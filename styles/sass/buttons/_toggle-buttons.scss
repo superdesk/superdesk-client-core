@@ -110,7 +110,7 @@ $checkBtnColorActive: #78909C;
         background: lighten($checkBtnColor, 5%);
     }
     &.focus, &:focus {
-        outline: 2px solid $sd-blue;
+        outline: 1px solid $sd-blue;
     }
     &.active, &:active {
         background: $checkBtnColorActive;

@@ -600,7 +600,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 }
 
                 // Check if there's unpublished related items
-                const related = relationsService.getRelatedItems($scope.item);
+                const related = relationsService.getRelatedItemsWithoutMediaGallery($scope.item, $scope.fields);
 
                 if (related.length > 0) {
                     return modal.confirm({
@@ -855,15 +855,24 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
             $scope.sendToNextStage = function() {
                 var stageIndex, stageList = desks.deskStages[desks.activeDeskId];
+                var selectedStage, selectedDesk = desks.deskLookup[desks.activeDeskId];
 
                 for (var i = 0; i < stageList.length; i++) {
                     if (stageList[i]._id === $scope.stage._id) {
+                        selectedStage = stageList[i];
                         stageIndex = i + 1 === stageList.length ? 0 : i + 1;
                         break;
                     }
                 }
 
-                $rootScope.$broadcast('item:nextStage', {stage: stageList[stageIndex], itemId: $scope.item._id});
+                $rootScope.$broadcast('item:nextStage', {
+                    stage: stageList[stageIndex],
+                    itemId: $scope.item._id,
+                    selectedStage: selectedStage,
+                    selectedDesk: selectedDesk,
+                    item: $scope.item,
+                });
+                $scope.close();
             };
 
             // Returns true if the given text is an URL

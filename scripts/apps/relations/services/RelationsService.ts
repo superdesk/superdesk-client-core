@@ -1,14 +1,22 @@
+import {pickBy} from 'lodash';
 import {IArticle} from 'superdesk-interfaces/Article';
 
-RelationsService.$inject = ['archiveService'];
+RelationsService.$inject = ['archiveService', 'mediaIdGenerator'];
 
-export function RelationsService(archiveService) {
-    this.getRelatedItems = function(item: IArticle) {
+export function RelationsService(archiveService, mediaIdGenerator) {
+    this.getRelatedItemsWithoutMediaGallery = function(item: IArticle, fields) {
         if (!item.associations) {
             return [];
         }
 
-        const related = Object.values(item.associations);
+        const relatedWithoutMedia = pickBy(item.associations, (value, key) => {
+            var parts = mediaIdGenerator.getFieldParts(key);
+            var field = fields.find((f) => f._id === parts[0]);
+
+            return field && field.field_type === 'related_content';
+        });
+
+        const related = Object.values(relatedWithoutMedia);
         const relatedWithoutNull = related.filter((o) => o !== null);
         const unpublished = relatedWithoutNull.filter((o) => !archiveService.isPublished(o));
 

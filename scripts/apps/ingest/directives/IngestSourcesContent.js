@@ -79,6 +79,18 @@ export function IngestSourcesContent(ingestSources, gettext, notify, api, $locat
                     13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24];
                 $scope.ingestExpiry = deployConfig.getSync('ingest_expiry_minutes');
 
+                $scope.statusFilters = [
+                    {label: gettext('Active'), id: 'active'},
+                    {label: gettext('All'), id: 'all'},
+                    {label: gettext('Closed'), id: 'closed'},
+                ];
+
+                $scope.activeStatusFilter = $scope.statusFilters[0];
+                $scope.filterIngestSources = function(id) {
+                    $scope.activeStatusFilter = $scope.statusFilters.find((item) => item.id === id);
+                    fetchProviders();
+                };
+
                 $scope.search = function(query) {
                     if (query) {
                         $scope.searchPage = 1;
@@ -93,19 +105,22 @@ export function IngestSourcesContent(ingestSources, gettext, notify, api, $locat
                     criteria.max_results = $location.search().max_results || 25;
                     criteria.page = $scope.searchPage || $location.search().page || 1;
                     criteria.sort = 'name';
-                    var orTerms = null;
+                    var andTerms = [];
 
                     if (!_.isEmpty($scope.searchQuery)) {
-                        orTerms = {$or: [
-                            {name: {
+                        andTerms.push({
+                            name: {
                                 $regex: $scope.searchQuery,
-                                $options: '-i'},
+                                $options: '-i',
                             },
-                        ]};
+                        });
+                    }
+                    if ($scope.activeStatusFilter.id !== 'all') {
+                        andTerms.push({is_closed: $scope.activeStatusFilter.id !== 'active'});
                     }
 
-                    if (orTerms !== null) {
-                        criteria.where = JSON.stringify(orTerms);
+                    if (!_.isEmpty(andTerms)) {
+                        criteria.where = JSON.stringify({$and: andTerms});
                     }
                     const searchTerm = $scope.searchQuery;
 

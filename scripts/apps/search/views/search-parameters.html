@@ -1,48 +1,49 @@
 <form>
     <fieldset class="search-parameters" ng-show="repo.search === 'local' || isContentApi()">
-        <div class="multiple">
-            <div class="field" ng-if="search_config.slugline">
-                <label for="search-slugline">
-                <label for="search-slugline">
+        <div class="form__row form__row--flex sd-margin-t--2">
+            <div class="sd-line-input sd-line-input--boxed sd-line-input--no-margin" ng-if="search_config.slugline">
+                <label class="sd-line-input__label" for="search-slugline">
                     {{:: 'Slugline' | translate}}
                 </label>
-                <input type="text" ng-keypress="keyPressed($event)" id="search-slugline" ng-model="meta.slugline">
+                <input class="sd-line-input__input" type="text" ng-keypress="keyPressed($event)" id="search-slugline" ng-model="meta.slugline">
             </div>
 
-            <div class="field" ng-if="search_config.headline">
-                <label for="search-headline">
+            <div class="sd-line-input sd-line-input--boxed  sd-line-input--no-margin" ng-if="search_config.headline">
+                <label class="sd-line-input__label" for="search-headline">
                     {{:: 'Headline' | translate}}
                 </label>
-                <input type="text" ng-keypress="keyPressed($event)" id="search-headline" ng-model="meta.headline">
+                <input class="sd-line-input__input" type="text" ng-keypress="keyPressed($event)" id="search-headline" ng-model="meta.headline">
             </div>
         </div>
 
-        <div class="field" ng-if="search_config.story_text">
-            <label for="search-storytext">
-                {{:: 'Story Text' | translate}}
-            </label>
-            <div class="control">
-                <input type="text" ng-keypress="keyPressed($event)" id="search-storytext" ng-model="meta.body_html">
+        <div class="form__row" ng-if="search_config.story_text">
+            <div class="sd-line-input sd-line-input--boxed sd-line-input--no-margin">
+                <label class="sd-line-input__label" for="search-storytext">
+                    {{:: 'Story Text' | translate}}
+                </label>
+                <span class="control">
+                    <input class="sd-line-input__input" type="text" ng-keypress="keyPressed($event)" id="search-storytext" ng-model="meta.body_html">
+                </span>
             </div>
         </div>
 
-        <div class="multiple">
-            <div class="field" ng-if="search_config.unique_name">
-                <label for="search-storyname">
+        <div class="form__row form__row--flex">
+            <div class="sd-line-input sd-line-input--boxed sd-line-input--no-margin" ng-if="search_config.unique_name">
+                <label class="sd-line-input__label" for="search-storyname">
                     {{:: 'Unique Name' | translate}}
                 </label>
-                <input type="text" ng-keypress="keyPressed($event)" id="search-storyname" ng-model="fields.unique_name">
+                <input class="sd-line-input__input" type="text" ng-keypress="keyPressed($event)" id="search-storyname" ng-model="fields.unique_name">
             </div>
-            <div class="field" ng-if="search_config.byline">
-                <label for="search-byline">
+            <div class="sd-line-input sd-line-input--boxed sd-line-input--no-margin" ng-if="search_config.byline">
+                <label class="sd-line-input__label" for="search-byline">
                     {{:: 'Byline' | translate}}
                 </label>
-                <input type="text" ng-keypress="keyPressed($event)" id="search-byline" ng-model="meta.byline">
+                <input class="sd-line-input__input" type="text" ng-keypress="keyPressed($event)" id="search-byline" ng-model="meta.byline">
             </div>
         </div>
 
-        <div class="field" ng-repeat="cv in cvs track by cv.id">
-            <label for="search-{{cv.name}}">
+        <div class="form__row" ng-repeat="cv in cvs track by cv.id">
+            <label class="form-label form__row-label" for="search-{{cv.name}}">
                 {{cv.name | translate}}
             </label>
             <div id="search-{{cv.name}}">
@@ -56,8 +57,8 @@
                     data-change="itemSearch(selecteditems, cv.id)"></div>
             </div>
         </div>
-        <div class="field" ng-if="search_config.marked_desks">
-            <label for="search-marked-desks">
+        <div class="form__row" ng-if="search_config.marked_desks">
+            <label class="form-label form__row-label" for="search-marked-desks">
                 {{:: 'Marked Desks' | translate}}
             </label>
             <div id="search-marked-desks">
@@ -82,27 +83,32 @@
                  data-header="true"
                  data-list="keywords"
                  data-item="meta"
+                 class="line-input--boxed"
             ></div>
         </div>
 
-        <div class="multiple">
-            <div class="field" ng-if="search_config.from_desk">
-                <label for="from-desk">
+        <div class="form__row form__row--flex">
+            <div class="sd-line-input sd-line-input--is-select sd-line-input--boxed sd-line-input--no-margin" ng-if="search_config.from_desk">
+                <label class="sd-line-input__label" for="from-desk">
                     {{:: 'From Desk' | translate}}
                 </label>
                 <select
-                    id="from-desk" name="from-desk"
+                    id="from-desk"
+                    class="sd-line-input__select"
+                    name="from-desk"
                     ng-options="d._id as d.name for d in desks._items"
                     ng-model="fields.from_desk">
                     <option value="" label=""></option>
                 </select>
             </div>
-            <div class="field" ng-if="search_config.to_desk">
-                <label for="to-desk">
+            <div class="sd-line-input sd-line-input--is-select sd-line-input--boxed sd-line-input--no-margin" ng-if="search_config.to_desk">
+                <label class="sd-line-input__label" for="to-desk">
                     {{:: 'To Desk' | translate}}
                 </label>
                 <select
-                    id="to-desk" name="to-desk"
+                    id="to-desk"
+                    class="sd-line-input__select" 
+                    name="to-desk"
                     ng-options="d._id as d.name for d in desks._items"
                     ng-model="fields.to_desk">
                     <option value="" label=""></option>
@@ -110,120 +116,146 @@
             </div>
         </div>
 
-        <div class="field" ng-if="repo.archive && search_config.creator">
-            <label for="search-creator">
-                {{:: 'Creator' | translate}}
-            </label>
-            <select id="search-creator"
-                    ng-model="fields.original_creator"
-                    ng-options="user._id as user.display_name for user in userList | orderBy:'display_name'
-                    track by user._id">
-            <option value="" label=""></option>
-            </select>
-        </div>
-
-        <div class="field" ng-if="search_config.spike">
-            <label for="spike-options">
-                {{:: 'Spiked Content' | translate}}
-            </label>
-            <select id="spike-options" name="spike-options" ng-model="fields.spike">
-                <option value="exclude" label="{{:: 'Exclude spiked content' | translate }}"></option>
-                <option value="include" label="{{:: 'Include spiked content' | translate }}"></option>
-                <option value="only" label="{{:: 'Spiked only content' | translate }}"></option>
-            </select>
-        </div>
-
-        <div class="field" ng-if="search_config.featuremedia">
-            <label for="search-featuremedia">
-            {{:: 'Feature Media' | translate}}
-            </label>
-            <span sd-switch ng-model="fields.featuremedia"></span>
-        </div>
-
-        <div class="multiple" ng-if="search_config.ingest_provider">
-            <div class="field">
-                <label for="search-ingest-provider">
-                    {{:: 'Provider' | translate}}
+        <div class="form__row" ng-if="repo.archive && search_config.creator">
+            <div class="sd-line-input sd-line-input--is-select sd-line-input--boxed sd-line-input--no-margin">
+                <label class="sd-line-input__label" for="search-creator">
+                    {{:: 'Creator' | translate}}
                 </label>
-                <select id="search-ingest-provider"
-                        ng-model='fields.ingest_provider'
-                        ng-options="provider._id as provider.name for provider in providers">
-                <option value="" label=""></option>
+                <select id="search-creator"
+                        class="sd-line-input__select"
+                        ng-model="fields.original_creator"
+                        ng-options="user._id as user.display_name for user in userList | orderBy:'display_name'
+                        track by user._id">
+                        <option value="" label=""></option>
                 </select>
             </div>
         </div>
 
-        <div class="field" ng-if="isContentApi() && search_config.subscribers">
-            <label for="search-subscriber">
+        <div class="form__row" ng-if="search_config.spike">
+            <div class="sd-line-input sd-line-input--is-select sd-line-input--boxed sd-line-input--no-margin">
+                <label class="sd-line-input__label" for="spike-options">
+                    {{:: 'Spiked Content' | translate}}
+                </label>
+                <select id="spike-options"
+                        class="sd-line-input__select" 
+                        name="spike-options"
+                        ng-model="fields.spike">
+                        <option value="exclude" label="{{:: 'Exclude spiked content' | translate }}"></option>
+                        <option value="include" label="{{:: 'Include spiked content' | translate }}"></option>
+                        <option value="only" label="{{:: 'Spiked only content' | translate }}"></option>
+                </select>
+            </div>
+
+
+        </div>
+
+        <div class="form__row form__row--flex" ng-if="search_config.ingest_provider">
+            <div class="sd-line-input sd-line-input--is-select sd-line-input--boxed sd-line-input--no-margin">
+                <label class="sd-line-input__label" for="search-ingest-provider">
+                    {{:: 'Provider' | translate}}
+                </label>
+                <select id="search-ingest-provider"
+                        class="sd-line-input__select"
+                        ng-model='fields.ingest_provider'
+                        ng-options="provider._id as provider.name for provider in providers">
+                        <option value="" label=""></option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form__row" ng-if="search_config.featuremedia">
+            <span sd-switch ng-model="fields.featuremedia"></span>
+            <label for="search-featuremedia">
+            {{:: 'Feature Media' | translate}}
+            </label>
+        </div>
+
+        <div class="sd-line-input sd-line-input--is-select sd-line-input--boxed sd-line-input--no-margin" ng-if="isContentApi() && search_config.subscribers">
+            <label class="sd-line-input__label" for="search-subscriber">
                 {{:: 'Subscriber' | translate}}
             </label>
             <select id="search-subscriber"
+                    class="sd-line-input__select"
                     ng-model='fields.subscriber'
                     ng-options="subscriber._id as subscriber.name for subscriber in subscribers">
-                <option value="" label=""></option>
+                    <option value="" label=""></option>
             </select>
         </div>
     </fieldset>
+
     <fieldset ng-show="providerType === 'aapmm'">
-        <div class="field">
-            <label for="search-objectname">
-                {{:: 'Object Name (Slugline)' | translate}}
-            </label>
-            <div class="control">
-                <input type="text" ng-keypress="keyPressed($event)" id="search-objectname" ng-model="meta.objectname">
+        <div class="form__row">
+            <div class="sd-line-input sd-line-input--boxed sd-line-input--no-margin">
+                <label class="sd-line-input__label" for="search-objectname">
+                    {{:: 'Object Name (Slugline)' | translate}}
+                </label>
+                <span class="control">
+                    <input class="sd-line-input__input" type="text" ng-keypress="keyPressed($event)" id="search-objectname" ng-model="meta.objectname">
+                </span>
             </div>
         </div>
-        <div class="field">
-            <label for="search-description">
-                {{:: 'Description' | translate}}
-            </label>
-            <div class="control">
-                <input type="text" ng-keypress="keyPressed($event)" id="search-description" ng-model="meta.description_text">
+
+        <div class="form__row">
+            <div class="sd-line-input sd-line-input--boxed sd-line-input--no-margin">
+                <label class="sd-line-input__label" for="search-description">
+                    {{:: 'Description' | translate}}
+                </label>
+                <span class="control">
+                    <input class="sd-line-input__input" type="text" ng-keypress="keyPressed($event)" id="search-description" ng-model="meta.description_text">
+                </span>
             </div>
         </div>
-            <div class="field">
-            <label for="search-aapkeyword">
-                {{:: 'AAP Image Keyword' | translate}}
-            </label>
-            <div class="control">
-                <input type="text" ng-keypress="keyPressed($event)" id="search-aapkeyword" ng-model="meta.aapkeyword">
+
+        <div class="form__row">
+            <div class="sd-line-input sd-line-input--boxed sd-line-input--no-margin">
+                <label class="sd-line-input__label" for="search-aapkeyword">
+                    {{:: 'AAP Image Keyword' | translate}}
+                </label>
+                <span class="control">
+                    <input class="sd-line-input__input" type="text" ng-keypress="keyPressed($event)" id="search-aapkeyword" ng-model="meta.aapkeyword">
+                </span>
             </div>
         </div>
-        <div>
-            <div class="field">
-            <label for="search-keywords">
-                {{:: 'Keywords'}}
-            </label>
-            <div class="control">
-                <input type="text" ng-keypress="keyPressed($event)" id="search-keywords" ng-model="meta.keywords">
+
+        <div class="form__row">
+            <div class="sd-line-input sd-line-input--boxed sd-line-input--no-margin">
+                <label class="sd-line-input__label" for="search-keywords">
+                    {{:: 'Keywords'}}
+                </label>
+                <span class="control">
+                    <input class="sd-line-input__input" type="text" ng-keypress="keyPressed($event)" id="search-keywords" ng-model="meta.keywords">
+                </span>
             </div>
         </div>
     </fieldset>
+
     <fieldset ng-if="providerType.startsWith('scanpix')">
-        <div class="field">
-            <label class="search-label" for="search-text" translate>Search</label>
-            <div class="control">
-                <input type="text" ng-keypress="keyPressed($event)" id="search-text" ng-model="meta.text">
-            </div>
-            <div>
-                <label class="search-label" for="search-id" translate>Scanpix ID(s)</label>
-                <div class="control">
-                    <input type="text" ng-keypress="keyPressed($event)" id="search-id" ng-model="meta.id">
-                </div>
-            </div>
-            <div>
-                <div class="checkbox">
-                    <label class="search-label">
-                        <input type="checkbox" id="search-bw" ng-model="meta.bw">{{:: 'Black&White' | translate}}
-                    </label>
-                </div>
-                <div class="checkbox">
-                    <label class="search-label">
-                        <input type="checkbox" id="search-clear_edge" ng-model="meta.clear_edge">{{:: 'Clear Edge' | translate}}
-                    </label>
-                </div>
+        <div class="form__row">
+            <div class="sd-line-input sd-line-input--boxed sd-line-input--no-margin">
+                <label class="search-label sd-line-input__label" for="search-text" translate>Search</label>
+                <span class="control">
+                    <input class="sd-line-input__input" type="text" ng-keypress="keyPressed($event)" id="search-text" ng-model="meta.text">
+                </span>
             </div>
         </div>
+        <div class="form__row">
+            <div class="sd-line-input sd-line-input--boxed sd-line-input--no-margin">
+                <label class="search-label sd-line-input__label" for="search-id" translate>Scanpix ID(s)</label>
+                <span class="control">
+                    <input class="sd-line-input__input" type="text" ng-keypress="keyPressed($event)" id="search-id" ng-model="meta.id">
+                </span>
+            </div>
+        </div>
+
+        <div>
+            <div class="form__row form__row--s-padding">
+                <sd-check id="search-bw" ng-model="meta.bw">{{:: 'Black&White' | translate}}</sd-check>
+            </div>
+            <div class="form__row form__row--s-padding">
+                <sd-check id="search-clear_edge" ng-model="meta.clear_edge">{{:: 'Clear Edge' | translate}}</sd-check>
+            </div>
+        </div>
+
     </fieldset>
     <div ng-if="hasTemplate(providerType)" ng-include="getTemplate(providerType)"></div>
 </form>

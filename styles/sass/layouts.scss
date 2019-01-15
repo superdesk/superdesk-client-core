@@ -382,6 +382,32 @@ a:hover {
 // Slide pane
 // ---------------------------------------------
 
+.sd-overlay-panel {
+    z-index: $zindexSlidePane !important;
+}
+
+.workspace .main-section {
+    .sd-overlay-panel {
+        top: 0;
+        bottom: 0;
+        width: 56rem;
+    }  
+}
+.workspace.authoring .main-section {
+    .sd-overlay-panel {
+        width: 40rem;
+    }
+}
+
+.workspace .main-section {
+    .archive-content {
+        .sd-overlay-panel {
+            top: 4.8rem;
+        } 
+    }
+} 
+
+
 //Variables
 $slide-pane-width: 400px;
 
@@ -453,19 +479,7 @@ $slide-pane-width: 400px;
         .btn-list li { padding-bottom: 0; }
     }
 
-    .btn-list {
-        font-size: 0;
-        li {
-            display: inline-block;
-            vertical-align: middle;
-            width: 48.5%;
-            padding: 0 0 3%;
-            &:nth-child(2n) { margin-left: 3%; }
-            &.full-width { width: 100%; margin-left: 0; }
-            input { min-height: 35px; }
-            .btn__check { width: 100%; }
-        }
-    }
+
 
     // Stylings for slide pane
     &.slide-pane--dark {
@@ -475,6 +489,34 @@ $slide-pane-width: 400px;
                 color: $white;
             }
         }
+    }
+}
+
+.btn-list {
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+    overflow-x: auto;
+    flex-wrap: wrap;
+    margin-left: -0.4rem;
+    margin-right: -0.4rem;
+    margin-bottom: 0.6rem;
+
+    li {
+        flex: 0 0 calc(50% - 0.8rem);
+        max-width: calc(50% - 0.8rem);
+        margin: 0.4rem !important;
+        .btn__check { width: 100%; }
+    }
+}
+
+.form__row--desk-select {
+    .dropdown__toggle, .dropdown__menu {
+        width: 100%;
+    }
+    .dropdown__toggle {
+        width: 100%;
+        max-height: 3.2rem;
     }
 }
 

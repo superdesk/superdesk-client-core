@@ -12,7 +12,7 @@ UserPreferencesDirective.$inject = ['session', 'preferencesService', 'notify', '
 
 export function UserPreferencesDirective(
     session, preferencesService, notify, asset, metadata, desks, modal,
-    $timeout, $q, userList, _, config, search, gettext
+    $timeout, $q, userList, _, config, search, gettext,
 ) {
     // human readable labels for server values
     const LABELS = {
@@ -21,6 +21,14 @@ export function UserPreferencesDirective(
         photogrid: gettext('Photo Grid View'),
         list: gettext('List View'),
         swimlane: gettext('Swimlane View'),
+    };
+
+    const ICONS = {
+        mgrid: 'grid-view',
+        compact: 'list-view',
+        photogrid: 'grid-view',
+        list: 'list-view',
+        swimlane: 'kanban-view',
     };
 
     return {
@@ -180,6 +188,8 @@ export function UserPreferencesDirective(
             };
 
             scope.valueLabel = (value) => LABELS[value] || value;
+
+            scope.getIcon = (value) => ICONS[value] || 'list-view';
 
             /**
             * Builds a user preferences object in scope from the given

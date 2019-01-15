@@ -150,7 +150,7 @@ function Content() {
 
     this.unspikeItems = function() {
         element(by.css('[ng-click="action.unspikeItems()"]')).click();
-        element(by.partialButtonText('send')).click();
+        element(by.buttonText('send')).click();
     };
 
     this.selectSpikedList = function() {

@@ -5,15 +5,17 @@
     <button class="btn btn--primary btn--expanded search" ng-click="search()" translate>Search</button>
 </div>
 <div ng-if="searching() || innerTab==='parameters'">
-    <div class="save-search" ng-if="searching() && !editingSearch && sTab !== 'savedSearches'">
+    <div class="save-search " ng-if="searching() && !editingSearch && sTab !== 'savedSearches'">
         <a id="clear_filters" class="save-search__link" ng-click="clear()" translate>Clear filters</a>
-        <button id="save_search_init" class="btn btn--primary" ng-click="editItem()" ng-if="!editingSearch"  translate>Save Search</button>
+        <button id="save_search_init" class="btn btn--primary btn--hollow" ng-click="editItem()" ng-if="!editingSearch"  translate>Save Search</button>
     </div>
     <div class="save-search" ng-if="editingSearch">
-        <button class="btn btn--primary btn--expanded search" ng-click="search()" ng-if="innerTab==='parameters'" translate>Search</button>
-        <button id="saveas_search_init" class="btn" ng-click="saveas()" translate ng-if="editingSearch">Save As</button>
-        <button id="save_search_init" class="btn btn--primary" ng-click="editItem()" ng-if="!editingSearch" translate>Save Changes</button>
-        <button id="save_search_init" class="btn btn--primary" ng-click="save(edit)" ng-if="editingSearch" translate>Save Changes</button>
+        <button class="btn btn--primary btn--expanded btn--hollow search" ng-click="search()" ng-if="innerTab==='parameters'" translate>Search</button>
+        <div class="save-search__button-split">
+            <button id="saveas_search_init" class="btn btn" ng-click="saveas()" translate ng-if="editingSearch">Save As</button>
+            <button id="save_search_init" class="btn btn--primary" ng-click="editItem()" ng-if="!editingSearch" translate>Save Changes</button>
+            <button id="save_search_init" class="btn btn--primary" ng-click="save(edit)" ng-if="editingSearch" translate>Save Changes</button>
+        </div>
     </div>
 </div>
 

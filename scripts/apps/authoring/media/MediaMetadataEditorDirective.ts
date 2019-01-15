@@ -51,10 +51,13 @@ export default function MediaMetadataEditorDirective(metadata, deployConfig, fea
                     }
                 });
 
-                // set scope fields in order
+                // set scope fields in order.
+                // Only display fields required on the media editor based on the value of `displayOnMediaEditor`.
+                // default is set to true to display all fields.
                 scope.fields = sortBy(
                     Object.keys(editor)
                         .filter((key) => editor[key] != null)
+                        .filter((key) => get(editor[key], 'displayOnMediaEditor', true))
                         .map((field) => Object.assign({
                             field: field,
                             label: getLabelForFieldId(field),

@@ -3,8 +3,10 @@
 
 // Label lite
 .label--lite {
-    font-size: 10px;
-    color: #8D8A8A;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.65);
     text-transform: uppercase;
 }
 
@@ -162,15 +164,15 @@ $priority-label-color-6 : #c0c9a1;
 }
 .state-label {
     display: inline-block;
-    line-height: 14px;
-    font-size: 9px;
-    letter-spacing: 0.08em;
+    line-height: 1.4rem;
+    font-size: 0.9rem;
+    letter-spacing: 0.125em;
     text-transform: uppercase;
-    @include border-radius(2px);
-    padding: 0 5px;
-    margin-right: 10px;
-    box-sizing: border-box;
+    @include border-radius(8px);
+    padding: 0 0.8rem;
+    margin-right: 1rem;
     border: 1px solid;
+    vertical-align: middle;
     @include state-color();
     @include text-semibold();
 

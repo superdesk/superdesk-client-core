@@ -6,14 +6,14 @@ import {insertContentInState} from '../handlePastedText';
 
 const stubForHighlights = {
     highlightsManager: {
-        styleMap: {}
-    }
+        styleMap: {},
+    },
 };
 
 describe('editor3.handlePastedText', () => {
     it('should insert text without selection', () => {
         const editorState = EditorState.createWithContent(
-            ContentState.createFromText('paste before this')
+            ContentState.createFromText('paste before this'),
         );
         const pastedContent = ContentState.createFromText('some text ');
 
@@ -26,7 +26,7 @@ describe('editor3.handlePastedText', () => {
 
     it('should insert text with selection at the end', () => {
         let editorState = EditorState.createWithContent(
-            ContentState.createFromText('paste after this ')
+            ContentState.createFromText('paste after this '),
         );
         const pastedContent = ContentState.createFromText('some text');
 
@@ -41,7 +41,7 @@ describe('editor3.handlePastedText', () => {
 
     it('should insert text with selection in the middle', () => {
         let editorState = EditorState.createWithContent(
-            ContentState.createFromText('paste after this!')
+            ContentState.createFromText('paste after this!'),
         );
         const pastedContent = ContentState.createFromText(' some text');
 
@@ -56,7 +56,7 @@ describe('editor3.handlePastedText', () => {
 
     it('should keep undo/redo history consistent', () => {
         let editorState = EditorState.createWithContent(
-            ContentState.createFromText('paste after this')
+            ContentState.createFromText('paste after this'),
         );
         const pastedContent = ContentState.createFromText(' some text');
 

@@ -158,7 +158,6 @@ export function saveOrUpdateSavedSearch(api, savedSearchOriginal: ISavedSearch, 
         }
     }
 
-    return api('saved_searches')
-        .save(savedSearchOriginal, savedSearchChanged)
+    return api('saved_searches').save(savedSearchOriginal, savedSearchChanged)
         .then(mapFiltersServerToClient);
 }

@@ -7,7 +7,8 @@
 
 .archive-sidebar {
     position:absolute;
-    top:0px;bottom:0px;
+    top:0px;
+    bottom:0px;
     left:0;
     width:$archive-sidebar-width;
     @include box-sizing(border-box);
@@ -17,11 +18,11 @@
     border-right: 2px solid #bbb;
 
     .header {
-        height: $nav-height + 1;
-        border-bottom: 1px solid #ddd;
+        height: $nav-height;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 0 rgba(0, 0, 0, 0.06);
         background-color: #f4f4f4;
         position: relative;
-        @include border-box();
+        z-index: 4;
         .icon {
             width: 48px;
             height: $nav-height;
@@ -69,25 +70,34 @@
 
     .content {
         position: absolute;
-        top:$nav-height; left:0px; bottom:0px; right:0px;
+        top: $nav-height;
+        left: 0px;
+        bottom: 0px;
+        right: 0px;
         padding: 20px;
         overflow: auto;
-        padding-bottom: $bottom-view-padding;
-        &.pull { bottom: 60px; }
-        &.pull-heigher { bottom: 120px; }
-
+        padding-bottom: $bottom-view-padding + 30px;
+        &.pull { 
+            bottom: 60px; 
+        }
+        &.pull-heigher { 
+            bottom: 120px; 
+        }
         .sd-check__wrapper {
             margin-left: 0;
         }
-
         .superdeskRepos {
-            margin-top: 10px;
-            margin-bottom: 5px;
+            margin-bottom: 2rem;
         }
     }
     
     .tab-box {
-        margin: 30px -20px 0 -20px;
+        margin: 0 -20px 0 -20px;
+        position: sticky;
+        top: -20px;
+        background-color: $archive-sidebar-bg;
+        padding-bottom: 0.4rem;
+        z-index: 3;
     }
 
     .edit-search {
@@ -144,98 +154,7 @@
         height: 200px;
     }
 
-    .filter-box {
-        li {
-            display: block;
-            margin-bottom: 1px;
-            @include border-radius(2px);
-            padding: 0 3px 0 5px;
-            margin-left: 5px;
-            line-height: 22px;
-            button {
-                border: 0;
-                background: none;
-                display: block;
-                width: 100%;
-                padding: 0;
-                color: #666;
-                text-align: left;
-                height: 22px;
-                line-height: 22px;
-                font-size: 12px;
-            }
-            i {
-                &:not([class*="filetype-icon-"]) {
-                    line-height: 16px;
-                    margin-top: 3px;
-                    margin-left: 5px;
-                    color: $grayLight;
-                    font-size: 11px;
-                }
-            }
-            .sd-checkbox {
-                margin-top: 3px;
-            }
-            [class*="filetype-icon-"] {
-                color: $grayLight;
-            }
-            &:hover {
-                cursor: pointer;
-                background: #ddd;
-                .remove-aggregate {
-                    display: inline;
-                }
-            }
-            &:active {
-                background: #ccc;
-            }
-            .remove-aggregate {
-                display: none;
-                margin-top: 3px;
-            }
-        }
-    }
 
-    .content-type-filters {
-        li {
-            position: relative;
-            line-height: 16px;
-            margin-bottom: 4px;
-            padding: 2px 3px 2px 5px;
-
-            i[class*="filetype-icon-"] {
-                margin:0 8px 0 0;
-                float: left;
-            }
-            .sd-checkbox {
-                position: absolute;
-                left: 5px;
-                top: 0px;
-                visibility: hidden;
-
-            }
-
-            .hover-box {
-                &:hover {
-                    i[class*="filetype-icon-"] {
-                        visibility: hidden;
-                    }
-                    .sd-checkbox {
-                        visibility: visible;
-                    }
-                }
-            }
-
-            &.checked {
-                .sd-checkbox {
-                    visibility: visible;
-                }
-            }
-            .remove-aggregate {
-                margin-top: 0px;
-            }
-        }
-    }
 
     .search-within-filter {
         position: relative;
@@ -286,7 +205,6 @@
     }
 
     .date-filter {
-
         .predefined-dates {
             display: flex;
             justify-content: space-between;
@@ -294,20 +212,25 @@
             > div {
                 flex: 1 1 auto;
                 padding: 4px;
-                @include border-box();
                 button {
                     display: block;
-                    @include border-box();
                     width: 100%;
                 }
             }
-            .btn--mini {
+            .btn--mini, .toggle-button {
                 min-height: 20px;
                 height: auto;
                 margin-right: 4px;
+                flex-grow: 1;
                 &:last-child {
                     margin-right: 0;
                 }
+            }
+            .toggle-button {
+                padding: 5px;
+                line-height: 130%;
+                font-size: 11px;
+                font-weight: 500;
             }
         }
         .datepicker-input {
@@ -318,7 +241,7 @@
                 .field {
                     padding-right: 10px;
                     &:last-child {
-                        padding-left: 10px;
+                        padding: 0;
                     }
                 }
             }
@@ -363,7 +286,6 @@
                         top:8px;
                     }
                     .delete, .edit {
-                        //float: left;
                         border: 0;
                         background: 0;
                         display: none;
@@ -382,9 +304,6 @@
                     &.active {
                         background: $sd-hover;
                     }
-                    &:last-child {
-                        //margin-bottom: 20px;
-                    }
                     &:first-child {
                         border-top: 1px solid #ddd;
                     }
@@ -400,6 +319,104 @@
                 padding: 0;
             }
         }
+    }
+}
+
+
+.filter-box {
+    .filter-box__item {
+        display: flex;
+        margin-bottom: 2px;
+        border-radius: 2px;
+        padding: 4px 4px 4px 5px;
+        line-height: 100%;
+        background-color: transparent;
+        transition: background-color ease-in-out 0.2s;
+        button {
+            border: 0;
+            background: none;
+            display: block;
+            width: 100%;
+            padding: 0;
+            color: #666;
+            text-align: left;
+            height: 22px;
+            line-height: 22px;
+            font-size: 12px;
+        }
+
+        .filter-box__hover-box {
+            height: 1.6rem;
+            width: 1.6rem;
+            flex-shrink: 0;
+            flex-grow: 0;
+            position: relative;
+            margin-right: 0.8rem;
+            &:hover {
+                i[class*="filetype-icon-"] {
+                    visibility: hidden;
+                }
+                .sd-checkbox {
+                    visibility: visible;
+                }
+            }
+            .sd-checkbox {
+                position: absolute;
+                left: 0;
+                top: 0;
+                visibility: hidden;
+            }
+        }
+        &.checked {
+            .sd-checkbox {
+                visibility: visible;
+            }
+        }
+
+        [class*="filetype-icon-"] {
+            color: $gray;
+        }
+
+        &:hover {
+            cursor: pointer;
+            background-color: rgba(0, 0, 0, 0.1);
+            .filter-box__negate-filter {
+                opacity: 0.6;
+                transition: all ease-in-out 0.2s;
+                &:hover {
+                    opacity: 1;
+                }
+                &:active {
+                    color: $state-color-red;
+                }
+            }
+        }
+        &:active {
+            background: #ccc;
+        }
+        .filter-box__negate-filter {
+            opacity: 0;
+            transition: all ease-in-out 0.1s;
+        }
+    }
+    .filter-box__name {
+        flex-grow: 1;
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+            i {
+                margin-left: 10px;
+                font-style: italic;
+                color: $grayText;
+                font-weight: 300;
+            }
+    }
+    .filter-box__check {
+        flex-grow: 0;
+        margin-right: 8px;
+
     }
 }
 
@@ -442,6 +459,7 @@
     bottom: 0;
     left: 0;
     right: 0;
+    z-index: 3;
     background-color: #fff;
     box-sizing: border-box;
     padding: 16px 24px;
@@ -449,6 +467,17 @@
     box-shadow: 0 -1px 2px 0 rgba(0, 0, 0, 0.12);
     .search {
         margin-bottom: 5px;
+    }
+    .save-search__button-split {
+        display: flex;
+        align-items: center;
+        .btn {
+            flex-basis: auto;
+            flex-grow: 1;
+            & + .btn {
+                margin-left: 5px;
+            }
+        }
     }
 }
 .save-search-panel {

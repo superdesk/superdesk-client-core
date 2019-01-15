@@ -1,5 +1,5 @@
 <fieldset ng-if="context">
-    <div class="superdeskRepos" ng-show="repo.search === 'local'">
+    <div class="superdeskRepos flex-grid flex-grid--boxed-small flex-grid--wrap-items flex-grid--small-2" ng-show="repo.search === 'local'">
         <button type="button" id="ingest-collection" class="toggle-button" ng-click="toggleRepo('ingest')" ng-class="{'toggle-button--active': repo.ingest}">{{:: 'Ingest' | translate}}</button>
         <button type="button" id="archive-collection" class="toggle-button" ng-click="toggleRepo('archive')" ng-class="{'toggle-button--active': repo.archive}">{{:: 'Production' | translate}}</button>
         <button type="button" id="published-collection" class="toggle-button" ng-click="toggleRepo('published')" ng-class="{'toggle-button--active': repo.published}">{{:: 'Published' | translate}}</button>

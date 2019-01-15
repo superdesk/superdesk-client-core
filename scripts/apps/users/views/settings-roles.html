@@ -53,7 +53,7 @@
         </div>
         <div class="modal__footer">
             <button class="btn" ng-click="cancel()" translate>Cancel</button>
-            <button class="btn btn--primary" ng-click="save(editRole)" ng-disabled="!roleForm.$valid" translate>Ok</button>
+            <button class="btn btn--primary" ng-click="save(editRole)" ng-disabled="!roleForm.$valid || !roleForm.$dirty" translate>Ok</button>
         </div>
     </div>
 </div>

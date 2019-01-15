@@ -280,6 +280,7 @@ describe('search', () => {
         globalSearch.actionOnItem('Edit', 4);
         authoring.sendToButton.click();
         authoring.setEmbargo();
+        authoring.closeSendAndPublish();
         authoring.save();
         authoring.close();
         expect(globalSearch.getItem(0).element(by.className('state_embargo')).isDisplayed()).toBe(true);

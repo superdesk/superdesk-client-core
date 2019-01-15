@@ -197,6 +197,8 @@ describe('content', () => {
         setEmbargo();
         browser.sleep(100);
 
+        authoring.closeSendAndPublish();
+
         element(by.css('[ng-click="saveTopbar()"]')).click();
         element(by.id('closeAuthoringBtn')).click();
 
@@ -220,7 +222,7 @@ describe('content', () => {
             expect(authoring.sendBtn.isEnabled()).toBe(false);
         });
 
-        var sidebar = element.all(by.css('.slide-pane   ')).last(),
+        var sidebar = element.all(by.css('.side-panel')).last(),
             dropdown = sidebar.element(by.css('.dropdown--dark .dropdown__toggle'));
 
         dropdown.waitReady();

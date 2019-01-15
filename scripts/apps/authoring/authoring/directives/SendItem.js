@@ -6,11 +6,13 @@ import {PreviewModal} from '../previewModal';
 SendItem.$inject = ['$q', 'api', 'search', 'desks', 'notify', 'authoringWorkspace',
     'superdeskFlags', '$location', 'macros', '$rootScope', 'deployConfig',
     'authoring', 'send', 'editorResolver', 'confirm', 'archiveService',
-    'preferencesService', 'multi', 'datetimeHelper', 'config', 'privileges', 'storage', 'modal', 'gettext', 'urls'];
+    'preferencesService', 'multi', 'datetimeHelper', 'config', 'privileges',
+    'storage', 'modal', 'gettext', 'urls', 'extensionPoints'];
 export function SendItem($q, api, search, desks, notify, authoringWorkspace,
     superdeskFlags, $location, macros, $rootScope, deployConfig,
     authoring, send, editorResolver, confirm, archiveService,
-    preferencesService, multi, datetimeHelper, config, privileges, storage, modal, gettext, urls) {
+    preferencesService, multi, datetimeHelper, config, privileges,
+    storage, modal, gettext, urls, extensionPoints) {
     return {
         scope: {
             item: '=',
@@ -28,6 +30,7 @@ export function SendItem($q, api, search, desks, notify, authoringWorkspace,
                 publish: 'publish',
                 duplicate_to: 'duplicate_to',
                 externalsource_to: 'externalsource_to',
+                publish_pane_two_columns: false,
             };
         },
         controllerAs: 'vm',
@@ -47,6 +50,10 @@ export function SendItem($q, api, search, desks, notify, authoringWorkspace,
             scope.destination_last = {send_to: null, publish: null, duplicate_to: null};
             scope.origItem = angular.extend({}, scope.item);
             scope.subscribersWithPreviewConfigured = [];
+
+            // if authoring:publish extension point is not defined
+            // then publish pane is single column
+            ctrl.userActions.publish_pane_two_columns = !_.isEmpty(extensionPoints.get('authoring:publish'));
 
             // key for the storing last desk/stage in the user preferences for send action.
             var PREFERENCE_KEY = 'destination:active';
@@ -185,13 +192,20 @@ export function SendItem($q, api, search, desks, notify, authoringWorkspace,
                 updateLastDestination();
                 return runSend(open, sendAllPackageItems);
             };
-
+            scope.isSendToNextStage = false;
             scope.$on('item:nextStage', (_e, data) => {
+                if (!scope.item) {
+                    scope.item = data.item;
+                    scope.selectedStage = data.selectedStage;
+                    scope.selectedDesk = data.selectedDesk;
+                    scope.mode = 'authoring';
+                    scope.isSendToNextStage = true;
+                }
+
                 if (scope.item && scope.item._id === data.itemId) {
                     var oldStage = scope.selectedStage;
 
                     scope.selectedStage = data.stage;
-
                     scope.send().then((sent) => {
                         if (!sent) {
                             scope.selectedStage = oldStage;
@@ -282,7 +296,7 @@ export function SendItem($q, api, search, desks, notify, authoringWorkspace,
              * Returns true if timezone needs to be displayed, false otherwise.
              */
             scope.showTimezone = function() {
-                return (scope.item.publish_schedule || scope.item.embargo) &&
+                return (scope.item && (scope.item.publish_schedule || scope.item.embargo)) &&
                     (scope.showPublishSchedule() || scope.showEmbargo());
             };
 

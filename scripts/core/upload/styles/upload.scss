@@ -302,6 +302,7 @@ media uploader
         bottom: 0;
         right: 0;
         overflow-y: auto;
+        border: none !important;
         @include user-select(none);
     }
 

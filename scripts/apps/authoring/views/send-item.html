@@ -1,190 +1,265 @@
-<div class="slide-pane slide-pane--dark content-item-preview" ng-show="isActive" ng-class="{open: isActive, 'slide-pane--inset': mode === 'authoring'}">
-    <div class="slide-pane__header">
-        <ul class="nav-tabs nav-tabs--ui-dark nav-tabs--big">
-            <li id="panel-send"
-                class="nav-tabs__tab {{currentUserAction === vm.userActions.send_to ? 'nav-tabs__tab--active' : ''}}"
-                ng-show="canSendItem() && isSendEnabled() && currentUserAction !== vm.userActions.duplicate_to">
-                <button ng-click="setUserAction(vm.userActions.send_to)" class="nav-tabs__link" translate>Send to</button></li>
-            <li id="panel-publish"
-                class="nav-tabs__tab {{currentUserAction === vm.userActions.publish ? 'nav-tabs__tab--active' : ''}}"
-                ng-show="canPublishItem()">
-                <button ng-click="setUserAction(vm.userActions.publish)" class="nav-tabs__link" translate>Publish</button></li>
-            <li id="panel-fetch"
-                class="nav-tabs__tab {{currentUserAction === vm.userActions.send_to ? 'nav-tabs__tab--active' : ''}}"
-                ng-show="!canSendItem() && !canPublishItem() && currentUserAction === vm.userActions.send_to">
-                <button class="nav-tabs__link" translate>Fetch To</button></li>
-            <li id="panel-duplicate"
-                class="nav-tabs__tab {{currentUserAction === vm.userActions.duplicate_to ? 'nav-tabs__tab--active' : ''}}"
-                ng-show="!canPublishItem() && currentUserAction === vm.userActions.duplicate_to">
-                <button class="nav-tabs__link" translate>Duplicate To</button></li>
-            <li id="panel-externalsource"
-                class="nav-tabs__tab {{currentUserAction === vm.userActions.externalsource_to ? 'nav-tabs__tab--active' : ''}}"
-                ng-show="!canSendItem() && !canPublishItem() && currentUserAction === vm.userActions.externalsource_to">
-                <button class="nav-tabs__link" translate>Fetch To</button></li>
-        </ul>
-        <div class="close" ng-click="close()"><i class="icon-close-small icon--white"></i></div>
-    </div>
-
-    <div class="slide-pane__content">
-        <div sd-toggle-box
-             ng-if="showSendButtonAndDestination()"
-             data-title="{{ currentUserAction === vm.userActions.publish ? 'From' : 'Destination' | translate }}"
-             data-open="true" data-style="dark">
-            <div sd-desk-select
-                data-desks="desks"
-                data-selected-desk="selectedDesk"
-                on-change="selectDesk(desk)"></div>
-
-            <ul class="btn-list" ng-if="stages && !(vm.userActions.publish === currentUserAction)">
-                <li ng-repeat="stage in stages track by stage._id"
-                    ng-if = "!disableFetchAndOpenButton() || stage.is_visible">
-                    <button class="btn__check"
-                            ng-class="{active: stage._id === selectedStage._id}"
-                            ng-disabled="mode !== 'spike' && stage._id === item.task.stage"
-                            ng-click="selectStage(stage)">
-                        {{::stage.name}}
-                    </button>
-                </li>
+<div class="sd-overlay-panel sd-overlay-panel--dark-ui" ng-show="isActive && !isSendToNextStage"
+     ng-class="{'sd-overlay-panel--open': isActive, 'sd-overlay-panel--large' : currentUserAction === vm.userActions.publish && vm.userActions.publish_pane_two_columns}" >
+    <div class="side-panel side-panel--shadow-right side-panel--dark-ui">
+        <div class="side-panel__header">
+            <ul class="nav-tabs nav-tabs--ui-dark nav-tabs--big">
+                <li id="panel-send"
+                    class="nav-tabs__tab {{currentUserAction === vm.userActions.send_to ? 'nav-tabs__tab--active' : ''}}"
+                    ng-show="canSendItem() && isSendEnabled() && currentUserAction !== vm.userActions.duplicate_to">
+                    <button ng-click="setUserAction(vm.userActions.send_to)" class="nav-tabs__link" translate>Send to</button></li>
+                <li id="panel-publish"
+                    class="nav-tabs__tab {{currentUserAction === vm.userActions.publish ? 'nav-tabs__tab--active' : ''}}"
+                    ng-show="canPublishItem()">
+                    <button ng-click="setUserAction(vm.userActions.publish)" class="nav-tabs__link" translate>Publish</button></li>
+                <li id="panel-fetch"
+                    class="nav-tabs__tab {{currentUserAction === vm.userActions.send_to ? 'nav-tabs__tab--active' : ''}}"
+                    ng-show="!canSendItem() && !canPublishItem() && currentUserAction === vm.userActions.send_to">
+                    <button class="nav-tabs__link" translate>Fetch To</button></li>
+                <li id="panel-duplicate"
+                    class="nav-tabs__tab {{currentUserAction === vm.userActions.duplicate_to ? 'nav-tabs__tab--active' : ''}}"
+                    ng-show="!canPublishItem() && currentUserAction === vm.userActions.duplicate_to">
+                    <button class="nav-tabs__link" translate>Duplicate To</button></li>
+                <li id="panel-externalsource"
+                    class="nav-tabs__tab {{currentUserAction === vm.userActions.externalsource_to ? 'nav-tabs__tab--active' : ''}}"
+                    ng-show="!canSendItem() && !canPublishItem() && currentUserAction === vm.userActions.externalsource_to">
+                    <button class="nav-tabs__link" translate>Fetch To</button></li>
             </ul>
+            <div class="side-panel__tools">
+                <a class="icn-btn" ng-click="close()"><i class="icon-close-small"></i></a>
+            </div>
         </div>
 
-        <div sd-toggle-box id="embargoTimestamp" ng-if="mode === 'authoring' && showEmbargo()" data-title="Embargo" data-open="true" data-style="dark">
-            <label class="label--lite">{{ :: 'Embargo' | translate }}</label>
-            <ul class="btn-list">
-                <li class="datepicker-input--dark">
-                    <div sd-datepicker ng-model="item.embargo_date"></div>
-                </li>
-                <li class="timepicker-input--dark">
-                    <div sd-timepicker ng-model="item.embargo_time"></div>
-                </li>
-            </ul>
-            <a class="toggle-box__button" ng-click="item.embargo_date=null; item.embargo_time=null;" sd-hotkey="ctrl+shift+x"><i class="icon-remove-sign icon--white"></i>{{ :: 'Clear embargo' | translate }}</a>
+        <!-- Content Send To-->
+        <div class="side-panel__content" ng-if="currentUserAction === vm.userActions.send_to || currentUserAction === vm.userActions.duplicate_to">
+            <div class="side-panel__content-block">
+                
+                <div sd-toggle-box
+                    ng-if="showSendButtonAndDestination()"
+                    data-title="{{ currentUserAction === vm.userActions.publish ? 'From' : 'Destination' | translate }}"
+                    data-open="true"
+                    data-style="circle">
+                    <div class="form__row form__row--no-padding form__row--desk-select">
+                        <div sd-desk-select
+                            data-desks="desks"
+                            data-selected-desk="selectedDesk"
+                            on-change="selectDesk(desk)"></div>
+                    </div>
+                   
+                   <ul class="btn-list" ng-if="stages && !(vm.userActions.publish === currentUserAction)">
+                       <li ng-repeat="stage in stages track by stage._id"
+                           ng-if = "!disableFetchAndOpenButton() || stage.is_visible">
+                           <button class="btn__check"
+                                   ng-class="{active: stage._id === selectedStage._id}"
+                                   ng-disabled="mode !== 'spike' && stage._id === item.task.stage"
+                                   ng-click="selectStage(stage)">
+                               {{::stage.name}}
+                           </button>
+                       </li>
+                   </ul>
+               </div>
+
+               <div sd-toggle-box
+                    id="embargoTimestamp" 
+                    ng-if="mode === 'authoring' && showEmbargo()" 
+                    data-title="{{ 'Embargo' | translate }}" 
+                    data-open="true" 
+                    data-style="circle">
+                    <ul class="btn-list">
+                        <li class="datepicker-input--dark">
+                            <div sd-datepicker ng-model="item.embargo_date"></div>
+                        </li>
+                        <li class="timepicker-input--dark">
+                            <div sd-timepicker ng-model="item.embargo_time"></div>
+                        </li>
+                    </ul>
+                    <a class="toggle-box__button" ng-click="item.embargo_date=null; item.embargo_time=null;" sd-hotkey="ctrl+shift+x" ng-if="item.embargo_date || item.embargo_time">
+                        <i class="icon-remove-sign icon--white"></i>{{ :: 'Clear embargo' | translate }}
+                    </a>
+                </div>
+        
+                <div sd-toggle-box
+                    id="publishScheduleTimestamp"
+                    ng-if="mode === 'authoring' && showPublishSchedule()"
+                    data-title="{{ 'Publishing Schedule' | translate }}"
+                    data-open="true" 
+                    data-style="circle">
+                    <ul class="btn-list">
+                        <li class="datepicker-input--dark">
+                            <div sd-datepicker ng-model="item.publish_schedule_date" ng-disabled="!_editable"></div>
+                        </li>
+                        <li class="timepicker-input--dark">
+                            <div sd-timepicker ng-model="item.publish_schedule_time" ng-disabled="!_editable"></div>
+                        </li>
+                    </ul>
+                    <a class="toggle-box__button" ng-click="item.publish_schedule_date=null; item.publish_schedule_time=null;" sd-hotkey="ctrl+shift+x" ng-if="item.publish_schedule_date || item.publish_schedule_time">
+                        <i class="icon-remove-sign"></i>{{ :: 'Clear schedule' | translate }}
+                    </a>
+                </div>
+        
+                <div sd-toggle-box id="timezoneTimestamp" ng-if="mode === 'authoring' && showTimezone()" data-title="Timezone" data-open="true" data-style="circle">
+                    <div sd-timezone data-timezone="item.time_zone" class="timezone-input--dark"></div>
+                </div>
+            </div>
+        </div>
+        <!-- ///////////////// PUBLISH /////////////////////// -->
+        <!-- Content Publish-->
+        <div class="side-panel__content"
+             ng-if="currentUserAction === vm.userActions.publish"
+             ng-class="{'side-panel__content--split': vm.userActions.publish_pane_two_columns}">
+            <div class="side-panel__content-block side-panel__content-block--left">
+                <div sd-toggle-box
+                    ng-if="showSendButtonAndDestination()"
+                    data-title="{{ currentUserAction === vm.userActions.publish ? 'From' : 'Destination' | translate }}"
+                    data-open="true"
+                    data-style="circle">
+                    <div class="form__row form__row--no-padding form__row--desk-select">
+                        <div sd-desk-select
+                            data-desks="desks"
+                            data-selected-desk="selectedDesk"
+                            on-change="selectDesk(desk)">
+                        </div>
+                    </div>
+               </div>
+               <div sd-toggle-box 
+                    id="embargoTimestamp" 
+                    ng-if="mode === 'authoring' && showEmbargo()" 
+                    data-title="{{ 'Embargo' | translate }}" 
+                    data-open="true" 
+                    data-style="circle">
+                    <ul class="btn-list">
+                        <li class="datepicker-input--dark">
+                            <div sd-datepicker ng-model="item.embargo_date"></div>
+                        </li>
+                        <li class="timepicker-input--dark">
+                            <div sd-timepicker ng-model="item.embargo_time"></div>
+                        </li>
+                    </ul>
+                    <a class="toggle-box__button" ng-click="item.embargo_date=null; item.embargo_time=null;" sd-hotkey="ctrl+shift+x" ng-if="item.embargo_date || item.embargo_time">
+                        <i class="icon-remove-sign"></i>{{ :: 'Clear embargo' | translate }}
+                    </a>
+                </div>
+        
+                <div sd-toggle-box 
+                    id="publishScheduleTimestamp"
+                    ng-if="mode === 'authoring' && showPublishSchedule()"
+                    data-title="{{ 'Publish Schedule' | translate }}"
+                    data-open="true"
+                    data-style="circle">
+                    <ul class="btn-list">
+                        <li class="datepicker-input--dark">
+                            <div sd-datepicker ng-model="item.publish_schedule_date" ng-disabled="!_editable"></div>
+                        </li>
+                        <li class="timepicker-input--dark">
+                            <div sd-timepicker ng-model="item.publish_schedule_time" ng-disabled="!_editable"></div>
+                        </li>
+                    </ul>
+                    <a class="toggle-box__button" ng-click="item.publish_schedule_date=null; item.publish_schedule_time=null;" sd-hotkey="ctrl+shift+x" ng-if="item.publish_schedule_date || item.publish_schedule_time">
+                        <i class="icon-remove-sign"></i>{{ :: 'Clear schedule' | translate }}
+                    </a>
+                </div>
+        
+                <div sd-toggle-box id="timezoneTimestamp" ng-if="mode === 'authoring' && showTimezone()" data-title="Timezone" data-open="true" data-style="circle">
+                    <div sd-timezone data-timezone="item.time_zone" class="timezone-input--dark"></div>
+                </div>
+            </div>
+            <div ng-if="vm.userActions.publish_pane_two_columns" class="side-panel__content-block side-panel__content-block--right">
+                <div sd-extension-point="authoring:publish"
+                    ng-if="canPublishItem() && currentUserAction === vm.userActions.publish">
+                </div>
+            </div>
         </div>
 
-        <div sd-toggle-box id="publishScheduleTimestamp" ng-if="mode === 'authoring' && showPublishSchedule()" data-title="{{ 'Publishing Schedule' | translate }}" data-open="true" data-style="dark">
-            <label class="label--lite">{{ :: 'Publish Schedule' | translate }}</label>
-            <ul class="btn-list">
-                <li class="datepicker-input--dark">
-                    <div sd-datepicker ng-model="item.publish_schedule_date" ng-disabled="!_editable"></div>
-                </li>
-                <li class="timepicker-input--dark">
-                    <div sd-timepicker ng-model="item.publish_schedule_time" ng-disabled="!_editable"></div>
-                </li>
-            </ul>
-            <a class="toggle-box__button" ng-click="item.publish_schedule_date=null; item.publish_schedule_time=null;" sd-hotkey="ctrl+shift+x"><i class="icon-remove-sign icon--white"></i>{{ :: 'Clear schedule' | translate }}</a>
-        </div>
-
-        <div sd-toggle-box id="timezoneTimestamp" ng-if="mode === 'authoring' && showTimezone()" data-title="Timezone" data-open="true" data-style="dark">
-            <div sd-timezone data-timezone="item.time_zone" class="timezone-input--dark"></div>
-        </div>
-
-        <div sd-extension-point="authoring:publish"
-            ng-if="canPublishItem() && currentUserAction === vm.userActions.publish">
-        </div>
-    </div>
-
-    <div class="slide-pane__footer" sd-loading="loading" ng-show="currentUserAction === vm.userActions.send_to">
-        <ul class="btn-list">
-            <li class="full-width" ng-if="showSendButtonAndDestination() && mode !== 'spike'">
-                <button class="btn btn--large btn--primary btn--hollow btn--expanded"
-                        ng-click="send(true)"
-                        ng-disabled="disableFetchAndOpenButton()">
+        <!-- Footer Send To-->
+        <div class="side-panel__footer side-panel__footer--button-box-large" ng-if="currentUserAction === vm.userActions.send_to">
+            <button class="btn btn--large btn--primary btn--hollow btn--expanded"
+                    ng-show="showSendButtonAndDestination() && mode !== 'spike' && mode !== 'authoring'"
+                    ng-click="send(true)"
+                    ng-disabled="disableFetchAndOpenButton()">
                     {{!canSendItem() ? 'fetch and open' : 'send and open' | translate}}
-                </button>
-            </li>
-            <li class="full-width" ng-if="showSendButtonAndDestination()">
-                <button class="btn btn--large btn--primary btn--expanded"
-                        ng-click="send()"
-                        ng-disabled="disableSendButton()"
-                        >
+            </button>
+
+            <button class="btn btn--large btn--primary btn--expanded"
+                    ng-show="showSendButtonAndDestination()"
+                    ng-click="send()"
+                    ng-disabled="disableSendButton()">
                     {{!canSendItem() ? 'fetch' : 'send' | translate}}
-                </button>
-            </li>
-            <li class="full-width" ng-if="showSendButtonAndDestination() && isPackage">
-                <button class="btn btn--large btn--primary btn--expanded"
-                        ng-click="send(false, true)"
-                        ng-disabled="disableSendButton()"
-                        translate
-                        >
+            </button>
+
+            <button class="btn btn--large btn--primary btn--expanded"
+                    ng-if="showSendButtonAndDestination() && isPackage"
+                    ng-click="send(false, true)"
+                    ng-disabled="disableSendButton()"
+                    translate>
                     send package and items
-                </button>
-            </li>
-        </ul>
-    </div>
-
-    <div class="slide-pane__footer" sd-loading="loading" ng-show="currentUserAction === vm.userActions.duplicate_to">
-        <ul class="btn-list">
-            <li class="full-width" ng-if="showSendButtonAndDestination() && !canSendItem()">
-                <button id="duplicate-open-btn" class="btn btn--large btn--hollow btn--expanded btn--ui-dark"
-                        ng-click="send(true)"
-                        ng-disabled="disableFetchAndOpenButton()"
-                        translate>
+            </button>
+        </div>
+        <!-- Footer Duplicate To-->
+        <div class="side-panel__footer side-panel__footer--button-box-large" ng-if="currentUserAction === vm.userActions.duplicate_to">
+            <button id="duplicate-open-btn"
+                    class="btn btn--large btn--hollow btn--expanded btn--ui-dark"
+                    ng-show="showSendButtonAndDestination() && !canSendItem()"
+                    ng-click="send(true)"
+                    ng-disabled="disableFetchAndOpenButton()"
+                    translate>
                     duplicate and open
-                </button>
-            </li>
-            <li class="full-width" ng-if="showSendButtonAndDestination()">
-                <button id="duplicate-btn" class="btn btn--large btn--primary btn--expanded"
-                        ng-click="send()"
-                        ng-disabled="disableSendButton()"
-                        translate>
+            </button>
+
+            <button id="duplicate-btn"
+                    class="btn btn--large btn--primary btn--expanded"
+                    ng-show="showSendButtonAndDestination()"
+                    ng-click="send()"
+                    ng-disabled="disableSendButton()"
+                    translate>
                     duplicate
-                </button>
-            </li>
-        </ul>
-    </div>
-
-    <div class="slide-pane__footer" sd-loading="loading" ng-show="currentUserAction === vm.userActions.externalsource_to">
-        <ul class="btn-list">
-            <li class="full-width" ng-if="showSendButtonAndDestination() && !canSendItem()">
-                <button id="externalsource-open-btn" class="btn btn--large btn--primary btn--hollow btn--expanded"
-                        ng-click="send(true)"
-                        ng-disabled="disableFetchAndOpenButton()"
-                        translate>
+            </button>
+        </div>
+        <!-- Footer Fetch To-->
+        <div class="side-panel__footer side-panel__footer--button-box-large" ng-if="currentUserAction === vm.userActions.externalsource_to">
+            <button id="externalsource-open-btn"
+                    class="btn btn--large btn--primary btn--hollow btn--expanded"
+                    ng-show="showSendButtonAndDestination() && !canSendItem()"
+                    ng-click="send(true)"
+                    ng-disabled="disableFetchAndOpenButton()"
+                    translate>
                     fetch and open
-                </button>
-            </li>
-            <li class="full-width" ng-if="showSendButtonAndDestination()">
-                <button id="externalsource-btn" class="btn btn--large btn--primary btn--expanded"
-                        ng-click="send()"
-                        ng-disabled="disableSendButton()"
-                        translate>
-                    fetch
-                </button>
-            </li>
-        </ul>
-    </div>
+            </button>
 
-    <div class="slide-pane__footer" sd-loading="loading" ng-show="currentUserAction === vm.userActions.publish">
-        <ul class="btn-list">
-            <li class="full-width" ng-if="isSendEnabled() && showSendButtonAndDestination()">
+            <button id="externalsource-btn"
+                    class="btn btn--large btn--primary btn--expanded"
+                    ng-show="showSendButtonAndDestination()"
+                    ng-click="send()"
+                    ng-disabled="disableSendButton()"
+                    translate>
+                    fetch
+            </button>
+        </div>
+        <!-- Footer Publish-->
+        <div class="side-panel__footer side-panel__footer--button-box-large" ng-if="currentUserAction === vm.userActions.publish">
+            <div class="side-panel__footer-buttons--flex">
+                <button type="button"
+                        class="btn btn--large btn--ui-dark btn--hollow btn--expanded"
+                        ng-show="subscribersWithPreviewConfigured.length > 0"
+                        ng-click="preview()"
+                        translate>
+                        Preview
+                </button>
+
                 <button type="submit"
-                        class="btn btn--large btn--primary btn--hollow btn--expanded"
-                        ng-show="_editable"
+                        class="btn btn--large btn--primary btn--hollow btn--expanded btn--ui-dark"
+                        ng-show="isSendEnabled() && showSendButtonAndDestination() && _editable"
                         ng-click="sendAndPublish()"
                         ng-disabled="!canSendAndPublish()"
                         translate>
-                    publish from
+                        publish from
                 </button>
-            </li>
-            <li class="full-width" ng-if="subscribersWithPreviewConfigured.length > 0">
-                <button type="button"
-                        class="btn btn--large btn--primary btn--hollow btn--expanded"
-                        ng-click="preview()"
-                        translate
-                        >
-                    Preview
-                </button>
-            </li>
-            <li class="full-width" ng-if="canSendItem() && canPublishItem()">
-                <button type="submit"
-                        class="btn btn--large btn--highlight btn--expanded"
-                        ng-show="_editable"
-                        ng-click="publish()"
-                        ng-disabled="canSendAndPublish()"
-                        >
+            </div>
+            <button type="submit"
+                    class="btn btn--large btn--highlight btn--expanded"
+                    ng-show="canSendItem() && canPublishItem() && _editable"
+                    ng-click="publish()"
+                    ng-disabled="canSendAndPublish()">
                     {{_action === 'edit' ? 'publish' : _action | translate}}
-                </button>
-            </li>
-        </ul>
+            </button>
+        </div>
     </div>
 </div>
