@@ -36,7 +36,7 @@ $notification-pane-width: 300px;
 $authoring-opened-articles: 30px;
 
 //Layout
-$bottom-view-padding: 0px + $authoring-opened-articles + 20px;
+$bottom-view-padding: $authoring-opened-articles + 20px;
 
 //Archive
 $archive-sidebar-width: 300px;
