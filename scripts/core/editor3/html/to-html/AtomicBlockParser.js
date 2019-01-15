@@ -41,7 +41,7 @@ export class AtomicBlockParser {
         case 'EMBED':
             return this.parseEmbed(data);
         case 'TABLE':
-            return this.parseTable(tableHelpers.getData(this.contentState, contentBlock));
+            return this.parseTable(tableHelpers.getData(this.contentState, contentBlock.getKey()));
         default:
             logger.warn(`Editor3: Cannot generate HTML for entity type of ${entity.getType()}`, data);
             return '';

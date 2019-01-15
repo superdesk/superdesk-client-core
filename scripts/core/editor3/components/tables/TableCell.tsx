@@ -1,8 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Editor, RichUtils, getDefaultKeyBinding, DraftHandleValue} from 'draft-js';
+import {Editor, RichUtils, getDefaultKeyBinding, DraftHandleValue, SelectionState, EditorState} from 'draft-js';
 import {getSelectedEntityType, getSelectedEntityRange} from '../links/entityUtils';
 import {customStyleMap} from '../customStyleMap';
+
+interface IProps {
+    editorState: EditorState;
+    readOnly: boolean;
+    onChange: (e: EditorState) => void;
+    onUndo: () => void;
+    onRedo: () => void;
+    onFocus: (styles: Array<string>, selection: SelectionState) => void;
+}
+
+interface IState {
+    editorState: EditorState;
+}
 
 /**
  * @ngdoc React
@@ -13,10 +26,7 @@ import {customStyleMap} from '../customStyleMap';
  * @param onFocus {Function}
  * @description Handles a cell in the table, as well as the containing editor.
  */
-export class TableCell extends React.Component<any, any> {
-    static propTypes: any;
-    static defaultProps: any;
-
+export class TableCell extends React.Component<IProps, IState> {
     constructor(props) {
         super(props);
 
@@ -136,7 +146,7 @@ export class TableCell extends React.Component<any, any> {
                     focusOffset: end,
                 });
 
-                stateAfterChange = RichUtils.toggleLink(editorState, entitySelection, null);
+                stateAfterChange = RichUtils.toggleLink(editorState, entitySelection as SelectionState, null);
             },
         );
 
@@ -149,7 +159,7 @@ export class TableCell extends React.Component<any, any> {
      * @param {Object} editorState the new editor state.
      * @description Triggered on changes to the cell's state.
      */
-    onChange(editorState) {
+    onChange(editorState: EditorState) {
         const selection = editorState.getSelection();
 
         if (!selection.getHasFocus()) {
@@ -190,12 +200,3 @@ export class TableCell extends React.Component<any, any> {
         );
     }
 }
-
-TableCell.propTypes = {
-    editorState: PropTypes.object.isRequired,
-    readOnly: PropTypes.bool.isRequired,
-    onChange: PropTypes.func.isRequired,
-    onUndo: PropTypes.func.isRequired,
-    onRedo: PropTypes.func.isRequired,
-    onFocus: PropTypes.func.isRequired,
-};
