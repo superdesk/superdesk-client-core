@@ -17,33 +17,18 @@ export const onEventCapture = (event) => {
 /**
  * @ngdoc method
  * @name gettext
- * @param {String} text
- * @param {Object} params
- * @param {String} plural
- * @param {number} count required if plural is present
+ * @param {String} text - the text that will be translated, it supports parameters (see the example)
+ * @param {Object} params - dictionary of parameters used in text and their value (see the example)
  * @description Used angular gettext service for displaying localised text on Browser
- *
- * Examples:
  *
  * gettext('This item was locked by {{username}}.', {username: 'John'});
  * result -> 'This item was locked by John'
- *
- * gettext('One item.', {}, '{{$count}} items', 1);
- * result -> 'One item'
- *
- * gettext('One item.', {}, '{{$count}} items', 2);
- * result -> '2 items'
  */
-export const gettext = (text, params = null, plural = null, count = null) => {
+export const gettext = (text, params = null) => {
     const injector = angular.element(document.body).injector();
 
     if (injector) { // in tests this will be empty
-        const gettextCatalog = injector.get('gettextCatalog');
-        const translated = plural === null || count === null ?
-            gettextCatalog.getString(text, params || {}) :
-            gettextCatalog.getPlural(count, text, plural, params || {});
-
-        return translated;
+        return injector.get('gettextCatalog').getString(text, params || {});
     }
 
     return text;
