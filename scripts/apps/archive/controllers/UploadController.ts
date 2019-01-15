@@ -87,7 +87,7 @@ export function UploadController(
     $scope.getIconForItemType = (imageMeta) => {
         const item = getItemByMetaId(imageMeta._id);
 
-        return 'icon-' + (item.cssType === 'image' ? 'photo': item.cssType);
+        return 'icon-' + (item.cssType === 'image' ? 'photo' : item.cssType);
     };
     $scope.invokeImagesInput = () => {
         var el: HTMLElement = document.querySelector('#images-input');

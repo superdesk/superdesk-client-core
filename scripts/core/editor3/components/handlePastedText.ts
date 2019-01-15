@@ -157,7 +157,11 @@ export function insertContentInState(
     // for the first block recover the initial block data because on replaceWithFragment the block data is
     // replaced with the data from pasted fragment
     const editorStateWithCustomData = setAllCustomDataForEditor(editorState, customData);
-    const newContent = Modifier.replaceWithFragment(editorStateWithCustomData.getCurrentContent(), editorState.getSelection(), newBlockMap);
+    const newContent = Modifier.replaceWithFragment(
+        editorStateWithCustomData.getCurrentContent(),
+        editorState.getSelection(),
+        newBlockMap,
+    );
     const nextEditorState = EditorState.push(editorStateWithCustomData, newContent, 'insert-fragment');
 
     return nextEditorState;
