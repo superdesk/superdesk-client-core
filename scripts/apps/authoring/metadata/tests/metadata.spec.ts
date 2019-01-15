@@ -56,5 +56,22 @@ describe('superdesk.apps.authoring.metadata', () => {
             expect(api.find).toHaveBeenCalledWith('vocabularies', 'bar');
             expect(metadata.cvs[1]).toEqual({_id: 'bar', display_name: 'Bar'});
         }));
+
+        it('can get list of vocabularies for authoring header', inject((metadata, $q, $rootScope) => {
+            spyOn(metadata, 'fetchMetadataValues').and.returnValue($q.when());
+            metadata.cvs = [
+                {_id: 'a', items: [{name: 'a', service: {a: 1}}], service: {all: 1}},
+                {_id: 'b', items: [{name: 'b'}], service: {all: 1}},
+                {_id: 'c', items: [{name: 'c'}], service: {b: 1}},
+                {_id: 'd'},
+            ];
+
+            metadata.getCustomVocabulariesForArticleHeader([], {a: 1, b: 1, c: 1, d: 1}, {})
+                .then((cvs) => {
+                    expect(['a', 'b', 'c']).toEqual(cvs.map((cv) => cv._id));
+                });
+            
+            $rootScope.$digest();
+        }));
     });
 });

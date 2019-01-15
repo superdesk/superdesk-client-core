@@ -1199,14 +1199,14 @@ function MetadataService(api, subscribersService, config, vocabularies, $rootSco
                     return true;
                 } else {
                     cv.terms = cv.items;
-                    return qcodes.some((qcode) => !!cvService[qcode]);
+                    return qcodes.length === 0 || qcodes.some((qcode) => !!cvService[qcode]);
                 }
             }));
         },
         getCustomVocabulariesForArticleHeader: function(qcodes, editor, schema) {
             return this.getFilteredCustomVocabularies(qcodes)
                 .then(
-                    (cvs) => cvs.filter((cv) => cv.terms.length && (editor[cv._id] || schema[cv._id]))
+                    (cvs) => cvs.filter((cv) => cv.items && cv.items.length && (editor[cv._id] || schema[cv._id]))
                 );
         },
         initialize: function() {
