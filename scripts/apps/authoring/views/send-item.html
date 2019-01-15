@@ -161,6 +161,37 @@
                 <div sd-toggle-box id="timezoneTimestamp" ng-if="mode === 'authoring' && showTimezone()" data-title="Timezone" data-open="true" data-style="circle">
                     <div sd-timezone data-timezone="item.time_zone" class="timezone-input--dark"></div>
                 </div>
+
+                <div sd-toggle-box id="target" data-title="Target" data-open="true" data-style="circle">
+                    <div class="form__row">
+                        <label class="form-label" translate>Target Subscribers</label>
+                        <div class="term-editor"
+                            sd-meta-terms
+                            data-item="item"
+                            data-unique="_id"
+                            data-list="metadata.customSubscribers"
+                            data-field="target_subscribers"
+                            data-header="true"
+                            data-reload-list="true">
+                        </div>
+                    </div>
+
+                    <div class="form__row">
+                        <label class="form-label" translate>Target Regions</label>
+                        <div sd-meta-target
+                            data-list="metadata.regions"
+                            data-targets="item.target_regions">
+                        </div>
+                    </div>
+
+                    <div class="form__row">
+                        <label class="form-label" translate>Target Types</label>
+                        <div sd-meta-target
+                            data-list="metadata.subscriberTypes"
+                            data-targets="item.target_types">
+                        </div>
+                    </div>
+                </div>
             </div>
             <div ng-if="vm.userActions.publish_pane_two_columns" class="side-panel__content-block side-panel__content-block--right">
                 <div sd-extension-point="authoring:publish"
