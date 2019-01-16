@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import {PhotoDeskFooter} from './PhotoDeskFooter';
 import {get} from 'lodash';
 
 import {broadcast} from './fields';
@@ -11,8 +10,6 @@ import {
     ItemUrgency,
     MediaPreview,
     MediaInfo,
-    PhotoDeskPreview,
-    PhotoDeskInfo,
     GridTypeIcon,
     ListTypeIcon,
     ListPriority,
@@ -21,6 +18,7 @@ import {
 } from './index';
 import {closeActionsMenu} from '../helpers';
 import {ItemSwimlane} from './ItemSwimlane';
+import {ItemPhotoGrid} from './ItemPhotoGrid';
 
 const actionsMenuDefaultTemplate = (toggle, stopEvent) => (
     <div className="item-right toolbox">
@@ -221,26 +219,15 @@ export class Item extends React.Component<any, any> {
                 );
             } else if (this.props.view === 'photogrid') {
                 return (
-                    <div>
-                        <PhotoDeskPreview
-                            item={item}
-                            desk={this.props.desk}
-                            onMultiSelect={this.props.onMultiSelect}
-                            swimlane={this.props.swimlane}
-                            svc={this.props.svc}
-                        />
-                        <PhotoDeskInfo
-                            item={item}
-                            ingestProvider={this.props.ingestProvider}
-                            svc={this.props.svc}
-                        />
-                        <PhotoDeskFooter
-                            item={item}
-                            svc={this.props.svc}
-                            getActionsMenu={getActionsMenu}
-                        />
-                        <div className="sd-grid-item__state-border"></div>
-                    </div>
+                    <ItemPhotoGrid
+                        item={item}
+                        desk={this.props.desk}
+                        ingestProvider={this.props.ingestProvider}
+                        svc={this.props.svc}
+                        swimlane={this.props.swimlane}
+                        onMultiSelect={this.props.onMultiSelect}
+                        getActionsMenu={getActionsMenu}
+                    />
                 );
             } else {
                return (
