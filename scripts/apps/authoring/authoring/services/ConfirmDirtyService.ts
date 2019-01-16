@@ -1,3 +1,5 @@
+import {gettext} from 'core/ui/components/utils';
+
 /**
  * @ngdoc service
  * @module superdesk.apps.authoring
@@ -13,9 +15,9 @@
  *
  * @description Confirm Service is responsible for displaying user prompts for content authoring.
  */
-ConfirmDirtyService.$inject = ['$window', '$q', '$filter', 'api', 'modal', 'gettextCatalog',
+ConfirmDirtyService.$inject = ['$window', '$q', '$filter', 'api', 'modal',
     '$interpolate', '$modal'];
-export function ConfirmDirtyService($window, $q, $filter, api, modal, gettextCatalog, $interpolate, $modal) {
+export function ConfirmDirtyService($window, $q, $filter, api, modal, $interpolate, $modal) {
     /**
      * Will ask for user confirmation for user confirmation if there are some changes which are not saved.
      * - Detecting changes via $scope.dirty - it's up to the controller to set it.
@@ -23,9 +25,9 @@ export function ConfirmDirtyService($window, $q, $filter, api, modal, gettextCat
     this.setupWindow = function setupWindow($scope) {
         $window.onbeforeunload = function() {
             if ($scope.dirty) {
-                return gettextCatalog.getString(
-                    'There are unsaved changes. If you navigate away, your changes will ' +
-                    'be lost.');
+                return gettext(
+                    'There are unsaved changes. If you navigate away, your changes will be lost.'
+                );
             }
 
             $scope.$on('$destroy', () => {
@@ -42,11 +44,11 @@ export function ConfirmDirtyService($window, $q, $filter, api, modal, gettextCat
      */
     this.reopen = function() {
         return modal.confirm(
-            gettextCatalog.getString('There are some unsaved changes, go to the article to save changes?'),
-            gettextCatalog.getString('Save changes?'),
-            gettextCatalog.getString('Go-To'),
-            gettextCatalog.getString('Ignore'),
-            gettextCatalog.getString('Cancel'),
+            gettext('There are some unsaved changes, go to the article to save changes?'),
+            gettext('Save changes?'),
+            gettext('Go-To'),
+            gettext('Ignore'),
+            gettext('Cancel'),
         );
     };
 
@@ -55,11 +57,11 @@ export function ConfirmDirtyService($window, $q, $filter, api, modal, gettextCat
      */
     this.confirm = function confirm() {
         return modal.confirm(
-            gettextCatalog.getString('There are some unsaved changes, do you want to save it now?'),
-            gettextCatalog.getString('Save changes?'),
-            gettextCatalog.getString('Save'),
-            gettextCatalog.getString('Ignore'),
-            gettextCatalog.getString('Cancel'),
+            gettext('There are some unsaved changes, do you want to save it now?'),
+            gettext('Save changes?'),
+            gettext('Save'),
+            gettext('Ignore'),
+            gettext('Cancel'),
         );
     };
 
@@ -68,10 +70,10 @@ export function ConfirmDirtyService($window, $q, $filter, api, modal, gettextCat
      */
     this.confirmQuickPublish = function() {
         return modal.confirm(
-            gettextCatalog.getString('Do you want to publish the article?'),
-            gettextCatalog.getString('Publishing'),
-            gettextCatalog.getString('Publish'),
-            gettextCatalog.getString('Cancel'),
+            gettext('Do you want to publish the article?'),
+            gettext('Publishing'),
+            gettext('Publish'),
+            gettext('Cancel'),
         );
     };
 
@@ -80,10 +82,10 @@ export function ConfirmDirtyService($window, $q, $filter, api, modal, gettextCat
      */
     this.confirmPublish = function() {
         return modal.confirm(
-            gettextCatalog.getString('There are some unsaved changes, do you want to save and publish it now?'),
-            gettextCatalog.getString('Save changes?'),
-            gettextCatalog.getString('Save and publish'),
-            gettextCatalog.getString('Cancel'),
+            gettext('There are some unsaved changes, do you want to save and publish it now?'),
+            gettext('Save changes?'),
+            gettext('Save and publish'),
+            gettext('Cancel'),
         );
     };
 
@@ -92,22 +94,19 @@ export function ConfirmDirtyService($window, $q, $filter, api, modal, gettextCat
      */
     this.confirmSendTo = function confirmSendTo(action) {
         return modal.confirm(
-            $interpolate(gettextCatalog.getString(
-                'There are some unsaved changes, do you want to save and send it now?',
-            ))({action: action}),
-            gettextCatalog.getString('Save changes?'),
-            $interpolate(gettextCatalog.getString('Save and send'))({action: action}),
-            gettextCatalog.getString('Cancel'),
+            gettext('There are some unsaved changes, do you want to save and send it now?'),
+            gettext('Save changes?'),
+            gettext('Save and send'),
+            gettext('Cancel'),
         );
     };
 
     this.confirmSaveWork = function confirmSavework(msg) {
         return modal.confirm(
-            $interpolate(
-                gettextCatalog.getString(
-                    'Configuration has changed. {{ message }} Would you like to save the story to your workspace?',
-                ),
-            )({message: msg}),
+            gettext(
+                'Configuration has changed. {{message}} Would you like to save the story to your workspace?',
+                {message: msg}
+            )
         );
     };
 
@@ -119,10 +118,19 @@ export function ConfirmDirtyService($window, $q, $filter, api, modal, gettextCat
      */
     this.unlock = function unlock(userId, headline) {
         api.find('users', userId).then((user) => {
-            var itemHeading = headline ? 'Item <b>' + headline + '</b>' : 'This item';
-            var msg = gettext(itemHeading + ' was unlocked by <b>' + $filter('username')(user) + '</b>.');
+            var username = $filter('username')(user);
+            var msg = headline ?
+                gettext(
+                    'This item was unlocked by {{username}}.',
+                    {username: `<b>${username}</b>`}
+                )
+                :
+                gettext(
+                    'Item {{headline}} was unlocked by {{username}}.',
+                    {headline: `<b>${headline}</b>`, username: `<b>${username}</b>`}
+                );
 
-            return modal.confirm(msg, gettextCatalog.getString('Item Unlocked'), gettextCatalog.getString('OK'), false);
+            return modal.confirm(msg, gettext('Item Unlocked'), gettext('OK'), false);
         });
     };
 
@@ -133,9 +141,10 @@ export function ConfirmDirtyService($window, $q, $filter, api, modal, gettextCat
      */
     this.lock = function lock(userId) {
         api.find('users', userId).then((user) => {
-            var msg = gettextCatalog.getString('This item was locked by <b>' + $filter('username')(user) + '</b>.');
+            var username = $filter('username')(user);
+            var msg = gettext('This item was locked by {{username}}.', {username: `<b>${username}</b>`});
 
-            return modal.confirm(msg, gettextCatalog.getString('Item locked'), gettext('OK'), false);
+            return modal.confirm(msg, gettext('Item locked'), gettext('OK'), false);
         });
     };
 

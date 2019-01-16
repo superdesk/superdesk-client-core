@@ -15,13 +15,12 @@ WidgetGroup.$inject = [
     '$anchorScroll',
     'activityService',
     '$rootScope',
-    'gettextCatalog',
     'datetime',
     'metadata',
 ];
 
 export function WidgetGroup(search, api, superdesk, desks, cards, $timeout, $q,
-    $location, $anchorScroll, activityService, $rootScope, gettextCatalog, datetime, metadata) {
+    $location, $anchorScroll, activityService, $rootScope, datetime, metadata) {
     const services = {
         search: search,
         api: api,
@@ -34,7 +33,6 @@ export function WidgetGroup(search, api, superdesk, desks, cards, $timeout, $q,
         $anchorScroll: $anchorScroll,
         activityService: activityService,
         $rootScope: $rootScope,
-        gettextCatalog: gettextCatalog,
         datetime: datetime,
         metadata: metadata,
     };

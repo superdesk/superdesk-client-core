@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {get} from 'lodash';
+import {gettext} from 'core/ui/components/utils';
 
 export const state: React.StatelessComponent<any> = (props) => {
     // support passing services as props
     const $filter = props.$filter || props.svc.$filter;
-    const gettextCatalog = props.gettextCatalog || props.svc.gettextCatalog;
     const datetime = props.datetime || props.svc.datetime;
 
     if (props.item.state !== undefined && props.item.state !== null) {
@@ -15,7 +15,7 @@ export const state: React.StatelessComponent<any> = (props) => {
             const scheduled = get(props.item, 'archive_item.schedule_settings.utc_publish_schedule');
 
             if (scheduled) {
-                title = gettextCatalog.getString('Scheduled for') + ' ' + datetime.longFormat(scheduled);
+                title = gettext('Scheduled for {{date}}', {date: datetime.longFormat(scheduled)});
             }
         }
 
@@ -26,7 +26,7 @@ export const state: React.StatelessComponent<any> = (props) => {
                 className: 'state-label state-' + props.item.state,
                 key: 'state',
             },
-            $filter('removeLodash')(gettextCatalog.getString(props.item.state)),
+            $filter('removeLodash')(gettext(props.item.state)),
         );
     }
 };
@@ -36,6 +36,5 @@ state.propTypes = {
     item: PropTypes.any,
     style: PropTypes.any,
     $filter: PropTypes.any,
-    gettextCatalog: PropTypes.any,
     datetime: PropTypes.any,
 };

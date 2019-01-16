@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import {ItemUrgency, TypeIcon} from './index';
+import {gettext} from 'core/ui/components/utils';
 
 /**
  * @ngdoc React
@@ -69,7 +70,6 @@ export class WidgetItem extends React.Component<any, any> {
                     <TypeIcon
                         type={this.item.type}
                         highlight={this.item.highlight}
-                        svc={this.props.svc}
                     />
                 </div>
                 <div className="content-item__urgency-field">
@@ -86,7 +86,7 @@ export class WidgetItem extends React.Component<any, any> {
                     <div className="content-item__action">
                         { this.item.type !== 'composite' ?
                             <button className="icn-btn" onMouseDown={this.preview}
-                                title={this.props.svc.gettextCatalog.getString('Preview')}>
+                                title={gettext('Preview')}>
                                 <i className="icon-external"/>
                             </button>
                             :
@@ -96,7 +96,7 @@ export class WidgetItem extends React.Component<any, any> {
                             ''
                             :
                             <button className="icn-btn" onMouseDown={this.edit}
-                                title={this.props.svc.gettextCatalog.getString('Edit')}>
+                                title={gettext('Edit')}>
                                 <i className="icon-pencil"/>
                             </button>
                         }

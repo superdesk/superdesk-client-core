@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-import {gettextCatalog} from '../utils';
+import {gettext} from 'core/ui/components/utils';
 
 /**
  * @ngdoc react
@@ -15,7 +15,7 @@ const Label: React.StatelessComponent<any> = ({text, children, centerText}) => (
         'popup__menu-label',
         {'popup__menu-label--center': centerText},
     )}>
-        {gettextCatalog(text)}
+        {gettext(text)}
         {children}
     </span>
 );

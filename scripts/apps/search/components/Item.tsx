@@ -188,7 +188,7 @@ export class Item extends React.Component<any, any> {
 
         if (this.props.view === 'mgrid') {
             contents.push(
-                item.archiveError ? React.createElement(ErrorBox, {svc: this.props.svc}) : null,
+                item.archiveError ? React.createElement(ErrorBox, {}) : null,
                 React.createElement(MediaPreview, {
                     item: item,
                     desk: this.props.desk,
@@ -213,7 +213,7 @@ export class Item extends React.Component<any, any> {
             );
         } else if (this.props.view === 'photogrid') {
             contents.push(
-                item.archiveError ? React.createElement(ErrorBox, {svc: this.props.svc}) : null,
+                item.archiveError ? React.createElement(ErrorBox, {}) : null,
                 React.createElement(PhotoDeskPreview, {
                     item: item,
                     desk: this.props.desk,

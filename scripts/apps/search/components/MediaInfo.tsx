@@ -2,12 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {createMarkUp} from '../helpers';
 import {FetchedDesksInfo} from './index';
+import {gettext} from 'core/ui/components/utils';
 
 /**
  * Media Info - renders item metadata
  */
 export const MediaInfo: React.StatelessComponent<any> = (props) => {
-    const {gettextCatalog, gettext, datetime} = props.svc;
+    const {datetime} = props.svc;
 
     const item = props.item;
     const meta = [];
@@ -18,18 +19,18 @@ export const MediaInfo: React.StatelessComponent<any> = (props) => {
     }
     if (source) {
         meta.push(
-            React.createElement('dt', {key: 1}, gettextCatalog.getString('source')),
+            React.createElement('dt', {key: 1}, gettext('source')),
             React.createElement('dd', {key: 2, className: 'provider'}, source),
         );
     }
 
     meta.push(
-        React.createElement('dt', {key: 3}, gettextCatalog.getString('updated')),
+        React.createElement('dt', {key: 3}, gettext('updated')),
         React.createElement('dd', {key: 4}, datetime.shortFormat(item.versioncreated)),
     );
 
     if (item.is_spiked) {
-        meta.push(React.createElement('dt', {key: 5}, gettextCatalog.getString('expires')));
+        meta.push(React.createElement('dt', {key: 5}, gettext('expires')));
         meta.push(React.createElement('dd', {key: 6}, datetime.shortFormat(item.expiry)));
     }
 

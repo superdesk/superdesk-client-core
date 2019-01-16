@@ -5,14 +5,15 @@ import ng from 'core/services/ng';
 import * as actions from '../../actions';
 import Textarea from 'react-textarea-autosize';
 import {get} from 'lodash';
+import {gettext} from 'core/ui/components/utils';
 
-function getTranslationForAssignRights(value, gettextCatalog) {
+function getTranslationForAssignRights(value) {
     if (value === 'single-usage') {
-        return gettextCatalog.getString('Single Usage');
+        return gettext('Single Usage');
     } else if (value === 'time-restricted') {
-        return gettextCatalog.getString('Time Restricted');
+        return gettext('Time Restricted');
     } else if (value === 'indefinite-usage') {
-        return gettextCatalog.getString('Indefinite Usage');
+        return gettext('Indefinite Usage');
     } else {
         return '';
     }
@@ -155,8 +156,6 @@ export class MediaBlockComponent extends React.Component<any, any> {
         const removable = !readOnly;
         const draggable = removable;
 
-        const {gettextCatalog} = this.props.blockProps.svc;
-
         return (
 
             <div className="image-block"
@@ -185,8 +184,8 @@ export class MediaBlockComponent extends React.Component<any, any> {
                             <div className="image-block__image-overlay">
                                 <div className="image-block__metadata image-block__metadata--top-overlay">
                                     <span>
-                                        <em>{gettextCatalog.getString('Title:')}{' '}</em>
-                                        {data.headline || gettextCatalog.getString('[No Value]')}
+                                        <em>{gettext('Title:')}{' '}</em>
+                                        {data.headline || gettext('[No Value]')}
                                     </span>
                                 </div>
                                 {
@@ -199,27 +198,27 @@ export class MediaBlockComponent extends React.Component<any, any> {
                                 }
                                 <div className="image-block__metadata image-block__metadata--bottom-overlay">
                                     <span>
-                                        <em>{gettextCatalog.getString('Alt text:')}{' '}</em>
-                                        {data.alt_text || gettextCatalog.getString('[No Value]')}
+                                        <em>{gettext('Alt text:')}{' '}</em>
+                                        {data.alt_text || gettext('[No Value]')}
                                     </span>
                                     <span>
-                                        <em>{gettextCatalog.getString('Credit:')}{' '}</em>
-                                        {data.byline || gettextCatalog.getString('[No Value]')}
+                                        <em>{gettext('Credit:')}{' '}</em>
+                                        {data.byline || gettext('[No Value]')}
                                     </span>
                                     <span>
-                                        <em>{gettextCatalog.getString('Copyright holder:')}{' '}</em>
-                                        {data.copyrightholder || gettextCatalog.getString('[No Value]')}
+                                        <em>{gettext('Copyright holder:')}{' '}</em>
+                                        {data.copyrightholder || gettext('[No Value]')}
                                     </span>
                                     <span>
-                                        <em>{gettextCatalog.getString('Assign rights:')}{' '}</em>
+                                        <em>{gettext('Assign rights:')}{' '}</em>
                                         {
-                                            getTranslationForAssignRights(data.usageterms, gettextCatalog)
-                                            || gettextCatalog.getString('[No Value]')
+                                            getTranslationForAssignRights(data.usageterms)
+                                            || gettext('[No Value]')
                                         }
                                     </span>
                                     <span>
-                                        <em>{gettextCatalog.getString('Copyright notice:')}{' '}</em>
-                                        {data.copyrightnotice || gettextCatalog.getString('[No Value]')}
+                                        <em>{gettext('Copyright notice:')}{' '}</em>
+                                        {data.copyrightnotice || gettext('[No Value]')}
                                     </span>
                                 </div>
 
@@ -244,23 +243,23 @@ export class MediaBlockComponent extends React.Component<any, any> {
                             <video controls src={rendition.href} width="100%" height="100%" />
                             <div className="image-block__metadata image-block__metadata--side-marg0">
                                 <span>
-                                    <em>{gettextCatalog.getString('Credit:')}{' '}</em>
-                                    {data.byline || gettextCatalog.getString('[No Value]')}
+                                    <em>{gettext('Credit:')}{' '}</em>
+                                    {data.byline || gettext('[No Value]')}
                                 </span>
                                 <span>
-                                    <em>{gettextCatalog.getString('Copyright holder:')}{' '}</em>
-                                    {data.copyrightholder || gettextCatalog.getString('[No Value]')}
+                                    <em>{gettext('Copyright holder:')}{' '}</em>
+                                    {data.copyrightholder || gettext('[No Value]')}
                                 </span>
                                 <span>
-                                    <em>{gettextCatalog.getString('Assign rights:')}{' '}</em>
+                                    <em>{gettext('Assign rights:')}{' '}</em>
                                     {
-                                        getTranslationForAssignRights(data.usageterms, gettextCatalog)
-                                        || gettextCatalog.getString('[No Value]')
+                                        getTranslationForAssignRights(data.usageterms)
+                                        || gettext('[No Value]')
                                     }
                                 </span>
                                 <span>
-                                    <em>{gettextCatalog.getString('Copyright notice:')}{' '}</em>
-                                    {data.copyrightnotice || gettextCatalog.getString('[No Value]')}
+                                    <em>{gettext('Copyright notice:')}{' '}</em>
+                                    {data.copyrightnotice || gettext('[No Value]')}
                                 </span>
                             </div>
                         </div>
@@ -283,23 +282,23 @@ export class MediaBlockComponent extends React.Component<any, any> {
                             <audio controls src={rendition.href} style={{width: '100%'}} />
                             <div className="image-block__metadata image-block__metadata--side-marg0">
                                 <span>
-                                    <em>{gettextCatalog.getString('Credit:')}{' '}</em>
-                                    {data.byline || gettextCatalog.getString('[No Value]')}
+                                    <em>{gettext('Credit:')}{' '}</em>
+                                    {data.byline || gettext('[No Value]')}
                                 </span>
                                 <span>
-                                    <em>{gettextCatalog.getString('Copyright holder:')}{' '}</em>
-                                    {data.copyrightholder || gettextCatalog.getString('[No Value]')}
+                                    <em>{gettext('Copyright holder:')}{' '}</em>
+                                    {data.copyrightholder || gettext('[No Value]')}
                                 </span>
                                 <span>
-                                    <em>{gettextCatalog.getString('Assign rights:')}{' '}</em>
+                                    <em>{gettext('Assign rights:')}{' '}</em>
                                     {
-                                        getTranslationForAssignRights(data.usageterms, gettextCatalog)
-                                            || gettextCatalog.getString('[No Value]')
+                                        getTranslationForAssignRights(data.usageterms)
+                                            || gettext('[No Value]')
                                     }
                                 </span>
                                 <span>
-                                    <em>{gettextCatalog.getString('Copyright notice:')}{' '}</em>
-                                    {data.copyrightnotice || gettextCatalog.getString('[No Value]')}
+                                    <em>{gettext('Copyright notice:')}{' '}</em>
+                                    {data.copyrightnotice || gettext('[No Value]')}
                                 </span>
                             </div>
 

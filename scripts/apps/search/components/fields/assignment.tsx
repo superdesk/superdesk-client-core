@@ -1,10 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {get} from 'lodash';
+import {gettext} from 'core/ui/components/utils';
 
-export const assignment: React.StatelessComponent<any> = ({item, svc}) => {
-    const {gettextCatalog} = svc;
-
+export const assignment: React.StatelessComponent<any> = ({item}) => {
     if (!get(item, 'assignment_id')) {
         return null;
     }
@@ -12,7 +11,7 @@ export const assignment: React.StatelessComponent<any> = ({item, svc}) => {
     return (
         <span key="assignment"
             className="assignment-icon"
-            title={gettextCatalog.getString('Coverage')}>
+            title={gettext('Coverage')}>
             <i className="icon-calendar" />
         </span>
     );
@@ -20,5 +19,4 @@ export const assignment: React.StatelessComponent<any> = ({item, svc}) => {
 
 assignment.propTypes = {
     item: PropTypes.object.isRequired,
-    svc: PropTypes.any.isRequired,
 };

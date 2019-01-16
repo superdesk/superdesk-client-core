@@ -1048,13 +1048,13 @@ function focusElement() {
  * Usage:
  * <input type='text' sd-validation-error='error.field' ng-required='schema.field.required' />
  */
-validationDirective.$inject = ['gettextCatalog'];
-function validationDirective(gettextCatalog) {
+validationDirective.$inject = [];
+function validationDirective() {
     return {
         restrict: 'A',
         link: function(scope, elem, attrs, ctrl) {
             var invalidText = '<span id="required_span" class="sd-invalid-text">' +
-            gettextCatalog.getString('This field is required') + '</span>';
+            gettext('This field is required') + '</span>';
 
             scope.$watch(attrs.required, (required) => {
                 if (!required) {
@@ -1075,7 +1075,7 @@ function validationDirective(gettextCatalog) {
                 if (elem.hasClass('field')) {
                     elem.find('label')
                         .after('<span id="required_span" class="sd-required">'
-                        + gettextCatalog.getString('Required') + '</span>');
+                        + gettext('Required') + '</span>');
                 } else if (elem.find('.authoring-header__input-holder').length) {
                     elem.find('.authoring-header__input-holder').append(invalidText);
                 } else {

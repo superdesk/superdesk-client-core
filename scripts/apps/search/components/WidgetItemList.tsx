@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {WidgetItem} from './index';
+import {gettext} from 'core/ui/components/utils';
 
 /**
  * @ngdoc React
@@ -41,7 +42,7 @@ export class WidgetItemList extends React.Component<any, any> {
         if (!this.state.itemIds.length) {
             return (
                 <div className="item-group__no-items">
-                    {this.props.svc.gettextCatalog.getString('No items in this stage')}
+                    {gettext('No items in this stage')}
                 </div>
             );
         }

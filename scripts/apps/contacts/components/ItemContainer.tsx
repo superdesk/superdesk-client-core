@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {find, join, map} from 'lodash';
 import {MAP_URL, TWITTER_URL, MAILTO_URL} from '../../contacts/constants';
+import {gettext} from 'core/ui/components/utils';
 
 export class ItemContainer extends React.Component<any, any> {
     static propTypes: any;
@@ -38,7 +39,6 @@ export class ItemContainer extends React.Component<any, any> {
     }
 
     init(props) {
-        const {gettextCatalog} = props.svc;
         let value;
         let title;
         let altTitle;
@@ -82,11 +82,11 @@ export class ItemContainer extends React.Component<any, any> {
         switch (key) {
         case 'contact_phone':
             value = this.getContactNumber(item, key);
-            title = value && gettextCatalog.getString(this.getContactNumberTitle(item, key));
+            title = value && gettext(this.getContactNumberTitle(item, key));
             break;
         case 'mobile':
             value = this.getContactNumber(item, key);
-            title = value && gettextCatalog.getString(this.getContactNumberTitle(item, key));
+            title = value && gettext(this.getContactNumberTitle(item, key));
             break;
         case 'contact_email':
             value = item.contact_email ? this.getEmailValue(item) : null;
@@ -94,7 +94,7 @@ export class ItemContainer extends React.Component<any, any> {
             break;
         case 'website':
             value = (<a href={item.website} target="_blank" rel="noopener noreferrer">{item.website}</a>);
-            title = value && gettextCatalog.getString(item.website);
+            title = value && item.website;
             _class = _link;
             break;
         case 'twitter':
@@ -107,20 +107,20 @@ export class ItemContainer extends React.Component<any, any> {
                     <i className="icon-twitter" />
                 </a>
             );
-            title = value && gettextCatalog.getString(`${TWITTER_URL}${item.twitter}`);
+            title = value && `${TWITTER_URL}${item.twitter}`;
             _class = _link;
             break;
         case 'facebook':
             value = (
                 <a href={item.facebook} target="_blank" rel="noopener noreferrer"><i className="icon-facebook" /></a>
             );
-            title = value && gettextCatalog.getString(item.facebook);
+            title = value && item.facebook;
             _class = _link;
             break;
         case 'location':
             value = contactAddress ? (<a href={`${MAP_URL}${contactAddress}`} target="_blank" rel="noopener noreferrer">
                 {contactAddress}</a>) : null;
-            title = value && gettextCatalog.getString(contactAddress);
+            title = value && contactAddress;
             _class = _link;
             break;
         }

@@ -17,17 +17,18 @@ export const onEventCapture = (event) => {
 /**
  * @ngdoc method
  * @name gettext
- * @param {String} text
- * @param {Object} params
+ * @param {String} text - the text that will be translated, it supports parameters (see the example)
+ * @param {Object} params - dictionary of parameters used in text and their value (see the example)
  * @description Used angular gettext service for displaying localised text on Browser
+ *
+ * gettext('This item was locked by {{username}}.', {username: 'John'});
+ * result -> 'This item was locked by John'
  */
 export const gettext = (text, params = null) => {
     const injector = angular.element(document.body).injector();
 
     if (injector) { // in tests this will be empty
-        const translated = injector.get('gettextCatalog').getString(text);
-
-        return params ? injector.get('$interpolate')(translated)(params) : translated;
+        return injector.get('gettextCatalog').getString(text, params || {});
     }
 
     return text;

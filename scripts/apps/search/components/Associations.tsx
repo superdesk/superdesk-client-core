@@ -39,7 +39,7 @@ export class Associations extends React.Component<any, any> {
                     onClick={this.openItem}
                     title={gettext('Associated ') + this.props.item.associations.featuremedia.type}
                 >
-                    <TypeIcon type={this.props.item.associations.featuremedia.type} svc={this.props.svc} />
+                    <TypeIcon type={this.props.item.associations.featuremedia.type} />
                 </div>
             );
         }

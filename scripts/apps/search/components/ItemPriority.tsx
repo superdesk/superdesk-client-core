@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {getSpecStyle, getSpecTitle, getSpecValue} from '../helpers';
+import {gettext} from 'core/ui/components/utils';
 
 export const ItemPriority: React.StatelessComponent<any> = (props) => {
-    const {metadata, gettextCatalog} = props.svc;
+    const {metadata} = props.svc;
 
     const priority = props.priority || 3;
     const spec = metadata.priorityByValue(priority);
@@ -14,7 +15,7 @@ export const ItemPriority: React.StatelessComponent<any> = (props) => {
             {
                 className: 'badge badge--square priority-label--' + priority,
                 style: getSpecStyle(spec),
-                title: getSpecTitle(spec, gettextCatalog.getString('Priority')),
+                title: getSpecTitle(spec, gettext('Priority')),
                 key: 'priority',
             },
             getSpecValue(spec, priority),
@@ -25,7 +26,7 @@ export const ItemPriority: React.StatelessComponent<any> = (props) => {
         'span',
         {
             className: 'badge badge--square priority-label--' + priority,
-            title: gettextCatalog.getString('Priority'),
+            title: gettext('Priority'),
             key: 'priority',
         },
         priority,
