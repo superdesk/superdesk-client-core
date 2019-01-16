@@ -93,10 +93,11 @@ function MacrosService(api, notify) {
  * @requires autosave
  * @requires https://docs.angularjs.org/api/ng/service/$rootScope $rootScope
  * @requires storage
+ * @requires editorResolver
  * @description MacrosController holds a set of convenience functions used by macros widget
  */
-MacrosController.$inject = ['$scope', 'macros', 'desks', 'autosave', '$rootScope', 'storage'];
-function MacrosController($scope, macros, desks, autosave, $rootScope, storage) {
+MacrosController.$inject = ['$scope', 'macros', 'desks', 'autosave', '$rootScope', 'storage', 'editorResolver'];
+function MacrosController($scope, macros, desks, autosave, $rootScope, storage, editorResolver) {
     let expandedGroup = storage.getItem('expandedGroup') || [];
 
     $scope.loading = true;
@@ -159,17 +160,22 @@ function MacrosController($scope, macros, desks, autosave, $rootScope, storage) 
 
         $scope.loading = true;
         return macros.call(macro, item).then((res) => {
-            let ignoreFields = ['_etag', 'body_html', 'fields_meta'];
+            let ignoreFields = ['_etag', 'fields_meta'];
 
-            Object.keys(res.item || {}).forEach((field) => {
-                if (isString(res.item[field]) === false || field === 'body_html') {
-                    return;
-                }
-                ignoreFields.push(field);
-                if (res.item[field] !== item[field]) {
-                    $rootScope.$broadcast('macro:refreshField', field, res.item[field]);
-                }
-            });
+            // ignore fields is only required for editor3
+            if (editorResolver.get().version() !== '2') {
+                ignoreFields.push('body_html');
+                Object.keys(res.item || {}).forEach((field) => {
+                    if (isString(res.item[field]) === false || field === 'body_html') {
+                        return;
+                    }
+                    ignoreFields.push(field);
+                    if (res.item[field] !== item[field]) {
+                        $rootScope.$broadcast('macro:refreshField', field, res.item[field]);
+                    }
+                });
+            }
+
             angular.extend($scope.item, _.omit(res.item, ignoreFields));
             autosave.save($scope.item, $scope.origItem);
             if (res.diff !== null) {

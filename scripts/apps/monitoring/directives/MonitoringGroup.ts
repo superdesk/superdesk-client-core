@@ -93,7 +93,6 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             onMonitoringItemDoubleClick: '=?',
         },
         link: function(scope: IScope, elem, attrs, ctrls) {
-
             if (scope.group == null) {
                 scope.group = {};
             }
