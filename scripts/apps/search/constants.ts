@@ -1,3 +1,4 @@
+import {IArticle} from "superdesk-interfaces/Article";
 
 /**
   * Global search parameters and label mapping.
@@ -81,6 +82,16 @@ export const DEFAULT_GRID_VIEW_FOOTER_CONFIG = {
     right: [
         'state',
     ],
+};
+
+interface ISwimlaneGroup {
+    fields: Array<keyof IArticle>;
+    ellipsis?: boolean;
+}
+
+export const DEFAULT_SWIMLANE_FIELDS_CONFIG: {[key: string]: Array<ISwimlaneGroup>} = {
+    left: [{fields: ['urgency']}, {fields: ['slugline', 'headline'], ellipsis: true}],
+    right: [{fields: ['versioncreated']}],
 };
 
 /**

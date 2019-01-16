@@ -705,6 +705,15 @@ $sfbox_mediaMaxWidth : 172px;
 
 $rightfield-width:60px;
 
+.media-box .keyword {
+    @include text-semibold();
+    color: $sd-keyword;
+    text-transform: uppercase;
+    font-size: 12px;
+    margin-right: 10px;
+    white-space: nowrap;
+}
+
 .mlist-view, .compact-view {
     box-shadow: $block-shadow-depth-2;
     .list-item-view {
@@ -834,11 +843,7 @@ $rightfield-width:60px;
                 margin: 3px 0;
             }
         }
-        .urgency {
-            i {
-                //margin-top: -4px;
-            }
-        }
+
         .urgency-reduced-rowheight {
             flex-direction: row;
             .urgency-label {
@@ -984,14 +989,6 @@ $rightfield-width:60px;
                 display: flex;
                 flex-grow: 1;
                 display:table;
-            }
-            .keyword {
-                @include text-semibold();
-                color: $sd-keyword;
-                text-transform: uppercase;
-                font-size: 12px;
-                margin-right: 10px;
-                white-space: nowrap;
             }
             .highlights-box {
                 margin-top: -2px;

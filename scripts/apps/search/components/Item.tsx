@@ -22,6 +22,21 @@ import {
     ListItemInfo,
 } from './index';
 import {closeActionsMenu} from '../helpers';
+import {DEFAULT_SWIMLANE_FIELDS_CONFIG} from '../constants';
+import {SwimlaneField} from './SwimlaneField';
+
+const actionsMenuDefaultTemplate = (toggle, stopEvent) => (
+    <div className="item-right toolbox">
+        <div className="item-actions-menu dropdown--big open">
+            <button
+                className={'more-activity-toggle condensed dropdown__toggle'}
+                onClick={toggle}
+                onDoubleClick={stopEvent}>
+                <i className="icon-dots-vertical"></i>
+            </button>
+        </div>
+    </div>
+);
 
 /**
  * Item component
@@ -160,11 +175,13 @@ export class Item extends React.Component<any, any> {
             classes = `${classes} ${scope.customRender.getItemClass(item)}`;
         }
 
+        const isLocked: boolean = (item.lock_user && item.lock_session) != null;
+
         const contents: any = [
             'div', {
                 className: classNames(classes, {
                     active: this.props.flags.selected,
-                    locked: item.lock_user && item.lock_session,
+                    locked: isLocked,
                     selected: this.props.item.selected || this.props.flags.selected,
                     archived: item.archived || item.created,
                     gone: item.gone,
@@ -177,16 +194,86 @@ export class Item extends React.Component<any, any> {
             contents.push(React.createElement(ProgressBar, {completed: item._progress}));
         }
 
-        const getActionsMenu = () =>
+        const getActionsMenu = (template = actionsMenuDefaultTemplate) =>
             !get(scope, 'flags.hideActions') && this.state.hover && !item.gone ? React.createElement(
                 ActionsMenu, {
                     item: item,
                     svc: this.props.svc,
                     scope: this.props.scope,
                     onActioning: this.setActioningState,
+                    template: template,
                 }) : null;
 
-        if (this.props.view === 'mgrid') {
+        if (this.props.view === 'swimlane2') {
+            const swimlaneViewFieldsConfig = get(
+                this.props.svc.config, 'swimlaneViewFields',
+                DEFAULT_SWIMLANE_FIELDS_CONFIG,
+            );
+
+            const renderGroup = (groups) => {
+                return groups.map((group, groupIndex) => (
+                    <span
+                        key={groupIndex}
+                        className={classNames({
+                            'sd-list-item__column': true,
+                            'sd-list-item__column--grow': group.ellipsis === true,
+                            'sd-list-item__column--no-border': groupIndex === groups.length - 1,
+                        })}>
+                        <span className="sd-list-item__row">
+                            <span className={classNames({'sd-overflow-ellipsis': group.ellipsis === true})}>
+                                {
+                                    group.fields
+                                        .map((field, fieldIndex) => (
+                                            <SwimlaneField
+                                                key={fieldIndex}
+                                                fieldId={field}
+                                                item={item}
+                                                svc={this.props.svc}
+                                            />
+                                        ))
+                                }
+                            </span>
+                        </span>
+                    </span>
+                ));
+            };
+
+            contents.push(
+                <div className="sd-list-item" style={{borderBottom: '1px solid #e7e7e7'}}>
+                    <span
+                        style={{minWidth: '4px', maxWidth: '4px', background: isLocked ? '#e51c23' : 'transparent'}}>
+                    </span>
+                    {
+                        item.archiveError
+                            ? <span className="sd-list-item__column"><ErrorBox svc={this.props.svc} /></span>
+                            : null
+                    }
+                    <span className="sd-list-item__column">
+                        <ListTypeIcon
+                            item={item}
+                            onMultiSelect={this.props.onMultiSelect}
+                            swimlane={this.props.swimlane}
+                            svc={this.props.svc}
+                        />
+                    </span>
+                    {renderGroup(swimlaneViewFieldsConfig.left)}
+                    <span className="sd-list-item--element-grow"></span>
+                    {renderGroup(swimlaneViewFieldsConfig.right)}
+                    {
+                        getActionsMenu((toggle, stopEvent) => (
+                            <div className="sd-list-item__action-menu">
+                                <button
+                                    className="icn-btn"
+                                    onClick={toggle}
+                                    onDoubleClick={stopEvent}>
+                                    <i className="icon-dots-vertical"></i>
+                                </button>
+                            </div>
+                        ))
+                    }
+                </div>,
+            );
+        } else if (this.props.view === 'mgrid') {
             contents.push(
                 item.archiveError ? React.createElement(ErrorBox, {svc: this.props.svc}) : null,
                 React.createElement(MediaPreview, {
