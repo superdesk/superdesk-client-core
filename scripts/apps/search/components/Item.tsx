@@ -11,14 +11,12 @@ import {
     MediaPreview,
     MediaInfo,
     GridTypeIcon,
-    ListTypeIcon,
-    ListPriority,
     ActionsMenu,
-    ListItemInfo,
 } from './index';
 import {closeActionsMenu} from '../helpers';
 import {ItemSwimlane} from './ItemSwimlane';
 import {ItemPhotoGrid} from './ItemPhotoGrid';
+import {ListItemTemplate} from './ItemListTemplate';
 
 const actionsMenuDefaultTemplate = (toggle, stopEvent) => (
     <div className="item-right toolbox">
@@ -230,40 +228,24 @@ export class Item extends React.Component<any, any> {
                     />
                 );
             } else {
-               return (
-                    <div>
-                        <span className="state-border"></span>
-                        <ListTypeIcon
-                            item={item}
-                            onMultiSelect={this.props.onMultiSelect}
-                            svc={this.props.svc}
-                        />
-                        {
-                            item.priority || item.urgency
-                                ? <ListPriority
-                                    item={item}
-                                    svc={this.props.svc}
-                                    scope={this.props.scope}
-                                />
-                                : null
-                        }
-                        <ListItemInfo
-                            item={item}
-                            openAuthoringView={this.openAuthoringView}
-                            desk={this.props.desk}
-                            ingestProvider={this.props.ingestProvider}
-                            highlightsById={this.props.highlightsById}
-                            markedDesksById={this.props.markedDesksById}
-                            profilesById={this.props.profilesById}
-                            swimlane={this.props.swimlane}
-                            versioncreator={this.props.versioncreator}
-                            narrow={this.props.narrow}
-                            svc={this.props.svc}
-                            scope={this.props.scope}
-                        />
-                        {getActionsMenu()}
-                    </div>
-               );
+                return (
+                    <ListItemTemplate
+                        item={item}
+                        desk={this.props.desk}
+                        svc={this.props.svc}
+                        openAuthoringView={this.openAuthoringView}
+                        ingestProvider={this.props.ingestProvider}
+                        highlightsById={this.props.highlightsById}
+                        markedDesksById={this.props.markedDesksById}
+                        profilesById={this.props.profilesById}
+                        swimlane={this.props.swimlane}
+                        versioncreator={this.props.versioncreator}
+                        narrow={this.props.narrow}
+                        onMultiSelect={this.props.onMultiSelect}
+                        getActionsMenu={getActionsMenu}
+                        scope={this.props.scope}
+                    />
+                );
             }
         };
 
