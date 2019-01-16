@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import {get} from 'lodash';
 
@@ -11,6 +10,8 @@ import {ItemSwimlane} from './ItemSwimlane';
 import {ItemPhotoGrid} from './ItemPhotoGrid';
 import {ListItemTemplate} from './ItemListTemplate';
 import {ItemMgridTemplate} from './ItemMgridTemplate';
+import {IArticle} from 'superdesk-interfaces/Article';
+import {IDesk} from 'superdesk-interfaces/Desk';
 
 const actionsMenuDefaultTemplate = (toggle, stopEvent) => (
     <div className="item-right toolbox">
@@ -25,10 +26,33 @@ const actionsMenuDefaultTemplate = (toggle, stopEvent) => (
     </div>
 );
 
-/**
- * Item component
- */
-export class Item extends React.Component<any, any> {
+interface IProps {
+    svc: any;
+    scope: any;
+    swimlane: any;
+    item: IArticle;
+    profilesById: any;
+    highlightsById: any;
+    markedDesksById: any;
+    ingestProvider: any;
+    versioncreator: any;
+    onMultiSelect: any;
+    desk: IDesk;
+    flags: any;
+    view: any;
+    onDbClick: any;
+    onEdit: any;
+    onSelect: any;
+    narrow: any;
+}
+
+interface IState {
+    hover: boolean;
+    actioning: boolean;
+    isActionMenuOpen: boolean;
+}
+
+export class Item extends React.Component<IProps, IState> {
     static propTypes: any;
     static defaultProps: any;
 
@@ -262,23 +286,3 @@ export class Item extends React.Component<any, any> {
         );
     }
 }
-
-Item.propTypes = {
-    svc: PropTypes.object.isRequired,
-    scope: PropTypes.any.isRequired,
-    swimlane: PropTypes.any,
-    item: PropTypes.any,
-    profilesById: PropTypes.any,
-    highlightsById: PropTypes.any,
-    markedDesksById: PropTypes.any,
-    ingestProvider: PropTypes.any,
-    versioncreator: PropTypes.any,
-    onMultiSelect: PropTypes.any,
-    desk: PropTypes.any,
-    flags: PropTypes.any,
-    view: PropTypes.any,
-    onDbClick: PropTypes.any,
-    onEdit: PropTypes.any,
-    onSelect: PropTypes.any,
-    narrow: PropTypes.any,
-};
