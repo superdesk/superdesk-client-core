@@ -17,8 +17,6 @@ import {
     ListTypeIcon,
     ListPriority,
     ActionsMenu,
-    ErrorBox,
-    ProgressBar,
     ListItemInfo,
 } from './index';
 import {closeActionsMenu} from '../helpers';

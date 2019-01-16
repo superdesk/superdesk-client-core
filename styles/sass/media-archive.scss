@@ -237,13 +237,6 @@ $sfbox_mediaMaxWidth : 172px;
         }
     }
 
-    .archiving-progress {
-        position: absolute;
-        bottom: -3px; left: 0;
-        height: 3px;
-        background: $sd-blue;
-    }
-
     .media {
         @include box-sizing(border-box);
         height:$sfbox_mediaHeight; //+2 media border
@@ -779,14 +772,6 @@ $rightfield-width:60px;
             &.swimlane {
                 width: 25px !important;
             }
-        }
-
-        .archiving-progress {
-            position: absolute;
-            bottom: 0px; left: 0;
-            height: 1px;
-            @include box-shadow(0 0 1px 0 darken($sd-blue,20%));
-            background: $sd-blue;
         }
 
         .type-icon {
