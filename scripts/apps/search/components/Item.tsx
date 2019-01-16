@@ -5,18 +5,12 @@ import {get} from 'lodash';
 
 import {broadcast} from './fields';
 
-import {
-    ItemPriority,
-    ItemUrgency,
-    MediaPreview,
-    MediaInfo,
-    GridTypeIcon,
-    ActionsMenu,
-} from './index';
+import {ActionsMenu} from './index';
 import {closeActionsMenu} from '../helpers';
 import {ItemSwimlane} from './ItemSwimlane';
 import {ItemPhotoGrid} from './ItemPhotoGrid';
 import {ListItemTemplate} from './ItemListTemplate';
+import {ItemMgridTemplate} from './ItemMgridTemplate';
 
 const actionsMenuDefaultTemplate = (toggle, stopEvent) => (
     <div className="item-right toolbox">
@@ -193,27 +187,16 @@ export class Item extends React.Component<any, any> {
                 );
             } else if (this.props.view === 'mgrid') {
                 return (
-                    <div>
-                        <MediaPreview
-                            item={item}
-                            desk={this.props.desk}
-                            onMultiSelect={this.props.onMultiSelect}
-                            swimlane={this.props.swimlane}
-                            svc={this.props.svc}
-                        />
-                        <MediaInfo
-                            item={item}
-                            ingestProvider={this.props.ingestProvider}
-                            svc={this.props.svc}
-                        />
-                        <div className="media-box__footer">
-                            <GridTypeIcon item={item} svc={this.props.svc} />
-                            {item.priority ? <ItemPriority {...angular.extend({svc: this.props.svc}, item)} /> : null}
-                            {item.urgency ? <ItemUrgency {...angular.extend({svc: this.props.svc}, item)} /> : null}
-                            {broadcast({item: item})}
-                            {getActionsMenu()}
-                        </div>
-                    </div>
+                    <ItemMgridTemplate
+                        item={item}
+                        desk={this.props.desk}
+                        swimlane={this.props.swimlane}
+                        svc={this.props.svc}
+                        ingestProvider={this.props.ingestProvider}
+                        onMultiSelect={this.props.onMultiSelect}
+                        broadcast={broadcast}
+                        getActionsMenu={getActionsMenu}
+                    />
                 );
             } else if (this.props.view === 'photogrid') {
                 return (
