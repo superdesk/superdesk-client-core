@@ -200,7 +200,6 @@ export class Item extends React.Component<any, any> {
             } else if (this.props.view === 'mgrid') {
                 return (
                     <div>
-                        {item.archiveError ? <ErrorBox svc={this.props.svc} /> : null}
                         <MediaPreview
                             item={item}
                             desk={this.props.desk}
@@ -225,7 +224,6 @@ export class Item extends React.Component<any, any> {
             } else if (this.props.view === 'photogrid') {
                 return (
                     <div>
-                        {item.archiveError ? <ErrorBox svc={this.props.svc} /> : null}
                         <PhotoDeskPreview
                             item={item}
                             desk={this.props.desk}
