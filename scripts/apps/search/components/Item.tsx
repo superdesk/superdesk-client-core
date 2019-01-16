@@ -190,10 +190,6 @@ export class Item extends React.Component<any, any> {
             },
         ];
 
-        if (item._progress) {
-            contents.push(React.createElement(ProgressBar, {completed: item._progress}));
-        }
-
         const getActionsMenu = (template = actionsMenuDefaultTemplate) =>
             !get(scope, 'flags.hideActions') && this.state.hover && !item.gone ? React.createElement(
                 ActionsMenu, {
