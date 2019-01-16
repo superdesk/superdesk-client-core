@@ -1,7 +1,6 @@
-<div class="stage"
-	ng-class="{swimlane: (viewColumn && (viewType === 'monitoring' || viewType === 'deskOutput' || viewType === 'scheduledDeskOutput'))}">
+<div class="stage">
 
-    <div sd-monitoring-group-header class="column-header" ng-class="{swimlane: viewColumn}" ng-if="group.header && viewType !== 'single_monitoring'">
+    <div sd-monitoring-group-header class="column-header" ng-if="group.header && viewType !== 'single_monitoring'">
     </div>
 
     <div class="stage-content group"

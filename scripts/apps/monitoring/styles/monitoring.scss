@@ -95,34 +95,11 @@
             .stage {
                 padding: 0;
                 margin: 9px 0;
-                .column-header {
-                    &:not(.swimlane) {
-                        width: 100% !important;
-                    }
-                }
-                &.swimlane {
-                    width: 98% !important;
-                    margin: 0;
-                    .column-header {
-                        position: fixed;
-                        z-index: 4;
-                        background-color: $sd-background;
-                        box-sizing: border-box;
-                        width: 90%;
-                    }
-                    .stage-content {
-                        padding-top: 37px;
-                        margin: 0 4px;
-                        overflow-y: auto;
-                        &:focus {
-                            @include box-shadow(0px 0px 10px 0px darken(#c6c6c6, 20%));
-                        }
-                    }
-                }
+            
             }
             .stage-content {
                 max-height: 100%;
-                overflow-y: scroll;
+                overflow-y: auto;
                 box-shadow: $block-shadow-depth-2;
                 &:focus {
                     @include box-shadow(0px 0px 10px 0px darken(#c6c6c6, 20%));
@@ -165,26 +142,6 @@
         }
     }
 }
-.swimlane {
-    .stage-header {
-        background-color: $sd-background;
-        height: 36px;
-        margin: 0 3px;
-        border-bottom: 4px solid #4d4d4d;
-        padding: 12px 0 4px;
-        .stage-header__name {
-            flex-grow: 1;
-            @include text-overflow();
-        }
-        .stage-header__number {
-            margin-left: 3px;
-        }
-        .stage-header__refresh {
-            margin: 0 0 0 3px;
-        }
-    }
-}
-
 
 .workspace {
   .main-section {
@@ -282,11 +239,6 @@
                 @media only screen and (max-width : 1430px) {
                     right: 0;
                 }
-                .sd-column.swimlane {
-                    &.inactive {
-                        display: none !important;
-                    }
-                }
             }
             .navbtn {
                 &.btnRearrange {
@@ -310,23 +262,25 @@
     }
 }
 
+.swimlane2 {
+    display: flex;
+    justify-content: space-between;
+
+    > * {
+        flex-basis: 0;
+        flex-grow: 1;
+        min-width: 250px;
+    }
+
+    > * + * {
+        margin-left: 15px
+    }
+}
+
 .notification-container {
     display: inline-flex !important;
     vertical-align: sub;
     margin-top: 2px;
-    &.swimlane {
-        position: absolute;
-        right: 0px;
-        top: 3px;
-        &.refresh {
-            right: 25px !important;
-        }
-        .monitoring-dropdown {
-            .dropdown-menu {
-                margin-top: 35px !important;
-            }
-        }
-    }
 }
 .monitoring-dropdown {
     .dropdown__menu {

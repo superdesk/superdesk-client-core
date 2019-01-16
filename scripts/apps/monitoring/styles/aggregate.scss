@@ -263,9 +263,6 @@ $search-widget-preview-width: 440px;
             margin: 5px 0 20px;
             overflow-y: auto;
             position: relative;
-            &.swimlane {
-                overflow-y: hidden !important;
-            }
         }
     }
 }
@@ -371,9 +368,6 @@ $search-widget-preview-width: 440px;
 }
 .refresh-box {
     display: flex;
-    &.swimlane {
-        position: relative;
-    }
     button {
         background: none;
         &.btnRefresh {
@@ -382,11 +376,6 @@ $search-widget-preview-width: 440px;
             height: 26px;
             position: absolute;
             right: 12px;
-            &.swimlane {
-                right: 0;
-                top: 2px;
-                margin-right: 0;
-            }
             &:hover {
                 @include opacity(90);
             }

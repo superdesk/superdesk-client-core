@@ -167,9 +167,8 @@
                 </div>
                 <!-- swimlane view -->
                 <div ng-if="monitoring.viewColumn && type === 'monitoring'">
-                    <div class="sd-columns"
-                         ng-if="(!monitoring.singleGroup || monitoring.isDeskChanged()) && type === 'monitoring'">
-                        <div class="sd-column" ng-class="{active: isActiveGroup(group), inactive: !isActiveGroup(group)}"
+                    <div class="swimlane2" ng-if="(!monitoring.singleGroup || monitoring.isDeskChanged()) && type === 'monitoring'">
+                        <div ng-class="{active: isActiveGroup(group), inactive: !isActiveGroup(group)}"
                              ng-repeat="group in aggregate.groups| limitTo:monitoring.columnsLimit track by group._id"
                              sd-monitoring-group data-group="group" data-num-items="group.max_items" data-view="view"
                              data-view-type="aggregate.isOutputType(group.type) ? group.type: 'monitoring'"
