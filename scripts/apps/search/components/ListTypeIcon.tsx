@@ -1,12 +1,18 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {TypeIcon, SelectBox} from './index';
 import classNames from 'classnames';
 
-export class ListTypeIcon extends React.Component<any, any> {
-    static propTypes: any;
-    static defaultProps: any;
+interface IProps {
+    svc: object;
+    onMultiSelect: () => void;
+    item: any;
+}
 
+interface IState {
+    hover: boolean;
+}
+
+export class ListTypeIcon extends React.Component<IProps, IState> {
     constructor(props) {
         super(props);
         this.state = {hover: false};
@@ -52,9 +58,3 @@ export class ListTypeIcon extends React.Component<any, any> {
         );
     }
 }
-
-ListTypeIcon.propTypes = {
-    svc: PropTypes.object.isRequired,
-    onMultiSelect: PropTypes.func,
-    item: PropTypes.any,
-};
