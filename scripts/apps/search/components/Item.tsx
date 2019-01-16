@@ -177,19 +177,6 @@ export class Item extends React.Component<any, any> {
 
         const isLocked: boolean = (item.lock_user && item.lock_session) != null;
 
-        const contents: any = [
-            'div', {
-                className: classNames(classes, {
-                    active: this.props.flags.selected,
-                    locked: isLocked,
-                    selected: this.props.item.selected || this.props.flags.selected,
-                    archived: item.archived || item.created,
-                    gone: item.gone,
-                    actioning: this.state.actioning,
-                }),
-            },
-        ];
-
         const getActionsMenu = (template = actionsMenuDefaultTemplate) =>
             !get(scope, 'flags.hideActions') && this.state.hover && !item.gone ? React.createElement(
                 ActionsMenu, {
@@ -200,173 +187,195 @@ export class Item extends React.Component<any, any> {
                     template: template,
                 }) : null;
 
-        if (this.props.view === 'swimlane2') {
-            const swimlaneViewFieldsConfig = get(
-                this.props.svc.config, 'swimlaneViewFields',
-                DEFAULT_SWIMLANE_FIELDS_CONFIG,
-            );
+        const getTemplate = () => {
+            if (this.props.view === 'swimlane2') {
+                const swimlaneViewFieldsConfig = get(
+                    this.props.svc.config, 'swimlaneViewFields',
+                    DEFAULT_SWIMLANE_FIELDS_CONFIG,
+                );
 
-            const renderGroup = (groups) => {
-                return groups.map((group, groupIndex) => (
-                    <span
-                        key={groupIndex}
-                        className={classNames({
-                            'sd-list-item__column': true,
-                            'sd-list-item__column--grow': group.ellipsis === true,
-                            'sd-list-item__column--no-border': groupIndex === groups.length - 1,
-                        })}>
-                        <span className="sd-list-item__row">
-                            <span className={classNames({'sd-overflow-ellipsis': group.ellipsis === true})}>
-                                {
-                                    group.fields
-                                        .map((field, fieldIndex) => (
-                                            <SwimlaneField
-                                                key={fieldIndex}
-                                                fieldId={field}
-                                                item={item}
-                                                svc={this.props.svc}
-                                            />
-                                        ))
-                                }
+                const renderGroup = (groups) => {
+                    return groups.map((group, groupIndex) => (
+                        <span
+                            key={groupIndex}
+                            className={classNames({
+                                'sd-list-item__column': true,
+                                'sd-list-item__column--grow': group.ellipsis === true,
+                                'sd-list-item__column--no-border': groupIndex === groups.length - 1,
+                            })}>
+                            <span className="sd-list-item__row">
+                                <span className={classNames({'sd-overflow-ellipsis': group.ellipsis === true})}>
+                                    {
+                                        group.fields
+                                            .map((field, fieldIndex) => (
+                                                <SwimlaneField
+                                                    key={fieldIndex}
+                                                    fieldId={field}
+                                                    item={item}
+                                                    svc={this.props.svc}
+                                                />
+                                            ))
+                                    }
+                                </span>
                             </span>
                         </span>
-                    </span>
-                ));
-            };
+                    ));
+                };
 
-            contents.push(
-                <div className="sd-list-item" style={{borderBottom: '1px solid #e7e7e7'}}>
-                    <span
-                        style={{minWidth: '4px', maxWidth: '4px', background: isLocked ? '#e51c23' : 'transparent'}}>
-                    </span>
-                    {
-                        item.archiveError
-                            ? <span className="sd-list-item__column"><ErrorBox svc={this.props.svc} /></span>
-                            : null
-                    }
-                    <span className="sd-list-item__column">
+                return (
+                    <div className="sd-list-item" style={{borderBottom: '1px solid #e7e7e7'}}>
+                        <span
+                            style={{
+                                minWidth: '4px',
+                                maxWidth: '4px',
+                                background: isLocked ? '#e51c23' : 'transparent',
+                            }}>
+                        </span>
+                        {
+                            item.archiveError
+                                ? <span className="sd-list-item__column"><ErrorBox svc={this.props.svc} /></span>
+                                : null
+                        }
+                        <span className="sd-list-item__column">
+                            <ListTypeIcon
+                                item={item}
+                                onMultiSelect={this.props.onMultiSelect}
+                                swimlane={this.props.swimlane}
+                                svc={this.props.svc}
+                            />
+                        </span>
+                        {renderGroup(swimlaneViewFieldsConfig.left)}
+                        <span className="sd-list-item--element-grow"></span>
+                        {renderGroup(swimlaneViewFieldsConfig.right)}
+                        {
+                            getActionsMenu((toggle, stopEvent) => (
+                                <div className="sd-list-item__action-menu">
+                                    <button
+                                        className="icn-btn"
+                                        onClick={toggle}
+                                        onDoubleClick={stopEvent}>
+                                        <i className="icon-dots-vertical"></i>
+                                    </button>
+                                </div>
+                            ))
+                        }
+                    </div>
+                );
+            } else if (this.props.view === 'mgrid') {
+                return (
+                    <div>
+                        {item.archiveError ? <ErrorBox svc={this.props.svc} /> : null}
+                        <MediaPreview
+                            item={item}
+                            desk={this.props.desk}
+                            onMultiSelect={this.props.onMultiSelect}
+                            swimlane={this.props.swimlane}
+                            svc={this.props.svc}
+                        />
+                        <MediaInfo
+                            item={item}
+                            ingestProvider={this.props.ingestProvider}
+                            svc={this.props.svc}
+                        />
+                        <div className="media-box__footer">
+                            <GridTypeIcon item={item} svc={this.props.svc} />
+                            {item.priority ? <ItemPriority {...angular.extend({svc: this.props.svc}, item)} /> : null}
+                            {item.urgency ? <ItemUrgency {...angular.extend({svc: this.props.svc}, item)} /> : null}
+                            {broadcast({item: item})}
+                            {getActionsMenu()}
+                        </div>
+                    </div>
+                );
+            } else if (this.props.view === 'photogrid') {
+                return (
+                    <div>
+                        {item.archiveError ? <ErrorBox svc={this.props.svc} /> : null}
+                        <PhotoDeskPreview
+                            item={item}
+                            desk={this.props.desk}
+                            onMultiSelect={this.props.onMultiSelect}
+                            swimlane={this.props.swimlane}
+                            svc={this.props.svc}
+                        />
+                        <PhotoDeskInfo
+                            item={item}
+                            ingestProvider={this.props.ingestProvider}
+                            svc={this.props.svc}
+                        />
+                        <PhotoDeskFooter
+                            item={item}
+                            svc={this.props.svc}
+                            getActionsMenu={getActionsMenu}
+                        />
+                        <div className="sd-grid-item__state-border"></div>
+                    </div>
+                );
+            } else {
+               return (
+                    <div>
+                        <span className="state-border"></span>
                         <ListTypeIcon
                             item={item}
                             onMultiSelect={this.props.onMultiSelect}
                             swimlane={this.props.swimlane}
                             svc={this.props.svc}
                         />
-                    </span>
-                    {renderGroup(swimlaneViewFieldsConfig.left)}
-                    <span className="sd-list-item--element-grow"></span>
-                    {renderGroup(swimlaneViewFieldsConfig.right)}
-                    {
-                        getActionsMenu((toggle, stopEvent) => (
-                            <div className="sd-list-item__action-menu">
-                                <button
-                                    className="icn-btn"
-                                    onClick={toggle}
-                                    onDoubleClick={stopEvent}>
-                                    <i className="icon-dots-vertical"></i>
-                                </button>
-                            </div>
-                        ))
-                    }
-                </div>,
-            );
-        } else if (this.props.view === 'mgrid') {
-            contents.push(
-                item.archiveError ? React.createElement(ErrorBox, {svc: this.props.svc}) : null,
-                React.createElement(MediaPreview, {
-                    item: item,
-                    desk: this.props.desk,
-                    onMultiSelect: this.props.onMultiSelect,
-                    swimlane: this.props.swimlane,
-                    svc: this.props.svc,
-                }),
-                React.createElement(MediaInfo, {
-                    item: item,
-                    ingestProvider: this.props.ingestProvider,
-                    svc: this.props.svc,
-                }),
-                React.createElement('div', {className: 'media-box__footer'},
-                    React.createElement(GridTypeIcon, {item: item, svc: this.props.svc}),
-                    item.priority ?
-                        React.createElement(ItemPriority, angular.extend({svc: this.props.svc}, item)) : null,
-                    item.urgency ?
-                        React.createElement(ItemUrgency, angular.extend({svc: this.props.svc}, item)) : null,
-                    broadcast({item: item}),
-                    getActionsMenu(),
-                ),
-            );
-        } else if (this.props.view === 'photogrid') {
-            contents.push(
-                item.archiveError ? React.createElement(ErrorBox, {svc: this.props.svc}) : null,
-                React.createElement(PhotoDeskPreview, {
-                    item: item,
-                    desk: this.props.desk,
-                    onMultiSelect: this.props.onMultiSelect,
-                    swimlane: this.props.swimlane,
-                    svc: this.props.svc,
-                }),
-                React.createElement(PhotoDeskInfo, {
-                    item: item,
-                    ingestProvider: this.props.ingestProvider,
-                    svc: this.props.svc,
-                }),
-                React.createElement(PhotoDeskFooter, {
-                    item: item,
-                    svc: this.props.svc,
-                    getActionsMenu: getActionsMenu,
-                }),
-                React.createElement('div',
-                    {className: 'sd-grid-item__state-border'},
-                ),
-            );
-        } else {
-            contents.push(
-                React.createElement('span', {className: 'state-border'}),
-                React.createElement(ListTypeIcon, {
-                    item: item,
-                    onMultiSelect: this.props.onMultiSelect,
-                    swimlane: this.props.swimlane,
-                    svc: this.props.svc,
-                }),
-                item.priority || item.urgency ? React.createElement(ListPriority, {
-                    item: item,
-                    svc: this.props.svc,
-                    scope: this.props.scope,
-                }) : null,
-                React.createElement(ListItemInfo, {
-                    item: item,
-                    openAuthoringView: this.openAuthoringView,
-                    desk: this.props.desk,
-                    ingestProvider: this.props.ingestProvider,
-                    highlightsById: this.props.highlightsById,
-                    markedDesksById: this.props.markedDesksById,
-                    profilesById: this.props.profilesById,
-                    swimlane: this.props.swimlane,
-                    versioncreator: this.props.versioncreator,
-                    narrow: this.props.narrow,
-                    svc: this.props.svc,
-                    scope: this.props.scope,
-                }),
-                getActionsMenu(),
-            );
-        }
+                        {
+                            item.priority || item.urgency
+                                ? <ListPriority
+                                    item={item}
+                                    svc={this.props.svc}
+                                    scope={this.props.scope}
+                                />
+                                : null
+                        }
+                        <ListItemInfo
+                            item={item}
+                            openAuthoringView={this.openAuthoringView}
+                            desk={this.props.desk}
+                            ingestProvider={this.props.ingestProvider}
+                            highlightsById={this.props.highlightsById}
+                            markedDesksById={this.props.markedDesksById}
+                            profilesById={this.props.profilesById}
+                            swimlane={this.props.swimlane}
+                            versioncreator={this.props.versioncreator}
+                            narrow={this.props.narrow}
+                            svc={this.props.svc}
+                            scope={this.props.scope}
+                        />
+                        {getActionsMenu()}
+                    </div>
+               );
+            }
+        };
 
-        return React.createElement(
-            'li', {
-                id: item._id,
-                key: item._id,
-                className: classNames(
+        return (
+            <li
+                id={item._id}
+                key={item._id}
+                className={classNames(
                     'list-item-view',
                     {active: this.props.flags.selected},
                     {selected: this.props.item.selected && !this.props.flags.selected},
-                ),
-                onMouseEnter: this.setHoverState,
-                onMouseLeave: this.unsetHoverState,
-                onDragStart: this.onDragStart,
-                onClick: this.select,
-                onDoubleClick: this.dbClick,
-                draggable: true,
-            },
-            React.createElement.apply(null, contents),
+                )}
+                onMouseEnter={this.setHoverState}
+                onMouseLeave={this.unsetHoverState}
+                onDragStart={this.onDragStart}
+                onClick={this.select}
+                onDoubleClick={this.dbClick}
+                draggable={true}
+            >
+                <div className={classNames(classes, {
+                    active: this.props.flags.selected,
+                    locked: isLocked,
+                    selected: this.props.item.selected || this.props.flags.selected,
+                    archived: item.archived || item.created,
+                    gone: item.gone,
+                    actioning: this.state.actioning,
+                })}>
+                    {getTemplate()}
+                </div>
+            </li>
         );
     }
 }
