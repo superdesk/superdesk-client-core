@@ -6,6 +6,7 @@ export interface ISuperdeskGlobalConfig {
         };
         editor3: boolean;
         qumu: boolean;
+        scriptTags?: Array<string>;
         editorAttachments: boolean;
         editorInlineComments: boolean;
         editorSuggestions: boolean;
