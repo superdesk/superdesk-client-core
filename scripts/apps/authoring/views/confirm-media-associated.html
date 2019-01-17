@@ -1,10 +1,10 @@
-<div class="modal--large">
+<div>
     <div class="modal__header">
         <h3 class="modal__heading" translate>Do you want to add an image to this update?</h3>
     </div>
 
-    <div class="modal__header">
-        <div sd-width="full" class="field">
+    <div class="modal__body featuremedia-confirmation">
+        <div class="field">
             <label translate>Featured Media</label>
             <div ng-if="item.associations.featuremedia" class="picture-preview">
                 <div sd-item-rendition data-item="item.associations.featuremedia" data-rendition="viewImage"></div>
@@ -16,7 +16,7 @@
     <div class="modal__footer">
         <button type="button" class="btn" translate ng-click="useMedia()">Use Media</button>
         <button type="button" class="btn" ng-click="publishWithoutMedia()" translate>Publish Without Media</button>
-                <button type="button" class="btn" ng-click="cancel()" translate>Cancel</button>
+        <button type="button" class="btn" ng-click="cancel()" translate>Cancel</button>
     </div>
 </div>
 
