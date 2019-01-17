@@ -1,16 +1,12 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import {gettext} from 'core/ui/components/utils';
 
-export const ErrorBox: React.StatelessComponent<any> = (props) => {
-    const {gettextCatalog} = props.svc;
-
-    return React.createElement('div', {className: 'error-box'},
+export const ErrorBox: React.StatelessComponent<any> = (props) =>
+    React.createElement('div', {className: 'error-box'},
         React.createElement('p', {className: 'message'},
-            gettextCatalog.getString('There was an error archiving this item')),
+            gettext('There was an error archiving this item')),
         React.createElement('div', {className: 'buttons'}),
     );
-};
 
 ErrorBox.propTypes = {
-    svc: PropTypes.object.isRequired,
 };

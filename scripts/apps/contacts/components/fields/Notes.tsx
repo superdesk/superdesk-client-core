@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {truncate} from 'lodash';
+import {gettext} from 'core/ui/components/utils';
 
-export const Notes: React.StatelessComponent<any> = ({item, svc}) => {
-    const {gettextCatalog} = svc;
-    const notes = gettextCatalog.getString(item.notes);
+export const Notes: React.StatelessComponent<any> = ({item}) => {
+    const notes = gettext(item.notes);
     const displayNotes = truncate(notes, {length: 120});
 
     return (
@@ -20,5 +20,4 @@ export const Notes: React.StatelessComponent<any> = ({item, svc}) => {
 
 Notes.propTypes = {
     item: PropTypes.object,
-    svc: PropTypes.object.isRequired,
 };

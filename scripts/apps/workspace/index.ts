@@ -36,25 +36,4 @@ angular.module('superdesk.apps.workspace', [
         keyboardManager.register('General', 'alt + p', gettext('Open personal'));
         keyboardManager.register('General', 'ctrl + alt + f', gettext('Open search'));
         keyboardManager.register('General', 'x', gettext('Multi-select (or deselect) an item'));
-    }])
-
-    // temporary planning config
-    .config(['workspaceMenuProvider', (workspaceMenuProvider) => {
-        workspaceMenuProvider.item({
-            href: '/workspace/assignments',
-            icon: 'tasks',
-            label: gettext('Assignments'),
-            shortcut: 'ctrl+alt+a',
-            if: 'workspaceConfig.assignments',
-            order: 300,
-        });
-
-        workspaceMenuProvider.item({
-            href: '/planning',
-            icon: 'calendar',
-            label: gettext('Planning'),
-            group: 'planning',
-            if: 'workspaceConfig.planning && privileges.planning',
-            order: 1100,
-        });
     }]);

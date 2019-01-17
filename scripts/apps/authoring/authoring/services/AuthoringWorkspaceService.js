@@ -23,6 +23,24 @@ export function AuthoringWorkspaceService($location, superdeskFlags, authoring, 
     this.action = null;
     this.state = null;
 
+    // Array<() => Promise<boolean>>
+    let widgetVisibilityCheckerFuntions = [];
+
+    this.addWidgetVisibilityCheckerFunction = (fn) => {
+        widgetVisibilityCheckerFuntions.push(fn);
+    };
+
+    this.removeWidgetVisibilityCheckerFunction = (fn) => {
+        widgetVisibilityCheckerFuntions = widgetVisibilityCheckerFuntions.filter((f) => f !== fn);
+    };
+
+    this.isWidgetVisible = (widget) => new Promise((resolve) => {
+        Promise.all(widgetVisibilityCheckerFuntions.map((fn) => fn(widget)))
+            .then((res) => {
+                resolve(resolve(res.every((i) => i === true)));
+            });
+    });
+
     var self = this;
 
     /**
@@ -47,6 +65,10 @@ export function AuthoringWorkspaceService($location, superdeskFlags, authoring, 
             self.close();
         }
     };
+
+    // plugin support
+    this.authoringTopBarAdditionalButtons = {},
+    this.authoringTopBarButtonsToHide = {};
 
     /**
      * Open an item in readonly mode without locking it

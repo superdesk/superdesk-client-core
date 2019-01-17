@@ -11,6 +11,8 @@ import * as directive from './directives';
 import * as svc from './services';
 import * as ctrl from './controllers';
 
+import {gettext} from 'core/ui/components/utils';
+
 angular.module('superdesk.apps.archive.directives', [
     'superdesk.core.filters',
     'superdesk.apps.authoring',
@@ -383,12 +385,11 @@ spikeActivity.$inject = [
     'authoringWorkspace',
     'confirm',
     'autosave',
-    'gettextCatalog',
     'config',
 ];
 
 function spikeActivity(spike, data, modal, $location, $q, multi, privileges,
-    authoringWorkspace, confirm, autosave, gettextCatalog, config) {
+    authoringWorkspace, confirm, autosave, config) {
     // For the sake of keyboard shortcut to work consistently,
     // if the item is multi-selected, let multibar controller handle its spike
     if (!data.item || multi.count > 0 && _.includes(multi.getIds(), data.item._id)) {
@@ -405,17 +406,17 @@ function spikeActivity(spike, data, modal, $location, $q, multi, privileges,
     _spike();
 
     function _spike() {
-        let message = gettextCatalog.getString('Are you sure you want to spike the item?');
+        let message = gettext('Are you sure you want to spike the item?');
 
         if ($location.path() === '/workspace/personal') {
-            message = gettextCatalog.getString('Do you want to delete the item permanently?');
+            message = gettext('Do you want to delete the item permanently?');
         } else if (get(privileges, 'privileges.planning') && data.item && data.item.assignment_id) {
-            message = gettextCatalog.getString('This item is linked to in-progress planning coverage, spike anyway?');
+            message = gettext('This item is linked to in-progress planning coverage, spike anyway?');
         } else if (!get(config, 'confirm_spike', true)) {
             return spike.spike(data.item);
         }
 
-        return modal.confirm(message, gettextCatalog.getString('Confirm'))
+        return modal.confirm(message, gettext('Confirm'))
             .then(() => spike.spike(data.item));
     }
 }

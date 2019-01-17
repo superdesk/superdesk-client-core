@@ -56,7 +56,7 @@
                     <div class="item-association__icons-block">
                         <a ng-if="related && editable" class="item-association__image-action" ng-click="associations.isMediaEditable() && associations.edit(this, related, {defaultTab: 'view'}); $event.stopPropagation()" sd-tooltip="Edit metadata"><i class="icon-pencil"></i></a>
                         <a ng-if="related && editable" class="item-association__image-action" ng-click="associations.isMediaEditable() && associations.edit(this, related, {defaultTab: 'image-edit'}); $event.stopPropagation()" sd-tooltip="Edit image"><i class="icon-switches"></i></a>
-                        <a ng-if="related && editable" class="item-association__image-action" ng-click="associations.isMediaEditable() && associations.edit(this, related, {defaultTab: 'crop', showMetadata: false}); $event.stopPropagation()" sd-tooltip="Edit crops"><i class="icon-crop"></i></a>
+                        <a ng-if="related && editable" class="item-association__image-action" ng-click="associations.isMediaEditable() && associations.edit(this, related, {defaultTab: 'crop'}); $event.stopPropagation()" sd-tooltip="Edit crops"><i class="icon-crop"></i></a>
                     </div>
                     <div sd-media-metadata-view data-item="related" data-show-alt-text="true"
                          class="item-association__metadata item-association__metadata--bottom-overlay"

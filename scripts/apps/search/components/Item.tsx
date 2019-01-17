@@ -46,6 +46,8 @@ interface IProps {
     onEdit: any;
     onSelect: any;
     narrow: any;
+    hideActions: boolean;
+    multiSelectDisabled: boolean;
 }
 
 interface IState {
@@ -191,7 +193,8 @@ export class Item extends React.Component<IProps, IState> {
         const isLocked: boolean = (item.lock_user && item.lock_session) != null;
 
         const getActionsMenu = (template = actionsMenuDefaultTemplate) =>
-            !get(scope, 'flags.hideActions') && this.state.hover && !item.gone ? React.createElement(
+            this.props.hideActions !== true && this.state.hover && !item.gone ? React.createElement(
+
                 ActionsMenu, {
                     item: item,
                     svc: this.props.svc,
@@ -253,6 +256,7 @@ export class Item extends React.Component<IProps, IState> {
                         onMultiSelect={this.props.onMultiSelect}
                         getActionsMenu={getActionsMenu}
                         scope={this.props.scope}
+                        selectingDisabled={this.props.multiSelectDisabled}
                     />
                 );
             }
@@ -264,6 +268,7 @@ export class Item extends React.Component<IProps, IState> {
                 key={item._id}
                 className={classNames(
                     'list-item-view',
+                    {'actions-visible': this.props.hideActions !== true},
                     {active: this.props.flags.selected},
                     {selected: this.props.item.selected && !this.props.flags.selected},
                 )}

@@ -20,6 +20,7 @@ interface IProps {
     onMultiSelect: () => any;
     getActionsMenu: () => any;
     scope: any;
+    selectingDisabled: boolean;
 }
 
 export class ListItemTemplate extends React.Component<IProps, never> {
@@ -33,6 +34,7 @@ export class ListItemTemplate extends React.Component<IProps, never> {
                     item={item}
                     onMultiSelect={this.props.onMultiSelect}
                     svc={this.props.svc}
+                    selectingDisabled={this.props.selectingDisabled}
                 />
                 {
                     item.priority || item.urgency

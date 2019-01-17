@@ -160,18 +160,20 @@
                 ng-if="action === 'correct' || action === 'kill'"
                 ng-click="close()"
                 translate>Cancel</button>
+        
+        <button ng-repeat="(_, btn) in additionalButtons" ng-class="btn.class" ng-click="btn.onClick(item)">{{btn.label}}</button>
     </div>
 
     <div class="subnav__button-stack subnav__button-stack--square-buttons">
         <button class="navbtn strict"
-                ng-if="!isLocked() && _editable"
+                ng-if="!isLocked() && _editable && buttonsToHide['article-edit--topbar--minimize'] !== true"
                 title="{{ :: 'Minimize' | translate }}"
                 ng-click="minimize()">
             <i class="big-icon--minimize"></i>
         </button>
 
         <div id="authoring-extra-dropdown"
-             ng-if="item._type !== 'legal_archive' && item._type !== 'archived' && !highlight && item.state !== 'spiked'"
+             ng-if="item._type !== 'legal_archive' && item._type !== 'archived' && !highlight && item.state !== 'spiked' && buttonsToHide['article-edit--topbar--actions'] !== true"
              class="dropdown pull-left strict" dropdown>
             <button id="more-actions" class="navbtn dropdown__toggle" title="{{ :: 'More actions' | translate }}" dropdown__toggle>
                 <i class="icon-dots-vertical"></i>
@@ -296,7 +298,7 @@
         </div>
 
         <button id="send-to-btn" ng-show="_editable"
-            ng-if="action !== 'correct' && action !== 'kill'"
+            ng-if="action !== 'correct' && action !== 'kill' && buttonsToHide['article-edit--topbar--sendto-publish'] !== true"
             class="navbtn navbtn--highlighted" sd-tooltip="{{ :: 'Send to / Publish' | translate }}" flow="left"
             ng-click="views.send = !views.send"
             ng-class="{'active': views.send}">

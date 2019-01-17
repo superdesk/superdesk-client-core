@@ -12,7 +12,7 @@ UserPreferencesDirective.$inject = ['session', 'preferencesService', 'notify', '
 
 export function UserPreferencesDirective(
     session, preferencesService, notify, asset, metadata, desks, modal,
-    $timeout, $q, userList, _, config, search, gettext
+    $timeout, $q, userList, _, config, search, gettext,
 ) {
     // human readable labels for server values
     const LABELS = {

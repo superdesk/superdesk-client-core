@@ -68,11 +68,11 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
     $scope.hideTabs = $scope.data.hideTabs || [];
 
     $scope.metadata = {
-        isDirty: false
+        isDirty: false,
     };
 
     $scope.crops = {
-        isDirty: false
+        isDirty: false,
     };
 
     $scope.data.renditions.forEach((rendition) => {
@@ -174,10 +174,6 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
         angular.extend($scope.data.item, $scope.data.metadata);
         $scope.data.item.poi = $scope.data.poi;
 
-        if ($scope.selectedRendition) {
-            $scope.saveAreaOfInterest($scope.currentCropData);
-        }
-
         $scope.crops.isDirty = false;
         $scope.data.isDirty = true;
     };
@@ -226,7 +222,7 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
         if ($scope.data.isDirty) {
             $scope.resolve({
                 cropData: $scope.data.cropData,
-                metadata: _.pick($scope.data.item, [
+                metadata: _.pick($scope.data.metadata, [
                     ...EDITABLE_METADATA,
                     'poi',
                     'renditions',
@@ -487,7 +483,6 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
     $scope.onChange = function(renditionName, cropData) {
         $scope.$applyAsync(() => {
             if (angular.isDefined(renditionName)) {
-                $scope.currentCropData = cropData;
                 $scope.data.cropData[renditionName] = angular.extend({}, cropData, sizes[renditionName]);
                 $scope.data.isDirty = true;
                 $scope.crops.isDirty = true;

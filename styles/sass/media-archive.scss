@@ -431,7 +431,7 @@ $sfbox_mediaMaxWidth : 172px;
     }
 }
 
-.mgrid-view, #scratchpad {
+.mgrid-view {
     .media-box {
         .action {
             display: none;
@@ -659,15 +659,6 @@ $sfbox_mediaMaxWidth : 172px;
     margin: 0;
 }
 
-#scratchpad {
-    .media-box {
-        border-color: #aaa;
-        &.archived {
-            @include box-shadow(none);
-        }
-    }
-}
-
 .sd-grid-list {
     .sd-grid-item {
         height: 100%;
@@ -722,6 +713,11 @@ $rightfield-width:60px;
             width: 100%;
         }
     }
+    .actions-visible .media-box:hover {
+        .item-info {
+            padding: 10px 30px 10px 10px;
+        }
+    }
     .media-box {
         position: relative;
         background: #fff;
@@ -729,15 +725,13 @@ $rightfield-width:60px;
         border-right: 2px solid #fff;
         padding-left: 40px;
         overflow: hidden;
+
         &:hover {
             background-color: #f4f4f4 !important;
             border-right: 2px solid #f4f4f4;
             cursor: pointer;
             .list-field {
                 border-color:#ebebeb;
-            }
-            .item-info {
-                padding: 10px 30px 10px 10px;
             }
             .item-info-reduced-rowheight {
                 padding: 5px 10px 5px 10px;
@@ -1112,7 +1106,7 @@ $rightfield-width:60px;
     }
 }
 
-.mgrid-view, #scratchpad {
+.mgrid-view {
     .active:not(.selected) {
         .media-box {
             border-color: #787878;

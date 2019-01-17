@@ -1,10 +1,11 @@
-import _ from 'lodash';
+import _, {get} from 'lodash';
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import {Item} from './index';
 import {isCheckAllowed, closeActionsMenu, bindMarkItemShortcut} from '../helpers';
 import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
+import {gettext} from 'core/ui/components/utils';
 
 /**
  * Item list component
@@ -85,6 +86,11 @@ export class ItemList extends React.Component<any, any> {
     }
 
     select(item, event?) {
+        if (typeof this.props.onMonitoringItemSelect === 'function') {
+            this.props.onMonitoringItemSelect(item, event);
+            return;
+        }
+
         const {$timeout} = this.props.svc;
         const {scope} = this.props;
 
@@ -194,6 +200,11 @@ export class ItemList extends React.Component<any, any> {
     }
 
     dbClick(item) {
+        if (typeof this.props.onMonitoringItemDoubleClick === 'function') {
+            this.props.onMonitoringItemDoubleClick(item);
+            return;
+        }
+
         const {superdesk, $timeout, authoringWorkspace} = this.props.svc;
         const {scope} = this.props;
 
@@ -434,7 +445,7 @@ export class ItemList extends React.Component<any, any> {
     }
 
     render() {
-        const {storage, gettextCatalog} = this.props.svc;
+        const {storage} = this.props.svc;
         const {scope} = this.props;
 
         const createItem = function(itemId) {
@@ -460,6 +471,8 @@ export class ItemList extends React.Component<any, any> {
                 versioncreator: this.modifiedUserName(item.version_creator),
                 narrow: this.state.narrow,
                 svc: this.props.svc,
+                hideActions: scope.hideActionsForMonitoringItems || get(scope, 'flags.hideActions'),
+                multiSelectDisabled: scope.disableMonitoringMultiSelect,
                 scope: scope,
             });
         }.bind(this);
@@ -480,7 +493,7 @@ export class ItemList extends React.Component<any, any> {
                 React.createElement(
                     'li',
                     {onClick: this.closeActionsMenu},
-                    gettextCatalog.getString('There are currently no items'),
+                    gettext('There are currently no items'),
                 ) : this.state.itemsList.map(createItem),
         );
     }
@@ -495,4 +508,6 @@ ItemList.propTypes = {
     desksById: PropTypes.any,
     ingestProvidersById: PropTypes.any,
     usersById: PropTypes.any,
+    onMonitoringItemSelect: PropTypes.func,
+    onMonitoringItemDoubleClick: PropTypes.func,
 };

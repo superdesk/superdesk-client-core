@@ -1,3 +1,5 @@
+import {gettext} from 'core/ui/components/utils';
+
 /**
  * Display relative date in <time> element
  *
@@ -8,8 +10,8 @@
  * @param {object} datetime - datetime string in utc
  * @param {boolean} useutc - if true vlues are converted to local datetime
  */
-ReldateComplex.$inject = ['config', 'gettextCatalog'];
-function ReldateComplex(config, gettextCatalog) {
+ReldateComplex.$inject = ['config'];
+function ReldateComplex(config) {
     var COMPARE_FORMAT = config.model.dateformat;
     var DATE_FORMAT = config.view.dateformat || config.model.dateformat;
     var TIME_FORMAT = config.view.timeformat || config.model.timeformat;
@@ -36,7 +38,7 @@ function ReldateComplex(config, gettextCatalog) {
                 scope.datetimeIso = date.toISOString();
 
                 if (moment().format(COMPARE_FORMAT) === date.format(COMPARE_FORMAT)) {
-                    scope.rday = gettextCatalog.getString(date.format(DISPLAY_TODAY_FORMAT));
+                    scope.rday = gettext(date.format(DISPLAY_TODAY_FORMAT));
                 } else {
                     scope.rday = date.format(DISPLAY_DAY_FORMAT);
                 }

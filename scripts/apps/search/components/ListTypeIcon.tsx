@@ -4,6 +4,7 @@ import classNames from 'classnames';
 
 interface IProps {
     svc: object;
+    selectingDisabled: boolean;
     onMultiSelect: () => void;
     item: any;
 }
@@ -32,14 +33,15 @@ export class ListTypeIcon extends React.Component<IProps, IState> {
     }
 
     render() {
-        const showSelect = this.state.hover || this.props.item.selected;
+        const {selectingDisabled} = this.props;
+        const showSelect = selectingDisabled !== true && (this.state.hover || this.props.item.selected);
 
         return React.createElement(
             'div',
             {
                 className: classNames('list-field type-icon sd-monitoring-item-multi-select-checkbox'),
-                onMouseEnter: this.setHover,
-                onMouseLeave: this.unsetHover,
+                onMouseEnter: selectingDisabled ? null : this.setHover,
+                onMouseLeave: selectingDisabled ? null : this.unsetHover,
                 style: {lineHeight: 0},
             },
             showSelect ?

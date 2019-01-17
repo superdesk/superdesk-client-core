@@ -4,7 +4,7 @@
     <h3 class="modal__heading modal__heading--no-grow" ng-if="nav === 'crop'">{{ :: 'Edit Crops' | translate }}</h3>
 
     <div class="modal__header-buttons  modal__header-buttons--center modal__header-element-grow button-nav">
-        <button class="button-nav__btn" ng-click="nav = 'view'; showMetadata = true" ng-class="{'button-nav__btn--active' : !nav || nav === 'view'}" ng-show="!hideTabs.includes('view')" ng-disabled="!isDoneEnabled()" translate>Details</button>
+        <button class="button-nav__btn" ng-click="nav = 'view'; showMetadata = true" ng-class="{'button-nav__btn--active' : !nav || nav === 'view'}" ng-show="!hideTabs.includes('view')" ng-disabled="!isDoneEnabled()" translate>Details / Metadata</button>
         <button class="button-nav__btn" ng-click="nav = 'image-edit'; showMetadata = true" ng-show="data.editable && !hideTabs.includes('image-edit')" ng-class="{'button-nav__btn--active': nav === 'image-edit'}" ng-disabled="!isDoneEnabled()" translate>Edit image</button>
         <button class="button-nav__btn" ng-click="nav = 'crop'; showMetadata = false" ng-show="data.editable && !hideTabs.includes('crop')" ng-class="{'button-nav__btn--active': nav === 'crop'}" ng-disabled="!isDoneEnabled()" translate>Edit crops</button>
     </div>
@@ -17,7 +17,7 @@
 <div class="modal__body modal__body--no-padding">
     <div class="sd-column-box--2">
         <div class="sd-column-box__main-column sd-column-box__main-column--photo-preview" ng-class="{'toolbar-offset': crops.isDirty}">
-            <a class="sd-photo-preview__slide-in-button" ng-show="!showMetadata" ng-click="showMetadata = !showMetadata" data-sd-tooltip="Open metadata" data-flow="left">
+            <a class="sd-photo-preview__slide-in-button" ng-show="!showMetadata && nav !== 'crop'" ng-click="showMetadata = !showMetadata" data-sd-tooltip="Open metadata" data-flow="left">
                 <i class="icon-backward-thin"></i>
             </a>
             <div class="sd-photo-preview" ng-if="!nav || nav === 'view'">
@@ -127,7 +127,7 @@
             </div>
         </div>
 
-        <div class="sd-column-box__slide-in-column sd-column-box__slide-in-column--large sd-column-box__slide-in-column--dark-ui" ng-class="{'sd-column-box__slide-in-column--closed' : !showMetadata}">
+        <div class="sd-column-box__slide-in-column sd-column-box__slide-in-column--large sd-column-box__slide-in-column--dark-ui" ng-class="{'sd-column-box__slide-in-column--closed' : !showMetadata}" ng-show="nav !== 'crop'">
             <div class="sd-column-box__slide-in-column-inner sd-slide-in-panel">
                 <div class="sd-slide-in-panel__header">
                     <h3 class="sd-slide-in-panel__heading" ng-if="nav !== 'image-edit'" translate>Metadata</h3>
@@ -142,7 +142,7 @@
                             <a class="btn" ng-click="cancelMetadataChanges()" translate>Cancel</a>
                             <a class="btn btn--primary" ng-click="applyMetadataChanges()" translate>Apply</a>
                         </div>
-                        
+
                         <div sd-media-metadata-editor
                              data-item="data.metadata"
                              data-validator="validator"

@@ -7,7 +7,6 @@ import {IArticle} from 'superdesk-interfaces/Article';
 interface IProps {
     item: IArticle;
     $filter: any;
-    gettextCatalog: any;
     datetime: any;
     authoringWorkspace: any;
     TranslationService: any;
@@ -48,7 +47,7 @@ class TranslationsWidgetComponent extends React.Component<IProps, IState> {
     }
 
     render() {
-        const {$filter, gettextCatalog, authoringWorkspace, datetime} = this.props;
+        const {$filter, authoringWorkspace, datetime} = this.props;
         const {translations, translationsLookup} = this.state;
 
         if (translations == null) {
@@ -102,7 +101,6 @@ class TranslationsWidgetComponent extends React.Component<IProps, IState> {
                                     <div>
                                         <State
                                             $filter={$filter}
-                                            gettextCatalog={gettextCatalog}
                                             datetime={datetime}
                                             item={translation}
                                             style={{marginRight: 0}}
@@ -120,5 +118,5 @@ class TranslationsWidgetComponent extends React.Component<IProps, IState> {
 
 export const TranslationsWidget = connectServices<IProps>(
     TranslationsWidgetComponent,
-    ['TranslationService', 'authoringWorkspace', '$filter', 'gettextCatalog', 'datetime'],
+    ['TranslationService', 'authoringWorkspace', '$filter', 'datetime'],
 );

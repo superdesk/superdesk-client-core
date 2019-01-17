@@ -32,15 +32,11 @@ $sidebar-width: 48px;
 $sidepreview-width: 400px;
 $notification-pane-width: 300px;
 
-// Scratchpad
-$scratchpad-closed: 0px;
-$scratchpad-content-height: 0px;
-
 // Article edit screen
 $authoring-opened-articles: 30px;
 
 //Layout
-$bottom-view-padding: $scratchpad-closed + $authoring-opened-articles + 20px;
+$bottom-view-padding: $authoring-opened-articles + 20px;
 
 //Archive
 $archive-sidebar-width: 300px;

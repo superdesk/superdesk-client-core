@@ -1,3 +1,5 @@
+import {gettext} from 'core/ui/components/utils';
+
 /**
  * Display absolute date in <time> element
  *
@@ -8,13 +10,13 @@
  * @param {object} datetime - datetime string in utc
  */
 
-angular.module('superdesk.core.datetime.absdate', []).directive('sdAbsdate', ['gettextCatalog',
-    function(gettextCatalog) {
+angular.module('superdesk.core.datetime.absdate', []).directive('sdAbsdate', [
+    function() {
         var COMPARE_FORMAT = 'YYYY-M-D';
         var DISPLAY_DATE_FORMAT = 'D. MMMM YYYY HH:mm';
         var DISPLAY_CDATE_FORMAT = 'D. MMMM HH:mm';
         var DISPLAY_DAY_FORMAT = 'dddd, ';
-        var DISPLAY_TODAY_FORMAT = '[' + gettextCatalog.getString('Today') + '], ';
+        var DISPLAY_TODAY_FORMAT = '[' + gettext('Today') + '], ';
 
         return {
             scope: {

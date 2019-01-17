@@ -14,7 +14,7 @@
                 <div class="user-preferences__heading">{{ p.category | translate }}</div>
                 <div sd-info-item>
                     
-                    <div class="form__row form__row--s-padding" ng-show="id === 'feature:preview'">
+                    <div class="form__row form__row--s-padding" ng-show="id === 'feature:preview' || id === 'singleline:view'">
                         <span sd-switch ng-hide="p.allowed" ng-model="p.enabled"></span>
                         <label class="form-label">{{ :: p.label | translate }}</label>
                     </div>

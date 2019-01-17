@@ -11,6 +11,7 @@ import MediumEditor from 'medium-editor';
 import MediumEditorTable from 'medium-editor-tables';
 import _ from 'lodash';
 import {get} from 'lodash';
+import {gettext} from 'core/ui/components/utils';
 
 import './customAnchor';
 
@@ -888,8 +889,8 @@ angular.module('superdesk.apps.editor2', [
         })
     )
     .directive('sdTextEditorBlockText', ['editor', 'spellcheck', '$timeout',
-        '$q', 'gettextCatalog', 'config', '$rootScope',
-        function(editor, spellcheck, $timeout, $q, gettextCatalog, config, $rootScope) {
+        '$q', 'config', '$rootScope',
+        function(editor, spellcheck, $timeout, $q, config, $rootScope) {
             var TOP_OFFSET = 134; // header height
 
             var EDITOR_CONFIG = {
@@ -909,9 +910,7 @@ angular.module('superdesk.apps.editor2', [
                     cleanReplacements: [[new RegExp(/<div.*?>/gi), '<p>'], [new RegExp(/<\/div>/gi), '</p>']],
                 },
                 anchor: {
-                    placeholderText: gettextCatalog.getString(
-                        'Paste or type a full link'
-                    ),
+                    placeholderText: gettext('Paste or type a full link'),
                     linkValidation: true,
                 },
                 anchorPreview: {
@@ -1031,9 +1030,9 @@ angular.module('superdesk.apps.editor2', [
                         h1: {
                             name: 'h1',
                             action: 'append-h2',
-                            aria: gettextCatalog.getString('header type 1'),
+                            aria: gettext('header type 1'),
                             tagNames: ['h2'],
-                            contentDefault: '<b>' + gettextCatalog.getString('H1') + '</b>',
+                            contentDefault: '<b>' + gettext('H1') + '</b>',
                             classList: ['custom-class-h1'],
                             attrs: {
                                 'data-custom-attr': 'attr-value-h1',
@@ -1043,9 +1042,9 @@ angular.module('superdesk.apps.editor2', [
                         h2: {
                             name: 'h2',
                             action: 'append-h3',
-                            aria: gettextCatalog.getString('header type 2'),
+                            aria: gettext('header type 2'),
                             tagNames: ['h3'],
-                            contentDefault: '<b>' + gettextCatalog.getString('H2') + '</b>',
+                            contentDefault: '<b>' + gettext('H2') + '</b>',
                             classList: ['custom-class-h2'],
                             attrs: {
                                 'data-custom-attr': 'attr-value-h2',
@@ -1055,42 +1054,42 @@ angular.module('superdesk.apps.editor2', [
                         bold: {
                             name: 'bold',
                             action: 'bold',
-                            aria: gettextCatalog.getString('bold'),
+                            aria: gettext('bold'),
                             tagNames: ['b'],
-                            contentDefault: '<b>' + gettextCatalog.getString('B') + '</b>',
+                            contentDefault: '<b>' + gettext('B') + '</b>',
                         },
 
                         underline: {
                             name: 'underline',
                             action: 'underline',
-                            aria: gettextCatalog.getString('underline'),
+                            aria: gettext('underline'),
                             tagNames: ['u'],
                         },
 
                         italic: {
                             name: 'italic',
                             action: 'italic',
-                            aria: gettextCatalog.getString('italic'),
+                            aria: gettext('italic'),
                             tagNames: ['i'],
-                            contentDefault: '<b>' + gettextCatalog.getString('I') + '</b>',
+                            contentDefault: '<b>' + gettext('I') + '</b>',
                         },
 
                         quote: {
                             name: 'quote',
                             action: 'append-blockquote',
-                            aria: gettextCatalog.getString('quote'),
+                            aria: gettext('quote'),
                         },
 
                         removeFormat: {
                             name: 'removeFormat',
                             action: 'removeFormat',
-                            aria: gettextCatalog.getString('remove formatting'),
+                            aria: gettext('remove formatting'),
                         },
 
                         link: {
                             name: 'anchor',
                             action: 'createLink',
-                            aria: gettextCatalog.getString('link'),
+                            aria: gettext('link'),
                         },
                     }[format] || format);
                 }
@@ -1134,7 +1133,7 @@ angular.module('superdesk.apps.editor2', [
                                 if (editorConfig.toolbar.buttons.indexOf('table') !== -1
                                     && angular.isDefined(MediumEditorTable)) {
                                     editorConfig.extensions.table = new MediumEditorTable({
-                                        aria: gettextCatalog.getString('insert table'),
+                                        aria: gettext('insert table'),
                                     });
                                 }
                             }

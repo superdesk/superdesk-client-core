@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {getSpecStyle, getSpecTitle, getSpecValue} from '../helpers';
+import {gettext} from 'core/ui/components/utils';
 
 export const ItemUrgency: React.StatelessComponent<any> = (props) => {
-    const {metadata, gettextCatalog} = props.svc;
+    const {metadata} = props.svc;
 
     const urgency = props.urgency || 3;
     const spec = metadata.urgencyByValue(urgency);
@@ -13,7 +14,7 @@ export const ItemUrgency: React.StatelessComponent<any> = (props) => {
             'span',
             {
                 className: 'badge urgency-label--' + urgency,
-                title: getSpecTitle(spec, gettextCatalog.getString('Urgency')),
+                title: getSpecTitle(spec, gettext('Urgency')),
                 style: getSpecStyle(spec),
                 key: 'urgency',
             },
@@ -25,7 +26,7 @@ export const ItemUrgency: React.StatelessComponent<any> = (props) => {
         'span',
         {
             className: 'badge urgency-label--' + urgency,
-            title: gettextCatalog.getString('Urgency'),
+            title: gettext('Urgency'),
             key: 'urgency',
         },
         urgency,

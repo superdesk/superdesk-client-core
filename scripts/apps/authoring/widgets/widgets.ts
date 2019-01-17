@@ -11,9 +11,9 @@ function AuthoringWidgetsProvider() {
     };
 }
 
-WidgetsManagerCtrl.$inject = ['$scope', '$routeParams', 'authoringWidgets', 'archiveService',
+WidgetsManagerCtrl.$inject = ['$scope', '$routeParams', 'authoringWidgets', 'archiveService', 'authoringWorkspace',
     'keyboardManager', '$location', 'desks', 'lock', 'content', 'config', 'lodash', 'privileges', '$injector'];
-function WidgetsManagerCtrl($scope, $routeParams, authoringWidgets, archiveService,
+function WidgetsManagerCtrl($scope, $routeParams, authoringWidgets, archiveService, authoringWorkspace,
     keyboardManager, $location, desks, lock, content, config, _, privileges, $injector) {
     $scope.active = null;
 
@@ -51,9 +51,23 @@ function WidgetsManagerCtrl($scope, $routeParams, authoringWidgets, archiveServi
 
         content.getType(item.profile).then((type) => {
             const promises = widgets.map(
-                (widget) => typeof widget.isWidgetVisible === 'function'
-                    ? $injector.invoke(widget.isWidgetVisible(item))
-                    : Promise.resolve(true),
+                (widget) => new Promise((resolve) => {
+                    Promise.all([
+                        // checking static superdesk config
+                        typeof widget.isWidgetVisible === 'function'
+                            ? $injector.invoke(widget.isWidgetVisible(item))
+                            : Promise.resolve(true),
+
+                        // checking result from plugins
+                        authoringWorkspace.isWidgetVisible(widget),
+                    ])
+                        .then((res) => {
+                            resolve(res.every((i) => i === true));
+                        })
+                        .catch(() => {
+                            resolve(false);
+                        });
+                }),
             );
 
             Promise.all(promises).then((result) => {

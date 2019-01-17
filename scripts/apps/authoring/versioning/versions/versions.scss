@@ -15,7 +15,7 @@
         position: absolute;
         left: 0; top:50px; right: 0;
         overflow: auto;
-        bottom: $authoring-opened-articles + $scratchpad-closed;
+        bottom: 0;
 
         .versions-list {
             padding: 12px;

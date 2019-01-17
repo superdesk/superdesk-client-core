@@ -43,7 +43,6 @@ export const MediaPreview: React.StatelessComponent<any> = (props) => {
             React.createElement(ItemContainer, {
                 item: item,
                 desk: props.desk,
-                svc: props.svc,
             }),
         ),
         React.createElement(SelectBox, {

@@ -600,7 +600,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 }
 
                 // Check if there's unpublished related items
-                const related = relationsService.getRelatedItemsWithoutMediaGallery($scope.item, mediaFields);
+                const related = relationsService.getRelatedItemsWithoutMediaGallery($scope.item, $scope.fields);
 
                 if (related.length > 0) {
                     return modal.confirm({
@@ -682,7 +682,9 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
              */
             $scope.close = function() {
                 _closing = true;
-                authoring.close($scope.item, $scope.origItem, $scope.save_enabled()).then(() => {
+
+                // returned promise used by superdesk-fi
+                return authoring.close($scope.item, $scope.origItem, $scope.save_enabled()).then(() => {
                     authoringWorkspace.close(true);
                 });
             };

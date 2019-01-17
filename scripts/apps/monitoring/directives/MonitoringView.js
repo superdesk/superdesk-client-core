@@ -12,6 +12,14 @@ export function MonitoringView($rootScope, authoringWorkspace, pageTitle, $timeo
         scope: {
             type: '=',
             state: '=',
+            customDataSource: '=?',
+            onMonitoringItemSelect: '=?',
+            onMonitoringItemDoubleClick: '=?',
+            hideActionsForMonitoringItems: '=?',
+            disableMonitoringMultiSelect: '=?',
+            disableMonitoringCreateItem: '=?',
+            hideMonitoringToolbar1: '=?',
+            hideMonitoringToolbar2: '=?',
         },
         link: function(scope, elem) {
             const containerElem = elem.find('.content-list');

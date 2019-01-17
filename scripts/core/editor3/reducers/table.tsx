@@ -161,7 +161,7 @@ const processCells = (state, fn) => {
     const {i, j, key, currentStyle, selection} = activeCell;
     const contentState = editorState.getCurrentContent();
     const block = contentState.getBlockForKey(key);
-    const {cells, numRows, numCols, withHeader} = getData(contentState, block);
+    const {cells, numRows, numCols, withHeader} = getData(contentState, block.getKey());
     const {data, newCurrentStyle} = fn(cells, numCols, numRows, i, j, withHeader, currentStyle, selection);
     const newEditorState = setData(editorState, block, data, 'change-block-data');
 

@@ -147,7 +147,6 @@ export function renderArea(area, itemProps, props, customRender: any = {}) {
             return fields[field](itemProps);
         }
 
-        console.warn('missing field in list: ' + field);
         return null;
     }).filter(angular.identity);
     var elemProps = angular.extend({key: area}, props);

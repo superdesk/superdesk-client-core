@@ -709,6 +709,22 @@ function Authoring() {
         utils.wait(element(by.className('widget-related-item')), 1000);
     };
 
+    this.openMacros = function() {
+        element(by.css('a[id="macros"]')).click();
+        utils.wait(element.all(by.repeater('macro in macros')), 1000);
+    };
+
+    this.callMacros = function(macroName) {
+        const macros = element.all(by.repeater('macro in macros'));
+        const macroBtn = macros.filter(
+            (elem) => elem.getText().then((text) => text.toLowerCase() === macroName.toLowerCase())
+        ).first();
+
+        if (macroBtn) {
+            macroBtn.click();
+        }
+    };
+
     this.searchRelatedItems = function(searchText) {
         const btn = element(by.id('search-related-items'));
 

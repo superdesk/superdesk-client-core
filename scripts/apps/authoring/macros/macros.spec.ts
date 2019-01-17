@@ -25,6 +25,10 @@ describe('macros', () => {
         },
     ];
 
+    beforeEach(window.module(($provide) => {
+        $provide.service('editorResolver', () => ({get: () => ({version: () => '3'})}));
+    }));
+
     beforeEach(window.module('superdesk.apps.desks'));
     beforeEach(window.module('superdesk.apps.authoring.macros'));
     beforeEach(window.module('superdesk.apps.authoring.autosave'));
@@ -95,4 +99,81 @@ describe('macros', () => {
             expect($scope.groupedMacros).toBe(null);
             expect($scope.groupedList).toBe(false);
         }));
+
+    it('can replace body html for editor 2', inject((macros, $q, autosave, $rootScope, editorResolver) => {
+        let item = {
+            _id: '1',
+            body_html: 'this is test',
+            abstract: 'test',
+            genre: [{qcode: 'foo', name: 'bar'}],
+            slugline: 'slugline',
+            _etag: 'foo',
+        };
+        let macroItem = {
+            _id: '1',
+            body_html: 'body html',
+            abstract: 'abstract',
+            genre: [{qcode: 'zoo', name: 'zoo'}],
+            _etag: 'bar',
+        };
+        let $scope = $rootScope.$new();
+
+        spyOn(editorResolver, 'get').and.returnValue({version: () => '2'});
+        spyOn(macros, 'call').and.returnValue($q.when({item: macroItem, diff: null}));
+        spyOn($rootScope, '$broadcast');
+
+        $scope.origItem = {};
+        $scope.item = item;
+        $scope.closeWidget = function() { /* no-op */ };
+        $controller('Macros', {$scope: $scope});
+        $scope.call('test');
+        expect(macros.call).toHaveBeenCalled();
+        $scope.$digest();
+
+        expect($scope.item.body_html).toEqual('body html');
+        expect($scope.item.abstract).toEqual('abstract');
+        expect($scope.item.genre).toEqual([{qcode: 'zoo', name: 'zoo'}]);
+        expect($scope.item._etag).toEqual('foo');
+        expect($scope.item.slugline).toEqual('slugline');
+        expect($rootScope.$broadcast).not.toHaveBeenCalled();
+    }));
+
+    it('can generate macro:refreshField event for editor 3', inject((macros, $q, autosave, $rootScope) => {
+        let item = {
+            _id: '1',
+            body_html: 'this is test',
+            abstract: 'test',
+            genre: [{qcode: 'foo', name: 'bar'}],
+            slugline: 'slugline',
+        };
+        let macroItem = {
+            _id: '1',
+            body_html: 'body html',
+            abstract: 'new abstract',
+            slugline: 'new slugline',
+            genre: [{qcode: 'zoo', name: 'zoo'}],
+        };
+        let $scope = $rootScope.$new();
+
+        spyOn(macros, 'call').and.returnValue($q.when({item: macroItem, diff: null}));
+        spyOn($rootScope, '$broadcast');
+
+        $scope.origItem = {};
+        $scope.item = item;
+        $scope.closeWidget = function() { /* no-op */ };
+        $controller('Macros', {$scope: $scope});
+        $scope.call('test');
+        expect(macros.call).toHaveBeenCalled();
+        $scope.$digest();
+
+        expect($scope.item.body_html).toEqual('this is test');
+        expect($scope.item.abstract).toEqual('test');
+        expect($scope.item.genre).toEqual([{qcode: 'zoo', name: 'zoo'}]);
+        expect($scope.item.slugline).toEqual('slugline');
+        expect($rootScope.$broadcast.calls.allArgs())
+            .toEqual([
+                ['macro:refreshField', 'abstract', 'new abstract'],
+                ['macro:refreshField', 'slugline', 'new slugline'],
+            ]);
+    }));
 });
