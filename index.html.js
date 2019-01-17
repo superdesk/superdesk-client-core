@@ -1,7 +1,4 @@
-module.exports = function buildIndex(features) {
-    const scriptTags = features.scriptTags || [];
-
-    return `
+const buildIndex = ({scriptTags}) => `
         <!doctype html>
         <html class="no-js">
           <head>
@@ -20,4 +17,5 @@ module.exports = function buildIndex(features) {
           </body>
         </html>
     `;
-};
+
+module.exports = buildIndex;

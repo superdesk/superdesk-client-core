@@ -1,5 +1,3 @@
-
-
 var path = require('path');
 var rootDir = path.dirname(path.dirname(__dirname));
 
@@ -54,10 +52,10 @@ module.exports = {
         src: __filename, // hack to make ngtemplate work
         options: {
             bootstrap: () => {
-                const features = getConfig().features || {};
+                const scriptTags = getConfig().scriptTags || [];
                 const buildIndex = require('../../index.html.js');
 
-                return buildIndex(features);
+                return buildIndex({scriptTags});
             },
         },
     },
