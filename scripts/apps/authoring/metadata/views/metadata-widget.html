@@ -48,12 +48,8 @@
                 </div>
             </li>
 
-            <li class="basic-list__item" ng-if="item.pubstatus">
-                <label class="basic-list__item-label" translate>Pubstatus</label>
-                <div class="basic-list__item-data">
-                    {{item.pubstatus}}
-                </div>
-            </li>
+            <li sd-metadata-list-item data-value="item.pubstatus" data-label="'Pubstatus' | translate" ng-if="item.pubstatus" ></li>
+
             <li class="basic-list__item" ng-if="item.original_source">
                 <label class="basic-list__item-label" translate>Original source</label>
                 <div class="basic-list__item-data">

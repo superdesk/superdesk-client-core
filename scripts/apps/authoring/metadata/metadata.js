@@ -1272,6 +1272,18 @@ function MetadataService(api, subscribersService, config, vocabularies, $rootSco
     return service;
 }
 
+MetadataListItem.$inject = [];
+function MetadataListItem() {
+    return {
+        scope: {
+            label: '=',
+            value: '=',
+        },
+        templateUrl: 'scripts/apps/authoring/metadata/views/metadata-list-item.html',
+    };
+}
+
+
 angular.module('superdesk.apps.authoring.metadata', [
     'superdesk.apps.authoring.widgets',
     'superdesk.apps.publish',
@@ -1301,6 +1313,7 @@ angular.module('superdesk.apps.authoring.metadata', [
     .controller('MetadataWidgetCtrl', MetadataCtrl)
     .service('metadata', MetadataService)
     .directive('sdMetaTarget', MetaTargetedPublishingDirective)
+    .directive('sdMetadataListItem', MetadataListItem)
     .directive('sdMetaTerms', MetaTermsDirective)
     .directive('sdMetaTags', MetaTagsDirective)
     .directive('sdMetaDropdown', MetaDropdownDirective)
