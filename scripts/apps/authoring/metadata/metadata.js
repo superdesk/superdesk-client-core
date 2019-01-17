@@ -1277,8 +1277,8 @@ function MetadataListItem() {
     return {
         scope: {
             label: '=',
-            value: '=',
         },
+        transclude: true,
         templateUrl: 'scripts/apps/authoring/metadata/views/metadata-list-item.html',
     };
 }
