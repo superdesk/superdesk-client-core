@@ -210,8 +210,6 @@ export function AssociationController(config, send, api, $q, superdesk,
             return renditions.crop(item, cropOptions)
                 .then((rendition) => {
                     self.updateItemAssociation(scope, rendition, options.customRel, callback);
-                }, () => {
-                    notify.error(gettext('Failed to generate picture crops.'));
                 })
                 .finally(() => {
                     scope.loading = false;
