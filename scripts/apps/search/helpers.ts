@@ -41,7 +41,7 @@ export function menuHolderElem() {
     return document.getElementById('react-placeholder');
 }
 
-export function closeActionsMenu(itemId) {
+export function closeActionsMenu(itemId?) {
     const menuHolder = menuHolderElem();
     const menuItemId = menuHolder.getAttribute('data-item-id');
 

@@ -1,3 +1,5 @@
+/* eslint-disable react/no-multi-comp */
+
 import React from 'react';
 import classNames from 'classnames';
 import {get} from 'lodash';
