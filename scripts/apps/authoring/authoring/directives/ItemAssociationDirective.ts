@@ -31,7 +31,7 @@ export function ItemAssociationDirective(renditions) {
             allowPicture: '<',
             allowVideo: '<',
             allowAudio: '<',
-            _onchange: '&onchange',
+            onchange: '&',
             showTitle: '<',
             save: '&',
             maxUploads: '=',
@@ -122,9 +122,9 @@ export function ItemAssociationDirective(renditions) {
                 }
             };
 
-            scope.onchange = (field) => {
+            scope.onMetadataChange = (field) => {
                 scope.related[field] = stripHtmlTags(scope.related[field]);
-                scope._onchange();
+                scope.onchange();
             };
         },
     };
