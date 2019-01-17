@@ -31,137 +31,94 @@
                     <span class="state-label legal" ng-show="item.flags.marked_for_legal" translate>Legal</span>
                 </span>
             </li>
-            <li class="basic-list__item" ng-if="!isRemovedField('usageterms')">
-                <label class="basic-list__item-label" translate>Usage terms</label>
-                <div class="basic-list__item-data">
-                    <input class="basic-input" type="text" ng-model="item.usageterms" ng-disabled="!_editable" ng-change="autosave(item)">
-                </div>
+
+            <li sd-metadata-list-item data-label="'Usage terms' | translate" ng-if="!isRemovedField('usageterms')">
+                <input class="basic-input" type="text" ng-model="item.usageterms" ng-disabled="!_editable" ng-change="autosave(item)">
             </li>
+
             <li class="basic-list__item basic-list__item--stacked" ng-if="$root.config.features.alchemy">
                 <label translate>Tags</label>
                 <div sd-meta-tags data-item="item" data-field="keywords" data-source-field="body_html" data-change="autosave(item)" data-disabled="!_editable">
             </li>
-            <li class="basic-list__item" ng-if="!isRemovedField('language')">
-                <label class="basic-list__item-label" translate>Language</label>
-                <div class="basic-list__item-data">
-                    <input class="basic-input" type="text" ng-model="item.language" ng-disabled="!_editable" ng-change="autosave(item)">
-                </div>
+
+            <li sd-metadata-list-item data-label="'Language' | translate" ng-if="!isRemovedField('language')">
+                <input class="basic-input" type="text" ng-model="item.language" ng-disabled="!_editable" ng-change="autosave(item)">
             </li>
 
-            <li sd-metadata-list-item data-label="'Pubstatus' | translate" ng-if="item.pubstatus" >{{ item.pubstatus }}</li>
-
-            <li class="basic-list__item" ng-if="item.original_source">
-                <label class="basic-list__item-label" translate>Original source</label>
-                <div class="basic-list__item-data">
-                    {{item.original_source}}
-                </div>
-            </li>
-            <li class="basic-list__item" ng-if="item.copyrightholder">
-                <label class="basic-list__item-label" translate>Copyright</label>
-                <div class="basic-list__item-data">
-                    {{item.copyrightholder}}
-                </div>
-            </li>
-            <li class="basic-list__item" ng-if="item.copyrightnotice">
-                <label class="basic-list__item-label" translate>Copyright notice</label>
-                <div class="basic-list__item-data">
-                    {{item.copyrightnotice}}
-                </div>
-            </li>
-            <li class="basic-list__item" ng-if="item.creditline">
-                <label class="basic-list__item-label" translate>Credit</label>
-                <div class="basic-list__item-data">
-                    {{item.creditline}}
-                </div>
-            </li>
-            <li class="basic-list__item">
-                <label class="basic-list__item-label" translate>State</label>
-                <div class="basic-list__item-data">
-                    <span sd-item-state data-state=item.state data-embargo=item.embargo></span>
-                    <span ng-if="item.flags.marked_for_not_publication" class="state-label not-for-publication" translate>Not For Publication</span>
-                    <span ng-if="item.flags.marked_for_legal" class="state-label legal" translate>Legal</span>
-                    <span ng-if="item.flags.marked_for_sms" class="state-label sms" translate>Sms</span>
-                    <span ng-if="item.rewritten_by" class="state-label updated" translate>Updated</span>
-                </div>
+            <li sd-metadata-list-item data-label="'Pubstatus' | translate" ng-if="item.pubstatus">
+                {{ item.pubstatus }}
             </li>
 
-            <li class="basic-list__item" ng-if="item.ingest_provider">
-                <label class="basic-list__item-label" translate>Ingest Provider</label>
-                <div class="basic-list__item-data" sd-meta-ingest data-item="item"></div>
+            <li sd-metadata-list-item data-label="'Original source' | translate" ng-if="item.original_source">
+                {{ item.original_source }}
             </li>
 
-            <li class="basic-list__item" ng-if="item.ingest_provider_sequence">
-                <label class="basic-list__item-label" translate>Provider sequence</label>
-                <div class="basic-list__item-data">
-                    {{item.ingest_provider_sequence}}
-                </div>
+            <li sd-metadata-list-item data-label="'Copyright' | translate" ng-if="item.copyrightholder">
+                {{ item.copyrightholder }}
             </li>
-            <li class="basic-list__item" ng-if="item.expiry">
-                <label class="basic-list__item-label" translate>Expiry</label>
+
+            <li sd-metadata-list-item data-label="'Copyright notice' | translate" ng-if="item.copyrightnotice">
+                {{ item.copyrightnotice }}
+            </li>
+
+            <li sd-metadata-list-item data-label="'Credit' | translate" ng-if="item.creditline">
+                {{ item.creditline }}
+            </li>
+
+            <li sd-metadata-list-item data-label="'State' | translate">
+                <span sd-item-state data-state=item.state data-embargo=item.embargo></span>
+                <span ng-if="item.flags.marked_for_not_publication" class="state-label not-for-publication" translate>Not For Publication</span>
+                <span ng-if="item.flags.marked_for_legal" class="state-label legal" translate>Legal</span>
+                <span ng-if="item.flags.marked_for_sms" class="state-label sms" translate>Sms</span>
+                <span ng-if="item.rewritten_by" class="state-label updated" translate>Updated</span>
+            </li>
+
+            <li sd-metadata-list-item data-label="'Ingest Provider' | translate" ng-if="item.ingest_provider">
+                <div sd-meta-ingest data-item="item"></div>
+            </li>
+
+            <li sd-metadata-list-item data-label="'Provider sequence' | translate" ng-if="item.ingest_provider_sequence">
+                {{ item.ingest_provider_sequence }}
+            </li>
+
+            <li sd-metadata-list-item data-label="'Expiry' | translate" ng-if="item.expiry">
                 <div class="basic-list__item-data" sd-reldate-complex datetime="item.expiry"></div>
             </li>
 
-            <li class="basic-list__item" ng-if="item.slugline">
-                <label class="basic-list__item-label" translate>Slugline</label>
-                <div class="basic-list__item-data">
-                    {{item.slugline}}
-                </div>
+            <li sd-metadata-list-item data-label="'Slugline' | translate" ng-if="item.slugline">
+                {{ item.slugline }}
             </li>
 
-            <li class="basic-list__item" ng-if="item.urgency">
-                <label class="basic-list__item-label" translate>Urgency</label>
-                <div class="basic-list__item-data">
-                    {{item.urgency}}
-                </div>
+            <li sd-metadata-list-item data-label="'Urgency' | translate" ng-if="item.urgency">
+                {{ item.urgency }}
             </li>
 
-            <li class="basic-list__item" ng-if="item.priority">
-                <label class="basic-list__item-label" translate>Priority</label>
-                <div class="basic-list__item-data">
-                    {{item.priority}}
-                </div>
+            <li sd-metadata-list-item data-label="'Priority' | translate" ng-if="item.priority">
+                {{ item.priority }}
             </li>
 
-            <li class="basic-list__item">
-                <label class="basic-list__item-label" translate>Word Count</label>
-                <div class="basic-list__item-data">
-                    {{item.word_count}}
-                </div>
+            <li sd-metadata-list-item data-label="'Word Count' | translate" ng-if="item.word_count">
+                {{ item.word_count }}
             </li>
 
-            <li class="basic-list__item" ng-if="item.keywords && item.keywords.length">
-                <label class="basic-list__item-label" translate>Keywords</label>
-                <div class="basic-list__item-data">
-                        {{item.keywords | mergeWords}}
-                </div>
+            <li sd-metadata-list-item data-label="'Word Count' | translate" ng-if="item.keywords && item.keywords.length">
+                {{ item.keywords | mergeWords }}
             </li>
 
-            <li class="basic-list__item" ng-if="item.source">
-                <label class="basic-list__item-label" translate>Source</label>
-                <div class="basic-list__item-data">
-                        {{item.source}}
-                </div>
+            <li sd-metadata-list-item data-label="'Source' | translate" ng-if="item.source">
+                {{ item.source }}
             </li>
 
-            <li class="basic-list__item">
-                <label class="basic-list__item-label" translate>Take key</label>
-                <div class="basic-list__item-data">
-                        {{item.anpa_take_key}}
-                </div>
+            <li sd-metadata-list-item data-label="'Take key' | translate">
+                {{ item.anpa_take_key }}
             </li>
 
-            <li class="basic-list__item" ng-if="item.signal">
-                <label class="basic-list__item-label" translate>Signal</label>
-                <div class="basic-list__item-data">
-                        {{item.signal}}
-                </div>
+            <li sd-metadata-list-item data-label="'Signal' | translate" ng-if="item.signal">
+                {{ item.signal }}
             </li>
 
-            <li class="basic-list__item" ng-if="item.anpa_category && item.anpa_category.length">
-                <label class="basic-list__item-label" translate>Service</label>
-                <div class="basic-list__item-data">
-                        {{item.anpa_category | mergeWords:'name'}}
-                </div>
+            <li sd-metadata-list-item data-label="'Service' | translate" ng-if="item.anpa_category && item.anpa_category.length">
+                {{ item.anpa_category | mergeWords:'name' }}
             </li>
 
             <li class="basic-list__item" ng-repeat="cv in cvs track by cv._id" ng-if="item[cv.schema_field] | mergeWords:'name' : cv._id">
@@ -171,86 +128,52 @@
                 </div>
             </li>
 
-            <li class="basic-list__item" ng-if="item.genre  && item.genre.length > 0 && !genreInCvs">
-                <label class="basic-list__item-label" translate>Genre</label>
-                <div class="basic-list__item-data">
-                        {{item.genre | mergeWords:'name'}}
-                </div>
+            <li sd-metadata-list-item data-label="'Genre' | translate" ng-if="item.genre  && item.genre.length > 0 && !genreInCvs">
+                {{ item.genre | mergeWords:'name' }}
             </li>
 
-            <li class="basic-list__item" ng-if="item.place && item.place.length > 0 && !placeInCvs">
-                <label class="basic-list__item-label" translate>Place</label>
-                <div class="basic-list__item-data">
-                        {{item.place | mergeWords:'name'}}
-                </div>
+            <li sd-metadata-list-item data-label="'Service' | translate" ng-if="item.place && item.place.length > 0 && !placeInCvs">
+                {{ item.place | mergeWords:'name' }}
             </li>
 
-            <li class="basic-list__item" ng-if="item.ednote">
-                <label class="basic-list__item-label" translate>Editorial Note</label>
-                <div class="basic-list__item-data">
-                        {{item.ednote}}
-                </div>
+            <li sd-metadata-list-item data-label="'Editorial Note' | translate" ng-if="item.ednote">
+                {{ item.ednote }}
             </li>
 
-            <li class="basic-list__item">
-                <label class="basic-list__item-label" translate>Dateline</label>
-                <div class="basic-list__item-data">
-                        {{item.dateline.text}}
-                </div>
+            <li sd-metadata-list-item data-label="'Dateline' | translate">
+                {{ item.dateline.text }}
             </li>
 
-            <li class="basic-list__item">
-                <label class="basic-list__item-label" translate>Byline</label>
-                <div class="basic-list__item-data">
-                        {{item.byline}}
-                </div>
+            <li sd-metadata-list-item data-label="'Byline' | translate">
+                {{ item.byline }}
             </li>
 
-            <li class="basic-list__item">
-                    <label class="basic-list__item-label" translate>Sign-Off</label>
-                <div class="basic-list__item-data">
-                        {{item.sign_off}}
-                </div>
+            <li sd-metadata-list-item data-label="'Sign-Off' | translate">
+                {{ item.sign_off }}
             </li>
 
-            <li class="basic-list__item" ng-if="item._current_version">
-                    <label class="basic-list__item-label" translate>Version</label>
-                <div class="basic-list__item-data">
-                        {{item._current_version}}
-                </div>
+            <li sd-metadata-list-item data-label="'Version' | translate" ng-if="item._current_version">
+                {{ item._current_version }}
             </li>
 
-            <li class="basic-list__item" ng-if="item.firstcreated">
-                    <label class="basic-list__item-label" translate>Created</label>
-                <div class="basic-list__item-data" sd-reldate-complex datetime="item.firstcreated">
-                </div>
+            <li sd-metadata-list-item data-label="'Created' | translate" ng-if="item.firstcreated">
+                <div sd-reldate-complex datetime="item.firstcreated">
             </li>
 
-            <li class="basic-list__item" ng-if="item.versioncreated">
-                    <label class="basic-list__item-label" translate>Last updated</label>
-                <div class="basic-list__item-data" sd-reldate-complex datetime="item.versioncreated">
-                </div>
+            <li sd-metadata-list-item data-label="'Last updated' | translate" ng-if="item.versioncreated">
+                <div sd-reldate-complex datetime="item.versioncreated">
             </li>
 
-            <li class="basic-list__item" ng-if="item.original_id">
-                    <label class="basic-list__item-label" translate>Original ID</label>
-                <div class="basic-list__item-data">
-                        {{item.original_id}}
-                </div>
+            <li sd-metadata-list-item data-label="'Original ID' | translate" ng-if="item.original_id">
+                {{ item.original_id }}
             </li>
 
-            <li class="basic-list__item" ng-if="originalCreator">
-                    <label class="basic-list__item-label" translate>Original creator</label>
-                <div class="basic-list__item-data">
-                        {{originalCreator}}
-                </div>
+            <li sd-metadata-list-item data-label="'Original creator' | translate" ng-if="item.originalCreator">
+                {{ item.originalCreator }}
             </li>
 
-            <li class="basic-list__item" ng-if="versionCreator">
-                    <label class="basic-list__item-label" translate>Version creator</label>
-                <div class="basic-list__item-data">
-                        {{versionCreator}}
-                </div>
+            <li sd-metadata-list-item data-label="'Version creator' | translate" ng-if="item.versionCreator">
+                {{ item.versionCreator }}
             </li>
 
             <li class="basic-list__item basic-list__item--stacked">
@@ -259,30 +182,21 @@
                     {{item.guid}}
                 </div>
             </li>
-            <li class="basic-list__item">
-                <label class="basic-list__item-label" translate>Unique name</label>
-                <div class="basic-list__item-data">
-                    <input class="basic-input" type="text" ng-model="item.unique_name" ng-change="autosave(item)" ng-disabled="!_editable || !unique_name_editable">
-                </div>
+
+            <li sd-metadata-list-item data-label="'Unique name' | translate">
+                <input class="basic-input" type="text" ng-model="item.unique_name" ng-change="autosave(item)" ng-disabled="!_editable || !unique_name_editable">
             </li>
 
-            <li class="basic-list__item">
-                    <label class="basic-list__item-label" translate>Type</label>
-                <div class="basic-list__item-data">
-                        {{item.type}}
-                </div>
+            <li sd-metadata-list-item data-label="'Type' | translate">
+                {{ item.type }}
             </li>
 
-            <li class="basic-list__item" ng-if="item.renditions && item.renditions.original">
-                <label class="basic-list__item-label" translate>Dimensions</label>
-                <div class="basic-list__item-data">
-                    {{ item.renditions.original.width }} x {{ item.renditions.original.height }}
-                </div>
+            <li sd-metadata-list-item data-label="'Dimensions' | translate" ng-if="item.renditions && item.renditions.original">
+                {{ item.renditions.original.width }} x {{ item.renditions.original.height }}
             </li>
 
-            <li class="basic-list__item" ng-if="item.type == 'picture' && item.archive_description && item.archive_description !== item.description_text">
-                <label class="basic-list__item-label" translate>Description</label>
-                <div class="basic-list__item-data" sd-html-preview="item.archive_description"></div>
+            <li sd-metadata-list-item data-label="'Description' | translate" ng-if="item.type == 'picture' && item.archive_description && item.archive_description !== item.description_text">
+                <div sd-html-preview="item.archive_description"></div>
             </li>
         </ul>
     </div>
