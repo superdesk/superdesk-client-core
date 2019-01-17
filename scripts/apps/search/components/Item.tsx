@@ -20,7 +20,7 @@ const actionsMenuDefaultTemplate = (toggle, stopEvent) => (
                 className={'more-activity-toggle condensed dropdown__toggle'}
                 onClick={toggle}
                 onDoubleClick={stopEvent}>
-                <i className="icon-dots-vertical"></i>
+                <i className="icon-dots-vertical" />
             </button>
         </div>
     </div>

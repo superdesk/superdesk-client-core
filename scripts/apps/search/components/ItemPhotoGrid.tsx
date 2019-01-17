@@ -38,7 +38,7 @@ export class ItemPhotoGrid extends React.Component<IProps, never> {
                     svc={this.props.svc}
                     getActionsMenu={this.props.getActionsMenu}
                 />
-                <div className="sd-grid-item__state-border"></div>
+                <div className="sd-grid-item__state-border" />
             </div>
         );
     }

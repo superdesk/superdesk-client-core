@@ -1,9 +1,9 @@
 import React from 'react';
-import { IArticle } from 'superdesk-interfaces/Article';
-import { IDesk } from 'superdesk-interfaces/Desk';
-import { ListTypeIcon } from './ListTypeIcon';
-import { ListPriority } from './ListPriority';
-import { ListItemInfo } from './ListItemInfo';
+import {IArticle} from 'superdesk-interfaces/Article';
+import {IDesk} from 'superdesk-interfaces/Desk';
+import {ListTypeIcon} from './ListTypeIcon';
+import {ListPriority} from './ListPriority';
+import {ListItemInfo} from './ListItemInfo';
 
 interface IProps {
     item: IArticle;
@@ -28,7 +28,7 @@ export class ListItemTemplate extends React.Component<IProps, never> {
 
         return (
             <div>
-                <span className="state-border"></span>
+                <span className="state-border" />
                 <ListTypeIcon
                     item={item}
                     onMultiSelect={this.props.onMultiSelect}
@@ -59,6 +59,6 @@ export class ListItemTemplate extends React.Component<IProps, never> {
                 />
                 {this.props.getActionsMenu()}
             </div>
-       );
+        );
     }
 }

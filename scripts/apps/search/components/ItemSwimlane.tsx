@@ -8,33 +8,31 @@ import {ListTypeIcon} from './ListTypeIcon';
 import {SwimlaneField} from './SwimlaneField';
 import {DEFAULT_SWIMLANE_FIELDS_CONFIG} from '../constants';
 
-const renderGroup = (groups, item: IArticle, svc) => {
-    return groups.map((group, groupIndex) => (
-        <span
-            key={groupIndex}
-            className={classNames({
-                'sd-list-item__column': true,
-                'sd-list-item__column--grow': group.ellipsis === true,
-                'sd-list-item__column--no-border': groupIndex === groups.length - 1,
-            })}>
-            <span className="sd-list-item__row">
-                <span className={classNames({'sd-overflow-ellipsis': group.ellipsis === true})}>
-                    {
-                        group.fields
-                            .map((field, fieldIndex) => (
-                                <SwimlaneField
-                                    key={fieldIndex}
-                                    fieldId={field}
-                                    item={item}
-                                    svc={svc}
-                                />
-                            ))
-                    }
-                </span>
+const renderGroup = (groups, item: IArticle, svc) => groups.map((group, groupIndex) => (
+    <span
+        key={groupIndex}
+        className={classNames({
+            'sd-list-item__column': true,
+            'sd-list-item__column--grow': group.ellipsis === true,
+            'sd-list-item__column--no-border': groupIndex === groups.length - 1,
+        })}>
+        <span className="sd-list-item__row">
+            <span className={classNames({'sd-overflow-ellipsis': group.ellipsis === true})}>
+                {
+                    group.fields
+                        .map((field, fieldIndex) => (
+                            <SwimlaneField
+                                key={fieldIndex}
+                                fieldId={field}
+                                item={item}
+                                svc={svc}
+                            />
+                        ))
+                }
             </span>
         </span>
-    ));
-};
+    </span>
+));
 
 interface IProps {
     item: IArticle;
@@ -60,8 +58,7 @@ export class ItemSwimlane extends React.Component<IProps, any> {
                         minWidth: '4px',
                         maxWidth: '4px',
                         background: isLocked ? '#e51c23' : 'transparent',
-                    }}>
-                </span>
+                    }} />
                 <span className="sd-list-item__column">
                     <ListTypeIcon
                         item={item}
@@ -70,7 +67,7 @@ export class ItemSwimlane extends React.Component<IProps, any> {
                     />
                 </span>
                 {renderGroup(swimlaneViewFieldsConfig.left, item, svc)}
-                <span className="sd-list-item--element-grow"></span>
+                <span className="sd-list-item--element-grow" />
                 {renderGroup(swimlaneViewFieldsConfig.right, item, svc)}
                 {
                     getActionsMenu((toggle, stopEvent) => (
@@ -79,7 +76,7 @@ export class ItemSwimlane extends React.Component<IProps, any> {
                                 className="icn-btn"
                                 onClick={toggle}
                                 onDoubleClick={stopEvent}>
-                                <i className="icon-dots-vertical"></i>
+                                <i className="icon-dots-vertical" />
                             </button>
                         </div>
                     ))

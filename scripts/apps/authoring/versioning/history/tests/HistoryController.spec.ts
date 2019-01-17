@@ -175,5 +175,5 @@ describe('archive-history', () => {
             expect(scope.historyItems.length).toBe(2);
             expect(scope.historyItems[0].operation).toBe('create');
             expect(scope.historyItems[1].operation).toBe('update');
-    }));
+        }));
 });
