@@ -109,7 +109,7 @@
                             <a  href=""
                                 ng-repeat="fileType in fileTypes"
                                 title="{{fileType.type}}"
-                                ng-click="addOrRemoveFileType(fileType.type)"
+                                ng-click="addOrRemoveFileType(fileType.type); editForm.$setDirty()"
                                 class="toggle-button"
                                 ng-class="{'toggle-button--active': hasFileType(fileType.type)}">
                                 <i class="toggle-button__icon {{fileType.icon}}"></i>
