@@ -1222,15 +1222,35 @@ function MetadataService(api, subscribersService, config, vocabularies, $rootSco
                     return true;
                 } else {
                     cv.terms = cv.items;
-                    return qcodes.length === 0 || qcodes.some((qcode) => !!cvService[qcode]);
+                    return qcodes.some((qcode) => !!cvService[qcode]);
                 }
             }));
         },
+        /**
+         * Get custom vocabularies for selected services, used in authoring
+         *
+         * @param {Array} qcodes - selected service qcodes
+         * @param {Object} editor
+         * @param {Object} schema
+         * @return {Array}
+         */
         getCustomVocabulariesForArticleHeader: function(qcodes, editor, schema) {
             return this.getFilteredCustomVocabularies(qcodes)
                 .then(
-                    (cvs) => cvs.filter((cv) => cv.items && cv.items.length && (editor[cv._id] || schema[cv._id]))
+                    (cvs) => cvs.filter((cv) => cv.terms.length && (editor[cv._id] || schema[cv._id]))
                 );
+        },
+        /**
+         * Get all available custom vocabularies, used in content profile editor
+         *
+         * @param {Ojbect} editor
+         * @param {Object} schema
+         * @return {Array}
+         */
+        getAllCustomVocabulariesForArticleHeader: function(editor, schema) {
+            return this.fetchMetadataValues().then(() =>
+                this.cvs.filter((cv) => cv.items.length && cv.service && (editor[cv._id] || schema[cv._id]))
+            );
         },
         initialize: function() {
             if (!this.loaded) {
