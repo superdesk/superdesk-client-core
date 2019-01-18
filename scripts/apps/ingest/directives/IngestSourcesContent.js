@@ -504,10 +504,8 @@ export function IngestSourcesContent(ingestSources, gettext, notify, api, $locat
                  *
                  * @param {string} fileType
                  */
-                $scope.addOrRemoveFileType = function(fileType) {
-                    let modalBodyContainer = angular.element('.modal__body');
-
-                    modalBodyContainer.scope().editForm.$setDirty();
+                $scope.addOrRemoveFileType = function(fileType, editForm) {
+                    editForm.$setDirty();
                     if (!$scope.provider.content_types) {
                         $scope.provider.content_types = [];
                     }
