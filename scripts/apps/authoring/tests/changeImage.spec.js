@@ -189,20 +189,22 @@ describe('authoring ChangeImageController', () => {
             expect(scope.data.metadata.poi).toEqual({x: 0.5, y: 0.5});
         }));
 
-        it('sets default poi if non defined, but don\'t save when crop validation is on', inject((api, gettext, $rootScope, $q, notify, config) => {
-            if (config.features == null) {
-                config.features = {};
-            }
-            config.features.validatePointOfInterestForImages = true;
+        it('sets default poi if non defined, but don\'t save when crop validation is on',
+            inject((api, gettext, $rootScope, $q, notify, config) => {
+                if (config.features == null) {
+                    config.features = {};
+                }
+                config.features.validatePointOfInterestForImages = true;
 
-            let scope = angular.copy(scopeData);
+                let scope = angular.copy(scopeData);
 
-            ChangeImageController(scope, gettext, notify, _, api, $rootScope, deployConfig, $q, config);
-            $rootScope.$digest();
+                ChangeImageController(scope, gettext, notify, _, api, $rootScope, deployConfig, $q, config);
+                $rootScope.$digest();
 
-            expect(scope.data.poi).toEqual({x: 0.5, y: 0.5});
-            expect(scope.data.metadata.poi).toBeFalsy();
-        }));
+                expect(scope.data.poi).toEqual({x: 0.5, y: 0.5});
+                expect(scope.data.metadata.poi).toBeFalsy();
+            })
+        );
 
         it('No error thrown if poi is specified', inject((api, gettext, $rootScope, $q, notify, config) => {
             let scope = angular.copy(scopeData);
