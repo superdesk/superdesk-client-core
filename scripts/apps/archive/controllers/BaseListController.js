@@ -11,7 +11,7 @@ export class BaseListController {
             const source = this.getQuery(null, $scope.repo.archive || false);
 
             source.from = from;
-            this.fetchItems({source}, true);
+            this.fetchItems(this.getCriteria(source), true);
         };
 
         $scope.$on('$routeUpdate', (e, data) => {
@@ -66,7 +66,13 @@ export class BaseListController {
     refresh(filterDesk) {
         var query = this.getQuery(_.omit(this.$location.search(), '_id'), filterDesk);
 
-        this.fetchItems({source: query});
+        this.fetchItems(this.getCriteria(query));
+    }
+
+    getCriteria(source) {
+        const params = this.$location.search().params ? JSON.parse(this.$location.search().params) : {};
+
+        return {source, params};
     }
 }
 
