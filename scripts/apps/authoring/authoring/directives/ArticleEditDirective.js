@@ -63,6 +63,11 @@ export function ArticleEditDirective(
         templateUrl: 'scripts/apps/authoring/views/article-edit.html',
         link: function(scope, elem) {
             getLabelNameResolver().then((getLabelForFieldId) => {
+                scope.handleUrlsChange = function(fieldId, value) {
+                    scope.item.extra[fieldId] = value;
+                    scope.autosave(scope.item);
+                };
+
                 scope.toggleDetails = true;
                 scope.errorMessage = null;
                 scope.contentType = null;
