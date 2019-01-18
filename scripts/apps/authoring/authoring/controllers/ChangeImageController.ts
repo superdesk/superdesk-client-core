@@ -177,7 +177,6 @@ export function ChangeImageController($scope, gettext, notify, _, api, $rootScop
 
         $scope.crops.isDirty = false;
         $scope.data.isDirty = true;
-        $scope.portraitPOIWarning = false;
     };
 
     /**
