@@ -279,8 +279,7 @@ export function ContentProfileSchemaEditor(content, metadata) {
                     scope.setDirty(true);
                 };
 
-                metadata.getCustomVocabulariesForArticleHeader(
-                    [],
+                metadata.getAllCustomVocabulariesForArticleHeader(
                     scope.model.editor,
                     scope.model.schema,
                 ).then((customVocabulariesForArticleHeader) => {

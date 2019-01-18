@@ -63,10 +63,27 @@ describe('superdesk.apps.authoring.metadata', () => {
                 {_id: 'a', items: [{name: 'a', service: {a: 1}}], service: {all: 1}},
                 {_id: 'b', items: [{name: 'b'}], service: {all: 1}},
                 {_id: 'c', items: [{name: 'c'}], service: {b: 1}},
-                {_id: 'd'},
+                {_id: 'd', items: []},
             ];
 
             metadata.getCustomVocabulariesForArticleHeader([], {a: 1, b: 1, c: 1, d: 1}, {})
+                .then((cvs) => {
+                    expect(['b']).toEqual(cvs.map((cv) => cv._id));
+                });
+            
+            $rootScope.$digest();
+        }));
+
+        it('can get list of all vocabularies for authoring header', inject((metadata, $q, $rootScope) => {
+            spyOn(metadata, 'fetchMetadataValues').and.returnValue($q.when());
+            metadata.cvs = [
+                {_id: 'a', items: [{name: 'a', service: {a: 1}}], service: {all: 1}},
+                {_id: 'b', items: [{name: 'b'}], service: {all: 1}},
+                {_id: 'c', items: [{name: 'c'}], service: {b: 1}},
+                {_id: 'd', items: []},
+            ];
+
+            metadata.getAllCustomVocabulariesForArticleHeader({a: 1, b: 1, c: 1, d: 1}, {})
                 .then((cvs) => {
                     expect(['a', 'b', 'c']).toEqual(cvs.map((cv) => cv._id));
                 });

@@ -210,8 +210,6 @@ export function AssociationController(config, send, api, $q, superdesk,
             return renditions.crop(item, cropOptions)
                 .then((rendition) => {
                     self.updateItemAssociation(scope, rendition, options.customRel, callback);
-                }, () => {
-                    notify.error(gettext('Failed to generate picture crops.'));
                 })
                 .finally(() => {
                     scope.loading = false;
@@ -232,7 +230,9 @@ export function AssociationController(config, send, api, $q, superdesk,
      * @param {Object} event Drop event
      */
     this.initializeUploadOnDrop = function(scope, event) {
-        if (getSuperdeskType(event) === 'Files') {
+        const superdeskType = getSuperdeskType(event);
+
+        if (superdeskType === 'Files') {
             if (self.isMediaEditable()) {
                 const files = event.originalEvent.dataTransfer.files;
 
@@ -241,7 +241,7 @@ export function AssociationController(config, send, api, $q, superdesk,
             return;
         }
 
-        self.getItem(event, getSuperdeskType(event)).then((item) => {
+        self.getItem(event, superdeskType).then((item) => {
             if (!scope.editable) {
                 return;
             }

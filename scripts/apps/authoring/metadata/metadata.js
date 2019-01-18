@@ -6,13 +6,13 @@ import {VOCABULARY_SELECTION_TYPES} from '../../vocabularies/constants';
 const SINGLE_SELECTION = VOCABULARY_SELECTION_TYPES.SINGLE_SELECTION.id;
 
 MetadataCtrl.$inject = [
-    '$scope', 'desks', 'metadata', 'privileges', 'datetimeHelper',
-    'preferencesService', 'config', 'moment', 'content',
+    '$scope', 'desks', 'metadata', 'privileges', 'datetimeHelper', 'userList',
+    'preferencesService', 'archiveService', 'config', 'moment', 'content',
 ];
 
 function MetadataCtrl(
-    $scope, desks, metadata, privileges, datetimeHelper,
-    preferencesService, config, moment, content) {
+    $scope, desks, metadata, privileges, datetimeHelper, userList,
+    preferencesService, archiveService, config, moment, content) {
     desks.initialize();
 
     $scope.change_profile = config.item_profile && config.item_profile.change_profile === 1 &&
@@ -220,6 +220,29 @@ function MetadataCtrl(
     $scope.targetsEditable = $scope.action !== 'correct' && $scope.action !== 'kill';
 
     resolvePublishScheduleAndEmbargoTS();
+
+    metadata.getFilteredCustomVocabularies([]).then((cvs) => {
+        $scope.genreInCvs = _.map(cvs, 'schema_field').indexOf('genre') !== -1;
+        $scope.placeInCvs = _.map(cvs, 'schema_field').indexOf('place') !== -1;
+    });
+
+    $scope.originalCreator = $scope.item.original_creator;
+    $scope.versionCreator = $scope.item.version_creator;
+
+    if (!archiveService.isLegal($scope.item)) {
+        if ($scope.item.original_creator) {
+            userList.getUser($scope.item.original_creator)
+                .then((user) => {
+                    $scope.originalCreator = user.display_name;
+                });
+        }
+        if ($scope.item.version_creator) {
+            userList.getUser($scope.item.version_creator)
+                .then((user) => {
+                    $scope.versionCreator = user.display_name;
+                });
+        }
+    }
 }
 
 MetaTargetedPublishingDirective.$inject = [];
@@ -1199,15 +1222,35 @@ function MetadataService(api, subscribersService, config, vocabularies, $rootSco
                     return true;
                 } else {
                     cv.terms = cv.items;
-                    return qcodes.length === 0 || qcodes.some((qcode) => !!cvService[qcode]);
+                    return qcodes.some((qcode) => !!cvService[qcode]);
                 }
             }));
         },
+        /**
+         * Get custom vocabularies for selected services, used in authoring
+         *
+         * @param {Array} qcodes - selected service qcodes
+         * @param {Object} editor
+         * @param {Object} schema
+         * @return {Array}
+         */
         getCustomVocabulariesForArticleHeader: function(qcodes, editor, schema) {
             return this.getFilteredCustomVocabularies(qcodes)
                 .then(
-                    (cvs) => cvs.filter((cv) => cv.items && cv.items.length && (editor[cv._id] || schema[cv._id]))
+                    (cvs) => cvs.filter((cv) => cv.terms.length && (editor[cv._id] || schema[cv._id]))
                 );
+        },
+        /**
+         * Get all available custom vocabularies, used in content profile editor
+         *
+         * @param {Ojbect} editor
+         * @param {Object} schema
+         * @return {Array}
+         */
+        getAllCustomVocabulariesForArticleHeader: function(editor, schema) {
+            return this.fetchMetadataValues().then(() =>
+                this.cvs.filter((cv) => cv.items.length && cv.service && (editor[cv._id] || schema[cv._id]))
+            );
         },
         initialize: function() {
             if (!this.loaded) {
@@ -1249,6 +1292,18 @@ function MetadataService(api, subscribersService, config, vocabularies, $rootSco
     return service;
 }
 
+MetadataListItem.$inject = [];
+function MetadataListItem() {
+    return {
+        scope: {
+            label: '=',
+        },
+        transclude: true,
+        templateUrl: 'scripts/apps/authoring/metadata/views/metadata-list-item.html',
+    };
+}
+
+
 angular.module('superdesk.apps.authoring.metadata', [
     'superdesk.apps.authoring.widgets',
     'superdesk.apps.publish',
@@ -1278,6 +1333,7 @@ angular.module('superdesk.apps.authoring.metadata', [
     .controller('MetadataWidgetCtrl', MetadataCtrl)
     .service('metadata', MetadataService)
     .directive('sdMetaTarget', MetaTargetedPublishingDirective)
+    .directive('sdMetadataListItem', MetadataListItem)
     .directive('sdMetaTerms', MetaTermsDirective)
     .directive('sdMetaTags', MetaTagsDirective)
     .directive('sdMetaDropdown', MetaDropdownDirective)

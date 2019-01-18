@@ -5,17 +5,10 @@ import {IArticle} from 'superdesk-interfaces/Article';
  * @ngdoc service
  * @module superdesk.apps.authoring
  * @name renditions
- *
- * @requires metadata
- * @requires $q
- * @requires api
- * @requires superdesk
- * @requires lodash
- *
  * @description Renditions Service allows the user to generate different crops.
  */
-RenditionsService.$inject = ['metadata', '$q', 'api', 'superdesk', 'lodash', 'config'];
-export function RenditionsService(metadata, $q, api, superdesk, _, config) {
+RenditionsService.$inject = ['metadata', '$q', 'api', 'superdesk', 'lodash', 'notify'];
+export function RenditionsService(metadata, $q, api, superdesk, _, notify) {
     var self = this;
 
     /**
@@ -91,7 +84,7 @@ export function RenditionsService(metadata, $q, api, superdesk, _, config) {
             return superdesk.intent('edit', 'crop', {
                 item: clonedItem,
                 renditions: withRatio,
-                poi: clonedItem.poi || {x: 0.5, y: 0.5},
+                poi: clonedItem.poi,
                 showAoISelectionButton: true,
                 showMetadataEditor: true,
                 ...cropOptions,
@@ -102,7 +95,7 @@ export function RenditionsService(metadata, $q, api, superdesk, _, config) {
 
                     // applying metadata changes
                     angular.forEach(result.cropData, (croppingData, renditionName) => {
-                    // if there a change in the crop co-ordinates
+                        // if there a change in the crop co-ordinates
                         const keys = ['CropLeft', 'CropTop', 'CropBottom', 'CropRight'];
 
                         const canAdd = !keys.every((key) => {
@@ -128,7 +121,7 @@ export function RenditionsService(metadata, $q, api, superdesk, _, config) {
                     });
 
                     return $q.all(savingImagePromises)
-                    // return the cropped images
+                        // return the cropped images
                         .then((croppedImages) => {
                             // save created images in "association" property
                             croppedImages.forEach((image, index) => {
@@ -150,6 +143,9 @@ export function RenditionsService(metadata, $q, api, superdesk, _, config) {
                             // apply the metadata changes
                             angular.extend(item, result.metadata);
                             return item;
+                        })
+                        .catch(() => {
+                            notify.error(gettext('Failed to generate picture crops.'));
                         });
                 });
         });

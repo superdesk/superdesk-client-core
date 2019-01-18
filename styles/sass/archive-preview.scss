@@ -1308,6 +1308,31 @@ figure.preview-overlay-on {
     }
 }
 
+.featuremedia-confirmation {
+    .picture-preview {
+        > div {
+            margin-top: auto;
+            margin-bottom: auto;
+            text-align: center;
+            background-color: rgba(0,0,0,0.7);
+        }
+        img {
+            max-width: 440px;
+            max-height: 440px;
+            object-fit: contain;
+        }
+        .description-text {
+            font-size: 14px;
+            font-weight: 400;
+            font-style: italic;
+            display: inline-block;
+            word-wrap: break-word;
+            margin-top: 0.7rem;
+        }
+    }
+}
+
+
 // .metadata-details-new {
 //     color:#777;
 //     position:relative;

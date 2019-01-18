@@ -63,6 +63,7 @@ describe('editor3', () => {
         bodyEditor.toolbar.link();
         bodyEditor.toolbar.linkInput.sendKeys('example.com/');
         bodyEditor.toolbar.linkSaveButton.click();
+        browser.sleep(500); // it must wait for the change from e3 to be visible in authoring
 
         const body = getPreviewBody();
 
