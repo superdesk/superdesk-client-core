@@ -28,9 +28,9 @@ export function validateMediaFieldsThrows(validator, metadata) {
     }
 }
 
-ChangeImageController.$inject = ['$scope', 'gettext', 'notify', 'modal', 'lodash', 'api', '$rootScope',
+ChangeImageController.$inject = ['$scope', 'gettext', 'notify', 'lodash', 'api', '$rootScope',
     'deployConfig', '$q', 'config'];
-export function ChangeImageController($scope, gettext, notify, modal, _, api, $rootScope, deployConfig, $q, config) {
+export function ChangeImageController($scope, gettext, notify, _, api, $rootScope, deployConfig, $q, config) {
     $scope.data = $scope.locals.data;
     $scope.data.cropData = {};
     $scope.validator = deployConfig.getSync('validator_media_metadata');
@@ -173,6 +173,7 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
         // update crop and poi data in `item`
         angular.extend($scope.data.item, $scope.data.metadata);
         $scope.data.item.poi = $scope.data.poi;
+        $scope.data.metadata.poi = $scope.data.poi;
 
         $scope.crops.isDirty = false;
         $scope.data.isDirty = true;
@@ -489,4 +490,12 @@ export function ChangeImageController($scope, gettext, notify, modal, _, api, $r
             }
         });
     };
+
+    // init poi if not set
+    if (!$scope.data.poi) {
+        $scope.data.poi = {x: 0.5, y: 0.5};
+        if (!config.features.validatePointOfInterestForImages) {
+            $scope.saveCrops(); // save it as defaults
+        }
+    }
 }
