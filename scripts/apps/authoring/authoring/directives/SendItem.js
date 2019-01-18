@@ -7,12 +7,12 @@ SendItem.$inject = ['$q', 'api', 'search', 'desks', 'notify', 'authoringWorkspac
     'superdeskFlags', '$location', 'macros', '$rootScope', 'deployConfig',
     'authoring', 'send', 'editorResolver', 'confirm', 'archiveService',
     'preferencesService', 'multi', 'datetimeHelper', 'config', 'privileges',
-    'storage', 'modal', 'gettext', 'urls', 'extensionPoints'];
+    'storage', 'modal', 'gettext', 'urls', 'extensionPoints', 'metadata'];
 export function SendItem($q, api, search, desks, notify, authoringWorkspace,
     superdeskFlags, $location, macros, $rootScope, deployConfig,
     authoring, send, editorResolver, confirm, archiveService,
     preferencesService, multi, datetimeHelper, config, privileges,
-    storage, modal, gettext, urls, extensionPoints) {
+    storage, modal, gettext, urls, extensionPoints, metadata) {
     return {
         scope: {
             item: '=',
@@ -63,6 +63,8 @@ export function SendItem($q, api, search, desks, notify, authoringWorkspace,
 
             scope.$watch('item', activateItem);
             scope.$watch(send.getConfig, activateConfig);
+
+            scope.metadata = metadata.values;
 
             scope.publish = function() {
                 scope.loading = true;
