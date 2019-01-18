@@ -1,5 +1,52 @@
 # Superdesk Client Changelog
 
+## [1.28.0] 2019-01-18
+
+### Added
+
+- Hide fields from media editor based on picture profile.
+- Add filtering to ingest sources settings.
+- Add planning version to about modal.
+- Add search to dictionaries settings.
+- Embed featured image into email output.
+
+### Changed
+
+- Move target entity to publish panel.
+- Move planning menu config to planning repo.
+- Replace `gettextCatalog.getString` calls with `gettext`.
+- Limit categories in vocabulary config modal to one.
+- Advanced search panel UI refactoring.
+- Improve user preferences page UI.
+
+### Fixed
+
+- Fix media not being saved without editing POI.
+- Fix feature media confirmation modal layout.
+- Activate save button after drag&drop to feature media field.
+- Fix issue where macros ignored string fields in editor2.
+- Fix `singleline:view` user preference not visible.
+- Fix contnet profile editor header field detection.
+- Maintain cursor position when undoing changes in tables.
+- Fix for unpublished related items error for scanpix pictures.
+- Once an image is cropped the result is not shown after saving.
+- Send to desk operation keeps the item locked.
+- Remove send and open buttons from authoring send to panel.
+- Fix saving of user profile after changing password.
+- Failed to generate image crops error is displayed when adding images to gallery.
+- Display extension point pane only if extension point is configured.
+- When creating a new routing scheme the cursor jumps out of the name field.
+- When editing image crops once the save button is shown the button panel is partly hidden.
+- Do not validate media gallery type of related items on publishing.
+- Item sometimes keeps previous image custom renditions.
+- To desk shortcut button does not work in authoring.
+- Fix translations in settings.
+- Save button should activate only when there are some changes in settings.
+- Set toolbar width to match editor size when floating.
+- Add missing fields to metadata widget.
+- Fix cursor position after paste + undo + redo in editor3.
+- Show notification when translated item is corrected.
+
 ## [1.27.0] 2018-12-14
 
 ### Fixed
