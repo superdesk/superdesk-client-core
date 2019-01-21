@@ -14,13 +14,19 @@ interface IState {
     widgetsConfig: IContentProfile['widgets_config'];
 }
 
-export const isWidgetVisible = (
+export const isWidgetVisibleForContentProfile = (
     widgetsConfig: IContentProfile['widgets_config'],
     widgetId: IContentProfile['widgets_config'][0]['widget_id'],
 ) => {
+    const defaultOption = true;
+
+    if (widgetsConfig == null) {
+        return defaultOption;
+    }
+
     const widgetConfig = widgetsConfig.find((config) => config.widget_id === widgetId);
 
-    return widgetConfig == null ? true : widgetConfig.is_displayed;
+    return widgetConfig == null ? defaultOption : widgetConfig.is_displayed;
 };
 
 export class WidgetsConfigComponent extends React.Component<IProps, IState> {
@@ -52,7 +58,7 @@ export class WidgetsConfigComponent extends React.Component<IProps, IState> {
                             <span className="sd-list-item__column">
                                 <input
                                     type="checkbox"
-                                    checked={isWidgetVisible(this.state.widgetsConfig, widget._id)}
+                                    checked={isWidgetVisibleForContentProfile(this.state.widgetsConfig, widget._id)}
                                     onChange={(e) => this.handleChange(widget._id, e.target.checked)}
                                 />
                             </span>
