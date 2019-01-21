@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {TypeIcon} from './index';
+import {gettext} from 'core/ui/components/utils';
+
 /**
  * @ngdoc React
  * @module superdesk.apps.search
  * @name associations
- * @param {Object} svc the services needed: gettext
  * @param {Object} item story to be marked
  * @param {function} openAuthoringView Open the associated item in view mode.
  * @description Creates an icon for the associated item.
@@ -32,8 +33,6 @@ export class Associations extends React.Component<any, any> {
     render() {
         if (this.props.item.associations &&
             this.props.item.associations.featuremedia && this.props.item.associations.featuremedia._id) {
-            const {gettext} = this.props.svc;
-
             return (
                 <div className="type-icon associations"
                     onClick={this.openItem}
@@ -51,10 +50,8 @@ export class Associations extends React.Component<any, any> {
 /*
  * item: item having associations
  * openAuthoringView: Opens the item in view mode
- * svc: contains gettext and is required
  */
 Associations.propTypes = {
-    svc: PropTypes.any.isRequired,
     item: PropTypes.any,
     openAuthoringView: PropTypes.func.isRequired,
 };

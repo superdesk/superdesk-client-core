@@ -1,10 +1,11 @@
 import _ from 'lodash';
+import {gettext} from 'core/ui/components/utils';
 
 AggregateCtrl.$inject = ['$scope', 'api', 'desks', 'workspaces', 'preferencesService', 'storage',
-    'gettext', 'multi', 'config', '$timeout', 'savedSearch', 'deployConfig'];
+    'multi', 'config', '$timeout', 'savedSearch', 'deployConfig'];
 
 export function AggregateCtrl($scope, api, desks, workspaces, preferencesService, storage,
-    gettext, multi, config, $timeout, savedSearch, deployConfig) {
+    multi, config, $timeout, savedSearch, deployConfig) {
     var PREFERENCES_KEY = 'agg:view';
     var defaultMaxItems = 10;
     var self = this;

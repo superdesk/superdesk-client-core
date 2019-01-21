@@ -14,6 +14,7 @@ import * as ctrl from './controllers';
 import * as directive from './directives';
 import * as filter from './filters';
 import {coreMenuGroups} from 'core/activity/activity';
+import {gettext} from 'core/ui/components/utils';
 
 /**
  * @ngdoc module

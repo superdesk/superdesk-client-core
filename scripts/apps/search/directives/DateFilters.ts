@@ -1,3 +1,5 @@
+import {gettext} from 'core/ui/components/utils';
+
 interface IDateRange {
     key: string;
     label: string;
@@ -64,7 +66,7 @@ export const dateRangesByKey: Dictionary<string, IDateRange> = {
     last_8_hours: last8hoursFilter,
 };
 
-export const getDateFilters = (gettext) => [
+export const getDateFilters = () => [
     {
         labelBlock: gettext('Date created'),
         labelFrom: gettext('Created from'),
@@ -117,7 +119,7 @@ export function mapPredefinedDateFiltersClientToServer(search) {
 
     // map custom range keys to from/to values server can understand
 
-    getDateFilters(gettext).forEach((dateFilter) => {
+    getDateFilters().forEach((dateFilter) => {
         const searchValueForFilter = search[dateFilter.fieldname];
         const predefinedFilter = dateFilter.predefinedFilters.find(
             (_predefinedFilter) => _predefinedFilter.key === searchValueForFilter,
@@ -142,7 +144,7 @@ export function mapPredefinedDateFiltersClientToServer(search) {
 export function mapPredefinedDateFiltersServerToClient(search) {
     const nextSearch = {...search};
 
-    getDateFilters(gettext).forEach((dateFilter) => {
+    getDateFilters().forEach((dateFilter) => {
         dateFilter.predefinedFilters.forEach((predefinedFilter) => {
             const expectedSearch = elasticSearchDateRangeToFieldNames(
                 predefinedFilter.elasticSearchDateRange,
