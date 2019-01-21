@@ -15,6 +15,19 @@ export function ContentProfilesController($scope, $location, notify, content, mo
     // can be changed with a button
     $scope.active_only = true;
 
+    // required for being able to mark the form as dirty and enable the save button
+    // after saving content profile widgets config
+    $scope.setNgForm = (ngForm) => {
+        $scope.ngForm = ngForm;
+    };
+
+    $scope.saveContentProfileWidgetsConfig = (nextWidgets) => {
+        $scope.editing.form.widgets = nextWidgets;
+        $scope.$applyAsync(() => {
+            $scope.ngForm.$dirty = true;
+        });
+    };
+
     $scope.withEditor3 = config.features.editor3;
 
     /**

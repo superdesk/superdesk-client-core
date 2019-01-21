@@ -1,7 +1,10 @@
+import {reactToAngular1} from 'superdesk-ui-framework';
+
 import {ContentService} from './services';
 import * as directive from './directives';
 import * as ctrl from './controllers';
 import {coreMenuGroups} from 'core/activity/activity';
+import {WidgetsConfig} from './components/WidgetsConfig';
 
 /**
  * @ngdoc module
@@ -24,6 +27,8 @@ angular.module('superdesk.apps.workspace.content', [
     .directive('sdContentSchemaEditor', directive.ContentProfileSchemaEditor)
     .directive('sdItemProfile', directive.ItemProfileDirective)
     .directive('sdSortContentProfiles', directive.SortContentProfiles)
+
+    .component('sdWidgetsConfig', reactToAngular1(WidgetsConfig, ['widgets', 'onUpdate']))
 
     .controller('ContentProfilesController', ctrl.ContentProfilesController)
 
