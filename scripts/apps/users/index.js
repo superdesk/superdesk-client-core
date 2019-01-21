@@ -11,6 +11,7 @@ import {UserEditController} from './controllers';
 import * as svc from './services';
 import * as directive from './directives';
 import * as config from './config';
+import {gettext} from 'core/ui/components/utils';
 
 /**
  * @ngdoc module

@@ -8,6 +8,7 @@ import {
 
 import _ from 'lodash';
 import {getDateFilters, dateRangesByKey} from '../directives/DateFilters';
+import {gettext} from 'core/ui/components/utils';
 
 const DEFAULT_REPOS = ['ingest', 'archive', 'published', 'archived'];
 
@@ -33,7 +34,6 @@ export function setFilters(search) {
  * @name search
  *
  * @requires $location
- * @requires gettext
  * @requires config
  * @requires session
  * @requires multi
@@ -45,7 +45,6 @@ export function setFilters(search) {
  */
 SearchService.$inject = [
     '$location',
-    'gettext',
     'config',
     'session',
     'multi',
@@ -53,7 +52,7 @@ SearchService.$inject = [
     'moment',
     'sort',
 ];
-export function SearchService($location, gettext, config, session, multi,
+export function SearchService($location, config, session, multi,
     preferencesService, moment, sortService) {
     var sortOptions = [
         {field: 'versioncreated', label: gettext('Updated')},
@@ -347,7 +346,7 @@ export function SearchService($location, gettext, config, session, multi,
                 }
             }
 
-            getDateFilters(gettext).forEach(({fieldname}) => {
+            getDateFilters().forEach(({fieldname}) => {
                 const dateRangeKey = params[fieldname];
 
                 if (params[fieldname] != null && dateRangesByKey[dateRangeKey] != null) {
