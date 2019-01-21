@@ -1,4 +1,5 @@
 var ENTER = 13;
+import {gettext} from 'core/ui/components/utils';
 
 CommentsService.$inject = ['api'];
 function CommentsService(api) {

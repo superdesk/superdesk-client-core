@@ -1,7 +1,8 @@
+import {gettext} from 'core/ui/components/utils';
 
 IngestDashboardController.$inject = ['$scope', 'api', 'ingestSources', 'preferencesService',
-    'notify', 'gettext', 'config'];
-export function IngestDashboardController($scope, $api, ingestSources, preferencesService, notify, gettext, config) {
+    'notify', 'config'];
+export function IngestDashboardController($scope, $api, ingestSources, preferencesService, notify, config) {
     $scope.items = [];
     $scope.dashboard_items = [];
 

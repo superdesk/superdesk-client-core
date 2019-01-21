@@ -1,4 +1,5 @@
 import {FILTER_FIELDS} from '../constants';
+import {gettext} from 'core/ui/components/utils';
 
 /**
  * @ngdoc controller
@@ -7,7 +8,6 @@ import {FILTER_FIELDS} from '../constants';
  * @requires https://docs.angularjs.org/api/ng/type/$rootScope.Scope $scope
  * @requires https://docs.angularjs.org/api/ng/service/$location $location
  * @requires pageTitle
- * @requires gettext
  * @requires preferencesService
  * @requires contacts service
  * @requires _ lodash
@@ -15,7 +15,7 @@ import {FILTER_FIELDS} from '../constants';
  * @description ContactsController
  */
 export class ContactsController {
-    constructor($scope, $location, pageTitle, gettext, preferencesService, metadata, privileges, contacts, _) {
+    constructor($scope, $location, pageTitle, preferencesService, metadata, privileges, contacts, _) {
         this.$scope = $scope;
         this.$location = $location;
         this.contacts = contacts;
@@ -116,5 +116,5 @@ export class ContactsController {
         this.$location.search(field, _.get(option, 'value', null));
     }
 }
-ContactsController.$inject = ['$scope', '$location', 'pageTitle', 'gettext',
+ContactsController.$inject = ['$scope', '$location', 'pageTitle',
     'preferencesService', 'metadata', 'privileges', 'contacts', 'lodash'];

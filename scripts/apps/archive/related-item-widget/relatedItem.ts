@@ -1,3 +1,5 @@
+import {gettext} from 'core/ui/components/utils';
+
 angular.module('superdesk.apps.dashboard.widgets.relatedItem', [
     'superdesk.apps.dashboard.widgets.base',
     'superdesk.apps.authoring.widgets',
@@ -54,7 +56,6 @@ RelatedItemController.$inject = [
     'config',
     'storage',
     'familyService',
-    'gettext',
     'moment',
     'content',
 ];
@@ -72,7 +73,6 @@ function RelatedItemController(
     config,
     storage,
     familyService,
-    gettext,
     moment,
     content,
 ) {
@@ -183,7 +183,7 @@ function RelatedItemController(
                         authoringWorkspace.edit(newItem);
                     }, (response) => {
                         if (angular.isDefined(response.data._message)) {
-                            notify.error(gettext('Failed to associate update: ' + response.data._message));
+                            notify.error(gettext('Failed to associate update: {{message}}', {message: response.data._message}));
                         } else {
                             notify.error(gettext('There is an error. Failed to associate update.'));
                         }

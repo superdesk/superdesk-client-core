@@ -1,6 +1,7 @@
 import * as helpers from 'apps/authoring/authoring/helpers';
 import _ from 'lodash';
 import postscribe from 'postscribe';
+import {gettext} from 'core/ui/components/utils';
 
 /**
  * @ngdoc directive
@@ -11,7 +12,6 @@ import postscribe from 'postscribe';
  * @requires superdeskFlags
  * @requires authoringWorkspace
  * @requires notify
- * @requires gettext
  * @requires desks
  * @requires authoring
  * @requires api
@@ -47,7 +47,6 @@ AuthoringDirective.$inject = [
     'superdeskFlags',
     'authoringWorkspace',
     'notify',
-    'gettext',
     'desks',
     'authoring',
     'api',
@@ -78,7 +77,7 @@ AuthoringDirective.$inject = [
     'relationsService',
 ];
 export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace, notify,
-    gettext, desks, authoring, api, session, lock, privileges, content, $location,
+    desks, authoring, api, session, lock, privileges, content, $location,
     referrer, macros, $timeout, $q, modal, archiveService, confirm, reloadService,
     $rootScope, $interpolate, metadata, suggest, config, deployConfig, editorResolver,
     compareVersions, embedService, $sce, mediaIdGenerator, relationsService) {
@@ -233,7 +232,8 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                             notify.error(UNIQUE_NAME_ERROR);
                             return;
                         } else if (angular.isDefined(response.data._issues['validator exception'])) {
-                            notify.error(gettext('Error: ' + response.data._issues['validator exception']));
+                            notify.error(gettext('Error: {{message}}',
+                                {message: response.data._issues['validator exception']}));
                             return;
                         }
                     }
@@ -325,24 +325,20 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                     return;
                 }
 
-                function fieldErr(err) {
-                    return $interpolate(err)({field: fieldName});
-                }
-
                 if (errors.date) {
-                    return fieldErr(gettext('{{ field }} date is required!'));
+                    return gettext('{{ field }} date is required!', {field: fieldName});
                 }
 
                 if (errors.time) {
-                    return fieldErr(gettext('{{ field }} time is required!'));
+                    return gettext('{{ field }} time is required!', {field: fieldName});
                 }
 
                 if (errors.timestamp) {
-                    return fieldErr(gettext('{{ field }} is not a valid date!'));
+                    return gettext('{{ field }} is not a valid date!', {field: fieldName});
                 }
 
                 if (errors.future && fieldName !== 'Embargo' || $scope._isInProductionStates) {
-                    return fieldErr(gettext('{{ field }} cannot be earlier than now!'));
+                    return gettext('{{ field }} cannot be earlier than now!', {field: fieldName});
                 }
             }
 
@@ -501,8 +497,8 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                     // required media metadata fields are defined in superdesk.config.js
                     _.each(Object.keys(validator), (key) => {
                         if (validator[key].required && (_.isNil(item[key]) || _.isEmpty(item[key]))) {
-                            notify.error($interpolate(gettext(
-                                'Required field {{ key }} is missing. ...'))({key: key}));
+                            notify.error(gettext(
+                                'Required field {{ key }} is missing. ...', {key: key}));
                             return false;
                         }
                     });
@@ -993,8 +989,10 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
             $scope.$on('item:publish:wrong:format', (_e, data) => {
                 if (data.item === $scope.item._id) {
-                    notify.error(gettext('No formatters found for ') + data.formats.join(',') +
-                        ' while publishing item having unique name ' + data.unique_name);
+                    notify.error(gettext(
+                        'No formatters found for {{formats}} while publishing item having unique name ',
+                        {formats: data.formats.join(','), name: data.unique_name}
+                    ));
                 }
             });
 

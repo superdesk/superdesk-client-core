@@ -1,4 +1,5 @@
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
+import {gettext} from 'core/ui/components/utils';
 
 /**
  * @ngdoc controller
@@ -54,7 +55,7 @@ export function ManageContentFiltersController($scope, contentFilters, notify, m
                             notify.error(gettext('Error: ' + response.data._issues['validator exception']));
                         } else if (angular.isDefined(response.data._issues)) {
                             if (response.data._issues.name && response.data._issues.name.unique) {
-                                notify.error(gettext('Error: ' + gettext('Name needs to be unique')));
+                                notify.error(gettext('Error: Name needs to be unique'));
                             } else {
                                 notify.error(gettext('Error: ' + JSON.stringify(response.data._issues)));
                             }
