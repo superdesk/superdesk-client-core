@@ -1,5 +1,6 @@
 import {isEmpty} from 'lodash';
 import {IArticle} from 'superdesk-interfaces/Article';
+import {gettext} from 'core/ui/components/utils';
 
 /**
  * @ngdoc service

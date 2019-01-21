@@ -6,6 +6,7 @@ import './content';
 import {WorkspaceService} from './services';
 import WorkspaceMenuProvider from './services/WorkspaceMenuProvider';
 import * as directive from './directives';
+import {gettext} from 'core/ui/components/utils';
 
 angular.module('superdesk.apps.workspace.menu', [])
     .provider('workspaceMenu', WorkspaceMenuProvider);
@@ -27,7 +28,7 @@ angular.module('superdesk.apps.workspace', [
     .directive('sdWorkspaceSidenav', directive.WorkspaceSidenavDirective)
     .directive('sdEditWorkspace', directive.EditWorkspaceDirective)
 
-    .run(['keyboardManager', 'gettext', function(keyboardManager, gettext) {
+    .run(['keyboardManager', function(keyboardManager) {
         keyboardManager.register('General', 'ctrl + alt + b', gettext('Open workspace / dashboard'));
         keyboardManager.register('General', 'alt + m', gettext('Open monitoring'));
         keyboardManager.register('General', 'ctrl + alt + h', gettext('Open highlights'));

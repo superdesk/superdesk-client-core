@@ -4,6 +4,7 @@ import classNames from 'classnames';
 
 import ng from 'core/services/ng';
 import {FileiconFilter, FilesizeFilter} from 'core/ui/ui';
+import {gettext} from 'core/ui/components/utils';
 
 export class AttachmentList extends React.Component<any, any> {
     static propTypes: any;

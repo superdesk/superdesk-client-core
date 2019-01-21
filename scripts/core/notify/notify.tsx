@@ -1,6 +1,7 @@
 import ReactDOM from 'react-dom';
 import React from 'react';
 import {find, matches} from 'lodash';
+import {gettext} from 'core/ui/components/utils';
 
 interface IMessageDisplayDurationByType {
     info: number;
@@ -117,7 +118,7 @@ class NotifyComponent extends React.Component<any, IState> {
  * notifications for users.
  */
 export default angular.module('superdesk.core.notify', ['superdesk.core.translate'])
-    .service('notify', ['gettext', function(gettext) {
+    .service('notify', [function() {
         const targetEl = document.createElement('div');
 
         document.body.appendChild(targetEl);

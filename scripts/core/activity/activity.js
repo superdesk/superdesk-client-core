@@ -1,4 +1,5 @@
 import langmap from 'core/lang';
+import {gettext} from 'core/ui/components/utils';
 
 var constants = {
     MENU_MAIN: 'superdesk.core.menu.main',
@@ -13,17 +14,17 @@ export const coreMenuGroups = {
     WORKFLOW: {
         id: 'WORKFLOW',
         priority: -500,
-        getLabel: (gettext) => gettext('Workflow'),
+        label: gettext('Workflow'),
     },
     CONTENT_CONFIG: {
         id: 'CONTENT_CONFIG',
         priority: -800,
-        getLabel: (gettext) => gettext('Content config'),
+        label: gettext('Content config'),
     },
     CONTENT_FLOW: {
         id: 'CONTENT_FLOW',
         priority: -200,
-        getLabel: (gettext) => gettext('Content flow'),
+        label: gettext('Content flow'),
     },
 };
 
@@ -413,13 +414,12 @@ angular.module('superdesk.core.activity', [
  * @requires $location
  * @requires $injector
  * @requires $q
- * @requires gettext
  * @requires modal
  * @requires lodash
  * @description The service allows choosing activities to perform.
  */
-    .service('activityService', ['$location', '$injector', '$q', 'gettext', 'modal', 'lodash',
-        function($location, $injector, $q, gettext, modal, _) {
+    .service('activityService', ['$location', '$injector', '$q', 'modal', 'lodash',
+        function($location, $injector, $q, modal, _) {
             var activityStack = [];
 
             this.activityStack = activityStack;

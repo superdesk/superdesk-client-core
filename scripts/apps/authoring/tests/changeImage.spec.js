@@ -207,7 +207,7 @@ describe('authoring ChangeImageController', () => {
             })
         );
 
-        it('No error thrown if poi is specified', inject((api, gettext, $rootScope, $q, notify, config) => {
+        it('No error thrown if poi is specified', inject((api, $rootScope, $q, notify, config) => {
             let scope = angular.copy(scopeData);
 
             scope.resolve = () => true;
