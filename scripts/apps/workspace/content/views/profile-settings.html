@@ -120,7 +120,7 @@
                             <sd-content-schema-editor data-section-to-render="'content'" data-model="editing.form"></sd-content-schema-editor>
                         </div>
                         <div sd-wizard-step data-title="{{ :: 'Widgets' | translate }}" data-code="widgets">
-                            <sd-widgets-config widgets="editing.form.widgets_config" on-update="saveContentProfileWidgetsConfig"></sd-widgets-config>
+                            <sd-widgets-config initial-widgets-config="editing.form.widgets_config" on-update="saveContentProfileWidgetsConfig"></sd-widgets-config>
                         </div>
                     </div>
                 </div>

@@ -14,11 +14,18 @@ interface IState {
     widgetsConfig: IContentProfile['widgets_config'];
 }
 
+export const isWidgetVisible = (
+    widgetsConfig: IContentProfile['widgets_config'],
+    widgetId: IContentProfile['widgets_config'][0]['widget_id'],
+) => {
+    const widgetConfig = widgetsConfig.find((config) => config.widget_id === widgetId);
+
+    return widgetConfig == null ? true : widgetConfig.is_displayed;
+};
+
 export class WidgetsConfigComponent extends React.Component<IProps, IState> {
     constructor(props) {
         super(props);
-
-        this.isEnabled = this.isEnabled.bind(this);
 
         this.state = {
             widgetsConfig: this.props.initialWidgetsConfig || [],
@@ -36,11 +43,6 @@ export class WidgetsConfigComponent extends React.Component<IProps, IState> {
             this.props.onUpdate(this.state.widgetsConfig);
         });
     }
-    isEnabled(widgetId: string) {
-        const widgetConfig = this.state.widgetsConfig.find((config) => config.widget_id === widgetId);
-
-        return widgetConfig == null ? false : widgetConfig.is_displayed;
-    }
     render() {
         return (
             <ul className="sd-list-item-group sd-shadow--z2">
@@ -50,7 +52,7 @@ export class WidgetsConfigComponent extends React.Component<IProps, IState> {
                             <span className="sd-list-item__column">
                                 <input
                                     type="checkbox"
-                                    checked={this.isEnabled(widget._id)}
+                                    checked={isWidgetVisible(this.state.widgetsConfig, widget._id)}
                                     onChange={(e) => this.handleChange(widget._id, e.target.checked)}
                                 />
                             </span>

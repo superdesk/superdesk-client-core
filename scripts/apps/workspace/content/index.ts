@@ -28,7 +28,7 @@ angular.module('superdesk.apps.workspace.content', [
     .directive('sdItemProfile', directive.ItemProfileDirective)
     .directive('sdSortContentProfiles', directive.SortContentProfiles)
 
-    .component('sdWidgetsConfig', reactToAngular1(WidgetsConfig, ['widgets', 'onUpdate']))
+    .component('sdWidgetsConfig', reactToAngular1(WidgetsConfig, ['initialWidgetsConfig', 'onUpdate']))
 
     .controller('ContentProfilesController', ctrl.ContentProfilesController)
 
