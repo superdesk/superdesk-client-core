@@ -1,3 +1,5 @@
+import {cloneDeep, get, isEqual} from 'lodash';
+
 ContentProfilesController.$inject = ['$scope', '$location', 'notify', 'content', 'modal', '$q', 'config'];
 export function ContentProfilesController($scope, $location, notify, content, modal, $q, config) {
     var self = this;
@@ -56,14 +58,14 @@ export function ContentProfilesController($scope, $location, notify, content, mo
 
             if (active) {
                 $scope.editing = {
-                    form: _.cloneDeep(active),
+                    form: cloneDeep(active),
                     original: active,
                 };
 
                 content.getTypeMetadata(active._id).then((type) => {
                     $scope.editing = {
-                        form: _.cloneDeep(type),
-                        original: _.cloneDeep(type),
+                        form: cloneDeep(type),
+                        original: cloneDeep(type),
                     };
                 });
             }
@@ -75,7 +77,7 @@ export function ContentProfilesController($scope, $location, notify, content, mo
      * @private
      */
     function reportError(resp) {
-        let message = _.get(resp, 'data._issues["validator exception"]') || '';
+        let message = get(resp, 'data._issues["validator exception"]') || '';
 
         notify.error(`Operation failed ${message} (check console for response).`);
         console.error(resp);
@@ -146,7 +148,7 @@ export function ContentProfilesController($scope, $location, notify, content, mo
         var diff = {};
 
         Object.keys(e.form).forEach((k) => {
-            if (!_.isEqual(e.form[k], e.original[k])) {
+            if (!isEqual(e.form[k], e.original[k])) {
                 diff[k] = e.form[k];
             }
         });
