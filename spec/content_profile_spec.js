@@ -84,7 +84,7 @@ describe('Content profiles', () => {
         contentProfiles.openContentProfileSettings();
         contentProfiles.addNew('Simple');
 
-        element(by.buttonText('Content')).click();
+        element(by.buttonText('Content fields')).click();
         expect(element(by.buttonText(FIELD_LABEL)).isDisplayed()).toBeFalsy();
 
         contentProfiles.openAddFieldDropdown();
