@@ -319,6 +319,13 @@ export class ItemList extends React.Component<any, any> {
     }
 
     handleKey(event) {
+
+        // don't do anything when modifier key is pressed
+        // this allows shortcuts defined in activities to work without two actions firing for one shortcut
+        if (event.ctrlKey || event.altKey || event.shiftKey) {
+            return;
+        }
+
         const {scope} = this.props;
         const {Keys, monitoringState} = this.props.svc;
         const KEY_CODES = Object.freeze({
