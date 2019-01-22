@@ -1,6 +1,18 @@
 import {forEach} from 'lodash';
 import langmap from 'core/lang';
 
+interface IActivityData {
+    priority: number; // priority used for ordering.
+    when: string; // $route.when param
+    href: string; // path for links generated for given activity
+    filters: Array<object>; //  list of `action` `type` pairs.
+    beta: boolean; // is activity available only in beta mode?
+    reloadOnSearch: boolean; // $route.reloadOnSearch param
+    auth: boolean; // does activity require authenticated user?
+    features: object; // map of features this activity requires
+    condition: () => any; // method used to check if the activity is enabled for a specific item.
+}
+
 var constants = {
     MENU_MAIN: 'superdesk.core.menu.main',
     MENU_SETTINGS: 'superdesk.core.menu.settings',
@@ -71,29 +83,8 @@ function SuperdeskProvider($routeProvider, _) {
         return this;
     };
 
-    /**
-     * @ngdoc method
-     * @name superdeskProvider#activity
-     * @public
-     * @param {string} id Activity ID. Can be used for later lookup.
-     * @param {Object} activityData Activity definition.
-     *
-     *    Object properties:
-     *
-     *    - `priority` - `{number}` - priority used for ordering.
-     *    - `when` - `{string}` - $route.when param.
-     *    - `href` - `{string}` - path for links generated for given activity.
-     *    - `filters` - `{Array.<Object>}` - list of `action` `type` pairs.
-     *    - `beta` - `{bool=false}` - is activity available only in beta mode?
-     *    - `reloadOnSearch` - `{bool=false}` - $route.reloadOnSearch param.
-     *    - `auth` - `{bool=true}` - does activity require authenticated user?
-     *    - `features` - `{Object}` - map of features this activity requires.
-     *    - `condition` - `{Function}` - method used to check if the activity is enabled for a specific item.
-     *
-     * @returns {Object} self
-     * @description Register a new activity.
-    */
-    this.activity = function(id, activityData) {
+    // Register a new activity.
+    this.activity = function(id, activityData: IActivityData) {
         var activity = angular.extend({
             _id: id,
             priority: 0,
