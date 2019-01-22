@@ -4,12 +4,15 @@
  */
 
 /* jshint ignore:start */
-document.write(`
+
+// tansa server base urls e.g 'http://localhost:8080/tansaclient/'
+var baseUrl = `${location.protocol}//${location.host}/tansaclient/`;
+var tansaScript =
+`
     <script type="text/javascript">
         var tansa = {
             settings: {
-                // tansa server base urls e.g 'http://localhost:8080/tansaclient/'
-                baseUrl: '${location.protocol}//${location.host}/tansaclient/',
+                baseUrl: '<baseUrl>',
                 clientExtenstionJs: 'tansa4ClientExtensionSimple.js',
                 // need to populate dynamically
                 tansaUserId: 'tansa',
@@ -28,7 +31,11 @@ document.write(`
             $rootScope.$broadcast('tansa:end', isCancelled);
         }
     </script>
-`);
+`;
+
+// workaround to avoid nggettext_extract parsing error
+tansaScript = tansaScript.replace('<baseUrl', baseUrl);
+document.write(tansaScript);
 
 var script = document.createElement('script');
 
