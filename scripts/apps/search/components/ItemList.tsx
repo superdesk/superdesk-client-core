@@ -85,7 +85,7 @@ export class ItemList extends React.Component<any, any> {
         this.setState({narrow: setNarrow});
     }
 
-    select(item, event?) {
+    select(item, event) {
         if (typeof this.props.onMonitoringItemSelect === 'function') {
             this.props.onMonitoringItemSelect(item, event);
             return;
@@ -106,21 +106,15 @@ export class ItemList extends React.Component<any, any> {
 
         $timeout.cancel(this.updateTimeout);
 
-        // even is null when selecting with keyboard
-        // but is not null and has a target when selected using the checkbox
         const showPreview = (event == null || event.target == null) ||
             querySelectorParent(event.target, '.sd-monitoring-item-multi-select-checkbox') == null;
 
-        this.updateTimeout = $timeout(() => {
-            if (item && scope.preview) {
-                scope.$apply(() => {
-                    if (showPreview) {
-                        scope.preview(item);
-                    }
-                    this.bindActionKeyShortcuts(item);
-                });
+        if (item && scope.preview) {
+            if (showPreview) {
+                scope.preview(item);
             }
-        }, 500, false);
+            this.bindActionKeyShortcuts(item);
+        }
     }
 
     /*
@@ -388,25 +382,25 @@ export class ItemList extends React.Component<any, any> {
             break;
         }
 
-        const highlightSelected = () => {
+        const highlightSelected = (_event) => {
             for (let i = 0; i < this.state.itemsList.length; i++) {
                 if (this.state.itemsList[i] === this.state.selected) {
                     const next = Math.min(this.state.itemsList.length - 1, Math.max(0, i + diff));
 
-                    this.select(this.state.itemsById[this.state.itemsList[next]]);
+                    this.select(this.state.itemsById[this.state.itemsList[next]], _event);
                     return;
                 }
             }
         };
 
-        const checkRemaining = () => {
+        const checkRemaining = (_event) => {
             event.preventDefault();
             event.stopPropagation();
 
             if (this.state.selected) {
-                highlightSelected();
+                highlightSelected(_event);
             } else {
-                this.select(this.state.itemsById[this.state.itemsList[0]]);
+                this.select(this.state.itemsById[this.state.itemsList[0]], _event);
             }
         };
 
@@ -432,7 +426,7 @@ export class ItemList extends React.Component<any, any> {
         };
 
         if (!_.isNil(diff)) {
-            checkRemaining();
+            checkRemaining(event);
             scrollSelectedItemIfRequired(event, scope);
         }
     }
