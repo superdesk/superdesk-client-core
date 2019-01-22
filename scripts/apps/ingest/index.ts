@@ -53,7 +53,6 @@ angular.module('superdesk.apps.ingest', [
     .filter('scheduleFilter', ScheduleFilter)
 
     .config(['superdeskProvider', 'workspaceMenuProvider', function(superdesk, workspaceMenuProvider) {
-        // debugger;
         superdesk
             .activity('/workspace/ingest', {
                 label: gettext('Workspace'),
