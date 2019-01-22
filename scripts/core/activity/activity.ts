@@ -1,3 +1,4 @@
+import {forEach} from 'lodash';
 import langmap from 'core/lang';
 
 var constants = {
@@ -39,7 +40,7 @@ export const coreMenuGroups = {
 SuperdeskProvider.$inject = ['$routeProvider', 'lodash'];
 function SuperdeskProvider($routeProvider, _) {
     var widgets = {};
-    var activities = {};
+    var activities: any = {};
     var permissions = {};
     var panes = {};
 
@@ -156,16 +157,16 @@ function SuperdeskProvider($routeProvider, _) {
      * @requires config
      * @description This service allows interacting with registered activities.
      */
-    this.$get = ['$q', '$route', '$rootScope', 'activityService', 'activityChooser',
-        'betaService', 'features', 'privileges', '$injector', 'lodash', 'config',
-        function superdeskFactory($q, $route, $rootScope, activityService, activityChooser, betaService,
-            features, privileges, $injector, _, config) {
+    this.$get = ['$q', '$rootScope', 'activityService', 'activityChooser',
+        'betaService', 'features', 'privileges', '$injector', 'config',
+        function superdeskFactory($q, $rootScope, activityService, activityChooser, betaService,
+            features, privileges, $injector, config) {
             /**
              * Render main menu depending on registered acitivites
              */
             betaService.isBeta().then((beta) => {
-                _.forEach(activities, (activity, id) => {
-                    if (activity.beta === true && !beta || !isAllowed(activity, beta)) {
+                forEach(activities, (activity, id) => {
+                    if (activity.beta === true && !beta || !isAllowed(activity)) {
                         $routeProvider.when(activity.when, {redirectTo: '/workspace'});
                     }
                 });
@@ -174,8 +175,8 @@ function SuperdeskProvider($routeProvider, _) {
             /**
              * Let user to choose an activity
              */
-            function chooseActivity(activities) {
-                return activityChooser.choose(activities);
+            function chooseActivity(_activities) {
+                return activityChooser.choose(_activities);
             }
 
             function checkFeatures(activity) {
@@ -240,17 +241,17 @@ function SuperdeskProvider($routeProvider, _) {
                  * @description Resolve an intent to a single activity
                  */
                 resolve: function(intent) {
-                    var activities = this.findActivities(intent);
+                    var _activities = this.findActivities(intent);
 
-                    switch (activities.length) {
+                    switch (_activities.length) {
                     case 0:
                         return $q.reject();
 
                     case 1:
-                        return $q.when(activities[0]);
+                        return $q.when(_activities[0]);
 
                     default:
-                        return chooseActivity(activities);
+                        return chooseActivity(_activities);
                     }
                 },
 
@@ -262,7 +263,7 @@ function SuperdeskProvider($routeProvider, _) {
                  * Find all available activities for given intent
                  */
                 findActivities: function(intent, item) {
-                    var criteria = {};
+                    var criteria: any = {};
 
                     if (intent.action) {
                         criteria.action = intent.action;
@@ -283,7 +284,7 @@ function SuperdeskProvider($routeProvider, _) {
                                 return $injector.invoke(
                                     activity.additionalCondition,
                                     {},
-                                    {item: item ? item : intent.data}
+                                    {item: item ? item : intent.data},
                                 );
                             }
 
@@ -476,27 +477,27 @@ angular.module('superdesk.core.activity', [
      * Start given activity
      */
             this.start = function startActivity(activity, locals) {
-                function execute(activity, locals) {
-                    var path = getPath(activity, locals && locals.data);
+                function execute(_activity, _locals) {
+                    var path = getPath(_activity, _locals && _locals.data);
 
                     if (path) { // trigger route
                         $location.path(path);
-                        return $q.when(locals);
+                        return $q.when(_locals);
                     }
 
-                    if (activity.modal) {
+                    if (_activity.modal) {
                         var defer = $q.defer();
 
                         activityStack.push({
                             defer: defer,
-                            activity: activity,
-                            locals: locals,
+                            activity: _activity,
+                            locals: _locals,
                         });
 
                         return defer.promise;
                     }
 
-                    return $q.when($injector.invoke(activity.controller, {}, locals));
+                    return $q.when($injector.invoke(_activity.controller, {}, _locals));
                 }
 
                 if (activity.confirm) {
@@ -512,12 +513,13 @@ angular.module('superdesk.core.activity', [
     .run(['$rootScope', 'superdesk', function($rootScope, superdesk) {
         $rootScope.superdesk = superdesk; // add superdesk reference so we can use constants in templates
 
-        $rootScope.intent = function() {
-            return superdesk.intent(...arguments);
+        $rootScope.intent = function(...args) {
+            //
+            return superdesk.intent(...args);
         };
 
-        $rootScope.link = function() {
-            var path = superdesk.link(...arguments);
+        $rootScope.link = function(...args) {
+            var path = superdesk.link(...args);
 
             return path ? '#' + path : null;
         };
