@@ -61,7 +61,7 @@ export const GET_LABEL_MAP = (gettext) => ({
     place: gettext('Place'),
     priority: gettext('Priority'),
     urgency: gettext('Urgency'),
-    anpa_category: gettext('Category'),
+    anpa_category: gettext('ANPA Category'),
     categories: gettext('Categories'),
     desk: gettext('Desk'),
     embargo: gettext('Embargo'),
