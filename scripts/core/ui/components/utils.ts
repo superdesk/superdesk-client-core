@@ -25,6 +25,10 @@ export const onEventCapture = (event) => {
  * result -> 'This item was locked by John'
  */
 export const gettext = (text, params = null) => {
+    if (!text) {
+        return '';
+    }
+
     const injector = angular.element(document.body).injector();
 
     if (injector) { // in tests this will be empty
@@ -42,6 +46,10 @@ export const gettext = (text, params = null) => {
  * @description Used angular gettext service for displaying localised text on Browser
  */
 export const gettextCatalog = (text, params = null) => {
+    if (!text) {
+        return '';
+    }
+
     const injector = angular.element(document.body).injector();
 
     if (injector) { // in tests this will be empty
