@@ -899,7 +899,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
             // Validates the given embed field
             function validateEmbed(fieldId) {
-                if ($scope.item.extra[fieldId].embed) {
+                if (_.get($scope.item, `extra.${fieldId}.embed`)) {
                     $scope.isValidEmbed[fieldId] = !$scope.isURL($scope.item.extra[fieldId].embed);
                 } else {
                     $scope.isValidEmbed[fieldId] = true;
