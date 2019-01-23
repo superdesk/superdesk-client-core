@@ -34,7 +34,7 @@ var tansaScript =
 `;
 
 // workaround to avoid nggettext_extract parsing error
-tansaScript = tansaScript.replace('<baseUrl', baseUrl);
+tansaScript = tansaScript.replace('<baseUrl>', baseUrl);
 document.write(tansaScript);
 
 var script = document.createElement('script');
