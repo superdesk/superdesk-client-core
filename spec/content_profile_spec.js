@@ -12,7 +12,7 @@ describe('Content profiles', () => {
         contentProfiles.openContentProfileSettings();
         contentProfiles.addNew('Simple');
         contentProfiles.toggleEnable();
-        element(by.buttonText('Content')).click();
+        element(by.buttonText('Content fields')).click();
         contentProfiles.disableField('Abstract');
         contentProfiles.update();
         templates.openTemplatesSettings();
