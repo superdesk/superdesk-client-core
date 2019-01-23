@@ -110,10 +110,12 @@ export class ItemList extends React.Component<any, any> {
             querySelectorParent(event.target, '.sd-monitoring-item-multi-select-checkbox') == null;
 
         if (item && scope.preview) {
-            if (showPreview) {
-                scope.preview(item);
-            }
-            this.bindActionKeyShortcuts(item);
+            scope.$apply(() => {
+                if (showPreview) {
+                    scope.preview(item);
+                }
+                this.bindActionKeyShortcuts(item);
+            });
         }
     }
 
