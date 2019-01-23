@@ -22,10 +22,6 @@ export const getLabelForType = (fieldType: VocabularyFieldType) => {
 export const getTypeForFieldId = (fieldId, vocabularies: Array<IVocabulary>) => {
     const vocabulary = vocabularies.find((obj) => obj._id === fieldId);
 
-    if (vocabulary && vocabulary.display_name.includes('take')) {
-        console.log(vocabulary);
-    }
-
     if (vocabulary && vocabulary.field_type) {
         return getLabelForType(vocabulary.field_type);
     }
