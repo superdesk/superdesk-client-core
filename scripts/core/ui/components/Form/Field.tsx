@@ -68,7 +68,6 @@ export class Field extends React.Component<any, any> {
         const schema = get(formProfile, `schema["${profileField}"]`) || {};
         const currentError = (this.state.dirty || showErrors) ? (error || get(errors, field)) : null;
         const currentValue = value || get(diff, field);
-        // console.log('field', currentError, showErrors, errors);
 
         const Component = component;
         const child = <Component

@@ -1,7 +1,9 @@
 import {HAS_FORMAT_OPTIONS} from 'apps/workspace/content/constants';
 import _ from 'lodash';
-import {getLabelNameResolver} from '../../helpers/getLabelForFieldId';
+import {getLabelForFieldId} from '../../helpers/getLabelForFieldId';
+import {getTypeForFieldId} from '../../helpers/getTypeForFieldId';
 import {IArticle} from 'superdesk-interfaces/Article';
+import {IVocabulary} from 'superdesk-interfaces/Vocabulary';
 import {assertNever} from 'core/helpers/typescript-helpers';
 
 interface IScope extends ng.IScope {
@@ -14,6 +16,7 @@ interface IScope extends ng.IScope {
     formattingOptionsEditor3: Array<string>;
     schemaKeysOrdering: any;
     schemaKeysDisabled: any;
+    vocabularies: Array<IVocabulary>;
     hasFormatOptions(field): boolean;
     hasImageSelected(field): boolean;
     remove(id): void;
@@ -50,8 +53,8 @@ const articleHeaderHardcodedFields = new Set<keyof IArticle>([
  *
  * @description Handles content profile schema editing
  */
-ContentProfileSchemaEditor.$inject = ['content', 'metadata'];
-export function ContentProfileSchemaEditor(content, metadata) {
+ContentProfileSchemaEditor.$inject = ['content', 'metadata', 'vocabularies'];
+export function ContentProfileSchemaEditor(content, metadata, vocabularies) {
     return {
         restrict: 'E',
         templateUrl: 'scripts/apps/workspace/content/views/schema-editor.html',
@@ -59,18 +62,17 @@ export function ContentProfileSchemaEditor(content, metadata) {
         scope: {model: '=', sectionToRender: '='},
         link: function(scope: IScope, elem, attr, form) {
             scope.loading = true;
-
             scope.schemaKeysDisabled = [];
             let schemaKeys = [];
 
             Promise.all([
                 content.getCustomFields(),
-                getLabelNameResolver(),
                 content.getTypeMetadata(scope.model._id),
+                vocabularies.getVocabularies(),
             ]).then((res) => {
-                const [customFields, getLabelForFieldId, typeMetadata] = res;
-
-                scope.label = (id) => getLabelForFieldId(id);
+                const [customFields, typeMetadata, vocabulariesCollection] = res;
+                scope.vocabularies = vocabulariesCollection;
+                scope.label = (id) => getLabelForFieldId(id, scope.vocabularies);
 
                 const updateSchemaKeys = (customVocabulariesForArticleHeader) => {
                     // Creates a list of field names of the schema sorted by 'order' value
@@ -107,10 +109,14 @@ export function ContentProfileSchemaEditor(content, metadata) {
                         .sort((a, b) => getOrder(a) - getOrder(b));
 
                     scope.schemaKeysDisabled = [];
-                    _.each(_.difference(keysForSection, schemaKeys), (value) =>
-                        scope.schemaKeysDisabled.push(
-                            {key: value, name: scope.model.editor[value].field_name || scope.label(value)},
-                        ));
+                    _.each(_.difference(keysForSection, schemaKeys), (value) => {
+                        getTypeForFieldId(value, scope.vocabularies);
+                        scope.schemaKeysDisabled.push({
+                            key: value,
+                            name: scope.model.editor[value].field_name || scope.label(value),
+                            type: getTypeForFieldId(value, scope.vocabularies),
+                        });
+                    });
 
                     scope.schemaKeysOrdering = _.clone(schemaKeys);
                     scope.updateOrder();
