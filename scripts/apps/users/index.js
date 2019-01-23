@@ -6,6 +6,7 @@ import './styles/users.scss';
 
 import './activity-widget/activity';
 import './import/import';
+import RolesService from './roles/RolesService';
 
 import {UserEditController} from './controllers';
 import * as svc from './services';
@@ -27,6 +28,7 @@ export default angular.module('superdesk.apps.users', [
     .controller('UserEditController', UserEditController) // make it available to user.profile
 
     .service('usersService', svc.UsersService)
+    .service('roles', RolesService)
     .factory('userList', svc.UserListService)
     .factory('userPopup', svc.UserPopupService)
 

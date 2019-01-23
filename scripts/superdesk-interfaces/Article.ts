@@ -1,7 +1,8 @@
-import {IUser} from './User';
+import {IAuthor} from './Author';
 
 export interface IArticle {
     _id: string;
+    _current_version: number;
     translated_from: string;
     translation_id: string;
     usageterms: any;
@@ -17,7 +18,7 @@ export interface IArticle {
     subject: any;
     company_codes: Array<any>;
     ednote: string;
-    authors: Array<IUser>;
+    authors: Array<IAuthor>;
     headline: string;
     sms: string;
     abstract: string;
