@@ -46,7 +46,7 @@ describe('Content profiles', () => {
         contentProfiles.openContentProfileSettings();
         contentProfiles.addNew('Simple');
         contentProfiles.toggleEnable();
-        element(by.buttonText('Content')).click();
+        element(by.buttonText('Content fields')).click();
         contentProfiles.disableField('Abstract');
         element(by.buttonText('Header')).click();
         contentProfiles.setRequired('Editorial Note');
