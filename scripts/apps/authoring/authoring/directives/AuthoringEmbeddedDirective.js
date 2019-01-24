@@ -1,8 +1,8 @@
 import * as helpers from 'apps/authoring/authoring/helpers';
 import {gettext} from 'core/ui/components/utils';
 
-AuthoringEmbeddedDirective.$inject = ['api', 'notify', '$filter', 'config', 'deployConfig', '$interpolate'];
-export function AuthoringEmbeddedDirective(api, notify, $filter, config, deployConfig, $interpolate) {
+AuthoringEmbeddedDirective.$inject = ['api', 'notify', '$filter', 'config', 'deployConfig'];
+export function AuthoringEmbeddedDirective(api, notify, $filter, config, deployConfig) {
     return {
         templateUrl: 'scripts/apps/authoring/views/authoring.html',
         scope: {
@@ -22,7 +22,7 @@ export function AuthoringEmbeddedDirective(api, notify, $filter, config, deployC
                     // no template specified in backend, we use default one
                     let slugline = scope.item.slugline ? '"' + scope.item.slugline + '" ' : '';
 
-                    scope.item.ednote = gettext('In the story {{ slugline }} sent at: {{ date }}\r\n' +
+                    scope.item.ednote = gettext('In the story {{slugline}} sent at: {{date}}\r\n' +
                         '\r\nThis is corrected repeat.', {slugline, date});
                 } else {
                     // we use template from backend

@@ -326,19 +326,19 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 }
 
                 if (errors.date) {
-                    return gettext('{{ field }} date is required!', {field: fieldName});
+                    return gettext('{{field}} date is required!', {field: fieldName});
                 }
 
                 if (errors.time) {
-                    return gettext('{{ field }} time is required!', {field: fieldName});
+                    return gettext('{{field}} time is required!', {field: fieldName});
                 }
 
                 if (errors.timestamp) {
-                    return gettext('{{ field }} is not a valid date!', {field: fieldName});
+                    return gettext('{{field}} is not a valid date!', {field: fieldName});
                 }
 
                 if (errors.future && fieldName !== 'Embargo' || $scope._isInProductionStates) {
-                    return gettext('{{ field }} cannot be earlier than now!', {field: fieldName});
+                    return gettext('{{field}} cannot be earlier than now!', {field: fieldName});
                 }
             }
 
@@ -498,7 +498,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                     _.each(Object.keys(validator), (key) => {
                         if (validator[key].required && (_.isNil(item[key]) || _.isEmpty(item[key]))) {
                             notify.error(gettext(
-                                'Required field {{ key }} is missing. ...', {key: key}));
+                                'Required field {{key}} is missing. ...', {key: key}));
                             return false;
                         }
                     });
@@ -990,7 +990,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             $scope.$on('item:publish:wrong:format', (_e, data) => {
                 if (data.item === $scope.item._id) {
                     notify.error(gettext(
-                        'No formatters found for {{formats}} while publishing item having unique name ',
+                        'No formatters found for {{formats}} while publishing item having unique name.',
                         {formats: data.formats.join(','), name: data.unique_name}
                     ));
                 }
