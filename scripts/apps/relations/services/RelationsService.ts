@@ -1,26 +1,29 @@
 import {pickBy} from 'lodash';
 import {IArticle} from 'superdesk-interfaces/Article';
 
-RelationsService.$inject = ['archiveService', 'mediaIdGenerator'];
+RelationsService.$inject = ['archiveService', 'mediaIdGenerator', 'api'];
 
-export function RelationsService(archiveService, mediaIdGenerator) {
+export function RelationsService(archiveService, mediaIdGenerator, api) {
     this.getRelatedItemsWithoutMediaGallery = function(item: IArticle, fields) {
         if (!item.associations) {
             return [];
         }
 
-        const relatedWithoutMedia = pickBy(item.associations, (value, key) => {
-            var parts = mediaIdGenerator.getFieldParts(key);
-            var field = fields.find((f) => f._id === parts[0]);
+        return api.find('archive', item._id)
+            .then((item) => {
+                const relatedWithoutMedia = pickBy(item.associations, (value, key) => {
+                    var parts = mediaIdGenerator.getFieldParts(key);
+                    var field = fields.find((f) => f._id === parts[0]);
 
-            return field && field.field_type === 'related_content';
-        });
+                    return field && field.field_type === 'related_content';
+                });
 
-        const related = Object.values(relatedWithoutMedia);
-        const relatedWithoutNull = related.filter((o) => o !== null);
-        const unpublished = relatedWithoutNull.filter((o) => !archiveService.isPublished(o));
+                const related = Object.values(relatedWithoutMedia);
+                const relatedWithoutNull = related.filter((o) => o !== null);
+                const unpublished = relatedWithoutNull.filter((o) => !archiveService.isPublished(o));
 
-        return unpublished;
+                return unpublished;
+            });
     };
 
     this.getRelatedKeys = function(item: IArticle, fieldId: string) {

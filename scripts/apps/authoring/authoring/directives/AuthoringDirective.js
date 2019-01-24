@@ -137,21 +137,6 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 }
             });
 
-            // to fetch the updated item if there are associations
-            function getUpdatedItem() {
-                if ($scope.item && $scope.item.associations) {
-                    api.find('archive', $scope.item._id).then((item) => {
-                        $scope.updatedItem = item;
-                    });
-                }
-            }
-            getUpdatedItem();
-            $scope.$watchCollection('item.associations', (newValue, oldValue) => {
-                if (newValue !== oldValue) {
-                    getUpdatedItem();
-                }
-            });
-
             $scope._isInProductionStates = !authoring.isPublished($scope.origItem);
 
             $scope.fullPreview = false;
@@ -610,19 +595,19 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                     return;
                 }
 
-                // Check if there's unpublished related items
-                const related = relationsService.getRelatedItemsWithoutMediaGallery($scope.item, $scope.fields);
-
-                if (related.length > 0) {
-                    return modal.confirm({
-                        bodyText: gettext(
-                            'There are unpublished related items that won\'t be sent out as related items.'
-                            + ' Do you want to publish the article anyway?'
-                        ),
-                    }).then((ok) => ok ? performPublish() : false);
-                }
-
-                return performPublish();
+                // Check if there's unpublished related items without media-gallery
+                relationsService.getRelatedItemsWithoutMediaGallery($scope.item, $scope.fields)
+                    .then((related) => {
+                        if (related.length > 0) {
+                            return modal.confirm({
+                                bodyText: gettext(
+                                    'There are unpublished related items that won\'t be sent out as related items.'
+                                + ' Do you want to publish the article anyway?'
+                                ),
+                            }).then((ok) => ok ? performPublish() : false);
+                        }
+                        return performPublish();
+                    });
             };
 
             function performPublish() {
