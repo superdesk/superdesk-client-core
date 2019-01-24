@@ -161,9 +161,6 @@ export function ChangeImageController($scope, gettext, notify, _, api, $rootScop
             if (config.features.validatePointOfInterestForImages === true) {
                 poiIsInsideEachCrop();
             }
-            if ($scope.data.showMetadataEditor) {
-                validateMediaFieldsThrows($scope.validator, $scope.data.metadata);
-            }
         } catch (e) {
             // show an error and stop the "done" operation
             notify.error(e);
@@ -177,6 +174,7 @@ export function ChangeImageController($scope, gettext, notify, _, api, $rootScop
 
         $scope.crops.isDirty = false;
         $scope.data.isDirty = true;
+        return true;
     };
 
     /**
@@ -197,8 +195,17 @@ export function ChangeImageController($scope, gettext, notify, _, api, $rootScop
     * @description
     */
     $scope.applyMetadataChanges = () => {
+        try {
+            validateMediaFieldsThrows($scope.validator, $scope.data.metadata);
+        } catch (e) {
+            // show an error and stop the "done" operation
+            notify.error(e);
+            return false;
+        }
+
         $scope.metadata.isDirty = false;
         $scope.data.isDirty = true;
+        return true;
     };
 
     /**
@@ -221,6 +228,11 @@ export function ChangeImageController($scope, gettext, notify, _, api, $rootScop
     */
     $scope.done = () => {
         if ($scope.data.isDirty) {
+            if (config.features.validatePointOfInterestForImages === true) {
+                if (!$scope.saveCrops() || !$scope.applyMetadataChanges()) {
+                    return;
+                }
+            }
             $scope.resolve({
                 cropData: $scope.data.cropData,
                 metadata: _.pick($scope.data.metadata, [
