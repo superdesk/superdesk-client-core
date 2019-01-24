@@ -43,14 +43,15 @@ function PasswordStrength() {
 
     // helpText holds the text that will be shown when the user hovers over the
     // informational icon.
-    var helpText = gettext('Must be {{MIN_LENGTH}} characters long and ' +
-        'contain {{MIN_STRENGTH}} out of 4 of the following:' +
+    var helpText = gettext(
+        'Must be {{MIN_LENGTH}} characters long and contain {{MIN_STRENGTH}} out of 4 of the following:',
+         config) +
         '<ul>' +
-            '<li>a lower case letter (a-z)</li>' +
-            '<li>an upper case letter (A-Z)</li>' +
-            '<li>a number (0-9)</li>' +
-            '<li>a special character (!@#$%^&...)</li>' +
-        '</ul>', config);
+            '<li>' + gettext('a lower case letter (a-z)') + '</li>' +
+            '<li>' + gettext('an upper case letter (A-Z)') + '</li>' +
+            '<li>' + gettext('a number (0-9)') + '</li>' +
+            '<li>' + gettext('a special character (!@#$%^&...)') + '</li>' +
+        '</ul>';
 
     return {
         require: 'ngModel',

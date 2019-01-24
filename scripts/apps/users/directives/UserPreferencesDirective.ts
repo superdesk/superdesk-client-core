@@ -333,11 +333,10 @@ export function UserPreferencesDirective(
                     return $q.when();
                 }
 
-                msg = gettext(
-                    'No preferred categories selected. Should you ' +
-                    'choose to proceed with your choice, a default ' +
-                    'set of categories will be selected for you.'
-                );
+                msg = gettext('No preferred categories selected.') + ' ' +
+                    gettext(
+                        'Should you choose to proceed with your choice, a default set of categories will be selected for you.'
+                    );
 
                 modalResult = modal.confirm(msg).then(() => {
                     scope.checkDefault();

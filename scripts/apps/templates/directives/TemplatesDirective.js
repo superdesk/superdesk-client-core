@@ -315,8 +315,8 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
 
                 if (deskNames) {
                     return notify.error(
-                        gettext('This is a default template of the following desk(s): {{deskNames}}. ' +
-                        'Please change the default templates first.', {deskNames})
+                        gettext('This is a default template of the following desk(s): {{deskNames}}.', {deskNames}) +
+                        ' ' + gettext('Please change the default templates first.')
                     );
                 }
 

@@ -3620,7 +3620,7 @@ msgid "Failed to add planning item added as featured story"
 msgstr ""
 
 #: scripts/apps/archive/directives/ArchivedItemKill.js:33
-#: scripts/apps/authoring/authoring/directives/AuthoringEmbeddedDirective.js:49
+#: scripts/apps/authoring/authoring/directives/AuthoringEmbeddedDirective.js:51
 msgid "Failed to apply kill template to the item."
 msgstr ""
 
@@ -4439,11 +4439,8 @@ msgstr ""
 msgid "In order to preview the item, save the changes first."
 msgstr ""
 
-#: scripts/apps/authoring/authoring/directives/AuthoringEmbeddedDirective.js:25
-msgid ""
-"In the story {{slugline}} sent at: {{date}}\r\n"
-"\r\n"
-"This is corrected repeat."
+#: scripts/apps/authoring/authoring/directives/AuthoringEmbeddedDirective.js:26
+msgid "In the story {{slugline}} sent at: {{date}} {{lineBreak}}. This is corrected repeat."
 msgstr ""
 
 #: ../superdesk-planning/client/utils/index.js:398
@@ -5357,7 +5354,7 @@ msgid "Must be less than {{ maximum }}"
 msgstr ""
 
 #: scripts/core/directives/PasswordStrengthDirective.ts:46
-msgid "Must be {{MIN_LENGTH}} characters long and contain {{MIN_STRENGTH}} out of 4 of the following:<ul><li>a lower case letter (a-z)</li><li>an upper case letter (A-Z)</li><li>a number (0-9)</li><li>a special character (!@#$%^&...)</li></ul>"
+msgid "Must be {{MIN_LENGTH}} characters long and contain {{MIN_STRENGTH}} out of 4 of the following:"
 msgstr ""
 
 #: ../superdesk-planning/client/components/Agendas/EditAgenda.jsx:96
@@ -5657,7 +5654,7 @@ msgid "No of calls"
 msgstr ""
 
 #: scripts/apps/users/directives/UserPreferencesDirective.ts:336
-msgid "No preferred categories selected. Should you choose to proceed with your choice, a default set of categories will be selected for you."
+msgid "No preferred categories selected."
 msgstr ""
 
 #: ../superdesk-planning/client/components/Events/EventPreviewContent.jsx:229
@@ -6123,7 +6120,7 @@ msgstr ""
 msgid "Password"
 msgstr ""
 
-#: scripts/core/directives/PasswordStrengthDirective.ts:73
+#: scripts/core/directives/PasswordStrengthDirective.ts:74
 msgid "Password is too weak."
 msgstr ""
 
@@ -6316,6 +6313,10 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Main/FiltersBox.jsx:37
 msgid "Planning only"
+msgstr ""
+
+#: scripts/apps/templates/directives/TemplatesDirective.js:319
+msgid "Please change the default templates first."
 msgstr ""
 
 #: scripts/core/auth/secure-login.html:14
@@ -7927,6 +7928,10 @@ msgstr ""
 msgid "Shortcuts"
 msgstr ""
 
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:337
+msgid "Should you choose to proceed with your choice, a default set of categories will be selected for you."
+msgstr ""
+
 #: ../superdesk-planning/client/components/Events/EventItemWithPlanning.jsx:40
 #: scripts/apps/monitoring/views/monitoring-view.html:159
 msgid "Show"
@@ -8098,7 +8103,7 @@ msgid "Sorry, but can't reach the server now.<br>Please try again later."
 msgstr ""
 
 #: scripts/core/upload/image-crop-directive.ts:305
-msgid "Sorry, but image must be at least {{r.width}}x{{r.height}}, (it is {{img.width}}x{{img.height}})."
+msgid "Sorry, but image must be at least {{requiredWidth}}x{{requiredHeight}}, (it is {{currentWidth}}x{{currentHeight}})."
 msgstr ""
 
 #: scripts/apps/authoring/attachments/attachments.js:35
@@ -8358,7 +8363,7 @@ msgstr ""
 msgid "Story is associated as update."
 msgstr ""
 
-#: scripts/core/directives/PasswordStrengthDirective.ts:63
+#: scripts/core/directives/PasswordStrengthDirective.ts:64
 msgid "Strength"
 msgstr ""
 
@@ -9000,7 +9005,7 @@ msgid "This field is required."
 msgstr ""
 
 #: scripts/apps/templates/directives/TemplatesDirective.js:318
-msgid "This is a default template of the following desk(s): {{deskNames}}. Please change the default templates first."
+msgid "This is a default template of the following desk(s): {{deskNames}}."
 msgstr ""
 
 #: scripts/apps/authoring/views/theme-select.html:38
@@ -10007,6 +10012,18 @@ msgstr ""
 msgid "a Recurring Event"
 msgstr ""
 
+#: scripts/core/directives/PasswordStrengthDirective.ts:50
+msgid "a lower case letter (a-z)"
+msgstr ""
+
+#: scripts/core/directives/PasswordStrengthDirective.ts:52
+msgid "a number (0-9)"
+msgstr ""
+
+#: scripts/core/directives/PasswordStrengthDirective.ts:53
+msgid "a special character (!@#$%^&...)"
+msgstr ""
+
 #: ../superdesk-planning/client/components/Agendas/ManageAgendasModal.jsx:83
 msgid "active"
 msgstr ""
@@ -10066,6 +10083,10 @@ msgstr ""
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:89
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:95
 msgid "an Event"
+msgstr ""
+
+#: scripts/core/directives/PasswordStrengthDirective.ts:51
+msgid "an upper case letter (A-Z)"
 msgstr ""
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.jsx:55

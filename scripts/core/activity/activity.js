@@ -14,17 +14,17 @@ export const coreMenuGroups = {
     WORKFLOW: {
         id: 'WORKFLOW',
         priority: -500,
-        label: gettext('Workflow'),
+        getLabel: (gettext) => gettext('Workflow'),
     },
     CONTENT_CONFIG: {
         id: 'CONTENT_CONFIG',
         priority: -800,
-        label: gettext('Content config'),
+        getLabel: (gettext) => gettext('Content config'),
     },
     CONTENT_FLOW: {
         id: 'CONTENT_FLOW',
         priority: -200,
-        label: gettext('Content flow'),
+        getLabel: (gettext) => gettext('Content flow'),
     },
 };
 
