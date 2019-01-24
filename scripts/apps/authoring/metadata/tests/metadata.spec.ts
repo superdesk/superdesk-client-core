@@ -70,7 +70,7 @@ describe('superdesk.apps.authoring.metadata', () => {
                 .then((cvs) => {
                     expect(['b']).toEqual(cvs.map((cv) => cv._id));
                 });
-            
+
             $rootScope.$digest();
         }));
 
@@ -87,7 +87,7 @@ describe('superdesk.apps.authoring.metadata', () => {
                 .then((cvs) => {
                     expect(['a', 'b', 'c']).toEqual(cvs.map((cv) => cv._id));
                 });
-            
+
             $rootScope.$digest();
         }));
     });

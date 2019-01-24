@@ -25,9 +25,7 @@ export function ConfirmDirtyService($window, $q, $filter, api, modal, $interpola
     this.setupWindow = function setupWindow($scope) {
         $window.onbeforeunload = function() {
             if ($scope.dirty) {
-                return gettext(
-                    'There are unsaved changes. If you navigate away, your changes will be lost.'
-                );
+                return gettext('There are unsaved changes. If you navigate away, your changes will be lost.');
             }
 
             $scope.$on('$destroy', () => {
@@ -105,8 +103,8 @@ export function ConfirmDirtyService($window, $q, $filter, api, modal, $interpola
         return modal.confirm(
             gettext(
                 'Configuration has changed. {{message}} Would you like to save the story to your workspace?',
-                {message: msg}
-            )
+                {message: msg},
+            ),
         );
     };
 
@@ -122,12 +120,12 @@ export function ConfirmDirtyService($window, $q, $filter, api, modal, $interpola
             var msg = headline ?
                 gettext(
                     'This item was unlocked by {{username}}.',
-                    {username: `<b>${username}</b>`}
+                    {username: `<b>${username}</b>`},
                 )
                 :
                 gettext(
                     'Item {{headline}} was unlocked by {{username}}.',
-                    {headline: `<b>${headline}</b>`, username: `<b>${username}</b>`}
+                    {headline: `<b>${headline}</b>`, username: `<b>${username}</b>`},
                 );
 
             return modal.confirm(msg, gettext('Item Unlocked'), gettext('OK'), false);
