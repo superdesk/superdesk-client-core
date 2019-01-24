@@ -282,7 +282,7 @@ angular.module('superdesk.apps.authoring', [
             },
         });
     }])
-    .run(['keyboardManager', 'gettext', function(keyboardManager, gettext) {
+    .run(['keyboardManager', 'gettext', function(keyboardManager) {
         keyboardManager.register('Authoring', 'ctrl + shift + u', gettext('Unlock current item'));
         keyboardManager.register('Authoring', 'ctrl + shift + e', gettext('Close current item'));
         keyboardManager.register('Authoring', 'ctrl + shift + s', gettext('Save current item'));

@@ -103,8 +103,8 @@ export function ConfirmDirtyService($window, $q, $filter, api, modal, $interpola
         return modal.confirm(
             gettext(
                 'Configuration has changed. {{message}} Would you like to save the story to your workspace?',
-                {message}
-            )
+                {message},
+            ),
         );
     };
 

@@ -250,6 +250,10 @@ msgstr ""
 msgid "A content profile with this name already exists."
 msgstr ""
 
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:338
+msgid "A default set of categories will be selected for you."
+msgstr ""
+
 #: scripts/core/auth/reset-password.html:43
 msgid "A link was sent to the specified email address. Please use it to reset your password. It is valid a limited amount of time."
 msgstr ""
@@ -1328,11 +1332,11 @@ msgstr ""
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.js:592
 #: scripts/apps/authoring/authoring/directives/SendItem.js:576
 #: scripts/apps/authoring/authoring/previewModal.tsx:100
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:100
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:51
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:64
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:76
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:88
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:49
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:62
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:74
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:86
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:98
 #: scripts/apps/authoring/comments/views/comments-widget.html:28
 #: scripts/apps/authoring/compare-versions/views/sd-compare-versions-dropdown.html:22
 #: scripts/apps/authoring/multiedit/views/sd-multiedit-dropdown.html:15
@@ -1696,7 +1700,7 @@ msgstr ""
 msgid "Configuration deleted."
 msgstr ""
 
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:106
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:104
 msgid "Configuration has changed. {{message}} Would you like to save the story to your workspace?"
 msgstr ""
 
@@ -2265,6 +2269,10 @@ msgstr ""
 msgid "Currently selected"
 msgstr ""
 
+#: scripts/core/upload/image-crop-directive.ts:308
+msgid "Currently the image size is {{width}}x{{height}})."
+msgstr ""
+
 #: scripts/apps/authoring/views/dashboard-articles.html:5
 msgid "Currently working on"
 msgstr ""
@@ -2686,7 +2694,7 @@ msgstr ""
 msgid "Do you want to delete the items permanently?"
 msgstr ""
 
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:73
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:71
 msgid "Do you want to publish the article?"
 msgstr ""
 
@@ -3624,7 +3632,7 @@ msgstr ""
 msgid "Failed to apply kill template to the item."
 msgstr ""
 
-#: scripts/apps/archive/related-item-widget/relatedItem.ts:186
+#: scripts/apps/archive/related-item-widget/relatedItem.ts:187
 msgid "Failed to associate update: {{message}}"
 msgstr ""
 
@@ -4179,7 +4187,7 @@ msgid "Go to items"
 msgstr ""
 
 #: ../superdesk-planning/client/components/IgnoreCancelSaveModal.jsx:116
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:49
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:47
 msgid "Go-To"
 msgstr ""
 
@@ -4391,8 +4399,8 @@ msgstr ""
 #: ../superdesk-planning/client/components/AddToPlanningModal/index.jsx:64
 #: ../superdesk-planning/client/components/ConfirmationModal.jsx:78
 #: ../superdesk-planning/client/components/IgnoreCancelSaveModal.jsx:172
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:50
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:63
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:48
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:61
 msgid "Ignore"
 msgstr ""
 
@@ -4638,7 +4646,7 @@ msgstr ""
 #: ../superdesk-planning/client/actions/main.js:1256
 #: ../superdesk-planning/client/controllers/AddToPlanningController.js:169
 #: ../superdesk-planning/client/controllers/FulfilAssignmentController.js:167
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:133
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:131
 msgid "Item Unlocked"
 msgstr ""
 
@@ -4682,7 +4690,7 @@ msgstr ""
 msgid "Item is locked. Cannot associate media item."
 msgstr ""
 
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:147
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:145
 msgid "Item locked"
 msgstr ""
 
@@ -4720,7 +4728,7 @@ msgstr ""
 msgid "Item updated."
 msgstr ""
 
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:128
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:126
 msgid "Item {{headline}} was unlocked by {{username}}."
 msgstr ""
 
@@ -5806,8 +5814,8 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentPopup/index.jsx:72
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:79
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:133
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:147
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:131
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:145
 #: scripts/apps/authoring/macros/views/macros-replace.html:3
 #: scripts/core/auth/auth.ts:199
 #: scripts/core/directives/PasswordStrengthDirective.ts:40
@@ -6689,7 +6697,7 @@ msgstr ""
 msgid "Public"
 msgstr ""
 
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:75
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:73
 #: scripts/apps/authoring/views/authoring-topbar.html:54
 #: scripts/apps/authoring/views/authoring-topbar.html:55
 #: scripts/apps/authoring/views/send-item.html:13
@@ -6744,7 +6752,7 @@ msgstr ""
 msgid "Published to"
 msgstr ""
 
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:74
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:72
 msgid "Publishing"
 msgstr ""
 
@@ -7395,7 +7403,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/Main/ItemEditor/EditorHeader.jsx:256
 #: ../superdesk-planning/client/components/ModalWithForm/index.jsx:111
 #: ../superdesk-planning/client/components/Planning/FeaturedPlanning/FeaturedPlanningModal.jsx:401
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:62
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:60
 #: scripts/apps/authoring/multiedit/views/sd-multiedit-article.html:3
 #: scripts/apps/authoring/views/authoring-topbar.html:108
 #: scripts/apps/authoring/views/change-image.html:61
@@ -7482,11 +7490,11 @@ msgstr ""
 msgid "Save Search"
 msgstr ""
 
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:87
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:85
 msgid "Save and publish"
 msgstr ""
 
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:99
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:97
 msgid "Save and send"
 msgstr ""
 
@@ -7528,10 +7536,10 @@ msgstr ""
 msgid "Save changes without re-posting ?"
 msgstr ""
 
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:48
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:61
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:86
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:98
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:46
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:59
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:84
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:96
 msgid "Save changes?"
 msgstr ""
 
@@ -7929,7 +7937,7 @@ msgid "Shortcuts"
 msgstr ""
 
 #: scripts/apps/users/directives/UserPreferencesDirective.ts:337
-msgid "Should you choose to proceed with your choice, a default set of categories will be selected for you."
+msgid "Should you choose to proceed with your choice."
 msgstr ""
 
 #: ../superdesk-planning/client/components/Events/EventItemWithPlanning.jsx:40
@@ -8103,7 +8111,7 @@ msgid "Sorry, but can't reach the server now.<br>Please try again later."
 msgstr ""
 
 #: scripts/core/upload/image-crop-directive.ts:305
-msgid "Sorry, but image must be at least {{requiredWidth}}x{{requiredHeight}}, (it is {{currentWidth}}x{{currentHeight}})."
+msgid "Sorry, but image must be at least {{width}}x{{height}}."
 msgstr ""
 
 #: scripts/apps/authoring/attachments/attachments.js:35
@@ -8818,19 +8826,19 @@ msgstr ""
 msgid "There are no {{ status }} agendas"
 msgstr ""
 
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:85
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:83
 msgid "There are some unsaved changes, do you want to save and publish it now?"
 msgstr ""
 
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:97
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:95
 msgid "There are some unsaved changes, do you want to save and send it now?"
 msgstr ""
 
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:60
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:58
 msgid "There are some unsaved changes, do you want to save it now?"
 msgstr ""
 
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:47
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:45
 msgid "There are some unsaved changes, go to the article to save changes?"
 msgstr ""
 
@@ -8850,7 +8858,7 @@ msgstr ""
 msgid "There are unsaved changes. If you navigate away, your changes will be lost."
 msgstr ""
 
-#: scripts/apps/archive/related-item-widget/relatedItem.ts:188
+#: scripts/apps/archive/related-item-widget/relatedItem.ts:190
 msgid "There is an error. Failed to associate update."
 msgstr ""
 
@@ -9017,11 +9025,11 @@ msgstr ""
 msgid "This item is linked to in-progress planning coverage, spike anyway?"
 msgstr ""
 
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:145
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:143
 msgid "This item was locked by {{username}}."
 msgstr ""
 
-#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:123
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:121
 msgid "This item was unlocked by {{username}}."
 msgstr ""
 

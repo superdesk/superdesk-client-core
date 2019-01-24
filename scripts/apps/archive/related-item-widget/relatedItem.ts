@@ -183,7 +183,12 @@ function RelatedItemController(
                         authoringWorkspace.edit(newItem);
                     }, (response) => {
                         if (angular.isDefined(response.data._message)) {
-                            notify.error(gettext('Failed to associate update: {{message}}', {message: response.data._message}));
+                            notify.error(
+                                gettext(
+                                    'Failed to associate update: {{message}}',
+                                    {message: response.data._message},
+                                ),
+                            );
                         } else {
                             notify.error(gettext('There is an error. Failed to associate update.'));
                         }

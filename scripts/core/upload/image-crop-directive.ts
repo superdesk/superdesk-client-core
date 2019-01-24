@@ -303,13 +303,11 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                         }
                         if (_img.width < rendition.width || _img.height < rendition.height) {
                             var text = gettext(
-                                'Sorry, but image must be at least {{requiredWidth}}x{{requiredHeight}}, (it is {{currentWidth}}x{{currentHeight}}).',
-                                {
-                                    requiredWidth: rendition.width,
-                                    requiredHeight: rendition.height,
-                                    currentWidth: _img.width,
-                                    currentHeight: _img.height
-                                }
+                                'Sorry, but image must be at least {{width}}x{{height}}.',
+                                {width: rendition.width, height: rendition.height},
+                            ) + ' ' + gettext(
+                                'Currently the image size is {{width}}x{{height}}).',
+                                {width: _img.width, height: _img.height},
                             );
 
                             elem.append('<p class="error">' + text);
