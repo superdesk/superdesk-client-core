@@ -1,7 +1,7 @@
 import {HAS_FORMAT_OPTIONS} from 'apps/workspace/content/constants';
 import _ from 'lodash';
 import {getLabelForFieldId} from '../../helpers/getLabelForFieldId';
-import {getLabelForType} from '../../helpers/getTypeForFieldId';
+import {getTypeForFieldId} from '../../helpers/getTypeForFieldId';
 import {IArticle} from 'superdesk-interfaces/Article';
 import {IVocabulary} from 'superdesk-interfaces/Vocabulary';
 import {assertNever} from 'core/helpers/typescript-helpers';
@@ -113,7 +113,7 @@ export function ContentProfileSchemaEditor(content, metadata, vocabularies) {
                         scope.schemaKeysDisabled.push({
                             key: value,
                             name: scope.model.editor[value].field_name || scope.label(value),
-                            type: getLabelForType(scope.model.schema[value].type),
+                            type: getTypeForFieldId(value, scope.vocabularies),
                         });
                     });
 

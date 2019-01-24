@@ -1,5 +1,3 @@
-export type VocabularyFieldType = 'text' | 'media' | 'date' | 'embed' | 'related_content';
-
 export interface IVocabularyTag {
     text: string;
 }
@@ -18,7 +16,7 @@ export interface IVocabulary {
     priority: number;
     unique_field: string;
     schema: {};
-    field_type: VocabularyFieldType;
+    field_type: 'text' | 'media' | 'date' | 'embed' | 'related_content';
     field_options: {};
     init_version: number;
     preffered_items: boolean;

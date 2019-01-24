@@ -1,8 +1,7 @@
-import {VocabularyFieldType, IVocabulary} from 'superdesk-interfaces/Vocabulary';
+import {IVocabulary} from 'superdesk-interfaces/Vocabulary';
 import {gettext} from 'core/ui/components/utils';
 
-// export type VocabularyFieldType = 'text' | 'media' | 'date' | 'embed' | 'related_content';
-export const getLabelForType = (fieldType: VocabularyFieldType) => {
+export const getLabelForType = (fieldType: IVocabulary['field_type']) => {
     switch (fieldType) {
         case 'text':
             return gettext('text');
@@ -15,7 +14,7 @@ export const getLabelForType = (fieldType: VocabularyFieldType) => {
         case 'related_content':
             return gettext('related content');
         default:
-            return 'CV';
+            return gettext('custom vocabulary');
     }
 };
 
