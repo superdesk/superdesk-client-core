@@ -33,7 +33,7 @@ export class Item extends React.Component<any, any> {
     constructor(props) {
         super(props);
 
-        this.state = {hover: false, actioning: false, isActionMenuOpen: false};
+        this.state = {hover: false, actioning: false, isActionMenuOpen: false, showNested: false};
 
         this.select = this.select.bind(this);
         this.edit = this.edit.bind(this);
@@ -43,11 +43,10 @@ export class Item extends React.Component<any, any> {
         this.unsetHoverState = this.unsetHoverState.bind(this);
         this.onDragStart = this.onDragStart.bind(this);
         this.openAuthoringView = this.openAuthoringView.bind(this);
+        this.toggleNested = this.toggleNested.bind(this);
     }
 
     componentWillMount() {
-        const {config} = this.props.svc;
-
         if (get(this.props, 'svc.config.apps', []).includes('superdesk-planning')) {
             this.loadPlanningModals();
         }
@@ -149,6 +148,11 @@ export class Item extends React.Component<any, any> {
         dragitem.start(event, this.props.item);
     }
 
+    toggleNested(event) {
+        event.stopPropagation();
+        this.setState({showNested: !this.state.showNested});
+    }
+
     render() {
         const {item, scope} = this.props;
         let classes = this.props.view === 'photogrid' ?
@@ -176,6 +180,8 @@ export class Item extends React.Component<any, any> {
         if (item._progress) {
             contents.push(React.createElement(ProgressBar, {completed: item._progress}));
         }
+
+        let nested = null;
 
         const getActionsMenu = () =>
             this.props.hideActions !== true && this.state.hover && !item.gone ? React.createElement(
@@ -263,29 +269,65 @@ export class Item extends React.Component<any, any> {
                     narrow: this.props.narrow,
                     svc: this.props.svc,
                     scope: this.props.scope,
+                    nestedCount: this.props.nested.length,
+                    showNested: this.state.showNested,
+                    toggleNested: this.toggleNested,
                 }),
                 getActionsMenu(),
             );
+
+            if (this.props.nested.length && this.state.showNested) {
+                nested = (
+                    <div className="sd-list-item-nested__childs sd-shadow--z1">
+                        {this.props.nested.map((childItem) => (
+                            <Item
+                                item={childItem}
+                                key={childItem._id + childItem._current_version}
+                                svc={this.props.svc}
+                                scope={this.props.scope}
+                                flags={{}}
+                                nested={[]}
+                                profilesById={this.props.profilesById}
+                                isNested={true}
+                                narrow={true}
+                                hideActions={true}
+                                onSelect={() => null}
+                                multiSelectDisabled={false}
+                            />
+                        ))}
+                    </div>
+                );
+            }
         }
 
+        const getCallback = (func) => this.props.isNested ? (event) => event.stopPropagation() : func;
+
         return React.createElement(
-            'li', {
+            this.props.isNested ? 'div' : 'li', {
                 id: item._id,
                 key: item._id,
                 className: classNames(
                     'list-item-view',
-                    {'actions-visible': this.props.hideActions !== true},
-                    {active: this.props.flags.selected},
-                    {selected: this.props.item.selected && !this.props.flags.selected},
+                    {
+                        'actions-visible': this.props.hideActions !== true,
+                        active: this.props.flags.selected,
+                        selected: this.props.item.selected && !this.props.flags.selected,
+                        'sd-list-item-nested': this.props.nested.length,
+                        'sd-list-item-nested--expanded': this.props.nested.length && this.state.showNested,
+                        'sd-list-item-nested--collapsed': this.props.nested.length && this.state.showNested === false,
+                    },
                 ),
-                onMouseEnter: this.setHoverState,
-                onMouseLeave: this.unsetHoverState,
-                onDragStart: this.onDragStart,
-                onClick: this.select,
-                onDoubleClick: this.dbClick,
-                draggable: true,
+                onMouseEnter: getCallback(this.setHoverState),
+                onMouseLeave: getCallback(this.unsetHoverState),
+                onDragStart: getCallback(this.onDragStart),
+                onClick: getCallback(this.select),
+                onDoubleClick: getCallback(this.dbClick),
+                draggable: !this.props.isNested,
             },
-            React.createElement.apply(null, contents),
+            <React.Fragment>
+                {React.createElement.apply(null, contents)}
+                {nested}
+            </React.Fragment>,
         );
     }
 }
@@ -310,4 +352,10 @@ Item.propTypes = {
     narrow: PropTypes.any,
     hideActions: PropTypes.bool,
     multiSelectDisabled: PropTypes.bool,
+    nested: PropTypes.array,
+    isNested: PropTypes.bool,
+};
+
+Item.defaultProps = {
+    isNested: false,
 };

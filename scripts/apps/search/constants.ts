@@ -65,6 +65,7 @@ export const DEFAULT_LIST_CONFIG = {
         'expiry',
         'desk',
         'fetchedDesk',
+        'nestedlink',
     ],
 };
 

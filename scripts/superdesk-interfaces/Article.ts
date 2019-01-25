@@ -2,6 +2,7 @@ import {IUser} from './User';
 
 export interface IArticle {
     _id: string;
+    guid: string;
     translated_from: string;
     translation_id: string;
     usageterms: any;
@@ -35,4 +36,5 @@ export interface IArticle {
     type: 'text' | 'picture' | 'video' | 'audio' | 'preformatted' | 'graphic' | 'composite';
     firstpublished?: string;
     linked_in_packages: any;
+    rewritten_by?: string;
 }
