@@ -2,6 +2,7 @@ import {IUser} from './User';
 
 export interface IArticle {
     _id: string;
+    guid: string;
     translated_from: string;
     translation_id: string;
     usageterms: any;

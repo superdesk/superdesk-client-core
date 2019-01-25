@@ -7,10 +7,20 @@ import {isCheckAllowed, closeActionsMenu, bindMarkItemShortcut} from '../helpers
 import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
 import {gettext} from 'core/ui/components/utils';
 
+interface IState {
+    narrow: boolean;
+    view: 'compact' | 'mgrid' | 'photogrid';
+    itemsList: Array<string>;
+    itemsById: any;
+    selected: string;
+    bindedShortcuts: Array<any>;
+    swimlane: any;
+}
+
 /**
  * Item list component
  */
-export class ItemList extends React.Component<any, any> {
+export class ItemList extends React.Component<any, IState> {
     static propTypes: any;
     static defaultProps: any;
 
@@ -28,6 +38,7 @@ export class ItemList extends React.Component<any, any> {
             view: 'compact',
             narrow: false,
             bindedShortcuts: [],
+            swimlane: null,
         };
 
         this.multiSelect = this.multiSelect.bind(this);
@@ -445,12 +456,17 @@ export class ItemList extends React.Component<any, any> {
     }
 
     render() {
-        const {storage} = this.props.svc;
+        const {storage, config} = this.props.svc;
         const {scope} = this.props;
+        const hideNested = get(config, 'features.nestedItemsInOutputStage', false) === true;
 
-        const createItem = function(itemId) {
+        const createItem = (itemId) => {
             const item = this.state.itemsById[itemId];
             const task = item.task || {desk: null};
+
+            if (hideNested && item._type === 'published' && (item.rewritten_by || !item.last_published_version)) {
+                return null;
+            }
 
             return React.createElement(Item, {
                 key: itemId,
@@ -475,7 +491,7 @@ export class ItemList extends React.Component<any, any> {
                 multiSelectDisabled: scope.disableMonitoringMultiSelect,
                 scope: scope,
             });
-        }.bind(this);
+        };
         const isEmpty = !this.state.itemsList.length;
 
         return React.createElement(
