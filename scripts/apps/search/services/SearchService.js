@@ -723,7 +723,6 @@ export function SearchService($location, gettext, config, session, multi,
     this.updateItems = function(newItems, scopeItems) {
         _.map(scopeItems._items, (item) => {
             if (item._type === 'published') {
-                console.info('published', item);
                 return _.extend(item, _.find(newItems._items,
                     {_id: item._id, _current_version: item._current_version}));
             }

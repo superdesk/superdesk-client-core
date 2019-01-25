@@ -6,6 +6,7 @@ import {Item} from './index';
 import {isCheckAllowed, closeActionsMenu, bindMarkItemShortcut} from '../helpers';
 import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
 import {gettext} from 'core/ui/components/utils';
+import { IArticle } from 'superdesk-interfaces/Article';
 
 interface IState {
     narrow: boolean;
@@ -455,17 +456,63 @@ export class ItemList extends React.Component<any, IState> {
             this.props.usersById[versionCreator].display_name : null;
     }
 
+    /**
+     * Get nested item parent
+     *
+     * This could be item with same guid for corrections or with guid == rewritten_by
+     */
+    getParent(item: IArticle) : string | null {
+        if (!item.rewritten_by) {
+            return this.state.itemsList.find((itemId) => itemId.startsWith(item.guid));
+        }
+
+        const parentId = this.state.itemsList.find((itemId) => itemId.startsWith(item.rewritten_by));
+
+        if (parentId) {
+            const parent = this.state.itemsById[parentId];
+
+            if (parent && parent.rewritten_by) {
+                return this.getParent(parent);
+            }
+        }
+
+        return parentId;
+    }
+
     render() {
         const {storage, config} = this.props.svc;
         const {scope} = this.props;
-        const hideNested = get(config, 'features.nestedItemsInOutputStage', false) === true;
+        const hideNested = get(config, 'features.nestedItemsInOutputStage', true) === true;
+        const nested = {};
+        const children = {};
+
+        if (hideNested) {
+            console.time('nested');
+            this.state.itemsList.map((itemId) => {
+                const item = this.state.itemsById[itemId];
+
+                if (item._type === 'published' && (item.rewritten_by || !item.last_published_version)) {
+                    nested[itemId] = true;
+                    const parentId = this.getParent(item);
+                    if (parentId) {
+                        const parentChildren = children[parentId] || [];
+                        parentChildren.push(itemId);
+                        children[parentId] = parentChildren;
+                    }
+                }
+            });
+            console.timeEnd('nested');
+        }
 
         const createItem = (itemId) => {
             const item = this.state.itemsById[itemId];
             const task = item.task || {desk: null};
+            let itemChildren = [];
 
-            if (hideNested && item._type === 'published' && (item.rewritten_by || !item.last_published_version)) {
-                return null;
+            if (nested[itemId]) {
+                return null; // hide nested items from list
+            } else if (hideNested && children[itemId]) {
+                itemChildren = children[itemId].map((childrenId) => this.state.itemsById[childrenId]);
             }
 
             return React.createElement(Item, {
@@ -490,6 +537,7 @@ export class ItemList extends React.Component<any, IState> {
                 hideActions: scope.hideActionsForMonitoringItems || get(scope, 'flags.hideActions'),
                 multiSelectDisabled: scope.disableMonitoringMultiSelect,
                 scope: scope,
+                itemChildren: itemChildren,
             });
         };
         const isEmpty = !this.state.itemsList.length;

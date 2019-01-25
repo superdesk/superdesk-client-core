@@ -54,6 +54,7 @@ interface IState {
     hover: boolean;
     actioning: boolean;
     isActionMenuOpen: boolean;
+    showNested: boolean;
 }
 
 export class Item extends React.Component<IProps, IState> {
@@ -63,7 +64,7 @@ export class Item extends React.Component<IProps, IState> {
     constructor(props) {
         super(props);
 
-        this.state = {hover: false, actioning: false, isActionMenuOpen: false};
+        this.state = {hover: false, actioning: false, isActionMenuOpen: false, showNested: false};
 
         this.select = this.select.bind(this);
         this.edit = this.edit.bind(this);
@@ -73,11 +74,10 @@ export class Item extends React.Component<IProps, IState> {
         this.unsetHoverState = this.unsetHoverState.bind(this);
         this.onDragStart = this.onDragStart.bind(this);
         this.openAuthoringView = this.openAuthoringView.bind(this);
+        this.toggleNested = this.toggleNested.bind(this);
     }
 
     componentWillMount() {
-        const {config} = this.props.svc;
-
         if (get(this.props, 'svc.config.apps', []).includes('superdesk-planning')) {
             this.loadPlanningModals();
         }
@@ -179,11 +179,17 @@ export class Item extends React.Component<IProps, IState> {
         dragitem.start(event, this.props.item);
     }
 
+    toggleNested(event) {
+        event.stopPropagation();
+        this.setState({showNested: !this.state.showNested});
+    }
+
     render() {
         const {item, scope} = this.props;
         let classes = this.props.view === 'photogrid' ?
             'sd-grid-item sd-grid-item--with-click' :
             'media-box media-' + item.type;
+        let nested = null;
 
         // Customize item class from its props
         if (scope.customRender && typeof scope.customRender.getItemClass === 'function') {
@@ -204,7 +210,8 @@ export class Item extends React.Component<IProps, IState> {
                 }) : null;
 
         const getTemplate = () => {
-            if (this.props.view === 'swimlane2') {
+            switch (this.props.view) {
+            case 'swimlane2':
                 return (
                     <ItemSwimlane
                         item={item}
@@ -214,7 +221,7 @@ export class Item extends React.Component<IProps, IState> {
                         svc={this.props.svc}
                     />
                 );
-            } else if (this.props.view === 'mgrid') {
+            case 'mgrid':
                 return (
                     <ItemMgridTemplate
                         item={item}
@@ -227,7 +234,7 @@ export class Item extends React.Component<IProps, IState> {
                         getActionsMenu={getActionsMenu}
                     />
                 );
-            } else if (this.props.view === 'photogrid') {
+            case 'photogrid':
                 return (
                     <ItemPhotoGrid
                         item={item}
@@ -239,7 +246,7 @@ export class Item extends React.Component<IProps, IState> {
                         getActionsMenu={getActionsMenu}
                     />
                 );
-            } else {
+            default:
                 return (
                     <ListItemTemplate
                         item={item}
@@ -289,6 +296,7 @@ export class Item extends React.Component<IProps, IState> {
                 })}>
                     {getTemplate()}
                 </div>
+                {nested}
             </li>
         );
     }

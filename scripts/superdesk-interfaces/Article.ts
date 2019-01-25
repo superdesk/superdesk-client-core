@@ -40,6 +40,7 @@ export interface IArticle {
     lock_action: any;
     lock_user: any;
     lock_session: any;
+    rewritten_by?: string;
 
     // might be only used for client-side state
     created: any;
