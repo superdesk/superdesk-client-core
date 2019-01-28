@@ -250,10 +250,6 @@ msgstr ""
 msgid "A content profile with this name already exists."
 msgstr ""
 
-#: scripts/apps/users/directives/UserPreferencesDirective.ts:338
-msgid "A default set of categories will be selected for you."
-msgstr ""
-
 #: scripts/core/auth/reset-password.html:43
 msgid "A link was sent to the specified email address. Please use it to reset your password. It is valid a limited amount of time."
 msgstr ""
@@ -395,7 +391,7 @@ msgstr ""
 #: scripts/apps/ingest/views/settings/ingest-routing-action.html:27
 #: scripts/apps/ingest/views/settings/ingest-routing-action.html:75
 #: scripts/apps/templates/views/template-editor-modal.html:169
-#: scripts/core/editor3/highlightsConfig.ts:22
+#: scripts/core/editor3/highlightsConfig.ts:24
 msgid "Add"
 msgstr ""
 
@@ -574,7 +570,7 @@ msgid "Add items"
 msgstr ""
 
 #: ../superdesk-planning/client/components/Events/EventEditor/index.jsx:201
-#: scripts/core/editor3/highlightsConfig.ts:121
+#: scripts/core/editor3/highlightsConfig.ts:123
 msgid "Add link"
 msgstr ""
 
@@ -796,6 +792,7 @@ msgstr ""
 
 #: scripts/core/editor3/components/annotations/AnnotationPopup.tsx:63
 #: scripts/core/editor3/components/toolbar/index.tsx:205
+#: scripts/core/editor3/highlightsConfig.ts:17
 msgid "Annotation"
 msgstr ""
 
@@ -914,7 +911,7 @@ msgstr ""
 msgid "Are you sure you want to delete this scheme?"
 msgstr ""
 
-#: scripts/apps/users/directives/UserRolesDirective.ts:85
+#: scripts/apps/users/directives/UserRolesDirective.ts:89
 msgid "Are you sure you want to delete user role?"
 msgstr ""
 
@@ -1103,6 +1100,10 @@ msgstr ""
 
 #: scripts/apps/users/views/edit-form.html:32
 msgid "Author info"
+msgstr ""
+
+#: scripts/apps/users/views/settings-roles.html:60
+msgid "Author roles controlled vocabullary is missing."
 msgstr ""
 
 #: scripts/apps/authoring/authoring/index.ts:94
@@ -1377,7 +1378,7 @@ msgstr ""
 #: scripts/apps/templates/views/template-editor-modal.html:202
 #: scripts/apps/users/views/edit-form.html:320
 #: scripts/apps/users/views/edit-form.html:4
-#: scripts/apps/users/views/settings-roles.html:55
+#: scripts/apps/users/views/settings-roles.html:86
 #: scripts/apps/users/views/user-preferences.html:5
 #: scripts/apps/users/views/user-privileges.html:6
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:188
@@ -1650,6 +1651,7 @@ msgstr ""
 
 #: scripts/core/editor3/components/comments/Comment.tsx:80
 #: scripts/core/editor3/components/toolbar/index.tsx:194
+#: scripts/core/editor3/highlightsConfig.ts:10
 msgid "Comment"
 msgstr ""
 
@@ -1827,6 +1829,14 @@ msgstr ""
 
 #: scripts/core/activity/activity.js:22
 msgid "Content config"
+msgstr ""
+
+#: scripts/apps/users/views/settings-roles.html:64
+msgid "Content creation"
+msgstr ""
+
+#: scripts/apps/users/views/settings-roles.html:74
+msgid "Content editing"
 msgstr ""
 
 #: scripts/apps/desks/views/desk-config-modal.html:245
@@ -2396,6 +2406,10 @@ msgstr ""
 msgid "Default Theme"
 msgstr ""
 
+#: scripts/apps/users/views/settings-roles.html:53
+msgid "Default author roles"
+msgstr ""
+
 #: scripts/apps/desks/views/desk-config-modal.html:85
 msgid "Default monitoring view"
 msgstr ""
@@ -2420,7 +2434,7 @@ msgstr ""
 msgid "Delete Rule"
 msgstr ""
 
-#: scripts/core/editor3/highlightsConfig.ts:111
+#: scripts/core/editor3/highlightsConfig.ts:113
 msgid "Delete empty paragraphs"
 msgstr ""
 
@@ -3067,7 +3081,7 @@ msgstr ""
 msgid "Edit in popup"
 msgstr ""
 
-#: scripts/core/editor3/highlightsConfig.ts:131
+#: scripts/core/editor3/highlightsConfig.ts:133
 msgid "Edit link"
 msgstr ""
 
@@ -3296,7 +3310,7 @@ msgstr ""
 #: scripts/apps/users/controllers/UserDeleteCommand.ts:22
 #: scripts/apps/users/controllers/UserEnableCommand.ts:17
 #: scripts/apps/users/controllers/UserEnableCommand.ts:19
-#: scripts/apps/users/directives/UserRolesDirective.ts:62
+#: scripts/apps/users/directives/UserRolesDirective.ts:66
 #: scripts/apps/vocabularies/controllers/VocabularyEditController.ts:33
 msgid "Error:"
 msgstr ""
@@ -4352,11 +4366,11 @@ msgstr ""
 msgid "I"
 msgstr ""
 
-#: scripts/apps/users/directives/UserRolesDirective.ts:42
+#: scripts/apps/users/directives/UserRolesDirective.ts:46
 msgid "I'm sorry but a role with that name already exists."
 msgstr ""
 
-#: scripts/apps/users/directives/UserRolesDirective.ts:46
+#: scripts/apps/users/directives/UserRolesDirective.ts:50
 msgid "I'm sorry but there was an error when saving the role."
 msgstr ""
 
@@ -4394,6 +4408,13 @@ msgstr ""
 
 #: scripts/core/ui/views/sd-timezone.html:17
 msgid "If not set, the UTC+0 time zone is assumed."
+msgstr ""
+
+#: scripts/apps/users/views/settings-roles.html:54
+msgid ""
+"If you select a default role for content creation or editing,\n"
+"                        Superdesk will prefill the Authors field with user's name and the role.\n"
+"                        The roles are managed in <b>Author roles</b> controlled vocabulary in the Metadata section."
 msgstr ""
 
 #: ../superdesk-planning/client/components/AddToPlanningModal/index.jsx:64
@@ -5197,7 +5218,7 @@ msgstr ""
 msgid "Media gallery"
 msgstr ""
 
-#: scripts/core/editor3/highlightsConfig.ts:101
+#: scripts/core/editor3/highlightsConfig.ts:103
 msgid "Merge paragraphs"
 msgstr ""
 
@@ -5661,8 +5682,8 @@ msgstr ""
 msgid "No of calls"
 msgstr ""
 
-#: scripts/apps/users/directives/UserPreferencesDirective.ts:336
-msgid "No preferred categories selected."
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:337
+msgid "No preferred categories selected. Should you choose to proceed with your choice. A default set of categories will be selected for you."
 msgstr ""
 
 #: ../superdesk-planning/client/components/Events/EventPreviewContent.jsx:229
@@ -5734,6 +5755,8 @@ msgstr ""
 #: scripts/apps/publish/views/publish-queue.html:68
 #: scripts/apps/templates/views/template-editor-modal.html:182
 #: scripts/apps/templates/views/template-editor-modal.html:74
+#: scripts/apps/users/views/settings-roles.html:68
+#: scripts/apps/users/views/settings-roles.html:78
 #: scripts/core/ui/components/Form/ColouredValueInput/ColouredValuePopup.tsx:120
 #: scripts/core/ui/components/Form/ColouredValueInput/index.tsx:100
 #: scripts/core/ui/components/Form/ColouredValueInput/index.tsx:87
@@ -5778,6 +5801,10 @@ msgstr ""
 #: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:606
 #: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.jsx:170
 msgid "Not for Publication"
+msgstr ""
+
+#: scripts/core/ui/components/List/PubStatus.tsx:22
+msgid "Not for publication"
 msgstr ""
 
 #: scripts/apps/workspace/content/views/schema-editor.html:71
@@ -5843,7 +5870,7 @@ msgstr ""
 #: scripts/apps/authoring/compare-versions/views/sd-compare-versions-dropdown.html:21
 #: scripts/apps/authoring/multiedit/views/sd-multiedit-dropdown.html:14
 #: scripts/apps/search/views/save-search.html:31
-#: scripts/apps/users/views/settings-roles.html:56
+#: scripts/apps/users/views/settings-roles.html:87
 msgid "Ok"
 msgstr ""
 
@@ -6446,6 +6473,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/UI/constants.js:28
 #: ../superdesk-planning/client/constants/tooltips.js:8
 #: ../superdesk-planning/client/utils/index.js:476
+#: scripts/core/ui/components/List/PubStatus.tsx:19
 msgid "Posted"
 msgstr ""
 
@@ -6976,7 +7004,7 @@ msgstr ""
 #: scripts/apps/search/views/multi-action-bar.html:58
 #: scripts/apps/templates/views/templates.html:37
 #: scripts/apps/workspace/content/views/profile-settings.html:32
-#: scripts/core/editor3/highlightsConfig.ts:29
+#: scripts/core/editor3/highlightsConfig.ts:31
 msgid "Remove"
 msgstr ""
 
@@ -7048,7 +7076,7 @@ msgstr ""
 msgid "Remove from featured stories"
 msgstr ""
 
-#: scripts/core/editor3/highlightsConfig.ts:126
+#: scripts/core/editor3/highlightsConfig.ts:128
 msgid "Remove link"
 msgstr ""
 
@@ -7936,10 +7964,6 @@ msgstr ""
 msgid "Shortcuts"
 msgstr ""
 
-#: scripts/apps/users/directives/UserPreferencesDirective.ts:337
-msgid "Should you choose to proceed with your choice."
-msgstr ""
-
 #: ../superdesk-planning/client/components/Events/EventItemWithPlanning.jsx:40
 #: scripts/apps/monitoring/views/monitoring-view.html:159
 msgid "Show"
@@ -8261,7 +8285,7 @@ msgstr ""
 msgid "Spiked only content"
 msgstr ""
 
-#: scripts/core/editor3/highlightsConfig.ts:92
+#: scripts/core/editor3/highlightsConfig.ts:94
 msgid "Split paragraph"
 msgstr ""
 
@@ -8858,7 +8882,7 @@ msgstr ""
 msgid "There are unsaved changes. If you navigate away, your changes will be lost."
 msgstr ""
 
-#: scripts/apps/archive/related-item-widget/relatedItem.ts:190
+#: scripts/apps/archive/related-item-widget/relatedItem.ts:193
 msgid "There is an error. Failed to associate update."
 msgstr ""
 
@@ -8944,7 +8968,7 @@ msgstr ""
 msgid "There was an error. Filter condition cannot be deleted."
 msgstr ""
 
-#: scripts/apps/users/directives/UserRolesDirective.ts:64
+#: scripts/apps/users/directives/UserRolesDirective.ts:68
 msgid "There was an error. Role cannot be deleted."
 msgstr ""
 
@@ -9144,7 +9168,7 @@ msgstr ""
 msgid "Today"
 msgstr ""
 
-#: scripts/core/editor3/highlightsConfig.ts:85
+#: scripts/core/editor3/highlightsConfig.ts:87
 msgid "Toggle"
 msgstr ""
 
@@ -9160,7 +9184,7 @@ msgstr ""
 msgid "Toggle Suggestions Mode"
 msgstr ""
 
-#: scripts/core/editor3/highlightsConfig.ts:38
+#: scripts/core/editor3/highlightsConfig.ts:40
 msgid "Toggle bold"
 msgstr ""
 
@@ -9168,7 +9192,7 @@ msgstr ""
 msgid "Toggle formatting marks"
 msgstr ""
 
-#: scripts/core/editor3/highlightsConfig.ts:46
+#: scripts/core/editor3/highlightsConfig.ts:48
 msgid "Toggle italic"
 msgstr ""
 
@@ -9176,15 +9200,15 @@ msgstr ""
 msgid "Toggle search view"
 msgstr ""
 
-#: scripts/core/editor3/highlightsConfig.ts:78
+#: scripts/core/editor3/highlightsConfig.ts:80
 msgid "Toggle strikethrough"
 msgstr ""
 
-#: scripts/core/editor3/highlightsConfig.ts:62
+#: scripts/core/editor3/highlightsConfig.ts:64
 msgid "Toggle subscript"
 msgstr ""
 
-#: scripts/core/editor3/highlightsConfig.ts:70
+#: scripts/core/editor3/highlightsConfig.ts:72
 msgid "Toggle superscript"
 msgstr ""
 
@@ -9192,7 +9216,7 @@ msgstr ""
 msgid "Toggle theme"
 msgstr ""
 
-#: scripts/core/editor3/highlightsConfig.ts:54
+#: scripts/core/editor3/highlightsConfig.ts:56
 msgid "Toggle underline"
 msgstr ""
 
@@ -9688,7 +9712,7 @@ msgstr ""
 msgid "User preferences saved"
 msgstr ""
 
-#: scripts/apps/users/directives/UserRolesDirective.ts:31
+#: scripts/apps/users/directives/UserRolesDirective.ts:35
 msgid "User role created."
 msgstr ""
 
@@ -9696,7 +9720,7 @@ msgstr ""
 msgid "User role not found."
 msgstr ""
 
-#: scripts/apps/users/directives/UserRolesDirective.ts:33
+#: scripts/apps/users/directives/UserRolesDirective.ts:37
 msgid "User role updated."
 msgstr ""
 
@@ -10770,7 +10794,7 @@ msgstr ""
 msgid "or Select from computer"
 msgstr ""
 
-#: scripts/core/editor3/highlightsConfig.ts:145
+#: scripts/core/editor3/highlightsConfig.ts:147
 msgid "ordered list"
 msgstr ""
 
@@ -10845,7 +10869,7 @@ msgstr ""
 msgid "posted"
 msgstr ""
 
-#: scripts/core/editor3/highlightsConfig.ts:146
+#: scripts/core/editor3/highlightsConfig.ts:148
 msgid "preformatted"
 msgstr ""
 
@@ -10891,7 +10915,7 @@ msgid "quick list"
 msgstr ""
 
 #: scripts/core/editor2/editor.js:1080
-#: scripts/core/editor3/highlightsConfig.ts:143
+#: scripts/core/editor3/highlightsConfig.ts:145
 msgid "quote"
 msgstr ""
 
@@ -11102,7 +11126,7 @@ msgstr ""
 msgid "underline"
 msgstr ""
 
-#: scripts/core/editor3/highlightsConfig.ts:144
+#: scripts/core/editor3/highlightsConfig.ts:146
 msgid "unordered list"
 msgstr ""
 

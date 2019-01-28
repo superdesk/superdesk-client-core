@@ -333,9 +333,8 @@ export function UserPreferencesDirective(
                     return $q.when();
                 }
 
-                msg = gettext('No preferred categories selected.') + ' ' +
-                    gettext('Should you choose to proceed with your choice.') + ' ' +
-                    gettext('A default set of categories will be selected for you.');
+                // tslint:disable-next-line
+                msg = gettext('No preferred categories selected. Should you choose to proceed with your choice. A default set of categories will be selected for you.');
 
                 modalResult = modal.confirm(msg).then(() => {
                     scope.checkDefault();
