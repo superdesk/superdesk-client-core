@@ -77,20 +77,6 @@ $toggleButtonBorderColor: #c6c6c6;
    padding: 11px 0 11px 20px;
 }
 
-// swimlane switch button
-.swimlane-switch {
-     .icon-th-list {
-        transform: rotate(90deg);
-        transition: transform 0.2s ease-in;   
-    }
-    &.swimlane-switch--on {
-        .icon-th-list {  
-            transition: transform 0.2s ease-in;
-            transform: rotate(0);   
-        }
-    }
-}
-
 // Radio styled buttons
 // --------------------------------------------------
 

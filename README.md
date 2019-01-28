@@ -34,7 +34,7 @@ To configure the build, the `superdesk.config.js` file must export a function th
 - `features.hideLiveSuggestions`: `true` - disables live suggestions panel in authoring
 - `features.alchemy`: `false` - allow alchemy widget for keywords
 - `features.elasticHighlight`: `false` - allow highlighting of search terms by elasticsearch
-- `features.swimlane`: `null` - enables switch view button in monitoring view, which allows to switch between list view or swimlane view. Example: `features: {swimlane: {columnsLimit: 4}}` will enable switch view button and displays 4 columns when turned ON, set null or keep undefined to disable
+- `features.swimlane`: `null` - enables switch view button in monitoring view, which allows to switch between list view or swimlane view. Example: `features: {swimlane: {defaultNumberOfColumns: 4}}` will enable switch view button and displays 4 columns when turned ON, set null or keep undefined to disable
 - `features.confirmMediaOnUpdate`: `true` - Display the user confirmation dialog in the updated story to use the media from the original story.
 
 ##### Workspace

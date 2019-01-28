@@ -8,7 +8,7 @@ export function getSpecStyle(spec) {
     var style = {};
 
     if (spec.color) {
-        style.backgroundColor = spec.color;
+        style['backgroundColor'] = spec.color;
     }
 
     return style;
@@ -41,7 +41,7 @@ export function menuHolderElem() {
     return document.getElementById('react-placeholder');
 }
 
-export function closeActionsMenu(itemId) {
+export function closeActionsMenu(itemId?) {
     const menuHolder = menuHolderElem();
     const menuItemId = menuHolder.getAttribute('data-item-id');
 
@@ -72,7 +72,7 @@ export function openActionsMenu(elem, target, itemId) {
  */
 export function renderToBody(elem, target, zIndex = 1000) {
     // first render it somewhere not visible
-    menuHolderElem().style.zIndex = -1;
+    menuHolderElem().style.zIndex = '-1';
     var node = ReactDOM.findDOMNode(ReactDOM.render(elem, menuHolderElem()));
     // make sure it's rendered
 
@@ -119,10 +119,10 @@ export function renderToBody(elem, target, zIndex = 1000) {
     node.style.top = top.toFixed() + 'px';
     node.style.left = left.toFixed() + 'px';
     node.style.position = 'absolute';
-    menuHolderElem().style.zIndex = zIndex;
+    menuHolderElem().style.zIndex = zIndex.toString();
 }
 
-export function renderArea(area, itemProps, props, customRender = {}) {
+export function renderArea(area, itemProps, props, customRender: any = {}) {
     // If singleline preference is set, don't show second line
     if (itemProps.scope.singleLine && area === 'secondLine') {
         return;

@@ -1,12 +1,19 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {TypeIcon, SelectBox} from './index';
 import classNames from 'classnames';
 
-export class ListTypeIcon extends React.Component<any, any> {
-    static propTypes: any;
-    static defaultProps: any;
+interface IProps {
+    svc: object;
+    selectingDisabled: boolean;
+    onMultiSelect: () => void;
+    item: any;
+}
 
+interface IState {
+    hover: boolean;
+}
+
+export class ListTypeIcon extends React.Component<IProps, IState> {
     constructor(props) {
         super(props);
         this.state = {hover: false};
@@ -35,6 +42,7 @@ export class ListTypeIcon extends React.Component<any, any> {
                 className: classNames('list-field type-icon sd-monitoring-item-multi-select-checkbox'),
                 onMouseEnter: selectingDisabled ? null : this.setHover,
                 onMouseLeave: selectingDisabled ? null : this.unsetHover,
+                style: {lineHeight: 0},
             },
             showSelect ?
                 React.createElement(SelectBox, {
@@ -52,10 +60,3 @@ export class ListTypeIcon extends React.Component<any, any> {
         );
     }
 }
-
-ListTypeIcon.propTypes = {
-    svc: PropTypes.object.isRequired,
-    onMultiSelect: PropTypes.func,
-    item: PropTypes.any,
-    selectingDisabled: PropTypes.bool,
-};

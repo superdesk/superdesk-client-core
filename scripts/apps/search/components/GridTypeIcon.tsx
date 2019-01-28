@@ -15,7 +15,7 @@ export const GridTypeIcon: React.StatelessComponent<any> = (props) => {
 
     return React.createElement(
         'span',
-        {className: classNames('type-icon', {swimlane: props.swimlane})},
+        {},
         React.createElement(TypeIcon, {type: props.item.type, svc: props.svc}),
     );
 };
