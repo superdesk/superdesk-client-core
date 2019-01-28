@@ -163,16 +163,19 @@ export function AssociationController(config, send, api, $q, superdesk,
         data[rel] = updated;
         scope.item.associations = angular.extend({}, scope.item.associations, data);
         scope.rel = rel;
-        if (!authoring.isPublished(scope.item) && updated && !autosave) {
-            var promise = scope.save();
 
-            if (callback) {
-                return promise.then(callback);
-            }
-            return promise;
+        let promise;
+        if (!authoring.isPublished(scope.item) && updated && !autosave) {
+            promise = scope.save();
+        } else {
+            promise = scope.onchange({ item: scope.item, data });
         }
 
-        scope.onchange({item: scope.item, data: data});
+        if (callback) {
+            return promise.then(callback);
+        }
+
+        return promise;
     };
 
     /**
