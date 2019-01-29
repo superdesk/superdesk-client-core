@@ -2,7 +2,7 @@ export interface ISuperdeskGlobalConfig {
     defaultRoute: string;
     features: {
         swimlane: {
-            columnsLimit: number;
+            defaultNumberOfColumns: number;
         };
         editor3: boolean;
         qumu: boolean;

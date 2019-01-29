@@ -9,7 +9,7 @@ module.exports = function(grunt) {
     return {
         defaultRoute: '/workspace',
         features: {
-            swimlane: {columnsLimit: 4},
+            swimlane: {defaultNumberOfColumns: 4},
             editor3: true,
             qumu: true,
             savedSearch: {

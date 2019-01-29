@@ -1,5 +1,5 @@
-UserRolesDirective.$inject = ['api', 'gettext', 'notify', 'modal', '$filter', 'lodash'];
-export function UserRolesDirective(api, gettext, notify, modal, $filter, _) {
+UserRolesDirective.$inject = ['api', 'gettext', 'notify', 'modal', '$filter', 'lodash', 'metadata'];
+export function UserRolesDirective(api, gettext, notify, modal, $filter, _, metadata) {
     return {
         scope: true,
         templateUrl: 'scripts/apps/users/views/settings-roles.html',
@@ -12,6 +12,10 @@ export function UserRolesDirective(api, gettext, notify, modal, $filter, _) {
                 .then((result) => {
                     scope.roles = $filter('sortByName')(result._items);
                 });
+
+            metadata.fetchMetadataValues().then(() => {
+                scope.author_roles = metadata.values.author_roles;
+            });
 
             scope.edit = function(role) {
                 scope.editRole = _.create(role);

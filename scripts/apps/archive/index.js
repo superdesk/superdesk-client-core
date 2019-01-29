@@ -37,7 +37,6 @@ angular.module('superdesk.apps.archive.directives', [
     .directive('sdRatioCalc', directive.RatioCalc)
     .directive('sdHtmlPreview', directive.HtmlPreview)
     .directive('sdProviderMenu', directive.ProviderMenu)
-    .directive('sdGridLayout', directive.GridLayout)
     .directive('sdContentResults', directive.ContentResults)
     .directive('sdArchivedItemKill', directive.ArchivedItemKill)
     .directive('sdResendItem', directive.ResendItem)

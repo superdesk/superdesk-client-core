@@ -169,7 +169,7 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
                                         if (angular.isDefined(response.data._issues['validator exception'])) {
                                             errorMessage = gettext(
                                                 'Error: {{error}}',
-                                                {error: response.data._issues['validator exception']}
+                                                {error: response.data._issues['validator exception']},
                                             );
                                         }
 

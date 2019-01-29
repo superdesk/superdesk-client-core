@@ -1,32 +1,62 @@
+/* eslint-disable react/no-multi-comp */
+
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import {PhotoDeskFooter} from './PhotoDeskFooter';
 import {get} from 'lodash';
 
 import {broadcast} from './fields';
 
-import {
-    ItemPriority,
-    ItemUrgency,
-    MediaPreview,
-    MediaInfo,
-    PhotoDeskPreview,
-    PhotoDeskInfo,
-    GridTypeIcon,
-    ListTypeIcon,
-    ListPriority,
-    ActionsMenu,
-    ErrorBox,
-    ProgressBar,
-    ListItemInfo,
-} from './index';
+import {ActionsMenu} from './index';
 import {closeActionsMenu} from '../helpers';
+import {ItemSwimlane} from './ItemSwimlane';
+import {ItemPhotoGrid} from './ItemPhotoGrid';
+import {ListItemTemplate} from './ItemListTemplate';
+import {ItemMgridTemplate} from './ItemMgridTemplate';
+import {IArticle} from 'superdesk-interfaces/Article';
+import {IDesk} from 'superdesk-interfaces/Desk';
 
-/**
- * Item component
- */
-export class Item extends React.Component<any, any> {
+const actionsMenuDefaultTemplate = (toggle, stopEvent) => (
+    <div className="item-right toolbox">
+        <div className="item-actions-menu dropdown--big open">
+            <button
+                className={'more-activity-toggle condensed dropdown__toggle'}
+                onClick={toggle}
+                onDoubleClick={stopEvent}>
+                <i className="icon-dots-vertical" />
+            </button>
+        </div>
+    </div>
+);
+
+interface IProps {
+    svc: any;
+    scope: any;
+    swimlane: any;
+    item: IArticle;
+    profilesById: any;
+    highlightsById: any;
+    markedDesksById: any;
+    ingestProvider: any;
+    versioncreator: any;
+    onMultiSelect: any;
+    desk: IDesk;
+    flags: any;
+    view: any;
+    onDbClick: any;
+    onEdit: any;
+    onSelect: any;
+    narrow: any;
+    hideActions: boolean;
+    multiSelectDisabled: boolean;
+}
+
+interface IState {
+    hover: boolean;
+    actioning: boolean;
+    isActionMenuOpen: boolean;
+}
+
+export class Item extends React.Component<IProps, IState> {
     static propTypes: any;
     static defaultProps: any;
 
@@ -160,154 +190,106 @@ export class Item extends React.Component<any, any> {
             classes = `${classes} ${scope.customRender.getItemClass(item)}`;
         }
 
-        const contents: any = [
-            'div', {
-                className: classNames(classes, {
-                    active: this.props.flags.selected,
-                    locked: item.lock_user && item.lock_session,
-                    selected: this.props.item.selected || this.props.flags.selected,
-                    archived: item.archived || item.created,
-                    gone: item.gone,
-                    actioning: this.state.actioning,
-                }),
-            },
-        ];
+        const isLocked: boolean = (item.lock_user && item.lock_session) != null;
 
-        if (item._progress) {
-            contents.push(React.createElement(ProgressBar, {completed: item._progress}));
-        }
-
-        const getActionsMenu = () =>
+        const getActionsMenu = (template = actionsMenuDefaultTemplate) =>
             this.props.hideActions !== true && this.state.hover && !item.gone ? React.createElement(
+
                 ActionsMenu, {
                     item: item,
                     svc: this.props.svc,
                     scope: this.props.scope,
                     onActioning: this.setActioningState,
+                    template: template,
                 }) : null;
 
-        if (this.props.view === 'mgrid') {
-            contents.push(
-                item.archiveError ? React.createElement(ErrorBox, {}) : null,
-                React.createElement(MediaPreview, {
-                    item: item,
-                    desk: this.props.desk,
-                    onMultiSelect: this.props.onMultiSelect,
-                    swimlane: this.props.swimlane,
-                    svc: this.props.svc,
-                }),
-                React.createElement(MediaInfo, {
-                    item: item,
-                    ingestProvider: this.props.ingestProvider,
-                    svc: this.props.svc,
-                }),
-                React.createElement('div', {className: 'media-box__footer'},
-                    React.createElement(GridTypeIcon, {item: item, svc: this.props.svc}),
-                    item.priority ?
-                        React.createElement(ItemPriority, angular.extend({svc: this.props.svc}, item)) : null,
-                    item.urgency ?
-                        React.createElement(ItemUrgency, angular.extend({svc: this.props.svc}, item)) : null,
-                    broadcast({item: item}),
-                    getActionsMenu(),
-                ),
-            );
-        } else if (this.props.view === 'photogrid') {
-            contents.push(
-                item.archiveError ? React.createElement(ErrorBox, {}) : null,
-                React.createElement(PhotoDeskPreview, {
-                    item: item,
-                    desk: this.props.desk,
-                    onMultiSelect: this.props.onMultiSelect,
-                    swimlane: this.props.swimlane,
-                    svc: this.props.svc,
-                }),
-                React.createElement(PhotoDeskInfo, {
-                    item: item,
-                    ingestProvider: this.props.ingestProvider,
-                    svc: this.props.svc,
-                }),
-                React.createElement(PhotoDeskFooter, {
-                    item: item,
-                    svc: this.props.svc,
-                    getActionsMenu: getActionsMenu,
-                }),
-                React.createElement('div',
-                    {className: 'sd-grid-item__state-border'},
-                ),
-            );
-        } else {
-            contents.push(
-                React.createElement('span', {className: 'state-border'}),
-                React.createElement(ListTypeIcon, {
-                    item: item,
-                    onMultiSelect: this.props.onMultiSelect,
-                    swimlane: this.props.swimlane,
-                    svc: this.props.svc,
-                    selectingDisabled: this.props.multiSelectDisabled,
-                }),
-                item.priority || item.urgency ? React.createElement(ListPriority, {
-                    item: item,
-                    svc: this.props.svc,
-                    scope: this.props.scope,
-                }) : null,
-                React.createElement(ListItemInfo, {
-                    item: item,
-                    openAuthoringView: this.openAuthoringView,
-                    desk: this.props.desk,
-                    ingestProvider: this.props.ingestProvider,
-                    highlightsById: this.props.highlightsById,
-                    markedDesksById: this.props.markedDesksById,
-                    profilesById: this.props.profilesById,
-                    swimlane: this.props.swimlane,
-                    versioncreator: this.props.versioncreator,
-                    narrow: this.props.narrow,
-                    svc: this.props.svc,
-                    scope: this.props.scope,
-                }),
-                getActionsMenu(),
-            );
-        }
+        const getTemplate = () => {
+            if (this.props.view === 'swimlane2') {
+                return (
+                    <ItemSwimlane
+                        item={item}
+                        isLocked={isLocked}
+                        getActionsMenu={getActionsMenu}
+                        onMultiSelect={this.props.onMultiSelect}
+                        svc={this.props.svc}
+                    />
+                );
+            } else if (this.props.view === 'mgrid') {
+                return (
+                    <ItemMgridTemplate
+                        item={item}
+                        desk={this.props.desk}
+                        swimlane={this.props.swimlane}
+                        svc={this.props.svc}
+                        ingestProvider={this.props.ingestProvider}
+                        onMultiSelect={this.props.onMultiSelect}
+                        broadcast={broadcast}
+                        getActionsMenu={getActionsMenu}
+                    />
+                );
+            } else if (this.props.view === 'photogrid') {
+                return (
+                    <ItemPhotoGrid
+                        item={item}
+                        desk={this.props.desk}
+                        ingestProvider={this.props.ingestProvider}
+                        svc={this.props.svc}
+                        swimlane={this.props.swimlane}
+                        onMultiSelect={this.props.onMultiSelect}
+                        getActionsMenu={getActionsMenu}
+                    />
+                );
+            } else {
+                return (
+                    <ListItemTemplate
+                        item={item}
+                        desk={this.props.desk}
+                        svc={this.props.svc}
+                        openAuthoringView={this.openAuthoringView}
+                        ingestProvider={this.props.ingestProvider}
+                        highlightsById={this.props.highlightsById}
+                        markedDesksById={this.props.markedDesksById}
+                        profilesById={this.props.profilesById}
+                        swimlane={this.props.swimlane}
+                        versioncreator={this.props.versioncreator}
+                        narrow={this.props.narrow}
+                        onMultiSelect={this.props.onMultiSelect}
+                        getActionsMenu={getActionsMenu}
+                        scope={this.props.scope}
+                        selectingDisabled={this.props.multiSelectDisabled}
+                    />
+                );
+            }
+        };
 
-        return React.createElement(
-            'li', {
-                id: item._id,
-                key: item._id,
-                className: classNames(
+        return (
+            <li
+                id={item._id}
+                key={item._id}
+                className={classNames(
                     'list-item-view',
                     {'actions-visible': this.props.hideActions !== true},
                     {active: this.props.flags.selected},
                     {selected: this.props.item.selected && !this.props.flags.selected},
-                ),
-                onMouseEnter: this.setHoverState,
-                onMouseLeave: this.unsetHoverState,
-                onDragStart: this.onDragStart,
-                onClick: this.select,
-                onDoubleClick: this.dbClick,
-                draggable: true,
-            },
-            React.createElement.apply(null, contents),
+                )}
+                onMouseEnter={this.setHoverState}
+                onMouseLeave={this.unsetHoverState}
+                onDragStart={this.onDragStart}
+                onClick={this.select}
+                onDoubleClick={this.dbClick}
+                draggable={true}
+            >
+                <div className={classNames(classes, {
+                    active: this.props.flags.selected,
+                    locked: isLocked,
+                    selected: this.props.item.selected || this.props.flags.selected,
+                    archived: item.archived || item.created,
+                    gone: item.gone,
+                    actioning: this.state.actioning,
+                })}>
+                    {getTemplate()}
+                </div>
+            </li>
         );
     }
 }
-
-Item.propTypes = {
-    svc: PropTypes.object.isRequired,
-    scope: PropTypes.any.isRequired,
-    swimlane: PropTypes.any,
-    item: PropTypes.any,
-    profilesById: PropTypes.any,
-    highlightsById: PropTypes.any,
-    markedDesksById: PropTypes.any,
-    ingestProvider: PropTypes.any,
-    versioncreator: PropTypes.any,
-    onMultiSelect: PropTypes.any,
-    desk: PropTypes.any,
-    flags: PropTypes.any,
-    view: PropTypes.any,
-    onDbClick: PropTypes.any,
-    onEdit: PropTypes.any,
-    onSelect: PropTypes.any,
-    narrow: PropTypes.any,
-    hideActions: PropTypes.bool,
-    multiSelectDisabled: PropTypes.bool,
-};

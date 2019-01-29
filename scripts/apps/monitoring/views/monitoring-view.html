@@ -1,4 +1,4 @@
- <div class="monitoring" ng-controller="AggregateCtrl as aggregate">
+<div class="monitoring" ng-controller="AggregateCtrl as aggregate">
 
     <section class="main-section" ng-class="monitoring.state">
 
@@ -117,7 +117,7 @@
                                     </button>
                                 </li>
                                 <li ng-if="!monitoring.singleGroup && type === 'monitoring' && monitoring.hasSwimlaneView">
-                                    <button ng-click="switchView('compact', true)">
+                                    <button ng-click="switchView('swimlane2', true)">
                                         <i class="icon-kanban-view"></i>{{'Swimlane View' | translate}}
                                     </button>
                                 </li>
@@ -127,6 +127,11 @@
                                     </button>
                                 </li>
                             </ul>
+                        </div>
+
+                        <div ng-if="type === 'monitoring' && monitoring.viewColumn === true" style="display: flex; align-items: center; margin: 0 10px;">
+                            <span translate>Columns:</span>
+                            <input type="number" min="2" max="{{aggregate.groups.length}}" ng-model="monitoring.columnsLimit" style="width: 40px; margin-left:10px;" />
                         </div>
             
                         <div class="dropdown dropdown--align-right dropdown--compact-state" dropdown  ng-if="type === 'monitoring' || elementState === 'compact'">
@@ -175,9 +180,8 @@
                         </div>
                         <!-- swimlane view -->
                         <div ng-if="monitoring.viewColumn && type === 'monitoring'">
-                            <div class="sd-columns"
-                                 ng-if="(!monitoring.singleGroup || monitoring.isDeskChanged()) && type === 'monitoring'">
-                                <div class="sd-column" ng-class="{active: isActiveGroup(group), inactive: !isActiveGroup(group)}"
+                            <div class="swimlane2" ng-if="(!monitoring.singleGroup || monitoring.isDeskChanged()) && type === 'monitoring'">
+                                <div ng-class="{active: isActiveGroup(group), inactive: !isActiveGroup(group)}"
                                      ng-repeat="group in aggregate.groups| limitTo:monitoring.columnsLimit track by group._id"
                                      sd-monitoring-group data-group="group" data-num-items="group.max_items" data-view="view"
                                      data-view-type="aggregate.isOutputType(group.type) ? group.type: 'monitoring'"
