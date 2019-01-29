@@ -482,7 +482,7 @@ export class ItemList extends React.Component<any, IState> {
     render() {
         const {storage, config} = this.props.svc;
         const {scope} = this.props;
-        const hideNested = get(config, 'features.nestedItemsInOutputStage', true) === true;
+        const hideNested = get(config, 'features.nestedItemsInOutputStage', false) === true;
         const nested = {};
         const children = {};
 
