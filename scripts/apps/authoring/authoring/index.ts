@@ -9,6 +9,8 @@ import '../suggest';
 import mediaModule from '../media';
 import {reactToAngular1} from 'superdesk-ui-framework';
 import {ArticleUrlFields} from './article-url-fields';
+import {PopulateAuthorsController} from './controllers/PopulateAuthorsController';
+
 import {gettext} from 'core/ui/components/utils';
 
 angular.module('superdesk.apps.authoring.autosave', []).service('autosave', svc.AutosaveService);
@@ -82,6 +84,8 @@ angular.module('superdesk.apps.authoring', [
     .component('sdArticleUrlFields',
         reactToAngular1(ArticleUrlFields, ['label', 'urls', 'helperText', 'onChange', 'fieldId']),
     )
+
+    .controller('PopulateAuthorsController', PopulateAuthorsController)
 
     .filter('embeddedFilter', filter.EmbeddedFilter)
 
