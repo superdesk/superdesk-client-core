@@ -48,6 +48,7 @@ interface IProps {
     narrow: any;
     hideActions: boolean;
     multiSelectDisabled: boolean;
+    nested: Array<IArticle>;
 }
 
 interface IState {
@@ -61,10 +62,10 @@ export class Item extends React.Component<IProps, IState> {
     static propTypes: any;
     static defaultProps: any;
 
+    readonly state = {hover: false, actioning: false, isActionMenuOpen: false, showNested: false};
+
     constructor(props) {
         super(props);
-
-        this.state = {hover: false, actioning: false, isActionMenuOpen: false, showNested: false};
 
         this.select = this.select.bind(this);
         this.edit = this.edit.bind(this);
@@ -189,7 +190,6 @@ export class Item extends React.Component<IProps, IState> {
         let classes = this.props.view === 'photogrid' ?
             'sd-grid-item sd-grid-item--with-click' :
             'media-box media-' + item.type;
-        let nested = null;
 
         // Customize item class from its props
         if (scope.customRender && typeof scope.customRender.getItemClass === 'function') {
@@ -269,6 +269,37 @@ export class Item extends React.Component<IProps, IState> {
             }
         };
 
+        const getNested = () => {
+            switch (this.props.view) {
+            case 'swimlane2':
+            case 'mgrid':
+            case 'photogrid':
+                return null;
+            default:
+                return (
+                    <div className="sd-list-item-nested__childs sd-shadow--z1">
+                        {this.props.nested.map((childItem) => (
+                            <Item
+                                item={childItem}
+                                key={childItem._id + childItem._current_version}
+                                svc={this.props.svc}
+                                scope={this.props.scope}
+                                flags={{}}
+                                nested={[]}
+                                profilesById={this.props.profilesById}
+                                isNested={true}
+                                narrow={true}
+                                hideActions={true}
+                                onSelect={() => null}
+                                multiSelectDisabled={false}
+                            />
+                        ))}
+                    </div>
+
+                );
+            }
+        }
+
         return (
             <li
                 id={item._id}
@@ -296,7 +327,7 @@ export class Item extends React.Component<IProps, IState> {
                 })}>
                     {getTemplate()}
                 </div>
-                {nested}
+                {getNested()}
             </li>
         );
     }

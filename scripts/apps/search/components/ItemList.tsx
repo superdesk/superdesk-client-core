@@ -6,7 +6,7 @@ import {Item} from './index';
 import {isCheckAllowed, closeActionsMenu, bindMarkItemShortcut} from '../helpers';
 import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
 import {gettext} from 'core/ui/components/utils';
-import { IArticle } from 'superdesk-interfaces/Article';
+import {IArticle} from 'superdesk-interfaces/Article';
 
 interface IState {
     narrow: boolean;
@@ -487,21 +487,19 @@ export class ItemList extends React.Component<any, IState> {
         const children = {};
 
         if (hideNested) {
-            console.time('nested');
             this.state.itemsList.map((itemId) => {
                 const item = this.state.itemsById[itemId];
 
                 if (item._type === 'published' && (item.rewritten_by || !item.last_published_version)) {
-                    nested[itemId] = true;
                     const parentId = this.getParent(item);
-                    if (parentId) {
+                    if (parentId && parentId !== itemId) {
+                        nested[itemId] = true;
                         const parentChildren = children[parentId] || [];
                         parentChildren.push(itemId);
                         children[parentId] = parentChildren;
                     }
                 }
             });
-            console.timeEnd('nested');
         }
 
         const createItem = (itemId) => {
@@ -537,7 +535,7 @@ export class ItemList extends React.Component<any, IState> {
                 hideActions: scope.hideActionsForMonitoringItems || get(scope, 'flags.hideActions'),
                 multiSelectDisabled: scope.disableMonitoringMultiSelect,
                 scope: scope,
-                itemChildren: itemChildren,
+                nested: itemChildren,
             });
         };
         const isEmpty = !this.state.itemsList.length;
