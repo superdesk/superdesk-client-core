@@ -9,13 +9,13 @@
         <div class="form-handler" ng-show="!changePassword">
             <figure class="avatar" style="background-image:url('{{ identity.Avatar.href || 'images/avatar_200.png' }}')" ng-show="identity.Avatar"></figure>
             <form name="loginForm" ng-submit="authenticate()">
-                <fieldset class="inputs">
+                <fieldset ng-show="!showOnlySaml" class="inputs">
                     <input type="text" id="login-username" ng-model="username" placeholder="{{ 'username'|translate }}" class="fullwidth-input" ng-disabled="identity.Id" required />
                     <input type="password" id="login-password" ng-model="password" placeholder="{{ 'password'|translate }}" class="fullwidth-input login-pass" required />
                 </fieldset>
 
                 <fieldset class="buttons">
-                    <button ng-disabled="isLoading" id="login-btn" type="submit" class="btn btn--sd-green">
+                    <button ng-show="!showOnlySaml" ng-disabled="isLoading" id="login-btn" type="submit" class="btn btn--sd-green">
                         {{ 'Log In' | translate }}
                         <div class="spinner" ng-show="isLoading">
                           <div class="dot1"></div>
@@ -29,7 +29,11 @@
                         ng-click="openLoginPopup('google')" translate>Log In with Google</button>
                 </fieldset>
 
-                <fieldset class="buttons" ng-show="methods.saml">
+                <fieldset class="buttons" ng-show="methods.saml && showOnlySaml">
+                    <button class="btn btn--sd-green"
+                        ng-click="openLoginPopup('saml')" translate>Log In</button>
+                </fieldset>
+                <fieldset class="buttons" ng-show="methods.saml && !showOnlySaml">
                     <button class="btn btn--sd-green"
                         ng-click="openLoginPopup('saml')" translate>{{ labels.saml }}</button>
                 </fieldset>
@@ -57,9 +61,9 @@
 
             <div class="links">
                 <a href="" ng-click="logout()" class="text" ng-show="identity.Id" translate>Sign in as a different user.</a>
-                <a href="/#/reset-password/" class="text" ng-show="features.reset_user_password" translate>Forgot password?</a>
+                <a href="/#/reset-password/" class="text" ng-show="features.reset_user_password && !showOnlySaml" translate>Forgot password?</a>
+                <a ng-click="disableSamlOnly()" class="text" ng-show="showOnlySaml" translate>Problems loggin in?</a>
             </div>
-
         </div>
 
         <div class="form-handler" ng-show="changePassword">

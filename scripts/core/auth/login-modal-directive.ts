@@ -19,6 +19,7 @@ angular.module('superdesk.core.auth.login', []).directive('sdLoginModal', [
             link: function(scope, element, attrs) {
                 scope.features = features;
                 scope.changePassword = false;
+                scope.showOnlySaml = false;
 
                 deployConfig.all({
                     xmpp: 'xmpp_auth',
@@ -26,6 +27,9 @@ angular.module('superdesk.core.auth.login', []).directive('sdLoginModal', [
                     google: 'google_auth',
                 }).then((methods) => {
                     scope.methods = methods;
+                    if (methods.saml === true) {
+                        scope.showOnlySaml = true;
+                    }
                 });
 
                 deployConfig.all({
@@ -33,6 +37,10 @@ angular.module('superdesk.core.auth.login', []).directive('sdLoginModal', [
                 }).then((labels) => {
                     scope.labels = labels;
                 });
+
+                scope.disableSamlOnly = () => {
+                    scope.showOnlySaml = false;
+                };
 
                 scope.authenticate = function() {
                     scope.isLoading = true;
