@@ -75,16 +75,18 @@ export function ChangeImageController($scope, gettext, notify, _, api, $rootScop
         isDirty: false,
     };
 
-    $scope.data.renditions.forEach((rendition) => {
-        const original = $scope.data.item.renditions.original;
-        // only extend the item renditions if the original image can fit the rendition dimensions
-        // otherwise we will get an error saving
+    if ($scope.data.renditions) {
+        $scope.data.renditions.forEach((rendition) => {
+            const original = $scope.data.item.renditions.original;
+            // only extend the item renditions if the original image can fit the rendition dimensions
+            // otherwise we will get an error saving
 
-        if (original.height >= rendition.height && original.width >= rendition.width) {
-            sizes[rendition.name] = {width: rendition.width, height: rendition.height};
-            $scope.data.cropData[rendition.name] = angular.extend({}, $scope.data.item.renditions[rendition.name]);
-        }
-    });
+            if (original && original.height >= rendition.height && original.width >= rendition.width) {
+                sizes[rendition.name] = {width: rendition.width, height: rendition.height};
+                $scope.data.cropData[rendition.name] = angular.extend({}, $scope.data.item.renditions[rendition.name]);
+            }
+        });
+    }
 
     $scope.data.isDirty = false;
     $scope.isNew = $scope.data.isNew === true;
