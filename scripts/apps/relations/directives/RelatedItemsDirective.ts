@@ -1,5 +1,6 @@
 import {get} from 'lodash';
 import {getSuperdeskType} from 'core/utils';
+import {gettext} from 'core/ui/components/utils';
 
 /**
  * @ngdoc directive

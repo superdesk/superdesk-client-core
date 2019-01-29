@@ -1,5 +1,6 @@
 import * as constant from '../constants';
 import _ from 'lodash';
+import {gettext} from 'core/ui/components/utils';
 
 /**
  * @ngdoc service
@@ -13,7 +14,6 @@ import _ from 'lodash';
  * @requires packages
  * @requires archiveService
  * @requires notify
- * @requires gettext
  * @requires $filter
  * @requires $q
  * @requires $rootScope
@@ -32,14 +32,13 @@ ContentService.$inject = [
     'packages',
     'archiveService',
     'notify',
-    'gettext',
     '$filter',
     '$q',
     '$rootScope',
     'session',
     'deployConfig',
 ];
-export function ContentService(api, superdesk, templates, desks, packages, archiveService, notify, gettext,
+export function ContentService(api, superdesk, templates, desks, packages, archiveService, notify,
     $filter, $q, $rootScope, session, deployConfig) {
     const TEXT_TYPE = 'text';
 

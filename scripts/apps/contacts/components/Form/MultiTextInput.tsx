@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Row, LineInput, Input} from './';
 import {KEYCODES} from '../../../contacts/constants';
-import {gettext} from '../../../contacts/helpers';
 import {isEmpty, get, set} from 'lodash';
+import {gettext} from 'core/ui/components/utils';
 
 export class MultiTextInput extends React.Component<any, any> {
     static propTypes: any;

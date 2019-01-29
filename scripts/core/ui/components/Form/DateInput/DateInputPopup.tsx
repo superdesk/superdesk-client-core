@@ -9,7 +9,7 @@ import {YearPicker} from './YearPicker';
 
 const moment: any = momentAlias;
 
-import {gettext} from '../../utils';
+import {gettext} from 'core/ui/components/utils';
 
 import './style.scss';
 

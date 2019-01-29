@@ -1,3 +1,5 @@
+import {gettext} from 'core/ui/components/utils';
+
 /**
  * Default list of fields
  */

@@ -1,5 +1,7 @@
-DeskeditPeople.$inject = ['gettext', 'WizardHandler', 'desks', '$rootScope'];
-export function DeskeditPeople(gettext, WizardHandler, desks, $rootScope) {
+import {gettext} from 'core/ui/components/utils';
+
+DeskeditPeople.$inject = ['WizardHandler', 'desks', '$rootScope'];
+export function DeskeditPeople(WizardHandler, desks, $rootScope) {
     return {
         link: function(scope, elem, attrs) {
             scope.$watch('step.current', (step, previous) => {

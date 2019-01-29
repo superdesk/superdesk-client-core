@@ -1,3 +1,5 @@
+import {gettext} from 'core/ui/components/utils';
+
 // http://docs.python-cerberus.org/en/stable/usage.html
 export const DEFAULT_SCHEMA = Object.freeze({
     slugline: {maxlength: 24, type: 'string', required: true},
@@ -53,7 +55,7 @@ export const DEFAULT_EDITOR = Object.freeze({
 });
 
 // labelMap maps schema entry keys to their display names.
-export const GET_LABEL_MAP = (gettext) => ({
+export const GET_LABEL_MAP = () => ({
     headline: gettext('Headline'),
     slugline: gettext('Slugline'),
     genre: gettext('Genre'),

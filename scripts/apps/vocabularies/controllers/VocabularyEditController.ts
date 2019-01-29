@@ -1,10 +1,9 @@
 import _ from 'lodash';
 import {MEDIA_TYPES, MEDIA_TYPE_KEYS, VOCABULARY_SELECTION_TYPES} from '../constants';
+import {gettext} from 'core/ui/components/utils';
 
 VocabularyEditController.$inject = [
     '$scope',
-    'gettext',
-    '$interpolate',
     'notify',
     'api',
     'vocabularies',
@@ -14,7 +13,7 @@ VocabularyEditController.$inject = [
 
 const idRegex = '^[a-zA-Z0-9-_]+$';
 
-export function VocabularyEditController($scope, gettext, $interpolate, notify, api, vocabularies, metadata, cvSchema) {
+export function VocabularyEditController($scope, notify, api, vocabularies, metadata, cvSchema) {
     var origVocabulary = _.cloneDeep($scope.vocabulary);
 
     $scope.idRegex = idRegex;
@@ -37,8 +36,8 @@ export function VocabularyEditController($scope, gettext, $interpolate, notify, 
                        response.data._issues.error.required_field) {
                 let params = response.data._issues.params;
 
-                notify.error($interpolate(gettext(
-                    'Required {{field}} in item {{item}}'))({field: params.field, item: params.item}));
+                notify.error(gettext(
+                    'Required {{field}} in item {{item}}', {field: params.field, item: params.item}));
             } else {
                 $scope.issues = response.data._issues;
                 notify.error(gettext('Error. Vocabulary not saved.'));
@@ -80,7 +79,7 @@ export function VocabularyEditController($scope, gettext, $interpolate, notify, 
         if (!checkForUniqueValues()) {
             const uniqueField = $scope.vocabulary.unique_field || 'qcode';
 
-            $scope.errorMessage = gettext('The values should be unique for ') + uniqueField;
+            $scope.errorMessage = gettext('The values should be unique for {{uniqueField}}', {uniqueField});
         }
 
         if ($scope.vocabulary.field_type === MEDIA_TYPES.GALLERY) {

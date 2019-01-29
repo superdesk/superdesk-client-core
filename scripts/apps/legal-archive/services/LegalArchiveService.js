@@ -1,18 +1,19 @@
+import {gettext} from 'core/ui/components/utils';
+
 /**
  * @ngdoc service
  * @module superdesk.apps.legal_archive
  * @name legal
  * @requires api
  * @requires https://docs.angularjs.org/api/ng/service/$location $location
- * @requires gettext
  * @requires config
  * @requires moment
  * @requires sort
  *
  * @description Handles retrieval of data from legal archive
  */
-LegalArchiveService.$inject = ['api', '$location', 'gettext', 'config', 'moment', 'sort'];
-export function LegalArchiveService(api, $location, gettext, config, moment, sortService) {
+LegalArchiveService.$inject = ['api', '$location', 'config', 'moment', 'sort'];
+export function LegalArchiveService(api, $location, config, moment, sortService) {
     var DEFAULT_PER_PAGE = 25;
 
     this.default_items = Object.freeze({_meta: {max_results: DEFAULT_PER_PAGE, page: 1, total: 1}});

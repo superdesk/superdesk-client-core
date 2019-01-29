@@ -1,5 +1,7 @@
-IngestRoutingAction.$inject = ['desks', 'macros', 'subscribersService', 'metadata', 'gettext'];
-export function IngestRoutingAction(desks, macros, subscribersService, metadata, gettext) {
+import {gettext} from 'core/ui/components/utils';
+
+IngestRoutingAction.$inject = ['desks', 'macros', 'subscribersService', 'metadata'];
+export function IngestRoutingAction(desks, macros, subscribersService, metadata) {
     return {
         scope: {rule: '='},
         templateUrl: 'scripts/apps/ingest/views/settings/ingest-routing-action.html',

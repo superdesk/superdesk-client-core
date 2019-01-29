@@ -16,7 +16,6 @@ import {MEDIA_TYPES} from 'apps/vocabularies/constants';
  * @requires config
  * @requires deployConfig
  * @requires session
- * @requires gettext
  * @requires history
  * @requires $interpolate
  * @requires suggest
@@ -37,7 +36,6 @@ ArticleEditDirective.$inject = [
     'config',
     'deployConfig',
     'session',
-    'gettext',
     'history',
     '$interpolate',
     'suggest',
@@ -53,7 +51,6 @@ export function ArticleEditDirective(
     config,
     deployConfig,
     session,
-    gettext,
     history,
     $interpolate,
     suggest,

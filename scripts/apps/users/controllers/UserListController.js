@@ -1,3 +1,5 @@
+import {gettext} from 'core/ui/components/utils';
+
 UserListController.$inject = ['$scope', '$location', 'api', 'lodash', 'session', 'usersService'];
 export function UserListController($scope, $location, api, _, session, usersService) {
     var DEFAULT_SIZE = 25;

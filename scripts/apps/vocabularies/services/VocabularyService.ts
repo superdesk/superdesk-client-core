@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import {gettext} from 'core/ui/components/utils';
 
 export const DEFAULT_DATEFIELD_SHORTCUTS = [
     {

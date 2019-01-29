@@ -1,4 +1,5 @@
 import {get} from 'lodash';
+import {gettext} from 'core/ui/components/utils';
 
 /**
  * @ngdoc controller
@@ -6,7 +7,6 @@ import {get} from 'lodash';
  * @name ChangeImageController
  *
  * @requires $scope
- * @requires gettext
  * @requires notify
  * @requires modal
  * @requires lodash
@@ -28,9 +28,9 @@ export function validateMediaFieldsThrows(validator, metadata) {
     }
 }
 
-ChangeImageController.$inject = ['$scope', 'gettext', 'notify', 'lodash', 'api', '$rootScope',
+ChangeImageController.$inject = ['$scope', 'notify', 'lodash', 'api', '$rootScope',
     'deployConfig', '$q', 'config'];
-export function ChangeImageController($scope, gettext, notify, _, api, $rootScope, deployConfig, $q, config) {
+export function ChangeImageController($scope, notify, _, api, $rootScope, deployConfig, $q, config) {
     $scope.data = $scope.locals.data;
     $scope.data.cropData = {};
     $scope.validator = deployConfig.getSync('validator_media_metadata');
@@ -144,14 +144,14 @@ export function ChangeImageController($scope, gettext, notify, _, api, $rootScop
 
             _.forEach($scope.data.cropData, (cropData, cropName) => {
                 if (!cropData || _.isEmpty(cropData)) {
-                    throw gettext('Crop coordinates are not defined for ' + cropName + ' picture crop.');
+                    throw gettext('Crop coordinates are not defined for {{cropName}} picture crop.', {cropName});
                 }
 
                 if (originalPoi.y < cropData.CropTop ||
                     originalPoi.y > cropData.CropBottom ||
                     originalPoi.x < cropData.CropLeft ||
                     originalPoi.x > cropData.CropRight) {
-                    throw gettext('Point of interest outside the crop ' + cropName + ' limits');
+                    throw gettext('Point of interest outside the crop {{cropName}} limits', {cropName});
                 }
             });
         }

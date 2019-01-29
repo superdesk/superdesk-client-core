@@ -1,5 +1,3 @@
-import {gettext} from 'core/ui/components/utils';
-
 describe('Tag Service', () => {
     var deskList = {
         123: {_id: '123', name: 'desk1'},

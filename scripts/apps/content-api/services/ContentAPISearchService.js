@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import {gettext} from 'core/ui/components/utils';
 
 const DEFAULT_PAGE_SIZE = 25;
 
@@ -10,11 +11,10 @@ const DEFAULT_PAGE_SIZE = 25;
  * @requires https://docs.angularjs.org/api/ng/service/$location $location
  * @requires sort
  * @requires search
- * @requires gettext
  * @description Handles retrieval of data from content api
  */
 export class ContentAPISearchService {
-    constructor(api, $location, sort, search, gettext) {
+    constructor(api, $location, sort, search) {
         this.api = api;
         this.$location = $location;
         this.sort = sort;
@@ -162,4 +162,4 @@ export class ContentAPISearchService {
     }
 }
 
-ContentAPISearchService.$inject = ['api', '$location', 'sort', 'search', 'gettext'];
+ContentAPISearchService.$inject = ['api', '$location', 'sort', 'search'];
