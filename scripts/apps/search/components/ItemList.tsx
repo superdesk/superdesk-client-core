@@ -459,9 +459,9 @@ export class ItemList extends React.Component<any, IState> {
     /**
      * Get nested item parent
      *
-     * This could be item with same guid for corrections or with guid == rewritten_by
+     * This could be item with same guid for corrections or with guid == rewritten_by for updates
      */
-    getParent(item: IArticle) : string | null {
+    getParent(item: IArticle): string | null {
         if (!item.rewritten_by) {
             return this.state.itemsList.find((itemId) => itemId.startsWith(item.guid));
         }
@@ -487,7 +487,7 @@ export class ItemList extends React.Component<any, IState> {
         const children = {};
 
         if (hideNested) {
-            this.state.itemsList.map((itemId) => {
+            this.state.itemsList.forEach((itemId) => {
                 const item = this.state.itemsById[itemId];
 
                 if (item._type === 'published' && (item.rewritten_by || !item.last_published_version)) {

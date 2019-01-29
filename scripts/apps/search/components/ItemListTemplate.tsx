@@ -21,6 +21,9 @@ interface IProps {
     getActionsMenu: () => any;
     scope: any;
     selectingDisabled: boolean;
+    showNested: boolean;
+    nestedCount: number;
+    toggleNested: (event) => void;
 }
 
 export class ListItemTemplate extends React.Component<IProps, never> {
@@ -58,6 +61,9 @@ export class ListItemTemplate extends React.Component<IProps, never> {
                     narrow={this.props.narrow}
                     svc={this.props.svc}
                     scope={this.props.scope}
+                    showNested={this.props.showNested}
+                    nestedCount={this.props.nestedCount}
+                    toggleNested={this.props.toggleNested}
                 />
                 {this.props.getActionsMenu()}
             </div>

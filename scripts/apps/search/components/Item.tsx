@@ -49,6 +49,7 @@ interface IProps {
     hideActions: boolean;
     multiSelectDisabled: boolean;
     nested: Array<IArticle>;
+    isNested: boolean;
 }
 
 interface IState {
@@ -200,7 +201,6 @@ export class Item extends React.Component<IProps, IState> {
 
         const getActionsMenu = (template = actionsMenuDefaultTemplate) =>
             this.props.hideActions !== true && this.state.hover && !item.gone ? React.createElement(
-
                 ActionsMenu, {
                     item: item,
                     svc: this.props.svc,
@@ -264,6 +264,9 @@ export class Item extends React.Component<IProps, IState> {
                         getActionsMenu={getActionsMenu}
                         scope={this.props.scope}
                         selectingDisabled={this.props.multiSelectDisabled}
+                        showNested={this.state.showNested}
+                        nestedCount={this.props.nested.length}
+                        toggleNested={this.toggleNested}
                     />
                 );
             }
@@ -276,6 +279,10 @@ export class Item extends React.Component<IProps, IState> {
             case 'photogrid':
                 return null;
             default:
+                if (!this.props.nested.length || !this.state.showNested) {
+                    return null;
+                }
+
                 return (
                     <div className="sd-list-item-nested__childs sd-shadow--z1">
                         {this.props.nested.map((childItem) => (
@@ -292,31 +299,50 @@ export class Item extends React.Component<IProps, IState> {
                                 hideActions={true}
                                 onSelect={() => null}
                                 multiSelectDisabled={false}
+                                swimlane={this.props.swimlane}
+                                highlightsById={this.props.highlightsById}
+                                markedDesksById={this.props.markedDesksById}
+                                ingestProvider={this.props.ingestProvider}
+                                desk={this.props.desk}
+                                view={this.props.view}
+                                versioncreator={this.props.versioncreator}
+                                onEdit={this.props.onEdit}
+                                onDbClick={this.props.onDbClick}
+                                onMultiSelect={this.props.onMultiSelect}
                             />
                         ))}
                     </div>
-
                 );
             }
-        }
+        };
 
-        return (
-            <li
-                id={item._id}
-                key={item._id}
-                className={classNames(
+        // avoid any actions on nested items
+        const getCallback = (func) => this.props.isNested ? (event) => event.stopPropagation() : func;
+
+        return React.createElement(
+            this.props.isNested ? 'div' : 'li',
+            {
+                id: item._id,
+                key: item._id,
+                className: classNames(
                     'list-item-view',
-                    {'actions-visible': this.props.hideActions !== true},
-                    {active: this.props.flags.selected},
-                    {selected: this.props.item.selected && !this.props.flags.selected},
-                )}
-                onMouseEnter={this.setHoverState}
-                onMouseLeave={this.unsetHoverState}
-                onDragStart={this.onDragStart}
-                onClick={this.select}
-                onDoubleClick={this.dbClick}
-                draggable={true}
-            >
+                    {
+                        'actions-visible': this.props.hideActions !== true,
+                        active: this.props.flags.selected,
+                        selected: this.props.item.selected && !this.props.flags.selected,
+                        'sd-list-item-nested': this.props.nested.length,
+                        'sd-list-item-nested--expanded': this.props.nested.length && this.state.showNested,
+                        'sd-list-item-nested--collapsed': this.props.nested.length && this.state.showNested === false,
+                    },
+                ),
+                onMouseEnter: getCallback(this.setHoverState),
+                onMouseLeave: getCallback(this.unsetHoverState),
+                onDragStart: getCallback(this.onDragStart),
+                onClick: getCallback(this.select),
+                onDoubleClick: getCallback(this.dbClick),
+                draggable: !this.props.isNested,
+            },
+            (
                 <div className={classNames(classes, {
                     active: this.props.flags.selected,
                     locked: isLocked,
@@ -327,8 +353,8 @@ export class Item extends React.Component<IProps, IState> {
                 })}>
                     {getTemplate()}
                 </div>
-                {getNested()}
-            </li>
+            ),
+            getNested(),
         );
     }
 }

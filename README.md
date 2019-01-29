@@ -36,6 +36,7 @@ To configure the build, the `superdesk.config.js` file must export a function th
 - `features.elasticHighlight`: `false` - allow highlighting of search terms by elasticsearch
 - `features.swimlane`: `null` - enables switch view button in monitoring view, which allows to switch between list view or swimlane view. Example: `features: {swimlane: {defaultNumberOfColumns: 4}}` will enable switch view button and displays 4 columns when turned ON, set null or keep undefined to disable
 - `features.confirmMediaOnUpdate`: `true` - Display the user confirmation dialog in the updated story to use the media from the original story.
+- `features.nestedItemsInOutputStage` : `false` - Display only latest version of published item in output stages.
 
 ##### Workspace
 - `workspace.content`: `false` - enable content view in workspace (obsolete)
