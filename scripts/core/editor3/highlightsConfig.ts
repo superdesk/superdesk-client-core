@@ -7,12 +7,14 @@ const ENTITY_STYLE_MAP = {
 export const highlightsConfig = {
     COMMENT: {
         type: 'COMMENT',
+        description: gettext('Comment'),
         draftStyleMap: {
             backgroundColor: 'rgba(255, 235, 59, 0.2)',
         },
     },
     ANNOTATION: {
         type: 'ANNOTATION',
+        description: gettext('Annotation'),
         draftStyleMap: {
             borderBottom: '4px solid rgba(100, 205, 0, 0.6)',
         },

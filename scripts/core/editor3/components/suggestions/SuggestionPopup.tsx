@@ -117,7 +117,7 @@ class Suggestion extends React.Component<any, any> {
         default:
             content = (
                 <div>
-                    <strong>{gettext(description) + space + gettext(blockStyleDescription)}: </strong>
+                    <strong>{description + space + blockStyleDescription}: </strong>
                     {this.truncateText(suggestionText)}
                 </div>
             );
