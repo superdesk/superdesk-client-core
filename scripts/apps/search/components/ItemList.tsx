@@ -492,9 +492,11 @@ export class ItemList extends React.Component<any, IState> {
 
                 if (item._type === 'published' && (item.rewritten_by || !item.last_published_version)) {
                     const parentId = this.getParent(item);
+
                     if (parentId && parentId !== itemId) {
                         nested[itemId] = true;
                         const parentChildren = children[parentId] || [];
+
                         parentChildren.push(itemId);
                         children[parentId] = parentChildren;
                     }
