@@ -1,21 +1,20 @@
 import {IVocabulary} from 'superdesk-interfaces/Vocabulary';
 import {gettext} from 'core/ui/components/utils';
 
+const TYPE_LABEL = {
+    text: gettext('text'),
+    media: '',
+    date: gettext('date'),
+    embed: gettext('embed'),
+    related_content: gettext('related content'),
+};
+
 export const getLabelForType = (fieldType: IVocabulary['field_type']) => {
-    switch (fieldType) {
-        case 'text':
-            return gettext('text');
-        case 'media':
-            return '';
-        case 'date':
-            return gettext('date');
-        case 'embed':
-            return gettext('embed');
-        case 'related_content':
-            return gettext('related content');
-        default:
-            return gettext('custom vocabulary');
+    if (TYPE_LABEL.hasOwnProperty(fieldType)) {
+        return TYPE_LABEL[fieldType];
     }
+
+    return gettext('custom vocabulary');
 };
 
 export const getTypeForFieldId = (fieldId, vocabularies: Array<IVocabulary>) => {
