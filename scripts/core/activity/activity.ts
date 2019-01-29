@@ -505,7 +505,6 @@ angular.module('superdesk.core.activity', [
         $rootScope.superdesk = superdesk; // add superdesk reference so we can use constants in templates
 
         $rootScope.intent = function(...args) {
-            //
             return superdesk.intent(...args);
         };
 
