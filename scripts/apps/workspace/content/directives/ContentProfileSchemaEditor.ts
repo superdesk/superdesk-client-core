@@ -61,6 +61,7 @@ export function ContentProfileSchemaEditor(content, metadata) {
 
             scope.schemaKeysDisabled = [];
             let schemaKeys = [];
+            let numberOfHeaderSchemaKeys = 0;
 
             Promise.all([
                 content.getCustomFields(),
@@ -68,6 +69,7 @@ export function ContentProfileSchemaEditor(content, metadata) {
                 content.getTypeMetadata(scope.model._id),
             ]).then((res) => {
                 const [customFields, getLabelForFieldId, typeMetadata] = res;
+                let headerFields = [];
 
                 scope.label = (id) => getLabelForFieldId(id);
 
@@ -100,6 +102,7 @@ export function ContentProfileSchemaEditor(content, metadata) {
                     });
 
                     const keysForSection = Object.keys(scope.model.editor).filter(sectionFilter);
+                    headerFields = Object.keys(scope.model.editor).filter((key) => articleHeaderFields.has(key));
 
                     schemaKeys = keysForSection
                         .filter((value) => scope.model.editor[value].enabled)
@@ -125,8 +128,11 @@ export function ContentProfileSchemaEditor(content, metadata) {
                             scope.schemaKeysOrdering.splice(scope.schemaKeysOrdering.indexOf(key), 1)[0]);
                     }
 
+                    let orderIndent = scope.sectionToRender === 'content' ?
+                        headerFields.filter((value) => scope.model.editor[value].enabled).length : 0;
+
                     angular.forEach(schemaKeys, (id) => {
-                        scope.model.editor[id].order = scope.schemaKeysOrdering.indexOf(id) + 1;
+                        scope.model.editor[id].order = orderIndent + scope.schemaKeysOrdering.indexOf(id) + 1;
                     });
                 };
 
