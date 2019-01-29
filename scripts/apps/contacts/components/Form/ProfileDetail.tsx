@@ -5,6 +5,7 @@ import {Row, LineInput, InputArray, MultiTextInput, Input, SelectInput, Toggle, 
     ContactNumberInput, Label, SelectFieldSearchInput} from './index';
 import {get, set, isEmpty, findKey, orderBy, map} from 'lodash';
 import {validateMinRequiredField} from '../../../contacts/helpers';
+import {gettext} from 'core/ui/components/utils';
 
 export class ProfileDetail extends React.Component<any, any> {
     static propTypes: any;
@@ -106,8 +107,7 @@ export class ProfileDetail extends React.Component<any, any> {
     }
 
     render() {
-        const {svc, contact, onChange, readOnly, errors, contactType} = this.props;
-        const {gettext} = svc;
+        const {contact, onChange, readOnly, errors, contactType} = this.props;
 
         const contactLabel = contactType === 'person' ? gettext('Role') : gettext('Point of contact');
 

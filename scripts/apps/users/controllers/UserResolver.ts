@@ -1,8 +1,10 @@
+import {gettext} from 'core/ui/components/utils';
+
 /**
  * Resolve a user by route id and redirect to /users if such user does not exist
  */
-UserResolver.$inject = ['api', '$route', 'notify', 'gettext', '$location'];
-export function UserResolver(api, $route, notify, gettext, $location) {
+UserResolver.$inject = ['api', '$route', 'notify', '$location'];
+export function UserResolver(api, $route, notify, $location) {
     return api.users.getById($route.current.params._id)
         .then(null, (response) => {
             if (response.status === 404) {

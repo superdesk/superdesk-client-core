@@ -1,8 +1,9 @@
 import _ from 'lodash';
+import {gettext} from 'core/ui/components/utils';
 
-ArchivedItemKill.$inject = ['authoring', 'api', 'notify', 'gettext'];
+ArchivedItemKill.$inject = ['authoring', 'api', 'notify'];
 
-export function ArchivedItemKill(authoring, api, notify, gettext) {
+export function ArchivedItemKill(authoring, api, notify) {
     return {
         templateUrl: 'scripts/apps/archive/views/archived-kill.html',
         scope: {

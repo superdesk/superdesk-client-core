@@ -1,3 +1,5 @@
+import {gettext} from 'core/ui/components/utils';
+
 angular.module('superdesk.apps.authoring.versioning', [])
     .config(['authoringWidgetsProvider', function(authoringWidgetsProvider) {
         authoringWidgetsProvider

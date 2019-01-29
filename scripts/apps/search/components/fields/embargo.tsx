@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {gettext} from 'core/ui/components/utils';
 
 export const embargo: React.StatelessComponent<any> = (props) => {
-    const {gettext} = props.svc;
-
     if (props.item.embargo) {
         return React.createElement(
             'span',
@@ -14,6 +13,5 @@ export const embargo: React.StatelessComponent<any> = (props) => {
 };
 
 embargo.propTypes = {
-    svc: PropTypes.any.isRequired,
     item: PropTypes.any,
 };

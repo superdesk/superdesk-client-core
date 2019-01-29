@@ -1,3 +1,5 @@
+import {gettext} from 'core/ui/components/utils';
+
 export default function notifySaveError(response, notify) {
     if (angular.isDefined(response.data._issues) &&
             angular.isDefined(response.data._issues['validator exception'])) {

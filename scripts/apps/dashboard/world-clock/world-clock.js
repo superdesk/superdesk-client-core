@@ -1,5 +1,6 @@
 import './world-clock.scss';
 import d3 from 'd3';
+import {gettext} from 'core/ui/components/utils';
 
 angular.module('superdesk.apps.dashboard.world-clock', [
     'superdesk.apps.dashboard', 'superdesk.core.datetime',
@@ -30,9 +31,9 @@ angular.module('superdesk.apps.dashboard.world-clock', [
 
             $scope.notify = function(action, zone) {
                 if (action === 'add') {
-                    notify.success(gettext('World clock added:') + ' ' + zone, 3000);
+                    notify.success(gettext('World clock added: {{zone}}', {zone}), 3000);
                 } else if (action === 'remove') {
-                    notify.success(gettext('World clock removed:') + ' ' + zone, 3000);
+                    notify.success(gettext('World clock removed: {{zone}}', {zone}), 3000);
                 }
             };
 

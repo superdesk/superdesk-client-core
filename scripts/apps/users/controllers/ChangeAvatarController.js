@@ -1,5 +1,7 @@
-ChangeAvatarController.$inject = ['$scope', 'upload', 'session', 'urls', 'betaService', 'gettext', 'notify', 'lodash'];
-export function ChangeAvatarController($scope, upload, session, urls, beta, gettext, notify, _) {
+import {gettext} from 'core/ui/components/utils';
+
+ChangeAvatarController.$inject = ['$scope', 'upload', 'session', 'urls', 'betaService', 'notify', 'lodash'];
+export function ChangeAvatarController($scope, upload, session, urls, beta, notify, _) {
     $scope.methods = [
         {id: 'upload', label: gettext('Upload from computer')},
         {id: 'photo', label: gettext('Take a picture')},

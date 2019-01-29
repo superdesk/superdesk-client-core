@@ -1,3 +1,5 @@
+import {gettext} from 'core/ui/components/utils';
+
 DateTimeDirective.$inject = ['datetime', 'moment'];
 function DateTimeDirective(datetime, moment) {
     return {
@@ -225,7 +227,7 @@ export default angular.module('superdesk.core.datetime', [
 
     .constant('moment', require('moment-timezone'))
 
-    .factory('weekdays', ['gettext', function(gettext) {
+    .factory('weekdays', [function() {
         return Object.freeze({
             MON: gettext('Monday'),
             TUE: gettext('Tuesday'),

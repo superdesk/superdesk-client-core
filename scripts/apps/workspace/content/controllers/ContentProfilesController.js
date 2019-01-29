@@ -1,3 +1,5 @@
+import {gettext} from 'core/ui/components/utils';
+
 ContentProfilesController.$inject = ['$scope', '$location', 'notify', 'content', 'modal', '$q', 'config'];
 export function ContentProfilesController($scope, $location, notify, content, modal, $q, config) {
     var self = this;

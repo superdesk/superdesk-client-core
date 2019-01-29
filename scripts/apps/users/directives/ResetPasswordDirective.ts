@@ -1,5 +1,7 @@
-ResetPasswordDirective.$inject = ['usersService', 'notify', 'gettext'];
-export function ResetPasswordDirective(usersService, notify, gettext) {
+import {gettext} from 'core/ui/components/utils';
+
+ResetPasswordDirective.$inject = ['usersService', 'notify'];
+export function ResetPasswordDirective(usersService, notify) {
     return {
         link: function(scope, element) {
             scope.$watch('user', () => {

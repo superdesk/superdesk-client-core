@@ -1,10 +1,9 @@
 import {GET_LABEL_MAP} from '../content/constants';
 import ng from 'core/services/ng';
-import {gettext} from 'core/ui/components/utils';
-
-const labelMap = GET_LABEL_MAP(gettext);
 
 export const getLabelForFieldId = (fieldId, vocabularies) => {
+    const labelMap = GET_LABEL_MAP();
+
     if (labelMap.hasOwnProperty(fieldId)) {
         return labelMap[fieldId];
     }

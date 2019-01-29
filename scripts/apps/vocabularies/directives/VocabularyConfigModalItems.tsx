@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import ItemsTableComponent from '../components/ItemsTableComponent';
 import {forEach, every} from 'lodash';
 
-export const VocabularyConfigModalItems: any = (gettext) => ({
+export const VocabularyConfigModalItems: any = () => ({
     require: '^^form',
     link: (scope, element, attr, ngForm) => {
         let component;
@@ -69,7 +69,6 @@ export const VocabularyConfigModalItems: any = (gettext) => ({
             model={scope.model}
             schema={scope.schema}
             schemaFields={scope.schemaFields}
-            gettext={gettext}
             remove={remove}
             update={update}
         />, element[0]);
@@ -90,4 +89,4 @@ export const VocabularyConfigModalItems: any = (gettext) => ({
     },
 });
 
-VocabularyConfigModalItems.$inject = ['gettext'];
+VocabularyConfigModalItems.$inject = [];

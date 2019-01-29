@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import {isSuperdeskContent} from 'apps/workspace/helpers/isSuperdeskContent';
+import {gettext} from 'core/ui/components/utils';
 
 PublishQueueController.$inject = [
     '$scope',

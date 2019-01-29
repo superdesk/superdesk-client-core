@@ -48,7 +48,6 @@ const articleHeaderHardcodedFields = new Set<keyof IArticle>([
  * @module superdesk.apps.workspace
  * @name ContentProfileSchemaEditor
  *
- * @requires gettext
  * @requires content
  *
  * @description Handles content profile schema editing

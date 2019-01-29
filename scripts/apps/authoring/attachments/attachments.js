@@ -1,13 +1,13 @@
 import './attachments.scss';
+import {gettext} from 'core/ui/components/utils';
 
 class AttachmentsController {
-    constructor($scope, $window, superdesk, attachments, notify, gettext, deployConfig, urls, lock) {
+    constructor($scope, $window, superdesk, attachments, notify, deployConfig, urls, lock) {
         this.$scope = $scope;
         this.$window = $window;
         this.superdesk = superdesk;
         this.attachments = attachments;
         this.notify = notify;
-        this.gettext = gettext;
         this.urls = urls;
         this.isLocked = lock.isLocked($scope.item);
         this.isLockedByMe = lock.isLockedByMe($scope.item);
@@ -25,14 +25,14 @@ class AttachmentsController {
     selectFiles(files) {
         if (Array.isArray(files) && files.length > 0 && !this.isLocked) {
             if (files.length + this.$scope.files.length > this.maxFiles) {
-                this.notify.error(this.gettext('Sorry, too many files selected.'));
+                this.notify.error(gettext('Sorry, too many files selected.'));
                 return;
             }
 
             const bigFiles = files.filter((file) => file.size > this.maxSize);
 
             if (bigFiles.length) {
-                this.notify.error(this.gettext('Sorry, but some files are too big.'));
+                this.notify.error(gettext('Sorry, but some files are too big.'));
                 return;
             }
 
@@ -88,7 +88,6 @@ AttachmentsController.$inject = [
     'superdesk',
     'attachments',
     'notify',
-    'gettext',
     'deployConfig',
     'urls',
     'lock',

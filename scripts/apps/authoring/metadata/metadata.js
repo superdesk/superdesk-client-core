@@ -2,6 +2,7 @@ import _ from 'lodash';
 import PreferedCvItemsConfigDirective from './PreferedCvItemsConfigDirective';
 import MetaPlaceDirective from './MetaPlaceDirective';
 import {VOCABULARY_SELECTION_TYPES} from '../../vocabularies/constants';
+import {gettext} from 'core/ui/components/utils';
 
 const SINGLE_SELECTION = VOCABULARY_SELECTION_TYPES.SINGLE_SELECTION.id;
 

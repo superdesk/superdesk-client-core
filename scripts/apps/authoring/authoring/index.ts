@@ -9,6 +9,7 @@ import '../suggest';
 import mediaModule from '../media';
 import {reactToAngular1} from 'superdesk-ui-framework';
 import {ArticleUrlFields} from './article-url-fields';
+import {gettext} from 'core/ui/components/utils';
 
 angular.module('superdesk.apps.authoring.autosave', []).service('autosave', svc.AutosaveService);
 
@@ -281,7 +282,7 @@ angular.module('superdesk.apps.authoring', [
             },
         });
     }])
-    .run(['keyboardManager', 'gettext', function(keyboardManager, gettext) {
+    .run(['keyboardManager', 'gettext', function(keyboardManager) {
         keyboardManager.register('Authoring', 'ctrl + shift + u', gettext('Unlock current item'));
         keyboardManager.register('Authoring', 'ctrl + shift + e', gettext('Close current item'));
         keyboardManager.register('Authoring', 'ctrl + shift + s', gettext('Save current item'));

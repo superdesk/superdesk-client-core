@@ -1,5 +1,7 @@
-PackageItemCtrl.$inject = ['data', 'packages', 'authoringWorkspace', 'notify', 'gettext'];
-export function PackageItemCtrl(data, packages, authoringWorkspace, notify, gettext) {
+import {gettext} from 'core/ui/components/utils';
+
+PackageItemCtrl.$inject = ['data', 'packages', 'authoringWorkspace', 'notify'];
+export function PackageItemCtrl(data, packages, authoringWorkspace, notify) {
     packages.createPackageFromItems([data.item])
         .then((newPackage) => {
             authoringWorkspace.edit(newPackage);

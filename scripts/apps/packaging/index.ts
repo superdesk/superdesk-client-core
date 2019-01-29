@@ -12,6 +12,7 @@ import './styles/packaging.scss';
 import * as ctrl from './controllers';
 import * as directive from './directives';
 import {PackagesService} from './services';
+import {gettext} from 'core/ui/components/utils';
 
 /**
  * @ngdoc module

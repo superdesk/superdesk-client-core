@@ -1,18 +1,19 @@
 import _ from 'lodash';
 import React from 'react';
 import {PreviewModal} from '../previewModal';
+import {gettext} from 'core/ui/components/utils';
 
 
 SendItem.$inject = ['$q', 'api', 'search', 'desks', 'notify', 'authoringWorkspace',
     'superdeskFlags', '$location', 'macros', '$rootScope', 'deployConfig',
     'authoring', 'send', 'editorResolver', 'confirm', 'archiveService',
     'preferencesService', 'multi', 'datetimeHelper', 'config', 'privileges',
-    'storage', 'modal', 'gettext', 'urls', 'extensionPoints', 'metadata'];
+    'storage', 'modal', 'urls', 'extensionPoints', 'metadata'];
 export function SendItem($q, api, search, desks, notify, authoringWorkspace,
     superdeskFlags, $location, macros, $rootScope, deployConfig,
     authoring, send, editorResolver, confirm, archiveService,
     preferencesService, multi, datetimeHelper, config, privileges,
-    storage, modal, gettext, urls, extensionPoints, metadata) {
+    storage, modal, urls, extensionPoints, metadata) {
     return {
         scope: {
             item: '=',
@@ -146,7 +147,6 @@ export function SendItem($q, api, search, desks, notify, authoringWorkspace,
                                     documentId={scope.item._id}
                                     urls={urls}
                                     closeModal={closeModal}
-                                    gettext={gettext}
                                 />
                             );
                         });

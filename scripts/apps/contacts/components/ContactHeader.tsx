@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {gettext} from 'core/ui/components/utils';
 
 /**
  * Contact header - renders header for contact card used in grid view

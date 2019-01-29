@@ -1,4 +1,5 @@
 import * as helpers from 'apps/authoring/authoring/helpers';
+import {gettext} from 'core/ui/components/utils';
 
 CharacterCount.$inject = [];
 export function CharacterCount() {

@@ -1,8 +1,9 @@
 import notifySaveError from '../helpers';
+import {gettext} from 'core/ui/components/utils';
 
-TemplatesDirective.$inject = ['gettext', 'notify', 'api', 'templates', 'modal', 'desks', 'weekdays',
+TemplatesDirective.$inject = ['notify', 'api', 'templates', 'modal', 'desks', 'weekdays',
     'content', '$filter', 'lodash'];
-export function TemplatesDirective(gettext, notify, api, templates, modal, desks, weekdays, content, $filter, _) {
+export function TemplatesDirective(notify, api, templates, modal, desks, weekdays, content, $filter, _) {
     return {
         templateUrl: 'scripts/apps/templates/views/templates.html',
         link: function($scope) {
@@ -314,9 +315,9 @@ export function TemplatesDirective(gettext, notify, api, templates, modal, desks
 
                 if (deskNames) {
                     return notify.error(
-                        gettext('This is a default template of the following desk(s):') +
-                        ` ${deskNames}. ` +
-                        gettext('Please change the default templates first.'));
+                        gettext('This is a default template of the following desk(s): {{deskNames}}.', {deskNames}) +
+                        ' ' + gettext('Please change the default templates first.')
+                    );
                 }
 
                 modal.confirm(gettext('Are you sure you want to delete the template?'))

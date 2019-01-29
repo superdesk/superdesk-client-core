@@ -99,11 +99,11 @@ export function ConfirmDirtyService($window, $q, $filter, api, modal, $interpola
         );
     };
 
-    this.confirmSaveWork = function confirmSavework(msg) {
+    this.confirmSaveWork = function confirmSavework(message) {
         return modal.confirm(
             gettext(
                 'Configuration has changed. {{message}} Would you like to save the story to your workspace?',
-                {message: msg},
+                {message},
             ),
         );
     };

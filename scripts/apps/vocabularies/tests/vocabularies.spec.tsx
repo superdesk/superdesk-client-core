@@ -158,7 +158,6 @@ describe('vocabularies', () => {
                             model={{name: null, qcode: null}}
                             schema={schema}
                             schemaFields={schemaFields}
-                            gettext={() => ''}
                             remove={() => null}
                             update={update}
                         />

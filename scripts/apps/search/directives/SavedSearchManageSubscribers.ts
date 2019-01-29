@@ -13,6 +13,7 @@ import {CronTimeInterval} from 'types/DataStructures/TimeInterval';
 import {IDesk} from 'superdesk-interfaces/Desk';
 import {IDesksService} from 'types/Services/Desks';
 import {nameof} from 'core/helpers/typescript-helpers';
+import {gettext} from 'core/ui/components/utils';
 
 interface IModel {
     userSubscribers: Array<IUser>;
@@ -53,9 +54,9 @@ interface IScope extends IDirectiveScope<IModel> {
     desksFilter(desk: IDesk): boolean;
 }
 
-SavedSearchManageSubscribers.$inject = ['asset', 'userList', 'api', 'modal', 'gettext', 'desks'];
+SavedSearchManageSubscribers.$inject = ['asset', 'userList', 'api', 'modal', 'desks'];
 
-export function SavedSearchManageSubscribers(asset, userList, api, modal, gettext, desks) {
+export function SavedSearchManageSubscribers(asset, userList, api, modal, desks) {
     return {
         scope: {
             savedSearch: '=',
