@@ -12,8 +12,8 @@ import {gettext} from 'core/utils';
  * add related items by using drag and drop, delete related items and open related items.
  */
 
-RelatedItemsDirective.$inject = ['authoringWorkspace', 'relationsService', 'notify', 'api'];
-export function RelatedItemsDirective(authoringWorkspace, relationsService, notify, api) {
+RelatedItemsDirective.$inject = ['authoringWorkspace', 'relationsService', 'notify'];
+export function RelatedItemsDirective(authoringWorkspace, relationsService, notify) {
     return {
         scope: {
             item: '=',
@@ -126,17 +126,18 @@ export function RelatedItemsDirective(authoringWorkspace, relationsService, noti
             };
 
             /**
-            * Get related items for fireldId
+            * Get related items for fieldId
             *
             * @param {String} fieldId
             * @return {[Object]}
             */
-            scope.getRelatedItems = (fieldId) => {
-                if (!scope.isItemUpdated) { // check if item is updated one
-                    return;
-                }
-                return relationsService.getRelatedItemsForField(scope.item, fieldId);
+            scope.getRelatedItems = () => {
+                relationsService.getRelatedItemsForField(scope.item, scope.field._id)
+                    .then((items) => {
+                        scope.relatedItems = items;
+                    });
             };
+            scope.getRelatedItems();
 
             /**
              * Reorder related items on related items list
@@ -190,6 +191,7 @@ export function RelatedItemsDirective(authoringWorkspace, relationsService, noti
 
                 data[key] = item;
                 scope.item.associations = angular.extend({}, scope.item.associations, data);
+                scope.getRelatedItems();
                 scope.onchange();
             };
 
@@ -206,6 +208,7 @@ export function RelatedItemsDirective(authoringWorkspace, relationsService, noti
 
                 data[key] = null;
                 scope.item.associations = angular.extend({}, scope.item.associations, data);
+                scope.getRelatedItems();
                 scope.onchange();
             };
 
@@ -217,16 +220,6 @@ export function RelatedItemsDirective(authoringWorkspace, relationsService, noti
             scope.openRelatedItem = (item) => {
                 authoringWorkspace.edit(item);
             };
-
-            function getUpdatedItem() {
-                return api.find('archive', scope.item._id).then((item) => {
-                    scope.item = item;
-                    scope.isItemUpdated = true;
-                });
-            }
-
-            // init
-            getUpdatedItem();
         },
     };
 }

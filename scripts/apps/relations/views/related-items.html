@@ -6,7 +6,7 @@
 <div class="related-items" ng-if="!isEmptyRelatedItems(field._id)">
     <ul class="groups draggable-list" sd-sort-groups>
         <li id="{{field._id}}" class="sort-item draggable-list__item draggable-list__item--no-padding"
-            ng-repeat="(key, relatedItem) in getRelatedItems(field._id) track by key">
+            ng-repeat="(key, relatedItem) in relatedItems track by key">
             <div class="sd-list-item sd-list-item--no-hover">
                 <div class="sd-list-item__column"><i class="type-icon" sd-filetype-icon data-item="relatedItem"></i></div>
                 <div class="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border">

@@ -1,26 +1,30 @@
 import {pickBy} from 'lodash';
 import {IArticle} from 'superdesk-interfaces/Article';
 
-RelationsService.$inject = ['archiveService', 'mediaIdGenerator', 'api'];
+RelationsService.$inject = ['archiveService', 'mediaIdGenerator', 'api', '$q'];
 
-export function RelationsService(archiveService, mediaIdGenerator, api) {
+export function RelationsService(archiveService, mediaIdGenerator, api, $q) {
     this.getRelatedItemsWithoutMediaGallery = function(item: IArticle, fields) {
         if (!item.associations) {
             return [];
         }
 
-        return api.find('archive', item._id)
-            .then((item) => {
-                const relatedWithoutMedia = pickBy(item.associations, (value, key) => {
-                    var parts = mediaIdGenerator.getFieldParts(key);
-                    var field = fields.find((f) => f._id === parts[0]);
+        const relatedWithoutMedia = pickBy(item.associations, (value, key) => {
+            var parts = mediaIdGenerator.getFieldParts(key);
+            var field = fields.find((f) => f._id === parts[0]);
 
-                    return field && field.field_type === 'related_content';
-                });
+            return field && field.field_type === 'related_content';
+        });
 
-                const related = Object.values(relatedWithoutMedia);
-                const relatedWithoutNull = related.filter((o) => o !== null);
-                const unpublished = relatedWithoutNull.filter((o) => !archiveService.isPublished(o));
+        const related = Object.values(relatedWithoutMedia);
+        const relatedWithoutNull = related.filter((o) => o !== null);
+
+        const relatedItems = relatedWithoutNull.map((o) => api.find('archive', o._id));
+
+
+        return $q.all(relatedItems)
+            .then((response) => {
+                const unpublished = response.filter((o) => !archiveService.isPublished(o));
 
                 return unpublished;
             });
@@ -34,10 +38,14 @@ export function RelationsService(archiveService, mediaIdGenerator, api) {
 
     this.getRelatedItemsForField = function(item: IArticle, fieldId: string) {
         const related = this.getRelatedKeys(item, fieldId);
+        const relatedItemsApi = related.map((o) => api.find('archive', item.associations[o]._id));
 
-        return related.reduce((obj, key) => {
-            obj[key] = item.associations[key];
-            return obj;
-        }, {});
+        return $q.all(relatedItemsApi)
+            .then((response) => {
+                const relatedItems = {};
+
+                related.map((key, index) => relatedItems[key] = response[index]);
+                return relatedItems;
+            });
     };
 }
