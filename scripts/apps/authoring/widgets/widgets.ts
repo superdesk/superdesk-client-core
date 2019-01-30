@@ -1,3 +1,6 @@
+import {debounce} from 'lodash';
+import {IContentProfile} from "superdesk-interfaces/ContentProfile";
+import {isWidgetVisibleForContentProfile} from "apps/workspace/content/components/WidgetsConfig";
 import {gettext} from 'core/ui/components/utils';
 
 function AuthoringWidgetsProvider() {
@@ -51,7 +54,7 @@ function WidgetsManagerCtrl($scope, $routeParams, authoringWidgets, archiveServi
                 (!widget.feature || !!_.get(config.features, widget.feature, true))
         ));
 
-        content.getType(item.profile).then((type) => {
+        content.getType(item.profile).then((contentProfile: IContentProfile) => {
             const promises = widgets.map(
                 (widget) => new Promise((resolve) => {
                     Promise.all([
@@ -62,6 +65,8 @@ function WidgetsManagerCtrl($scope, $routeParams, authoringWidgets, archiveServi
 
                         // checking result from plugins
                         authoringWorkspace.isWidgetVisible(widget),
+
+                        Promise.resolve(isWidgetVisibleForContentProfile(contentProfile.widgets_config, widget._id)),
                     ])
                         .then((res) => {
                             resolve(res.every((i) => i === true));
@@ -179,7 +184,7 @@ function AuthoringWidgetsDir(desks, commentsService, $injector) {
             var editor = elem.find('.page-content-container'),
                 stickyHeader = elem.find('.authoring-sticky');
 
-            var scrollHandler = _.debounce(clipHeader, 100);
+            var scrollHandler = debounce(clipHeader, 100);
 
             editor.on('scroll', scrollHandler);
             scope.$on('$destroy', () => {
