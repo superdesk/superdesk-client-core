@@ -63,6 +63,7 @@ export function ContentProfileSchemaEditor(content, metadata, vocabularies) {
             scope.loading = true;
             scope.schemaKeysDisabled = [];
             let schemaKeys = [];
+            let numberOfHeaderSchemaKeys = 0;
 
             Promise.all([
                 content.getCustomFields(),
@@ -70,8 +71,11 @@ export function ContentProfileSchemaEditor(content, metadata, vocabularies) {
                 vocabularies.getVocabularies(),
             ]).then((res) => {
                 const [customFields, typeMetadata, vocabulariesCollection] = res;
+                
                 scope.vocabularies = vocabulariesCollection;
                 scope.label = (id) => getLabelForFieldId(id, scope.vocabularies);
+                
+                let headerFields = [];
 
                 const updateSchemaKeys = (customVocabulariesForArticleHeader) => {
                     // Creates a list of field names of the schema sorted by 'order' value
@@ -102,6 +106,7 @@ export function ContentProfileSchemaEditor(content, metadata, vocabularies) {
                     });
 
                     const keysForSection = Object.keys(scope.model.editor).filter(sectionFilter);
+                    headerFields = Object.keys(scope.model.editor).filter((key) => articleHeaderFields.has(key));
 
                     schemaKeys = keysForSection
                         .filter((value) => scope.model.editor[value].enabled)
@@ -130,8 +135,11 @@ export function ContentProfileSchemaEditor(content, metadata, vocabularies) {
                             scope.schemaKeysOrdering.splice(scope.schemaKeysOrdering.indexOf(key), 1)[0]);
                     }
 
+                    let orderIndent = scope.sectionToRender === 'content' ?
+                        headerFields.filter((value) => scope.model.editor[value].enabled).length : 0;
+
                     angular.forEach(schemaKeys, (id) => {
-                        scope.model.editor[id].order = scope.schemaKeysOrdering.indexOf(id) + 1;
+                        scope.model.editor[id].order = orderIndent + scope.schemaKeysOrdering.indexOf(id) + 1;
                     });
                 };
 

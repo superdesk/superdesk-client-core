@@ -405,7 +405,9 @@
              data-required="schema.authors.required"
              ng-if="schema.authors && editor.authors"
              sd-width="{{editor.authors.sdWidth}}"
-             order="{{editor.authors.order}}">
+             order="{{editor.authors.order}}"
+             ng-controller="PopulateAuthorsController"
+        >
             <label class="authoring-header__item-label" translate>AUTHORS</label>
             <div class="authoring-header__input-holder">
                 <div id="authors"
