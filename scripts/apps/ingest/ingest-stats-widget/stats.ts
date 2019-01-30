@@ -1,8 +1,10 @@
+import {gettext} from 'core/ui/components/utils';
+
 angular.module('superdesk.apps.dashboard.widgets.ingeststats', [])
     .factory('colorSchemes', ['$resource', function($resource) {
         return $resource('scripts/apps/ingest/static-resources/color-schemes.json');
     }])
-    .config(['dashboardWidgetsProvider', 'gettext', function(dashboardWidgets, gettext) {
+    .config(['dashboardWidgetsProvider', function(dashboardWidgets) {
         dashboardWidgets.addWidget('ingest-stats', {
             label: gettext('Ingest Stats'),
             multiple: true,

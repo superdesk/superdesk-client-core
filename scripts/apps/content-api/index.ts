@@ -1,6 +1,7 @@
 import {ContentAPIController} from './controllers';
 import * as directives from './directives';
 import * as services from './services';
+import {gettext} from 'core/ui/components/utils';
 
 /**
  * @ngdoc module

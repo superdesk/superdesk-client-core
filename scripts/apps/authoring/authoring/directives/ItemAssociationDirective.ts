@@ -13,7 +13,6 @@ import {stripHtmlTags, getSuperdeskType} from 'core/utils';
  * @requires $q
  * @requires api
  * @requires notify
- * @requires gettext
  * @requires mediaIdGenerator
  *
  * @description

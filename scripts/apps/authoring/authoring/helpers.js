@@ -231,6 +231,9 @@ export function cutoffPreviousRenditions(update, origItem) {
         try {
             updateRenditions = update.associations[key].renditions;
             origRenditions = origItem.associations[key].renditions;
+            if (updateRenditions == null || origRenditions == null) {
+                return;
+            }
         } catch (error) {
             if (error instanceof TypeError) {
                 return;

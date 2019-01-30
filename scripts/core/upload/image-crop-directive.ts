@@ -1,3 +1,5 @@
+import {gettext} from 'core/ui/components/utils';
+
 export default angular.module('superdesk.core.upload.imagecrop', [
     'superdesk.core.translate',
 ])
@@ -72,8 +74,8 @@ export default angular.module('superdesk.core.upload.imagecrop', [
  *  data-crop-data="{CropLeft: 0, CropTop: 0, CropRight: 800, CropBottom: 600}">
  * </div>
  */
-    .directive('sdImageCrop', ['gettext', '$interpolate', 'imageFactory', 'lodash',
-        function(gettext, $interpolate, imageFactory, _) {
+    .directive('sdImageCrop', ['imageFactory', 'lodash',
+        function(imageFactory, _) {
             return {
                 scope: {
                     src: '=',
@@ -300,13 +302,13 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                             return true;
                         }
                         if (_img.width < rendition.width || _img.height < rendition.height) {
-                            var text = $interpolate(
-                                gettext('Sorry, but image must be at least {{ r.width }}x{{ r.height }},' +
-                                ' (it is {{ img.width }}x{{ img.height }}).'),
-                            )({
-                                r: rendition,
-                                img: _img,
-                            });
+                            var text = gettext(
+                                'Sorry, but image must be at least {{width}}x{{height}}.',
+                                {width: rendition.width, height: rendition.height},
+                            ) + ' ' + gettext(
+                                'Currently the image size is {{width}}x{{height}}).',
+                                {width: _img.width, height: _img.height},
+                            );
 
                             elem.append('<p class="error">' + text);
                             return false;

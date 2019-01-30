@@ -49,6 +49,37 @@
                         <sd-check ng-model="editRole.is_default" id="is_default" ng-disabled="defaultRole">{{:: 'Set as default' | translate }}</sd-check>
                     </div>
                 </fieldset>
+                <fieldset>
+                    <legend translate>Default author roles</legend>
+                    <div class="form__row" translate>
+                        If you select a default role for content creation or editing,
+                        Superdesk will prefill the Authors field with user's name and the role.
+                        The roles are managed in <b>Author roles</b> controlled vocabulary in the Metadata section.
+                    </div>
+
+                    <div ng-show="!author_roles" class="sd-alert sd-alert--hollow sd-alert--warning" translate>Author roles controlled vocabullary is missing.</div>
+
+                    <div class="form__row">
+                        <div class="sd-line-input">
+                            <label class="sd-line-input__label" translate>Content creation</label>
+                            <select class="sd-line-input__select"
+                                ng-model="editRole.author_role"
+                                ng-options="role.qcode as role.name for role in author_roles">
+                                <option value="" translate>None</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form__row">
+                        <div class="sd-line-input">
+                            <label class="sd-line-input__label" translate>Content editing</label>
+                            <select class="sd-line-input__select"
+                                ng-model="editRole.editor_role"
+                                ng-options="role.qcode as role.name for role in author_roles">
+                                <option value="" translate>None</option>
+                            </select>
+                        </div>
+                    </div>
+                </fieldset>
             </form>
         </div>
         <div class="modal__footer">

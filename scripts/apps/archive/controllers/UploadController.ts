@@ -1,6 +1,7 @@
 import EXIF from 'exif-js';
 import _ from 'lodash';
 import {getDataUrl} from 'core/upload/image-preview-directive';
+import {gettext} from 'core/ui/components/utils';
 
 /* eslint-disable complexity */
 
@@ -185,7 +186,7 @@ export function UploadController(
             return false;
         }
         if (!$scope.uniqueUpload && $scope.maxUploads && (files.length + $scope.items.length) > $scope.maxUploads) {
-            notify.error(gettext('Select at most ') + $scope.maxUploads + gettext(' files to upload.'));
+            notify.error(gettext('Select at most {{maxUploads}} files to upload.', {maxUploads: $scope.maxUploads}));
             return false;
         }
 

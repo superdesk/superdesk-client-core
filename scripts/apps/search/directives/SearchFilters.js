@@ -2,7 +2,7 @@ import _ from 'lodash';
 import {getDateFilters} from './DateFilters';
 
 class LinkFunction {
-    constructor(desks, tags, $location, scope, elem, metadata, gettext) {
+    constructor(desks, tags, $location, scope, elem, metadata) {
         this.scope = scope;
         this.elem = elem;
         this.tags = tags;
@@ -14,7 +14,7 @@ class LinkFunction {
         this.scope.removeFilter = this.removeFilter.bind(this);
         this.scope.setFilter = this.setFilter.bind(this);
         this.scope.isEmpty = this.isEmpty.bind(this);
-        this.scope.dateFilters = getDateFilters(gettext);
+        this.scope.dateFilters = getDateFilters();
         this.scope.clearPredefinedFilters = this.clearPredefinedFilters.bind(this);
         this.scope.togglePredefinedDateFilter = this.togglePredefinedDateFilter.bind(this);
         this.scope.hasPredefinedDateFilter = this.hasPredefinedDateFilter.bind(this);
@@ -348,11 +348,11 @@ class LinkFunction {
  * @description sd-search-filters handles filtering using aggregates in the
  * left hand side panel of Global search page, archive search page and content api search.
  */
-export function SearchFilters(desks, tags, $location, metadata, gettext) {
+export function SearchFilters(desks, tags, $location, metadata) {
     return {
         template: require('scripts/apps/search/views/search-filters.html'),
-        link: (scope, elem) => new LinkFunction(desks, tags, $location, scope, elem, metadata, gettext),
+        link: (scope, elem) => new LinkFunction(desks, tags, $location, scope, elem, metadata),
     };
 }
 
-SearchFilters.$inject = ['desks', 'tags', '$location', 'metadata', 'gettext'];
+SearchFilters.$inject = ['desks', 'tags', '$location', 'metadata'];

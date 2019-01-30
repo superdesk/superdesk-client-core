@@ -7,6 +7,9 @@
 * AUTHORS and LICENSE files distributed with this source code, or
 * at https://www.sourcefabric.org/superdesk/license
 */
+
+import {gettext} from 'core/ui/components/utils';
+
 WebSocketProxy.$inject = ['$rootScope', 'config', '$interval', 'session', 'SESSION_EVENTS'];
 function WebSocketProxy($rootScope, config, $interval, session, SESSION_EVENTS) {
     var ws = null;
@@ -92,8 +95,8 @@ function WebSocketProxy($rootScope, config, $interval, session, SESSION_EVENTS) 
 /**
  * Service for notifying user when websocket connection disconnected or connected.
  */
-NotifyConnectionService.$inject = ['$rootScope', 'notify', 'gettext', '$timeout', 'session'];
-function NotifyConnectionService($rootScope, notify, gettext, $timeout, session) {
+NotifyConnectionService.$inject = ['$rootScope', 'notify', '$timeout', 'session'];
+function NotifyConnectionService($rootScope, notify, $timeout, session) {
     var self = this;
 
     self.message = null;
@@ -124,8 +127,8 @@ function NotifyConnectionService($rootScope, notify, gettext, $timeout, session)
     });
 }
 
-ReloadService.$inject = ['$window', '$rootScope', 'session', 'desks', 'gettext', 'superdeskFlags', 'lodash'];
-function ReloadService($window, $rootScope, session, desks, gettext, superdeskFlags, _) {
+ReloadService.$inject = ['$window', '$rootScope', 'session', 'desks', 'superdeskFlags', 'lodash'];
+function ReloadService($window, $rootScope, session, desks, superdeskFlags, _) {
     var self = this;
 
     self.userDesks = [];

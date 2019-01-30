@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
+import {gettext} from 'core/ui/components/utils';
 
 const StyleIcons = {
     bold: 'icon-bold',

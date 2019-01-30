@@ -3,7 +3,8 @@ import {OverlayTrigger, Tooltip} from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
 import {Column} from './Column';
-import {isNotForPublication, gettext} from '../utils';
+import {isNotForPublication} from '../utils';
+import {gettext} from 'core/ui/components/utils';
 import {TOOLTIPS} from '../constants';
 
 /**

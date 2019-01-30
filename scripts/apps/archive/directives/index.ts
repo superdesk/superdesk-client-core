@@ -15,7 +15,6 @@ export {ItemRendition} from './ItemRendition';
 export {RatioCalc} from './RatioCalc';
 export {HtmlPreview} from './HtmlPreview';
 export {ProviderMenu} from './ProviderMenu';
-export {GridLayout} from './GridLayout';
 export {ContentResults} from './ContentResults';
 export {ArchivedItemKill} from './ArchivedItemKill';
 export {ResendItem} from './ResendItem';

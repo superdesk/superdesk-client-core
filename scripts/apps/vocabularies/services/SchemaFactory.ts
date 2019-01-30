@@ -1,5 +1,7 @@
-SchemaFactory.$inject = ['gettext'];
-export function SchemaFactory(gettext) {
+import {gettext} from 'core/ui/components/utils';
+
+SchemaFactory.$inject = [];
+export function SchemaFactory() {
     var colorScheme = {
         name: {type: 'text', label: gettext('Name')},
         qcode: {type: 'text', label: gettext('QCode')},

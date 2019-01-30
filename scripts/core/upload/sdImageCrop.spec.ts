@@ -95,8 +95,10 @@ describe('Image Crop', () => {
                 handler.apply(fakeImg);
                 expect(mySpy.calls.count()).toEqual(0);
                 expect($elm.text())
-                    .toBe('Sorry, but image must be at least ' + scope.rendition.width + 'x' + scope.rendition.height +
-                          ', (it is 500x600).');
+                    .toBe(
+                        'Sorry, but image must be at least {{width}}x{{height}}.' + ' ' +
+                        'Currently the image size is {{width}}x{{height}}).',
+                    );
             }));
 
             it('calls onChange callback on change only', inject(() => {

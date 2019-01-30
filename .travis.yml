@@ -15,4 +15,5 @@ cache:
 
 script:
     - npm run test
+    - npm run tslint
     - npm run build

@@ -1,6 +1,8 @@
-DictionaryEditController.$inject = ['$scope', 'dictionaries', 'upload', 'gettext', 'notify',
+import {gettext} from 'core/ui/components/utils';
+
+DictionaryEditController.$inject = ['$scope', 'dictionaries', 'upload', 'notify',
     'modal', '$rootScope', '$q'];
-export function DictionaryEditController($scope, dictionaries, upload, gettext, notify,
+export function DictionaryEditController($scope, dictionaries, upload, notify,
     modal, $rootScope, $q) {
     function onSuccess(result) {
         if ($scope.isAbbreviations()) {

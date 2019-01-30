@@ -1,6 +1,6 @@
 <div class="form__row form__row--s-padding" ng-repeat="field in currentFeedingService.fields track by field.id">
     <div class="sd-line-input" ng-if="field.type === 'text'" ng-show="isConfigFieldVisible(field)">
-        <label class="sd-line-input__label" for="{{getConfigFieldId(field.id)}}">{{ field.label | translate }}</label>
+        <label class="sd-line-input__label" for="{{getConfigFieldId(field.id)}}">{{field.label | translate}}</label>
         <input class="sd-line-input__input" type="{{field.type}}" id="{{getConfigFieldId(field.id)}}" placeholder="{{:: field.placeholder | translate}}"
             ng-model="provider.config[field.id]" ng-required="isConfigFieldRequired(field)" ng-change="$parent.setConfig(provider)"
             ng-show="isConfigFieldVisible(field)">
@@ -8,7 +8,7 @@
     </div>
 
     <div class="sd-line-input" ng-if="field.type === 'password'" ng-show="isConfigFieldVisible(field)">
-        <label class="sd-line-input__label" for="{{getConfigFieldId(field.id)}}">{{ field.label | translate }}</label>
+        <label class="sd-line-input__label" for="{{getConfigFieldId(field.id)}}">{{field.label | translate}}</label>
         <input class="sd-line-input__input" type="password" id="{{getConfigFieldId(field.id)}}" placeholder="{{:: field.placeholder | translate}}"
             ng-model="provider.config[field.id]" ng-required="isConfigFieldRequired(field)" ng-change="$parent.setConfig(provider)"
             ng-show="isConfigFieldVisible(field)" autocomplete="new-password">
@@ -18,12 +18,12 @@
     <div class="form__row" ng-if="field.type === 'boolean'" ng-show="isConfigFieldVisible(field)">
         <span sd-switch id="{{getConfigFieldId(field.id)}}" ng-model="provider.config[field.id]"
         ng-required="isConfigFieldRequired(field)"></span>
-        <label for="{{getConfigFieldId(field.id)}}">{{ field.label | translate }}</label>
+        <label for="{{getConfigFieldId(field.id)}}">{{field.label | translate}}</label>
         <div sd-ingest-config-errors></div>
     </div>
 
     <div class="sd-line-input sd-line-input--is-select" ng-if="field.type === 'choices'" ng-show="isConfigFieldVisible(field)">
-        <label class="sd-line-input__label" for="{{getConfigFieldId(field.id)}}">{{ field.label | translate }}</label>
+        <label class="sd-line-input__label" for="{{getConfigFieldId(field.id)}}">{{field.label | translate}}</label>
         <select id="{{getConfigFieldId(field.id)}}"
                 class="sd-line-input__select"
                 ng-required="isConfigFieldRequired(field)"
@@ -33,7 +33,7 @@
     </div>
 
     <fieldset class="separated rss-config" ng-if="field.type === 'mapping'">
-      <legend translate>{{ field.label | translate }}</legend>
+      <legend translate>{{field.label | translate}}</legend>
 
       <div class="sd-alert sd-alert--hollow sd-alert--small sd-alert--no-margin" ng-show="provider.config[field.id].length == 0" ng-hide="fieldAliases[field.id].length > 0">
         {{:: field.empty_label|translate }}

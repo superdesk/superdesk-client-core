@@ -7,7 +7,7 @@ describe('monitoring', () => {
     it('can switch between list and swimlane view',
         inject(($controller, $rootScope, $q, preferencesService, config) => {
             config.features = {
-                swimlane: {columnsLimit: 4},
+                swimlane: {defaultNumberOfColumns: 4},
             };
 
             spyOn(preferencesService, 'update');

@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import {gettext} from 'core/ui/components/utils';
 
 SearchResults.$inject = [
     '$location',
@@ -216,6 +217,11 @@ export function SearchResults(
                 scope.total = null;
                 criteria.es_highlight = search.getElasticHighlight();
                 criteria.projections = JSON.stringify(projections);
+
+                if (getSearch().params) {
+                    criteria.params = JSON.parse(getSearch().params);
+                }
+
                 return api.query(getProvider(criteria), criteria).then((items) => {
                     if (config.features.autorefreshContent && data != null) {
                         data.force = true;

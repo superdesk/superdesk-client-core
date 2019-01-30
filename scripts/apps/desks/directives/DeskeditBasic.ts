@@ -1,10 +1,11 @@
 import {limits} from 'apps/desks/constants';
 import _ from 'lodash';
+import {gettext} from 'core/ui/components/utils';
 
-DeskeditBasic.$inject = ['gettext', 'desks', 'WizardHandler', 'metadata', 'config',
-    '$filter', '$interpolate', '$rootScope'];
-export function DeskeditBasic(gettext, desks, WizardHandler, metadata, config,
-    $filter, $interpolate, $rootScope) {
+DeskeditBasic.$inject = ['desks', 'WizardHandler', 'metadata', 'config',
+    '$filter'];
+export function DeskeditBasic(desks, WizardHandler, metadata, config,
+    $filter) {
     return {
         link: function(scope, elem, attrs) {
             scope.limits = limits;
@@ -71,8 +72,8 @@ export function DeskeditBasic(gettext, desks, WizardHandler, metadata, config,
 
                 if (response.data && response.data._issues) {
                     if (response.data._issues.name && response.data._issues.name.unique) {
-                        scope._errorMessage = $interpolate(gettext(
-                            'Desk with name ' + name + ' already exists.'))({name: scope.desk.edit.name});
+                        scope._errorMessage = gettext(
+                            'Desk with name {{name}} already exists.', {name: scope.desk.edit.name});
                     } else if (response.data._issues['validator exception']) {
                         scope._errorMessage = gettext(response.data._issues['validator exception']);
                     }

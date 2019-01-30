@@ -1,7 +1,4 @@
-// dummy function to make the highlights description accesible as keys for translation
-function gettext(text) {
-    return text;
-}
+import {gettext} from 'core/ui/components/utils';
 
 const ENTITY_STYLE_MAP = {
     backgroundColor: 'rgba(100, 235, 59, 0.2)',

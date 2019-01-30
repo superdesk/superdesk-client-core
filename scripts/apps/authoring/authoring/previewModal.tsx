@@ -5,6 +5,7 @@ import {Modal} from 'core/ui/components/Modal/Modal';
 import {ModalHeader} from 'core/ui/components/Modal/ModalHeader';
 import {ModalBody} from 'core/ui/components/Modal/ModalBody';
 import {ModalFooter} from 'core/ui/components/Modal/ModalFooter';
+import {gettext} from 'core/ui/components/utils';
 
 const getFormattedDocument = (url) => fetch(url).then(
     (response) => response.text()
@@ -19,7 +20,7 @@ export class PreviewModal extends React.Component<any, any> {
     static defaultProps: any;
 
     openPreviewForItem(subscriberId, format, endpointUrl) {
-        const {urls, documentId, gettext} = this.props;
+        const {urls, documentId} = this.props;
 
         const nextWindow = window.open();
 
@@ -53,7 +54,7 @@ export class PreviewModal extends React.Component<any, any> {
         });
     }
     render() {
-        const {closeModal, subscribersWithPreviewConfigured, gettext} = this.props;
+        const {closeModal, subscribersWithPreviewConfigured} = this.props;
 
         return (
             <Modal>
@@ -108,5 +109,4 @@ PreviewModal.propTypes = {
     documentId: PropTypes.string.isRequired,
     urls: PropTypes.object.isRequired,
     closeModal: PropTypes.func.isRequired,
-    gettext: PropTypes.func.isRequired,
 };

@@ -1,3 +1,5 @@
+import {gettext} from 'core/ui/components/utils';
+
 /**
  * @ngdoc directive
  * @module superdesk.apps.ingest
@@ -6,8 +8,8 @@
  *   Creates the main page for adding or editing routing rules (in the
  *   modal for editing ingest routing schemes).
  */
-IngestRoutingContent.$inject = ['api', 'gettext', 'notify', 'modal', 'contentFilters', '$filter'];
-export function IngestRoutingContent(api, gettext, notify, modal, contentFilters, $filter) {
+IngestRoutingContent.$inject = ['api', 'notify', 'modal', 'contentFilters', '$filter'];
+export function IngestRoutingContent(api, notify, modal, contentFilters, $filter) {
     return {
         templateUrl: 'scripts/apps/ingest/views/settings/ingest-routing-content.html',
         link: function(scope) {

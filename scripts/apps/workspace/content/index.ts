@@ -5,6 +5,7 @@ import * as directive from './directives';
 import * as ctrl from './controllers';
 import {coreMenuGroups} from 'core/activity/activity';
 import {WidgetsConfig} from './components/WidgetsConfig';
+import {gettext} from 'core/ui/components/utils';
 
 /**
  * @ngdoc module
@@ -45,6 +46,6 @@ angular.module('superdesk.apps.workspace.content', [
                 privileges: {content_type: 1},
             });
     }])
-    .run(['keyboardManager', 'gettext', function(keyboardManager, gettext) {
+    .run(['keyboardManager', function(keyboardManager) {
         keyboardManager.register('General', 'ctrl + m', gettext('Create new item'));
     }]);
