@@ -72,7 +72,7 @@ describe('Content profiles', () => {
     });
 
     it('displays custom text fields', () => {
-        const FIELD_LABEL = 'New custom text field';
+        const FIELD_LABEL = 'A custom text field';
 
         metadata.open();
         metadata.openCustomTextFields();
@@ -88,6 +88,6 @@ describe('Content profiles', () => {
         expect(element(by.buttonText(FIELD_LABEL)).isDisplayed()).toBeFalsy();
 
         contentProfiles.openAddFieldDropdown();
-        expect(element(by.buttonText(FIELD_LABEL)).isDisplayed()).toBeTruthy();
+        expect(element(by.buttonText('A custom text field')).isPresent()).toBeTruthy();
     });
 });
