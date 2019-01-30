@@ -1,10 +1,10 @@
-var templates = require('./helpers/templates'),
-    contentProfiles = require('./helpers/content_profiles'),
-    monitoring = require('./helpers/monitoring'),
-    workspace = require('./helpers/workspace'),
-    authoring = require('./helpers/authoring'),
-    assertToastMsg = require('./helpers/utils').assertToastMsg,
-    metadata = require('./helpers/metadata');
+const templates = require('./helpers/templates');
+const contentProfiles = require('./helpers/content_profiles');
+const monitoring = require('./helpers/monitoring');
+const workspace = require('./helpers/workspace');
+const authoring = require('./helpers/authoring');
+const assertToastMsg = require('./helpers/utils').assertToastMsg;
+const metadata = require('./helpers/metadata');
 
 describe('Content profiles', () => {
     it('creates corresponding template', () => {
@@ -88,6 +88,7 @@ describe('Content profiles', () => {
         expect(element(by.buttonText(FIELD_LABEL)).isDisplayed()).toBeFalsy();
 
         contentProfiles.openAddFieldDropdown();
-        expect(element(by.buttonText(FIELD_LABEL)).isDisplayed()).toBeTruthy();
+
+        expect(element(by.buttonText(`${FIELD_LABEL} (text)`)).isDisplayed()).toBeTruthy();
     });
 });
