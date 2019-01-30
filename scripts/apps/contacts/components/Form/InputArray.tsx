@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Row} from './';
 import {cloneDeep} from 'lodash';
+import {gettext} from 'core/ui/components/utils';
 
 export const InputArray: React.StatelessComponent<any> = ({
     field,

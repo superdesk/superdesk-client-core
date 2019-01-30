@@ -232,7 +232,7 @@ export function TagService($location, desks, userList, metadata, search,
      * @param {String} key
      */
     function removeFacet(type, key) {
-        const dateFilter = getDateFilters(gettext).find(
+        const dateFilter = getDateFilters().find(
             ({labelBlock, labelFrom, labelTo}) => [labelBlock, labelFrom, labelTo].includes(type)
         );
 
@@ -311,7 +311,7 @@ export function TagService($location, desks, userList, metadata, search,
             initParameters(tags.currentSearch, urlParams);
             initExcludedFacets(tags.currentSearch);
 
-            const dateFilters = getDateFilters(gettext);
+            const dateFilters = getDateFilters();
 
             /* eslint-disable complexity */
             _.forEach(tags.currentSearch, (type, key) => {

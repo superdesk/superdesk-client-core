@@ -1,3 +1,7 @@
+import {cloneDeep, get, isEqual} from 'lodash';
+import {IContentProfile} from 'superdesk-interfaces/ContentProfile';
+import {gettext} from 'core/ui/components/utils';
+
 ContentProfilesController.$inject = ['$scope', '$location', 'notify', 'content', 'modal', '$q', 'config'];
 export function ContentProfilesController($scope, $location, notify, content, modal, $q, config) {
     var self = this;
@@ -14,6 +18,19 @@ export function ContentProfilesController($scope, $location, notify, content, mo
     // if true, only active Content Profiles will be shown
     // can be changed with a button
     $scope.active_only = true;
+
+    // required for being able to mark the form as dirty and enable the save button
+    // after saving content profile widgets config
+    $scope.setNgForm = (ngForm) => {
+        $scope.ngForm = ngForm;
+    };
+
+    $scope.saveContentProfileWidgetsConfig = (nextWidgetsConfig: IContentProfile['widgets_config']) => {
+        $scope.editing.form.widgets_config = nextWidgetsConfig;
+        $scope.$applyAsync(() => {
+            $scope.ngForm.$dirty = true;
+        });
+    };
 
     $scope.withEditor3 = config.features.editor3;
 
@@ -43,14 +60,14 @@ export function ContentProfilesController($scope, $location, notify, content, mo
 
             if (active) {
                 $scope.editing = {
-                    form: _.cloneDeep(active),
+                    form: cloneDeep(active),
                     original: active,
                 };
 
                 content.getTypeMetadata(active._id).then((type) => {
                     $scope.editing = {
-                        form: _.cloneDeep(type),
-                        original: _.cloneDeep(type),
+                        form: cloneDeep(type),
+                        original: cloneDeep(type),
                     };
                 });
             }
@@ -62,7 +79,7 @@ export function ContentProfilesController($scope, $location, notify, content, mo
      * @private
      */
     function reportError(resp) {
-        let message = _.get(resp, 'data._issues["validator exception"]') || '';
+        let message = get(resp, 'data._issues["validator exception"]') || '';
 
         notify.error(`Operation failed ${message} (check console for response).`);
         console.error(resp);
@@ -133,7 +150,7 @@ export function ContentProfilesController($scope, $location, notify, content, mo
         var diff = {};
 
         Object.keys(e.form).forEach((k) => {
-            if (!_.isEqual(e.form[k], e.original[k])) {
+            if (!isEqual(e.form[k], e.original[k])) {
                 diff[k] = e.form[k];
             }
         });

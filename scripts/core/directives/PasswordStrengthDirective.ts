@@ -1,3 +1,5 @@
+import {gettext} from 'core/ui/components/utils';
+
 // config holds the default configuration for the password strength calculator.
 var config = {
     MIN_LENGTH: 8,
@@ -13,9 +15,6 @@ var config = {
  * @module superdesk.core.directives
  * @name sdPasswordStrength
  *
- * @requires gettext
- * @requires https://docs.angularjs.org/api/ng/service/$interpolate $interpolate
- *
  * @param {Object} ngModel - model that the input is bound to
  *
  * @description Appends a strength indicator to the input that it is
@@ -30,8 +29,8 @@ var config = {
  *        - a number
  *        - another character
  */
-PasswordStrength.$inject = ['gettext', '$interpolate'];
-function PasswordStrength(gettext, $interpolate) {
+PasswordStrength.$inject = [];
+function PasswordStrength() {
     // styles holds each of the strength labels by index along with the class
     // to be added to the indicator.
     var styles = [
@@ -44,14 +43,15 @@ function PasswordStrength(gettext, $interpolate) {
 
     // helpText holds the text that will be shown when the user hovers over the
     // informational icon.
-    var helpText = gettext('Must be {{ MIN_LENGTH }} characters long and ' +
-        'contain {{ MIN_STRENGTH }} out of 4 of the following:' +
+    var helpText = gettext(
+        'Must be {{MIN_LENGTH}} characters long and contain {{MIN_STRENGTH}} out of 4 of the following:',
+         config) +
         '<ul>' +
-            '<li>a lower case letter (a-z)</li>' +
-            '<li>an upper case letter (A-Z)</li>' +
-            '<li>a number (0-9)</li>' +
-            '<li>a special character (!@#$%^&...)</li>' +
-        '</ul>');
+            '<li>' + gettext('a lower case letter (a-z)') + '</li>' +
+            '<li>' + gettext('an upper case letter (A-Z)') + '</li>' +
+            '<li>' + gettext('a number (0-9)') + '</li>' +
+            '<li>' + gettext('a special character (!@#$%^&...)') + '</li>' +
+        '</ul>';
 
     return {
         require: 'ngModel',
@@ -67,7 +67,7 @@ function PasswordStrength(gettext, $interpolate) {
             );
 
             indicator.find('.icon-question-sign').tooltip({
-                title: $interpolate(helpText)(config),
+                title: helpText,
                 html: true,
             });
 

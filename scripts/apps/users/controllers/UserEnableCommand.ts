@@ -1,8 +1,10 @@
+import {gettext} from 'core/ui/components/utils';
+
 /**
  * Enable user
  */
-UserEnableCommand.$inject = ['api', 'data', '$q', 'notify', 'gettext', 'usersService', '$rootScope'];
-export function UserEnableCommand(api, data, $q, notify, gettext, usersService, $rootScope) {
+UserEnableCommand.$inject = ['api', 'data', '$q', 'notify', 'usersService', '$rootScope'];
+export function UserEnableCommand(api, data, $q, notify, usersService, $rootScope) {
     var user = data.item;
 
     return usersService.save(user, {is_enabled: true, is_active: true}).then(

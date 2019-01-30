@@ -1,5 +1,7 @@
-TemplatesService.$inject = ['api', 'session', '$q', 'gettext', 'preferencesService', 'privileges', 'desks'];
-export function TemplatesService(api, session, $q, gettext, preferencesService, privileges, desks) {
+import {gettext} from 'core/ui/components/utils';
+
+TemplatesService.$inject = ['api', 'session', '$q', 'preferencesService', 'privileges', 'desks'];
+export function TemplatesService(api, session, $q, preferencesService, privileges, desks) {
     var PAGE_SIZE = 10;
     var PREFERENCES_KEY = 'templates:recent';
 

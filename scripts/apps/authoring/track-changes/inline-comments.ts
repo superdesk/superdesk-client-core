@@ -15,6 +15,7 @@ import {highlightsConfig} from 'core/editor3/highlightsConfig';
 import {getCustomMetadata} from 'core/editor3/helpers/editor3CustomData';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 import {get} from 'lodash';
+import {gettext} from 'core/ui/components/utils';
 
 function getAllUserIdsFromComments(comments) {
     const users = [];

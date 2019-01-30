@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {gettext} from 'core/ui/components/utils';
 
 export const flags: React.StatelessComponent<any> = (props) => {
-    const {gettext} = props.svc;
-
     const _flags = props.item.flags || {};
     const elems = [
         _flags.marked_for_not_publication ?
@@ -35,6 +34,5 @@ export const flags: React.StatelessComponent<any> = (props) => {
 };
 
 flags.propTypes = {
-    svc: PropTypes.any.isRequired,
     item: PropTypes.any,
 };

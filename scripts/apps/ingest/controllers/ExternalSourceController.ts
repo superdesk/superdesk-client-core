@@ -1,3 +1,5 @@
+import {gettext} from 'core/ui/components/utils';
+
 /**
  * @ngdoc controller
  * @module superdesk.apps.ingest
@@ -7,13 +9,12 @@
  * @requires data
  * @requires desks
  * @requires notify
- * @requires gettext
  *
  * @description
  *   This controller fetches the item from external source ( like AAP Multimedia, Scanpix) into Superdesk.
  */
-ExternalSourceController.$inject = ['api', 'data', 'desks', 'notify', 'gettext'];
-export function ExternalSourceController(api, data, desks, notify, gettext) {
+ExternalSourceController.$inject = ['api', 'data', 'desks', 'notify'];
+export function ExternalSourceController(api, data, desks, notify) {
     return api.save(data.item.fetch_endpoint, {
         guid: data.item.guid,
         desk: desks.getCurrentDeskId(),

@@ -1,13 +1,7 @@
 import React from 'react';
 import {DEFAULT_LIST_CONFIG, LOOKUP_FIELDS, FB_URL, IG_URL} from './constants';
 import * as fields from './components/fields';
-import ng from '../../core/services/ng';
 
-export function gettext(str) {
-    const gettext = ng.get('gettext');
-
-    return gettext(str);
-}
 
 export const onEventCapture = (event) => {
     if (event) {

@@ -10,7 +10,7 @@
     <div class="about-content">
       <span class="sf-logo"></span>
       <h4>Superdesk {{ :: version }}</span></h4>
-      <h5 ng-if="build_rev && build_rev !== ''">Superdesk rev. <a href="https://github.com/superdesk/superdesk/commit/{{ :: build_rev }}" rel="noopener noreferrer">{{ :: build_rev }}</a></h5>
+      <h5 ng-if="build_rev && build_rev !== ''">Superdesk rev. <a href="https://github.com/superdesk/superdesk/tree/{{ :: build_rev }}" rel="noopener noreferrer">{{ :: build_rev }}</a></h5>
 
       <h5 ng-repeat="module in modules track by module.name">
         {{ module.name }}: <a ng-href="{{ module.href }}" rel="noopener noreferrer">{{ module.version }}</a>

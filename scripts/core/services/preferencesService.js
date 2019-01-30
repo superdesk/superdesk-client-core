@@ -9,12 +9,11 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
      * @requires https://docs.angularjs.org/api/ng/service/$q $q
      * @requires session
      * @requires notify
-     * @requires gettext
      *
      * @description Preferences Service (TODO)
      */
-    .service('preferencesService', ['$injector', '$rootScope', '$q', 'session', 'notify', 'gettext', 'lodash',
-        function PreferencesService($injector, $rootScope, $q, session, notify, gettext, _) {
+    .service('preferencesService', ['$injector', '$rootScope', '$q', 'session', 'notify', 'lodash',
+        function PreferencesService($injector, $rootScope, $q, session, notify, _) {
             var USER_PREFERENCES = 'user_preferences',
                 SESSION_PREFERENCES = 'session_preferences',
                 ACTIVE_PRIVILEGES = 'active_privileges',

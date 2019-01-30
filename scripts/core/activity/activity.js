@@ -1,4 +1,5 @@
 import langmap from 'core/lang';
+import {gettext} from 'core/ui/components/utils';
 
 var constants = {
     MENU_MAIN: 'superdesk.core.menu.main',
@@ -413,13 +414,12 @@ angular.module('superdesk.core.activity', [
  * @requires $location
  * @requires $injector
  * @requires $q
- * @requires gettext
  * @requires modal
  * @requires lodash
  * @description The service allows choosing activities to perform.
  */
-    .service('activityService', ['$location', '$injector', '$q', 'gettext', 'modal', 'lodash',
-        function($location, $injector, $q, gettext, modal, _) {
+    .service('activityService', ['$location', '$injector', '$q', 'modal', 'lodash',
+        function($location, $injector, $q, modal, _) {
             var activityStack = [];
 
             this.activityStack = activityStack;

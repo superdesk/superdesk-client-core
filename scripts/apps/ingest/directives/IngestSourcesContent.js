@@ -1,7 +1,8 @@
 import _ from 'lodash';
 import {cloneDeep} from 'lodash';
+import {gettext} from 'core/ui/components/utils';
 
-IngestSourcesContent.$inject = ['ingestSources', 'gettext', 'notify', 'api', '$location',
+IngestSourcesContent.$inject = ['ingestSources', 'notify', 'api', '$location',
     'modal', '$filter', 'config', 'deployConfig', 'privileges'];
 
 /**
@@ -10,7 +11,6 @@ IngestSourcesContent.$inject = ['ingestSources', 'gettext', 'notify', 'api', '$l
  * @name sdIngestSourcesContent
  *
  * @requires ingestSources
- * @requires gettext
  * @requires notify
  * @requires api
  * @requires $location
@@ -22,7 +22,7 @@ IngestSourcesContent.$inject = ['ingestSources', 'gettext', 'notify', 'api', '$l
  *
  * @description Handles the management for Ingest Sources.
  */
-export function IngestSourcesContent(ingestSources, gettext, notify, api, $location,
+export function IngestSourcesContent(ingestSources, notify, api, $location,
     modal, $filter, config, deployConfig, privileges) {
     return {
         templateUrl: 'scripts/apps/ingest/views/settings/ingest-sources-content.html',

@@ -4,6 +4,7 @@ import 'owl.carousel';
 import * as ctrl from '../controllers';
 import {waitForImagesToLoad, waitForAudioAndVideoToLoadMetadata} from 'core/helpers/waitForMediaToBeReady';
 import {getSuperdeskType} from 'core/utils';
+import {gettext} from 'core/ui/components/utils';
 
 
 const carouselContainerSelector = '.sd-media-carousel__content';

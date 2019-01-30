@@ -1,3 +1,5 @@
+import {gettext} from 'core/ui/components/utils';
+
 Monitoring.$inject = ['superdeskProvider', 'workspaceMenuProvider'];
 export function Monitoring(superdesk, workspaceMenuProvider) {
     superdesk

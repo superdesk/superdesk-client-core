@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import {get} from 'lodash';
 
-import {gettext} from '../../utils';
+import {gettext} from 'core/ui/components/utils';
 
 import {LineInput, Label} from '../';
 import {ColouredValuePopup} from './ColouredValuePopup';

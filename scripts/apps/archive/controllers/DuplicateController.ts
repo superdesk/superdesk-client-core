@@ -1,3 +1,5 @@
+import {gettext} from 'core/ui/components/utils';
+
 DuplicateController.$inject = ['api', 'notify', '$rootScope', 'data', 'desks', '$location', 'workspaces', 'session'];
 export function DuplicateController(api, notify, $rootScope, data, desks, $location, workspaces, session) {
     let currentDeskId;

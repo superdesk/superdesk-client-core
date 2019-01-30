@@ -1,12 +1,13 @@
 import {create, clone, each} from 'lodash';
 import {saveOrUpdateSavedSearch} from '../SavedSearch';
+import {gettext} from 'core/ui/components/utils';
 
-SaveSearch.$inject = ['$location', 'asset', 'api', 'session', 'notify', 'gettext', '$rootScope'];
+SaveSearch.$inject = ['$location', 'asset', 'api', 'session', 'notify', '$rootScope'];
 
 /**
  * Opens and manages save search panel
  */
-export function SaveSearch($location, asset, api, session, notify, gettext, $rootScope) {
+export function SaveSearch($location, asset, api, session, notify, $rootScope) {
     return {
         templateUrl: asset.templateUrl('apps/search/views/save-search.html'),
         link: function(scope, elem) {

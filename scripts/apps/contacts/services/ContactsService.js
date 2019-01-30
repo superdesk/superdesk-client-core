@@ -1,4 +1,5 @@
 import {FILTER_FIELDS, URL_PARAMETERS} from '../constants';
+import {gettext} from 'core/ui/components/utils';
 
 const DEFAULT_PAGE_SIZE = 50;
 
@@ -10,11 +11,10 @@ const DEFAULT_PAGE_SIZE = 50;
  * @requires https://docs.angularjs.org/api/ng/service/$location $location
  * @requires sort
  * @requires search
- * @requires gettext
  * @description Handles retrieval of data from contacts api
  */
 export class ContactsService {
-    constructor(api, $location, sort, search, gettext) {
+    constructor(api, $location, sort, search) {
         this.api = api;
         this.$location = $location;
         this.sort = sort;
@@ -136,4 +136,4 @@ export class ContactsService {
     }
 }
 
-ContactsService.$inject = ['api', '$location', 'sort', 'search', 'gettext'];
+ContactsService.$inject = ['api', '$location', 'sort', 'search'];
