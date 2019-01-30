@@ -23,21 +23,23 @@ var constants = {
     ACTION_PREVIEW: 'preview',
 };
 
+// using a function with no arguments is required so gettext
+// is not called before angular starts and translations are loaded
 export const coreMenuGroups = {
     WORKFLOW: {
         id: 'WORKFLOW',
         priority: -500,
-        getLabel: (_gettext) => gettext('Workflow'),
+        getLabel: () => gettext('Workflow'),
     },
     CONTENT_CONFIG: {
         id: 'CONTENT_CONFIG',
         priority: -800,
-        getLabel: (_gettext) => gettext('Content config'),
+        getLabel: () => gettext('Content config'),
     },
     CONTENT_FLOW: {
         id: 'CONTENT_FLOW',
         priority: -200,
-        getLabel: (_gettext) => gettext('Content flow'),
+        getLabel: () => gettext('Content flow'),
     },
 };
 
