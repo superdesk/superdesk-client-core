@@ -4,7 +4,8 @@
         <span class="item-association__text-label">{{'Drop items here' | translate}}</span>  
 </button>
 <div class="related-items" ng-if="!isEmptyRelatedItems(field._id)">
-    <ul class="groups draggable-list" sd-sort-groups>
+    <div ng-if="loading" class="loading-overlay" ng-class="{active: loading}" style="opacity: 0.5;"></div>
+    <ul class="groups draggable-list" ng-if="!loading" sd-sort-groups>
         <li id="{{field._id}}" class="sort-item draggable-list__item draggable-list__item--no-padding"
             ng-repeat="(key, relatedItem) in relatedItems track by key">
             <div class="sd-list-item sd-list-item--no-hover">

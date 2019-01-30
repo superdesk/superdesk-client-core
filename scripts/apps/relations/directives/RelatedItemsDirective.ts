@@ -99,8 +99,6 @@ export function RelatedItemsDirective(authoringWorkspace, relationsService, noti
                 elem.find('.related-items').removeClass(dragOverClass);
             };
 
-            scope.isItemUpdated = false;
-
             /**
              * Get related items keys for fireldId
              *
@@ -132,9 +130,11 @@ export function RelatedItemsDirective(authoringWorkspace, relationsService, noti
             * @return {[Object]}
             */
             scope.getRelatedItems = () => {
+                scope.loading = true;
                 relationsService.getRelatedItemsForField(scope.item, scope.field._id)
                     .then((items) => {
                         scope.relatedItems = items;
+                        scope.loading = false;
                     });
             };
             scope.getRelatedItems();
@@ -211,7 +211,6 @@ export function RelatedItemsDirective(authoringWorkspace, relationsService, noti
                 scope.getRelatedItems();
                 scope.onchange();
             };
-
             /**
              * Open related item
              *
