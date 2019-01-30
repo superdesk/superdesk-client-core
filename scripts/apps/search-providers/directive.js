@@ -1,4 +1,6 @@
-export default function SearchProviderConfigDirective(searchProviderService, gettext, notify, api, modal) {
+import {gettext} from 'core/ui/components/utils';
+
+export default function SearchProviderConfigDirective(searchProviderService, notify, api, modal) {
     return {
         templateUrl: 'scripts/apps/search-providers/views/search-provider-config.html',
         link: function($scope) {
@@ -99,4 +101,4 @@ export default function SearchProviderConfigDirective(searchProviderService, get
     };
 }
 
-SearchProviderConfigDirective.$inject = ['searchProviderService', 'gettext', 'notify', 'api', 'modal'];
+SearchProviderConfigDirective.$inject = ['searchProviderService', 'notify', 'api', 'modal'];

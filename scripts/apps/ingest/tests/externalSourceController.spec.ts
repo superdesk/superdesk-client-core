@@ -34,13 +34,13 @@ describe('externalSourceController', () => {
         spyOn(notify, 'error').and.returnValue(null);
     }));
 
-    it('can export to active desk', inject((api, data, desks, notify, gettext, $rootScope, $q) => {
+    it('can export to active desk', inject((api, data, desks, notify, $rootScope, $q) => {
         let result = null;
 
         desks.activeDeskId = userDesks[2]._id;
         spyOn(api, 'save').and.returnValue($q.when({}));
 
-        ExternalSourceController(api, data, desks, notify, gettext)
+        ExternalSourceController(api, data, desks, notify)
             .then((_result) => {
                 result = _result;
             });
@@ -59,11 +59,11 @@ describe('externalSourceController', () => {
         expect(notify.success.calls.count()).toEqual(1);
     }));
 
-    it('can export to default desk', inject((api, data, desks, notify, gettext, session, $rootScope, $q) => {
+    it('can export to default desk', inject((api, data, desks, notify, session, $rootScope, $q) => {
         session.identity.desk = userDesks[1]._id;
         spyOn(api, 'save').and.returnValue($q.when({}));
 
-        ExternalSourceController(api, data, desks, notify, gettext);
+        ExternalSourceController(api, data, desks, notify);
 
         $rootScope.$digest();
         expect(api.save).toHaveBeenCalledWith(
@@ -76,10 +76,10 @@ describe('externalSourceController', () => {
         );
     }));
 
-    it('can export to first user desk', inject((api, data, desks, notify, gettext, $rootScope, $q) => {
+    it('can export to first user desk', inject((api, data, desks, notify, $rootScope, $q) => {
         spyOn(api, 'save').and.returnValue($q.when({}));
 
-        ExternalSourceController(api, data, desks, notify, gettext);
+        ExternalSourceController(api, data, desks, notify);
 
         $rootScope.$digest();
         expect(api.save).toHaveBeenCalledWith(
@@ -92,10 +92,10 @@ describe('externalSourceController', () => {
         );
     }));
 
-    it('can raise error', inject((api, data, desks, notify, gettext, $rootScope, $q) => {
+    it('can raise error', inject((api, data, desks, notify, $rootScope, $q) => {
         spyOn(api, 'save').and.returnValue($q.reject('Failed'));
 
-        ExternalSourceController(api, data, desks, notify, gettext);
+        ExternalSourceController(api, data, desks, notify);
 
         $rootScope.$digest();
         expect(notify.error.calls.count()).toEqual(1);

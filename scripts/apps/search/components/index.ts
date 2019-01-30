@@ -18,7 +18,6 @@ export {HighlightsList} from './HighlightsList';
 export {MarkedDesksInfo} from './MarkedDesksInfo';
 export {MarkedDesksList} from './MarkedDesksList';
 export {ActionsMenu} from './actions-menu';
-export {ProgressBar} from './ProgressBar';
 export {ErrorBox} from './ErrorBox';
 export {ListItemInfo} from './ListItemInfo';
 export {Item} from './Item';

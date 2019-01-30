@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import {range} from 'lodash';
 
-import {gettext} from '../../utils';
+import {gettext} from 'core/ui/components/utils';
 
 import {Popup, Content, Header, Footer} from '../../Popup';
 import {Button} from '../../';

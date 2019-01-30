@@ -18,7 +18,7 @@
                                       ng-readonly="!!vocabulary._links"
                                       required>
                     <div class="sd-line-input__message"
-                         ng-show="issues._id.unique" translate>ID must be unique.</div>
+                         ng-show="issues._id.unique || issues._id.deleted" translate>ID must be unique.</div>
                     <div class="sd-line-input__message"
                          ng-show="issues._id.conflict" translate>ID conflicts with system field.</div>
                     <div class="sd-line-input__message"
@@ -79,7 +79,7 @@
                                type="text"
                                ng-model="vocabulary.helper_text"
                                ng-maxlength="120">
-                        <div class="sd-line-input__hint" translate>This will appear below the fild in the Editor.</div>
+                        <div class="sd-line-input__hint" translate>This will appear below the field in the Editor.</div>
                         <div class="sd-line-input__message"
                              ng-show="vocabularyForm.$error.maxlength" translate>The helper text must not exceed 120 characters.</div>
                     </div>

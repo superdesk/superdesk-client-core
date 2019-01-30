@@ -34,24 +34,7 @@ export class ActionsMenu extends React.Component<any, any> {
     }
 
     render() {
-        return React.createElement(
-            'div',
-            {className: 'item-right toolbox'},
-
-            React.createElement(
-                'div',
-                {className: 'item-actions-menu dropdown--big open'},
-                React.createElement(
-                    'button',
-                    {
-                        className: 'more-activity-toggle condensed dropdown__toggle',
-                        onClick: this.toggle,
-                        onDoubleClick: this.stopEvent,
-                    },
-                    React.createElement('i', {className: 'icon-dots-vertical'}),
-                ),
-            ),
-        );
+        return this.props.template(this.toggle, this.stopEvent);
     }
 }
 
@@ -60,4 +43,5 @@ ActionsMenu.propTypes = {
     scope: PropTypes.any.isRequired,
     item: PropTypes.any,
     onActioning: PropTypes.func,
+    template: PropTypes.func.isRequired,
 };

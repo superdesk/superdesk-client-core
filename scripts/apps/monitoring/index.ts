@@ -18,6 +18,7 @@ import * as directive from './directives';
 import * as svc from './services';
 import {SplitFilter} from './filters';
 import {MonitoringController} from './controllers/MonitoringController';
+import {gettext} from 'core/ui/components/utils';
 
 /**
  * @ngdoc module
@@ -50,7 +51,7 @@ angular.module('superdesk.apps.monitoring', [
 
     .filter('splitText', SplitFilter)
 
-    .run(['keyboardManager', 'gettext', function(keyboardManager, gettext) {
+    .run(['keyboardManager', function(keyboardManager) {
         keyboardManager.register('Monitoring / List actions', 'ctrl + alt + j',
             gettext('Switch between grouped/single stage view'));
         keyboardManager.register('Monitoring / List actions', 'ctrl + alt + g',

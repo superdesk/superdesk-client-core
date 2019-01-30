@@ -1,17 +1,16 @@
 import {GET_LABEL_MAP} from '../content/constants';
 import ng from 'core/services/ng';
-import {gettext} from 'core/ui/components/utils';
 
 export const getLabelNameResolver = () => ng.getServices(['vocabularies'])
     .then((services) => {
         const [vocabularies] = services;
 
         return vocabularies.getAllActiveVocabularies()
-            .then((vocabularies) => [gettext, vocabularies]);
+            .then((vocabularies) => [vocabularies]);
     })
     .then((res) => {
-        const [gettext, vocabularies] = res;
-        const labelMap = GET_LABEL_MAP(gettext);
+        const [vocabularies] = res;
+        const labelMap = GET_LABEL_MAP();
 
         return (fieldId) => {
             if (labelMap.hasOwnProperty(fieldId)) {

@@ -3,10 +3,11 @@ import PropTypes from 'prop-types';
 import {get} from 'lodash';
 import classNames from 'classnames';
 
-import {gettext, onEventCapture} from '../../utils';
+import {onEventCapture} from '../../utils';
 import {KEYCODES} from '../../constants';
 
 import {Popup, Header, Content, Label} from '../../Popup';
+import {gettext} from 'core/ui/components/utils';
 
 import './style.scss';
 

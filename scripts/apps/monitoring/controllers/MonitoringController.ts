@@ -116,7 +116,7 @@ export function MonitoringController($rootScope, $scope, $location, desks, confi
         self.viewColumn = viewColumn;
 
         if (self.viewColumn) {
-            self.columnsLimit = numberOfColumns ? numberOfColumns : config.features.swimlane.columnsLimit;
+            self.columnsLimit = numberOfColumns ? numberOfColumns : config.features.swimlane.defaultNumberOfColumns;
         } else {
             self.columnsLimit = null;
         }

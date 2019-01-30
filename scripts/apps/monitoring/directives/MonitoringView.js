@@ -1,3 +1,5 @@
+import {gettext} from 'core/ui/components/utils';
+
 /**
  * Main monitoring view - list + preview
  *
@@ -56,10 +58,6 @@ export function MonitoringView($rootScope, authoringWorkspace, pageTitle, $timeo
             });
 
             scope.numberOfColumns = 1;
-            scope.switchSwimlaneColumns = function(numberOfColumns) {
-                scope.numberOfColumns = numberOfColumns;
-                scope.monitoring.switchViewColumn(true, true, numberOfColumns);
-            };
 
             /**
              * Toggle viewColumn to switch views between swimlane and list

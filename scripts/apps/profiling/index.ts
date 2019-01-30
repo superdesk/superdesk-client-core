@@ -8,6 +8,7 @@
  * at https://www.sourcefabric.org/superdesk/license
  */
 import {ProfilingController} from './controllers';
+import {gettext} from 'core/ui/components/utils';
 
 /**
  * @ngdoc module

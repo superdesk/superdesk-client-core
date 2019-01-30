@@ -1,4 +1,5 @@
 import {mapValues} from 'lodash';
+import {gettext} from 'core/ui/components/utils';
 
 /**
  * Gives top shadow for scroll elements

@@ -13,7 +13,6 @@ ItemList.$inject = [
     '$filter',
     'search',
     'datetime',
-    'gettext',
     'superdesk',
     'workflowService',
     'archiveService',
@@ -47,7 +46,6 @@ ItemList.$inject = [
  * @requires $filter
  * @requires search
  * @requires datetime
- * @requires gettext
  * @requires superdesk
  * @requires workflowService
  * @requires archiveService
@@ -80,7 +78,6 @@ export function ItemList(
     $filter,
     search,
     datetime,
-    gettext,
     superdesk,
     workflowService,
     archiveService,
@@ -111,7 +108,6 @@ export function ItemList(
         $filter: $filter,
         search: search,
         datetime: datetime,
-        gettext: gettext,
         superdesk: superdesk,
         workflowService: workflowService,
         archiveService: archiveService,

@@ -1,9 +1,5 @@
 import {IDesk} from './Desk';
-
-export interface IUserRole {
-    name: string;
-    privileges: any;
-}
+import {IUserRole} from './UserRole';
 
 export interface IUser {
     _id: string;
@@ -26,7 +22,7 @@ export interface IUser {
     picture_url: string;
     avatar: string;
     avatar_renditions: {};
-    role: IUserRole;
+    role?: IUserRole['_id'];
     privileges: {};
     user_type: 'user' | 'administrator';
     is_support: boolean;

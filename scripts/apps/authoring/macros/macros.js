@@ -7,6 +7,9 @@
  * @description MacrosService provides set of methods which allows fetching of macros
  * and triggering of macros to be apply on provided item
  */
+
+import {gettext} from 'core/ui/components/utils';
+
 MacrosService.$inject = ['api', 'notify'];
 function MacrosService(api, notify) {
     /**
@@ -77,7 +80,7 @@ function MacrosService(api, notify) {
             commit: !!commit,
         }).then((res) => res, (err) => {
             if (angular.isDefined(err.data._message)) {
-                notify.error(gettext('Error: ' + err.data._message));
+                notify.error(gettext('Error: {{message}}', {message: err.data._message}));
             }
         });
     }

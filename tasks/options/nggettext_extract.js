@@ -12,10 +12,10 @@ module.exports = {
     pot: {
         files: {
             '<%= poDir %>/superdesk.pot': [
-                'scripts/**/*.{html,js,jsx,tsx}',
+                'scripts/**/*.{html,js,jsx,tsx,ts}',
                 // planning
                 '../superdesk-planning/index.js',
-                '../superdesk-planning/client/**/*.{html,js,jsx,tsx}',
+                '../superdesk-planning/client/**/*.{html,js,jsx,tsx,ts}',
             ],
         },
     },

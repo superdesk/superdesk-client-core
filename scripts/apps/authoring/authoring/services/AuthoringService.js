@@ -1,4 +1,5 @@
 import * as helpers from 'apps/authoring/authoring/helpers';
+import {gettext} from 'core/ui/components/utils';
 
 /**
  * @ngdoc service
@@ -101,7 +102,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
                 authoringWorkspace.edit(newItem);
             }, (response) => {
                 if (angular.isDefined(response.data._message)) {
-                    notify.error(gettext('Failed to generate update: ' + response.data._message));
+                    notify.error(gettext('Failed to generate update: {{message}}', {message: response.data._message}));
                 } else {
                     notify.error(gettext('There was an error. Failed to generate update.'));
                 }
@@ -120,7 +121,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         .then((data) => notify.success(gettext('Link has been removed')),
             (response) => {
                 if (angular.isDefined(response.data._message)) {
-                    notify.error(gettext('Failed to remove link: ' + response.data._message));
+                    notify.error(gettext('Failed to remove link: {{message}}', {message: response.data._message}));
                 } else {
                     notify.error(gettext('There was an error. Failed to remove link.'));
                 }

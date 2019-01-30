@@ -1,3 +1,5 @@
+import {gettext} from 'core/ui/components/utils';
+
 /**
  * @ngdoc controller
  * @module superdesk.apps.content_filters

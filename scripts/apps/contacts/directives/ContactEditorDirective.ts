@@ -7,7 +7,6 @@ import {ContactFormContainer as ContactFormContainerComponent} from '../../conta
 
 ContactEditorDirective.$inject = [
     'contacts',
-    'gettext',
     'notify',
     'privileges',
     'metadata',
@@ -19,7 +18,6 @@ ContactEditorDirective.$inject = [
 
 export function ContactEditorDirective(
     contacts,
-    gettext,
     notify,
     privileges,
     metadata,
@@ -32,7 +30,6 @@ export function ContactEditorDirective(
     // components via props
     const services = {
         contacts: contacts,
-        gettext: gettext,
         notify: notify,
         privileges: privileges,
         metadata: metadata,

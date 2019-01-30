@@ -1,6 +1,7 @@
 import {StreamController} from './controllers';
 import {ActivityMessageService} from './services';
 import {ActivityStream, ActivityMessage} from './directives';
+import {gettext} from 'core/ui/components/utils';
 
 export default angular.module('superdesk.apps.stream', [
     'superdesk.core.activity',
@@ -12,7 +13,7 @@ export default angular.module('superdesk.apps.stream', [
     .directive('sdActivityStream', ActivityStream)
     .directive('sdActivityMessage', ActivityMessage)
 
-    .config(['superdeskProvider', 'assetProvider', 'gettext', function(superdesk, asset, gettext) {
+    .config(['superdeskProvider', 'assetProvider', function(superdesk, asset) {
         superdesk.activity('/workspace/stream', {
             label: gettext('Workspace'),
             controller: 'StreamController',
