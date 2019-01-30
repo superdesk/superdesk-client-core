@@ -88,7 +88,6 @@ describe('Content profiles', () => {
         expect(element(by.buttonText(FIELD_LABEL)).isDisplayed()).toBeFalsy();
 
         contentProfiles.openAddFieldDropdown();
-
         expect(element(by.buttonText(`${FIELD_LABEL} (text)`)).isDisplayed()).toBeTruthy();
     });
 });

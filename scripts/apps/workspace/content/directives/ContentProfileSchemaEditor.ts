@@ -71,10 +71,10 @@ export function ContentProfileSchemaEditor(content, metadata, vocabularies) {
                 vocabularies.getVocabularies(),
             ]).then((res) => {
                 const [customFields, typeMetadata, vocabulariesCollection] = res;
-                
+
                 scope.vocabularies = vocabulariesCollection;
                 scope.label = (id) => getLabelForFieldId(id, scope.vocabularies);
-                
+
                 let headerFields = [];
 
                 const updateSchemaKeys = (customVocabulariesForArticleHeader) => {
