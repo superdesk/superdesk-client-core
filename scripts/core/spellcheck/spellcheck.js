@@ -536,12 +536,12 @@ function SpellcheckMenuController($rootScope, editorResolver, spellcheck, notify
 
         if (!self.isActiveDictionary) {
             spellcheck.setSpellcheckerStatus(self.isActiveDictionary);
+        } else {
+            spellcheck.getSpellcheckerStatus().then((status) => {
+                self.isAuto = status && !useTansaProofing() && self.isActiveDictionary;
+                render();
+            });
         }
-
-        spellcheck.getSpellcheckerStatus().then((status) => {
-            self.isAuto = status && !useTansaProofing() && self.isActiveDictionary;
-            render();
-        });
     });
 }
 
