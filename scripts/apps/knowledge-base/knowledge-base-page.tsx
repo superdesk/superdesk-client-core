@@ -11,8 +11,9 @@ import {
     SidePanelContentBlock
 } from 'core/components/SidePanel';
 import {IFormGroup} from './interfaces/form';
+import {FormViewEdit} from './from-group';
 
-const dataz = [
+const originalItems = [
     {
         id: "1",
         title: "Biscuits Fossier",
@@ -51,6 +52,7 @@ interface IState {
     allItems: Array<any>;
     itemInPreview?: string;
     filtersOpen: boolean;
+    filterValues: {[key: string]: any};
 }
 
 const formConfig: IFormGroup = {
@@ -80,15 +82,18 @@ export class KnowledgeBasePage extends React.Component<void, IState> {
         super(props);
 
         this.state = {
-            allItems: dataz,
+            allItems: originalItems,
             itemInPreview: null,
             filtersOpen: true,
+            filterValues: {},
         };
 
         this.openPreview = this.openPreview.bind(this);
         this.closePreview = this.closePreview.bind(this);
         this.closeFilters = this.closeFilters.bind(this);
         this.updateItem = this.updateItem.bind(this);
+        this.handleFilterFieldChange = this.handleFilterFieldChange.bind(this);
+        this.filterItems = this.filterItems.bind(this);
     }
     openPreview(id) {
         this.setState({
@@ -110,6 +115,25 @@ export class KnowledgeBasePage extends React.Component<void, IState> {
             });
         });
     }
+    handleFilterFieldChange(field, nextValue) {
+        this.setState({
+            filterValues: {
+                ...this.state.filterValues,
+                [field]: nextValue,
+            },
+        });
+    }
+    filterItems() {
+        const {filterValues} = this.state;
+
+        this.setState({
+            allItems: originalItems.filter((item) => {
+                return Object.keys(filterValues).every((field) => {
+                    return item[field].toLowerCase().includes(filterValues[field].toLowerCase());
+                });
+            }),
+        });
+    }
     closeFilters() {
         this.setState({filtersOpen: false});
     }
@@ -119,7 +143,7 @@ export class KnowledgeBasePage extends React.Component<void, IState> {
                 {
                     !this.state.filtersOpen ? null : (
                         <PageContainerItem>
-                            <SidePanel side='left' width={200}>
+                            <SidePanel side='left' width={240}>
                                 <SidePanelHeader>
                                     <SidePanelHeading>{gettext('Refine search')}</SidePanelHeading>
                                     <SidePanelTools>
@@ -130,7 +154,18 @@ export class KnowledgeBasePage extends React.Component<void, IState> {
                                 </SidePanelHeader>
                                 <SidePanelContent>
                                     <SidePanelContentBlock>
-                                        {/* TODO: */}
+                                        <FormViewEdit
+                                            item={{}}
+                                            formConfig={formConfig}
+                                            editMode={true}
+                                            handleFieldChange={this.handleFilterFieldChange}
+                                        />
+                                        <button
+                                            onClick={this.filterItems}
+                                            className="btn btn--primary btn--expanded"
+                                        >
+                                            {gettext('Filter')}
+                                        </button>
                                     </SidePanelContentBlock>
                                 </SidePanelContent>
                             </SidePanel>

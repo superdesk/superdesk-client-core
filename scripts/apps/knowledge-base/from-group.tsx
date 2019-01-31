@@ -46,7 +46,7 @@ function getFormFieldComponent(type: IFormField['type']) {
 }
 
 // The component is recursive!
-export class FormGroup extends React.Component<IProps> {
+export class FormViewEdit extends React.Component<IProps> {
     render() {
         const group = this.props.formConfig;
         const GroupWrapper = getGroupWrapper(group.type);
@@ -58,7 +58,7 @@ export class FormGroup extends React.Component<IProps> {
                     group.form.map((item, i) => {
                         if (isIFormGroup(item)) {
                             return (
-                                <FormGroup
+                                <FormViewEdit
                                     key={i}
                                     formConfig={item}
                                     item={this.props.item}

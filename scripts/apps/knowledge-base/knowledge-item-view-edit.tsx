@@ -7,7 +7,7 @@ import {
     SidePanelContent,
     SidePanelContentBlock,
 } from "core/components/SidePanel";
-import {FormGroup as FormViewEdit} from "./from-group";
+import {FormViewEdit} from "./from-group";
 import {IFormGroup} from "./interfaces/form";
 import { connectServices } from "core/helpers/ReactRenderAsync";
 
@@ -88,7 +88,9 @@ class KnowledgeItemViewEditComponent extends React.Component<IProps, IState> {
                         editing
                             ? (
                                 <div className="side-panel__sliding-toolbar side-panel__sliding-toolbar--right">
-                                    <button className="btn" onClick={() => this.setEditMode(false)}>Cancel</button>
+                                    <button className="btn" onClick={() => this.setEditMode(false)}>
+                                        {gettext('Cancel')}
+                                    </button>
                                     <button
                                         disabled={!this.isFormDirty()}
                                         onClick={() => {
@@ -96,7 +98,7 @@ class KnowledgeItemViewEditComponent extends React.Component<IProps, IState> {
                                         }}
                                         className="btn btn--primary"
                                     >
-                                        Save
+                                        {gettext('Save')}
                                     </button>
                                 </div>
                             )
