@@ -84,7 +84,7 @@ describe('superdesk.apps.authoring.metadata', () => {
             ];
 
             metadata.getAllCustomVocabulariesForArticleHeader({a: 1, b: 1, c: 1, d: 1}, {})
-                .then((cvs) => {
+                .then(({customVocabulariesForArticleHeader: cvs}) => {
                     expect(['a', 'b', 'c']).toEqual(cvs.map((cv) => cv._id));
                 });
 

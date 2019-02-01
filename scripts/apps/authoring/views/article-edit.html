@@ -548,7 +548,7 @@
 
 <!-- custom text editor fields -->
 <div class="field" ng-repeat="field in fields track by field._id"
-    ng-if="field.field_type === 'text'"
+    ng-if="field.field_type === 'text' && editor[field._id].section !== 'header'"
     sd-width="{{ editor[field._id].sdWidth || 'full' }}"
     data-required="schema[field._id].required"
     order="{{ editor[field._id].order }}"
@@ -577,7 +577,7 @@
 
 <!-- custom date editor fields -->
 <div class="field" ng-repeat="field in fields track by field._id"
-    ng-if="field.field_type === 'date'"
+    ng-if="field.field_type === 'date' && editor[field._id].section !== 'header'"
     sd-width="{{ editor[field._id].sdWidth || 'full' }}"
     data-required="schema[field._id].required"
     order="{{ editor[field._id].order }}"

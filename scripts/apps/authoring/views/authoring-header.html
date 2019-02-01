@@ -354,6 +354,60 @@
             </div>
         </div>
 
+        <!-- custom text editor fields -->
+        <div class="authoring-header__item"
+            ng-repeat="field in fields track by field._id"
+            ng-if="field.field_type === 'text' && editor[field._id].section === 'header'"
+            sd-width="{{ editor[field._id].sdWidth || 'full' }}"
+            data-required="schema[field._id].required"
+            order="{{ editor[field._id].order }}"
+            sd-validation-error="error[field._id.toLowerCase()]">
+
+            <label class="authoring-header__item-label"">{{field.display_name}}</label>
+            <span ng-if="schema[field._id].maxlength || schema[field._id].minlength" sd-character-count
+                data-item="item.extra[field._id]" data-html="true" data-limit="schema[field._id].maxlength"></span>
+            <div class="authoring-header__input-holder">
+                <div sd-editor3
+                    data-path-to-value="'extra' + FIELD_KEY_SEPARATOR + field._id"
+                    data-single-line="field.field_options.single"
+                    data-value="item.extra[field._id]"
+                    data-bind-to-value="compareView"
+                    data-scroll-container=".page-content-container"
+                    data-language="item.language"
+                    data-on-change="autosave(item)"
+                    data-read-only="!_editable"
+                    data-disable-spellchecker="useTansaProofing()"
+                    data-editor-format="editor[field._id].formatOptions"
+                    data-item="item"
+                    data-refresh-trigger="refreshTrigger"
+                    data-tabindex="editor[field._id].order">
+                </div>
+                <div class="authoring-header__hint" ng-if="helper_text[field._id]">{{field.helper_text}}</div>
+            </div>
+        </div>
+
+        <!-- custom date editor fields -->
+        <div class="authoring-header__item"
+            ng-repeat="field in fields track by field._id"
+            ng-if="field.field_type === 'date' && editor[field._id].section === 'header'"
+            sd-width="{{ editor[field._id].sdWidth || 'full' }}"
+            data-required="schema[field._id].required"
+            order="{{ editor[field._id].order }}"
+            sd-validation-error="error[field._id.toLowerCase()]">
+            <label class="authoring-header__item-label">{{field.display_name}}</label>
+            <div class="authoring-header__input-holder">
+                <div sd-datepicker
+                    ng-disabled="!_editable"
+                    data-tabindex="editor[field._id].order"
+                    ng-model="item.extra[field._id]"
+                    data-format="YYYY-MM-DDT00:00:00+0000"
+                    data-on-change="autosave(item)"
+                    shortcuts="field.date_shortcuts">
+                </div>
+                <div class="authoring-header__hint" ng-if="helper_text[field._id]">{{field.helper_text}}</div>
+            </div>
+        </div>
+
         <div class="authoring-header__item"
              sd-validation-error="error.company_codes"
              data-required="schema.company_codes.required"
