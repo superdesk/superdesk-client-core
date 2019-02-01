@@ -3,6 +3,7 @@ import {IAuthor} from './Author';
 export interface IArticle {
     _id: string;
     _current_version: number;
+    guid: string;
     translated_from: string;
     translation_id: string;
     usageterms: any;
@@ -40,6 +41,7 @@ export interface IArticle {
     lock_action: any;
     lock_user: any;
     lock_session: any;
+    rewritten_by?: string;
 
     // might be only used for client-side state
     created: any;
