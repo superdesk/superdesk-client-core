@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Row} from './';
 import {cloneDeep} from 'lodash';
-import {gettext} from 'core/ui/components/utils';
 
 export const InputArray: React.StatelessComponent<any> = ({
     field,
@@ -51,7 +50,7 @@ export const InputArray: React.StatelessComponent<any> = ({
                     onClick={add}
                     type="button"
                 >
-                    {addButtonText ? gettext(addButtonText) : <i className="icon-plus-large" />}
+                    {addButtonText ? addButtonText : <i className="icon-plus-large" />}
                 </button>
             )}
         </Row>

@@ -39,7 +39,7 @@ function getLocalizedTypeText(type, blockType) {
     const blockStyleDescription = Highlights.getBlockStylesDescription(blockType);
     const space = blockStyleDescription !== '' ? ' ' : '';
 
-    return gettext(description) + space + gettext(blockStyleDescription);
+    return description + space + blockStyleDescription;
 }
 
 SuggestionsCtrl.$inject = ['$scope', 'userList', 'content'];
