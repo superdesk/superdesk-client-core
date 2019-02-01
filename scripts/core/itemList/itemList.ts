@@ -38,7 +38,7 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
                             scope.loading = true;
                             familyService.fetchRelatableItems(scope.itemListOptions.keyword,
                                 scope.itemListOptions.sluglineMatch,
-                                scope.options.item.event_id,
+                                scope.options.item,
                                 scope.itemListOptions.modificationDateAfter).then((items) => {
                                 scope.processedItems = items._items;
                             })
