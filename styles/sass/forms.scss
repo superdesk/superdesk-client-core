@@ -1236,3 +1236,13 @@ input {
         border-color: #ddd !important;
     }
 }
+
+.form-group-horizontal {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    > * + * {
+        margin-left: 1.2rem!important;  // line_input has margin-left: 0
+    }
+}
