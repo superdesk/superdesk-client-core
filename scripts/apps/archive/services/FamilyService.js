@@ -1,3 +1,5 @@
+import {get} from 'lodash';
+
 /**
  * @ngdoc service
  * @module superdesk.apps.archive
@@ -108,17 +110,22 @@ export function FamilyService(api, desks) {
      * @description Returns any story potentially linkable
      * @param {string} keyword - slugline to be matched
      * @param {string} sluglineMatch - type of matching rule for slugline
-     * @param {string} eventId - event id to be searched
+     * @param {item} item - authoring item that the user is trying to link
      * @param {string} modificationDateAfter - filter for versioncreated
      * @returns {Object}
      */
-    this.fetchRelatableItems = (keyword, sluglineMatch, eventId, modificationDateAfter) => {
+    this.fetchRelatableItems = (keyword, sluglineMatch, item, modificationDateAfter) => {
         let filter = [
             {not: {term: {state: 'spiked'}}},
-            {not: {term: {event_id: eventId}}},
+            {not: {term: {event_id: item.event_id}}},
             {not: {term: {type: 'composite'}}},
             {not: {term: {last_published_version: 'false'}}},
+            {term: {type: item.type}},
         ];
+
+        if (get(item, 'genre[0].qcode')) {
+            filter.push({term: {'genre.qcode': get(item, 'genre[0].qcode')}});
+        }
 
         let queryString = null;
         let queryRelatedItem = [];
