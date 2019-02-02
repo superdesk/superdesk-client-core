@@ -200,7 +200,7 @@ function RelatedItemController(
                 var userHasPermission = privileges.userHasPrivileges({rewrite: 1});
 
                 var canBeRewrite = !authoring.isPublished($scope.item) &&
-                _.includes(['text', 'preformatted'], $scope.item.type) &&
+                $scope.item.type === 'text' &&
                 !$scope.item.rewrite_of && (!$scope.item.broadcast || !$scope.item.broadcast.master_id);
 
                 var canBeRewritten = authoring.itemActions(item).re_write;

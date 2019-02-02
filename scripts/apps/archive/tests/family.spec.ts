@@ -108,6 +108,12 @@ describe('family service', () => {
     });
 
     describe('fetching related items', () => {
+        const item = {
+            type: 'text',
+            genre: [{qcode: 'Article'}],
+            event_id: 1,
+        };
+
         it('can query related items', inject(($rootScope, $q, familyService, api) => {
             const query = {
                 repo: 'archive,published',
@@ -147,6 +153,8 @@ describe('family service', () => {
                                     {not: {term: {event_id: 1}}},
                                     {not: {term: {type: 'composite'}}},
                                     {not: {term: {last_published_version: 'false'}}},
+                                    {term: {type: 'text'}},
+                                    {term: {'genre.qcode': 'Article'}},
                                 ],
                             },
                             query: {
@@ -161,7 +169,7 @@ describe('family service', () => {
             };
 
             spyOn(api, 'query').and.returnValue($q.when());
-            familyService.fetchRelatableItems('test', '', 1).then();
+            familyService.fetchRelatableItems('test', '', item).then();
             $rootScope.$digest();
             expect(api.query).toHaveBeenCalledWith('search', query);
         }));
@@ -178,6 +186,8 @@ describe('family service', () => {
                                     {not: {term: {event_id: 1}}},
                                     {not: {term: {type: 'composite'}}},
                                     {not: {term: {last_published_version: 'false'}}},
+                                    {term: {type: 'text'}},
+                                    {term: {'genre.qcode': 'Article'}},
                                 ],
                             },
                             query: {
@@ -192,7 +202,7 @@ describe('family service', () => {
             };
 
             spyOn(api, 'query').and.returnValue($q.when());
-            familyService.fetchRelatableItems('test', 'PREFIX', 1).then();
+            familyService.fetchRelatableItems('test', 'PREFIX', item).then();
             $rootScope.$digest();
             expect(api.query).toHaveBeenCalledWith('search', query);
         }));
@@ -209,6 +219,8 @@ describe('family service', () => {
                                     {not: {term: {event_id: 1}}},
                                     {not: {term: {type: 'composite'}}},
                                     {not: {term: {last_published_version: 'false'}}},
+                                    {term: {type: 'text'}},
+                                    {term: {'genre.qcode': 'Article'}},
                                     {range: {versioncreated: {gte: '48-h'}}},
                                 ],
                             },
@@ -224,7 +236,7 @@ describe('family service', () => {
             };
 
             spyOn(api, 'query').and.returnValue($q.when());
-            familyService.fetchRelatableItems('test', 'PREFIX', 1, '48-h').then();
+            familyService.fetchRelatableItems('test', 'PREFIX', item, '48-h').then();
             $rootScope.$digest();
             expect(api.query).toHaveBeenCalledWith('search', query);
         }));
