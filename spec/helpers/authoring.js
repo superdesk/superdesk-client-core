@@ -250,7 +250,7 @@ function Authoring() {
 
         this.publish_panel.click();
 
-        browser.wait(() => this.publish_button.isPresent(), 1000);
+        browser.wait(() => this.publish_button.isPresent(), 3000);
 
         this.publish_panel.click();
         this.publish_button.click();
