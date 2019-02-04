@@ -33,23 +33,31 @@ class LinkComponent extends React.Component<any, any> {
 
     constructor(props) {
         super(props);
+        this.state = {title: ''};
+        this.getLinksAndAttachments(props);
+    }
 
+    componentWillReceiveProps(nextProps) {
+        this.getLinksAndAttachments(nextProps);
+    }
+
+    getLinksAndAttachments(props) {
         const entity = props.contentState.getEntity(props.entityKey);
 
         this.link = entity.getData().link;
 
-        if (!this.link && entity.getData() && entity.getData().url) { // BC
+        if (!this.link && entity.getData() && entity.getData().url) {
             this.link = {href: entity.getData().url};
         }
 
         if (this.link.attachment) {
-            this.state = {title: ''};
             ng.get('attachments').byId(this.link.attachment)
                 .then((attachment) => {
                     this.setState({title: attachment.title});
                 });
         }
     }
+
 
     render() {
         if (this.link.attachment) {
