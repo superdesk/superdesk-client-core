@@ -22,6 +22,7 @@ export function SendItem($q, api, search, desks, notify, authoringWorkspace,
             _editable: '=editable',
             _publish: '&publish',
             _action: '=action',
+            autosave: '&',
             mode: '@',
         },
         controller: function() {

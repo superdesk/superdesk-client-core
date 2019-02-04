@@ -217,8 +217,6 @@ function MetadataCtrl(
     $scope.unique_name_editable = Boolean(privileges.privileges.metadata_uniquename &&
         $scope.action !== 'correct' && $scope.action !== 'kill');
 
-    $scope.targetsEditable = $scope.action !== 'correct' && $scope.action !== 'kill';
-
     resolvePublishScheduleAndEmbargoTS();
 
     metadata.getFilteredCustomVocabularies([]).then((cvs) => {
