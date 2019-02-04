@@ -10,8 +10,8 @@ import {
     SidePanelContent,
     SidePanelContentBlock
 } from 'core/components/SidePanel';
-import {IFormGroup} from './interfaces/form';
-import {FormViewEdit} from './from-group';
+import {IFormGroup} from './generic-form/interfaces/form';
+import {FormViewEdit} from './generic-form/from-group';
 
 const originalItems = [
     {

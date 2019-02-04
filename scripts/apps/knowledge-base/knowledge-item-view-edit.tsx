@@ -7,8 +7,8 @@ import {
     SidePanelContent,
     SidePanelContentBlock,
 } from "core/components/SidePanel";
-import {FormViewEdit} from "./from-group";
-import {IFormGroup} from "./interfaces/form";
+import {FormViewEdit} from "./generic-form/from-group";
+import {IFormGroup} from "./generic-form/interfaces/form";
 import { connectServices } from "core/helpers/ReactRenderAsync";
 
 interface IProps {
