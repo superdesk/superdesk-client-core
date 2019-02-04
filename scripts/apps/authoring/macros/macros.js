@@ -163,10 +163,11 @@ function MacrosController($scope, macros, desks, autosave, $rootScope, storage, 
 
         $scope.loading = true;
         return macros.call(macro, item).then((res) => {
+            const isEditor3 = editorResolver.get().version() !== '2';
             let ignoreFields = ['_etag', 'fields_meta'];
 
             // ignore fields is only required for editor3
-            if (editorResolver.get().version() !== '2') {
+            if (isEditor3) {
                 ignoreFields.push('body_html');
                 Object.keys(res.item || {}).forEach((field) => {
                     if (isString(res.item[field]) === false || field === 'body_html') {
@@ -179,11 +180,15 @@ function MacrosController($scope, macros, desks, autosave, $rootScope, storage, 
                 });
             }
 
-            angular.extend($scope.item, _.omit(res.item, ignoreFields));
-            autosave.save($scope.item, $scope.origItem);
-            if (res.diff !== null) {
+            if (isEditor3 || res.diff == null) {
+                angular.extend($scope.item, _.omit(res.item, ignoreFields));
+                autosave.save($scope.item, $scope.origItem);
+            }
+
+            if (res.diff != null) {
                 $rootScope.$broadcast('macro:diff', res.diff);
             }
+
             $scope.closeWidget();
         })
             .finally(() => {
