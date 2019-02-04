@@ -1249,9 +1249,17 @@ function MetadataService(api, subscribersService, config, vocabularies, $rootSco
          * @return {Array}
          */
         getAllCustomVocabulariesForArticleHeader: function(editor, schema) {
-            return this.fetchMetadataValues().then(() =>
-                this.cvs.filter((cv) => cv.items.length && cv.service && (editor[cv._id] || schema[cv._id]))
-            );
+            return this.fetchMetadataValues().then(() => {
+                const customVocabulariesForArticleHeader = this.cvs.filter(
+                    (cv) => cv.items.length && cv.service && (editor[cv._id] || schema[cv._id])
+                );
+
+                const customTextAndDateVocabularies = this.cvs.filter(
+                    (cv) => cv.field_type === 'text' || cv.field_type === 'date'
+                );
+
+                return {customVocabulariesForArticleHeader, customTextAndDateVocabularies};
+            });
         },
         initialize: function() {
             if (!this.loaded) {

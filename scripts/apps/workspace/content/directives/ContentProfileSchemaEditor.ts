@@ -77,7 +77,7 @@ export function ContentProfileSchemaEditor(content, metadata, vocabularies) {
 
                 let headerFields = [];
 
-                const updateSchemaKeys = (customVocabulariesForArticleHeader) => {
+                const updateSchemaKeys = (customVocabulariesForArticleHeader, customTextAndDateVocabularies) => {
                     // Creates a list of field names of the schema sorted by 'order' value
                     // and assigns it to schemaKeys
 
@@ -87,9 +87,9 @@ export function ContentProfileSchemaEditor(content, metadata, vocabularies) {
                     let sectionFilter = (function() {
                         switch (scope.sectionToRender) {
                         case 'header':
-                            return (key) => articleHeaderFields.has(key);
+                            return (key) => articleHeaderFields.has(key) || articleCommonFields.has(key);
                         case 'content':
-                            return (key) => articleHeaderFields.has(key) === false;
+                            return (key) => articleHeaderFields.has(key) === false || articleCommonFields.has(key);
                         default:
                             assertNever(scope.sectionToRender);
                         }
@@ -105,11 +105,21 @@ export function ContentProfileSchemaEditor(content, metadata, vocabularies) {
                         articleHeaderFields.add(filteredCustomField._id);
                     });
 
+                    const articleCommonFields = new Set();
+
+                    customTextAndDateVocabularies.forEach((filteredCustomField) => {
+                        articleCommonFields.add(filteredCustomField._id);
+                    });
+
                     const keysForSection = Object.keys(scope.model.editor).filter(sectionFilter);
                     headerFields = Object.keys(scope.model.editor).filter((key) => articleHeaderFields.has(key));
 
                     schemaKeys = keysForSection
-                        .filter((value) => scope.model.editor[value].enabled)
+                        .filter((value) =>
+                            scope.model.editor[value].enabled &&
+                            (scope.model.editor[value].section == null ||
+                                scope.model.editor[value].section === scope.sectionToRender),
+                        )
                         .sort((a, b) => getOrder(a) - getOrder(b));
 
                     scope.schemaKeysDisabled = [];
@@ -222,8 +232,9 @@ export function ContentProfileSchemaEditor(content, metadata, vocabularies) {
                     if (scope.model.editor[schema.key]) {
                         scope.model.editor[schema.key].enabled = true;
                         scope.model.schema[schema.key].enabled = true;
+                        scope.model.editor[schema.key].section = scope.sectionToRender;
                     } else {
-                        scope.model.editor[schema.key] = {enabled: true};
+                        scope.model.editor[schema.key] = {enabled: true, section: scope.sectionToRender};
                         scope.model.schema[schema.key] = {enabled: true};
                     }
 
@@ -242,6 +253,7 @@ export function ContentProfileSchemaEditor(content, metadata, vocabularies) {
                 scope.remove = (id) => {
                     scope.model.editor[id].enabled = false;
                     scope.model.schema[id].enabled = false;
+                    scope.model.editor[id].section = null;
 
                     schemaKeys.splice(schemaKeys.indexOf(id), 1);
                     scope.schemaKeysDisabled.push({
@@ -294,8 +306,8 @@ export function ContentProfileSchemaEditor(content, metadata, vocabularies) {
                 metadata.getAllCustomVocabulariesForArticleHeader(
                     scope.model.editor,
                     scope.model.schema,
-                ).then((customVocabulariesForArticleHeader) => {
-                    updateSchemaKeys(customVocabulariesForArticleHeader);
+                ).then(({customVocabulariesForArticleHeader, customTextAndDateVocabularies}) => {
+                    updateSchemaKeys(customVocabulariesForArticleHeader, customTextAndDateVocabularies);
 
                     scope.loading = false;
                 });

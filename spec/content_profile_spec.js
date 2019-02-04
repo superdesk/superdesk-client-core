@@ -12,7 +12,7 @@ describe('Content profiles', () => {
         contentProfiles.openContentProfileSettings();
         contentProfiles.addNew('Simple');
         contentProfiles.toggleEnable();
-        element(by.buttonText('Content')).click();
+        element(by.buttonText('Content fields')).click();
         contentProfiles.disableField('Abstract');
         contentProfiles.update();
         templates.openTemplatesSettings();
@@ -46,9 +46,9 @@ describe('Content profiles', () => {
         contentProfiles.openContentProfileSettings();
         contentProfiles.addNew('Simple');
         contentProfiles.toggleEnable();
-        element(by.buttonText('Content')).click();
+        element(by.buttonText('Content fields')).click();
         contentProfiles.disableField('Abstract');
-        element(by.buttonText('Header')).click();
+        element(by.buttonText('Header fields')).click();
         contentProfiles.setRequired('Editorial Note');
         contentProfiles.update();
         monitoring.openMonitoring();
@@ -72,7 +72,7 @@ describe('Content profiles', () => {
     });
 
     it('displays custom text fields', () => {
-        const FIELD_LABEL = 'New custom text field';
+        const FIELD_LABEL = 'A custom text field';
 
         metadata.open();
         metadata.openCustomTextFields();
@@ -84,10 +84,10 @@ describe('Content profiles', () => {
         contentProfiles.openContentProfileSettings();
         contentProfiles.addNew('Simple');
 
-        element(by.buttonText('Content')).click();
+        element(by.buttonText('Content fields')).click();
         expect(element(by.buttonText(FIELD_LABEL)).isDisplayed()).toBeFalsy();
 
         contentProfiles.openAddFieldDropdown();
-        expect(element(by.buttonText(`${FIELD_LABEL} (text)`)).isDisplayed()).toBeTruthy();
+        expect(element(by.buttonText('A custom text field')).isPresent()).toBeTruthy();
     });
 });

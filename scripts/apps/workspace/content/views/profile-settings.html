@@ -90,7 +90,7 @@
     </div>
     <div class="modal__body">
         <form name="editForm">
-            <fieldset>
+            <fieldset ng-init="setNgForm(editForm)">
                 <div class="form__row">
                     <div class="sd-line-input" ng-class="{'sd-line-input--invalid': editForm.label.$error.maxlength}">
                         <label class="sd-line-input__label" translate>Label</label>
@@ -111,15 +111,16 @@
                     <span ng-model="editing.form.editor.body_html.editor3" sd-switch></span><label>{{:: 'Editor3' | translate }}</label>
                 </div>
 
-                <h4 translate>Schema Configuration</h4>
-
                 <div class="field">
                     <div sd-wizard data-name="profile-settings-content-profiles" data-current-step="'header'">
-                        <div sd-wizard-step data-title="{{ 'Header' | translate }}" data-code="header">
+                        <div sd-wizard-step data-title="{{ 'Header fields' | translate }}" data-code="header">
                             <sd-content-schema-editor data-section-to-render="'header'" data-model="editing.form"></sd-content-schema-editor>
                         </div>
-                        <div sd-wizard-step data-title="{{ :: 'Content' | translate }}" data-code="content">
+                        <div sd-wizard-step data-title="{{ :: 'Content fields' | translate }}" data-code="content">
                             <sd-content-schema-editor data-section-to-render="'content'" data-model="editing.form"></sd-content-schema-editor>
+                        </div>
+                        <div sd-wizard-step data-title="{{ :: 'Widgets' | translate }}" data-code="widgets">
+                            <sd-widgets-config initial-widgets-config="editing.form.widgets_config" on-update="saveContentProfileWidgetsConfig"></sd-widgets-config>
                         </div>
                     </div>
                 </div>

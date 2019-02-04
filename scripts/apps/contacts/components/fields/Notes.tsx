@@ -1,10 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {truncate} from 'lodash';
-import {gettext} from 'core/ui/components/utils';
 
 export const Notes: React.StatelessComponent<any> = ({item}) => {
-    const notes = gettext(item.notes);
+    const notes = item.notes;
     const displayNotes = truncate(notes, {length: 120});
 
     return (

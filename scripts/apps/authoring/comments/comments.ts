@@ -1,5 +1,7 @@
-var ENTER = 13;
 import {gettext} from 'core/ui/components/utils';
+import {each} from 'lodash';
+
+var ENTER = 13;
 
 CommentsService.$inject = ['api'];
 function CommentsService(api) {
@@ -95,7 +97,7 @@ function CommentTextDirective($compile) {
             // map user mentions
             var mentionedUsers = html.match(/\@([a-zA-Z0-9-_.\w]+)/g);
 
-            _.each(mentionedUsers, (token) => {
+            each(mentionedUsers, (token) => {
                 var username = token.substring(1, token.length);
 
                 if (scope.comment.mentioned_users && scope.comment.mentioned_users[username]) {
@@ -108,7 +110,7 @@ function CommentTextDirective($compile) {
             // map desk mentions
             var mentionedDesks = html.match(/\#([a-zA-Z0-9-_.]\w+)/g);
 
-            _.each(mentionedDesks, (token) => {
+            each(mentionedDesks, (token) => {
                 var deskname = token.substring(1, token.length);
 
                 if (scope.comment.mentioned_desks && scope.comment.mentioned_desks[deskname]) {

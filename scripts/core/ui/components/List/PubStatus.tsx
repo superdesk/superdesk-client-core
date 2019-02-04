@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import {Column} from './Column';
 import {isNotForPublication} from '../utils';
 import {gettext} from 'core/ui/components/utils';
-import {TOOLTIPS} from '../constants';
 
 /**
  * @ngdoc react
@@ -17,10 +16,10 @@ export const PubStatus: React.StatelessComponent<any> = ({item, isPublic}) => {
     let title = null;
 
     if (isPublic) {
-        title = gettext(TOOLTIPS.postedState);
+        title = gettext('Posted');
         badge = <span className="badge badge--success">P</span>;
     } else if (isNotForPublication(item)) {
-        title = gettext(TOOLTIPS.notForPublication);
+        title = gettext('Not for publication');
         badge = <i
             className="icon-ban-circle icon--red"
             style={{
