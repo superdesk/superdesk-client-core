@@ -52,7 +52,7 @@ export default class ItemsTableComponent extends React.Component<any, any> {
     }
 
     setCaretPosition(ctrl, pos) {
-        if (ctrl.setSelectionRange) {
+        if (ctrl.setSelectionRange && pos !== null) {
             ctrl.focus();
             ctrl.setSelectionRange(pos, pos);
         }
