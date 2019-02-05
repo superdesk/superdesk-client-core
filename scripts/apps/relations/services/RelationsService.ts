@@ -44,7 +44,8 @@ export function RelationsService(archiveService, mediaIdGenerator, api, $q) {
             .then((response) => {
                 const relatedItems = {};
 
-                related.map((key, index) => relatedItems[key] = response[index]);
+
+                related.forEach((key, index) => relatedItems[key] = response[index]);
                 return relatedItems;
             });
     };

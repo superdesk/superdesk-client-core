@@ -129,7 +129,7 @@ export function RelatedItemsDirective(authoringWorkspace, relationsService, noti
             * @param {String} fieldId
             * @return {[Object]}
             */
-            scope.getRelatedItems = () => {
+            scope.refreshRelatedItems = () => {
                 scope.loading = true;
                 relationsService.getRelatedItemsForField(scope.item, scope.field._id)
                     .then((items) => {
@@ -137,7 +137,7 @@ export function RelatedItemsDirective(authoringWorkspace, relationsService, noti
                         scope.loading = false;
                     });
             };
-            scope.getRelatedItems();
+            scope.refreshRelatedItems();
 
             /**
              * Reorder related items on related items list
@@ -189,9 +189,8 @@ export function RelatedItemsDirective(authoringWorkspace, relationsService, noti
                 const key = getNextKey(scope.item.associations || {}, scope.field._id);
                 let data = {};
 
-                data[key] = item;
+                data[key] = {_id: item._id};
                 scope.item.associations = angular.extend({}, scope.item.associations, data);
-                scope.getRelatedItems();
                 scope.onchange();
             };
 
@@ -208,7 +207,6 @@ export function RelatedItemsDirective(authoringWorkspace, relationsService, noti
 
                 data[key] = null;
                 scope.item.associations = angular.extend({}, scope.item.associations, data);
-                scope.getRelatedItems();
                 scope.onchange();
             };
             /**
@@ -219,6 +217,12 @@ export function RelatedItemsDirective(authoringWorkspace, relationsService, noti
             scope.openRelatedItem = (item) => {
                 authoringWorkspace.edit(item);
             };
+
+            scope.$watchCollection('item.associations', (newValue, oldValue) => {
+                if (newValue !== oldValue) {
+                    scope.refreshRelatedItems();
+                }
+            });
         },
     };
 }
