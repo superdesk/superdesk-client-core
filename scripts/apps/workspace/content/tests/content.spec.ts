@@ -303,7 +303,10 @@ describe('superdesk.apps.workspace.content', () => {
 
                 spyOn(content, 'getCustomFields').and.returnValue($q.when([]));
                 spyOn(vocabularies, 'getVocabularies').and.returnValue($q.when([]));
-                spyOn(metadata, 'getAllCustomVocabulariesForArticleHeader').and.returnValue($q.when([]));
+                spyOn(metadata, 'getAllCustomVocabulariesForArticleHeader').and.returnValue($q.when({
+                    customVocabulariesForArticleHeader: [],
+                    customTextAndDateVocabularies: [],
+                }));
 
                 waitUntil(() => {
                     el.scope().$digest();
