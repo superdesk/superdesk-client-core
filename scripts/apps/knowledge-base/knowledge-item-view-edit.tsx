@@ -40,30 +40,36 @@ class KnowledgeItemViewEditComponent extends React.Component<IProps, IState> {
         this.isFormDirty = this.isFormDirty.bind(this);
     }
     componentWillReceiveProps(nextProps) {
-        this.setState({
-            nextItem: nextProps.item,
+        // support switching to another item while in edit mode
+
+        (
+            this.isFormDirty() === false
+            ? Promise.resolve()
+            : this.props.modal.confirm(gettext('There are unsaved changed which will be discarded. Continue?'))
+        ).then(() => {
+            this.setState({
+                editMode: false,
+                nextItem: nextProps.item,
+            });
+        })
+        .catch(() => {
+            // do nothing
         });
     }
     setEditMode(nextValue: boolean) {
-        if (nextValue) {
-            this.setState({editMode: nextValue});
-        } else {
-            const exitEditMode = () => {
-                this.setState({
-                    editMode: nextValue,
-                    nextItem: this.props.item,
-                });
-            };
-            if (this.isFormDirty()) {
-                this.props.modal.confirm(gettext('There are unsaved changed which will be discarded. Continue?'))
-                    .then(exitEditMode)
-                    .catch((err) => {
-                        // do nothing
-                    });
-            } else {
-                exitEditMode();
-            }
-        }
+        (
+            this.isFormDirty() === false
+            ? Promise.resolve()
+            : this.props.modal.confirm(gettext('There are unsaved changed which will be discarded. Continue?'))
+        ).then(() => {
+            this.setState({
+                editMode: nextValue,
+                nextItem: this.props.item,
+            });
+        })
+        .catch(() => {
+            // do nothing
+        });
     }
     handleFieldChange(field: keyof IProps['item'], nextValue: valueof<IProps['item']>) {
         this.setState({
