@@ -21,7 +21,6 @@ export function RelationsService(archiveService, mediaIdGenerator, api, $q) {
 
         const relatedItems = relatedWithoutNull.map((o) => api.find('archive', o._id));
 
-
         return $q.all(relatedItems)
             .then((response) => {
                 const unpublished = response.filter((o) => !archiveService.isPublished(o));
@@ -43,7 +42,6 @@ export function RelationsService(archiveService, mediaIdGenerator, api, $q) {
         return $q.all(relatedItemsApi)
             .then((response) => {
                 const relatedItems = {};
-
 
                 related.forEach((key, index) => relatedItems[key] = response[index]);
                 return relatedItems;
