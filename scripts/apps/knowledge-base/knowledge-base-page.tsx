@@ -12,6 +12,8 @@ import {
 } from 'core/components/SidePanel';
 import {IFormGroup} from './generic-form/interfaces/form';
 import {FormViewEdit} from './generic-form/from-group';
+import {SearchBar} from 'core/ui/components';
+import {Button} from 'core/ui/components/Nav';
 
 const originalItems = [
     {
@@ -51,8 +53,10 @@ const originalItems = [
 interface IState {
     allItems: Array<any>;
     itemInPreview?: string;
+    newItem: null | {[key: string]: any};
     filtersOpen: boolean;
     filterValues: {[key: string]: any};
+    searchValue: string;
 }
 
 const formConfig: IFormGroup = {
@@ -84,16 +88,19 @@ export class KnowledgeBasePage extends React.Component<void, IState> {
         this.state = {
             allItems: originalItems,
             itemInPreview: null,
-            filtersOpen: true,
+            newItem: null,
+            filtersOpen: false,
             filterValues: {},
+            searchValue: '',
         };
 
         this.openPreview = this.openPreview.bind(this);
         this.closePreview = this.closePreview.bind(this);
-        this.closeFilters = this.closeFilters.bind(this);
-        this.updateItem = this.updateItem.bind(this);
+        this.setFiltersVisibility = this.setFiltersVisibility.bind(this);
+        this.updateItemInEditMode = this.updateItemInEditMode.bind(this);
         this.handleFilterFieldChange = this.handleFilterFieldChange.bind(this);
         this.filterItems = this.filterItems.bind(this);
+        this.addItem = this.addItem.bind(this);
     }
     openPreview(id) {
         this.setState({
@@ -103,7 +110,7 @@ export class KnowledgeBasePage extends React.Component<void, IState> {
     closePreview() {
         this.setState({itemInPreview: null});
     }
-    updateItem(nextItem): Promise<void> {
+    updateItemInEditMode(nextItem): Promise<void> {
         return new Promise((resolve) => {
             this.setState({
                 ...this.state,
@@ -134,77 +141,130 @@ export class KnowledgeBasePage extends React.Component<void, IState> {
             }),
         });
     }
-    closeFilters() {
-        this.setState({filtersOpen: false});
+    setFiltersVisibility(open: boolean) {
+        this.setState({filtersOpen: open});
+    }
+    addItem() {
+        this.setState({newItem: {}});
     }
     render() {
         return (
-            <PageContainer>
-                {
-                    !this.state.filtersOpen ? null : (
-                        <PageContainerItem>
-                            <SidePanel side='left' width={240}>
-                                <SidePanelHeader>
-                                    <SidePanelHeading>{gettext('Refine search')}</SidePanelHeading>
-                                    <SidePanelTools>
-                                        <button className="icn-btn" onClick={this.closeFilters}>
-                                            <i className="icon-close-small"></i>
-                                        </button>
-                                    </SidePanelTools>
-                                </SidePanelHeader>
-                                <SidePanelContent>
-                                    <SidePanelContentBlock>
-                                        <FormViewEdit
-                                            item={{}}
-                                            formConfig={formConfig}
-                                            editMode={true}
-                                            handleFieldChange={this.handleFilterFieldChange}
-                                        />
-                                        <button
-                                            onClick={this.filterItems}
-                                            className="btn btn--primary btn--expanded"
-                                        >
-                                            {gettext('Filter')}
-                                        </button>
-                                    </SidePanelContentBlock>
-                                </SidePanelContent>
-                            </SidePanel>
-                        </PageContainerItem>
-                    )
-                }
-                <PageContainerItem shrink>
-                    <div style={{margin: 20}}>
-                        {
-                            this.state.allItems.map((item) => (
-                                <ListItem onClick={() => this.openPreview(item.id)} key={item.id}>
-                                    <ListItemColumn>
-                                        {item.title}
-                                    </ListItemColumn>
-                                    <ListItemColumn>
-                                        {item.language}
-                                    </ListItemColumn>
-                                    <ListItemColumn ellipsisAndGrow>
-                                        {item.value}
-                                    </ListItemColumn>
-                                </ListItem>
-                            ))
-                        }
-                    </div>
-                </PageContainerItem>
+            <div style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
+                <div className="subnav">
+                    <Button
+                        icon="icon-filter-large"
+                        onClick={() => this.setFiltersVisibility(!this.state.filtersOpen)}
+                        active={this.state.filtersOpen}
+                        darker={true}
+                    />
 
-                {
-                    this.state.itemInPreview == null ? null : (
-                        <PageContainerItem>
-                            <KnowledgeItemViewEdit
-                                formConfig={formConfig}
-                                item={this.state.allItems.find(({id}) => id === this.state.itemInPreview)}
-                                updateItem={this.updateItem}
-                                onClose={this.closePreview}
-                            />
-                        </PageContainerItem>
-                    )
-                }
-            </PageContainer>
+                    <SearchBar
+                        value={this.state.searchValue}
+                        allowCollapsed={false}
+                        onSearch={() => { throw new Error('Not implemented yet'); }}
+                    />
+
+                    <Button
+                        onClick={this.addItem}
+                        className="sd-create-btn dropdown-toggle"
+                        icon="icon-plus-large"
+                    >
+                        <span className="circle"></span>
+                    </Button>
+                </div>
+                <PageContainer>
+                    {
+                        this.state.filtersOpen ? (
+                            <PageContainerItem>
+                                <SidePanel side='left' width={240}>
+                                    <SidePanelHeader>
+                                        <SidePanelHeading>{gettext('Refine search')}</SidePanelHeading>
+                                        <SidePanelTools>
+                                            <button
+                                                className="icn-btn"
+                                                onClick={() => this.setFiltersVisibility(false)}
+                                            >
+                                                <i className="icon-close-small"></i>
+                                            </button>
+                                        </SidePanelTools>
+                                    </SidePanelHeader>
+                                    <SidePanelContent>
+                                        <SidePanelContentBlock>
+                                            <FormViewEdit
+                                                item={{}}
+                                                formConfig={formConfig}
+                                                editMode={true}
+                                                handleFieldChange={this.handleFilterFieldChange}
+                                            />
+                                            <button
+                                                onClick={this.filterItems}
+                                                className="btn btn--primary btn--expanded"
+                                            >
+                                                {gettext('Filter')}
+                                            </button>
+                                        </SidePanelContentBlock>
+                                    </SidePanelContent>
+                                </SidePanel>
+                            </PageContainerItem>
+                        ) : null
+                    }
+                    <PageContainerItem shrink>
+                        <div style={{margin: 20}}>
+                            {
+                                this.state.allItems.map((item) => (
+                                    <ListItem onClick={() => this.openPreview(item.id)} key={item.id}>
+                                        <ListItemColumn>
+                                            {item.title}
+                                        </ListItemColumn>
+                                        <ListItemColumn>
+                                            {item.language}
+                                        </ListItemColumn>
+                                        <ListItemColumn ellipsisAndGrow>
+                                            {item.value}
+                                        </ListItemColumn>
+                                    </ListItem>
+                                ))
+                            }
+                        </div>
+                    </PageContainerItem>
+
+                    {
+                        this.state.itemInPreview != null ? (
+                            <PageContainerItem>
+                                <KnowledgeItemViewEdit
+                                    operation='editing'
+                                    formConfig={formConfig}
+                                    item={this.state.allItems.find(({id}) => id === this.state.itemInPreview)}
+                                    onSave={this.updateItemInEditMode}
+                                    onClose={this.closePreview}
+                                />
+                            </PageContainerItem>
+                        ) : null
+                    }
+
+                    {
+                        this.state.newItem != null ? (
+                            <PageContainerItem>
+                                <KnowledgeItemViewEdit
+                                    operation='creation'
+                                    formConfig={formConfig}
+                                    item={this.state.newItem}
+                                    onSave={(item) => new Promise((resolve) => {
+                                        // do api call and set newItem to null
+                                        this.setState({newItem: null}, () => { resolve(); });
+                                    })}
+                                    onClose={() => {
+                                        this.setState({newItem: null});
+                                    }}
+                                    onCancel={() => {
+                                        this.setState({newItem: null});
+                                    }}
+                                />
+                            </PageContainerItem>
+                        ) : null
+                    }
+                </PageContainer>
+            </div>
         );
     }
 }
