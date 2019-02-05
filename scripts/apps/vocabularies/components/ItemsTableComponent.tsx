@@ -16,7 +16,9 @@ export default class ItemsTableComponent extends React.Component<any, any> {
     componentDidUpdate() {
         const {targetInput, caretPosition} = this.state;
 
-        this.setCaretPosition(targetInput, caretPosition);
+        if (caretPosition != null) {
+            this.setCaretPosition(targetInput, caretPosition);
+        }
     }
 
     getModelKeys() {
@@ -52,7 +54,7 @@ export default class ItemsTableComponent extends React.Component<any, any> {
     }
 
     setCaretPosition(ctrl, pos) {
-        if (ctrl.setSelectionRange && pos !== null) {
+        if (ctrl.setSelectionRange) {
             ctrl.focus();
             ctrl.setSelectionRange(pos, pos);
         }
