@@ -2,8 +2,8 @@ function isLinkExternal(href) {
     try {
         const url = new URL(href);
 
-        // Check if the hosts are different, or if the href protocol is data not http
-        return url.host !== window.location.host && url.protocol !== 'data:';
+        // Check if the hosts are different and protocol is http or https
+        return url.host !== window.location.host && ['http:', 'https:'].includes(url.protocol);
     } catch (e) {
         // will throw if string is not a valid link
         return false;
