@@ -16,7 +16,9 @@ export default class ItemsTableComponent extends React.Component<any, any> {
     componentDidUpdate() {
         const {targetInput, caretPosition} = this.state;
 
-        this.setCaretPosition(targetInput, caretPosition);
+        if (caretPosition != null) {
+            this.setCaretPosition(targetInput, caretPosition);
+        }
     }
 
     getModelKeys() {
