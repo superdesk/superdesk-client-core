@@ -1,3 +1,5 @@
+import {isNull, isUndefined, find, filter, keys, findIndex, defer, sortBy, map, forEach, startsWith} from 'lodash';
+
 AuthoringHeaderDirective.$inject = [
     'api',
     'authoringWidgets',
@@ -28,7 +30,7 @@ export function AuthoringHeaderDirective(
     moment,
     features,
     TranslationService,
-    authoringWorkspace
+    authoringWorkspace,
 ) {
     return {
         templateUrl: 'scripts/apps/authoring/views/authoring-header.html',
@@ -53,7 +55,7 @@ export function AuthoringHeaderDirective(
                         scope.translationsInfo = {
                             count: translations._meta.total,
                             translatedFromReference: translations._items.find(
-                                (item) => item._id === scope.item.translated_from
+                                (item) => item._id === scope.item.translated_from,
                             ),
                         };
                     })
@@ -84,18 +86,18 @@ export function AuthoringHeaderDirective(
                 var financeCategory;
 
                 if (!display && scope.item.anpa_category) {
-                    financeCategory = _.find(scope.item.anpa_category, {qcode: 'f'});
-                    display = !_.isUndefined(financeCategory) && !_.isNull(financeCategory);
+                    financeCategory = find(scope.item.anpa_category, {qcode: 'f'});
+                    display = !isUndefined(financeCategory) && !isNull(financeCategory);
                 }
 
                 if (!display && scope.item.subject) {
-                    financeCategory = _.find(scope.item.subject, (category) => {
+                    financeCategory = find(scope.item.subject, (category) => {
                         if (category.qcode === '04000000' || category.qcode === '04006018'
                             || category.qcode === '04019000') {
                             return category;
                         }
                     });
-                    display = !_.isUndefined(financeCategory) && !_.isNull(financeCategory);
+                    display = !isUndefined(financeCategory) && !isNull(financeCategory);
                 }
 
                 scope.displayCompanyCodes = display;
@@ -111,7 +113,7 @@ export function AuthoringHeaderDirective(
                 scope.missing_link = false;
 
                 if (!archiveService.isLegal(scope.item)) {
-                    var relatedItemWidget = _.filter(authoringWidgets, (widget) => widget._id === 'related-item');
+                    var relatedItemWidget = filter(authoringWidgets, (widget) => widget._id === 'related-item');
 
                     scope.activateWidget = function() {
                         WidgetsManagerCtrl.activate(relatedItemWidget[0]);
@@ -120,8 +122,8 @@ export function AuthoringHeaderDirective(
                     scope.previewMasterStory = function() {
                         var itemId = item.broadcast.master_id;
 
-                        return api.find('archive', itemId).then((item) => {
-                            $rootScope.$broadcast('broadcast:preview', {item: item});
+                        return api.find('archive', itemId).then((_item) => {
+                            $rootScope.$broadcast('broadcast:preview', {item: _item});
                         });
                     };
                 }
@@ -186,19 +188,19 @@ export function AuthoringHeaderDirective(
              */
             function initAnpaCategories() {
                 if (scope.schema.subject && scope.schema.subject.mandatory_in_list) {
-                    _.forEach(scope.schema.subject.mandatory_in_list.scheme, (subjectName) => {
-                        if (!_.startsWith(subjectName, 'subservice_')) {
+                    forEach(scope.schema.subject.mandatory_in_list.scheme, (subjectName) => {
+                        if (!startsWith(subjectName, 'subservice_')) {
                             return;
                         }
                         vocabularies.getVocabularies().then((vocabulariesColl) => {
-                            var vocabulary = _.find(vocabulariesColl, {_id: subjectName});
+                            var vocabulary: any = find(vocabulariesColl, {_id: subjectName});
 
                             if (vocabulary) {
-                                var qcode = _.keys(vocabulary.service).pop();
-                                var categoriesVocabulary = _.find(vocabulariesColl, {_id: 'categories'});
-                                var category = _.find(categoriesVocabulary.items, {qcode: qcode});
+                                var qcode = keys(vocabulary.service).pop();
+                                var categoriesVocabulary: any = find(vocabulariesColl, {_id: 'categories'});
+                                var category: any = find(categoriesVocabulary.items, {qcode: qcode});
 
-                                if (category && _.findIndex(scope.item.anpa_category, {name: category.name}) === -1) {
+                                if (category && findIndex(scope.item.anpa_category, {name: category.name}) === -1) {
                                     if (!scope.item.anpa_category) {
                                         scope.item.anpa_category = [];
                                     }
@@ -221,12 +223,12 @@ export function AuthoringHeaderDirective(
                         return;
                     }
 
-                    var qcodes = _.map(services, 'qcode');
+                    var qcodes = map(services, 'qcode');
 
                     metadata.getCustomVocabulariesForArticleHeader(qcodes, editor, schema).then((cvs) => {
-                        scope.cvs = _.sortBy(cvs, 'priority');
-                        scope.genreInCvs = _.map(cvs, 'schema_field').indexOf('genre') !== -1;
-                        scope.placeInCvs = _.map(cvs, 'schema_field').indexOf('place') !== -1;
+                        scope.cvs = sortBy(cvs, 'priority');
+                        scope.genreInCvs = map(cvs, 'schema_field').indexOf('genre') !== -1;
+                        scope.placeInCvs = map(cvs, 'schema_field').indexOf('place') !== -1;
 
                         scope.shouldDisplayCompanyCodes();
                     });
@@ -238,7 +240,7 @@ export function AuthoringHeaderDirective(
             });
 
             // If correction set focus to the ednote to encourage user to fill it in
-            _.defer(() => {
+            defer(() => {
                 if (scope.action === 'correct') {
                     elem.find('#ednote').focus();
                 } else {
