@@ -40,12 +40,14 @@ export const gettext = (text, params = null) => {
 
 /**
  * @ngdoc method
- * @name gettextCatalog
+ * @name gettextPlural
+ * @param {Number} count
  * @param {String} text
+ * @param {String} pluralText
  * @param {Object} params
- * @description Used angular gettext service for displaying localised text on Browser
+ * @description Used angular gettext service for displaying plural localised text on Browser
  */
-export const gettextCatalog = (text, params = null) => {
+const gettextPlural = (count, text, pluralText, params) => {
     if (!text) {
         return '';
     }
@@ -53,12 +55,15 @@ export const gettextCatalog = (text, params = null) => {
     const injector = angular.element(document.body).injector();
 
     if (injector) { // in tests this will be empty
-        const translated = injector.get('gettextCatalog').getString(text);
-
-        return params ? injector.get('$interpolate')(translated)(params) : translated;
+        return injector.get('gettextCatalog').getPlural(count, text, pluralText, params);
     }
 
     return text;
+};
+
+export const gettextCatalog = {
+    getString: gettext,
+    getPlural: gettextPlural,
 };
 
 /**
