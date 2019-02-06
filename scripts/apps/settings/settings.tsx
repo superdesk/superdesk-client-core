@@ -81,7 +81,7 @@ class SettingsComponent extends React.Component<IProps, IState> {
                 return 0;
             });
 
-            const groupLabel = coreMenuGroups[key].getLabel(gettext);
+            const groupLabel = coreMenuGroups[key].getLabel();
 
             listToRender.push(
                 <li key={++reactKey} className="sd-left-nav__group-header">{groupLabel}</li>,

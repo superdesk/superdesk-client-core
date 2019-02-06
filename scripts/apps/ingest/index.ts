@@ -115,6 +115,7 @@ angular.module('superdesk.apps.ingest', [
                 controller: ['send', 'data', function(send, data) {
                     return send.one(data.item);
                 }],
+                keyboardShortcut: 'ctrl+enter',
                 filters: [{action: 'list', type: 'ingest'}],
                 privileges: {fetch: 1},
                 key: 'f',
