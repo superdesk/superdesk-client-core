@@ -52,7 +52,7 @@
     line-height: 54px;
     text-align: center;
     background: $archive-sidebar-bg;
-    //border-right: 1px solid #e0e0e0;
+    flex-shrink: 0;
     @include transition(all ease 0.1s);
     overflow: hidden;
     i {
@@ -414,3 +414,105 @@
         }
     }
 }
+
+
+.workspace .main-section.search-page-container  {
+
+    .preview-layout {
+        .search-content {
+            display: flex;
+            flex-direction: row;
+        }
+        .search-content__main {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            position: relative;
+            overflow-x: auto;
+            .search-tags {
+                flex-shrink: 0;
+            }
+        }
+        .search-preview {
+            height:100%;
+            transition: all ease-in-out 0.2s;
+            width: $sidepreview-width + 160;
+            position: relative;
+            flex-grow: 0;
+            flex-shrink: 0;
+            .content-item-preview {
+                top: 0 !important;
+                position: relative;
+                width:100% !important;
+                height:100%;
+                opacity: 1;
+                transition: opacity ease-in-out 0.4s;
+                transition-delay: 0.2s;
+                
+            }
+            @media only screen and (max-width: 1430px) {
+                width: $sidepreview-width - 40;
+            }
+        }
+        &.closed {
+            .search-preview {
+                width: 0;
+                overflow: hidden;
+                .content-item-preview {
+                    opacity: 0;
+                } 
+            }
+    
+        }
+    }
+}
+
+
+.workspace.authoring .main-section.search-page-container  {
+    .preview-layout {
+
+        .search-preview--overlay {
+            position: absolute;
+            top: 4.8rem;
+            right: 0;
+            bottom: 0;
+            width:0;
+            overflow: visible;
+            z-index: 3;
+            .content-item-preview {
+                top: 0 !important;
+                position: absolute;
+                width: $sidepreview-width - 80;
+                right: 80 - $sidepreview-width - 4;
+                opacity: 1;
+                transition: all ease-in-out 0.2s;
+                overflow-y: visible !important;
+                box-shadow: inset 3px 0 2px -1px rgba(0, 0, 0, 0.12), 2px 0 8px 0 rgba(0, 0, 0, 0.3), 0 0 2px 0 rgba(0, 0, 0, 0.12);
+                .shift-preview__toggle {
+                    display: inline-block;
+                }
+                &.shift {
+                    right: 0;
+                    box-shadow: -2px 0 8px 0 rgba(0, 0, 0, 0.3), 0 0 2px 0 rgba(0, 0, 0, 0.12)
+                }
+            }
+        }
+
+        .search-preview {
+            width: $sidepreview-width;
+            @media only screen and (max-width: 1430px) {
+                width: $sidepreview-width - 40;
+            }
+        }
+        &.closed {
+            .search-preview {
+                width: 0;
+                overflow: hidden;
+                .content-item-preview {
+                    opacity: 0;
+                } 
+            }
+        }
+    }
+}
+
