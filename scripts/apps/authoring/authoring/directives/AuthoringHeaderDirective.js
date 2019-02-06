@@ -1,7 +1,35 @@
-AuthoringHeaderDirective.$inject = ['api', 'authoringWidgets', '$rootScope', 'archiveService', 'metadata',
-    'content', 'lodash', 'authoring', 'vocabularies', '$timeout', 'config', 'moment', 'features', 'TranslationService'];
-export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, archiveService, metadata, content,
-    lodash, authoring, vocabularies, $timeout, config, moment, features, TranslationService) {
+AuthoringHeaderDirective.$inject = [
+    'api',
+    'authoringWidgets',
+    '$rootScope',
+    'archiveService',
+    'metadata',
+    'content',
+    'authoring',
+    'vocabularies',
+    '$timeout',
+    'config',
+    'moment',
+    'features',
+    'TranslationService',
+    'authoringWorkspace',
+];
+export function AuthoringHeaderDirective(
+    api,
+    authoringWidgets,
+    $rootScope,
+    archiveService,
+    metadata,
+    content,
+    authoring,
+    vocabularies,
+    $timeout,
+    config,
+    moment,
+    features,
+    TranslationService,
+    authoringWorkspace
+) {
     return {
         templateUrl: 'scripts/apps/authoring/views/authoring-header.html',
         require: '?^sdAuthoringWidgets',
@@ -11,15 +39,27 @@ export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, arch
             scope.features = features;
             scope.translationService = TranslationService;
 
+            scope.isCollapsed = authoringWorkspace.displayAuthoringHeaderCollapedByDefault == null
+                ? false :
+                authoringWorkspace.displayAuthoringHeaderCollapedByDefault;
+
+            scope.toggleCollapsed = () => {
+                scope.isCollapsed = !scope.isCollapsed;
+            };
+
             if (TranslationService.translationsEnabled() === true) {
-                TranslationService.getTranslations(scope.item).then((translations) => {
-                    scope.translationsInfo = {
-                        count: translations._meta.total,
-                        translatedFromReference: translations._items.find(
-                            (item) => item._id === scope.item.translated_from
-                        ),
-                    };
-                });
+                TranslationService.getTranslations(scope.item)
+                    .then((translations) => {
+                        scope.translationsInfo = {
+                            count: translations._meta.total,
+                            translatedFromReference: translations._items.find(
+                                (item) => item._id === scope.item.translated_from
+                            ),
+                        };
+                    })
+                    .catch(() => {
+                        // no translations found, do nothing
+                    });
             }
 
             scope.shouldDisplayUrgency = function() {
