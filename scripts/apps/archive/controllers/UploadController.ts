@@ -2,6 +2,7 @@ import EXIF from 'exif-js';
 import _ from 'lodash';
 import {getDataUrl} from 'core/upload/image-preview-directive';
 import {gettext} from 'core/utils';
+import {isEmpty} from 'lodash';
 
 /* eslint-disable complexity */
 
@@ -10,6 +11,15 @@ const getExifData = (file) => new Promise((resolve) => {
         resolve(this);
     });
 });
+
+function serializePromises(promiseCreators: Array<() => Promise<any>>): Promise<Array<any>> {
+    let promise = Promise.resolve();
+
+    return Promise.all(promiseCreators.map((promiseCreator) => {
+        promise = promise.then(promiseCreator);
+        return promise;
+    }));
+}
 
 UploadController.$inject = [
     '$scope',
@@ -258,18 +268,19 @@ export function UploadController(
     };
 
     $scope.upload = function() {
-        var promises = [];
+        if (isEmpty($scope.items)) {
+            return Promise.resolve();
+        }
 
-        _.each($scope.items, (item) => {
+        // upload items in sequence, and resolve when all are done
+        return serializePromises($scope.items.map((item) => {
             if (!item.model && !item.progress) {
                 item.upload = null;
-                promises.push(uploadFile(item));
+                return () => uploadFile(item);
             }
-        });
-        if (promises.length) {
-            return $q.all(promises);
-        }
-        return $q.when();
+
+            return () => Promise.resolve(item);
+        }));
     };
 
     $scope.save = function() {
