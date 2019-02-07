@@ -331,7 +331,7 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, deploy
                 return api.save('picture_renditions', {
                     item: result.item,
                     no_custom_crops: true,
-                    is_article_edit_media: $scope.data.isArticleEditMedia != null
+                    is_article_edit_media: $scope.data.isArticleEditMedia != null,
                 })
                     .then((item) => {
                         $scope.data.item.renditions = item.renditions;
