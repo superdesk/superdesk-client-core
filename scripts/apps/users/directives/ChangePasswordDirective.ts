@@ -1,4 +1,4 @@
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 ChangePasswordDirective.$inject = ['usersService', 'notify'];
 export function ChangePasswordDirective(usersService, notify) {

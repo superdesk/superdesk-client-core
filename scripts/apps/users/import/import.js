@@ -1,4 +1,4 @@
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 UserImportService.$inject = ['api', '$q'];
 function UserImportService(api, $q) {

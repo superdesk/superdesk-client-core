@@ -1,4 +1,4 @@
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 export default function notifySaveError(response, notify) {
     if (angular.isDefined(response.data._issues) &&

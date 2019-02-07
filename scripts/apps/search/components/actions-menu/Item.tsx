@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import {LEFT_SIDEBAR_WIDTH} from 'core/ui/constants';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 import {closeActionsMenu} from '../../helpers';
 

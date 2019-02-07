@@ -1,6 +1,6 @@
 import {DesksReactDropdown} from './DesksReactDropdown';
 import ReactDOM from 'react-dom';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 /**
  * @ngdoc directive

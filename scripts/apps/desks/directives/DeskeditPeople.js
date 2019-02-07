@@ -1,4 +1,4 @@
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 DeskeditPeople.$inject = ['WizardHandler', 'desks', '$rootScope'];
 export function DeskeditPeople(WizardHandler, desks, $rootScope) {

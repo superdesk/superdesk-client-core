@@ -7,7 +7,7 @@ import {onEventCapture} from '../../utils';
 import {KEYCODES} from '../../constants';
 
 import {Popup, Header, Content, Label} from '../../Popup';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 import './style.scss';
 

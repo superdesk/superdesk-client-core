@@ -2,7 +2,7 @@ import {ContactsController} from './controllers';
 import * as directives from './directives';
 import * as services from './services';
 import './styles/contacts.scss';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 /**
  * @ngdoc module

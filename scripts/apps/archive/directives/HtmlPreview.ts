@@ -1,7 +1,7 @@
 import {getAnnotationsFromItem} from 'core/editor3/helpers/editor3CustomData';
 import {META_FIELD_NAME} from 'core/editor3/helpers/fieldsMeta';
 import ng from 'core/services/ng';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 function getAnnotationTypesAsync(scope) {
     ng.get('metadata').initialize()

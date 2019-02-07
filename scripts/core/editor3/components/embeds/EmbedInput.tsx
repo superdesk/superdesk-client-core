@@ -4,7 +4,7 @@ import {loadIframelyEmbedJs} from './loadIframely';
 import ng from 'core/services/ng';
 import {connect} from 'react-redux';
 import {embed, hidePopups} from '../../actions';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 const fallbackAPIKey = '1d1728bf82b2ac8139453f'; // register to author's personal account
 const GenericError = gettext('This URL could not be embedded.');

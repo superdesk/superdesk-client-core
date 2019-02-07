@@ -1,4 +1,4 @@
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 describe('legal archive service', () => {
     beforeEach(window.module('superdesk.core.api'));

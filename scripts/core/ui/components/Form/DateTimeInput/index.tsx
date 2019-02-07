@@ -4,7 +4,7 @@ import * as momentAlias from 'moment';
 import {Row, DateInput, TimeInput, Field} from '..';
 import './style.scss';
 import Button from '../../Button';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 const moment: any = momentAlias;
 

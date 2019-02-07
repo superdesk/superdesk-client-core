@@ -1,4 +1,4 @@
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 class LinkFunction {
     constructor(contentApiSearch, search, notify, $location, scope, elem) {

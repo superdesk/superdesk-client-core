@@ -16,58 +16,6 @@ export const onEventCapture = (event) => {
 
 /**
  * @ngdoc method
- * @name gettext
- * @param {String} text - the text that will be translated, it supports parameters (see the example)
- * @param {Object} params - dictionary of parameters used in text and their value (see the example)
- * @description Used angular gettext service for displaying localised text on Browser
- *
- * gettext('This item was locked by {{username}}.', {username: 'John'});
- * result -> 'This item was locked by John'
- */
-export const gettext = (text, params = null) => {
-    if (!text) {
-        return '';
-    }
-
-    const injector = angular.element(document.body).injector();
-
-    if (injector) { // in tests this will be empty
-        return injector.get('gettextCatalog').getString(text, params || {});
-    }
-
-    return text;
-};
-
-/**
- * @ngdoc method
- * @name gettextPlural
- * @param {Number} count
- * @param {String} text
- * @param {String} pluralText
- * @param {Object} params
- * @description Used angular gettext service for displaying plural localised text on Browser
- */
-const gettextPlural = (count, text, pluralText, params) => {
-    if (!text) {
-        return '';
-    }
-
-    const injector = angular.element(document.body).injector();
-
-    if (injector) { // in tests this will be empty
-        return injector.get('gettextCatalog').getPlural(count, text, pluralText, params);
-    }
-
-    return text;
-};
-
-export const gettextCatalog = {
-    getString: gettext,
-    getPlural: gettextPlural,
-};
-
-/**
- * @ngdoc method
  * @name scrollListItemIfNeeded
  * @param {number} selectedIndex
  * @param {Object} listRefElement

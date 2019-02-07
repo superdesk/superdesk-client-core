@@ -1,3 +1,4 @@
+import {gettext} from 'core/utils';
 
 angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
 /**
@@ -10,8 +11,8 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
  * @param {object} loading
  * @description Creates a list of stories to appear in related items widget.
  */
-    .directive('sdRelatedItemListWidget', ['notify', 'gettext', 'familyService', 'desks',
-        function(notify, gettext, familyService, desks) {
+    .directive('sdRelatedItemListWidget', ['notify', 'familyService', 'desks',
+        function(notify, familyService, desks) {
             return {
                 scope: {
                     options: '=',

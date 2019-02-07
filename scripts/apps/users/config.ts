@@ -9,7 +9,7 @@ import {
     SessionsDeleteCommand,
 } from './controllers';
 import {coreMenuGroups} from 'core/activity/activity';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 API.$inject = ['apiProvider'];
 export function API(apiProvider) {

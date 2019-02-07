@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {Row, LineInput, Label, Input, TextArea} from './';
 import {IconButton} from '../';
 import {onEventCapture} from '../utils';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 import {get} from 'lodash';
 import './style.scss';
 

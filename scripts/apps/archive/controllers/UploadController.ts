@@ -1,7 +1,7 @@
 import EXIF from 'exif-js';
 import _ from 'lodash';
 import {getDataUrl} from 'core/upload/image-preview-directive';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 /* eslint-disable complexity */
 

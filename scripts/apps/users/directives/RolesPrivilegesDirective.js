@@ -1,5 +1,5 @@
 import handleError from '../helpers';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 RolesPrivilegesDirective.$inject = ['api', 'notify', '$q', '$filter'];
 export function RolesPrivilegesDirective(api, notify, $q, $filter) {

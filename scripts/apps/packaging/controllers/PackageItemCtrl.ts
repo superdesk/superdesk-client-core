@@ -1,4 +1,4 @@
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 PackageItemCtrl.$inject = ['data', 'packages', 'authoringWorkspace', 'notify'];
 export function PackageItemCtrl(data, packages, authoringWorkspace, notify) {

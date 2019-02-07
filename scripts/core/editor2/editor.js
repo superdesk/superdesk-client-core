@@ -11,7 +11,7 @@ import MediumEditor from 'medium-editor';
 import MediumEditorTable from 'medium-editor-tables';
 import _ from 'lodash';
 import {get} from 'lodash';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 import './customAnchor';
 

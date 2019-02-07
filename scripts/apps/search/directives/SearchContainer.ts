@@ -1,5 +1,5 @@
 import {isEmpty, omit} from 'lodash';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 export function SearchContainer() {
     return {

@@ -6,7 +6,7 @@ import './content';
 import {WorkspaceService} from './services';
 import WorkspaceMenuProvider from './services/WorkspaceMenuProvider';
 import * as directive from './directives';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 angular.module('superdesk.apps.workspace.menu', [])
     .provider('workspaceMenu', WorkspaceMenuProvider);

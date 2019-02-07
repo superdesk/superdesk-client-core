@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {Row, LineInput, Input, SelectInput, Toggle, Label} from './';
 import {KEYCODES} from '../../../contacts/constants';
 import {set, get, isEmpty} from 'lodash';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 export class ContactNumberInput extends React.Component<any, any> {
     static propTypes: any;

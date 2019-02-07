@@ -1,4 +1,4 @@
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 UserRolesDirective.$inject = ['api', 'notify', 'modal', '$filter', 'lodash', 'metadata'];
 export function UserRolesDirective(api, notify, modal, $filter, _, metadata) {

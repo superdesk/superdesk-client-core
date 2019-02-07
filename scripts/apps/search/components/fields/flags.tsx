@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 export const flags: React.StatelessComponent<any> = (props) => {
     const _flags = props.item.flags || {};

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {closeActionsMenu} from '../helpers';
 import {isString, map} from 'lodash';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 /**
  * @ngdoc React

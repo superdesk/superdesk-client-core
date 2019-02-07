@@ -1,4 +1,4 @@
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 import {each} from 'lodash';
 
 var ENTER = 13;
