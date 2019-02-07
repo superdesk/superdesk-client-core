@@ -66,7 +66,7 @@ export const gettext = (text, params = null) => {
  * @param {Object} params
  * @description Used angular gettext service for displaying plural localised text on Browser
  */
-const gettextPlural = (count, text, pluralText, params) => {
+const gettextPlural = (count, text, pluralText, params = {}) => {
     if (!text) {
         return '';
     }
