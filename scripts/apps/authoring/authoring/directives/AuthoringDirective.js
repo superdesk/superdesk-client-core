@@ -595,7 +595,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                     return;
                 }
 
-                // Check if there's unpublished related items without media-gallery
+                // Check if there are unpublished related items without media-gallery
                 relationsService.getRelatedItemsWithoutMediaGallery($scope.item, $scope.fields)
                     .then((related) => {
                         if (related.length > 0) {
