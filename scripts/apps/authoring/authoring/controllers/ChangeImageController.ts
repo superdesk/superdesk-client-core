@@ -328,14 +328,19 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, deploy
                     media: result._id,
                 });
                 $scope.data.isDirty = true;
-                return api.save('picture_renditions', {item: result.item, no_custom_crops: true}).then((item) => {
-                    $scope.data.item.renditions = item.renditions;
-                    const editableMetadata = extractEditableMetadata($scope.data.metadata);
+                return api.save('picture_renditions', {
+                    item: result.item,
+                    no_custom_crops: true,
+                    is_article_edit_media: $scope.data.isArticleEditMedia != null
+                })
+                    .then((item) => {
+                        $scope.data.item.renditions = item.renditions;
+                        const editableMetadata = extractEditableMetadata($scope.data.metadata);
 
-                    $scope.data.metadata = Object.assign($scope.data.item, editableMetadata);
-                    $scope.data.poi = {x: 0.5, y: 0.5};
-                    $rootScope.$broadcast('poiUpdate', $scope.data.poi);
-                });
+                        $scope.data.metadata = Object.assign($scope.data.item, editableMetadata);
+                        $scope.data.poi = {x: 0.5, y: 0.5};
+                        $rootScope.$broadcast('poiUpdate', $scope.data.poi);
+                    });
             }, (response) =>
                 $q.reject(response),
             )

@@ -292,6 +292,7 @@ export function ArticleEditDirective(
                             defaultTab: defaultTab,
                             hideTabs: scope.metadata && scope.metadata.crop_sizes ? [] : ['crop'],
                             showMetadata: true,
+                            isArticleEditMedia: true,
                         }
                     )
                         .then((picture) => {
