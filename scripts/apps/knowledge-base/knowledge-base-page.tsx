@@ -14,6 +14,7 @@ import {IFormGroup} from './generic-form/interfaces/form';
 import {FormViewEdit} from './generic-form/from-group';
 import {SearchBar} from 'core/ui/components';
 import {Button} from 'core/ui/components/Nav';
+import {SortBar} from 'core/ui/components/SortBar';
 
 const originalItems = [
     {
@@ -49,6 +50,25 @@ const originalItems = [
         sandwiches, macarons, soups, cakes, pastries, coffee, wine, and beer.",
     },
 ];
+
+const testSortOptions = [
+    {
+        id: '1',
+        label: 'Name',
+    },
+    {
+        id: '2',
+        label: 'Description',
+    },
+    {
+        id: '3',
+        label: 'Last updated',
+    },
+];
+
+const testCurrentSortOption = '2';
+const testItemsCount = 34;
+const testCurrentSortDirection = 'descending';
 
 interface IState {
     allItems: Array<any>;
@@ -162,6 +182,19 @@ export class KnowledgeBasePage extends React.Component<void, IState> {
                         value={this.state.searchValue}
                         allowCollapsed={false}
                         onSearch={() => { throw new Error('Not implemented yet'); }}
+                    />
+
+                    <SortBar
+                        sortOptions={testSortOptions}
+                        selectedSortOptionId={testCurrentSortOption}
+                        direction={testCurrentSortDirection}
+                        itemsCount={testItemsCount}
+                        onSortOptionChange={() => {
+                            console.log('sort option changed');
+                        }}
+                        onSortDirectionChange={() => {
+                            console.log('sort direction changed');
+                        }}
                     />
 
                     <Button
