@@ -270,6 +270,12 @@
         &.inactive {
             opacity: 0.5;
         }
+        .social-info {
+            margin: 0 0.5rem;
+            span {
+                margin-right: 0.5rem;
+            }
+        }
     }
 }
 
