@@ -1,5 +1,6 @@
 import {startsWith, endsWith, some, forEach, get} from 'lodash';
 import {getSuperdeskType} from 'core/utils';
+import {gettext} from 'core/utils';
 
 /**
  * @ngdoc controller

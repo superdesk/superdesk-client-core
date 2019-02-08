@@ -1,4 +1,4 @@
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 /**
  * Display absolute date in <time> element

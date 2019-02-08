@@ -7,7 +7,7 @@ import {Modal} from './Modal';
 import {ModalHeader} from './ModalHeader';
 import {ModalBody} from './ModalBody';
 import {ModalFooter} from './ModalFooter';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 export class ModalPrompt extends React.Component<any, any> {
     static propTypes: any;

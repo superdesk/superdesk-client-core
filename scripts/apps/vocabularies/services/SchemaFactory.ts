@@ -1,4 +1,4 @@
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 SchemaFactory.$inject = [];
 export function SchemaFactory() {

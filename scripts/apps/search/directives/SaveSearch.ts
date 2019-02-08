@@ -1,6 +1,6 @@
 import {create, clone, each} from 'lodash';
 import {saveOrUpdateSavedSearch} from '../SavedSearch';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 SaveSearch.$inject = ['$location', 'asset', 'api', 'session', 'notify', '$rootScope'];
 

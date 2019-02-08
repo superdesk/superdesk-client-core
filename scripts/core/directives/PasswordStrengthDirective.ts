@@ -1,4 +1,4 @@
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 // config holds the default configuration for the password strength calculator.
 var config = {

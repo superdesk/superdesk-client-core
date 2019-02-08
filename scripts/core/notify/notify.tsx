@@ -1,7 +1,7 @@
 import ReactDOM from 'react-dom';
 import React from 'react';
 import {find, matches} from 'lodash';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 interface IMessageDisplayDurationByType {
     info: number;

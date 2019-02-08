@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 import {getAuthorInfo, hidePopups} from '../../actions';
 import CommentTextArea from './CommentTextArea';
 import {highlightsConfig} from '../../highlightsConfig';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 /**
  * @ngdoc React

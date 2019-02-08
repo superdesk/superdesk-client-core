@@ -1,5 +1,5 @@
 import {coreMenuGroups} from 'core/activity/activity';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 InternalDestinationsFactory.$inject = ['api'];
 function InternalDestinationsFactory(api) {

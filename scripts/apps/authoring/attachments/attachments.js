@@ -1,5 +1,5 @@
 import './attachments.scss';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 class AttachmentsController {
     constructor($scope, $window, superdesk, attachments, notify, deployConfig, urls, lock) {

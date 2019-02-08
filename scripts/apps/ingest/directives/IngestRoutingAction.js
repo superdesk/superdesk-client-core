@@ -1,4 +1,4 @@
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 IngestRoutingAction.$inject = ['desks', 'macros', 'subscribersService', 'metadata'];
 export function IngestRoutingAction(desks, macros, subscribersService, metadata) {

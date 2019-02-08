@@ -11,7 +11,7 @@ import {DashboardController} from './controllers';
 import * as directive from './directives';
 import * as svc from './services';
 
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 angular.module('superdesk.apps.dashboard.widgets', [])
     .provider('dashboardWidgets', svc.DashboardWidgets);

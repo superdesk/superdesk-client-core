@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import React from 'react';
 import {PreviewModal} from '../previewModal';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 
 SendItem.$inject = ['$q', 'api', 'search', 'desks', 'notify', 'authoringWorkspace',

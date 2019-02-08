@@ -1,7 +1,7 @@
 import * as helpers from 'apps/authoring/authoring/helpers';
 import _ from 'lodash';
 import postscribe from 'postscribe';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 /**
  * @ngdoc directive

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {closeActionsMenu} from '../../helpers';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 const Label: React.StatelessComponent<any> = (props) =>
     React.createElement(

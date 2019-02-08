@@ -1,4 +1,4 @@
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 PreviewFormattedDirective.$inject = ['api', 'config', 'notify', 'storage'];
 export function PreviewFormattedDirective(api, config, notify, storage) {

@@ -2,7 +2,7 @@ import {MEDIA_TYPES, MEDIA_TYPE_KEYS, DEFAULT_SCHEMA, VOCABULARY_SELECTION_TYPES
 import {IVocabulary, IVocabularyTag} from 'superdesk-interfaces/Vocabulary';
 import {IDirectiveScope} from 'types/Angular/DirectiveScope';
 import {remove, reduce} from 'lodash';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 const OTHER = gettext('Other');
 

@@ -1,4 +1,4 @@
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 // http://docs.python-cerberus.org/en/stable/usage.html
 export const DEFAULT_SCHEMA = Object.freeze({

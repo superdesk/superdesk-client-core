@@ -5,7 +5,7 @@ import {Row, LineInput, InputArray, MultiTextInput, Input, SelectInput, Toggle, 
     ContactNumberInput, Label, SelectFieldSearchInput} from './index';
 import {get, set, isEmpty, findKey, orderBy, map} from 'lodash';
 import {validateMinRequiredField} from '../../../contacts/helpers';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 export class ProfileDetail extends React.Component<any, any> {
     static propTypes: any;

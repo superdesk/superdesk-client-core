@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import {cloneDeep} from 'lodash';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 IngestSourcesContent.$inject = ['ingestSources', 'notify', 'api', '$location',
     'modal', '$filter', 'config', 'deployConfig', 'privileges'];

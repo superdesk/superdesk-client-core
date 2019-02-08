@@ -11,7 +11,7 @@ import * as directive from './directives';
 import * as svc from './services';
 import * as ctrl from './controllers';
 
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 angular.module('superdesk.apps.archive.directives', [
     'superdesk.core.filters',

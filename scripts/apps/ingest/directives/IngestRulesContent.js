@@ -1,4 +1,4 @@
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 IngestRulesContent.$inject = ['api', 'notify', 'modal', '$filter'];
 export function IngestRulesContent(api, notify, modal, $filter) {

@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 AggregateCtrl.$inject = ['$scope', 'api', 'desks', 'workspaces', 'preferencesService', 'storage',
     'multi', 'config', '$timeout', 'savedSearch', 'deployConfig'];

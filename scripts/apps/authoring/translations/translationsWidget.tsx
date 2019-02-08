@@ -3,7 +3,7 @@ import {RelativeDate} from 'core/datetime/relativeDate';
 import {state as State} from 'apps/search/components/fields/state';
 import {connectServices} from 'core/helpers/ReactRenderAsync';
 import {IArticle} from 'superdesk-interfaces/Article';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 interface IProps {
     item: IArticle;

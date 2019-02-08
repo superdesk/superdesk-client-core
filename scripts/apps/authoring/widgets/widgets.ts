@@ -1,7 +1,7 @@
 import {debounce} from 'lodash';
 import {IContentProfile} from "superdesk-interfaces/ContentProfile";
 import {isWidgetVisibleForContentProfile} from "apps/workspace/content/components/WidgetsConfig";
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 function AuthoringWidgetsProvider() {
     var widgets = [];

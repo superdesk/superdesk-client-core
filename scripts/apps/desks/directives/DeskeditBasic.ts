@@ -1,6 +1,6 @@
 import {limits} from 'apps/desks/constants';
 import _ from 'lodash';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 DeskeditBasic.$inject = ['desks', 'WizardHandler', 'metadata', 'config',
     '$filter'];

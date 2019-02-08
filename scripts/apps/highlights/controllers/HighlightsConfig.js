@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 HighlightsConfig.$inject = ['$scope', 'highlightsService', 'desks', 'api', 'notify', 'modal'];
 export function HighlightsConfig($scope, highlightsService, desks, api, notify, modal) {

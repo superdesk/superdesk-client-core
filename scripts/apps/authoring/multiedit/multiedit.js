@@ -8,7 +8,7 @@
  * at https://www.sourcefabric.org/superdesk/license
  */
 
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 
 MultieditService.$inject = ['storage', 'superdesk', 'authoringWorkspace', 'referrer', '$location'];

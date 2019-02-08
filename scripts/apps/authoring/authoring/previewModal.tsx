@@ -5,7 +5,7 @@ import {Modal} from 'core/ui/components/Modal/Modal';
 import {ModalHeader} from 'core/ui/components/Modal/ModalHeader';
 import {ModalBody} from 'core/ui/components/Modal/ModalBody';
 import {ModalFooter} from 'core/ui/components/Modal/ModalFooter';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 const getFormattedDocument = (url) => fetch(url).then(
     (response) => response.text()

@@ -1,6 +1,6 @@
 import {forEach} from 'lodash';
 import langmap from 'core/lang';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 interface IActivityData {
     priority: number; // priority used for ordering.

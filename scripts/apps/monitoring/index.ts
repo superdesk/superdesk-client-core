@@ -18,7 +18,7 @@ import * as directive from './directives';
 import * as svc from './services';
 import {SplitFilter} from './filters';
 import {MonitoringController} from './controllers/MonitoringController';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 /**
  * @ngdoc module

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import {Column} from './Column';
 import {isNotForPublication} from '../utils';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 /**
  * @ngdoc react
