@@ -70,12 +70,23 @@
             @include transition(all .3s);
             @include border-box();
             padding: 0!important;
-            &.monitoring__content {
-                display: flex;
-                flex-direction: column;
-            }
+
             .list {
                 padding-top: 9px
+            }
+            .sd-columns {
+                display: table;
+                width: 100%;
+                height: 100vh;
+                table-layout: fixed;
+                @media only screen and (max-width : 1430px) {
+                    right: $sidepreview-width - 40;
+                }
+            }
+            .sd-column {
+                display: table-cell;
+                position: relative;
+                vertical-align: top;
             }
             .stage {
                 padding: 0;
@@ -85,6 +96,11 @@
             .single-group {
                 .stage {
                     margin: 0;
+                    position: absolute;
+                    top: 9px;
+                    bottom: 18px;
+                    left: 18px;
+                    right: 18px;
                 }
             }
 
@@ -120,135 +136,39 @@
                 max-height: calc(100vh - 180px) !important;
             }
         }
-        .monitoring__toolbar-container {
-            flex-shrink: 1;
-        }
-        .monitoring__main-content {
-            position: relative;
-            flex-grow: 1;
-            display: flex;
-            overflow-y: auto;   
-        }
     }
 }
 
 .workspace {
-    .main-section {
-        .sd-preview-panel {
-            width: 0;
-            transition: all ease-in-out 0.2s;
-        }
-        [sd-item-preview] {
-            opacity: 0;
-            transition: all ease-in-out 0.4s;
-        }
-        .content-item-preview {
-            position: absolute;
-            z-index: 1;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            width: $sidepreview-width + 160;
-            @media only screen and (max-width : 1430px) {
-                width: $sidepreview-width - 40;
-            }
-            .shift-preview__toggle {
-                display: none;
-            }
-        }
-        &.with-preview {
-            [sd-item-preview] {
-                position: relative;
-                width: 100%;
-                height: 100%;
-                opacity: 1;
-                &.sd-preview--overlay {
-                    position: absolute;
-                    overflow: visible;
-                    top: 9.6rem;
-                    right:0;
-                    bottom: 0;
-                    width: 0;
-                    z-index: 3;
-                    .content-item-preview {
-                        width: $sidepreview-width - 80;
-                        transition: all ease-in-out 0.2s;
-                        overflow-y: visible !important;
-                        right: 80 - $sidepreview-width - 4;
-                        box-shadow: inset 3px 0 2px -1px rgba(0, 0, 0, 0.12), 2px 0 8px 0 rgba(0, 0, 0, 0.3), 0 0 2px 0 rgba(0, 0, 0, 0.12);
-                        &.shift {
-                            right:0;
-                            box-shadow: -2px 0 8px 0 rgba(0, 0, 0, 0.3), 0 0 2px 0 rgba(0, 0, 0, 0.12);
-                        }
-                        .shift-preview__toggle {
-                            display: inline-block;
-                        }
-                    }
-                }
-            }
-            .sd-preview-panel {
-                width: $sidepreview-width + 160;
-                @media only screen and (max-width : 1430px) {
-                    width: $sidepreview-width - 40;
-                }
-                flex-shrink: 0;
-
-            }
-            .compact {
-                .content-list {
-                    overflow-y: visible;
-                }
-
-            }
-        }
-        &.search-page-container {
-            .content-item-preview {
-            top: $nav-height;
-            }
-        }
-        &.search {
-            .preview-layout {
-                [sd-item-preview] {
-                    opacity: 1;
-                    transition: all ease-in-out 0.4s;
-                }
-                &.closed {
-                    opacity: 1;
-                }
-            }
-
-        }
+  .main-section {
+    .content-item-preview {
+      position: absolute;
+      z-index: 9999;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: $sidepreview-width + 160;
+      @media only screen and (max-width : 1430px) {
+          width: $sidepreview-width - 40;
+      }
+      .shift-preview__toggle {
+        display: none;
+      }
     }
-}
-
-.shift-preview__toggle {
-    position: absolute;
-    display: none;
-    width: 24px;
-    height: 48px;
-    padding: 0;
-    top: 0;
-    right: -24px;
-    border: 0;
-    line-height: 0;
-    opacity: .65;
-    background-color: $white;
-    @include border-radius(0 2px 2px 0);
-    box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.2), 2px 0 10px 0 rgba(0, 0, 0, 0.3);
-
-    i { height: 15px; }
-
-    &:hover {
-        opacity: 1;
-        background-color: $sd-blue;
-        i { color: $white; }
-    }          
-    &.shift {
-        top: 1px;
-        @include border-radius(2px 0 0 2px);
-        @include box-shadow(-1px 0px 7px 0px rgba(0, 0, 0, 0.3));
-        @include rotate(180deg);
+    &.with-preview {
+      .content-list {
+        right: $sidepreview-width + 160;
+        @media only screen and (max-width : 1430px) {
+            right: $sidepreview-width - 40;
+        }
+      }
     }
+    &.search-page-container {
+      .content-item-preview {
+        top: $nav-height;
+      }
+    }
+  }
 }
 
 .workspace.authoring {
@@ -258,12 +178,62 @@
             @media only screen and (max-width : 1630px) {
                 width: $sidepreview-width - 40;
             }
+            @media only screen and (max-width : 1430px) {
+                width: $sidepreview-width - 80;
+                overflow: visible;
+                right: -324px;
+                overflow-y: visible !important;
+            }
+            &.shift {
+                @media only screen and (max-width : 1430px) {
+                    width: $sidepreview-width - 80;
+                    right: 0px;
+                    @include box-shadow(inset 2px 0 3px -1px #d8d8d8);
+                }
+            }
+            .shift-preview__toggle {
+                position: absolute;
+                width: 24px;
+                height: 48px;
+                padding: 0;
+                top: 0;
+                right: -24px;
+                border: 0;
+                line-height: 0;
+                opacity: .5;
+                background-color: $white;
+                @include border-radius(0 2px 2px 0);
+                @include box-shadow(2px 0px 10px 0px rgba(0, 0, 0, 0.3));
+
+                i { height: 15px; }
+
+                &:hover {
+                    opacity: 1;
+                    background-color: $sd-blue;
+                    i { color: $white; }
+                }          
+                &.shift {
+                    top: 1px;
+                    @include border-radius(2px 0 0 2px);
+                    @include box-shadow(-1px 0px 7px 0px rgba(0, 0, 0, 0.3));
+                    @include rotate(180deg);
+                }
+                @media only screen and (max-width : 1430px) {
+                    display: inline !important;
+                }
+                @media only screen and (max-width : 1630px) {
+                    display: none;
+                }
+            }
         }
         &.with-preview {
-            .sd-preview-panel {
-                width: $sidepreview-width;
+            .content-list {
+                right: $sidepreview-width;
                 @media only screen and (max-width : 1630px) {
-                    width: $sidepreview-width - 40;
+                    right: $sidepreview-width - 40;
+                }
+                @media only screen and (max-width : 1430px) {
+                    right: 0;
                 }
             }
             .navbtn {

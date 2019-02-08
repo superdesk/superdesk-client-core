@@ -264,6 +264,10 @@ a:hover {
         }
         > .content {
             overflow: auto;
+            right: $sidepreview-width + 160;
+            @media only screen and (max-width : 1430px) {
+                right: $sidepreview-width - 40;
+            }
         }
     }
     .preview-pane {
@@ -312,25 +316,25 @@ a:hover {
         }
     }
 
-    // &.closed {
-    //     @include transition(right ease 0.2s);
-    //     .list-pane {
-    //         border-right: 0;
-    //         > .content {
-    //             right: 0 !important;
-    //         }
-    //     }
-    // }
+    &.closed {
+        @include transition(right ease 0.2s);
+        .list-pane {
+            border-right: 0;
+            > .content {
+                right: 0 !important;
+            }
+        }
+    }
 
-    // .content-item-preview {
-    //     position: absolute;
-    //     top:50px;
-    //     right: 0;
-    //     bottom: 0;
-    //     @media only screen and (max-width : 1430px) {
-    //         width: $sidepreview-width - 40;
-    //     }
-    // }
+    .content-item-preview {
+        position: absolute;
+        top:50px;
+        right: 0;
+        bottom: 0;
+        @media only screen and (max-width : 1430px) {
+            width: $sidepreview-width - 40;
+        }
+    }
 }
 .ingest-container {
     .list-pane {
@@ -343,37 +347,37 @@ a:hover {
     }
 }
 
-// .authoring {
-//     .preview-layout {
-//         .list-pane {
-//             > .content {
-//                 right: $sidepreview-width;
-//                 @media only screen and (max-width : 1630px) {
-//                     right: $sidepreview-width - 40;
-//                 }
-//                 @media only screen and (max-width : 1430px) {
-//                     right: 0;
-//                 }
-//             }
-//         }
-//         .content-item-preview {
-//             @media only screen and (max-width : 1630px) {
-//                 width: $sidepreview-width - 40;
-//             }
-//             @media only screen and (max-width : 1430px) {
-//                 width: $sidepreview-width - 80;
-//                 box-shadow: inset 4px 0 8px -5px rgba(0,0,0,0.9), 0 1px 12px 2px rgba(0,0,0,0.3), 0 1px 2px 1px rgba(0,0,0,0.3);
-//             }
-//         }
-//         &.closed {
-//             .content-item-preview {
-//                 @media only screen and (max-width : 1430px) {
-//                     box-shadow: none;
-//                 }
-//             }
-//         }
-//     }
-// }
+.authoring {
+    .preview-layout {
+        .list-pane {
+            > .content {
+                right: $sidepreview-width;
+                @media only screen and (max-width : 1630px) {
+                    right: $sidepreview-width - 40;
+                }
+                @media only screen and (max-width : 1430px) {
+                    right: 0;
+                }
+            }
+        }
+        .content-item-preview {
+            @media only screen and (max-width : 1630px) {
+                width: $sidepreview-width - 40;
+            }
+            @media only screen and (max-width : 1430px) {
+                width: $sidepreview-width - 80;
+                box-shadow: inset 4px 0 8px -5px rgba(0,0,0,0.9), 0 1px 12px 2px rgba(0,0,0,0.3), 0 1px 2px 1px rgba(0,0,0,0.3);
+            }
+        }
+        &.closed {
+            .content-item-preview {
+                @media only screen and (max-width : 1430px) {
+                    box-shadow: none;
+                }
+            }
+        }
+    }
+}
 
 // Slide pane
 // ---------------------------------------------
@@ -530,10 +534,7 @@ $slide-pane-width: 400px;
     }
     > .content {
         position: absolute;
-        top: $nav-height; 
-        left: 0; 
-        right: 0; 
-        bottom: 0;
+        top: $nav-height; left: 0; right: 0; bottom: 0;
         overflow: auto;
         overflow-x: hidden;
         padding: 20px;
