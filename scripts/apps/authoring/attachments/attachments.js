@@ -14,47 +14,54 @@ import {
     download,
 } from './actions';
 
+const mapStateToCtrl = (state) => ({
+    edit: state.attachments.diff,
+    file: state.attachments.file,
+    files: state.attachments.files,
+    maxSize: state.attachments.maxSize,
+    maxFiles: state.attachments.maxFiles,
+    isLocked: state.editor.isLocked,
+    isLockedByMe: state.editor.isLockedByMe,
+});
+
+const mapDispatchToCtrl = (dispatch) => ({
+    selectFiles: (files) => dispatch(selectFiles(files)),
+    removeFile: (file) => dispatch(removeFile(file)),
+    editFile: (file) => dispatch(editFile(file)),
+    saveFile: (file, diff) => dispatch(saveFile(file, diff)),
+    closeEdit: () => dispatch(closeEdit()),
+    download: (file) => dispatch(download(file)),
+});
+
 class AttachmentsController {
     constructor($scope) {
         // connect
-        this.selectFiles = (files) => $scope.store.dispatch(selectFiles(files));
-        this.removeFile = (file) => $scope.store.dispatch(removeFile(file));
-        this.editFile = (file) => $scope.store.dispatch(editFile(file));
-        this.saveFile = (file, diff) => $scope.store.dispatch(saveFile(file, diff));
-        this.closeEdit = () => $scope.store.dispatch(closeEdit());
-        this.download = (file) => $scope.store.dispatch(download(file));
+        Object.assign(this, mapDispatchToCtrl($scope.store.dispatch));
+
+        let state = $scope.store.getState();
 
         // re-render on change
-        $scope.store.subscribe(() => {
-            $scope.$applyAsync(() => {
-                this.mapStateToCtrl($scope.store.getState());
-            });
+        const unsubscribe = $scope.store.subscribe(() => {
+            if ($scope.store.getState().attachments !== state.attachments) {
+                state = $scope.store.getState();
+                $scope.$applyAsync(() => {
+                    this.mapState($scope.store.getState());
+                });
+            }
         });
 
+        $scope.$on('$destroy', unsubscribe);
+
         // init
-        this.mapStateToCtrl($scope.store.getState());
+        this.mapState($scope.store.getState());
     }
 
-    mapStateToCtrl(state) {
-        this.edit = state.attachments.diff;
-        this.file = state.attachments.file;
-        this.files = state.attachments.files;
-        this.maxSize = state.attachments.maxSize;
-        this.maxFiles = state.attachments.maxFiles;
-        this.isLocked = state.editor.isLocked;
-        this.isLockedByMe = state.editor.isLockedByMe;
+    mapState(state) {
+        Object.assign(this, mapStateToCtrl(state));
     }
 }
 
-AttachmentsController.$inject = [
-    '$scope',
-    '$window',
-    'superdesk',
-    'attachments',
-    'notify',
-    'urls',
-    'lock',
-];
+AttachmentsController.$inject = ['$scope'];
 
 AttachmentsFactory.$inject = ['api'];
 function AttachmentsFactory(api) {
