@@ -1,3 +1,9 @@
+import {createStore, applyMiddleware} from 'redux';
+import thunk from 'redux-thunk';
+
+import {attachments as attachmentsReducer} from './attachments';
+import * as actions from './actions';
+
 describe('attachments', () => {
     beforeEach(window.module('superdesk.apps.authoring.attachments'));
 
@@ -22,4 +28,30 @@ describe('attachments', () => {
 
         $rootScope.$digest();
     }));
+
+    describe('attachments store', () => {
+        let store;
+
+        beforeEach(inject((attachments, deployConfig) => {
+            store = createStore(attachmentsReducer, applyMiddleware(thunk.withExtraArgument({
+                attachments: attachments,
+                deployConfig: deployConfig,
+            })));
+        }));
+
+        it('can init attachments', inject((api, deployConfig, $q, $rootScope) => {
+            const item = {};
+            const files = ['foo'];
+
+            spyOn(api, 'query').and.returnValue($q.when({_items: files}));
+            spyOn(deployConfig, 'getSync').and.returnValue(100);
+
+            store.dispatch(actions.initAttachments(item));
+            $rootScope.$digest();
+
+            expect(store.getState().maxSize).toBe(100);
+            expect(store.getState().maxFiles).toBe(100);
+            expect(store.getState().files).toBe(files);
+        }));
+    });
 });

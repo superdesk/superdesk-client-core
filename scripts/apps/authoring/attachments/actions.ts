@@ -81,9 +81,6 @@ export function download(file) {
 }
 
 function updateItem(state, $scope) {
-    $scope.item.attachments = state.attachments.files.map(
-        (f) => ({attachment: f._id})
-    );
-
+    $scope.item.attachments = state.attachments.files.map((f) => ({attachment: f._id}));
     $scope.autosave();
 }

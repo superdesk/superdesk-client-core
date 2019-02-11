@@ -151,6 +151,7 @@ const config = (awp) =>
 
 angular.module('superdesk.apps.authoring.attachments', [
     'ngFileUpload',
+    'superdesk.config',
     'superdesk.core.api',
     'superdesk.apps.authoring.widgets',
 ])

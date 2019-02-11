@@ -23,9 +23,18 @@ export function attachments(state = initialState, action: {type: string, payload
     case REMOVE_ATTACHMENT:
         return {...state, files: state.files.filter((f) => f !== action.payload)};
     case EDIT_ATTACHMENT:
-        return {...state, file: action.payload, diff: action.payload != null ? Object.create(action.payload) : null};
+        return {
+            ...state,
+            file: action.payload,
+            diff: action.payload != null ? Object.create(action.payload) : null,
+        };
     case SAVE_ATTACHMENT:
-        return {...state, file: null, diff: null, files: state.files.map((f) => f._id !== action.payload._id ? f : action.payload)};
+        return {
+            ...state,
+            file: null,
+            diff: null,
+            files: state.files.map((f) => f._id !== action.payload._id ? f : action.payload),
+        };
     default:
         return state;
     }
