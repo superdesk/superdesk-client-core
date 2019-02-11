@@ -14,7 +14,7 @@ const initialState = {
     maxFiles: 10,
 };
 
-export function attachments(state = initialState, action) {
+export function attachments(state = initialState, action: {type: string, payload: any}) {
     switch (action.type) {
     case INIT_ATTACHMENTS:
         return {...action.payload};
