@@ -3,8 +3,8 @@
     ngf-stop-propagation="true"
     ngf-multiple="true">
     <div class="attachments-list">
-        <ul ng-if="files">
-            <li ng-repeat="file in files track by file._id" class="sd-list-item sd-shadow--z1">
+        <ul ng-if="ctrl.files">
+            <li ng-repeat="file in ctrl.files track by file._id" class="sd-list-item sd-shadow--z1">
                 <div class="sd-list-item__column sd-list-item__column--no-border" title="{{ :: file.mimetype }}">
                     <i class="big-icon--{{ :: file.mimetype | fileicon }}"></i>
                 </div>
@@ -25,7 +25,7 @@
                         title="{{ :: 'Download' | translate }}"><i class="icon-download"></i></button>
                     <button class="dropdown__toggle"
                         ng-if="!ctrl.isLocked"
-                        ng-click="ctrl.startEdit(file)"
+                        ng-click="ctrl.editFile(file)"
                         title="{{ :: 'Edit' | translate }}"><i class="icon-pencil"></i></button>
                     <button class="dropdown__toggle"
                         ng-if="!ctrl.isLocked"
@@ -37,8 +37,8 @@
     </div>
 
     <div class="attach-indicator"
-        ng-show="files.length < ctrl.maxFiles && ctrl.isLockedByMe"
-        ng-class="{empty: files.length === 0}"
+        ng-show="ctrl.files.length < ctrl.maxFiles && ctrl.isLockedByMe"
+        ng-class="{empty: ctrl.files.length === 0}"
         >
 
         <div class="round-box">
@@ -82,7 +82,7 @@
         </div>
 
         <div class="modal__footer">
-            <button class="btn btn--primary pull-right" ng-click="ctrl.saveEdit()" ng-disabled="attachmentsForm.$invalid" translate>Update</button>
+            <button class="btn btn--primary pull-right" ng-click="ctrl.saveFile(ctrl.file, ctrl.edit)" ng-disabled="attachmentsForm.$invalid" translate>Update</button>
             <button class="btn pull-right" ng-click="ctrl.closeEdit()" translate>Cancel</button>
         </div>
     </div>

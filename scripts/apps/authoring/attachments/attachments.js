@@ -1,84 +1,48 @@
 import './attachments.scss';
 import {gettext} from 'core/utils';
+import AttachmentsEditorDirective from './AttachmentsEditorDirective';
+
+export {attachments} from './reducer';
+export {initAttachments} from './actions';
+
+import {
+    removeFile,
+    selectFiles,
+    editFile,
+    saveFile,
+    closeEdit,
+    download,
+} from './actions';
 
 class AttachmentsController {
-    constructor($scope, $window, superdesk, attachments, notify, deployConfig, urls, lock) {
-        this.$scope = $scope;
-        this.$window = $window;
-        this.superdesk = superdesk;
-        this.attachments = attachments;
-        this.notify = notify;
-        this.urls = urls;
-        this.isLocked = lock.isLocked($scope.item);
-        this.isLockedByMe = lock.isLockedByMe($scope.item);
+    constructor($scope) {
+        // connect
+        this.selectFiles = (files) => $scope.store.dispatch(selectFiles(files));
+        this.removeFile = (file) => $scope.store.dispatch(removeFile(file));
+        this.editFile = (file) => $scope.store.dispatch(editFile(file));
+        this.saveFile = (file, diff) => $scope.store.dispatch(saveFile(file, diff));
+        this.closeEdit = () => $scope.store.dispatch(closeEdit());
+        this.download = (file) => $scope.store.dispatch(download(file));
 
-        attachments.byItem($scope.item).then((files) => {
-            this.$scope.files = files;
-        }, () => {
-            this.$scope.files = [];
+        // re-render on change
+        $scope.store.subscribe(() => {
+            $scope.$applyAsync(() => {
+                this.mapStateToCtrl($scope.store.getState());
+            });
         });
 
-        this.maxFiles = deployConfig.getSync('attachments_max_files');
-        this.maxSize = deployConfig.getSync('attachments_max_size');
+        // init
+        this.mapStateToCtrl($scope.store.getState());
     }
 
-    selectFiles(files) {
-        if (Array.isArray(files) && files.length > 0 && !this.isLocked) {
-            if (files.length + this.$scope.files.length > this.maxFiles) {
-                this.notify.error(gettext('Sorry, too many files selected.'));
-                return;
-            }
-
-            const bigFiles = files.filter((file) => file.size > this.maxSize);
-
-            if (bigFiles.length) {
-                this.notify.error(gettext('Sorry, but some files are too big.'));
-                return;
-            }
-
-            this.superdesk
-                .intent('upload', 'attachments', files)
-                .then(this.addFiles.bind(this));
-        }
-    }
-
-    addFiles(files) {
-        const attachments = this.$scope.item.attachments || [];
-
-        this.$scope.files = this.$scope.files.concat(files);
-        this.$scope.item.attachments = attachments.concat(files.map((f) => ({attachment: f._id})));
-        this.autosave();
-    }
-
-    removeFile(file) {
-        this.$scope.files = this.$scope.files.filter((f) => f !== file);
-        this.$scope.item.attachments = this.$scope.item.attachments.filter(
-            (item) => item.attachment !== file._id
-        );
-        this.autosave();
-    }
-
-    download(file) {
-        this.$window.open(this.urls.media(file.media, 'attachments'), '_blank');
-    }
-
-    autosave() {
-        this.$scope.autosave(this.$scope.item);
-    }
-
-    startEdit(file) {
-        this.edit = Object.create(file);
-        this.file = file;
-    }
-
-    saveEdit() {
-        this.attachments.save(this.file, this.edit);
-        this.closeEdit();
-    }
-
-    closeEdit() {
-        this.edit = null;
-        this.file = null;
+    mapStateToCtrl(state) {
+        this.edit = state.attachments.diff;
+        this.file = state.attachments.file;
+        this.files = state.attachments.files;
+        this.maxSize = state.attachments.maxSize;
+        this.maxFiles = state.attachments.maxFiles;
+        this.isLocked = state.editor.isLocked;
+        this.isLockedByMe = state.editor.isLockedByMe;
     }
 }
 
@@ -88,7 +52,6 @@ AttachmentsController.$inject = [
     'superdesk',
     'attachments',
     'notify',
-    'deployConfig',
     'urls',
     'lock',
 ];
@@ -186,4 +149,6 @@ angular.module('superdesk.apps.authoring.attachments', [
 ])
     .factory('attachments', AttachmentsFactory)
     .controller('AttachmentsCtrl', AttachmentsController)
-    .config(['authoringWidgetsProvider', config]);
+    .config(['authoringWidgetsProvider', config])
+    .directive('sdAttachmentsEditor', AttachmentsEditorDirective)
+;
