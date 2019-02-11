@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 LockService.$inject = ['$q', 'api', 'session', 'privileges', 'notify'];
 export function LockService($q, api, session, privileges, notify) {

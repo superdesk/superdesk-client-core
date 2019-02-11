@@ -1,4 +1,4 @@
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 CombinePackageCtrl.$inject = ['data', 'packages', 'authoringWorkspace', 'notify'];
 export function CombinePackageCtrl(data, packages, authoringWorkspace, notify) {

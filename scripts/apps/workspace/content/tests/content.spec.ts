@@ -8,6 +8,7 @@ describe('superdesk.apps.workspace.content', () => {
     beforeEach(window.module('superdesk.apps.workspace.content'));
     beforeEach(window.module('superdesk.apps.vocabularies'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
+    beforeEach(window.module('superdesk.apps.authoring.metadata'));
 
     describe('content service', () => {
         var done;
@@ -292,7 +293,7 @@ describe('superdesk.apps.workspace.content', () => {
         }));
 
         it('should dirty parent form when toggling fields', (done) => {
-            inject((content, vocabularies, $q) => {
+            inject((content, vocabularies, $q, metadata) => {
                 var el = compile({
                     model: {},
                 });
@@ -301,7 +302,11 @@ describe('superdesk.apps.workspace.content', () => {
                     editor: content.contentProfileEditor}));
 
                 spyOn(content, 'getCustomFields').and.returnValue($q.when([]));
-                spyOn(vocabularies, 'getAllActiveVocabularies').and.returnValue($q.when([]));
+                spyOn(vocabularies, 'getVocabularies').and.returnValue($q.when([]));
+                spyOn(metadata, 'getAllCustomVocabulariesForArticleHeader').and.returnValue($q.when({
+                    customVocabulariesForArticleHeader: [],
+                    customTextAndDateVocabularies: [],
+                }));
 
                 waitUntil(() => {
                     el.scope().$digest();

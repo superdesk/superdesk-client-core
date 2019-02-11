@@ -1,5 +1,5 @@
 import {ChangeImageController} from '../authoring/controllers/ChangeImageController';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 describe('authoring ChangeImageController', () => {
     let deployConfig = {

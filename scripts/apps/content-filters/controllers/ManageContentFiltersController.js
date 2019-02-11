@@ -1,5 +1,5 @@
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 /**
  * @ngdoc controller

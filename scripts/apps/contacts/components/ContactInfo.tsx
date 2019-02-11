@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {ItemContainer} from 'apps/contacts/components';
 import {ContactName, Notes, JobTitle} from 'apps/contacts/components/fields';
 import {isEmpty, findKey} from 'lodash';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 /**
  * Media Contact Info - renders contact's information

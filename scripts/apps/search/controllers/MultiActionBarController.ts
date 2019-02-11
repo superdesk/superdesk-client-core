@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import {IArticle} from 'superdesk-interfaces/Article';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 /**
  * @ngdoc controller

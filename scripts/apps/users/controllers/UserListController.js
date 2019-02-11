@@ -1,4 +1,4 @@
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 UserListController.$inject = ['$scope', '$location', 'api', 'lodash', 'session', 'usersService'];
 export function UserListController($scope, $location, api, _, session, usersService) {

@@ -1,4 +1,4 @@
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 ResendItem.$inject = ['subscribersService', 'authoring', 'api', 'notify'];
 

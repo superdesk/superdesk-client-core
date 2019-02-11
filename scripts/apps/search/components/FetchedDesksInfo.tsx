@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {DesksDropdown} from './index';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 export class FetchedDesksInfo extends React.Component<any, any> {
     static propTypes: any;

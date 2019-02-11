@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ObjectEditor from './ObjectEditor';
 import {has} from 'lodash';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 export default class ItemsTableComponent extends React.Component<any, any> {
     static propTypes: any;
@@ -16,7 +16,9 @@ export default class ItemsTableComponent extends React.Component<any, any> {
     componentDidUpdate() {
         const {targetInput, caretPosition} = this.state;
 
-        this.setCaretPosition(targetInput, caretPosition);
+        if (caretPosition != null) {
+            this.setCaretPosition(targetInput, caretPosition);
+        }
     }
 
     getModelKeys() {

@@ -18,7 +18,7 @@ import * as directive from './directives';
 import * as svc from './services';
 import {SplitFilter} from './filters';
 import {MonitoringController} from './controllers/MonitoringController';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 /**
  * @ngdoc module
@@ -66,6 +66,7 @@ angular.module('superdesk.apps.monitoring', [
             gettext('Select previous item on focused stage or group'));
         keyboardManager.register('Monitoring / List actions', 'alt + o', gettext('View an item'));
         keyboardManager.register('Monitoring / List actions', 'ctrl + alt + e', gettext('Edit an item'));
+        keyboardManager.register('Monitoring / List actions', 'ctrl + enter', gettext('Fetch an item'));
         keyboardManager.register('Monitoring / List actions', 'ctrl + alt + n',
             gettext('Edit an item in a new Window'));
         keyboardManager.register('Monitoring / List actions', 'ctrl + alt + d', gettext('Duplicate an item'));

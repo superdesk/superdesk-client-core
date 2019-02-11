@@ -1,4 +1,4 @@
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 ChangeAvatarController.$inject = ['$scope', 'upload', 'session', 'urls', 'betaService', 'notify', 'lodash'];
 export function ChangeAvatarController($scope, upload, session, urls, beta, notify, _) {

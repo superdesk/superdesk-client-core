@@ -1,4 +1,4 @@
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 TemplateSelectDirective.$inject = ['api', 'desks', 'session', 'templates', 'notify'];
 export function TemplateSelectDirective(api, desks, session, templates, notify) {

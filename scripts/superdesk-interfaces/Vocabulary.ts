@@ -16,7 +16,7 @@ export interface IVocabulary {
     priority: number;
     unique_field: string;
     schema: {};
-    field_type: string;
+    field_type: 'text' | 'media' | 'date' | 'embed' | 'related_content';
     field_options: {};
     init_version: number;
     preffered_items: boolean;

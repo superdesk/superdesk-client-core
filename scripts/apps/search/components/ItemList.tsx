@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import {Item} from './index';
 import {isCheckAllowed, closeActionsMenu, bindMarkItemShortcut} from '../helpers';
 import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 import {IArticle} from 'superdesk-interfaces/Article';
 
 interface IState {
@@ -97,7 +97,7 @@ export class ItemList extends React.Component<any, IState> {
         this.setState({narrow: setNarrow});
     }
 
-    select(item, event?) {
+    select(item, event) {
         if (typeof this.props.onMonitoringItemSelect === 'function') {
             this.props.onMonitoringItemSelect(item, event);
             return;
@@ -118,21 +118,17 @@ export class ItemList extends React.Component<any, IState> {
 
         $timeout.cancel(this.updateTimeout);
 
-        // even is null when selecting with keyboard
-        // but is not null and has a target when selected using the checkbox
         const showPreview = (event == null || event.target == null) ||
             querySelectorParent(event.target, '.sd-monitoring-item-multi-select-checkbox') == null;
 
-        this.updateTimeout = $timeout(() => {
-            if (item && scope.preview) {
-                scope.$apply(() => {
-                    if (showPreview) {
-                        scope.preview(item);
-                    }
-                    this.bindActionKeyShortcuts(item);
-                });
-            }
-        }, 500, false);
+        if (item && scope.preview) {
+            scope.$apply(() => {
+                if (showPreview) {
+                    scope.preview(item);
+                }
+                this.bindActionKeyShortcuts(item);
+            });
+        }
     }
 
     /*
@@ -331,6 +327,12 @@ export class ItemList extends React.Component<any, IState> {
     }
 
     handleKey(event) {
+        // don't do anything when modifier key is pressed
+        // this allows shortcuts defined in activities to work without two actions firing for one shortcut
+        if (event.ctrlKey || event.altKey || event.shiftKey) {
+            return;
+        }
+
         const {scope} = this.props;
         const {Keys, monitoringState} = this.props.svc;
         const KEY_CODES = Object.freeze({
@@ -393,25 +395,25 @@ export class ItemList extends React.Component<any, IState> {
             break;
         }
 
-        const highlightSelected = () => {
+        const highlightSelected = (_event) => {
             for (let i = 0; i < this.state.itemsList.length; i++) {
                 if (this.state.itemsList[i] === this.state.selected) {
                     const next = Math.min(this.state.itemsList.length - 1, Math.max(0, i + diff));
 
-                    this.select(this.state.itemsById[this.state.itemsList[next]]);
+                    this.select(this.state.itemsById[this.state.itemsList[next]], _event);
                     return;
                 }
             }
         };
 
-        const checkRemaining = () => {
+        const checkRemaining = (_event) => {
             event.preventDefault();
             event.stopPropagation();
 
             if (this.state.selected) {
-                highlightSelected();
+                highlightSelected(_event);
             } else {
-                this.select(this.state.itemsById[this.state.itemsList[0]]);
+                this.select(this.state.itemsById[this.state.itemsList[0]], _event);
             }
         };
 
@@ -437,7 +439,7 @@ export class ItemList extends React.Component<any, IState> {
         };
 
         if (!_.isNil(diff)) {
-            checkRemaining();
+            checkRemaining(event);
             scrollSelectedItemIfRequired(event, scope);
         }
     }

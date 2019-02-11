@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import {MEDIA_TYPES, MEDIA_TYPE_KEYS, VOCABULARY_SELECTION_TYPES} from '../constants';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 VocabularyEditController.$inject = [
     '$scope',

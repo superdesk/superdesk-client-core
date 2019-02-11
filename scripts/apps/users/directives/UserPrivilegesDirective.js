@@ -1,5 +1,5 @@
 import handleError from '../helpers';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 /**
  * @ngdoc directive

@@ -1,5 +1,5 @@
 import React from 'react';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 export const ErrorBox: React.StatelessComponent<any> = (props) =>
     React.createElement('div', {className: 'error-box'},

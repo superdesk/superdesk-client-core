@@ -9,7 +9,7 @@ import * as directive from './directives';
 import {InsertFilter, ScheduleFilter} from './filters';
 import _ from 'lodash';
 import {coreMenuGroups} from 'core/activity/activity';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 angular.module('superdesk.apps.ingest.send', ['superdesk.core.api', 'superdesk.apps.desks'])
     .service('send', svc.SendService);
@@ -115,6 +115,7 @@ angular.module('superdesk.apps.ingest', [
                 controller: ['send', 'data', function(send, data) {
                     return send.one(data.item);
                 }],
+                keyboardShortcut: 'ctrl+enter',
                 filters: [{action: 'list', type: 'ingest'}],
                 privileges: {fetch: 1},
                 key: 'f',

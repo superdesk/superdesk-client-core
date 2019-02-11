@@ -1,5 +1,5 @@
 import * as helpers from 'apps/authoring/authoring/helpers';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 AuthoringEmbeddedDirective.$inject = ['api', 'notify', '$filter', 'config', 'deployConfig'];
 export function AuthoringEmbeddedDirective(api, notify, $filter, config, deployConfig) {

@@ -1,4 +1,4 @@
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 ItemGlobalSearch.$inject = [
     'session', 'api', 'notify', 'keyboardManager', 'asset', 'authoringWorkspace', 'authoring',

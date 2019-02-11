@@ -1,7 +1,7 @@
 import * as helpers from 'apps/authoring/authoring/helpers';
 import _ from 'lodash';
 import postscribe from 'postscribe';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 /**
  * @ngdoc directive
@@ -595,19 +595,19 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                     return;
                 }
 
-                // Check if there's unpublished related items
-                const related = relationsService.getRelatedItemsWithoutMediaGallery($scope.item, $scope.fields);
-
-                if (related.length > 0) {
-                    return modal.confirm({
-                        bodyText: gettext(
-                            'There are unpublished related items that won\'t be sent out as related items.'
-                            + ' Do you want to publish the article anyway?'
-                        ),
-                    }).then((ok) => ok ? performPublish() : false);
-                }
-
-                return performPublish();
+                // Check if there are unpublished related items without media-gallery
+                relationsService.getRelatedItemsWithoutMediaGallery($scope.item, $scope.fields)
+                    .then((related) => {
+                        if (related.length > 0) {
+                            return modal.confirm({
+                                bodyText: gettext(
+                                    'There are unpublished related items that won\'t be sent out as related items.'
+                        + ' Do you want to publish the article anyway?'
+                                ),
+                            }).then((ok) => ok ? performPublish() : false);
+                        }
+                        return performPublish();
+                    });
             };
 
             function performPublish() {

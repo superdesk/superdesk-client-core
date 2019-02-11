@@ -4,7 +4,7 @@ import './styles/settings.scss';
 import {reactToAngular1} from 'superdesk-ui-framework';
 import {Settings} from './settings';
 import * as directive from './directives';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 /**
  * @ngdoc module

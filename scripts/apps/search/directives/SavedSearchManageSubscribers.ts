@@ -13,7 +13,7 @@ import {CronTimeInterval} from 'types/DataStructures/TimeInterval';
 import {IDesk} from 'superdesk-interfaces/Desk';
 import {IDesksService} from 'types/Services/Desks';
 import {nameof} from 'core/helpers/typescript-helpers';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 interface IModel {
     userSubscribers: Array<IUser>;

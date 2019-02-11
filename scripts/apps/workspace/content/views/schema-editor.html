@@ -33,7 +33,7 @@
                     <li class="main-list">
                         <ul>
                             <li ng-repeat="schema in schemaKeysDisabled | orderBy: 'name' | filter: search track by schema.key">
-                                <button ng-click="toggle(schema, model.editor[id].order, 'before')">{{schema.name | translate}}</button>
+                                <button ng-click="toggle(schema, model.editor[id].order, 'before')">{{schema.name | translate}} <span class="vocabulary-field-type" ng-if="schema.type">({{ schema.type }})</span></button>
                             </li>
                         </ul>
                     </li>

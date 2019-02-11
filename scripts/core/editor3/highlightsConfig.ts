@@ -1,4 +1,4 @@
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 const ENTITY_STYLE_MAP = {
     backgroundColor: 'rgba(100, 235, 59, 0.2)',

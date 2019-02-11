@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {getSpecStyle, getSpecTitle, getSpecValue} from '../helpers';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 export const ItemUrgency: React.StatelessComponent<any> = (props) => {
     const {metadata} = props.svc;

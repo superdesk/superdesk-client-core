@@ -8,7 +8,7 @@
  * and triggering of macros to be apply on provided item
  */
 
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 MacrosService.$inject = ['api', 'notify'];
 function MacrosService(api, notify) {

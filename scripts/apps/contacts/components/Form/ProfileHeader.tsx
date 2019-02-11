@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import {Toggle} from './index';
 import {get} from 'lodash';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 export const ProfileHeader: React.StatelessComponent<any> = ({contact, onChange, readOnly, contactType}) => {
     const displayName = contact.first_name ? contact.first_name + ' ' + contact.last_name : contact.organisation;

@@ -1,3 +1,5 @@
+import {gettext} from 'core/utils';
+
 DictionaryConfigController.$inject = ['$scope', 'dictionaries', 'session', 'modal', 'notify'];
 export function DictionaryConfigController($scope, dictionaries, session, modal, notify) {
     $scope.dictionaries = null;

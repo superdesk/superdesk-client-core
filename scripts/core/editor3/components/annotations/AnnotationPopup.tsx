@@ -12,7 +12,7 @@ import {connectPromiseResults} from 'core/helpers/ReactRenderAsync';
 import {EditorHighlightsHeader} from '../../editorPopup/EditorHighlightsHeader';
 import {FluidRows} from '../../fluid-flex-rows/fluid-rows';
 import {FluidRow} from '../../fluid-flex-rows/fluid-row';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 class Annotation extends React.Component<any, any> {
     static propTypes: any;

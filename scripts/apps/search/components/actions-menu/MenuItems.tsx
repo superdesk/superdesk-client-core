@@ -7,7 +7,7 @@ import Item from './Item';
 import SubmenuDropdown from './SubmenuDropdown';
 import {AUTHORING_MENU_GROUPS} from '../../../authoring/authoring/constants';
 import {closeActionsMenu, menuHolderElem} from '../../helpers';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 export default class MenuItems extends React.Component<any, any> {
     static propTypes: any;

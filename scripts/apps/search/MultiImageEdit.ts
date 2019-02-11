@@ -2,7 +2,7 @@ import _ from 'lodash';
 import {uniq, pickBy, isEmpty} from 'lodash';
 import {validateMediaFieldsThrows} from 'apps/authoring/authoring/controllers/ChangeImageController';
 import {logger} from 'core/services/logger';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 interface IScope extends ng.IScope {
     validator: any;

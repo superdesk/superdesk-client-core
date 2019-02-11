@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 /**
  * Login modal is watching session token and displays modal when needed
