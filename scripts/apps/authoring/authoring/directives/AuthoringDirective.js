@@ -1143,6 +1143,13 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 return mediaIdGenerator.getFieldVersionName(parts[0], newIndex);
             };
 
+            // init
+            $scope.content = content;
+            $scope.closePreview();
+            macros.setupShortcuts($scope);
+            initEmbedFieldsValidation();
+
+            // init redux
             const initialState = {
                 isLocked: $scope.isLocked(),
                 isLockedByMe: $scope.isLockedByMe(),
@@ -1152,13 +1159,6 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 return state;
             }
 
-            // init
-            $scope.content = content;
-            $scope.closePreview();
-            macros.setupShortcuts($scope);
-            initEmbedFieldsValidation();
-
-            // init redux
             const reducer = combineReducers({attachments, editor});
 
             $scope.store = createStore(reducer, applyMiddleware(thunk.withExtraArgument({
