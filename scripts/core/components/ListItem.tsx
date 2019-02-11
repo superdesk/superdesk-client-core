@@ -18,19 +18,42 @@ export class ListItem extends React.Component<IListItemProps, any> {
 
 interface IPropsListItemColumn {
     ellipsisAndGrow?: boolean;
+    noBorder?: boolean;
 }
 
 export class ListItemColumn extends React.Component<IPropsListItemColumn, any> {
     render() {
-        return this.props.ellipsisAndGrow
-            ? (
-                <div className="sd-list-item__column sd-list-item__column--grow">
+        const classNames = [];
+
+        if (this.props.noBorder) {
+            classNames.push('sd-list-item__column--no-border');
+        }
+
+        if (this.props.ellipsisAndGrow) {
+            return (
+                <div className={classNames.concat(['sd-list-item__column', 'sd-list-item__column--grow']).join(' ')}>
                     <div className="sd-list-item__row">
                         <span className="sd-overflow-ellipsis">{this.props.children}</span>
                     </div>
                 </div>
-            )
-            : <div className="sd-list-item__column">{this.props.children}</div>;
+            );
+        } else {
+            return (
+                <div className={classNames.concat(['sd-list-item__column']).join(' ')}>
+                    {this.props.children}
+                </div>
+            );
+        }
+    }
+}
+
+export class ListItemActionsMenu extends React.Component {
+    render() {
+        return (
+            <div className="sd-list-item__action-menu">
+                {this.props.children}
+            </div>
+        );
     }
 }
 

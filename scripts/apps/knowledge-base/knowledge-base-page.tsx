@@ -1,5 +1,5 @@
 import React from 'react';
-import {ListItem, ListItemColumn} from 'core/components/ListItem';
+import {ListItem, ListItemColumn, ListItemActionsMenu} from 'core/components/ListItem';
 import {PageContainer, PageContainerItem} from 'core/components/PageLayout';
 import {KnowledgeItemViewEdit} from './knowledge-item-view-edit';
 import {
@@ -15,6 +15,7 @@ import {FormViewEdit} from './generic-form/from-group';
 import {SearchBar} from 'core/ui/components';
 import {Button} from 'core/ui/components/Nav';
 import {SortBar} from 'core/ui/components/SortBar';
+import {Dropdown2} from 'superdesk-ui-framework';
 
 const originalItems = [
     {
@@ -244,7 +245,7 @@ export class KnowledgeBasePage extends React.Component<void, IState> {
                     <PageContainerItem shrink>
                         <div style={{margin: 20}}>
                             {
-                                this.state.allItems.map((item) => (
+                                this.state.allItems.map((item, i) => (
                                     <ListItem onClick={() => this.openPreview(item.id)} key={item.id}>
                                         <ListItemColumn>
                                             {item.title}
@@ -252,9 +253,40 @@ export class KnowledgeBasePage extends React.Component<void, IState> {
                                         <ListItemColumn>
                                             {item.language}
                                         </ListItemColumn>
-                                        <ListItemColumn ellipsisAndGrow>
+                                        <ListItemColumn ellipsisAndGrow noBorder>
                                             {item.value}
                                         </ListItemColumn>
+                                        <ListItemActionsMenu>
+                                            <button id={"knowledgebaseitem" + i}>
+                                                <i className="icon-dots-vertical" />
+                                            </button>
+                                            <Dropdown2
+                                                triggerSelector={"#knowledgebaseitem" + i}
+                                                placement="left-start"
+                                            >
+                                                <ul
+                                                    className="dropdown__menu"
+                                                    style={{ display: "block", position: "static" }}
+                                                >
+                                                    <li>
+                                                        <div className="dropdown__menu-label">{gettext('Actions')}</div>
+                                                    </li>
+                                                    <li className="dropdown__menu-divider" />
+                                                    <li>
+                                                        <a title="Edit">
+                                                        <i className="icon-pencil" />
+                                                        <span style={{ display: "inline" }}>Button 1</span>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a title="Edit in new Window">
+                                                        <i className="icon-pencil" />
+                                                        <span style={{ display: "inline" }}>Button 2</span>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </Dropdown2>
+                                        </ListItemActionsMenu>
                                     </ListItem>
                                 ))
                             }
