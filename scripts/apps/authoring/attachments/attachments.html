@@ -37,6 +37,7 @@
     </div>
 
     <div class="attach-indicator"
+        ng-if="widget"
         ng-show="ctrl.files.length < ctrl.maxFiles && ctrl.isLockedByMe"
         ng-class="{empty: ctrl.files.length === 0}"
         >
@@ -53,6 +54,12 @@
             {{ :: 'Attach files' | translate }}
         </a>
     </div>
+
+    <button ng-if="!widget" class="item-association"
+        ngf-select="ctrl.selectFiles($files)"
+        ngf-multiple="true">
+        <div class="subtext" translate>Drag one or more files here to upload them, or just click the button below.</div>
+    </button>
 
     <div sd-modal data-model="ctrl.edit" data-close="ctrl.closeEdit()">
         <div class="modal__header">
