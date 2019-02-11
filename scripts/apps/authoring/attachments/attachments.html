@@ -58,7 +58,10 @@
     <button ng-if="!widget" class="item-association"
         ngf-select="ctrl.selectFiles($files)"
         ngf-multiple="true">
-        <div class="subtext" translate>Drag one or more files here to upload them, or just click the button below.</div>
+        <div class="subtext">
+            <i class="icon-attachment-large"></i>
+            <span translate>Drag one or more files here to upload them, or just click the button below.</span>
+        </div>
     </button>
 
     <div sd-modal data-model="ctrl.edit" data-close="ctrl.closeEdit()">
