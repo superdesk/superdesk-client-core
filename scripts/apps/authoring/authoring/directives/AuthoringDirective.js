@@ -4,7 +4,7 @@ import postscribe from 'postscribe';
 import thunk from 'redux-thunk';
 import {gettext} from 'core/utils';
 import {combineReducers, createStore, applyMiddleware} from 'redux';
-import {attachments, initAttachments} from '../../attachments/attachments';
+import {attachments, initAttachments} from '../../attachments';
 
 /**
  * @ngdoc directive

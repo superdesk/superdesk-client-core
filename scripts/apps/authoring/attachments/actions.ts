@@ -3,18 +3,16 @@ import {gettext} from 'core/utils';
 export const INIT_ATTACHMENTS = 'INIT_ATTACHMENTS';
 export function initAttachments(item) {
     return (dispatch, geState, {deployConfig, attachments}) => {
-        const payload = {
-            maxSize: deployConfig.getSync('attachments_max_size'),
-            maxFiles: deployConfig.getSync('attachments_max_files'),
-            files: [],
-        };
-
         attachments.byItem(item)
             .then((files) => {
-                payload.files = files;
-            })
-            .finally(() => {
-                dispatch({type: INIT_ATTACHMENTS, payload: payload});
+                dispatch({
+                    type: INIT_ATTACHMENTS,
+                    payload: {
+                        files: files,
+                        maxSize: deployConfig.getSync('attachments_max_size'),
+                        maxFiles: deployConfig.getSync('attachments_max_files'),
+                    },
+                });
             });
     };
 }

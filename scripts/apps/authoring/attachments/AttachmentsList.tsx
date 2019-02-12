@@ -38,7 +38,7 @@ class AttachmentsList extends React.PureComponent<IProps> {
 
     renderFile(file: IFile) {
         const {isLocked, fileicon, filesize,
-            editFile, removeFile, download,
+            download: _download, editFile: _editFile, removeFile: _removeFile,
         } = this.props;
 
         return (
@@ -60,17 +60,17 @@ class AttachmentsList extends React.PureComponent<IProps> {
                 </div>
                 <div className="sd-list-item__action-menu sd-list-item__action-menu--direction-row">
                     <button className="dropdown__toggle"
-                        onClick={() => download(file)}
+                        onClick={() => _download(file)}
                         title={gettext('Download')}>
                         <i className="icon-download"></i>
                     </button>
                     {!isLocked && <button className="dropdown__toggle"
-                        onClick={() => editFile(file)}
+                        onClick={() => _editFile(file)}
                         title={gettext('Edit')}>
                         <i className="icon-pencil"></i>
                     </button>}
                     <button className="dropdown__toggle"
-                        onClick={() => removeFile(file)}
+                        onClick={() => _removeFile(file)}
                         title={gettext('Remove')}>
                         <i className="icon-trash"></i>
                     </button>

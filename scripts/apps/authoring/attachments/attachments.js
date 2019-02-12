@@ -3,9 +3,6 @@ import {gettext} from 'core/utils';
 import AttachmentsEditorDirective from './AttachmentsEditorDirective';
 import AttachmentsListDirective from './AttachmentsListDirective';
 
-export {attachments} from './reducer';
-export {initAttachments} from './actions';
-
 import {
     selectFiles,
     saveFile,

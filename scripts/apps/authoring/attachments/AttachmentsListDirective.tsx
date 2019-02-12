@@ -4,10 +4,14 @@ import {Provider} from 'react-redux';
 
 import AttachmentsList from './AttachmentsList';
 
+interface IScope extends ng.IScope {
+    store: {};
+}
+
 AttachmentsListDirective.$inject = ['$filter'];
 export default function AttachmentsListDirective($filter) {
     return {
-        link: (scope, elem) => {
+        link: (scope: IScope, elem: Array<HTMLElement>) => {
             render(
                 <Provider store={scope.store}>
                     <AttachmentsList
@@ -15,7 +19,7 @@ export default function AttachmentsListDirective($filter) {
                         filesize={$filter('filesize')}
                     />
                 </Provider>,
-                elem[0]
+                elem[0],
             );
 
             scope.$on('$destroy', () => unmoutComponentAtNode(elem[0]));
