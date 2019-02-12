@@ -33,36 +33,7 @@
     </button>
 
     <div sd-modal data-model="ctrl.edit" data-close="ctrl.closeEdit()">
-        <div class="modal__header">
-            <button type="button" class="modal__close pull-right" ng-click="ctrl.closeEdit()">
-                <i class="icon-close-small"></i>
-            </button>
-            <h3 class="modal__heading" translate>Edit Attachment</h3>
-        </div>
-
-        <div class="modal__body">
-            <form name="attachmentsForm">
-                <div class="sd-line-input">
-                    <label class="sd-line-input__label" translate>Title</label>
-                    <input type="text" class="sd-line-input__input"
-                        ng-model="ctrl.edit.title"
-                        required />
-                </div>
-
-                <div class="sd-line-input">
-                    <label class="sd-line-input__label" translate>Description</label>
-                    <textarea class="sd-line-input__input"
-                        ng-model="ctrl.edit.description"
-                        sd-auto-height
-                        required></textarea>
-                </div>
-            </form>
-        </div>
-
-        <div class="modal__footer">
-            <button class="btn btn--primary pull-right" ng-click="ctrl.saveFile(ctrl.file, ctrl.edit)" ng-disabled="attachmentsForm.$invalid" translate>Update</button>
-            <button class="btn pull-right" ng-click="ctrl.closeEdit()" translate>Cancel</button>
-        </div>
+        <div sd-attachments-editor-modal></div>
     </div>
 
 </div>

@@ -1,17 +1,16 @@
 import './attachments.scss';
 import {gettext} from 'core/utils';
-import AttachmentsEditorDirective from './AttachmentsEditorDirective';
 import AttachmentsListDirective from './AttachmentsListDirective';
+import AttachmentsEditorDirective from './AttachmentsEditorDirective';
+import AttachmentsEditorModalDirective from './AttachmentsEditorModalDirective';
 
 import {
     selectFiles,
-    saveFile,
     closeEdit,
 } from './actions';
 
 const mapStateToCtrl = (state) => ({
-    edit: state.attachments.diff,
-    file: state.attachments.file,
+    edit: state.attachments.edit,
     files: state.attachments.files,
     maxSize: state.attachments.maxSize,
     maxFiles: state.attachments.maxFiles,
@@ -25,7 +24,6 @@ class AttachmentsController {
 
         // map dispatch
         this.selectFiles = (files) => dispatch(selectFiles(files));
-        this.saveFile = (file, diff) => dispatch(saveFile(file, diff));
         this.closeEdit = () => dispatch(closeEdit());
 
         let state = $scope.store.getState();
@@ -150,4 +148,5 @@ angular.module('superdesk.apps.authoring.attachments', [
     .config(['authoringWidgetsProvider', config])
     .directive('sdAttachmentsEditor', AttachmentsEditorDirective)
     .directive('sdAttachmentsList', AttachmentsListDirective)
+    .directive('sdAttachmentsEditorModal', AttachmentsEditorModalDirective)
 ;

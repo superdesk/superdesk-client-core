@@ -32,6 +32,8 @@
     "@types/draft-js": "0.10.25",
     "@types/lodash": "4.14.117",
     "@types/react": "16.4.9",
+    "@types/react-dom": "^16.8.0",
+    "@types/react-redux": "^7.0.1",
     "angular": "1.6.9",
     "angular-contenteditable": "0.3.9",
     "angular-dynamic-locale": "0.1.32",

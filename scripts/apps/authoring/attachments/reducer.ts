@@ -7,8 +7,7 @@ import {
 } from './actions';
 
 const initialState = {
-    diff: null,
-    file: null,
+    edit: null,
     files: [],
     maxSize: 0,
     maxFiles: 10,
@@ -25,14 +24,12 @@ export function attachments(state = initialState, action: {type: string, payload
     case EDIT_ATTACHMENT:
         return {
             ...state,
-            file: action.payload,
-            diff: action.payload != null ? Object.create(action.payload) : null,
+            edit: action.payload,
         };
     case SAVE_ATTACHMENT:
         return {
             ...state,
-            file: null,
-            diff: null,
+            edit: null,
             files: state.files.map((f) => f._id !== action.payload._id ? f : action.payload),
         };
     default:

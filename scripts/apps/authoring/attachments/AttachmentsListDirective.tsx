@@ -1,28 +1,20 @@
 import React from 'react';
-import {Provider} from 'react-redux';
-import {render, unmountComponentAtNode} from 'react-dom';
-
+import {Store} from 'redux';
+import {linkComponent} from 'core/ui/utils';
 import AttachmentsList from './AttachmentsList';
 
 interface IScope extends ng.IScope {
-    store: {};
+    store: Store<{}>;
 }
 
 AttachmentsListDirective.$inject = ['$filter'];
 export default function AttachmentsListDirective($filter) {
     return {
         link: (scope: IScope, elem: Array<HTMLElement>) => {
-            render(
-                <Provider store={scope.store}>
-                    <AttachmentsList
-                        fileicon={$filter('fileicon')}
-                        filesize={$filter('filesize')}
-                    />
-                </Provider>,
-                elem[0],
-            );
-
-            scope.$on('$destroy', () => unmountComponentAtNode(elem[0]));
+            linkComponent(scope, elem, <AttachmentsList
+                fileicon={$filter('fileicon')}
+                filesize={$filter('filesize')}
+            />);
         },
     };
 }

@@ -53,5 +53,12 @@ describe('attachments', () => {
             expect(store.getState().maxFiles).toBe(100);
             expect(store.getState().files).toBe(files);
         }));
+
+        it('can edit item', () => {
+            const file = {title: 'foo'};
+
+            store.dispatch(actions.editFile(file));
+            expect(store.getState().edit).toBe(file);
+        });
     });
 });
