@@ -21,8 +21,8 @@
                         id="saved-search-subscriptions--add-new"
                         class="btn btn--hollow btn--primary"><i class="icon-plus-sign"></i>Add new</button>
 
-                    <dropdown2 placement="'bottom-end'" trigger-selector="'#saved-search-subscriptions--add-new'" z-index="1050">
-                        <div class="dropdown2" style="width: 439px;">
+                    <sd-positioner placement="'bottom-end'" class-name="'dropdown2'" trigger-selector="'#saved-search-subscriptions--add-new'" z-index="1050">
+                        <div style="width: 439px;">
                             <div class="flat-searchbar extended">
                                 <div class="search-handler" style="height: auto!important; padding: 4px 8px; padding-right: 0; border: 0">
                                     <label
@@ -65,7 +65,7 @@
 
                             <div ng-if="wrapper.newSubscriptionFilterText.length > 0" style="padding-bottom: 4px"></div>
                         </div>
-                    </dropdown2>
+                    </sd-positioner>
                 </div>
             </div>
 

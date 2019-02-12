@@ -15,7 +15,7 @@ import {FormViewEdit} from './generic-form/from-group';
 import {SearchBar} from 'core/ui/components';
 import {Button} from 'core/ui/components/Nav';
 import {SortBar} from 'core/ui/components/SortBar';
-import {Dropdown2} from 'superdesk-ui-framework';
+import {Positioner} from 'superdesk-ui-framework';
 
 const originalItems = [
     {
@@ -260,9 +260,10 @@ export class KnowledgeBasePage extends React.Component<void, IState> {
                                             <button id={"knowledgebaseitem" + i}>
                                                 <i className="icon-dots-vertical" />
                                             </button>
-                                            <Dropdown2
+                                            <Positioner
                                                 triggerSelector={"#knowledgebaseitem" + i}
                                                 placement="left-start"
+                                                className="dropdown2"
                                             >
                                                 <ul
                                                     className="dropdown__menu"
@@ -285,7 +286,7 @@ export class KnowledgeBasePage extends React.Component<void, IState> {
                                                         </a>
                                                     </li>
                                                 </ul>
-                                            </Dropdown2>
+                                            </Positioner>
                                         </ListItemActionsMenu>
                                     </ListItem>
                                 ))
