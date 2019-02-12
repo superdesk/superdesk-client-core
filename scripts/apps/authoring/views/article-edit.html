@@ -692,9 +692,10 @@
 </div>
 
 <div class="field"
+    ng-if="schema.attachments && editor.attachments"
     sd-width="{{ editor.attachments.sdWidth || 'full'}}"
     sd-validation-error="error.attachments"
-    order="{{ editor.attachments.order || 1 }}"
+    order="{{ editor.attachments.order }}"
     data-required="schema.attachments.required">
     <label class="field__label" translate>{{ :: 'Attachments' | translate }}</label>
     <div sd-attachments-editor

@@ -85,7 +85,7 @@ class AttachmentsList extends React.PureComponent<IProps> {
 
         return (
             <div className="attachments-list">
-                {files.length &&
+                {!!files.length &&
                     <ul>
                         {files.map(this.renderFile)}
                     </ul>
