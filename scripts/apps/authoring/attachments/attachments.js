@@ -1,17 +1,15 @@
 import './attachments.scss';
 import {gettext} from 'core/utils';
 import AttachmentsEditorDirective from './AttachmentsEditorDirective';
+import AttachmentsListDirective from './AttachmentsListDirective';
 
 export {attachments} from './reducer';
 export {initAttachments} from './actions';
 
 import {
-    removeFile,
     selectFiles,
-    editFile,
     saveFile,
     closeEdit,
-    download,
 } from './actions';
 
 const mapStateToCtrl = (state) => ({
@@ -26,11 +24,8 @@ const mapStateToCtrl = (state) => ({
 
 const mapDispatchToCtrl = (dispatch) => ({
     selectFiles: (files) => dispatch(selectFiles(files)),
-    removeFile: (file) => dispatch(removeFile(file)),
-    editFile: (file) => dispatch(editFile(file)),
-    saveFile: (file, diff) => dispatch(saveFile(file, diff)),
     closeEdit: () => dispatch(closeEdit()),
-    download: (file) => dispatch(download(file)),
+    saveFile: (file, diff) => dispatch(saveFile(file, diff)),
 });
 
 class AttachmentsController {
@@ -159,4 +154,5 @@ angular.module('superdesk.apps.authoring.attachments', [
     .controller('AttachmentsCtrl', AttachmentsController)
     .config(['authoringWidgetsProvider', config])
     .directive('sdAttachmentsEditor', AttachmentsEditorDirective)
+    .directive('sdAttachmentsList', AttachmentsListDirective)
 ;
