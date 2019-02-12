@@ -234,9 +234,11 @@ export function ContentProfileSchemaEditor(content, metadata, vocabularies, noti
                     let newOrder = order;
 
                     if (scope.model.editor[schema.key].enabled) {
-                        notify.error(gettext(
-                            `This item is already added in ${scope.model.editor[schema.key].section} fields.`
-                        ));
+                        notify.error(
+                            gettext(
+                                `This item is already added in ${scope.model.editor[schema.key].section} fields.`
+                            ),
+                        );
                         return;
                     }
                     if (scope.model.editor[schema.key]) {
