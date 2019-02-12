@@ -22,20 +22,18 @@ const mapStateToCtrl = (state) => ({
     isLockedByMe: state.editor.isLockedByMe,
 });
 
-const mapDispatchToCtrl = (dispatch) => ({
-    selectFiles: (files) => dispatch(selectFiles(files)),
-    closeEdit: () => dispatch(closeEdit()),
-    saveFile: (file, diff) => dispatch(saveFile(file, diff)),
-});
-
 class AttachmentsController {
     constructor($scope) {
-        // connect
-        Object.assign(this, mapDispatchToCtrl($scope.store.dispatch));
+        const {dispatch} = $scope.store;
+
+        // map dispatch
+        this.selectFiles = (files) => dispatch(selectFiles(files));
+        this.saveFile = (file, diff) => dispatch(saveFile(file, diff));
+        this.closeEdit = () => dispatch(closeEdit());
 
         let state = $scope.store.getState();
 
-        // re-render on change
+        // re-render on state change
         const unsubscribe = $scope.store.subscribe(() => {
             if ($scope.store.getState().attachments !== state.attachments) {
                 state = $scope.store.getState();
