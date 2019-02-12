@@ -41,19 +41,3 @@ Item.defaultProps = {
     noHover: false,
     margin: false,
 };
-
-export const ListItemRow = ({children}) => (
-    <div className="sd-list-item__row">{children}</div>
-);
-
-export const ListItemColumn = ({children, grow = false, border = false, title = ''}) => (
-    <div className={classNames(
-        'sd-list-item__column',
-        {
-            'sd-list-item__column--grow': grow,
-            'sd-list-item__column--border': border,
-        })}
-        title={title}>
-        {children}
-    </div>
-);
