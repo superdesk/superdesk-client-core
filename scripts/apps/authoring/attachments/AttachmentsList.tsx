@@ -3,10 +3,15 @@ import {connect} from 'react-redux';
 import {gettext} from 'core/utils';
 
 import {
+    Item, ListItemColumn, ListItemRow
+} from 'core/ui/components/List/Item';
+
+import {
     editFile,
     download,
     removeFile,
 } from './actions';
+import { ActionMenu } from 'core/ui/components/List';
 
 interface IFile {
     _id: string;
@@ -30,6 +35,8 @@ interface IProps {
     removeFile: (file: IFile) => void;
 }
 
+
+
 class AttachmentsList extends React.PureComponent<IProps> {
     constructor(props) {
         super(props);
@@ -42,23 +49,22 @@ class AttachmentsList extends React.PureComponent<IProps> {
         } = this.props;
 
         return (
-            <li key={file._id}
-                className="sd-list-item sd-shadow--z1">
-                <div className="sd-list-item__column sd-list-item__column--no-border" title={file.mimetype}>
+            <Item key={file._id} shadow={1}>
+                <ListItemColumn border={true} title={file.mimetype}>
                     <i className={`big-icon--${fileicon(file.mimetype)}`}></i>
-                </div>
-                <div className="sd-list-item__column sd-list-item__column--grow">
-                    <div className="sd-list-item__row">
+                </ListItemColumn>
+                <ListItemColumn grow={true}>
+                    <ListItemRow>
                         <h4>{file.title}</h4>
-                    </div>
-                    <div className="sd-list-item__row">
+                    </ListItemRow>
+                    <ListItemRow>
                         <h5>{file.filename} {`(${filesize(file.media.length)})`}</h5>
-                    </div>
-                    <div className="sd-list-item__row">
+                    </ListItemRow>
+                    <ListItemRow>
                         <div className="description">{file.description}</div>
-                    </div>
-                </div>
-                <div className="sd-list-item__action-menu sd-list-item__action-menu--direction-row">
+                    </ListItemRow>
+                </ListItemColumn>
+                <ActionMenu row={true}>
                     <button className="dropdown__toggle"
                         onClick={() => _download(file)}
                         title={gettext('Download')}>
@@ -74,8 +80,8 @@ class AttachmentsList extends React.PureComponent<IProps> {
                         title={gettext('Remove')}>
                         <i className="icon-trash"></i>
                     </button>
-                </div>
-            </li>
+                </ActionMenu>
+            </Item>
         );
     }
 

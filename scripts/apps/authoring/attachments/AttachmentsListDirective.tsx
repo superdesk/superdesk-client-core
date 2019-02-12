@@ -1,6 +1,6 @@
 import React from 'react';
-import {render, unmoutComponentAtNode} from 'react-dom';
 import {Provider} from 'react-redux';
+import {render, unmountComponentAtNode} from 'react-dom';
 
 import AttachmentsList from './AttachmentsList';
 
@@ -22,7 +22,7 @@ export default function AttachmentsListDirective($filter) {
                 elem[0],
             );
 
-            scope.$on('$destroy', () => unmoutComponentAtNode(elem[0]));
+            scope.$on('$destroy', () => unmountComponentAtNode(elem[0]));
         },
     };
 }

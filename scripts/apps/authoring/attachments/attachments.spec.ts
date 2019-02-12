@@ -1,7 +1,7 @@
 import {createStore, applyMiddleware} from 'redux';
 import thunk from 'redux-thunk';
 
-import {attachments as attachmentsReducer} from './attachments';
+import {attachments as attachmentsReducer} from './reducer';
 import * as actions from './actions';
 
 describe('attachments', () => {
