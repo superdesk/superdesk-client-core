@@ -16,7 +16,7 @@ angular.module('superdesk.core.auth.login', []).directive('sdLoginModal', [
     function(session, auth, features, config, deployConfig, usersService, notify, $route) {
         return {
             replace: true,
-            template: require('./login-modal.html'),
+            templateUrl: 'scripts/core/auth/login-modal.html',
             link: function(scope, element, attrs) {
                 scope.features = features;
                 scope.changePassword = false;
