@@ -26,7 +26,11 @@ describe('macros', () => {
     ];
 
     beforeEach(window.module(($provide) => {
-        $provide.service('editorResolver', () => ({get: () => ({version: () => '3'})}));
+        $provide.service('editorResolver', () => ({get: () => ({
+            version: () => '3',
+            getHtmlForTansa: () => null,
+            setHtmlFromTansa: (html, simpleReplace) => null,
+        })}));
     }));
 
     beforeEach(window.module('superdesk.apps.desks'));
