@@ -37,7 +37,7 @@ export function DesksFactory($q, api, preferencesService, userList, notify,
                 let pg = page;
                 let extended = items.concat(result._items);
 
-                if (result._links.next) {
+                if (result._links && result._links.next) {
                     pg++;
                     return _fetchAll(endpoint, parent, pg, extended);
                 }
@@ -180,7 +180,7 @@ export function DesksFactory($q, api, preferencesService, userList, notify,
                 return $q.when(self.userDesks);
             }
 
-            return $q.all(this.fetchCurrentDeskId()) // make sure there will be current desk
+            return $q.when().then(this.fetchCurrentDeskId()) // make sure there will be current desk
                 .then(angular.bind(session, session.getIdentity))
                 .then(angular.bind(this, this.fetchUserDesks))
                 .then(angular.bind(this, function(desks) {
