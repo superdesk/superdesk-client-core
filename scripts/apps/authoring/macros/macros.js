@@ -156,16 +156,26 @@ function MacrosController($scope, macros, desks, autosave, $rootScope, storage, 
      * content is replaced with the value changed by macro
      */
     $scope.call = function(macro) {
+        const editor = editorResolver.get();
+        const isEditor3 = editor.version() !== '2';
         let item = _.extend({}, $scope.origItem, $scope.item);
+
+        if (isEditor3) {
+            item.body_html = editor.getHtmlForTansa() || item.body_html;
+        }
 
         $scope.loading = true;
         return macros.call(macro, item).then((res) => {
-            const isEditor3 = editorResolver.get().version() !== '2';
             let ignoreFields = ['_etag', 'fields_meta'];
 
             // ignore fields is only required for editor3
             if (isEditor3) {
                 ignoreFields.push('body_html');
+
+                if (item.body_html !== res.item.body_html) {
+                    editor.setHtmlFromTansa(res.item.body_html, macro.simple_replace);
+                }
+
                 Object.keys(res.item || {}).forEach((field) => {
                     if (isString(res.item[field]) === false || field === 'body_html') {
                         return;
