@@ -29,8 +29,8 @@ export function validateMediaFieldsThrows(validator, metadata) {
 }
 
 ChangeImageController.$inject = ['$scope', 'notify', 'lodash', 'api', '$rootScope',
-    'deployConfig', '$q', 'config'];
-export function ChangeImageController($scope, notify, _, api, $rootScope, deployConfig, $q, config) {
+    'deployConfig', '$q', 'config', 'archiveService'];
+export function ChangeImageController($scope, notify, _, api, $rootScope, deployConfig, $q, config, archiveService) {
     $scope.data = $scope.locals.data;
     $scope.data.cropData = {};
     $scope.validator = deployConfig.getSync('validator_media_metadata');
@@ -331,9 +331,22 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, deploy
                 return api.save('picture_renditions', {
                     item: result.item,
                     no_custom_crops: true,
-                    is_article_edit_media: $scope.data.isArticleEditMedia != null,
                 })
                     .then((item) => {
+                        /* if the image is in editor body or as feature media
+                            and we crop the image then update the crops in original item too.
+                        */
+                        if ($scope.data.isArticleEditMedia == null) {
+                            api.find('archive', $scope.data.item._id).then((response) => {
+                                if (!archiveService.isPublished(response)) {
+                                    api.update('archive', response, {renditions: item.renditions})
+                                        .then((updatedItem) => {
+                                            $scope.data.item = updatedItem;
+                                        });
+                                }
+                            });
+                        }
+
                         $scope.data.item.renditions = item.renditions;
                         const editableMetadata = extractEditableMetadata($scope.data.metadata);
 

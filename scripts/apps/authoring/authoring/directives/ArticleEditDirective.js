@@ -292,6 +292,7 @@ export function ArticleEditDirective(
                             defaultTab: defaultTab,
                             hideTabs: scope.metadata && scope.metadata.crop_sizes ? [] : ['crop'],
                             showMetadata: true,
+                            // isArticleEditMedia set to true if the media is not being edited from another item's body.
                             isArticleEditMedia: true,
                         }
                     )
