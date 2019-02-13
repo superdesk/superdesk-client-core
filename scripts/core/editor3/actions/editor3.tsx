@@ -144,13 +144,15 @@ export function mergeEntityDataByKey(blockKey, entityKey, valuesToMerge) {
  * @ngdoc method
  * @name setHtmlFromTansa
  * @param {string} html
+ * @param {string} simpleReplace
  * @description For every block from editor content merge the changes received from Tansa.
+ * If simpleReplace is true on merge will not try to preserve inline style and entity
  * @returns {Object}
  */
-export function setHtmlFromTansa(html) {
+export function setHtmlFromTansa(html, simpleReplace) {
     return {
         type: 'EDITOR_SET_HTML_FROM_TANSA',
-        payload: html,
+        payload: {html, simpleReplace},
     };
 }
 

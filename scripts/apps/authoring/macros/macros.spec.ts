@@ -29,7 +29,7 @@ describe('macros', () => {
         $provide.service('editorResolver', () => ({get: () => ({
             version: () => '3',
             getHtmlForTansa: () => null,
-            setHtmlFromTansa: (html) => null,
+            setHtmlFromTansa: (html, simpleReplace) => null,
         })}));
     }));
 

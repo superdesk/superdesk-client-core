@@ -176,7 +176,7 @@ function MacrosController($scope, macros, desks, autosave, $rootScope, storage, 
                 ignoreFields.push('body_html');
 
                 if (item.body_html !== res.item.body_html) {
-                    editor.setHtmlFromTansa(res.item.body_html);
+                    editor.setHtmlFromTansa(res.item.body_html, macro.simple_replace);
                 }
 
                 Object.keys(res.item || {}).forEach((field) => {

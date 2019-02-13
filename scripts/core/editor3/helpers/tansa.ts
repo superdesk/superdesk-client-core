@@ -41,12 +41,14 @@ export function getTansaHtml(editorState) {
 
 /**
  * Update the editor with the changes performed by Tansa
+ * If the simpleReplace is true try to preserve the existing inline styles and entities
  *
  * @param {EditorState} editorState
  * @param {String} html
+ * @param {String} simpleReplace
  * @returns {EditorState}
  */
-export function setTansaHtml(editorState, html) {
+export function setTansaHtml(editorState, html, simpleReplace) {
     let content = editorState.getCurrentContent();
     const blockMap = content.getBlockMap();
     const htmlElement = document.createElement('div');
@@ -66,7 +68,7 @@ export function setTansaHtml(editorState, html) {
         } else {
             const newText = getTextFromTag(htmlElement, 'text', key);
 
-            content = updateText(editorState, content, block, newText, diffMatchPatch);
+            content = updateText(editorState, content, block, newText, diffMatchPatch, simpleReplace);
         }
     });
 
@@ -144,15 +146,18 @@ function updateMedia(content, block, newDescription, newAlt, newHeadline) {
 }
 
 /**
- * Update the text in the block and preserve the existing inline styles and entities
+ * Update the text in the block
+ * If the simpleReplace is true try to preserve the existing inline styles and entities
  *
  * @param {EditorState} editorState
- * @param {ContentState} contentState
+ * @param {ContentState} content
  * @param {Block} block
- * @param {String} text
+ * @param {String} newText
+ * @param {Object} diffMatchPatch
+ * @param {boolean} simpleReplace
  * @returns {ContentState}
  */
-function updateText(editorState, content, block, newText, diffMatchPatch) {
+function updateText(editorState, content, block, newText, diffMatchPatch, simpleReplace) {
     const text = block.getText();
     let newContent = content;
     let offset = 0;
@@ -188,7 +193,11 @@ function updateText(editorState, content, block, newText, diffMatchPatch) {
                 newContent = removeText(editorState, newContent, block, offset, _previousText);
             }
 
-            previousDiff = diff;
+            if (simpleReplace === true) {
+                newContent = removeText(editorState, newContent, block, offset, _text);
+            } else  {
+                previousDiff = diff;
+            }
         }
     });
 
