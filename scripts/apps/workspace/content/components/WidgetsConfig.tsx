@@ -51,24 +51,29 @@ export class WidgetsConfigComponent extends React.Component<IProps, IState> {
     }
     render() {
         return (
-            <ul className="sd-list-item-group sd-shadow--z2">
-                {
-                    this.props.authoringWidgets.map((widget, i) => (
-                        <li className="sd-list-item" key={i}>
-                            <span className="sd-list-item__column">
-                                <input
-                                    type="checkbox"
-                                    checked={isWidgetVisibleForContentProfile(this.state.widgetsConfig, widget._id)}
-                                    onChange={(e) => this.handleChange(widget._id, e.target.checked)}
-                                />
-                            </span>
-                            <span className="sd-list-item__column">
-                                {widget.label}
-                            </span>
-                        </li>
-                    ))
-                }
-            </ul>
+            <div>
+                <div className="sd-alert sd-alert--hollow sd-alert--small" style={{marginTop: 20}}>
+                    {gettext('Show or hide the widgets in the right toolbar in the editor workspace.')}
+                </div>
+                <ul className="sd-list-item-group sd-shadow--z2">
+                    {
+                        this.props.authoringWidgets.map((widget, i) => (
+                            <li className="sd-list-item" key={i}>
+                                <span className="sd-list-item__column">
+                                    <input
+                                        type="checkbox"
+                                        checked={isWidgetVisibleForContentProfile(this.state.widgetsConfig, widget._id)}
+                                        onChange={(e) => this.handleChange(widget._id, e.target.checked)}
+                                    />
+                                </span>
+                                <span className="sd-list-item__column">
+                                    {widget.label}
+                                </span>
+                            </li>
+                        ))
+                    }
+                </ul>
+            </div>
         );
     }
 }
