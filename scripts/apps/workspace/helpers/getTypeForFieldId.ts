@@ -3,7 +3,7 @@ import {gettext} from 'core/utils';
 
 const TYPE_LABEL = {
     text: gettext('text'),
-    media: '',
+    media: gettext('related content'),
     date: gettext('date'),
     embed: gettext('embed'),
     related_content: gettext('related content'),
