@@ -50,6 +50,7 @@ interface IProps {
     multiSelectDisabled: boolean;
     nested: Array<IArticle>;
     isNested: boolean;
+    actioning: boolean;
 }
 
 interface IState {
@@ -128,6 +129,7 @@ export class Item extends React.Component<IProps, IState> {
             nextProps.view !== this.props.view ||
             nextProps.flags.selected !== this.props.flags.selected ||
             nextProps.narrow !== this.props.narrow ||
+            nextProps.actioning !== this.props.actioning ||
             nextState !== this.state;
     }
 
@@ -349,7 +351,7 @@ export class Item extends React.Component<IProps, IState> {
                     selected: this.props.item.selected || this.props.flags.selected,
                     archived: item.archived || item.created,
                     gone: item.gone,
-                    actioning: this.state.actioning,
+                    actioning: this.state.actioning || this.props.actioning,
                 })}>
                     {getTemplate()}
                 </div>

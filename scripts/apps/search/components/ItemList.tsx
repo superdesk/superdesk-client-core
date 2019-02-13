@@ -16,6 +16,7 @@ interface IState {
     selected: string;
     bindedShortcuts: Array<any>;
     swimlane: any;
+    actioning: {};
 }
 
 /**
@@ -40,6 +41,7 @@ export class ItemList extends React.Component<any, IState> {
             narrow: false,
             bindedShortcuts: [],
             swimlane: null,
+            actioning: {},
         };
 
         this.multiSelect = this.multiSelect.bind(this);
@@ -207,6 +209,15 @@ export class ItemList extends React.Component<any, IState> {
         this.multiSelect(selectedItems, true);
     }
 
+    setActioning(item: IArticle, isActioning: boolean) {
+        const {search} = this.props.svc;
+        const actioning = Object.assign({}, this.state.actioning);
+        const itemId = search.generateTrackByIdentifier(item);
+
+        actioning[itemId] = isActioning;
+        this.setState({actioning});
+    }
+
     dbClick(item) {
         if (typeof this.props.onMonitoringItemDoubleClick === 'function') {
             this.props.onMonitoringItemDoubleClick(item);
@@ -227,12 +238,16 @@ export class ItemList extends React.Component<any, IState> {
         }
 
         if (item._type === 'externalsource') {
+            this.setActioning(item, true);
             superdesk.intent('list', 'externalsource', {item: item}, 'fetch-externalsource')
                 .then((archiveItem) => {
                     archiveItem.guid = archiveItem._id; // fix item guid to match new item _id
                     scope.$applyAsync(() => {
                         scope.edit ? scope.edit(archiveItem) : authoringWorkspace.open(archiveItem);
                     });
+                })
+                .finally(() => {
+                    this.setActioning(item, false);
                 });
         } else if (canEdit && scope.edit) {
             scope.$apply(() => {
@@ -540,6 +555,7 @@ export class ItemList extends React.Component<any, IState> {
                 multiSelectDisabled: scope.disableMonitoringMultiSelect,
                 scope: scope,
                 nested: itemChildren,
+                actioning: !!this.state.actioning[itemId],
             });
         };
         const isEmpty = !this.state.itemsList.length;
