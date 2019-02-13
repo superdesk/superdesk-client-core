@@ -1,487 +1,489 @@
-<div class="authoring-header__holder" ng-controller="MetadataWidgetCtrl" ng-if="loaded">
-    <div class="authoring-header__general-info">
-        <div>
-            <i class="filetype-icon-{{ :: item.type}}" title="{{'Article Type'| translate }}: {{ item.type}}"></i>
-        </div>
-        <div ng-if="item.profile && !change_profile">
-            <span class="authoring-header__label" translate>PROFILE</span>
-            <div class="authoring-header__value" sd-item-profile data-profile="item.profile"></div>
-        </div>
-        <div ng-if="change_profile && content_types.length">
-            <span class="authoring-header__label" translate>PROFILE</span>
-            <div class="authoring-header__value" >
-                <select id="item-profile"
-                        ng-model="item.profile"
-                        ng-change="changeProfile(item)"
-                        style="padding: 0px; height: 16px; font-size: 11px;"
-                        ng-options="type._id as type.label for type in desk_content_types">
-                </select>
-            </div>
-        </div>
-        <div ng-if="item.type === 'text'">
-            <span class="authoring-header__value">
-                <strong sd-word-count data-item="item.body_html" data-html="true" data-count-only="true"></strong>
-            </span>
-            <span class="authoring-header__label" translate translate-n="item.word_count" translate-plural="WORDS">WORD</span>
-        </div>
-        <div ng-if="item.signal">
-            <span class="signal">{{ item.signal}}</span>
-        </div>
-        <div>
-            <span class="authoring-header__label" translate>SOURCE</span>
-            <div class="authoring-header__value" id="item-source" >{{ item.source}}</div>
-        </div>
-        <div ng-if="relatedItems._items.length > 0">
-            <span class="authoring-header__label" translate>RELATED</span>
-            <a href="" class="authoring-header__value" ng-click="activateWidget()">{{relatedItems._items.length}}</a>
-        </div>
-        <div id="item-correction" ng-if="item.correction_sequence">
-            <span class="authoring-header__label" translate>UPDATE</span>
-            <div class="authoring-header__value">{{item.correction_sequence}}</div>
-        </div>
-        <div ng-if="missing_link || item.flags.marked_for_legal || item.flags.marked_for_sms || item.flags.marked_for_not_publication || item.rewritten_by">
-            <span class="state-label missing-link" ng-if="missing_link" translate>Missing Link</span>
-            <span class="state-label legal" ng-if="item.flags.marked_for_legal" translate>Legal</span>
-            <span class="state-label sms" ng-if="item.flags.marked_for_sms" translate>Sms</span>
-            <span class="state-label not-for-publication" ng-if="item.flags.marked_for_not_publication" translate>Not For Publication</span>
-            <span class="state-label updated" ng-if="item.rewritten_by" translate>Updated</span>
-        </div>
-        <div ng-if="item.broadcast.master_id">
-            <span
-                class="authoring-header__label text-red"
-                ng-class="{'broadcast-status': item.broadcast.status !== ''}"
-                title="{{item.broadcast.status| translate}}">
-                <span translate>MASTER</span><b style="font-size: 14px;" ng-if="item.broadcast.status"> !</b></span>
+<div class="authoring-header" ng-class="{active: !isCollapsed}">
+    <div class="authoring-header__holder" ng-controller="MetadataWidgetCtrl" ng-if="loaded">
+        <div class="authoring-header__general-info">
             <div>
-                <a id="preview-master" ng-click="previewMasterStory()" title="{{ :: 'Preview master story' | translate }}" ng-app=""class="open-item">
-                    <i class="icon-external"></i>
-                </a>
+                <i class="filetype-icon-{{ :: item.type}}" title="{{'Article Type'| translate }}: {{ item.type}}"></i>
+            </div>
+            <div ng-if="item.profile && !change_profile">
+                <span class="authoring-header__label" translate>PROFILE</span>
+                <div class="authoring-header__value" sd-item-profile data-profile="item.profile"></div>
+            </div>
+            <div ng-if="change_profile && content_types.length">
+                <span class="authoring-header__label" translate>PROFILE</span>
+                <div class="authoring-header__value" >
+                    <select id="item-profile"
+                            ng-model="item.profile"
+                            ng-change="changeProfile(item)"
+                            style="padding: 0px; height: 16px; font-size: 11px;"
+                            ng-options="type._id as type.label for type in desk_content_types">
+                    </select>
+                </div>
+            </div>
+            <div ng-if="item.type === 'text'">
+                <span class="authoring-header__value">
+                    <strong sd-word-count data-item="item.body_html" data-html="true" data-count-only="true"></strong>
+                </span>
+                <span class="authoring-header__label" translate translate-n="item.word_count" translate-plural="WORDS">WORD</span>
+            </div>
+            <div ng-if="item.signal">
+                <span class="signal">{{ item.signal}}</span>
+            </div>
+            <div>
+                <span class="authoring-header__label" translate>SOURCE</span>
+                <div class="authoring-header__value" id="item-source" >{{ item.source}}</div>
+            </div>
+            <div ng-if="relatedItems._items.length > 0">
+                <span class="authoring-header__label" translate>RELATED</span>
+                <a href="" class="authoring-header__value" ng-click="activateWidget()">{{relatedItems._items.length}}</a>
+            </div>
+            <div id="item-correction" ng-if="item.correction_sequence">
+                <span class="authoring-header__label" translate>UPDATE</span>
+                <div class="authoring-header__value">{{item.correction_sequence}}</div>
+            </div>
+            <div ng-if="missing_link || item.flags.marked_for_legal || item.flags.marked_for_sms || item.flags.marked_for_not_publication || item.rewritten_by">
+                <span class="state-label missing-link" ng-if="missing_link" translate>Missing Link</span>
+                <span class="state-label legal" ng-if="item.flags.marked_for_legal" translate>Legal</span>
+                <span class="state-label sms" ng-if="item.flags.marked_for_sms" translate>Sms</span>
+                <span class="state-label not-for-publication" ng-if="item.flags.marked_for_not_publication" translate>Not For Publication</span>
+                <span class="state-label updated" ng-if="item.rewritten_by" translate>Updated</span>
+            </div>
+            <div ng-if="item.broadcast.master_id">
+                <span
+                    class="authoring-header__label text-red"
+                    ng-class="{'broadcast-status': item.broadcast.status !== ''}"
+                    title="{{item.broadcast.status| translate}}">
+                    <span translate>MASTER</span><b style="font-size: 14px;" ng-if="item.broadcast.status"> !</b></span>
+                <div>
+                    <a id="preview-master" ng-click="previewMasterStory()" title="{{ :: 'Preview master story' | translate }}" ng-app=""class="open-item">
+                        <i class="icon-external"></i>
+                    </a>
+                </div>
+            </div>
+    
+            <div ng-if="translationService.translationsEnabled() && translationsInfo != null">
+                <span ng-if="item.translated_from != null" class="authoring-header__label-2" translate>Translated from</span>
+                <span ng-if="item.translated_from != null" class="label label--hollow">{{translationsInfo.translatedFromReference.language}}</span>
+    
+                <span ng-if="item.translated_from == null" class="label label--primary label--hollow" translate>Original</span>
+                <a href ng-click="activateTranslationsWidget()"><strong>({{translationsInfo.count}})</strong> <span translate>translations</span></a>
             </div>
         </div>
-
-        <div ng-if="translationService.translationsEnabled() && translationsInfo != null">
-            <span ng-if="item.translated_from != null" class="authoring-header__label-2" translate>Translated from</span>
-            <span ng-if="item.translated_from != null" class="label label--hollow">{{translationsInfo.translatedFromReference.language}}</span>
-
-            <span ng-if="item.translated_from == null" class="label label--primary label--hollow" translate>Original</span>
-            <a href ng-click="activateTranslationsWidget()"><strong>({{translationsInfo.count}})</strong> <span translate>translations</span></a>
+    
+        <div class="authoring-header__detailed" sd-media-query min-width="550">
+    
+            <div class="authoring-header__item"
+                 sd-validation-error="error.slugline"
+                 data-required="schema.slugline.required"
+                 ng-if="schema.slugline"
+                 sd-width="{{editor.slugline.sdWidth}}"
+                 order="{{editor.slugline.order}}">
+                <label class="authoring-header__item-label uppercase" translate>SLUGLINE</label>
+                <div class="authoring-header__input-holder">
+                    <input type="text"
+                           tansa-scope-sync
+                           tabindex="{{editor.slugline.order}}"
+                           class="line-input slugline"
+                           id="slugline"
+                           ng-model="item.slugline"
+                           ng-model-options="{debounce: 500}"
+                           ng-change="autosave(item)"
+                           ng-disabled="!_editable"
+                           ng-trim="false"
+                           tabindex="{{editor.slugline.order}}">
+                    <span ng-if="schema.slugline.maxlength" sd-character-count data-item="item.slugline" data-html="true" data-limit="schema.slugline.maxlength"></span>
+                </div>
+            </div>
+    
+            <div class="authoring-header__item"
+                 sd-validation-error="error.keywords"
+                 data-required="schema.keywords.required"
+                 ng-if="schema.keywords"
+                 sd-width="{{editor.keywords.sdWidth}}"
+                 order="{{editor.keywords.order}}">
+                <label class="authoring-header__item-label" translate>KEYWORDS</label>
+                <div class="authoring-header__input-holder">
+                    <div sd-meta-words-list
+                        class="data terms-box"
+                        data-item="item"
+                        data-field="keywords"
+                        data-change="autosave(item)"
+                        data-header="_editable"
+                        data-list="metadata.keywords"
+                        data-disabled="!_editable"
+                        data-style="line-input"
+                        tabindex="{{editor.keywords.order}}">
+                    </div>
+                    <div class="authoring-header__hint" ng-if="helper_text.keywords">{{helper_text.keywords}}</div>
+                </div>
+            </div>
+    
+            <div class="authoring-header__item"
+                 sd-validation-error="error.genre"
+                 data-required="schema.genre.required"
+                 ng-if="schema.genre && editor.genre && !genreInCvs"
+                 sd-width="{{editor.genre.sdWidth}}"
+                 order="{{editor.genre.order}}">
+                <label class="authoring-header__item-label" translate>GENRE</label>
+                <div class="authoring-header__input-holder">
+                    <div sd-meta-dropdown
+                         class="data"
+                         data-tabindex="editor.genre.order"
+                         data-item="item"
+                         data-field="genre"
+                         data-list="metadata.genre"
+                         ng-disabled="!_editable || item.broadcast.master_id"
+                         data-change="autosave(item)"
+                         tabindex="{{editor.genre.order}}">
+                    </div>
+                    <div class="authoring-header__hint" ng-if="helper_text.genre">{{helper_text.genre}}</div>
+                </div>
+            </div>
+    
+            <div class="authoring-header__item"
+                 sd-validation-error="error.anpa_take_key"
+                 data-required="schema.anpa_take_key.required"
+                 ng-if="schema.anpa_take_key"
+                 sd-width="{{editor.anpa_take_key.sdWidth}}"
+                 order="{{editor.anpa_take_key.order}}">
+                <label class="authoring-header__item-label" translate>TAKEKEY</label>
+                <div class="authoring-header__input-holder">
+                    <input type="text"
+                           tabindex="{{editor.anpa_take_key.order}}"
+                           class="line-input"
+                           id="anpa_take_key"
+                           ng-model="item.anpa_take_key"
+                           ng-change="autosave(item)"
+                           ng-disabled="!_editable"
+                           ng-trim="false"
+                           tabindex="{{editor.anpa_take_key.order}}">
+                </div>
+            </div>
+    
+            <div class="authoring-header__item"
+                 sd-validation-error="error.place"
+                 data-required="schema.place.required"
+                 ng-if="metadata.locators && schema.place && editor.place && !placeInCvs"
+                 sd-width="{{editor.place.sdWidth}}"
+                 order="{{editor.place.order}}">
+                <label class="authoring-header__item-label" translate>PLACE</label>
+                <div class="authoring-header__input-holder">
+                    <div sd-meta-terms ng-if="!features.places_autocomplete && !single_value.locators"
+                         class="data"
+                         data-tabindex="editor.place.order"
+                         data-item="item"
+                         data-field="place"
+                         data-unique="qcode"
+                         data-header="true"
+                         data-list="metadata.locators"
+                         ng-disabled="!_editable"
+                         data-change="autosave(item)">
+                    </div>
+    
+                    <div sd-meta-dropdown ng-if="!features.places_autocomplete && single_value.locators"
+                         class="data"
+                         data-tabindex="editor.place.order"
+                         data-item="item"
+                         data-field="place"
+                         data-unique="qcode"
+                         data-list="metadata.locators"
+                         data-group="region"
+                         ng-disabled="!_editable"
+                         data-change="autosave(item)">
+                    </div>
+    
+                    <div sd-meta-place ng-if="features.places_autocomplete"
+                        class="data"
+                        data-tabindex="editor.place.order"
+                        data-item="item"
+                        data-field="place"
+                        ng-disabled="!_editable"
+                        data-change="autosave(item)">
+                    </div>
+    
+                    <div class="authoring-header__hint" ng-if="helper_text.locators">{{helper_text.locators}}</div>
+                </div>
+            </div>
+    
+            <div class="authoring-header__item"
+                 sd-validation-error="error.language"
+                 data-required="schema.language.required"
+                 ng-if="metadata.languages && schema.language && editor.language"
+                 sd-width="{{editor.language.sdWidth}}"
+                 order="{{editor.language.order}}">
+    
+                <label class="authoring-header__item-label" translate>LANGUAGE</label>
+                <div class="authoring-header__input-holder">
+                    <div sd-meta-dropdown
+                         class="data"
+                         data-tabindex="editor.language.order"
+                         data-item="item"
+                         data-field="language"
+                         data-key="qcode"
+                         data-list="metadata.languages"
+                         ng-disabled="!_editable"
+                         data-change="autosave(item)"
+                         tabindex="{{editor.language.order}}">
+                    </div>
+                </div>
+            </div>
+    
+            <div class="authoring-header__item"
+                 sd-validation-error="error.priority"
+                 data-required="schema.priority.required"
+                 ng-if="schema.priority"
+                 sd-width="{{editor.priority.sdWidth}}"
+                 order="{{editor.priority.order}}">
+                <label class="authoring-header__item-label" translate>PRIORITY</label>
+                <div class="authoring-header__input-holder">
+                    <div sd-meta-dropdown
+                         data-item="item"
+                         data-tabindex="editor.priority.order"
+                         data-field="priority"
+                         data-list="metadata.priority"
+                         data-icon="priority-label priority-label-"
+                         data-label="Priority"
+                         ng-disabled="!_editable"
+                         data-key="qcode"
+                         data-change="autosave(item)"
+                         tabindex="{{editor.priority.order}}">
+                    </div>
+                    <div class="authoring-header__hint" ng-if="helper_text.priority">{{helper_text.priority}}</div>
+                </div>
+            </div>
+            <div class="authoring-header__item"
+                 sd-validation-error="error.urgency"
+                 data-required="schema.urgency.required"
+                 ng-if="schema.urgency && shouldDisplayUrgency()"
+                 sd-width="{{editor.urgency.sdWidth}}"
+                 order="{{editor.urgency.order}}">
+                <label class="authoring-header__item-label" translate>URGENCY</label>
+                <div class="authoring-header__input-holder">
+                    <div sd-meta-dropdown
+                         data-item="item"
+                         data-tabindex="editor.urgency.order"
+                         data-field="urgency"
+                         data-list="metadata.urgency"
+                         data-icon="urgency-label urgency-label-"
+                         data-label= "{{ :: 'Urgency' | translate }}"
+                         ng-disabled="!_editable"
+                         data-key="qcode"
+                         data-change="autosave(item)"
+                         tabindex="{{editor.urgency.order}}">
+                    </div>
+                    <div class="authoring-header__hint" ng-if="helper_text.urgency">{{helper_text.urgency}}</div>
+                </div>
+            </div>
+    
+            <div class="authoring-header__item" id="category-setting"
+                 sd-validation-error="error.anpa_category"
+                 data-required="schema.anpa_category.required"
+                 ng-if="metadata.categories && schema.anpa_category"
+                 sd-width="{{editor.anpa_category.sdWidth}}"
+                 order="{{editor.anpa_category.order}}">
+                <label class="authoring-header__item-label uppercase" translate>ANPA Category</label>
+                <div class="authoring-header__input-holder">
+                    <div sd-meta-terms
+                        class="data"
+                        data-tabindex="editor.anpa_category.order"
+                        ng-disabled="!_editable"
+                        data-item="item"
+                        data-field="anpa_category"
+                        data-unique="qcode"
+                        data-list="availableCategories"
+                        data-header="true"
+                        data-change="autosave(item)"
+                        data-reload-list="false"
+                        data-cv="{popup_width: popup_width.categories}"
+                        data-set-language="true"
+                        tabindex="{{editor.anpa_category.order}}">
+                    </div>
+                    <div class="authoring-header__hint" ng-if="helper_text.categories">{{helper_text.categories}}</div>
+                </div>
+            </div>
+    
+            <div class="authoring-header__item"
+                 sd-validation-error="error.subject"
+                 data-required="schema.subject.required"
+                 ng-if="metadata.subjectcodes && schema.subject && editor.subject"
+                 sd-width="{{editor.subject.sdWidth}}"
+                 order="{{editor.subject.order}}">
+                <label class="authoring-header__item-label" translate>SUBJECT</label>
+                <div class="authoring-header__input-holder">
+                    <div id="subjects"
+                        sd-meta-terms
+                        class="data"
+                        data-tabindex="editor.subject.order"
+                        data-item="item"
+                        data-field="subject"
+                        data-unique="qcode"
+                        data-list="metadata.subjectcodes"
+                        ng-disabled="!_editable"
+                        data-header="true"
+                        data-change="autosave(item)"
+                        data-reload-list="true"
+                        tabindex="{{editor.subject.order}}">
+                   </div>
+                </div>
+            </div>
+    
+            <div class="authoring-header__item"
+                 ng-repeat="cv in cvs track by cv._id"
+                 sd-validation-error="error[cv.display_name.toLowerCase()]"
+                 data-required="editor[cv._id].required"
+                 sd-width="{{editor[cv._id].sdWidth}}"
+                 order="{{editor[cv._id].order}}">
+                <label class="authoring-header__item-label">
+                    <span>{{ cv.display_name | translate }}</span>
+                </label>
+                <div class="authoring-header__input-holder">
+                    <div sd-meta-terms
+                        class="data"
+                        data-tabindex="editor[cv._id].order"
+                        data-item="item"
+                        data-field="{{cv.schema_field|| 'subject'}}"
+                        data-unique="qcode"
+                        data-list="cv.terms"
+                        data-cv="cv"
+                        ng-disabled="!_editable"
+                        data-header="true"
+                        data-change="autosave(item)"
+                        data-reload-list="true"
+                        data-include-parent="{{editor[cv._id].includeparent}}"
+                        tabindex="{{editor[cv._id].order}}">
+                   </div>
+                   <div class="authoring-header__hint" ng-if="helper_text[cv._id]">{{helper_text[cv._id]}}</div>
+                </div>
+            </div>
+    
+            <!-- custom text editor fields -->
+            <div class="authoring-header__item"
+                ng-repeat="field in fields track by field._id"
+                ng-if="field.field_type === 'text' && editor[field._id].section === 'header'"
+                sd-width="{{ editor[field._id].sdWidth || 'full' }}"
+                data-required="schema[field._id].required"
+                order="{{ editor[field._id].order }}"
+                sd-validation-error="error[field._id.toLowerCase()]">
+    
+                <label class="authoring-header__item-label"">{{field.display_name}}</label>
+                <span ng-if="schema[field._id].maxlength || schema[field._id].minlength" sd-character-count
+                    data-item="item.extra[field._id]" data-html="true" data-limit="schema[field._id].maxlength"></span>
+                <div class="authoring-header__input-holder">
+                    <div sd-editor3
+                        data-path-to-value="'extra' + FIELD_KEY_SEPARATOR + field._id"
+                        data-single-line="field.field_options.single"
+                        data-value="item.extra[field._id]"
+                        data-bind-to-value="compareView"
+                        data-scroll-container=".page-content-container"
+                        data-language="item.language"
+                        data-on-change="autosave(item)"
+                        data-read-only="!_editable"
+                        data-disable-spellchecker="useTansaProofing()"
+                        data-editor-format="editor[field._id].formatOptions"
+                        data-item="item"
+                        data-refresh-trigger="refreshTrigger"
+                        data-tabindex="editor[field._id].order">
+                    </div>
+                    <div class="authoring-header__hint" ng-if="helper_text[field._id]">{{field.helper_text}}</div>
+                </div>
+            </div>
+    
+            <!-- custom date editor fields -->
+            <div class="authoring-header__item"
+                ng-repeat="field in fields track by field._id"
+                ng-if="field.field_type === 'date' && editor[field._id].section === 'header'"
+                sd-width="{{ editor[field._id].sdWidth || 'full' }}"
+                data-required="schema[field._id].required"
+                order="{{ editor[field._id].order }}"
+                sd-validation-error="error[field._id.toLowerCase()]">
+                <label class="authoring-header__item-label">{{field.display_name}}</label>
+                <div class="authoring-header__input-holder">
+                    <div sd-datepicker
+                        ng-disabled="!_editable"
+                        data-tabindex="editor[field._id].order"
+                        ng-model="item.extra[field._id]"
+                        data-format="YYYY-MM-DDT00:00:00+0000"
+                        data-on-change="autosave(item)"
+                        shortcuts="field.date_shortcuts">
+                    </div>
+                    <div class="authoring-header__hint" ng-if="helper_text[field._id]">{{field.helper_text}}</div>
+                </div>
+            </div>
+    
+            <div class="authoring-header__item"
+                 sd-validation-error="error.company_codes"
+                 data-required="schema.company_codes.required"
+                 ng-if="displayCompanyCodes && schema.company_codes"
+                 sd-width="{{editor.company_codes.sdWidth}}"
+                 order="{{editor.company_codes.order}}">
+                <label class="authoring-header__item-label" translate>COMPANY</label>
+                <div class="authoring-header__input-holder">
+                    <div sd-meta-terms
+                        class="data"
+                        data-tabindex="editor.company_codes.order"
+                        data-item="item"
+                        data-field="company_codes"
+                        data-unique="qcode"
+                        data-list="availableCompanyCodes"
+                        ng-disabled="!_editable"
+                        data-header="true"
+                        data-change="autosave(item)"
+                        data-reload-list="false"
+                        data-search-unique="true"
+                        tabindex="{{editor.company_codes.order}}">
+                    </div>
+                </div>
+            </div>
+    
+            <div class="authoring-header__item"
+                 sd-validation-error="error.ednote"
+                 data-required="schema.ednote.required"
+                 ng-if="schema.ednote"
+                 sd-width="{{editor.ednote.sdWidth}}"
+                 order="{{editor.ednote.order}}">
+                <label class="authoring-header__item-label" translate>ED. NOTE</label>
+                <div class="authoring-header__input-holder">
+                    <textarea id="ednote" class="line-input ed-note"
+                              sd-auto-height
+                              tansa-scope-sync
+                              tabindex="{{editor.ednote.order}}"
+                              ng-model="item.ednote"
+                              ng-disabled="!_editable"
+                              ng-change="autosave(item)"
+                              tabindex="{{editor.ednote.order}}">
+                    </textarea>
+                </div>
+    
+            </div>
+    
+            <div class="authoring-header__item"
+                 sd-validation-error="error.authors"
+                 data-required="schema.authors.required"
+                 ng-if="schema.authors && editor.authors"
+                 sd-width="{{editor.authors.sdWidth}}"
+                 order="{{editor.authors.order}}"
+                 ng-controller="PopulateAuthorsController"
+            >
+                <label class="authoring-header__item-label" translate>AUTHORS</label>
+                <div class="authoring-header__input-holder">
+                    <div id="authors"
+                        sd-meta-terms
+                        class="data"
+                        data-tabindex="editor.authors.order"
+                        data-item="item"
+                        data-field="authors"
+                        data-unique="_id"
+                        data-list="metadata.authors"
+                        data-label= "{{ :: 'Add author' | translate }}"
+                        ng-disabled="!_editable"
+                        data-header="true"
+                        data-change="autosave(item)"
+                        data-reload-list="true"
+                        data-select-entire-category="false"
+                        tabindex="{{editor.authors.order}}">
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-
-    <div class="authoring-header__detailed" sd-media-query min-width="550">
-
-        <div class="authoring-header__item"
-             sd-validation-error="error.slugline"
-             data-required="schema.slugline.required"
-             ng-if="schema.slugline"
-             sd-width="{{editor.slugline.sdWidth}}"
-             order="{{editor.slugline.order}}">
-            <label class="authoring-header__item-label uppercase" translate>SLUGLINE</label>
-            <div class="authoring-header__input-holder">
-                <input type="text"
-                       tansa-scope-sync
-                       tabindex="{{editor.slugline.order}}"
-                       class="line-input slugline"
-                       id="slugline"
-                       ng-model="item.slugline"
-                       ng-model-options="{debounce: 500}"
-                       ng-change="autosave(item)"
-                       ng-disabled="!_editable"
-                       ng-trim="false"
-                       tabindex="{{editor.slugline.order}}">
-                <span ng-if="schema.slugline.maxlength" sd-character-count data-item="item.slugline" data-html="true" data-limit="schema.slugline.maxlength"></span>
-            </div>
-        </div>
-
-        <div class="authoring-header__item"
-             sd-validation-error="error.keywords"
-             data-required="schema.keywords.required"
-             ng-if="schema.keywords"
-             sd-width="{{editor.keywords.sdWidth}}"
-             order="{{editor.keywords.order}}">
-            <label class="authoring-header__item-label" translate>KEYWORDS</label>
-            <div class="authoring-header__input-holder">
-                <div sd-meta-words-list
-                    class="data terms-box"
-                    data-item="item"
-                    data-field="keywords"
-                    data-change="autosave(item)"
-                    data-header="_editable"
-                    data-list="metadata.keywords"
-                    data-disabled="!_editable"
-                    data-style="line-input"
-                    tabindex="{{editor.keywords.order}}">
-                </div>
-                <div class="authoring-header__hint" ng-if="helper_text.keywords">{{helper_text.keywords}}</div>
-            </div>
-        </div>
-
-        <div class="authoring-header__item"
-             sd-validation-error="error.genre"
-             data-required="schema.genre.required"
-             ng-if="schema.genre && editor.genre && !genreInCvs"
-             sd-width="{{editor.genre.sdWidth}}"
-             order="{{editor.genre.order}}">
-            <label class="authoring-header__item-label" translate>GENRE</label>
-            <div class="authoring-header__input-holder">
-                <div sd-meta-dropdown
-                     class="data"
-                     data-tabindex="editor.genre.order"
-                     data-item="item"
-                     data-field="genre"
-                     data-list="metadata.genre"
-                     ng-disabled="!_editable || item.broadcast.master_id"
-                     data-change="autosave(item)"
-                     tabindex="{{editor.genre.order}}">
-                </div>
-                <div class="authoring-header__hint" ng-if="helper_text.genre">{{helper_text.genre}}</div>
-            </div>
-        </div>
-
-        <div class="authoring-header__item"
-             sd-validation-error="error.anpa_take_key"
-             data-required="schema.anpa_take_key.required"
-             ng-if="schema.anpa_take_key"
-             sd-width="{{editor.anpa_take_key.sdWidth}}"
-             order="{{editor.anpa_take_key.order}}">
-            <label class="authoring-header__item-label" translate>TAKEKEY</label>
-            <div class="authoring-header__input-holder">
-                <input type="text"
-                       tabindex="{{editor.anpa_take_key.order}}"
-                       class="line-input"
-                       id="anpa_take_key"
-                       ng-model="item.anpa_take_key"
-                       ng-change="autosave(item)"
-                       ng-disabled="!_editable"
-                       ng-trim="false"
-                       tabindex="{{editor.anpa_take_key.order}}">
-            </div>
-        </div>
-
-        <div class="authoring-header__item"
-             sd-validation-error="error.place"
-             data-required="schema.place.required"
-             ng-if="metadata.locators && schema.place && editor.place && !placeInCvs"
-             sd-width="{{editor.place.sdWidth}}"
-             order="{{editor.place.order}}">
-            <label class="authoring-header__item-label" translate>PLACE</label>
-            <div class="authoring-header__input-holder">
-                <div sd-meta-terms ng-if="!features.places_autocomplete && !single_value.locators"
-                     class="data"
-                     data-tabindex="editor.place.order"
-                     data-item="item"
-                     data-field="place"
-                     data-unique="qcode"
-                     data-header="true"
-                     data-list="metadata.locators"
-                     ng-disabled="!_editable"
-                     data-change="autosave(item)">
-                </div>
-
-                <div sd-meta-dropdown ng-if="!features.places_autocomplete && single_value.locators"
-                     class="data"
-                     data-tabindex="editor.place.order"
-                     data-item="item"
-                     data-field="place"
-                     data-unique="qcode"
-                     data-list="metadata.locators"
-                     data-group="region"
-                     ng-disabled="!_editable"
-                     data-change="autosave(item)">
-                </div>
-
-                <div sd-meta-place ng-if="features.places_autocomplete"
-                    class="data"
-                    data-tabindex="editor.place.order"
-                    data-item="item"
-                    data-field="place"
-                    ng-disabled="!_editable"
-                    data-change="autosave(item)">
-                </div>
-
-                <div class="authoring-header__hint" ng-if="helper_text.locators">{{helper_text.locators}}</div>
-            </div>
-        </div>
-
-        <div class="authoring-header__item"
-             sd-validation-error="error.language"
-             data-required="schema.language.required"
-             ng-if="metadata.languages && schema.language && editor.language"
-             sd-width="{{editor.language.sdWidth}}"
-             order="{{editor.language.order}}">
-
-            <label class="authoring-header__item-label" translate>LANGUAGE</label>
-            <div class="authoring-header__input-holder">
-                <div sd-meta-dropdown
-                     class="data"
-                     data-tabindex="editor.language.order"
-                     data-item="item"
-                     data-field="language"
-                     data-key="qcode"
-                     data-list="metadata.languages"
-                     ng-disabled="!_editable"
-                     data-change="autosave(item)"
-                     tabindex="{{editor.language.order}}">
-                </div>
-            </div>
-        </div>
-
-        <div class="authoring-header__item"
-             sd-validation-error="error.priority"
-             data-required="schema.priority.required"
-             ng-if="schema.priority"
-             sd-width="{{editor.priority.sdWidth}}"
-             order="{{editor.priority.order}}">
-            <label class="authoring-header__item-label" translate>PRIORITY</label>
-            <div class="authoring-header__input-holder">
-                <div sd-meta-dropdown
-                     data-item="item"
-                     data-tabindex="editor.priority.order"
-                     data-field="priority"
-                     data-list="metadata.priority"
-                     data-icon="priority-label priority-label-"
-                     data-label="Priority"
-                     ng-disabled="!_editable"
-                     data-key="qcode"
-                     data-change="autosave(item)"
-                     tabindex="{{editor.priority.order}}">
-                </div>
-                <div class="authoring-header__hint" ng-if="helper_text.priority">{{helper_text.priority}}</div>
-            </div>
-        </div>
-        <div class="authoring-header__item"
-             sd-validation-error="error.urgency"
-             data-required="schema.urgency.required"
-             ng-if="schema.urgency && shouldDisplayUrgency()"
-             sd-width="{{editor.urgency.sdWidth}}"
-             order="{{editor.urgency.order}}">
-            <label class="authoring-header__item-label" translate>URGENCY</label>
-            <div class="authoring-header__input-holder">
-                <div sd-meta-dropdown
-                     data-item="item"
-                     data-tabindex="editor.urgency.order"
-                     data-field="urgency"
-                     data-list="metadata.urgency"
-                     data-icon="urgency-label urgency-label-"
-                     data-label= "{{ :: 'Urgency' | translate }}"
-                     ng-disabled="!_editable"
-                     data-key="qcode"
-                     data-change="autosave(item)"
-                     tabindex="{{editor.urgency.order}}">
-                </div>
-                <div class="authoring-header__hint" ng-if="helper_text.urgency">{{helper_text.urgency}}</div>
-            </div>
-        </div>
-
-        <div class="authoring-header__item" id="category-setting"
-             sd-validation-error="error.anpa_category"
-             data-required="schema.anpa_category.required"
-             ng-if="metadata.categories && schema.anpa_category"
-             sd-width="{{editor.anpa_category.sdWidth}}"
-             order="{{editor.anpa_category.order}}">
-            <label class="authoring-header__item-label uppercase" translate>ANPA Category</label>
-            <div class="authoring-header__input-holder">
-                <div sd-meta-terms
-                    class="data"
-                    data-tabindex="editor.anpa_category.order"
-                    ng-disabled="!_editable"
-                    data-item="item"
-                    data-field="anpa_category"
-                    data-unique="qcode"
-                    data-list="availableCategories"
-                    data-header="true"
-                    data-change="autosave(item)"
-                    data-reload-list="false"
-                    data-cv="{popup_width: popup_width.categories}"
-                    data-set-language="true"
-                    tabindex="{{editor.anpa_category.order}}">
-                </div>
-                <div class="authoring-header__hint" ng-if="helper_text.categories">{{helper_text.categories}}</div>
-            </div>
-        </div>
-
-        <div class="authoring-header__item"
-             sd-validation-error="error.subject"
-             data-required="schema.subject.required"
-             ng-if="metadata.subjectcodes && schema.subject && editor.subject"
-             sd-width="{{editor.subject.sdWidth}}"
-             order="{{editor.subject.order}}">
-            <label class="authoring-header__item-label" translate>SUBJECT</label>
-            <div class="authoring-header__input-holder">
-                <div id="subjects"
-                    sd-meta-terms
-                    class="data"
-                    data-tabindex="editor.subject.order"
-                    data-item="item"
-                    data-field="subject"
-                    data-unique="qcode"
-                    data-list="metadata.subjectcodes"
-                    ng-disabled="!_editable"
-                    data-header="true"
-                    data-change="autosave(item)"
-                    data-reload-list="true"
-                    tabindex="{{editor.subject.order}}">
-               </div>
-            </div>
-        </div>
-
-        <div class="authoring-header__item"
-             ng-repeat="cv in cvs track by cv._id"
-             sd-validation-error="error[cv.display_name.toLowerCase()]"
-             data-required="editor[cv._id].required"
-             sd-width="{{editor[cv._id].sdWidth}}"
-             order="{{editor[cv._id].order}}">
-            <label class="authoring-header__item-label">
-                <span>{{ cv.display_name | translate }}</span>
-            </label>
-            <div class="authoring-header__input-holder">
-                <div sd-meta-terms
-                    class="data"
-                    data-tabindex="editor[cv._id].order"
-                    data-item="item"
-                    data-field="{{cv.schema_field|| 'subject'}}"
-                    data-unique="qcode"
-                    data-list="cv.terms"
-                    data-cv="cv"
-                    ng-disabled="!_editable"
-                    data-header="true"
-                    data-change="autosave(item)"
-                    data-reload-list="true"
-                    data-include-parent="{{editor[cv._id].includeparent}}"
-                    tabindex="{{editor[cv._id].order}}">
-               </div>
-               <div class="authoring-header__hint" ng-if="helper_text[cv._id]">{{helper_text[cv._id]}}</div>
-            </div>
-        </div>
-
-        <!-- custom text editor fields -->
-        <div class="authoring-header__item"
-            ng-repeat="field in fields track by field._id"
-            ng-if="field.field_type === 'text' && editor[field._id].section === 'header'"
-            sd-width="{{ editor[field._id].sdWidth || 'full' }}"
-            data-required="schema[field._id].required"
-            order="{{ editor[field._id].order }}"
-            sd-validation-error="error[field._id.toLowerCase()]">
-
-            <label class="authoring-header__item-label"">{{field.display_name}}</label>
-            <span ng-if="schema[field._id].maxlength || schema[field._id].minlength" sd-character-count
-                data-item="item.extra[field._id]" data-html="true" data-limit="schema[field._id].maxlength"></span>
-            <div class="authoring-header__input-holder">
-                <div sd-editor3
-                    data-path-to-value="'extra' + FIELD_KEY_SEPARATOR + field._id"
-                    data-single-line="field.field_options.single"
-                    data-value="item.extra[field._id]"
-                    data-bind-to-value="compareView"
-                    data-scroll-container=".page-content-container"
-                    data-language="item.language"
-                    data-on-change="autosave(item)"
-                    data-read-only="!_editable"
-                    data-disable-spellchecker="useTansaProofing()"
-                    data-editor-format="editor[field._id].formatOptions"
-                    data-item="item"
-                    data-refresh-trigger="refreshTrigger"
-                    data-tabindex="editor[field._id].order">
-                </div>
-                <div class="authoring-header__hint" ng-if="helper_text[field._id]">{{field.helper_text}}</div>
-            </div>
-        </div>
-
-        <!-- custom date editor fields -->
-        <div class="authoring-header__item"
-            ng-repeat="field in fields track by field._id"
-            ng-if="field.field_type === 'date' && editor[field._id].section === 'header'"
-            sd-width="{{ editor[field._id].sdWidth || 'full' }}"
-            data-required="schema[field._id].required"
-            order="{{ editor[field._id].order }}"
-            sd-validation-error="error[field._id.toLowerCase()]">
-            <label class="authoring-header__item-label">{{field.display_name}}</label>
-            <div class="authoring-header__input-holder">
-                <div sd-datepicker
-                    ng-disabled="!_editable"
-                    data-tabindex="editor[field._id].order"
-                    ng-model="item.extra[field._id]"
-                    data-format="YYYY-MM-DDT00:00:00+0000"
-                    data-on-change="autosave(item)"
-                    shortcuts="field.date_shortcuts">
-                </div>
-                <div class="authoring-header__hint" ng-if="helper_text[field._id]">{{field.helper_text}}</div>
-            </div>
-        </div>
-
-        <div class="authoring-header__item"
-             sd-validation-error="error.company_codes"
-             data-required="schema.company_codes.required"
-             ng-if="displayCompanyCodes && schema.company_codes"
-             sd-width="{{editor.company_codes.sdWidth}}"
-             order="{{editor.company_codes.order}}">
-            <label class="authoring-header__item-label" translate>COMPANY</label>
-            <div class="authoring-header__input-holder">
-                <div sd-meta-terms
-                    class="data"
-                    data-tabindex="editor.company_codes.order"
-                    data-item="item"
-                    data-field="company_codes"
-                    data-unique="qcode"
-                    data-list="availableCompanyCodes"
-                    ng-disabled="!_editable"
-                    data-header="true"
-                    data-change="autosave(item)"
-                    data-reload-list="false"
-                    data-search-unique="true"
-                    tabindex="{{editor.company_codes.order}}">
-                </div>
-            </div>
-        </div>
-
-        <div class="authoring-header__item"
-             sd-validation-error="error.ednote"
-             data-required="schema.ednote.required"
-             ng-if="schema.ednote"
-             sd-width="{{editor.ednote.sdWidth}}"
-             order="{{editor.ednote.order}}">
-            <label class="authoring-header__item-label" translate>ED. NOTE</label>
-            <div class="authoring-header__input-holder">
-                <textarea id="ednote" class="line-input ed-note"
-                          sd-auto-height
-                          tansa-scope-sync
-                          tabindex="{{editor.ednote.order}}"
-                          ng-model="item.ednote"
-                          ng-disabled="!_editable"
-                          ng-change="autosave(item)"
-                          tabindex="{{editor.ednote.order}}">
-                </textarea>
-            </div>
-
-        </div>
-
-        <div class="authoring-header__item"
-             sd-validation-error="error.authors"
-             data-required="schema.authors.required"
-             ng-if="schema.authors && editor.authors"
-             sd-width="{{editor.authors.sdWidth}}"
-             order="{{editor.authors.order}}"
-             ng-controller="PopulateAuthorsController"
-        >
-            <label class="authoring-header__item-label" translate>AUTHORS</label>
-            <div class="authoring-header__input-holder">
-                <div id="authors"
-                    sd-meta-terms
-                    class="data"
-                    data-tabindex="editor.authors.order"
-                    data-item="item"
-                    data-field="authors"
-                    data-unique="_id"
-                    data-list="metadata.authors"
-                    data-label= "{{ :: 'Add author' | translate }}"
-                    ng-disabled="!_editable"
-                    data-header="true"
-                    data-change="autosave(item)"
-                    data-reload-list="true"
-                    data-select-entire-category="false"
-                    tabindex="{{editor.authors.order}}">
-                </div>
-            </div>
-        </div>
-    </div>
+    <button class="authoring-header__toggle" ng-class="{active: !isCollapsed}" ng-click="toggleCollapsed()" tabindex="-1"><i class="icon-chevron-up-thin"></i></button>
 </div>
-<button class="authoring-header__toggle" ng-class="{active: toggleHeader}" ng-click="toggleHeader = !toggleHeader" tabindex="-1"><i class="icon-chevron-up-thin"></i></button>
