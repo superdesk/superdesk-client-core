@@ -349,17 +349,27 @@ export class ProfileDetail extends React.Component<any, any> {
                         </LineInput>
                     </Row>
 
-                    <Row>
-                        <LineInput readOnly={readOnly}>
-                            <Label text={gettext('address')} />
-                            <InputArray
-                                field="contact_address"
-                                value={get(contact, 'contact_address', [])}
+                    <Row noPadding={true}>
+                        <LineInput readOnly={readOnly} hint={gettext('Street Address, PO Box, Company Name')}>
+                            <Label text={gettext('Street Address')} />
+                            <Input
+                                field="contact_address[0]"
+                                value={get(contact, 'contact_address[0]', '')}
                                 onChange={onChange}
-                                component={MultiTextInput}
-                                defaultValue=""
-                                errors={errors}
-                                readOnly={readOnly} />
+                                type="text"
+                                readOnly={readOnly}
+                                placeholder={gettext('Address line 1')} />
+                        </LineInput>
+                    </Row>
+                    <Row>
+                        <LineInput readOnly={readOnly} hint={gettext('Building, Suite, Unit, Apartment, Floor, etc.')} >
+                            <Input
+                                field="contact_address[1]"
+                                value={get(contact, 'contact_address[1]', '')}
+                                onChange={onChange}
+                                type="text"
+                                readOnly={readOnly}
+                                placeholder={gettext('Address line 2')} />
                         </LineInput>
                     </Row>
 
