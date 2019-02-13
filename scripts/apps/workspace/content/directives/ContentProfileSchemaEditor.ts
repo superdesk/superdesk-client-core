@@ -235,9 +235,7 @@ export function ContentProfileSchemaEditor(content, metadata, vocabularies, noti
 
                     if (scope.model.editor[schema.key].enabled) {
                         notify.error(
-                            gettext(
-                                `This item is already added in ${scope.model.editor[schema.key].section} fields.`
-                            ),
+                            gettext(`This item is already added in ${scope.model.editor[schema.key].section} fields.`),
                         );
                         return;
                     }
