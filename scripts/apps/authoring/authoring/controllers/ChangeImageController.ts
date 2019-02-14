@@ -230,7 +230,7 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, deploy
     */
     $scope.done = () => {
         if ($scope.data.isDirty) {
-            if (config.features.validatePointOfInterestForImages === true) {
+            if ($scope.data.item.type === 'picture' && config.features.validatePointOfInterestForImages === true) {
                 if (!$scope.saveCrops() || !$scope.applyMetadataChanges()) {
                     return;
                 }
