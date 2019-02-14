@@ -229,6 +229,11 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
     this.publish = function publish(orig, diff, action = 'publish') {
         let extDiff = helpers.extendItem({}, diff);
 
+        // if current document is image and it has been changed on 'media edit' we have to update the etag
+        if (orig.type === 'picture') {
+            orig._etag = diff._etag;
+        }
+
         this.cleanUpdatesBeforePublishing(orig, extDiff, action);
         helpers.filterDefaultValues(extDiff, orig);
         var endpoint = 'archive_' + action;
