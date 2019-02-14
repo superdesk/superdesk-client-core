@@ -65,7 +65,7 @@ export function ChangeImageController($scope, gettext, notify, _, api, $rootScop
 
     $scope.showMetadata = $scope.data.showMetadata;
     $scope.nav = $scope.data.defaultTab || 'view';
-    $scope.hideTabs = $scope.data.hideTabs || [];
+    $scope.tabs = $scope.data.tabs || ['view', 'image-edit', 'crop'];
 
     $scope.metadata = {
         isDirty: false,

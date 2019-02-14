@@ -284,14 +284,16 @@ export function ArticleEditDirective(
                  * @description Opens the Change Image Controller to modify the image metadata.
                  */
                 scope.editMedia = (defaultTab = 'view') => {
-                    let hideTabs = [];
+                    let showTabs = [];
 
                     scope.mediaLoading = true;
 
-                    if (scope.item.type === 'video' || scope.item.type === 'audio') {
-                        hideTabs = ['image-edit', 'crop'];
-                    } else if (!scope.metadata.crop_sizes) {
-                        hideTabs = ['crop'];
+                    if (scope.item.type === 'picture' && scope.metadata.crop_sizes) {
+                        showTabs = ['view', 'image-edit', 'crop'];
+                    } else if (scope.item.type === 'picture' && !scope.metadata.crop_sizes) {
+                        showTabs = ['view', 'image-edit'];
+                    } else {
+                        showTabs = ['view'];
                     }
 
                     return renditions.crop(
@@ -301,7 +303,7 @@ export function ArticleEditDirective(
                             editable: true,
                             isAssociated: false,
                             defaultTab: defaultTab,
-                            hideTabs: hideTabs,
+                            tabs: showTabs,
                             showMetadata: true,
                         }
                     )
