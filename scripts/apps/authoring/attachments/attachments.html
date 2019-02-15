@@ -17,6 +17,7 @@
         <div class="subtext" translate>Drag one or more files here to upload them, or just click the button below.</div>
 
         <a class="btn btn--hollow"
+            ng-disabled="!ctrl.editable"
             ngf-select="ctrl.selectFiles($files)"
             ngf-multiple="true">
             {{ :: 'Attach files' | translate }}
@@ -24,6 +25,7 @@
     </div>
 
     <button ng-if="!widget" class="item-association"
+        ng-disabled="!ctrl.editable"
         ngf-select="ctrl.selectFiles($files)"
         ngf-multiple="true">
         <div class="subtext">

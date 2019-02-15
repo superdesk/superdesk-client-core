@@ -19,6 +19,7 @@ class AttachmentsController {
     files: Array<IAttachment>;
     maxSize: number;
     maxFiles: number;
+    editable: boolean;
     isLocked: boolean;
     isLockedByMe: boolean;
 
@@ -52,6 +53,7 @@ class AttachmentsController {
         this.files = state.attachments.files;
         this.maxSize = state.attachments.maxSize;
         this.maxFiles = state.attachments.maxFiles;
+        this.editable = state.editor.editable;
         this.isLocked = state.editor.isLocked;
         this.isLockedByMe = state.editor.isLockedByMe;
     }

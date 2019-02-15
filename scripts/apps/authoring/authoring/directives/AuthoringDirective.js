@@ -1151,6 +1151,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
             // init redux
             const initialState = {
+                editable: !!$scope.origItem._editable,
                 isLocked: $scope.isLocked(),
                 isLockedByMe: $scope.isLockedByMe(),
             };
