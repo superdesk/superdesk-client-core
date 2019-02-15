@@ -3,6 +3,7 @@ import _ from 'lodash';
 import {getLabelNameResolver} from '../../helpers/getLabelForFieldId';
 import {IArticle} from 'superdesk-interfaces/Article';
 import {assertNever} from 'core/helpers/typescript-helpers';
+import {gettext} from 'core/utils';
 
 interface IScope extends ng.IScope {
     model: any;
@@ -103,6 +104,7 @@ export function ContentProfileSchemaEditor(content, metadata) {
                     });
 
                     const keysForSection = Object.keys(scope.model.editor).filter(sectionFilter);
+
                     headerFields = Object.keys(scope.model.editor).filter((key) => articleHeaderFields.has(key));
 
                     schemaKeys = keysForSection
@@ -213,6 +215,10 @@ export function ContentProfileSchemaEditor(content, metadata) {
                  * @param {String} id the key of the field to toggle.
                  */
                 scope.toggle = (schema, order, position) => {
+                    if (scope.model.editor[schema.key].enabled) {
+                        throw new Error('Unexpected behaviour: Item already added.');
+                    }
+
                     if (scope.model.editor[schema.key]) {
                         scope.model.editor[schema.key].enabled = true;
                         scope.model.schema[schema.key].enabled = true;
@@ -221,7 +227,10 @@ export function ContentProfileSchemaEditor(content, metadata) {
                         scope.model.schema[schema.key] = {enabled: true};
                     }
 
-                    schemaKeys.splice(position === 'before' ? order - 1 : order + 1, 0, schema.key);
+                    let keyIndex = schemaKeys.indexOf(
+                        schemaKeys.find((value) => scope.model.editor[value].order === order)) + 1;
+
+                    schemaKeys.splice(position === 'before' ? keyIndex - 1 : keyIndex + 1, 0, schema.key);
                     _.remove(scope.schemaKeysDisabled, schema);
                     scope.schemaKeysOrdering = _.clone(schemaKeys);
 
