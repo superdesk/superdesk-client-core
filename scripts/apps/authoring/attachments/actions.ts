@@ -73,8 +73,8 @@ export function closeEdit() {
 }
 
 export function download(file) {
-    return (dispatch, getState, {urls, $window}) => {
-        $window.open(urls.media(file.media, 'attachments'), '_blank');
+    return (dispatch, getState, {urls}) => {
+        window.open(urls.media(file.media, 'attachments'), '_blank');
     };
 }
 

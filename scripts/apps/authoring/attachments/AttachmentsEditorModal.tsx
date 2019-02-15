@@ -14,13 +14,12 @@ import {Label} from 'core/ui/components/Form/Label';
 import {Input} from 'core/ui/components/Form/Input';
 import {TextArea} from 'core/ui/components/Form/TextArea';
 
-interface IProps {
-    file: {
-        title: string;
-        description: string;
-    };
+import {IAttachment} from '.';
 
-    saveFile: (file: {}, updates: {}) => void;
+interface IProps {
+    file: IAttachment;
+
+    saveFile: (file: IAttachment, updates: IAttachment) => void;
     closeEdit: () => void;
 }
 

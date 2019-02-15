@@ -9,16 +9,19 @@ import {
     closeEdit,
 } from './actions';
 
-const mapStateToCtrl = (state) => ({
-    edit: state.attachments.edit,
-    files: state.attachments.files,
-    maxSize: state.attachments.maxSize,
-    maxFiles: state.attachments.maxFiles,
-    isLocked: state.editor.isLocked,
-    isLockedByMe: state.editor.isLockedByMe,
-});
+import {IAttachment} from '.';
 
 class AttachmentsController {
+    closeEdit: () => void;
+    selectFiles: (files: Array<File>) => void;
+
+    edit: IAttachment;
+    files: Array<IAttachment>;
+    maxSize: number;
+    maxFiles: number;
+    isLocked: boolean;
+    isLockedByMe: boolean;
+
     constructor($scope) {
         const {dispatch} = $scope.store;
 
@@ -45,7 +48,12 @@ class AttachmentsController {
     }
 
     mapState(state) {
-        Object.assign(this, mapStateToCtrl(state));
+        this.edit = state.attachments.edit;
+        this.files = state.attachments.files;
+        this.maxSize = state.attachments.maxSize;
+        this.maxFiles = state.attachments.maxFiles;
+        this.isLocked = state.editor.isLocked;
+        this.isLockedByMe = state.editor.isLockedByMe;
     }
 }
 

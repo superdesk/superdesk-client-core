@@ -10,26 +10,17 @@ import {
 
 import {Item, Column, Row, ActionMenu} from 'core/ui/components/List';
 
-interface IFile {
-    _id: string;
-    title: string;
-    mimetype: string;
-    filename: string;
-    description: string;
-    media: {
-        length: number;
-    };
-}
+import {IAttachment} from '.';
 
 interface IProps {
-    files: Array<IFile>;
+    files: Array<IAttachment>;
     isLocked: boolean;
     fileicon: (mimetype: string) => string;
     filesize: (size: number) => string;
 
-    editFile: (file: IFile) => void;
-    download: (file: IFile) => void;
-    removeFile: (file: IFile) => void;
+    editFile: (file: IAttachment) => void;
+    download: (file: IAttachment) => void;
+    removeFile: (file: IAttachment) => void;
 }
 
 class AttachmentsList extends React.PureComponent<IProps> {
@@ -38,7 +29,7 @@ class AttachmentsList extends React.PureComponent<IProps> {
         this.renderFile = this.renderFile.bind(this);
     }
 
-    renderFile(file: IFile) {
+    renderFile(file: IAttachment) {
         const {isLocked, fileicon, filesize,
             download: _download, editFile: _editFile, removeFile: _removeFile,
         } = this.props;
