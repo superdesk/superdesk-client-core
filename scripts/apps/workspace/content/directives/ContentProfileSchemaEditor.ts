@@ -232,7 +232,7 @@ export function ContentProfileSchemaEditor(content, metadata, vocabularies, noti
                  */
                 scope.toggle = (schema, order, position) => {
                     if (scope.model.editor[schema.key].enabled) {
-                        throw new Error('Unexpected behaviour: Item arlready added.');
+                        throw new Error('Unexpected behaviour: Item already added.');
                     }
 
                     if (scope.model.editor[schema.key]) {
