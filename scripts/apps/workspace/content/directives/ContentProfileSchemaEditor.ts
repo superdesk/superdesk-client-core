@@ -231,13 +231,10 @@ export function ContentProfileSchemaEditor(content, metadata, vocabularies, noti
                  * @param {String} id the key of the field to toggle.
                  */
                 scope.toggle = (schema, order, position) => {
-                    let newOrder = order;
-
                     if (scope.model.editor[schema.key].enabled) {
-                        notify.error(gettext('This item is already added in {{section}} fields.',
-                            {section: scope.model.editor[schema.key].section}));
-                        return;
+                        throw new Error('Unexpected behaviour: Item arlready added.');
                     }
+
                     if (scope.model.editor[schema.key]) {
                         scope.model.editor[schema.key].enabled = true;
                         scope.model.schema[schema.key].enabled = true;
@@ -247,17 +244,10 @@ export function ContentProfileSchemaEditor(content, metadata, vocabularies, noti
                         scope.model.schema[schema.key] = {enabled: true};
                     }
 
-                    if (scope.sectionToRender === 'content') {
-                        schemaKeys.some((id, index) => {
-                            if (scope.model.editor[id].order === order) {
-                                newOrder = index + 1;
-                                return true;
-                            }
-                            return false;
-                        });
-                    }
+                    let keyIndex = schemaKeys.indexOf(
+                        schemaKeys.find((value) => scope.model.editor[value].order === order)) + 1;
 
-                    schemaKeys.splice(position === 'before' ? newOrder - 1 : newOrder + 1, 0, schema.key);
+                    schemaKeys.splice(position === 'before' ? keyIndex - 1 : keyIndex + 1, 0, schema.key);
                     _.remove(scope.schemaKeysDisabled, schema);
                     scope.schemaKeysOrdering = _.clone(schemaKeys);
 
