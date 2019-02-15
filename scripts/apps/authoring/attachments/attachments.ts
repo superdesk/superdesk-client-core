@@ -5,8 +5,8 @@ import AttachmentsEditorDirective from './AttachmentsEditorDirective';
 import AttachmentsEditorModalDirective from './AttachmentsEditorModalDirective';
 
 import {
-    selectFiles,
     closeEdit,
+    selectFiles,
 } from './actions';
 
 import {IAttachment} from '.';

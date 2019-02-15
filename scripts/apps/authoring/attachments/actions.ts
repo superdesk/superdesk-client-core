@@ -53,23 +53,24 @@ export function removeFile(file) {
     };
 }
 
-export const EDIT_ATTACHMENT = 'EDIT_ATTACHMENT';
+export const OPEN_ATTACHMENT_FOR_EDITING = 'OPEN_ATTACHMENT_FOR_EDITING';
 export function editFile(file) {
-    return {type: EDIT_ATTACHMENT, payload: file};
+    return {type: OPEN_ATTACHMENT_FOR_EDITING, payload: file};
 }
 
-export const SAVE_ATTACHMENT = 'SAVE_ATTACHMENT';
+export const UPDATE_ATTACHMENT = 'UPDATE_ATTACHMENT';
 export function saveFile(file, diff) {
     return (dispatch, getState, {attachments}) => {
         attachments.save(file, diff).then((updated) => {
-            dispatch({type: SAVE_ATTACHMENT, payload: updated});
+            dispatch({type: UPDATE_ATTACHMENT, payload: updated});
             dispatch(closeEdit());
         });
     };
 }
 
+export const CLOSE_ATTACHMENT_EDITOR = 'CLOSE_ATTACHMENT_EDITOR';
 export function closeEdit() {
-    return {type: EDIT_ATTACHMENT, payload: null};
+    return {type: CLOSE_ATTACHMENT_EDITOR};
 }
 
 export function download(file) {

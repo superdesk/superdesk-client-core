@@ -2,8 +2,9 @@ import {
     INIT_ATTACHMENTS,
     ADD_ATTACHMENTS,
     REMOVE_ATTACHMENT,
-    EDIT_ATTACHMENT,
-    SAVE_ATTACHMENT,
+    UPDATE_ATTACHMENT,
+    OPEN_ATTACHMENT_FOR_EDITING,
+    CLOSE_ATTACHMENT_EDITOR,
 } from './actions';
 
 const initialState = {
@@ -21,12 +22,14 @@ export function attachments(state = initialState, action: {type: string, payload
         return {...state, files: state.files.concat(action.payload)};
     case REMOVE_ATTACHMENT:
         return {...state, files: state.files.filter((f) => f !== action.payload)};
-    case EDIT_ATTACHMENT:
+    case OPEN_ATTACHMENT_FOR_EDITING:
         return {
             ...state,
             edit: action.payload,
         };
-    case SAVE_ATTACHMENT:
+    case CLOSE_ATTACHMENT_EDITOR:
+        return {...state, edit: null};
+    case UPDATE_ATTACHMENT:
         return {
             ...state,
             edit: null,
