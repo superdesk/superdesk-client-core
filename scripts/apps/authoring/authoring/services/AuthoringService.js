@@ -230,6 +230,11 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
     this.publish = function publish(orig, diff, action = 'publish') {
         let extDiff = helpers.extendItem({}, diff);
 
+        // if there were some changes on image, we should update etag
+        if (diff && diff._etag) {
+            orig._etag = diff._etag;
+        }
+
         this.cleanUpdatesBeforePublishing(orig, extDiff, action);
         helpers.filterDefaultValues(extDiff, orig);
         var endpoint = 'archive_' + action;
