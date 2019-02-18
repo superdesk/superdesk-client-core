@@ -15,6 +15,8 @@ import {ItemMgridTemplate} from './ItemMgridTemplate';
 import {IArticle} from 'superdesk-interfaces/Article';
 import {IDesk} from 'superdesk-interfaces/Desk';
 
+const CLICK_TIMEOUT = 300;
+
 const actionsMenuDefaultTemplate = (toggle, stopEvent) => (
     <div className="item-right toolbox">
         <div className="item-actions-menu dropdown--big open">
@@ -65,6 +67,8 @@ export class Item extends React.Component<IProps, IState> {
     static defaultProps: any;
 
     readonly state = {hover: false, actioning: false, isActionMenuOpen: false, showNested: false};
+
+    clickTimeout: Promise<any>;
 
     constructor(props) {
         super(props);
@@ -134,8 +138,14 @@ export class Item extends React.Component<IProps, IState> {
     }
 
     select(event) {
-        if (!this.props.item.gone) {
-            this.props.onSelect(this.props.item, event);
+        const {$timeout} = this.props.svc;
+
+        if (!this.props.item.gone && !this.clickTimeout) {
+            event.persist(); // make event available in timeout callback
+            this.clickTimeout = $timeout(() => {
+                this.clickTimeout = null;
+                this.props.onSelect(this.props.item, event);
+            }, CLICK_TIMEOUT);
         }
     }
 
@@ -156,6 +166,13 @@ export class Item extends React.Component<IProps, IState> {
     }
 
     dbClick(event) {
+        const {$timeout} = this.props.svc;
+
+        if (this.clickTimeout) {
+            $timeout.cancel(this.clickTimeout);
+            this.clickTimeout = null;
+        }
+
         if (!this.props.item.gone) {
             this.props.onDbClick(this.props.item);
         }
