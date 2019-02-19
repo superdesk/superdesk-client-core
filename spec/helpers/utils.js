@@ -200,6 +200,7 @@ function assertToastMsg(type, msg) {
  * @return {Promise}
  */
 function wait(elem, time) {
+    browser.wait(() => elem.isPresent(), time || 500);
     return browser.wait(() => elem.isDisplayed(), time || 500);
 }
 
