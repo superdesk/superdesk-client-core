@@ -213,6 +213,8 @@ function Monitoring() {
     this.getPreviewTitle = function() {
         var headline = element(by.css('.content-container')).element(by.css('.preview-headline'));
 
+        waitFor(headline, 500);
+
         return headline.getText();
     };
 
