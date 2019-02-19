@@ -16,6 +16,7 @@ angular.module('superdesk.core.auth.login', []).directive('sdLoginModal', [
     function(session, auth, features, config, deployConfig, usersService, notify, $route) {
         return {
             replace: true,
+            // login template can be overriden (like on superdesk-fi)
             templateUrl: 'scripts/core/auth/login-modal.html',
             link: function(scope, element, attrs) {
                 scope.features = features;
