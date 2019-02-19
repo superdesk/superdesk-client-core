@@ -68,7 +68,7 @@ export class Item extends React.Component<IProps, IState> {
 
     readonly state = {hover: false, actioning: false, isActionMenuOpen: false, showNested: false};
 
-    clickTimeout: NodeJS.Timeout;
+    clickTimeout: number;
 
     constructor(props) {
         super(props);
@@ -140,7 +140,7 @@ export class Item extends React.Component<IProps, IState> {
     select(event) {
         if (!this.props.item.gone && !this.clickTimeout) {
             event.persist(); // make event available in timeout callback
-            this.clickTimeout = setTimeout(() => {
+            this.clickTimeout = window.setTimeout(() => {
                 this.clickTimeout = null;
                 this.props.onSelect(this.props.item, event);
             }, CLICK_TIMEOUT);
@@ -165,7 +165,7 @@ export class Item extends React.Component<IProps, IState> {
 
     dbClick(event) {
         if (this.clickTimeout) {
-            clearTimeout(this.clickTimeout);
+            window.clearTimeout(this.clickTimeout);
             this.clickTimeout = null;
         }
 
