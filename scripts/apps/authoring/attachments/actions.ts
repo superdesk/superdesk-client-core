@@ -19,7 +19,7 @@ export function initAttachments(item) {
 
 export const ADD_ATTACHMENTS = 'ADD_ATTACHMENTS';
 export function selectFiles(files) {
-    return (dispatch, getState, {$scope, notify, superdesk}) => {
+    return (dispatch, getState, {notify, superdesk}) => {
         const state = getState();
 
         if (Array.isArray(files) && files.length > 0 && !state.editor.isLocked) {
@@ -39,7 +39,6 @@ export function selectFiles(files) {
                 .intent('upload', 'attachments', files)
                 .then((uploadedFiles) => {
                     dispatch({type: ADD_ATTACHMENTS, payload: uploadedFiles});
-                    updateItem(getState(), $scope);
                 });
         }
     };
@@ -47,10 +46,7 @@ export function selectFiles(files) {
 
 export const REMOVE_ATTACHMENT = 'REMOVE_ATTACHMENT';
 export function removeFile(file) {
-    return (dispatch, getState, {$scope}) => {
-        dispatch({type: REMOVE_ATTACHMENT, payload: file});
-        updateItem(getState(), $scope);
-    };
+    return {type: REMOVE_ATTACHMENT, payload: file};
 }
 
 export const OPEN_ATTACHMENT_FOR_EDITING = 'OPEN_ATTACHMENT_FOR_EDITING';
@@ -77,9 +73,4 @@ export function download(file) {
     return (dispatch, getState, {urls}) => {
         window.open(urls.media(file.media, 'attachments'), '_blank');
     };
-}
-
-function updateItem(state, $scope) {
-    $scope.item.attachments = state.attachments.files.map((f) => ({attachment: f._id}));
-    $scope.autosave();
 }

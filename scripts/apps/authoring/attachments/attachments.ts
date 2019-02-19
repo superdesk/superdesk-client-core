@@ -11,6 +11,10 @@ import {
 
 import {IAttachment} from '.';
 
+function getFilesLength(state) {
+    return state.attachments.files.length;
+}
+
 class AttachmentsController {
     closeEdit: () => void;
     selectFiles: (files: Array<File>) => void;
@@ -35,8 +39,15 @@ class AttachmentsController {
         // re-render on state change
         const unsubscribe = $scope.store.subscribe(() => {
             if ($scope.store.getState().attachments !== state.attachments) {
+                const filesLengthChange = getFilesLength($scope.store.getState()) !== getFilesLength(state);
+
                 state = $scope.store.getState();
                 $scope.$applyAsync(() => {
+                    if (filesLengthChange) {
+                        $scope.item.attachments = state.attachments.files.map((f) => ({attachment: f._id}));
+                        $scope.autosave();
+                    }
+
                     this.mapState($scope.store.getState());
                 });
             }
