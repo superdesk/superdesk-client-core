@@ -30,6 +30,7 @@ export function ItemCarouselDirective($timeout, notify) {
             save: '&',
             onchange: '&',
             maxUploads: '=',
+            field: '=',
         },
         transclude: true,
         templateUrl: 'scripts/apps/authoring/views/item-carousel.html',
@@ -129,6 +130,33 @@ export function ItemCarouselDirective($timeout, notify) {
                 event.stopPropagation();
 
                 if (ALLOWED_TYPES.includes(type) || type === 'Files') {
+                    const mediaItemsForCurrentField = Object.keys(scope.item.associations || {})
+                        .filter((key) => key.startsWith(scope.field._id) && scope.item.associations[key] != null)
+                        .map((key) => scope.item.associations[key]);
+
+                    const currentUploads = mediaItemsForCurrentField.length;
+
+                    const item = angular.fromJson(event.originalEvent.dataTransfer.getData(type));
+
+
+                    const itemAlreadyAddedAsMediaGallery = mediaItemsForCurrentField.some(
+                        (mediaItem) => mediaItem._id === item._id
+                    );
+
+                    if (currentUploads >= scope.maxUploads) {
+                        notify.error(
+                            gettext(
+                                'Media item was not added, because the field reached the limit of allowed media items.'
+                            )
+                        );
+                        return;
+                    }
+
+                    if (itemAlreadyAddedAsMediaGallery) {
+                        notify.error('This item is already added as media gallery.');
+                        return;
+                    }
+
                     ctrl.initializeUploadOnDrop(scope, event);
                 } else {
                     const allowedTypeNames = [
