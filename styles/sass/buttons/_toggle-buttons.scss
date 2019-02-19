@@ -60,15 +60,27 @@ $toggleButtonBorderColor: #c6c6c6;
 
 .button-list {
     overflow: hidden;
-   .toggle-button, .btn {
-       float:left;
-       margin-right: 6px;
-   } 
+    .toggle-button, .btn {
+        float:left;
+        margin-right: 6px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    } 
 }
 .subnav {
+    .toggle-list {
+        .button-list {
+            white-space: nowrap;
+            max-height: 26px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+    }
     .button-list {
-       .toggle-button, .btn {
-           margin-bottom: 0;
+        .toggle-button, .btn {
+            margin-bottom: 0;
        } 
     }
 }

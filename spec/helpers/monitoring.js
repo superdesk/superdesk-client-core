@@ -255,6 +255,8 @@ function Monitoring() {
     this.actionOnItem = function(action, group, item, useFullLinkText, confirm) {
         var menu = this.openItemMenu(group, item);
 
+        browser.wait(() => menu.isPresent(), 3000);
+
         if (useFullLinkText) {
             menu.element(by.linkText(action)).click();
         } else {
