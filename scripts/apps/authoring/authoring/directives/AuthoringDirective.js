@@ -780,8 +780,13 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             };
 
             $scope.save_enabled = function() {
+                if ($rootScope.macro_dirty == true) {
+                    $scope.dirty = true;
+                    delete $rootScope.macro_dirty;
+                }
                 confirm.dirty = $scope.dirty;
-                return ($scope.dirty || $scope.item._autosave) &&
+
+                return ($scope.dirty || $scope.item._autosave != null) &&
                     _.reduce($scope.isValidEmbed, (agg, val) => agg && val, true);
             };
 
