@@ -311,6 +311,7 @@ export class Item extends React.Component<IProps, IState> {
                                 onEdit={this.props.onEdit}
                                 onDbClick={this.props.onDbClick}
                                 onMultiSelect={this.props.onMultiSelect}
+                                actioning={false}
                             />
                         ))}
                     </div>

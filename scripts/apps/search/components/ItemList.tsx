@@ -478,22 +478,23 @@ export class ItemList extends React.Component<any, IState> {
      *
      * This could be item with same guid for corrections or with guid == rewritten_by for updates
      */
-    getParent(item: IArticle): string | null {
-        if (!item.rewritten_by) {
-            return this.state.itemsList.find((itemId) => itemId.startsWith(item.guid));
-        }
-
-        const parentId = this.state.itemsList.find((itemId) => itemId.startsWith(item.rewritten_by));
+    getParent(item: IArticle, itemId: string): string | null {
+        const parentId = item.rewritten_by &&
+            this.state.itemsList.find((_itemId) => _itemId.startsWith(item.rewritten_by));
 
         if (parentId) {
             const parent = this.state.itemsById[parentId];
 
-            if (parent && parent.rewritten_by) {
-                return this.getParent(parent);
+            if (parent) {
+                return this.getParent(parent, parentId) || parentId; // return parent's parent or parent
             }
         }
 
-        return parentId;
+        // check for previous version of same item
+        return this.state.itemsList.find((_itemId) =>
+            _itemId.startsWith(item.guid) // same guid
+            && _itemId !== itemId // but different version
+            && this.state.itemsById[_itemId]._current_version > item._current_version); // and more recent one
     }
 
     render() {
@@ -508,7 +509,7 @@ export class ItemList extends React.Component<any, IState> {
                 const item = this.state.itemsById[itemId];
 
                 if (item._type === 'published' && (item.rewritten_by || !item.last_published_version)) {
-                    const parentId = this.getParent(item);
+                    const parentId = this.getParent(item, itemId);
 
                     if (parentId && parentId !== itemId) {
                         nested[itemId] = true;
