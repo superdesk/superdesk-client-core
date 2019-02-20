@@ -87,6 +87,14 @@
                         ></div>
                     </div>
                 </div>
+                <div class="sd-slide-in-panel__footer">
+                    <div class="btn-group--flex sd-margin-b--1">
+                        <button type="button" class="btn btn--hollow btn--primary btn--expanded" ng-click="copyMetadata(metadata)" ng-disabled="!isDirty()" translate>Copy metadata</button>
+                        <button type="button" class="btn btn--hollow btn--expanded" ng-click="pasteMetadata()" ng-disabled="!metadataFromStorage" translate>Paste metadata</button>
+                    </div>
+                    <sd-check ng-model="autoFill" ng-click="toggleAutofill()">{{ :: 'Autofill' | translate }}</sd-check>
+                    <a ng-click="clearSavedMetadata()" class="text-link text-link--white pull-right" ng-show="metadataFromStorage" translate>Clear saved metadata</a>
+                </div>
             </div>
         </div>
     </div>
