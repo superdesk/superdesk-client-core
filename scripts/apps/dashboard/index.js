@@ -6,6 +6,7 @@ import './styles/widgets.scss';
 import './workspace-tasks/tasks';
 import './world-clock/world-clock';
 import './grid/grid';
+import './closed-desk';
 
 import {DashboardController} from './controllers';
 import * as directive from './directives';
@@ -35,6 +36,7 @@ angular.module('superdesk.apps.dashboard', [
     'superdesk.core.itemList',
     'superdesk.apps.legal_archive',
     'superdesk.apps.workspace',
+    'superdesk.apps.dashboard.closed-desk',
 ])
     .controller('DashboardController', DashboardController)
     .filter('wcodeFilter', () => (input, values) => _.pick(input, _.difference(_.keys(input), _.keys(values))))
