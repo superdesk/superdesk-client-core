@@ -85,10 +85,15 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
         link: function($scope, elem, attrs) {
             var _closing;
             var mediaFields = {};
+            var userDesks;
 
             const UNIQUE_NAME_ERROR = gettext('Error: Unique Name is not unique.');
             const MEDIA_TYPES = ['video', 'picture', 'audio'];
 
+            desks.fetchCurrentUserDesks().then((desksList) => {
+                userDesks = desksList;
+                $scope.itemActions = authoring.itemActions($scope.origItem, userDesks);
+            });
             $scope.privileges = privileges.privileges;
             $scope.dirty = false;
             $scope.views = {send: false};
@@ -96,7 +101,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             $scope._editable = !!$scope.origItem._editable;
             $scope.isMediaType = _.includes(['audio', 'video', 'picture', 'graphic'], $scope.origItem.type);
             $scope.action = $scope.action || ($scope._editable ? 'edit' : 'view');
-            $scope.itemActions = authoring.itemActions($scope.origItem);
+
             $scope.highlight = !!$scope.origItem.highlight;
             $scope.showExportButton = $scope.highlight && $scope.origItem.type === 'composite';
             $scope.openSuggestions = () => suggest.setActive();
@@ -110,7 +115,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             $scope.$watch('origItem', (newValue, oldValue) => {
                 $scope.itemActions = null;
                 if (newValue) {
-                    $scope.itemActions = authoring.itemActions(newValue);
+                    $scope.itemActions = authoring.itemActions(newValue, userDesks);
                 }
             }, true);
 

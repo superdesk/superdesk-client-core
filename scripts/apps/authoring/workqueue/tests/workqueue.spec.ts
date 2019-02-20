@@ -63,7 +63,7 @@ describe('workqueue', () => {
 
     it('can get active item from url', inject(
         (api, $location, $controller, $q, $rootScope, workqueue) => {
-            spyOn(api, 'query').and.returnValue($q.when({_items: [{_id: 'foo', name: 'Foo'}]}));
+            spyOn(api, 'query').and.returnValue($q.when({_items: [{_id: 'foo'}]}));
             $location.path('/mock');
             $location.search('item', 'foo');
             $rootScope.$digest();
@@ -78,7 +78,7 @@ describe('workqueue', () => {
     it('can confirm before closing autosaved or not autosaved, but dirty active item', inject(
         (api, $location, $controller, $q, $rootScope, autosave, confirm) => {
         // first get active item from url.
-            spyOn(api, 'query').and.returnValue($q.when({_items: [{_id: 'foo', name: 'Foo'}]}));
+            spyOn(api, 'query').and.returnValue($q.when({_items: [{_id: 'foo'}]}));
             $location.path('/mock');
             $location.search('item', 'foo');
             $rootScope.$digest();

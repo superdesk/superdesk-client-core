@@ -180,7 +180,7 @@ export function DesksFactory($q, api, preferencesService, userList, notify,
                 return $q.when(self.userDesks);
             }
 
-            return $q.when().then(this.fetchCurrentDeskId()) // make sure there will be current desk
+            return this.fetchCurrentDeskId() // make sure there will be current desk
                 .then(angular.bind(session, session.getIdentity))
                 .then(angular.bind(this, this.fetchUserDesks))
                 .then(angular.bind(this, function(desks) {
