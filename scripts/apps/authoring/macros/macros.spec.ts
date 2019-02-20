@@ -139,7 +139,10 @@ describe('macros', () => {
         expect($scope.item.genre).toEqual([{qcode: 'zoo', name: 'zoo'}]);
         expect($scope.item._etag).toEqual('foo');
         expect($scope.item.slugline).toEqual('slugline');
-        expect($rootScope.$broadcast).not.toHaveBeenCalled();
+        expect($rootScope.$broadcast.calls.allArgs())
+        .toEqual([
+            [ 'editor:setDirty', true ],
+        ]);
     }));
 
     it('can generate macro:refreshField event for editor 3', inject((macros, $q, autosave, $rootScope) => {
@@ -178,6 +181,7 @@ describe('macros', () => {
             .toEqual([
                 ['macro:refreshField', 'abstract', 'new abstract'],
                 ['macro:refreshField', 'slugline', 'new slugline'],
+                [ 'editor:setDirty', true ],
             ]);
     }));
 });

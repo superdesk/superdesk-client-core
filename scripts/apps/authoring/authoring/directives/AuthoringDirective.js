@@ -779,11 +779,11 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 return !$scope.item.sendTo && lock.can_unlock($scope.item);
             };
 
+            $scope.$on('editor:setDirty', (evt, value) => {
+                $scope.dirty = value;
+            });
+
             $scope.save_enabled = function() {
-                if ($rootScope.macro_dirty == true) {
-                    $scope.dirty = true;
-                    delete $rootScope.macro_dirty;
-                }
                 confirm.dirty = $scope.dirty;
 
                 return ($scope.dirty || $scope.item._autosave != null) &&
