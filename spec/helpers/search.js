@@ -81,6 +81,9 @@ function GlobalSearch() {
         var itemElem = this.getItem(index);
 
         itemElem.click();
+
+        browser.wait(() => itemElem.getAttribute('class').then((classes) => classes.includes('active')), 500);
+        browser.sleep(350); // there is timeout on click
     };
 
     /**
