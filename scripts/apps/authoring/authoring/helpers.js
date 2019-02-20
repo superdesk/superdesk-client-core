@@ -234,12 +234,17 @@ export function cutoffPreviousRenditions(update, origItem) {
             if (updateRenditions == null || origRenditions == null) {
                 return;
             }
+
+            if (updateRenditions.original == null && origRenditions.original == null) {
+                return; // external image
+            }
         } catch (error) {
             if (error instanceof TypeError) {
                 return;
             }
             throw error;
         }
+
         // image was changed
         if (updateRenditions.original.href !== origRenditions.original.href) {
             // walk through all renditions
