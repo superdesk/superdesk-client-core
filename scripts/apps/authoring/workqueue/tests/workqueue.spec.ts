@@ -62,7 +62,7 @@ describe('workqueue', () => {
     }));
 
     it('can get active item from url', inject(
-        (api, $location, $controller, $q, $rootScope, workqueue) => {
+        (api, $location, $controller, $q, $rootScope) => {
             spyOn(api, 'query').and.returnValue($q.when({_items: [{_id: 'foo'}]}));
             $location.path('/mock');
             $location.search('item', 'foo');
