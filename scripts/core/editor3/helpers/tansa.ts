@@ -20,16 +20,18 @@ export function getTansaHtml(editorState) {
             const data = (entity != null && entity.getData() != null) ? entity.getData() : {media: {}};
             const {media} = data;
 
-            if (media.description_text != null) {
-                html += getBlockHtml('description', block.getKey(), media.description_text);
-            }
+            if (media != null) {
+                if (media.description_text != null) {
+                    html += getBlockHtml('description', block.getKey(), media.description_text);
+                }
 
-            if (media.alt_text != null) {
-                html += getBlockHtml('alt', block.getKey(), media.alt_text);
-            }
+                if (media.alt_text != null) {
+                    html += getBlockHtml('alt', block.getKey(), media.alt_text);
+                }
 
-            if (media.headline != null) {
-                html += getBlockHtml('headline', block.getKey(), media.headline);
+                if (media.headline != null) {
+                    html += getBlockHtml('headline', block.getKey(), media.headline);
+                }
             }
         } else {
             html = getBlockHtml('text', block.getKey(), block.getText());
