@@ -1,5 +1,6 @@
 import {EditorState, convertFromRaw, convertToRaw, ContentState} from 'draft-js';
 import {createStore, applyMiddleware} from 'redux';
+import {createLogger} from 'redux-logger';
 import thunk from 'redux-thunk';
 import {pick} from 'lodash';
 
@@ -47,6 +48,14 @@ export default function createEditorStore(props, isReact = false) {
 
     const onChangeValue = isReact ? props.onChange : _.debounce(onChange.bind(props), props.debounce);
 
+    const middlewares = [thunk];
+
+    if (process.env.NODE_ENV !== 'production') {
+        // activate logs actions for non production instances.
+        // (this should always be the last middleware)
+        middlewares.push(createLogger());
+    }
+
     const store = createStore(reducers, {
         editorState: EditorState.createWithContent(content, decorators),
         searchTerm: {pattern: '', index: -1, caseSensitive: false},
@@ -66,7 +75,7 @@ export default function createEditorStore(props, isReact = false) {
         invisibles: false,
         svc: props.svc,
         abbreviations: {},
-    }, applyMiddleware(thunk));
+    }, applyMiddleware(...middlewares));
 
 
     // after we have the dictionary, force update the editor to highlight typos
