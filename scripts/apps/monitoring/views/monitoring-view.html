@@ -1,10 +1,8 @@
 <div class="monitoring" ng-controller="AggregateCtrl as aggregate">
-
     <section class="main-section" ng-class="monitoring.state">
-
-        <div class="preview-layout monitoring-preview-layout">
-            <div class="content-list" ng-if="!aggregate.loading" style="display:flex;flex-direction:column;">
-                <div>
+        <div class="preview-layout monitoring-preview-layout" sd-media-query min-width="700" element-class="narrowList">
+            <div class="content-list monitoring__content" ng-if="!aggregate.loading">
+                <div class="monitoring__toolbar-container">
                     <div class="subnav" ng-if="hideMonitoringToolbar1 !== true">
                         <div class="flat-searchbar monitoring-backlink" ng-if="monitoring.singleGroup">
                             <button sd-tooltip="{{ :: 'Back to original view' | translate }}" flow="right" class="navbtn navbtn--left" ng-click="monitoring.viewMonitoringHome()">
@@ -102,11 +100,28 @@
                                 <i ng-if="fileType === 'highlightsPackage'" class="toggle-button__icon filetype-icon-highlight-pack" title="{{ :: 'Highlight Package' | translate }}"></i>
                             </a>
                         </div>
+
+                        <div class="dropdown dropdown--align-left dropdown--compact-state" dropdown  ng-if="elementState === 'compact'" sd-tooltip="{{:: 'Filter file types' | translate}}" flow="right">
+                                <button class="navbtn dropdown__toggle" dropdown__toggle><i class="icon-dots"></i></button>
+                                <ul class="dropdown__menu">
+                                    <li><span class="dropdown__menu-label">{{:: 'File types' | translate}}</span></li>
+                                    <li ng-repeat="fileType in aggregate.fileTypes"
+                                        ng-click="aggregate.setFileType(fileType)"
+                                        ng-class="{'dropdown__menu-item--active': aggregate.hasFileType(fileType)}"
+                                        title="{{fileType| translate}}">
+                                        <button>
+                                            <span ng-if="fileType === 'all'" class="toggle-button__text--all">{{:: 'all' | translate}}</span>
+                                            <span ng-if="fileType === 'highlightsPackage'"><i class="filetype-icon-highlight-pack"></i>&nbsp;{{ :: 'Highlight Package' | translate }}</span>
+                                            <span ng-if="fileType !== 'all' && fileType !== 'highlightsPackage'"><i class="filetype-icon-{{fileType}}"></i>&nbsp;{{fileType}}</span>
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
             
                         <div class="subnav__stretch-bar"></div>
             
                         <!-- sorting not implemented for usage with custom data source -->
-                        <div sd-item-sortbar ng-if="(!elementState || elementState === 'comfort') && customDataSource == null" class="sortbar-container"></div>
+                        <div sd-item-sortbar class="sortbar-container"></div>
             
                         <div class="dropdown dropdown--align-right" dropdown ng-if="type === 'monitoring'">
                             <button class="navbtn dropdown__toggle" dropdown__toggle><i ng-class="{'icon-list-view': !monitoring.viewColumn && (!view || view === 'compact'), 'icon-grid-view': view === 'photogrid', 'icon-kanban-view': monitoring.viewColumn}"></i></button>
@@ -129,108 +144,96 @@
                             </ul>
                         </div>
 
-                        <div ng-if="type === 'monitoring' && monitoring.viewColumn === true" style="display: flex; align-items: center; margin: 0 10px;">
-                            <span translate>Columns:</span>
-                            <input type="number" min="2" max="{{aggregate.groups.length}}" ng-model="monitoring.columnsLimit" style="width: 40px; margin-left:10px;" />
+                        <div ng-if="type === 'monitoring' && monitoring.viewColumn === true" class="subnav__button-stack subnav__button-stack--padded">
+                            <span class="sd-overflow-ellipsis" translate>Columns:</span>
+                            <input class="line-input line-input--inline-mini sd-margin-l--1" type="number" min="2" max="{{aggregate.groups.length}}" ng-model="monitoring.columnsLimit">
                         </div>
-            
-                        <div class="dropdown dropdown--align-right dropdown--compact-state" dropdown  ng-if="type === 'monitoring' || elementState === 'compact'">
+
+                        <div class="dropdown dropdown--align-right dropdown--compact-state" dropdown  ng-if="type === 'monitoring'">
                             <button class="navbtn dropdown__toggle" dropdown__toggle><i class="icon-dots-vertical"></i></button>
                             <ul class="dropdown__menu">
-                                <li ng-if="elementState === 'compact'"><span class="dropdown__menu-label">{{:: 'File types' | translate}}</span></li>
-                                <li ng-repeat="fileType in aggregate.fileTypes"
-                                    ng-click="aggregate.setFileType(fileType)"
-                                    ng-class="{'dropdown__menu-item--active': aggregate.hasFileType(fileType)}"
-                                    ng-if="elementState === 'compact'" title="{{fileType| translate}}">
-                                    <button>
-                                        <span ng-if="fileType === 'all'" class="toggle-button__text--all">{{:: 'all' | translate}}</span>
-                                        <span ng-if="fileType === 'highlightsPackage'"><i class="filetype-icon-highlight-pack"></i>&nbsp;{{ :: 'Highlight Package' | translate }}</span>
-                                        <span ng-if="fileType !== 'all' && fileType !== 'highlightsPackage'"><i class="filetype-icon-{{fileType}}"></i>&nbsp;{{fileType}}</span>
-                                    </button>
-                                </li>
-                                <li ng-if="elementState === 'compact'" class="dropdown__menu-divider"></li>
-                                <li ng-if="elementState === 'compact'"><span class="dropdown__menu-label">{{:: 'Sorting' | translate}}</span></li>
-                                <li ng-if="elementState === 'compact'">
-                                    <span sd-item-sortbar></span>
-                                </li>
-                                <li ng-if="elementState === 'compact' && type !== 'spike'" class="dropdown__menu-divider"></li>
                                 <li ng-if="type === 'monitoring'">
                                     <button ng-click="aggregate.edit('reorder', true)">
                                         <i class="icon-switches"></i>
                                         &nbsp;<span>{{:: 'Rearrange Groups' | translate}}</span>
                                     </button>
                                 </li>
-                                <li ng-if="swimlane" ng-repeat="n in [2,3,4,5,6]">
-                                    <button ng-if="numberOfColumns !== n" ng-click="switchSwimlaneColumns(n)"><span>{{ :: 'Show' | translate}} {{n}} {{:: 'columns' | translate }}</span></button>
-                                </li>
                             </ul>
                         </div>
             
                     </div>
                 </div>
-
-                <div style="height: 100%;overflow: auto;padding: 0px 18px 18px !important; position:relative;">
-                    <!-- list view -->
-                    <div ng-if="!monitoring.viewColumn && type === 'monitoring'" class="list">
-                            <div ng-if="(!monitoring.singleGroup || monitoring.isDeskChanged()) && type === 'monitoring'">
-                                <div ng-repeat="group in aggregate.groups track by group._id"
-                                     sd-monitoring-group data-group="group" data-num-items="group.max_items" data-view="view"
-                                     data-view-type="aggregate.isOutputType(group.type) ? group.type: 'monitoring'"></div>
-                            </div>
-                        </div>
-                        <!-- swimlane view -->
-                        <div ng-if="monitoring.viewColumn && type === 'monitoring'">
-                            <div class="swimlane2" ng-if="(!monitoring.singleGroup || monitoring.isDeskChanged()) && type === 'monitoring'">
-                                <div ng-class="{active: isActiveGroup(group), inactive: !isActiveGroup(group)}"
-                                     ng-repeat="group in aggregate.groups| limitTo:monitoring.columnsLimit track by group._id"
-                                     sd-monitoring-group data-group="group" data-num-items="group.max_items" data-view="view"
-                                     data-view-type="aggregate.isOutputType(group.type) ? group.type: 'monitoring'"
-                                     sd-header-resize>
+                <div class="monitoring__main-content">
+                    <div class="sd-column-box--3">
+                        <div style="padding: 0 20px 20px;" class="sd-column-box__main-column">
+                            <!-- list view -->
+                            <div ng-if="!monitoring.viewColumn && type === 'monitoring'" class="list">
+                                <div ng-if="(!monitoring.singleGroup || monitoring.isDeskChanged()) && type === 'monitoring'">
+                                    <div ng-repeat="group in aggregate.groups track by group._id"
+                                            sd-monitoring-group data-group="group" data-num-items="group.max_items" data-view="view"
+                                            data-view-type="aggregate.isOutputType(group.type) ? group.type: 'monitoring'"></div>
                                 </div>
                             </div>
-                        </div>
-                        <div ng-if="type === 'spike'" class="list">
-                            <div ng-repeat="group in aggregate.spikeGroups track by group._id | orderBy: name"
-                                 sd-monitoring-group
-                                 ng-class="{'single-group': aggregate.spikeGroups.length === 1}"
-                                 data-group="group"
-                                 data-view-type="'spiked'"
-                                 data-force-limited="{{ aggregate.spikeGroups.length > 1}}">
+                            <!-- swimlane view -->
+                            <div ng-if="monitoring.viewColumn && type === 'monitoring'">
+                                <div class="swimlane2" ng-if="(!monitoring.singleGroup || monitoring.isDeskChanged()) && type === 'monitoring'">
+                                    <div ng-class="{active: isActiveGroup(group), inactive: !isActiveGroup(group)}"
+                                            ng-repeat="group in aggregate.groups| limitTo:monitoring.columnsLimit track by group._id"
+                                            sd-monitoring-group data-group="group" data-num-items="group.max_items" data-view="view"
+                                            data-view-type="aggregate.isOutputType(group.type) ? group.type: 'monitoring'"
+                                            sd-header-resize>
+                                    </div>
+                                </div>
+                            </div>
+                            <div ng-if="type === 'spike'" class="list">
+                                <div ng-repeat="group in aggregate.spikeGroups track by group._id | orderBy: name"
+                                        sd-monitoring-group
+                                        ng-class="{'single-group': aggregate.spikeGroups.length === 1}"
+                                        data-group="group"
+                                        data-view-type="'spiked'"
+                                        data-force-limited="{{ aggregate.spikeGroups.length > 1}}">
+                                </div>
+                            </div>
+                            <div ng-if="monitoring.singleGroup && !monitoring.isDeskChanged()" class="list">
+                                <div sd-monitoring-group class="single-group" data-group="monitoring.singleGroup" data-view="view" data-view-type="'single_monitoring'">
+                                </div>
+                            </div>
+                            <div ng-if="type === 'personal'" class="list">
+                                <div sd-monitoring-group data-view="view" data-group="{'type': 'personal', 'query': query, 'fileType': aggregate.getSelectedFileTypes()}" view-type="'personal'">
+                                </div>
+                            </div>
+                            <div ng-if="type === 'custom-monitoring-view'" class="list">
+                                <div sd-monitoring-group
+                                        class="single-group"
+                                        custom-data-source="customDataSource"
+                                        data-hide-actions-for-monitoring-items="hideActionsForMonitoringItems"
+                                        data-disable-monitoring-multi-select="disableMonitoringMultiSelect"
+                                        on-monitoring-item-select="onMonitoringItemSelect"
+                                        on-monitoring-item-double-click="onMonitoringItemDoubleClick"></div>
+                            </div>
+                            <div ng-if="type === 'highlights' && !monitoring.highlightsDeskChanged()" class="list">
+                                <div sd-monitoring-group class="single-group"
+                                        data-group="{'type': 'highlights', 'query': query, 'fileType': aggregate.getSelectedFileTypes()}"
+                                        data-view="view"
+                                        data-view-type="'highlights'"></div>
                             </div>
                         </div>
-                        <div ng-if="monitoring.singleGroup && !monitoring.isDeskChanged()" class="list">
-                            <div sd-monitoring-group class="single-group" data-group="monitoring.singleGroup" data-view="view" data-view-type="'single_monitoring'">
-                            </div>
+                        <div class="sd-preview-panel" style="position: relative;" ng-if="!narrowList">
+                            <div sd-item-preview  style="position: relative;"
+                                 data-item="monitoring.previewItem"
+                                 data-close="monitoring.closePreview()"
+                                 data-show-history-tab="monitoring.showHistoryTab"></div>
                         </div>
-                        <div ng-if="type === 'personal'" class="list">
-                            <div sd-monitoring-group data-view="view" data-group="{'type': 'personal', 'query': query, 'fileType': aggregate.getSelectedFileTypes()}" view-type="'personal'">
-                            </div>
-                        </div>
-        
-                        <div ng-if="type === 'custom-monitoring-view'" class="list">
-                            <div
-                                sd-monitoring-group
-                                class="single-group"
-                                custom-data-source="customDataSource"
-                                data-hide-actions-for-monitoring-items="hideActionsForMonitoringItems"
-                                data-disable-monitoring-multi-select="disableMonitoringMultiSelect"
-                                on-monitoring-item-select="onMonitoringItemSelect"
-                                on-monitoring-item-double-click="onMonitoringItemDoubleClick"></div>
-                        </div>
-                        <div ng-if="type === 'highlights' && !monitoring.highlightsDeskChanged()" class="list">
-                            <div sd-monitoring-group class="single-group"
-                                 data-group="{'type': 'highlights', 'query': query, 'fileType': aggregate.getSelectedFileTypes()}"
-                                 data-view="view"
-                                 data-view-type="'highlights'"></div>
-                        </div>
+                    </div>
+
                 </div>
+                    <!-- Overlay Preview Pane -->
+                    <div sd-item-preview class="sd-preview--overlay" ng-if="narrowList"
+                         data-item="monitoring.previewItem"
+                         data-close="monitoring.closePreview()"
+                         data-show-history-tab="monitoring.showHistoryTab"></div>
+
             </div>
-
-            <div sd-item-preview
-                 data-item="monitoring.previewItem"
-                 data-close="monitoring.closePreview()"
-                 data-show-history-tab="monitoring.showHistoryTab"></div>
-
             <div sd-send-item
                  data-item="null"
                  data-mode="{{type}}"></div>

@@ -971,10 +971,12 @@ function mediaQuery($window, authoringWorkspace) {
         scope: {
             minWidth: '=',
             maxWidth: '=',
+            elementClass: '@',
         },
         link: function(scope, elem) {
             var window = angular.element($window);
             var resize = _.debounce(calcSize, 300);
+            var elementClass = scope.elementClass ? scope.elementClass : 'elementState';
 
             window.on('resize', resize);
 
@@ -985,17 +987,17 @@ function mediaQuery($window, authoringWorkspace) {
 
                 if (width < scope.minWidth) {
                     scope.$parent.$applyAsync(() => {
-                        scope.$parent.elementState = 'compact';
+                        scope.$parent[elementClass] = 'compact';
                     });
                     elem.removeClass('comfort').addClass('compact');
                 } else if (width > scope.maxWidth) {
                     scope.$parent.$applyAsync(() => {
-                        scope.$parent.elementState = 'comfort';
+                        scope.$parent[elementClass] = 'comfort';
                     });
                     elem.removeClass('compact').addClass('comfort');
                 } else {
                     scope.$parent.$applyAsync(() => {
-                        scope.$parent.elementState = null;
+                        scope.$parent[elementClass] = null;
                     });
                     elem.removeClass('compact comfort');
                 }
