@@ -25,6 +25,25 @@ describe('macros', () => {
         },
     ];
 
+    beforeEach(window.module('angular-embed'));
+    beforeEach(window.module('superdesk.apps.publish'));
+    beforeEach(window.module('superdesk.core.preferences'));
+    beforeEach(window.module('superdesk.apps.archive'));
+    beforeEach(window.module('superdesk.apps.authoring'));
+    beforeEach(window.module('superdesk.core.auth'));
+    beforeEach(window.module('superdesk.apps.workspace.content'));
+    beforeEach(window.module('superdesk.mocks'));
+    beforeEach(window.module('superdesk.core.privileges'));
+    beforeEach(window.module('superdesk.apps.desks'));
+    beforeEach(window.module('superdesk.templates-cache'));
+    beforeEach(window.module('superdesk.apps.vocabularies'));
+    beforeEach(window.module('superdesk.apps.searchProviders'));
+    beforeEach(window.module('superdesk.core.editor3'));
+    beforeEach(window.module('superdesk.apps.editor2'));
+
+    beforeEach(window.module('superdesk.apps.authoring.macros'));
+    beforeEach(window.module('superdesk.apps.authoring.autosave'));
+
     beforeEach(window.module(($provide) => {
         $provide.service('editorResolver', () => ({get: () => ({
             version: () => '3',
@@ -33,17 +52,35 @@ describe('macros', () => {
         })}));
     }));
 
-    beforeEach(window.module('superdesk.apps.desks'));
-    beforeEach(window.module('superdesk.apps.authoring.macros'));
-    beforeEach(window.module('superdesk.apps.authoring.autosave'));
-    beforeEach(window.module('superdesk.apps.searchProviders'));
-
     var $controller;
 
     beforeEach(inject((_$controller_, macros, $q) => {
         $controller = _$controller_;
         spyOn(macros, 'get').and.returnValue($q.when([]));
     }));
+
+    /**
+     * Start authoring ctrl for given item.
+     *
+     * @param {object} item
+     * @param {string} action
+     * @returns {object}
+     */
+    function startAuthoring(item, action) {
+        var $scope;
+
+        inject(($rootScope, _$controller_, superdesk, $compile) => {
+            $scope = $rootScope.$new();
+            _$controller_(superdesk.activity('authoring').controller, {
+                $scope: $scope,
+                item: item,
+                action: action,
+            });
+            $compile(angular.element('<div sd-authoring-workspace><div sd-authoring></div></div>'))($scope);
+        });
+
+        return $scope;
+    }
 
     it('can trigger macro with diff', inject((macros, api, $q, $rootScope) => {
         var diff = {foo: 'bar'};
@@ -58,7 +95,7 @@ describe('macros', () => {
     it('trigger macro with diff does not update item', inject((macros, $q, autosave, $rootScope) => {
         var diff = {foo: 'bar'};
         var item = {_id: '1'};
-        var $scope = $rootScope.$new();
+        var $scope = startAuthoring(item, 'edit');
 
         spyOn(macros, 'call').and.returnValue($q.when({item: item, diff: diff}));
         spyOn($rootScope, '$broadcast');
@@ -120,7 +157,7 @@ describe('macros', () => {
             genre: [{qcode: 'zoo', name: 'zoo'}],
             _etag: 'bar',
         };
-        let $scope = $rootScope.$new();
+        let $scope = startAuthoring(item, 'edit');
 
         spyOn(editorResolver, 'get').and.returnValue({version: () => '2'});
         spyOn(macros, 'call').and.returnValue($q.when({item: macroItem, diff: null}));
@@ -146,7 +183,7 @@ describe('macros', () => {
         let item = {
             _id: '1',
             body_html: 'this is test',
-            abstract: 'test',
+            abstract: 'abstract',
             genre: [{qcode: 'foo', name: 'bar'}],
             slugline: 'slugline',
         };
@@ -157,7 +194,7 @@ describe('macros', () => {
             slugline: 'new slugline',
             genre: [{qcode: 'zoo', name: 'zoo'}],
         };
-        let $scope = $rootScope.$new();
+        let $scope = startAuthoring(item, 'edit');
 
         spyOn(macros, 'call').and.returnValue($q.when({item: macroItem, diff: null}));
         spyOn($rootScope, '$broadcast');
@@ -171,7 +208,7 @@ describe('macros', () => {
         $scope.$digest();
 
         expect($scope.item.body_html).toEqual('this is test');
-        expect($scope.item.abstract).toEqual('test');
+        expect($scope.item.abstract).toEqual('abstract');
         expect($scope.item.genre).toEqual([{qcode: 'zoo', name: 'zoo'}]);
         expect($scope.item.slugline).toEqual('slugline');
         expect($rootScope.$broadcast.calls.allArgs())
