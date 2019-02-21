@@ -86,6 +86,76 @@ describe('authoring', () => {
         expect(context.$rootScope.$applyAsync).toHaveBeenCalled();
     }));
 
+    it('synchronizes associations field from editor state', inject(() => {
+        const entity1 = {guid: 'entity1', renditions: {original: {href: 'foo'}}};
+        const entity2 = {guid: 'entity2', renditions: {original: {href: 'bar'}}};
+
+        const contentStateRaw = {
+            blocks: [
+                {
+                    key: 'aaaa1', text: 'test', type: 'unstyled', depth: 0, inlineStyleRanges: [], entityRanges: [],
+                },
+                {
+                    key: 'aaaa2', text: ' ', type: 'atomic', depth: 0, inlineStyleRanges: [], entityRanges: [
+                        {
+                            offset: 0,
+                            length: 1,
+                            key: 0,
+                        },
+                    ],
+                },
+                {
+                    key: 'aaaa3', text: ' ', type: 'atomic', depth: 0, inlineStyleRanges: [], entityRanges: [
+                        {
+                            offset: 0,
+                            length: 1,
+                            key: 1,
+                        },
+                    ],
+                },
+            ],
+            entityMap: {
+                0: {
+                    data: {media: entity1},
+                    type: 'MEDIA',
+                    mutability: 'MUTABLE',
+                },
+                1: {
+                    data: {media: entity2},
+                    type: 'MEDIA',
+                    mutability: 'MUTABLE',
+                },
+            },
+        };
+        const contentState = convertFromRaw(contentStateRaw);
+
+        const context = {
+            pathToValue: 'body_html',
+            item: {
+                body_html: '<p>foo</p>',
+                associations: {
+                    foo: {foo: 1},
+                    editor_1: {guid: 'existing assoc'},
+                    editor_2: {guid: 'some old association'},
+                },
+                fields_meta: {
+                    body_html: {
+                        draftjsState: [contentStateRaw],
+                    },
+                },
+            },
+            $rootScope: {
+                $applyAsync: () => null,
+            },
+        };
+
+        onChange.call(context, contentState);
+        expect(context.item.associations.foo).toEqual({foo: 1});
+        expect(context.item.associations.editor_0).toEqual(entity1);
+        expect(context.item.associations.editor_1).toEqual(entity2);
+        expect(context.item.associations.editor_2).toBe(null);
+    }));
+
     describe('authoring workspace', () => {
         it('can open an item in new window', inject(($window, authoringWorkspace) => {
             spyOn($window, 'open');
