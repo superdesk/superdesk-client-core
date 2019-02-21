@@ -190,7 +190,7 @@ function MacrosController($scope, macros, desks, autosave, $rootScope, storage, 
             if (isEditor3 || res.diff == null) {
                 $rootScope.macro_dirty = true;
                 angular.extend($scope.item, _.omit(res.item, ignoreFields));
-                autosave.save($scope.item, $scope.origItem);
+                $scope.autosave($scope.item);
             }
 
             if (res.diff != null) {
