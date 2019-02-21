@@ -1,4 +1,6 @@
 
+import {IMedia} from 'superdesk-interfaces/Media';
+
 export {attachments} from './reducer';
 export {initAttachments} from './actions';
 
@@ -8,7 +10,5 @@ export interface IAttachment {
     mimetype: string;
     filename: string;
     description: string;
-    media: {
-        length: number;
-    };
+    media: IMedia;
 }
