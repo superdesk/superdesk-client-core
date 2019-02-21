@@ -194,10 +194,6 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
      * If not removed the API will throw errors.
      */
     this.cleanUpdatesBeforePublishing = function(original, updates, action = 'publish') {
-        if (!updates.publish_schedule) {
-            delete updates.publish_schedule;
-        }
-
         // check if rendition is dirty for real
         if (_.isEqual(original.renditions, updates.renditions)) {
             delete updates.renditions;
