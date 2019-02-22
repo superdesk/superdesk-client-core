@@ -29,9 +29,13 @@ angular.module('superdesk.core.menu', [
         SuperdeskViewController.$inject = ['superdeskFlags', 'superdesk'];
         function SuperdeskViewController(superdeskFlags, superdesk) {
             this.flags = superdeskFlags.flags;
-
             this.openUpload = function openUpload(files) {
-                superdesk.intent('upload', 'media', files);
+                let uploadData = {
+                    files: files,
+                    deskSelectionAllowed: true,
+                };
+
+                superdesk.intent('upload', 'media', uploadData);
             };
         }
 
