@@ -17,7 +17,8 @@ interface IProps {
     item: {[key: string]: any};
     onClose: () => void;
     onCancel?: () => void;
-    onSave: (nextItem) => Promise<void>;
+    onSave: (nextItem) => Promise<any>;
+    onEditModeChange?(currentEditMode: boolean): void;
 
     // connected services
     modal?: any;
@@ -43,25 +44,27 @@ class KnowledgeItemViewEditComponent extends React.Component<IProps, IState> {
         this.isFormDirty = this.isFormDirty.bind(this);
     }
     componentWillReceiveProps(nextProps) {
-        if (JSON.stringify(nextProps.item) === JSON.stringify(this.props.item)) {
-            return;
-        }
-
-        // support switching to another item while in edit mode
-
-        (
-            this.isFormDirty() === false
-            ? Promise.resolve()
-            : this.props.modal.confirm(gettext('There are unsaved changes which will be discarded. Continue?'))
-        ).then(() => {
+        if (this.state.editMode === false) {
+            // enable changing which item is previewed
             this.setState({
-                editMode: false,
                 nextItem: nextProps.item,
             });
-        })
-        .catch(() => {
-            // do nothing
-        });
+        }
+    }
+    componentDidUpdate(prevProps, prevState) {
+        if (this.state.editMode !== prevState.editMode && typeof this.props.onEditModeChange === 'function') {
+            this.props.onEditModeChange(this.state.editMode);
+        }
+    }
+    componentDidMount() {
+        if (typeof this.props.onEditModeChange === 'function') {
+            this.props.onEditModeChange(this.state.editMode);
+        }
+    }
+    componentWillUnmount() {
+        if (typeof this.props.onEditModeChange === 'function') {
+            this.props.onEditModeChange(false);
+        }
     }
     enableEditMode() {
         this.setState({
@@ -115,7 +118,9 @@ class KnowledgeItemViewEditComponent extends React.Component<IProps, IState> {
                                     <button
                                         disabled={!this.isFormDirty()}
                                         onClick={() => {
-                                            this.props.onSave(this.state.nextItem).then(this.props.onClose);
+                                            this.props.onSave(this.state.nextItem).then(() => {
+                                                this.setState({editMode: false});
+                                            });
                                         }}
                                         className="btn btn--primary"
                                     >

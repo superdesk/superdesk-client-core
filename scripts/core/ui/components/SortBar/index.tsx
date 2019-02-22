@@ -1,18 +1,23 @@
 import React from "react";
+import {ISortOption} from "core/helpers/CrudManager";
+
+export interface ISortFields {
+    label: string;
+    field: string;
+}
 
 interface IProps {
-    sortOptions: Array<{id: string; label: string}>;
-    selectedSortOptionId: string;
-    direction: 'ascending' | 'descending';
+    sortOptions: Array<ISortFields>;
+    selected: ISortOption;
+
     itemsCount: number;
-    onSortOptionChange(id: string): void;
-    onSortDirectionChange(nextDirection: IProps['direction']): void;
+    onSortOptionChange(nextSortOption: ISortOption): void;
 }
 
 export class SortBar extends React.Component<IProps, any> {
     render() {
         const currentSortOption = this.props.sortOptions.find(
-            (option) => option.id === this.props.selectedSortOptionId,
+            (option) => option.field === this.props.selected.field,
         );
 
         return (
@@ -31,7 +36,10 @@ export class SortBar extends React.Component<IProps, any> {
                             this.props.sortOptions.map((option, i) => (
                                 <li key={i}>
                                     <button
-                                        onClick={() => this.props.onSortOptionChange(option.id)}
+                                        onClick={() => this.props.onSortOptionChange({
+                                            field: option.field,
+                                            direction: 'ascending',
+                                        })}
                                     >
                                         {option.label}
                                     </button>
@@ -42,10 +50,12 @@ export class SortBar extends React.Component<IProps, any> {
                 </div>
 
                 {
-                    this.props.direction === 'ascending'
+                    this.props.selected.direction === 'ascending'
                         ? (
                             <button
-                                onClick={() => this.props.onSortDirectionChange('ascending')}
+                                onClick={() => this.props.onSortOptionChange({
+                                    ...this.props.selected, direction: 'descending',
+                                })}
                                 className="icn-btn direction"
                                 title={gettext('Ascending')}
                             >
@@ -54,7 +64,9 @@ export class SortBar extends React.Component<IProps, any> {
                         )
                         : (
                             <button
-                                onClick={() => this.props.onSortDirectionChange('descending')}
+                                onClick={() => this.props.onSortOptionChange({
+                                    ...this.props.selected, direction: 'ascending',
+                                })}
                                 className="icn-btn direction"
                                 title={gettext('Descending')}
                             >

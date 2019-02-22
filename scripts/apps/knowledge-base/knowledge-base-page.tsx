@@ -1,4 +1,6 @@
 import React from 'react';
+import {noop} from 'lodash';
+
 import {ListItem, ListItemColumn, ListItemActionsMenu} from 'core/components/ListItem';
 import {PageContainer, PageContainerItem} from 'core/components/PageLayout';
 import {KnowledgeItemViewEdit} from './knowledge-item-view-edit';
@@ -14,80 +16,48 @@ import {IFormGroup} from './generic-form/interfaces/form';
 import {FormViewEdit} from './generic-form/from-group';
 import {SearchBar} from 'core/ui/components';
 import {Button} from 'core/ui/components/Nav';
-import {SortBar} from 'core/ui/components/SortBar';
+import {SortBar, ISortFields} from 'core/ui/components/SortBar';
 import {Positioner} from 'superdesk-ui-framework';
-
-const originalItems = [
-    {
-        id: "1",
-        title: "Biscuits Fossier",
-        language: "English",
-        value: "Biscuits Fossier is a Reims, France based manufacturer of biscuits, \
-        gingerbread, sweets and marsipan-based confectionery.",
-    },
-    {
-        id: "2",
-        title: "Délifrance",
-        language: "Portuguese",
-        value: "Biscuits Fossier is a Reims, France based manufacturer of biscuits, \
-        gingerbread, sweets and marsipan-based confectionery.",
-    },
-    {
-        id: "3",
-        title: "Biscuits Fossier",
-        language: "English",
-        value: `Délifrance is a bakery company that produces "French style" bakery, \
-        savoury and snacking products in over 100 countries on five continents. It has \
-        been in operation since 1983. The sister company of Délifrance is Grands Moulins \
-        de Paris, which is a major French milling company and supplies 100% of the flour \
-        used in Délifrance's products.`,
-    },
-    {
-        id: "4",
-        title: "Paul",
-        language: "French",
-        value: "Paul is a French chain of bakery/café restaurants established in 1889 in the town of Croix, \
-        in Nord, by Charlemagne Mayot. It specializes in serving French products including breads, crêpes, \
-        sandwiches, macarons, soups, cakes, pastries, coffee, wine, and beer.",
-    },
-];
-
-const testSortOptions = [
-    {
-        id: '1',
-        label: 'Name',
-    },
-    {
-        id: '2',
-        label: 'Description',
-    },
-    {
-        id: '3',
-        label: 'Last updated',
-    },
-];
-
-const testCurrentSortOption = '2';
-const testItemsCount = 34;
-const testCurrentSortDirection = 'descending';
+import {connectCrudManager, ICrudManager} from 'core/helpers/CrudManager';
+import {TagLabel} from 'core/ui/components/TagLabel';
+import {connectServices} from 'core/helpers/ReactRenderAsync';
 
 interface IState {
-    allItems: Array<any>;
     itemInPreview?: string;
     newItem: null | {[key: string]: any};
     filtersOpen: boolean;
     filterValues: {[key: string]: any};
     searchValue: string;
+    loading: boolean;
 }
+
+const sortOptions: Array<ISortFields> = [
+    {
+        label : gettext('Name'),
+        field: 'name',
+    },
+    {
+        label : gettext('Definition'),
+        field: 'definition',
+    },
+    {
+        label : gettext('Last updated'),
+        field: '_updated',
+    },
+    {
+        label : gettext('First created'),
+        field: '_created',
+    },
+];
 
 const formConfig: IFormGroup = {
     direction: 'vertical',
     type: 'inline',
     form: [
         {
-            label : gettext('Title'),
+            label : gettext('Name'),
             type: 'single_line_text',
-            field: 'title',
+            field: 'name',
         },
         {
             label : gettext('Language'),
@@ -95,80 +65,114 @@ const formConfig: IFormGroup = {
             field: 'language',
         },
         {
-            label : gettext('Value'),
+            label : gettext('Definition'),
             type: 'single_line_text',
-            field: 'value',
+            field: 'definition',
         },
     ],
 };
 
-export class KnowledgeBasePage extends React.Component<void, IState> {
+interface IProps {
+    conceptItems: ICrudManager<IKnowledgeBaseItem>;
+    modal: any;
+}
+
+interface IKnowledgeBaseItem {
+    _created: string;
+    _updated: string;
+    _etag: string;
+    _id: string;
+    name: string;
+    cpnat_type: 'cpnat:abstract';
+    labels?: Array<string>;
+    language: string;
+    definition: string;
+}
+
+class KnowledgeBasePageComponent extends React.Component<IProps, IState> {
+    previewInEditMode: boolean;
+
     constructor(props) {
         super(props);
 
         this.state = {
-            allItems: originalItems,
             itemInPreview: null,
             newItem: null,
             filtersOpen: false,
             filterValues: {},
             searchValue: '',
+            loading: true,
         };
+
+        this.previewInEditMode = false;
 
         this.openPreview = this.openPreview.bind(this);
         this.closePreview = this.closePreview.bind(this);
         this.setFiltersVisibility = this.setFiltersVisibility.bind(this);
-        this.updateItemInEditMode = this.updateItemInEditMode.bind(this);
         this.handleFilterFieldChange = this.handleFilterFieldChange.bind(this);
-        this.filterItems = this.filterItems.bind(this);
-        this.addItem = this.addItem.bind(this);
+        this.openNewItemForm = this.openNewItemForm.bind(this);
+        this.closeNewItemForm = this.closeNewItemForm.bind(this);
     }
     openPreview(id) {
-        this.setState({
-            itemInPreview: id,
-        });
+        if (this.previewInEditMode === true) {
+            this.props.modal.alert({
+                headerText: gettext('Warning'),
+                bodyText: gettext(
+                    'Can\'t open a preview, because another item is in edit mode.',
+                ),
+            });
+        } else {
+            this.setState({
+                itemInPreview: id,
+            });
+        }
     }
     closePreview() {
         this.setState({itemInPreview: null});
     }
-    updateItemInEditMode(nextItem): Promise<void> {
-        return new Promise((resolve) => {
-            this.setState({
-                ...this.state,
-                allItems: this.state.allItems.map(
-                    (currentItem) => currentItem.id === nextItem.id ? nextItem : currentItem,
-                ),
-            }, () => {
-                resolve();
-            });
-        });
-    }
-    handleFilterFieldChange(field, nextValue) {
+    handleFilterFieldChange(field, nextValue, callback = noop) {
         this.setState({
             filterValues: {
                 ...this.state.filterValues,
                 [field]: nextValue,
             },
-        });
+        }, callback);
     }
-    filterItems() {
-        const {filterValues} = this.state;
-
-        this.setState({
-            allItems: originalItems.filter((item) => {
-                return Object.keys(filterValues).every((field) => {
-                    return item[field].toLowerCase().includes(filterValues[field].toLowerCase());
-                });
-            }),
-        });
+    executeFilters() {
+        this.props.conceptItems.read(
+            this.props.conceptItems.activeSortOption,
+            this.state.filterValues,
+        );
     }
-    setFiltersVisibility(open: boolean) {
-        this.setState({filtersOpen: open});
+    closeNewItemForm() {
+        this.setState({newItem: null});
     }
-    addItem() {
-        this.setState({newItem: {}});
+    setFiltersVisibility(nextValue: boolean) {
+        this.setState({filtersOpen: nextValue});
+    }
+    openNewItemForm() {
+        if (this.previewInEditMode === true) {
+            this.props.modal.alert({
+                headerText: gettext('Warning'),
+                bodyText: gettext(
+                    'Can\'t add a new item, because another item is in edit mode.',
+                ),
+            });
+        } else {
+            this.setState({newItem: {}, itemInPreview: null});
+        }
+    }
+    componentDidMount() {
+        this.props.conceptItems.read();
     }
     render() {
+        if (this.props.conceptItems._items == null) {
+            // loading
+            return null;
+        }
+
+        const {activeFilters} = this.props.conceptItems;
+
         return (
             <div style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
                 <div className="subnav">
@@ -182,24 +186,20 @@ export class KnowledgeBasePage extends React.Component<void, IState> {
                     <SearchBar
                         value={this.state.searchValue}
                         allowCollapsed={false}
-                        onSearch={() => { throw new Error('Not implemented yet'); }}
+                        onSearch={(value) => {
+                            this.handleFilterFieldChange('name', value, this.executeFilters);
+                        }}
                     />
 
                     <SortBar
-                        sortOptions={testSortOptions}
-                        selectedSortOptionId={testCurrentSortOption}
-                        direction={testCurrentSortDirection}
-                        itemsCount={testItemsCount}
-                        onSortOptionChange={() => {
-                            console.log('sort option changed');
-                        }}
-                        onSortDirectionChange={() => {
-                            console.log('sort direction changed');
-                        }}
+                        sortOptions={sortOptions}
+                        selected={this.props.conceptItems.activeSortOption}
+                        itemsCount={this.props.conceptItems._meta.total}
+                        onSortOptionChange={this.props.conceptItems.sort}
                     />
 
                     <Button
-                        onClick={this.addItem}
+                        onClick={this.openNewItemForm}
                         className="sd-create-btn dropdown-toggle"
                         icon="icon-plus-large"
                     >
@@ -224,18 +224,20 @@ export class KnowledgeBasePage extends React.Component<void, IState> {
                                     </SidePanelHeader>
                                     <SidePanelContent>
                                         <SidePanelContentBlock>
-                                            <FormViewEdit
-                                                item={{}}
-                                                formConfig={formConfig}
-                                                editMode={true}
-                                                handleFieldChange={this.handleFilterFieldChange}
-                                            />
-                                            <button
-                                                onClick={this.filterItems}
-                                                className="btn btn--primary btn--expanded"
-                                            >
-                                                {gettext('Filter')}
-                                            </button>
+                                            <form onSubmit={(event) => {
+                                                event.preventDefault();
+                                                this.executeFilters();
+                                            }}>
+                                                <FormViewEdit
+                                                    item={{}}
+                                                    formConfig={formConfig}
+                                                    editMode={true}
+                                                    handleFieldChange={this.handleFilterFieldChange}
+                                                />
+                                                <button className="btn btn--primary btn--expanded" type="submit">
+                                                    {gettext('Filter')}
+                                                </button>
+                                            </form>
                                         </SidePanelContentBlock>
                                     </SidePanelContent>
                                 </SidePanel>
@@ -245,16 +247,35 @@ export class KnowledgeBasePage extends React.Component<void, IState> {
                     <PageContainerItem shrink>
                         <div style={{margin: 20}}>
                             {
-                                this.state.allItems.map((item, i) => (
-                                    <ListItem onClick={() => this.openPreview(item.id)} key={item.id}>
+                                Object.keys(activeFilters).length < 1 ? null : (
+                                    <div
+                                        className="subnav"
+                                        style={{background: 'transparent', boxShadow: 'none', marginTop: -20}}
+                                    >
+                                        {
+                                            Object.keys(activeFilters).map((fieldName, i) => (
+                                                <TagLabel
+                                                    key={i}
+                                                    onRemove={() => this.props.conceptItems.removeFilter(fieldName)}
+                                                >
+                                                    {fieldName}:{' '}<strong>{activeFilters[fieldName]}</strong>
+                                                </TagLabel>
+                                            ))
+                                        }
+                                    </div>
+                                )
+                            }
+                            {
+                                this.props.conceptItems._items.map((item, i) => (
+                                    <ListItem onClick={() => this.openPreview(item._id)} key={item._id}>
                                         <ListItemColumn>
-                                            {item.title}
+                                            {item.name}
                                         </ListItemColumn>
                                         <ListItemColumn>
                                             {item.language}
                                         </ListItemColumn>
                                         <ListItemColumn ellipsisAndGrow noBorder>
-                                            {item.value}
+                                            {item.definition}
                                         </ListItemColumn>
                                         <ListItemActionsMenu>
                                             <button id={"knowledgebaseitem" + i}>
@@ -274,16 +295,17 @@ export class KnowledgeBasePage extends React.Component<void, IState> {
                                                     </li>
                                                     <li className="dropdown__menu-divider" />
                                                     <li>
-                                                        <a title="Edit">
-                                                        <i className="icon-pencil" />
-                                                        <span style={{ display: "inline" }}>Button 1</span>
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a title="Edit in new Window">
-                                                        <i className="icon-pencil" />
-                                                        <span style={{ display: "inline" }}>Button 2</span>
-                                                        </a>
+                                                        <button
+                                                            onClick={() => this.props.conceptItems.delete(item) }
+                                                            title="Edit"
+                                                        >
+                                                            <i className="icon-pencil" />
+                                                            <span
+                                                                style={{ display: "inline" }}
+                                                            >
+                                                                {gettext('Remove')}
+                                                            </span>
+                                                        </button>
                                                     </li>
                                                 </ul>
                                             </Positioner>
@@ -298,10 +320,15 @@ export class KnowledgeBasePage extends React.Component<void, IState> {
                         this.state.itemInPreview != null ? (
                             <PageContainerItem>
                                 <KnowledgeItemViewEdit
+                                    onEditModeChange={(val) => {
+                                        this.previewInEditMode = val;
+                                    }}
                                     operation='editing'
                                     formConfig={formConfig}
-                                    item={this.state.allItems.find(({id}) => id === this.state.itemInPreview)}
-                                    onSave={this.updateItemInEditMode}
+                                    item={
+                                        this.props.conceptItems._items.find(({_id}) => _id === this.state.itemInPreview)
+                                    }
+                                    onSave={(nextItem) => this.props.conceptItems.update(nextItem)}
                                     onClose={this.closePreview}
                                 />
                             </PageContainerItem>
@@ -315,16 +342,12 @@ export class KnowledgeBasePage extends React.Component<void, IState> {
                                     operation='creation'
                                     formConfig={formConfig}
                                     item={this.state.newItem}
-                                    onSave={(item) => new Promise((resolve) => {
-                                        // do api call and set newItem to null
-                                        this.setState({newItem: null}, () => { resolve(); });
-                                    })}
-                                    onClose={() => {
-                                        this.setState({newItem: null});
-                                    }}
-                                    onCancel={() => {
-                                        this.setState({newItem: null});
-                                    }}
+                                    onSave={(item: IKnowledgeBaseItem) => this.props.conceptItems.create({
+                                        ...item,
+                                        "cpnat_type": "cpnat:abstract",
+                                    }).then(this.closeNewItemForm)}
+                                    onClose={this.closeNewItemForm}
+                                    onCancel={this.closeNewItemForm}
                                 />
                             </PageContainerItem>
                         ) : null
@@ -334,3 +357,10 @@ export class KnowledgeBasePage extends React.Component<void, IState> {
         );
     }
 }
+
+export const KnowledgeBasePage = connectServices(
+    connectCrudManager<IKnowledgeBaseItem>(
+        KnowledgeBasePageComponent,
+        'conceptItems',
+        'concept_items',
+    ), ['modal']);
