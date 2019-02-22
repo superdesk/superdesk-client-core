@@ -24,7 +24,6 @@ export class VocabularySingleValueComponent extends React.Component<IProps, ISta
         this.props.vocabularies.getVocabulary(this.props.formField.component_parameters.vocabulary_id)
             .then((res) => {
                 this.setState({vocabulary: res});
-                console.log(res);
             });
     }
     render() {
