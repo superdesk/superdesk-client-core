@@ -96,6 +96,7 @@
     "react-redux": "5.0.7",
     "react-textarea-autosize": "5.2.1",
     "redux": "3.7.2",
+    "redux-logger": "3.0.6",
     "redux-thunk": "2.2.0",
     "sass-loader": "6.0.6",
     "shortid": "2.2.8",
