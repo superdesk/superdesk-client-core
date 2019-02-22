@@ -390,7 +390,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
     * Actions that it can perform on an item
     * @param {Object} item : item
     */
-    this.itemActions = function(item) {
+    this.itemActions = function(item, userDesks) {
         var currentItem = this._getCurrentItem(item);
         var userPrivileges = privileges.privileges;
         var action = angular.extend({}, helpers.DEFAULT_ACTIONS);
@@ -439,7 +439,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
 
         this._updateGeneralActions(currentItem, action);
 
-        return this._updateDeskActions(currentItem, action);
+        return this._updateDeskActions(currentItem, action, userDesks || self.userDesks);
     };
 
     this._updateActionsForContentApi = function(item, action) {
@@ -550,7 +550,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
 
     // check for desk membership for edit rights and returns updated
     // actions accordingly
-    this._updateDeskActions = function(currentItem, oldAction) {
+    this._updateDeskActions = function(currentItem, oldAction, userDesks) {
         let action = oldAction;
         let reWrite = action.re_write;
         let userPrivileges = privileges.privileges;
@@ -563,7 +563,8 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
 
             action.add_to_current = !_.includes(['spiked', 'scheduled', 'killed', 'recalled'], currentItem.state);
 
-            var desk = _.find(self.userDesks, {_id: currentItem.task.desk});
+            var desk = _.find(userDesks, {_id: currentItem.task.desk});
+
 
             if (!desk) {
                 action = angular.extend({}, helpers.DEFAULT_ACTIONS);
