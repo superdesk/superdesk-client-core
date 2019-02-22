@@ -10,6 +10,7 @@ import {
 import {FormViewEdit} from "./generic-form/from-group";
 import {IFormGroup} from "./generic-form/interfaces/form";
 import { connectServices } from "core/helpers/ReactRenderAsync";
+import { mapValues, mapKeys } from "lodash";
 
 interface IProps {
     operation: 'editing' | 'creation';
@@ -27,6 +28,7 @@ interface IProps {
 interface IState {
     editMode: boolean;
     nextItem: IProps['item'];
+    issues: {[field: string]: Array<string>};
 }
 
 class KnowledgeItemViewEditComponent extends React.Component<IProps, IState> {
@@ -36,12 +38,14 @@ class KnowledgeItemViewEditComponent extends React.Component<IProps, IState> {
         this.state = {
             editMode: this.props.operation === 'creation' ? true : false,
             nextItem: this.props.item,
+            issues: {},
         };
 
         this.enableEditMode = this.enableEditMode.bind(this);
         this.handleCancel = this.handleCancel.bind(this);
         this.handleFieldChange = this.handleFieldChange.bind(this);
         this.isFormDirty = this.isFormDirty.bind(this);
+        this.handleSave = this.handleSave.bind(this);
     }
     componentWillReceiveProps(nextProps) {
         if (this.state.editMode === false) {
@@ -103,6 +107,40 @@ class KnowledgeItemViewEditComponent extends React.Component<IProps, IState> {
     isFormDirty() {
         return JSON.stringify(this.props.item) !== JSON.stringify(this.state.nextItem);
     }
+    handleSave() {
+        this.props.onSave(this.state.nextItem).then(() => {
+            this.setState({editMode: false});
+        })
+        .catch((res) => {
+            let issues = {};
+
+            for (let fieldName in res.data._issues) {
+                let issuesForField = [];
+
+                if (typeof res.data._issues[fieldName] === 'string') {
+                    issuesForField.push(res.data._issues[fieldName]);
+                } else {
+                    for (let key in res.data._issues[fieldName]) {
+                        if (key === 'required') {
+                            issuesForField.push(
+                                gettext('Field is required'),
+                            );
+                        } else {
+                            issuesForField.push(
+                                gettext('Uknown validation error'),
+                            );
+                        }
+                    }
+                }
+
+                issues[fieldName] = issuesForField;
+            }
+
+            this.setState({
+                issues: issues,
+            });
+        });
+    }
     render() {
         return (
             <SidePanel side='right' width={360}>
@@ -117,11 +155,7 @@ class KnowledgeItemViewEditComponent extends React.Component<IProps, IState> {
                                     </button>
                                     <button
                                         disabled={!this.isFormDirty()}
-                                        onClick={() => {
-                                            this.props.onSave(this.state.nextItem).then(() => {
-                                                this.setState({editMode: false});
-                                            });
-                                        }}
+                                        onClick={this.handleSave}
                                         className="btn btn--primary"
                                     >
                                         {gettext('Save')}
@@ -152,6 +186,7 @@ class KnowledgeItemViewEditComponent extends React.Component<IProps, IState> {
                             item={this.state.nextItem}
                             formConfig={this.props.formConfig}
                             editMode={this.state.editMode}
+                            issues={this.state.issues}
                             handleFieldChange={this.handleFieldChange}
                         />
                     </SidePanelContentBlock>

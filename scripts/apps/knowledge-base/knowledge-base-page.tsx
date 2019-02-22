@@ -56,17 +56,20 @@ const formConfig: IFormGroup = {
     form: [
         {
             label : gettext('Name'),
-            type: 'single_line_text',
+            type: 'text_single_line',
             field: 'name',
         },
         {
             label : gettext('Language'),
-            type: 'single_line_text',
+            type: 'vocabulary_single_value',
             field: 'language',
+            component_parameters: {
+                vocabulary_id: 'languages',
+            },
         },
         {
             label : gettext('Definition'),
-            type: 'single_line_text',
+            type: 'text_single_line',
             field: 'definition',
         },
     ],
@@ -232,6 +235,7 @@ class KnowledgeBasePageComponent extends React.Component<IProps, IState> {
                                                     item={{}}
                                                     formConfig={formConfig}
                                                     editMode={true}
+                                                    issues={{}}
                                                     handleFieldChange={this.handleFilterFieldChange}
                                                 />
                                                 <button className="btn btn--primary btn--expanded" type="submit">

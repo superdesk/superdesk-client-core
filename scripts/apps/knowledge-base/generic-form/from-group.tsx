@@ -10,6 +10,7 @@ interface IProps {
     formConfig: IFormGroup;
     item: {[key: string]: any};
     editMode: boolean;
+    issues: {[field: string]: Array<string>};
     handleFieldChange(field: keyof IProps['item'], nextValue: valueof<IProps['item']>): void;
 }
 
@@ -29,6 +30,7 @@ export class FormViewEdit extends React.Component<IProps> {
                                     formConfig={item}
                                     item={this.props.item}
                                     editMode={this.props.editMode}
+                                    issues={this.props.issues}
                                     handleFieldChange={this.props.handleFieldChange}
                                 />
                             );
@@ -41,6 +43,7 @@ export class FormViewEdit extends React.Component<IProps> {
                                     formField={item}
                                     value={this.props.item[item.field]}
                                     disabled={!this.props.editMode}
+                                    issues={this.props.issues[item.field] || []}
                                     onChange={
                                         (nextValue) => this.props.handleFieldChange(item.field, nextValue)
                                     }

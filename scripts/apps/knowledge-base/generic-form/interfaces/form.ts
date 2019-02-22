@@ -1,5 +1,5 @@
 export interface IFormField { // don't fortget to update runtime type checks
-    type: 'single_line_text';
+    type: 'text_single_line' | 'vocabulary_single_value';
     required?: boolean;
 
     // custom components for some fields might not require a label or want include a custom one
@@ -15,8 +15,8 @@ export interface IFormField { // don't fortget to update runtime type checks
     component_parameters?: {[key: string]: any};
 }
 
-export function isIFormField(x: IFormGroup['form'][0]): x is IFormField {
-    return x['type'] === 'single_line_text';
+export function isIFormField(x: IFormGroup['form'][0]): x is IFormField { // don't fortget to update runtime type checks
+    return x['direction'] == null;
 }
 
 //

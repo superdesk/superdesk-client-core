@@ -8,7 +8,7 @@ export interface IVocabulary {
     helper_text: string;
     popup_width: number;
     type: string;
-    items: Array<{name: string}>;
+    items: Array<{name: string; qcode: string}>;
     single_value: boolean;
     schema_field: string;
     dependent: boolean;
