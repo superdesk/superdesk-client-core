@@ -256,6 +256,14 @@ angular.module('superdesk.apps.authoring', [
                 templateUrl: 'scripts/apps/authoring/views/change-image.html',
                 filters: [{action: 'edit', type: 'crop'}],
             })
+            .activity('edit.video', {
+                label: gettext('Details'),
+                modal: true,
+                cssClass: 'modal--fullscreen modal--dark-ui',
+                controller: ctrl.ChangeVideoController,
+                templateUrl: 'scripts/apps/authoring/views/change-video.html',
+                filters: [{action: 'edit', type: 'video'}],
+            })
             .activity('preview', {
                 href: '/preview/:_id',
                 when: '/preview/:_id',

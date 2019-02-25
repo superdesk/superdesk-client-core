@@ -46,6 +46,53 @@ export function RenditionsService(metadata, $q, api, superdesk, _, notify) {
         });
     };
 
+
+    /**
+     *  ngdoc method
+     *  @name renditions#videoEdit
+     *  @public
+     *  @description edit video.
+     *
+     *  @param {Object} item Media item
+     *  @param {boolean} isNew to indicate if picture is new or not
+     *  @param {boolean} editable to indicate if picture is editable or not
+     *  @param {boolean} isAssociated to indicate if picture is isAssociated or not
+     *  @return {promise} returns the modified picture item
+     */
+    this.videoEdit = function(item, options): Promise<IArticle> {
+        const clonedItem = _.extend({}, item);
+
+        clonedItem.renditions = _.cloneDeep(clonedItem.renditions);
+
+        return self.get().then((renditions) => {
+            // we want to crop only renditions that change the ratio
+            let withRatio = _.filter(renditions, (rendition) => angular.isDefined(rendition.ratio));
+
+            if (!withRatio.length) {
+                withRatio = self.renditions;
+            }
+            var hideTabs = ['video-edit', 'crop']
+            const cropOptions = {
+                isNew: true,
+                isAssociated: false,
+                editable: true,
+                defaultTab: false,
+                hideTabs: hideTabs,
+                showMetadata: false,
+                ...options,
+            };
+
+            return superdesk.intent('edit', 'video', {
+                item: clonedItem,
+                renditions: withRatio,
+                poi: clonedItem.poi,
+                showAoISelectionButton: true,
+                showMetadataEditor: true,
+                ...cropOptions,
+            })
+        }
+
+
     /**
      *  ngdoc method
      *  @name renditions#crop

@@ -292,7 +292,20 @@ export function ArticleEditDirective(
                     } else {
                         showTabs = ['view'];
                     }
-
+                    if (scope.item.type === 'video' && scope.metadata.crop_sizes) {
+                        showTabs = ['view', 'image-edit'];
+                        return renditions.videoEdit(
+                            scope.item,
+                            {
+                                isNew: false,
+                                editable: true,
+                                isAssociated: false,
+                                defaultTab: defaultTab,
+                                tabs: showTabs,
+                                showMetadata: true,
+                            }
+                        )
+                    }
                     return renditions.crop(
                         scope.item,
                         {

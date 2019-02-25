@@ -1,0 +1,156 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.0/utils/Draggable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.0/TweenMax.min.js"></script>
+<div class="modal__header modal__header--flex">
+    <h3 class="modal__heading modal__heading--no-grow" ng-if="!nav || nav === 'view'">{{ :: activity.label}}</h3>
+    <h3 class="modal__heading modal__heading--no-grow" ng-if="nav === 'video-edit'">{{ :: 'Edit video' | translate }}</h3>
+
+    <div class="modal__header-buttons  modal__header-buttons--center modal__header-element-grow button-nav">
+        <button class="button-nav__btn" ng-click="nav = 'view'; showMetadata = true" ng-class="{'button-nav__btn--active' : !nav || nav === 'view'}" ng-show="!hideTabs.includes('view')" ng-disabled="!isDoneEnabled()" translate>Details / Metadata</button>
+        <button class="button-nav__btn" ng-click="nav = 'video-edit'; showMetadata = false" ng-show="data.editable && !hideTabs.includes('video-edit')" ng-class="{'button-nav__btn--active': nav === 'video-edit'}" ng-disabled="!isDoneEnabled()" translate>Edit Video</button>
+    </div>
+
+    <div class="modal__header-buttons modal__header-buttons--right">
+        <button class="btn btn--primary btn--hollow" ng-click="done()" ng-disabled="!isDoneEnabled() || isAoISelectionModeEnabled">{{ 'Done ' | translate }}</button>
+    </div>
+</div>
+
+<div class="modal__body modal__body--no-padding">
+    <div class="sd-column-box--2">
+        <div class="sd-column-box__main-column sd-column-box__main-column--photo-preview" ng-class="{'toolbar-offset': crops.isDirty}">
+            <a class="sd-photo-preview__slide-in-button" ng-show="!showMetadata && nav !== 'video-edit'" ng-click="showMetadata = !showMetadata" data-sd-tooltip="Open metadata" data-flow="left">
+                <i class="icon-backward-thin"></i>
+            </a>
+            <div class="sd-photo-preview" ng-if="!nav || nav === 'view'">
+                <div class="sd-photo-preview__image">
+                    <video controls ng-if="data.item.type === 'video'" ng-src="{{data.item.renditions.original.href}}"></video>
+                    <audio controls ng-if="data.item.type === 'audio'" ng-src="{{data.item.renditions.original.href}}"></audio>
+                </div>
+            </div>
+            <div class="sd-photo-preview sd-photo-preview__edit-mode" ng-if="nav === 'video-edit'">
+                <div class="modal__sliding-toolbar" ng-if="crops.isDirty">
+                    <div class="sliding-toolbar__inner"></div>
+                    <a class="btn" ng-click="cancelCrops()" translate>Cancel</a>
+                    <a class="btn btn--primary" ng-click="saveCrops()" translate>Save</a>
+                </div>
+                <div class="video-preview">
+                    <div id="player-overlay">
+                        <div class="video-player">
+                            <video id="video" class="video-display" controls ng-if="data.item.type === 'video'" ng-src="{{data.item.renditions.original.href}}" ng-init="videoInit()" ></video>
+                        </div>
+                        <div class="sd-photo-preview__thumb-strip video-control">
+                            <div class="btn-player">
+                                <button class="btn btn--ui-dark btn--hollow btn--icon-only btn--large" ng-click="playVideo()" ng-class="{'btn--active' : isAoISelectionModeEnabled}" ng-disabled="controls.isDirty"><i class="icon-redo"></i></button>
+                            </div>
+                            <label class="sd-photo-preview__label name-boder">
+                                {{data.item.headline}}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="sd-photo-preview__thumb-strip">
+                    <div class="item-association item-association--preview video-toolbar">
+
+                        <div class="video-toolbar">
+                            <div  id="output" class="thumbnail-preview"></div>
+                        </div>
+                        <div class="item-association__image-overlay" id="thumbnail-container">
+                            <div class="item-association__icons-block">
+                                <a class="item-association__image-action--small" sd-tooltip="Use current frame" ng-click="captureThumbnail()"><i class="icon-photo"></i></a>
+                                <a class="item-association__image-action--small" sd-tooltip="Upload image" ng-click="rotateImage()"><i class="icon-upload"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="video-controls">
+                        <md-frames class="thumbs">
+                            <div class="inner">
+                                <video preload="metadata" width="88" height="50"
+                                       poster="https://s58.123apps.com/vcutter/frame2/s584FooPQ18.mp4/0/50" class="loaded"></video>
+                                <video preload="metadata" width="88" height="50"
+                                       poster="https://s58.123apps.com/vcutter/frame2/s584FooPQ18.mp4/28822/50" class="loaded"></video>
+                                <video preload="metadata" width="88" height="50"
+                                       poster="https://s58.123apps.com/vcutter/frame2/s584FooPQ18.mp4/57644/50" class="loaded"></video>
+                                <video preload="metadata" width="88" height="50"
+                                       poster="https://s58.123apps.com/vcutter/frame2/s584FooPQ18.mp4/86465/50" class="loaded"></video>
+                                <video preload="metadata" width="88" height="50"
+                                       poster="https://s58.123apps.com/vcutter/frame2/s584FooPQ18.mp4/115287/50" class="loaded"></video>
+                                <video preload="metadata" width="88" height="50"
+                                       poster="https://s58.123apps.com/vcutter/frame2/s584FooPQ18.mp4/144109/50" class="loaded"></video>
+                                <video preload="metadata" width="88" height="50"
+                                       poster="https://s58.123apps.com/vcutter/frame2/s584FooPQ18.mp4/172931/50" class="loaded"></video>
+                                <video preload="metadata" width="88" height="50"
+                                       poster="https://s58.123apps.com/vcutter/frame2/s584FooPQ18.mp4/201752/50" class="loaded"></video>
+                                <video preload="metadata" width="88" height="50"
+                                       poster="https://s58.123apps.com/vcutter/frame2/s584FooPQ18.mp4/230574/50" class="loaded"></video>
+                                <video preload="metadata" width="88" height="50"
+                                       poster="https://s58.123apps.com/vcutter/frame2/s584FooPQ18.mp4/259396/50" class="loaded"></video>
+                                <video preload="metadata" width="88" height="50"
+                                       poster="https://s58.123apps.com/vcutter/frame2/s584FooPQ18.mp4/288218/50" class="loaded"></video>
+                                <video preload="metadata" width="88" height="50"
+                                       poster="https://s58.123apps.com/vcutter/frame2/s584FooPQ18.mp4/317039/50" class="loaded"></video>
+                            </div>
+                        </md-frames>
+                        <md-controlbars class="control-bars" data-parser="time">
+
+                            <div class="mask left active" style="width: 18.0396%;"></div>
+
+                            <div class="mask right" style="width: 0px;"></div>
+                            <div class="progress-output" style="--offset:3.92699px; --contentTop:-20.073px; left: 30.0396%;">
+                                <div class="content">
+                                    <svg width="50px" height="13px" viewBox="0 0 54 24" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                                         xmlns:xlink="http://www.w3.org/1999/xlink">
+                                        <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                            <path d="M27,23 L27,24 L26,24 L26,23 C26,20.2385763 23.7614237,18 21,18 L9,18 C4.02943725,18 0,13.9705627 0,9 C0,4.02943725 4.02943725,0 9,0 L45,0 C49.9705627,0 54,4.02943725 54,9 C54,13.9705627 49.9705627,18 45,18 L32,18 L32,18 C29.2385763,18 27,20.2385763 27,23 Z"
+                                                  id="time_bg" fill="#FFFFFF"></path>
+                                        </g>
+                                    </svg>
+                                    <div class="inner">01:02.3</div>
+                                </div>
+                                <div class="progress-line"></div>
+                            </div>
+                            <div class="control-bars-wrapper" style="right: 0px; left: 18.0396%;">
+                                <div class="control-bar cb-left" data-content="01:02.3">
+
+                                </div>
+                                <div class="control-bar cb-right" data-content="05:45.8">
+
+                                </div>
+                            </div>
+
+                        </md-controlbars>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="sd-column-box__slide-in-column sd-column-box__slide-in-column--large sd-column-box__slide-in-column--dark-ui" ng-class="{'sd-column-box__slide-in-column--closed' : !showMetadata}" ng-show="nav !== 'video-edit'">
+            <div class="sd-column-box__slide-in-column-inner sd-slide-in-panel">
+                <div class="sd-slide-in-panel__header">
+                    <h3 class="sd-slide-in-panel__heading" ng-if="nav !== 'image-edit'" translate>Metadata</h3>
+                    <a class="icn-btn sd-slide-in-panel__close" sd-tooltip="Close details" flow="top" ng-click="showMetadata = !showMetadata"><i class="icon-close-small"></i></a>
+                </div>
+                <div class="sd-slide-in-panel__content" ng-if="nav !== 'image-edit'">
+                    <div class="sd-slide-in-panel__content-block sd-slide-in-panel__content-block--first">
+
+                        <div class="modal__sliding-toolbar" ng-if="metadata.isDirty">
+                            <div class="sliding-toolbar__inner"></div>
+                            <a class="btn" ng-click="cancelMetadataChanges()" translate>Cancel</a>
+                            <a class="btn btn--primary" ng-click="applyMetadataChanges()" translate>Apply</a>
+                        </div>
+
+                        <div sd-media-metadata-editor
+                             data-item="data.metadata"
+                             data-validator="validator"
+                             data-dark="true"
+                             data-boxed="true"
+                             data-on-change="metadata.isDirty = true"
+                             data-disabled="!data.editable"
+                             data-associated="data.isAssociated">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
