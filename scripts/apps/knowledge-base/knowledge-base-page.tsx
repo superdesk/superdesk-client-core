@@ -1,5 +1,6 @@
 import React from 'react';
 import {noop} from 'lodash';
+import ReactPaginate from 'react-paginate';
 
 import {ListItem, ListItemColumn, ListItemActionsMenu} from 'core/components/ListItem';
 import {PageContainer, PageContainerItem} from 'core/components/PageLayout';
@@ -143,6 +144,7 @@ class KnowledgeBasePageComponent extends React.Component<IProps, IState> {
     }
     executeFilters() {
         this.props.conceptItems.read(
+            1,
             this.props.conceptItems.activeSortOption,
             this.state.filterValues,
         );
@@ -166,7 +168,7 @@ class KnowledgeBasePageComponent extends React.Component<IProps, IState> {
         }
     }
     componentDidMount() {
-        this.props.conceptItems.read();
+        this.props.conceptItems.read(1);
     }
     render() {
         if (this.props.conceptItems._items == null) {
@@ -175,6 +177,9 @@ class KnowledgeBasePageComponent extends React.Component<IProps, IState> {
         }
 
         const {activeFilters} = this.props.conceptItems;
+        const totalResults = this.props.conceptItems._meta.total;
+        const pageSize = this.props.conceptItems._meta.max_results;
+        const pageCount = Math.ceil(totalResults / pageSize);
 
         return (
             <div style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
@@ -250,6 +255,21 @@ class KnowledgeBasePageComponent extends React.Component<IProps, IState> {
                     }
                     <PageContainerItem shrink>
                         <div style={{margin: 20}}>
+                            <div style={{textAlign: 'center', marginTop: -20}}>
+                                <ReactPaginate
+                                    previousLabel={gettext('prev')}
+                                    nextLabel={gettext('next')}
+                                    pageCount={pageCount}
+                                    marginPagesDisplayed={2}
+                                    pageRangeDisplayed={5}
+                                    onPageChange={({selected}) => {
+                                        this.props.conceptItems.goToPage(selected + 1);
+                                    }}
+                                    initialPage={this.props.conceptItems._meta.page - 1}
+                                    containerClassName={'bs-pagination'}
+                                    activeClassName="active"
+                                />
+                            </div>
                             {
                                 Object.keys(activeFilters).length < 1 ? null : (
                                     <div
