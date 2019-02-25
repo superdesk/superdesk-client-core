@@ -1,8 +1,10 @@
+import {gettext} from 'core/utils';
+
 /**
  * Disable user
  */
-UserDeleteCommand.$inject = ['api', 'data', '$q', 'notify', 'gettext', '$rootScope'];
-export function UserDeleteCommand(api, data, $q, notify, gettext, $rootScope) {
+UserDeleteCommand.$inject = ['api', 'data', '$q', 'notify', '$rootScope'];
+export function UserDeleteCommand(api, data, $q, notify, $rootScope) {
     var user = data.item;
 
     return api.users.remove(user).then(

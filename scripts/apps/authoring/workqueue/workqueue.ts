@@ -197,7 +197,7 @@ function WorkqueueCtrl($scope, $rootScope, $route, workqueue, authoringWorkspace
                 }
             })
             .catch((err) => {
-                const message = get(err, 'data._message') || getGenericErrorMessage(gettext);
+                const message = get(err, 'data._message') || getGenericErrorMessage();
 
                 notify.error(message);
             });

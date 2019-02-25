@@ -21,5 +21,3 @@ export const ICON_COLORS = {
     WHITE: 'icon--white',
     YELLOW: 'icon--yellow',
 };
-
-export const TOOLTIPS = {postedState: 'Posted', notForPublication: 'Not for publication'};

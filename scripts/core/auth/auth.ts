@@ -1,3 +1,5 @@
+import {gettext} from 'core/utils';
+
 /**
  * Expire session on 401 server response
  */
@@ -39,8 +41,8 @@ function AuthExpiredInterceptor(session, $q, $injector, $browser, config, _) {
 angular.module('superdesk.core.auth.interceptor', ['superdesk.core.api', 'superdesk.core.auth.session'])
     .service('AuthExpiredInterceptor', AuthExpiredInterceptor);
 
-ResetPassworController.$inject = ['$scope', '$location', 'api', 'notify', 'gettext'];
-function ResetPassworController($scope, $location, api, notify, gettext) {
+ResetPassworController.$inject = ['$scope', '$location', 'api', 'notify'];
+function ResetPassworController($scope, $location, api, notify) {
     $scope.isSending = false;
     $scope.isReseting = false;
 
@@ -177,9 +179,9 @@ export default angular.module('superdesk.core.auth', [
 
     // watch session token, identity
     .run(['$rootScope', '$http', '$window', 'session', 'api', 'superdeskFlags', 'authoringWorkspace',
-        'modal', 'gettext', 'SESSION_EVENTS',
+        'modal', 'SESSION_EVENTS',
         function($rootScope, $http, $window, session, api, superdeskFlags, authoringWorkspace,
-            modal, gettext, SESSION_EVENTS) {
+            modal, SESSION_EVENTS) {
             $rootScope.logout = function() {
                 function replace() {
                     session.clear();

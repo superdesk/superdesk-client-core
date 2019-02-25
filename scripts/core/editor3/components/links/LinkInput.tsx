@@ -8,6 +8,7 @@ import {AttachmentList} from './AttachmentList';
 import {applyLink, hidePopups, createLinkSuggestion, changeLinkSuggestion} from '../../actions';
 import {connectPromiseResults} from 'core/helpers/ReactRenderAsync';
 import ng from 'core/services/ng';
+import {gettext} from 'core/utils';
 
 /**
  * @ngdoc React

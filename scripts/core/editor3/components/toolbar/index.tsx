@@ -13,6 +13,7 @@ import classNames from 'classnames';
 import * as actions from '../../actions';
 import {PopupTypes} from '../../actions';
 import {highlightsConfig} from '../../highlightsConfig';
+import {gettext} from 'core/utils';
 
 /**
  * @ngdoc React

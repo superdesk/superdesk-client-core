@@ -1,3 +1,5 @@
+import {gettext} from 'core/utils';
+
 /**
  * @ngdoc service
  * @module superdesk.apps.archive
@@ -6,7 +8,6 @@
  * @requires $location
  * @requires api
  * @requires notify
- * @requires gettext
  * @requires send
  * @requires $q
  * @requires authoring
@@ -16,9 +17,9 @@
  * @description Spike Service is responsible for proving item (single and multiple) spike/un-spike functionality
  */
 
-SpikeService.$inject = ['$location', 'api', 'notify', 'gettext', 'send', '$q', 'authoring', 'authoringWorkspace',
+SpikeService.$inject = ['$location', 'api', 'notify', 'send', '$q', 'authoring', 'authoringWorkspace',
     'lock'];
-export function SpikeService($location, api, notify, gettext, send, $q, authoring, authoringWorkspace, lock) {
+export function SpikeService($location, api, notify, send, $q, authoring, authoringWorkspace, lock) {
     var SPIKE_RESOURCE = 'archive_spike',
         UNSPIKE_RESOURCE = 'archive_unspike';
 

@@ -1,7 +1,9 @@
-import {IUser} from './User';
+import {IAuthor} from './Author';
 
 export interface IArticle {
     _id: string;
+    _current_version: number;
+    guid: string;
     translated_from: string;
     translation_id: string;
     usageterms: any;
@@ -17,7 +19,7 @@ export interface IArticle {
     subject: any;
     company_codes: Array<any>;
     ednote: string;
-    authors: Array<IUser>;
+    authors: Array<IAuthor>;
     headline: string;
     sms: string;
     abstract: string;
@@ -39,6 +41,7 @@ export interface IArticle {
     lock_action: any;
     lock_user: any;
     lock_session: any;
+    rewritten_by?: string;
 
     // might be only used for client-side state
     created: any;

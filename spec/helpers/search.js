@@ -81,6 +81,9 @@ function GlobalSearch() {
         var itemElem = this.getItem(index);
 
         itemElem.click();
+
+        browser.wait(() => itemElem.getAttribute('class').then((classes) => classes.includes('active')), 500);
+        browser.sleep(350); // there is timeout on click
     };
 
     /**
@@ -108,8 +111,16 @@ function GlobalSearch() {
             .mouseMove(itemElem, {x: -50, y: -50}) // first move out
             .mouseMove(itemElem) // now it can mouseover for sure
             .perform();
-        itemElem.element(by.className('icon-dots-vertical')).click();
-        return element(by.css('.dropdown__menu.open'));
+
+        const dots = itemElem.element(by.className('icon-dots-vertical'));
+
+        waitFor(dots, 200);
+        dots.click();
+
+        const menu = element(by.css('.dropdown__menu.open'));
+
+        waitFor(menu, 3000);
+        return menu;
     };
 
     /**

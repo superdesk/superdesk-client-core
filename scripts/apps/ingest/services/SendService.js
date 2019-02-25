@@ -1,3 +1,5 @@
+import {gettext} from 'core/utils';
+
 SendService.$inject = ['desks', 'api', '$q', 'notify', '$injector', 'multi', '$rootScope'];
 export function SendService(desks, api, $q, notify, $injector, multi, $rootScope) {
     this.one = sendOne;

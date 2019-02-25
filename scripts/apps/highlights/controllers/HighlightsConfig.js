@@ -1,7 +1,8 @@
 import _ from 'lodash';
+import {gettext} from 'core/utils';
 
-HighlightsConfig.$inject = ['$scope', 'highlightsService', 'desks', 'api', 'gettext', 'notify', 'modal'];
-export function HighlightsConfig($scope, highlightsService, desks, api, gettext, notify, modal) {
+HighlightsConfig.$inject = ['$scope', 'highlightsService', 'desks', 'api', 'notify', 'modal'];
+export function HighlightsConfig($scope, highlightsService, desks, api, notify, modal) {
     highlightsService.get().then((items) => {
         items._items = _.sortBy(items._items, (i) => i.name.toLowerCase());
         $scope.configurations = items;

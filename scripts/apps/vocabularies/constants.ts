@@ -1,7 +1,5 @@
 import {get} from 'lodash';
-// Adding the following because planning webpack when compiled for test cases
-// won't be aware of gettext.
-const gettext = get(window, 'gettext', (text) => text);
+import {gettext} from 'core/utils';
 
 export const MEDIA_TYPES = {
     GALLERY: {

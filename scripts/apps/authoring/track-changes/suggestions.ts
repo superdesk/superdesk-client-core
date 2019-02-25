@@ -7,6 +7,7 @@ import * as Highlights from 'core/editor3/helpers/highlights';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 import {fieldsMetaKeys, META_FIELD_NAME, getFieldMetadata, getFieldId} from '../../../core/editor3/helpers/fieldsMeta';
 import {get} from 'lodash';
+import {gettext} from 'core/utils';
 
 function getAllUserIdsFromSuggestions(suggestions) {
     const users = [];
@@ -38,7 +39,7 @@ function getLocalizedTypeText(type, blockType) {
     const blockStyleDescription = Highlights.getBlockStylesDescription(blockType);
     const space = blockStyleDescription !== '' ? ' ' : '';
 
-    return gettext(description) + space + gettext(blockStyleDescription);
+    return description + space + blockStyleDescription;
 }
 
 SuggestionsCtrl.$inject = ['$scope', 'userList', 'content'];

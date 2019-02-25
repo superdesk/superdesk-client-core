@@ -1,9 +1,10 @@
 import {limits} from 'apps/desks/constants';
 import _ from 'lodash';
+import {gettext} from 'core/utils';
 
-DeskeditStages.$inject = ['gettext', 'api', 'WizardHandler', 'tasks', '$rootScope', 'desks', 'notify',
+DeskeditStages.$inject = ['api', 'WizardHandler', 'tasks', '$rootScope', 'desks', 'notify',
     'macros', 'deployConfig'];
-export function DeskeditStages(gettext, api, WizardHandler, tasks, $rootScope, desks, notify, macros, deployConfig) {
+export function DeskeditStages(api, WizardHandler, tasks, $rootScope, desks, notify, macros, deployConfig) {
     return {
         link: function(scope, elem, attrs) {
             var orig = null;

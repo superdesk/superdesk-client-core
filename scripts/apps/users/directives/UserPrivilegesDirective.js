@@ -1,4 +1,5 @@
 import handleError from '../helpers';
+import {gettext} from 'core/utils';
 
 /**
  * @ngdoc directive
@@ -9,8 +10,8 @@ import handleError from '../helpers';
  *   panel, allowing users to set various system preferences for
  *   themselves.
  */
-UserPrivilegesDirective.$inject = ['api', 'gettext', 'notify', 'userList', '$q'];
-export function UserPrivilegesDirective(api, gettext, notify, userList, $q) {
+UserPrivilegesDirective.$inject = ['api', 'notify', 'userList', '$q'];
+export function UserPrivilegesDirective(api, notify, userList, $q) {
     return {
         scope: {
             user: '=',

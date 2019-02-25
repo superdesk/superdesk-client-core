@@ -6,6 +6,7 @@ import {MultiActionBarController} from './controllers';
 import {SearchController} from './controllers';
 import SearchMenuController from './controllers/SearchMenuController';
 import {MultiImageEditDirective} from './MultiImageEdit';
+import {gettext} from 'core/utils';
 
 angular.module('superdesk.apps.search.react', [
     'superdesk.apps.highlights',
@@ -89,7 +90,7 @@ angular.module('superdesk.apps.search', [
         },
     ])
 
-    .run(['keyboardManager', 'gettext', function(keyboardManager, gettext) {
+    .run(['keyboardManager', function(keyboardManager) {
         keyboardManager.register('Search', 'ctrl + 0', gettext('Show search modal'));
         keyboardManager.register('Search', 'v', gettext('Toggle search view'));
     }]);

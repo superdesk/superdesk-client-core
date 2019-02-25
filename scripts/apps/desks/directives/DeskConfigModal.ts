@@ -1,3 +1,5 @@
+import {gettext} from 'core/utils';
+
 /**
  * @ngdoc directive
  * @module superdesk.apps.desks

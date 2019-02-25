@@ -1,3 +1,5 @@
+import {gettext} from 'core/utils';
+
 PackageItemsEdit.$inject = ['packages', 'notify', '$rootScope'];
 export function PackageItemsEdit(packages, notify, $rootScope) {
     return {

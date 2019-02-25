@@ -4,6 +4,7 @@ import {Mention, MentionsInput} from 'react-mentions';
 import {UserAvatar} from 'apps/users/components';
 import mentionsStyle from './mentionsStyle';
 import ng from 'core/services/ng';
+import {gettext} from 'core/utils';
 
 class CommentTextArea extends React.Component<any, any> {
     static propTypes: any;

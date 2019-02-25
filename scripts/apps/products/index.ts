@@ -4,6 +4,7 @@ import {ProductsFilter} from './filters';
 import {ProductsFactory} from './services';
 import {ProductsConfigController} from './controllers';
 import {coreMenuGroups} from 'core/activity/activity';
+import {gettext} from 'core/utils';
 
 /**
  * @ngdoc module

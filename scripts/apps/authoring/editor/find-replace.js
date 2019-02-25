@@ -7,6 +7,10 @@
  * AUTHORS and LICENSE files distributed with this source code, or
  * at https://www.sourcefabric.org/apps/license
  */
+
+import {gettext} from 'core/utils';
+
+
 FindReplaceDirective.$inject = ['editorResolver', 'macros'];
 /**
  * using directive here so that it can return focus

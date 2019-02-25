@@ -1,3 +1,5 @@
+import {gettext} from 'core/utils';
+
 /**
  * @ngdoc service
  * @module superdesk.apps.desks
@@ -35,7 +37,7 @@ export function DesksFactory($q, api, preferencesService, userList, notify,
                 let pg = page;
                 let extended = items.concat(result._items);
 
-                if (result._links.next) {
+                if (result._links && result._links.next) {
                     pg++;
                     return _fetchAll(endpoint, parent, pg, extended);
                 }

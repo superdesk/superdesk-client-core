@@ -1,3 +1,5 @@
+import {gettext} from 'core/utils';
+
 /**
  * @ngdoc directive
  * @module superdesk.apps.users
@@ -8,11 +10,11 @@
  *   themselves.
  */
 UserPreferencesDirective.$inject = ['session', 'preferencesService', 'notify', 'asset',
-    'metadata', 'desks', 'modal', '$timeout', '$q', 'userList', 'lodash', 'config', 'search', 'gettext'];
+    'metadata', 'desks', 'modal', '$timeout', '$q', 'userList', 'lodash', 'config', 'search'];
 
 export function UserPreferencesDirective(
     session, preferencesService, notify, asset, metadata, desks, modal,
-    $timeout, $q, userList, _, config, search, gettext,
+    $timeout, $q, userList, _, config, search,
 ) {
     // human readable labels for server values
     const LABELS = {
@@ -331,12 +333,8 @@ export function UserPreferencesDirective(
                     return $q.when();
                 }
 
-                msg = [
-                    'No preferred categories selected. Should you ',
-                    'choose to proceed with your choice, a default ',
-                    'set of categories will be selected for you.',
-                ].join('');
-                msg = gettext(msg);
+                // tslint:disable-next-line
+                msg = gettext('No preferred categories selected. Should you choose to proceed with your choice. A default set of categories will be selected for you.');
 
                 modalResult = modal.confirm(msg).then(() => {
                     scope.checkDefault();

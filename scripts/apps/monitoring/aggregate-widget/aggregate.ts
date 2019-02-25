@@ -1,3 +1,5 @@
+import {gettext} from 'core/utils';
+
 angular.module('superdesk.apps.aggregate.widgets', ['superdesk.apps.aggregate', 'superdesk.apps.dashboard.widgets'])
     .config(['dashboardWidgetsProvider', function(dashboardWidgets) {
         dashboardWidgets.addWidget('aggregate', {

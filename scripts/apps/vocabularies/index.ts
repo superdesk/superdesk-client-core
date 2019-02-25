@@ -13,6 +13,7 @@ import {VocabularyService, SchemaFactory} from './services';
 import * as ctrl from './controllers';
 import * as directive from './directives';
 import {coreMenuGroups} from 'core/activity/activity';
+import {gettext} from 'core/utils';
 
 /**
  * @ngdoc module

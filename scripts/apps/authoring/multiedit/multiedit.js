@@ -7,6 +7,10 @@
  * AUTHORS and LICENSE files distributed with this source code, or
  * at https://www.sourcefabric.org/superdesk/license
  */
+
+import {gettext} from 'core/utils';
+
+
 MultieditService.$inject = ['storage', 'superdesk', 'authoringWorkspace', 'referrer', '$location'];
 function MultieditService(storage, superdesk, authoringWorkspace, referrer, $location) {
     // 1. Service manages multiedit screen

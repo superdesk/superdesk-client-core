@@ -5,12 +5,24 @@ import classNames from 'classnames';
 import {Item} from './index';
 import {isCheckAllowed, closeActionsMenu, bindMarkItemShortcut} from '../helpers';
 import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
+import {IArticle} from 'superdesk-interfaces/Article';
+
+interface IState {
+    narrow: boolean;
+    view: 'compact' | 'mgrid' | 'photogrid';
+    itemsList: Array<string>;
+    itemsById: any;
+    selected: string;
+    bindedShortcuts: Array<any>;
+    swimlane: any;
+    actioning: {};
+}
 
 /**
  * Item list component
  */
-export class ItemList extends React.Component<any, any> {
+export class ItemList extends React.Component<any, IState> {
     static propTypes: any;
     static defaultProps: any;
 
@@ -28,6 +40,8 @@ export class ItemList extends React.Component<any, any> {
             view: 'compact',
             narrow: false,
             bindedShortcuts: [],
+            swimlane: null,
+            actioning: {},
         };
 
         this.multiSelect = this.multiSelect.bind(this);
@@ -85,7 +99,7 @@ export class ItemList extends React.Component<any, any> {
         this.setState({narrow: setNarrow});
     }
 
-    select(item, event?) {
+    select(item, event) {
         if (typeof this.props.onMonitoringItemSelect === 'function') {
             this.props.onMonitoringItemSelect(item, event);
             return;
@@ -106,21 +120,17 @@ export class ItemList extends React.Component<any, any> {
 
         $timeout.cancel(this.updateTimeout);
 
-        // even is null when selecting with keyboard
-        // but is not null and has a target when selected using the checkbox
         const showPreview = (event == null || event.target == null) ||
             querySelectorParent(event.target, '.sd-monitoring-item-multi-select-checkbox') == null;
 
-        this.updateTimeout = $timeout(() => {
-            if (item && scope.preview) {
-                scope.$apply(() => {
-                    if (showPreview) {
-                        scope.preview(item);
-                    }
-                    this.bindActionKeyShortcuts(item);
-                });
-            }
-        }, 500, false);
+        if (item && scope.preview) {
+            scope.$apply(() => {
+                if (showPreview) {
+                    scope.preview(item);
+                }
+                this.bindActionKeyShortcuts(item);
+            });
+        }
     }
 
     /*
@@ -199,6 +209,15 @@ export class ItemList extends React.Component<any, any> {
         this.multiSelect(selectedItems, true);
     }
 
+    setActioning(item: IArticle, isActioning: boolean) {
+        const {search} = this.props.svc;
+        const actioning = Object.assign({}, this.state.actioning);
+        const itemId = search.generateTrackByIdentifier(item);
+
+        actioning[itemId] = isActioning;
+        this.setState({actioning});
+    }
+
     dbClick(item) {
         if (typeof this.props.onMonitoringItemDoubleClick === 'function') {
             this.props.onMonitoringItemDoubleClick(item);
@@ -219,12 +238,16 @@ export class ItemList extends React.Component<any, any> {
         }
 
         if (item._type === 'externalsource') {
+            this.setActioning(item, true);
             superdesk.intent('list', 'externalsource', {item: item}, 'fetch-externalsource')
                 .then((archiveItem) => {
                     archiveItem.guid = archiveItem._id; // fix item guid to match new item _id
                     scope.$applyAsync(() => {
                         scope.edit ? scope.edit(archiveItem) : authoringWorkspace.open(archiveItem);
                     });
+                })
+                .finally(() => {
+                    this.setActioning(item, false);
                 });
         } else if (canEdit && scope.edit) {
             scope.$apply(() => {
@@ -319,6 +342,12 @@ export class ItemList extends React.Component<any, any> {
     }
 
     handleKey(event) {
+        // don't do anything when modifier key is pressed
+        // this allows shortcuts defined in activities to work without two actions firing for one shortcut
+        if (event.ctrlKey || event.altKey || event.shiftKey) {
+            return;
+        }
+
         const {scope} = this.props;
         const {Keys, monitoringState} = this.props.svc;
         const KEY_CODES = Object.freeze({
@@ -381,25 +410,25 @@ export class ItemList extends React.Component<any, any> {
             break;
         }
 
-        const highlightSelected = () => {
+        const highlightSelected = (_event) => {
             for (let i = 0; i < this.state.itemsList.length; i++) {
                 if (this.state.itemsList[i] === this.state.selected) {
                     const next = Math.min(this.state.itemsList.length - 1, Math.max(0, i + diff));
 
-                    this.select(this.state.itemsById[this.state.itemsList[next]]);
+                    this.select(this.state.itemsById[this.state.itemsList[next]], _event);
                     return;
                 }
             }
         };
 
-        const checkRemaining = () => {
+        const checkRemaining = (_event) => {
             event.preventDefault();
             event.stopPropagation();
 
             if (this.state.selected) {
-                highlightSelected();
+                highlightSelected(_event);
             } else {
-                this.select(this.state.itemsById[this.state.itemsList[0]]);
+                this.select(this.state.itemsById[this.state.itemsList[0]], _event);
             }
         };
 
@@ -425,7 +454,7 @@ export class ItemList extends React.Component<any, any> {
         };
 
         if (!_.isNil(diff)) {
-            checkRemaining();
+            checkRemaining(event);
             scrollSelectedItemIfRequired(event, scope);
         }
     }
@@ -444,13 +473,65 @@ export class ItemList extends React.Component<any, any> {
             this.props.usersById[versionCreator].display_name : null;
     }
 
-    render() {
-        const {storage} = this.props.svc;
-        const {scope} = this.props;
+    /**
+     * Get nested item parent
+     *
+     * This could be item with same guid for corrections or with guid == rewritten_by for updates
+     */
+    getParent(item: IArticle, itemId: string): string | null {
+        const parentId = item.rewritten_by &&
+            this.state.itemsList.find((_itemId) => _itemId.startsWith(item.rewritten_by));
 
-        const createItem = function(itemId) {
+        if (parentId) {
+            const parent = this.state.itemsById[parentId];
+
+            if (parent) {
+                return this.getParent(parent, parentId) || parentId; // return parent's parent or parent
+            }
+        }
+
+        // check for previous version of same item
+        return this.state.itemsList.find((_itemId) =>
+            _itemId.startsWith(item.guid) // same guid
+            && _itemId !== itemId // but different version
+            && this.state.itemsById[_itemId]._current_version > item._current_version); // and more recent one
+    }
+
+    render() {
+        const {storage, config} = this.props.svc;
+        const {scope} = this.props;
+        const hideNested = get(config, 'features.nestedItemsInOutputStage', false) === true;
+        const nested = {};
+        const children = {};
+
+        if (hideNested) {
+            this.state.itemsList.forEach((itemId) => {
+                const item = this.state.itemsById[itemId];
+
+                if (item._type === 'published' && (item.rewritten_by || !item.last_published_version)) {
+                    const parentId = this.getParent(item, itemId);
+
+                    if (parentId && parentId !== itemId) {
+                        nested[itemId] = true;
+                        const parentChildren = children[parentId] || [];
+
+                        parentChildren.push(itemId);
+                        children[parentId] = parentChildren;
+                    }
+                }
+            });
+        }
+
+        const createItem = (itemId) => {
             const item = this.state.itemsById[itemId];
             const task = item.task || {desk: null};
+            let itemChildren = [];
+
+            if (nested[itemId]) {
+                return null; // hide nested items from list
+            } else if (hideNested && children[itemId]) {
+                itemChildren = children[itemId].map((childrenId) => this.state.itemsById[childrenId]);
+            }
 
             return React.createElement(Item, {
                 key: itemId,
@@ -474,8 +555,10 @@ export class ItemList extends React.Component<any, any> {
                 hideActions: scope.hideActionsForMonitoringItems || get(scope, 'flags.hideActions'),
                 multiSelectDisabled: scope.disableMonitoringMultiSelect,
                 scope: scope,
+                nested: itemChildren,
+                actioning: !!this.state.actioning[itemId],
             });
-        }.bind(this);
+        };
         const isEmpty = !this.state.itemsList.length;
 
         return React.createElement(

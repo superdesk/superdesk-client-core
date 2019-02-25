@@ -1,8 +1,9 @@
+import {gettext} from 'core/utils';
+
 /**
  * @ngdoc directive
  * @module superdesk.apps.publish
  * @name sdAdminPubSubscribers
- * @requires gettext
  * @requires notify
  * @requires api
  * @requires subscribersService
@@ -18,12 +19,12 @@
  * @description SubscribersDirective handles subscriber maintenance.
  */
 SubscribersDirective.$inject = [
-    'gettext', 'notify', 'api', 'subscribersService', 'adminPublishSettingsService', 'modal',
+    'notify', 'api', 'subscribersService', 'adminPublishSettingsService', 'modal',
     'metadata', 'contentFilters', '$q', '$filter', 'products',
 ];
 
 export function SubscribersDirective(
-    gettext, notify, api, subscribersService, adminPublishSettingsService,
+    notify, api, subscribersService, adminPublishSettingsService,
     modal, metadata, contentFilters, $q, $filter, products) {
     return {
         scope: {

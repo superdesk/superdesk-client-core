@@ -1,6 +1,8 @@
-ResendItem.$inject = ['subscribersService', 'authoring', 'api', 'notify', 'gettext'];
+import {gettext} from 'core/utils';
 
-export function ResendItem(subscribersService, authoring, api, notify, gettext) {
+ResendItem.$inject = ['subscribersService', 'authoring', 'api', 'notify'];
+
+export function ResendItem(subscribersService, authoring, api, notify) {
     return {
         templateUrl: 'scripts/apps/archive/views/resend-configuration.html',
         scope: {item: '='},

@@ -71,7 +71,8 @@ function Content() {
     };
 
     function waitFor(elem, time) {
-        return browser.wait(() => elem.isDisplayed(), time || 800);
+        browser.wait(() => elem.isPresent(), time || 1000);
+        return browser.wait(() => elem.isDisplayed(), time || 1000);
     }
 
     this.openItemMenu = function(item) {

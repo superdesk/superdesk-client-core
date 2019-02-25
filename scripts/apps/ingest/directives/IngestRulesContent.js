@@ -1,5 +1,7 @@
-IngestRulesContent.$inject = ['api', 'gettext', 'notify', 'modal', '$filter'];
-export function IngestRulesContent(api, gettext, notify, modal, $filter) {
+import {gettext} from 'core/utils';
+
+IngestRulesContent.$inject = ['api', 'notify', 'modal', '$filter'];
+export function IngestRulesContent(api, notify, modal, $filter) {
     return {
         templateUrl: 'scripts/apps/ingest/views/settings/ingest-rules-content.html',
         link: function(scope) {

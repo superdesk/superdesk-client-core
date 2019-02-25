@@ -3,6 +3,7 @@ import './compare-versions.scss';
 import CompareVersionsService from './CompareVersionsService';
 import CompareVersionsController from './CompareVersionsController';
 import * as directive from './directives';
+import {gettext} from 'core/utils';
 
 /**
  * @ngdoc module

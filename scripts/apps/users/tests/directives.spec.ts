@@ -102,7 +102,6 @@ describe('user edit directive', () => {
     beforeEach(window.module('superdesk.templates-cache'));
 
     beforeEach(window.module(($provide) => {
-        $provide.service('gettext', noop);
         $provide.service('api', noop);
         $provide.service('notify', noop);
         $provide.service('resource', noop);

@@ -15,6 +15,8 @@ import {ItemMgridTemplate} from './ItemMgridTemplate';
 import {IArticle} from 'superdesk-interfaces/Article';
 import {IDesk} from 'superdesk-interfaces/Desk';
 
+const CLICK_TIMEOUT = 300;
+
 const actionsMenuDefaultTemplate = (toggle, stopEvent) => (
     <div className="item-right toolbox">
         <div className="item-actions-menu dropdown--big open">
@@ -48,22 +50,28 @@ interface IProps {
     narrow: any;
     hideActions: boolean;
     multiSelectDisabled: boolean;
+    nested: Array<IArticle>;
+    isNested: boolean;
+    actioning: boolean;
 }
 
 interface IState {
     hover: boolean;
     actioning: boolean;
     isActionMenuOpen: boolean;
+    showNested: boolean;
 }
 
 export class Item extends React.Component<IProps, IState> {
     static propTypes: any;
     static defaultProps: any;
 
+    readonly state = {hover: false, actioning: false, isActionMenuOpen: false, showNested: false};
+
+    clickTimeout: number;
+
     constructor(props) {
         super(props);
-
-        this.state = {hover: false, actioning: false, isActionMenuOpen: false};
 
         this.select = this.select.bind(this);
         this.edit = this.edit.bind(this);
@@ -73,11 +81,10 @@ export class Item extends React.Component<IProps, IState> {
         this.unsetHoverState = this.unsetHoverState.bind(this);
         this.onDragStart = this.onDragStart.bind(this);
         this.openAuthoringView = this.openAuthoringView.bind(this);
+        this.toggleNested = this.toggleNested.bind(this);
     }
 
     componentWillMount() {
-        const {config} = this.props.svc;
-
         if (get(this.props, 'svc.config.apps', []).includes('superdesk-planning')) {
             this.loadPlanningModals();
         }
@@ -126,12 +133,17 @@ export class Item extends React.Component<IProps, IState> {
             nextProps.view !== this.props.view ||
             nextProps.flags.selected !== this.props.flags.selected ||
             nextProps.narrow !== this.props.narrow ||
+            nextProps.actioning !== this.props.actioning ||
             nextState !== this.state;
     }
 
     select(event) {
-        if (!this.props.item.gone) {
-            this.props.onSelect(this.props.item, event);
+        if (!this.props.item.gone && !this.clickTimeout) {
+            event.persist(); // make event available in timeout callback
+            this.clickTimeout = window.setTimeout(() => {
+                this.clickTimeout = null;
+                this.props.onSelect(this.props.item, event);
+            }, CLICK_TIMEOUT);
         }
     }
 
@@ -152,6 +164,11 @@ export class Item extends React.Component<IProps, IState> {
     }
 
     dbClick(event) {
+        if (this.clickTimeout) {
+            window.clearTimeout(this.clickTimeout);
+            this.clickTimeout = null;
+        }
+
         if (!this.props.item.gone) {
             this.props.onDbClick(this.props.item);
         }
@@ -179,6 +196,11 @@ export class Item extends React.Component<IProps, IState> {
         dragitem.start(event, this.props.item);
     }
 
+    toggleNested(event) {
+        event.stopPropagation();
+        this.setState({showNested: !this.state.showNested});
+    }
+
     render() {
         const {item, scope} = this.props;
         let classes = this.props.view === 'photogrid' ?
@@ -194,7 +216,6 @@ export class Item extends React.Component<IProps, IState> {
 
         const getActionsMenu = (template = actionsMenuDefaultTemplate) =>
             this.props.hideActions !== true && this.state.hover && !item.gone ? React.createElement(
-
                 ActionsMenu, {
                     item: item,
                     svc: this.props.svc,
@@ -204,7 +225,8 @@ export class Item extends React.Component<IProps, IState> {
                 }) : null;
 
         const getTemplate = () => {
-            if (this.props.view === 'swimlane2') {
+            switch (this.props.view) {
+            case 'swimlane2':
                 return (
                     <ItemSwimlane
                         item={item}
@@ -214,7 +236,7 @@ export class Item extends React.Component<IProps, IState> {
                         svc={this.props.svc}
                     />
                 );
-            } else if (this.props.view === 'mgrid') {
+            case 'mgrid':
                 return (
                     <ItemMgridTemplate
                         item={item}
@@ -227,7 +249,7 @@ export class Item extends React.Component<IProps, IState> {
                         getActionsMenu={getActionsMenu}
                     />
                 );
-            } else if (this.props.view === 'photogrid') {
+            case 'photogrid':
                 return (
                     <ItemPhotoGrid
                         item={item}
@@ -239,7 +261,7 @@ export class Item extends React.Component<IProps, IState> {
                         getActionsMenu={getActionsMenu}
                     />
                 );
-            } else {
+            default:
                 return (
                     <ListItemTemplate
                         item={item}
@@ -257,39 +279,98 @@ export class Item extends React.Component<IProps, IState> {
                         getActionsMenu={getActionsMenu}
                         scope={this.props.scope}
                         selectingDisabled={this.props.multiSelectDisabled}
+                        showNested={this.state.showNested}
+                        nestedCount={this.props.nested.length}
+                        toggleNested={this.toggleNested}
                     />
                 );
             }
         };
 
-        return (
-            <li
-                id={item._id}
-                key={item._id}
-                className={classNames(
+        const getNested = () => {
+            switch (this.props.view) {
+            case 'swimlane2':
+            case 'mgrid':
+            case 'photogrid':
+                return null;
+            default:
+                if (!this.props.nested.length || !this.state.showNested) {
+                    return null;
+                }
+
+                return (
+                    <div className="sd-list-item-nested__childs sd-shadow--z1">
+                        {this.props.nested.map((childItem) => (
+                            <Item
+                                item={childItem}
+                                key={childItem._id + childItem._current_version}
+                                svc={this.props.svc}
+                                scope={this.props.scope}
+                                flags={{}}
+                                nested={[]}
+                                profilesById={this.props.profilesById}
+                                isNested={true}
+                                narrow={true}
+                                hideActions={true}
+                                onSelect={() => null}
+                                multiSelectDisabled={false}
+                                swimlane={this.props.swimlane}
+                                highlightsById={this.props.highlightsById}
+                                markedDesksById={this.props.markedDesksById}
+                                ingestProvider={this.props.ingestProvider}
+                                desk={this.props.desk}
+                                view={this.props.view}
+                                versioncreator={this.props.versioncreator}
+                                onEdit={this.props.onEdit}
+                                onDbClick={this.props.onDbClick}
+                                onMultiSelect={this.props.onMultiSelect}
+                                actioning={false}
+                            />
+                        ))}
+                    </div>
+                );
+            }
+        };
+
+        // avoid any actions on nested items
+        const getCallback = (func) => this.props.isNested ? (event) => event.stopPropagation() : func;
+
+        return React.createElement(
+            this.props.isNested ? 'div' : 'li',
+            {
+                id: item._id,
+                key: item._id,
+                className: classNames(
                     'list-item-view',
-                    {'actions-visible': this.props.hideActions !== true},
-                    {active: this.props.flags.selected},
-                    {selected: this.props.item.selected && !this.props.flags.selected},
-                )}
-                onMouseEnter={this.setHoverState}
-                onMouseLeave={this.unsetHoverState}
-                onDragStart={this.onDragStart}
-                onClick={this.select}
-                onDoubleClick={this.dbClick}
-                draggable={true}
-            >
+                    {
+                        'actions-visible': this.props.hideActions !== true,
+                        active: this.props.flags.selected,
+                        selected: this.props.item.selected && !this.props.flags.selected,
+                        'sd-list-item-nested': this.props.nested.length,
+                        'sd-list-item-nested--expanded': this.props.nested.length && this.state.showNested,
+                        'sd-list-item-nested--collapsed': this.props.nested.length && this.state.showNested === false,
+                    },
+                ),
+                onMouseEnter: getCallback(this.setHoverState),
+                onMouseLeave: getCallback(this.unsetHoverState),
+                onDragStart: getCallback(this.onDragStart),
+                onClick: getCallback(this.select),
+                onDoubleClick: getCallback(this.dbClick),
+                draggable: !this.props.isNested,
+            },
+            (
                 <div className={classNames(classes, {
                     active: this.props.flags.selected,
                     locked: isLocked,
                     selected: this.props.item.selected || this.props.flags.selected,
                     archived: item.archived || item.created,
                     gone: item.gone,
-                    actioning: this.state.actioning,
+                    actioning: this.state.actioning || this.props.actioning,
                 })}>
                     {getTemplate()}
                 </div>
-            </li>
+            ),
+            getNested(),
         );
     }
 }

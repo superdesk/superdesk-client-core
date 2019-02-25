@@ -9,6 +9,7 @@ import {getAuthorInfo} from '../../actions';
 import {editor3DataKeys, getCustomDataFromEditor, setCustomDataForEditor} from '../../helpers/editor3CustomData';
 import * as Highlights from '../../helpers/highlights';
 import {HighlightsPopupPositioner} from '../HighlightsPopupPositioner';
+import {gettext} from 'core/utils';
 
 /**
  * @ngdoc React

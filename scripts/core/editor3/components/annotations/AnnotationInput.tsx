@@ -9,6 +9,7 @@ import {getAuthorInfo} from '../../actions';
 import {connectPromiseResults} from 'core/helpers/ReactRenderAsync';
 import {hidePopups} from '../../actions';
 import ng from 'core/services/ng';
+import {gettext} from 'core/utils';
 
 /**
  * @ngdoc React

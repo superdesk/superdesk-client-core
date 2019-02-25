@@ -5,6 +5,7 @@ import {FB_URL, IG_URL} from '../../../contacts/constants';
 import {ContactProfile} from './ContactProfile';
 import {ActionBar} from './ActionBar';
 import {get, set, isEqual, cloneDeep, some, isEmpty, extend, each, omit, isNil} from 'lodash';
+import {gettext} from 'core/utils';
 
 export class ContactFormContainer extends React.Component<any, any> {
     static propTypes: any;
@@ -43,7 +44,7 @@ export class ContactFormContainer extends React.Component<any, any> {
     validateField(fieldName, value, e) {
         const fieldValidationErrors = this.state.errors;
 
-        const {gettext, contacts} = this.props.svc;
+        const {contacts} = this.props.svc;
         const twitterPattern = contacts.twitterPattern;
 
         if (e && e.target.type === 'email') {
@@ -74,7 +75,7 @@ export class ContactFormContainer extends React.Component<any, any> {
 
     save() {
         const {svc, onSave} = this.props;
-        const {gettext, notify, contacts} = svc;
+        const {notify, contacts} = svc;
 
         const origContact = this.state.originalContact;
 

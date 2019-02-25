@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {DesksDropdown} from './index';
+import {gettext} from 'core/utils';
 
 export class FetchedDesksInfo extends React.Component<any, any> {
     static propTypes: any;
@@ -54,8 +55,6 @@ export class FetchedDesksInfo extends React.Component<any, any> {
     }
 
     render() {
-        const {gettext} = this.props.svc;
-
         const items = [];
 
         items.push(React.createElement('dt', {

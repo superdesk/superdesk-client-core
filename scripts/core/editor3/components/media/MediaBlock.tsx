@@ -5,7 +5,7 @@ import ng from 'core/services/ng';
 import * as actions from '../../actions';
 import Textarea from 'react-textarea-autosize';
 import {get} from 'lodash';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 function getTranslationForAssignRights(value) {
     if (value === 'single-usage') {
@@ -143,13 +143,13 @@ export class MediaBlockComponent extends React.Component<any, any> {
     render() {
         const {setLocked, showTitle, readOnly} = this.props;
         const data = this.data();
-        const rendition = data.renditions.viewImage || data.renditions.original;
+        const rendition = data.renditions.baseImage || data.renditions.viewImage || data.renditions.original;
         const alt = data.alt_text || data.description_text || data.caption;
         const mediaType = data.type;
         const {features} = ng.get('config');
 
         const editable =
-            !readOnly &&
+            !readOnly && !data.fetch_endpoint &&
             (data._type !== 'externalsource'
             || get(features, 'editFeaturedImage', true));
 
@@ -314,7 +314,7 @@ export class MediaBlockComponent extends React.Component<any, any> {
                         value={data.description_text}
                         onChange={this.onChange}
                     />
-                    {(mediaType === 'audio' || mediaType === 'video') &&
+                    {editable && (mediaType === 'audio' || mediaType === 'video') &&
                         <div className="image-block__action-bar">
                             <a className="btn btn--hollow btn--small"
                                 onClick={this.onClick}><span>{gettext('Edit metadata')}</span></a>

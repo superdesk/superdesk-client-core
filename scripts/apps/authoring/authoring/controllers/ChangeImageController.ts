@@ -1,4 +1,5 @@
 import {get} from 'lodash';
+import {gettext} from 'core/utils';
 
 /**
  * @ngdoc controller
@@ -6,7 +7,6 @@ import {get} from 'lodash';
  * @name ChangeImageController
  *
  * @requires $scope
- * @requires gettext
  * @requires notify
  * @requires modal
  * @requires lodash
@@ -28,9 +28,9 @@ export function validateMediaFieldsThrows(validator, metadata) {
     }
 }
 
-ChangeImageController.$inject = ['$scope', 'gettext', 'notify', 'lodash', 'api', '$rootScope',
+ChangeImageController.$inject = ['$scope', 'notify', 'lodash', 'api', '$rootScope',
     'deployConfig', '$q', 'config'];
-export function ChangeImageController($scope, gettext, notify, _, api, $rootScope, deployConfig, $q, config) {
+export function ChangeImageController($scope, notify, _, api, $rootScope, deployConfig, $q, config) {
     $scope.data = $scope.locals.data;
     $scope.data.cropData = {};
     $scope.validator = deployConfig.getSync('validator_media_metadata');
@@ -65,7 +65,7 @@ export function ChangeImageController($scope, gettext, notify, _, api, $rootScop
 
     $scope.showMetadata = $scope.data.showMetadata;
     $scope.nav = $scope.data.defaultTab || 'view';
-    $scope.hideTabs = $scope.data.hideTabs || [];
+    $scope.tabs = $scope.data.tabs || ['view', 'image-edit', 'crop'];
 
     $scope.metadata = {
         isDirty: false,
@@ -75,16 +75,18 @@ export function ChangeImageController($scope, gettext, notify, _, api, $rootScop
         isDirty: false,
     };
 
-    $scope.data.renditions.forEach((rendition) => {
-        const original = $scope.data.item.renditions.original;
-        // only extend the item renditions if the original image can fit the rendition dimensions
-        // otherwise we will get an error saving
+    if ($scope.data.renditions) {
+        $scope.data.renditions.forEach((rendition) => {
+            const original = $scope.data.item.renditions.original;
+            // only extend the item renditions if the original image can fit the rendition dimensions
+            // otherwise we will get an error saving
 
-        if (original.height >= rendition.height && original.width >= rendition.width) {
-            sizes[rendition.name] = {width: rendition.width, height: rendition.height};
-            $scope.data.cropData[rendition.name] = angular.extend({}, $scope.data.item.renditions[rendition.name]);
-        }
-    });
+            if (original && original.height >= rendition.height && original.width >= rendition.width) {
+                sizes[rendition.name] = {width: rendition.width, height: rendition.height};
+                $scope.data.cropData[rendition.name] = angular.extend({}, $scope.data.item.renditions[rendition.name]);
+            }
+        });
+    }
 
     $scope.data.isDirty = false;
     $scope.isNew = $scope.data.isNew === true;
@@ -144,14 +146,14 @@ export function ChangeImageController($scope, gettext, notify, _, api, $rootScop
 
             _.forEach($scope.data.cropData, (cropData, cropName) => {
                 if (!cropData || _.isEmpty(cropData)) {
-                    throw gettext('Crop coordinates are not defined for ' + cropName + ' picture crop.');
+                    throw gettext('Crop coordinates are not defined for {{cropName}} picture crop.', {cropName});
                 }
 
                 if (originalPoi.y < cropData.CropTop ||
                     originalPoi.y > cropData.CropBottom ||
                     originalPoi.x < cropData.CropLeft ||
                     originalPoi.x > cropData.CropRight) {
-                    throw gettext('Point of interest outside the crop ' + cropName + ' limits');
+                    throw gettext('Point of interest outside the crop {{cropName}} limits', {cropName});
                 }
             });
         }
@@ -228,7 +230,7 @@ export function ChangeImageController($scope, gettext, notify, _, api, $rootScop
     */
     $scope.done = () => {
         if ($scope.data.isDirty) {
-            if (config.features.validatePointOfInterestForImages === true) {
+            if ($scope.data.item.type === 'picture' && config.features.validatePointOfInterestForImages === true) {
                 if (!$scope.saveCrops() || !$scope.applyMetadataChanges()) {
                     return;
                 }

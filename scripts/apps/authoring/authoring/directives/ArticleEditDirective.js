@@ -16,7 +16,6 @@ import {MEDIA_TYPES} from 'apps/vocabularies/constants';
  * @requires config
  * @requires deployConfig
  * @requires session
- * @requires gettext
  * @requires history
  * @requires $interpolate
  * @requires suggest
@@ -37,7 +36,6 @@ ArticleEditDirective.$inject = [
     'config',
     'deployConfig',
     'session',
-    'gettext',
     'history',
     '$interpolate',
     'suggest',
@@ -53,7 +51,6 @@ export function ArticleEditDirective(
     config,
     deployConfig,
     session,
-    gettext,
     history,
     $interpolate,
     suggest,
@@ -283,8 +280,18 @@ export function ArticleEditDirective(
                  *
                  * @description Opens the Change Image Controller to modify the image metadata.
                  */
-                scope.editMedia = (defaultTab = 'view', hideTabs = []) => {
+                scope.editMedia = (defaultTab = 'view') => {
+                    let showTabs = [];
+
                     scope.mediaLoading = true;
+
+                    if (scope.item.type === 'picture' && scope.metadata.crop_sizes) {
+                        showTabs = ['view', 'image-edit', 'crop'];
+                    } else if (scope.item.type === 'picture' && !scope.metadata.crop_sizes) {
+                        showTabs = ['view', 'image-edit'];
+                    } else {
+                        showTabs = ['view'];
+                    }
 
                     return renditions.crop(
                         scope.item,
@@ -293,7 +300,7 @@ export function ArticleEditDirective(
                             editable: true,
                             isAssociated: false,
                             defaultTab: defaultTab,
-                            hideTabs: scope.metadata && scope.metadata.crop_sizes ? [] : ['crop'],
+                            tabs: showTabs,
                             showMetadata: true,
                         }
                     )

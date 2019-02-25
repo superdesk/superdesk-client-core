@@ -13,6 +13,7 @@ import * as ctrl from './controllers';
 import * as directive from './directives';
 import {DesksFactory} from './services';
 import {coreMenuGroups} from 'core/activity/activity';
+import {gettext} from 'core/utils';
 
 /**
  * @ngdoc module

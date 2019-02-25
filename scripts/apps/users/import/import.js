@@ -1,3 +1,5 @@
+import {gettext} from 'core/utils';
+
 UserImportService.$inject = ['api', '$q'];
 function UserImportService(api, $q) {
     function reject(key, message) {

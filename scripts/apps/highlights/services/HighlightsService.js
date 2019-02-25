@@ -1,3 +1,5 @@
+import {gettext} from 'core/utils';
+
 /**
  * Service for highlights with caching.
  */

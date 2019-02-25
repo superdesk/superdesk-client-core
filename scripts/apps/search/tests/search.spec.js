@@ -1,4 +1,4 @@
-
+import {gettext} from 'core/utils';
 
 describe('search service', () => {
     beforeEach(window.module('superdesk.templates-cache'));

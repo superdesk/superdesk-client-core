@@ -3,10 +3,9 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import {Toggle} from './index';
 import {get} from 'lodash';
+import {gettext} from 'core/utils';
 
-export const ProfileHeader: React.StatelessComponent<any> = ({svc, contact, onChange, readOnly, contactType}) => {
-    const {gettext} = svc;
-
+export const ProfileHeader: React.StatelessComponent<any> = ({contact, onChange, readOnly, contactType}) => {
     const displayName = contact.first_name ? contact.first_name + ' ' + contact.last_name : contact.organisation;
 
     const cssClass = classNames(
@@ -42,7 +41,6 @@ export const ProfileHeader: React.StatelessComponent<any> = ({svc, contact, onCh
 };
 
 ProfileHeader.propTypes = {
-    svc: PropTypes.object.isRequired,
     contact: PropTypes.object.isRequired,
     contactType: PropTypes.string,
     onChange: PropTypes.func,

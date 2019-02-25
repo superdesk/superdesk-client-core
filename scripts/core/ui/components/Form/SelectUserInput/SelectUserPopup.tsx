@@ -4,7 +4,8 @@ import classNames from 'classnames';
 import {get} from 'lodash';
 
 import {KEYCODES} from '../../constants';
-import {gettext, scrollListItemIfNeeded, onEventCapture} from '../../utils';
+import {scrollListItemIfNeeded, onEventCapture} from '../../utils';
+import {gettext} from 'core/utils';
 
 import {Popup, Content} from '../../Popup';
 import {UserAvatar} from 'apps/users/components/UserAvatar';

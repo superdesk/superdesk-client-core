@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import {gettext, onEventCapture} from '../utils';
+import {onEventCapture} from '../utils';
 import {KEYCODES} from '../constants';
+import {gettext} from 'core/utils';
 
 import './style.scss';
 

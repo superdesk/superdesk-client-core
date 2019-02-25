@@ -5,6 +5,7 @@ import classNames from 'classnames';
 
 import * as actions from '../../actions';
 import {getSelectedEntityType, getSelectedEntityData} from '../links/entityUtils';
+import {gettext} from 'core/utils';
 
 export class LinkToolbarComponent extends React.Component<any, any> {
     static propTypes: any;

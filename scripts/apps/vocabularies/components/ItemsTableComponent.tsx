@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ObjectEditor from './ObjectEditor';
 import {has} from 'lodash';
+import {gettext} from 'core/utils';
 
 export default class ItemsTableComponent extends React.Component<any, any> {
     static propTypes: any;
@@ -15,11 +16,13 @@ export default class ItemsTableComponent extends React.Component<any, any> {
     componentDidUpdate() {
         const {targetInput, caretPosition} = this.state;
 
-        this.setCaretPosition(targetInput, caretPosition);
+        if (caretPosition != null) {
+            this.setCaretPosition(targetInput, caretPosition);
+        }
     }
 
     getModelKeys() {
-        const {gettext, model} = this.props;
+        const {model} = this.props;
 
         return Object.keys(model)
             .filter((key) => key !== 'is_active')
@@ -31,7 +34,7 @@ export default class ItemsTableComponent extends React.Component<any, any> {
     }
 
     getSchemaKeys() {
-        const {gettext, schemaFields} = this.props;
+        const {schemaFields} = this.props;
 
         return schemaFields.map((field) => (
             <th key={field.key}>
@@ -41,7 +44,7 @@ export default class ItemsTableComponent extends React.Component<any, any> {
     }
 
     header() {
-        const {schema, gettext} = this.props;
+        const {schema} = this.props;
         const fields = schema ? this.getSchemaKeys() : this.getModelKeys();
 
         fields.push(<th key="is_active"><label>{gettext('Active')}</label></th>);
@@ -227,7 +230,6 @@ ItemsTableComponent.propTypes = {
     model: PropTypes.object,
     schema: PropTypes.object,
     schemaFields: PropTypes.array,
-    gettext: PropTypes.func.isRequired,
     update: PropTypes.func.isRequired,
     remove: PropTypes.func.isRequired,
 };

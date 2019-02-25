@@ -1,3 +1,5 @@
+import {gettext} from 'core/utils';
+
 UserNotificationsService.$inject = [
     '$rootScope',
     '$timeout',
@@ -66,6 +68,7 @@ function UserNotificationsService(
 
                     item._unread = !isRead(recipients, identity._id, true);
                     this.unread += item._unread ? 1 : 0;
+                    item.message = gettext(item.message, item.data);
                 });
             });
     };

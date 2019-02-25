@@ -1,9 +1,10 @@
+import {gettext} from 'core/utils';
+
 /**
  * @ngdoc controller
  * @module superdesk.apps.products
  * @name ProductsConfigCtrl
  * @requires https://docs.angularjs.org/api/ng/type/$rootScope.Scope $scope
- * @requires gettext
  * @requires notify
  * @requires api
  * @requires products
@@ -13,9 +14,9 @@
  * @requires $filter
  * @description ProductsConfigController holds a set of convenience functions for product maintenance.
  */
-ProductsConfigController.$inject = ['$scope', 'gettext', 'notify', 'api', 'products', 'modal',
+ProductsConfigController.$inject = ['$scope', 'notify', 'api', 'products', 'modal',
     'subscribersService', 'metadata', '$filter'];
-export function ProductsConfigController($scope, gettext, notify, api, products, modal,
+export function ProductsConfigController($scope, notify, api, products, modal,
     subscribersService, metadata, $filter) {
     $scope.testLookup = {};
     $scope.productLookup = {};
@@ -148,7 +149,7 @@ export function ProductsConfigController($scope, gettext, notify, api, products,
                 notify.error(gettext('Error: ' + response.data._issues['validator exception']));
             } else if (angular.isDefined(response.data._issues)) {
                 if (response.data._issues.name && response.data._issues.name.unique) {
-                    notify.error(gettext('Error: ' + gettext('Name needs to be unique')));
+                    notify.error(gettext('Error: Name needs to be unique'));
                 } else if (response.data._issues.product_type) {
                     notify.error(gettext('Error: ' + gettext('Product Type is required')));
                 } else {

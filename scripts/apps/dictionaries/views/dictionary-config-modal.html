@@ -21,12 +21,12 @@
                         <label for="dict-name" class="sd-line-input__label">{{'Dictionary name' | translate}}</label>
                         <input id="dict-name" class="sd-line-input__input" type="text" ng-if="!dictionary.user" ng-model="dictionary.name" required>
                         <input class="sd-line-input__input" type="text" ng-if="dictionary.user" value="{{ :: (!isAbbreviations() ? 'Personal' : 'Abbreviations') | translate}}" disabled>
-                        <div ng-show="_errorUniqueness && !dictionary.user" class="sd-line-input__message"><span translate>Dictionary with name "{{ dictionary.name}}" already exists.</span></div>
+                        <div ng-show="_errorUniqueness && !dictionary.user" class="sd-line-input__message"><span translate>Dictionary with name {{dictionary.name}} already exists.</span></div>
                     </div>
                     <div class="sd-line-input sd-line-input--required" ng-class="{'sd-line-input--invalid' : _errorUniqueness && dictionary.user}">
                         <label class="sd-line-input__label" for="dict-lang-code">{{'Language code' | translate}}</label>
                         <input class="sd-line-input__input" id="dict-lang-code" type="text" ng-model="dictionary.language_id" required>
-                        <div ng-show="_errorUniqueness && dictionary.user" class="sd-line-input__message"><span translate>Personal dictionary for language "{{ dictionary.language_id}}" already exists.</span></div>
+                        <div ng-show="_errorUniqueness && dictionary.user" class="sd-line-input__message"><span translate>Personal dictionary for language "{{dictionary.language_id}}" already exists.</span></div>
                     </div>
                     <div class="sd-line-input" ng-if="!isAbbreviations()">
                         <label class="sd-line-input__label" for="dict-file">{{'Dictionary file' | translate}}</label>

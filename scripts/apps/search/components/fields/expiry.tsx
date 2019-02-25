@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {gettext} from 'core/utils';
 
 export const expiry: React.StatelessComponent<any> = (props) => {
-    const {gettext, datetime} = props.svc;
+    const {datetime} = props.svc;
 
     if (props.item.is_spiked) {
         return React.createElement(

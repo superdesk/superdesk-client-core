@@ -7,6 +7,9 @@
  * @description MacrosService provides set of methods which allows fetching of macros
  * and triggering of macros to be apply on provided item
  */
+
+import {gettext} from 'core/utils';
+
 MacrosService.$inject = ['api', 'notify'];
 function MacrosService(api, notify) {
     /**
@@ -77,7 +80,7 @@ function MacrosService(api, notify) {
             commit: !!commit,
         }).then((res) => res, (err) => {
             if (angular.isDefined(err.data._message)) {
-                notify.error(gettext('Error: ' + err.data._message));
+                notify.error(gettext('Error: {{message}}', {message: err.data._message}));
             }
         });
     }
@@ -156,15 +159,26 @@ function MacrosController($scope, macros, desks, autosave, $rootScope, storage, 
      * content is replaced with the value changed by macro
      */
     $scope.call = function(macro) {
+        const editor = editorResolver.get();
+        const isEditor3 = editor.version() !== '2';
         let item = _.extend({}, $scope.origItem, $scope.item);
+
+        if (isEditor3) {
+            item.body_html = editor.getHtmlForTansa() || item.body_html;
+        }
 
         $scope.loading = true;
         return macros.call(macro, item).then((res) => {
             let ignoreFields = ['_etag', 'fields_meta'];
 
             // ignore fields is only required for editor3
-            if (editorResolver.get().version() !== '2') {
+            if (isEditor3) {
                 ignoreFields.push('body_html');
+
+                if (item.body_html !== res.item.body_html) {
+                    editor.setHtmlFromTansa(res.item.body_html, macro.simple_replace);
+                }
+
                 Object.keys(res.item || {}).forEach((field) => {
                     if (isString(res.item[field]) === false || field === 'body_html') {
                         return;
@@ -176,11 +190,15 @@ function MacrosController($scope, macros, desks, autosave, $rootScope, storage, 
                 });
             }
 
-            angular.extend($scope.item, _.omit(res.item, ignoreFields));
-            autosave.save($scope.item, $scope.origItem);
-            if (res.diff !== null) {
+            if (isEditor3 || res.diff == null) {
+                angular.extend($scope.item, _.omit(res.item, ignoreFields));
+                $scope.autosave($scope.item);
+            }
+
+            if (res.diff != null) {
                 $rootScope.$broadcast('macro:diff', res.diff);
             }
+
             $scope.closeWidget();
         })
             .finally(() => {

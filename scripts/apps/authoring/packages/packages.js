@@ -1,3 +1,5 @@
+import {gettext} from 'core/utils';
+
 PackagesCtrl.$inject = ['$scope', 'superdesk', 'api', 'search'];
 function PackagesCtrl($scope, superdesk, api, search) {
     $scope.contentItems = [];

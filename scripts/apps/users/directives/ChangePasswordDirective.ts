@@ -1,5 +1,7 @@
-ChangePasswordDirective.$inject = ['usersService', 'notify', 'gettext'];
-export function ChangePasswordDirective(usersService, notify, gettext) {
+import {gettext} from 'core/utils';
+
+ChangePasswordDirective.$inject = ['usersService', 'notify'];
+export function ChangePasswordDirective(usersService, notify) {
     return {
         link: function(scope, element) {
             scope.$watch('user', () => {

@@ -548,13 +548,13 @@
 
 <!-- custom text editor fields -->
 <div class="field" ng-repeat="field in fields track by field._id"
-    ng-if="field.field_type === 'text'"
+    ng-if="field.field_type === 'text' && editor[field._id].section !== 'header'"
     sd-width="{{ editor[field._id].sdWidth || 'full' }}"
     data-required="schema[field._id].required"
     order="{{ editor[field._id].order }}"
     sd-validation-error="error[field._id.toLowerCase()]">
 
-    <label class="field__label">{{ field.display_name }}</label>
+    <label class="field__label">{{field.display_name}}</label>
     <span ng-if="schema[field._id].maxlength || schema[field._id].minlength" sd-character-count
         data-item="item.extra[field._id]" data-html="true" data-limit="schema[field._id].maxlength"></span>
     <div sd-editor3
@@ -577,13 +577,13 @@
 
 <!-- custom date editor fields -->
 <div class="field" ng-repeat="field in fields track by field._id"
-    ng-if="field.field_type === 'date'"
+    ng-if="field.field_type === 'date' && editor[field._id].section !== 'header'"
     sd-width="{{ editor[field._id].sdWidth || 'full' }}"
     data-required="schema[field._id].required"
     order="{{ editor[field._id].order }}"
     sd-validation-error="error[field._id.toLowerCase()]">
 
-    <label class="field__label">{{ field.display_name }}</label>
+    <label class="field__label">{{field.display_name}}</label>
     <div sd-datepicker ng-disabled="!_editable" data-tabindex="editor[field._id].order" ng-model="item.extra[field._id]" data-format="YYYY-MM-DDT00:00:00+0000" data-on-change="autosave(item)" shortcuts="field.date_shortcuts"></div>
     <div class="sd-editor__info-text" ng-if="helper_text[field._id]">{{field.helper_text}}</div>
 </div>
@@ -594,7 +594,7 @@
     order="{{ editor[field._id].order }}"
     sd-validation-error="error[field._id.toLowerCase()]"
     data-required="schema[field._id].required">
-    <label class="field__label" translate>{{ field.display_name }}</label>
+    <label class="field__label" translate>{{field.display_name}}</label>
     <span>
     <button ng-disabled="!_editable" id="clear-embed-btn" type="button" class="btn btn--small pull-right" ng-click="clearEmbed(field._id)"
         ng-show="item.extra[field._id].embed" translate>Clear Embed
@@ -639,13 +639,13 @@
      sd-validation-error="error[field._id.toLowerCase()]"
      order="{{editor[field._id].order}}"
      data-required="schema[field._id].required">
-    <label class="field__label" translate>{{ field.display_name }}</label>
+    <label class="field__label" translate>{{field.display_name}}</label>
 
     <div sd-item-carousel
          data-item="item"
          data-items="mediaFieldVersions[field._id]"
          data-editable="_editable"
-         data-onchange="autosave(item)"
+         data-onchange="autosave(item, 0)"
          data-save="save()"
          data-allow-picture="!!field.field_options.allowed_types.picture"
          data-allow-video="!!field.field_options.allowed_types.video"
@@ -663,7 +663,7 @@
      sd-validation-error="error[field._id.toLowerCase()]"
      order="{{editor[field._id].order}}"
      data-required="schema[field._id].required">
-    <label class="field__label" translate>{{ field.display_name }}</label>
+    <label class="field__label" translate>{{field.display_name}}</label>
 
     <div sd-related_items
         data-item="item"

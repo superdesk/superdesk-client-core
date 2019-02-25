@@ -12,7 +12,7 @@ import {UserAvatar} from 'apps/users/components/UserAvatar';
 import {FluidRows} from '../../fluid-flex-rows/fluid-rows';
 import {FluidRow} from '../../fluid-flex-rows/fluid-row';
 import {EditorHighlightsHeader} from '../../editorPopup/EditorHighlightsHeader';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 /**
  * @ngdoc React
@@ -117,7 +117,7 @@ class Suggestion extends React.Component<any, any> {
         default:
             content = (
                 <div>
-                    <strong>{gettext(description) + space + gettext(blockStyleDescription)}: </strong>
+                    <strong>{description + space + blockStyleDescription}: </strong>
                     {this.truncateText(suggestionText)}
                 </div>
             );

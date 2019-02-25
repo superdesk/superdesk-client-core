@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {find, join, map} from 'lodash';
 import {MAP_URL, TWITTER_URL, MAILTO_URL} from '../../contacts/constants';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 export class ItemContainer extends React.Component<any, any> {
     static propTypes: any;

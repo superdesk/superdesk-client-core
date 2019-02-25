@@ -1,9 +1,10 @@
 import {isEmpty, omit} from 'lodash';
+import {gettext} from 'core/utils';
 
 export function SearchContainer() {
     return {
-        controller: ['$scope', '$location', 'gettext', 'pageTitle',
-            function SearchContainerController($scope, $location, gettext, pageTitle) {
+        controller: ['$scope', '$location', 'pageTitle',
+            function SearchContainerController($scope, $location, pageTitle) {
                 const query = omit($location.search(), '_id', 'repo');
 
                 this.flags = $scope.flags || {};

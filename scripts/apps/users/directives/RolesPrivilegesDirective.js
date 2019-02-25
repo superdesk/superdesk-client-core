@@ -1,7 +1,8 @@
 import handleError from '../helpers';
+import {gettext} from 'core/utils';
 
-RolesPrivilegesDirective.$inject = ['api', 'gettext', 'notify', '$q', '$filter'];
-export function RolesPrivilegesDirective(api, gettext, notify, $q, $filter) {
+RolesPrivilegesDirective.$inject = ['api', 'notify', '$q', '$filter'];
+export function RolesPrivilegesDirective(api, notify, $q, $filter) {
     return {
         scope: true,
         templateUrl: 'scripts/apps/users/views/settings-privileges.html',

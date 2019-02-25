@@ -228,23 +228,35 @@ function SuperdeskProvider($routeProvider, _) {
                     return activities[id] || null;
                 },
 
-                // Resolve an intent to a single activity
-                resolve: function(intent): Promise<any> {
-                    return this.findActivities(intent).then((_activities) => {
-                        switch (_activities.length) {
-                            case 0:
-                                return $q.reject();
+                /**
+                 * @ngdoc method
+                 * @name superdesk#resolve
+                 * @public
+                 * @description Resolve an intent to a single activity
+                 */
+                resolve: function(intent) {
+                    var _activities = this.findActivities(intent);
 
-                            case 1:
-                                return _activities[0];
+                    switch (_activities.length) {
+                    case 0:
+                        return $q.reject();
 
-                            default:
-                                return chooseActivity(_activities);
-                            }
-                    });
+                    case 1:
+                        return $q.when(_activities[0]);
+
+                    default:
+                        return chooseActivity(_activities);
+                    }
                 },
 
-                findActivities: function(intent, item): Promise<any> {
+                /**
+                 * @ngdoc method
+                 * @name superdesk#findActivities
+                 * @public
+                 * @description
+                 * Find all available activities for given intent
+                 */
+                findActivities: function(intent, item) {
                     var criteria: any = {};
 
                     if (intent.action) {
@@ -257,40 +269,22 @@ function SuperdeskProvider($routeProvider, _) {
                         criteria.id = intent.id;
                     }
 
-                    function testAdditionalCondition(activity): Promise<any> {
-                        if (activity.additionalCondition) {
-                            return $q.when(
-                                $injector.invoke(
+                    return _.sortBy(_.filter(this.activities, (activity) => {
+                        return _.find(activity.filters, criteria) && isAllowed(activity) &&
+                            activity.condition(item) && testAdditionalCondition();
+
+                        function testAdditionalCondition() {
+                            if (activity.additionalCondition) {
+                                return $injector.invoke(
                                     activity.additionalCondition,
                                     {},
                                     {item: item ? item : intent.data},
-                                ),
-                            );
+                                );
+                            }
+
+                            return true;
                         }
-
-                        return $q.when(true);
-                    }
-
-                    const activityIds = Object.keys(this.activities).map((key) => this.activities[key]._id);
-
-                    return $q.all(activityIds.map(
-                        (key) => testAdditionalCondition(this.activities[key]),
-                    ))
-                        .then((res: Array<any>) => {
-                            let additionalConditionResults = {};
-
-                            activityIds.forEach((id, i) => {
-                                additionalConditionResults[id] = res[i];
-                            });
-
-                            return _.sortBy(_.filter(this.activities, (activity) => {
-                                return _.find(activity.filters, criteria) && isAllowed(activity) &&
-                                    activity.condition(item) && additionalConditionResults[activity._id];
-                            }), 'priority').reverse();
-                        })
-                        .catch((err) => {
-                            throw new Error(err);
-                        });
+                    }), 'priority').reverse();
                 },
 
                 /**

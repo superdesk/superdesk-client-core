@@ -2,9 +2,9 @@
 const HR_TEMPLATE = 'scripts/apps/workspace/views/workspace-sidenav-items-hr.html';
 const DEFAULT_TEMPLATE = 'scripts/apps/workspace/views/workspace-sidenav-items-default.html';
 
-WorkspaceSidenavDirective.$inject = ['superdeskFlags', 'workspaceMenu', 'Keys', 'gettext', 'config',
+WorkspaceSidenavDirective.$inject = ['superdeskFlags', 'workspaceMenu', 'Keys', 'config',
     '$rootScope', 'workspaces', 'privileges'];
-export function WorkspaceSidenavDirective(superdeskFlags, workspaceMenu, Keys, gettext, config,
+export function WorkspaceSidenavDirective(superdeskFlags, workspaceMenu, Keys, config,
     $rootScope, workspaces, privileges) {
     return {
         template: require('../views/workspace-sidenav-items.html'),

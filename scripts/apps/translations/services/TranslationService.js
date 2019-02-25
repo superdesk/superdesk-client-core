@@ -1,3 +1,5 @@
+import {gettext} from 'core/utils';
+
 /**
  * @ngdoc service
  * @module superdesk.apps.translations

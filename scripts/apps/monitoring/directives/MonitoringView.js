@@ -1,3 +1,5 @@
+import {gettext} from 'core/utils';
+
 /**
  * Main monitoring view - list + preview
  *

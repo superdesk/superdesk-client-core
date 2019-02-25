@@ -1,7 +1,9 @@
+import {gettext} from 'core/utils';
+
 DashboardController.$inject = ['$scope', 'desks', 'dashboardWidgets', 'api', 'session', 'workspaces',
-    'modal', 'gettext', 'privileges', 'pageTitle'];
+    'modal', 'privileges', 'pageTitle'];
 export function DashboardController($scope, desks, dashboardWidgets, api, session, workspaces,
-    modal, gettext, privileges, pageTitle) {
+    modal, privileges, pageTitle) {
     var self = this;
 
     $scope.edited = null;

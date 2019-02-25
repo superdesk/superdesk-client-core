@@ -9,6 +9,7 @@ import {
     SessionsDeleteCommand,
 } from './controllers';
 import {coreMenuGroups} from 'core/activity/activity';
+import {gettext} from 'core/utils';
 
 API.$inject = ['apiProvider'];
 export function API(apiProvider) {
@@ -151,8 +152,8 @@ export function Permissions(superdesk) {
         });
 }
 
-export var KeyboardShortcuts = ['keyboardManager', 'gettext',
-    function(keyboardManager, gettext) {
+export var KeyboardShortcuts = ['keyboardManager',
+    function(keyboardManager) {
         keyboardManager.register('Users', 'Up', gettext('Previous user'));
         keyboardManager.register('Users', 'Down', gettext('Next user'));
     },

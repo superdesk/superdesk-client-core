@@ -10,6 +10,7 @@
 
 import * as directive from './directives';
 import * as svc from './services';
+import {gettext} from 'core/utils';
 
 /**
  * @ngdoc module

@@ -30,7 +30,7 @@
         </div>
 
         <!-- Content Send To-->
-        <div class="side-panel__content" ng-if="currentUserAction === vm.userActions.send_to || currentUserAction === vm.userActions.duplicate_to">
+        <div class="side-panel__content" ng-if="currentUserAction === vm.userActions.send_to || currentUserAction === vm.userActions.duplicate_to || currentUserAction === vm.userActions.externalsource_to">
             <div class="side-panel__content-block">
                 
                 <div sd-toggle-box
@@ -172,6 +172,8 @@
                             data-list="metadata.customSubscribers"
                             data-field="target_subscribers"
                             data-header="true"
+                            ng-disabled="!_editable"
+                            data-change="autosave(item)"
                             data-reload-list="true">
                         </div>
                     </div>
@@ -180,6 +182,8 @@
                         <label class="form-label" translate>Target Regions</label>
                         <div sd-meta-target
                             data-list="metadata.regions"
+                            data-autosave="autosave(item)"
+                            ng-disabled="!_editable"
                             data-targets="item.target_regions">
                         </div>
                     </div>
@@ -188,6 +192,8 @@
                         <label class="form-label" translate>Target Types</label>
                         <div sd-meta-target
                             data-list="metadata.subscriberTypes"
+                            data-autosave="autosave(item)"
+                            ng-disabled="!_editable"
                             data-targets="item.target_types">
                         </div>
                     </div>

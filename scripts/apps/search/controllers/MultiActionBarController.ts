@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import {IArticle} from 'superdesk-interfaces/Article';
+import {gettext} from 'core/utils';
 
 /**
  * @ngdoc controller
@@ -24,12 +25,12 @@ import {IArticle} from 'superdesk-interfaces/Article';
  */
 
 MultiActionBarController.$inject = [
-    '$rootScope', 'multi', 'multiEdit', 'multiImageEdit', 'send', 'remove', 'modal', '$q', 'gettext',
+    '$rootScope', 'multi', 'multiEdit', 'multiImageEdit', 'send', 'remove', 'modal', '$q',
     'packages', 'superdesk', 'notify', 'spike', 'authoring', 'privileges', '$location', 'config', 'api',
 ];
 
 export function MultiActionBarController(
-    $rootScope, multi, multiEdit, multiImageEdit, send, remove, modal, $q, gettext,
+    $rootScope, multi, multiEdit, multiImageEdit, send, remove, modal, $q,
     packages, superdesk, notify, spike, authoring, privileges, $location, config, api,
 ) {
     this.send = function() {

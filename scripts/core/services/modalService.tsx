@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import {ModalPrompt} from 'core/ui/components/Modal/ModalPrompt';
+import {gettext} from 'core/utils';
 
 export default angular.module('superdesk.core.services.modal', ['superdesk-ui', 'superdesk.core.services.asset'])
     .service('modal', ['$q', '$modal', '$sce', 'asset', function($q, $modal, $sce, asset) {

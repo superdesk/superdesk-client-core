@@ -337,24 +337,8 @@
 // ------------
 .subnav {
     align-items: center;
-    z-index: 1001;
-    // position: absolute;
-    // display: flex;
-    // top: $nav-height;
-    // left: 0;
-    // right: 0;
-    // height:$subnav-height;
-    // @include border-box();
-    // z-index: 1001;
-    // background: rgba(245,245,245,0.90);
-    // border-bottom: 0px;
-    // @include box-shadow-both(0 1px 3px rgba(0,0,0,0.07), 0 1px 0 0 rgba(0,0,0,0.1));
-    // @include transition( all 0.3s ease);
     &--padded {
         padding: 10px 20px;
-    }
-    + .subnav {
-        z-index: 999;
     }
 }
 
@@ -363,7 +347,7 @@
     top:48px;
     left:0;
     right:0;
-    z-index: 1001;
+    z-index: 10;
 }
 .subnav--top {
     top: 48px;

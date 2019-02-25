@@ -1,3 +1,5 @@
+import {gettext} from 'core/utils';
+
 /**
  * @ngdoc controller
  * @module superdesk.apps.content-api
@@ -5,13 +7,12 @@
  * @requires https://docs.angularjs.org/api/ng/type/$rootScope.Scope $scope
  * @requires https://docs.angularjs.org/api/ng/service/$location $location
  * @requires pageTitle
- * @requires gettext
  * @requires preferencesService
  *
  * @description ContentAPIController
  */
 export class ContentAPIController {
-    constructor($scope, $location, pageTitle, gettext, preferencesService) {
+    constructor($scope, $location, pageTitle, preferencesService) {
         this.$scope = $scope;
         this.$location = $location;
         this.preferencesService = preferencesService;
@@ -65,4 +66,4 @@ export class ContentAPIController {
     }
 }
 
-ContentAPIController.$inject = ['$scope', '$location', 'pageTitle', 'gettext', 'preferencesService'];
+ContentAPIController.$inject = ['$scope', '$location', 'pageTitle', 'preferencesService'];

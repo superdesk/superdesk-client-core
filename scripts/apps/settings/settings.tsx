@@ -2,7 +2,7 @@ import React from 'react';
 import {connectServices} from 'core/helpers/ReactRenderAsync';
 import {capitalize} from 'lodash';
 import {coreMenuGroups} from 'core/activity/activity';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 interface IProps {
     $route: any;
@@ -81,7 +81,7 @@ class SettingsComponent extends React.Component<IProps, IState> {
                 return 0;
             });
 
-            const groupLabel = coreMenuGroups[key].getLabel(gettext);
+            const groupLabel = coreMenuGroups[key].getLabel();
 
             listToRender.push(
                 <li key={++reactKey} className="sd-left-nav__group-header">{groupLabel}</li>,

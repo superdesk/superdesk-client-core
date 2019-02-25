@@ -8,9 +8,10 @@ import {IPrivilegesService} from 'types/Services/Privileges';
 
 import {forEach, clone, filter} from 'lodash';
 import {mapPredefinedDateFiltersServerToClient} from './DateFilters';
+import {gettext} from 'core/utils';
 
 SavedSearches.$inject = [
-    '$rootScope', 'api', 'session', 'modal', 'notify', 'gettext', 'asset',
+    '$rootScope', 'api', 'session', 'modal', 'notify', 'asset',
     '$location', 'desks', 'privileges', 'search', 'savedSearch', 'config',
 ];
 
@@ -37,7 +38,7 @@ interface ISavedSearchesScope extends ng.IScope {
     userHasPrivileges(privileges: any): boolean;
 }
 
-export function SavedSearches($rootScope, api, session, modal, notify, gettext, asset, $location,
+export function SavedSearches($rootScope, api, session, modal, notify, asset, $location,
     desks, privileges, search, savedSearch, config): ng.IDirective {
     return {
         templateUrl: asset.templateUrl('apps/search/views/saved-searches.html'),

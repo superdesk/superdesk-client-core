@@ -50,7 +50,7 @@ export const InputArray: React.StatelessComponent<any> = ({
                     onClick={add}
                     type="button"
                 >
-                    {addButtonText ? gettext(addButtonText) : <i className="icon-plus-large" />}
+                    {addButtonText ? addButtonText : <i className="icon-plus-large" />}
                 </button>
             )}
         </Row>

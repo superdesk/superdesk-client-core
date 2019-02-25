@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import {ItemUrgency, TypeIcon} from './index';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 /**
  * @ngdoc React

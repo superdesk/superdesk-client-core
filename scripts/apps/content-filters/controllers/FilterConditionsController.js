@@ -1,4 +1,6 @@
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
+import {gettext} from 'core/utils';
+
 /**
  * @ngdoc controller
  * @module superdesk.apps.content_filters
@@ -79,7 +81,7 @@ export function FilterConditionsController($scope, contentFilters, notify, modal
                     (response) => {
                         if (angular.isDefined(response.data._issues)) {
                             if (response.data._issues.name && response.data._issues.name.unique) {
-                                notify.error(gettext('Error: ' + gettext('Name needs to be unique')));
+                                notify.error(gettext('Error: Name needs to be unique'));
                             } else {
                                 notify.error(gettext('Error: ' + JSON.stringify(response.data._issues)));
                             }

@@ -1,3 +1,5 @@
+import {gettext} from 'core/utils';
+
 angular.module('superdesk.core.activity.list', [])
     .directive('sdActivityList', ['superdesk', 'activityService', 'workflowService', 'asset', 'notify', 'lodash',
         function(superdesk, activityService, workflowService, asset, notify, _) {

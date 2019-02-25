@@ -1,5 +1,7 @@
-TemplateSelectDirective.$inject = ['api', 'desks', 'session', 'templates', 'notify', 'gettext'];
-export function TemplateSelectDirective(api, desks, session, templates, notify, gettext) {
+import {gettext} from 'core/utils';
+
+TemplateSelectDirective.$inject = ['api', 'desks', 'session', 'templates', 'notify'];
+export function TemplateSelectDirective(api, desks, session, templates, notify) {
     var PAGE_SIZE = 200;
 
     return {

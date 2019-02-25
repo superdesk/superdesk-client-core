@@ -1,10 +1,11 @@
+import {gettext} from 'core/utils';
+
 class LinkFunction {
-    constructor(contentApiSearch, search, notify, gettext, $location, scope, elem) {
+    constructor(contentApiSearch, search, notify, $location, scope, elem) {
         this.scope = scope;
         this.elem = elem;
         this.containerElem = elem.find('.shadow-list-holder');
         this.notify = notify;
-        this.gettext = gettext;
         this.$location = $location;
         this.contentApiSearch = contentApiSearch;
         this.search = search;
@@ -64,7 +65,7 @@ class LinkFunction {
                 this.render(items, null, data && data.force);
             });
         }, (error) => {
-            this.notify.error(this.gettext('Failed to run the query!'));
+            this.notify.error(gettext('Failed to run the query!'));
         })
             .finally(() => {
                 this.scope.loading = false;
@@ -128,15 +129,14 @@ class LinkFunction {
  * @requires contentApiSearch
  * @requires search
  * @requires notify
- * @requires gettext
  * @requires https://docs.angularjs.org/api/ng/service/$location $location
  * @description sd-content-api-search-results displays the search based on the change to the route.
  */
-export function ContentAPISearchResultsDirective(contentApiSearch, search, notify, gettext, $location) {
+export function ContentAPISearchResultsDirective(contentApiSearch, search, notify, $location) {
     return {
         template: require('scripts/apps/content-api/views/search-results.html'),
-        link: (scope, elem) => new LinkFunction(contentApiSearch, search, notify, gettext, $location, scope, elem),
+        link: (scope, elem) => new LinkFunction(contentApiSearch, search, notify, $location, scope, elem),
     };
 }
 
-ContentAPISearchResultsDirective.$inject = ['contentApiSearch', 'search', 'notify', 'gettext', '$location'];
+ContentAPISearchResultsDirective.$inject = ['contentApiSearch', 'search', 'notify', '$location'];

@@ -1,12 +1,12 @@
 import {URL_PARAMETERS} from '../constants';
+import {gettext} from 'core/utils';
 
 class LinkFunction {
-    constructor(contacts, search, notify, gettext, $location, $timeout, scope, elem) {
+    constructor(contacts, search, notify, $location, $timeout, scope, elem) {
         this.scope = scope;
         this.elem = elem;
         this.containerElem = elem.find('.contacts-list__holder');
         this.notify = notify;
-        this.gettext = gettext;
         this.$location = $location;
         this.$timeout = $timeout;
         this.contacts = contacts;
@@ -66,7 +66,7 @@ class LinkFunction {
                 this.render(items, null, data && data.force);
             });
         }, (error) => {
-            this.notify.error(this.gettext('Failed to run the query!'));
+            this.notify.error(gettext('Failed to run the query!'));
         })
             .finally(() => {
                 this.scope.loading = false;
@@ -128,15 +128,14 @@ class LinkFunction {
  * @requires Contacts service
  * @requires search
  * @requires notify
- * @requires gettext
  * @requires https://docs.angularjs.org/api/ng/service/$location $location
  * @description sd-contacts-search-results displays the search based on the change to the route.
  */
-export function ContactsSearchResultsDirective(contacts, search, notify, gettext, $location, $timeout) {
+export function ContactsSearchResultsDirective(contacts, search, notify, $location, $timeout) {
     return {
         template: require('scripts/apps/contacts/views/search-results.html'),
-        link: (scope, elem) => new LinkFunction(contacts, search, notify, gettext, $location, $timeout, scope, elem),
+        link: (scope, elem) => new LinkFunction(contacts, search, notify, $location, $timeout, scope, elem),
     };
 }
 
-ContactsSearchResultsDirective.$inject = ['contacts', 'search', 'notify', 'gettext', '$location', '$timeout'];
+ContactsSearchResultsDirective.$inject = ['contacts', 'search', 'notify', '$location', '$timeout'];

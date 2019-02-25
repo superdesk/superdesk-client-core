@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {VersionCreated, SocialInfo} from 'apps/contacts/components/fields';
 import {getContactType} from '../../contacts/helpers';
 import classNames from 'classnames';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 /**
  * Contact footer - renders footer for contact card used in grid view

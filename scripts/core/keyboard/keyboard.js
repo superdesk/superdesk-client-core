@@ -1,4 +1,6 @@
-export default angular.module('superdesk.core.keyboard', ['gettext'])
+import {gettext} from 'core/utils';
+
+export default angular.module('superdesk.core.keyboard', [])
 
     .constant('Keys', Object.freeze({
         pageup: 33,
@@ -393,7 +395,7 @@ export default angular.module('superdesk.core.keyboard', ['gettext'])
         };
     }])
 
-    .directive('sdKeyboardModal', ['keyboardManager', 'gettext', function(keyboardManager, gettext) {
+    .directive('sdKeyboardModal', ['keyboardManager', function(keyboardManager) {
         return {
             scope: true,
             templateUrl: 'scripts/core/keyboard/views/keyboard-modal.html',

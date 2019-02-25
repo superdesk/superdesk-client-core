@@ -1,3 +1,5 @@
+import {gettext} from 'core/utils';
+
 /**
  * Default list of fields
  */

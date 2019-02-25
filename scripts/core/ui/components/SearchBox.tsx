@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {gettext} from './utils';
 import {KEYCODES} from './constants';
+import {gettext} from 'core/utils';
 
 /**
  * @ngdoc react

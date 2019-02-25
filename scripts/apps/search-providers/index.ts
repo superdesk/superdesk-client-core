@@ -11,6 +11,7 @@ import {providerTypes} from './constants';
 import SearchProviderService from './service';
 import SearchProviderConfigDirective from './directive';
 import {coreMenuGroups} from 'core/activity/activity';
+import {gettext} from 'core/utils';
 
 SearchProviderSettingsController.$inject = ['$scope', 'privileges'];
 function SearchProviderSettingsController($scope, privileges) { /* no-op */ }

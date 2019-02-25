@@ -2,6 +2,7 @@ import _ from 'lodash';
 import PreferedCvItemsConfigDirective from './PreferedCvItemsConfigDirective';
 import MetaPlaceDirective from './MetaPlaceDirective';
 import {VOCABULARY_SELECTION_TYPES} from '../../vocabularies/constants';
+import {gettext} from 'core/utils';
 
 const SINGLE_SELECTION = VOCABULARY_SELECTION_TYPES.SINGLE_SELECTION.id;
 
@@ -216,8 +217,6 @@ function MetadataCtrl(
 
     $scope.unique_name_editable = Boolean(privileges.privileges.metadata_uniquename &&
         $scope.action !== 'correct' && $scope.action !== 'kill');
-
-    $scope.targetsEditable = $scope.action !== 'correct' && $scope.action !== 'kill';
 
     resolvePublishScheduleAndEmbargoTS();
 
@@ -1248,9 +1247,17 @@ function MetadataService(api, subscribersService, config, vocabularies, $rootSco
          * @return {Array}
          */
         getAllCustomVocabulariesForArticleHeader: function(editor, schema) {
-            return this.fetchMetadataValues().then(() =>
-                this.cvs.filter((cv) => cv.items.length && cv.service && (editor[cv._id] || schema[cv._id]))
-            );
+            return this.fetchMetadataValues().then(() => {
+                const customVocabulariesForArticleHeader = this.cvs.filter(
+                    (cv) => cv.items.length && cv.service && (editor[cv._id] || schema[cv._id])
+                );
+
+                const customTextAndDateVocabularies = this.cvs.filter(
+                    (cv) => cv.field_type === 'text' || cv.field_type === 'date'
+                );
+
+                return {customVocabulariesForArticleHeader, customTextAndDateVocabularies};
+            });
         },
         initialize: function() {
             if (!this.loaded) {

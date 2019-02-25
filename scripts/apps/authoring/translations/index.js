@@ -1,5 +1,6 @@
 import {reactToAngular1} from 'superdesk-ui-framework';
 import {TranslationsWidget} from './translationsWidget';
+import {gettext} from 'core/utils';
 
 angular.module('superdesk.apps.authoring.translations', [
     'superdesk.apps.authoring.widgets',

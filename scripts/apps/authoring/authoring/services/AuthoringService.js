@@ -1,4 +1,5 @@
 import * as helpers from 'apps/authoring/authoring/helpers';
+import {gettext} from 'core/utils';
 
 /**
  * @ngdoc service
@@ -101,7 +102,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
                 authoringWorkspace.edit(newItem);
             }, (response) => {
                 if (angular.isDefined(response.data._message)) {
-                    notify.error(gettext('Failed to generate update: ' + response.data._message));
+                    notify.error(gettext('Failed to generate update: {{message}}', {message: response.data._message}));
                 } else {
                     notify.error(gettext('There was an error. Failed to generate update.'));
                 }
@@ -120,7 +121,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         .then((data) => notify.success(gettext('Link has been removed')),
             (response) => {
                 if (angular.isDefined(response.data._message)) {
-                    notify.error(gettext('Failed to remove link: ' + response.data._message));
+                    notify.error(gettext('Failed to remove link: {{message}}', {message: response.data._message}));
                 } else {
                     notify.error(gettext('There was an error. Failed to remove link.'));
                 }
@@ -193,10 +194,6 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
      * If not removed the API will throw errors.
      */
     this.cleanUpdatesBeforePublishing = function(original, updates, action = 'publish') {
-        if (!updates.publish_schedule) {
-            delete updates.publish_schedule;
-        }
-
         // check if rendition is dirty for real
         if (_.isEqual(original.renditions, updates.renditions)) {
             delete updates.renditions;
@@ -228,6 +225,11 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
 
     this.publish = function publish(orig, diff, action = 'publish') {
         let extDiff = helpers.extendItem({}, diff);
+
+        // if there were some changes on image, we should update etag
+        if (diff && diff._etag) {
+            orig._etag = diff._etag;
+        }
 
         this.cleanUpdatesBeforePublishing(orig, extDiff, action);
         helpers.filterDefaultValues(extDiff, orig);
@@ -388,7 +390,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
     * Actions that it can perform on an item
     * @param {Object} item : item
     */
-    this.itemActions = function(item) {
+    this.itemActions = function(item, userDesks) {
         var currentItem = this._getCurrentItem(item);
         var userPrivileges = privileges.privileges;
         var action = angular.extend({}, helpers.DEFAULT_ACTIONS);
@@ -437,7 +439,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
 
         this._updateGeneralActions(currentItem, action);
 
-        return this._updateDeskActions(currentItem, action);
+        return this._updateDeskActions(currentItem, action, userDesks || self.userDesks);
     };
 
     this._updateActionsForContentApi = function(item, action) {
@@ -548,7 +550,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
 
     // check for desk membership for edit rights and returns updated
     // actions accordingly
-    this._updateDeskActions = function(currentItem, oldAction) {
+    this._updateDeskActions = function(currentItem, oldAction, userDesks) {
         let action = oldAction;
         let reWrite = action.re_write;
         let userPrivileges = privileges.privileges;
@@ -561,7 +563,8 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
 
             action.add_to_current = !_.includes(['spiked', 'scheduled', 'killed', 'recalled'], currentItem.state);
 
-            var desk = _.find(self.userDesks, {_id: currentItem.task.desk});
+            var desk = _.find(userDesks, {_id: currentItem.task.desk});
+
 
             if (!desk) {
                 action = angular.extend({}, helpers.DEFAULT_ACTIONS);

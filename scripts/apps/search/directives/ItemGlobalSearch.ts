@@ -1,12 +1,14 @@
+import {gettext} from 'core/utils';
+
 ItemGlobalSearch.$inject = [
-    'session', 'api', 'notify', 'gettext', 'keyboardManager', 'asset', 'authoringWorkspace', 'authoring',
+    'session', 'api', 'notify', 'keyboardManager', 'asset', 'authoringWorkspace', 'authoring',
 ];
 
 /**
  * Open Item dialog
  */
 export function ItemGlobalSearch(
-    session, api, notify, gettext, keyboardManager, asset, authoringWorkspace, authoring,
+    session, api, notify, keyboardManager, asset, authoringWorkspace, authoring,
 ) {
     return {
         scope: {repo: '=', context: '='},

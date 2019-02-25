@@ -1,5 +1,7 @@
-CombinePackageCtrl.$inject = ['data', 'packages', 'authoringWorkspace', 'notify', 'gettext'];
-export function CombinePackageCtrl(data, packages, authoringWorkspace, notify, gettext) {
+import {gettext} from 'core/utils';
+
+CombinePackageCtrl.$inject = ['data', 'packages', 'authoringWorkspace', 'notify'];
+export function CombinePackageCtrl(data, packages, authoringWorkspace, notify) {
     var openItem = authoringWorkspace.getItem();
 
     packages.createPackageFromItems([openItem, data.item])

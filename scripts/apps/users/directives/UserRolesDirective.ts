@@ -1,5 +1,7 @@
-UserRolesDirective.$inject = ['api', 'gettext', 'notify', 'modal', '$filter', 'lodash', 'metadata'];
-export function UserRolesDirective(api, gettext, notify, modal, $filter, _, metadata) {
+import {gettext} from 'core/utils';
+
+UserRolesDirective.$inject = ['api', 'notify', 'modal', '$filter', 'lodash', 'metadata'];
+export function UserRolesDirective(api, notify, modal, $filter, _, metadata) {
     return {
         scope: true,
         templateUrl: 'scripts/apps/users/views/settings-roles.html',

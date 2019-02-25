@@ -1,8 +1,10 @@
+import {gettext} from 'core/utils';
+
 /*
  * Delete sessions of a user
  */
-SessionsDeleteCommand.$inject = ['api', 'data', '$q', 'notify', 'gettext', '$rootScope'];
-export function SessionsDeleteCommand(api, data, $q, notify, gettext, $rootScope) {
+SessionsDeleteCommand.$inject = ['api', 'data', '$q', 'notify', '$rootScope'];
+export function SessionsDeleteCommand(api, data, $q, notify, $rootScope) {
     var user = data.item;
 
     api.remove(user, {}, 'clear_sessions')
