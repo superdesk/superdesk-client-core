@@ -1,5 +1,47 @@
 # Superdesk Client Changelog
 
+## [1.28.1] 2019-02-25
+
+### Added
+
+- Change body on editor3 for macros.
+
+### Changed
+
+- Allow clearing the publish schedule on save and publish.
+- Changed label for 'category' in CVs.
+- Show loading indicator when fetching item.
+- Space out the twitter and facebook icons in contacts grid.
+- `mailto` href should not open blank tab.
+- If gettext gets null, return an empty string
+
+### Fixed
+
+- Fix applying macros for editor2.
+- Fix error in macros for bodies with tables.
+- Avoid single click on monitoring when using double click.
+- Avoid removing renditions on external images.
+- Fix bugs with media fields and media editor.
+- Fields were not being added to selected position in CPs.
+- Make the UI for the more Street Address clear.
+- Upload files sequentially.
+- Fix tooltip displaying old attatchment or URL.
+- Fix picking a colour for urgency and priority CVs.
+- Change in value of targets should trigger autosave.
+- Use cloneDeep when editing a Widget's config.
+- editor2 macros should replace on fields or diff, but not both.
+- Fix issues related to display of missing link and relatable items query.
+- When fetching from external source desk selection was not displayed
+- Fix scrolling not loading items on single group view
+- Issues with scanpix video in editor3
+- Fix issue with ordering in CP
+- Fix ANPA category label
+- Ensure that crops exist when the users click the `done` button
+- Fix item not updating after adding a second related item
+- Fix console error when creating a new authoring item
+- Spelling error for helper text in custom fields
+
+
 ## [1.28.0] 2019-01-18
 
 ### Added
@@ -392,7 +434,7 @@
 ### Fixed
 
 - On insert in editor mode don't split already existing suggestions.
-- Pasted text won't include disabled styles in editor3. 
+- Pasted text won't include disabled styles in editor3.
 - Disable autocompletion on password fields in feeding services config.
 - Video preview size is too big in the editor.
 - Fix editor3 freezing on del at the end of paragraph.
@@ -418,7 +460,7 @@
 - Add missing format options to editor3 (subscript, superdeskcript, strikethrough, preformatted).
 - Warn user when publishing an item with unresolved comments.
 - Add button to remove all formating to editor3 toolbar.
-- Handle suggestions when using ctrl+i/b/u keys in suggestion mode. 
+- Handle suggestions when using ctrl+i/b/u keys in suggestion mode.
 - Only support users can see support users.
 - Support add link suggestion.
 - Support standalone editor3 not connected to an item.
@@ -661,7 +703,7 @@
 
 - Fix check spelling shortuct not working when body html has the focus.
 - Lists for ingest saved searches are not refreshed in monitoring when preview is open.
-- Siplay custom error message on item lock failure. 
+- Siplay custom error message on item lock failure.
 - Fix the refresh for monitoring widget when item is ingested/updated.
 - Load Tansa module in async mode when used.
 - Fix the need to save twice in upload form.
@@ -710,7 +752,7 @@
 - Add name for custom workspace to monitoring.
 - Allow new vocabulary creation.
 - Add SAML auth support.
-- Add Compare versions view. 
+- Add Compare versions view.
 - Support object type fields in vocabulary schema.
 - Add move path to FTP ingest settings.
 - Add editor3 option to content profiles.
