@@ -87,10 +87,13 @@ interface IKnowledgeBaseItem {
     _etag: string;
     _id: string;
     name: string;
-    cpnat_type: 'cpnat:abstract';
     labels?: Array<string>;
     language: string;
     definition: string;
+
+    // http://cv.iptc.org/newscodes/cpnature/
+    cpnat_type: 'cpnat:abstract' | 'cpnat:event' | 'cpnat:geoArea'
+        | 'cpnat:object' | 'cpnat:organisation' | 'cpnat:person' | 'cpnat:poi';
 }
 
 class KnowledgeBasePageComponent extends React.Component<IProps, IState> {
