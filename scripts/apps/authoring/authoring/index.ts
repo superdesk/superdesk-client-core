@@ -82,7 +82,7 @@ angular.module('superdesk.apps.authoring', [
     .directive('tansaScopeSync', directive.TansaScopeSyncDirective)
     .directive('sdItemActionByIntent', directive.ItemActionsByIntentDirective)
     .component('sdArticleUrlFields',
-        reactToAngular1(ArticleUrlFields, ['label', 'urls', 'helperText', 'onChange', 'fieldId']),
+        reactToAngular1(ArticleUrlFields, ['label', 'urls', 'helperText', 'onChange', 'fieldId', 'editable']),
     )
 
     .controller('PopulateAuthorsController', PopulateAuthorsController)

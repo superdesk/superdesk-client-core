@@ -139,7 +139,9 @@
               <div class="text body-text" ng-if="field.field_type === 'text'" sd-html-preview="selected.preview.extra[field._id]"></div>
               
               <ul class="text body-text" ng-if="field.field_type === 'urls'">
-                <li ng-repeat="url in selected.preview.extra[field._id] track by $index">{{url}}</li>
+                <li ng-repeat="item in selected.preview.extra[field._id] track by $index">{{item.url}}<br>
+                  <p class="nav-space description-text">{{item.description}}</p>
+                </li>
               </ul>
             </div>
 
