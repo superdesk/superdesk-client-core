@@ -50,7 +50,7 @@ export function getTansaHtml(editorState) {
  * @param {String} simpleReplace
  * @returns {EditorState}
  */
-export function setTansaHtml(editorState, html, simpleReplace) {
+export function setTansaHtml(editorState, html, simpleReplace?) {
     let content = editorState.getCurrentContent();
     const blockMap = content.getBlockMap();
     const htmlElement = document.createElement('div');
