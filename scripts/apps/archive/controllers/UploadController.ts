@@ -57,8 +57,8 @@ export function UploadController(
     $scope.allowVideo = !($scope.locals && $scope.locals.data && $scope.locals.data.allowVideo === false);
     $scope.allowAudio = !($scope.locals && $scope.locals.data && $scope.locals.data.allowAudio === false);
     $scope.validator = _.omit(deployConfig.getSync('validator_media_metadata'), ['archive_description']);
-    $scope.deskSelectionAllowed = $location.path() !== '/workspace/personal';
-
+    $scope.deskSelectionAllowed = ($location.path() !== '/workspace/personal') && $scope.locals &&
+        $scope.locals.data && $scope.locals.data.deskSelectionAllowed === true;
     if ($scope.deskSelectionAllowed === true) {
         Promise.all([desks.fetchDesks(), desks.getCurrentDesk()]).then(([_desks, currentDesk]) => {
             $scope.desks = _desks._items;
