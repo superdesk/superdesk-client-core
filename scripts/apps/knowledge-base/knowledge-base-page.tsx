@@ -81,7 +81,7 @@ interface IProps {
     modal: any;
 }
 
-interface IKnowledgeBaseItem {
+export interface IKnowledgeBaseItem {
     _created: string;
     _updated: string;
     _etag: string;

@@ -25,7 +25,13 @@ export class ToolbarPopup extends React.Component<any, any> {
 
         switch (type) {
         case PopupTypes.Annotation:
-            return <AnnotationInput data={data} highlightsManager={this.props.highlightsManager} />;
+            return (
+                <AnnotationInput
+                    data={data}
+                    editorState={this.props.editorState}
+                    highlightsManager={this.props.highlightsManager}
+                />
+            );
         case PopupTypes.Comment:
             return <CommentInput data={data} highlightsManager={this.props.highlightsManager} />;
         case PopupTypes.Link:
@@ -42,4 +48,5 @@ ToolbarPopup.propTypes = {
     type: PropTypes.string,
     data: PropTypes.object,
     highlightsManager: PropTypes.object.isRequired,
+    editorState: PropTypes.object.isRequired,
 };

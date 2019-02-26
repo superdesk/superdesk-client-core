@@ -1,14 +1,27 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-export class NavTabs extends React.Component<any, any> {
+interface ITab {
+    label: string;
+    render(): JSX.Element;
+}
+
+interface IProps {
+    tabs: Array<ITab>;
+    active: number;
+}
+
+interface IState {
+    tab: ITab;
+}
+
+export class NavTabs extends React.Component<IProps, IState> {
     static propTypes: any;
     static defaultProps: any;
 
     constructor(props) {
         super(props);
-        this.state = {tab: props.active ? props.tabs[props.active] : props.tabs[0]};
+        this.state = {tab: props.active != null ? props.tabs[props.active] : props.tabs[0]};
     }
 
     selectTab(tab) {
@@ -40,8 +53,3 @@ export class NavTabs extends React.Component<any, any> {
         );
     }
 }
-
-NavTabs.propTypes = {
-    tabs: PropTypes.array.isRequired,
-    active: PropTypes.number,
-};
