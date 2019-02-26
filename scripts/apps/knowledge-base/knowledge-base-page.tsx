@@ -22,6 +22,7 @@ import {Positioner} from 'superdesk-ui-framework';
 import {connectCrudManager, ICrudManager} from 'core/helpers/CrudManager';
 import {TagLabel} from 'core/ui/components/TagLabel';
 import {connectServices} from 'core/helpers/ReactRenderAsync';
+import {IDefaultApiFields} from 'types/RestApi';
 
 interface IState {
     itemInPreview?: string;
@@ -81,11 +82,7 @@ interface IProps {
     modal: any;
 }
 
-interface IKnowledgeBaseItem {
-    _created: string;
-    _updated: string;
-    _etag: string;
-    _id: string;
+interface IKnowledgeBaseItem extends IDefaultApiFields {
     name: string;
     labels?: Array<string>;
     language: string;
@@ -386,7 +383,7 @@ class KnowledgeBasePageComponent extends React.Component<IProps, IState> {
 }
 
 export const KnowledgeBasePage = connectServices(
-    connectCrudManager<IKnowledgeBaseItem>(
+    connectCrudManager<IProps, IKnowledgeBaseItem>(
         KnowledgeBasePageComponent,
         'conceptItems',
         'concept_items',

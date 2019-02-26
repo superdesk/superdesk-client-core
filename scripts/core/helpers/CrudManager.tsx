@@ -7,12 +7,12 @@ export interface ISortOption {
     direction: 'ascending' | 'descending';
 }
 
-interface IState<T extends IDefaultApiFields> extends IRestApiResponse<T> {
+interface IState<Entity extends IDefaultApiFields> extends IRestApiResponse<Entity> {
     activeFilters: {[fieldName: string]: string};
     activeSortOption?: ISortOption;
 }
 
-interface IMethods<T extends IDefaultApiFields> {
+interface IMethods<Entity extends IDefaultApiFields> {
     read(
         page: number,
         sort?: {
@@ -21,20 +21,24 @@ interface IMethods<T extends IDefaultApiFields> {
         },
         filterValues?: {[fieldName: string]: string},
     ): void;
-    update(item: T): Promise<IRestApiResponse<T>>;
-    create(item: T): Promise<IRestApiResponse<T>>;
-    delete(item: T): Promise<IRestApiResponse<T>>;
-    sort(nextSortOption: ISortOption): Promise<IRestApiResponse<T>>;
-    removeFilter(fieldName: string): Promise<IRestApiResponse<T>>;
-    goToPage(nextPage: number): Promise<IRestApiResponse<T>>;
+    update(item: Entity): Promise<IRestApiResponse<Entity>>;
+    create(item: Entity): Promise<IRestApiResponse<Entity>>;
+    delete(item: Entity): Promise<IRestApiResponse<Entity>>;
+    sort(nextSortOption: ISortOption): Promise<IRestApiResponse<Entity>>;
+    removeFilter(fieldName: string): Promise<IRestApiResponse<Entity>>;
+    goToPage(nextPage: number): Promise<IRestApiResponse<Entity>>;
 }
 
-export interface ICrudManager<T extends IDefaultApiFields> extends IState<T>, IMethods<T> {
+export interface ICrudManager<Entity extends IDefaultApiFields> extends IState<Entity>, IMethods<Entity> {
     // allow exposing it as one interface for consumer components
 }
 
-export function connectCrudManager<T extends IDefaultApiFields>(WrappedComponent, name, endpoint) {
-    const component = class extends React.Component<any, IState<T>> implements IMethods<T> {
+export function connectCrudManager<Props, Entity extends IDefaultApiFields>(
+    WrappedComponent: React.ComponentType<Props>,
+    name: string,
+    endpoint: string,
+) {
+    const component = class extends React.Component<Props, IState<Entity>> implements IMethods<Entity> {
         api: any;
 
         constructor(props) {
@@ -59,7 +63,7 @@ export function connectCrudManager<T extends IDefaultApiFields>(WrappedComponent
             this.goToPage = this.goToPage.bind(this);
         }
 
-        create(item: T): Promise<IRestApiResponse<T>> {
+        create(item: Entity): Promise<IRestApiResponse<Entity>> {
             return this.api.save(item)
                 // creating an item impacts sorting/filtering/pagination. Data is re-fetched the page to correct it.
                 .then(() => this.read(1, this.state.activeSortOption, this.state.activeFilters));
@@ -69,7 +73,7 @@ export function connectCrudManager<T extends IDefaultApiFields>(WrappedComponent
             page: number,
             sortOption: ISortOption = {field: 'name', direction: 'ascending'},
             filterValues: {[fieldName: string]: string} = {},
-        ): Promise<IRestApiResponse<T>> {
+        ): Promise<IRestApiResponse<Entity>> {
             let query = {
                 page: page,
             };
@@ -111,7 +115,7 @@ export function connectCrudManager<T extends IDefaultApiFields>(WrappedComponent
                 query['where'] = filters;
             }
 
-            return this.api.query(query).then((res: IRestApiResponse<T>) => {
+            return this.api.query(query).then((res: IRestApiResponse<Entity>) => {
                 this.setState({
                     ...res,
                     activeSortOption: sortOption,
@@ -120,24 +124,24 @@ export function connectCrudManager<T extends IDefaultApiFields>(WrappedComponent
             });
         }
 
-        update(nextItem: T): Promise<IRestApiResponse<T>> {
+        update(nextItem: Entity): Promise<IRestApiResponse<Entity>> {
             return this.api.save(nextItem)
                 // updating an item impacts sorting/filtering/pagination. Data is re-fetched the page to correct it.
                 .then(() => this.read(1, this.state.activeSortOption, this.state.activeFilters));
         }
 
-        delete(item: T): Promise<IRestApiResponse<T>> {
+        delete(item: Entity): Promise<IRestApiResponse<Entity>> {
             // items in page will not match with page limit unless refetched
             return this.api.remove(item)
                 // updating an item impacts sorting/filtering. Data is re-fetched the page to correct it.
                 .then(() => this.read(1, this.state.activeSortOption, this.state.activeFilters));
         }
 
-        sort(sortOption: ISortOption): Promise<IRestApiResponse<T>> {
+        sort(sortOption: ISortOption): Promise<IRestApiResponse<Entity>> {
             return this.read(1, sortOption);
         }
 
-        removeFilter(fieldName: string): Promise<IRestApiResponse<T>> {
+        removeFilter(fieldName: string): Promise<IRestApiResponse<Entity>> {
             let nextFilters = {...this.state.activeFilters};
             delete nextFilters[fieldName];
 
@@ -149,6 +153,10 @@ export function connectCrudManager<T extends IDefaultApiFields>(WrappedComponent
         }
 
         render() {
+            // workaround for typescript bug
+            // https://github.com/Microsoft/TypeScript/issues/28748#issuecomment-450497274
+            const fixedProps = this.props as any;
+
             return (
                 <WrappedComponent
                     {
@@ -165,7 +173,7 @@ export function connectCrudManager<T extends IDefaultApiFields>(WrappedComponent
                             },
                         }
                     }
-                    {...this.props}
+                    {...fixedProps}
                 />
             );
         }
