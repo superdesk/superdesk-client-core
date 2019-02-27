@@ -140,7 +140,7 @@
               
               <ul class="text body-text" ng-if="field.field_type === 'urls'">
                 <li ng-repeat="item in selected.preview.extra[field._id] track by $index">{{item.url}}<br>
-                  <p class="nav-space description-text">{{item.description}}</p>
+                  <p class="nav-space description-text">{{item.description | translate}}</p>
                 </li>
               </ul>
             </div>

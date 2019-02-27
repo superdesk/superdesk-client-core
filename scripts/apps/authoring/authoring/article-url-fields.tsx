@@ -1,17 +1,22 @@
 import React from 'react';
 import {gettext} from 'core/utils';
 
+interface IUrl {
+    url: string;
+    description: string;
+}
+
 interface IProps {
     label: string;
-    urls: Array<object>;
+    urls: Array<IUrl>;
     helperText: string;
     fieldId: string;
-    onChange: (fieldId: string, urls: Array<object>) => void;
+    onChange: (fieldId: string, urls: Array<IUrl>) => void;
     editable: boolean;
 }
 
 interface IState {
-    urls: Array<object>;
+    urls: Array<IUrl>;
 }
 
 export class ArticleUrlFields extends React.Component<IProps, IState> {
@@ -37,12 +42,13 @@ export class ArticleUrlFields extends React.Component<IProps, IState> {
             this.props.onChange(this.props.fieldId, this.state.urls);
         });
     }
-    handleChange(index, key, event) {
+    handleChange(index, field: keyof IUrl, event) {
         const nextUrls = this.state.urls.map((currentValue, i) => {
             if (i === index) {
-                currentValue[key] = event.target.value;
+                return {...currentValue, [field]: event.target.value};
+            } else {
+                return currentValue;
             }
-            return currentValue;
         });
 
         this.setState({
@@ -72,7 +78,7 @@ export class ArticleUrlFields extends React.Component<IProps, IState> {
                             style={{marginTop: 0.5 + 'em'}}
                             disabled={!editable}
                             className="sd-editor__default-input"
-                            placeholder="Description"
+                            placeholder={gettext('Description')}
                             value={item.description}
                             onChange={this.handleChange.bind(this, i, 'description')} />
                     </div>
