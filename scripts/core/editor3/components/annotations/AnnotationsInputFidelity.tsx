@@ -15,8 +15,11 @@ export class AnnotationInputFidely extends React.Component<IProps> {
                 label: gettext('Annotation library'),
                 render: () => (
                     <AnnotationsSelect
-                        annotationText={this.props.annotationInputComponent}
-                        onApplyAnnotation={null}
+                        annotationText={this.props.annotationText}
+                        annotationTypes={[]}
+                        onApplyAnnotation={() => {
+                            console.log('test');
+                        }}
                     />
                 ),
             },

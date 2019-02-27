@@ -10,7 +10,7 @@ interface IProps {
     onApplyAnnotation(contentPlainText: string): void;
 
     // connected
-    conceptItems: ICrudManager<IKnowledgeBaseItem>;
+    conceptItems?: ICrudManager<IKnowledgeBaseItem>;
 }
 
 interface IState {
@@ -56,7 +56,7 @@ class AnnotationsSelectComponent extends React.Component<IProps, IState> {
     }
 }
 
-export const AnnotationsSelect = connectCrudManager<IKnowledgeBaseItem>(
+export const AnnotationsSelect = connectCrudManager<IProps, IKnowledgeBaseItem>(
     AnnotationsSelectComponent,
     'conceptItems',
     'concept_items',

@@ -82,7 +82,7 @@ interface IProps {
     modal: any;
 }
 
-interface IKnowledgeBaseItem extends IDefaultApiFields {
+export interface IKnowledgeBaseItem extends IDefaultApiFields {
     name: string;
     labels?: Array<string>;
     language: string;
