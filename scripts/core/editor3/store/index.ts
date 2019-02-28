@@ -1,4 +1,4 @@
-import {EditorState, convertFromRaw, convertToRaw, ContentState} from 'draft-js';
+import {EditorState, convertFromRaw, convertToRaw, ContentState, RawDraftContentState} from 'draft-js';
 import {createStore, applyMiddleware} from 'redux';
 import {createLogger} from 'redux-logger';
 import thunk from 'redux-thunk';
@@ -26,6 +26,21 @@ export const ignoreInternalAnnotationFields = (annotations) =>
 
 export const isEditorPlainText = (props) => props.singleLine || (props.editorFormat || []).length === 0;
 
+interface IProps {
+    editorState: RawDraftContentState;
+    disableSpellchecker?: boolean;
+    language?: any;
+    debounce?: any;
+    onChange?: any;
+    readOnly?: any;
+    singleLine?: any;
+    tabindex?: any;
+    showTitle?: any;
+    editorFormat?: any;
+    item?: any;
+    svc?: any;
+}
+
 /**
  * @name createEditorStore
  * @description Returns a new redux store.
@@ -33,7 +48,7 @@ export const isEditorPlainText = (props) => props.singleLine || (props.editorFor
  * @param {Boolean=} isReact True if the store is created for a React component.
  * @returns {Object} Redux store.
  */
-export default function createEditorStore(props, isReact = false) {
+export default function createEditorStore(props: IProps, isReact = false) {
     const spellcheck = ng.get('spellcheck');
 
     if (!props.disableSpellchecker) {
@@ -50,8 +65,10 @@ export default function createEditorStore(props, isReact = false) {
 
     const middlewares = [thunk];
 
-    if (process.env.NODE_ENV !== 'production') {
-        // activate logs actions for non production instances.
+    const devtools = localStorage.getItem('devtools');
+    const reduxLoggerEnabled = devtools == null ? false : JSON.stringify(devtools).includes('redux-logger');
+
+    if (reduxLoggerEnabled) {
         // (this should always be the last middleware)
         middlewares.push(createLogger());
     }

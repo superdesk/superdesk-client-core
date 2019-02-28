@@ -3,7 +3,9 @@ import createEditorStore from './store';
 import {Editor3} from './components';
 import {Provider} from 'react-redux';
 import ng from 'core/services/ng';
-import {ContentState} from 'draft-js';
+import {ContentState, RawDraftContentState, convertFromRaw, EditorState, convertToRaw} from 'draft-js';
+import {setReadOnly, changeEditorState} from './actions/editor3';
+import {isEqual} from 'lodash';
 
 interface IProps {
     // If set, it will be used to make sure the toolbar is always
@@ -23,13 +25,9 @@ interface IProps {
     // in the toolbar.
     editorFormat: Array<string>;
 
-    // A JSON object representing the initial Content State of the Draft editor.
-    // It is transformed using `convertFromRaw` and its value is expected to be the
-    // result of `converToRaw`.
-    editorState: any;
+    rawDraftContentState: RawDraftContentState;
 
-    // Function that gets called on every content change. Receives editorState.
-    onChange(contentState: ContentState): void;
+    onChange(contentState: RawDraftContentState): void;
 
     // HTML value of editor. If contentState is not set, this is used.
     html: string;
@@ -69,17 +67,48 @@ export class Editor3Standalone extends React.Component<IProps> {
 
     store: any;
 
-    constructor(props) {
+    constructor(props: IProps) {
         super(props);
 
-        const forReact = true;
-        const store = createEditorStore(props, forReact);
+        this.onChangeInterceptor = this.onChangeInterceptor.bind(this);
+
+        const store = createEditorStore(
+            {
+                ...props,
+                editorState: this.props.rawDraftContentState,
+                onChange: this.onChangeInterceptor,
+            },
+            true,
+        );
 
         if (props.findReplaceTarget) {
             ng.get('editor3').setStore(store);
         }
 
         this.store = store;
+    }
+
+    onChangeInterceptor(contentState: ContentState): void {
+        // ensure that onChange value is of the same type as received from the props
+        const rawState = convertToRaw(contentState);
+
+        this.props.onChange(rawState);
+    }
+
+    componentDidUpdate(prevProps: IProps) {
+        if (this.props.readOnly !== prevProps.readOnly) {
+            this.store.dispatch(setReadOnly(this.props.readOnly));
+        }
+
+        const rawStateFromStore = convertToRaw(this.store.getState().editorState.getCurrentContent());
+
+        if (isEqual(this.props.rawDraftContentState, rawStateFromStore) === false) {
+            // This component holds it's own state which is derived from props
+            // internal state is reloaded when it doesn't match with what's in the props
+            this.store.dispatch(
+                changeEditorState(EditorState.createWithContent(convertFromRaw(this.props.rawDraftContentState)), true),
+            );
+        }
     }
 
     render() {
