@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Dropdown} from 'core/ui/components';
-import {Editor} from 'core/editor3';
 import {connect} from 'react-redux';
 import {convertToRaw} from 'draft-js';
 import {highlightsConfig} from '../../highlightsConfig';
@@ -10,6 +9,22 @@ import {connectPromiseResults} from 'core/helpers/ReactRenderAsync';
 import {hidePopups} from '../../actions';
 import ng from 'core/services/ng';
 import {gettext} from 'core/utils';
+import {Editor3Standalone} from 'core/editor3/react';
+
+interface IProps {
+    hidePopups: any;
+    highlightsManager: any;
+    data: any;
+    spellcheckerEnabled: any;
+    language: any;
+    annotationTypes: any;
+}
+
+interface IState {
+    body: any;
+    type: any;
+    isEmpty: any;
+}
 
 /**
  * @ngdoc React
@@ -18,7 +33,7 @@ import {gettext} from 'core/utils';
  * @description AnnotationInput is the popup containing the fields needed to fill in information
  * about an annotation.
  */
-class AnnotationInputBody extends React.Component<any, any> {
+class AnnotationInputBody extends React.Component<IProps, IState> {
     static propTypes: any;
     static defaultProps: any;
 
@@ -153,12 +168,13 @@ class AnnotationInputBody extends React.Component<any, any> {
                     }
                     <div className="sd-line-input">
                         <label className="sd-line-input__label">Annotation Body</label>
-                        <Editor
+                        <Editor3Standalone
                             onChange={this.onChange}
                             editorFormat={['bold', 'italic', 'underline', 'link']}
                             editorState={this.initialContent}
                             language={language}
                             disableSpellchecker={!spellcheckerEnabled}
+                            scrollContainer={'body'}
                         />
                     </div>
                     <div className="pull-right">

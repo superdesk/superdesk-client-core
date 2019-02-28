@@ -53,7 +53,7 @@ interface IProps {
  * @name Editor
  * @description Editor as a React component.
  */
-export class Editor extends React.Component<IProps> {
+export class Editor3Standalone extends React.Component<IProps> {
     static defaultProps = {
         findReplaceTarget: false,
         highlights: false,
