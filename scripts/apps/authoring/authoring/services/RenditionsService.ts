@@ -71,8 +71,8 @@ export function RenditionsService(metadata, $q, api, superdesk, _, notify) {
             if (!withRatio.length) {
                 withRatio = self.renditions;
             }
-            var hideTabs = ['video-edit', 'crop']
-            const cropOptions = {
+            var hideTabs = ['crop']
+            const videoOptions = {
                 isNew: true,
                 isAssociated: false,
                 editable: true,
@@ -88,9 +88,10 @@ export function RenditionsService(metadata, $q, api, superdesk, _, notify) {
                 poi: clonedItem.poi,
                 showAoISelectionButton: true,
                 showMetadataEditor: true,
-                ...cropOptions,
-            })
-        }
+                ...videoOptions,
+            });
+        });
+    };
 
 
     /**

@@ -1,5 +1,6 @@
 import {get} from 'lodash';
 import {TweenMax, Power2, TimelineLite} from "gsap/TweenMax";
+import {gettext} from "superdesk-core/scripts/core/utils";
 
 /**
  * @ngdoc controller
@@ -34,7 +35,9 @@ ChangeVideoController.$inject = ['$scope', 'gettext', 'notify', 'lodash', 'api',
 
 export function ChangeVideoController($scope, gettext, notify, _, api, $rootScope, deployConfig, $q, config) {
     $scope.data = $scope.locals.data;
-    $scope.data.cropData = {};
+    $scope.addThumbnail = {};
+    $scope.cuttingVideo = {};
+
     $scope.validator = deployConfig.getSync('validator_media_metadata');
     const sizes = {};
 
@@ -76,17 +79,9 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
     $scope.crops = {
         isDirty: false,
     };
-
-    $scope.data.renditions.forEach((rendition) => {
-        const original = $scope.data.item.renditions.original;
-        // only extend the item renditions if the original image can fit the rendition dimensions
-        // otherwise we will get an error saving
-
-        if (original.height >= rendition.height && original.width >= rendition.width) {
-            sizes[rendition.name] = {width: rendition.width, height: rendition.height};
-            $scope.data.cropData[rendition.name] = angular.extend({}, $scope.data.item.renditions[rendition.name]);
-        }
-    });
+    $scope.editVideo = {
+        isDirty: false,
+    };
 
     $scope.data.isDirty = false;
     $scope.isNew = $scope.data.isNew === true;
@@ -94,20 +89,50 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
     $scope.data.showMetadataEditor = $scope.data.showMetadataEditor === true;
     // initialize metadata from `item`
     $scope.data.metadata = angular.copy($scope.data.item);
-    $scope.selectedRendition = null;
-    $scope.selectRendition = function (rendition) {
-        if (!rendition) {
-            $scope.selectedRendition = null;
-        } else if ($scope.selectedRendition === null || $scope.selectedRendition.name !== rendition.name) {
-            $scope.selectedRendition = rendition;
-        }
+
+
+    /**
+     * @ngdoc method
+     * @name ChangeImageController#saveCrops
+     * @public
+     * @description Validate new crop-coordinates and resolve the promise and return
+     * modified crop information, point of interest and metadata changes.
+     */
+    $scope.saveEditVideo = function () {
+        $scope.editVideo.isDirty = false;
+        $scope.metadata.isDirty = true;
+        $scope.addThumbnail = angular.copy(cache_addThumbnail);
+        $scope.cuttingVideo = angular.copy(cache_cuttingVideo);
+        alert("save");
     };
 
-    const _origCropsData = angular.copy($scope.data.cropData);
-
-    if (_origCropsData && Object.keys(_origCropsData).length === 0) {
-        $scope.data.isDirty = true;
-    }
+    /**
+     * @ngdoc method
+     * @name ChangeImageController#cancelMetadataChanges
+     * @public
+     * @description
+     */
+    $scope.cancelEditVideo = () => {
+        $scope.editVideo.isDirty = false;
+        cache_cuttingVideo = angular.copy($scope.cuttingVideo);
+        var position = cache_cuttingVideo.endtime/video.duration;
+        TweenMax.set(cbwrapper, {
+            right: ((1 - position) * 100) + '%'
+        });
+        TweenMax.set(maskright, {
+            width: ((1 - position) * 100) + '%'
+        });
+        barright.setAttribute("data-content", getstrtime(position * video.duration));
+        var position = cache_cuttingVideo.starttime/video.duration
+        TweenMax.set(cbwrapper, {
+            left: (position * 100) + '%'
+        });
+        TweenMax.set(maskleft, {
+            width: (position * 100) + '%'
+        });
+        barleft.setAttribute("data-content", getstrtime(position * video.duration));
+        alert("hello")
+    };
 
     /**
      * @ngdoc method
@@ -116,32 +141,36 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
      * @description Capture the thumbnail video at play time in time line.
      */
     $scope.captureThumbnail = function () {
-        var snapshots = [];
-        function capture(video, scaleFactor) {
-            if (scaleFactor == null) {
-                scaleFactor = 1;
-            }
-            var w = video.videoWidth * scaleFactor;
-            var h = video.videoHeight * scaleFactor;
-            var canvas = document.createElement('canvas');
-            canvas.width = w;
-            canvas.height = h;
-            var ctx = canvas.getContext('2d');
-            ctx.drawImage(video, 0, 0, w, h);
-            return canvas;
-        }
         try {
-            var video = document.getElementById('video');
+            var time = video.currentTime;
+            video = document.getElementById('video');
             var output = document.getElementById('output');
-            video.pause();
-            var canvas = capture(video, 0.5);
+            var canvas = drawObjectToCanvas(video, video.videoHeight, video.videoWidth);
+            var file = document.getElementById("file-upload")
             output.innerHTML = '';
             canvas.style = "max-width: 100%;"
+            file.value = "";
             output.append(canvas);
-        }catch (e) {
-            alert(e.message);
+            cache_cuttingVideo = {
+                type:"capture",
+                minetype: "image/png",
+                time: time
+            };
+            $scope.editVideo.isDirty = true;
+        } catch (e) {
+            throw gettext(e.message);
         }
     };
+
+
+    function drawObjectToCanvas(object, height, width) {
+        var canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        var ctx = canvas.getContext('2d');
+        ctx.drawImage(object, 0, 0, width, height);
+        return canvas;
+    }
 
     /**
      * @ngdoc method
@@ -150,34 +179,209 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
      * @description Capture the thumbnail video at play time in time line.
      */
     $scope.playVideo = () => {
-        var video = document.getElementById('video');
         if (video.paused) {
-            video.play();
+            if (video.currentTime > cache_cuttingVideo.endtime) {
+                video.pause();
+            } else {
+                video.play();
+            }
         } else {
             video.pause();
         }
-
     };
-    $scope.timelineClick = (event) => {
-        alert(event.x);
+    $scope.uploadThumbnail = function () {
+        document.getElementById("file-upload").click()
     }
+
+
+    var video, progressoutput, controlbar, inner, maskleft, maskright, barleft, barright, cbwrapper, iconplay, iconstop;
+    var mins = 0, secs = 0, li = 0, cache_addThumbnail = {}, cache_cuttingVideo = {};
+
     $scope.videoInit = function () {
-        var video = document.getElementById('video');
-        var dragplay =  document.getElementsByClassName('timeline__drag-play')[0];
-        var timeline = document.getElementsByClassName('timeline')[0];
-        function vidUpdate() {
-            var postplayer = timeline.offsetWidth * video.currentTime / video.duration;
-            dragplay.style='transform: translate3d('+postplayer+'px, 0px, 0px);';
-        }
+        video = document.getElementById('video');
+        progressoutput = document.getElementsByClassName('progress-output')[0];
+        inner = document.getElementById('inner-play');
+        barleft = document.getElementById('bar-left');
+        barright = document.getElementById('bar-right');
+        controlbar = document.getElementsByClassName('control-bars')[0];
+        cbwrapper = document.getElementById('cb-wrapper');
+        maskleft = document.getElementById('mask-left');
+        maskright = document.getElementById('mask-right');
+        iconplay = document.getElementById('icon-play');
+        iconstop = document.getElementById('icon-stop');
         video.onplay = function () {
+            iconplay.style.display = 'none';
+            iconstop.style.display = 'initial';
             TweenMax.ticker.addEventListener('tick', vidUpdate);
         };
         video.onpause = function () {
+            iconplay.style.display = 'initial';
+            iconstop.style.display = 'none';
             TweenMax.ticker.removeEventListener('tick', vidUpdate);
         };
         video.onended = function () {
+            iconplay.style.display = 'initial';
+            iconstop.style.display = 'none';
             TweenMax.ticker.removeEventListener('tick', vidUpdate);
         };
+        video.onloadeddata = function () {
+            cache_cuttingVideo = {
+                starttime: 0,
+                endtime: video.duration
+            }
+            barright.setAttribute("data-content", getstrtime(video.duration));
+            barleft.setAttribute("data-content", getstrtime(0));
+        }
+
+        barleft.ondragstart = function () {
+            onDragStart();
+        };
+        barleft.ondrag = function () {
+            onDragCb("left");
+        };
+        barleft.ondragend = function () {
+            onDragEndCb();
+        };
+        barright.ondragstart = function () {
+            onDragStart()
+        };
+        barright.ondrag = function () {
+            onDragCb("right");
+        };
+        barright.ondragend = function () {
+            onDragEndCb();
+        };
+        controlbar.onclick = function () {
+            var position = setTimeline();
+            if (video.currentTime < cache_cuttingVideo.starttime) {
+                TweenMax.set(cbwrapper, {
+                    left: (position * 100) + '%'
+                });
+                TweenMax.set(maskleft, {
+                    width: (position * 100) + '%'
+                });
+            }
+            if (video.currentTime > cache_cuttingVideo.endtime) {
+                TweenMax.set(cbwrapper, {
+                    right: ((1 - position) * 100) + '%'
+                });
+                TweenMax.set(maskright, {
+                    width: ((1 - position) * 100) + '%'
+                });
+            }
+        };
+
+        document.getElementById('file-upload').onchange = function (evt) {
+            var tgt = evt.target || window.event.srcElement,
+                files = tgt.files;
+
+            // FileReader support
+            if (FileReader && files && files.length) {
+                var fr = new FileReader();
+                var img = document.createElement("img");
+                img.onload = function () {
+                    var canvas = drawObjectToCanvas(img, video.offsetHeight, video.offsetWidth);
+                    var output = document.getElementById('output');
+                    output.innerHTML = '';
+                    canvas.style = "max-width: 100%;";
+                    output.append(canvas);
+                    $scope.editVideo.isDirty = true;
+                    cache_addThumbnail = {
+                        type:"upload",
+                        minetype: "image/png",
+                        data:canvas
+                    };
+                }
+                fr.onload = function () {
+                    img.src = fr.result;
+                }
+                fr.readAsDataURL(files[0]);
+            }
+        }
+    };
+
+    function vidUpdate() {
+        TweenMax.set(progressoutput, {
+            left: (video.currentTime / video.duration * 100) + "%"
+        });
+        inner.innerHTML = getstrtime(video.currentTime);
+        if (video.currentTime > cache_cuttingVideo.endtime) {
+            video.pause();
+        }
+    };
+
+    function getPositionBar() {
+        var position = ((event.clientX - controlbar.getBoundingClientRect().left) / controlbar.offsetWidth);
+        if (position > 1) {
+            position = 1;
+        }
+        if (position < 0) {
+            position = 0;
+        }
+        position = Math.floor(position * 100) / 100;
+        return position;
+    };
+
+    function getstrtime(s) {
+        mins = Math.floor(s / 60);
+        mins = mins < 10 ? '0' + mins : mins;
+        secs = Math.floor(s % 60);
+        secs = secs < 10 ? '0' + secs : secs;
+        li = Math.floor((s * 10) % 10);
+        return mins + ':' + secs + '.' + li;
+    };
+
+
+    function onDragCb(type) {
+        if (event.clientX == 0) {
+            return;
+        }
+        var position = getPositionBar();
+        if (type == 'right') {
+            TweenMax.set(cbwrapper, {
+                right: ((1 - position) * 100) + '%'
+            });
+            TweenMax.set(maskright, {
+                width: ((1 - position) * 100) + '%'
+            });
+            barright.setAttribute("data-content", getstrtime(position * video.duration));
+            cache_cuttingVideo.endtime = position * video.duration;
+        } else {
+            TweenMax.set(cbwrapper, {
+                left: (position * 100) + '%'
+            });
+            TweenMax.set(maskleft, {
+                width: (position * 100) + '%'
+            });
+            barleft.setAttribute("data-content", getstrtime(position * video.duration));
+            cache_cuttingVideo.starttime = position * video.duration;
+        }
+    };
+
+
+    function onDragEndCb() {
+        $scope.editVideo.isDirty = true;
+        alert($scope.editVideo.isDirty);
+        setTimeline()
+    };
+
+    function onDragStart() {
+        var img = document.createElement("img");
+        event.dataTransfer.setDragImage(img, 0, 0);
+    };
+
+
+    function setTimeline() {
+        var position = getPositionBar();
+        video.currentTime = position * video.duration;
+        inner.innerHTML = getstrtime(video.currentTime);
+        TweenMax.set(progressoutput, {
+            left: (position * 100) + '%'
+        });
+        TweenMax.set(progressoutput, {
+            left: (position * 100) + '%'
+        });
+        return position;
 
     };
 
@@ -195,73 +399,6 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
             !$scope.isAoISelectionModeEnabled;
     };
 
-    /**
-     * @ngdoc method
-     * @name ChangeImageController#saveCrops
-     * @public
-     * @description Validate new crop-coordinates and resolve the promise and return
-     * modified crop information, point of interest and metadata changes.
-     */
-    $scope.saveCrops = function () {
-        /* Throw an exception if PoI is outside of a crop */
-        function poiIsInsideEachCrop() {
-            const originalImage = $scope.data.metadata.renditions.original;
-
-            if (!$scope.data.poi || !_.isFinite($scope.data.poi.x) || !_.isFinite($scope.data.poi.y)) {
-                throw gettext('Point of interest is not defined.');
-            }
-
-            const originalPoi = {
-                x: originalImage.width * $scope.data.poi.x,
-                y: originalImage.height * $scope.data.poi.y,
-            };
-
-            _.forEach($scope.data.cropData, (cropData, cropName) => {
-                if (!cropData || _.isEmpty(cropData)) {
-                    throw gettext('Crop coordinates are not defined for ' + cropName + ' picture crop.');
-                }
-
-                if (originalPoi.y < cropData.CropTop ||
-                    originalPoi.y > cropData.CropBottom ||
-                    originalPoi.x < cropData.CropLeft ||
-                    originalPoi.x > cropData.CropRight) {
-                    throw gettext('Point of interest outside the crop ' + cropName + ' limits');
-                }
-            });
-        }
-
-        // check if data are valid
-        try {
-            if (config.features.validatePointOfInterestForImages === true) {
-                poiIsInsideEachCrop();
-            }
-        } catch (e) {
-            // show an error and stop the "done" operation
-            notify.error(e);
-            return false;
-        }
-
-        // update crop and poi data in `item`
-        angular.extend($scope.data.item, $scope.data.metadata);
-        $scope.data.item.poi = $scope.data.poi;
-        $scope.data.metadata.poi = $scope.data.poi;
-
-        $scope.crops.isDirty = false;
-        $scope.data.isDirty = true;
-        return true;
-    };
-
-    /**
-     * @ngdoc method
-     * @name ChangeImageController#cancelCrops
-     * @public
-     * @description
-     */
-    $scope.cancelCrops = () => {
-        alert('testing')
-        $scope.data.cropData = angular.copy(_origCropsData);
-        $scope.crops.isDirty = false;
-    };
 
     /**
      * @ngdoc method
@@ -304,12 +441,13 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
     $scope.done = () => {
         if ($scope.data.isDirty) {
             if (config.features.validatePointOfInterestForImages === true) {
-                if (!$scope.saveCrops() || !$scope.applyMetadataChanges()) {
+                if (!$scope.saveEditVideo() || !$scope.applyMetadataChanges()) {
                     return;
                 }
             }
             $scope.resolve({
-                cropData: $scope.data.cropData,
+                addThumbnail: $scope.data.addThumbnail,
+                cuttingVideo: $scope.data.cuttingVideo,
                 metadata: _.pick($scope.data.metadata, [
                     ...EDITABLE_METADATA,
                     'poi',
@@ -329,224 +467,4 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
         return _.pick(metadata, EDITABLE_METADATA);
     }
 
-    /**
-     * @ngdoc method
-     * @name ChangeImageController#saveAreaOfInterest
-     * @public
-     * @description Based on the new Area of Interest save the original image and crops.
-     */
-    $scope.saveAreaOfInterest = function (croppingData) {
-        const [width, height] = [
-            croppingData.CropRight - croppingData.CropLeft,
-            croppingData.CropBottom - croppingData.CropTop,
-        ];
-        let validCrop = true;
-
-        // check if new crop is valid or not.
-        if (Object.keys(sizes)) {
-            validCrop = Object.keys(sizes).every((key) => width >= sizes[key].width && height >= sizes[key].height);
-        }
-
-        if (!validCrop) {
-            notify.error(gettext('Original size cannot be less than the required crop sizes.'));
-            return;
-        }
-
-        $scope.showLoader = true;
-        api.save('picture_crop', {item: $scope.data.item, crop: croppingData})
-            .then((result) => {
-                    angular.extend(result.item.renditions.original, {
-                        href: result.href,
-                        width: result.width,
-                        height: result.height,
-                        media: result._id,
-                    });
-                    $scope.data.isDirty = true;
-                    return api.save('picture_renditions', {item: result.item, no_custom_crops: true}).then((item) => {
-                        $scope.data.item.renditions = item.renditions;
-                        const editableMetadata = extractEditableMetadata($scope.data.metadata);
-
-                        $scope.data.metadata = Object.assign($scope.data.item, editableMetadata);
-                        $scope.data.poi = {x: 0.5, y: 0.5};
-                        $rootScope.$broadcast('poiUpdate', $scope.data.poi);
-                    });
-                }, (response) =>
-                    $q.reject(response),
-            )
-            .then(() => {
-                $scope.showAreaOfInterestView(false);
-            }, (response) => {
-                if (_.isObject(response.data) && angular.isDefined(response.data._message)) {
-                    notify.error(gettext('Failed to save the area of interest: ' + response.data._message));
-                } else {
-                    notify.error(gettext('There was an error. Failed to save the area of interest.'));
-                }
-
-                $scope.showLoader = false;
-            });
-    };
-
-    /**
-     * @ngdoc method
-     * @name ChangeImageController#rotateImage
-     * @public
-     * @description Rotate image
-     */
-    $scope.rotateImage = (direction) => {
-        switch (direction) {
-            case 'left':
-                $scope.controls.rotate = $scope.controls.rotate - 90;
-                break;
-
-            case 'right':
-                $scope.controls.rotate = $scope.controls.rotate + 90;
-                break;
-        }
-
-        return $scope.controls.isDirty = true;
-    };
-
-    /**
-     * @ngdoc method
-     * @name ChangeImageController#flipImage
-     * @public
-     * @description Flip image
-     */
-    $scope.flipImage = (direction) => {
-        switch (direction) {
-            case 'horizontal':
-                $scope.controls.fliph = $scope.controls.fliph + 180;
-                break;
-
-            case 'vertical':
-                $scope.controls.flipv = $scope.controls.flipv + 180;
-                break;
-        }
-
-        return $scope.controls.isDirty = true;
-    };
-
-    /**
-     * @ngdoc method
-     * @name ChangeImageController#applyImageChanges
-     * @public
-     * @description Apply image modifications
-     */
-    $scope.applyImageChanges = () => {
-        let flip = 'none',
-            flipH = Math.abs($scope.controls.fliph / 180 % 2),
-            flipV = Math.abs($scope.controls.flipv / 180 % 2);
-
-        if (flipH === 1 && flipV === 1) {
-            flip = 'both';
-        } else if (flipH === 1 && flipV === 0) {
-            flip = 'horizontal';
-        } else if (flipH === 0 && flipV === 1) {
-            flip = 'vertical';
-        }
-
-        $scope.loaderForMediaEdit = true;
-        return api.save('media_editor', {
-            item: $scope.data.item, edit: {
-                brightness: $scope.controls.brightness,
-                contrast: $scope.controls.contrast,
-                saturation: $scope.controls.saturation,
-                rotate: -$scope.controls.rotate,
-                flip: flip,
-
-            }
-        }).then((result) => {
-            $scope.data.item.renditions = result.renditions;
-            $scope.data.item._etag = result._etag;
-            const editableMetadata = extractEditableMetadata($scope.data.metadata);
-
-            $scope.data.metadata = Object.assign($scope.data.item, editableMetadata);
-            $scope.controls = angular.copy(DEFAULT_CONTROLS);
-            $scope.data.isDirty = true;
-            $scope.loaderForMediaEdit = false;
-        });
-    };
-
-    /**
-     * @ngdoc method
-     * @name ChangeImageController#setRatio
-     * @public
-     * @description Set image ratio
-     */
-    $scope.setRatio = (ratio) => {
-        const originalImage = $scope.data.metadata.renditions.original;
-
-        let sizeW, sizeH;
-
-        switch (ratio) {
-            case '16:9':
-                sizeW = originalImage.width - (originalImage.height * 16 / 9);
-                sizeH = originalImage.height - (originalImage.width * 9 / 16);
-                break;
-
-            case '4:3':
-                sizeW = originalImage.width - (originalImage.height * 4 / 3);
-                sizeH = originalImage.height - (originalImage.width * 3 / 4);
-                break;
-
-            case '3:2':
-                sizeW = originalImage.width - (originalImage.height * 3 / 2);
-                sizeH = originalImage.height - (originalImage.width * 2 / 3);
-                break;
-
-            default:
-                sizeW = 0;
-                sizeH = 0;
-        }
-
-        $scope.areaOfInterestData.CropTop = sizeH > 0 ? Math.round(sizeH / 2) : 0;
-        $scope.areaOfInterestData.CropBottom = sizeH > 0 ?
-            originalImage.height - Math.round(sizeH / 2) :
-            originalImage.height;
-        $scope.areaOfInterestData.CropLeft = sizeW > 0 ? Math.round(sizeW / 2) : 0;
-        $scope.areaOfInterestData.CropRight = sizeW > 0 ?
-            originalImage.width - Math.round(sizeW / 2) :
-            originalImage.width;
-    };
-
-    $scope.resizeImage = (image) => {
-        const originalImage = $scope.data.metadata.renditions.original;
-
-        $scope.areaOfInterestData.CropTop = originalImage.height - image.height / 2;
-        $scope.areaOfInterestData.CropBottom = originalImage.height - (originalImage.height - image.height / 2);
-        $scope.areaOfInterestData.CropLeft = originalImage.width - image.width / 2;
-        $scope.areaOfInterestData.CropRight = originalImage.width - (originalImage.width - image.width / 2);
-    };
-
-    /**
-     * @ngdoc method
-     * @name ChangeImageController#cancelImageChanges
-     * @public
-     * @description Cancel image changes and set values back to default
-     */
-    $scope.cancelImageChanges = () => $scope.controls = angular.copy(DEFAULT_CONTROLS);
-
-    /**
-     * @ngdoc method
-     * @name ChangeImageController#onChange
-     * @public
-     * @description Based on the new Area of Interest save the original image and crops.
-     */
-    $scope.onChange = function (renditionName, cropData) {
-        $scope.$applyAsync(() => {
-            if (angular.isDefined(renditionName)) {
-                $scope.data.cropData[renditionName] = angular.extend({}, cropData, sizes[renditionName]);
-                $scope.data.isDirty = true;
-                $scope.crops.isDirty = true;
-            }
-        });
-    };
-
-    // init poi if not set
-    if (!$scope.data.poi) {
-        $scope.data.poi = {x: 0.5, y: 0.5};
-        if (!config.features.validatePointOfInterestForImages) {
-            $scope.saveCrops(); // save it as defaults
-        }
-    }
 }
