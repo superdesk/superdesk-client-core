@@ -161,9 +161,11 @@ function MacrosController($scope, macros, desks, autosave, $rootScope, storage, 
     $scope.call = function(macro) {
         const editor = editorResolver.get();
         const isEditor3 = editor.version() !== '2';
+        const useReplace = macro.replace_type != null && macro.replace_type !== 'no-replace';
+        const isSimpleReplace = macro.replace_type === 'simple-replace';
         let item = _.extend({}, $scope.origItem, $scope.item);
 
-        if (isEditor3) {
+        if (isEditor3 && useReplace) {
             item.body_html = editor.getHtmlForTansa() || item.body_html;
         }
 
@@ -175,8 +177,8 @@ function MacrosController($scope, macros, desks, autosave, $rootScope, storage, 
             if (isEditor3) {
                 ignoreFields.push('body_html');
 
-                if (item.body_html !== res.item.body_html) {
-                    editor.setHtmlFromTansa(res.item.body_html, macro.simple_replace);
+                if (useReplace && item.body_html !== res.item.body_html) {
+                    editor.setHtmlFromTansa(res.item.body_html, isSimpleReplace);
                 }
 
                 Object.keys(res.item || {}).forEach((field) => {
@@ -184,7 +186,7 @@ function MacrosController($scope, macros, desks, autosave, $rootScope, storage, 
                         return;
                     }
                     ignoreFields.push(field);
-                    if (res.item[field] !== item[field]) {
+                    if (res.item[field] !== item[field] && res.diff == null) {
                         $rootScope.$broadcast('macro:refreshField', field, res.item[field]);
                     }
                 });
