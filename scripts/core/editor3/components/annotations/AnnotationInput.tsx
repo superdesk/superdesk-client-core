@@ -1,15 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Dropdown} from 'core/ui/components';
-import {Editor} from 'core/editor3';
 import {connect} from 'react-redux';
-import {convertToRaw, SelectionState, EditorState} from 'draft-js';
+
+import {convertToRaw, ContentState, SelectionState, EditorState, RawDraftContentState, convertFromRaw} from 'draft-js';
 import {highlightsConfig} from '../../highlightsConfig';
 import {getAuthorInfo} from '../../actions';
 import {connectPromiseResults} from 'core/helpers/ReactRenderAsync';
 import {hidePopups} from '../../actions';
 import ng from 'core/services/ng';
 import {gettext} from 'core/utils';
+import {Editor3Standalone} from 'core/editor3/react';
 import { AnnotationInputWrapper } from './AnnotationInputWrapper';
 import { AnnotationInputFidely } from './AnnotationsInputFidelity';
 
@@ -25,6 +26,7 @@ interface IProps {
     annotationTypes: Array<any>;
     language: string;
     hidePopups(): void;
+
 }
 
 interface IState {
@@ -44,8 +46,6 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
     static propTypes: any;
     static defaultProps: any;
 
-    initialContent: any;
-
     constructor(props) {
         super(props);
 
@@ -62,8 +62,7 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
             isEmpty = false;
         }
 
-        this.state = {body, type, isEmpty};
-        this.initialContent = body;
+        this.state = {body: body != null ? body : convertToRaw(ContentState.createFromText('')), type, isEmpty};
 
         this.onSubmit = this.onSubmit.bind(this);
         this.onChange = this.onChange.bind(this);
@@ -111,16 +110,10 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
         }
     }
 
-    /**
-     * @ngdoc method
-     * @name AnnotationInput#onChange
-     * @param {ContentState} content
-     * @description onChange is triggered when the content of the editor changes.
-     */
-    onChange(content) {
+    onChange(rawDraftContentState: RawDraftContentState) {
         this.setState({
-            body: convertToRaw(content),
-            isEmpty: content == null || !content.hasText(),
+            body: rawDraftContentState,
+            isEmpty: rawDraftContentState == null || !convertFromRaw(rawDraftContentState).hasText(),
         });
     }
 
@@ -180,12 +173,13 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
                 }
                 <div className="sd-line-input">
                     <label className="sd-line-input__label">Annotation Body</label>
-                    <Editor
+                    <Editor3Standalone
                         onChange={this.onChange}
                         editorFormat={['bold', 'italic', 'underline', 'link']}
-                        editorState={this.initialContent}
+                        rawDraftContentState={this.state.body}
                         language={language}
                         disableSpellchecker={!spellcheckerEnabled}
+                        scrollContainer={'body'}
                     />
                 </div>
                 <div className="pull-right">

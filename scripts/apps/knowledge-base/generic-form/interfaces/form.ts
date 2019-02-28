@@ -1,5 +1,5 @@
 export interface IFormField { // don't fortget to update runtime type checks
-    type: 'text_single_line' | 'vocabulary_single_value';
+    type: 'text_single_line' | 'text_editor3' | 'vocabulary_single_value';
     required?: boolean;
 
     // custom components for some fields might not require a label or want include a custom one

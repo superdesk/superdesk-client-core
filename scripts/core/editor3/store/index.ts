@@ -1,8 +1,8 @@
-import {EditorState, convertFromRaw, convertToRaw, ContentState} from 'draft-js';
+import {EditorState, convertFromRaw, convertToRaw, ContentState, RawDraftContentState} from 'draft-js';
 import {createStore, applyMiddleware} from 'redux';
 import {createLogger} from 'redux-logger';
 import thunk from 'redux-thunk';
-import {pick} from 'lodash';
+import {pick, debounce} from 'lodash';
 
 import {toHTML} from 'core/editor3/html';
 import ng from 'core/services/ng';
@@ -21,10 +21,25 @@ import reducers from '../reducers';
 
 export const ignoreInternalAnnotationFields = (annotations) =>
     annotations.map(
-        (annotation) => pick(annotation, ['id', 'type', 'body'])
+        (annotation) => pick(annotation, ['id', 'type', 'body']),
     );
 
 export const isEditorPlainText = (props) => props.singleLine || (props.editorFormat || []).length === 0;
+
+interface IProps {
+    editorState: RawDraftContentState;
+    disableSpellchecker?: boolean;
+    language?: any;
+    debounce?: any;
+    onChange?: any;
+    readOnly?: any;
+    singleLine?: any;
+    tabindex?: any;
+    showTitle?: any;
+    editorFormat?: any;
+    item?: any;
+    svc?: any;
+}
 
 /**
  * @name createEditorStore
@@ -33,7 +48,7 @@ export const isEditorPlainText = (props) => props.singleLine || (props.editorFor
  * @param {Boolean=} isReact True if the store is created for a React component.
  * @returns {Object} Redux store.
  */
-export default function createEditorStore(props, isReact = false) {
+export default function createEditorStore(props: IProps, isReact = false) {
     const spellcheck = ng.get('spellcheck');
 
     if (!props.disableSpellchecker) {
@@ -46,12 +61,14 @@ export default function createEditorStore(props, isReact = false) {
     const decorators = Editor3.getDecorator(props.disableSpellchecker || !spellcheck.isAutoSpellchecker);
     const showToolbar = !isEditorPlainText(props);
 
-    const onChangeValue = isReact ? props.onChange : _.debounce(onChange.bind(props), props.debounce);
+    const onChangeValue = isReact ? props.onChange : debounce(onChange.bind(props), props.debounce);
 
     const middlewares = [thunk];
 
-    if (process.env.NODE_ENV !== 'production') {
-        // activate logs actions for non production instances.
+    const devtools = localStorage.getItem('devtools');
+    const reduxLoggerEnabled = devtools == null ? false : JSON.stringify(devtools).includes('redux-logger');
+
+    if (reduxLoggerEnabled) {
         // (this should always be the last middleware)
         middlewares.push(createLogger());
     }
@@ -77,7 +94,6 @@ export default function createEditorStore(props, isReact = false) {
         abbreviations: {},
     }, applyMiddleware(...middlewares));
 
-
     // after we have the dictionary, force update the editor to highlight typos
     dict.finally(() => store.dispatch(forceUpdate()));
 
@@ -95,7 +111,7 @@ export default function createEditorStore(props, isReact = false) {
  */
 function generateAnnotations(item) {
     item.annotations = ignoreInternalAnnotationFields(
-        getAnnotationsFromItem(item, 'body_html')
+        getAnnotationsFromItem(item, 'body_html'),
     );
 }
 
@@ -117,14 +133,14 @@ export function onChange(contentState, {plainText = false} = {}) {
     const decorativeStyles = ['HIGHLIGHT', 'HIGHLIGHT_STRONG'];
     const contentStateCleaned = removeInlineStyles(contentState, decorativeStyles);
     const contentStateHighlightsReadyForExport = prepareHighlightsForExport(
-        EditorState.createWithContent(contentStateCleaned)
+        EditorState.createWithContent(contentStateCleaned),
     ).getCurrentContent();
 
     setFieldMetadata(
         this.item,
         pathToValue,
         fieldsMetaKeys.draftjsState,
-        convertToRaw(contentStateHighlightsReadyForExport)
+        convertToRaw(contentStateHighlightsReadyForExport),
     );
 
     // example: "extra.customField"
@@ -165,7 +181,7 @@ export function getInitialContent(props) {
     // support standalone instance of editor3 which is not connected to item field
     if (props.editorState != null) {
         var contentState = convertFromRaw(
-            (props.editorState instanceof Array) ? props.editorState[0] : props.editorState
+            (props.editorState instanceof Array) ? props.editorState[0] : props.editorState,
         );
 
         return initializeHighlights(EditorState.createWithContent(contentState)).getCurrentContent();
@@ -174,13 +190,13 @@ export function getInitialContent(props) {
     const draftjsRawState = getFieldMetadata(
         props.item,
         props.pathToValue,
-        fieldsMetaKeys.draftjsState
+        fieldsMetaKeys.draftjsState,
     );
 
     if (draftjsRawState != null) {
-        let contentState = convertFromRaw(draftjsRawState);
+        let _contentState = convertFromRaw(draftjsRawState);
 
-        return initializeHighlights(EditorState.createWithContent(contentState)).getCurrentContent();
+        return initializeHighlights(EditorState.createWithContent(_contentState)).getCurrentContent();
     }
 
     if (props.value) {

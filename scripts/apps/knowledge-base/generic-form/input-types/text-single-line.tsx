@@ -4,6 +4,10 @@ import {IInputType} from "../interfaces/input-types";
 
 export class TextSingleLine extends React.Component<IInputType<string>> {
     render() {
+        if (this.props.previewOuput) {
+            return <div>{this.props.value}</div>;
+        }
+
         return (
             <div className={classNames('sd-line-input', {'sd-line-input--invalid': this.props.issues.length > 0})}>
                 <label className="sd-line-input__label">{this.props.formField.label}</label>

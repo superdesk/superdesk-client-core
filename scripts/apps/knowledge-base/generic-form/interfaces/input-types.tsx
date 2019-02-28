@@ -5,5 +5,9 @@ export interface IInputType<T> {
     disabled: boolean;
     value: T;
     issues: Array<string>;
+
+    // renders a minimal representation of the value without any editing controls
+    previewOuput: boolean;
+
     onChange: (nextValue: T) => void;
 }

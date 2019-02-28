@@ -2,6 +2,7 @@ import {BlockEntityWrapper} from '.';
 import {BlockInlineStyleWrapper} from '.';
 import {AtomicBlockParser} from '.';
 import {getAnnotationsFromContentState} from 'core/editor3/helpers/editor3CustomData';
+import { ContentState, ContentBlock } from 'draft-js';
 
 /**
  * @type {Object}
@@ -31,7 +32,14 @@ const BlockStyleTags = {
  * tables.
  */
 export class HTMLGenerator {
-    constructor(contentState, disabled = []) {
+    contentState: ContentState;
+    listTags: Array<any>;
+    lastDepth: number;
+    atomicBlockParser: AtomicBlockParser;
+    blocks: Array<ContentBlock>;
+    annotationIndexesByStyleName: any;
+
+    constructor(contentState: ContentState, disabled = []) {
         this.contentState = contentState;
         this.listTags = [];
         this.lastDepth = 0;
