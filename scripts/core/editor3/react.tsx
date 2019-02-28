@@ -49,7 +49,7 @@ interface IProps {
 /**
  * @ngdoc React
  * @name Editor
- * @description Editor as a React component.
+ * @description Editor as a React component. Standalone means that it isn't connected to article item.
  */
 export class Editor3Standalone extends React.Component<IProps> {
     static defaultProps = {
