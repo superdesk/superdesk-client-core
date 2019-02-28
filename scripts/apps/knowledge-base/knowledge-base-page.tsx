@@ -13,7 +13,7 @@ import {
     SidePanelContent,
     SidePanelContentBlock
 } from 'core/components/SidePanel';
-import {IFormGroup} from './generic-form/interfaces/form';
+import {IFormGroup, IFormField} from './generic-form/interfaces/form';
 import {FormViewEdit} from './generic-form/from-group';
 import {SearchBar} from 'core/ui/components';
 import {Button} from 'core/ui/components/Nav';
@@ -23,6 +23,9 @@ import {connectCrudManager, ICrudManager} from 'core/helpers/CrudManager';
 import {TagLabel} from 'core/ui/components/TagLabel';
 import {connectServices} from 'core/helpers/ReactRenderAsync';
 import {IDefaultApiFields} from 'types/RestApi';
+import {VocabularySingleValue} from './generic-form/input-types/vocabulary_single_value';
+import {TextEditor3} from './generic-form/input-types/text-editor3';
+import {TextSingleLine} from './generic-form/input-types/text-single-line';
 
 interface IState {
     itemInPreview?: string;
@@ -39,8 +42,8 @@ const sortOptions: Array<ISortFields> = [
         field: 'name',
     },
     {
-        label : gettext('Definition'),
-        field: 'definition',
+        label : gettext('Annotation'),
+        field: 'annotation_value',
     },
     {
         label : gettext('Last updated'),
@@ -52,28 +55,32 @@ const sortOptions: Array<ISortFields> = [
     },
 ];
 
+const nameField: IFormField = {
+    label : gettext('Name'),
+    type: 'text_single_line',
+    field: 'name',
+};
+const languageField: IFormField = {
+    label : gettext('Language'),
+    type: 'vocabulary_single_value',
+    field: 'language',
+    component_parameters: {
+        vocabulary_id: 'languages',
+    },
+};
+const definitionField: IFormField = {
+    label : gettext('Definition'),
+    type: 'text_editor3',
+    field: 'annotation_value',
+};
+
 const formConfig: IFormGroup = {
     direction: 'vertical',
     type: 'inline',
     form: [
-        {
-            label : gettext('Name'),
-            type: 'text_single_line',
-            field: 'name',
-        },
-        {
-            label : gettext('Language'),
-            type: 'vocabulary_single_value',
-            field: 'language',
-            component_parameters: {
-                vocabulary_id: 'languages',
-            },
-        },
-        {
-            label : gettext('Definition'),
-            type: 'text_single_line',
-            field: 'definition',
-        },
+        nameField,
+        languageField,
+        definitionField,
     ],
 };
 
@@ -86,7 +93,8 @@ interface IKnowledgeBaseItem extends IDefaultApiFields {
     name: string;
     labels?: Array<string>;
     language: string;
-    definition: string;
+    definition: any;
+    annotation_value: any;
 
     // http://cv.iptc.org/newscodes/cpnature/
     cpnat_type: 'cpnat:abstract' | 'cpnat:event' | 'cpnat:geoArea'
@@ -293,13 +301,34 @@ class KnowledgeBasePageComponent extends React.Component<IProps, IState> {
                                 this.props.conceptItems._items.map((item, i) => (
                                     <ListItem onClick={() => this.openPreview(item._id)} key={item._id}>
                                         <ListItemColumn>
-                                            {item.name}
+                                            <TextSingleLine
+                                                previewOuput={true}
+                                                value={item.name}
+                                                formField={nameField}
+                                                disabled={false}
+                                                issues={[]}
+                                                onChange={noop}
+                                            />
                                         </ListItemColumn>
                                         <ListItemColumn>
-                                            {item.language}
+                                            <VocabularySingleValue
+                                                previewOuput={true}
+                                                value={item.language}
+                                                formField={languageField}
+                                                disabled={false}
+                                                issues={[]}
+                                                onChange={noop}
+                                            />
                                         </ListItemColumn>
                                         <ListItemColumn ellipsisAndGrow noBorder>
-                                            {item.definition}
+                                            <TextEditor3
+                                                previewOuput={true}
+                                                value={item.annotation_value}
+                                                formField={definitionField}
+                                                disabled={false}
+                                                issues={[]}
+                                                onChange={noop}
+                                            />
                                         </ListItemColumn>
                                         <ListItemActionsMenu>
                                             <button id={"knowledgebaseitem" + i}>

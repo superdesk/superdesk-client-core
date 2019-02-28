@@ -31,6 +31,12 @@ export class VocabularySingleValueComponent extends React.Component<IProps, ISta
             return null;
         }
 
+        if (this.props.previewOuput) {
+            let vocabularyItem = this.state.vocabulary.items.find((item) => item.qcode === this.props.value);
+
+            return vocabularyItem == null ? <div>{this.props.value}</div> : <div>{vocabularyItem.name}</div>;
+        }
+
         return (
             <div className={classNames('sd-line-input', {'sd-line-input--invalid': this.props.issues.length > 0})}>
                 <label className="sd-line-input__label">{this.props.formField.label}</label>
