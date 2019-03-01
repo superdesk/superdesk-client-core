@@ -189,13 +189,12 @@ const render = (state) => {
     let changedContent = false;
 
     let {content, editorState} = clearHighlights(es.getCurrentContent(), es);
-    let newContent = content;
 
     if (!pattern) {
         return {...state, editorState};
     }
 
-    newContent = forEachMatch(content, pattern, caseSensitive, (i, selection, block, _newContent) => {
+    const newContent = forEachMatch(content, pattern, caseSensitive, (i, selection, block, _newContent) => {
         changedContent = true;
 
         return Modifier.applyInlineStyle(
