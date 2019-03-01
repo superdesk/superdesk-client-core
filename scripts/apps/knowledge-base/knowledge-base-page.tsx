@@ -24,7 +24,7 @@ import {TagLabel} from 'core/ui/components/TagLabel';
 import {connectServices} from 'core/helpers/ReactRenderAsync';
 import {IDefaultApiFields} from 'types/RestApi';
 import {VocabularySingleValue} from './generic-form/input-types/vocabulary_single_value';
-import {TextEditor3} from './generic-form/input-types/text-editor3';
+import {TextEditor3, IEditor3State} from './generic-form/input-types/text-editor3';
 import {TextSingleLine} from './generic-form/input-types/text-single-line';
 
 interface IState {
@@ -89,12 +89,12 @@ interface IProps {
     modal: any;
 }
 
-interface IKnowledgeBaseItem extends IDefaultApiFields {
+export interface IKnowledgeBaseItem extends IDefaultApiFields {
     name: string;
     labels?: Array<string>;
     language: string;
     definition: any;
-    annotation_value: any;
+    annotation_value: IEditor3State;
 
     // http://cv.iptc.org/newscodes/cpnature/
     cpnat_type: 'cpnat:abstract' | 'cpnat:event' | 'cpnat:geoArea'

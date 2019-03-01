@@ -5,7 +5,7 @@ import {RawDraftContentState, convertFromRaw, ContentState, convertToRaw} from "
 import {Editor3Standalone} from "core/editor3/react";
 import {HTMLGenerator} from "core/editor3/html/to-html/HTMLGenerator";
 
-interface IEditor3State {
+export interface IEditor3State {
     rawDraftContentState: RawDraftContentState;
     html: string;
 }
