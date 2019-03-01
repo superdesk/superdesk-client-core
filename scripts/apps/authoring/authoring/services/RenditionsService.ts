@@ -9,6 +9,7 @@ import {gettext} from 'core/utils';
  * @description Renditions Service allows the user to generate different crops.
  */
 RenditionsService.$inject = ['metadata', '$q', 'api', 'superdesk', 'lodash', 'notify'];
+
 export function RenditionsService(metadata, $q, api, superdesk, _, notify) {
     var self = this;
 
@@ -20,7 +21,7 @@ export function RenditionsService(metadata, $q, api, superdesk, _, notify) {
      *
      *  @return {promise}
      */
-    this.ingest = function(item) {
+    this.ingest = function (item) {
         var performRenditions = $q.when(item);
         // ingest picture if it comes from an external source (create renditions)
 
@@ -39,7 +40,7 @@ export function RenditionsService(metadata, $q, api, superdesk, _, notify) {
      *
      *  @return {promise} picture crops
      */
-    this.get = function() {
+    this.get = function () {
         return metadata.initialize().then(() => {
             self.renditions = metadata.values.crop_sizes;
             return self.renditions;
@@ -59,7 +60,7 @@ export function RenditionsService(metadata, $q, api, superdesk, _, notify) {
      *  @param {boolean} isAssociated to indicate if picture is isAssociated or not
      *  @return {promise} returns the modified picture item
      */
-    this.videoEdit = function(item, options): Promise<IArticle> {
+    this.videoEdit = function (item, options): Promise<IArticle> {
         const clonedItem = _.extend({}, item);
 
         clonedItem.renditions = _.cloneDeep(clonedItem.renditions);
@@ -89,7 +90,12 @@ export function RenditionsService(metadata, $q, api, superdesk, _, notify) {
                 showAoISelectionButton: true,
                 showMetadataEditor: true,
                 ...videoOptions,
-            });
+            })
+                .then((result) => {
+                    var res = api.save("video_edit",{item: clonedItem, video_cutting:result.cuttingVideo, add_thumbnail:result.addThumbnail});
+
+                });
+
         });
     };
 
@@ -106,7 +112,7 @@ export function RenditionsService(metadata, $q, api, superdesk, _, notify) {
      *  @param {boolean} isAssociated to indicate if picture is isAssociated or not
      *  @return {promise} returns the modified picture item
      */
-    this.crop = function(item, options): Promise<IArticle> {
+    this.crop = function (item, options): Promise<IArticle> {
         const clonedItem = _.extend({}, item);
 
         clonedItem.renditions = _.cloneDeep(clonedItem.renditions);
@@ -149,7 +155,7 @@ export function RenditionsService(metadata, $q, api, superdesk, _, notify) {
 
                         const canAdd = !keys.every((key) => {
                             const sameCoords = angular.isDefined(item.renditions[renditionName]) &&
-                            item.renditions[renditionName][key] === croppingData[key];
+                                item.renditions[renditionName][key] === croppingData[key];
 
                             return sameCoords;
                         });
@@ -170,7 +176,7 @@ export function RenditionsService(metadata, $q, api, superdesk, _, notify) {
                     });
 
                     return $q.all(savingImagePromises)
-                        // return the cropped images
+                    // return the cropped images
                         .then((croppedImages) => {
                             // save created images in "association" property
                             croppedImages.forEach((image, index) => {

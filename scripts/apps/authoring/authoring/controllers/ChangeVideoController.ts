@@ -1,3 +1,4 @@
+
 import {get} from 'lodash';
 import {TweenMax, Power2, TimelineLite} from "gsap/TweenMax";
 import {gettext} from "superdesk-core/scripts/core/utils";
@@ -100,10 +101,12 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
      */
     $scope.saveEditVideo = function () {
         $scope.editVideo.isDirty = false;
-        $scope.metadata.isDirty = true;
-        $scope.addThumbnail = angular.copy(cache_addThumbnail);
-        $scope.cuttingVideo = angular.copy(cache_cuttingVideo);
-        alert("save");
+        $scope.data.isDirty = true;
+        $scope.cuttingVideo = {
+            starttime: starttime,
+            endtime: endtime
+        }
+        $scope.addThumbnail = angular.copy(cache_addThumbnail)
     };
 
     /**
@@ -114,8 +117,9 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
      */
     $scope.cancelEditVideo = () => {
         $scope.editVideo.isDirty = false;
-        cache_cuttingVideo = angular.copy($scope.cuttingVideo);
-        var position = cache_cuttingVideo.endtime/video.duration;
+        starttime = $scope.cuttingVideo.starttime;
+        endtime = $scope.cuttingVideo.endtime;
+        var position = endtime / video.duration;
         TweenMax.set(cbwrapper, {
             right: ((1 - position) * 100) + '%'
         });
@@ -123,7 +127,7 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
             width: ((1 - position) * 100) + '%'
         });
         barright.setAttribute("data-content", getstrtime(position * video.duration));
-        var position = cache_cuttingVideo.starttime/video.duration
+        var position = starttime / video.duration
         TweenMax.set(cbwrapper, {
             left: (position * 100) + '%'
         });
@@ -131,7 +135,6 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
             width: (position * 100) + '%'
         });
         barleft.setAttribute("data-content", getstrtime(position * video.duration));
-        alert("hello")
     };
 
     /**
@@ -143,16 +146,17 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
     $scope.captureThumbnail = function () {
         try {
             var time = video.currentTime;
-            video = document.getElementById('video');
+            video =  document.getElementById('video');
             var output = document.getElementById('output');
             var canvas = drawObjectToCanvas(video, video.videoHeight, video.videoWidth);
             var file = document.getElementById("file-upload")
             output.innerHTML = '';
-            canvas.style = "max-width: 100%;"
+            canvas.id = "canvas-thumnail";
+            canvas.style = "max-width: 100%;";
             file.value = "";
             output.append(canvas);
-            cache_cuttingVideo = {
-                type:"capture",
+            cache_addThumbnail = {
+                type: "capture",
                 minetype: "image/png",
                 time: time
             };
@@ -180,7 +184,7 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
      */
     $scope.playVideo = () => {
         if (video.paused) {
-            if (video.currentTime > cache_cuttingVideo.endtime) {
+            if (video.currentTime > endtime) {
                 video.pause();
             } else {
                 video.play();
@@ -190,13 +194,19 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
         }
     };
     $scope.uploadThumbnail = function () {
-        document.getElementById("file-upload").click()
+        document.getElementById("file-upload").click();
     }
 
 
     var video, progressoutput, controlbar, inner, maskleft, maskright, barleft, barright, cbwrapper, iconplay, iconstop;
-    var mins = 0, secs = 0, li = 0, cache_addThumbnail = {}, cache_cuttingVideo = {};
+    var mins = 0, secs = 0, li = 0, cache_addThumbnail = {}, starttime = 0, endtime = 0;
 
+    /**
+     * @ngdoc method
+     * @name ChangeVideoController#videoInit
+     * @public
+     * @description Capture the thumbnail video at play time in time line.
+     */
     $scope.videoInit = function () {
         video = document.getElementById('video');
         progressoutput = document.getElementsByClassName('progress-output')[0];
@@ -225,9 +235,11 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
             TweenMax.ticker.removeEventListener('tick', vidUpdate);
         };
         video.onloadeddata = function () {
-            cache_cuttingVideo = {
-                starttime: 0,
-                endtime: video.duration
+            starttime = 0;
+            endtime = video.duration;
+            $scope.cuttingVideo = {
+                starttime: starttime,
+                endtime: endtime
             }
             barright.setAttribute("data-content", getstrtime(video.duration));
             barleft.setAttribute("data-content", getstrtime(0));
@@ -251,25 +263,6 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
         barright.ondragend = function () {
             onDragEndCb();
         };
-        controlbar.onclick = function () {
-            var position = setTimeline();
-            if (video.currentTime < cache_cuttingVideo.starttime) {
-                TweenMax.set(cbwrapper, {
-                    left: (position * 100) + '%'
-                });
-                TweenMax.set(maskleft, {
-                    width: (position * 100) + '%'
-                });
-            }
-            if (video.currentTime > cache_cuttingVideo.endtime) {
-                TweenMax.set(cbwrapper, {
-                    right: ((1 - position) * 100) + '%'
-                });
-                TweenMax.set(maskright, {
-                    width: ((1 - position) * 100) + '%'
-                });
-            }
-        };
 
         document.getElementById('file-upload').onchange = function (evt) {
             var tgt = evt.target || window.event.srcElement,
@@ -283,13 +276,14 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
                     var canvas = drawObjectToCanvas(img, video.offsetHeight, video.offsetWidth);
                     var output = document.getElementById('output');
                     output.innerHTML = '';
+                    canvas.id = "canvas-thumnail";
                     canvas.style = "max-width: 100%;";
                     output.append(canvas);
                     $scope.editVideo.isDirty = true;
                     cache_addThumbnail = {
-                        type:"upload",
+                        type: "upload",
                         minetype: "image/png",
-                        data:canvas
+                        data: canvas.toDataURL()
                     };
                 }
                 fr.onload = function () {
@@ -300,12 +294,33 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
         }
     };
 
+    $scope.controlBarClick = function () {
+        var position = setTimeline();
+        if (position * video.duration < starttime) {
+            TweenMax.set(cbwrapper, {
+                left: (position * 100) + '%'
+            });
+            TweenMax.set(maskleft, {
+                width: (position * 100) + '%'
+            });
+        }
+        if (position * video.duration > endtime) {
+            TweenMax.set(cbwrapper, {
+                right: ((1 - position) * 100) + '%'
+            });
+            TweenMax.set(maskright, {
+                width: ((1 - position) * 100) + '%'
+            });
+        }
+    };
+
+
     function vidUpdate() {
         TweenMax.set(progressoutput, {
             left: (video.currentTime / video.duration * 100) + "%"
         });
         inner.innerHTML = getstrtime(video.currentTime);
-        if (video.currentTime > cache_cuttingVideo.endtime) {
+        if (video.currentTime > endtime) {
             video.pause();
         }
     };
@@ -345,7 +360,7 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
                 width: ((1 - position) * 100) + '%'
             });
             barright.setAttribute("data-content", getstrtime(position * video.duration));
-            cache_cuttingVideo.endtime = position * video.duration;
+            endtime = position * video.duration;
         } else {
             TweenMax.set(cbwrapper, {
                 left: (position * 100) + '%'
@@ -354,15 +369,15 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
                 width: (position * 100) + '%'
             });
             barleft.setAttribute("data-content", getstrtime(position * video.duration));
-            cache_cuttingVideo.starttime = position * video.duration;
+            starttime = position * video.duration;
         }
     };
 
 
     function onDragEndCb() {
+        setTimeline();
         $scope.editVideo.isDirty = true;
-        alert($scope.editVideo.isDirty);
-        setTimeline()
+        video.click();
     };
 
     function onDragStart() {
@@ -395,7 +410,7 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
     $scope.isDoneEnabled = function () {
         return !$scope.metadata.isDirty &&
             !$scope.controls.isDirty &&
-            !$scope.crops.isDirty &&
+            !$scope.editVideo.isDirty &&
             !$scope.isAoISelectionModeEnabled;
     };
 
@@ -445,9 +460,17 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
                     return;
                 }
             }
+            if ($scope.cuttingVideo)
+            {
+                if($scope.cuttingVideo.starttime == 0 && $scope.cuttingVideo.endtime == video.duration)
+                {
+                    $scope.cuttingVideo = null;
+                }
+            }
+            alert($scope.cuttingVideo.starttime);
             $scope.resolve({
-                addThumbnail: $scope.data.addThumbnail,
-                cuttingVideo: $scope.data.cuttingVideo,
+                addThumbnail: $scope.addThumbnail,
+                cuttingVideo: $scope.cuttingVideo,
                 metadata: _.pick($scope.data.metadata, [
                     ...EDITABLE_METADATA,
                     'poi',
