@@ -22,13 +22,18 @@ export class NavTabs extends React.Component<IProps, IState> {
     constructor(props) {
         super(props);
         this.state = {tab: props.active != null ? props.tabs[props.active] : props.tabs[0]};
+
+        this.selectTab = this.selectTab.bind(this);
+        this.selectTabByIndex = this.selectTabByIndex.bind(this);
     }
 
-    selectTab(tab) {
-        return (event) => {
-            event.stopPropagation();
-            this.setState({tab: tab});
-        };
+    selectTabByIndex(index: number) {
+        this.setState({tab: this.props.tabs[index]});
+    }
+
+    selectTab(event, tab) {
+        event.stopPropagation();
+        this.setState({tab: tab});
     }
 
     render() {
@@ -39,7 +44,7 @@ export class NavTabs extends React.Component<IProps, IState> {
 
             return (
                 <li key={tab.label} className={className}>
-                    <button onClick={this.selectTab(tab)}
+                    <button onClick={(event) => this.selectTab(event, tab)}
                         className="nav-tabs__link">{tab.label}</button>
                 </li>
             );

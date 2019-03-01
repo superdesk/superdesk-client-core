@@ -20,7 +20,7 @@ interface IMethods<Entity extends IDefaultApiFields> {
             direction: 'ascending' | 'descending';
         },
         filterValues?: {[fieldName: string]: string},
-    ): void;
+    ): Promise<IRestApiResponse<Entity>>;
     update(item: Entity): Promise<IRestApiResponse<Entity>>;
     create(item: Entity): Promise<IRestApiResponse<Entity>>;
     delete(item: Entity): Promise<IRestApiResponse<Entity>>;
@@ -115,13 +115,18 @@ export function connectCrudManager<Props, Entity extends IDefaultApiFields>(
                 query['where'] = filters;
             }
 
-            return this.api.query(query).then((res: IRestApiResponse<Entity>) => {
-                this.setState({
-                    ...res,
-                    activeSortOption: sortOption,
-                    activeFilters: filtersValidated,
+            return this.api.query(query)
+                .then((res: IRestApiResponse<Entity>) => {
+                    return new Promise((resolve) => {
+                        this.setState({
+                            ...res,
+                            activeSortOption: sortOption,
+                            activeFilters: filtersValidated,
+                        }, () => {
+                            resolve(res);
+                        });
+                    });
                 });
-            });
         }
 
         update(nextItem: Entity): Promise<IRestApiResponse<Entity>> {

@@ -110,11 +110,11 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
         }
     }
 
-    onChange(rawDraftContentState: RawDraftContentState) {
+    onChange(rawDraftContentState: RawDraftContentState, callback?) {
         this.setState({
             body: rawDraftContentState,
             isEmpty: rawDraftContentState == null || !convertFromRaw(rawDraftContentState).hasText(),
-        });
+        }, callback);
     }
 
     /**
@@ -157,20 +157,22 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
         const block = contentState.getBlockForKey(blockKey);
         const text = block.getText().slice(selection.getStartOffset(), selection.getEndOffset());
 
+        const annotationTypeSelect = annotationTypes == null ? null : (
+            <div className="sd-line-input sd-line-input--is-select">
+                <label className="sd-line-input__label">Annotation Type</label>
+                <select className="sd-line-input__select" onChange={this.onSelect} value={type}>
+                    {annotationTypes.map((annotationType) =>
+                        <option key={annotationType.qcode} value={annotationType.qcode}>
+                            {annotationType.name}
+                        </option>,
+                    )}
+                </select>
+            </div>
+        );
+
         const annotationInputComponent = (
             <div>
-                {annotationTypes &&
-                    <div className="sd-line-input sd-line-input--is-select">
-                        <label className="sd-line-input__label">Annotation Type</label>
-                        <select className="sd-line-input__select" onChange={this.onSelect} value={type}>
-                            {annotationTypes.map((annotationType) =>
-                                <option key={annotationType.qcode} value={annotationType.qcode}>
-                                    {annotationType.name}
-                                </option>,
-                            )}
-                        </select>
-                    </div>
-                }
+                {annotationTypeSelect}
                 <div className="sd-line-input">
                     <label className="sd-line-input__label">Annotation Body</label>
                     <Editor3Standalone
@@ -204,12 +206,11 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
                 <Dropdown open={true} scrollable={false}>
                     <AnnotationInputFidely
                         annotationText={text}
+                        onCancel={_hidePopups}
+                        annotationTypeSelect={annotationTypeSelect}
                         annotationInputComponent={annotationInputComponent}
-                        onApplyAnnotation={(contentPlainText) => {
-                            // this.setState({
-                            //     body: convertToRaw(content),
-                            //     isEmpty: content == null || !content.hasText(),
-                            // });
+                        onApplyAnnotation={(rawDraftContentState: RawDraftContentState) => {
+                            this.onChange(rawDraftContentState, this.onSubmit);
                         }}
                     />
                 </Dropdown>

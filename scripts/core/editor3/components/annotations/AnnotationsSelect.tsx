@@ -1,23 +1,23 @@
 import React from "react";
 import {IKnowledgeBaseItem} from "apps/knowledge-base/knowledge-base-page";
-import {connectCrudManager, ICrudManager} from "core/helpers/CrudManager";
+import {ICrudManager} from "core/helpers/CrudManager";
 import {AnnotationSelectList} from "./AnnotationSelectList";
-import { AnnotationSelectSingleItem } from "./AnnotationSelectSingleItem";
+import {AnnotationSelectSingleItem} from "./AnnotationSelectSingleItem";
+import {RawDraftContentState} from "draft-js";
 
 interface IProps {
     annotationText: string;
-    annotationTypes: Array<string>;
-    onApplyAnnotation(contentPlainText: string): void;
-
-    // connected
-    conceptItems?: ICrudManager<IKnowledgeBaseItem>;
+    conceptItems: ICrudManager<IKnowledgeBaseItem>;
+    annotationTypeSelect: JSX.Element;
+    onCancel(): void;
+    onApplyAnnotation(rawDraftContentState: RawDraftContentState): void;
 }
 
 interface IState {
     selected?: IKnowledgeBaseItem;
 }
 
-class AnnotationsSelectComponent extends React.Component<IProps, IState> {
+export class AnnotationsSelect extends React.Component<IProps, IState> {
     constructor(props) {
         super(props);
 
@@ -25,12 +25,30 @@ class AnnotationsSelectComponent extends React.Component<IProps, IState> {
             selected: null,
         };
     }
-    componentDidMount() {
-        this.props.conceptItems.read(1, null, {'name': this.props.annotationText});
-    }
     render() {
+        const backButton = (
+            <div className="space-between" style={{marginTop: 15}}>
+                <span />
+                <button
+                    onClick={this.props.onCancel}
+                    className="btn"
+                >
+                    {gettext('Cancel')}
+                </button>
+            </div>
+        );
+
         if (this.props.conceptItems._items == null) {
             return null; // loading
+        }
+
+        if (this.props.conceptItems._meta.total < 1) {
+            return (
+                <div>
+                    <p style={{marginTop: 20}}>{gettext('No matches found in the library.')}</p>
+                    {backButton}
+                </div>
+            );
         }
 
         if (this.state.selected != null) {
@@ -40,6 +58,7 @@ class AnnotationsSelectComponent extends React.Component<IProps, IState> {
                     onBack={() => {
                         this.setState({selected: null});
                     }}
+                    annotationTypeSelect={this.props.annotationTypeSelect}
                     onApplyAnnotation={this.props.onApplyAnnotation}
                 />
             );
@@ -50,14 +69,10 @@ class AnnotationsSelectComponent extends React.Component<IProps, IState> {
                     onSelect={(item) => {
                         this.setState({selected: item});
                     }}
+                    backButton={backButton}
+                    onCancel={this.props.onCancel}
                 />
             );
         }
     }
 }
-
-export const AnnotationsSelect = connectCrudManager<IProps, IKnowledgeBaseItem>(
-    AnnotationsSelectComponent,
-    'conceptItems',
-    'concept_items',
-);
