@@ -1,4 +1,4 @@
-import {IRestApiResponse, IDefaultApiFields} from 'types/RestApi';
+import {IRestApiResponse, IDefaultApiFields} from '../../types/RestApi';
 import React from 'react';
 import {connectServices} from './ReactRenderAsync';
 
