@@ -39,6 +39,8 @@ interface IProps {
     editorFormat?: any;
     item?: any;
     svc?: any;
+    trim?: any;
+    value?: any;
 }
 
 /**
