@@ -11,11 +11,20 @@ import {hidePopups} from '../../actions';
 import ng from 'core/services/ng';
 import {gettext} from 'core/utils';
 import {Editor3Standalone} from 'core/editor3/react';
-import { AnnotationInputWrapper } from './AnnotationInputWrapper';
-import { AnnotationInputFidely } from './AnnotationsInputFidelity';
+import {AnnotationInputDefault} from './AnnotationInputDefault';
+
+// used in superdesk-fi
+export interface IPropsAnnotationInputComponent {
+    annotationText: string;
+    annotationInputComponent: React.ReactElement<any>;
+    annotationTypeSelect: JSX.Element;
+    onCancel(): void;
+    onApplyAnnotation(rawDraftContentState: RawDraftContentState): void;
+}
 
 interface IProps {
     editorState: EditorState;
+    extensionPoints: any;
     data: {
         highlightId: any;
         selection: SelectionState;
@@ -201,10 +210,15 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
             </div>
         );
 
+        const annotationExtensionPoints = this.props.extensionPoints.get('authoring:editor3:annotations');
+        const AnnotationInputComponent = annotationExtensionPoints[0] == null
+            ? AnnotationInputDefault
+            : annotationExtensionPoints[0].componentClass;
+
         return (
             <div className="annotation-input">
                 <Dropdown open={true} scrollable={false}>
-                    <AnnotationInputFidely
+                    <AnnotationInputComponent
                         annotationText={text}
                         onCancel={_hidePopups}
                         annotationTypeSelect={annotationTypeSelect}
@@ -236,6 +250,7 @@ const mapStateToProps = (state) => ({
 const AnnotationInputBodyWithDependenciesLoaded = connectPromiseResults(() => ({
     annotationTypes: ng.get('metadata').initialize()
         .then(() => ng.get('metadata').values.annotation_types),
+    extensionPoints: ng.getService('extensionPoints'),
 }))(AnnotationInputBody);
 
 export const AnnotationInput: React.StatelessComponent<any> = connect(mapStateToProps, {
