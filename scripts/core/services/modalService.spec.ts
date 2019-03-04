@@ -1,5 +1,4 @@
 describe('modal service', () => {
-
     beforeEach(window.module('superdesk.core.services.modal'));
 
     beforeEach(inject(($templateCache) => {
