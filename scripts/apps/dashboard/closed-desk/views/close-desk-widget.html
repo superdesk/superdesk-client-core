@@ -1,6 +1,6 @@
 <div class="close-desk-widget-content" ng-controller="RoutingWidgetController as routing">
     <div class="sd-line-input" ng-if="routing.routedFrom.length">
-        <label class="sd-line-input__label">Routed from</label>
+        <label class="sd-line-input__label" translate>Routed from</label>
         <div class="sd-list-item-group">
             <div class="sd-list-item" ng-repeat="desk in routing.routedFrom">
                 <div class="sd-list-item">
@@ -19,7 +19,7 @@
     <div class="space-eater"></div>
 
     <div class="sd-line-input sd-line-input--is-select">
-        <label class="sd-line-input__label">Route incoming content to</label>
+        <label class="sd-line-input__label" translate>Route incoming content to</label>
         <select class="sd-line-input__select"
             ng-options="d._id as d.name for d in routing.desks"
             ng-model="routing.destination"
@@ -31,13 +31,13 @@
     <button class="btn btn--large btn--success btn--expanded"
         ng-if="!routing.desk.is_closed"
         ng-disabled="!routing.destination || !routing.canManage"
-        ng-click="routing.toggle()">
+        ng-click="routing.toggle()" translate>
         Start routing
     </button>
     <button class="btn btn--large btn--alert btn--expanded"
         ng-if="routing.desk.is_closed"
         ng-disabled="!routing.canManage"
-        ng-click="routing.toggle()">
+        ng-click="routing.toggle()" translate>
         Stop routing
     </button>
 </div>

@@ -22,7 +22,7 @@ function RoutingWidgetController(desks, privileges, api, notify, gettext, $scope
 
     const errorHandler = (reason) => {
         if (reason.status === 412) {
-            notify.warning('Desk status is outdated, please refresh.');
+            notify.warning(gettext('Desk status is outdated, please refresh.'));
         } else {
             console.error('unknown error', reason);
         }
