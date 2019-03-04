@@ -1,4 +1,4 @@
-import {gettext} from 'core/utils';
+import {gettext, gettextCatalog} from 'core/utils';
 
 export const INIT_ATTACHMENTS = 'INIT_ATTACHMENTS';
 export function initAttachments(item) {
@@ -18,20 +18,24 @@ export function initAttachments(item) {
 }
 
 export const ADD_ATTACHMENTS = 'ADD_ATTACHMENTS';
-export function selectFiles(files) {
+export function selectFiles(files: Array<File>) {
     return (dispatch, getState, {notify, superdesk}) => {
         const state = getState();
 
         if (Array.isArray(files) && files.length > 0 && !state.editor.isLocked) {
             if (files.length + state.attachments.files.length > state.attachments.maxFiles) {
-                notify.error(gettext('Sorry, too many files selected.'));
+                notify.error(gettextCatalog.getPlural(state.attachments.maxFiles,
+                    'Too many files selected. Only 1 file is allowed.',
+                    'Too many files selected. Only {{$count}} files are allowed.',
+                ));
                 return;
             }
 
-            const bigFiles = files.filter((file) => file.size > state.attachments.maxSize);
+            const filenames = files.filter((file) => file.size > state.attachments.maxSize)
+                .map((file) => file.name);
 
-            if (bigFiles.length) {
-                notify.error(gettext('Sorry, but some files are too big.'));
+            if (filenames.length) {
+                notify.error(gettext('Sorry, but files "{{ filenames }}" are too big.', {filenames: filenames.join(', ')}));
                 return;
             }
 
