@@ -282,7 +282,7 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
                     $scope.editVideo.isDirty = true;
                     cache_addThumbnail = {
                         type: "upload",
-                        minetype: "image/png",
+                        mimetype: "image/png",
                         data: canvas.toDataURL()
                     };
                 }
@@ -464,19 +464,12 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
             {
                 if($scope.cuttingVideo.starttime == 0 && $scope.cuttingVideo.endtime == video.duration)
                 {
-                    $scope.cuttingVideo = null;
+                    $scope.cuttingVideo = {};
                 }
             }
-            alert($scope.cuttingVideo.starttime);
             $scope.resolve({
                 addThumbnail: $scope.addThumbnail,
-                cuttingVideo: $scope.cuttingVideo,
-                metadata: _.pick($scope.data.metadata, [
-                    ...EDITABLE_METADATA,
-                    'poi',
-                    'renditions',
-                    '_etag',
-                ]),
+                cuttingVideo: $scope.cuttingVideo
             });
         } else {
             $scope.reject();

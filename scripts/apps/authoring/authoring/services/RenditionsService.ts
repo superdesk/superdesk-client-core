@@ -92,7 +92,9 @@ export function RenditionsService(metadata, $q, api, superdesk, _, notify) {
                 ...videoOptions,
             })
                 .then((result) => {
-                    var res = api.save("video_edit",{item: clonedItem, video_cutting:result.cuttingVideo, add_thumbnail:result.addThumbnail});
+                    var res = api.save("video_edit",{item: clonedItem, video_cut:result.cuttingVideo, thumbnail_add:result.addThumbnail});
+
+
 
                 });
 

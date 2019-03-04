@@ -308,8 +308,7 @@ export function ArticleEditDirective(
                                 showMetadata: true,
                             }
                         )
-                            .then((picture) => {
-
+                            .then((res) => {
                                 if (authoring.isPublished(scope.item)) {
                                     mainEditScope.dirty = true;
 
