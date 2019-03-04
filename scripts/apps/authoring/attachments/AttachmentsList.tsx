@@ -1,6 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {gettext} from 'core/utils';
+import {filesize, fileicon} from 'core/ui/ui';
 
 import {
     editFile,
@@ -15,8 +16,6 @@ import {IAttachment} from '.';
 interface IProps {
     files: Array<IAttachment>;
     isLocked: boolean;
-    fileicon: (mimetype: string) => string;
-    filesize: (size: number) => string;
 
     editFile: (file: IAttachment) => void;
     download: (file: IAttachment) => void;
@@ -30,9 +29,7 @@ class AttachmentsList extends React.PureComponent<IProps> {
     }
 
     renderFile(file: IAttachment) {
-        const {isLocked, fileicon, filesize,
-            download: _download, editFile: _editFile, removeFile: _removeFile,
-        } = this.props;
+        const {isLocked, download: _download, editFile: _editFile, removeFile: _removeFile} = this.props;
 
         return (
             <Item key={file._id} shadow={1}>

@@ -781,8 +781,6 @@ export function FilesizeFilter() {
     };
 }
 
-export const filesize = FilesizeFilter();
-
 WeekdayPickerDirective.$inject = ['weekdays'];
 function WeekdayPickerDirective(weekdays) {
     return {
@@ -1211,6 +1209,10 @@ function multiSelectDirective() {
         },
     };
 }
+
+// export filter instances for react
+export const fileicon = FileiconFilter();
+export const filesize = FilesizeFilter();
 
 /**
  * @ngdoc module

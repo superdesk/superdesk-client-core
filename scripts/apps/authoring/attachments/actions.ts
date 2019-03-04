@@ -20,7 +20,7 @@ export function initAttachments(item) {
 
 export const ADD_ATTACHMENTS = 'ADD_ATTACHMENTS';
 export function selectFiles(files: Array<File>) {
-    return (dispatch, getState, {notify, superdesk, $filter}) => {
+    return (dispatch, getState, {notify, superdesk}) => {
         const state = getState();
 
         if (Array.isArray(files) && files.length > 0 && !state.editor.isLocked) {
@@ -37,7 +37,7 @@ export function selectFiles(files: Array<File>) {
 
             if (filenames.length) {
                 notify.error(gettext(
-                    'Sorry, but some files "{{ filenames }}" are bigger than limit ({{ limit }}).',
+                    'Sorry, but some files "{{filenames}}" are bigger than limit ({{limit}}).',
                     {
                         filenames: filenames.join(', '),
                         limit: filesize(state.attachments.maxSize),
