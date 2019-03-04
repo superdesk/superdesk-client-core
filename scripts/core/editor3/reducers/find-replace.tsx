@@ -146,9 +146,15 @@ const getPrevPattern = (pattern, diff) => {
 const findPrev = (state) => {
     let {index, pattern, diff} = state.searchTerm;
 
-    if (index === 0) {
+    if (--index < 0) {
         pattern = getPrevPattern(pattern, diff) || pattern;
-        index = 0;
+
+        const total = countOccurrences({
+            ...state,
+            searchTerm: {...state.searchTerm, index, pattern},
+        });
+
+        index = total - 1;
     }
 
     return render({
