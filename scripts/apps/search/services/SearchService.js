@@ -338,8 +338,8 @@ export function SearchService($location, config, session, multi,
             var facetrange = {};
 
             // inject custom date field filters { fieldname: 'string(IDateRange)' }
-            if (typeof params.customDateFields !== 'undefined') {
-                for (let [fieldname, range] of Object.entries(params.customDateFields)) {
+            if (typeof params.customFields !== 'undefined') {
+                for (let [fieldname, range] of Object.entries(params.customFields)) {
                     if (typeof dateRangesByKey[range] !== 'undefined') {
                         facetrange[fieldname] = dateRangesByKey[range].elasticSearchDateRange;
                     }
