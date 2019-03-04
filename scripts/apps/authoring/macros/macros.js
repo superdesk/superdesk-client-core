@@ -177,7 +177,7 @@ function MacrosController($scope, macros, desks, autosave, $rootScope, storage, 
             if (isEditor3) {
                 ignoreFields.push('body_html');
 
-                if (useReplace && item.body_html !== res.item.body_html) {
+                if (res.diff == null && useReplace === true && item.body_html !== res.item.body_html) {
                     editor.setHtmlFromTansa(res.item.body_html, isSimpleReplace);
                 }
 
@@ -186,7 +186,7 @@ function MacrosController($scope, macros, desks, autosave, $rootScope, storage, 
                         return;
                     }
                     ignoreFields.push(field);
-                    if (res.item[field] !== item[field] && res.diff == null) {
+                    if (res.item[field] !== item[field]) {
                         $rootScope.$broadcast('macro:refreshField', field, res.item[field]);
                     }
                 });
