@@ -781,6 +781,8 @@ export function FilesizeFilter() {
     };
 }
 
+export const filesize = FilesizeFilter();
+
 WeekdayPickerDirective.$inject = ['weekdays'];
 function WeekdayPickerDirective(weekdays) {
     return {

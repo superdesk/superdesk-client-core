@@ -1,4 +1,5 @@
 import {gettext, gettextCatalog} from 'core/utils';
+import {filesize} from 'core/ui/ui';
 
 export const INIT_ATTACHMENTS = 'INIT_ATTACHMENTS';
 export function initAttachments(item) {
@@ -19,7 +20,7 @@ export function initAttachments(item) {
 
 export const ADD_ATTACHMENTS = 'ADD_ATTACHMENTS';
 export function selectFiles(files: Array<File>) {
-    return (dispatch, getState, {notify, superdesk}) => {
+    return (dispatch, getState, {notify, superdesk, $filter}) => {
         const state = getState();
 
         if (Array.isArray(files) && files.length > 0 && !state.editor.isLocked) {
@@ -35,7 +36,13 @@ export function selectFiles(files: Array<File>) {
                 .map((file) => file.name);
 
             if (filenames.length) {
-                notify.error(gettext('Sorry, but files "{{ filenames }}" are too big.', {filenames: filenames.join(', ')}));
+                notify.error(gettext(
+                    'Sorry, but some files "{{ filenames }}" are bigger than limit ({{ limit }}).',
+                    {
+                        filenames: filenames.join(', '),
+                        limit: filesize(state.attachments.maxSize),
+                    },
+                ));
                 return;
             }
 
