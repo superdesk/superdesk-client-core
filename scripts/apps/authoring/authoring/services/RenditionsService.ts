@@ -92,10 +92,33 @@ export function RenditionsService(metadata, $q, api, superdesk, _, notify) {
                 ...videoOptions,
             })
                 .then((result) => {
-                    var res = api.save("video_edit",{item: clonedItem, video_cut:result.cuttingVideo, thumbnail_add:result.addThumbnail});
+                    const savingvideoPromises = [];
+                    savingvideoPromises.push(api.save("video_edit", {
+                        item: clonedItem,
+                        video_cut: result.cuttingVideo,
+                        thumbnail_add: result.addThumbnail
+                    }));
+                    return $q.all(savingvideoPromises)
+                    // return the cropped images
+                        .then((editVideoitems) => {
+                            editVideoitems.forEach((editvideo, index) => {
+                                const url = editvideo.href;
 
-
-
+                                // update association renditions
+                                angular.extend(
+                                    result.metadata.renditions[index],
+                                    {
+                                        href: url,
+                                        width: editvideo.width,
+                                        height: editvideo.height,
+                                        media: editvideo._id,
+                                        mimetype: editvideo.item.mimetype,
+                                    },
+                                );
+                            });
+                            angular.extend(item, result.metadata);
+                            return item;
+                        });
                 });
 
         });
