@@ -93,7 +93,7 @@ export function RenditionsService(metadata, $q, api, superdesk, _, notify) {
             })
                 .then((result) => {
                     const savingVideoPromises = [];
-                    if (!isEmpty(result.cuttingVideo) || !isEmpty(result.cuttingVideo)) {
+                    if (!isEmpty(result.cuttingVideo) || !isEmpty(result.addThumbnail)) {
                         savingVideoPromises.push(api.save("video_edit", {
                             item: clonedItem,
                             video_cut: result.cuttingVideo,

@@ -490,6 +490,7 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
                 metadata: _.pick($scope.data.metadata, [
                     ...EDITABLE_METADATA,
                     'renditions',
+                    '_etag',
                 ]),
             });
         } else {

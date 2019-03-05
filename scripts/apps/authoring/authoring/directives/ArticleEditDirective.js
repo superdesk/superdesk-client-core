@@ -309,6 +309,7 @@ export function ArticleEditDirective(
                             }
                         )
                             .then((res) => {
+                                scope.item._etag = res._etag;
                                 if (authoring.isPublished(scope.item)) {
                                     mainEditScope.dirty = true;
 
