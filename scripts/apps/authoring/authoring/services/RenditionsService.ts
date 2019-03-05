@@ -92,29 +92,23 @@ export function RenditionsService(metadata, $q, api, superdesk, _, notify) {
                 ...videoOptions,
             })
                 .then((result) => {
-                    const savingvideoPromises = [];
-                    savingvideoPromises.push(api.save("video_edit", {
-                        item: clonedItem,
-                        video_cut: result.cuttingVideo,
-                        thumbnail_add: result.addThumbnail
-                    }));
-                    return $q.all(savingvideoPromises)
+                    const savingVideoPromises = [];
+                    if (!isEmpty(result.cuttingVideo) || !isEmpty(result.cuttingVideo)) {
+                        savingVideoPromises.push(api.save("video_edit", {
+                            item: clonedItem,
+                            video_cut: result.cuttingVideo,
+                            thumbnail_add: result.addThumbnail
+                        }));
+                    }
+                    return $q.all(savingVideoPromises)
                     // return the cropped images
                         .then((editVideoitems) => {
-                            editVideoitems.forEach((editvideo, index) => {
+                            editVideoitems.forEach((editvideo) => {
                                 const url = editvideo.href;
 
                                 // update association renditions
                                 angular.extend(
-                                    result.metadata.renditions[index],
-                                    {
-                                        href: url,
-                                        width: editvideo.width,
-                                        height: editvideo.height,
-                                        media: editvideo._id,
-                                        mimetype: editvideo.item.mimetype,
-                                    },
-                                );
+                                    result.metadata.renditions,editvideo.result);
                             });
                             angular.extend(item, result.metadata);
                             return item;

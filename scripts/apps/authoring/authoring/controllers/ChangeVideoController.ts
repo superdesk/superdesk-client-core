@@ -1,4 +1,3 @@
-
 import {get} from 'lodash';
 import {TweenMax, Power2, TimelineLite} from "gsap/TweenMax";
 import {gettext} from "superdesk-core/scripts/core/utils";
@@ -135,6 +134,10 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
             width: (position * 100) + '%'
         });
         barleft.setAttribute("data-content", getstrtime(position * video.duration));
+        if ($scope.addThumbnail)
+        {
+            loadImage()
+        }
     };
 
     /**
@@ -146,7 +149,7 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
     $scope.captureThumbnail = function () {
         try {
             var time = video.currentTime;
-            video =  document.getElementById('video');
+            video = document.getElementById('video');
             var output = document.getElementById('output');
             var canvas = drawObjectToCanvas(video, video.videoHeight, video.videoWidth);
             var file = document.getElementById("file-upload")
@@ -263,7 +266,7 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
         barright.ondragend = function () {
             onDragEndCb();
         };
-
+        loadImage();
         document.getElementById('file-upload').onchange = function (evt) {
             var tgt = evt.target || window.event.srcElement,
                 files = tgt.files;
@@ -293,6 +296,19 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
             }
         }
     };
+
+    function loadImage() {
+        var img = document.createElement("img");
+        img.src = $scope.data.metadata.renditions.thumbnail.href
+        img.onload = function () {
+            var canvas = drawObjectToCanvas(img, video.offsetHeight, video.offsetWidth);
+            var output = document.getElementById('output');
+            output.innerHTML = '';
+            canvas.id = "canvas-thumnail";
+            canvas.style = "max-width: 100%;";
+            output.append(canvas);
+        };
+    }
 
     $scope.controlBarClick = function () {
         var position = setTimeline();
@@ -460,16 +476,18 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
                     return;
                 }
             }
-            if ($scope.cuttingVideo)
-            {
-                if($scope.cuttingVideo.starttime == 0 && $scope.cuttingVideo.endtime == video.duration)
-                {
+            if ($scope.cuttingVideo) {
+                if ($scope.cuttingVideo.starttime == 0 && $scope.cuttingVideo.endtime == video.duration) {
                     $scope.cuttingVideo = {};
                 }
             }
             $scope.resolve({
                 addThumbnail: $scope.addThumbnail,
-                cuttingVideo: $scope.cuttingVideo
+                cuttingVideo: $scope.cuttingVideo,
+                metadata: _.pick($scope.data.metadata, [
+                    ...EDITABLE_METADATA,
+                    'renditions',
+                ]),
             });
         } else {
             $scope.reject();
