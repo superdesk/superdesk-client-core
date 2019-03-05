@@ -29,3 +29,4 @@ export {language} from './language';
 export {copyright} from './copyright';
 export {usageterms} from './usageterms';
 export {nestedlink} from './nested-link';
+export {associatedItems} from './associatedItems';
