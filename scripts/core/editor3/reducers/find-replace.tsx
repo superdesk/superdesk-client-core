@@ -1,7 +1,7 @@
 // eslint complains about imported types not being used
 // eslint-disable-next-line no-unused-vars
 import {Modifier, EditorState} from 'draft-js';
-import {clearHighlights, quietPush, forEachMatch, getRegExp} from '../helpers/find-replace';
+import {clearHighlights, quietPush, forEachMatch} from '../helpers/find-replace';
 import {onChange} from './editor3';
 
 const findReplace = (state = {}, action) => {
@@ -36,26 +36,32 @@ const replaceHighlight = (state, txt, all = false) => {
     const es = state.editorState;
 
     let contentChanged = false;
+    let contentChangedInAll = true;
     let {content, editorState} = clearHighlights(es.getCurrentContent(), es);
 
     // tries to replace the occurrence at position pos and returns true if successful.
-    const replaceAt = (pos) =>
-        forEachMatch(content, pattern, caseSensitive, (i, selection, block) => {
+    const replaceAt = (pos, _content) =>
+        forEachMatch(_content, pattern, caseSensitive, (i, selection, block, newContent) => {
             if (i === pos) {
                 // let's preserve styling and entities (such as links) on replacing
                 const styleAt = block.getInlineStyleAt(selection.anchorOffset) || null;
                 const entityAt = block.getEntityAt(selection.anchorOffset) || null;
 
-                content = Modifier.replaceText(content, selection, txt, styleAt, entityAt);
                 contentChanged = true;
+                contentChangedInAll = true;
+                return Modifier.replaceText(newContent, selection, txt, styleAt, entityAt);
             }
+            return newContent;
         });
 
     if (all) {
         // each replace alters the content and changes text offsets, so we need to call this method repeatedly
-        while (replaceAt(0)) { /* no-op */ }
+        while (contentChangedInAll) {
+            contentChangedInAll = false;
+            content = replaceAt(0, content);
+        }
     } else {
-        replaceAt(index);
+        content = replaceAt(index, content);
     }
 
     if (contentChanged) {
@@ -82,8 +88,12 @@ const getNextPattern = (pattern, diff) => {
     const keys = Object.keys(diff);
     const index = keys.indexOf(pattern);
 
-    if (index === -1 || keys.length === index - 1) {
+    if (index === -1) {
         return null;
+    }
+
+    if (index === keys.length - 1) {
+        return keys[0];
     }
 
     return keys[index + 1];
@@ -117,25 +127,34 @@ const getPrevPattern = (pattern, diff) => {
     const keys = Object.keys(diff);
     const index = keys.indexOf(pattern);
 
-    if (index === -1 || index < 1) {
+    if (index === -1) {
         return null;
+    }
+
+    if (index === 0) {
+        return keys[keys.length - 1];
     }
 
     return keys[index - 1];
 };
 
 /**
- * @name findNext
+ * @name findPrev
  * @param {Object} state
  * @description Decreases the highlighted ocurrence index.
  */
 const findPrev = (state) => {
-    const total = countOccurrences(state);
     let {index, pattern, diff} = state.searchTerm;
 
-    if (index-- === 0) {
+    if (--index < 0) {
         pattern = getPrevPattern(pattern, diff) || pattern;
-        index = 0;
+
+        const total = countOccurrences({
+            ...state,
+            searchTerm: {...state.searchTerm, index, pattern},
+        });
+
+        index = total - 1;
     }
 
     return render({
@@ -160,7 +179,6 @@ const setCriteria = (state, {diff, caseSensitive}) => {
 
     return render({
         ...state,
-
         searchTerm: {pattern, caseSensitive, index, diff},
     });
 };
@@ -174,22 +192,26 @@ const render = (state) => {
     const {pattern, index, caseSensitive} = state.searchTerm;
     const es = state.editorState;
 
+    let changedContent = false;
+
     let {content, editorState} = clearHighlights(es.getCurrentContent(), es);
 
     if (!pattern) {
         return {...state, editorState};
     }
 
-    const changedContent = forEachMatch(content, pattern, caseSensitive, (i, selection) => {
-        content = Modifier.applyInlineStyle(
-            content,
+    const newContent = forEachMatch(content, pattern, caseSensitive, (i, selection, block, _newContent) => {
+        changedContent = true;
+
+        return Modifier.applyInlineStyle(
+            _newContent,
             selection,
             i === index ? 'HIGHLIGHT_STRONG' : 'HIGHLIGHT',
         );
     });
 
     if (changedContent) {
-        editorState = quietPush(editorState, content);
+        editorState = quietPush(editorState, newContent);
     }
 
     return {...state, editorState};
@@ -204,12 +226,13 @@ export default findReplace;
  */
 export const countOccurrences = (state) => {
     const content = state.editorState.getCurrentContent();
-    const re = getRegExp(state.searchTerm);
+    const {pattern, caseSensitive} = state.searchTerm;
 
     let matches = 0;
 
-    content.getBlocksAsArray().forEach((block) => {
-        matches += (block.getText().match(re) || []).length;
+    forEachMatch(content, pattern, caseSensitive, (i, selection, block, newContent) => {
+        matches++;
+        return newContent;
     });
 
     return matches;

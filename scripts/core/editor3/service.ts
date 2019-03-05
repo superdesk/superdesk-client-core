@@ -182,13 +182,15 @@ export class EditorService {
         let txt = pattern;
 
         // find the active match
-        forEachMatch(content, pattern, caseSensitive, (i, selection, block) => {
+        forEachMatch(content, pattern, caseSensitive, (i, selection, block, newContent) => {
             if (i === index) {
                 const start = selection.getStartOffset();
                 const end = selection.getEndOffset();
 
                 txt = block.getText().slice(start, end);
             }
+
+            return newContent;
         });
 
         return txt;
