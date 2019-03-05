@@ -26,6 +26,7 @@ import {IDefaultApiFields} from 'types/RestApi';
 import {VocabularySingleValue} from './generic-form/input-types/vocabulary_single_value';
 import {TextEditor3, IEditor3State} from './generic-form/input-types/text-editor3';
 import {TextSingleLine} from './generic-form/input-types/text-single-line';
+import {getFormGroupForFiltering} from './generic-form/get-form-group-for-filtering';
 
 interface IState {
     itemInPreview?: string;
@@ -83,6 +84,8 @@ const formConfig: IFormGroup = {
         definitionField,
     ],
 };
+
+const formConfigForFilters = getFormGroupForFiltering(formConfig);
 
 interface IProps {
     conceptItems: ICrudManager<IKnowledgeBaseItem>;
@@ -246,7 +249,7 @@ class KnowledgeBasePageComponent extends React.Component<IProps, IState> {
                                             }}>
                                                 <FormViewEdit
                                                     item={{}}
-                                                    formConfig={formConfig}
+                                                    formConfig={formConfigForFilters}
                                                     editMode={true}
                                                     issues={{}}
                                                     handleFieldChange={this.handleFilterFieldChange}
