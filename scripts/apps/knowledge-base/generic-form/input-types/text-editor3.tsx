@@ -26,7 +26,9 @@ export class TextEditor3 extends React.Component<IProps> {
     }
     render() {
         if (this.props.previewOuput) {
-            return <div dangerouslySetInnerHTML={{__html: this.props.value.html}} />;
+            return (
+                <div className="user-html-in-single-line" dangerouslySetInnerHTML={{__html: this.props.value.html}} />
+            );
         }
 
         const rawDraftContentState = this.props.value != null
