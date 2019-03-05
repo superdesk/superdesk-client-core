@@ -509,7 +509,7 @@ export function SearchService($location, config, session, multi,
         this.filter({not: {term: {package_type: 'takes'}}});
 
         // inject custom elastic search queries
-        if (typeof params.customQueries !== 'undefined') {
+        if (params.customQueries != null) {
             for (let q of params.customQueries) {
                 this.filter(q);
             }
