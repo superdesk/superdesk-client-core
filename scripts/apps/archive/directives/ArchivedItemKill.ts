@@ -18,7 +18,7 @@ export function ArchivedItemKill(authoring, api, notify) {
             api.remove(itemToDelete, {}, 'archived').then(
                 (response) => {
                     var fields = _.union(_.keys(authoring.getContentFieldDefaults()), ['_id', 'versioncreated']);
-                    var itemForTemplate = {template_name: scope.action, item: _.pick(scope.item, fields)};
+                    let itemForTemplate: any = {template_name: scope.action, item: _.pick(scope.item, fields)};
 
                     api.save('content_templates_apply', {}, itemForTemplate, {}).then((result) => {
                         itemForTemplate = _.pick(result, _.keys(authoring.getContentFieldDefaults()));
