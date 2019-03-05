@@ -1,6 +1,7 @@
+import {reactToAngular1} from 'superdesk-ui-framework';
+
 import './attachments.scss';
 import {gettext} from 'core/utils';
-import AttachmentsListDirective from './AttachmentsListDirective';
 import AttachmentsEditorDirective from './AttachmentsEditorDirective';
 import AttachmentsEditorModalDirective from './AttachmentsEditorModalDirective';
 
@@ -10,6 +11,7 @@ import {
 } from './actions';
 
 import {IAttachment} from '.';
+import {AttachmentsList} from './AttachmentsList';
 
 function getFilesLength(state) {
     return state.attachments.files.length;
@@ -168,6 +170,6 @@ angular.module('superdesk.apps.authoring.attachments', [
     .controller('AttachmentsCtrl', AttachmentsController)
     .config(['authoringWidgetsProvider', config])
     .directive('sdAttachmentsEditor', AttachmentsEditorDirective)
-    .directive('sdAttachmentsList', AttachmentsListDirective)
     .directive('sdAttachmentsEditorModal', AttachmentsEditorModalDirective)
+    .component('sdAttachmentsList', reactToAngular1(AttachmentsList, ['store']))
 ;

@@ -1,5 +1,5 @@
 import React from 'react';
-import {connect} from 'react-redux';
+import {Provider, connect} from 'react-redux';
 import {gettext} from 'core/utils';
 import {filesize, fileicon} from 'core/ui/ui';
 
@@ -22,7 +22,7 @@ interface IProps {
     removeFile: (file: IAttachment) => void;
 }
 
-class AttachmentsList extends React.PureComponent<IProps> {
+class AttachmentsListComponent extends React.PureComponent<IProps> {
     constructor(props) {
         super(props);
         this.renderFile = this.renderFile.bind(this);
@@ -94,4 +94,10 @@ const mapDispatchToProps = {
     removeFile,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(AttachmentsList);
+const AttachmentsListConnected = connect(mapStateToProps, mapDispatchToProps)(AttachmentsListComponent);
+
+export const AttachmentsList = (props: {store: any}) => (
+    <Provider store={props.store}>
+        <AttachmentsListConnected />
+    </Provider>
+);
