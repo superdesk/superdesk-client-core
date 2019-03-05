@@ -7,6 +7,6 @@ interface IProps {
 // is imported from fidelity repo
 export class UserHtmlSingleLine extends React.Component<IProps> {
     render() {
-        return <div className="user-html-in-single-line" dangerouslySetInnerHTML={{__html: this.props.html}} />;
+        return <span className="user-html-in-single-line" dangerouslySetInnerHTML={{__html: this.props.html}} />;
     }
 }
