@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 FullPreviewDirective.$inject = ['api', '$timeout', 'config', 'content', '$sce'];
 export function FullPreviewDirective(api, $timeout, config, content, $sce) {
     return {

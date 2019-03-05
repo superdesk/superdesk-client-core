@@ -1,4 +1,5 @@
 import {gettext} from 'core/ui/components/utils';
+import _ from 'lodash';
 
 SendService.$inject = ['desks', 'api', '$q', 'notify', '$injector', 'multi', '$rootScope'];
 export function SendService(desks, api, $q, notify, $injector, multi, $rootScope) {
