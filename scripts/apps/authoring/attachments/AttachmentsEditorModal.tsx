@@ -1,3 +1,5 @@
+/* eslint-disable react/no-multi-comp */
+
 import React from 'react';
 import {Provider, connect} from 'react-redux';
 import {gettext} from 'core/utils';
