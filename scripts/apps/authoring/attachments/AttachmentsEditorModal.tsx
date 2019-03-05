@@ -1,5 +1,5 @@
 import React from 'react';
-import {connect} from 'react-redux';
+import {Provider, connect} from 'react-redux';
 import {gettext} from 'core/utils';
 
 import {
@@ -28,7 +28,7 @@ interface IState {
     description: string;
 }
 
-class AttachmentsEditorModal extends React.Component<IProps, IState> {
+class AttachmentsEditorModalComponent extends React.Component<IProps, IState> {
     constructor(props) {
         super(props);
         this.state = {title: props.file.title, description: props.file.description};
@@ -91,4 +91,10 @@ const mapDispatchToProps = {
     closeEdit,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(AttachmentsEditorModal);
+const AttachmentsEditorModalConnected = connect(mapStateToProps, mapDispatchToProps)(AttachmentsEditorModalComponent);
+
+export const AttachmentsEditorModal = (props: {store: any}) => (
+    <Provider store={props.store}>
+        <AttachmentsEditorModalConnected />
+    </Provider>
+);
