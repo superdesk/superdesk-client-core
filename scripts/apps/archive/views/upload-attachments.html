@@ -7,35 +7,35 @@
     <form name="attachmentsForm">
         <div class="upload-edit" ng-show="items.length">
             <ul class="upload-thumbs flex-grid flex-grid--boxed flex-grid--wrap-items flex-grid--small-4">
-                <li ng-repeat="item in items" class="flex-grid__item sd-shadow--z3">
-                    <div class="thumb">
+                <li ng-repeat="item in items" class="flex-grid__item sd-shadow--z3 sd-card">
+                    <div class="thumb sd-card__thumbnail">
                         <div class="holder"><i class="big-icon--text"></i></div>
                         <span class="remove" ng-click="cancelItem(item)"><i class="icon-close-small"></i></span>
                     </div>
 
-                    <div class="info">
+                    <div class="sd-card__content">
                         <div class="upload-progress" ng-show="item.progress">
                             <div class="bar" style="width:{{ item.progress }}%"></div>
                         </div>
                         <div class="other-info">
-                            <div class="row">
+                            <div class="form__row">
                                 <label>Title *</label>
                                 <input type="text" required ng-model="item.meta.title" class="contenteditable-input" />
                             </div>
-                            <div class="row">
+                            <div class="form__row">
                                 <label>Description *</label>
                                 <textarea class="contenteditable-input"
                                     ng-model="item.meta.description"
                                     sd-auto-height
                                     required></textarea>
                             </div>
-                            <div class="row">
+                            <div class="form__row">
                                 <label translate>File Name</label>
                                 <div class="contenteditable-input">
                                     {{ :: item.file.name }}
                                 </div>                        
                             </div>
-                            <div class="row">
+                            <div class="form__row">
                                 <label translate>File Size</label>
                                 <div class="contenteditable-input">
                                     {{ :: item.file.size | filesize }}

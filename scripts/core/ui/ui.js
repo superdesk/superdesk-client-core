@@ -1212,6 +1212,10 @@ function multiSelectDirective() {
     };
 }
 
+// export filter instances for react
+export const fileicon = FileiconFilter();
+export const filesize = FilesizeFilter();
+
 /**
  * @ngdoc module
  * @module superdesk.core.ui
