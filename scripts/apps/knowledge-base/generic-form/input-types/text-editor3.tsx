@@ -4,6 +4,7 @@ import {IInputType} from "../interfaces/input-types";
 import {RawDraftContentState, convertFromRaw, ContentState, convertToRaw} from "draft-js";
 import {Editor3Standalone} from "core/editor3/react";
 import {HTMLGenerator} from "core/editor3/html/to-html/HTMLGenerator";
+import {UserHtmlSingleLine} from "core/helpers/UserHtmlSingleLine";
 
 export interface IEditor3State {
     rawDraftContentState: RawDraftContentState;
@@ -26,9 +27,7 @@ export class TextEditor3 extends React.Component<IProps> {
     }
     render() {
         if (this.props.previewOuput) {
-            return (
-                <div className="user-html-in-single-line" dangerouslySetInnerHTML={{__html: this.props.value.html}} />
-            );
+            return <UserHtmlSingleLine html={this.props.value.html} />;
         }
 
         const rawDraftContentState = this.props.value != null
