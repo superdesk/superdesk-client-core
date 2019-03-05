@@ -22,7 +22,7 @@ import {Positioner} from 'superdesk-ui-framework';
 import {connectCrudManager, ICrudManager} from 'core/helpers/CrudManager';
 import {TagLabel} from 'core/ui/components/TagLabel';
 import {connectServices} from 'core/helpers/ReactRenderAsync';
-import {IDefaultApiFields} from 'types/RestApi';
+import {IDefaultApiFields} from '../../types/RestApi';
 import {VocabularySingleValue} from './generic-form/input-types/vocabulary_single_value';
 import {TextEditor3, IEditor3State} from './generic-form/input-types/text-editor3';
 import {TextSingleLine} from './generic-form/input-types/text-single-line';
