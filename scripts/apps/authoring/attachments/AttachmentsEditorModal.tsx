@@ -19,14 +19,11 @@ import {IAttachment} from '.';
 interface IProps {
     file: IAttachment;
 
-    saveFile: (file: IAttachment, updates: IAttachment) => void;
+    saveFile: (file: IAttachment, updates: Partial<IAttachment>) => void;
     closeEdit: () => void;
 }
 
-interface IState {
-    title: string;
-    description: string;
-}
+type IState = Partial<IAttachment>;
 
 class AttachmentsEditorModalComponent extends React.Component<IProps, IState> {
     constructor(props) {
