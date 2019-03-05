@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 MediaMetadata.$inject = ['userList', 'archiveService', 'metadata'];
 
 export function MediaMetadata(userList, archiveService, metadata) {

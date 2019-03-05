@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import {URL_PARAMETERS} from '../constants';
 import {gettext} from 'core/ui/components/utils';
 

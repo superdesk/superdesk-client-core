@@ -2,7 +2,7 @@
 import './styles/related-item.scss';
 import './styles/assignment.scss';
 import './styles/html-preview.scss';
-import {get} from 'lodash';
+import {get, includes} from 'lodash';
 
 // scripts
 import './related-item-widget/relatedItem';
@@ -392,7 +392,7 @@ function spikeActivity(spike, data, modal, $location, $q, multi, privileges,
     authoringWorkspace, confirm, autosave, config) {
     // For the sake of keyboard shortcut to work consistently,
     // if the item is multi-selected, let multibar controller handle its spike
-    if (!data.item || multi.count > 0 && _.includes(multi.getIds(), data.item._id)) {
+    if (!data.item || multi.count > 0 && includes(multi.getIds(), data.item._id)) {
         return;
     }
 

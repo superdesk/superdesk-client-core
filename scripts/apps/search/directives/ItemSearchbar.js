@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 ItemSearchbar.$inject = ['$location', '$document', 'asset'];
 
 /**

@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 export class BaseListController {
     constructor($scope, $location, search, desks) {
         this.lastQueryParams = {};

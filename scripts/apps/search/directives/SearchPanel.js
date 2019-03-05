@@ -1,4 +1,4 @@
-import {cloneDeep} from 'lodash';
+import _, {cloneDeep} from 'lodash';
 
 /**
  * @ngdoc directive

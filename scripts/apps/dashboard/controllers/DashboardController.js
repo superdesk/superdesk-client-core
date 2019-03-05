@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import {gettext} from 'core/ui/components/utils';
 
 DashboardController.$inject = ['$scope', 'desks', 'dashboardWidgets', 'api', 'session', 'workspaces',

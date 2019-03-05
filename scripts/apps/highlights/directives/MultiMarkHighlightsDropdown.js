@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 MultiMarkHighlightsDropdown.$inject = ['desks', 'highlightsService', 'multi'];
 export function MultiMarkHighlightsDropdown(desks, highlightsService, multi) {
     return {

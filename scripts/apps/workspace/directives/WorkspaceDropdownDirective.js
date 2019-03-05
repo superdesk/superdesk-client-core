@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 WorkspaceDropdownDirective.$inject = ['desks', 'workspaces', '$route', 'preferencesService', '$location',
     'reloadService', 'notifyConnectionService', 'deskNotifications', 'pageTitle'];
 export function WorkspaceDropdownDirective(desks, workspaces, $route, preferencesService, $location, reloadService,

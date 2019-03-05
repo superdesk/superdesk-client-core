@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 SearchWidgetCtrl.$inject = ['$scope', 'packages', 'api', 'search'];
 export function SearchWidgetCtrl($scope, packages, api, search) {
     $scope.selected = null;

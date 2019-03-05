@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 function ListItemDirectiveFactory() {
     return {
         link: function(scope, element, attrs, controller, $transclude) {

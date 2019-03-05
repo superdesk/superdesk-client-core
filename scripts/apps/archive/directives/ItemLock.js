@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 ItemLock.$inject = ['api', 'lock', 'privileges', 'desks'];
 export function ItemLock(api, lock, privileges, desks) {
     return {

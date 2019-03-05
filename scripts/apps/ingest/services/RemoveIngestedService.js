@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 RemoveIngestedService.$inject = ['api', '$rootScope'];
 export function RemoveIngestedService(api, $rootScope) {
     this.canRemove = canRemove;

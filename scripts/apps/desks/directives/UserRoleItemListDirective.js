@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 UserRoleItemListDirective.$inject = ['desks', 'usersService'];
 export function UserRoleItemListDirective(desks, usersService) {
     return {

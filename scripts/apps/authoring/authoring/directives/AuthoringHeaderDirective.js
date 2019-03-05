@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 AuthoringHeaderDirective.$inject = ['api', 'authoringWidgets', '$rootScope', 'archiveService', 'metadata',
     'content', 'lodash', 'authoring', 'vocabularies', '$timeout', 'config', 'moment', 'features', 'TranslationService'];
 export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, archiveService, metadata, content,

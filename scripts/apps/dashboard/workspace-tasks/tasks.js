@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import './styles/tasks.scss';
 import {gettext} from 'core/ui/components/utils';
 

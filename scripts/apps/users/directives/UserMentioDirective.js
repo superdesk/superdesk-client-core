@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 UserMentioDirective.$inject = ['userList', 'desks', 'asset', '$q'];
 export function UserMentioDirective(userList, desks, asset, $q) {
     return {

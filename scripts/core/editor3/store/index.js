@@ -1,7 +1,7 @@
 import {EditorState, convertFromRaw, convertToRaw, ContentState} from 'draft-js';
 import {createStore, applyMiddleware} from 'redux';
 import thunk from 'redux-thunk';
-import {pick} from 'lodash';
+import _, {pick} from 'lodash';
 
 import {toHTML} from 'core/editor3/html';
 import ng from 'core/services/ng';

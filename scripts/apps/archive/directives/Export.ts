@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 class LinkFunction {
     constructor(api, config, multi, notify, storage, session, urls, scope) {
         this.api = api;

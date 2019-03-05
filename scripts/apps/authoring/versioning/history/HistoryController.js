@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 HistoryController.$inject = [
     '$scope',
     'desks',

@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import {FIELD_KEY_SEPARATOR} from 'core/editor3/helpers/fieldsMeta';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 import {MEDIA_TYPES} from 'apps/vocabularies/constants';

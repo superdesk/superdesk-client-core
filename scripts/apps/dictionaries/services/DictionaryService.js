@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 DictionaryService.$inject = ['api', 'urls', 'session', 'Upload', '$q'];
 export function DictionaryService(api, urls, session, Upload, $q) {
     this.dictionaries = null;

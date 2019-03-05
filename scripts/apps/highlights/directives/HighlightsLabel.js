@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 HighlightsLabel.$inject = ['desks', 'highlightsService'];
 export function HighlightsLabel(desks, highlightsService) {
     return {

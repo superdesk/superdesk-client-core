@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 /*
  * TansaScopeSync synchornises any changes caused by tansa to the DOM with the ng-model of the host
  */

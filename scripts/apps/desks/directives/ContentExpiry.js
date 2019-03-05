@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 /**
  * @ngdoc directive
  * @module superdesk.apps.desks

@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import * as helpers from 'apps/authoring/authoring/helpers';
 import {gettext} from 'core/ui/components/utils';
 

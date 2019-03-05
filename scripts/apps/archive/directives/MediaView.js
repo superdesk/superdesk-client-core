@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 MediaView.$inject = ['keyboardManager', 'packages'];
 
 export function MediaView(keyboardManager, packages) {

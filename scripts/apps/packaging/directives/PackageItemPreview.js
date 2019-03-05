@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 PackageItemPreview.$inject = ['api', 'lock', 'superdesk', 'authoringWorkspace', '$location', '$sce',
     'desks', 'vocabularies'];
 export function PackageItemPreview(api, lock, superdesk, authoringWorkspace, $location, $sce,

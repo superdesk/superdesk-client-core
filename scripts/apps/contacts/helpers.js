@@ -1,4 +1,5 @@
 import React from 'react';
+import _ from 'lodash';
 import {DEFAULT_LIST_CONFIG, LOOKUP_FIELDS, FB_URL, IG_URL} from './constants';
 import * as fields from './components/fields';
 

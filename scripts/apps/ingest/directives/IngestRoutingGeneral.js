@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 IngestRoutingGeneral.$inject = ['weekdays', 'desks', 'macros'];
 export function IngestRoutingGeneral(weekdays, desks, macros) {
     return {

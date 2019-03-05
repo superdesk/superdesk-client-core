@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 export function InsertFilter() {
     return function(input, location, addition = '') {
         let loc = location || input.length;

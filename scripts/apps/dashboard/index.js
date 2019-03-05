@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 // styles
 import './styles/dashboard.scss';
 import './styles/widgets.scss';

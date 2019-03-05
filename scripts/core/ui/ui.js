@@ -1,4 +1,4 @@
-import {mapValues} from 'lodash';
+import _, {mapValues} from 'lodash';
 import {gettext} from 'core/ui/components/utils';
 
 /**

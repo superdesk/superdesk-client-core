@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 import 'core/global-fixes';
 
 import 'core/activity';

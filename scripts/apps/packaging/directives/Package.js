@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 export function Package() {
     var solveRefs = function(item, groups) {
         var items = {childId: '_items', childData: []};

@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import {gettext} from 'core/ui/components/utils';
 
 TemplatesService.$inject = ['api', 'session', '$q', 'preferencesService', 'privileges', 'desks'];

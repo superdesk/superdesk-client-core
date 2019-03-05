@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 class LinkFunction {
     constructor(compareVersions, desks, archiveService, scope, elem) {
         this.compareVersions = compareVersions;

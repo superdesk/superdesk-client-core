@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 ContentResults.$inject = ['$location', 'preferencesService', 'packages', 'tags', 'asset', 'search'];
 
 /*

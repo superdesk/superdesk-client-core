@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import {ChangeImageController} from '../authoring/controllers/ChangeImageController';
 import {gettext} from 'core/ui/components/utils';
 

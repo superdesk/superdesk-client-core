@@ -1,5 +1,6 @@
 import DiffMatchPatch from 'diff-match-patch';
 import shortid from 'shortid';
+import _ from 'lodash';
 
 class LinkFunction {
     constructor(compareVersions, content, lock, $timeout, scope, elem) {

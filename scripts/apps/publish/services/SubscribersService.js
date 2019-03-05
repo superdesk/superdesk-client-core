@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 SubscribersService.$inject = ['api', '$q', '$filter'];
 export function SubscribersService(api, $q, $filter) {
     /**

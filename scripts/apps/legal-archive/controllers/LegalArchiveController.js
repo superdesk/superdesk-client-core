@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 LegalArchiveController.$inject = ['$scope', '$location', 'legal', 'preferencesService'];
 export function LegalArchiveController($scope, $location, legal, preferencesService) {
     var viewUpdate = {'archive:view': {

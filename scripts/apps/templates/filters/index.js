@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 /**
  * @ngdoc filter
  * @module superdesk.apps.templates

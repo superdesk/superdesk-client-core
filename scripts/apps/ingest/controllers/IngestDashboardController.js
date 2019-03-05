@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import {gettext} from 'core/ui/components/utils';
 
 IngestDashboardController.$inject = ['$scope', 'api', 'ingestSources', 'preferencesService',

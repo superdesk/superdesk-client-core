@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 // styles
 import './activity-widget/widget-activity.scss';
 import './styles/change-avatar.scss';

@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import {FILTER_FIELDS} from '../constants';
 import {gettext} from 'core/ui/components/utils';
 

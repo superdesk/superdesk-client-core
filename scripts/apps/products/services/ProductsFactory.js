@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 ProductsFactory.$inject = ['$q', 'api', 'contentFilters', '$filter'];
 export function ProductsFactory($q, api, contentFilters, $filter) {
     /**

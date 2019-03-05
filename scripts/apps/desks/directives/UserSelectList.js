@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 UserSelectList.$inject = ['$filter', 'api'];
 export function UserSelectList($filter, api) {
     return {

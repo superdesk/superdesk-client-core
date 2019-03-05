@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 export default angular.module('superdesk.core.workflow', [])
     .run(['workflowService', angular.noop]) // make sure it's loaded
     .service('workflowService', ['preferencesService', '$rootScope', function(preferencesService, $rootScope) {

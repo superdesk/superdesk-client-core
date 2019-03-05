@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 /**
  * Bussiness logic layer, should be used instead of resource
  */

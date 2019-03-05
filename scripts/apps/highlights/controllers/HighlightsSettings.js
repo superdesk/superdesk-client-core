@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 HighlightsSettings.$inject = ['$scope', 'api', 'desks'];
 export function HighlightsSettings($scope, api, desks) {
     desks.initialize().then(() => {

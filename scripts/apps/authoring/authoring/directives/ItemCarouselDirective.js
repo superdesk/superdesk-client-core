@@ -1,6 +1,7 @@
 /* global _ */
 
 import 'owl.carousel';
+import _ from 'lodash';
 import * as ctrl from '../controllers';
 import {waitForImagesToLoad, waitForAudioAndVideoToLoadMetadata} from 'core/helpers/waitForMediaToBeReady';
 import {getSuperdeskType} from 'core/utils';

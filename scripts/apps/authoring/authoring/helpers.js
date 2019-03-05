@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import {stripHtmlTags} from 'core/utils';
 import {META_FIELD_NAME, fieldsMetaKeys, getFieldMetadata} from 'core/editor3/helpers/fieldsMeta';
 import {isSuggestion, isComment} from 'core/editor3/highlightsConfig';

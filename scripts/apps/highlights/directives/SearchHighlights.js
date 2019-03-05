@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 SearchHighlights.$inject = ['highlightsService'];
 export function SearchHighlights(highlightsService) {
     return {

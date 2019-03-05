@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import {PARAMETERS} from 'apps/search/constants';
 
 /**

@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 PackagesService.$inject = ['api', '$q', 'archiveService', 'lock', 'autosave', 'authoring',
     'authoringWorkspace', 'desks', '$rootScope'];
 export function PackagesService(api, $q, archiveService, lock, autosave, authoring,

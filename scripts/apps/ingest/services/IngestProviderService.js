@@ -1,3 +1,4 @@
+import _ from 'lodash';
 
 IngestProviderService.$inject = ['api', '$q', 'preferencesService', '$filter', 'searchProviderService', 'config'];
 export function IngestProviderService(api, $q, preferencesService, $filter, searchProviderService, config) {

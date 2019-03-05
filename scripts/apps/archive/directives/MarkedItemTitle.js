@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 class LinkFunction {
     constructor(desks, authoring, highlightsService, $filter, $location, $timeout, scope, elem) {
         this.desks = desks;

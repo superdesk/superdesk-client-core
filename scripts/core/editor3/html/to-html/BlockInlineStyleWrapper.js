@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 /**
  * @type {Object}
  * @name InlineStyleTags

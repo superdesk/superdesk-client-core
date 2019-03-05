@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 /**
  * Action picker component
  *

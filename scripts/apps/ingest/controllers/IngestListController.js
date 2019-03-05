@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import {BaseListController} from 'apps/archive/controllers';
 
 export class IngestListController extends BaseListController {

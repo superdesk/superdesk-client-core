@@ -1,4 +1,4 @@
-import {get} from 'lodash';
+import _, {get} from 'lodash';
 
 /**
  * @ngdoc service

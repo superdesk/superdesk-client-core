@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import {stripHtmlTags} from '../utils';
 
 export default angular.module('superdesk.core.filters', [])

@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 SubjectService.$inject = ['api'];
 export function SubjectService(api) {
     var service = {

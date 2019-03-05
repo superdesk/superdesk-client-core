@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 TransmissionDetailsDirective.$inject = ['api'];
 export function TransmissionDetailsDirective(api) {
     return {

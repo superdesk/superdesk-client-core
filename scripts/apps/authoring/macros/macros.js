@@ -8,6 +8,7 @@
  * and triggering of macros to be apply on provided item
  */
 
+import _ from 'lodash';
 import {gettext} from 'core/ui/components/utils';
 
 MacrosService.$inject = ['api', 'notify'];

@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 export default angular.module('superdesk.core.directives.searchListSingle', ['superdesk.core.services.asset'])
     /**
      * @ngdoc directive

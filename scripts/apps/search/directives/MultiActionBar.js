@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 MultiActionBar.$inject = ['asset', 'multi', 'authoringWorkspace', 'superdesk', 'keyboardManager'];
 export function MultiActionBar(asset, multi, authoringWorkspace, superdesk, keyboardManager) {
     return {

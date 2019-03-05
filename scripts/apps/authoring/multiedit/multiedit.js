@@ -8,6 +8,7 @@
  * at https://www.sourcefabric.org/superdesk/license
  */
 
+import _ from 'lodash';
 import {gettext} from 'core/ui/components/utils';
 
 

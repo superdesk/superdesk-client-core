@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 var render = function(element, value) {
     element.toggleClass('checked', !!value);
     element.attr('checked', !!value);

@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 SavedSearchService.$inject = ['api', '$filter', '$q', '$rootScope'];
 
 export function SavedSearchService(api, $filter, $q, $rootScope) {
