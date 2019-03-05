@@ -298,7 +298,9 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
     };
 
     function loadImage() {
-        var img = document.createElement("img");
+        if ('thumbnail' in $scope.data.metadata.renditions)
+        {
+            var img = document.createElement("img");
         img.src = $scope.data.metadata.renditions.thumbnail.href
         img.onload = function () {
             var canvas = drawObjectToCanvas(img, video.offsetHeight, video.offsetWidth);
@@ -308,6 +310,7 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
             canvas.style = "max-width: 100%;";
             output.append(canvas);
         };
+        }
     }
 
     $scope.controlBarClick = function () {
