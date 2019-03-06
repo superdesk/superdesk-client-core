@@ -39,5 +39,7 @@ export interface IFormGroup { // don't fortget to update runtime type checks
 }
 
 export function isIFormGroup(x: IFormGroup['form'][0]): x is IFormGroup {
-    return JSON.stringify(Object.keys(x)) === '["direction","type","form"]';
+    const keys = Object.keys(x);
+
+    return keys.length === 3 && keys.includes('direction') && keys.includes('type') && keys.includes('form');
 }
