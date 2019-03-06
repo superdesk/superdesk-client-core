@@ -23,10 +23,8 @@ import {connectCrudManager, ICrudManager} from 'core/helpers/CrudManager';
 import {TagLabel} from 'core/ui/components/TagLabel';
 import {connectServices} from 'core/helpers/ReactRenderAsync';
 import {IDefaultApiFields} from '../../types/RestApi';
-import {VocabularySingleValue} from './generic-form/input-types/vocabulary_single_value';
-import {TextSingleLine} from './generic-form/input-types/text-single-line';
 import {getFormGroupForFiltering} from './generic-form/get-form-group-for-filtering';
-import {getFormFieldsRecursive} from './generic-form/form-field';
+import {getFormFieldsRecursive, getFormFieldPreviewComponent} from './generic-form/form-field';
 
 interface IState {
     itemInPreview?: string;
@@ -81,6 +79,22 @@ const sortOptions: Array<ISortFields> = [
         field: '_created',
     },
 ];
+
+const renderConceptItemRow = (item: IKnowledgeBaseItem) => {
+    return (
+        <React.Fragment>
+            <ListItemColumn>
+                {getFormFieldPreviewComponent(item, nameField)}
+            </ListItemColumn>
+            <ListItemColumn>
+                {getFormFieldPreviewComponent(item, languageField)}
+            </ListItemColumn>
+            <ListItemColumn ellipsisAndGrow noBorder>
+                {getFormFieldPreviewComponent(item, definitionField)}
+            </ListItemColumn>
+        </React.Fragment>
+    );
+};
 
 interface IProps {
     conceptItems: ICrudManager<IKnowledgeBaseItem>;
@@ -297,36 +311,7 @@ class KnowledgeBasePageComponent extends React.Component<IProps, IState> {
                             {
                                 this.props.conceptItems._items.map((item, i) => (
                                     <ListItem onClick={() => this.openPreview(item._id)} key={item._id}>
-                                        <ListItemColumn>
-                                            <TextSingleLine
-                                                previewOuput={true}
-                                                value={item.name}
-                                                formField={nameField}
-                                                disabled={false}
-                                                issues={[]}
-                                                onChange={noop}
-                                            />
-                                        </ListItemColumn>
-                                        <ListItemColumn>
-                                            <VocabularySingleValue
-                                                previewOuput={true}
-                                                value={item.language}
-                                                formField={languageField}
-                                                disabled={false}
-                                                issues={[]}
-                                                onChange={noop}
-                                            />
-                                        </ListItemColumn>
-                                        <ListItemColumn ellipsisAndGrow noBorder>
-                                            <TextSingleLine
-                                                previewOuput={true}
-                                                value={item.definition}
-                                                formField={definitionField}
-                                                disabled={false}
-                                                issues={[]}
-                                                onChange={noop}
-                                            />
-                                        </ListItemColumn>
+                                        {renderConceptItemRow(item)}
                                         <ListItemActionsMenu>
                                             <button id={"knowledgebaseitem" + i}>
                                                 <i className="icon-dots-vertical" />
