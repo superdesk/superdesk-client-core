@@ -71,7 +71,7 @@ const languageField: IFormField = {
 };
 const definitionField: IFormField = {
     label : gettext('Definition'),
-    type: 'text_editor3',
+    type: 'text_single_line',
     field: 'definition',
 };
 
@@ -323,7 +323,7 @@ class KnowledgeBasePageComponent extends React.Component<IProps, IState> {
                                             />
                                         </ListItemColumn>
                                         <ListItemColumn ellipsisAndGrow noBorder>
-                                            <TextEditor3
+                                            <TextSingleLine
                                                 previewOuput={true}
                                                 value={item.definition}
                                                 formField={definitionField}
