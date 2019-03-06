@@ -24,9 +24,9 @@ import {TagLabel} from 'core/ui/components/TagLabel';
 import {connectServices} from 'core/helpers/ReactRenderAsync';
 import {IDefaultApiFields} from '../../types/RestApi';
 import {VocabularySingleValue} from './generic-form/input-types/vocabulary_single_value';
-import {TextEditor3} from './generic-form/input-types/text-editor3';
 import {TextSingleLine} from './generic-form/input-types/text-single-line';
 import {getFormGroupForFiltering} from './generic-form/get-form-group-for-filtering';
+import {getFormFieldsRecursive} from './generic-form/form-field';
 
 interface IState {
     itemInPreview?: string;
@@ -36,25 +36,6 @@ interface IState {
     searchValue: string;
     loading: boolean;
 }
-
-const sortOptions: Array<ISortFields> = [
-    {
-        label : gettext('Name'),
-        field: 'name',
-    },
-    {
-        label : gettext('Definition'),
-        field: 'definition',
-    },
-    {
-        label : gettext('Last updated'),
-        field: '_updated',
-    },
-    {
-        label : gettext('First created'),
-        field: '_created',
-    },
-];
 
 const nameField: IFormField = {
     label : gettext('Name'),
@@ -86,6 +67,20 @@ const formConfig: IFormGroup = {
 };
 
 const formConfigForFilters = getFormGroupForFiltering(formConfig);
+
+const fieldsList = getFormFieldsRecursive(formConfig.form);
+
+const sortOptions: Array<ISortFields> = [
+    ...fieldsList.map(({label, field}) => ({label, field})),
+    {
+        label : gettext('Last updated'),
+        field: '_updated',
+    },
+    {
+        label : gettext('First created'),
+        field: '_created',
+    },
+];
 
 interface IProps {
     conceptItems: ICrudManager<IKnowledgeBaseItem>;

@@ -1,6 +1,6 @@
 import {TextSingleLine} from "./input-types/text-single-line";
 import {assertNever} from "core/helpers/typescript-helpers";
-import {IFormField} from "./interfaces/form";
+import {IFormField, IFormGroup, isIFormGroup, isIFormField} from "./interfaces/form";
 import {VocabularySingleValue} from "./input-types/vocabulary_single_value";
 import {TextEditor3} from "./input-types/text-editor3";
 
@@ -15,4 +15,20 @@ export function getFormFieldComponent(type: IFormField['type']) {
         default:
             assertNever(type);
     }
+}
+
+export function getFormFieldsRecursive(form: Array<IFormField | IFormGroup>): Array<IFormField> {
+    let result: Array<IFormField> = [];
+
+    form.forEach((item) => {
+        if (isIFormGroup(item)) {
+            result = result.concat(getFormFieldsRecursive(item.form));
+        } else if (isIFormField(item)) {
+            result.push(item);
+        } else {
+            assertNever(item);
+        }
+    });
+
+    return result;
 }
