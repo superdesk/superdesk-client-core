@@ -1,4 +1,4 @@
-import {ContentState, convertFromRaw} from 'draft-js';
+import {ContentState, convertFromRaw, convertToRaw} from 'draft-js';
 import {HTMLGenerator} from '.';
 import {isQumuWidget, postProccessQumuEmbed} from '../../components/embeds/QumuWidget';
 import {logger} from 'core/services/logger';
@@ -16,6 +16,7 @@ export class AtomicBlockParser {
     constructor(contentState, disabled = []) {
         this.contentState = contentState;
         this.disabled = disabled;
+        this.rawState = convertToRaw(contentState);
     }
 
     /**
@@ -34,10 +35,11 @@ export class AtomicBlockParser {
 
         const entity = this.contentState.getEntity(entityKey);
         const data = entity.getData();
+        const rawKey = this.getRawKey(data);
 
         switch (entity.getType()) {
         case 'MEDIA':
-            return this.parseMedia(data);
+            return this.parseMedia(data, rawKey);
         case 'EMBED':
             return this.parseEmbed(data);
         case 'TABLE':
@@ -46,6 +48,16 @@ export class AtomicBlockParser {
             logger.warn(`Editor3: Cannot generate HTML for entity type of ${entity.getType()}`, data);
             return '';
         }
+    }
+
+    /**
+     * Get entity key from raw state, which will be sent to backend and which is used for associations
+     *
+     * @param {Object} data
+     * @return Number
+     */
+    getRawKey(data) {
+        return Object.keys(this.rawState.entityMap).find((key) => this.rawState.entityMap[key].data === data);
     }
 
     /**
@@ -70,35 +82,51 @@ export class AtomicBlockParser {
      * @ngdoc method
      * @name AtomicBlockParser#parseMedia
      * @param {Object} data Entity data.
+     * @param {String} rawKey Entity output key.
      * @returns {string} HTML
      * @description Returns the HTML representation of an atomic 'MEDIA' block having
      * the passed entity data.
      */
-    parseMedia(data) {
+    parseMedia(data, rawKey) {
         const {media} = data;
         const rendition = media.renditions.original || media.renditions.viewImage;
         const href = rendition.href;
         const alt = media.alt_text || '';
         const mediaType = media.type;
 
-        let html = '<div class="media-block">';
+        let type, content, desc = media.description_text;
 
         switch (mediaType) {
         case 'video':
-            html += `<video controls src="${href}" alt="${alt}" width="100%" height="100%" />`;
+            type = 'Video';
+            content = `<video controls src="${href}" alt="${alt}" width="100%" height="100%" />`;
             break;
         case 'audio':
-            html += `<audio controls src="${href}" alt="${alt}" width="100%" height="100%" />`;
+            type = 'Audio';
+            content = `<audio controls src="${href}" alt="${alt}" width="100%" height="100%" />`;
             break;
         default:
-            html += `<img src="${href}" alt="${alt}" />`;
+            type = 'Image';
+            content = `<img src="${href}" alt="${alt}" />`;
         }
 
-        html += media.description_text
-            ? `<span class="media-block__description">${media.description_text}</span>`
-            : '';
+        return this.formatEmbed(type, rawKey, content, desc);
+    }
 
-        return `${html}</div>`;
+    formatEmbed(type, key, content, desc) {
+        const id = `${type} {id: "editor_${key}"}`;
+
+        if (desc) {
+            content + `\n    <figcatpion>${desc}</figcaption>`;
+        }
+
+        return `
+<!-- EMBED START ${id} -->
+<figure>
+    ${content}
+</figure>
+<!-- EMBED END ${id} -->
+`;
     }
 
     /**
