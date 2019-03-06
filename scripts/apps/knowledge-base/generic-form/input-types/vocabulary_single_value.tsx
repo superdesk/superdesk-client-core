@@ -45,9 +45,7 @@ export class VocabularySingleValueComponent extends React.Component<IProps, ISta
                     value={this.props.value}
                     className="sd-line-input__select"
                     onChange={(event) => {
-                        if (event.target.value !== '') {
-                            this.props.onChange(event.target.value);
-                        }
+                        this.props.onChange(event.target.value);
                     }}
                 >
                     <option value=""></option>
