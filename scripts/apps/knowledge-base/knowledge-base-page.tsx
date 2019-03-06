@@ -24,7 +24,7 @@ import {TagLabel} from 'core/ui/components/TagLabel';
 import {connectServices} from 'core/helpers/ReactRenderAsync';
 import {IDefaultApiFields} from '../../types/RestApi';
 import {VocabularySingleValue} from './generic-form/input-types/vocabulary_single_value';
-import {TextEditor3, IEditor3State} from './generic-form/input-types/text-editor3';
+import {TextEditor3} from './generic-form/input-types/text-editor3';
 import {TextSingleLine} from './generic-form/input-types/text-single-line';
 import {getFormGroupForFiltering} from './generic-form/get-form-group-for-filtering';
 
@@ -43,8 +43,8 @@ const sortOptions: Array<ISortFields> = [
         field: 'name',
     },
     {
-        label : gettext('Annotation'),
-        field: 'annotation_value',
+        label : gettext('Definition'),
+        field: 'definition',
     },
     {
         label : gettext('Last updated'),
@@ -72,7 +72,7 @@ const languageField: IFormField = {
 const definitionField: IFormField = {
     label : gettext('Definition'),
     type: 'text_editor3',
-    field: 'annotation_value',
+    field: 'definition',
 };
 
 const formConfig: IFormGroup = {
@@ -96,8 +96,7 @@ export interface IKnowledgeBaseItem extends IDefaultApiFields {
     name: string;
     labels?: Array<string>;
     language: string;
-    definition: any;
-    annotation_value: IEditor3State;
+    definition: string;
 
     // http://cv.iptc.org/newscodes/cpnature/
     cpnat_type: 'cpnat:abstract' | 'cpnat:event' | 'cpnat:geoArea'
@@ -326,7 +325,7 @@ class KnowledgeBasePageComponent extends React.Component<IProps, IState> {
                                         <ListItemColumn ellipsisAndGrow noBorder>
                                             <TextEditor3
                                                 previewOuput={true}
-                                                value={item.annotation_value}
+                                                value={item.definition}
                                                 formField={definitionField}
                                                 disabled={false}
                                                 issues={[]}
