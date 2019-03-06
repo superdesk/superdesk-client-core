@@ -92,7 +92,7 @@ const getNextPattern = (pattern, diff) => {
         return null;
     }
 
-    if (index === keys.length - 1) {
+    if (index >= keys.length - 1) {
         return keys[0];
     }
 
@@ -108,7 +108,7 @@ const findNext = (state) => {
     const total = countOccurrences(state);
     let {index, pattern, diff} = state.searchTerm;
 
-    if (++index === total) {
+    if (++index >= total) {
         pattern = getNextPattern(pattern, diff) || pattern;
         index = 0;
     }
@@ -131,7 +131,7 @@ const getPrevPattern = (pattern, diff) => {
         return null;
     }
 
-    if (index === 0) {
+    if (index <= 0) {
         return keys[keys.length - 1];
     }
 
