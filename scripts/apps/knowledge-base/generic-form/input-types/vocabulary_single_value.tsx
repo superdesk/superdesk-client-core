@@ -1,8 +1,8 @@
-import React from "react";
+import React from 'react';
 import classNames from 'classnames';
-import {connectServices} from "core/helpers/ReactRenderAsync";
-import {IInputType} from "../interfaces/input-types";
-import {IVocabulary} from "superdesk-interfaces/Vocabulary";
+import {connectServices} from 'core/helpers/ReactRenderAsync';
+import {IInputType} from '../interfaces/input-types';
+import {IVocabulary} from 'superdesk-interfaces/Vocabulary';
 
 interface IProps extends IInputType<string> {
     vocabularies?: any;
@@ -48,7 +48,7 @@ export class VocabularySingleValueComponent extends React.Component<IProps, ISta
                         this.props.onChange(event.target.value);
                     }}
                 >
-                    <option value=""></option>
+                    <option value="" />
                     {
                         this.state.vocabulary.items.map(({qcode, name}, i) => (
                             <option key={i} value={qcode}>{name}</option>

@@ -1,5 +1,5 @@
-import React from "react";
-import {assertNever} from "core/helpers/typescript-helpers";
+import React from 'react';
+import {assertNever} from 'core/helpers/typescript-helpers';
 
 interface IPropsSidePanel {
     children: Array<React.ReactElement<SidePanelHeader> | React.ReactElement<SidePanelContent>>;
@@ -27,7 +27,7 @@ export class SidePanel extends React.Component<IPropsSidePanel, any> {
     }
 }
 
-type OneOrMany<T> = React.ReactElement<T> | Array<React.ReactElement<T>>;
+type OneOrMany < T > = React.ReactElement<T> | Array<React.ReactElement<T>>;
 
 interface IPropsSidePanelHeader {
     children: OneOrMany<SidePanelHeading> | OneOrMany<SidePanelTools>;

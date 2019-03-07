@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 export class PageContainer extends React.Component<any, any> {
     render() {
@@ -17,7 +17,7 @@ interface IPageContainerItem {
 export class PageContainerItem extends React.Component<IPageContainerItem, any> {
     render() {
         return (
-            <div className={this.props.shrink ? "sd-column-box__main-column" : null}>
+            <div className={this.props.shrink ? 'sd-column-box__main-column' : null}>
                 {this.props.children}
             </div>
         );

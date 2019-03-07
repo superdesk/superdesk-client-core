@@ -173,7 +173,7 @@ function updateText(editorState, content, block, newText, diffMatchPatch, simple
 
         if (diff[0] === 0) {
             if (previousDiff != null) {
-                const _previousText  = previousDiff[1];
+                const _previousText = previousDiff[1];
 
                 newContent = removeText(editorState, newContent, block, offset, _previousText);
             }
@@ -183,21 +183,21 @@ function updateText(editorState, content, block, newText, diffMatchPatch, simple
             if (previousDiff == null) {
                 ({newContent, offset} = insertText(editorState, newContent, block, offset, _text));
             } else {
-                const _previousText  = previousDiff[1];
+                const _previousText = previousDiff[1];
 
-                ({newContent, offset}  =  replaceText(editorState, newContent, block, offset, _previousText, _text));
+                ({newContent, offset} = replaceText(editorState, newContent, block, offset, _previousText, _text));
                 previousDiff = null;
             }
         } else {
             if (previousDiff != null) {
-                const _previousText  = previousDiff[1];
+                const _previousText = previousDiff[1];
 
                 newContent = removeText(editorState, newContent, block, offset, _previousText);
             }
 
             if (simpleReplace === true) {
                 newContent = removeText(editorState, newContent, block, offset, _text);
-            } else  {
+            } else {
                 previousDiff = diff;
             }
         }
@@ -235,7 +235,7 @@ function insertText(editorState, content, block, offset, text) {
  * @param {String} newText
  * @returns {ContentState, Integer}
  */
-function replaceText(editorState, content, block, offset, text, newText)  {
+function replaceText(editorState, content, block, offset, text, newText) {
     const overlapLength = text.length < newText.length ? text.length : newText.length;
     let newContent = content;
 

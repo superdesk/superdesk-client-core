@@ -16,8 +16,8 @@ interface IMethods<Entity extends IDefaultApiFields> {
     read(
         page: number,
         sort?: {
-            field: string;
-            direction: 'ascending' | 'descending';
+        field: string;
+        direction: 'ascending' | 'descending';
         },
         filterValues?: {[fieldName: string]: string},
     ): Promise<IRestApiResponse<Entity>>;
@@ -108,8 +108,8 @@ export function connectCrudManager<Props, Entity extends IDefaultApiFields>(
                         continue;
                     }
                     filters[key] = {
-                        "$regex": filtersValidated[key],
-                        "$options": "i",
+                        $regex: filtersValidated[key],
+                        $options: 'i',
                     };
                 }
 
@@ -117,17 +117,15 @@ export function connectCrudManager<Props, Entity extends IDefaultApiFields>(
             }
 
             return this.api.query(query)
-                .then((res: IRestApiResponse<Entity>) => {
-                    return new Promise((resolve) => {
-                        this.setState({
-                            ...res,
-                            activeSortOption: sortOption,
-                            activeFilters: filtersValidated,
-                        }, () => {
-                            resolve(res);
-                        });
+                .then((res: IRestApiResponse<Entity>) => new Promise((resolve) => {
+                    this.setState({
+                        ...res,
+                        activeSortOption: sortOption,
+                        activeFilters: filtersValidated,
+                    }, () => {
+                        resolve(res);
                     });
-                });
+                }));
         }
 
         update(nextItem: Entity): Promise<Entity> {
@@ -150,6 +148,7 @@ export function connectCrudManager<Props, Entity extends IDefaultApiFields>(
 
         removeFilter(fieldName: string): Promise<IRestApiResponse<Entity>> {
             let nextFilters = {...this.state.activeFilters};
+
             delete nextFilters[fieldName];
 
             return this.read(1, this.state.activeSortOption, nextFilters);
@@ -167,18 +166,18 @@ export function connectCrudManager<Props, Entity extends IDefaultApiFields>(
             return (
                 <WrappedComponent
                     {
-                        ...{
-                            [name]: {
-                                ...this.state,
-                                create: this.create,
-                                read: this.read,
-                                update: this.update,
-                                delete: this.delete,
-                                sort: this.sort,
-                                removeFilter: this.removeFilter,
-                                goToPage: this.goToPage,
-                            },
-                        }
+                    ...{
+                        [name]: {
+                            ...this.state,
+                            create: this.create,
+                            read: this.read,
+                            update: this.update,
+                            delete: this.delete,
+                            sort: this.sort,
+                            removeFilter: this.removeFilter,
+                            goToPage: this.goToPage,
+                        },
+                    }
                     }
                     {...fixedProps}
                 />

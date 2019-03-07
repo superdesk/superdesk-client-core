@@ -1,10 +1,10 @@
-import React from "react";
+import React from 'react';
 
-import {IFormGroup, isIFormGroup, isIFormField} from "./interfaces/form";
+import {IFormGroup, isIFormGroup, isIFormField} from './interfaces/form';
 
-import {getFormFieldComponent} from "./form-field";
-import {assertNever} from "core/helpers/typescript-helpers";
-import {FormGroupWrapper} from "./form-group-wrapper";
+import {getFormFieldComponent} from './form-field';
+import {assertNever} from 'core/helpers/typescript-helpers';
+import {FormGroupWrapper} from './form-group-wrapper';
 
 interface IProps {
     formConfig: IFormGroup;

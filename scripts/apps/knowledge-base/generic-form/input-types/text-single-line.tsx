@@ -1,6 +1,6 @@
-import React from "react";
+import React from 'react';
 import classNames from 'classnames';
-import {IInputType} from "../interfaces/input-types";
+import {IInputType} from '../interfaces/input-types';
 
 export class TextSingleLine extends React.Component<IInputType<string>> {
     render() {

@@ -1,13 +1,13 @@
-import React from "react";
+import React from 'react';
 import classNames from 'classnames';
-import {IInputType} from "../interfaces/input-types";
-import {RawDraftContentState, convertFromRaw, ContentState, convertToRaw} from "draft-js";
-import {Editor3Standalone} from "core/editor3/react";
-import {HTMLGenerator} from "core/editor3/html/to-html/HTMLGenerator";
-import {UserHtmlSingleLine} from "core/helpers/UserHtmlSingleLine";
-import {getContentStateFromHtml} from "core/editor3/html/from-html";
+import {IInputType} from '../interfaces/input-types';
+import {RawDraftContentState, convertFromRaw, ContentState, convertToRaw} from 'draft-js';
+import {Editor3Standalone} from 'core/editor3/react';
+import {HTMLGenerator} from 'core/editor3/html/to-html/HTMLGenerator';
+import {UserHtmlSingleLine} from 'core/helpers/UserHtmlSingleLine';
+import {getContentStateFromHtml} from 'core/editor3/html/from-html';
 
-type IProps =  IInputType<string>;
+type IProps = IInputType<string>;
 
 interface IState {
     rawDraftContentState: RawDraftContentState;

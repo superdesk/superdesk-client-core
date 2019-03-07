@@ -1,4 +1,4 @@
-import {IFormField} from "./form";
+import {IFormField} from './form';
 
 export interface IInputType<T> {
     formField: IFormField;

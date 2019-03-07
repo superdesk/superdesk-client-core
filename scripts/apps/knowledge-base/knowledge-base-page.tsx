@@ -151,11 +151,11 @@ class KnowledgeBasePageComponent extends React.Component<IProps, IState> {
         const sortOptions: Array<ISortFields> = [
             ...fieldsList.map(({label, field}) => ({label, field})),
             {
-                label : gettext('Last updated'),
+                label: gettext('Last updated'),
                 field: '_updated',
             },
             {
-                label : gettext('First created'),
+                label: gettext('First created'),
                 field: '_created',
             },
         ];
@@ -190,14 +190,14 @@ class KnowledgeBasePageComponent extends React.Component<IProps, IState> {
                         className="sd-create-btn dropdown-toggle"
                         icon="icon-plus-large"
                     >
-                        <span className="circle"></span>
+                        <span className="circle" />
                     </Button>
                 </div>
                 <PageContainer>
                     {
                         this.state.filtersOpen ? (
                             <PageContainerItem>
-                                <SidePanel side='left' width={240}>
+                                <SidePanel side="left" width={240}>
                                     <SidePanelHeader>
                                         <SidePanelHeading>{gettext('Refine search')}</SidePanelHeading>
                                         <SidePanelTools>
@@ -205,7 +205,7 @@ class KnowledgeBasePageComponent extends React.Component<IProps, IState> {
                                                 className="icn-btn"
                                                 onClick={() => this.setFiltersVisibility(false)}
                                             >
-                                                <i className="icon-close-small"></i>
+                                                <i className="icon-close-small" />
                                             </button>
                                         </SidePanelTools>
                                     </SidePanelHeader>
@@ -278,17 +278,17 @@ class KnowledgeBasePageComponent extends React.Component<IProps, IState> {
                                     <ListItem onClick={() => this.openPreview(item._id)} key={item._id}>
                                         {renderConceptItemRow(item)}
                                         <ListItemActionsMenu>
-                                            <button id={"knowledgebaseitem" + i}>
+                                            <button id={'knowledgebaseitem' + i}>
                                                 <i className="icon-dots-vertical" />
                                             </button>
                                             <Positioner
-                                                triggerSelector={"#knowledgebaseitem" + i}
+                                                triggerSelector={'#knowledgebaseitem' + i}
                                                 placement="left-start"
                                                 className="dropdown2"
                                             >
                                                 <ul
                                                     className="dropdown__menu"
-                                                    style={{ display: "block", position: "static" }}
+                                                    style={{display: 'block', position: 'static'}}
                                                 >
                                                     <li>
                                                         <div className="dropdown__menu-label">{gettext('Actions')}</div>
@@ -301,7 +301,7 @@ class KnowledgeBasePageComponent extends React.Component<IProps, IState> {
                                                         >
                                                             <i className="icon-pencil" />
                                                             <span
-                                                                style={{ display: "inline" }}
+                                                                style={{display: 'inline'}}
                                                             >
                                                                 {gettext('Remove')}
                                                             </span>
@@ -323,7 +323,7 @@ class KnowledgeBasePageComponent extends React.Component<IProps, IState> {
                                     onEditModeChange={(val) => {
                                         this.previewInEditMode = val;
                                     }}
-                                    operation='editing'
+                                    operation="editing"
                                     formConfig={formConfig}
                                     item={
                                         this.props.conceptItems._items.find(({_id}) => _id === this.state.itemInPreview)
@@ -339,12 +339,12 @@ class KnowledgeBasePageComponent extends React.Component<IProps, IState> {
                         this.state.newItem != null ? (
                             <PageContainerItem>
                                 <KnowledgeItemViewEdit
-                                    operation='creation'
+                                    operation="creation"
                                     formConfig={formConfig}
                                     item={this.state.newItem}
                                     onSave={(item: IKnowledgeBaseItem) => this.props.conceptItems.create({
                                         ...item,
-                                        "cpnat_type": "cpnat:abstract",
+                                        cpnat_type: 'cpnat:abstract',
                                     }).then((res) => {
                                         this.closeNewItemForm();
                                         this.openPreview(res._id);
