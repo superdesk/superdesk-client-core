@@ -103,52 +103,12 @@
                     </div>
                     <div class="video-controls">
                         <md-frames class="thumbs">
-                            <div class="inner">
-                                <video preload="metadata" width="88" height="50"
-                                       poster="https://s37.123apps.com/vcutter/frame2/s376KEEwSz2.mp4/0/50"
-                                       class="loaded"></video>
-                                <video preload="metadata" width="88" height="50"
-                                       poster="https://s37.123apps.com/vcutter/frame2/s376KEEwSz2.mp4/26605/50"
-                                       class="loaded"></video>
-                                <video preload="metadata" width="88" height="50"
-                                       poster="https://s37.123apps.com/vcutter/frame2/s376KEEwSz2.mp4/53209/50"
-                                       class="loaded"></video>
-                                <video preload="metadata" width="88" height="50"
-                                       poster="https://s37.123apps.com/vcutter/frame2/s376KEEwSz2.mp4/79814/50"
-                                       class="loaded"></video>
-                                <video preload="metadata" width="88" height="50"
-                                       poster="https://s37.123apps.com/vcutter/frame2/s376KEEwSz2.mp4/106419/50"
-                                       class="loaded"></video>
-                                <video preload="metadata" width="88" height="50"
-                                       poster="https://s37.123apps.com/vcutter/frame2/s376KEEwSz2.mp4/133024/50"
-                                       class="loaded"></video>
-                                <video preload="metadata" width="88" height="50"
-                                       poster="https://s37.123apps.com/vcutter/frame2/s376KEEwSz2.mp4/159628/50"
-                                       class="loaded"></video>
-                                <video preload="metadata" width="88" height="50"
-                                       poster="https://s37.123apps.com/vcutter/frame2/s376KEEwSz2.mp4/186233/50"
-                                       class="loaded"></video>
-                                <video preload="metadata" width="88" height="50"
-                                       poster="https://s37.123apps.com/vcutter/frame2/s376KEEwSz2.mp4/212838/50"
-                                       class="loaded"></video>
-                                <video preload="metadata" width="88" height="50"
-                                       poster="https://s37.123apps.com/vcutter/frame2/s376KEEwSz2.mp4/239442/50"
-                                       class="loaded"></video>
-                                <video preload="metadata" width="88" height="50"
-                                       poster="https://s37.123apps.com/vcutter/frame2/s376KEEwSz2.mp4/266047/50"
-                                       class="loaded"></video>
-                                <video preload="metadata" width="88" height="50"
-                                       poster="https://s37.123apps.com/vcutter/frame2/s376KEEwSz2.mp4/292652/50"
-                                       class="loaded"></video>
-                                <video preload="metadata" width="88" height="50"
-                                       poster="https://s37.123apps.com/vcutter/frame2/s376KEEwSz2.mp4/319257/50"
-                                       class="loaded"></video>
+                            <div class="inner" id="inner-frames">
                             </div>
                         </md-frames>
-                        <md-controlbars class="control-bars" data-parser="time" ng-click="controlBarClick($event)">
+                        <md-controlbars class="control-bars" data-parser="time" ng-onchang="controlBarChange()" ng-click="controlBarClick($event)">
 
                             <div class="mask left" id="mask-left"></div>
-
                             <div class="mask right" id="mask-right"></div>
                             <div class="progress-output"
                                  style="--offset:3.92699px; --contentTop:-20.073px;">

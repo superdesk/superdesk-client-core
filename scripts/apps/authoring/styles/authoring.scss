@@ -1811,7 +1811,7 @@ md-controlbars .mask.left.active:after {
     position: absolute;
     width: 6px;
     height: 100%;
-    right: -6px;
+    right: -3px;
     background-position: right;
     background-repeat: no-repeat;
     content: ' ';
@@ -1825,8 +1825,8 @@ md-controlbars .mask.right {
 
 md-controlbars .mask {
     position: absolute;
-    top: 0;
-    bottom: 0;
+    top: -1px;
+    bottom: -1px;
     background-color: rgba(25, 30, 64, .8);
 }
 

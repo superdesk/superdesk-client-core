@@ -1,6 +1,7 @@
 import {get} from 'lodash';
 import {TweenMax, Power2, TimelineLite} from "gsap/TweenMax";
 import {gettext} from "superdesk-core/scripts/core/utils";
+import {IArticle} from "superdesk-core/scripts/superdesk-interfaces/Article";
 
 /**
  * @ngdoc controller
@@ -134,8 +135,7 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
             width: (position * 100) + '%'
         });
         barleft.setAttribute("data-content", getstrtime(position * video.duration));
-        if ($scope.addThumbnail)
-        {
+        if ($scope.addThumbnail) {
             loadImage()
         }
     };
@@ -266,7 +266,9 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
         barright.ondragend = function () {
             onDragEndCb();
         };
+
         loadImage();
+
         document.getElementById('file-upload').onchange = function (evt) {
             var tgt = evt.target || window.event.srcElement,
                 files = tgt.files;
@@ -295,21 +297,46 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
                 fr.readAsDataURL(files[0]);
             }
         }
-    };
+        if ('timeline' in $scope.data.metadata.renditions) {
+            loadTimeLine($scope.data.metadata.renditions['timeline'])
+        } else {
+            api.save('video_edit', {action: 'timeline', item: $scope.data.metadata}).then((data) => {
+                    var list_thumbnails = data.result.timeline;
+                    loadTimeLine(list_thumbnails);
+                    $scope.data.metadata.renditions['timeline'] = data.result.timeline;
+                    $scope.data.isDirty = true;
+                }
+            )
+        }
+    }
+
+    function loadTimeLine(list_thumbnails) {
+        var inner_frames = document.getElementById('inner-frames');
+        var total_thumbnail = Math.ceil(controlbar.offsetWidth / 88);
+        var per_index_image = 20 / total_thumbnail
+        inner_frames.innerHTML = '';
+        for (var i = 0; i <= total_thumbnail; i++) {
+            var index = Math.round(i * per_index_image)
+            var video = document.createElement("video");
+            video.width = 88;
+            video.height = 50;
+            video.poster = list_thumbnails[index].href;
+            inner_frames.append(video);
+        }
+    }
 
     function loadImage() {
-        if ('thumbnail' in $scope.data.metadata.renditions)
-        {
+        if ('thumbnail' in $scope.data.metadata.renditions) {
             var img = document.createElement("img");
-        img.src = $scope.data.metadata.renditions.thumbnail.href
-        img.onload = function () {
-            var canvas = drawObjectToCanvas(img, video.offsetHeight, video.offsetWidth);
-            var output = document.getElementById('output');
-            output.innerHTML = '';
-            canvas.id = "canvas-thumnail";
-            canvas.style = "max-width: 100%;";
-            output.append(canvas);
-        };
+            img.src = $scope.data.metadata.renditions.thumbnail.href
+            img.onload = function () {
+                var canvas = drawObjectToCanvas(img, video.offsetHeight, video.offsetWidth);
+                var output = document.getElementById('output');
+                output.innerHTML = '';
+                canvas.id = "canvas-thumnail";
+                canvas.style = "max-width: 100%;";
+                output.append(canvas);
+            };
         }
     }
 
@@ -419,6 +446,16 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
 
     };
 
+    /**
+     * @ngdoc metho d
+     * @name ChangeImageController#isDoneEnabled
+     * @public
+     * @description if dirty or is new picture item.
+     * @returns {Boolean}
+     */
+    $scope.controlBarChange = function () {
+        loadTimeLine($scope.data.metadata.renditions['timeline'])
+    };
     /**
      * @ngdoc metho d
      * @name ChangeImageController#isDoneEnabled
