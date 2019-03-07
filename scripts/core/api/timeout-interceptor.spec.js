@@ -1,11 +1,10 @@
-var RequestService = window.RequestService;
 var TimeoutHttpInterceptor = window.TimeoutHttpInterceptor;
 
 describe('timeout http interceptor', () => {
     var service;
 
     beforeEach(window.module(($provide) => {
-        $provide.service('request', RequestService);
+        $provide.service('request', window.RequestService);
         $provide.service('upload', function() {
             this.isUpload = function() {
                 return false;

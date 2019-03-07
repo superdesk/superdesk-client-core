@@ -1,4 +1,9 @@
 class LinkFunction {
+    scope: any;
+    superdesk: any;
+    api: any;
+    familyService: any;
+
     constructor(superdesk, api, familyService, scope) {
         this.scope = scope;
         this.superdesk = superdesk;

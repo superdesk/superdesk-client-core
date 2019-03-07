@@ -18,7 +18,7 @@ export function AuthoringHeaderDirective(api, authoringWidgets, $rootScope, arch
                     scope.translationsInfo = {
                         count: translations._meta.total,
                         translatedFromReference: translations._items.find(
-                            (item) => item._id === scope.item.translated_from
+                            (item) => item._id === scope.item.translated_from,
                         ),
                     };
                 });

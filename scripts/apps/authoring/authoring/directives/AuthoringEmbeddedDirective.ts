@@ -38,7 +38,7 @@ export function AuthoringEmbeddedDirective(api, notify, $filter, config, deployC
                 // kill template is applied on the item.
                 // task is required to get the desk name.
                 var fields = _.union(_.keys(helpers.CONTENT_FIELDS_DEFAULTS), ['_id', 'versioncreated', 'task']);
-                var item = {
+                var item: any = {
                     template_name: scope.action, item: _.pick(scope.item, fields),
                 };
 

@@ -38,7 +38,7 @@ export function ReadingTime(deployConfig) {
 
     function getReadingTime(input, language) {
         if (language && language.startsWith('ja')) {
-            return filter(input, (x) => trim(x)).length / deployConfig.getSync('japanese_characters_per_minute', 600);
+            return filter(input, (x) => !!trim(x)).length / deployConfig.getSync('japanese_characters_per_minute', 600);
         }
 
         const numWords = compact(input.split(/\s+/)).length || 0;

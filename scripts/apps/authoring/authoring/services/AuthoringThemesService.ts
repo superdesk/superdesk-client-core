@@ -1,6 +1,6 @@
 AuthoringThemesService.$inject = ['storage', 'preferencesService'];
 export function AuthoringThemesService(storage, preferencesService) {
-    var service = {};
+    var service: any = {};
 
     var PREFERENCES_KEY = 'editor:theme';
 

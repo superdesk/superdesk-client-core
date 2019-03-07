@@ -3,6 +3,14 @@ import shortid from 'shortid';
 import _ from 'lodash';
 
 class LinkFunction {
+    compareVersions: any;
+    content: any;
+    lock: any;
+    $timeout: any;
+    scope: any;
+    elem: any;
+    diffMatchPatch: any;
+
     constructor(compareVersions, content, lock, $timeout, scope, elem) {
         this.compareVersions = compareVersions;
         this.content = content;
@@ -99,7 +107,7 @@ class LinkFunction {
                     if (item.extra[field._id] || oldItem.extra[field._id]) {
                         item.extra[field._id] = this.highlightDifferences(
                             item.extra[field._id],
-                            oldItem.extra[field._id]
+                            oldItem.extra[field._id],
                         );
                     }
                 });
@@ -109,7 +117,7 @@ class LinkFunction {
                 oldItem.associations && oldItem.associations.featuremedia) {
                 item.associations.featuremedia.description_text = this.highlightDifferences(
                     item.associations.featuremedia.description_text,
-                    oldItem.associations.featuremedia.description_text
+                    oldItem.associations.featuremedia.description_text,
                 );
             }
         });
@@ -172,7 +180,7 @@ class LinkFunction {
         _.map(Object.keys(mapWords), (key) => {
             result = result.replace(
                 new RegExp(key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'),
-                ' ' + mapWords[key] + ' '
+                ' ' + mapWords[key] + ' ',
             );
         });
 

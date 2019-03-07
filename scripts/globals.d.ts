@@ -37,6 +37,7 @@ interface Window {
     webkitURL: any;
     superdeskConfig: any;
     module: any;
+    RunTansaProofing: any;
 }
 
 // ------------------------------------------------------------------------------------------------

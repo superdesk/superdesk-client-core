@@ -21,7 +21,7 @@ export function ItemActionsByIntentDirective(superdesk, activityService, workflo
         templateUrl: 'scripts/apps/authoring/views/item-actions-by-intent.html',
         link: function($scope, elem, attrs) {
             function getMenuGroups() {
-                let intent = {};
+                let intent: any = {};
 
                 if (_.get(attrs, 'sdIntentType')) {
                     intent.type = _.get(attrs, 'sdIntentType');

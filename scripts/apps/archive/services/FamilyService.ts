@@ -24,7 +24,7 @@ export function FamilyService(api, desks) {
      * @returns {Object}
      */
     this.fetchItems = (familyId, excludeItem) => {
-        let filter = [
+        let filter: Array<any> = [
             {not: {term: {state: 'spiked'}}},
             {term: {family_id: familyId}},
         ];
@@ -64,8 +64,8 @@ export function FamilyService(api, desks) {
      * @param {Object} queryString
      * @returns {Object}
      */
-    const query = (filter, sortField, order, queryString) => {
-        let params = {
+    const query = (filter: any, sortField: string, order: string, queryString?: string) => {
+        let params: any = {
             repo: repo,
             source: {
                 query: {filtered: {filter: {
@@ -115,7 +115,7 @@ export function FamilyService(api, desks) {
      * @returns {Object}
      */
     this.fetchRelatableItems = (keyword, sluglineMatch, item, modificationDateAfter) => {
-        let filter = [
+        let filter: Array<any> = [
             {not: {term: {state: 'spiked'}}},
             {not: {term: {event_id: item.event_id}}},
             {not: {term: {type: 'composite'}}},
@@ -142,7 +142,7 @@ export function FamilyService(api, desks) {
 
         // process creation date
         if (modificationDateAfter) {
-            let dateQuery = {};
+            let dateQuery: any = {};
 
             dateQuery.versioncreated = {
                 gte: modificationDateAfter,

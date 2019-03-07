@@ -1,6 +1,12 @@
 import _ from 'lodash';
 
 class LinkFunction {
+    compareVersions: any;
+    desks: any;
+    archiveService: any;
+    scope: any;
+    elem: any;
+
     constructor(compareVersions, desks, archiveService, scope, elem) {
         this.compareVersions = compareVersions;
         this.desks = desks;
@@ -53,7 +59,6 @@ class LinkFunction {
                 this.scope.queue = [this.scope.current];
             });
     }
-
 
     /**
      * @ngdoc method

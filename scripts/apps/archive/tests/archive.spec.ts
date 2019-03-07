@@ -2,7 +2,7 @@
 import {DuplicateController} from '../controllers';
 
 describe('content', () => {
-    var item = {_id: 1};
+    var item: any = {_id: 1};
 
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.mocks'));

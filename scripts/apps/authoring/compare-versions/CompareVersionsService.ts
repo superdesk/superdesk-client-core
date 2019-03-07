@@ -16,6 +16,15 @@ import _ from 'lodash';
 const MIN_BOARDS = 2; // at least two boards to display for versions comparision.
 
 export default class CompareVersionsService {
+    superdesk: any;
+    authoringWorkspace: any;
+    referrer: any;
+    desks: any;
+    archiveService: any;
+    $location: any;
+    items: any;
+    versions: any;
+
     constructor(superdesk, authoringWorkspace, referrer, desks, archiveService, $location) {
         this.superdesk = superdesk;
         this.authoringWorkspace = authoringWorkspace;
@@ -37,7 +46,7 @@ export default class CompareVersionsService {
          * @ngdoc property
          * @name compareVersions#versions
          * @type {Array<object>}
-         * @description Maintains array of object that contains all available versions of an opened article.
+
          */
         this.versions = [];
     }
@@ -145,7 +154,6 @@ export default class CompareVersionsService {
     _createBoard(itemVersion) {
         return {article: itemVersion};
     }
-
 
     init(item) {
         this.desks.initialize()

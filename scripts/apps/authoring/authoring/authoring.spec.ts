@@ -1,5 +1,5 @@
 import {onChange} from 'core/editor3/store/index';
-import {convertFromRaw} from 'draft-js';
+import {convertFromRaw, RawDraftContentState} from 'draft-js';
 
 describe('authoring', () => {
     beforeEach(window.module('superdesk.apps.vocabularies'));
@@ -61,9 +61,9 @@ describe('authoring', () => {
     it('generates annotations field from the editor state', inject((authoring) => {
         // eslint-disable-next-line max-len
         var contentStateRaw = {blocks: [{key: 'ak77o', text: 'test', type: 'unstyled', depth: 0, inlineStyleRanges: [{offset: 1, length: 2, style: 'ANNOTATION-1'}], entityRanges: [], data: {MULTIPLE_HIGHLIGHTS: {highlightsData: {'ANNOTATION-1': {data: {msg: '{"blocks":[{"key":"7f13c","text":"123","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}],"entityMap":{}}', email: 'a@a.com', annotationType: 'regular:001', authorId: '59c222237300870c9a7863b2', date: '2018-05-21T04:14:45.074Z', author: 'Andrew Powers', avatar: 'https://sd-master.test.superdesk.org/api/upload-raw/2018022710028/e5bc36e933881f6ad79962a085844b8616aecea0a87908db20033ac129d88cf2.jpg'}, type: 'ANNOTATION'}}, lastHighlightIds: {SPLIT_PARAGRAPH_SUGGESTION: 0, DELETE_SUGGESTION: 0, TOGGLE_BOLD_SUGGESTION: 0, MERGE_PARAGRAPHS_SUGGESTION: 0, ADD_SUGGESTION: 0, ADD_LINK_SUGGESTION: 0, ANNOTATION: 1, COMMENT: 0, BLOCK_STYLE_SUGGESTION: 0, TOGGLE_SUPERSCRIPT_SUGGESTION: 0, TOGGLE_SUBSCRIPT_SUGGESTION: 0, TOGGLE_UNDERLINE_SUGGESTION: 0, TOGGLE_STRIKETHROUGH_SUGGESTION: 0, CHANGE_LINK_SUGGESTION: 0, TOGGLE_ITALIC_SUGGESTION: 0, REMOVE_LINK_SUGGESTION: 0}, highlightsStyleMap: {'ANNOTATION-1': {borderBottom: '4px solid rgba(100, 205, 0, 0.6)'}}}, __PUBLIC_API__comments: []}}], entityMap: {}};
-        var contentState = convertFromRaw(contentStateRaw);
+        var contentState = convertFromRaw(contentStateRaw as RawDraftContentState);
 
-        var context = {
+        var context: any = {
             pathToValue: 'body_html',
             item: {
                 body_html: '<p>t<span annotation-id="1">es</span>t</p>',

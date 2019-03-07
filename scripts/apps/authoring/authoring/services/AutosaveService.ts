@@ -6,6 +6,8 @@ const RESOURCE = 'archive_autosave',
 let $q, $timeout, api;
 
 export class AutosaveService {
+    timeouts: any;
+
     constructor(_$q, _$timeout, _api) {
         $q = _$q;
         $timeout = _$timeout;

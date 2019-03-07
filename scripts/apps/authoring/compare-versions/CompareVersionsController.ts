@@ -9,6 +9,10 @@
  * provides set of convenience functions used by compare-versions screen.
  */
 export default class CompareVersionsController {
+    compareVersions: any;
+    lock: any;
+    $scope: any;
+
     constructor($scope, compareVersions, lock) {
         this.compareVersions = compareVersions;
         this.lock = lock;

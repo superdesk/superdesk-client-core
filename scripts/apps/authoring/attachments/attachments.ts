@@ -2,6 +2,19 @@ import './attachments.scss';
 import {gettext} from 'core/ui/components/utils';
 
 class AttachmentsController {
+    $scope: any;
+    $window: any;
+    superdesk: any;
+    attachments: any;
+    notify: any;
+    urls: any;
+    isLocked: any;
+    isLockedByMe: any;
+    maxFiles: any;
+    maxSize: any;
+    edit: any;
+    file: any;
+
     constructor($scope, $window, superdesk, attachments, notify, deployConfig, urls, lock) {
         this.$scope = $scope;
         this.$window = $window;
@@ -53,7 +66,7 @@ class AttachmentsController {
     removeFile(file) {
         this.$scope.files = this.$scope.files.filter((f) => f !== file);
         this.$scope.item.attachments = this.$scope.item.attachments.filter(
-            (item) => item.attachment !== file._id
+            (item) => item.attachment !== file._id,
         );
         this.autosave();
     }

@@ -214,7 +214,7 @@ export function AuthoringWorkspaceService($location, superdeskFlags, authoring, 
 
         $window.open(
             `${baseURL}/#/workspace/monitoring?item=${item._id}&action=${action}&popup`,
-            item._id
+            item._id,
         );
     };
 
@@ -256,7 +256,7 @@ export function AuthoringWorkspaceService($location, superdeskFlags, authoring, 
     /**
      * Fetch item by id and start editing it
      */
-    function authoringOpen(itemId, action, repo) {
+    function authoringOpen(itemId, action, repo?) {
         return authoring.open(itemId, action === 'view', repo, action)
             .then((item) => {
                 self.item = item;
