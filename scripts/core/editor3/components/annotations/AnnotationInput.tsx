@@ -12,6 +12,7 @@ import ng from 'core/services/ng';
 import {gettext} from 'core/utils';
 import {Editor3Standalone} from 'core/editor3/react';
 import {AnnotationInputDefault} from './AnnotationInputDefault';
+import {getContentStateFromHtml} from 'core/editor3/html/from-html';
 
 // used in superdesk-fi
 export interface IPropsAnnotationInputComponent {
@@ -19,7 +20,7 @@ export interface IPropsAnnotationInputComponent {
     annotationInputComponent: React.ReactElement<any>;
     annotationTypeSelect: JSX.Element;
     onCancel(): void;
-    onApplyAnnotation(rawDraftContentState: RawDraftContentState): void;
+    onApplyAnnotation(html: string): void;
 }
 
 interface IProps {
@@ -227,8 +228,8 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
                         onCancel={_hidePopups}
                         annotationTypeSelect={annotationTypeSelect}
                         annotationInputComponent={annotationInputComponent}
-                        onApplyAnnotation={(rawDraftContentState: RawDraftContentState) => {
-                            this.onChange(rawDraftContentState, this.onSubmit);
+                        onApplyAnnotation={(html: string) => {
+                            this.onChange(convertToRaw(getContentStateFromHtml(html)), this.onSubmit);
                         }}
                     />
                 </Dropdown>
