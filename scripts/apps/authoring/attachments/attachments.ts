@@ -1,110 +1,78 @@
+import {reactToAngular1} from 'superdesk-ui-framework';
+
 import './attachments.scss';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
+import AttachmentsEditorDirective from './AttachmentsEditorDirective';
+
+import {
+    closeEdit,
+    selectFiles,
+} from './actions';
+
+import {IAttachment} from '.';
+import {AttachmentsList} from './AttachmentsList';
+import {AttachmentsEditorModal} from './AttachmentsEditorModal';
+
+function getFilesLength(state) {
+    return state.attachments.files.length;
+}
 
 class AttachmentsController {
-    $scope: any;
-    $window: any;
-    superdesk: any;
-    attachments: any;
-    notify: any;
-    urls: any;
-    isLocked: any;
-    isLockedByMe: any;
-    maxFiles: any;
-    maxSize: any;
-    edit: any;
-    file: any;
+    closeEdit: () => void;
+    selectFiles: (files: Array<File>) => void;
 
-    constructor($scope, $window, superdesk, attachments, notify, deployConfig, urls, lock) {
-        this.$scope = $scope;
-        this.$window = $window;
-        this.superdesk = superdesk;
-        this.attachments = attachments;
-        this.notify = notify;
-        this.urls = urls;
-        this.isLocked = lock.isLocked($scope.item);
-        this.isLockedByMe = lock.isLockedByMe($scope.item);
+    edit: IAttachment;
+    files: Array<IAttachment>;
+    maxSize: number;
+    maxFiles: number;
+    editable: boolean;
+    isLocked: boolean;
+    isLockedByMe: boolean;
 
-        attachments.byItem($scope.item).then((files) => {
-            this.$scope.files = files;
-        }, () => {
-            this.$scope.files = [];
+    constructor($scope) {
+        const {dispatch} = $scope.store;
+
+        // map dispatch
+        this.selectFiles = (files) => dispatch(selectFiles(files));
+        this.closeEdit = () => dispatch(closeEdit());
+
+        let state = $scope.store.getState();
+
+        // re-render on state change
+        const unsubscribe = $scope.store.subscribe(() => {
+            if ($scope.store.getState().attachments !== state.attachments) {
+                const filesLengthChange = getFilesLength($scope.store.getState()) !== getFilesLength(state);
+
+                state = $scope.store.getState();
+                $scope.$applyAsync(() => {
+                    if (filesLengthChange) {
+                        $scope.item.attachments = state.attachments.files.map((f) => ({attachment: f._id}));
+                        $scope.autosave();
+                    }
+
+                    this.mapState($scope.store.getState());
+                });
+            }
         });
 
-        this.maxFiles = deployConfig.getSync('attachments_max_files');
-        this.maxSize = deployConfig.getSync('attachments_max_size');
+        $scope.$on('$destroy', unsubscribe);
+
+        // init
+        this.mapState($scope.store.getState());
     }
 
-    selectFiles(files) {
-        if (Array.isArray(files) && files.length > 0 && !this.isLocked) {
-            if (files.length + this.$scope.files.length > this.maxFiles) {
-                this.notify.error(gettext('Sorry, too many files selected.'));
-                return;
-            }
-
-            const bigFiles = files.filter((file) => file.size > this.maxSize);
-
-            if (bigFiles.length) {
-                this.notify.error(gettext('Sorry, but some files are too big.'));
-                return;
-            }
-
-            this.superdesk
-                .intent('upload', 'attachments', files)
-                .then(this.addFiles.bind(this));
-        }
-    }
-
-    addFiles(files) {
-        const attachments = this.$scope.item.attachments || [];
-
-        this.$scope.files = this.$scope.files.concat(files);
-        this.$scope.item.attachments = attachments.concat(files.map((f) => ({attachment: f._id})));
-        this.autosave();
-    }
-
-    removeFile(file) {
-        this.$scope.files = this.$scope.files.filter((f) => f !== file);
-        this.$scope.item.attachments = this.$scope.item.attachments.filter(
-            (item) => item.attachment !== file._id,
-        );
-        this.autosave();
-    }
-
-    download(file) {
-        this.$window.open(this.urls.media(file.media, 'attachments'), '_blank');
-    }
-
-    autosave() {
-        this.$scope.autosave(this.$scope.item);
-    }
-
-    startEdit(file) {
-        this.edit = Object.create(file);
-        this.file = file;
-    }
-
-    saveEdit() {
-        this.attachments.save(this.file, this.edit);
-        this.closeEdit();
-    }
-
-    closeEdit() {
-        this.edit = null;
-        this.file = null;
+    mapState(state) {
+        this.edit = state.attachments.edit;
+        this.files = state.attachments.files;
+        this.maxSize = state.attachments.maxSize;
+        this.maxFiles = state.attachments.maxFiles;
+        this.editable = state.editor.editable;
+        this.isLocked = state.editor.isLocked;
+        this.isLockedByMe = state.editor.isLockedByMe;
     }
 }
 
-AttachmentsController.$inject = [
-    '$scope',
-    '$window',
-    'superdesk',
-    'attachments',
-    'notify',
-    'deployConfig',
-    'urls',
-    'lock',
-];
+AttachmentsController.$inject = ['$scope'];
 
 AttachmentsFactory.$inject = ['api'];
 function AttachmentsFactory(api) {
@@ -194,9 +162,14 @@ const config = (awp) =>
 
 angular.module('superdesk.apps.authoring.attachments', [
     'ngFileUpload',
+    'superdesk.config',
     'superdesk.core.api',
     'superdesk.apps.authoring.widgets',
 ])
     .factory('attachments', AttachmentsFactory)
     .controller('AttachmentsCtrl', AttachmentsController)
-    .config(['authoringWidgetsProvider', config]);
+    .config(['authoringWidgetsProvider', config])
+    .directive('sdAttachmentsEditor', AttachmentsEditorDirective)
+    .component('sdAttachmentsEditorModal', reactToAngular1(AttachmentsEditorModal, ['store']))
+    .component('sdAttachmentsList', reactToAngular1(AttachmentsList, ['store']))
+;
