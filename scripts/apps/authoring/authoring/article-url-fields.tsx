@@ -1,5 +1,5 @@
 import React from 'react';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 interface IProps {
     label: string;

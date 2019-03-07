@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ObjectEditor from './ObjectEditor';
 import {has} from 'lodash';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 export default class ItemsTableComponent extends React.Component<any, any> {
     static propTypes: any;

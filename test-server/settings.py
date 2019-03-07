@@ -1,5 +1,5 @@
 
-DEBUG = True
+DEBUG = False
 SUPERDESK_TESTING = True
 
 SERVER_NAME = 'localhost:5000'

@@ -353,13 +353,15 @@ const changeImageCaption = (state, {entityKey, newCaption, field}) => {
  * @ngdoc method
  * @name setHtmlForTansa
  * @param {string} html
+ * @param {string} simpleReplace
  * @description Replaces the current editor content with the given HTML. This is used
  * by the Tansa spellchecker to apply a corrected text.
+ * If the simpleReplace is true try to preserve the existing inline styles and entities
  * @returns {Object}
  */
-const setHtmlFromTansa = (state, html) => {
+const setHtmlFromTansa = (state, {html, simpleReplace}) => {
     const {editorState} = state;
-    const newEditorState = setTansaHtml(editorState, html);
+    const newEditorState = setTansaHtml(editorState, html, simpleReplace);
 
     return onChange(state, newEditorState);
 };

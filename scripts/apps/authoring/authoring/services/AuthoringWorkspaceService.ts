@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import {get, includes} from 'lodash';
 
 /**
  * @ngdoc service
@@ -39,7 +39,7 @@ export function AuthoringWorkspaceService($location, superdeskFlags, authoring, 
     this.isWidgetVisible = (widget) => new Promise((resolve) => {
         Promise.all(widgetVisibilityCheckerFuntions.map((fn) => fn(widget)))
             .then((res) => {
-                resolve(resolve(res.every((i) => i === true)));
+                resolve(res.every((i) => i === true));
             });
     });
 
@@ -59,7 +59,7 @@ export function AuthoringWorkspaceService($location, superdeskFlags, authoring, 
     this.edit = function(item, action) {
         if (item) {
             // disable edit of external ingest sources that are not editable (editFeaturedImage false or not available)
-            if (item._type === 'externalsource' && !!_.get(config.features, 'editFeaturedImage') === false) {
+            if (item._type === 'externalsource' && !!get(config.features, 'editFeaturedImage') === false) {
                 return;
             }
             authoringOpen(item._id, action || 'edit', item._type || null);
@@ -71,6 +71,7 @@ export function AuthoringWorkspaceService($location, superdeskFlags, authoring, 
     // plugin support
     this.authoringTopBarAdditionalButtons = {},
     this.authoringTopBarButtonsToHide = {};
+    this.displayAuthoringHeaderCollapedByDefault = null;
 
     /**
      * Open an item in readonly mode without locking it
@@ -98,11 +99,11 @@ export function AuthoringWorkspaceService($location, superdeskFlags, authoring, 
         }.bind(this);
 
         // disable open for external ingest sources that are not editable (editFeaturedImage false or not available)
-        if (item._type === 'externalsource' && !!_.get(config.features, 'editFeaturedImage') === false) {
+        if (item._type === 'externalsource' && !!get(config.features, 'editFeaturedImage') === false) {
             return;
         }
 
-        if (_.includes(['ingest', 'externalsource'], item._type) || item.state === 'ingested') {
+        if (includes(['ingest', 'externalsource'], item._type) || item.state === 'ingested') {
             send.one(item).then(_open);
         } else {
             _open(item);
@@ -239,7 +240,7 @@ export function AuthoringWorkspaceService($location, superdeskFlags, authoring, 
     function sendRowViewEvents() {
         let evnt = superdeskFlags.flags.authoring ? 'rowview:narrow' : 'rowview:default';
 
-        if (superdeskFlags.flags.previewing && search.singleLine && _.get(config, 'list.narrowView')) {
+        if (superdeskFlags.flags.previewing && search.singleLine && get(config, 'list.narrowView')) {
             $rootScope.$broadcast(evnt);
         }
     }

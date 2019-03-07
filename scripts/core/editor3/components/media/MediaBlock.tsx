@@ -5,7 +5,7 @@ import ng from 'core/services/ng';
 import * as actions from '../../actions';
 import Textarea from 'react-textarea-autosize';
 import {get} from 'lodash';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 function getTranslationForAssignRights(value) {
     if (value === 'single-usage') {

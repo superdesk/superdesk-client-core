@@ -1,7 +1,5 @@
 <div class="monitoring" ng-controller="AggregateCtrl as aggregate">
-
     <section class="main-section" ng-class="monitoring.state">
-
         <div class="preview-layout monitoring-preview-layout" sd-media-query min-width="700" element-class="narrowList">
             <div class="content-list monitoring__content" ng-if="!aggregate.loading">
                 <div class="monitoring__toolbar-container">
@@ -151,7 +149,6 @@
                             <input class="line-input line-input--inline-mini sd-margin-l--1" type="number" min="2" max="{{aggregate.groups.length}}" ng-model="monitoring.columnsLimit">
                         </div>
 
-            
                         <div class="dropdown dropdown--align-right dropdown--compact-state" dropdown  ng-if="type === 'monitoring'">
                             <button class="navbtn dropdown__toggle" dropdown__toggle><i class="icon-dots-vertical"></i></button>
                             <ul class="dropdown__menu">
@@ -229,7 +226,6 @@
                         </div>
                     </div>
 
-
                 </div>
                     <!-- Overlay Preview Pane -->
                     <div sd-item-preview class="sd-preview--overlay" ng-if="narrowList"
@@ -238,9 +234,6 @@
                          data-show-history-tab="monitoring.showHistoryTab"></div>
 
             </div>
-
-
-
             <div sd-send-item
                  data-item="null"
                  data-mode="{{type}}"></div>

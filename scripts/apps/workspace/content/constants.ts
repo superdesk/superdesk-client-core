@@ -1,4 +1,4 @@
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 // http://docs.python-cerberus.org/en/stable/usage.html
 export const DEFAULT_SCHEMA = Object.freeze({
@@ -98,6 +98,7 @@ export const GET_LABEL_MAP = () => ({
     alt_text: gettext('Alt text'),
     copyrightholder: gettext('Copyright holder'),
     copyrightnotice: gettext('Copyright notice'),
+    attachments: gettext('Attachments'),
 });
 
 export const HAS_FORMAT_OPTIONS = Object.freeze({

@@ -268,7 +268,11 @@ describe('spellcheck', () => {
     describe('spellcheck menu', () => {
         it('can toggle auto spellcheck',
             inject((editor, editorResolver, $controller, $rootScope, preferencesService) => {
-                var ctrl = $controller('SpellcheckMenu');
+                var $scope = $rootScope.$new();
+
+                $scope.item = {language: 'en'};
+                $scope.$digest();
+                var ctrl = $controller('SpellcheckMenu', {$scope: $scope});
 
                 expect(ctrl.isAuto).toBe(false);
 

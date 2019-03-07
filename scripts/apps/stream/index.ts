@@ -1,7 +1,7 @@
 import {StreamController} from './controllers';
 import {ActivityMessageService} from './services';
 import {ActivityStream, ActivityMessage} from './directives';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 export default angular.module('superdesk.apps.stream', [
     'superdesk.core.activity',

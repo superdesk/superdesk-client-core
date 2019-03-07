@@ -8,12 +8,13 @@ import './styles/widgets.scss';
 import './workspace-tasks/tasks';
 import './world-clock/world-clock';
 import './grid/grid';
+import './closed-desk';
 
 import {DashboardController} from './controllers';
 import * as directive from './directives';
 import * as svc from './services';
 
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 angular.module('superdesk.apps.dashboard.widgets', [])
     .provider('dashboardWidgets', svc.DashboardWidgets);
@@ -37,6 +38,7 @@ angular.module('superdesk.apps.dashboard', [
     'superdesk.core.itemList',
     'superdesk.apps.legal_archive',
     'superdesk.apps.workspace',
+    'superdesk.apps.dashboard.closed-desk',
 ])
     .controller('DashboardController', DashboardController)
     .filter('wcodeFilter', () => (input, values) => _.pick(input, _.difference(_.keys(input), _.keys(values))))

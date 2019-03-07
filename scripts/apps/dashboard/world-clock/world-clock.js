@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import './world-clock.scss';
 import d3 from 'd3';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 angular.module('superdesk.apps.dashboard.world-clock', [
     'superdesk.apps.dashboard', 'superdesk.core.datetime',

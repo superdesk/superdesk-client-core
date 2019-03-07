@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 export const takekey: React.StatelessComponent<any> = (props) => {
     if (props.item.anpa_take_key) {

@@ -1,5 +1,6 @@
 import {startsWith, endsWith, some, forEach, get} from 'lodash';
 import {getSuperdeskType} from 'core/utils';
+import {gettext} from 'core/utils';
 
 /**
  * @ngdoc controller
@@ -208,7 +209,7 @@ export function AssociationController(config, send, api, $q, superdesk,
             showMetadata: 'showMetadata' in options ? options.showMetadata : true,
         };
 
-        if (isImage === true && item.renditions && item.renditions.original) {
+        if (item.renditions && item.renditions.original) {
             scope.loading = true;
             return renditions.crop(item, cropOptions)
                 .then((rendition) => {

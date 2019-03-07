@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import {cloneDeep} from 'lodash';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 IngestSourcesContent.$inject = ['ingestSources', 'notify', 'api', '$location',
     'modal', '$filter', 'config', 'deployConfig', 'privileges'];
@@ -494,7 +494,7 @@ export function IngestSourcesContent(ingestSources, notify, api, $location,
                         });
                     } else {
                         $location.path('/search').search(
-                            {repo: 'ingest', source: angular.toJson([provider.source])}
+                            {repo: 'ingest', ingest_provider: provider._id}
                         );
                     }
                 };

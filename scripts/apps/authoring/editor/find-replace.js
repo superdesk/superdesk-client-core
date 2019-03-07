@@ -8,7 +8,7 @@
  * at https://www.sourcefabric.org/apps/license
  */
 
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 
 FindReplaceDirective.$inject = ['editorResolver', 'macros'];

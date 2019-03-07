@@ -440,6 +440,7 @@
             position: relative;
             flex-grow: 0;
             flex-shrink: 0;
+            opacity: 1;
             .content-item-preview {
                 top: 0 !important;
                 position: relative;
@@ -470,7 +471,6 @@
 
 .workspace.authoring .main-section.search-page-container  {
     .preview-layout {
-
         .search-preview--overlay {
             position: absolute;
             top: 4.8rem;
@@ -478,6 +478,7 @@
             bottom: 0;
             width:0;
             overflow: visible;
+            opacity: 1;
             z-index: 3;
             .content-item-preview {
                 top: 0 !important;
@@ -508,11 +509,15 @@
             .search-preview {
                 width: 0;
                 overflow: hidden;
+
                 .content-item-preview {
                     opacity: 0;
                 } 
             }
+            .search-preview--overlay {
+                opacity: 0;
+            }
+
         }
     }
 }
-

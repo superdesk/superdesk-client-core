@@ -5,7 +5,7 @@ import * as directive from './directives';
 import * as ctrl from './controllers';
 import {coreMenuGroups} from 'core/activity/activity';
 import {WidgetsConfig} from './components/WidgetsConfig';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 /**
  * @ngdoc module

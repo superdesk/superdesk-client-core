@@ -1,6 +1,6 @@
 import {isEmpty} from 'lodash';
 import {IArticle} from 'superdesk-interfaces/Article';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 /**
  * @ngdoc service
@@ -77,7 +77,7 @@ export function RenditionsService(metadata, $q, api, superdesk, _, notify) {
                 isAssociated: false,
                 editable: true,
                 defaultTab: false,
-                hideTabs: item.type === 'picture' ? [] : ['image-edit', 'crop'],
+                tabs: item.type === 'picture' ? ['view', 'image-edit', 'crop'] : ['view'],
                 showMetadata: false,
                 ...options,
             };

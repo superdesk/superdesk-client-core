@@ -1,5 +1,5 @@
-import _, {mapValues} from 'lodash';
-import {gettext} from 'core/ui/components/utils';
+import {mapValues} from 'lodash';
+import {gettext} from 'core/utils';
 
 /**
  * Gives top shadow for scroll elements
@@ -1211,6 +1211,10 @@ function multiSelectDirective() {
         },
     };
 }
+
+// export filter instances for react
+export const fileicon = FileiconFilter();
+export const filesize = FilesizeFilter();
 
 /**
  * @ngdoc module

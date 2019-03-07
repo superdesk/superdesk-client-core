@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 export const ActionBar: React.StatelessComponent<any> = ({svc, readOnly, dirty, valid, onSave, onCancel}) => (
     <div className="action-bar clearfix show">

@@ -1,5 +1,5 @@
 import {FILTER_FIELDS, URL_PARAMETERS} from '../constants';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 const DEFAULT_PAGE_SIZE = 50;
 

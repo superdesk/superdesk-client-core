@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import {URL_PARAMETERS} from '../constants';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 class LinkFunction {
     constructor(contacts, search, notify, $location, $timeout, scope, elem) {

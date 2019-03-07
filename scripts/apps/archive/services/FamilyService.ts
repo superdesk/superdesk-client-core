@@ -29,7 +29,7 @@ export function FamilyService(api, desks) {
             {term: {family_id: familyId}},
         ];
 
-        if (excludeItem) {
+        if (excludeItem && excludeItem.unique_id) {
             filter.push({not: {term: {unique_id: excludeItem.unique_id}}});
         }
 

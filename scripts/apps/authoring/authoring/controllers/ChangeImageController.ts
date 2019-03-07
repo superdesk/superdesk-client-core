@@ -1,5 +1,5 @@
 import {get} from 'lodash';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 /**
  * @ngdoc controller
@@ -65,7 +65,7 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, deploy
 
     $scope.showMetadata = $scope.data.showMetadata;
     $scope.nav = $scope.data.defaultTab || 'view';
-    $scope.hideTabs = $scope.data.hideTabs || [];
+    $scope.tabs = $scope.data.tabs || ['view', 'image-edit', 'crop'];
 
     $scope.metadata = {
         isDirty: false,
@@ -230,7 +230,7 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, deploy
     */
     $scope.done = () => {
         if ($scope.data.isDirty) {
-            if (config.features.validatePointOfInterestForImages === true) {
+            if ($scope.data.item.type === 'picture' && config.features.validatePointOfInterestForImages === true) {
                 if (!$scope.saveCrops() || !$scope.applyMetadataChanges()) {
                     return;
                 }

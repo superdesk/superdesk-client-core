@@ -20,16 +20,18 @@ export function getTansaHtml(editorState) {
             const data = (entity != null && entity.getData() != null) ? entity.getData() : {media: {}};
             const {media} = data;
 
-            if (media.description_text != null) {
-                html += getBlockHtml('description', block.getKey(), media.description_text);
-            }
+            if (media != null) {
+                if (media.description_text != null) {
+                    html += getBlockHtml('description', block.getKey(), media.description_text);
+                }
 
-            if (media.alt_text != null) {
-                html += getBlockHtml('alt', block.getKey(), media.alt_text);
-            }
+                if (media.alt_text != null) {
+                    html += getBlockHtml('alt', block.getKey(), media.alt_text);
+                }
 
-            if (media.headline != null) {
-                html += getBlockHtml('headline', block.getKey(), media.headline);
+                if (media.headline != null) {
+                    html += getBlockHtml('headline', block.getKey(), media.headline);
+                }
             }
         } else {
             html = getBlockHtml('text', block.getKey(), block.getText());
@@ -41,12 +43,14 @@ export function getTansaHtml(editorState) {
 
 /**
  * Update the editor with the changes performed by Tansa
+ * If the simpleReplace is true try to preserve the existing inline styles and entities
  *
  * @param {EditorState} editorState
  * @param {String} html
+ * @param {String} simpleReplace
  * @returns {EditorState}
  */
-export function setTansaHtml(editorState, html) {
+export function setTansaHtml(editorState, html, simpleReplace) {
     let content = editorState.getCurrentContent();
     const blockMap = content.getBlockMap();
     const htmlElement = document.createElement('div');
@@ -66,7 +70,7 @@ export function setTansaHtml(editorState, html) {
         } else {
             const newText = getTextFromTag(htmlElement, 'text', key);
 
-            content = updateText(editorState, content, block, newText, diffMatchPatch);
+            content = updateText(editorState, content, block, newText, diffMatchPatch, simpleReplace);
         }
     });
 
@@ -145,19 +149,22 @@ function updateMedia(content, block, newDescription, newAlt, newHeadline) {
 
 /**
  * Update the text in the block
+ * If the simpleReplace is true try to preserve the existing inline styles and entities
  *
  * @param {EditorState} editorState
- * @param {ContentState} contentState
+ * @param {ContentState} content
  * @param {Block} block
- * @param {String} text
+ * @param {String} newText
+ * @param {Object} diffMatchPatch
+ * @param {boolean} simpleReplace
  * @returns {ContentState}
  */
-function updateText(editorState, content, block, newText, diffMatchPatch) {
+function updateText(editorState, content, block, newText, diffMatchPatch, simpleReplace) {
     const text = block.getText();
     let newContent = content;
     let offset = 0;
     let diffs;
-    let selection;
+    let previousDiff;
 
     diffs = diffMatchPatch.diff_main(text, newText);
 
@@ -165,18 +172,116 @@ function updateText(editorState, content, block, newText, diffMatchPatch) {
         const _text = diff[1];
 
         if (diff[0] === 0) {
+            if (previousDiff != null) {
+                const _previousText  = previousDiff[1];
+
+                newContent = removeText(editorState, newContent, block, offset, _previousText);
+            }
             offset += _text.length;
+            previousDiff = null;
         } else if (diff[0] === 1) {
-            selection = createSelectionForBlock(editorState, block, offset);
-            offset += _text.length;
+            if (previousDiff == null) {
+                ({newContent, offset} = insertText(editorState, newContent, block, offset, _text));
+            } else {
+                const _previousText  = previousDiff[1];
 
-            newContent = Modifier.insertText(newContent, selection, _text);
+                ({newContent, offset}  =  replaceText(editorState, newContent, block, offset, _previousText, _text));
+                previousDiff = null;
+            }
         } else {
-            selection = createSelectionForBlock(editorState, block, offset, _text.length);
+            if (previousDiff != null) {
+                const _previousText  = previousDiff[1];
 
-            newContent = Modifier.removeRange(newContent, selection, 'forward');
+                newContent = removeText(editorState, newContent, block, offset, _previousText);
+            }
+
+            if (simpleReplace === true) {
+                newContent = removeText(editorState, newContent, block, offset, _text);
+            } else  {
+                previousDiff = diff;
+            }
         }
     });
+
+    return newContent;
+}
+
+/**
+ * Insert a new text at offset position
+ *
+ * @param {EditorState} editorState
+ * @param {ContentState} content
+ * @param {Block} block
+ * @param {Integer} offset
+ * @param {String} text
+ * @returns {ContentState, Integer}
+ */
+function insertText(editorState, content, block, offset, text) {
+    const selection = createSelectionForBlock(editorState, block, offset);
+    const newContent = Modifier.insertText(content, selection, text);
+
+    offset += text.length;
+    return {newContent, offset};
+}
+
+/**
+ * Replate text with newText and preserve the existing inline styles and entities
+ *
+ * @param {EditorState} editorState
+ * @param {ContentState} content
+ * @param {Block} block
+ * @param {Integer} offset
+ * @param {String} text
+ * @param {String} newText
+ * @returns {ContentState, Integer}
+ */
+function replaceText(editorState, content, block, offset, text, newText)  {
+    const overlapLength = text.length < newText.length ? text.length : newText.length;
+    let newContent = content;
+
+    for (let i = 0; i < overlapLength; i++) {
+        const inlineStyle = block.getInlineStyleAt(offset + i);
+        const entity = block.getEntityAt(offset + i);
+        const selection = createSelectionForBlock(editorState, block, offset + i, 1);
+        const newCharacter = newText[i];
+
+        newContent = Modifier.replaceText(newContent, selection, newCharacter, inlineStyle, entity);
+    }
+
+    offset += overlapLength;
+
+    if (overlapLength < text.length) {
+        const extraText = text.substring(overlapLength);
+
+        newContent = removeText(editorState, newContent, block, offset, extraText);
+    }
+
+    if (overlapLength < newText.length) {
+        const lastInlineStyle = block.getInlineStyleAt(overlapLength - 1);
+        const lastEntity = block.getEntityAt(overlapLength - 1);
+        const extraText = newText.substring(overlapLength);
+        const selection = createSelectionForBlock(editorState, block, offset, extraText.length);
+
+        newContent = Modifier.insertText(newContent, selection, extraText, lastInlineStyle, lastEntity);
+        offset += extraText.length;
+    }
+
+    return {newContent, offset};
+}
+
+/**
+ * Remove the 'text' at offset position
+ *
+ * @param {EditorState} editorState
+ * @param {ContentState} content
+ * @param {Block} block
+ * @param {Integer} offset
+ * @param {String} text
+ * @returns {ContentState}
+ */
+function removeText(editorState, content, block, offset, text) {
+    const selection = createSelectionForBlock(editorState, block, offset, text.length);
+    const newContent = Modifier.removeRange(content, selection, 'forward');
 
     return newContent;
 }

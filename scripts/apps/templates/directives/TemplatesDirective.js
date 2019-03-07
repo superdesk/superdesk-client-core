@@ -1,5 +1,5 @@
 import notifySaveError from '../helpers';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 TemplatesDirective.$inject = ['notify', 'api', 'templates', 'modal', 'desks', 'weekdays',
     'content', '$filter', 'lodash'];

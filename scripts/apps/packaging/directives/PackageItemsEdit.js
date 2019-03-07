@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 PackageItemsEdit.$inject = ['packages', 'notify', '$rootScope'];
 export function PackageItemsEdit(packages, notify, $rootScope) {

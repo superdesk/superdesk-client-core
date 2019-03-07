@@ -11,7 +11,7 @@ describe('content', () => {
     function selectedHeadline() {
         var headline = element.all(by.css('.preview-headline')).first();
 
-        browser.wait(() => headline.isDisplayed(), 200); // animated sidebar
+        browser.wait(() => headline.isDisplayed(), 500); // animated sidebar
 
         return headline.getText();
     }
@@ -42,7 +42,7 @@ describe('content', () => {
     }
 
     it('can navigate with keyboard', () => {
-        body.click();
+        content.getItems().first().click();
 
         pressKey(protractor.Key.UP);
         expect(selectedHeadline()).toBe('item1');

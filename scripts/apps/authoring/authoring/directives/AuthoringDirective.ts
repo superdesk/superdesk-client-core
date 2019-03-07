@@ -1,7 +1,10 @@
 import * as helpers from 'apps/authoring/authoring/helpers';
 import _ from 'lodash';
 import postscribe from 'postscribe';
-import {gettext} from 'core/ui/components/utils';
+import thunk from 'redux-thunk';
+import {gettext} from 'core/utils';
+import {combineReducers, createStore, applyMiddleware} from 'redux';
+import {attachments, initAttachments} from '../../attachments';
 
 /**
  * @ngdoc directive
@@ -75,20 +78,26 @@ AuthoringDirective.$inject = [
     '$sce',
     'mediaIdGenerator',
     'relationsService',
+    '$injector',
 ];
 export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace, notify,
     desks, authoring, api, session, lock, privileges, content, $location,
     referrer, macros, $timeout, $q, modal, archiveService, confirm, reloadService,
     $rootScope, $interpolate, metadata, suggest, config, deployConfig, editorResolver,
-    compareVersions, embedService, $sce, mediaIdGenerator, relationsService) {
+    compareVersions, embedService, $sce, mediaIdGenerator, relationsService, $injector) {
     return {
         link: function($scope, elem, attrs) {
             var _closing;
             var mediaFields = {};
+            var userDesks;
 
             const UNIQUE_NAME_ERROR = gettext('Error: Unique Name is not unique.');
             const MEDIA_TYPES = ['video', 'picture', 'audio'];
 
+            desks.fetchCurrentUserDesks().then((desksList) => {
+                userDesks = desksList;
+                $scope.itemActions = authoring.itemActions($scope.origItem, userDesks);
+            });
             $scope.privileges = privileges.privileges;
             $scope.dirty = false;
             $scope.views = {send: false};
@@ -96,7 +105,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             $scope._editable = !!$scope.origItem._editable;
             $scope.isMediaType = _.includes(['audio', 'video', 'picture', 'graphic'], $scope.origItem.type);
             $scope.action = $scope.action || ($scope._editable ? 'edit' : 'view');
-            $scope.itemActions = authoring.itemActions($scope.origItem);
+
             $scope.highlight = !!$scope.origItem.highlight;
             $scope.showExportButton = $scope.highlight && $scope.origItem.type === 'composite';
             $scope.openSuggestions = () => suggest.setActive();
@@ -110,7 +119,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             $scope.$watch('origItem', (newValue, oldValue) => {
                 $scope.itemActions = null;
                 if (newValue) {
-                    $scope.itemActions = authoring.itemActions(newValue);
+                    $scope.itemActions = authoring.itemActions(newValue, userDesks);
                 }
             }, true);
 
@@ -202,6 +211,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             $scope.save = function() {
                 return authoring.save($scope.origItem, $scope.item).then((res) => {
                     $scope.dirty = false;
+                    angular.extend($scope.item, res);
 
                     if (res.cropData) {
                         $scope.item.hasCrops = true;
@@ -595,19 +605,19 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                     return;
                 }
 
-                // Check if there's unpublished related items
-                const related = relationsService.getRelatedItemsWithoutMediaGallery($scope.item, $scope.fields);
-
-                if (related.length > 0) {
-                    return modal.confirm({
-                        bodyText: gettext(
-                            'There are unpublished related items that won\'t be sent out as related items.'
-                            + ' Do you want to publish the article anyway?'
-                        ),
-                    }).then((ok) => ok ? performPublish() : false);
-                }
-
-                return performPublish();
+                // Check if there are unpublished related items without media-gallery
+                relationsService.getRelatedItemsWithoutMediaGallery($scope.item, $scope.fields)
+                    .then((related) => {
+                        if (related.length > 0) {
+                            return modal.confirm({
+                                bodyText: gettext(
+                                    'There are unpublished related items that won\'t be sent out as related items.'
+                        + ' Do you want to publish the article anyway?'
+                                ),
+                            }).then((ok) => ok ? performPublish() : false);
+                        }
+                        return performPublish();
+                    });
             };
 
             function performPublish() {
@@ -781,7 +791,8 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
             $scope.save_enabled = function() {
                 confirm.dirty = $scope.dirty;
-                return ($scope.dirty || $scope.item._autosave) &&
+
+                return ($scope.dirty || $scope.item._autosave != null) &&
                     _.reduce($scope.isValidEmbed, (agg, val) => agg && val, true);
             };
 
@@ -1144,6 +1155,31 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             $scope.closePreview();
             macros.setupShortcuts($scope);
             initEmbedFieldsValidation();
+
+            // init redux
+            const initialState = {
+                editable: !!$scope.origItem._editable,
+                isLocked: $scope.isLocked(),
+                isLockedByMe: $scope.isLockedByMe(),
+            };
+
+            function editor(state = initialState) {
+                return state;
+            }
+
+            const reducer = combineReducers({attachments, editor});
+
+            $scope.store = createStore(reducer, applyMiddleware(thunk.withExtraArgument({
+                $scope: $scope,
+                $window: $injector.get('$window'),
+                urls: $injector.get('urls'),
+                notify: notify,
+                superdesk: superdesk,
+                deployConfig: deployConfig,
+                attachments: $injector.get('attachments'),
+            })));
+
+            $scope.store.dispatch(initAttachments($scope.item));
         },
     };
 }

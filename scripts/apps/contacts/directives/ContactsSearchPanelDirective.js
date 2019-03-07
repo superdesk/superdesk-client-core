@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import _ from 'lodash';
 import {URL_PARAMETERS} from '../constants';
 import {SelectFieldSearchInput} from '../../contacts/components/Form';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 
 class LinkFunction {

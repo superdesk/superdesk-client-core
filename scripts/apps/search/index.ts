@@ -6,7 +6,7 @@ import {MultiActionBarController} from './controllers';
 import {SearchController} from './controllers';
 import SearchMenuController from './controllers/SearchMenuController';
 import {MultiImageEditDirective} from './MultiImageEdit';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 angular.module('superdesk.apps.search.react', [
     'superdesk.apps.highlights',

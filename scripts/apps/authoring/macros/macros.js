@@ -8,8 +8,8 @@
  * and triggering of macros to be apply on provided item
  */
 
+import {gettext} from 'core/utils';
 import _ from 'lodash';
-import {gettext} from 'core/ui/components/utils';
 
 MacrosService.$inject = ['api', 'notify'];
 function MacrosService(api, notify) {
@@ -160,16 +160,28 @@ function MacrosController($scope, macros, desks, autosave, $rootScope, storage, 
      * content is replaced with the value changed by macro
      */
     $scope.call = function(macro) {
+        const editor = editorResolver.get();
+        const isEditor3 = editor.version() !== '2';
+        const useReplace = macro.replace_type != null && macro.replace_type !== 'no-replace';
+        const isSimpleReplace = macro.replace_type === 'simple-replace';
         let item = _.extend({}, $scope.origItem, $scope.item);
+
+        if (isEditor3 && useReplace) {
+            item.body_html = editor.getHtmlForTansa() || item.body_html;
+        }
 
         $scope.loading = true;
         return macros.call(macro, item).then((res) => {
-            const isEditor3 = editorResolver.get().version() !== '2';
             let ignoreFields = ['_etag', 'fields_meta'];
 
             // ignore fields is only required for editor3
             if (isEditor3) {
                 ignoreFields.push('body_html');
+
+                if (res.diff == null && useReplace === true && item.body_html !== res.item.body_html) {
+                    editor.setHtmlFromTansa(res.item.body_html, isSimpleReplace);
+                }
+
                 Object.keys(res.item || {}).forEach((field) => {
                     if (isString(res.item[field]) === false || field === 'body_html') {
                         return;
@@ -183,7 +195,7 @@ function MacrosController($scope, macros, desks, autosave, $rootScope, storage, 
 
             if (isEditor3 || res.diff == null) {
                 angular.extend($scope.item, _.omit(res.item, ignoreFields));
-                autosave.save($scope.item, $scope.origItem);
+                $scope.autosave($scope.item);
             }
 
             if (res.diff != null) {

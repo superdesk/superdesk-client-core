@@ -200,10 +200,32 @@ a:hover {
     margin-bottom: -2px;
     margin-top: 10px;
 }
+
 .main-section.users {
     .preview-layout {
         .list-pane > .content {
             right: 400px;
+            transition: all ease-in-out 0.2s;
+        }
+        &.closed {
+            .list-pane > .content {
+                right: 0;
+            }
+        }
+    }
+}
+
+.main-section.contacts-section {
+    .preview-layout {
+        .content {
+            right: 560px;
+            transition: all ease-in-out 0.2s;
+        }
+        &.closed {
+            .content {
+                right: 0;
+                transition: all ease-in-out 0.2s;
+            }
         }
     }
 }
@@ -311,27 +333,8 @@ a:hover {
             max-width: 100%;
         }
     }
-
-    // &.closed {
-    //     @include transition(right ease 0.2s);
-    //     .list-pane {
-    //         border-right: 0;
-    //         > .content {
-    //             right: 0 !important;
-    //         }
-    //     }
-    // }
-
-    // .content-item-preview {
-    //     position: absolute;
-    //     top:50px;
-    //     right: 0;
-    //     bottom: 0;
-    //     @media only screen and (max-width : 1430px) {
-    //         width: $sidepreview-width - 40;
-    //     }
-    // }
 }
+
 .ingest-container {
     .list-pane {
         top:-$nav-height;
@@ -342,38 +345,6 @@ a:hover {
         top:$nav-height;
     }
 }
-
-// .authoring {
-//     .preview-layout {
-//         .list-pane {
-//             > .content {
-//                 right: $sidepreview-width;
-//                 @media only screen and (max-width : 1630px) {
-//                     right: $sidepreview-width - 40;
-//                 }
-//                 @media only screen and (max-width : 1430px) {
-//                     right: 0;
-//                 }
-//             }
-//         }
-//         .content-item-preview {
-//             @media only screen and (max-width : 1630px) {
-//                 width: $sidepreview-width - 40;
-//             }
-//             @media only screen and (max-width : 1430px) {
-//                 width: $sidepreview-width - 80;
-//                 box-shadow: inset 4px 0 8px -5px rgba(0,0,0,0.9), 0 1px 12px 2px rgba(0,0,0,0.3), 0 1px 2px 1px rgba(0,0,0,0.3);
-//             }
-//         }
-//         &.closed {
-//             .content-item-preview {
-//                 @media only screen and (max-width : 1430px) {
-//                     box-shadow: none;
-//                 }
-//             }
-//         }
-//     }
-// }
 
 // Slide pane
 // ---------------------------------------------

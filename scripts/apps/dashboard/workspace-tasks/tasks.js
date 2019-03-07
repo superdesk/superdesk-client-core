@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import './styles/tasks.scss';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 TasksService.$inject = ['desks', '$rootScope', 'api', 'datetimeHelper'];
 function TasksService(desks, $rootScope, api, datetimeHelper) {

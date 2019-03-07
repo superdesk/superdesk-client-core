@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 angular.module('superdesk.core.upload.crop', [])
     .directive('sdCrop', ['notify', function(notify) {

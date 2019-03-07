@@ -686,6 +686,8 @@ describe('monitoring', () => {
         // select first item
         monitoring.selectItem(0, 0);
         monitoring.expectIsChecked(0, 0);
+
+        browser.sleep(100); // from react to angular
         expect(monitoring.getMultiSelectCount()).toBe('1 Item selected');
 
         monitoring.actionOnItem('Correct item', 0, 0);

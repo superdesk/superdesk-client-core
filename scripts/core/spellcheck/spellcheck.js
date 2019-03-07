@@ -478,9 +478,10 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _, pref
     });
 }
 
-SpellcheckMenuController.$inject = ['$rootScope', 'editorResolver', 'spellcheck'];
-function SpellcheckMenuController($rootScope, editorResolver, spellcheck) {
+SpellcheckMenuController.$inject = ['$rootScope', 'editorResolver', 'spellcheck', 'notify', '$scope'];
+function SpellcheckMenuController($rootScope, editorResolver, spellcheck, notify, $scope) {
     this.isAuto = false;
+    this.isActiveDictionary = false;
     this.runSpellchecker = runSpellchecker;
     this.pushSettings = pushSettings;
     var self = this;
@@ -489,6 +490,11 @@ function SpellcheckMenuController($rootScope, editorResolver, spellcheck) {
      * Force spell ckecking
      */
     function runSpellchecker() {
+        if (!self.isActiveDictionary) {
+            notify.error(gettext('No dictionary available for spell checking.'));
+            return;
+        }
+
         const editor = editorResolver.get();
 
         if (editor && editor.version() === '3') {
@@ -525,9 +531,17 @@ function SpellcheckMenuController($rootScope, editorResolver, spellcheck) {
         return $rootScope.config.features && $rootScope.config.features.useTansaProofing;
     }
 
-    spellcheck.getSpellcheckerStatus().then((status) => {
-        self.isAuto = status && !useTansaProofing();
-        render();
+    spellcheck.getDictionary($scope.item.language).then((dict) => {
+        self.isActiveDictionary = !!dict.length;
+
+        if (!self.isActiveDictionary) {
+            spellcheck.setSpellcheckerStatus(self.isActiveDictionary);
+        } else {
+            spellcheck.getSpellcheckerStatus().then((status) => {
+                self.isAuto = status && !useTansaProofing() && self.isActiveDictionary;
+                render();
+            });
+        }
     });
 }
 

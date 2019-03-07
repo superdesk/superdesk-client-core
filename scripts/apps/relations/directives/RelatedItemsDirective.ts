@@ -1,6 +1,6 @@
 import {get} from 'lodash';
 import {getSuperdeskType} from 'core/utils';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 /**
  * @ngdoc directive
@@ -124,12 +124,20 @@ export function RelatedItemsDirective(authoringWorkspace, relationsService, noti
             };
 
             /**
-            * Get related items for fireldId
+            * Get related items for fieldId
             *
             * @param {String} fieldId
             * @return {[Object]}
             */
-            scope.getRelatedItems = (fieldId) => relationsService.getRelatedItemsForField(scope.item, fieldId);
+            scope.refreshRelatedItems = () => {
+                scope.loading = true;
+                relationsService.getRelatedItemsForField(scope.item, scope.field._id)
+                    .then((items) => {
+                        scope.relatedItems = items;
+                        scope.loading = false;
+                    });
+            };
+            scope.refreshRelatedItems();
 
             /**
              * Reorder related items on related items list
@@ -181,7 +189,7 @@ export function RelatedItemsDirective(authoringWorkspace, relationsService, noti
                 const key = getNextKey(scope.item.associations || {}, scope.field._id);
                 let data = {};
 
-                data[key] = item;
+                data[key] = {_id: item._id};
                 scope.item.associations = angular.extend({}, scope.item.associations, data);
                 scope.onchange();
             };
@@ -201,7 +209,6 @@ export function RelatedItemsDirective(authoringWorkspace, relationsService, noti
                 scope.item.associations = angular.extend({}, scope.item.associations, data);
                 scope.onchange();
             };
-
             /**
              * Open related item
              *
@@ -210,6 +217,12 @@ export function RelatedItemsDirective(authoringWorkspace, relationsService, noti
             scope.openRelatedItem = (item) => {
                 authoringWorkspace.edit(item);
             };
+
+            scope.$watchCollection('item.associations', (newValue, oldValue) => {
+                if (newValue !== oldValue) {
+                    scope.refreshRelatedItems();
+                }
+            });
         },
     };
 }

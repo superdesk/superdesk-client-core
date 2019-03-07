@@ -5,7 +5,7 @@ import {get} from 'lodash';
 
 import {KEYCODES} from '../../constants';
 import {scrollListItemIfNeeded, onEventCapture} from '../../utils';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 import {Popup, Content} from '../../Popup';
 import {UserAvatar} from 'apps/users/components/UserAvatar';

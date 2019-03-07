@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 /**
  * @ngdoc service
@@ -38,7 +38,7 @@ export function DesksFactory($q, api, preferencesService, userList, notify,
                 let pg = page;
                 let extended = items.concat(result._items);
 
-                if (result._links.next) {
+                if (result._links && result._links.next) {
                     pg++;
                     return _fetchAll(endpoint, parent, pg, extended);
                 }

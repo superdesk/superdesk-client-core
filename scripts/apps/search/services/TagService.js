@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import {PARAMETERS, EXCLUDE_FACETS} from 'apps/search/constants';
 import {getDateFilters, dateRangesByKey} from '../directives/DateFilters';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 /**
  * @ngdoc service

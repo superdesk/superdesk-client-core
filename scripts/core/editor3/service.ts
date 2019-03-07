@@ -182,13 +182,15 @@ export class EditorService {
         let txt = pattern;
 
         // find the active match
-        forEachMatch(content, pattern, caseSensitive, (i, selection, block) => {
+        forEachMatch(content, pattern, caseSensitive, (i, selection, block, newContent) => {
             if (i === index) {
                 const start = selection.getStartOffset();
                 const end = selection.getEndOffset();
 
                 txt = block.getText().slice(start, end);
             }
+
+            return newContent;
         });
 
         return txt;
@@ -233,11 +235,13 @@ export class EditorService {
      * @ngdoc method
      * @name editor3#setHtmlFromTansa
      * @param {string} html
+     * @param {string} simpleReplace
      * @description For every block from editor content merge the changes received from tansa.
+     * If the simpleReplace is true try to preserve the existing inline styles and entities
      */
-    setHtmlFromTansa(html) {
+    setHtmlFromTansa(html, simpleReplace = false) {
         if (ok()) {
-            store.dispatch(action.setHtmlFromTansa(html));
+            store.dispatch(action.setHtmlFromTansa(html, simpleReplace));
         }
     }
 }

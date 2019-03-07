@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 TemplatesService.$inject = ['api', 'session', '$q', 'preferencesService', 'privileges', 'desks'];
 export function TemplatesService(api, session, $q, preferencesService, privileges, desks) {

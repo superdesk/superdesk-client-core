@@ -1,4 +1,4 @@
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 angular.module('superdesk.apps.aggregate.widgets', ['superdesk.apps.aggregate', 'superdesk.apps.dashboard.widgets'])
     .config(['dashboardWidgetsProvider', function(dashboardWidgets) {

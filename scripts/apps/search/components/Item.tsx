@@ -15,6 +15,8 @@ import {ItemMgridTemplate} from './ItemMgridTemplate';
 import {IArticle} from 'superdesk-interfaces/Article';
 import {IDesk} from 'superdesk-interfaces/Desk';
 
+const CLICK_TIMEOUT = 300;
+
 const actionsMenuDefaultTemplate = (toggle, stopEvent) => (
     <div className="item-right toolbox">
         <div className="item-actions-menu dropdown--big open">
@@ -50,6 +52,7 @@ interface IProps {
     multiSelectDisabled: boolean;
     nested: Array<IArticle>;
     isNested: boolean;
+    actioning: boolean;
 }
 
 interface IState {
@@ -64,6 +67,8 @@ export class Item extends React.Component<IProps, IState> {
     static defaultProps: any;
 
     readonly state = {hover: false, actioning: false, isActionMenuOpen: false, showNested: false};
+
+    clickTimeout: number;
 
     constructor(props) {
         super(props);
@@ -128,12 +133,17 @@ export class Item extends React.Component<IProps, IState> {
             nextProps.view !== this.props.view ||
             nextProps.flags.selected !== this.props.flags.selected ||
             nextProps.narrow !== this.props.narrow ||
+            nextProps.actioning !== this.props.actioning ||
             nextState !== this.state;
     }
 
     select(event) {
-        if (!this.props.item.gone) {
-            this.props.onSelect(this.props.item, event);
+        if (!this.props.item.gone && !this.clickTimeout) {
+            event.persist(); // make event available in timeout callback
+            this.clickTimeout = window.setTimeout(() => {
+                this.clickTimeout = null;
+                this.props.onSelect(this.props.item, event);
+            }, CLICK_TIMEOUT);
         }
     }
 
@@ -154,6 +164,11 @@ export class Item extends React.Component<IProps, IState> {
     }
 
     dbClick(event) {
+        if (this.clickTimeout) {
+            window.clearTimeout(this.clickTimeout);
+            this.clickTimeout = null;
+        }
+
         if (!this.props.item.gone) {
             this.props.onDbClick(this.props.item);
         }
@@ -309,6 +324,7 @@ export class Item extends React.Component<IProps, IState> {
                                 onEdit={this.props.onEdit}
                                 onDbClick={this.props.onDbClick}
                                 onMultiSelect={this.props.onMultiSelect}
+                                actioning={false}
                             />
                         ))}
                     </div>
@@ -349,7 +365,7 @@ export class Item extends React.Component<IProps, IState> {
                     selected: this.props.item.selected || this.props.flags.selected,
                     archived: item.archived || item.created,
                     gone: item.gone,
-                    actioning: this.state.actioning,
+                    actioning: this.state.actioning || this.props.actioning,
                 })}>
                     {getTemplate()}
                 </div>

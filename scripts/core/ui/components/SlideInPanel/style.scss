@@ -9,3 +9,20 @@
         }
     }
 }
+
+.sd-slide-in-panel__footer {
+    padding: 2rem 1.6rem;
+    box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12);
+}
+
+.btn-group--flex {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-basis: 0;
+
+    .btn + .btn {
+        margin-left: 0.8rem;
+        margin-top: 0;
+    }
+}

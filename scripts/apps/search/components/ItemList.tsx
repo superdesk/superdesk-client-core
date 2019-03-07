@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import {Item} from './index';
 import {isCheckAllowed, closeActionsMenu, bindMarkItemShortcut} from '../helpers';
 import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 import {IArticle} from 'superdesk-interfaces/Article';
 
 interface IState {
@@ -16,6 +16,7 @@ interface IState {
     selected: string;
     bindedShortcuts: Array<any>;
     swimlane: any;
+    actioning: {};
 }
 
 /**
@@ -40,6 +41,7 @@ export class ItemList extends React.Component<any, IState> {
             narrow: false,
             bindedShortcuts: [],
             swimlane: null,
+            actioning: {},
         };
 
         this.multiSelect = this.multiSelect.bind(this);
@@ -207,6 +209,15 @@ export class ItemList extends React.Component<any, IState> {
         this.multiSelect(selectedItems, true);
     }
 
+    setActioning(item: IArticle, isActioning: boolean) {
+        const {search} = this.props.svc;
+        const actioning = Object.assign({}, this.state.actioning);
+        const itemId = search.generateTrackByIdentifier(item);
+
+        actioning[itemId] = isActioning;
+        this.setState({actioning});
+    }
+
     dbClick(item) {
         if (typeof this.props.onMonitoringItemDoubleClick === 'function') {
             this.props.onMonitoringItemDoubleClick(item);
@@ -227,12 +238,16 @@ export class ItemList extends React.Component<any, IState> {
         }
 
         if (item._type === 'externalsource') {
+            this.setActioning(item, true);
             superdesk.intent('list', 'externalsource', {item: item}, 'fetch-externalsource')
                 .then((archiveItem) => {
                     archiveItem.guid = archiveItem._id; // fix item guid to match new item _id
                     scope.$applyAsync(() => {
                         scope.edit ? scope.edit(archiveItem) : authoringWorkspace.open(archiveItem);
                     });
+                })
+                .finally(() => {
+                    this.setActioning(item, false);
                 });
         } else if (canEdit && scope.edit) {
             scope.$apply(() => {
@@ -463,22 +478,23 @@ export class ItemList extends React.Component<any, IState> {
      *
      * This could be item with same guid for corrections or with guid == rewritten_by for updates
      */
-    getParent(item: IArticle): string | null {
-        if (!item.rewritten_by) {
-            return this.state.itemsList.find((itemId) => itemId.startsWith(item.guid));
-        }
-
-        const parentId = this.state.itemsList.find((itemId) => itemId.startsWith(item.rewritten_by));
+    getParent(item: IArticle, itemId: string): string | null {
+        const parentId = item.rewritten_by &&
+            this.state.itemsList.find((_itemId) => _itemId.startsWith(item.rewritten_by));
 
         if (parentId) {
             const parent = this.state.itemsById[parentId];
 
-            if (parent && parent.rewritten_by) {
-                return this.getParent(parent);
+            if (parent) {
+                return this.getParent(parent, parentId) || parentId; // return parent's parent or parent
             }
         }
 
-        return parentId;
+        // check for previous version of same item
+        return this.state.itemsList.find((_itemId) =>
+            _itemId.startsWith(item.guid) // same guid
+            && _itemId !== itemId // but different version
+            && this.state.itemsById[_itemId]._current_version > item._current_version); // and more recent one
     }
 
     render() {
@@ -493,7 +509,7 @@ export class ItemList extends React.Component<any, IState> {
                 const item = this.state.itemsById[itemId];
 
                 if (item._type === 'published' && (item.rewritten_by || !item.last_published_version)) {
-                    const parentId = this.getParent(item);
+                    const parentId = this.getParent(item, itemId);
 
                     if (parentId && parentId !== itemId) {
                         nested[itemId] = true;
@@ -540,6 +556,7 @@ export class ItemList extends React.Component<any, IState> {
                 multiSelectDisabled: scope.disableMonitoringMultiSelect,
                 scope: scope,
                 nested: itemChildren,
+                actioning: !!this.state.actioning[itemId],
             });
         };
         const isEmpty = !this.state.itemsList.length;

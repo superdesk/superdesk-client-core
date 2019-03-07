@@ -2,7 +2,7 @@ import _ from 'lodash';
 import {uniq, pickBy, isEmpty} from 'lodash';
 import {validateMediaFieldsThrows} from 'apps/authoring/authoring/controllers/ChangeImageController';
 import {logger} from 'core/services/logger';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 interface IScope extends ng.IScope {
     validator: any;
@@ -195,7 +195,13 @@ export function MultiImageEditDirective(asset, $sce) {
         controller: MultiImageEditController,
         templateUrl: asset.templateUrl('apps/search/views/multi-image-edit.html'),
         link: function(scope) {
+            const METADATA_ITEMS = 'metadata:items';
+            const METADATA_AUTOFILL = 'metadata:autofill';
+
+            scope.metadataFromStorage = !!localStorage.getItem(METADATA_ITEMS);
+
             scope.trustAsHtml = $sce.trustAsHtml;
+            scope.autoFill = localStorage.getItem(METADATA_AUTOFILL) === 'true';
 
             scope.handleItemClick = function(event, image) {
                 if (event.target != null && event.target.classList.contains('icon-close-small')) {
@@ -204,6 +210,32 @@ export function MultiImageEditDirective(asset, $sce) {
                     scope.selectImage(image);
                 }
             };
+
+            scope.copyMetadata = (metadata) => {
+                scope.metadataFromStorage = true;
+                localStorage.setItem(METADATA_ITEMS, JSON.stringify(metadata));
+            };
+
+            scope.toggleAutofill = () => {
+                scope.autoFill = !scope.autoFill;
+                localStorage.setItem(METADATA_AUTOFILL, scope.autoFill);
+            };
+
+            scope.pasteMetadata = () => {
+                scope.metadata = JSON.parse(localStorage.getItem(METADATA_ITEMS));
+                _.forEach(scope.metadata, (metadata, key) => {
+                    scope.onChange(key);
+                });
+            };
+
+            scope.clearSavedMetadata = () => {
+                localStorage.removeItem(METADATA_ITEMS);
+                scope.metadataFromStorage = false;
+            };
+
+            if (scope.autoFill) {
+                scope.pasteMetadata();
+            }
         },
     };
 }

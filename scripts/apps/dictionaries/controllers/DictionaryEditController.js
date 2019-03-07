@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 DictionaryEditController.$inject = ['$scope', 'dictionaries', 'upload', 'notify',
     'modal', '$rootScope', '$q'];

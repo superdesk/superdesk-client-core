@@ -1,4 +1,3 @@
-
 @import '~mixins.scss';
 @import '~variables.scss';
 
@@ -157,6 +156,14 @@
             }
         }
         &.with-preview {
+            .sd-preview-panel {
+                width: $sidepreview-width + 160;
+                @media only screen and (max-width : 1430px) {
+                    width: $sidepreview-width - 40;
+                }
+                flex-shrink: 0;
+
+            }
             [sd-item-preview] {
                 position: relative;
                 width: 100%;
@@ -185,14 +192,6 @@
                         }
                     }
                 }
-            }
-            .sd-preview-panel {
-                width: $sidepreview-width + 160;
-                @media only screen and (max-width : 1430px) {
-                    width: $sidepreview-width - 40;
-                }
-                flex-shrink: 0;
-
             }
             .compact {
                 .content-list {

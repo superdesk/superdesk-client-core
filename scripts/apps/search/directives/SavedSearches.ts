@@ -8,7 +8,7 @@ import {IPrivilegesService} from 'types/Services/Privileges';
 
 import {forEach, clone, filter} from 'lodash';
 import {mapPredefinedDateFiltersServerToClient} from './DateFilters';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 SavedSearches.$inject = [
     '$rootScope', 'api', 'session', 'modal', 'notify', 'asset',

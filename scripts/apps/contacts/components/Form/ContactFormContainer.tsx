@@ -5,7 +5,7 @@ import {FB_URL, IG_URL} from '../../../contacts/constants';
 import {ContactProfile} from './ContactProfile';
 import {ActionBar} from './ActionBar';
 import {get, set, isEqual, cloneDeep, some, isEmpty, extend, each, omit, isNil} from 'lodash';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 export class ContactFormContainer extends React.Component<any, any> {
     static propTypes: any;

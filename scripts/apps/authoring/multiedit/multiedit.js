@@ -8,8 +8,8 @@
  * at https://www.sourcefabric.org/superdesk/license
  */
 
+import {gettext} from 'core/utils';
 import _ from 'lodash';
-import {gettext} from 'core/ui/components/utils';
 
 
 MultieditService.$inject = ['storage', 'superdesk', 'authoringWorkspace', 'referrer', '$location'];

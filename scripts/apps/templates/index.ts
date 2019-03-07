@@ -14,7 +14,7 @@ import {FilterTemplatesFilter} from './filters';
 import * as directive from './directives';
 import * as ctrl from './controllers';
 import {coreMenuGroups} from 'core/activity/activity';
-import {gettext} from 'core/ui/components/utils';
+import {gettext} from 'core/utils';
 
 angular.module('superdesk.apps.templates', [
     'superdesk.core.activity',
