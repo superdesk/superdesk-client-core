@@ -71,7 +71,11 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
             isEmpty = false;
         }
 
-        this.state = {body: body != null ? body : convertToRaw(ContentState.createFromText('')), type, isEmpty};
+        this.state = {
+            body: body != null ? body : convertToRaw(ContentState.createFromText('')),
+            type: type,
+            isEmpty: isEmpty,
+        };
 
         this.onSubmit = this.onSubmit.bind(this);
         this.onChange = this.onChange.bind(this);

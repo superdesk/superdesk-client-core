@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 interface IProps {
     type?: 'rounded' | 'square';
@@ -20,7 +20,7 @@ export class TagLabel extends React.Component<IProps> {
             classNames.push('tag-label--darker');
         } else if (color === 'blue-lighter') {
             classNames.push('tag-label--highlight1');
-        }  else if (color === 'blue') {
+        } else if (color === 'blue') {
             classNames.push('tag-label--highlight2');
         }
 

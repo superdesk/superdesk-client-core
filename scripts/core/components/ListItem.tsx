@@ -1,3 +1,5 @@
+/* eslint-disable react/no-multi-comp */
+
 import React from 'react';
 
 interface IListItemProps {
@@ -47,7 +49,7 @@ export class ListItemColumn extends React.Component<IPropsListItemColumn, any> {
     }
 }
 
-export class ListItemActionsMenu extends React.Component {
+export class ListItemActionsMenu extends React.Component<any> {
     render() {
         return (
             <div className="sd-list-item__action-menu">

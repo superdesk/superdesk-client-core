@@ -1,3 +1,6 @@
+/* tslint:disable:max-line-length */
+/* eslint-disable max-len */
+
 import {gettext} from 'core/utils';
 
 /**
@@ -333,7 +336,6 @@ export function UserPreferencesDirective(
                     return $q.when();
                 }
 
-                // tslint:disable-next-line
                 msg = gettext('No preferred categories selected. Should you choose to proceed with your choice. A default set of categories will be selected for you.');
 
                 modalResult = modal.confirm(msg).then(() => {

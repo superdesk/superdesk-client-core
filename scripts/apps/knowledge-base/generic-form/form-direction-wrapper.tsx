@@ -1,8 +1,8 @@
-import React from "react";
+import React from 'react';
 
-import {IFormGroup} from "./interfaces/form";
-import {assertNever} from "core/helpers/typescript-helpers";
-import {omit} from "lodash";
+import {IFormGroup} from './interfaces/form';
+import {assertNever} from 'core/helpers/typescript-helpers';
+import {omit} from 'lodash';
 
 interface IProps extends React.AllHTMLAttributes<HTMLDivElement> {
     direction: IFormGroup['direction'];

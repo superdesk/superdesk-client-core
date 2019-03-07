@@ -1,8 +1,8 @@
-import React from "react";
+import React from 'react';
 
-import {IFormGroup} from "./interfaces/form";
-import {FormGroupDisplayWrapper} from "./form-group-display-wrapper";
-import {FormGroupDirectionWrapper} from "./form-direction-wrapper";
+import {IFormGroup} from './interfaces/form';
+import {FormGroupDisplayWrapper} from './form-group-display-wrapper';
+import {FormGroupDirectionWrapper} from './form-direction-wrapper';
 
 interface IProps extends React.AllHTMLAttributes<HTMLDivElement> {
     group: IFormGroup;

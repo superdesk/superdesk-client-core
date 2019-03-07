@@ -1,5 +1,5 @@
 import React from 'react';
-import {noop} from 'lodash';
+import {noop, omit} from 'lodash';
 import ReactPaginate from 'react-paginate';
 
 import {ListItem, ListItemColumn, ListItemActionsMenu} from 'core/components/ListItem';
@@ -22,10 +22,9 @@ import {Positioner} from 'superdesk-ui-framework';
 import {connectCrudManager, ICrudManager} from 'core/helpers/CrudManager';
 import {TagLabel} from 'core/ui/components/TagLabel';
 import {connectServices} from 'core/helpers/ReactRenderAsync';
-import {IDefaultApiFields} from 'types/RestApi';
-import {VocabularySingleValue} from './generic-form/input-types/vocabulary_single_value';
-import {TextEditor3, IEditor3State} from './generic-form/input-types/text-editor3';
-import {TextSingleLine} from './generic-form/input-types/text-single-line';
+import {IDefaultApiFields} from '../../types/RestApi';
+import {getFormGroupForFiltering} from './generic-form/get-form-group-for-filtering';
+import {getFormFieldsRecursive, getFormFieldPreviewComponent} from './generic-form/form-field';
 
 interface IState {
     itemInPreview?: string;
@@ -36,65 +35,20 @@ interface IState {
     loading: boolean;
 }
 
-const sortOptions: Array<ISortFields> = [
-    {
-        label : gettext('Name'),
-        field: 'name',
-    },
-    {
-        label : gettext('Annotation'),
-        field: 'annotation_value',
-    },
-    {
-        label : gettext('Last updated'),
-        field: '_updated',
-    },
-    {
-        label : gettext('First created'),
-        field: '_created',
-    },
-];
-
-const nameField: IFormField = {
-    label : gettext('Name'),
-    type: 'text_single_line',
-    field: 'name',
-};
-const languageField: IFormField = {
-    label : gettext('Language'),
-    type: 'vocabulary_single_value',
-    field: 'language',
-    component_parameters: {
-        vocabulary_id: 'languages',
-    },
-};
-const definitionField: IFormField = {
-    label : gettext('Definition'),
-    type: 'text_editor3',
-    field: 'annotation_value',
-};
-
-const formConfig: IFormGroup = {
-    direction: 'vertical',
-    type: 'inline',
-    form: [
-        nameField,
-        languageField,
-        definitionField,
-    ],
-};
-
 interface IProps {
-    conceptItems: ICrudManager<IKnowledgeBaseItem>;
-    modal: any;
+    formConfig: IFormGroup;
+    renderConceptItemRow(item: IKnowledgeBaseItem): JSX.Element;
+
+    // connected
+    conceptItems?: ICrudManager<IKnowledgeBaseItem>;
+    modal?: any;
 }
 
 export interface IKnowledgeBaseItem extends IDefaultApiFields {
     name: string;
     labels?: Array<string>;
     language: string;
-    definition: any;
-    annotation_value: IEditor3State;
+    definition: string;
 
     // http://cv.iptc.org/newscodes/cpnature/
     cpnat_type: 'cpnat:abstract' | 'cpnat:event' | 'cpnat:geoArea'
@@ -189,6 +143,23 @@ class KnowledgeBasePageComponent extends React.Component<IProps, IState> {
         const pageSize = this.props.conceptItems._meta.max_results;
         const pageCount = Math.ceil(totalResults / pageSize);
 
+        const {formConfig, renderConceptItemRow} = this.props;
+
+        const formConfigForFilters = getFormGroupForFiltering(formConfig);
+        const fieldsList = getFormFieldsRecursive(formConfig.form);
+
+        const sortOptions: Array<ISortFields> = [
+            ...fieldsList.map(({label, field}) => ({label, field})),
+            {
+                label: gettext('Last updated'),
+                field: '_updated',
+            },
+            {
+                label: gettext('First created'),
+                field: '_created',
+            },
+        ];
+
         return (
             <div style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
                 <div className="subnav">
@@ -219,14 +190,14 @@ class KnowledgeBasePageComponent extends React.Component<IProps, IState> {
                         className="sd-create-btn dropdown-toggle"
                         icon="icon-plus-large"
                     >
-                        <span className="circle"></span>
+                        <span className="circle" />
                     </Button>
                 </div>
                 <PageContainer>
                     {
                         this.state.filtersOpen ? (
                             <PageContainerItem>
-                                <SidePanel side='left' width={240}>
+                                <SidePanel side="left" width={240}>
                                     <SidePanelHeader>
                                         <SidePanelHeading>{gettext('Refine search')}</SidePanelHeading>
                                         <SidePanelTools>
@@ -234,7 +205,7 @@ class KnowledgeBasePageComponent extends React.Component<IProps, IState> {
                                                 className="icn-btn"
                                                 onClick={() => this.setFiltersVisibility(false)}
                                             >
-                                                <i className="icon-close-small"></i>
+                                                <i className="icon-close-small" />
                                             </button>
                                         </SidePanelTools>
                                     </SidePanelHeader>
@@ -245,8 +216,8 @@ class KnowledgeBasePageComponent extends React.Component<IProps, IState> {
                                                 this.executeFilters();
                                             }}>
                                                 <FormViewEdit
-                                                    item={{}}
-                                                    formConfig={formConfig}
+                                                    item={this.state.filterValues}
+                                                    formConfig={formConfigForFilters}
                                                     editMode={true}
                                                     issues={{}}
                                                     handleFieldChange={this.handleFilterFieldChange}
@@ -288,7 +259,12 @@ class KnowledgeBasePageComponent extends React.Component<IProps, IState> {
                                             Object.keys(activeFilters).map((fieldName, i) => (
                                                 <TagLabel
                                                     key={i}
-                                                    onRemove={() => this.props.conceptItems.removeFilter(fieldName)}
+                                                    onRemove={() => {
+                                                        this.setState({
+                                                            filterValues: omit(this.state.filterValues, [fieldName]),
+                                                        });
+                                                        this.props.conceptItems.removeFilter(fieldName);
+                                                    }}
                                                 >
                                                     {fieldName}:{' '}<strong>{activeFilters[fieldName]}</strong>
                                                 </TagLabel>
@@ -300,48 +276,19 @@ class KnowledgeBasePageComponent extends React.Component<IProps, IState> {
                             {
                                 this.props.conceptItems._items.map((item, i) => (
                                     <ListItem onClick={() => this.openPreview(item._id)} key={item._id}>
-                                        <ListItemColumn>
-                                            <TextSingleLine
-                                                previewOuput={true}
-                                                value={item.name}
-                                                formField={nameField}
-                                                disabled={false}
-                                                issues={[]}
-                                                onChange={noop}
-                                            />
-                                        </ListItemColumn>
-                                        <ListItemColumn>
-                                            <VocabularySingleValue
-                                                previewOuput={true}
-                                                value={item.language}
-                                                formField={languageField}
-                                                disabled={false}
-                                                issues={[]}
-                                                onChange={noop}
-                                            />
-                                        </ListItemColumn>
-                                        <ListItemColumn ellipsisAndGrow noBorder>
-                                            <TextEditor3
-                                                previewOuput={true}
-                                                value={item.annotation_value}
-                                                formField={definitionField}
-                                                disabled={false}
-                                                issues={[]}
-                                                onChange={noop}
-                                            />
-                                        </ListItemColumn>
+                                        {renderConceptItemRow(item)}
                                         <ListItemActionsMenu>
-                                            <button id={"knowledgebaseitem" + i}>
+                                            <button id={'knowledgebaseitem' + i}>
                                                 <i className="icon-dots-vertical" />
                                             </button>
                                             <Positioner
-                                                triggerSelector={"#knowledgebaseitem" + i}
+                                                triggerSelector={'#knowledgebaseitem' + i}
                                                 placement="left-start"
                                                 className="dropdown2"
                                             >
                                                 <ul
                                                     className="dropdown__menu"
-                                                    style={{ display: "block", position: "static" }}
+                                                    style={{display: 'block', position: 'static'}}
                                                 >
                                                     <li>
                                                         <div className="dropdown__menu-label">{gettext('Actions')}</div>
@@ -354,7 +301,7 @@ class KnowledgeBasePageComponent extends React.Component<IProps, IState> {
                                                         >
                                                             <i className="icon-pencil" />
                                                             <span
-                                                                style={{ display: "inline" }}
+                                                                style={{display: 'inline'}}
                                                             >
                                                                 {gettext('Remove')}
                                                             </span>
@@ -376,7 +323,7 @@ class KnowledgeBasePageComponent extends React.Component<IProps, IState> {
                                     onEditModeChange={(val) => {
                                         this.previewInEditMode = val;
                                     }}
-                                    operation='editing'
+                                    operation="editing"
                                     formConfig={formConfig}
                                     item={
                                         this.props.conceptItems._items.find(({_id}) => _id === this.state.itemInPreview)
@@ -392,13 +339,16 @@ class KnowledgeBasePageComponent extends React.Component<IProps, IState> {
                         this.state.newItem != null ? (
                             <PageContainerItem>
                                 <KnowledgeItemViewEdit
-                                    operation='creation'
+                                    operation="creation"
                                     formConfig={formConfig}
                                     item={this.state.newItem}
                                     onSave={(item: IKnowledgeBaseItem) => this.props.conceptItems.create({
                                         ...item,
-                                        "cpnat_type": "cpnat:abstract",
-                                    }).then(this.closeNewItemForm)}
+                                        cpnat_type: 'cpnat:abstract',
+                                    }).then((res) => {
+                                        this.closeNewItemForm();
+                                        this.openPreview(res._id);
+                                    })}
                                     onClose={this.closeNewItemForm}
                                     onCancel={this.closeNewItemForm}
                                 />

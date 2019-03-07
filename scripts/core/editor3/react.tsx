@@ -84,13 +84,13 @@ export class Editor3Standalone extends React.Component<IProps> {
 
         const store = createEditorStore(
             {
-                disableSpellchecker,
-                language,
-                readOnly,
-                singleLine,
-                tabindex,
-                showTitle,
-                editorFormat,
+                disableSpellchecker: disableSpellchecker,
+                language: language,
+                readOnly: readOnly,
+                singleLine: singleLine,
+                tabindex: tabindex,
+                showTitle: showTitle,
+                editorFormat: editorFormat,
                 editorState: this.props.rawDraftContentState,
                 onChange: this.onChangeInterceptor,
             },

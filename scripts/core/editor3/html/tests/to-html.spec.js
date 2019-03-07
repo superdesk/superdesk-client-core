@@ -257,7 +257,7 @@ describe('core.editor3.html.to-html.AtomicBlockParser', () => {
 });
 
 describe('core.editor3.html.to-html.BlockInlineStyleWrapper', () => {
-    it('should get correct tags', () => {
+    it('should get correct tags v1', () => {
         const wrapper = new BlockInlineStyleWrapper();
 
         expect(wrapper.tags(OS([]))).toEqual('');
@@ -276,10 +276,8 @@ describe('core.editor3.html.to-html.BlockInlineStyleWrapper', () => {
         expect(wrapper.tags(OS(['SUPERSCRIPT']))).toEqual('</sub><sup>');
         expect(wrapper.tags(OS(['STRIKETHROUGH']))).toEqual('</sup><s>');
     });
-});
 
-describe('core.editor3.html.to-html.BlockEntityWrapper', () => {
-    it('should get correct tags', () => {
+    it('should get correct tags v2', () => {
         const contentState = ContentState.createFromText('abcdefghijklmn');
 
         const ek = [ // entity keys

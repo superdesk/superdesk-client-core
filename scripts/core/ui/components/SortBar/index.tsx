@@ -1,5 +1,5 @@
-import React from "react";
-import {ISortOption} from "core/helpers/CrudManager";
+import React from 'react';
+import {ISortOption} from 'core/helpers/CrudManager';
 
 export interface ISortFields {
     label: string;

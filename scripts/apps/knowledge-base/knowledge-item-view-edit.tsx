@@ -1,4 +1,6 @@
-import React from "react";
+/* eslint-disable max-depth */
+
+import React from 'react';
 import {
     SidePanelTools,
     SidePanel,
@@ -6,11 +8,10 @@ import {
     SidePanelHeading,
     SidePanelContent,
     SidePanelContentBlock,
-} from "core/components/SidePanel";
-import {FormViewEdit} from "./generic-form/from-group";
-import {IFormGroup} from "./generic-form/interfaces/form";
-import { connectServices } from "core/helpers/ReactRenderAsync";
-import { mapValues, mapKeys } from "lodash";
+} from 'core/components/SidePanel';
+import {FormViewEdit} from './generic-form/from-group';
+import {IFormGroup} from './generic-form/interfaces/form';
+import {connectServices} from 'core/helpers/ReactRenderAsync';
 
 interface IProps {
     operation: 'editing' | 'creation';
@@ -32,11 +33,13 @@ interface IState {
 }
 
 class KnowledgeItemViewEditComponent extends React.Component<IProps, IState> {
+    _mounted: boolean;
+
     constructor(props) {
         super(props);
 
         this.state = {
-            editMode: this.props.operation === 'creation' ? true : false,
+            editMode: this.props.operation === 'creation',
             nextItem: this.props.item,
             issues: {},
         };
@@ -61,11 +64,15 @@ class KnowledgeItemViewEditComponent extends React.Component<IProps, IState> {
         }
     }
     componentDidMount() {
+        this._mounted = true;
+
         if (typeof this.props.onEditModeChange === 'function') {
             this.props.onEditModeChange(this.state.editMode);
         }
     }
     componentWillUnmount() {
+        this._mounted = false;
+
         if (typeof this.props.onEditModeChange === 'function') {
             this.props.onEditModeChange(false);
         }
@@ -97,53 +104,55 @@ class KnowledgeItemViewEditComponent extends React.Component<IProps, IState> {
 
         (
             this.isFormDirty() === false
-            ? Promise.resolve()
-            : this.props.modal.confirm(gettext('There are unsaved changes which will be discarded. Continue?'))
+                ? Promise.resolve()
+                : this.props.modal.confirm(gettext('There are unsaved changes which will be discarded. Continue?'))
         ).then(cancelFn)
-        .catch(() => {
+            .catch(() => {
             // do nothing
-        });
+            });
     }
     isFormDirty() {
         return JSON.stringify(this.props.item) !== JSON.stringify(this.state.nextItem);
     }
     handleSave() {
         this.props.onSave(this.state.nextItem).then(() => {
-            this.setState({editMode: false});
+            if (this._mounted === true) {
+                this.setState({editMode: false});
+            }
         })
-        .catch((res) => {
-            let issues = {};
+            .catch((res) => {
+                let issues = {};
 
-            for (let fieldName in res.data._issues) {
-                let issuesForField = [];
+                for (let fieldName in res.data._issues) {
+                    let issuesForField = [];
 
-                if (typeof res.data._issues[fieldName] === 'string') {
-                    issuesForField.push(res.data._issues[fieldName]);
-                } else {
-                    for (let key in res.data._issues[fieldName]) {
-                        if (key === 'required') {
-                            issuesForField.push(
-                                gettext('Field is required'),
-                            );
-                        } else {
-                            issuesForField.push(
-                                gettext('Uknown validation error'),
-                            );
+                    if (typeof res.data._issues[fieldName] === 'string') {
+                        issuesForField.push(res.data._issues[fieldName]);
+                    } else {
+                        for (let key in res.data._issues[fieldName]) {
+                            if (key === 'required') {
+                                issuesForField.push(
+                                    gettext('Field is required'),
+                                );
+                            } else {
+                                issuesForField.push(
+                                    gettext('Uknown validation error'),
+                                );
+                            }
                         }
                     }
+
+                    issues[fieldName] = issuesForField;
                 }
 
-                issues[fieldName] = issuesForField;
-            }
-
-            this.setState({
-                issues: issues,
+                this.setState({
+                    issues: issues,
+                });
             });
-        });
     }
     render() {
         return (
-            <SidePanel side='right' width={360}>
+            <SidePanel side="right" width={360}>
                 <SidePanelHeader>
                     <SidePanelHeading>{gettext('Details:')}</SidePanelHeading>
                     {
@@ -168,12 +177,12 @@ class KnowledgeItemViewEditComponent extends React.Component<IProps, IState> {
                                         {
                                             this.props.operation === 'editing' ? (
                                                 <button onClick={this.enableEditMode} className="icn-btn">
-                                                    <i className="icon-pencil"></i>
+                                                    <i className="icon-pencil" />
                                                 </button>
                                             ) : null
                                         }
                                         <button className="icn-btn" onClick={this.props.onClose}>
-                                            <i className="icon-close-small"></i>
+                                            <i className="icon-close-small" />
                                         </button>
                                     </div>
                                 </SidePanelTools>
