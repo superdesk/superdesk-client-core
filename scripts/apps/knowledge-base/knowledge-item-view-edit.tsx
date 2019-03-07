@@ -9,8 +9,7 @@ import {
 } from "core/components/SidePanel";
 import {FormViewEdit} from "./generic-form/from-group";
 import {IFormGroup} from "./generic-form/interfaces/form";
-import { connectServices } from "core/helpers/ReactRenderAsync";
-import { mapValues, mapKeys } from "lodash";
+import {connectServices} from "core/helpers/ReactRenderAsync";
 
 interface IProps {
     operation: 'editing' | 'creation';
@@ -32,6 +31,8 @@ interface IState {
 }
 
 class KnowledgeItemViewEditComponent extends React.Component<IProps, IState> {
+    _mounted: boolean;
+
     constructor(props) {
         super(props);
 
@@ -61,11 +62,15 @@ class KnowledgeItemViewEditComponent extends React.Component<IProps, IState> {
         }
     }
     componentDidMount() {
+        this._mounted = true;
+
         if (typeof this.props.onEditModeChange === 'function') {
             this.props.onEditModeChange(this.state.editMode);
         }
     }
     componentWillUnmount() {
+        this._mounted = false;
+
         if (typeof this.props.onEditModeChange === 'function') {
             this.props.onEditModeChange(false);
         }
@@ -109,7 +114,9 @@ class KnowledgeItemViewEditComponent extends React.Component<IProps, IState> {
     }
     handleSave() {
         this.props.onSave(this.state.nextItem).then(() => {
-            this.setState({editMode: false});
+            if (this._mounted === true) {
+                this.setState({editMode: false});
+            }
         })
         .catch((res) => {
             let issues = {};

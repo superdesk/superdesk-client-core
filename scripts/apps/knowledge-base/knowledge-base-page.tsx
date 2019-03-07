@@ -35,70 +35,13 @@ interface IState {
     loading: boolean;
 }
 
-const nameField: IFormField = {
-    label : gettext('Name'),
-    type: 'text_single_line',
-    field: 'name',
-};
-const languageField: IFormField = {
-    label : gettext('Language'),
-    type: 'vocabulary_single_value',
-    field: 'language',
-    component_parameters: {
-        vocabulary_id: 'languages',
-    },
-};
-const definitionField: IFormField = {
-    label : gettext('Definition'),
-    type: 'text_single_line',
-    field: 'definition',
-};
-
-const formConfig: IFormGroup = {
-    direction: 'vertical',
-    type: 'inline',
-    form: [
-        nameField,
-        languageField,
-        definitionField,
-    ],
-};
-
-const formConfigForFilters = getFormGroupForFiltering(formConfig);
-
-const fieldsList = getFormFieldsRecursive(formConfig.form);
-
-const sortOptions: Array<ISortFields> = [
-    ...fieldsList.map(({label, field}) => ({label, field})),
-    {
-        label : gettext('Last updated'),
-        field: '_updated',
-    },
-    {
-        label : gettext('First created'),
-        field: '_created',
-    },
-];
-
-const renderConceptItemRow = (item: IKnowledgeBaseItem) => {
-    return (
-        <React.Fragment>
-            <ListItemColumn>
-                {getFormFieldPreviewComponent(item, nameField)}
-            </ListItemColumn>
-            <ListItemColumn>
-                {getFormFieldPreviewComponent(item, languageField)}
-            </ListItemColumn>
-            <ListItemColumn ellipsisAndGrow noBorder>
-                {getFormFieldPreviewComponent(item, definitionField)}
-            </ListItemColumn>
-        </React.Fragment>
-    );
-};
-
 interface IProps {
-    conceptItems: ICrudManager<IKnowledgeBaseItem>;
-    modal: any;
+    formConfig: IFormGroup;
+    renderConceptItemRow(item: IKnowledgeBaseItem): JSX.Element;
+
+    // connected
+    conceptItems?: ICrudManager<IKnowledgeBaseItem>;
+    modal?: any;
 }
 
 export interface IKnowledgeBaseItem extends IDefaultApiFields {
@@ -199,6 +142,23 @@ class KnowledgeBasePageComponent extends React.Component<IProps, IState> {
         const totalResults = this.props.conceptItems._meta.total;
         const pageSize = this.props.conceptItems._meta.max_results;
         const pageCount = Math.ceil(totalResults / pageSize);
+
+        const {formConfig, renderConceptItemRow} = this.props;
+
+        const formConfigForFilters = getFormGroupForFiltering(formConfig);
+        const fieldsList = getFormFieldsRecursive(formConfig.form);
+
+        const sortOptions: Array<ISortFields> = [
+            ...fieldsList.map(({label, field}) => ({label, field})),
+            {
+                label : gettext('Last updated'),
+                field: '_updated',
+            },
+            {
+                label : gettext('First created'),
+                field: '_created',
+            },
+        ];
 
         return (
             <div style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
@@ -380,7 +340,10 @@ class KnowledgeBasePageComponent extends React.Component<IProps, IState> {
                                     onSave={(item: IKnowledgeBaseItem) => this.props.conceptItems.create({
                                         ...item,
                                         "cpnat_type": "cpnat:abstract",
-                                    }).then(this.closeNewItemForm)}
+                                    }).then((res) => {
+                                        this.closeNewItemForm();
+                                        this.openPreview(res._id);
+                                    })}
                                     onClose={this.closeNewItemForm}
                                     onCancel={this.closeNewItemForm}
                                 />
