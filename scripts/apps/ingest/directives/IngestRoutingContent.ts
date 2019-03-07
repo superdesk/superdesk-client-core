@@ -104,7 +104,7 @@ export function IngestRoutingContent(api, notify, modal, contentFilters, $filter
              * @description Pick up rule for preview.
              */
             scope.selectRule = (rule) => {
-                rule.filterName = rule.filter ? _.find(scope.contentFilters, {_id: rule.filter}).name : null;
+                rule.filterName = rule.filter ? (_.find(scope.contentFilters, {_id: rule.filter}) as any).name : null;
                 rule.schedule._allDay = !(_.get(rule, 'schedule.hour_of_day_from', false) ||
                     _.get(rule, 'schedule.hour_of_day_to', false));
 
@@ -135,7 +135,7 @@ export function IngestRoutingContent(api, notify, modal, contentFilters, $filter
                 _origRule = _.clone(rule);
 
                 scope.rule = rule;
-                scope.rule.filterName = rule.filter ? _.find(scope.contentFilters, {_id: rule.filter}).name : null;
+                scope.rule.filterName = rule.filter ? (_.find(scope.contentFilters, {_id: rule.filter}) as any).name : null;
                 scope.rule.schedule._allDay = !(_.get(scope.rule, 'schedule.hour_of_day_from', false) ||
                     _.get(scope.rule, 'schedule.hour_of_day_to', false));
             };

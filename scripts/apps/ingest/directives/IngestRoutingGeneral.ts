@@ -18,7 +18,7 @@ export function IngestRoutingGeneral(weekdays, desks, macros) {
                 });
 
             macros.get().then((macros) => {
-                _.transform(macros, (lookup, macro, idx) => {
+                _.transform(macros, (lookup, macro: any, idx) => {
                     scope.macroLookup[macro.name] = macro;
                 });
             });

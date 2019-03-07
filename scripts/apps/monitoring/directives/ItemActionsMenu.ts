@@ -65,7 +65,7 @@ export function ItemActionsMenu(superdesk, activityService, workflowService, arc
              */
             function getActions(item) {
                 let intent = {action: 'list', type: getType(item)};
-                let groups = {};
+                let groups: any = {};
 
                 superdesk.findActivities(intent, item).forEach((activity) => {
                     if (workflowService.isActionAllowed(scope.item, activity.action)) {
@@ -80,7 +80,7 @@ export function ItemActionsMenu(superdesk, activityService, workflowService, arc
 
                 AUTHORING_MENU_GROUPS.forEach((mg) => {
                     if (groups[mg._id]) {
-                        let group = {...mg};
+                        let group: any = {...mg};
 
                         group.actions = groups[mg._id];
                         menuGroups.push(group);

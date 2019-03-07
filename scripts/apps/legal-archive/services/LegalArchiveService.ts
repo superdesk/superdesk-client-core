@@ -33,7 +33,7 @@ export function LegalArchiveService(api, $location, config, moment, sortService)
 
     this.getCriteria = function() {
         var params = $location.search(),
-            criteria = {
+            criteria: any = {
                 max_results: Number(params.max_results) || DEFAULT_PER_PAGE,
             };
 
@@ -73,7 +73,7 @@ export function LegalArchiveService(api, $location, config, moment, sortService)
             var val = _.trim(n);
 
             if (val) {
-                var clause = {};
+                var clause: any = {};
 
                 if (key === 'published_after') {
                     clause.versioncreated = {$gte: prepareDate(val, 'T00:00:00')};

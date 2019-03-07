@@ -534,7 +534,7 @@ export function IngestSourcesContent(ingestSources, notify, api, $location,
                  * Initializes the configuration for the selected feeding service.
                  */
                 $scope.initProviderConfig = function() {
-                    var service = getCurrentService();
+                    var service: any = getCurrentService();
 
                     if (service && service.config) {
                         $scope.provider.config = angular.extend({}, service.config);
@@ -570,7 +570,7 @@ export function IngestSourcesContent(ingestSources, notify, api, $location,
                  * @returns {string}
                  */
                 $scope.getConfigTemplateUrl = function() {
-                    var feedingService = getCurrentService();
+                    var feedingService: any = getCurrentService();
 
                     return feedingService ? feedingService.templateUrl : '';
                 };

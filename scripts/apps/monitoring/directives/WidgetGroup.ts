@@ -100,7 +100,7 @@ export function WidgetGroup(search, api, superdesk, desks, cards, $timeout, $q,
                 return provider;
             }
 
-            function queryItems(queryString, params) {
+            function queryItems(queryString?, params?) {
                 if (!scope.fetching) {
                     // page reload disabled when the user scrolls
                     if (container.scrollTop > 20) {
@@ -138,7 +138,7 @@ export function WidgetGroup(search, api, superdesk, desks, cards, $timeout, $q,
 
                         if ($rootScope.config.features.customMonitoringWidget &&
                             !scope.selected && scope.itemIds && scope.itemIds.length) {
-                            scope.selected = scope.itemsById[_.head(scope.itemIds)];
+                            scope.selected = scope.itemsById[(_.head(scope.itemIds) as string)];
                             scope.action({item: scope.selected});
                         }
 
@@ -364,12 +364,12 @@ export function WidgetGroup(search, api, superdesk, desks, cards, $timeout, $q,
                     }
                     if (index === -1) { // selected not in current items, select first
                         container.scrollTop = 0;
-                        clickItem(scope.itemsById[_.head(scope.itemIds)], event);
+                        clickItem(scope.itemsById[(_.head(scope.itemIds) as any)], event);
                     }
                     var nextIndex = _.max([0, _.min([scope.itemIds.length - 1, index + diff])]);
 
                     if (nextIndex < 0) {
-                        clickItem(scope.itemsById[_.last(scope.itemIds)], event);
+                        clickItem(scope.itemsById[(_.last(scope.itemIds) as any)], event);
                     }
                     if (index !== nextIndex) {
                         // scrolling in monitoring widget for ntb is done by keyboard

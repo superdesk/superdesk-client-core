@@ -67,7 +67,7 @@ describe('monitoring', () => {
     it('can hide history tabs when preview externalsource item', inject(($controller, $rootScope) => {
         var scope = $rootScope.$new(),
             ctrl = $controller('Monitoring', {$scope: scope}),
-            item = {};
+            item: any = {};
 
         expect(ctrl.state['with-preview']).toBeFalsy();
 
@@ -142,7 +142,7 @@ describe('monitoring', () => {
 
         it('can get criteria for spike desk', inject((cards, session) => {
             session.identity = {_id: 'foo'};
-            var card = {type: 'spike'};
+            var card: any = {type: 'spike'};
             var criteria = cards.criteria(card);
 
             expect(criteria.source.query.filtered.filter.and).toContain({

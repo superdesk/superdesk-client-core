@@ -1,6 +1,8 @@
 import {BaseSortBar} from 'apps/search/directives/BaseSortBar';
 
 class LinkFunction extends BaseSortBar {
+    legal: any;
+
     constructor(legal, sort, scope, elem) {
         super(scope, elem, sort);
         this.legal = legal;

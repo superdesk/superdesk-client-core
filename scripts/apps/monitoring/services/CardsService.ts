@@ -7,7 +7,7 @@ export function CardsService(api, search, session, desks, config) {
     this.shouldUpdate = shouldUpdate;
 
     function getCriteriaParams(card) {
-        let params = {};
+        let params: any = {};
 
         if (card.type === 'search' && card.search && card.search.filter.query) {
             angular.copy(card.search.filter.query, params);
@@ -109,7 +109,7 @@ export function CardsService(api, search, session, desks, config) {
                 {term: {type: 'composite'}},
             ]};
 
-            var termsFileType = {terms: {type: JSON.parse(card.fileType)}};
+            var termsFileType: any = {terms: {type: JSON.parse(card.fileType)}};
 
             // Normal package
             if (_.includes(JSON.parse(card.fileType), 'composite')) {
@@ -142,7 +142,7 @@ export function CardsService(api, search, session, desks, config) {
     function getCriteria(card, queryString, queryParam) {
         var params = getCriteriaParams(card);
         var query = search.query(setFilters(params));
-        var criteria = {es_highlight: card.query ? search.getElasticHighlight() : 0};
+        var criteria: any = {es_highlight: card.query ? search.getElasticHighlight() : 0};
 
         filterQueryByCardType(query, queryParam, card);
         filterQueryByCardFileType(query, card);

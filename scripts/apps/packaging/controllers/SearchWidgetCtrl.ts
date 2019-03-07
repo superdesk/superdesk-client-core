@@ -19,7 +19,7 @@ export function SearchWidgetCtrl($scope, packages, api, search) {
             return;
         }
 
-        var params = {};
+        var params: any = {};
 
         params.q = $scope.query;
         params.ignoreKilled = true;

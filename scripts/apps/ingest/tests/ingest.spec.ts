@@ -12,7 +12,7 @@ describe('ingest', () => {
 
         it('can send an ingest item', inject((send, api, $q, $rootScope) => {
             spyOn(api, 'save').and.returnValue($q.when({_created: 'now'}));
-            var item = {_id: '1', _type: 'ingest'};
+            var item: any = {_id: '1', _type: 'ingest'};
 
             expect(send.one(item).then).toBeDefined();
             $rootScope.$digest();
@@ -43,7 +43,7 @@ describe('ingest', () => {
         }));
 
         it('can send an item as', inject((send, api, $q, $rootScope) => {
-            var item = {_id: 1, _type: 'ingest'},
+            var item: any = {_id: 1, _type: 'ingest'},
                 config = {
                     desk: 'desk1',
                     stage: 'stage1',
@@ -86,7 +86,7 @@ describe('ingest', () => {
         it('can send multiple items as', inject((send, api, $q, $rootScope) => {
             spyOn(api, 'save').and.returnValue($q.when({_id: 'foo', _created: 'now'}));
 
-            var items = [{_id: 1, _type: 'ingest'}, {_id: 2, _type: 'ingest'}];
+            var items: any = [{_id: 1, _type: 'ingest'}, {_id: 2, _type: 'ingest'}];
 
             expect(send.config).toBe(null);
 

@@ -268,7 +268,7 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
      * @param {boolean} isDesk
      */
     function initSpikeGroups(isDesk) {
-        var spikeDesks = {};
+        var spikeDesks: any = {};
 
         if (self.spikeGroups.length > 0) {
             self.spikeGroups.length = 0;
@@ -297,7 +297,7 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
             }
         });
 
-        _.each(spikeDesks, (item) => {
+        _.each(spikeDesks, (item: any) => {
             if (item._id === 'personal') {
                 self.spikeGroups.push({_id: item._id, type: 'spike-personal', header: item.name});
             } else {

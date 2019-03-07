@@ -65,7 +65,7 @@ export function DeskNotifications(desks, deskNotifications, authoringWorkspace, 
              * @return {boolean} True if the notification is read by any user
              */
             scope.isRead = function(notification) {
-                var recipient = getRecipient(notification);
+                var recipient: any = getRecipient(notification);
 
                 return recipient && recipient.read;
             };
@@ -77,7 +77,7 @@ export function DeskNotifications(desks, deskNotifications, authoringWorkspace, 
              * @return {string} Display name of the user
              */
             scope.readBy = function(notification) {
-                var recipient = getRecipient(notification);
+                var recipient: any = getRecipient(notification);
 
                 if (recipient && recipient.read) {
                     return desks.userLookup[recipient.user_id].display_name;

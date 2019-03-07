@@ -92,7 +92,7 @@ export function SendService(desks, api, $q, notify, $injector, multi, $rootScope
      * @returns {Promise}
      */
     function sendOneAs(item, config, action) {
-        var data = getData(config);
+        var data: any = getData(config);
 
         if (item._type === 'ingest') {
             return api.save('fetch', {}, data, item).then((archived) => {
@@ -149,8 +149,8 @@ export function SendService(desks, api, $q, notify, $injector, multi, $rootScope
                 });
         }
 
-        function getData(config) {
-            var data = {
+        function getData(config: any) {
+            var data: any = {
                 desk: config.desk,
             };
 

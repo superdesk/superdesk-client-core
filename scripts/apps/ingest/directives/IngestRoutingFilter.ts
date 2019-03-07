@@ -31,7 +31,7 @@ export function IngestRoutingFilter() {
      * @return {string} - an escaped version of the given string
      */
     // XXX: should probably be moved into some utils module - but where?
-    RegExp.escape = function(s) {
+    RegExp['escape'] = function(s) {
         return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
     };
 
@@ -68,7 +68,7 @@ export function IngestRoutingFilter() {
              * @param {string} term - the string to search for
              */
             scope.searchFilters = function(term) {
-                var regex = new RegExp(RegExp.escape(term), 'i');
+                var regex = new RegExp(RegExp['escape'](term), 'i');
 
                 scope.matchingFilters = _.filter(
                     scope.filters,
