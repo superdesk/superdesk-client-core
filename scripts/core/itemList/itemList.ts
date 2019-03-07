@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import {gettext} from 'core/utils';
 
 angular.module('superdesk.core.itemList', ['superdesk.apps.search'])

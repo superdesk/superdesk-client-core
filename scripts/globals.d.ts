@@ -16,9 +16,13 @@ declare const inject: any;
 declare const jasmine: any;
 declare const spyOn: any;
 declare const describe: any;
+declare const fdescribe: any;
+declare const xdescribe: any;
 declare const beforeEach: any;
 declare const expect: any;
 declare const it: any;
+declare const fit: any;
+declare const xit: any;
 
 // globals
 // tslint:disable-next-line: interface-name

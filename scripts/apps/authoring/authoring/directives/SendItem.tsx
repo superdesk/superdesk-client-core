@@ -3,7 +3,6 @@ import React from 'react';
 import {PreviewModal} from '../previewModal';
 import {gettext} from 'core/utils';
 
-
 SendItem.$inject = ['$q', 'api', 'search', 'desks', 'notify', 'authoringWorkspace',
     'superdeskFlags', '$location', 'macros', '$rootScope', 'deployConfig',
     'authoring', 'send', 'editorResolver', 'confirm', 'archiveService',
@@ -115,11 +114,11 @@ export function SendItem($q, api, search, desks, notify, authoringWorkspace,
                                     (subscriber) => {
                                         subscriber.destinations = subscriber.destinations.filter(
                                             (destination) => typeof destination.preview_endpoint_url === 'string'
-                                                && destination.preview_endpoint_url.length > 0
+                                                && destination.preview_endpoint_url.length > 0,
                                         );
 
                                         return subscriber;
-                                    }
+                                    },
                                 )
                                 .filter((subscriber) => subscriber.destinations.length > 0);
                         });
@@ -136,7 +135,7 @@ export function SendItem($q, api, search, desks, notify, authoringWorkspace,
                     modal.alert({
                         headerText: gettext('Preview'),
                         bodyText: gettext(
-                            'In order to preview the item, save the changes first.'
+                            'In order to preview the item, save the changes first.',
                         ),
                     });
                 } else {
@@ -148,7 +147,7 @@ export function SendItem($q, api, search, desks, notify, authoringWorkspace,
                                     documentId={scope.item._id}
                                     urls={urls}
                                     closeModal={closeModal}
-                                />
+                                />,
                             );
                         });
                 }
@@ -433,7 +432,7 @@ export function SendItem($q, api, search, desks, notify, authoringWorkspace,
              * @returns {Boolean}
              */
             scope.canSendItem = function() {
-                var itemType = [], typesList;
+                var itemType: any = [], typesList;
 
                 if (scope.multiItems) {
                     angular.forEach(scope.multiItems, (item) => {
@@ -551,7 +550,7 @@ export function SendItem($q, api, search, desks, notify, authoringWorkspace,
                         })
                         .finally(() => {
                             scope.loading = false;
-                        })
+                        }),
                     );
             };
 
@@ -574,7 +573,7 @@ export function SendItem($q, api, search, desks, notify, authoringWorkspace,
                     gettext('The package contains published items which can\'t be moved.'),
                     gettext('Warning'),
                     gettext('Continue'),
-                    gettext('Cancel')
+                    gettext('Cancel'),
                 );
 
             const containsPublishedItems = (items) => {

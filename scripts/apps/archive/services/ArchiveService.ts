@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import moment from 'moment';
 
 ArchiveService.$inject = ['desks', 'session', 'api', '$q', 'search', '$location', 'config'];
 export function ArchiveService(desks, session, api, $q, search, $location, config) {
@@ -81,7 +82,7 @@ export function ArchiveService(desks, session, api, $q, search, $location, confi
     this.getRelatedItems = function(item, fromDateTime) {
         var beforeDateTime = fromDateTime || moment().subtract(1, 'days')
             .format(config.view.dateformat);
-        var params = {};
+        var params: any = {};
 
         params.q = 'slugline.phrase:"' + _.trim(item.slugline) + '"'; // exact match
         params.ignoreKilled = true;
@@ -93,7 +94,7 @@ export function ArchiveService(desks, session, api, $q, search, $location, confi
         query.size(200);
 
         if (_.get(item, '_id')) {
-            let filter = {
+            let filter: any  = {
                 bool: {
                     must_not: [
                         {bool: {must: [{term: {_id: item._id}}, {term: {_type: 'archive'}}]}},
@@ -208,6 +209,8 @@ export function ArchiveService(desks, session, api, $q, search, $location, confi
             return _.find(versions, {_current_version: item._latest_version});
         }
 
-        return _.max(versions, (version) => version._current_version || version.version);
+        const versionsMap = versions.map((v) => v._current_version || v.version);
+
+        return _.max(versionsMap);
     };
 }

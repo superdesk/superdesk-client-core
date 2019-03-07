@@ -1,6 +1,11 @@
 import _ from 'lodash';
 
 export class BaseListController {
+    lastQueryParams: any;
+    $location: any;
+    search: any;
+    desks: any;
+
     constructor($scope, $location, search, desks) {
         this.lastQueryParams = {};
         this.$location = $location;
@@ -13,7 +18,7 @@ export class BaseListController {
             const source = this.getQuery(null, $scope.repo.archive || false);
 
             source.from = from;
-            this.fetchItems(this.getCriteria(source), true);
+            this.fetchItems(this.getCriteria(source));
         };
 
         $scope.$on('$routeUpdate', (e, data) => {
@@ -57,12 +62,13 @@ export class BaseListController {
         return query;
     }
 
-    fetchItems(criteria) {
+    fetchItems(criteria, next?) {
         console.warn('No API defined.');
     }
 
     fetchItem(id) {
         console.warn('no api defined');
+        return new Promise((r) => r());
     }
 
     refresh(filterDesk) {

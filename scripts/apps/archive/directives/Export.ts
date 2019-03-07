@@ -1,6 +1,15 @@
 import _ from 'lodash';
 
 class LinkFunction {
+    api: any;
+    config: any;
+    multi: any;
+    notify: any;
+    storage: any;
+    session: any;
+    urls: any;
+    scope: any;
+
     constructor(api, config, multi, notify, storage, session, urls, scope) {
         this.api = api;
         this.config = config;
