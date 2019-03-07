@@ -1,7 +1,10 @@
 import * as helpers from 'apps/authoring/authoring/helpers';
 import _ from 'lodash';
 import postscribe from 'postscribe';
+import thunk from 'redux-thunk';
 import {gettext} from 'core/utils';
+import {combineReducers, createStore, applyMiddleware} from 'redux';
+import {attachments, initAttachments} from '../../attachments';
 
 /**
  * @ngdoc directive
@@ -75,12 +78,13 @@ AuthoringDirective.$inject = [
     '$sce',
     'mediaIdGenerator',
     'relationsService',
+    '$injector',
 ];
 export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace, notify,
     desks, authoring, api, session, lock, privileges, content, $location,
     referrer, macros, $timeout, $q, modal, archiveService, confirm, reloadService,
     $rootScope, $interpolate, metadata, suggest, config, deployConfig, editorResolver,
-    compareVersions, embedService, $sce, mediaIdGenerator, relationsService) {
+    compareVersions, embedService, $sce, mediaIdGenerator, relationsService, $injector) {
     return {
         link: function($scope, elem, attrs) {
             var _closing;
@@ -1151,6 +1155,31 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             $scope.closePreview();
             macros.setupShortcuts($scope);
             initEmbedFieldsValidation();
+
+            // init redux
+            const initialState = {
+                editable: !!$scope.origItem._editable,
+                isLocked: $scope.isLocked(),
+                isLockedByMe: $scope.isLockedByMe(),
+            };
+
+            function editor(state = initialState) {
+                return state;
+            }
+
+            const reducer = combineReducers({attachments, editor});
+
+            $scope.store = createStore(reducer, applyMiddleware(thunk.withExtraArgument({
+                $scope: $scope,
+                $window: $injector.get('$window'),
+                urls: $injector.get('urls'),
+                notify: notify,
+                superdesk: superdesk,
+                deployConfig: deployConfig,
+                attachments: $injector.get('attachments'),
+            })));
+
+            $scope.store.dispatch(initAttachments($scope.item));
         },
     };
 }

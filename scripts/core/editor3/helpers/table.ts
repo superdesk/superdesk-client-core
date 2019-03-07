@@ -1,7 +1,7 @@
 import {
-    EditorChangeType,
     Modifier,
     ContentState,
+    SelectionState,
     ContentBlock,
     EditorState,
     CompositeDecorator,
@@ -121,7 +121,7 @@ export function getData(contentState: ContentState, blockKey: string) {
 
 /**
  * @ngdoc method
- * @name getData
+ * @name setData
  * @param {Object} contentState The editor content state
  * @param {Object} block The current atomic block
  * @description Returns EditorState with the data contained in the entity of this atomic block.
@@ -134,15 +134,9 @@ export function setData(
     lastChangeType,
 ): EditorState {
     const contentState = editorState.getCurrentContent();
-    const entityKey = block.getEntityAt(0);
     const selection = createBlockSelection(editorState, block);
-    const newContentState = Modifier.setBlockData(
-        contentState,
-        selection,
-        Map().set('data', JSON.stringify(data)),
-    );
 
-    newContentState.replaceEntityData(entityKey, {data});
+    const newContentState = setDataForContent(contentState, selection, block, data);
 
     const newEditorState = EditorState.push(
         editorState,
@@ -151,4 +145,30 @@ export function setData(
     );
 
     return newEditorState;
+}
+
+/**
+ * @ngdoc method
+ * @name setDataForContent
+ * @param {Object} contentState The editor content state
+ * @param {Object} block The current atomic block
+ * @description Returns ContentState with the data contained in the entity of this atomic block.
+ * @return {Object}
+ */
+export function setDataForContent(
+    contentState: ContentState,
+    selection: SelectionState,
+    block: ContentBlock,
+    data,
+): ContentState {
+    const entityKey = block.getEntityAt(0);
+    const newContentState = Modifier.setBlockData(
+        contentState,
+        selection,
+        Map().set('data', JSON.stringify(data)),
+    );
+
+    newContentState.replaceEntityData(entityKey, {data});
+
+    return newContentState;
 }

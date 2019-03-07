@@ -200,10 +200,32 @@ a:hover {
     margin-bottom: -2px;
     margin-top: 10px;
 }
+
 .main-section.users {
     .preview-layout {
         .list-pane > .content {
             right: 400px;
+            transition: all ease-in-out 0.2s;
+        }
+        &.closed {
+            .list-pane > .content {
+                right: 0;
+            }
+        }
+    }
+}
+
+.main-section.contacts-section {
+    .preview-layout {
+        .content {
+            right: 560px;
+            transition: all ease-in-out 0.2s;
+        }
+        &.closed {
+            .content {
+                right: 0;
+                transition: all ease-in-out 0.2s;
+            }
         }
     }
 }

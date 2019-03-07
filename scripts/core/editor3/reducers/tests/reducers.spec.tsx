@@ -186,10 +186,10 @@ describe('editor3.reducers', () => {
         const state = reducer(startState, {type: 'HIGHLIGHTS_FIND_PREV'});
         const block = state.editorState.getCurrentContent().getFirstBlock();
 
-        expect(state.searchTerm.index).toBe(0);
-        expect(block.getInlineStyleAt(0).has('HIGHLIGHT_STRONG')).toBe(true);
+        expect(state.searchTerm.index).toBe(2);
+        expect(block.getInlineStyleAt(0).has('HIGHLIGHT')).toBe(true);
         expect(block.getInlineStyleAt(13).has('HIGHLIGHT')).toBe(true);
-        expect(block.getInlineStyleAt(26).has('HIGHLIGHT')).toBe(true);
+        expect(block.getInlineStyleAt(26).has('HIGHLIGHT_STRONG')).toBe(true);
     });
 
     it('HIGHLIGHTS_FIND_REPLACE', () => {

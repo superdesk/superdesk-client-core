@@ -494,7 +494,7 @@ export function IngestSourcesContent(ingestSources, notify, api, $location,
                         });
                     } else {
                         $location.path('/search').search(
-                            {repo: 'ingest', source: angular.toJson([provider.source])}
+                            {repo: 'ingest', ingest_provider: provider._id}
                         );
                     }
                 };

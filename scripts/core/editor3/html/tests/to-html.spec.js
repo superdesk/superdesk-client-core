@@ -154,8 +154,13 @@ describe('core.editor3.html.to-html.AtomicBlockParser', () => {
         const {block, contentState} = testUtils.imageBlockAndContent();
         const html = new AtomicBlockParser(contentState).parse(block);
 
-        expect(html).toBe('<div class="media-block"><img src="image_href" alt="image_alt_text" />' +
-            '<span class="media-block__description">image_description</span></div>');
+        expect(html).toBe(`
+<!-- EMBED START Image {id: "editor_0"} -->
+<figure>
+    <img src="image_href" alt="image_alt_text" />
+</figure>
+<!-- EMBED END Image {id: "editor_0"} -->
+`);
     });
 
     it('should correctly parse images without alt and description', () => {
@@ -165,7 +170,13 @@ describe('core.editor3.html.to-html.AtomicBlockParser', () => {
 
         const html = new AtomicBlockParser(contentState).parse(block);
 
-        expect(html).toBe('<div class="media-block"><img src="image_href" alt="" /></div>');
+        expect(html).toBe(`
+<!-- EMBED START Image {id: "editor_0"} -->
+<figure>
+    <img src="image_href" alt="" />
+</figure>
+<!-- EMBED END Image {id: "editor_0"} -->
+`);
     });
 
     it('should correctly parse tables', () => {
