@@ -39,6 +39,8 @@ export class TextEditor3 extends React.Component<IProps, IState> {
             // internal state is reloaded when it doesn't match with what's in the props
             // holding own state is required to prevent infinite loops which would happen because
             // draftjs keys change every time content state is created from HTML
+
+            // eslint-disable-next-line react/no-did-update-set-state
             this.setState({rawDraftContentState: getRawDraftContentStateFromString(this.props.value)});
         }
     }

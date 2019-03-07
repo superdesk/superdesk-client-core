@@ -1,3 +1,5 @@
+/* eslint-disable max-depth */
+
 import React from 'react';
 import {
     SidePanelTools,

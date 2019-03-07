@@ -170,7 +170,7 @@ export function AssociationController(config, send, api, $q, superdesk,
         if (!authoring.isPublished(scope.item) && updated && !autosave) {
             promise = scope.save();
         } else {
-            promise = scope.onchange({item: scope.item, data});
+            promise = scope.onchange({item: scope.item, data: data});
         }
 
         if (callback) {

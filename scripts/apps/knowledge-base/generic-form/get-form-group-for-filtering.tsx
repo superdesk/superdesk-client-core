@@ -23,7 +23,7 @@ function getFormForFiltering(form: Array<IFormField | IFormGroup>): Array<IFormF
         } else if (isIFormField(item)) {
             return {...item, type: getFieldTypeForFiltering(item.type)};
         } else {
-            assertNever(item);
+            return assertNever(item);
         }
     });
 }

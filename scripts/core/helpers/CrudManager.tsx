@@ -93,6 +93,7 @@ export function connectCrudManager<Props, Entity extends IDefaultApiFields>(
                     }
                 } else {
                     accumulator[key] = filterValues[key];
+                    return accumulator;
                 }
             }, {});
 

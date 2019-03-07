@@ -1,3 +1,5 @@
+/* eslint-disable react/no-multi-comp */
+
 import React from 'react';
 
 export class PageContainer extends React.Component<any, any> {

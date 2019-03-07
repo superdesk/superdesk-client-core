@@ -51,7 +51,7 @@ export class FormViewEdit extends React.Component<IProps> {
                                 />
                             );
                         } else {
-                            assertNever(item);
+                            return assertNever(item);
                         }
                     })
                 }

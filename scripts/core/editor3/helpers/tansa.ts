@@ -220,8 +220,7 @@ function insertText(editorState, content, block, offset, text) {
     const selection = createSelectionForBlock(editorState, block, offset);
     const newContent = Modifier.insertText(content, selection, text);
 
-    offset += text.length;
-    return {newContent, offset};
+    return {newContent: newContent, offset: offset + text.length};
 }
 
 /**
@@ -235,7 +234,9 @@ function insertText(editorState, content, block, offset, text) {
  * @param {String} newText
  * @returns {ContentState, Integer}
  */
-function replaceText(editorState, content, block, offset, text, newText) {
+function replaceText(editorState, content, block, _offset, text, newText) {
+    let offset = _offset;
+
     const overlapLength = text.length < newText.length ? text.length : newText.length;
     let newContent = content;
 

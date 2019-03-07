@@ -1,3 +1,5 @@
+/* tslint:disable:max-line-length */
+/* eslint-disable max-len */
 
 describe('Image Crop', () => {
     beforeEach(window.module('superdesk.core.upload'));
@@ -96,8 +98,7 @@ describe('Image Crop', () => {
                 expect(mySpy.calls.count()).toEqual(0);
                 expect($elm.text())
                     .toBe(
-                        'Sorry, but image must be at least {{width}}x{{height}}.' + ' ' +
-                        'Currently the image size is {{width}}x{{height}}).',
+                        'Sorry, but image must be at least {{width}}x{{height}}. Currently the image size is {{width}}x{{height}}).',
                     );
             }));
 
