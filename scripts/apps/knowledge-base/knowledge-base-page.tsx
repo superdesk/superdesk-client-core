@@ -1,5 +1,5 @@
 import React from 'react';
-import {noop} from 'lodash';
+import {noop, omit} from 'lodash';
 import ReactPaginate from 'react-paginate';
 
 import {ListItem, ListItemColumn, ListItemActionsMenu} from 'core/components/ListItem';
@@ -216,7 +216,7 @@ class KnowledgeBasePageComponent extends React.Component<IProps, IState> {
                                                 this.executeFilters();
                                             }}>
                                                 <FormViewEdit
-                                                    item={{}}
+                                                    item={this.state.filterValues}
                                                     formConfig={formConfigForFilters}
                                                     editMode={true}
                                                     issues={{}}
@@ -259,7 +259,12 @@ class KnowledgeBasePageComponent extends React.Component<IProps, IState> {
                                             Object.keys(activeFilters).map((fieldName, i) => (
                                                 <TagLabel
                                                     key={i}
-                                                    onRemove={() => this.props.conceptItems.removeFilter(fieldName)}
+                                                    onRemove={() => {
+                                                        this.setState({
+                                                            filterValues: omit(this.state.filterValues, [fieldName]),
+                                                        });
+                                                        this.props.conceptItems.removeFilter(fieldName);
+                                                    }}
                                                 >
                                                     {fieldName}:{' '}<strong>{activeFilters[fieldName]}</strong>
                                                 </TagLabel>
