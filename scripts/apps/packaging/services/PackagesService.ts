@@ -20,7 +20,7 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
     this.createPackageFromItems = function(items, defaults) {
         var idRef = 'main';
         var item = items[0];
-        var newPackage = {
+        var newPackage: any = {
             headline: item.headline || item.description_text || '',
             slugline: item.slugline || '',
             description_text: item.description_text || '',
@@ -46,7 +46,7 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
     };
 
     this.createEmptyPackage = function(defaults, idRef = 'main') {
-        var newPackage = {
+        var newPackage: any = {
             headline: '',
             slugline: '',
             description_text: '',
@@ -77,7 +77,7 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
         var targetGroup = _.find(origGroups, (group) => group.id.toLowerCase() === groupId);
 
         if (!targetGroup) {
-            var rootGroup = _.find(origGroups, {id: 'root'});
+            var rootGroup: any = _.find(origGroups, {id: 'root'});
 
             rootGroup.refs.push({idRef: groupId});
             targetGroup = {
@@ -127,7 +127,7 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
 
     function setItemLabel(pkg, item, label) {
         _.forEach(pkg.groups, (group) => {
-            var ref = _.find(group.refs, {residRef: item._id});
+            var ref: any = _.find(group.refs, {residRef: item._id});
 
             if (ref) {
                 ref.label = label ? label.qcode : null;
@@ -154,7 +154,7 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
         var isSet = false;
 
         _.forEach(pkg.groups, (group) => {
-            var ref = _.find(group.refs, {guid: item._id});
+            var ref: any = _.find(group.refs, {guid: item._id});
 
             if (ref && ref.label === qcode) {
                 isSet = true;

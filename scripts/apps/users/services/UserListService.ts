@@ -4,7 +4,7 @@
  */
 UserListService.$inject = ['api', '$q', '$cacheFactory'];
 export function UserListService(api, $q, $cacheFactory) {
-    var userservice = {};
+    var userservice: any = {};
 
     var cache = $cacheFactory('userList');
 
@@ -33,7 +33,7 @@ export function UserListService(api, $q, $cacheFactory) {
             return $q.when(value);
         }
 
-        var criteria = {max_results: page * perPage};
+        var criteria: any = {max_results: page * perPage};
 
         if (search) {
             criteria.where = JSON.stringify({

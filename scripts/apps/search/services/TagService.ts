@@ -23,7 +23,7 @@ TagService.$inject = ['$location', 'desks', 'userList', 'metadata', 'search',
     'ingestSources', 'subscribersService', '$q'];
 export function TagService($location, desks, userList, metadata, search,
     ingestSources, subscribersService, $q) {
-    var tags = {};
+    var tags: any = {};
 
     tags.selectedFacets = {};
     tags.selectedParameters = [];
@@ -47,7 +47,7 @@ export function TagService($location, desks, userList, metadata, search,
 
     var cvs = search.cvs;
 
-    function tag(label, value) {
+    function tag(label, value?) {
         return {
             label: label,
             value: value || label,

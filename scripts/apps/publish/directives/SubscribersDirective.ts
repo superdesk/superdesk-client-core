@@ -221,7 +221,7 @@ export function SubscribersDirective(
                     if (angular.isDefined($scope.subscriber.destinations)
                         && !_.isNull($scope.subscriber.destinations) &&
                         $scope.subscriber.destinations.length > 0) {
-                        $scope.destinations = _.clone($scope.subscriber.destinations, true);
+                        $scope.destinations = _.clone($scope.subscriber.destinations);
                     }
 
                     $scope.subscriberType = $scope.subscriber.subscriber_type || '';

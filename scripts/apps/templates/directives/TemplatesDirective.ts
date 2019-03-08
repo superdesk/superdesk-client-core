@@ -300,7 +300,7 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
                 }
             });
 
-            function setupContentType(type) {
+            function setupContentType(type?) {
                 if (type) {
                     $scope.schema = content.schema(type, $scope.item.type);
                     $scope.editor = content.editor(type, $scope.item.type);

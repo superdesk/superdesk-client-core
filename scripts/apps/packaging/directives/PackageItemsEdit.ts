@@ -26,7 +26,7 @@ export function PackageItemsEdit(packages, notify, $rootScope) {
             });
 
             scope.$on('package:updateGroupRef', (event, data) => {
-                var group = _.find(scope.list, {id: data.group.id});
+                var group: any = _.find(scope.list, {id: data.group.id});
 
                 if (group) {
                     var ref = _.find(group.items, {residRef: data.ref.residRef});
@@ -69,7 +69,7 @@ export function PackageItemsEdit(packages, notify, $rootScope) {
             });
 
             ngModel.$formatters.unshift((modelValue) => {
-                var root = _.find(modelValue, {id: 'root'});
+                var root: any = _.find(modelValue, {id: 'root'});
 
                 if (typeof root === 'undefined') {
                     return;
@@ -85,7 +85,7 @@ export function PackageItemsEdit(packages, notify, $rootScope) {
                 });
 
                 function visit(groupId) {
-                    var _group = _.find(modelValue, {id: groupId});
+                    var _group: any = _.find(modelValue, {id: groupId});
                     var items = [];
 
                     _.each(_group.refs, (ref) => {
@@ -106,7 +106,7 @@ export function PackageItemsEdit(packages, notify, $rootScope) {
             });
 
             scope.remove = function(groupId, residRef) {
-                var group = _.find(scope.list, {id: groupId});
+                var group: any = _.find(scope.list, {id: groupId});
                 var item = _.find(group.items, {residRef: residRef});
 
                 _.remove(group.items, {residRef: residRef});
@@ -115,8 +115,8 @@ export function PackageItemsEdit(packages, notify, $rootScope) {
             };
 
             scope.reorder = function(start, end) {
-                var src = _.find(scope.list, {id: start.group});
-                var dest = _.find(scope.list, {id: end.group});
+                var src: any = _.find(scope.list, {id: start.group});
+                var dest: any = _.find(scope.list, {id: end.group});
 
                 if (start.index !== end.index || start.group !== end.group) {
                     var item = src.items.splice(start.index, 1)[0];

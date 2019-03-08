@@ -1,4 +1,6 @@
 export default class RolesService {
+    _api: any;
+
     constructor(api) {
         this._api = api;
     }

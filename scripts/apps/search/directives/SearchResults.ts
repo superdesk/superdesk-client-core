@@ -166,7 +166,7 @@ export function SearchResults(
             /**
              * Schedule an update if it's not there yet
              */
-            function queryItems(event, data) {
+            function queryItems(event?, data?) {
                 if (!nextUpdate) {
                     if (scope.search.repo.search !== 'local' && !getSearch().q && !(data && data.force)) {
                         return; // ignore updates with external content
@@ -185,7 +185,7 @@ export function SearchResults(
             /**
              * Function for fetching total items and filling scope for the first time.
              */
-            function _queryItems(event, data) {
+            function _queryItems(event?, data?) {
                 criteria = search.query(getSearch()).getCriteria(true);
                 criteria.source.size = 50;
                 var originalQuery;
@@ -340,7 +340,7 @@ export function SearchResults(
              *
              * @param {items}
              */
-            function render(items, next, force) {
+            function render(items, next, force?) {
                 scope.loading = true;
                 if (items) {
                     setScopeItems(items, force);
@@ -438,7 +438,7 @@ export function SearchResults(
              * @description If singLine:view preference is set, an item is being previewed, config has narrowView list
              * then, sends rowview event
              */
-            function sendRowViewEvents(item) {
+            function sendRowViewEvents(item?) {
                 let sendEvent = scope.singleLine && superdeskFlags.flags.authoring && config.list
                     && config.list.narrowView;
                 let evnt = item ? 'rowview:narrow' : 'rowview:default';

@@ -57,7 +57,7 @@ export function UserListController($scope, $location, api, _, session, usersServ
 
     function getCriteria() {
         var params = $location.search(),
-            criteria = {
+            criteria: any = {
                 max_results: Number(params.max_results) || DEFAULT_SIZE,
             };
 
@@ -77,7 +77,7 @@ export function UserListController($scope, $location, api, _, session, usersServ
     }
 
     function initCriteria(search, filter) {
-        const query = {};
+        const query: any = {};
         const canSeeSupportUsers = usersService.isSupport(session.identity);
 
         if (!canSeeSupportUsers) {

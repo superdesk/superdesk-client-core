@@ -11,7 +11,7 @@ export function ProfileService(api) {
      * @return {Promise}
      */
     this.getUserActivity = function(user, maxResults, page) {
-        var q = {
+        var q: any = {
             where: {user: user._id},
             sort: '[(\'_created\',-1)]',
             embedded: {user: 1},
@@ -38,7 +38,7 @@ export function ProfileService(api) {
      * @return {Promise}
      */
     this.getAllUsersActivity = function(maxResults, page) {
-        var q = {
+        var q: any = {
             sort: '[(\'_created\',-1)]',
             where: {user: {$exists: true}, item: {$exists: true}},
             embedded: {user: 1},

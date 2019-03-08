@@ -1,6 +1,5 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
-import PropTypes from 'prop-types';
 
 /**
  * @ngdoc directive
@@ -21,11 +20,16 @@ TranslationReactDropdown.$inject = ['item', 'className', 'TranslationService', '
 export function TranslationReactDropdown(item, className, TranslationService, noLanguagesLabel) {
     var languages = TranslationService.get() || {_items: []};
 
+    interface ITranslateBtnProps {
+        item: any;
+        language: any;
+    }
+
     /*
      * Creates specific language button in list
      * @return {React} Language button
      */
-    class TranslateBtn extends React.Component {
+    class TranslateBtn extends React.Component<ITranslateBtnProps> {
         constructor(props) {
             super(props);
             this.markTranslate = this.markTranslate.bind(this);
@@ -54,11 +58,6 @@ export function TranslationReactDropdown(item, className, TranslationService, no
             );
         }
     }
-
-    TranslateBtn.propTypes = {
-        item: PropTypes.object,
-        language: PropTypes.object,
-    };
 
     /*
      * Creates list element for specific language

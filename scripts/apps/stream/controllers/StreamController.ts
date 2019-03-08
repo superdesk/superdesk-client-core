@@ -20,13 +20,13 @@ export function StreamController($scope, api, $rootScope, desks) {
         }
         var previousDate = new Date($scope.activities._items[activity.index - 1]._created);
 
-        return previousDate.getYear() !== $scope.currentDate.getYear() ||
+        return previousDate.getFullYear() !== $scope.currentDate.getFullYear() ||
                previousDate.getMonth() !== $scope.currentDate.getMonth() ||
                previousDate.getDate() !== $scope.currentDate.getDate();
     };
 
     var fetchActivities = function() {
-        var filter = {max_results: $scope.max_results};
+        var filter: any = {max_results: $scope.max_results};
 
         if ($scope.desk) {
             filter.where = {desk: $scope.desk._id};

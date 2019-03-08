@@ -27,7 +27,7 @@ export function ChangeAvatarController($scope, upload, session, urls, beta, noti
     };
 
     $scope.upload = function(config) {
-        var form = {};
+        var form: any = {};
 
         form.CropLeft = Math.round(Math.min(config.cords.x, config.cords.x2));
         form.CropRight = Math.round(Math.max(config.cords.x, config.cords.x2));

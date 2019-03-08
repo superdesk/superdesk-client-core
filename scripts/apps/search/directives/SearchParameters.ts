@@ -47,7 +47,7 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
 
             const getSearchConfig = () => {
                 if (scope.isContentApi()) {
-                    let searchConfig = _.pick(metadata.search_config, ['slugline', 'headline',
+                    let searchConfig: any = _.pick(metadata.search_config, ['slugline', 'headline',
                         'byline', 'story_text']);
 
                     searchConfig.subscribers = 1;
@@ -64,7 +64,7 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
              * init function to setup the directive initial state and called by $locationChangeSuccess event
              * @param {boolean} loadData.
              */
-            function init(loadData) {
+            function init(loadData?) {
                 var params = $location.search();
 
                 scope.query = params.q;

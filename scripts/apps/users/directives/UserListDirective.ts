@@ -64,7 +64,7 @@ export function UserListDirective(keyboardManager, usersService, asset, session)
 
             function getSelectedIndex() {
                 if (!_.isEmpty(scope.selected)) {
-                    return _.findIndex(scope.users, (user) => user._id === scope.selected._id);
+                    return _.findIndex(scope.users, (user: any) => user._id === scope.selected._id);
                 }
             }
         },

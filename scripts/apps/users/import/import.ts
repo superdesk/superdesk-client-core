@@ -3,7 +3,7 @@ import {gettext} from 'core/utils';
 UserImportService.$inject = ['api', '$q'];
 function UserImportService(api, $q) {
     function reject(key, message) {
-        var error = {};
+        var error: any = {};
 
         error[key] = 1;
         error.message = message;

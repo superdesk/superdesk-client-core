@@ -73,13 +73,13 @@ export function TemplatesService(api, session, $q, preferencesService, privilege
      * Used in template management screen.
      */
     this.fetchAllTemplates = function(page, pageSize, type, templateName) {
-        var params = {
+        var params: any = {
             page: page || 1,
             max_results: pageSize || PAGE_SIZE,
             sort: 'template_name',
         };
 
-        var criteria = {};
+        var criteria: any = {};
         // in template management only see the templates that are create by the user
 
         criteria.$or = [{user: session.identity._id}];
@@ -119,12 +119,12 @@ export function TemplatesService(api, session, $q, preferencesService, privilege
     };
 
     this.fetchTemplatesByDesk = function(desk) {
-        let params = {
+        let params: any = {
             sort: 'template_name',
             max_results: 200,
         };
 
-        let deskCriteria = [
+        let deskCriteria: any = [
             {is_public: true},
         ];
 
@@ -144,19 +144,19 @@ export function TemplatesService(api, session, $q, preferencesService, privilege
     };
 
     this.fetchTemplatesByUserDesk = function(user, desk, page, pageSize, type, templateName) {
-        var params = {
+        var params: any = {
             page: page || 1,
             max_results: pageSize || PAGE_SIZE,
             sort: 'template_name',
         };
 
-        var criteria = {};
+        var criteria: any = {};
 
         if (!user) {
             return $q.when();
         }
 
-        var deskCriteria = [
+        var deskCriteria: any = [
             {template_desks: {$exists: false}, is_public: true},
             {template_desks: [], is_public: true},
         ];

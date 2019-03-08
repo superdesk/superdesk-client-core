@@ -16,7 +16,7 @@ import {gettext} from 'core/utils';
 
 TranslationService.$inject = ['api', '$rootScope', 'notify', 'authoringWorkspace', 'desks', 'search'];
 export function TranslationService(api, $rootScope, notify, authoringWorkspace, desks, search) {
-    var service = {};
+    var service: any = {};
 
     /**
      * @ngdoc method

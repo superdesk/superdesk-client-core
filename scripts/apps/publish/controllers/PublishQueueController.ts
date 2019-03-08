@@ -238,7 +238,7 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
 
         /* look for any items in states that cannot be resent */
         var idx = _.findIndex($scope.selectedQueueItems,
-            (item) => _.includes(['pending', 'in-progress', 'retrying'], item.state));
+            (item: any) => _.includes(['pending', 'in-progress', 'retrying'], item.state));
 
         /* All selected items can be resent */
         if (idx === -1) {
@@ -248,7 +248,7 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
         } else {
             /* Find the index of any item that can be resent */
             idx = _.findIndex($scope.selectedQueueItems,
-                (item) => item.state === 'success' || item.state === 'in-progress' || item.state === 'canceled' ||
+                (item: any) => item.state === 'success' || item.state === 'in-progress' || item.state === 'canceled' ||
                     item.state === 'error' || item.state === 'retrying');
             /* Nothing to resend found */
             if (idx === -1) {
@@ -256,7 +256,7 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
                 $scope.showCancelSelectionBtn = true;
                 /* look for items that can be canceled */
                 idx = _.findIndex($scope.selectedQueueItems,
-                    (item) => item.state === 'pending' || item.state === 'retrying');
+                    (item: any) => item.state === 'pending' || item.state === 'retrying');
                 /* Something can be canceled so show the button */
                 if (idx !== -1) {
                     $scope.showCancelBtn = true;
@@ -295,7 +295,7 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
     };
 
     function previewItem() {
-        var queueItem = _.find($scope.publish_queue, {_id: $location.search()._id}) || null;
+        var queueItem: any = _.find($scope.publish_queue, {_id: $location.search()._id}) || null;
 
         $scope.selected.extensionPoint = false;
 

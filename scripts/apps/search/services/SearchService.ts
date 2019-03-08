@@ -269,7 +269,7 @@ export function SearchService($location, config, session, multi,
         var size,
             filters = [],
             postFilters = [],
-            params = {},
+            params: any = {},
             zeroHourSuffix = 'T00:00:00',
             midnightSuffix = 'T23:59:59';
 
@@ -333,13 +333,15 @@ export function SearchService($location, config, session, multi,
           * @param {String} params - search parameters
           * @param {Object} query - Query object
           */
-        function buildFilters(params, query) {
+        function buildFilters(params: any, query) {
             // date filters start
             var facetrange = {};
 
             // inject custom field filters { fieldname: 'string(IDateRange)' }
             if (typeof params.customFields !== 'undefined') {
-                for (let [fieldname, range] of Object.entries(params.customFields)) {
+                for (let fieldname of params.customFields) {
+                    let range = params.customFields[fieldname];
+
                     if (typeof dateRangesByKey[range] !== 'undefined') {
                         facetrange[fieldname] = dateRangesByKey[range].elasticSearchDateRange;
                     }
@@ -394,7 +396,7 @@ export function SearchService($location, config, session, multi,
             let sort = sortService.getSort(sortOptions);
 
             setParameters(filters, params);
-            let criteria = {
+            let criteria: any = {
                 query: {filtered: {filter: {and: filters}}},
                 sort: [_.zipObject([sort.field], [sort.dir])],
             };
@@ -634,7 +636,7 @@ export function SearchService($location, config, session, multi,
         // if fetched items are new or removed then update current scope.items
         // by adding or removing items found in diffToAdd or diffToMinus respectively.
         if (!_.isEmpty(diffToMinus)) {
-            _.remove(scopeItems._items, (item) => _.includes(diffToMinus, item._id));
+            _.remove(scopeItems._items, (item: any) => _.includes(diffToMinus, item._id));
         }
 
         if (!_.isEmpty(diffToAdd)) {
@@ -751,9 +753,9 @@ export function SearchService($location, config, session, multi,
      */
     this.getProjectedFields = function() {
         var uiConfig = config.list || DEFAULT_LIST_CONFIG;
-        var uiFields = _.union(uiConfig.priority, uiConfig.firstLine, uiConfig.secondLine);
+        var uiFields: any = _.union(uiConfig.priority, uiConfig.firstLine, uiConfig.secondLine);
 
-        let projectedFields = [];
+        let projectedFields: any = [];
 
         uiFields.forEach((uiField) => {
             if (uiField in UI_PROJECTED_FIELD_MAPPINGS) {

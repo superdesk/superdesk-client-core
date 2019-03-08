@@ -1,6 +1,11 @@
 import {BaseSortBar} from './BaseSortBar';
 
 class LinkFunction extends BaseSortBar {
+    search: any;
+    $location: any;
+    scope: any;
+    repos: any;
+
     constructor(search, $location, sort, scope, elem) {
         super(scope, elem, sort);
         this.search = search;

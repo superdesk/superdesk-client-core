@@ -8,6 +8,8 @@ import _ from 'lodash';
  * @description Parses the $location for sort parameter and set sort parameter
  */
 export class SortService {
+    $location: any;
+
     constructor($location) {
         this.$location = $location;
     }
@@ -43,7 +45,7 @@ export class SortService {
      * @param {object} sortOptions Sort options for the different repo.
      */
     setSort(field, sortOptions) {
-        let option = _.find(sortOptions, {field: field});
+        let option: any = _.find(sortOptions, {field: field});
 
         this.setSortUrlParam(option.field, option.defaultDir || 'desc');
     }

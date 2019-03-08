@@ -1,4 +1,7 @@
 export class BaseSortBar {
+    scope: any;
+    sortService: any;
+
     constructor(scope, elem, sortService) {
         this.scope = scope;
         this.sortService = sortService;
