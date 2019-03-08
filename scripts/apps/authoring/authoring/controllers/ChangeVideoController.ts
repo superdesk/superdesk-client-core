@@ -208,7 +208,7 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
      * @ngdoc method
      * @name ChangeVideoController#videoInit
      * @public
-     * @description Capture the thumbnail video at play time in time line.
+     * @description Capture the thumbnail video at play time in time line.     *
      */
     $scope.videoInit = function () {
         video = document.getElementById('video');
@@ -222,6 +222,8 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
         maskright = document.getElementById('mask-right');
         iconplay = document.getElementById('icon-play');
         iconstop = document.getElementById('icon-stop');
+
+
         video.onplay = function () {
             iconplay.style.display = 'none';
             iconstop.style.display = 'initial';
@@ -298,30 +300,44 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
             }
         }
         if ('timeline' in $scope.data.metadata.renditions) {
-            loadTimeLine($scope.data.metadata.renditions['timeline'])
+            loadTimeLine($scope.data.metadata.renditions['timeline']);
         } else {
-            api.save('video_edit', {action: 'timeline', item: $scope.data.metadata}).then((data) => {
-                    var list_thumbnails = data.result.timeline;
-                    loadTimeLine(list_thumbnails);
-                    $scope.data.metadata.renditions['timeline'] = data.result.timeline;
-                    $scope.data.isDirty = true;
-                }
-            )
+            loadTimeLine($scope.data.metadata.renditions['timeline']);
+            api.save('video_edit', {action: 'timeline', item: $scope.data.metadata}).then(function (data) {
+                var list_thumbnails = data.result.timeline;
+                loadTimeLine(list_thumbnails);
+                $scope.data.metadata.renditions['timeline'] = data.result.timeline;
+                $scope.data.isDirty = true;
+            });
         }
+
+        var observer = new ResizeObserver(function (entries) {
+            entries.forEach(function (entry) {
+                loadTimeLine($scope.data.metadata.renditions['timeline'])
+            });
+        });
+        observer.observe(controlbar);
     }
 
     function loadTimeLine(list_thumbnails) {
         var inner_frames = document.getElementById('inner-frames');
         var total_thumbnail = Math.ceil(controlbar.offsetWidth / 88);
-        var per_index_image = 20 / total_thumbnail
-        inner_frames.innerHTML = '';
-        for (var i = 0; i <= total_thumbnail; i++) {
-            var index = Math.round(i * per_index_image)
-            var video = document.createElement("video");
-            video.width = 88;
-            video.height = 50;
-            video.poster = list_thumbnails[index].href;
-            inner_frames.append(video);
+        var per_index_image = 20 / total_thumbnail;
+        if (inner_frames) {
+            inner_frames.innerHTML = '';
+            for (var i = 0; i <= total_thumbnail; i++) {
+                var index = Math.round(i * per_index_image);
+                var video = document.createElement("video");
+                video.width = 88;
+                video.height = 50;
+                if (list_thumbnails) {
+                    video.poster = list_thumbnails[index].href;
+                }
+                video.onloadeddata = function () {
+                    video.className = 'loaded';
+                };
+                inner_frames.append(video);
+            }
         }
     }
 
@@ -391,7 +407,6 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
         li = Math.floor((s * 10) % 10);
         return mins + ':' + secs + '.' + li;
     };
-
 
     function onDragCb(type) {
         if (event.clientX == 0) {
@@ -535,7 +550,7 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
         }
     };
 
-    // Area of Interest
+// Area of Interest
     $scope.data.showAoISelectionButton = $scope.data.showAoISelectionButton === true;
 
     function extractEditableMetadata(metadata) {
@@ -543,3 +558,6 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
     }
 
 }
+
+
+
