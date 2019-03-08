@@ -1,3 +1,5 @@
+/* eslint-disable react/no-multi-comp */
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
@@ -23,12 +25,60 @@ import {
 } from './index';
 import {closeActionsMenu} from '../helpers';
 
-/**
- * Item component
- */
-export class Item extends React.Component<any, any> {
+const CLICK_TIMEOUT = 300;
+
+const actionsMenuDefaultTemplate = (toggle, stopEvent) => (
+    <div className="item-right toolbox">
+        <div className="item-actions-menu dropdown--big open">
+            <button
+                className={'more-activity-toggle condensed dropdown__toggle'}
+                onClick={toggle}
+                onDoubleClick={stopEvent}>
+                <i className="icon-dots-vertical" />
+            </button>
+        </div>
+    </div>
+);
+
+interface IProps {
+    svc: any;
+    scope: any;
+    swimlane: any;
+    item: IArticle;
+    profilesById: any;
+    highlightsById: any;
+    markedDesksById: any;
+    ingestProvider: any;
+    versioncreator: any;
+    onMultiSelect: any;
+    desk: IDesk;
+    flags: any;
+    view: any;
+    onDbClick: any;
+    onEdit: any;
+    onSelect: any;
+    narrow: any;
+    hideActions: boolean;
+    multiSelectDisabled: boolean;
+    nested: Array<IArticle>;
+    isNested: boolean;
+    actioning: boolean;
+}
+
+interface IState {
+    hover: boolean;
+    actioning: boolean;
+    isActionMenuOpen: boolean;
+    showNested: boolean;
+}
+
+export class Item extends React.Component<IProps, IState> {
     static propTypes: any;
     static defaultProps: any;
+
+    readonly state = {hover: false, actioning: false, isActionMenuOpen: false, showNested: false};
+
+    clickTimeout: number;
 
     constructor(props) {
         super(props);
@@ -101,8 +151,12 @@ export class Item extends React.Component<any, any> {
     }
 
     select(event) {
-        if (!this.props.item.gone) {
-            this.props.onSelect(this.props.item, event);
+        if (!this.props.item.gone && !this.clickTimeout) {
+            event.persist(); // make event available in timeout callback
+            this.clickTimeout = window.setTimeout(() => {
+                this.clickTimeout = null;
+                this.props.onSelect(this.props.item, event);
+            }, CLICK_TIMEOUT);
         }
     }
 
@@ -123,6 +177,11 @@ export class Item extends React.Component<any, any> {
     }
 
     dbClick(event) {
+        if (this.clickTimeout) {
+            window.clearTimeout(this.clickTimeout);
+            this.clickTimeout = null;
+        }
+
         if (!this.props.item.gone) {
             this.props.onDbClick(this.props.item);
         }

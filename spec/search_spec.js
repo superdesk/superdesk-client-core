@@ -8,6 +8,16 @@ var nav = require('./helpers/utils').nav,
     monitoring = require('./helpers/monitoring'),
     scrollToView = require('./helpers/utils').scrollToView;
 
+var previewPane = element(by.id('item-preview'));
+
+function closePreview() {
+    previewPane.isPresent().then((present) => {
+        if (present) {
+            previewPane.element(by.css('.close-preview')).click();
+        }
+    });
+}
+
 describe('search', () => {
     beforeEach(() => {
         nav('/search').then(globalSearch.setListView());
@@ -211,7 +221,6 @@ describe('search', () => {
     it('can action on items', () => {
         // DOWN arrow key selects an item and opens preview pane
         expect(globalSearch.getItems().count()).toBe(14);
-        var previewPane = element(by.id('item-preview'));
 
         expect(previewPane.isPresent()).toBe(false);
         globalSearch.itemClick(2);
@@ -219,6 +228,7 @@ describe('search', () => {
         expect(previewPane.isPresent()).toBe(true);
         // now proceed to perform keyboard operation on text editor
         globalSearch.actionOnItem('Edit', 2);
+        closePreview();
         expect(authoring.getBodyText()).toBe('item5 text');
         authoring.focusBodyHtmlElement();
         browser.actions().sendKeys(protractor.Key.ENTER).perform();
@@ -263,7 +273,7 @@ describe('search', () => {
         previewPane = element(by.id('item-preview'));
         expect(previewPane.isPresent()).toBe(false);
         globalSearch.actionOnItem('Edit', 2);
-        expect(previewPane.isPresent()).toBe(false); // avoids opening preview
+        closePreview();
         authoring.close();
 
         // can avoid retaining item\'s preview on an item action
