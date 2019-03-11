@@ -1,44 +1,12 @@
-<div class="schema-editor" ng-if="loading === false">
+<div class="schema-editor" ng-if="fields">
 
     <div ng-if="schemaKeysOrdering.length < 1" style="display: flex; justify-content: center; margin: 20px 0;">
-        <div class="dropdown dropdown--add-more dropdown--add-more__top dropdown-terms" dropdown>
-            <button class="btn btn--primary btn--icon-only-circle" sd-tooltip="{{ :: 'Add Field' | translate }}" flow="right" ng-click="search = ''" dropdown__toggle>
-                <i class="icon-plus-large"></i>
-            </button>
-            <ul class="dropdown__menu nested-menu">
-                <li class="input-term">
-                    <input ng-model="search" type="text" ng-click="$event.stopPropagation()">
-                </li>
-                <li class="main-list">
-                    <ul>
-                        <li ng-repeat="schema in schemaKeysDisabled | orderBy: 'name' | filter: search track by schema.key">
-                            <button ng-click="toggle(schema, model.editor[id].order, 'before')">{{schema.name | translate}}</button>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
+        <sd-schema-editor-fields-dropdown fields="available" on-select="toggle(field, id, 'before')" />
     </div>
 
     <ul class="pills-list" sd-sort-content-profiles>
-        <li class="schema-item" ng-repeat="id in schemaKeysOrdering track by id">
-            <div class="dropdown dropdown--add-more dropdown--add-more__top dropdown-terms" dropdown>
-                <button class="btn btn--primary btn--icon-only-circle" sd-tooltip="{{ :: 'Add Field' | translate }}" flow="right" ng-click="search = ''" dropdown__toggle>
-                    <i class="icon-plus-large"></i>
-                </button>
-                <ul class="dropdown__menu nested-menu">
-                    <li class="input-term">
-                        <input ng-model="search" type="text" ng-click="$event.stopPropagation()">
-                    </li>
-                    <li class="main-list">
-                        <ul>
-                            <li ng-repeat="schema in schemaKeysDisabled | orderBy: 'name' | filter: search track by schema.key">
-                                <button ng-click="toggle(schema, model.editor[id].order, 'before')">{{schema.name | translate}} <span class="vocabulary-field-type" ng-if="schema.type">({{ schema.type }})</span></button>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
+        <li class="schema-item" ng-repeat="id in enabled track by id" data-id="{{ id }}">
+            <sd-schema-editor-fields-dropdown fields="available" on-select="toggle(field, id, 'before')" />
 
             <div class="header">
                 <span class="title">{{ :: model.editor[id].field_name|| label(id) | translate}}</span>
@@ -100,13 +68,13 @@
                              sd-multi-select
                              data-item="model.editor[id].formatOptions"
                              data-list="formattingOptionsEditor3"
-                             data-change="setDirty(true)">
+                             data-change="setDirty()">
                         </div>
                         <div class="controls" ng-if="!model.editor.body_html.editor3"
                              sd-multi-select
                              data-item="model.editor[id].formatOptions"
                              data-list="formattingOptions"
-                             data-change="setDirty(true)">
+                             data-change="setDirty()">
                         </div>
                     </div>
 
@@ -132,24 +100,9 @@
                 </fieldset>
             </form>
 
-            <div class="dropdown dropdown--add-more dropdown--add-more__bottom dropdown-terms" dropdown>
-                <button class="btn btn--primary btn--icon-only-circle" sd-tooltip="{{ :: 'Add Field' | translate }}" flow="right" ng-click="search = ''" dropdown__toggle>
-                    <i class="icon-plus-large"></i>
-                </button>
-                <ul class="dropdown__menu nested-menu">
-                    <li class="input-term">
-                        <input ng-model="search" type="text" ng-click="$event.stopPropagation()">
-                    </li>
-                    <li class="main-list">
-                        <ul>
-                            <li ng-repeat="schema in schemaKeysDisabled | orderBy: 'name' | filter: search track by schema.key">
-                                <button ng-click="toggle(schema, model.editor[id].order, 'after')">{{schema.name | translate}}</button>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
+            <div ng-if="$last">
+                <sd-schema-editor-fields-dropdown fields="available" on-select="toggle(field, id, 'after')" bottom="true" />
             </div>
-
         </li>
     </ul>
 </div>

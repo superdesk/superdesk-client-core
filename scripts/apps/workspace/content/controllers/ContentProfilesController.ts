@@ -59,15 +59,15 @@ export function ContentProfilesController($scope, $location, notify, content, mo
             const active = self.items.find((p) => p._id === $location.search()._id);
 
             if (active) {
-                $scope.editing = {
-                    form: cloneDeep(active),
-                    original: active,
-                };
-
                 content.getTypeMetadata(active._id).then((type) => {
                     $scope.editing = {
                         form: cloneDeep(type),
                         original: cloneDeep(type),
+                    };
+                }, () => {
+                    $scope.editing = {
+                        form: cloneDeep(active),
+                        original: active,
                     };
                 });
             }
@@ -171,5 +171,5 @@ export function ContentProfilesController($scope, $location, notify, content, mo
         });
     };
 
-    refreshList(false);
+    refreshList(true);
 }
