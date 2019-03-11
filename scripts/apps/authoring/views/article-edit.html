@@ -702,3 +702,47 @@
     <div sd-attachments-editor
     ></div>
 </div>
+
+<!-- Slugline -->
+<div class="field"
+     sd-validation-error="error.slugline"
+     data-required="schema.slugline.required"
+     ng-if="schema.slugline && editor['slugline'].section === 'content' && !(features.onlyEditor3 || editor.body_html.editor3)"
+     sd-width="{{editor.slugline.sdWidth}}"
+     order="{{editor.slugline.order}}">
+    <label class="field__label">{{label('slugline')}}</label>
+    <span ng-if="schema.slugline.maxlength" sd-character-count data-item="item.slugline" data-html="true" data-limit="schema.slugline.maxlength"></span>
+    <input type="text" class="slugline"
+       id="slugline"
+       data-language="item.language"
+       ng-model="item.slugline"
+       ng-model-options="{debounce: 500}"
+       ng-change="autosave(item)"
+       ng-disabled="!_editable"
+       ng-trim="false"
+       tabindex="{{editor.slugline.order}}">
+</div>
+<div class="field"
+     sd-width="{{editor.slugline.sdWidth|| 'full'}}"
+     ng-if="schema.slugline && editor['slugline'].section === 'content' && (features.onlyEditor3 || editor.body_html.editor3)"
+     order="{{editor.slugline.order}}"
+     sd-validation-error="error.slugline"
+     data-required="schema.slugline.required">
+    <label class="field__label">{{label('slugline')}}</label>
+    <span ng-if="schema.slugline.maxlength" sd-character-count data-item="item.slugline" data-html="true" data-limit="schema.slugline.maxlength"></span>
+    <div id="title" class="slugline"
+         sd-editor3
+         data-path-to-value="'slugline'"
+         data-single-line="true"
+         data-bind-to-value="compareView"
+         data-scroll-container=".page-content-container"
+         data-language="item.language"
+         data-value="item.slugline"
+         data-on-change="autosave(item)"
+         data-read-only="!_editable"
+         data-disable-spellchecker="useTansaProofing()"
+         data-item="item"
+         data-refresh-trigger="refreshTrigger"
+         data-tabindex="editor.slugline.order">
+    </div>
+</div>
