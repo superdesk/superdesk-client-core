@@ -5,7 +5,6 @@ import {getTypeForFieldId} from '../../helpers/getTypeForFieldId';
 import {IArticle} from 'superdesk-interfaces/Article';
 import {IVocabulary} from 'superdesk-interfaces/Vocabulary';
 import {assertNever} from 'core/helpers/typescript-helpers';
-import {gettext} from 'core/utils';
 
 interface IScope extends ng.IScope {
     model: any;
@@ -64,7 +63,7 @@ export function ContentProfileSchemaEditor(content, metadata, vocabularies, noti
             scope.loading = true;
             scope.schemaKeysDisabled = [];
             let schemaKeys = [];
-            let numberOfHeaderSchemaKeys = 0;
+            let keysForSection = [];
 
             Promise.all([
                 content.getCustomFields(),
@@ -73,29 +72,14 @@ export function ContentProfileSchemaEditor(content, metadata, vocabularies, noti
             ]).then((res) => {
                 const [customFields, typeMetadata, vocabulariesCollection] = res;
 
-                scope.vocabularies = vocabulariesCollection;
-                scope.label = (id) => getLabelForFieldId(id, scope.vocabularies);
+                scope.label = (id) => getLabelForFieldId(id, vocabulariesCollection);
 
                 let headerFields = [];
 
-                const updateSchemaKeys = (customVocabulariesForArticleHeader, customTextAndDateVocabularies) => {
-                    // Creates a list of field names of the schema sorted by 'order' value
-                    // and assigns it to schemaKeys
+                // inner function to return the value of 'order' of a given field
+                const getOrder = (f) => _.get(scope.model.editor[f], 'order') || 99;
 
-                    // inner function to return the value of 'order' of a given field
-                    const getOrder = (f) => _.get(scope.model.editor[f], 'order') || 99;
-
-                    let sectionFilter = (function() {
-                        switch (scope.sectionToRender) {
-                        case 'header':
-                            return (key) => articleHeaderFields.has(key) || articleCommonFields.has(key);
-                        case 'content':
-                            return (key) => articleHeaderFields.has(key) === false || articleCommonFields.has(key);
-                        default:
-                            assertNever(scope.sectionToRender);
-                        }
-                    })();
-
+                const getArticleHeaderFields = (customVocabulariesForArticleHeader) => {
                     const articleHeaderFields = new Set();
 
                     articleHeaderHardcodedFields.forEach((id) => {
@@ -106,14 +90,38 @@ export function ContentProfileSchemaEditor(content, metadata, vocabularies, noti
                         articleHeaderFields.add(filteredCustomField._id);
                     });
 
+                    return articleHeaderFields;
+                };
+
+                const getArticleCommonFields = (customTextAndDateVocabularies) => {
                     const articleCommonFields = new Set();
 
                     customTextAndDateVocabularies.forEach((filteredCustomField) => {
                         articleCommonFields.add(filteredCustomField._id);
                     });
 
-                    const keysForSection = Object.keys(scope.model.editor).filter(sectionFilter);
+                    return articleCommonFields;
+                };
 
+                const updateSchemaKeys = (customVocabulariesForArticleHeader, customTextAndDateVocabularies) => {
+                    // Creates a list of field names of the schema sorted by 'order' value
+                    // and assigns it to schemaKeys
+
+                    const articleHeaderFields = getArticleHeaderFields(customVocabulariesForArticleHeader);
+                    const articleCommonFields = getArticleCommonFields(customTextAndDateVocabularies);
+
+                    const sectionFilter = (function() {
+                        switch (scope.sectionToRender) {
+                        case 'header':
+                            return (key) => articleHeaderFields.has(key) || articleCommonFields.has(key);
+                        case 'content':
+                            return (key) => articleHeaderFields.has(key) === false || articleCommonFields.has(key);
+                        default:
+                            assertNever(scope.sectionToRender);
+                        }
+                    })();
+
+                    keysForSection = Object.keys(scope.model.editor).filter(sectionFilter);
                     headerFields = Object.keys(scope.model.editor).filter((key) => articleHeaderFields.has(key));
 
                     schemaKeys = keysForSection
@@ -124,18 +132,20 @@ export function ContentProfileSchemaEditor(content, metadata, vocabularies, noti
                         )
                         .sort((a, b) => getOrder(a) - getOrder(b));
 
-                    scope.schemaKeysDisabled = [];
-                    _.each(_.difference(keysForSection, schemaKeys), (value) => {
-                        scope.schemaKeysDisabled.push({
-                            key: value,
-                            name: scope.model.editor[value].field_name || scope.label(value),
-                            type: getTypeForFieldId(value, scope.vocabularies),
-                        });
-                    });
-
+                    setSchemaKeysDisabled();
                     scope.schemaKeysOrdering = _.clone(schemaKeys);
                     scope.updateOrder();
                 };
+
+                function setSchemaKeysDisabled() {
+                    scope.schemaKeysDisabled = _.difference(keysForSection, schemaKeys)
+                        .filter((key) => !scope.model.editor[key].enabled)
+                        .map((value) => ({
+                            key: value,
+                            name: scope.model.editor[value].field_name || scope.label(value),
+                            type: getTypeForFieldId(value, vocabulariesCollection),
+                        }));
+                }
 
                 /*
                 * @description Update order on input change
@@ -235,20 +245,25 @@ export function ContentProfileSchemaEditor(content, metadata, vocabularies, noti
                         throw new Error('Unexpected behaviour: Item already added.');
                     }
 
+                    const editor = Object.assign({}, scope.model.editor);
+
                     if (scope.model.editor[schema.key]) {
-                        scope.model.editor[schema.key].enabled = true;
+                        editor[schema.key].enabled = true;
+                        editor[schema.key].section = scope.sectionToRender;
                         scope.model.schema[schema.key].enabled = true;
-                        scope.model.editor[schema.key].section = scope.sectionToRender;
                     } else {
-                        scope.model.editor[schema.key] = {enabled: true, section: scope.sectionToRender};
+                        editor[schema.key] = {enabled: true, section: scope.sectionToRender};
                         scope.model.schema[schema.key] = {enabled: true};
                     }
+
+                    // trigger editor watch
+                    scope.model.editor = editor;
 
                     let keyIndex = schemaKeys.indexOf(
                         schemaKeys.find((value) => scope.model.editor[value].order === order)) + 1;
 
                     schemaKeys.splice(position === 'before' ? keyIndex - 1 : keyIndex + 1, 0, schema.key);
-                    _.remove(scope.schemaKeysDisabled, schema);
+                    setSchemaKeysDisabled();
                     scope.schemaKeysOrdering = _.clone(schemaKeys);
 
                     scope.updateOrder();
@@ -260,14 +275,16 @@ export function ContentProfileSchemaEditor(content, metadata, vocabularies, noti
                  * @param {String} id the key of the field to toggle.
                  */
                 scope.remove = (id) => {
-                    scope.model.editor[id].enabled = false;
+                    const editor = Object.assign({}, scope.model.editor);
+
+                    editor[id].enabled = false;
+                    editor[id].section = null;
                     scope.model.schema[id].enabled = false;
-                    scope.model.editor[id].section = null;
+
+                    scope.model.editor = editor;
 
                     schemaKeys.splice(schemaKeys.indexOf(id), 1);
-                    scope.schemaKeysDisabled.push({
-                        key: id, name: scope.model.editor[id].field_name || scope.label(id),
-                    });
+                    setSchemaKeysDisabled();
                     scope.schemaKeysOrdering = _.clone(schemaKeys);
 
                     scope.updateOrder();
@@ -320,6 +337,8 @@ export function ContentProfileSchemaEditor(content, metadata, vocabularies, noti
 
                     scope.loading = false;
                 });
+
+                scope.$watch('model.editor', setSchemaKeysDisabled);
             });
         },
     };
