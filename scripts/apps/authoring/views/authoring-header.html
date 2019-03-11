@@ -74,7 +74,7 @@
             <div class="authoring-header__item"
                  sd-validation-error="error.slugline"
                  data-required="schema.slugline.required"
-                 ng-if="schema.slugline"
+                 ng-if="schema.slugline && editor['slugline'].section === 'header'"
                  sd-width="{{editor.slugline.sdWidth}}"
                  order="{{editor.slugline.order}}">
                 <label class="authoring-header__item-label uppercase" translate>SLUGLINE</label>
