@@ -310,6 +310,7 @@ body, html {
         line-height: 150%;
         min-height: 2.7rem;
         padding: 2px 0 0 1px;
+        word-break: break-all;
     }
     // inputs
     .text-editor, input, .field__select {
