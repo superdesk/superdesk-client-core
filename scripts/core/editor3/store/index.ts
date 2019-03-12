@@ -2,7 +2,7 @@ import {EditorState, convertFromRaw, convertToRaw, ContentState} from 'draft-js'
 import {createStore, applyMiddleware} from 'redux';
 import {createLogger} from 'redux-logger';
 import thunk from 'redux-thunk';
-import _, {pick} from 'lodash';
+import {pick, get, debounce} from 'lodash';
 
 import {toHTML} from 'core/editor3/html';
 import ng from 'core/services/ng';
@@ -46,7 +46,7 @@ export default function createEditorStore(props, isReact = false) {
     const decorators = Editor3Base.getDecorator(props.disableSpellchecker || !spellcheck.isAutoSpellchecker);
     const showToolbar = !isEditorPlainText(props);
 
-    const onChangeValue = isReact ? props.onChange : _.debounce(onChange.bind(props), props.debounce);
+    const onChangeValue = isReact ? props.onChange : debounce(onChange.bind(props), props.debounce);
 
     const middlewares = [thunk];
 
@@ -118,13 +118,18 @@ export function onChange(contentState, {plainText = false} = {}) {
     const contentStateHighlightsReadyForExport = prepareHighlightsForExport(
         EditorState.createWithContent(contentStateCleaned),
     ).getCurrentContent();
+    const rawState = convertToRaw(contentStateHighlightsReadyForExport);
 
     setFieldMetadata(
         this.item,
         pathToValue,
         fieldsMetaKeys.draftjsState,
-        convertToRaw(contentStateHighlightsReadyForExport),
+        rawState,
     );
+
+    if (pathToValue === 'body_html') {
+        syncAssociations(this.item, rawState);
+    }
 
     // example: "extra.customField"
     const pathToValueArray = pathToValue.split(FIELD_KEY_SEPARATOR);
@@ -188,4 +193,26 @@ export function getInitialContent(props) {
     }
 
     return ContentState.createFromText('');
+}
+
+/**
+ * Sync editor embeds in item.associations
+ *
+ * @param {Object} item
+ * @param {RawDraftContentState} rawState
+ */
+function syncAssociations(item, rawState) {
+    const associations = Object.assign({}, item.associations);
+
+    Object.keys(associations).forEach((key) => {
+        if (key.startsWith('editor_')) {
+            associations[key] = null;
+        }
+    });
+
+    Object.keys(rawState.entityMap).forEach((key) => {
+        associations['editor_' + key] = get(rawState.entityMap[key], 'data.media');
+    });
+
+    item.associations = associations;
 }

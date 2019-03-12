@@ -154,30 +154,34 @@ export function ArticleEditDirective(
                  * the properties dependent on dateline.
                  */
                 scope.updateDateline = function(item, city) {
+                    var currentItem = _.cloneDeep(item);
+
                     if (city === '') {
-                        item.dateline.date = null;
-                        item.dateline.located = null;
-                        item.dateline.text = '';
+                        currentItem.dateline.date = null;
+                        currentItem.dateline.located = null;
+                        currentItem.dateline.text = '';
 
                         scope.dateline.month = '';
                         scope.dateline.day = '';
                     } else {
-                        var monthAndDay = $filter('parseDateline')(item.dateline.date, item.dateline.located);
+                        var monthAndDay = $filter('parseDateline')(currentItem.dateline.date,
+                            currentItem.dateline.located);
 
                         scope.dateline.month = monthAndDay.month;
                         scope.dateline.day = monthAndDay.day;
                         scope.resetNumberOfDays(false);
-                        if (!item.dateline.date) {
-                            item.dateline.date = $filter('relativeUTCTimestamp')(scope.item.dateline.located,
+                        if (!currentItem.dateline.date) {
+                            currentItem.dateline.date = $filter('relativeUTCTimestamp')(scope.item.dateline.located,
                                 parseInt(scope.dateline.month, 10), parseInt(scope.dateline.day, 10));
                         }
 
-                        item.dateline.text = $filter('formatDatelineText')(item.dateline.located,
+                        currentItem.dateline.text = $filter('formatDatelineText')(currentItem.dateline.located,
                             $interpolate('{{ month | translate }}')({
                                 month: _.findKey(scope.monthNames, (m) => m === scope.dateline.month),
                             }),
-                            scope.dateline.day, item.source);
+                            scope.dateline.day, currentItem.source);
                     }
+                    scope.autosave(currentItem);
                 };
 
                 /**
