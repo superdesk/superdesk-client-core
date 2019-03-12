@@ -71,7 +71,7 @@ angular.module('superdesk.apps.dashboard.world-clock', [
 
             tzdata.$promise.then(() => {
                 moment.tz.add(
-                    _.pick(tzdata, ['zones', 'links'])
+                    _.pick(tzdata, ['zones', 'links']),
                 );
             });
 

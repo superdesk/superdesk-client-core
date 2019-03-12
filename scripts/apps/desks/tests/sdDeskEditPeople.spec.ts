@@ -134,7 +134,7 @@ describe('sdDeskeditPeople directive', () => {
                 name: 'foo',
                 members: [],
             },
-            {members: [{user: 1}]}
+            {members: [{user: 1}]},
         );
     });
 });

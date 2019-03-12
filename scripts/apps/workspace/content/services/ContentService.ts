@@ -198,7 +198,7 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
 
         // cache when fetching all types
         return api.getAll('content_types', params, !!includeDisabled).then((result) => {
-            self.types = result.sort((a, b) => b.priority - a.priority // with higher priority goes up
+            self.types = result.sort((a, b) => b.priority - a.priority, // with higher priority goes up
             );
             return self.types;
         }, (reason) => {
@@ -296,7 +296,7 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
     this.getDeskProfiles = function(desk, profileId) {
         return this.getTypes().then((profiles) => !desk || _.isEmpty(desk.content_profiles) ?
             profiles :
-            profiles.filter((profile) => desk.content_profiles[profile._id] || profile._id === profileId)
+            profiles.filter((profile) => desk.content_profiles[profile._id] || profile._id === profileId),
         );
     };
 

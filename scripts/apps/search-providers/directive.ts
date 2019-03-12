@@ -24,7 +24,7 @@ export default function SearchProviderConfigDirective(searchProviderService, not
                 searchProviderService.getSearchProviders().then(
                     (result) => {
                         $scope.providers = result;
-                    }
+                    },
                 );
             }
 
@@ -50,7 +50,7 @@ export default function SearchProviderConfigDirective(searchProviderService, not
                             } else {
                                 notify.error(gettext('Error: Failed to save Search Provider.'));
                             }
-                        }
+                        },
                     )
                     .then(fetchSearchProviders);
             };
@@ -82,10 +82,10 @@ export default function SearchProviderConfigDirective(searchProviderService, not
                                     } else {
                                         notify.error(gettext('Error: Unable to delete Search Provider.'));
                                     }
-                                }
+                                },
                             )
                             .then(fetchSearchProviders);
-                    }
+                    },
                 );
             };
 

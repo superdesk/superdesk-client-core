@@ -151,7 +151,6 @@ export function WidgetGroup(search, api, superdesk, desks, cards, $timeout, $q,
                     });
             }
 
-
             scope.updateItem = function(item, gone, schedule) {
                 var itemId;
 
@@ -427,7 +426,7 @@ export function WidgetGroup(search, api, superdesk, desks, cards, $timeout, $q,
                     select: scope.select,
                     edit: scope.edit,
                     updateCallback: scope.getUpdateCallback,
-                }
+                },
             );
 
             ReactDOM.render(itemList, elem[0]);

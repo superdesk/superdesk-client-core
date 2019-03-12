@@ -234,7 +234,7 @@ export function TagService($location, desks, userList, metadata, search,
      */
     function removeFacet(type, key) {
         const dateFilter = getDateFilters().find(
-            ({labelBlock, labelFrom, labelTo}) => [labelBlock, labelFrom, labelTo].includes(type)
+            ({labelBlock, labelFrom, labelTo}) => [labelBlock, labelFrom, labelTo].includes(type),
         );
 
         if (dateFilter != null) {
@@ -350,7 +350,7 @@ export function TagService($location, desks, userList, metadata, search,
                     tags.selectedFacets.credit = JSON.parse(type);
                 } else {
                     const dateFilter = dateFilters.find(
-                        ({fieldname}) => key === fieldname + 'from' || key === fieldname + 'to'
+                        ({fieldname}) => key === fieldname + 'from' || key === fieldname + 'to',
                     );
 
                     if (dateFilter != null) {

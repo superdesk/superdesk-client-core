@@ -34,7 +34,7 @@ export function ItemCrops(metadata) {
             scope.showCrops = () => (
                 _.includes(['picture', 'graphic'], scope.item.type) && _.get(metadata, 'values.crop_sizes') &&
                 metadata.values.crop_sizes.some(
-                    (crop) => scope.item.renditions && scope.item.renditions[crop.name]
+                    (crop) => scope.item.renditions && scope.item.renditions[crop.name],
                 )
             );
         },

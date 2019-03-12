@@ -268,7 +268,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, editor, config, $q
             var index = self.getBlockPosition(textBlockCtrl.block) + 1;
 
             if (index === 0) {
-                throw 'Block to split not found';
+                throw new Error('Block to split not found');
             }
             // cut the text that is after the caret in the block and save it in order to add it after the embed later
             var after = textBlockCtrl.extractEndOfBlock().innerHTML;

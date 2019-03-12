@@ -179,7 +179,7 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
                 } else {
                     notify.error(gettext('Error: Failed to re-schedule'));
                 }
-            }
+            },
         );
     };
 

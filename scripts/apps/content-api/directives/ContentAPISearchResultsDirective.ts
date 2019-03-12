@@ -38,7 +38,6 @@ class LinkFunction {
         });
     }
 
-
     /**
      * @ngdoc method
      * @name sdContentApiSearchResults#_getAggregations

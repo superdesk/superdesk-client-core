@@ -52,7 +52,7 @@ export function SearchResults(
     $rootScope,
     config,
     superdeskFlags,
-    notify
+    notify,
 ) { // uff - should it use injector instead?
     var preferencesUpdate = {
         'archive:view': {
@@ -104,7 +104,6 @@ export function SearchResults(
             scope.$on('item:unspike', scheduleIfShouldUpdate);
             scope.$on('item:duplicate', queryItems);
             scope.$on('item:translate', queryItems);
-
 
             // used by superdesk-fi
             scope.showtags = attr.showtags !== 'false';

@@ -38,7 +38,7 @@ app.post('/preview', (req, res) => {
         ${getContent(req.headers['content-type'], req.body)}
     </div>
 </body>
-</html>`
+</html>`,
     );
 });
 

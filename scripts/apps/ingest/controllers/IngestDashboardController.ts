@@ -21,7 +21,7 @@ export function IngestDashboardController($scope, $api, ingestSources, preferenc
         _.forEach(_.filter($scope.items, {dashboard_enabled: true}),
             (item) => {
                 preferences.push(_.pick(item, _.union(['_id'], _.keys(config.ingest.PROVIDER_DASHBOARD_DEFAULTS))));
-            }
+            },
         );
 
         update['dashboard:ingest'] = preferences;

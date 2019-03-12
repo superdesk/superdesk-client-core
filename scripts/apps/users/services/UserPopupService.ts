@@ -87,7 +87,7 @@ export function UserPopupService($compile, $timeout, userList) {
             '<div class="title">{{user.display_name}}</div>' +
             '<div class="actions">' +
                 '<a href="#/users/{{user._id}}">go to profile</a>' +
-            '</div>'
+            '</div>',
         );
         var popupScope = scope.$new(true);
 

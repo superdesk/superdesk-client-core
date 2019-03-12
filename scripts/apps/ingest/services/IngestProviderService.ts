@@ -106,7 +106,7 @@ export function IngestProviderService(api, $q, preferencesService, $filter, sear
                     _.forEach(ingestProviders, (provider) => {
                         var userProvider = _.find(
                             _.isArray ? userIngestProviders : [userIngestProviders],
-                            (item) => item._id === provider._id
+                            (item) => item._id === provider._id,
                         );
 
                         provider.dashboard_enabled = !!userProvider;
@@ -128,4 +128,3 @@ export function IngestProviderService(api, $q, preferencesService, $filter, sear
 
     return service;
 }
-

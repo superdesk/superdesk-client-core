@@ -13,7 +13,6 @@ FamilyService.$inject = ['api', 'desks'];
 export function FamilyService(api, desks) {
     const repo = 'archive,published';
 
-
     /**
      * @ngdoc method
      * @name family#fetchItems

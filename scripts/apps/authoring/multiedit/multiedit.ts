@@ -11,7 +11,6 @@
 import {gettext} from 'core/utils';
 import _ from 'lodash';
 
-
 MultieditService.$inject = ['storage', 'superdesk', 'authoringWorkspace', 'referrer', '$location'];
 function MultieditService(storage, superdesk, authoringWorkspace, referrer, $location) {
     // 1. Service manages multiedit screen

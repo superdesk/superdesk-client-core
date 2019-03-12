@@ -175,7 +175,6 @@ export function removeWhitespaces(data) {
         .trim();
 }
 
-
 /**
  * Removes whitespaces for fields
  * @param item
@@ -190,7 +189,6 @@ export function stripWhitespaces(item) {
     });
 }
 
-
 /**
  * Check if the item has at least one style of type suggestion
  */
@@ -200,8 +198,8 @@ export function itemHasUnresolvedHighlight(item, isHighlightFn) {
         .filter((draftjsState) => draftjsState != null)
         .some((draftjsState) => (draftjsState.blocks || [])
             .some((block) => (block.inlineStyleRanges || [])
-                .some((inlineStyleRange) => isHighlightFn(inlineStyleRange.style))
-            )
+                .some((inlineStyleRange) => isHighlightFn(inlineStyleRange.style)),
+            ),
         );
 }
 
@@ -212,7 +210,6 @@ export function itemHasUnresolvedSuggestions(item) {
 export function itemHasUnresolvedComments(item) {
     return itemHasUnresolvedHighlight(item, isComment);
 }
-
 
 /**
  * Removes renditions from previously used image(s)

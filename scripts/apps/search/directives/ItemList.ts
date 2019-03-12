@@ -98,7 +98,7 @@ export function ItemList(
     metadata,
     storage,
     keyboardManager,
-    session
+    session,
 ) {
     // contains all the injected services to be passed down to child
     // components via props
@@ -388,7 +388,6 @@ export function ItemList(
                         listComponent.setState({itemsById: itemsById});
                     }
                 });
-
 
                 scope.singleLine = search.singleLine;
 

@@ -3,7 +3,6 @@ import _ from 'lodash';
 import {DEFAULT_LIST_CONFIG, LOOKUP_FIELDS, FB_URL, IG_URL} from './constants';
 import * as fields from './components/fields';
 
-
 export const onEventCapture = (event?) => {
     if (event) {
         event.preventDefault();
@@ -61,7 +60,6 @@ export function getContactType(contact) {
 export function validateRequiredFormFields(contact) {
     return validateRequiredField(contact) && validateMinRequiredField(contact);
 }
-
 
 export function validateRequiredField(contact) {
     const REQUIRED_CONTACT_FIELDS = getContactType(contact) === 'person' ?

@@ -96,7 +96,7 @@ export function UserMentioDirective(userList, desks, asset, $q) {
                     if (newValue.hasClass('active')) {
                         $('.mentio-menu').scrollTop(newValue.position().top);
                     }
-                }
+                },
             );
         },
     };

@@ -287,7 +287,7 @@ describe('sdSearchPanel directive', () => {
         'superdesk.apps.search',
         'superdesk.core.services.pageTitle',
         'superdesk.templates-cache',
-        'superdesk.apps.searchProviders'
+        'superdesk.apps.searchProviders',
     ));
 
     /**
@@ -332,7 +332,7 @@ describe('sdSearchPanel directive', () => {
      * Mock even more dependencies and compile the directive under test.
      */
     beforeEach(inject((
-        $templateCache, $compile, $rootScope, $q, _desks_, tags, search
+        $templateCache, $compile, $rootScope, $q, _desks_, tags, search,
     ) => {
         var html,
             scope;
@@ -347,7 +347,7 @@ describe('sdSearchPanel directive', () => {
         spyOn(tags, 'initSelectedFacets').and.returnValue(facetsInit.promise);
 
         fakeApi.ingestProviders.query.and.returnValue(
-            $q.when({_items: [{foo: 'bar'}]})
+            $q.when({_items: [{foo: 'bar'}]}),
         );
 
         // directive compilation...
@@ -421,7 +421,7 @@ describe('sdSearchPanel directive', () => {
 
             expect(console.warn).toHaveBeenCalledWith(
                 'Desk (key: abc123) not found in deskLookup, ' +
-                'probable storage inconsistency.'
+                'probable storage inconsistency.',
             );
         });
     });
@@ -433,9 +433,8 @@ describe('sort service', () => {
         {field: 'urgency', label: gettext('Urgency')},
     ];
 
-
     beforeEach(window.module(
-        'superdesk.apps.search'
+        'superdesk.apps.search',
     ));
 
     it('can sort items', inject((sort, $location, $rootScope) => {

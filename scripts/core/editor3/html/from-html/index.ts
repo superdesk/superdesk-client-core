@@ -93,7 +93,7 @@ class HTMLParser {
                     // editor2 media support
 
                     const lineAfterFigureClosingTag = node.parentElement.innerHTML.slice(
-                        node.parentElement.innerHTML.indexOf(node.outerHTML) + node.outerHTML.length + 1
+                        node.parentElement.innerHTML.indexOf(node.outerHTML) + node.outerHTML.length + 1,
                     ).match(/.+\n/)[0];
 
                     const embedId = lineAfterFigureClosingTag
@@ -146,14 +146,14 @@ class HTMLParser {
 
         let contentState = ContentState.createFromBlockArray(
             conversionResult.contentBlocks,
-            conversionResult.entityMap
+            conversionResult.entityMap,
         );
 
         contentState = this.processLinks(contentState);
 
         return ContentState.createFromBlockArray(
             contentState.getBlocksAsArray().map(processBlock),
-            contentState.getEntityMap()
+            contentState.getEntityMap(),
         );
     }
 

@@ -40,7 +40,7 @@ angular.module('superdesk.core.upload.crop', [])
                     && scope.file.size / 1048576 > parseInt(scope.maxFileSize, 10)) {
                         notify.info(gettext(
                             'Image is bigger than {{maxFileSize}}MB, upload file size may be limited!',
-                            {maxFileSize: scope.maxFileSize}
+                            {maxFileSize: scope.maxFileSize},
                         ));
                     }
 

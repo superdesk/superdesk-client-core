@@ -10,7 +10,6 @@
 
 import {gettext} from 'core/utils';
 
-
 FindReplaceDirective.$inject = ['editorResolver', 'macros'];
 /**
  * using directive here so that it can return focus

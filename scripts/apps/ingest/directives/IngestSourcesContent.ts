@@ -275,10 +275,10 @@ export function IngestSourcesContent(ingestSources, notify, api, $location,
                                         } else {
                                             notify.error(gettext('Error: Unable to delete Ingest Source'));
                                         }
-                                    }
+                                    },
                                 )
                                 .then(fetchProviders);
-                        }
+                        },
                     );
                 };
 
@@ -310,7 +310,7 @@ export function IngestSourcesContent(ingestSources, notify, api, $location,
                             });
 
                             $scope.fieldsNotSelected[field.id] = field.first_field_options.values.filter(
-                                (fieldName) => !(fieldName in aliasObj)
+                                (fieldName) => !(fieldName in aliasObj),
                             );
                         } else if (
                             // preset value in dropdown
@@ -390,7 +390,7 @@ export function IngestSourcesContent(ingestSources, notify, api, $location,
                     });
 
                     $scope.fieldsNotSelected[field.id] = field.first_field_options.values.filter(
-                        (fieldName) => !(fieldName in selectedFields)
+                        (fieldName) => !(fieldName in selectedFields),
                     );
                 };
 
@@ -449,7 +449,7 @@ export function IngestSourcesContent(ingestSources, notify, api, $location,
                     delete $scope.provider.source_errors;
 
                     const originalProvider = $scope.providers._items.find(
-                        (provider) => provider._id === $scope.provider._id
+                        (provider) => provider._id === $scope.provider._id,
                     );
 
                     $scope.loading = true;
@@ -494,7 +494,7 @@ export function IngestSourcesContent(ingestSources, notify, api, $location,
                         });
                     } else {
                         $location.path('/search').search(
-                            {repo: 'ingest', ingest_provider: provider._id}
+                            {repo: 'ingest', ingest_provider: provider._id},
                         );
                     }
                 };
@@ -556,7 +556,7 @@ export function IngestSourcesContent(ingestSources, notify, api, $location,
                             }
                             $scope.feedParsers = _.filter($scope.feedParsers, (feedParser) =>
                                 $scope.currentFeedingService.parser_restricted_values.includes(
-                                    feedParser.feed_parser)
+                                    feedParser.feed_parser),
                             );
                         } else if ($scope.currentFeedingService.parser_restricted_values === null) {
                             $scope.feedParsers = [];

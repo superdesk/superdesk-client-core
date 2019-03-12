@@ -59,7 +59,6 @@ function insertAtomicBlockWithoutEmptyLines(editorState, entityKey, character) {
         }));
     }
 
-
     fragmentArray.push(new ContentBlock({
         key: genKey(),
         type: 'atomic',

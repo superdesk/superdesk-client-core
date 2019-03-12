@@ -55,7 +55,7 @@ describe('authoring ChangeImageController', () => {
             ChangeImageController(scope, notify, _, api, $rootScope, deployConfig, $q, config);
             scope.saveAreaOfInterest(croppingData);
             expect(notify.error).toHaveBeenCalledWith(
-                gettext('Original size cannot be less than the required crop sizes.')
+                gettext('Original size cannot be less than the required crop sizes.'),
             );
         }));
 
@@ -93,7 +93,7 @@ describe('authoring ChangeImageController', () => {
             $rootScope.$digest();
 
             expect(notify.error).toHaveBeenCalledWith(
-                gettext('Failed to save the area of interest: Failed to call picture_crop.')
+                gettext('Failed to save the area of interest: Failed to call picture_crop.'),
             );
 
             expect(scope.loaderForAoI).toBeFalsy();
@@ -127,7 +127,7 @@ describe('authoring ChangeImageController', () => {
             $rootScope.$digest();
 
             expect(notify.error).toHaveBeenCalledWith(
-                gettext('Failed to save the area of interest: Failed to call picture_renditions.')
+                gettext('Failed to save the area of interest: Failed to call picture_renditions.'),
             );
 
             expect(scope.loaderForAoI).toBeFalsy();
@@ -205,7 +205,7 @@ describe('authoring ChangeImageController', () => {
 
                 expect(scope.data.poi).toEqual({x: 0.5, y: 0.5});
                 expect(scope.data.metadata.poi).toBeFalsy();
-            })
+            }),
         );
 
         it('No error thrown if poi is specified', inject((api, $rootScope, $q, notify, config) => {

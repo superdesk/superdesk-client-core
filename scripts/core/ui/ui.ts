@@ -645,7 +645,7 @@ function TimezoneDirective(tzdata, config, $timeout) {
                 termLower = searchTerm.toLowerCase();
                 scope.matchingTimeZones = _.filter(
                     scope.timeZones,
-                    (item) => item.toLowerCase().indexOf(termLower) >= 0
+                    (item) => item.toLowerCase().indexOf(termLower) >= 0,
                 );
             };
 

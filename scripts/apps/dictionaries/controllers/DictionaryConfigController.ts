@@ -92,7 +92,7 @@ export function DictionaryConfigController($scope, dictionaries, session, modal,
                     _.remove($scope.dictionaries, dictionary);
                     notify.success(gettext('Dictionary deleted.'), 3000);
                 });
-            }
+            },
         );
     };
 

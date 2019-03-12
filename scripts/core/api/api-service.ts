@@ -78,7 +78,7 @@ function APIProvider() {
                         console.warn('duplicate request',
                             config.url,
                             'after', now - last.now, 'ms',
-                            config.params
+                            config.params,
                         );
                         return last.promise;
                     }

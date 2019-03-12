@@ -24,7 +24,7 @@ export default angular.module('superdesk.core.directives.withParams', [])
                     var excludes = attrs.exclude.split(',');
                     var query = locationParams.makeQuery(
                         _.omit(locationParams.params, excludes),
-                        locationParams.defaults
+                        locationParams.defaults,
                     );
 
                     attrs.$set('href', attrs.href.trim() + query);

@@ -68,7 +68,6 @@ class LinkFunction {
         }
     }
 
-
     /**
      * @ngdoc method
      * @public
@@ -344,7 +343,6 @@ class LinkFunction {
         return isValue || isLabel || facet.indexOf(key) >= 0;
     }
 }
-
 
 /**
  * @ngdoc directive

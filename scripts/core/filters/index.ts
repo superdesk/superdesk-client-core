@@ -112,7 +112,7 @@ export default angular.module('superdesk.core.filters', [])
             } else if (input === 'error') {
                 return 'danger';
             }
-        }
+        },
     )
     .filter('mergeTargets', () => function(array) {
         var merged = [];

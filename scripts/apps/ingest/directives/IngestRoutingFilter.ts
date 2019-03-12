@@ -72,7 +72,7 @@ export function IngestRoutingFilter() {
 
                 scope.matchingFilters = _.filter(
                     scope.filters,
-                    (filter) => regex.test(filter.name)
+                    (filter) => regex.test(filter.name),
                 );
             };
 

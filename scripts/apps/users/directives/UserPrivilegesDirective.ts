@@ -68,7 +68,7 @@ export function UserPrivilegesDirective(api, notify, userList, $q) {
                 api.save(
                     'users',
                     scope.user,
-                    _.pick(scope.user, 'privileges')
+                    _.pick(scope.user, 'privileges'),
                 )
                     .then(() => {
                         scope.origPrivileges = angular.copy(

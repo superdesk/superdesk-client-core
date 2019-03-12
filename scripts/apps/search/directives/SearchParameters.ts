@@ -143,7 +143,6 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                     });
             }
 
-
             function fetchSubscribers() {
                 if (scope.repo.search !== 'content-api') {
                     return;

@@ -135,7 +135,7 @@ function MetadataCtrl(
                 $scope.item.publish_schedule = datetimeHelper.mergeDateTime(
                     $scope.item.publish_schedule_date,
                     $scope.item.publish_schedule_time,
-                    $scope.item.time_zone
+                    $scope.item.time_zone,
                 );
                 setTimeZone();
             } else {
@@ -170,7 +170,7 @@ function MetadataCtrl(
                 $scope.item.embargo = datetimeHelper.mergeDateTime(
                     $scope.item.embargo_date,
                     $scope.item.embargo_time,
-                    $scope.item.time_zone
+                    $scope.item.time_zone,
                 );
                 setTimeZone();
             } else {
@@ -1094,10 +1094,10 @@ function MetadataService(api, subscribersService, config, vocabularies, $rootSco
                 });
                 self.cvs = result;
                 self.values.regions = _.sortBy(self.values.geographical_restrictions,
-                    (target) => target.value && target.value.toLowerCase() === 'all' ? '' : target.name
+                    (target) => target.value && target.value.toLowerCase() === 'all' ? '' : target.name,
                 );
                 self.values.subscriberTypes = _.sortBy(self.values.subscriber_types,
-                    (target) => target.value && target.value.toLowerCase() === 'all' ? '' : target.name
+                    (target) => target.value && target.value.toLowerCase() === 'all' ? '' : target.name,
                 );
 
                 if (self.values.urgency) {
@@ -1236,7 +1236,7 @@ function MetadataService(api, subscribersService, config, vocabularies, $rootSco
         getCustomVocabulariesForArticleHeader: function(qcodes, editor, schema) {
             return this.getFilteredCustomVocabularies(qcodes)
                 .then(
-                    (cvs) => cvs.filter((cv) => cv.terms.length && (editor[cv._id] || schema[cv._id]))
+                    (cvs) => cvs.filter((cv) => cv.terms.length && (editor[cv._id] || schema[cv._id])),
                 );
         },
         /**
@@ -1249,11 +1249,11 @@ function MetadataService(api, subscribersService, config, vocabularies, $rootSco
         getAllCustomVocabulariesForArticleHeader: function(editor, schema) {
             return this.fetchMetadataValues().then(() => {
                 const customVocabulariesForArticleHeader = this.cvs.filter(
-                    (cv) => cv.items.length && cv.service && (editor[cv._id] || schema[cv._id])
+                    (cv) => cv.items.length && cv.service && (editor[cv._id] || schema[cv._id]),
                 );
 
                 const customTextAndDateVocabularies = this.cvs.filter(
-                    (cv) => cv.field_type === 'text' || cv.field_type === 'date'
+                    (cv) => cv.field_type === 'text' || cv.field_type === 'date',
                 );
 
                 return {customVocabulariesForArticleHeader, customTextAndDateVocabularies};
@@ -1309,7 +1309,6 @@ function MetadataListItem() {
         templateUrl: 'scripts/apps/authoring/metadata/views/metadata-list-item.html',
     };
 }
-
 
 angular.module('superdesk.apps.authoring.metadata', [
     'superdesk.apps.authoring.widgets',

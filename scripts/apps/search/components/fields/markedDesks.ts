@@ -12,4 +12,3 @@ export class markedDesks extends React.Component<IProps> {
         }, this.props));
     }
 }
-

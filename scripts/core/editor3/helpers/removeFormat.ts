@@ -41,7 +41,7 @@ export function removeInlineStylesForSelection(content, selection) {
     const contentWithoutStyles = acceptedInlineStyles.reduce(
         (newContentState, style) =>
             Modifier.removeInlineStyle(newContentState, selection, style),
-        content
+        content,
     );
 
     return contentWithoutStyles;
@@ -90,19 +90,19 @@ export function removeFormatFromState(editorState) {
     const selection = editorState.getSelection();
     const contentWithoutInlineStyles = removeInlineStylesForSelection(
         editorState.getCurrentContent(),
-        selection
+        selection,
     );
     const contentWithoutBlockStyles = removeBlockStyles(
         editorState,
         contentWithoutInlineStyles,
         selection,
-        ['atomic']
+        ['atomic'],
     );
 
     // Push new editor state as only one change so 'UNDO' will change both at the same type
     return EditorState.push(
         editorState,
         contentWithoutBlockStyles,
-        'change-block-type'
+        'change-block-type',
     );
 }

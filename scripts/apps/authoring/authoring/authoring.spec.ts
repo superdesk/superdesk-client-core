@@ -11,7 +11,7 @@ describe('authoring', () => {
         inject(($httpBackend, $q, $rootScope, $compile, vocabularies, archiveService, content, $templateCache) => {
             $templateCache.put(
                 'scripts/apps/authoring/views/authoring-header.html',
-                '<div>{{scope.item}}</div>'
+                '<div>{{scope.item}}</div>',
             );
 
             var vocabulariesData = [
@@ -93,7 +93,7 @@ describe('authoring', () => {
             expect($window.open)
                 .toHaveBeenCalledWith(
                     'http://server/#/workspace/monitoring?item=foo&action=edit&popup',
-                    'foo'
+                    'foo',
                 );
         }));
     });

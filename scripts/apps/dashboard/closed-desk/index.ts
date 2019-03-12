@@ -64,7 +64,6 @@ function RoutingWidgetController(desks, privileges, api, notify, gettext, $scope
     });
 }
 
-
 TopMenuInfoDirective.$inject = ['desks', '$timeout'];
 function TopMenuInfoDirective(desks, $timeout) {
     return {

@@ -21,7 +21,7 @@ import reducers from '../reducers';
 
 export const ignoreInternalAnnotationFields = (annotations) =>
     annotations.map(
-        (annotation) => pick(annotation, ['id', 'type', 'body'])
+        (annotation) => pick(annotation, ['id', 'type', 'body']),
     );
 
 export const isEditorPlainText = (props) => props.singleLine || (props.editorFormat || []).length === 0;
@@ -77,7 +77,6 @@ export default function createEditorStore(props, isReact = false) {
         abbreviations: {},
     }, applyMiddleware(...middlewares));
 
-
     // after we have the dictionary, force update the editor to highlight typos
     dict.finally(() => store.dispatch(forceUpdate()));
 
@@ -95,7 +94,7 @@ export default function createEditorStore(props, isReact = false) {
  */
 function generateAnnotations(item) {
     item.annotations = ignoreInternalAnnotationFields(
-        getAnnotationsFromItem(item, 'body_html')
+        getAnnotationsFromItem(item, 'body_html'),
     );
 }
 
@@ -117,14 +116,14 @@ export function onChange(contentState, {plainText = false} = {}) {
     const decorativeStyles = ['HIGHLIGHT', 'HIGHLIGHT_STRONG'];
     const contentStateCleaned = removeInlineStyles(contentState, decorativeStyles);
     const contentStateHighlightsReadyForExport = prepareHighlightsForExport(
-        EditorState.createWithContent(contentStateCleaned)
+        EditorState.createWithContent(contentStateCleaned),
     ).getCurrentContent();
 
     setFieldMetadata(
         this.item,
         pathToValue,
         fieldsMetaKeys.draftjsState,
-        convertToRaw(contentStateHighlightsReadyForExport)
+        convertToRaw(contentStateHighlightsReadyForExport),
     );
 
     // example: "extra.customField"
@@ -165,7 +164,7 @@ export function getInitialContent(props) {
     // support standalone instance of editor3 which is not connected to item field
     if (props.editorState != null) {
         var contentState = convertFromRaw(
-            (props.editorState instanceof Array) ? props.editorState[0] : props.editorState
+            (props.editorState instanceof Array) ? props.editorState[0] : props.editorState,
         );
 
         return initializeHighlights(EditorState.createWithContent(contentState)).getCurrentContent();
@@ -174,7 +173,7 @@ export function getInitialContent(props) {
     const draftjsRawState = getFieldMetadata(
         props.item,
         props.pathToValue,
-        fieldsMetaKeys.draftjsState
+        fieldsMetaKeys.draftjsState,
     );
 
     if (draftjsRawState != null) {

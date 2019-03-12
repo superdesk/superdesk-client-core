@@ -16,7 +16,6 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _, pref
     self.abbreviationsDict = null;
     self.isAutoSpellchecker = false;
 
-
     /**
      * Set current language
      *

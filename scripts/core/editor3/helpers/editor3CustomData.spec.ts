@@ -10,8 +10,8 @@ it('should generate ids for annotations in order they appear in the content', ()
     const result = getAnnotationsFromContentState(contentState);
 
     expect(
-        JSON.stringify(ignoreInternalAnnotationFields(result))
+        JSON.stringify(ignoreInternalAnnotationFields(result)),
     ).toBe(
-        JSON.stringify(ignoreInternalAnnotationFields(outputJson))
+        JSON.stringify(ignoreInternalAnnotationFields(outputJson)),
     );
 });

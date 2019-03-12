@@ -173,7 +173,7 @@ export default angular.module('superdesk.core.services.server', [])
                 return this._http('post',
                     this._makeUrl(resource),
                     null,
-                    data
+                    data,
                 );
             },
 
@@ -191,7 +191,7 @@ export default angular.module('superdesk.core.services.server', [])
             list: function(resource, params) {
                 return this._http('get',
                     this._makeUrl(resource),
-                    this._convertParams(params)
+                    this._convertParams(params),
                 );
             },
 
@@ -238,7 +238,7 @@ export default angular.module('superdesk.core.services.server', [])
              */
             read: function(item) {
                 return this._http('get',
-                    this._wrapUrl(item._links.self.href)
+                    this._wrapUrl(item._links.self.href),
                 );
             },
 
@@ -255,7 +255,7 @@ export default angular.module('superdesk.core.services.server', [])
              */
             readById: function(resource, id) {
                 return this._http('get',
-                    this._makeUrl(resource, id)
+                    this._makeUrl(resource, id),
                 );
             },
 
@@ -281,7 +281,7 @@ export default angular.module('superdesk.core.services.server', [])
                 return this._http('patch',
                     this._wrapUrl(item._links.self.href),
                     {},
-                    item
+                    item,
                 );
             },
             /**
@@ -298,7 +298,7 @@ export default angular.module('superdesk.core.services.server', [])
                 return this._http('delete',
                     this._wrapUrl(item._links.self.href),
                     {},
-                    item
+                    item,
                 );
             },
         };

@@ -40,7 +40,7 @@ export function SendService(desks, api, $q, notify, $injector, multi, $rootScope
                         }
                         notify.error(gettext(message));
                         item.error = response;
-                    }
+                    },
                 )
                 .finally(() => {
                     if (item.actioning) {
@@ -61,7 +61,7 @@ export function SendService(desks, api, $q, notify, $injector, multi, $rootScope
                         item.error = error;
                         notify.error(gettext('Failed to get item.'));
                         return item;
-                    }
+                    },
                 )
                 .finally(() => {
                     if (item.actioning) {

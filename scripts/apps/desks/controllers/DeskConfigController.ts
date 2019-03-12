@@ -48,9 +48,9 @@ export function DeskConfigController($scope, $controller, notify, desks, WizardH
                         } else {
                             notify.error(gettext('Unknown Error: There was a problem, desk was not deleted.'));
                         }
-                    }
+                    },
                 );
-            }
+            },
         );
     };
 

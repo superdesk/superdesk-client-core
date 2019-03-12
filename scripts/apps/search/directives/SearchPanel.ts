@@ -39,7 +39,7 @@ export function SearchPanel($location,
     metadata,
     $rootScope,
     session,
-    config
+    config,
 ) {
     desks.initialize();
     return {

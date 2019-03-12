@@ -210,7 +210,7 @@ export function SearchService($location, config, session, multi,
             }
             var elementName = queryArrayElement.substring(
                 queryArrayElement.lastIndexOf('(') + 1,
-                queryArrayElement.lastIndexOf(')')
+                queryArrayElement.lastIndexOf(')'),
             );
 
             for (var j = 0, codeListLength = codeList.length; j < codeListLength; j++) {

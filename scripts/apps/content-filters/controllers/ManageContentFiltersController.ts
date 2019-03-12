@@ -67,7 +67,7 @@ export function ManageContentFiltersController($scope, contentFilters, notify, m
                         } else {
                             notify.error(gettext('Error: Failed to test content filter.'));
                         }
-                    }
+                    },
                 )
                 .then(fetchContentFilters);
         };
@@ -135,7 +135,7 @@ export function ManageContentFiltersController($scope, contentFilters, notify, m
                         } else {
                             notify.error(gettext('Error: Failed to save content filter.'));
                         }
-                    }
+                    },
                 );
         };
 

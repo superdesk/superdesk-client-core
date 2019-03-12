@@ -58,7 +58,7 @@ export function SubscribersDirective(
                 subscribersService.fetchSubscribers().then(
                     (result) => {
                         $scope.subscribers = result;
-                    }
+                    },
                 );
             };
 
@@ -79,7 +79,6 @@ export function SubscribersDirective(
                     $scope.apiProducts = _.filter(items, (item) =>
                         _.includes(['api', 'both'], item.product_type || 'both'));
                 });
-
 
             /**
              * Initializes the Global Filters on the selected subscriber.
@@ -185,7 +184,7 @@ export function SubscribersDirective(
                             } else {
                                 notify.error(gettext('Error: Failed to save Subscriber.'));
                             }
-                        }
+                        },
                     )
                     .then(fetchSubscribers);
             };

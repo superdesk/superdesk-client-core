@@ -1,7 +1,6 @@
 import {stickElements} from './stickElements';
 import {OnEveryAnimationFrame} from './onEveryAnimationFrame';
 
-
 export class StickElementsWithTracking {
     animationManager: OnEveryAnimationFrame;
 

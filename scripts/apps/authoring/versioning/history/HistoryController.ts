@@ -66,7 +66,7 @@ export function HistoryController(
                     // Filter out item_lock and item_unlock history entries
                     if ($scope.historyItems && $scope.historyItems.length > 0) {
                         $scope.historyItems = $scope.historyItems.filter(
-                            (entry) => !entry.operation || ['item_lock', 'item_unlock'].indexOf(entry.operation) < 0
+                            (entry) => !entry.operation || ['item_lock', 'item_unlock'].indexOf(entry.operation) < 0,
                         );
                     }
                 })
@@ -181,7 +181,6 @@ export function HistoryController(
         h.isPublished = ['publish', 'correct', 'kill', 'resend', 'takedown'].includes(h.operation);
         h.fieldsUpdated = h.update ? Object.keys(h.update).join(', ') : null;
     };
-
 
     $scope.$watchGroup(['item._id', 'item._latest_version'], fetchHistory);
 }

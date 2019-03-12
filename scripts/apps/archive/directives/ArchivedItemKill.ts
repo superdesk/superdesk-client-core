@@ -38,7 +38,7 @@ export function ArchivedItemKill(authoring, api, notify) {
                     } else {
                         notify.error(gettext('Unknown Error: Cannot kill the item'));
                     }
-                }
+                },
             );
 
             scope.kill = function() {

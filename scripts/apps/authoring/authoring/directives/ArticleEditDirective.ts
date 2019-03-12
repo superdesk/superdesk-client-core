@@ -55,7 +55,7 @@ export function ArticleEditDirective(
     history,
     $interpolate,
     suggest,
-    renditions
+    renditions,
 ) {
     return {
         templateUrl: 'scripts/apps/authoring/views/article-edit.html',
@@ -303,7 +303,7 @@ export function ArticleEditDirective(
                             defaultTab: defaultTab,
                             tabs: showTabs,
                             showMetadata: true,
-                        }
+                        },
                     )
                         .then((picture) => {
                             scope.item._etag = picture._etag;

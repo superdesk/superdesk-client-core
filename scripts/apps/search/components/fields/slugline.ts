@@ -11,7 +11,7 @@ export class slugline extends React.Component<IProps> {
             return React.createElement(
                 'span',
                 {className: 'keyword', key: 'slugline',
-                    dangerouslySetInnerHTML: createMarkUp(this.props.item.slugline)}
+                    dangerouslySetInnerHTML: createMarkUp(this.props.item.slugline)},
             );
         }
     }

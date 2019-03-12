@@ -44,7 +44,7 @@ export function DictionaryEditController($scope, dictionaries, upload, notify,
             dictionaries.upload($scope.origDictionary, $scope.dictionary, $scope.file,
                 onSuccess, onError, (update) => {
                     $scope.progress.width = Math.round(update.loaded / update.total * 100.0);
-                }
+                },
             );
         } else {
             dictionaries.update($scope.origDictionary, $scope.dictionary, onSuccess, onError);

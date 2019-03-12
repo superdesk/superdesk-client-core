@@ -8,7 +8,7 @@ export class wordcount extends React.Component<IProps> {
         return React.createElement(
             'span',
             {className: 'word-count', key: 'wordcount'},
-            this.props.item.word_count
+            this.props.item.word_count,
         );
     }
 }

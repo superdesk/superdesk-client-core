@@ -758,7 +758,7 @@ angular.module('superdesk.apps.editor2', [
                     ];
 
                     let getType = (event) => MEDIA_TYPES.find(
-                        (_type) => event.originalEvent.dataTransfer.types.indexOf(_type) >= 0
+                        (_type) => event.originalEvent.dataTransfer.types.indexOf(_type) >= 0,
                     );
 
                     element.on('drop dragdrop', (event) => {
@@ -886,7 +886,7 @@ angular.module('superdesk.apps.editor2', [
             controllerAs: 'vm',
             bindToController: true,
             controller: SdTextEditorBlockEmbedController,
-        })
+        }),
     )
     .directive('sdTextEditorBlockText', ['editor', 'spellcheck', '$timeout',
         '$q', 'config', '$rootScope',
@@ -1333,7 +1333,7 @@ angular.module('superdesk.apps.editor2', [
                                     });
 
                                     scope.suggestions = suggestions.filter((suggestion) =>
-                                        suggestion.key !== scope.replaceWord
+                                        suggestion.key !== scope.replaceWord,
                                     );
                                 } else {
                                     scope.suggestions = suggestions;

@@ -36,7 +36,7 @@ export function ContactList(
     search,
     datetime,
     Keys,
-    $rootScope
+    $rootScope,
 ) {
     // contains all the injected services to be passed down to child
     // components via props

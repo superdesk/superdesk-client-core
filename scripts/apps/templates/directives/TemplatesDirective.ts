@@ -20,7 +20,7 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
                     (result) => {
                         result._items = $filter('sortByName')(result._items, 'template_name');
                         $scope.content_templates = result;
-                    }
+                    },
                 );
             }
 
@@ -220,7 +220,7 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
                             },
                             (response) => {
                                 notifySaveError(response, notify);
-                            }
+                            },
                         )
                         .then(fetchTemplates);
                 }
@@ -316,7 +316,7 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
                 if (deskNames) {
                     return notify.error(
                         gettext('This is a default template of the following desk(s): {{deskNames}}.', {deskNames}) +
-                        ' ' + gettext('Please change the default templates first.')
+                        ' ' + gettext('Please change the default templates first.'),
                     );
                 }
 
@@ -371,7 +371,7 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
             // the list of filters.
             desks.fetchDesks().then((desks) => {
                 $scope.filters = $scope.filters.concat(
-                    desks._items.map((d) => ({label: d.name, value: d._id}))
+                    desks._items.map((d) => ({label: d.name, value: d._id})),
                 );
             });
 

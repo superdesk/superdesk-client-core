@@ -577,7 +577,7 @@ describe('authoring', () => {
                 timestamp.slice(0, 10),
                 timestamp.slice(11, 19),
                 timestamp,
-                'America/Toronto' // anything before utc
+                'America/Toronto', // anything before utc
             )).toBeFalsy();
         }));
 
@@ -678,7 +678,7 @@ describe('Item Crops directive', () => {
             scope.$digest();
 
             expect(iScope.showCrops()).toBe(true);
-        })
+        }),
     );
 });
 

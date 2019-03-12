@@ -121,7 +121,7 @@ function UserNotificationsService(
                 $timeout(this.reload, UPDATE_TIMEOUT, false);
                 // check for permission and send a desktop notificiation
                 preferencesService.desktopNotification.send(
-                    sdActivityMessage.format(extras.activity)
+                    sdActivityMessage.format(extras.activity),
                 );
             }
         });

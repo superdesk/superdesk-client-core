@@ -105,7 +105,7 @@ export function ProductionTestController($scope, contentFilters, notify, $locati
     var fetchProductionTestResult = function() {
         contentFilters.testContentFilter({
             filter_id: $scope.selectedfilter,
-            return_matching: $scope.$eval($scope.model.selectedType
+            return_matching: $scope.$eval($scope.model.selectedType,
             )}).then(
             (result) => {
                 $scope.testResult = result.match_results;
@@ -118,7 +118,7 @@ export function ProductionTestController($scope, contentFilters, notify, $locati
                 } else {
                     notify.error(gettext('Error: Failed to fetch production test results.'));
                 }
-            }
+            },
         );
     };
 }

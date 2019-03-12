@@ -1,5 +1,4 @@
 
-
 describe('users api', () => {
     beforeEach(window.module('superdesk.apps.users'));
     beforeEach(window.module('superdesk.mocks'));
@@ -183,7 +182,7 @@ describe('user edit form', () => {
             identity: {_id: 1},
             getIdentity: function() {
                 return $q.when(
-                    {who: 'cares', this: 'is', totaly: 'fake'}
+                    {who: 'cares', this: 'is', totaly: 'fake'},
                 );
             },
         }));

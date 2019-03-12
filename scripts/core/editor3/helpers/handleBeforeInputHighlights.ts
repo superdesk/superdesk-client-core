@@ -6,7 +6,6 @@ import {getDraftCharacterListForSelection} from './getDraftCharacterListForSelec
 import {resizeDraftSelection} from './resizeDraftSelection';
 import {styleNameBelongsToHighlight} from './highlights';
 
-
 /**
  * @ngdoc method
  * @name addCommentsForServer
@@ -60,7 +59,7 @@ export function handleBeforeInputHighlights(onChange, chars, editorState) {
     }
 
     const commonHighlightStyles = allHighlightStyles.filter(
-        (styleName) => characterStyles.every((stylesAtPosition) => stylesAtPosition.includes(styleName))
+        (styleName) => characterStyles.every((stylesAtPosition) => stylesAtPosition.includes(styleName)),
     );
 
     const nextInlineStyles = editorState.getCurrentInlineStyle()
@@ -71,7 +70,7 @@ export function handleBeforeInputHighlights(onChange, chars, editorState) {
         editorState.getCurrentContent(),
         editorState.getSelection(),
         chars,
-        nextInlineStyles
+        nextInlineStyles,
     );
     const nextEditorState = EditorState.push(editorState, nextContentstate, 'insert-characters');
 

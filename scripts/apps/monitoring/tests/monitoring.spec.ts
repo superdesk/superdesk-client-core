@@ -22,7 +22,6 @@ describe('monitoring', () => {
             var scope = $rootScope.$new(),
                 ctrl = $controller('Monitoring', {$scope: scope});
 
-
             expect(ctrl.hasSwimlaneView).toBe(1);
             $rootScope.$digest();
 
@@ -38,7 +37,7 @@ describe('monitoring', () => {
             expect(ctrl.columnsLimit).toBe(4);
             expect(preferencesService.update).toHaveBeenCalledWith(
                 {'monitoring:view:session': true},
-                'monitoring:view:session'
+                'monitoring:view:session',
             );
 
             // Switch back to list view
@@ -294,7 +293,7 @@ describe('monitoring', () => {
                 scope.$digest();
                 $timeout.flush(2000);
                 expect(search.mergeItems).toHaveBeenCalled();
-            })
+            }),
         );
 
         it('can edit non spiked item', inject(($controller, $rootScope, $compile, authoringWorkspace, session) => {

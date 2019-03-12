@@ -26,7 +26,7 @@ function getCustomMetadataFromContentState(contentState, highlightType) {
 
     const allStyleNames = getUniqueStyleNamesInDraftSelection(
         editorState,
-        getDraftSelectionForEntireContent(editorState)
+        getDraftSelectionForEntireContent(editorState),
     );
 
     return allStyleNames
@@ -73,7 +73,7 @@ export function setAllCustomDataForEditor(editorState, value) {
     const editorStateWithDataSet = EditorState.push(editorState, content, 'change-block-data');
     const editorStateWithSelectionRestored = EditorState.acceptSelection(
         editorStateWithDataSet,
-        currentSelectionToPreserve
+        currentSelectionToPreserve,
     );
 
     return editorStateWithSelectionRestored;

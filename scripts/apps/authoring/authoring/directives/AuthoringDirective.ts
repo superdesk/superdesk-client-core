@@ -271,7 +271,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                     modal.confirm(gettext('You have unsaved changes, do you want to continue?'))
                         .then(() => {
                             _exportHighlight(item._id);
-                        }
+                        },
                         );
                 } else {
                     _exportHighlight(item._id);
@@ -328,7 +328,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                     timePartOfTS,
                     timestamp,
                     timezone,
-                    fieldName
+                    fieldName,
                 );
 
                 if (!errors) {
@@ -382,7 +382,6 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                         item.publish_schedule, item.schedule_settings ? item.schedule_settings.time_zone : null,
                         gettext('Publish Schedule'));
                 }
-
 
                 if (errorMessage) {
                     notify.error(errorMessage);
@@ -583,7 +582,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                     modal.alert({
                         headerText: gettext('Resolving suggestions'),
                         bodyText: gettext(
-                            'Article cannot be published. Please accept or reject all suggestions first.'
+                            'Article cannot be published. Please accept or reject all suggestions first.',
                         ),
                     });
 
@@ -595,7 +594,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                         bodyText: gettext(
                             'This article contains unresolved comments.'
                             + 'Click on Cancel to go back to editing to'
-                            + 'resolve those comments or OK to ignore and proceed with publishing'
+                            + 'resolve those comments or OK to ignore and proceed with publishing',
                         ),
                         headerText: gettext('Resolving comments'),
                         okText: gettext('Ok'),
@@ -612,7 +611,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                             return modal.confirm({
                                 bodyText: gettext(
                                     'There are unpublished related items that won\'t be sent out as related items.'
-                        + ' Do you want to publish the article anyway?'
+                        + ' Do you want to publish the article anyway?',
                                 ),
                             }).then((ok) => ok ? performPublish() : false);
                         }
@@ -1002,7 +1001,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 if (data.item === $scope.item._id) {
                     notify.error(gettext(
                         'No formatters found for {{formats}} while publishing item having unique name.',
-                        {formats: data.formats.join(','), name: data.unique_name}
+                        {formats: data.formats.join(','), name: data.unique_name},
                     ));
                 }
             });

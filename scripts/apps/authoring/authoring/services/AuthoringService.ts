@@ -566,7 +566,6 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
 
             var desk = _.find(userDesks, {_id: currentItem.task.desk});
 
-
             if (!desk) {
                 action = angular.extend({}, helpers.DEFAULT_ACTIONS);
                 // user can action `update` even if the user is not a member.
@@ -613,7 +612,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         var now = moment();
         var schedule = moment.tz(
             timestamp.replace('+0000', '').replace('Z', ''), // avoid timezone info here
-            timezone || config.defaultTimezone
+            timezone || config.defaultTimezone,
         );
 
         if (!schedule.isValid()) {

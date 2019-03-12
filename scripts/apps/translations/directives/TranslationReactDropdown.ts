@@ -54,7 +54,7 @@ export function TranslationReactDropdown(item, className, TranslationService, no
                     disabled: isCurrentLang,
                     onClick: this.markTranslate,
                 },
-                language.label
+                language.label,
             );
         }
     }
@@ -67,7 +67,7 @@ export function TranslationReactDropdown(item, className, TranslationService, no
         return React.createElement(
             'li',
             {key: 'language-' + language._id},
-            React.createElement(TranslateBtn, {item: item, language: language})
+            React.createElement(TranslateBtn, {item: item, language: language}),
         );
     };
 
@@ -82,7 +82,7 @@ export function TranslationReactDropdown(item, className, TranslationService, no
             React.createElement(
                 'button',
                 {disabled: true},
-                noLanguagesLabel)
+                noLanguagesLabel),
         );
     };
 
@@ -93,6 +93,6 @@ export function TranslationReactDropdown(item, className, TranslationService, no
     return React.createElement(
         'ul',
         {className: className},
-        languages._items.length ? languages._items.map(createTranslateItem) : React.createElement(noLanguage)
+        languages._items.length ? languages._items.map(createTranslateItem) : React.createElement(noLanguage),
     );
 }

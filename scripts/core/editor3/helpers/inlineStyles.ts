@@ -26,7 +26,6 @@ export const acceptedInlineStyles = Object.values(inlineStyles);
 export function sanitizeContent(editorState, inlineStyles = acceptedInlineStyles) {
     let contentState = editorState.getCurrentContent();
 
-
     const ignoreStyle = (style) => inlineStyles.indexOf(style) === -1;
     const getSelection = (block, start, end) => SelectionState.createEmpty(block.getKey()).merge({
         anchorOffset: start,
@@ -44,22 +43,21 @@ export function sanitizeContent(editorState, inlineStyles = acceptedInlineStyles
                 const inlineStyle = block.getInlineStyleAt(start).find(ignoreStyle);
 
                 contentState = Modifier.removeInlineStyle(contentState, selection as SelectionState, inlineStyle);
-            }
+            },
         );
     });
 
     nextEditorState = EditorState.push(
         nextEditorState,
         contentState,
-        'change-inline-style'
+        'change-inline-style',
     );
 
     nextEditorState = EditorState.push(
         nextEditorState,
         contentState,
-        'apply-entity'
+        'apply-entity',
     );
 
     return nextEditorState;
 }
-

@@ -91,7 +91,7 @@ export function FilterConditionsController($scope, contentFilters, notify, modal
                         } else {
                             notify.error(gettext('Error: Failed to save filter condition.'));
                         }
-                    }
+                    },
                 )
                 .then(fetchFilterConditions);
         };

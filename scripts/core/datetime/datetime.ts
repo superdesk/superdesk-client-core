@@ -262,7 +262,7 @@ export default angular.module('superdesk.core.datetime', [
         tzResource.prototype.getTzNames = function() {
             return _.union(
                 _.keys(this.zones),
-                _.keys(this.links)
+                _.keys(this.links),
             ).sort();
         };
 

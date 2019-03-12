@@ -18,4 +18,3 @@ describe('core.editor3.html.from-html', () => {
         expect(computedResult).toBe(removeKeys(JSON.stringify(expectedResultJson)));
     });
 });
-

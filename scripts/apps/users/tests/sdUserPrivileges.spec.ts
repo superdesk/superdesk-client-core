@@ -117,7 +117,7 @@ describe('sdUserPrivileges directive', () => {
             isoScope.$digest();
 
             expect(isoScope.privileges).toEqual(
-                [{name: 'role_foo'}, {name: 'role_bar'}]
+                [{name: 'role_foo'}, {name: 'role_bar'}],
             );
         });
 
@@ -172,7 +172,7 @@ describe('sdUserPrivileges directive', () => {
                 userJohn,
                 {
                     privileges: [{name: 'can_edit'}],
-                }
+                },
             );
         });
 
@@ -190,9 +190,9 @@ describe('sdUserPrivileges directive', () => {
                 isoScope.$digest();
 
                 expect(isoScope.origPrivileges).toEqual(
-                    [{name: 'manager'}, {name: 'reviewer'}]
+                    [{name: 'manager'}, {name: 'reviewer'}],
                 );
-            }
+            },
         );
 
         it('issues system notification on success', inject((notify) => {
