@@ -1,7 +1,7 @@
 import createEditorStore from '..';
 
 describe('editor3.store', () => {
-    beforeEach(window['module'](($provide) => {
+    beforeEach(window.module(($provide) => {
         $provide.service('spellcheck', ($q) => ({
             setLanguage: jasmine.createSpy(),
             getDict: jasmine.createSpy().and.returnValue($q.when(null)),

@@ -18,7 +18,7 @@ describe('editor3.components.spellchecker-decorator', () => {
         return mount(<SpellcheckerError children={children} />, options);
     }
 
-    beforeEach(window['module'](($provide) => {
+    beforeEach(window.module(($provide) => {
         $provide.service('spellcheck', ($q) => ({
             suggest: jasmine.createSpy().and.returnValue($q.when(['this', 'tish', 'fish'])),
         }));
@@ -88,7 +88,7 @@ describe('editor3.components.spellchecker-context-menu', () => {
         {value: 'three', key: 'threeKey'},
     ];
 
-    beforeEach(window['module'](($provide) => {
+    beforeEach(window.module(($provide) => {
         $provide.service('spellcheck', ($q) => ({
             addWord: jasmine.createSpy().and.returnValue(null),
         }));

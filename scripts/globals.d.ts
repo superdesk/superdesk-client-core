@@ -45,6 +45,7 @@ interface Window {
     superdeskConfig: any;
     module: any;
     RunTansaProofing: any;
+    iframely: any;
 }
 
 // Allow importing json/html files
