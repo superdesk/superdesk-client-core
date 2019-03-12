@@ -9,7 +9,7 @@ declare const gettext: any;
 declare const KV: any; // qumu widgets
 
 // angular
-declare const angular: any;
+declare const angular: IAngularStatic;
 declare const inject: any;
 
 // testing
