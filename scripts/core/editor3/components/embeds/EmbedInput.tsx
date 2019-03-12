@@ -155,7 +155,7 @@ EmbedInputComponent.propTypes = {
     hidePopups: PropTypes.func.isRequired,
 };
 
-export const EmbedInput: React.StatelessComponent<any> = connect(null, {
+export const EmbedInput = connect(null, {
     embed,
     hidePopups,
 })(EmbedInputComponent);

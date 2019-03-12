@@ -19,6 +19,7 @@ declare const describe: any;
 declare const fdescribe: any;
 declare const xdescribe: any;
 declare const beforeEach: any;
+declare const afterEach: any;
 declare const expect: any;
 declare const it: any;
 declare const fit: any;
@@ -33,6 +34,7 @@ interface Window {
     $: any;
     _paq: any;
     GoogleAnalyticsObject: any;
+    ga: any;
     TimeoutHttpInterceptor: any;
     RequestService: any;
     clipboardData: any;
@@ -44,6 +46,10 @@ interface Window {
     module: any;
     RunTansaProofing: any;
 }
+
+// Allow importing json/html files
+declare module "*.json";
+declare module "*.html";
 
 // ------------------------------------------------------------------------------------------------
 // TYPES

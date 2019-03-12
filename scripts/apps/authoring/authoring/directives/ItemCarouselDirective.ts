@@ -7,7 +7,6 @@ import {waitForImagesToLoad, waitForAudioAndVideoToLoadMetadata} from 'core/help
 import {getSuperdeskType} from 'core/utils';
 import {gettext} from 'core/utils';
 
-
 const carouselContainerSelector = '.sd-media-carousel__content';
 
 /**
@@ -45,7 +44,6 @@ export function ItemCarouselDirective($timeout, notify) {
                 .filter((key) => allowed[key] === true)
                 .map((key) => 'application/superdesk.item.' + key);
 
-
             /*
              * Initialize carousel after all content is loaded
              * otherwise carousel height is messed up
@@ -65,9 +63,8 @@ export function ItemCarouselDirective($timeout, notify) {
 
                 scope.rel = field ? field.fieldId : null;
 
-                scope.carouselItems = _.sortBy(_.filter(items, (item) => item[item.fieldId]),
-                    [(item) => item[item.fieldId].order]);
-
+                scope.carouselItems = _.sortBy(_.filter(items, (item: any) => item[item.fieldId]),
+                    [(item: any) => item[item.fieldId].order]);
 
                 scope.$applyAsync(() => {
                     // waiting for angular to render items
@@ -79,8 +76,8 @@ export function ItemCarouselDirective($timeout, notify) {
                     const carouselImages = Array.from(elem.get(0).querySelectorAll(`${carouselContainerSelector} img`));
                     const carouselAudiosAndVideos = Array.from(
                         elem.get(0).querySelectorAll(
-                            `${carouselContainerSelector} video, ${carouselContainerSelector} audio`
-                        )
+                            `${carouselContainerSelector} video, ${carouselContainerSelector} audio`,
+                        ),
                     );
 
                     if (items.length < 1 || (carouselImages.length + carouselAudiosAndVideos.length < 1)) {
@@ -139,16 +136,15 @@ export function ItemCarouselDirective($timeout, notify) {
 
                     const item = angular.fromJson(event.originalEvent.dataTransfer.getData(type));
 
-
                     const itemAlreadyAddedAsMediaGallery = mediaItemsForCurrentField.some(
-                        (mediaItem) => mediaItem._id === item._id
+                        (mediaItem) => mediaItem._id === item._id,
                     );
 
                     if (currentUploads >= scope.maxUploads) {
                         notify.error(
                             gettext(
-                                'Media item was not added, because the field reached the limit of allowed media items.'
-                            )
+                                'Media item was not added, because the field reached the limit of allowed media items.',
+                            ),
                         );
                         return;
                     }
@@ -216,7 +212,7 @@ export function ItemCarouselDirective($timeout, notify) {
                     start: (event, ui) => {
                         ui.item.data('start_index',
                             ui.item.parent().find('.sd-media-carousel__thumb-strip-item')
-                                .index(ui.item)
+                                .index(ui.item),
                         );
                     },
                     stop: (event, ui) => {

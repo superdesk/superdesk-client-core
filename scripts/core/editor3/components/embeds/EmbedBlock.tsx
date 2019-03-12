@@ -181,4 +181,4 @@ const mapDispatchToProps = (dispatch) => ({
         dispatch(actions.mergeEntityDataByKey(blockKey, entityKey, valuesToMerge)),
 });
 
-export const EmbedBlock: React.StatelessComponent<any> = connect(null, mapDispatchToProps)(EmbedBlockComponent);
+export const EmbedBlock = connect(null, mapDispatchToProps)(EmbedBlockComponent);
