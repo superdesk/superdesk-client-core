@@ -25,7 +25,7 @@ module.exports = function(config) {
 
         preprocessors: {
             '**/*.html': ['ng-html2js'],
-            'scripts/tests.js': ['webpack', 'sourcemap'],
+            'scripts/tests.ts': ['webpack', 'sourcemap'],
         },
 
         webpack: webpackConfig,
@@ -40,7 +40,7 @@ module.exports = function(config) {
         },
 
         files: [
-            'scripts/tests.js',
+            'scripts/tests.ts',
             'scripts/**/*.html',
         ],
 
