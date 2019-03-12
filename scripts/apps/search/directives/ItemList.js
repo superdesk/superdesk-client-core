@@ -33,6 +33,7 @@ ItemList.$inject = [
     'storage',
     'keyboardManager',
     'session',
+    'content',
 ];
 
 /**
@@ -97,7 +98,8 @@ export function ItemList(
     metadata,
     storage,
     keyboardManager,
-    session
+    session,
+    content
 ) {
     // contains all the injected services to be passed down to child
     // components via props
@@ -128,6 +130,7 @@ export function ItemList(
         storage: storage,
         keyboardManager: keyboardManager,
         session: session,
+        content: content,
     };
 
     return {
