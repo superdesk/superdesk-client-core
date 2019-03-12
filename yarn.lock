@@ -9548,10 +9548,10 @@ superdesk-code-style@^1.1.1:
     eslint-plugin-jasmine "^2.9.1"
     eslint-plugin-react "^7.5.1"
 
-superdesk-ui-framework@1.8.4:
-  version "1.8.4"
-  resolved "https://registry.yarnpkg.com/superdesk-ui-framework/-/superdesk-ui-framework-1.8.4.tgz#4fc623f402314754fe111364f3e58e181c5de3a5"
-  integrity sha512-D6xLmTOXIeZ8BXv/Ed/NsuDUknoVTYko96my7c4WhKaZb1xyLJvFBaVNW/vLnR4i9grhC1gf1qXLSEICorve9w==
+superdesk-ui-framework@1.8.6:
+  version "1.8.6"
+  resolved "https://registry.yarnpkg.com/superdesk-ui-framework/-/superdesk-ui-framework-1.8.6.tgz#f1805f6d859124a10452824e44436e042754af9a"
+  integrity sha512-D7AC/jTw2cIG0q4d1jEO47cHIqggHeLXtpmUGjpfjYvKY4fUpUS9wePpC4vsjPl7BmTgdlIWTeKYhEAj+irQcA==
   dependencies:
     popper.js "1.14.4"
 
