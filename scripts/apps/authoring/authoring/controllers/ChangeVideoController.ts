@@ -203,6 +203,7 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
 
     var video, progressoutput, controlbar, inner, maskleft, maskright, barleft, barright, cbwrapper, iconplay, iconstop, time_line;
     var mins = 0, secs = 0, li = 0, cache_addThumbnail = {}, starttime = 0, endtime = 0;
+    var positionCropVideo = [] ,jcrop_api;;
 
     /**
      * @ngdoc method
@@ -607,7 +608,6 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
      * @description crop video
      * 
      */
-    var jcrop_api;
     $scope.cropVideo = (ratio) => {
         let elementVideo = document.getElementById('video');
         let ratio2;
@@ -665,7 +665,7 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
         $scope.editVideo.isDirty = true;
         
     }
-    var positionCropVideo = [];
+    
     function showCoords(c)
     {
         // variables can be accessed here as
