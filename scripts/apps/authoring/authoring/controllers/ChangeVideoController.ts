@@ -662,16 +662,15 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
                 break;
         }
 
-        
+        $scope.editVideo.isDirty = true;
         
     }
-
+    var positionCropVideo = [];
     function showCoords(c)
     {
         // variables can be accessed here as
         // c.x, c.y, c.x2, c.y2, c.w, c.h
-
-        console.log(`${c.x} - ${c.y} - ${c.x2} - ${c.y2} - ${c.w} - ${c.h}`);
+        positionCropVideo = [c.x , c.y ,c.x2 , c.y2 ,c.w , c.h];
     };    
     
 
