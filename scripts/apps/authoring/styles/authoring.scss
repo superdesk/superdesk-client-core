@@ -1968,3 +1968,109 @@ md-controlbars .control-bar {
     top: 15px;
     left: 20%;
 }
+
+//----------------------------------------
+/* Menu toggle button  (change-video.html)*/
+/* Important styles */
+// #toggle {
+//     display: block;
+//     width: 28px;
+//     height: 30px;
+//     margin: 30px auto 10px;
+//   }
+  
+  #toggle span:after,
+  #toggle span:before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: -9px;
+  }
+  #toggle span:after{
+    top: 9px;
+  }
+  #toggle span {
+    position: relative;
+    display: block;
+  }
+  
+  #toggle span,
+  #toggle span:after,
+  #toggle span:before {
+    width: 100%;
+    height: 5px;
+    background-color: #888;
+    transition: all 0.3s;
+    backface-visibility: hidden;
+    border-radius: 2px;
+  }
+  
+  /* on activation */
+  #toggle.on span {
+    background-color: transparent;
+  }
+  #toggle.on span:before {
+    transform: rotate(45deg) translate(5px, 5px);
+  }
+  #toggle.on span:after {
+    transform: rotate(-45deg) translate(7px, -8px);
+  }
+  #toggle.on + #menu {
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  /* menu appearance*/
+  #menu {
+    z-index: 999;
+    margin-top: -152px;
+    position: fixed;
+    color: #999;
+    width: 150px;
+    padding: 10px;
+    margin: auto;
+    font-family: "Segoe UI", Candara, "Bitstream Vera Sans", "DejaVu Sans", "Bitstream Vera Sans", "Trebuchet MS", Verdana, "Verdana Ref", sans-serif;
+    text-align: center;
+    border-radius: 4px;
+    background: white;
+    box-shadow: 0 1px 8px rgba(0,0,0,0.05);
+    /* just for this demo */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .4s;
+  }
+  #menu ul{
+    padding: 6px 20px 6px 40px;
+    white-space: nowrap;
+  }
+  #menu ul li span:hover{
+    background-color: rgba(255,255,255,.1);
+  }
+  #menu ul, li span {
+    list-style: none;
+    display: block;
+    margin: 0;
+    color: #888;
+    padding: 5px;
+  }
+
+//custom jcrop 
+.jcrop-dark {
+    .jcrop-handle {
+        opacity: 1 !important;
+        background-color: rgba(205, 205, 205, 0.5);
+        border-color: white;
+        border-radius: 50%;
+    }
+    .jcrop-vline, .jcrop-hline {
+        background: rgba(255, 255, 255, 0.3);
+        opacity: 1;
+    }
+
+    .jcrop-handle.ord-n, .jcrop-handle.ord-s, .jcrop-handle.ord-e, .jcrop-handle.ord-w {
+        //opacity: 0.3 !important;
+        display: none;
+    }
+}
+
+  

@@ -1,5 +1,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.0/utils/Draggable.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.0/TweenMax.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/jcrop/dist/jcrop.css">
+<script src="https://unpkg.com/jcrop"></script>
 <div class="modal__header modal__header--flex">
     <h3 class="modal__heading modal__heading--no-grow" ng-if="!nav || nav === 'view'">{{ :: activity.label}}</h3>
     <h3 class="modal__heading modal__heading--no-grow" ng-if="nav === 'video-edit'">{{ :: 'Edit video' | translate
@@ -72,7 +74,22 @@
                                         <path d="M0 0h24v24H0z" fill="none"/>
                                         <path d="M6 6h12v12H6z"/>
                                     </svg>
-                                    </i></button>
+                                    </i>
+                                </button>
+                                <button class="btn btn--ui-dark btn--hollow btn--icon-only btn--large btn-toggle"
+                                        ng-click="toggleMenu()" id="toggle">
+                                        <i style="color: #ffffff" class="icon-crop"></i>
+                                </button>
+                                <div id="menu">
+                                    <ul>
+                                      <li ng-click="cropVideo('1:1')"><span>1:1</span></li>
+                                      <li ng-click="cropVideo('4:3')"><span>4:3</span></li>
+                                      <li ng-click="cropVideo('16:9')"><span>16:9</span></li>
+                                      <!-- <li ng-click="cropVideo('clear')"><span>Clear crop</span></li> -->
+                                    </ul>
+                                </div>
+                                
+                                
                             </div>
                             <label class="sd-photo-preview__label name-boder">
                                 {{data.item.headline}}
