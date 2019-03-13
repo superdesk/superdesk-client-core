@@ -68,7 +68,7 @@ export class BaseListController {
 
     fetchItem(id) {
         console.warn('no api defined');
-        return new Promise((r) => r());
+        return Promise.resolve();
     }
 
     refresh(filterDesk) {
