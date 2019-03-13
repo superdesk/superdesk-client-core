@@ -299,13 +299,14 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
                 fr.readAsDataURL(files[0]);
             }
         }
-        if ('timeline' in $scope.data.metadata.renditions) {
+        if ('timeline' in $scope.data.metadata.renditions && $scope.data.metadata.renditions.timeline.length>0) {
             loadTimeLine($scope.data.metadata.renditions['timeline']);
         } else {
-            loadTimeLine($scope.data.metadata.renditions['timeline']);
+            loadTimeLine([]);
             api.save('video_edit', {action: 'timeline', item: $scope.data.metadata}).then(function (data) {
                 var list_thumbnails = data.result.timeline;
                 loadTimeLine(list_thumbnails);
+                $scope.data.metadata._etag = data._etag;
                 $scope.data.metadata.renditions['timeline'] = data.result.timeline;
                 $scope.data.isDirty = true;
             });
@@ -330,7 +331,7 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
                 var video = document.createElement("video");
                 video.width = 88;
                 video.height = 50;
-                if (list_thumbnails) {
+                if (list_thumbnails && list_thumbnails.length>0) {
                     video.poster = list_thumbnails[index].href;
                 }
                 video.onloadeddata = function () {
