@@ -201,9 +201,9 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
     }
 
 
-    var video, progressoutput, controlbar, inner, maskleft, maskright, barleft, barright, cbwrapper, iconplay, iconstop, time_line;
+    var video, progressoutput, controlbar, inner, maskleft, maskright, barleft, barright, cbwrapper, iconplay, iconstop;
     var mins = 0, secs = 0, li = 0, cache_addThumbnail = {}, starttime = 0, endtime = 0;
-    var positionCropVideo = [] ,jcrop_api;;
+    var positionCropVideo = [] ,jcrop_api;
 
     /**
      * @ngdoc method
@@ -223,7 +223,6 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
         maskright = document.getElementById('mask-right');
         iconplay = document.getElementById('icon-play');
         iconstop = document.getElementById('icon-stop');
-        time_line = document.getElementById('time-line');
         video.onplay = function () {
             iconplay.style.display = 'none';
             iconstop.style.display = 'initial';
@@ -270,14 +269,6 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
         };
 
         loadImage();
-        //add dynamic element for time-line
-        for(var i = 0 ; i < 13 ; i++){
-            var newNode = document.createElement('video');
-            newNode.className = "video-time-line";
-            newNode.setAttribute("style","width:88px ; height: 55px");
-            time_line.appendChild(newNode);
-        }
-        
 
         document.getElementById('file-upload').onchange = function (evt) {
             var tgt = evt.target || window.event.srcElement,
@@ -307,7 +298,7 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
                 fr.readAsDataURL(files[0]);
             }
         }
-        if ('timeline' in $scope.data.metadata.renditions && $scope.data.metadata.renditions.timeline.length>0) {
+        if ('timeline' in $scope.data.metadata.renditions && $scope.data.metadata.renditions.timeline.length > 0) {
             loadTimeLine($scope.data.metadata.renditions['timeline']);
         } else {
             loadTimeLine([]);
@@ -339,7 +330,7 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
                 var video = document.createElement("video");
                 video.width = 88;
                 video.height = 50;
-                if (list_thumbnails && list_thumbnails.length>0) {
+                if (list_thumbnails && list_thumbnails.length > 0) {
                     video.poster = list_thumbnails[index].href;
                 }
                 video.onloadeddata = function () {
@@ -571,34 +562,36 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
      * @name ChangeImageController#toggleMenu
      * @public
      * @description minu menu for button
-     * 
+     *
      */
     $scope.toggleMenu = () => {
         if (video.play) {
             video.pause();
-        } 
+        }
 
         var theToggle = document.getElementById('toggle');
+
         // hasClass
         function hasClass(elem, className) {
             return new RegExp(' ' + className + ' ').test(' ' + elem.className + ' ');
         }
+
         // toggleClass
         function toggleClass(elem, className) {
-            var newClass = ' ' + elem.className.replace( /[\t\r\n]/g, " " ) + ' ';
+            var newClass = ' ' + elem.className.replace(/[\t\r\n]/g, " ") + ' ';
             if (hasClass(elem, className)) {
-                while (newClass.indexOf(" " + className + " ") >= 0 ) {
-                    newClass = newClass.replace( " " + className + " " , " " );
+                while (newClass.indexOf(" " + className + " ") >= 0) {
+                    newClass = newClass.replace(" " + className + " ", " ");
                 }
                 elem.className = newClass.replace(/^\s+|\s+$/g, '');
             } else {
                 elem.className += ' ' + className;
             }
         }
-    
+
         toggleClass(theToggle, 'on');
         return false;
-    
+
     };
 
     /**
@@ -606,57 +599,57 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
      * @name ChangeImageController#cropVideo
      * @public
      * @description crop video
-     * 
+     *
      */
     $scope.cropVideo = (ratio) => {
         let elementVideo = document.getElementById('video');
         let ratio2;
-        if(ratio === "1:1")
-            ratio2 = 1/1;
-        if(ratio === "4:3")
-            ratio2 = 4/3;
-        if(ratio === "16:9")
-            ratio2 = 16/9;
+        if (ratio === "1:1")
+            ratio2 = 1 / 1;
+        if (ratio === "4:3")
+            ratio2 = 4 / 3;
+        if (ratio === "16:9")
+            ratio2 = 16 / 9;
         $('#video').Jcrop({
             onSelect: showCoords,
             onchange: showCoords,
             aspectRatio: ratio2,
             minSize: [200, 200],
-            trueSize: [elementVideo.clientWidth,elementVideo.clientHeight],
+            trueSize: [elementVideo.clientWidth, elementVideo.clientHeight],
             addClass: 'jcrop-dark',
-            bgOpacity:   .4
-            
-        },function(){
+            bgOpacity: .4
+
+        }, function () {
             jcrop_api = this;
         });
         let x = elementVideo.clientWidth;
         let y = elementVideo.clientHeight;
         switch (ratio) {
-            
+
             case "1:1":
                 jcrop_api.release();
-                jcrop_api.setOptions({ setSelect: [ 0, 0, elementVideo.clientHeight, elementVideo.clientHeight ] });
+                jcrop_api.setOptions({setSelect: [0, 0, elementVideo.clientHeight, elementVideo.clientHeight]});
                 break;
             case "4:3":
                 jcrop_api.release();
-                let xClassic = y *4 /3;
-                let yClassic = x *3 /4;
+                let xClassic = y * 4 / 3;
+                let yClassic = x * 3 / 4;
 
-                if(xClassic < x)
-                    jcrop_api.setOptions({ setSelect: [ 0, 0, xClassic, y ] });
+                if (xClassic < x)
+                    jcrop_api.setOptions({setSelect: [0, 0, xClassic, y]});
                 else
-                    jcrop_api.setOptions({ setSelect: [ 0, 0, x, yClassic ] });
-                
+                    jcrop_api.setOptions({setSelect: [0, 0, x, yClassic]});
+
                 break;
             case "16:9":
                 jcrop_api.release();
-                let xWide = y *4 /3;
-                let yWide = x *3 /4;
+                let xWide = y * 4 / 3;
+                let yWide = x * 3 / 4;
 
-                if(xWide < x)
-                    jcrop_api.setOptions({ setSelect: [ 0, 0, xWide, y ] });
+                if (xWide < x)
+                    jcrop_api.setOptions({setSelect: [0, 0, xWide, y]});
                 else
-                    jcrop_api.setOptions({ setSelect: [ 0, 0, x, yWide ] });
+                    jcrop_api.setOptions({setSelect: [0, 0, x, yWide]});
                 break;
             default:
                 break;
