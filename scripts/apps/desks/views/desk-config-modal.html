@@ -52,6 +52,14 @@
                             data-expiry-minutes="systemExpiry"
                             data-expiry-context="System">
                     </div>
+                    <div class="form__row form__row--flex" ng-if="isPublishedContentExpired()">
+                        <div class="form__row-item">
+                            <span title="{{:: 'If selected, content published from this desk will be not be expired' | translate}}">
+                                <span sd-switch ng-model="desk.edit.preserve_published_content"></span>
+                                <label translate>Preserve Published Content</label>
+                            </span>
+                        </div>
+                    </div>
                     <div class="form__row form__row--flex">
                         <div class="form__row-item">
                             <div class="sd-line-input sd-line-input--is-select sd-line-input--required">
