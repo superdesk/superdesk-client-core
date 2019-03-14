@@ -140,29 +140,29 @@ export function SendService(desks, api, $q, notify, $injector, multi, $rootScope
                 });
         } else if (!item.lock_user) {
             return api.save('move', {}, {task: data, allPackageItems: config.sendAllPackageItems}, item)
-                .then((item) => {
-                    $rootScope.$broadcast('item:update', {item: item});
+                .then((_item) => {
+                    $rootScope.$broadcast('item:update', {item: _item});
                     if (config.open) {
-                        $injector.get('authoringWorkspace').edit(item);
+                        $injector.get('authoringWorkspace').edit(_item);
                     }
-                    return item;
+                    return _item;
                 });
         }
 
-        function getData(config: any) {
-            var data: any = {
-                desk: config.desk,
+        function getData(_config: any) {
+            var _data: any = {
+                desk: _config.desk,
             };
 
-            if (config.stage) {
-                data.stage = config.stage;
+            if (_config.stage) {
+                _data.stage = _config.stage;
             }
 
-            if (config.macro) {
-                data.macro = config.macro;
+            if (_config.macro) {
+                _data.macro = _config.macro;
             }
 
-            return data;
+            return _data;
         }
     }
 

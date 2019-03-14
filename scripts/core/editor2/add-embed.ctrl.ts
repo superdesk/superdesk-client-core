@@ -1,4 +1,4 @@
-var embedCodeHandlers = require('./embedCodeHandlers');
+import embedCodeHandlers from './embedCodeHandlers';
 
 angular.module('superdesk.apps.editor2.embed', []).controller('SdAddEmbedController', SdAddEmbedController);
 
@@ -32,8 +32,8 @@ function SdAddEmbedController(embedService, $element, $timeout, $q, _,
                             embed = editor.generateMediaTag({url: data.url, altText: data.description});
                         }
                     }
-                    return $q.when(embed).then((embed) => ({
-                        body: embed,
+                    return $q.when(embed).then((embedElement) => ({
+                        body: embedElement,
                         provider: data.provider_name || EMBED_PROVIDERS.custom,
                     }));
                 });

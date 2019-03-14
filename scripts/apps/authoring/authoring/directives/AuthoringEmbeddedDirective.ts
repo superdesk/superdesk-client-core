@@ -55,9 +55,9 @@ export function AuthoringEmbeddedDirective(api, notify, $filter, config, deployC
                 deployConfig.all({
                     override: 'override_ednote_for_corrections',
                     template: 'override_ednote_template',
-                }).then((config) => {
-                    if (config.override) {
-                        overrideEdnote(config.template);
+                }).then((_config) => {
+                    if (_config.override) {
+                        overrideEdnote(_config.template);
                     }
                     scope.origItem = scope.item;
                 });

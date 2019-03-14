@@ -241,7 +241,7 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
 
             $scope.addCronTime = function() {
                 if ($scope.new_time && $scope.new_time.picked && _.findIndex($scope.cron_times,
-                    (t) => t == $scope.new_time.picked.substring(0, 5)) == -1) {
+                    (t) => t === $scope.new_time.picked.substring(0, 5)) === '-1') {
                     $scope.cron_times.push($scope.new_time.picked.substring(0, 5));
                     $scope.cron_times = _.sortBy($scope.cron_times);
                     $scope.new_time = {picked: null};
@@ -308,10 +308,10 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
             }
 
             $scope.remove = function(template) {
-                const desks = _.filter($scope.desks._items, (desk) =>
+                const _desks = _.filter($scope.desks._items, (desk) =>
                     desk.default_content_template === template._id);
 
-                const deskNames = desks.map((desk) => desk.name).join(', ');
+                const deskNames = _desks.map((desk) => desk.name).join(', ');
 
                 if (deskNames) {
                     return notify.error(
@@ -369,9 +369,9 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
 
             // fetch all desks for the current user and add them to
             // the list of filters.
-            desks.fetchDesks().then((desks) => {
+            desks.fetchDesks().then((_desks) => {
                 $scope.filters = $scope.filters.concat(
-                    desks._items.map((d) => ({label: d.name, value: d._id})),
+                    _desks._items.map((d) => ({label: d.name, value: d._id})),
                 );
             });
 

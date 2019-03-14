@@ -34,8 +34,8 @@ function UserImportController($scope, userImport) {
     $scope.importUser = function importUser(user) {
         $scope.error = null;
         userImport.importUser(user)
-            .then(function finishImport(user) {
-                $scope.resolve(user);
+            .then(function finishImport(importedUser) {
+                $scope.resolve(importedUser);
             }, function renderErrors(error) {
                 $scope.error = error;
             });

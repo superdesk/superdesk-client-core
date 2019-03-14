@@ -447,8 +447,8 @@ export function ItemList(
                  * @param {Element} elem
                  * @return {Boolean}
                  */
-                function isListEnd(elem) {
-                    return elem.scrollTop + elem.offsetHeight + 200 >= elem.scrollHeight;
+                function isListEnd(element) {
+                    return element.scrollTop + element.offsetHeight + 200 >= element.scrollHeight;
                 }
 
                 elem.on('keydown', listComponent.handleKey);

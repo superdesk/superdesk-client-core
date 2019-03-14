@@ -89,7 +89,7 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
                         if ('Notification' in window && Notification.permission !== 'denied') {
                             Notification.requestPermission((permission) => {
                                 if (permission === 'granted') {
-                                    new Notification(msg);
+                                    return new Notification(msg);
                                 }
                             });
                         }
@@ -191,7 +191,7 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
              * @name preferencesService#update
              * @private
              *
-             * @param {object} updates
+             * @param {object} updatesObject
              * @param {string} key
              *
              * @description
@@ -202,12 +202,12 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
              * only cache changes. In next $digest those changes are pushed to api.
              * This way we can update multiple preferences without getting etag conflicts.
              */
-            this.update = function(updates, key) {
+            this.update = function(updatesObject, key) {
                 if (!key || userPreferences[key]) {
-                    return scheduleUpdate(USER_PREFERENCES, updates);
+                    return scheduleUpdate(USER_PREFERENCES, updatesObject);
                 }
 
-                return scheduleUpdate(SESSION_PREFERENCES, updates);
+                return scheduleUpdate(SESSION_PREFERENCES, updatesObject);
             };
 
             var updates,
@@ -272,8 +272,8 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
             /**
              * Make sure all segments are presented in preferences.
              */
-            function initPreferences(preferences) {
-                if (_.get(preferences, 'user_preferences.desktop:notification.enabled')) {
+            function initPreferences(prefs) {
+                if (_.get(prefs, 'user_preferences.desktop:notification.enabled')) {
                     desktopNotification.requestPermission();
                 }
                 angular.forEach([
@@ -282,8 +282,8 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
                     ACTIVE_PRIVILEGES,
                     ACTIONS,
                 ], (key) => {
-                    if (_.isNil(preferences[key])) {
-                        preferences[key] = {};
+                    if (_.isNil(prefs[key])) {
+                        prefs[key] = {};
                     }
                 });
             }

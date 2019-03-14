@@ -40,7 +40,7 @@ export function MediaMetadata(userList, archiveService, metadata) {
             }
 
             scope.getLocaleName = function(terms, scheme) {
-                const term = terms.find((elem) => elem.scheme === scheme);
+                const term = terms.find((element) => element.scheme === scheme);
 
                 if (!term) {
                     return 'None';

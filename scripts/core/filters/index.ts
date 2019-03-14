@@ -16,7 +16,7 @@ export default angular.module('superdesk.core.filters', [])
 
         return texts.join('\n');
     })
-    .filter('mergeWords', ['lodash', function(_) {
+    .filter('mergeWords', [function() {
         return function(array, propertyName, schemeName, returnArray) {
             var subjectMerged = [];
 

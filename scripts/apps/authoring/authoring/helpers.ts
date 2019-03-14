@@ -246,15 +246,15 @@ export function cutoffPreviousRenditions(update, origItem) {
         // image was changed
         if (updateRenditions.original.href !== origRenditions.original.href) {
             // walk through all renditions
-            Object.keys(origRenditions).forEach((key) => {
+            Object.keys(origRenditions).forEach((_key) => {
                 // ignore default renditions, because all images have default renditions
-                if (!(key in defaultRenditions) &&
-                    key in updateRenditions &&
-                    origRenditions[key] !== null &&
+                if (!(_key in defaultRenditions) &&
+                    _key in updateRenditions &&
+                    origRenditions[_key] !== null &&
                     // image was changed, but rendition(s) still equal
-                    origRenditions[key].href === updateRenditions[key].href) {
+                    origRenditions[_key].href === updateRenditions[_key].href) {
                     // remove rendition from previously used image
-                    delete updateRenditions[key];
+                    delete updateRenditions[_key];
                 }
             });
         }

@@ -15,12 +15,12 @@ export function DeskeditStages(api, WizardHandler, tasks, $rootScope, desks, not
             scope.systemExpiry = deployConfig.getSync('content_expiry_minutes');
 
             if (scope.desk.edit && scope.desk.edit.name) {
-                macros.getByDesk(scope.desk.edit.name, true).then((macros) => {
-                    scope.macros = _.reject(macros, {action_type: 'interactive'});
+                macros.getByDesk(scope.desk.edit.name, true).then((_macros) => {
+                    scope.macros = _.reject(_macros, {action_type: 'interactive'});
                 });
             } else {
-                macros.get(true).then((macros) => {
-                    scope.macros = _.reject(macros, {action_type: 'interactive'});
+                macros.get(true).then((_macros) => {
+                    scope.macros = _.reject(_macros, {action_type: 'interactive'});
                 });
             }
 

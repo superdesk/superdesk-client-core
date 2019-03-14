@@ -85,8 +85,8 @@ function escapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-EditorService.$inject = ['spellcheck', '$q', 'lodash', 'renditions', 'editorUtils'];
-function EditorService(spellcheck, $q, _, renditionsService, utils) {
+EditorService.$inject = ['spellcheck', '$q', 'renditions', 'editorUtils'];
+function EditorService(spellcheck, $q, renditionsService, utils) {
     this.settings = {spellcheck: true};
 
     this.version = () => '2';
@@ -671,10 +671,10 @@ function SdTextEditorBlockEmbedController($timeout, editor, renditions, config) 
                 return false;
             }
             self.model.loading = true;
-            renditions.crop(picture).then((picture) => {
+            renditions.crop(picture).then((croppedPicture) => {
                 // update block
-                self.model.association = picture;
-                editor.generateMediaTag(picture).then((img) => {
+                self.model.association = croppedPicture;
+                editor.generateMediaTag(croppedPicture).then((img) => {
                     self.model.body = img;
                 });
                 // update caption
@@ -839,7 +839,7 @@ angular.module('superdesk.apps.editor2', [
                 },
             };
         }])
-    .directive('sdTextEditor', ['$timeout', 'lodash', function($timeout, _) {
+    .directive('sdTextEditor', ['$timeout', function($timeout) {
         return {
             scope: {type: '=', config: '=', editorformat: '=', language: '=', associations: '=?'},
             require: ['sdTextEditor', 'ngModel'],
@@ -1181,8 +1181,8 @@ angular.module('superdesk.apps.editor2', [
                                 scope.medium.subscribe(eventName, updateAddContentButton);
                             });
                         // listen updates by medium editor to update the model
-                        scope.medium.subscribe('editableInput', (e, elem) => {
-                            elem.querySelectorAll('span[style]').forEach((span) => {
+                        scope.medium.subscribe('editableInput', (e, element) => {
+                            element.querySelectorAll('span[style]').forEach((span) => {
                                 span.before(span.firstChild);
                                 span.remove();
                             });
@@ -1207,9 +1207,9 @@ angular.module('superdesk.apps.editor2', [
                         });
 
                         // hide toolbar if element is under header
-                        scope.medium.subscribe('positionedToolbar', (e, elem) => {
+                        scope.medium.subscribe('positionedToolbar', (e, element) => {
                             var toolbar = scope.medium.getExtensionByName('toolbar'),
-                                elemPosition = elem.getBoundingClientRect();
+                                elemPosition = element.getBoundingClientRect();
 
                             if (toolbar) {
                                 toolbar.toolbar.hidden = elemPosition.top + elemPosition.height < TOP_OFFSET;
@@ -1416,8 +1416,8 @@ angular.module('superdesk.apps.editor2', [
                         scope.node.parentNode.classList.remove(TYPING_CLASS);
                     }
                 },
-                controller: ['$scope', 'editor', 'api', 'superdesk', 'renditions', 'config',
-                    function(scope, editor, api, superdesk, renditions, config) {
+                controller: ['$scope', 'api', 'superdesk', 'renditions',
+                    function(scope, api, superdesk, renditions) {
                         var self = this;
 
                         angular.extend(self, {
@@ -1478,11 +1478,11 @@ angular.module('superdesk.apps.editor2', [
                                             return media;
                                         }
                                         return renditions.ingest(media);
-                                    })()).then((media) => {
-                                        editor.generateMediaTag(media).then((imgTag) => {
+                                    })()).then((mediaObject) => {
+                                        editor.generateMediaTag(mediaObject).then((imgTag) => {
                                             angular.extend(block, {
                                                 body: imgTag,
-                                                association: media,
+                                                association: mediaObject,
                                                 loading: false,
                                             });
                                             $timeout(self.sdEditorCtrl.commitChanges);

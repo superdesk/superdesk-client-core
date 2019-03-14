@@ -3,8 +3,8 @@ import {gettext} from 'core/utils';
 
 import './styles.scss';
 
-RoutingWidgetController.$inject = ['desks', 'privileges', 'api', 'notify', 'gettext', '$scope'];
-function RoutingWidgetController(desks, privileges, api, notify, gettext, $scope) {
+RoutingWidgetController.$inject = ['desks', 'privileges', 'api', 'notify', '$scope'];
+function RoutingWidgetController(desks, privileges, api, notify, $scope) {
     this.canManage = privileges.privileges.desk_routing;
 
     desks.initialize().then(() => {
@@ -51,7 +51,9 @@ function RoutingWidgetController(desks, privileges, api, notify, gettext, $scope
     $scope.$on('desks:closed', (event, extra) => {
         // update open/close status for routedFrom
         this.routedFrom.forEach((desk) => {
-            desk._id === extra._id && angular.extend(desk, {is_closed: extra.is_closed});
+            if (desk._id === extra._id) {
+                angular.extend(desk, {is_closed: extra.is_closed});
+            }
         });
 
         // update open/close status for current desk
@@ -73,7 +75,9 @@ function TopMenuInfoDirective(desks, $timeout) {
                 const desk = desks.getCurrentDesk();
                 const selected = document.getElementById('selected-desk');
 
-                selected && selected.classList.remove('desk--closed');
+                if (selected) {
+                    selected.classList.remove('desk--closed');
+                }
                 scope.routingFrom = scope.routingTo = null;
 
                 if (!desk) {
@@ -83,7 +87,9 @@ function TopMenuInfoDirective(desks, $timeout) {
                 scope.$applyAsync(() => { // using debounce, so it must trigger angular rendering
                     if (desk.is_closed) {
                         scope.routingTo = get(desks.deskLookup[desk.closed_destination], 'name', '');
-                        selected && selected.classList.add('desk--closed');
+                        if (selected) {
+                            selected.classList.add('desk--closed');
+                        }
                     } else {
                         scope.routingFrom = getRoutingFrom(desk);
                     }

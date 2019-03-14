@@ -100,39 +100,42 @@ export class ContentAPISearchService {
         criteria.sort = this.sort.formatSort(sort.field, sort.dir);
         criteria.page = 1;
 
-        const buildRangeFilter = (params, filters) => {
+        const buildRangeFilter = (paramsObject, _filters) => {
             // created & modified date filters
-            let hasParams = params.beforefirstcreated || params.afterfirstcreated ||
-                params.beforeversioncreated || params.afterversioncreated;
+            let hasParams = paramsObject.beforefirstcreated || paramsObject.afterfirstcreated ||
+                paramsObject.beforeversioncreated || paramsObject.afterversioncreated;
             let zeroHourSuffix = 'T00:00:00',
                 midnightSuffix = 'T23:59:59';
 
             if (hasParams) {
                 let range: any = {firstcreated: {}, versioncreated: {}};
 
-                if (params.beforefirstcreated) {
-                    range.firstcreated.lte = this.search.formatDate(params.beforefirstcreated, midnightSuffix);
+                if (paramsObject.beforefirstcreated) {
+                    range.firstcreated.lte = this.search.formatDate(paramsObject.beforefirstcreated, midnightSuffix);
                 }
 
-                if (params.afterfirstcreated) {
-                    range.firstcreated.gte = this.search.formatDate(params.afterfirstcreated, zeroHourSuffix);
+                if (paramsObject.afterfirstcreated) {
+                    range.firstcreated.gte = this.search.formatDate(paramsObject.afterfirstcreated, zeroHourSuffix);
                 }
 
-                if (params.beforeversioncreated) {
-                    range.versioncreated.lte = this.search.formatDate(params.beforeversioncreated, midnightSuffix);
+                if (paramsObject.beforeversioncreated) {
+                    range.versioncreated.lte =
+                        this.search.formatDate(paramsObject.beforeversioncreated, midnightSuffix);
                 }
 
-                if (params.afterversioncreated) {
-                    range.versioncreated.gte = this.search.formatDate(params.afterversioncreated, zeroHourSuffix);
+                if (paramsObject.afterversioncreated) {
+                    range.versioncreated.gte = this.search.formatDate(paramsObject.afterversioncreated, zeroHourSuffix);
                 }
 
-                filters.push({range: range});
-            } else if (params.after) {
+                return [..._filters, { range }];
+            } else if (paramsObject.after) {
                 let range: any = {firstcreated: {}};
 
-                range.firstcreated.gte = params.after;
-                filters.push({range: range});
+                range.firstcreated.gte = paramsObject.after;
+                return [..._filters, { range }];
             }
+
+            return _filters;
         };
 
         if (params.subscriber) {
@@ -146,7 +149,7 @@ export class ContentAPISearchService {
 
         let filters = this._getFilters(params);
 
-        buildRangeFilter(params, filters);
+        filters = buildRangeFilter(params, filters);
 
         if (filters.length > 0) {
             criteria.filter = JSON.stringify(filters);

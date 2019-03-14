@@ -111,9 +111,9 @@ class LinkFunction {
     render(items, next, force?) {
         this.scope.loading = true;
 
-        const setScopeItems = (items, force) => {
-            this.scope.items = this.search.mergeItems(items, this.scope.items, next, force);
-            this.scope.total = items._meta.total;
+        const setScopeItems = (_items, _force) => {
+            this.scope.items = this.search.mergeItems(_items, this.scope.items, next, _force);
+            this.scope.total = _items._meta.total;
             this.scope.loading = false;
         };
 

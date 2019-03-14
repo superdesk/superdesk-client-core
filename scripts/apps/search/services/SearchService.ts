@@ -285,46 +285,46 @@ export function SearchService($location, config, session, multi,
             });
         }
 
-        function buildGeneralFilters(params, query) {
-            if (params.urgency) {
-                query.post_filter({terms: {urgency: JSON.parse(params.urgency)}});
+        function buildGeneralFilters(paramsObject, query) {
+            if (paramsObject.urgency) {
+                query.post_filter({terms: {urgency: JSON.parse(paramsObject.urgency)}});
             }
 
-            if (params.priority) {
-                query.post_filter({terms: {priority: JSON.parse(params.priority)}});
+            if (paramsObject.priority) {
+                query.post_filter({terms: {priority: JSON.parse(paramsObject.priority)}});
             }
 
-            if (params.source) {
-                query.post_filter({terms: {source: JSON.parse(params.source)}});
+            if (paramsObject.source) {
+                query.post_filter({terms: {source: JSON.parse(paramsObject.source)}});
             }
 
             // used by aap multimedia datalayer
-            if (params.creditqcode) {
-                query.post_filter({terms: {credit: _.map(JSON.parse(params.creditqcode), 'value')}});
+            if (paramsObject.creditqcode) {
+                query.post_filter({terms: {credit: _.map(JSON.parse(paramsObject.creditqcode), 'value')}});
             }
 
-            if (params.category) {
-                query.post_filter({terms: {'anpa_category.name': JSON.parse(params.category)}});
+            if (paramsObject.category) {
+                query.post_filter({terms: {'anpa_category.name': JSON.parse(paramsObject.category)}});
             }
 
-            if (params.genre) {
-                query.post_filter({terms: {'genre.name': JSON.parse(params.genre)}});
+            if (paramsObject.genre) {
+                query.post_filter({terms: {'genre.name': JSON.parse(paramsObject.genre)}});
             }
 
-            if (params.desk) {
-                query.post_filter({terms: {'task.desk': JSON.parse(params.desk)}});
+            if (paramsObject.desk) {
+                query.post_filter({terms: {'task.desk': JSON.parse(paramsObject.desk)}});
             }
 
-            if (params.legal) {
-                query.post_filter({terms: {'flags.marked_for_legal': JSON.parse(params.legal)}});
+            if (paramsObject.legal) {
+                query.post_filter({terms: {'flags.marked_for_legal': JSON.parse(paramsObject.legal)}});
             }
 
-            if (params.sms) {
-                query.post_filter({terms: {'flags.marked_for_sms': JSON.parse(params.sms)}});
+            if (paramsObject.sms) {
+                query.post_filter({terms: {'flags.marked_for_sms': JSON.parse(paramsObject.sms)}});
             }
 
-            if (params.language) {
-                query.post_filter({terms: {language: JSON.parse(params.language)}});
+            if (paramsObject.language) {
+                query.post_filter({terms: {language: JSON.parse(paramsObject.language)}});
             }
         }
 
@@ -333,14 +333,14 @@ export function SearchService($location, config, session, multi,
           * @param {String} params - search parameters
           * @param {Object} query - Query object
           */
-        function buildFilters(params: any, query) {
+        function buildFilters(paramsObject: any, query) {
             // date filters start
             var facetrange = {};
 
             // inject custom field filters { fieldname: 'string(IDateRange)' }
-            if (typeof params.customFields !== 'undefined') {
-                for (let fieldname of params.customFields) {
-                    let range = params.customFields[fieldname];
+            if (typeof paramsObject.customFields !== 'undefined') {
+                for (let fieldname of paramsObject.customFields) {
+                    let range = paramsObject.customFields[fieldname];
 
                     if (typeof dateRangesByKey[range] !== 'undefined') {
                         facetrange[fieldname] = dateRangesByKey[range].elasticSearchDateRange;
@@ -349,25 +349,25 @@ export function SearchService($location, config, session, multi,
             }
 
             getDateFilters().forEach(({fieldname}) => {
-                const dateRangeKey = params[fieldname];
+                const dateRangeKey = paramsObject[fieldname];
 
-                if (params[fieldname] != null && dateRangesByKey[dateRangeKey] != null) {
+                if (paramsObject[fieldname] != null && dateRangesByKey[dateRangeKey] != null) {
                     // handle predefined ranges
                     facetrange[fieldname] = dateRangesByKey[dateRangeKey].elasticSearchDateRange;
                 } else {
                     // handle manual ranges
 
-                    if (params[fieldname + 'to'] != null) {
+                    if (paramsObject[fieldname + 'to'] != null) {
                         if (facetrange[fieldname] == null) {
                             facetrange[fieldname] = {};
                         }
-                        facetrange[fieldname].lte = formatDate(params[fieldname + 'to'], midnightSuffix);
+                        facetrange[fieldname].lte = formatDate(paramsObject[fieldname + 'to'], midnightSuffix);
                     }
-                    if (params[fieldname + 'from'] != null) {
+                    if (paramsObject[fieldname + 'from'] != null) {
                         if (facetrange[fieldname] == null) {
                             facetrange[fieldname] = {};
                         }
-                        facetrange[fieldname].gte = formatDate(params[fieldname + 'from'], zeroHourSuffix);
+                        facetrange[fieldname].gte = formatDate(paramsObject[fieldname + 'from'], zeroHourSuffix);
                     }
                 }
             });
@@ -377,15 +377,15 @@ export function SearchService($location, config, session, multi,
             }
             // date filters end
 
-            if (params.type) {
+            if (paramsObject.type) {
                 var type = {
-                    type: JSON.parse(params.type),
+                    type: JSON.parse(paramsObject.type),
                 };
 
                 query.post_filter({terms: type});
             }
 
-            buildGeneralFilters(params, query);
+            buildGeneralFilters(paramsObject, query);
         }
 
         /**

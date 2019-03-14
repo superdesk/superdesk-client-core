@@ -1,4 +1,4 @@
-require('angular-dynamic-locale');
+import 'angular-dynamic-locale';
 import {addLangOverride} from 'core/lang';
 import moment from 'moment';
 

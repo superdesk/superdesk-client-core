@@ -188,16 +188,18 @@ class Editor3Directive {
         const store = createEditorStore(this);
 
         // bind the directive value attribute bi-directionally between Angular and Redux.
-        this.bindToValue && $scope.$watch('vm.value', (newValue, oldValue) => {
-            const text = (newValue || '')
-                .replace(/<ins/g, '<code')
-                .replace(/<\/ins>/g, '</code>');
-            const content = getContentStateFromHtml(text);
-            const state = store.getState();
-            const editorState = EditorState.push(state.editorState, content, 'insert-characters');
+        if (this.bindToValue) {
+            $scope.$watch('vm.value', (newValue, oldValue) => {
+                const text = (newValue || '')
+                    .replace(/<ins/g, '<code')
+                    .replace(/<\/ins>/g, '</code>');
+                const content = getContentStateFromHtml(text);
+                const state = store.getState();
+                const editorState = EditorState.push(state.editorState, content, 'insert-characters');
 
-            store.dispatch(changeEditorState(editorState));
-        });
+                store.dispatch(changeEditorState(editorState));
+            });
+        }
 
         // bind the directive refreshTrigger attribute bi-directionally between Angular and Redux.
         $scope.$watch('vm.refreshTrigger', (val, old) => {

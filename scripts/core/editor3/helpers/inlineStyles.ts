@@ -23,10 +23,10 @@ export const acceptedInlineStyles = Object.values(inlineStyles);
  * @returns {ContentState}
  */
 
-export function sanitizeContent(editorState, inlineStyles = acceptedInlineStyles) {
+export function sanitizeContent(editorState, styles = acceptedInlineStyles) {
     let contentState = editorState.getCurrentContent();
 
-    const ignoreStyle = (style) => inlineStyles.indexOf(style) === -1;
+    const ignoreStyle = (style) => styles.indexOf(style) === -1;
     const getSelection = (block, start, end) => SelectionState.createEmpty(block.getKey()).merge({
         anchorOffset: start,
         focusOffset: end,

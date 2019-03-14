@@ -5,6 +5,7 @@ interface IProps {
     item: any;
 }
 
+// tslint:disable-next-line:class-name
 export class slugline extends React.Component<IProps> {
     render() {
         if (this.props.item.slugline) {

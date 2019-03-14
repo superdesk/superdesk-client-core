@@ -182,11 +182,11 @@ export default angular.module('superdesk.core.services.data', [])
                  * @name DataAdapter#reset
                  * @public
                  *
-                 * @param {Object} params Paramters.
+                 * @param {Object} paramsObject Paramters.
                  *
                  * @description Reset default params
                  */
-                this.reset = function(params) {
+                this.reset = function(paramsObject) {
                     cancelWatch();
 
                     defaultParams = angular.extend({
@@ -196,7 +196,7 @@ export default angular.module('superdesk.core.services.data', [])
                         sort: [],
                         filters: [],
                         ttl: 0,
-                    }, params);
+                    }, paramsObject);
 
                     // main loop - update when query criteria change
                     cancelWatch = $rootScope.$watchCollection(() => getQueryCriteria(), (criteria) => {

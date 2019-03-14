@@ -540,10 +540,10 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
             $scope.runTansa = function() {
                 if (window.RunTansaProofing) {
-                    const editor = editorResolver.get();
+                    const _editor = editorResolver.get();
 
-                    if (editor && editor.version() === '3') {
-                        $('#editor3Tansa').html(editor.getHtmlForTansa());
+                    if (_editor && _editor.version() === '3') {
+                        $('#editor3Tansa').html(_editor.getHtmlForTansa());
                     }
 
                     switch ($scope.item.language) {
@@ -566,10 +566,10 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             };
 
             function afterTansa(e, isCancelled) {
-                const editor = editorResolver.get();
+                const _editor = editorResolver.get();
 
-                if (editor && editor.version() === '3') {
-                    editor.setHtmlFromTansa($('#editor3Tansa').html());
+                if (_editor && _editor.version() === '3') {
+                    _editor.setHtmlFromTansa($('#editor3Tansa').html());
                 }
             }
 
@@ -1034,7 +1034,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
              */
             function isMediaField(fieldId) {
                 var parts = mediaIdGenerator.getFieldParts(fieldId);
-                var field = _.find($scope.fields, (field) => field._id === parts[0]);
+                var field = _.find($scope.fields, (_field) => _field._id === parts[0]);
 
                 return field && field.field_type === 'media';
             }
@@ -1050,7 +1050,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             function computeMediaFieldVersions(fieldId) {
                 $scope.mediaFieldVersions[fieldId] = [];
 
-                var field = _.find($scope.fields, (field) => field._id === fieldId);
+                var field = _.find($scope.fields, (_field) => _field._id === fieldId);
 
                 if (field) {
                     var multipleItems = _.get(field, 'field_options.multiple_items.enabled');
@@ -1136,7 +1136,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
              * @return {String}
              */
             $scope.getNewMediaFieldId = (fieldId) => {
-                var field = _.find($scope.fields, (field) => field._id === fieldId);
+                var field = _.find($scope.fields, (_field) => _field._id === fieldId);
                 var multipleItems = field ? _.get(field, 'field_options.multiple_items.enabled') : false;
                 var parts = mediaIdGenerator.getFieldParts(fieldId);
                 var newIndex = multipleItems ? 1 : null;

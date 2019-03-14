@@ -121,7 +121,7 @@ export class AtomicBlockParser {
         const id = `${type} {id: "editor_${key}"}`;
 
         if (desc) {
-            content + `\n    <figcatpion>${desc}</figcaption>`;
+            content += `\n    <figcatpion>${desc}</figcaption>`;
         }
 
         return `

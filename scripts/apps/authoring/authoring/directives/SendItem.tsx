@@ -79,13 +79,13 @@ export function SendItem($q, api, search, desks, notify, authoringWorkspace,
                     });
             };
 
-            function activateConfig(config, oldConfig) {
-                if (scope.mode !== 'authoring' && config !== oldConfig) {
-                    scope.isActive = !!config;
+            function activateConfig(_config, oldConfig) {
+                if (scope.mode !== 'authoring' && _config !== oldConfig) {
+                    scope.isActive = !!_config;
                     scope.item = scope.isActive ? {} : null;
                     scope.multiItems = multi.count ? multi.getItems() : null;
-                    scope.config = config;
-                    scope.isPackage = config != null && config.isPackage;
+                    scope.config = _config;
+                    scope.isPackage = _config != null && _config.isPackage;
                     activate();
                 }
             }

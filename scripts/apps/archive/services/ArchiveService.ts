@@ -133,11 +133,11 @@ export function ArchiveService(desks, session, api, $q, search, $location, confi
      * Returns versions of the item.
      *
      * @param {Object} item
-     * @param {Object} desks deskService
+     * @param {Object} deskService
      * @param {String} versionType one of versions, operations
      * @return list of object where each object is a version of the item
      */
-    this.getVersions = function(item, desks, versionType) {
+    this.getVersions = function(item, deskService, versionType) {
         if (this.isLegal(item)) {
             return api.find('legal_archive', item._id, {version: 'all', max_results: 200})
                 .then((result) => {
@@ -166,18 +166,19 @@ export function ArchiveService(desks, session, api, $q, search, $location, confi
                 _.each(result._items, (version) => {
                     if (version.task) {
                         if (version.task.desk) {
-                            var versiondesk = desks.deskLookup[version.task.desk];
+                            var versiondesk = deskService.deskLookup[version.task.desk];
 
                             version.desk = versiondesk && versiondesk.name;
                         }
                         if (version.task.stage) {
-                            var versionstage = desks.stageLookup[version.task.stage];
+                            var versionstage = deskService.stageLookup[version.task.stage];
 
                             version.stage = versionstage && versionstage.name;
                         }
                     }
                     if (version.version_creator || version.original_creator) {
-                        var versioncreator = desks.userLookup[version.version_creator || version.original_creator];
+                        var versioncreator =
+                            deskService.userLookup[version.version_creator || version.original_creator];
 
                         version.creator = versioncreator && versioncreator.display_name || 'System';
                     }

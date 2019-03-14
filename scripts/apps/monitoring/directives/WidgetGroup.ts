@@ -72,29 +72,29 @@ export function WidgetGroup(search, api, superdesk, desks, cards, $timeout, $q,
                 if (item._type === 'ingest') {
                     var activity = superdesk.findActivities({action: 'list', type: 'ingest'}, item)[0];
 
-                    activityService.start(activity, {data: {item: item}}).then((item) => {
-                        initEdit(item);
+                    activityService.start(activity, {data: {item: item}}).then((_item) => {
+                        initEdit(_item);
                     });
                 } else {
                     initEdit(item);
                 }
 
-                function initEdit(item) {
-                    superdesk.intent('edit', 'item', item).then(null, () => {
-                        superdesk.intent('view', 'item', item);
+                function initEdit(_item) {
+                    superdesk.intent('edit', 'item', _item).then(null, () => {
+                        superdesk.intent('view', 'item', _item);
                     });
                 }
             };
 
-            function getProvider(criteria) {
+            function getProvider(_criteria) {
                 var provider = 'archive';
 
                 if (scope.stage.type && (desks.isOutputType(scope.stage.type) || scope.stage.type === 'search')) {
                     provider = 'search';
                 }
 
-                if (criteria.repo && criteria.repo.indexOf(',') === -1) {
-                    provider = criteria.repo;
+                if (_criteria.repo && _criteria.repo.indexOf(',') === -1) {
+                    provider = _criteria.repo;
                 }
 
                 return provider;

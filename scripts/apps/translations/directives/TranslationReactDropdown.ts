@@ -41,9 +41,9 @@ export function TranslationReactDropdown(item, className, TranslationService, no
         }
 
         render() {
-            var item = this.props.item;
+            var _item = this.props.item;
             var language = this.props.language;
-            var isCurrentLang = item.language === language.language;
+            var isCurrentLang = _item.language === language.language;
 
             if (!language.destination) {
                 return false;

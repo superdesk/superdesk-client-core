@@ -240,10 +240,10 @@ export function TagService($location, desks, userList, metadata, search,
         if (dateFilter != null) {
             removeDateFacet(type, dateFilter);
         } else {
-            var search = $location.search();
+            var _search = $location.search();
 
-            if (search[type]) {
-                var keys = JSON.parse(search[type]);
+            if (_search[type]) {
+                var keys = JSON.parse(_search[type]);
 
                 keys.splice(keys.indexOf(key), 1);
                 if (keys.length > 0) {

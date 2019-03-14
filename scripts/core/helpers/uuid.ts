@@ -1,3 +1,4 @@
+/* tslint:disable:no-bitwise */
 // https://gist.github.com/jed/982883
 export function uuid(a?) {
     return a // if the placeholder was passed, return

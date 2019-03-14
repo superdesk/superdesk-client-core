@@ -22,7 +22,7 @@ export class ContactsController {
     preferencesService: any;
     preferencesUpdate: any;
 
-    constructor($scope, $location, pageTitle, preferencesService, metadata, privileges, contacts, _) {
+    constructor($scope, $location, pageTitle, preferencesService, metadata, privileges, contacts) {
         this.$scope = $scope;
         this.$location = $location;
         this.contacts = contacts;
@@ -124,4 +124,4 @@ export class ContactsController {
     }
 }
 ContactsController.$inject = ['$scope', '$location', 'pageTitle',
-    'preferencesService', 'metadata', 'privileges', 'contacts', 'lodash'];
+    'preferencesService', 'metadata', 'privileges', 'contacts'];

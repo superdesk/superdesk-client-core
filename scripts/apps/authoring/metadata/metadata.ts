@@ -705,8 +705,8 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                 if ($event.altKey) {
                     let activeTree = scope.tree[term ? term[scope.uniqueField] : null];
 
-                    return angular.forEach(activeTree, (term) => {
-                        scope.selectTerm(term, $event);
+                    return angular.forEach(activeTree, (_term) => {
+                        scope.selectTerm(_term, $event);
                     });
                 }
 
@@ -794,7 +794,7 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                     }
 
                     if (scope.cv && scope.cv.selection_type === SINGLE_SELECTION) {
-                        t = _.filter(t, (term) => term.scheme !== scope.cv._id);
+                        t = _.filter(t, (_term) => _term.scheme !== scope.cv._id);
                     }
 
                     // build object
@@ -818,8 +818,8 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                     addTerm(term);
 
                     if (includeParent) {
-                        scope.termPath.forEach((term) => {
-                            addTerm(term);
+                        scope.termPath.forEach((_term) => {
+                            addTerm(_term);
                         });
                     }
 

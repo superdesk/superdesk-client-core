@@ -98,10 +98,10 @@ export function TemplatesService(api, session, $q, preferencesService, privilege
         } else if (self.isAdmin()) {
             var _criteria = criteria;
 
-            criteria = desks.fetchCurrentUserDesks().then((desks) => {
+            criteria = desks.fetchCurrentUserDesks().then((_desks) => {
                 _criteria.$or.push({
                     is_public: true,
-                    template_desks: {$in: desks.map((desk) => desk._id)},
+                    template_desks: {$in: _desks.map((desk) => desk._id)},
                 });
 
                 return _criteria;
@@ -109,13 +109,13 @@ export function TemplatesService(api, session, $q, preferencesService, privilege
         }
 
         return $q.when(criteria)
-            .then((criteria) => {
+            .then((criteriaReady) => {
                 params.where = JSON.stringify({
-                    $and: [criteria],
+                    $and: [criteriaReady],
                 });
                 return params;
             })
-            .then((params) => api.query('content_templates', params));
+            .then((_params) => api.query('content_templates', _params));
     };
 
     this.fetchTemplatesByDesk = function(desk) {

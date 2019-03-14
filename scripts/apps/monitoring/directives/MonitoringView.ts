@@ -100,8 +100,8 @@ export function MonitoringView($rootScope, authoringWorkspace, pageTitle, $timeo
 
             containerElem.on('scroll', handleContainerScroll);
 
-            function isListEnd(containerElem) {
-                return containerElem.scrollTop + containerElem.offsetHeight + 200 >= containerElem.scrollHeight;
+            function isListEnd(container) {
+                return container.scrollTop + container.offsetHeight + 200 >= container.scrollHeight;
             }
 
             /**

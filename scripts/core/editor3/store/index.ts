@@ -182,9 +182,9 @@ export function getInitialContent(props) {
     );
 
     if (draftjsRawState != null) {
-        let contentState = convertFromRaw(draftjsRawState);
+        let initialContent = convertFromRaw(draftjsRawState);
 
-        return initializeHighlights(EditorState.createWithContent(contentState)).getCurrentContent();
+        return initializeHighlights(EditorState.createWithContent(initialContent)).getCurrentContent();
     }
 
     if (props.value) {

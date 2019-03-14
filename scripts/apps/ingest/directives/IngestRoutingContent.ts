@@ -135,7 +135,9 @@ export function IngestRoutingContent(api, notify, modal, contentFilters, $filter
                 _origRule = _.clone(rule);
 
                 scope.rule = rule;
-                scope.rule.filterName = rule.filter ? (_.find(scope.contentFilters, {_id: rule.filter}) as any).name : null;
+                scope.rule.filterName = rule.filter
+                    ? (_.find(scope.contentFilters, {_id: rule.filter}) as any).name
+                    : null;
                 scope.rule.schedule._allDay = !(_.get(scope.rule, 'schedule.hour_of_day_from', false) ||
                     _.get(scope.rule, 'schedule.hour_of_day_to', false));
             };
@@ -158,8 +160,9 @@ export function IngestRoutingContent(api, notify, modal, contentFilters, $filter
 
                 return api('routing_schemes').save(_orig, diff)
                     .then((result) => {
-                        !scope.editScheme._id ?
-                            scope.schemes.push(_orig) : null;
+                        if (!scope.editScheme._id) {
+                            scope.schemes.push(_orig);
+                        }
 
                         scope.schemes = $filter('sortByName')(scope.schemes);
                         scope.editScheme = _.clone(result);

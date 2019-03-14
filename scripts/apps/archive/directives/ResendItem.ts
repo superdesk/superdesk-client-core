@@ -15,8 +15,8 @@ export function ResendItem(subscribersService, authoring, api, notify) {
                     subscribersService.fetchTargetableSubscribers().then((items) => {
                         scope.customSubscribers = [];
                         scope.subscribers = items._items;
-                        _.each(items, (item) => {
-                            scope.customSubscribers.push({qcode: item._id, name: item.name});
+                        _.each(items, (_item) => {
+                            scope.customSubscribers.push({qcode: _item._id, name: _item.name});
                         });
                     });
                 }

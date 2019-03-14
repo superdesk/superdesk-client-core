@@ -8,8 +8,8 @@ export function ChangeAvatarController($scope, upload, session, urls, beta, noti
         {id: 'globe', label: gettext('Use a Web URL')},
     ];
 
-    beta.isBeta().then((beta) => {
-        if (!beta) {
+    beta.isBeta().then((isBeta) => {
+        if (!isBeta) {
             $scope.methods = _.reject($scope.methods, {beta: true});
         }
     });

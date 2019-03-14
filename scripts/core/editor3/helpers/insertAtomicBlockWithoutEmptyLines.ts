@@ -9,7 +9,7 @@ import {
 } from 'draft-js';
 import {getAllCustomDataFromEditor, setAllCustomDataForEditor} from './editor3CustomData';
 
-const Immutable = require('immutable');
+import Immutable from 'immutable';
 
 var List = Immutable.List,
     Repeat = Immutable.Repeat;

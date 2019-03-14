@@ -189,7 +189,7 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
      * @return {Promise}
      */
     this.getTypes = function(includeDisabled) {
-        var self = this;
+        var getTypesFnThis = this;
         var params = {};
 
         if (!includeDisabled) {
@@ -198,12 +198,12 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
 
         // cache when fetching all types
         return api.getAll('content_types', params, !!includeDisabled).then((result) => {
-            self.types = result.sort((a, b) => b.priority - a.priority, // with higher priority goes up
+            getTypesFnThis.types = result.sort((a, b) => b.priority - a.priority, // with higher priority goes up
             );
-            return self.types;
+            return getTypesFnThis.types;
         }, (reason) => {
-            self.types = [];
-            return self.types;
+            getTypesFnThis.types = [];
+            return getTypesFnThis.types;
         });
     };
 

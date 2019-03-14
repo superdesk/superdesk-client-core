@@ -10,7 +10,7 @@ const appConfig = __SUPERDESK_CONFIG__;
 
 if (appConfig.features.useTansaProofing) {
     // see: http://www.hiddenwebgenius.com/blog/guides/understanding-javascripts-asynchronous-code/
-    setTimeout(require('apps/tansa'), 0);
+    setTimeout(() => require('apps/tansa'), 0);
 }
 
 let body = angular.element('body');

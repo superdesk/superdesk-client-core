@@ -273,7 +273,7 @@ describe('content', () => {
             inject(($rootScope, superdesk, activityService, privileges, modal, $q, spike) => {
                 privileges.privileges = {planning: 1};
 
-                let item = {
+                let itemObject = {
                     _id: 'foo1',
                     _type: 'archive',
                     task: {desk: 'desk1', stage: 'stage1'},
@@ -284,7 +284,7 @@ describe('content', () => {
                 spyOn(modal, 'confirm').and.returnValue($q.when({}));
                 spyOn(spike, 'spike').and.returnValue($q.when({}));
 
-                activityService.start(superdesk.activities.spike, {data: {item: item}});
+                activityService.start(superdesk.activities.spike, {data: {item: itemObject}});
                 $rootScope.$digest();
 
                 expect(modal.confirm).toHaveBeenCalledWith('This item is linked to in-progress ' +
@@ -296,7 +296,7 @@ describe('content', () => {
             inject(($rootScope, superdesk, activityService, privileges, modal, $q, spike) => {
                 privileges.privileges = {planning: 1};
 
-                let item = {
+                let itemObject = {
                     _id: 'foo1',
                     _type: 'archive',
                     task: {desk: 'desk1', stage: 'stage1'},
@@ -306,7 +306,7 @@ describe('content', () => {
                 spyOn(modal, 'confirm').and.returnValue($q.when({}));
                 spyOn(spike, 'spike').and.returnValue($q.when({}));
 
-                activityService.start(superdesk.activities.spike, {data: {item: item}});
+                activityService.start(superdesk.activities.spike, {data: {item: itemObject}});
                 $rootScope.$digest();
 
                 expect(modal.confirm).toHaveBeenCalledWith('Are you sure you want to spike the item?', 'Confirm');
@@ -315,7 +315,7 @@ describe('content', () => {
 
         it('spike action does prompts user if planning component not activated',
             inject(($rootScope, superdesk, activityService, privileges, modal, $q, spike) => {
-                let item = {
+                let itemObject = {
                     _id: 'foo1',
                     _type: 'archive',
                     task: {desk: 'desk1', stage: 'stage1'},
@@ -325,7 +325,7 @@ describe('content', () => {
                 spyOn(modal, 'confirm').and.returnValue($q.when({}));
                 spyOn(spike, 'spike').and.returnValue($q.when({}));
 
-                activityService.start(superdesk.activities.spike, {data: {item: item}});
+                activityService.start(superdesk.activities.spike, {data: {item: itemObject}});
                 $rootScope.$digest();
 
                 expect(modal.confirm).toHaveBeenCalledWith('Are you sure you want to spike the item?', 'Confirm');
@@ -334,14 +334,14 @@ describe('content', () => {
 
         it('spike action prompts user if item has unsaved changes',
             inject((activityService, superdesk, autosave, confirm, $q, $rootScope, spike, modal) => {
-                const item = {_id: 'foo', lock_user: 'foo'};
+                const itemObject = {_id: 'foo', lock_user: 'foo'};
 
                 spyOn(autosave, 'get').and.returnValue($q.when());
                 spyOn(confirm, 'reopen').and.returnValue($q.reject());
                 spyOn(modal, 'confirm').and.returnValue($q.when());
                 spyOn(spike, 'spike');
 
-                activityService.start(superdesk.activities.spike, {data: {item: item}});
+                activityService.start(superdesk.activities.spike, {data: {item: itemObject}});
                 $rootScope.$digest();
 
                 expect(autosave.get).toHaveBeenCalled();

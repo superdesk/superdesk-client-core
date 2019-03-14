@@ -25,7 +25,7 @@ export function TansaScopeSyncDirective($rootScope) {
                 }
 
                 var txt = $(node).find('.text-editor');
-                var tag = _.find(txt, (elem) => $(elem).is(':visible'));
+                var tag = _.find(txt, (_elem) => $(_elem).is(':visible'));
 
                 if (tag) {
                     return tag.innerHTML;

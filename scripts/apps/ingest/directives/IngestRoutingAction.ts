@@ -21,8 +21,8 @@ export function IngestRoutingAction(desks, macros, subscribersService, metadata)
                     scope.stageLookup = desks.stageLookup;
                 });
 
-            macros.get(true).then((macros) => {
-                _.transform(macros, (lookup, macro: any, idx) => {
+            macros.get(true).then((_macros) => {
+                _.transform(_macros, (lookup, macro: any, idx) => {
                     scope.macroLookup[macro.name] = macro;
                 });
             });

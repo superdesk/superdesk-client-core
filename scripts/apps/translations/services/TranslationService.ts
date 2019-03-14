@@ -55,8 +55,8 @@ export function TranslationService(api, $rootScope, notify, authoringWorkspace, 
             desk: desks.getCurrentDeskId(),
         };
 
-        api.save('translate', params).then((item) => {
-            authoringWorkspace.open(item);
+        api.save('translate', params).then((_item) => {
+            authoringWorkspace.open(_item);
             $rootScope.$broadcast('item:translate');
             notify.success(gettext('Item Translated'));
         });

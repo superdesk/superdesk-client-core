@@ -308,14 +308,14 @@ export function SearchResults(
             /*
              * Function to get the search endpoint name based on the criteria
              *
-             * @param {Object} criteria
+             * @param {Object} _criteria
              * @returns {string}
              */
-            function getProvider(criteria) {
+            function getProvider(_criteria) {
                 var provider = 'search';
 
-                if (criteria.repo && criteria.repo.indexOf(',') === -1) {
-                    provider = criteria.repo;
+                if (_criteria.repo && _criteria.repo.indexOf(',') === -1) {
+                    provider = _criteria.repo;
                 }
 
                 if (scope.search.repo.search && scope.search.repo.search !== 'local') {
@@ -323,7 +323,7 @@ export function SearchResults(
                 }
 
                 if (isObjectId(provider)) {
-                    criteria.repo = provider;
+                    _criteria.repo = provider;
                     provider = 'search_providers_proxy';
                 }
 
@@ -379,9 +379,9 @@ export function SearchResults(
                     oldQuery = query;
                 }
 
-                function setScopeItems(items, force) {
-                    scope.items = search.mergeItems(items, scope.items, next, force);
-                    scope.total_records = items._meta.total;
+                function setScopeItems(_items, _force) {
+                    scope.items = search.mergeItems(_items, scope.items, next, _force);
+                    scope.total_records = _items._meta.total;
                     scope.loading = false;
                 }
             }

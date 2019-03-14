@@ -319,8 +319,8 @@ function DatepickerDirective($document) {
     };
 }
 
-DatepickerInnerDirective.$inject = ['$compile', '$document', 'popupService', 'datetimeHelper', 'config', 'moment'];
-function DatepickerInnerDirective($compile, $document, popupService, datetimeHelper, config, moment) {
+DatepickerInnerDirective.$inject = ['$compile', '$document', 'popupService', 'datetimeHelper', 'config'];
+function DatepickerInnerDirective($compile, $document, popupService, datetimeHelper, config) {
     var popupTpl = '<div sd-datepicker-wrapper ng-model="date">' +
         '<div datepicker format-day="d" starting-day="' + config.startingDay + '" show-weeks="false"></div>' +
     '</div>';
@@ -692,13 +692,13 @@ function TimepickerPopupDirective($timeout, config) {
 
             var POPUP = '.timepicker-popup';
 
-            var focusElement = function() {
+            var focusEl = function() {
                 $timeout(() => {
                     element.find(POPUP).focus();
                 }, 0, false);
             };
 
-            scope.$on('timepicker.focus', focusElement);
+            scope.$on('timepicker.focus', focusEl);
 
             element.bind('click', (event) => {
                 event.preventDefault();
@@ -1104,6 +1104,7 @@ function MultipleEmailsValidation() {
         require: 'ngModel',
         link: function(scope, elem, attrs, ctrl) {
             // eslint-disable-next-line max-len
+            // tslint:disable-next-line:max-line-length
             var EMAIL_REGEXP = /^(?=.{1,254}$)(?=.{1,64}@)[-!#$%&'*+\/0-9=?A-Z^_`a-z{|}~]+(\.[-!#$%&'*+\/0-9=?A-Z^_`a-z{|}~]+)*@[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?(\.[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?)*$/;
 
             ctrl.$validators.multipleEmails = function(modelValue, viewValue) {

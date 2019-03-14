@@ -161,8 +161,8 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
         if (angular.isDefined(item)) {
             queueItems.push($scope.buildNewSchedule(item));
         } else if ($scope.multiSelectCount > 0) {
-            _.forEach($scope.selectedQueueItems, (item) => {
-                queueItems.push($scope.buildNewSchedule(item));
+            _.forEach($scope.selectedQueueItems, (_item) => {
+                queueItems.push($scope.buildNewSchedule(_item));
             });
         }
 
@@ -189,16 +189,16 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
         if (angular.isDefined(item)) {
             itemList.push(item);
         } else if ($scope.multiSelectCount > 0) {
-            _.forEach($scope.selectedQueueItems, (item) => {
-                if (item.state === 'pending' || item.state === 'retrying') {
-                    item.state = 'canceled';
-                    itemList.push(item);
+            _.forEach($scope.selectedQueueItems, (_item) => {
+                if (_item.state === 'pending' || _item.state === 'retrying') {
+                    _item.state = 'canceled';
+                    itemList.push(_item);
                 }
             });
         }
 
-        _.forEach(itemList, (item) => {
-            api.publish_queue.update(item, {state: 'canceled'});
+        _.forEach(itemList, (_item) => {
+            api.publish_queue.update(_item, {state: 'canceled'});
         });
         $scope.cancelSelection();
     };

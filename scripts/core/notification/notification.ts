@@ -128,8 +128,8 @@ function NotifyConnectionService($rootScope, notify, $timeout, session) {
     });
 }
 
-ReloadService.$inject = ['$window', '$rootScope', 'session', 'desks', 'superdeskFlags', 'lodash'];
-function ReloadService($window, $rootScope, session, desks, superdeskFlags, _) {
+ReloadService.$inject = ['$window', '$rootScope', 'session', 'desks', 'superdeskFlags'];
+function ReloadService($window, $rootScope, session, desks, superdeskFlags) {
     var self = this;
 
     self.userDesks = [];

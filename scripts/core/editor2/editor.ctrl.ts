@@ -5,9 +5,9 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, editor, config, $q
     var self = this;
 
     function Block(attrs: any = {}) {
-        var self = this;
+        var BlockFnThis = this;
 
-        angular.extend(self, _.defaults({
+        angular.extend (BlockFnThis, _.defaults({
             body: attrs.body,
             loading: attrs.loading,
             caption: attrs.caption,
@@ -16,18 +16,18 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, editor, config, $q
             association: attrs.association,
             lowerAddEmbedIsExtended: undefined,
             showAndFocusLowerAddAnEmbedBox: function() {
-                self.lowerAddEmbedIsExtended = true;
+                BlockFnThis.lowerAddEmbedIsExtended = true;
             },
         }, {
             body: '<p><br></p>',
             loading: false,
             blockType: 'text',
-        }));
+        }); )
     }
     /**
-    * For the given blocks, merge text blocks when there are following each other
-    * and add empty text block arround embeds if needed
-    */
+     * For the given blocks, merge text blocks when there are following each other
+     * and add empty text block arround embeds if needed
+     */
     function prepareBlocks(blocks) {
         var newBlocks = [];
 
@@ -56,8 +56,8 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, editor, config, $q
     function splitIntoBlock(bodyHtml) {
         var blocks = [], block;
         /**
-        * push the current block into the blocks collection if it is not empty
-        */
+         * push the current block into the blocks collection if it is not empty
+         */
 
         function commitBlock() {
             if (block !== undefined && block.body.trim() !== '') {
@@ -78,11 +78,11 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, editor, config, $q
             .contents()
             .toArray()
             .forEach((element) => {
-            // if we get a <p>, we push the current block and create a new one
-            // for the paragraph content
+                // if we get a <p>, we push the current block and create a new one
+                // for the paragraph content
                 if (element.nodeName === 'P') {
                     handleParagraph(element);
-                // detect if it's an embed
+                    // detect if it's an embed
                 } else if (element.nodeName === '#comment') {
                     if (element.nodeValue.indexOf('EMBED START') > -1) {
                         commitBlock();
@@ -101,7 +101,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, editor, config, $q
                         var embedAssoKey = /{id: "(embedded\d+)"}/;
 
                         if ((match = embedAssoKey.exec(angular.copy(element.nodeValue).trim())) !== null
-                        && self.associations) {
+                            && self.associations) {
                             association = angular.copy(self.associations[match[1]]);
                         }
                         // create the embed block
@@ -115,7 +115,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, editor, config, $q
                     if (element.nodeValue.indexOf('EMBED END') > -1) {
                         commitBlock();
                     }
-                // if it's not a paragraph or an embed, we update the current block
+                    // if it's not a paragraph or an embed, we update the current block
                 } else {
                     if (block === undefined) {
                         block = new Block({body: ''});
@@ -129,28 +129,28 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, editor, config, $q
             blocks.push(block);
         }
         // Complete embeds with metadata (from association datadata or html)
-        blocks.forEach((block) => {
-            if (block.blockType === 'embed') {
+        blocks.forEach((blockObject) => {
+            if (blockObject.blockType === 'embed') {
                 // for images that come from Superdesk, we use the association
-                if (block.association && block.embedType === 'Image') {
-                    block.caption = block.association.description_text;
-                    block.body = '';
-                    editor.generateMediaTag(block.association).then((img) => {
-                        block.body = img;
+                if (blockObject.association && blockObject.embedType === 'Image') {
+                    blockObject.caption = blockObject.association.description_text;
+                    blockObject.body = '';
+                    editor.generateMediaTag(blockObject.association).then((img) => {
+                        blockObject.body = img;
                     });
                 } else {
-                    // extract body and caption from embed block html
-                    var originalBody = angular.element(angular.copy(block.body));
+                    // extract body and caption from embed blockObject html
+                    var originalBody = angular.element(angular.copy(blockObject.body));
 
                     if (originalBody.get(0).nodeName === 'FIGURE') {
-                        block.body = '';
+                        blockObject.body = '';
                         originalBody.contents()
                             .toArray()
                             .forEach((element) => {
                                 if (element.nodeName === 'FIGCAPTION') {
-                                    block.caption = element.innerHTML;
+                                    blockObject.caption = element.innerHTML;
                                 } else {
-                                    block.body += element.outerHTML || element.nodeValue || '';
+                                    blockObject.body += element.outerHTML || element.nodeValue || '';
                                 }
                             });
                     }
@@ -246,8 +246,8 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, editor, config, $q
             }
         },
         /**
-        * Return an object that contains the embedded images in the story
-        */
+         * Return an object that contains the embedded images in the story
+         */
         getAssociations: function() {
             var association = {};
 
@@ -313,13 +313,13 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, editor, config, $q
             });
         },
         /**
-        ** Merge text blocks when there are following each other and add empty text block arround embeds if needed
-        ** @param {Integer} position
-        ** @param {Object} block ; block attributes
-        ** @param {boolean} doNotRenderBlocks ; if true, it won't merge text blocks and
-        ** add empty text block if needed through the `renderBlocks()` function.
-        ** @returns {object} this
-        */
+         ** Merge text blocks when there are following each other and add empty text block arround embeds if needed
+         ** @param {Integer} position
+         ** @param {Object} block ; block attributes
+         ** @param {boolean} doNotRenderBlocks ; if true, it won't merge text blocks and
+         ** add empty text block if needed through the `renderBlocks()` function.
+         ** @returns {object} this
+         */
         insertNewBlock: function(position, attrs, doNotRenderBlocks) {
             var newBlock = new Block(attrs);
 
@@ -341,8 +341,8 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, editor, config, $q
             });
         },
         /**
-        * Merge text blocks when there are following each other and add empty text block arround embeds if needed
-        */
+         * Merge text blocks when there are following each other and add empty text block arround embeds if needed
+         */
         renderBlocks: function() {
             self.blocks = prepareBlocks(self.blocks);
         },
@@ -373,9 +373,9 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, editor, config, $q
             return block;
         },
         /**
-        * Compute an id for the block with its content and its position.
-        * Used as `track by` value, it allows the blocks to be well rendered.
-        */
+         * Compute an id for the block with its content and its position.
+         * Used as `track by` value, it allows the blocks to be well rendered.
+         */
         generateBlockId: function(block) {
             function hashCode(string) {
                 var hash = 0, i, chr, len;
@@ -385,8 +385,9 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, editor, config, $q
                 }
                 for (i = 0, len = string.length; i < len; i++) {
                     chr = string.charCodeAt(i);
-                    /* jshint bitwise: false */
+                    // tslint:disable-next-line:no-bitwise
                     hash = (hash << 5) - hash + chr;
+                    // tslint:disable-next-line:no-bitwise
                     hash |= 0; // Convert to 32bit integer
                 }
                 return hash;

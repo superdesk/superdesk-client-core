@@ -71,8 +71,8 @@ export default angular.module('superdesk.apps.users', [
                 element.html(value);
                 var nscope = scope.$new(true);
 
-                _.each(scope.$eval(attrs.data), (value, key) => {
-                    nscope[key] = value;
+                _.each(scope.$eval(attrs.data), (val, key) => {
+                    nscope[key] = val;
                 });
                 $compile(element.contents())(nscope);
             };

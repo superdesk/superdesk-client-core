@@ -377,7 +377,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
      * @param {Object} item
      * @param {string} userId
      */
-    this.lock = function lock(item, userId) {
+    this.lock = function(item, userId) {
         autosave.stop(item);
         api.find('users', userId).then((user) => {
             item.lock_user = user;
@@ -397,7 +397,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         var action = angular.extend({}, helpers.DEFAULT_ACTIONS);
         var itemOnReadOnlyStage = item && item.task && item.task.stage && desks.isReadOnlyStage(item.task.stage);
         var isUndefinedOperation = angular.isUndefined(currentItem) || angular.isUndefined(userPrivileges);
-        const isKilledItem = (item) => _.get(item, 'state') === 'killed' || _.get(item, 'state') === 'recalled';
+        const isKilledItem = (_item) => _.get(_item, 'state') === 'killed' || _.get(_item, 'state') === 'recalled';
 
         action = this._updateActionsForContentApi(currentItem, action);
 
@@ -445,10 +445,10 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
 
     this._updateActionsForContentApi = function(item, action) {
         if (this.isContentApiItem(item)) {
-            let action = angular.extend({}, helpers.DEFAULT_ACTIONS);
+            let _action = angular.extend({}, helpers.DEFAULT_ACTIONS);
 
-            action.view = false;
-            return action;
+            _action.view = false;
+            return _action;
         }
 
         return action;

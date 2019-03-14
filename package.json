@@ -47,8 +47,10 @@
     "angular-resource": "1.6.9",
     "angular-route": "1.6.9",
     "angular-vs-repeat": "1.1.7",
+    "body-parser": "1.18.3",
     "bootstrap": "3.3.7",
     "classnames": "2.2.5",
+    "cors": "2.8.5",
     "css-loader": "0.28.10",
     "d3": "3.5.17",
     "diff-match-patch": "1.0.0",
@@ -111,6 +113,7 @@
     "webpack-dev-server": "2.11.1"
   },
   "devDependencies": {
+    "@types/moment-timezone": "^0.5.12",
     "@types/webpack-env": "^1.13.9",
     "btoa": "^1.1.2",
     "enzyme": "^3.3.0",

@@ -25,10 +25,10 @@ angular.module('superdesk.core.upload.crop', [])
                     });
                 }, 300);
 
-                function showPreview(e, rx, ry, boundx, boundy, cordx, cordy) {
+                function showPreview(e, rx, ry, boundX, boundY, cordx, cordy) {
                     $(e).css({
-                        width: Math.round(rx * boundx) + 'px',
-                        height: Math.round(ry * boundy) + 'px',
+                        width: Math.round(rx * boundX) + 'px',
+                        height: Math.round(ry * boundY) + 'px',
                         marginLeft: '-' + Math.round(rx * cordx) + 'px',
                         marginTop: '-' + Math.round(ry * cordy) + 'px',
                     });

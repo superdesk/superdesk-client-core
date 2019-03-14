@@ -36,7 +36,7 @@ export function ItemCarouselDirective($timeout, notify) {
         templateUrl: 'scripts/apps/authoring/views/item-carousel.html',
         controller: ctrl.AssociationController,
         controllerAs: 'associations',
-        link: function(scope, elem, attr, ctrl) {
+        link: function(scope, elem, attr) {
             let carousel;
             let previousItemsString;
             const allowed = {picture: scope.allowPicture, video: scope.allowVideo, audio: scope.allowAudio};

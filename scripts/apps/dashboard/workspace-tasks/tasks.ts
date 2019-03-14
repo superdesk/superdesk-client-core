@@ -393,8 +393,8 @@ angular.module('superdesk.apps.workspace.tasks', ['superdesk.apps.workspace.menu
              * @param {Object} superdesk service
              * @return {Promise}
              */
-                function pickTask(data, superdesk) {
-                    return superdesk.intent('edit', 'item', data.item);
+                function pickTask(data, superdeskService) {
+                    return superdeskService.intent('edit', 'item', data.item);
                 },
             ],
             filters: [{action: superdesk.ACTION_EDIT, type: 'task'}],

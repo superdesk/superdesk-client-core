@@ -219,7 +219,7 @@ mod.directive('sdUpdowns', ['$location', 'keyboardManager', '$anchorScroll',
  * @items {object} Item container as received from server, with _items and _meta.
  * @limit {number} Number of items per page.
  */
-mod.directive('sdPagination', ['$location', 'asset', 'lodash', function($location, asset, _) {
+mod.directive('sdPagination', ['$location', 'asset', function($location, asset) {
     return {
         template: require('./views/sdPagination.html'),
         scope: {

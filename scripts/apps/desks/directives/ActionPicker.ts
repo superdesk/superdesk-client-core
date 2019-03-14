@@ -22,8 +22,8 @@ export function ActionPicker(desks, macros) {
             scope.deskMacros = null;
 
             function updateMacros() {
-                macros.getByDesk(desks.deskLookup[scope.desk].name, true).then((macros) => {
-                    scope.deskMacros = _.filter(macros, {action_type: 'direct'});
+                macros.getByDesk(desks.deskLookup[scope.desk].name, true).then((_macros) => {
+                    scope.deskMacros = _.filter(_macros, {action_type: 'direct'});
                 });
 
                 if (_.findIndex(scope.deskStages[scope.desk], {_id: scope.stage}) === -1) {

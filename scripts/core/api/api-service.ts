@@ -237,12 +237,12 @@ function APIProvider() {
          * @description
          * Query resource
          */
-        Resource.prototype.query = function(params, cache) {
+        Resource.prototype.query = function(params, _cache) {
             return http({
                 method: 'GET',
                 url: this.url(),
                 params: params,
-                cache: cache,
+                cache: _cache,
             });
         };
 
@@ -286,12 +286,12 @@ function APIProvider() {
          * @description
          * Get an item by _id
          */
-        Resource.prototype.getById = function(_id, params, cache) {
+        Resource.prototype.getById = function(_id, params, _cache) {
             return http({
                 method: 'GET',
                 url: this.url(_id),
                 params: params,
-                cache: cache,
+                cache: _cache,
             });
         };
 
@@ -322,8 +322,8 @@ function APIProvider() {
         /**
          * @alias api(resource).getById(id)
          */
-        api.find = function apiFind(resource, id, params, cache) {
-            return api(resource).getById(id, params, cache);
+        api.find = function apiFind(resource, id, params, _cache) {
+            return api(resource).getById(id, params, _cache);
         };
 
         /**
@@ -373,8 +373,8 @@ function APIProvider() {
          * @param {Object} parent
          * @param {boolean} cache
          */
-        api.query = function apiQuery(resource, query, parent, cache) {
-            return api(resource, parent).query(query, cache);
+        api.query = function apiQuery(resource, query, parent, _cache) {
+            return api(resource, parent).query(query, _cache);
         };
 
         function getResourceUrl(resource, item, id) {

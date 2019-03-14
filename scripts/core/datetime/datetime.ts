@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
+import momentTimezone from 'moment-timezone';
 
 DateTimeDirective.$inject = ['datetime', 'moment'];
 function DateTimeDirective(datetime, moment) {
@@ -226,7 +227,7 @@ export default angular.module('superdesk.core.datetime', [
         };
     }])
 
-    .constant('moment', require('moment-timezone'))
+    .constant('moment', momentTimezone)
 
     .factory('weekdays', [function() {
         return Object.freeze({

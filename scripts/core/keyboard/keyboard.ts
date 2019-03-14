@@ -178,28 +178,28 @@ export default angular.module('superdesk.core.keyboard', [])
 
             const inputDisabled = function(e) {
                 if (options.inputDisabled) {
-                    var elt;
+                    var elem;
 
                     if (e.target) {
-                        elt = e.target;
+                        elem = e.target;
                     } else if (e.srcElement) {
-                        elt = e.srcElement;
+                        elem = e.srcElement;
                     }
-                    if (elt.nodeType === 3) {
-                        elt = elt.parentNode;
+                    if (elem.nodeType === 3) {
+                        elem = elem.parentNode;
                     }
-                    return elt.tagName === 'INPUT' || elt.tagName === 'TEXTAREA' ||
-                    elt.className.indexOf('editor-type-html') !== -1;
+                    return elem.tagName === 'INPUT' || elem.tagName === 'TEXTAREA' ||
+                    elem.className.indexOf('editor-type-html') !== -1;
                 }
             };
 
-            const getCharacter = function(code) {
-                let character = String.fromCharCode(code).toLowerCase();
+            const getCharacter = function(codeNumber) {
+                let character = String.fromCharCode(codeNumber).toLowerCase();
 
-                if (code === 188) {
+                if (codeNumber === 188) {
                     character = ',';
                 } // If the user presses , when the type is onkeydown
-                if (code === 190) {
+                if (codeNumber === 190) {
                     character = '.';
                 } // If the user presses , when the type is onkeydown
 
@@ -242,8 +242,8 @@ export default angular.module('superdesk.core.keyboard', [])
                 };
 
                 let computeKeys = () => {
-                    let isCtrl = (k) => k === 'ctrl' || k === 'control';
-                    let isMeta = (k) => k === 'alt' || k === 'shift' || k === 'meta';
+                    let isCtrl = (key) => key === 'ctrl' || key === 'control';
+                    let isMeta = (key) => key === 'alt' || key === 'shift' || key === 'meta';
 
                     // Foreach keys in label (split on +)
                     for (var i = 0, l = keys.length; k = keys[i], i < l; i++) {

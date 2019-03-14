@@ -84,15 +84,15 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _, pref
     /*
      * Return dictionaries for requested language
      *
-     * @param {Object} lang
+     * @param {Object} language
      * @returns {Object} List of dictionaries
      */
-    this.getDictionary = function(lang) {
-        if (!_activeCache[lang]) {
-            _activeCache[lang] = dictionaries.getActive(lang, getBaseLanguage(lang));
+    this.getDictionary = function(language) {
+        if (!_activeCache[language]) {
+            _activeCache[language] = dictionaries.getActive(language, getBaseLanguage(language));
         }
 
-        return _activeCache[lang];
+        return _activeCache[language];
     };
 
     /**
@@ -412,10 +412,10 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _, pref
      * Add word to regular or ignored dictionary
      *
      * @param {String} word
-     * @param {String} isIgnored
+     * @param {String} isBeingIgnored
      */
-    this.addWord = function addWord(word, isIgnored) {
-        if (isIgnored) {
+    this.addWord = function addWord(word, isBeingIgnored) {
+        if (isBeingIgnored) {
             ignoreWord(word);
         } else {
             addWordToUserDictionary(word);
