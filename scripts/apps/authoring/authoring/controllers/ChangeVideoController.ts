@@ -561,8 +561,8 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
      * @ngdoc method
      * @name ChangeImageController#toggleMenu
      * @public
-     * @description minu menu for button
-     *
+     * @description menu for crop video
+     * 
      */
     $scope.toggleMenu = () => {
         if (video.play) {
@@ -604,12 +604,12 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
     $scope.cropVideo = (ratio) => {
         let elementVideo = document.getElementById('video');
         let ratio2;
-        if (ratio === "1:1")
-            ratio2 = 1 / 1;
-        if (ratio === "4:3")
-            ratio2 = 4 / 3;
-        if (ratio === "16:9")
-            ratio2 = 16 / 9;
+        if(ratio === "1:1")
+            ratio2 = 1/1;
+        else if(ratio === "4:3")
+            ratio2 = 4/3;
+        else if(ratio === "16:9")
+            ratio2 = 16/9;
         $('#video').Jcrop({
             onSelect: showCoords,
             onchange: showCoords,
@@ -643,8 +643,8 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
                 break;
             case "16:9":
                 jcrop_api.release();
-                let xWide = y * 4 / 3;
-                let yWide = x * 3 / 4;
+                let xWide = y *16 /9;
+                let yWide = x *9 /16;
 
                 if (xWide < x)
                     jcrop_api.setOptions({setSelect: [0, 0, xWide, y]});
