@@ -53,7 +53,7 @@
                             {{related.headline || ('[No Value]' | translate)}}
                         </span>
                     </div>
-                    <div class="item-association__icons-block">
+                    <div ng-hide="related._type === 'externalsource' || related.fetch_endpoint" class="item-association__icons-block">
                         <a ng-if="related && editable" class="item-association__image-action" ng-click="associations.isMediaEditable() && associations.edit(this, related, {defaultTab: 'view'}); $event.stopPropagation()" sd-tooltip="Edit metadata"><i class="icon-pencil"></i></a>
                         <a ng-if="related && editable" class="item-association__image-action" ng-click="associations.isMediaEditable() && associations.edit(this, related, {defaultTab: 'image-edit'}); $event.stopPropagation()" sd-tooltip="Edit image"><i class="icon-switches"></i></a>
                         <a ng-if="related && editable" class="item-association__image-action" ng-click="associations.isMediaEditable() && associations.edit(this, related, {defaultTab: 'crop'}); $event.stopPropagation()" sd-tooltip="Edit crops"><i class="icon-crop"></i></a>
