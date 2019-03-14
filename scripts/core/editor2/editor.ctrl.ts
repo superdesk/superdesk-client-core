@@ -22,7 +22,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, editor, config, $q
             body: '<p><br></p>',
             loading: false,
             blockType: 'text',
-        }); )
+        }));
     }
     /**
      * For the given blocks, merge text blocks when there are following each other
