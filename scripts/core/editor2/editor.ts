@@ -432,7 +432,7 @@ function EditorService(spellcheck, $q, renditionsService, utils) {
                         var oldSettings = angular.extend({}, self.settings);
                         var caretPosition = scope.medium.exportSelection();
 
-                        _.forEach(_.uniq(found), (val) => {
+                        _.forEach(_.uniq(found), (val: string) => {
                             var replacementValue = abbreviations[val.replace('*', '')];
 
                             if (replacementValue) {

@@ -36,7 +36,7 @@ export function ItemCarouselDirective($timeout, notify) {
         templateUrl: 'scripts/apps/authoring/views/item-carousel.html',
         controller: ctrl.AssociationController,
         controllerAs: 'associations',
-        link: function(scope, elem, attr) {
+        link: function(scope, elem, attr, controller) {
             let carousel;
             let previousItemsString;
             const allowed = {picture: scope.allowPicture, video: scope.allowVideo, audio: scope.allowAudio};
@@ -154,7 +154,7 @@ export function ItemCarouselDirective($timeout, notify) {
                         return;
                     }
 
-                    ctrl.initializeUploadOnDrop(scope, event);
+                    controller.initializeUploadOnDrop(scope, event);
                 } else {
                     const allowedTypeNames = [
                         (scope.allowPicture === true ? gettext('image') : ''),
@@ -175,7 +175,7 @@ export function ItemCarouselDirective($timeout, notify) {
              */
             scope.upload = function() {
                 if (scope.editable) {
-                    ctrl.uploadAndCropImages(scope);
+                    controller.uploadAndCropImages(scope);
                 }
             };
 
@@ -187,7 +187,7 @@ export function ItemCarouselDirective($timeout, notify) {
              * @param {Object} item Item object
              */
             scope.remove = function(item) {
-                ctrl.updateItemAssociation(scope, null, item.fieldId);
+                controller.updateItemAssociation(scope, null, item.fieldId);
             };
 
             /**

@@ -113,6 +113,7 @@
     "webpack-dev-server": "2.11.1"
   },
   "devDependencies": {
+    "@types/moment": "^2.13.0",
     "@types/moment-timezone": "^0.5.12",
     "@types/webpack-env": "^1.13.9",
     "btoa": "^1.1.2",
