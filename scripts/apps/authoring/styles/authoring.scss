@@ -1732,6 +1732,7 @@ feature-image {
     max-height: 600px;
     max-width: 100%;
     margin: 0 auto;
+    transition: transform 0.8s;
 }
 
 .name-boder{

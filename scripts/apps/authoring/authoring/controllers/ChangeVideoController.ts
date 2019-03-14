@@ -667,4 +667,35 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
     };    
     
 
+    /**
+     * @ngdoc method
+     * @name ChangeImageController#rotateVideo
+     * @public
+     * @description rotate video to the left
+     * 
+     */
+    var rotate = { left:0 };
+    $scope.rotateVideo = (direction) => {
+        var video = document.getElementById('video');
+        switch (direction) {
+            case 'left':
+                rotate.left = rotate.left - 90;
+                
+                let scale = (rotate.left / 90) % 2 ? (video.clientHeight / video.clientWidth ) : 1;
+                video.style.transform = `rotate(${rotate.left}deg) scale(${scale})`;
+
+                let iconRotate = document.getElementsByClassName('icon-rotate-custom')[0];
+
+                if((rotate.left / 180) % 2 === 0)
+                    iconRotate.setAttribute("style", "color:#ffffff !important;");
+                else
+                    iconRotate.setAttribute("style", "color:#01f18b !important;");
+                break;
+        
+            case 'right':
+                break;
+            default:
+                break;
+        }
+    }
 }
