@@ -2024,17 +2024,16 @@ md-controlbars .control-bar {
   /* menu appearance*/
   #menu {
     z-index: 999;
-    margin-top: -152px;
+    margin-top: -174px;
     position: fixed;
-    color: #999;
     width: 150px;
     padding: 10px;
-    margin: auto;
     font-family: "Segoe UI", Candara, "Bitstream Vera Sans", "DejaVu Sans", "Bitstream Vera Sans", "Trebuchet MS", Verdana, "Verdana Ref", sans-serif;
     text-align: center;
-    border-radius: 4px;
-    background: white;
+    border-radius: 10px;
+    background-color: #444;
     box-shadow: 0 1px 8px rgba(0,0,0,0.05);
+    overflow: hidden;
     /* just for this demo */
     opacity: 0;
     visibility: hidden;
@@ -2043,15 +2042,22 @@ md-controlbars .control-bar {
   #menu ul{
     padding: 6px 20px 6px 40px;
     white-space: nowrap;
+    cursor: pointer;
   }
   #menu ul li span:hover{
-    background-color: rgba(255,255,255,.1);
+    color: #01f18b;
+  }
+  #menu ul li {
+    color: #fff;
+  }
+  #menu .active{
+    color: #01f18b;
   }
   #menu ul, li span {
     list-style: none;
     display: block;
     margin: 0;
-    color: #888;
+    
     padding: 5px;
   }
 

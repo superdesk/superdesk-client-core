@@ -601,7 +601,15 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
      * @description crop video
      *
      */
-    $scope.cropVideo = (ratio) => {
+    $scope.cropVideo = (ratio,currentTarget) => {
+        let self = currentTarget;
+        let elementRatio = document.getElementsByClassName('ratio');
+        [].forEach.call(elementRatio,function(el) {
+            el.classList.remove('active');
+        });
+        self.classList.add("active");
+
+
         let elementVideo = document.getElementById('video');
         let ratio2;
         if(ratio === "1:1")
