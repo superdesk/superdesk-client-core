@@ -1,15 +1,15 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {HighlightsInfo} from '../index';
 
-interface IProps {
-    item: any;
+export function highlights(props) {
+    return React.createElement(HighlightsInfo, angular.extend({
+        key: 'highlights',
+    }, props));
 }
 
-// tslint:disable-next-line:class-name
-export class highlights extends React.Component<IProps> {
-    render() {
-        return React.createElement(HighlightsInfo, angular.extend({
-            key: 'highlights',
-        }, this.props));
-    }
-}
+highlights['propTypes'] = {
+    // item is passed through to HighlightsInfo directly via props
+    // eslint-disable-next-line react/no-unused-prop-types
+    item: PropTypes.any,
+};

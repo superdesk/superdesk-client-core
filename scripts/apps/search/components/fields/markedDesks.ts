@@ -1,15 +1,15 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {MarkedDesksInfo} from '../index';
 
-interface IProps {
-    item: any;
+export function markedDesks(props) {
+    return React.createElement(MarkedDesksInfo, angular.extend({
+        key: 'markedDesks',
+    }, props));
 }
 
-// tslint:disable-next-line:class-name
-export class markedDesks extends React.Component<IProps> {
-    render() {
-        return React.createElement(MarkedDesksInfo, angular.extend({
-            key: 'markedDesks',
-        }, this.props));
-    }
-}
+markedDesks['propTypes'] = {
+    // item is passed through to MarkedDesksInfo directly via props
+    // eslint-disable-next-line react/no-unused-prop-types
+    item: PropTypes.any,
+};

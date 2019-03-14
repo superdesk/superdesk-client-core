@@ -1,19 +1,19 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {createMarkUp} from '../../helpers';
 
-interface IProps {
-    item: any;
+export function slugline(props) {
+  if (props.item.slugline) {
+    return React.createElement(
+                  'span',
+                  {className: 'keyword', key: 'slugline',
+                                  dangerouslySetInnerHTML: createMarkUp(props.item.slugline)},
+
+    );
+  }
 }
 
-// tslint:disable-next-line:class-name
-export class slugline extends React.Component<IProps> {
-    render() {
-        if (this.props.item.slugline) {
-            return React.createElement(
-                'span',
-                {className: 'keyword', key: 'slugline',
-                    dangerouslySetInnerHTML: createMarkUp(this.props.item.slugline)},
-            );
-        }
-    }
-}
+slugline['propTypes'] = {
+      item: PropTypes.any,
+
+};

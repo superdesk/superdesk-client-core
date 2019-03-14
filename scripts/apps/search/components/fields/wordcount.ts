@@ -1,16 +1,15 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
-interface IProps {
-    item: any;
-}
-
-// tslint:disable-next-line:class-name
-export class wordcount extends React.Component<IProps> {
-    render() {
-        return React.createElement(
+export function wordcount(props) {
+  return React.createElement(
             'span',
             {className: 'word-count', key: 'wordcount'},
-            this.props.item.word_count,
-        );
-    }
+            props.item.word_count,
+  );
 }
+
+wordcount['propTypes'] = {
+      item: PropTypes.any,
+
+};
