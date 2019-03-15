@@ -113,9 +113,9 @@ export function RenditionsService(metadata, $q, api, superdesk, _, notify) {
                                 // update association renditions
                                 angular.extend(
                                     result.metadata.renditions,editvideo.result.renditions);
-                                if ('media' in result)
+                                if ('media' in editvideo.result)
                                 {
-                                    result.metadata.media = result.media;
+                                    result.metadata.media = editvideo.result.media;
                                 }
 
                             });

@@ -140,10 +140,10 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
             loadImage();
         }
         // disable crop video
-        if(jcrop_api){
+        if (jcrop_api) {
             jcrop_api.release();
             jcrop_api.disable();
-            positionCropVideo= [];
+            positionCropVideo = [];
         }
         positionCropVideo = {};
     };
@@ -328,15 +328,19 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
     }
 
     function loadTimeLine(list_thumbnails) {
+        var widthpic=88
+        if (list_thumbnails && list_thumbnails.length > 0) {
+            widthpic = list_thumbnails[0].width
+        }
         var inner_frames = document.getElementById('inner-frames');
-        var total_thumbnail = Math.ceil(controlbar.offsetWidth / 88);
+        var total_thumbnail = Math.ceil(controlbar.offsetWidth / widthpic);
         var per_index_image = 20 / total_thumbnail;
         if (inner_frames) {
             inner_frames.innerHTML = '';
             for (var i = 0; i <= total_thumbnail; i++) {
                 var index = Math.round(i * per_index_image);
                 var video = document.createElement("video");
-                video.width = 88;
+                video.width = widthpic;
                 video.height = 50;
                 if (list_thumbnails && list_thumbnails.length > 0) {
                     video.poster = list_thumbnails[index].href;
@@ -597,8 +601,8 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
      * @description crop video
      *
      */
-    $scope.cropVideo = (ratio,currentTarget) => {
-        if(jcrop_api){
+    $scope.cropVideo = (ratio, currentTarget) => {
+        if (jcrop_api) {
             jcrop_api.enable();
         }
 
@@ -607,7 +611,7 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
 
         let self = currentTarget;
         let elementRatio = document.getElementsByClassName('ratio');
-        [].forEach.call(elementRatio,function(el) {
+        [].forEach.call(elementRatio, function (el) {
             el.classList.remove('active');
         });
         self.classList.add("active");
@@ -669,27 +673,26 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
         $scope.editVideo.isDirty = true;
 
     }
-<<<<<<< Updated upstream
     /**
      * @ngdoc method
      * @name ChangeImageController#rotateVideo
      * @public
      * @description rotate video to the left
-     * 
+     *
      */
-    var rotate = { left:0 };
+    var rotate = {left: 0};
     $scope.rotateVideo = (direction) => {
         var video = document.getElementById('video');
         switch (direction) {
             case 'left':
                 rotate.left = rotate.left - 90;
 
-                let scale = (rotate.left / 90) % 2 ? (video.clientHeight / video.clientWidth ) : 1;
+                let scale = (rotate.left / 90) % 2 ? (video.clientHeight / video.clientWidth) : 1;
                 video.style.transform = `rotate(${rotate.left}deg) scale(${scale})`;
 
                 let iconRotate = document.getElementsByClassName('icon-rotate-custom')[0];
 
-                if((rotate.left / 180) % 2 === 0)
+                if ((rotate.left / 180) % 2 === 0)
                     iconRotate.setAttribute("style", "color:#ffffff !important;");
                 else
                     iconRotate.setAttribute("style", "color:#01f18b !important;");
@@ -702,13 +705,13 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
         }
     }
 
-    function showCoords(c)
-    {
+    function showCoords(c) {
         // variables can be accessed here as
         // c.x, c.y, c.x2, c.y2, c.w, c.h
-        positionCropVideo = [c.x , c.y ,c.x2 , c.y2 ,c.w , c.h];
+        positionCropVideo = [c.x, c.y, c.x2, c.y2, c.w, c.h];
     };
-    function showHideToggleMenu(elem,className){
+
+    function showHideToggleMenu(elem, className) {
         // hasClass
         function hasClass(elem, className) {
             return new RegExp(' ' + className + ' ').test(' ' + elem.className + ' ');
@@ -726,6 +729,7 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
         }
 
     }
+
     function showCoords(c) {
         // variables can be accessed here as
         // c.x, c.y, c.x2, c.y2, c.w, c.h
