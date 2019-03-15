@@ -107,6 +107,8 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
             starttime: starttime,
             endtime: endtime
         };
+        $scope.rotatingVideo = {degree : rotate}; 
+        $scope.qualityVideo = {quality:qualityVideo};
         $scope.editVideo.isChange = true;
     };
 
@@ -211,7 +213,7 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
 
     var video, progressoutput, controlbar, inner, maskleft, maskright, barleft, barright, cbwrapper, iconplay, iconstop;
     var mins = 0, secs = 0, li = 0, starttime = 0, endtime = 0;
-    var positionCropVideo = {}, jcrop_api;
+    var positionCropVideo = {}, jcrop_api , rotate = { left:0 } , qualityVideo;
 
     /**
      * @ngdoc method
@@ -275,6 +277,11 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
         barright.ondragend = function () {
             onDragEndCb();
         };
+
+        if($scope.rotatingVideo.degree){
+            let video = document.getElementById('video');
+            actRotate(video,$scope.rotatingVideo.degree);
+        }
 
         loadImage();
 
@@ -565,7 +572,7 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
         }
     };
 
-// Area of Interest
+    // Area of Interest
     $scope.data.showAoISelectionButton = $scope.data.showAoISelectionButton === true;
 
     function extractEditableMetadata(metadata) {
@@ -574,17 +581,31 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
 
     /**
      * @ngdoc method
-     * @name ChangeImageController#toggleMenu
+     * @name ChangeImageController#toggleMenuRatio
      * @public
      * @description menu for crop video
      *
      */
-    $scope.toggleMenu = () => {
+    $scope.toggleMenuRatio = () => {
         if (video.play) {
             video.pause();
         }
+        let theToggle = document.getElementById('toggle');
+        showHideToggleMenu(theToggle, 'on');
+        return false;
 
-        var theToggle = document.getElementById('toggle');
+    };
+
+    /**
+     * @ngdoc method
+     * @name ChangeImageController#toggleMenuQuality
+     * @public
+     * @description menuRatio for crop video
+     * 
+     */
+    $scope.toggleMenuQuality = () => {
+
+        let theToggle = document.getElementById('toggleQuality');
         showHideToggleMenu(theToggle, 'on');
         return false;
 
@@ -669,7 +690,6 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
         $scope.editVideo.isDirty = true;
 
     }
-<<<<<<< Updated upstream
     /**
      * @ngdoc method
      * @name ChangeImageController#rotateVideo
@@ -677,22 +697,12 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
      * @description rotate video to the left
      * 
      */
-    var rotate = { left:0 };
     $scope.rotateVideo = (direction) => {
-        var video = document.getElementById('video');
+        let video = document.getElementById('video');
         switch (direction) {
             case 'left':
-                rotate.left = rotate.left - 90;
-
-                let scale = (rotate.left / 90) % 2 ? (video.clientHeight / video.clientWidth ) : 1;
-                video.style.transform = `rotate(${rotate.left}deg) scale(${scale})`;
-
-                let iconRotate = document.getElementsByClassName('icon-rotate-custom')[0];
-
-                if((rotate.left / 180) % 2 === 0)
-                    iconRotate.setAttribute("style", "color:#ffffff !important;");
-                else
-                    iconRotate.setAttribute("style", "color:#01f18b !important;");
+                let degree = rotate.left = rotate.left - 90;
+                actRotate(video,degree);
                 break;
 
             case 'right':
@@ -702,19 +712,34 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
         }
     }
 
-    function showCoords(c)
-    {
-        // variables can be accessed here as
-        // c.x, c.y, c.x2, c.y2, c.w, c.h
-        positionCropVideo = [c.x , c.y ,c.x2 , c.y2 ,c.w , c.h];
-    };
+    function actRotate(elementVideo,degree) {
+        
+
+        let scale = (degree / 90) % 2 ? (elementVideo.clientHeight / elementVideo.clientWidth ) : 1;
+        elementVideo.style.transform = `rotate(${degree}deg) scale(${scale})`;
+
+        let iconRotate = document.getElementsByClassName('icon-rotate-custom')[0];
+        if((degree / 180) % 2 === 0)
+            iconRotate.setAttribute("style", "color:#ffffff !important;");
+        else
+            iconRotate.setAttribute("style", "color:#01f18b !important;");
+    }
+
+    /**
+     * @ngdoc method
+     * @name ChangeImageController#qualityVideo
+     * @public
+     * @description change quality the video
+     * 
+    */
+    $scope.changeQualityVideo = (element) => {
+        qualityVideo = element;
+    }
     function showHideToggleMenu(elem,className){
         // hasClass
         function hasClass(elem, className) {
             return new RegExp(' ' + className + ' ').test(' ' + elem.className + ' ');
         }
-
-
         var newClass = ' ' + elem.className.replace(/[\t\r\n]/g, " ") + ' ';
         if (hasClass(elem, className)) {
             while (newClass.indexOf(" " + className + " ") >= 0) {

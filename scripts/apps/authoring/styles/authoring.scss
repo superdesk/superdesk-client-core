@@ -1749,6 +1749,11 @@ feature-image {
     left: 1.5rem;
     position: absolute;
 }
+.btn-quality{
+    top: 15%;
+    right: 1.5rem;
+    position: absolute;
+}
 
 
 
@@ -1980,24 +1985,36 @@ md-controlbars .control-bar {
 //     margin: 30px auto 10px;
 //   }
   
+
+#toggleQuality{
+    padding: 0.89em 0.8em;
+}
+
   #toggle span:after,
-  #toggle span:before {
+  #toggle span:before,
+  #toggleQuality span:after,
+  #toggleQuality span:before {
     content: "";
     position: absolute;
     left: 0;
     top: -9px;
   }
-  #toggle span:after{
+  #toggle span:after,
+  #toggleQuality span:after{
     top: 9px;
   }
-  #toggle span {
+  #toggle span,
+  #toggleQuality span {
     position: relative;
     display: block;
   }
   
   #toggle span,
   #toggle span:after,
-  #toggle span:before {
+  #toggle span:before,
+  #toggleQuality span,
+  #toggleQuality span:after,
+  #toggleQuality span:before  {
     width: 100%;
     height: 5px;
     background-color: #888;
@@ -2007,26 +2024,38 @@ md-controlbars .control-bar {
   }
   
   /* on activation */
-  #toggle.on span {
+  #toggle.on span,
+  #toggleQuality.on span {
     background-color: transparent;
   }
-  #toggle.on span:before {
+  #toggle.on span:before,
+  #toggleQuality.on span:before {
     transform: rotate(45deg) translate(5px, 5px);
   }
-  #toggle.on span:after {
+  #toggle.on span:after,
+  #toggleQuality.on span:after {
     transform: rotate(-45deg) translate(7px, -8px);
   }
-  #toggle.on + #menu {
+  #toggle.on + #menuRatio,
+  #toggleQuality.on + #menuQuality {
     opacity: 1;
     visibility: visible;
   }
   
   /* menu appearance*/
-  #menu {
+
+  #menuQuality{
+    margin-top: -213px !important;  
+    margin-left: -14px !important;
+  }
+
+  #menuRatio,
+  #menuQuality {
     z-index: 999;
-    margin-top: -174px;
+    margin-top: -164px;
     position: fixed;
-    width: 150px;
+    margin-left: 21px;
+    width: 6%;
     padding: 10px;
     font-family: "Segoe UI", Candara, "Bitstream Vera Sans", "DejaVu Sans", "Bitstream Vera Sans", "Trebuchet MS", Verdana, "Verdana Ref", sans-serif;
     text-align: center;
@@ -2039,21 +2068,26 @@ md-controlbars .control-bar {
     visibility: hidden;
     transition: opacity .4s;
   }
-  #menu ul{
+  #menuRatio ul,
+  #menuQuality ul{
     padding: 6px 20px 6px 40px;
     white-space: nowrap;
     cursor: pointer;
   }
-  #menu ul li span:hover{
+  #menuRatio ul li span:hover,
+  #menuQuality ul li span:hover{
     color: #01f18b;
   }
-  #menu ul li {
+  #menuRatio ul li,
+  #menuQuality ul li {
     color: #fff;
   }
-  #menu .active{
+  #menuRatio .active,
+  #menuQuality .active{
     color: #01f18b;
   }
-  #menu ul, li span {
+  #menuRatio ul, li span,
+  #menuQuality ul, li span {
     list-style: none;
     display: block;
     margin: 0;
