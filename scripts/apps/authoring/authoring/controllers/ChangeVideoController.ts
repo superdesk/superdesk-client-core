@@ -138,6 +138,14 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
         if ($scope.addThumbnail) {
             loadImage()
         }
+
+        // disable crop video
+        if(jcrop_api){
+            jcrop_api.release();
+            jcrop_api.disable();
+            positionCropVideo= [];
+        }
+        
     };
 
     /**
@@ -570,26 +578,7 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
         }
 
         var theToggle = document.getElementById('toggle');
-
-        // hasClass
-        function hasClass(elem, className) {
-            return new RegExp(' ' + className + ' ').test(' ' + elem.className + ' ');
-        }
-
-        // toggleClass
-        function toggleClass(elem, className) {
-            var newClass = ' ' + elem.className.replace(/[\t\r\n]/g, " ") + ' ';
-            if (hasClass(elem, className)) {
-                while (newClass.indexOf(" " + className + " ") >= 0) {
-                    newClass = newClass.replace(" " + className + " ", " ");
-                }
-                elem.className = newClass.replace(/^\s+|\s+$/g, '');
-            } else {
-                elem.className += ' ' + className;
-            }
-        }
-
-        toggleClass(theToggle, 'on');
+        showHideToggleMenu(theToggle, 'on');
         return false;
 
     };
@@ -602,6 +591,13 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
      *
      */
     $scope.cropVideo = (ratio,currentTarget) => {
+        if(jcrop_api){
+            jcrop_api.enable();
+        }
+
+        var theToggle = document.getElementById('toggle');
+        showHideToggleMenu(theToggle, 'on');
+
         let self = currentTarget;
         let elementRatio = document.getElementsByClassName('ratio');
         [].forEach.call(elementRatio,function(el) {
@@ -666,15 +662,6 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
         $scope.editVideo.isDirty = true;
         
     }
-    
-    function showCoords(c)
-    {
-        // variables can be accessed here as
-        // c.x, c.y, c.x2, c.y2, c.w, c.h
-        positionCropVideo = [c.x , c.y ,c.x2 , c.y2 ,c.w , c.h];
-    };    
-    
-
     /**
      * @ngdoc method
      * @name ChangeImageController#rotateVideo
@@ -706,4 +693,31 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
                 break;
         }
     }
+    
+    function showCoords(c)
+    {
+        // variables can be accessed here as
+        // c.x, c.y, c.x2, c.y2, c.w, c.h
+        positionCropVideo = [c.x , c.y ,c.x2 , c.y2 ,c.w , c.h];
+    };    
+    
+    function showHideToggleMenu(elem,className){
+        // hasClass
+        function hasClass(elem, className) {
+            return new RegExp(' ' + className + ' ').test(' ' + elem.className + ' ');
+        }
+
+        
+        var newClass = ' ' + elem.className.replace(/[\t\r\n]/g, " ") + ' ';
+        if (hasClass(elem, className)) {
+            while (newClass.indexOf(" " + className + " ") >= 0) {
+                newClass = newClass.replace(" " + className + " ", " ");
+            }
+            elem.className = newClass.replace(/^\s+|\s+$/g, '');
+        } else {
+            elem.className += ' ' + className;
+        }
+        
+    }
+    
 }
