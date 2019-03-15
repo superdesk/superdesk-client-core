@@ -93,12 +93,15 @@ export function RenditionsService(metadata, $q, api, superdesk, _, notify) {
             })
                 .then((result) => {
                     const savingVideoPromises = [];
-                    if (!isEmpty(result.cuttingVideo) || !isEmpty(result.addThumbnail)) {
+                    if (result.hasChange==true) {
                         savingVideoPromises.push(api.save("video_edit", {
                             action:'edit',
                             item: clonedItem,
                             video_cut: result.cuttingVideo,
-                            thumbnail_add: result.addThumbnail
+                            video_crop: result.croppingVideo,
+                            video_rotate: result.rotatingVideo,
+                            video_quality: result.qualityVideo,
+                            thumbnail_add: result.addingThumbnail,
                         }));
                     }
                     return $q.all(savingVideoPromises)
@@ -109,7 +112,12 @@ export function RenditionsService(metadata, $q, api, superdesk, _, notify) {
 
                                 // update association renditions
                                 angular.extend(
-                                    result.metadata,editvideo.result);
+                                    result.metadata.renditions,editvideo.result.renditions);
+                                if ('media' in result)
+                                {
+                                    result.metadata.media = result.media;
+                                }
+
                             });
                             angular.extend(item, result.metadata);
                             return item;
