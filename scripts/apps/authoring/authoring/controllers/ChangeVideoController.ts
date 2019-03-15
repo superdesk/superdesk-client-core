@@ -278,11 +278,6 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
             onDragEndCb();
         };
 
-        if($scope.rotatingVideo.degree){
-            let video = document.getElementById('video');
-            actRotate(video,$scope.rotatingVideo.degree);
-        }
-
         loadImage();
 
         document.getElementById('file-upload').onchange = function (evt) {
