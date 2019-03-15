@@ -217,7 +217,6 @@ export function MultiImageEditDirective(asset, $sce) {
             };
 
             scope.toggleAutofill = () => {
-                scope.autoFill = !scope.autoFill;
                 localStorage.setItem(METADATA_AUTOFILL, scope.autoFill);
             };
 

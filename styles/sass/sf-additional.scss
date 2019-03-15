@@ -1936,3 +1936,9 @@
 sd-tag-input + .sd-line-input__message {
     margin-top: -2rem;
 }
+
+sd-multi-image-edit {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
