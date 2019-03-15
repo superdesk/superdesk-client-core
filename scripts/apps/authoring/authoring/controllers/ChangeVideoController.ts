@@ -107,6 +107,8 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
             starttime: starttime,
             endtime: endtime
         };
+        $scope.rotatingVideo = {degree : rotate}; 
+        $scope.qualityVideo = {quality:qualityVideo};
         $scope.editVideo.isChange = true;
     };
 
@@ -140,10 +142,10 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
             loadImage();
         }
         // disable crop video
-        if (jcrop_api) {
+        if(jcrop_api){
             jcrop_api.release();
             jcrop_api.disable();
-            positionCropVideo = [];
+            positionCropVideo= [];
         }
         positionCropVideo = {};
     };
@@ -211,7 +213,7 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
 
     var video, progressoutput, controlbar, inner, maskleft, maskright, barleft, barright, cbwrapper, iconplay, iconstop;
     var mins = 0, secs = 0, li = 0, starttime = 0, endtime = 0;
-    var positionCropVideo = {}, jcrop_api;
+    var positionCropVideo = {}, jcrop_api , rotate = { left:0 } , qualityVideo;
 
     /**
      * @ngdoc method
@@ -705,19 +707,11 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
         }
     }
 
-    function showCoords(c) {
-        // variables can be accessed here as
-        // c.x, c.y, c.x2, c.y2, c.w, c.h
-        positionCropVideo = [c.x, c.y, c.x2, c.y2, c.w, c.h];
-    };
-
     function showHideToggleMenu(elem, className) {
         // hasClass
         function hasClass(elem, className) {
             return new RegExp(' ' + className + ' ').test(' ' + elem.className + ' ');
         }
-
-
         var newClass = ' ' + elem.className.replace(/[\t\r\n]/g, " ") + ' ';
         if (hasClass(elem, className)) {
             while (newClass.indexOf(" " + className + " ") >= 0) {

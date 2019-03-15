@@ -77,26 +77,39 @@
                                     </i>
                                 </button>
                                 <button class="btn btn--ui-dark btn--hollow btn--icon-only btn--large"
-                                        ng-click="toggleMenu()" id="toggle">
+                                        ng-click="toggleMenuRatio()" id="toggle">
                                         <i style="color: #ffffff" class="icon-crop"></i>
                                 </button>
-                                <div id="menu">
+                                <div id="menuRatio">
                                     <ul>
                                       <li class="ratio" ng-click="cropVideo('1:1',$event.currentTarget)"><span>1:1</span></li>
                                       <li class="ratio" ng-click="cropVideo('4:3',$event.currentTarget)"><span>4:3</span></li>
                                       <li class="ratio" ng-click="cropVideo('16:9',$event.currentTarget)"><span>16:9</span></li>
-                                      <!-- <li ng-click="cropVideo('clear')"><span>Clear crop</span></li> -->
                                     </ul>
                                 </div>
                                 <button class="btn btn--ui-dark btn--hollow btn--icon-only btn--large" 
                                     ng-click="rotateVideo('left')">
                                     <i class="icon-rotate-left icon--white icon-rotate-custom"></i>
                                 </button>
-                                
                             </div>
                             <label class="sd-photo-preview__label name-boder">
                                 {{data.item.headline}}
                             </label>
+                            <div class="btn-quality">
+                                <button class="btn btn--ui-dark btn--hollow btn--icon-only"
+                                    ng-click="toggleMenuQuality()" id="toggleQuality">
+                                    Quality
+                                </button>
+                                <div id="menuQuality">
+                                    <ul>
+                                      <li class="quality" ng-click="changeQualityVideo($event.currentTarget.value)" value="720"><span>720p</span></li>
+                                      <li class="quality" ng-click="changeQualityVideo($event.currentTarget.value)" value="480"><span>480p</span></li>
+                                      <li class="quality" ng-click="changeQualityVideo($event.currentTarget.value)" value="360"><span>360p</span></li>
+                                      <li class="quality" ng-click="changeQualityVideo($event.currentTarget.value)" value="240"><span>240p</span></li>
+                                      <li class="quality" ng-click="changeQualityVideo($event.currentTarget.value)" value="0"><span>Same</span></li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
