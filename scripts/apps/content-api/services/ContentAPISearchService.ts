@@ -127,12 +127,12 @@ export class ContentAPISearchService {
                     range.versioncreated.gte = this.search.formatDate(paramsObject.afterversioncreated, zeroHourSuffix);
                 }
 
-                return [..._filters, { range }];
+                return [..._filters, {range}];
             } else if (paramsObject.after) {
                 let range: any = {firstcreated: {}};
 
                 range.firstcreated.gte = paramsObject.after;
-                return [..._filters, { range }];
+                return [..._filters, {range}];
             }
 
             return _filters;

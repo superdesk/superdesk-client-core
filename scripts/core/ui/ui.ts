@@ -1,3 +1,6 @@
+/* eslint-disable max-len */
+/* tslint:disable:max-line-length */
+
 import _, {mapValues} from 'lodash';
 import moment from 'moment-timezone';
 import {gettext} from 'core/utils';
@@ -1103,8 +1106,6 @@ function MultipleEmailsValidation() {
         restrict: 'A',
         require: 'ngModel',
         link: function(scope, elem, attrs, ctrl) {
-            // eslint-disable-next-line max-len
-            // tslint:disable-next-line:max-line-length
             var EMAIL_REGEXP = /^(?=.{1,254}$)(?=.{1,64}@)[-!#$%&'*+\/0-9=?A-Z^_`a-z{|}~]+(\.[-!#$%&'*+\/0-9=?A-Z^_`a-z{|}~]+)*@[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?(\.[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?)*$/;
 
             ctrl.$validators.multipleEmails = function(modelValue, viewValue) {

@@ -5,9 +5,10 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, editor, config, $q
     var self = this;
 
     function Block(attrs: any = {}) {
+        // eslint-disable-next-line consistent-this
         var BlockFnThis = this;
 
-        angular.extend (BlockFnThis, _.defaults({
+        angular.extend(BlockFnThis, _.defaults({
             body: attrs.body,
             loading: attrs.loading,
             caption: attrs.caption,

@@ -189,6 +189,7 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
      * @return {Promise}
      */
     this.getTypes = function(includeDisabled) {
+        // eslint-disable-next-line consistent-this
         var getTypesFnThis = this;
         var params = {};
 

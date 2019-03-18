@@ -13,8 +13,8 @@ function isLinkExternal(href) {
 document.addEventListener('click', (event) => {
     if (event != null) {
         const target = event.target as HTMLAnchorElement;
-        if (target && target.tagName === 'A' && isLinkExternal(target.href)) {
 
+        if (target && target.tagName === 'A' && isLinkExternal(target.href)) {
             event.preventDefault();
             event.stopPropagation();
 

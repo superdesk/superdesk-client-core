@@ -94,7 +94,7 @@ export function ArchiveService(desks, session, api, $q, search, $location, confi
         query.size(200);
 
         if (_.get(item, '_id')) {
-            let filter: any  = {
+            let filter: any = {
                 bool: {
                     must_not: [
                         {bool: {must: [{term: {_id: item._id}}, {term: {_type: 'archive'}}]}},

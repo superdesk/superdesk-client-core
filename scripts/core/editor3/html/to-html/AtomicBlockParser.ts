@@ -121,6 +121,7 @@ export class AtomicBlockParser {
         const id = `${type} {id: "editor_${key}"}`;
 
         if (desc) {
+            // eslint-disable-next-line
             content += `\n    <figcatpion>${desc}</figcaption>`;
         }
 
