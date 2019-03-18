@@ -217,6 +217,16 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, deploy
     * @description
     */
     $scope.cancelMetadataChanges = () => {
+        const selectedUsageTerms = [];
+
+        $scope.data.metadata.subject.forEach((value, key) => {
+            if (!$scope.data.item.subject.find((item) => item.qcode === value.qcode)) {
+                selectedUsageTerms.push(value);
+            }
+        });
+        if (selectedUsageTerms.length) {
+            $rootScope.$broadcast('clear: selectedUsageTerms', selectedUsageTerms);
+        }
         $scope.data.metadata = angular.copy($scope.data.item);
         $scope.metadata.isDirty = false;
     };
