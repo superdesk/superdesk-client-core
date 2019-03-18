@@ -632,6 +632,24 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
 
     /**
      * @ngdoc method
+     * @name ChangeImageController#toggleMenuRatio
+     * @public
+     * @description menu for crop video
+     *
+     */
+    $scope.toggleMenuRatio = () => {
+        if (video.play) {
+            video.pause();
+        }
+        let theToggle = document.getElementById('toggle');
+        showHideToggleMenu(theToggle, 'on');
+        return false;
+
+    };
+
+
+    /**
+     * @ngdoc method
      * @name ChangeImageController#cropVideo
      * @public
      * @description crop video
