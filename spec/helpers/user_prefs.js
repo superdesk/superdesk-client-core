@@ -3,6 +3,7 @@
 module.exports = new UserPrefs();
 
 var nav = require('./utils').nav;
+var wait = require('./utils').wait;
 
 /**
  * A helper for working with the user preference settings located in the
@@ -29,6 +30,19 @@ function UserPrefs() {
         element(by.css('[name="user_language"]'))
             .element(by.cssContainingText('option', lang))
             .click();
+    };
+
+    this.save = () => {
+        wait(this.btnSave, 3000);
+        this.btnSave.click();
+
+        const ok = element(by.className('modal__footer')).element(by.className('btn--primary'));
+
+        ok.isDisplayed().then((click) => {
+            if (click) {
+                ok.click();
+            }
+        });
     };
 
     this.navigateTo = function() {
