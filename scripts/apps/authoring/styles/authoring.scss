@@ -1753,6 +1753,9 @@ feature-image {
     top: 15%;
     right: 1.5rem;
     position: absolute;
+    width: 111px;
+    margin-top: 5px;
+    cursor: pointer;
 }
 
 
@@ -1987,7 +1990,7 @@ md-controlbars .control-bar {
   
 
 #toggleQuality{
-    padding: 0.89em 0.8em;
+    // padding: 0.89em 0.8em;
 }
 
   #toggle span:after,
@@ -2045,22 +2048,24 @@ md-controlbars .control-bar {
   /* menu appearance*/
 
   #menuQuality{
-    margin-top: -213px !important;  
-    margin-left: -14px !important;
+    margin-top: -217px !important;  
+    margin-left: -21px !important;
   }
-
+  #menuQuality hr , #menuRatio hr{
+      margin: 5px 0;
+  }
   #menuRatio,
   #menuQuality {
     z-index: 999;
-    margin-top: -164px;
+    margin-top: -194px;
     position: fixed;
-    margin-left: 21px;
+    margin-left: 23px;
     width: 6%;
-    padding: 10px;
+    padding: 10px 0 10px 0;
     font-family: "Segoe UI", Candara, "Bitstream Vera Sans", "DejaVu Sans", "Bitstream Vera Sans", "Trebuchet MS", Verdana, "Verdana Ref", sans-serif;
     text-align: center;
     border-radius: 10px;
-    background-color: #444;
+    background-color: rgba(25,30,64,0.55);
     box-shadow: 0 1px 8px rgba(0,0,0,0.05);
     overflow: hidden;
     /* just for this demo */
@@ -2070,7 +2075,6 @@ md-controlbars .control-bar {
   }
   #menuRatio ul,
   #menuQuality ul{
-    padding: 6px 20px 6px 40px;
     white-space: nowrap;
     cursor: pointer;
   }
@@ -2092,9 +2096,27 @@ md-controlbars .control-bar {
     display: block;
     margin: 0;
     
-    padding: 5px;
+    padding: 5px 0 5px 0;
   }
 
+  li.quality:hover, li.ratio:hover {
+    background-color: rgba(255,255,255,.1);
+  }
+  #txtQuality{
+    color: #2988a0;
+    margin-left: 5px;
+    text-transform: none;
+    font-weight: 400;
+    box-sizing: border-box;
+    width: auto;
+    display: inline-block;
+  }
+  .btn-quality [class^="icon-"]{
+    color: #2988a0;
+    position: relative;
+    top: 5px;
+
+  }
 //custom jcrop 
 .jcrop-dark {
     .jcrop-handle {
