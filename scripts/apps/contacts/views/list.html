@@ -21,8 +21,8 @@
            ng-class="{'filter-trigger--active': openAdvanceSearch}"
       ><i class="icon-filter-large"></i></div>
       <div class="dropdown" dropdown>
-            <button class="dropdown__toggle navbtn navbtn--text-only" dropdown__toggle translate>
-                Privacy Level: {{filters.selectedPrivacy.name}}
+            <button class="dropdown__toggle navbtn navbtn--text-only" dropdown__toggle>
+                {{ :: 'Privacy Level:' | translate }} {{filters.selectedPrivacy.name}}
                 <span class="dropdown__caret"></span>
             </button>
             <ul class="dropdown__menu">
@@ -32,8 +32,8 @@
             </ul>
       </div>
       <div class="dropdown" dropdown>
-            <button class="dropdown__toggle navbtn navbtn--text-only" dropdown__toggle translate>
-                Status: {{filters.selectedStatus.name}}
+            <button class="dropdown__toggle navbtn navbtn--text-only" dropdown__toggle>
+                {{ :: 'Status:' | translate }} {{filters.selectedStatus.name}}
                 <span class="dropdown__caret"></span>
             </button>
             <ul class="dropdown__menu">

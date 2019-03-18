@@ -52,6 +52,10 @@
                                 <h4>{{ :: 'Desk Type' | translate }}</h4>
                                 <span>{{ desk.desk_type | translate }}</span>
                             </li>
+                            <li ng-if="desk.preserve_published_content">
+                                <h4>{{ :: 'Published Content' | translate }}</h4>
+                                <span>{{ :: 'Not Expired' | translate }}</span>
+                            </li>
                             <li class="card-box__content-list-item--inline" ng-if="desk.desk_language">
                                 <h4>{{ :: 'Language' | translate }}</h4>
                                 <span>{{ desk.desk_language | translate }}</span>

@@ -15,8 +15,7 @@ export function WordCount() {
             html: '@',
             countOnly: '@',
         },
-        template: '<span ng-if="!countOnly" class="char-count words" translate>{{numWords}} words</span>' +
-                  '<span ng-if="countOnly" class="char-count words">{{numWords}}</span>',
+        template: require('./WordCount.html'),
         link: function wordCountLink(scope, elem, attrs) {
             /* This pattern matches http(s) links, numbers (1.000.000 or 1,000,000 or 1 000 000), regulars words,
             compound words (e.g. "two-done") or abbreviation (e.g. D.C.)
