@@ -341,7 +341,8 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
         const keys = Object.keys(associations);
 
         return Promise.all(keys.map((key) => {
-            if (associations[key] && associations[key]._id && !associations[key].guid) {
+            // there is only _id, maybe _type for related items
+            if (associations[key] && Object.keys(associations[key]).length <= 2) {
                 return api.find('archive', associations[key]._id);
             }
 
