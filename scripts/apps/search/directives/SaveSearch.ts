@@ -78,7 +78,8 @@ export function SaveSearch($location, asset, api, session, notify, $rootScope) {
                 // perform search with selected parameters before saving
                 // so parameters get in the url where they are later read from
                 scope.search();
-                editSearch.filter = {query: clone($location.search())};
+
+                editSearch.filter = editSearch.filter ? editSearch.filter : {query: clone($location.search())};
                 var originalSearch = editSearch._id ? scope.editingSearch : {};
 
                 saveOrUpdateSavedSearch(api, originalSearch, editSearch)

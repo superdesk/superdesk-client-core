@@ -337,7 +337,7 @@ export function SearchService($location, config, session, multi,
             // date filters start
             var facetrange = {};
 
-            // inject custom field filters { fieldname: 'string(IDateRange)' }
+            // inject custom date field filters { fieldname: 'string(IDateRange)' }
             if (typeof params.customFields !== 'undefined') {
                 for (let [fieldname, range] of Object.entries(params.customFields)) {
                     if (typeof dateRangesByKey[range] !== 'undefined') {
@@ -507,6 +507,13 @@ export function SearchService($location, config, session, multi,
 
         // this is needed for archived collection
         this.filter({not: {term: {package_type: 'takes'}}});
+
+        // inject custom elastic search queries
+        if (params.customQueries != null) {
+            for (let q of params.customQueries) {
+                this.filter(q);
+            }
+        }
 
         buildFilters(params, this);
     }

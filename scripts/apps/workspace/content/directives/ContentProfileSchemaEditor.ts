@@ -28,7 +28,6 @@ interface IScope extends ng.IScope {
 }
 
 const articleHeaderHardcodedFields = new Set<keyof IArticle>([
-    'slugline',
     'keywords',
     'genre',
     'anpa_take_key',
@@ -94,7 +93,7 @@ export function ContentProfileSchemaEditor(content, metadata, vocabularies, noti
                 };
 
                 const getArticleCommonFields = (customTextAndDateVocabularies) => {
-                    const articleCommonFields = new Set();
+                    const articleCommonFields = new Set(['slugline']);
 
                     customTextAndDateVocabularies.forEach((filteredCustomField) => {
                         articleCommonFields.add(filteredCustomField._id);

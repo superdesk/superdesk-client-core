@@ -548,6 +548,11 @@ Add new widget modal
                     background-color: $widget_analytics;
                 }
             }
+            &.stages-auto-publish {
+                .thumbnail {
+                    background-color: $widget_publish;
+                }
+            }
             // selected
             &.selected {
                 cursor: default;

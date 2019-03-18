@@ -341,6 +341,7 @@ export function IngestSourcesContent(ingestSources, notify, api, $location,
 
                 $scope.cancel = function() {
                     $scope.provider = null;
+                    $scope.error = null;
                 };
 
                 $scope.setConfig = function(provider) {
