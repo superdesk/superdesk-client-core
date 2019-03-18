@@ -47,7 +47,7 @@
                 <div class="video-preview">
                     <div id="player-overlay">
                         <div class="video-player">
-                            <video id="video" class="video-display" ng-if="data.item.type === 'video'" ng-init="videoInit()"
+                            <video autoplay="autoplay"  id="video" class="video-display" ng-if="data.item.type === 'video'" ng-init="videoInit()"
                                 ng-src="{{data.item.renditions.original.href}}"></video>
                         </div>
                         <div class="sd-photo-preview__thumb-strip video-control">

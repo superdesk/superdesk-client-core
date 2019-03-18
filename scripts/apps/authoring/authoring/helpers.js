@@ -49,6 +49,7 @@ export const CONTENT_FIELDS_DEFAULTS = Object.freeze({
     attachments: null,
     semantics: null,
     annotations: null,
+    media:null,
     [META_FIELD_NAME]: {},
 });
 

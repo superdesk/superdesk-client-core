@@ -107,7 +107,7 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
             starttime: starttime,
             endtime: endtime
         };
-        $scope.rotatingVideo = {degree : rotate}; 
+        $scope.rotatingVideo = {degree : 360+(rotate.left)};
         $scope.qualityVideo = {quality:qualityVideo};
         $scope.editVideo.isChange = true;
     };
@@ -122,6 +122,7 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
         $scope.editVideo.isChange = false;
         $scope.editVideo.isDirty = false;
         starttime = 0;
+        video = document.getElementById('video');
         endtime = video.duration;
         TweenMax.set(cbwrapper, {
             right: '0%'
@@ -342,7 +343,7 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
         }
         var inner_frames = document.getElementById('inner-frames');
         var total_thumbnail = Math.ceil(controlbar.offsetWidth / widthpic);
-        var per_index_image = 20 / total_thumbnail;
+        var per_index_image = 35 / total_thumbnail;
         if (inner_frames) {
             inner_frames.innerHTML = '';
             for (var i = 0; i <= total_thumbnail; i++) {
