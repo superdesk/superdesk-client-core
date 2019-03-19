@@ -13,8 +13,8 @@
         <button class="btn btn--primary btn--expanded btn--hollow search" ng-click="search()" ng-if="innerTab==='parameters'" translate>Search</button>
         <div class="save-search__button-split">
             <button id="saveas_search_init" class="btn btn" ng-click="saveas()" translate ng-if="editingSearch">Save As</button>
+            <button id="save_search_init" class="btn btn--primary" ng-click="save(edit)" ng-disabled="!isValid(edit)" ng-if="editingSearch" translate>Save Changes</button>
             <button id="save_search_init" class="btn btn--primary" ng-click="editItem()" ng-if="!editingSearch" translate>Save Changes</button>
-            <button id="save_search_init" class="btn btn--primary" ng-click="save(edit)" ng-if="editingSearch" translate>Save Changes</button>
         </div>
     </div>
 </div>
