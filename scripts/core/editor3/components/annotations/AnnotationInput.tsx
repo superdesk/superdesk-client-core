@@ -173,7 +173,7 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
 
         const annotationTypeSelect = annotationTypes == null ? null : (
             <div className="sd-line-input sd-line-input--is-select">
-                <label className="sd-line-input__label">Annotation Type</label>
+                <label className="sd-line-input__label">{gettext('Annotation Type')}</label>
                 <select className="sd-line-input__select" onChange={this.onSelect} value={type}>
                     {annotationTypes.map((annotationType) =>
                         <option key={annotationType.qcode} value={annotationType.qcode}>
@@ -188,7 +188,7 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
             <div>
                 {annotationTypeSelect}
                 <div className="sd-line-input">
-                    <label className="sd-line-input__label">Annotation Body</label>
+                    <label className="sd-line-input__label">{gettext('Annotation Body')}</label>
                     <Editor3Standalone
                         onChange={this.onChange}
                         editorFormat={['bold', 'italic', 'underline', 'link']}
