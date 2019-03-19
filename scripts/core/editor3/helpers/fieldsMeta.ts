@@ -39,8 +39,10 @@ export function setFieldMetadata(item, fieldKey, contentKey, contentValue) {
         throw new Error('Invalid key');
     }
 
-    item[META_FIELD_NAME][fieldKey] = {
-        ...item[META_FIELD_NAME][fieldKey],
-        [contentKey]: wrapper.wrap(contentValue),
-    };
+    if (item[META_FIELD_NAME]) {
+        item[META_FIELD_NAME][fieldKey] = {
+            ...item[META_FIELD_NAME][fieldKey],
+            [contentKey]: wrapper.wrap(contentValue),
+        };
+    }
 }

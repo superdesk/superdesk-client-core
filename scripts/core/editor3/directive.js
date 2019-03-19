@@ -160,6 +160,7 @@ class Editor3Directive {
         this.disableSpellchecker = this.disableSpellchecker || false;
         this.bindToValue = this.bindToValue || false;
         this.tabindex = this.tabindex || 0;
+        this.refreshTrigger = this.refreshTrigger || 0;
         this.showTitle = this.showTitle || false;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
