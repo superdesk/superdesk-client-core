@@ -1,4 +1,4 @@
-export interface IFormField { // don't fortget to update runtime type checks
+export interface IFormField { // don't forget to update runtime type checks
     type: 'text_single_line' | 'text_editor3' | 'vocabulary_single_value';
     required?: boolean;
 
@@ -15,13 +15,13 @@ export interface IFormField { // don't fortget to update runtime type checks
     component_parameters?: {[key: string]: any};
 }
 
-export function isIFormField(x: IFormGroup['form'][0]): x is IFormField { // don't fortget to update runtime type checks
+export function isIFormField(x: IFormGroup['form'][0]): x is IFormField { // don't forget to update runtime type checks
     return x['direction'] == null;
 }
 
 //
 
-export interface IFormGroupCollapsible { // don't fortget to update runtime type checks
+export interface IFormGroupCollapsible { // don't forget to update runtime type checks
     label: string;
     openByDefault: boolean;
 }
@@ -32,7 +32,7 @@ export function isIFormGroupCollapsible(x: IFormGroup['type']): x is IFormGroupC
 
 //
 
-export interface IFormGroup { // don't fortget to update runtime type checks
+export interface IFormGroup { // don't forget to update runtime type checks
     direction: 'vertical' | 'horizontal';
     type: 'inline' | IFormGroupCollapsible;
     form: Array<IFormField | IFormGroup>;
