@@ -287,18 +287,15 @@
     }
 }
 
-.swimlane2 {
-    display: flex;
-    justify-content: space-between;
+.sd-kanban-list-container {
+    height: 100%;
+}
 
-    > * {
-        flex-basis: 0;
-        flex-grow: 1;
-        min-width: 250px;
-    }
+.sd-kanban-list {
+    overflow: auto;
 
-    > * + * {
-        margin-left: 15px
+    .fix-stage { // there should be no div for .stage, but it's needed for list view
+        flex: 1 1 0;
     }
 }
 

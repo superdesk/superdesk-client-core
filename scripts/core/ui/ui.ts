@@ -919,49 +919,6 @@ function splitterWidget(superdesk, $timeout) {
 }
 
 /*
- * Header Resize directive for swimlane view, applies the same width of
- * stage column to its fixed positioned header in order to resize it.
- * sd-header-resize used in monitoring-view.html with respective sd-monitoring-group
- *
- */
-HeaderResizeDirective.$inject = ['$rootScope', '$timeout', '$window', 'workspaces'];
-function HeaderResizeDirective($rootScope, $timeout, $window, workspaces) {
-    return {
-        link: function(scope, element) {
-            let window = angular.element($window);
-            let resize = _.debounce(calcSize, 250);
-
-            window.on('resize', resize);
-
-            function calcSize() {
-                let stageContainer = element.find('.stage.swimlane');
-                let headerContainer = element.find('.column-header.swimlane');
-
-                if (stageContainer && headerContainer) {
-                    if (headerContainer.width() !== stageContainer.width()) {
-                        scope.$applyAsync(() => {
-                            headerContainer.width(stageContainer.width());
-                        });
-                    }
-                }
-            }
-
-            scope.$watch(() => workspaces.active, resize);
-
-            $rootScope.$on('resize:header', () => {
-                $timeout(() => {
-                    resize();
-                }, 0, false);
-            });
-
-            scope.$on('$destroy', () => {
-                window.off('resize', resize);
-            });
-        },
-    };
-}
-
-/*
  * Media Query directive is used for creating responsive
  * layout's for single elements on page
  *
@@ -1245,7 +1202,6 @@ export default angular.module('superdesk.core.ui', [
     .directive('sdCreateBtn', CreateButtonDirective)
     .directive('sdAutofocus', AutofocusDirective)
     .directive('sdAutoexpand', AutoexpandDirective)
-    .directive('sdHeaderResize', HeaderResizeDirective)
     .directive('sdTimezone', TimezoneDirective)
     .directive('sdDatepickerInner', DatepickerInnerDirective)
     .directive('sdDatepickerWrapper', DatepickerWrapper)
