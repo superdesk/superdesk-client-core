@@ -41,9 +41,10 @@ export function SaveSearch($location, asset, api, session, notify, $rootScope) {
             };
             scope.isValid = function(edit) {
                 if (edit.filter.query.raw == null) {
-                    return !!edit.name;
+                    return typeof edit.name === 'string' && edit.name.length > 0;
                 }
-                return edit.filter.query && edit.filter.query.raw !== '' && edit.name;
+                return edit.filter.query && typeof edit.filter.query.raw === 'string'
+                    && edit.filter.query.raw.length > 0 && typeof edit.name === 'string' && edit.name.length > 0;
             };
 
             scope.clear = function() {
