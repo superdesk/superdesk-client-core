@@ -2,6 +2,7 @@ import {get} from 'lodash';
 import {TweenMax, Power2, TimelineLite} from "gsap/TweenMax";
 import {gettext} from "superdesk-core/scripts/core/utils";
 import {IArticle} from "superdesk-core/scripts/superdesk-interfaces/Article";
+import angular = require("angular");
 
 /**
  * @ngdoc controller
@@ -320,10 +321,9 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
         } else {
             loadTimeLine([]);
             api.save('video_edit', {action: 'timeline', item: $scope.data.metadata}).then(function (data) {
-                var list_thumbnails = data.result.timeline;
+                angular.extend($scope.data.metadata, data.result)
+                var list_thumbnails = data.result.renditions.timeline;
                 loadTimeLine(list_thumbnails);
-                $scope.data.metadata._etag = data._etag;
-                $scope.data.metadata.renditions['timeline'] = data.result.timeline;
                 $scope.data.isDirty = true;
             });
         }
