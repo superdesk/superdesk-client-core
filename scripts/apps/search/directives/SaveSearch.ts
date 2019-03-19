@@ -39,6 +39,12 @@ export function SaveSearch($location, asset, api, session, notify, $rootScope) {
                 scope.edit = null;
                 scope.activateSearchPane = false;
             };
+            scope.isValid = function(edit) {
+                if (edit.filter.query.raw == null) {
+                    return !!edit.name;
+                }
+                return edit.filter.query && edit.filter.query.raw !== '' && edit.name;
+            };
 
             scope.clear = function() {
                 scope.editingSearch = false;
