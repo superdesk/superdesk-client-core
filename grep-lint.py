@@ -48,11 +48,6 @@ rules_to_check = [
         'perl_regex': 'template\s*?:\s*[\'|"|`][^\'|"|`]*<[^\'|"|`]*[\'|"|`]',
         'tolerance': True
     },
-    # {
-    #     'name': 'Do not create angularjs directives anymore. Use React components and use `reactToAngular1` if you need it to use inside existing angular template.',
-    #     'perl_regex': '\.\s*?directive\(',
-    #     'tolerance': True
-    # },
 ]
 
 any_rule_violated = False
