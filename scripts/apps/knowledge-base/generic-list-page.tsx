@@ -4,7 +4,7 @@ import ReactPaginate from 'react-paginate';
 
 import {ListItem} from 'core/components/ListItem';
 import {PageContainer, PageContainerItem} from 'core/components/PageLayout';
-import {GenericListPageItemViewEdit} from './knowledge-item-view-edit';
+import {GenericListPageItemViewEdit} from './generic-list-page-item-view-edit';
 import {
     SidePanelHeader,
     SidePanel,
