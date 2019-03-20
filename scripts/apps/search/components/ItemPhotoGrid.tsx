@@ -20,7 +20,7 @@ export class ItemPhotoGrid extends React.Component<IProps, never> {
         const {item} = this.props;
 
         return (
-            <div>
+            <div className="sd-wrap-helper">
                 <PhotoDeskPreview
                     item={item}
                     desk={this.props.desk}

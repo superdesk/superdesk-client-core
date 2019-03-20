@@ -1942,3 +1942,7 @@ sd-multi-image-edit {
     display: flex;
     flex-direction: column;
 }
+
+.sd-wrap-helper {
+    display: contents !important;
+} 
