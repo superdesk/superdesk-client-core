@@ -19,11 +19,11 @@ import {SortBar, ISortFields} from 'core/ui/components/SortBar';
 import {connectCrudManager, ICrudManager} from 'core/helpers/CrudManager';
 import {TagLabel} from 'core/ui/components/TagLabel';
 import {connectServices} from 'core/helpers/ReactRenderAsync';
-import {IDefaultApiFields} from '../../types/RestApi';
 import {IFormGroup} from 'core/ui/components/generic-form/interfaces/form';
 import {getFormGroupForFiltering} from 'core/ui/components/generic-form/get-form-group-for-filtering';
 import {getFormFieldsRecursive} from 'core/ui/components/generic-form/form-field';
 import {FormViewEdit} from 'core/ui/components/generic-form/from-group';
+import {IDefaultApiFields} from 'types/RestApi';
 
 interface IState {
     itemInPreview?: string;
