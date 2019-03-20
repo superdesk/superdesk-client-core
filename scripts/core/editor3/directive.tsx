@@ -44,6 +44,7 @@ class Editor3Directive {
     svc: any;
     pathToValue: any;
     scrollContainer: any;
+    refreshTrigger: any;
 
     constructor() {
         this.scope = {};
