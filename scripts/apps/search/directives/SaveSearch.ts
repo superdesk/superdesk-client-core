@@ -39,12 +39,15 @@ export function SaveSearch($location, asset, api, session, notify, $rootScope) {
                 scope.edit = null;
                 scope.activateSearchPane = false;
             };
+
+            scope.isEmptyString = (str) => typeof str === 'string' && str.length > 0;
+
             scope.isValid = function(edit) {
                 if (edit.filter.query.raw == null) {
-                    return typeof edit.name === 'string' && edit.name.length > 0;
+                    return scope.isEmptyString(edit.name);
                 }
-                return edit.filter.query && typeof edit.filter.query.raw === 'string'
-                    && edit.filter.query.raw.length > 0 && typeof edit.name === 'string' && edit.name.length > 0;
+                return edit.filter.query && scope.isEmptyString(edit.filter.query.raw)
+                && scope.isEmptyString(edit.name);
             };
 
             scope.clear = function() {
