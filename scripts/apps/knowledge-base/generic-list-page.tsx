@@ -38,6 +38,9 @@ interface IProps<T extends IDefaultApiFields> {
     formConfig: IFormGroup;
     renderRow(item: T, items: ICrudManager<T>): JSX.Element;
 
+    // Allows creating an item with required fields which aren't editable from the GUI
+    newItemTemplate: {[key: string]: any};
+
     // connected
     items?: ICrudManager<T>;
     modal?: any;
@@ -45,6 +48,8 @@ interface IProps<T extends IDefaultApiFields> {
 
 class GenericListPageComponent<T extends IDefaultApiFields> extends React.Component<IProps<T>, IState> {
     previewInEditMode: boolean;
+
+    static defaultProps = {newItemTemplate: {}};
 
     constructor(props) {
         super(props);
@@ -114,7 +119,7 @@ class GenericListPageComponent<T extends IDefaultApiFields> extends React.Compon
                 ),
             });
         } else {
-            this.setState({newItem: {}, itemInPreview: null});
+            this.setState({newItem: this.props.newItemTemplate, itemInPreview: null});
         }
     }
     componentDidMount() {
@@ -297,10 +302,7 @@ class GenericListPageComponent<T extends IDefaultApiFields> extends React.Compon
                                     operation="creation"
                                     formConfig={formConfig}
                                     item={this.state.newItem}
-                                    onSave={(item: T) => this.props.items.create({
-                                        ...item,
-                                        cpnat_type: 'cpnat:abstract',
-                                    }).then((res) => {
+                                    onSave={(item: T) => this.props.items.create(item).then((res) => {
                                         this.closeNewItemForm();
                                         this.openPreview(res._id);
                                     })}
