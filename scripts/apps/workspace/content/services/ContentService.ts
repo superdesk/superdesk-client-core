@@ -1,5 +1,5 @@
 import * as constant from '../constants';
-import _ from 'lodash';
+import {get, omit, isEmpty, zipObject} from 'lodash';
 import {gettext} from 'core/utils';
 
 /**
@@ -60,7 +60,7 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
     function save(data) {
         return api.save('archive', data).catch((reason) => {
             if (reason.status === 403) {
-                if (_.get(reason, 'data.error.readonly')) {
+                if (get(reason, 'data.error.readonly')) {
                     notify.error(gettext('You are not allowed to create article on readonly stage.'));
                 } else {
                     notify.error(gettext('You are not allowed to create an article there.'));
@@ -118,7 +118,7 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
         angular.extend(item, templates.pickItemData(template.data || {}), {template: template._id});
         // set the dateline date to default utc date.
         if (item.dateline && item.dateline.located) {
-            item.dateline = _.omit(item.dateline, 'text');
+            item.dateline = omit(item.dateline, 'text');
             item.dateline.date = $filter('formatDateTimeString')();
         }
         // set missing byline from user profile.
@@ -255,8 +255,8 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
      * @return {Object}
      */
     this.schema = function(profile, contentType) {
-        const schema = _.get(profile, 'schema',
-            _.get(deployConfig.getSync('schema'), contentType, constant.DEFAULT_SCHEMA));
+        const schema = get(profile, 'schema',
+            get(deployConfig.getSync('schema'), contentType, constant.DEFAULT_SCHEMA));
 
         return angular.extend({}, schema);
     };
@@ -269,8 +269,8 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
      * @return {Object}
      */
     this.editor = function(profile, contentType) {
-        const editor = _.get(profile, 'editor',
-            _.get(deployConfig.getSync('editor'), contentType, constant.DEFAULT_EDITOR));
+        const editor = get(profile, 'editor',
+            get(deployConfig.getSync('editor'), contentType, constant.DEFAULT_EDITOR));
 
         return angular.extend({}, editor);
     };
@@ -295,7 +295,7 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
      * @return {Promise}
      */
     this.getDeskProfiles = function(desk, profileId) {
-        return this.getTypes().then((profiles) => !desk || _.isEmpty(desk.content_profiles) ?
+        return this.getTypes().then((profiles) => !desk || isEmpty(desk.content_profiles) ?
             profiles :
             profiles.filter((profile) => desk.content_profiles[profile._id] || profile._id === profileId),
         );
@@ -336,6 +336,20 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
     }
 
     this.getCustomFields = getCustomFields;
+
+    this.fetchAssociations = (item) => {
+        const associations = item.associations || {};
+        const keys = Object.keys(associations);
+
+        return Promise.all(keys.map((key) => {
+            // there is only _id, maybe _type for related items
+            if (associations[key] && Object.keys(associations[key]).length <= 2) {
+                return api.find('archive', associations[key]._id);
+            }
+
+            return Promise.resolve(associations[key]);
+        })).then((values) => zipObject(keys, values));
+    };
 
     /**
      * Reset custom fields info
