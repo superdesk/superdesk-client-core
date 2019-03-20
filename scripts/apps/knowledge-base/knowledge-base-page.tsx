@@ -2,7 +2,7 @@ import React from 'react';
 import {noop, omit} from 'lodash';
 import ReactPaginate from 'react-paginate';
 
-import {ListItem, ListItemColumn, ListItemActionsMenu} from 'core/components/ListItem';
+import {ListItem, ListItemActionsMenu} from 'core/components/ListItem';
 import {PageContainer, PageContainerItem} from 'core/components/PageLayout';
 import {KnowledgeItemViewEdit} from './knowledge-item-view-edit';
 import {
@@ -13,7 +13,7 @@ import {
     SidePanelContent,
     SidePanelContentBlock
 } from 'core/components/SidePanel';
-import {IFormGroup, IFormField} from './generic-form/interfaces/form';
+import {IFormGroup} from './generic-form/interfaces/form';
 import {FormViewEdit} from './generic-form/from-group';
 import {SearchBar} from 'core/ui/components';
 import {Button} from 'core/ui/components/Nav';
@@ -24,7 +24,7 @@ import {TagLabel} from 'core/ui/components/TagLabel';
 import {connectServices} from 'core/helpers/ReactRenderAsync';
 import {IDefaultApiFields} from '../../types/RestApi';
 import {getFormGroupForFiltering} from './generic-form/get-form-group-for-filtering';
-import {getFormFieldsRecursive, getFormFieldPreviewComponent} from './generic-form/form-field';
+import {getFormFieldsRecursive} from './generic-form/form-field';
 
 interface IState {
     itemInPreview?: string;
@@ -35,27 +35,16 @@ interface IState {
     loading: boolean;
 }
 
-interface IProps {
+interface IProps<T extends IDefaultApiFields> {
     formConfig: IFormGroup;
-    renderConceptItemRow(item: IKnowledgeBaseItem): JSX.Element;
+    renderConceptItemRow(item: T): JSX.Element;
 
     // connected
-    conceptItems?: ICrudManager<IKnowledgeBaseItem>;
+    conceptItems?: ICrudManager<T>;
     modal?: any;
 }
 
-export interface IKnowledgeBaseItem extends IDefaultApiFields {
-    name: string;
-    labels?: Array<string>;
-    language: string;
-    definition: string;
-
-    // http://cv.iptc.org/newscodes/cpnature/
-    cpnat_type: 'cpnat:abstract' | 'cpnat:event' | 'cpnat:geoArea'
-        | 'cpnat:object' | 'cpnat:organisation' | 'cpnat:person' | 'cpnat:poi';
-}
-
-class KnowledgeBasePageComponent extends React.Component<IProps, IState> {
+class GenericListPageComponent<T extends IDefaultApiFields> extends React.Component<IProps<T>, IState> {
     previewInEditMode: boolean;
 
     constructor(props) {
@@ -342,7 +331,7 @@ class KnowledgeBasePageComponent extends React.Component<IProps, IState> {
                                     operation="creation"
                                     formConfig={formConfig}
                                     item={this.state.newItem}
-                                    onSave={(item: IKnowledgeBaseItem) => this.props.conceptItems.create({
+                                    onSave={(item: T) => this.props.conceptItems.create({
                                         ...item,
                                         cpnat_type: 'cpnat:abstract',
                                     }).then((res) => {
@@ -361,9 +350,11 @@ class KnowledgeBasePageComponent extends React.Component<IProps, IState> {
     }
 }
 
-export const KnowledgeBasePage = connectServices(
-    connectCrudManager<IProps, IKnowledgeBaseItem>(
-        KnowledgeBasePageComponent,
+export const getGenericListPageComponent = <T extends IDefaultApiFields>() => connectServices<IProps<T>>(
+    connectCrudManager<IProps<T>, T>(
+        GenericListPageComponent,
         'conceptItems',
         'concept_items',
-    ), ['modal']);
+    )
+    , ['modal'],
+);

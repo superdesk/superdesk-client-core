@@ -4,7 +4,6 @@ import {assertNever} from 'core/helpers/typescript-helpers';
 import {IFormField, IFormGroup, isIFormGroup, isIFormField} from './interfaces/form';
 import {VocabularySingleValue} from './input-types/vocabulary_single_value';
 import {TextEditor3} from './input-types/text-editor3';
-import {IKnowledgeBaseItem} from '../knowledge-base-page';
 import {noop} from 'lodash';
 
 export function getFormFieldComponent(type: IFormField['type']) {
@@ -20,7 +19,7 @@ export function getFormFieldComponent(type: IFormField['type']) {
     }
 }
 
-export function getFormFieldPreviewComponent(item: IKnowledgeBaseItem, formFieldConfig: IFormField): JSX.Element {
+export function getFormFieldPreviewComponent(item: {[key: string]: any}, formFieldConfig: IFormField): JSX.Element {
     const Component = getFormFieldComponent(formFieldConfig.type);
 
     return (
