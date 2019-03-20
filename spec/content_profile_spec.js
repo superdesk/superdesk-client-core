@@ -51,6 +51,12 @@ describe('Content profiles', () => {
         element(by.buttonText('Header fields')).click();
         contentProfiles.setRequired('Editorial Note');
         contentProfiles.update();
+        templates.openTemplatesSettings();
+        expect(templates.getListCount()).toBeGreaterThan(2);
+        templates.edit('Simple');
+        templates.selectDesk('Politic Desk');
+        templates.selectDesk('Sports Desk');
+        templates.save();
         monitoring.openMonitoring();
         workspace.selectDesk('Sports Desk');
         authoring.createTextItemFromTemplate('simple');

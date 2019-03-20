@@ -43,10 +43,10 @@ export function TemplateSelectDirective(api, desks, session, templates, notify) 
                             scope.publicTemplates = [];
                             scope.privateTemplates = [];
                             result._items.forEach((template) => {
-                                if (template.is_public !== false) {
-                                    scope.publicTemplates.push(template);
-                                } else {
+                                if (template.is_public === false) {
                                     scope.privateTemplates.push(template);
+                                } else if (template.template_desks && template.template_desks.length > 0) {
+                                    scope.publicTemplates.push(template);
                                 }
                             });
                         }
