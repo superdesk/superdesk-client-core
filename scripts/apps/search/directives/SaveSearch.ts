@@ -1,7 +1,7 @@
 import {create, clone, each} from 'lodash';
 import {saveOrUpdateSavedSearch} from '../SavedSearch';
 import {gettext} from 'core/utils';
-
+import {isEmptyString} from 'core/helpers/utils';
 SaveSearch.$inject = ['$location', 'asset', 'api', 'session', 'notify', '$rootScope'];
 
 /**
@@ -38,6 +38,14 @@ export function SaveSearch($location, asset, api, session, notify, $rootScope) {
                 scope.editingSearch = false;
                 scope.edit = null;
                 scope.activateSearchPane = false;
+            };
+
+            scope.isValid = function(edit) {
+                if (edit.filter.query.raw == null) {
+                    return isEmptyString(edit.name);
+                }
+                return edit.filter.query && isEmptyString(edit.filter.query.raw)
+                    && isEmptyString(edit.name);
             };
 
             scope.clear = function() {
