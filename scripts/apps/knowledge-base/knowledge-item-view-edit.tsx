@@ -32,7 +32,7 @@ interface IState {
     issues: {[field: string]: Array<string>};
 }
 
-class KnowledgeItemViewEditComponent extends React.Component<IProps, IState> {
+class GenericListPageItemViewEditComponent extends React.Component<IProps, IState> {
     _mounted: boolean;
 
     constructor(props) {
@@ -205,7 +205,7 @@ class KnowledgeItemViewEditComponent extends React.Component<IProps, IState> {
     }
 }
 
-export const KnowledgeItemViewEdit = connectServices<IProps>(
-    KnowledgeItemViewEditComponent,
+export const GenericListPageItemViewEdit = connectServices<IProps>(
+    GenericListPageItemViewEditComponent,
     ['modal'],
 );

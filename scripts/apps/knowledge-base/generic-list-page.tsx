@@ -4,7 +4,7 @@ import ReactPaginate from 'react-paginate';
 
 import {ListItem} from 'core/components/ListItem';
 import {PageContainer, PageContainerItem} from 'core/components/PageLayout';
-import {KnowledgeItemViewEdit} from './knowledge-item-view-edit';
+import {GenericListPageItemViewEdit} from './knowledge-item-view-edit';
 import {
     SidePanelHeader,
     SidePanel,
@@ -279,7 +279,7 @@ class GenericListPageComponent<T extends IDefaultApiFields> extends React.Compon
                     {
                         this.state.itemInPreview != null ? (
                             <PageContainerItem>
-                                <KnowledgeItemViewEdit
+                                <GenericListPageItemViewEdit
                                     onEditModeChange={(val) => {
                                         this.previewInEditMode = val;
                                     }}
@@ -298,7 +298,7 @@ class GenericListPageComponent<T extends IDefaultApiFields> extends React.Compon
                     {
                         this.state.newItem != null ? (
                             <PageContainerItem>
-                                <KnowledgeItemViewEdit
+                                <GenericListPageItemViewEdit
                                     operation="creation"
                                     formConfig={formConfig}
                                     item={this.state.newItem}
