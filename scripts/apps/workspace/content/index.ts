@@ -30,6 +30,14 @@ angular.module('superdesk.apps.workspace.content', [
     .directive('sdSortContentProfiles', directive.SortContentProfiles)
 
     .component('sdWidgetsConfig', reactToAngular1(WidgetsConfig, ['initialWidgetsConfig', 'onUpdate']))
+    .component('sdSchemaEditorFieldsDropdown', {
+        template: require('./views/schema-editor-fields-dropdown.html'),
+        bindings: {
+            bottom: '@',
+            fields: '=',
+            onSelect: '&',
+        },
+    })
 
     .controller('ContentProfilesController', ctrl.ContentProfilesController)
 
