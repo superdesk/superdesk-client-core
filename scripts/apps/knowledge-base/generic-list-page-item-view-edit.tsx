@@ -9,9 +9,9 @@ import {
     SidePanelContent,
     SidePanelContentBlock,
 } from 'core/components/SidePanel';
-import {FormViewEdit} from './generic-form/from-group';
-import {IFormGroup} from './generic-form/interfaces/form';
 import {connectServices} from 'core/helpers/ReactRenderAsync';
+import {IFormGroup} from 'core/ui/components/generic-form/interfaces/form';
+import {FormViewEdit} from 'core/ui/components/generic-form/from-group';
 
 interface IProps {
     operation: 'editing' | 'creation';

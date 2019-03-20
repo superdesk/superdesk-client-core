@@ -13,8 +13,6 @@ import {
     SidePanelContent,
     SidePanelContentBlock
 } from 'core/components/SidePanel';
-import {IFormGroup} from './generic-form/interfaces/form';
-import {FormViewEdit} from './generic-form/from-group';
 import {SearchBar} from 'core/ui/components';
 import {Button} from 'core/ui/components/Nav';
 import {SortBar, ISortFields} from 'core/ui/components/SortBar';
@@ -22,8 +20,10 @@ import {connectCrudManager, ICrudManager} from 'core/helpers/CrudManager';
 import {TagLabel} from 'core/ui/components/TagLabel';
 import {connectServices} from 'core/helpers/ReactRenderAsync';
 import {IDefaultApiFields} from '../../types/RestApi';
-import {getFormGroupForFiltering} from './generic-form/get-form-group-for-filtering';
-import {getFormFieldsRecursive} from './generic-form/form-field';
+import {IFormGroup} from 'core/ui/components/generic-form/interfaces/form';
+import {getFormGroupForFiltering} from 'core/ui/components/generic-form/get-form-group-for-filtering';
+import {getFormFieldsRecursive} from 'core/ui/components/generic-form/form-field';
+import {FormViewEdit} from 'core/ui/components/generic-form/from-group';
 
 interface IState {
     itemInPreview?: string;
