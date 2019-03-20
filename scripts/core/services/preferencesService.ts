@@ -89,7 +89,7 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
                         if ('Notification' in window && Notification.permission !== 'denied') {
                             Notification.requestPermission((permission) => {
                                 if (permission === 'granted') {
-                                    return new Notification(msg);
+                                    new Notification(msg);
                                 }
                             });
                         }
