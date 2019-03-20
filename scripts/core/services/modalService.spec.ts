@@ -14,7 +14,15 @@ describe('modal service', () => {
         modal.confirm('body', 'header', 'ok', 'cancel', 'foo');
         $rootScope.$digest();
 
-        expect(angular.element(document.body).find('.modal__header').text().trim()).toBe('header');
-        expect(angular.element(document.body).find('.modal__body').text().trim()).toBe('body');
+        expect(
+            angular.element(document.body).find('.modal__header')
+                .text()
+                .trim(),
+        ).toBe('header');
+        expect(
+            angular.element(document.body).find('.modal__body')
+                .text()
+                .trim(),
+        ).toBe('body');
     }));
 });
