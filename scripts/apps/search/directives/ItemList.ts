@@ -100,7 +100,7 @@ export function ItemList(
     storage,
     keyboardManager,
     session,
-    content
+    content,
 ) {
     // contains all the injected services to be passed down to child
     // components via props
