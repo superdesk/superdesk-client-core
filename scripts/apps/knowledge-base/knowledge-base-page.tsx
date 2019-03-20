@@ -2,7 +2,7 @@ import React from 'react';
 import {noop, omit} from 'lodash';
 import ReactPaginate from 'react-paginate';
 
-import {ListItem, ListItemActionsMenu} from 'core/components/ListItem';
+import {ListItem} from 'core/components/ListItem';
 import {PageContainer, PageContainerItem} from 'core/components/PageLayout';
 import {KnowledgeItemViewEdit} from './knowledge-item-view-edit';
 import {
@@ -18,7 +18,6 @@ import {FormViewEdit} from './generic-form/from-group';
 import {SearchBar} from 'core/ui/components';
 import {Button} from 'core/ui/components/Nav';
 import {SortBar, ISortFields} from 'core/ui/components/SortBar';
-import {Positioner} from 'superdesk-ui-framework';
 import {connectCrudManager, ICrudManager} from 'core/helpers/CrudManager';
 import {TagLabel} from 'core/ui/components/TagLabel';
 import {connectServices} from 'core/helpers/ReactRenderAsync';
@@ -37,10 +36,10 @@ interface IState {
 
 interface IProps<T extends IDefaultApiFields> {
     formConfig: IFormGroup;
-    renderConceptItemRow(item: T): JSX.Element;
+    renderRow(item: T, items: ICrudManager<T>): JSX.Element;
 
     // connected
-    conceptItems?: ICrudManager<T>;
+    items?: ICrudManager<T>;
     modal?: any;
 }
 
@@ -94,9 +93,9 @@ class GenericListPageComponent<T extends IDefaultApiFields> extends React.Compon
         }, callback);
     }
     executeFilters() {
-        this.props.conceptItems.read(
+        this.props.items.read(
             1,
-            this.props.conceptItems.activeSortOption,
+            this.props.items.activeSortOption,
             this.state.filterValues,
         );
     }
@@ -119,20 +118,20 @@ class GenericListPageComponent<T extends IDefaultApiFields> extends React.Compon
         }
     }
     componentDidMount() {
-        this.props.conceptItems.read(1);
+        this.props.items.read(1);
     }
     render() {
-        if (this.props.conceptItems._items == null) {
+        if (this.props.items._items == null) {
             // loading
             return null;
         }
 
-        const {activeFilters} = this.props.conceptItems;
-        const totalResults = this.props.conceptItems._meta.total;
-        const pageSize = this.props.conceptItems._meta.max_results;
+        const {activeFilters} = this.props.items;
+        const totalResults = this.props.items._meta.total;
+        const pageSize = this.props.items._meta.max_results;
         const pageCount = Math.ceil(totalResults / pageSize);
 
-        const {formConfig, renderConceptItemRow} = this.props;
+        const {formConfig, renderRow} = this.props;
 
         const formConfigForFilters = getFormGroupForFiltering(formConfig);
         const fieldsList = getFormFieldsRecursive(formConfig.form);
@@ -169,9 +168,9 @@ class GenericListPageComponent<T extends IDefaultApiFields> extends React.Compon
 
                     <SortBar
                         sortOptions={sortOptions}
-                        selected={this.props.conceptItems.activeSortOption}
-                        itemsCount={this.props.conceptItems._meta.total}
-                        onSortOptionChange={this.props.conceptItems.sort}
+                        selected={this.props.items.activeSortOption}
+                        itemsCount={this.props.items._meta.total}
+                        onSortOptionChange={this.props.items.sort}
                     />
 
                     <Button
@@ -231,9 +230,9 @@ class GenericListPageComponent<T extends IDefaultApiFields> extends React.Compon
                                     marginPagesDisplayed={2}
                                     pageRangeDisplayed={5}
                                     onPageChange={({selected}) => {
-                                        this.props.conceptItems.goToPage(selected + 1);
+                                        this.props.items.goToPage(selected + 1);
                                     }}
-                                    initialPage={this.props.conceptItems._meta.page - 1}
+                                    initialPage={this.props.items._meta.page - 1}
                                     containerClassName={'bs-pagination'}
                                     activeClassName="active"
                                 />
@@ -252,7 +251,7 @@ class GenericListPageComponent<T extends IDefaultApiFields> extends React.Compon
                                                         this.setState({
                                                             filterValues: omit(this.state.filterValues, [fieldName]),
                                                         });
-                                                        this.props.conceptItems.removeFilter(fieldName);
+                                                        this.props.items.removeFilter(fieldName);
                                                     }}
                                                 >
                                                     {fieldName}:{' '}<strong>{activeFilters[fieldName]}</strong>
@@ -263,42 +262,9 @@ class GenericListPageComponent<T extends IDefaultApiFields> extends React.Compon
                                 )
                             }
                             {
-                                this.props.conceptItems._items.map((item, i) => (
+                                this.props.items._items.map((item) => (
                                     <ListItem onClick={() => this.openPreview(item._id)} key={item._id}>
-                                        {renderConceptItemRow(item)}
-                                        <ListItemActionsMenu>
-                                            <button id={'knowledgebaseitem' + i}>
-                                                <i className="icon-dots-vertical" />
-                                            </button>
-                                            <Positioner
-                                                triggerSelector={'#knowledgebaseitem' + i}
-                                                placement="left-start"
-                                                className="dropdown2"
-                                            >
-                                                <ul
-                                                    className="dropdown__menu"
-                                                    style={{display: 'block', position: 'static'}}
-                                                >
-                                                    <li>
-                                                        <div className="dropdown__menu-label">{gettext('Actions')}</div>
-                                                    </li>
-                                                    <li className="dropdown__menu-divider" />
-                                                    <li>
-                                                        <button
-                                                            onClick={() => this.props.conceptItems.delete(item) }
-                                                            title="Edit"
-                                                        >
-                                                            <i className="icon-pencil" />
-                                                            <span
-                                                                style={{display: 'inline'}}
-                                                            >
-                                                                {gettext('Remove')}
-                                                            </span>
-                                                        </button>
-                                                    </li>
-                                                </ul>
-                                            </Positioner>
-                                        </ListItemActionsMenu>
+                                        {renderRow(item, this.props.items)}
                                     </ListItem>
                                 ))
                             }
@@ -315,9 +281,9 @@ class GenericListPageComponent<T extends IDefaultApiFields> extends React.Compon
                                     operation="editing"
                                     formConfig={formConfig}
                                     item={
-                                        this.props.conceptItems._items.find(({_id}) => _id === this.state.itemInPreview)
+                                        this.props.items._items.find(({_id}) => _id === this.state.itemInPreview)
                                     }
-                                    onSave={(nextItem) => this.props.conceptItems.update(nextItem)}
+                                    onSave={(nextItem) => this.props.items.update(nextItem)}
                                     onClose={this.closePreview}
                                 />
                             </PageContainerItem>
@@ -331,7 +297,7 @@ class GenericListPageComponent<T extends IDefaultApiFields> extends React.Compon
                                     operation="creation"
                                     formConfig={formConfig}
                                     item={this.state.newItem}
-                                    onSave={(item: T) => this.props.conceptItems.create({
+                                    onSave={(item: T) => this.props.items.create({
                                         ...item,
                                         cpnat_type: 'cpnat:abstract',
                                     }).then((res) => {
@@ -350,11 +316,12 @@ class GenericListPageComponent<T extends IDefaultApiFields> extends React.Compon
     }
 }
 
-export const getGenericListPageComponent = <T extends IDefaultApiFields>() => connectServices<IProps<T>>(
-    connectCrudManager<IProps<T>, T>(
-        GenericListPageComponent,
-        'conceptItems',
-        'concept_items',
-    )
-    , ['modal'],
-);
+export const getGenericListPageComponent = <T extends IDefaultApiFields>(resource: string) =>
+    connectServices<IProps<T>>(
+        connectCrudManager<IProps<T>, T>(
+            GenericListPageComponent,
+            'items',
+            resource,
+        )
+        , ['modal'],
+    );
