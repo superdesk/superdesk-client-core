@@ -88,10 +88,10 @@ function insertAtomicBlockWithoutEmptyLines(editorState, entityKey, character) {
 
     var withAtomicBlock = Modifier.replaceWithFragment(asAtomicBlock, target.selectionState, fragment);
 
-    var newContent: ContentState|any = withAtomicBlock.merge({
+    var newContent: ContentState = withAtomicBlock.merge({
         selectionBefore: selectionState,
         selectionAfter: withAtomicBlock.getSelectionAfter().set('hasFocus', true),
-    });
+    }) as ContentState;
 
     const {block: blockKeyForEntity} = newContent.getBlocksAsArray()
         .map((b) => ({entity: b.getEntityAt(0), block: b.getKey()}))
