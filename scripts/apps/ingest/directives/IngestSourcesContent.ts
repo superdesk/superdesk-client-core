@@ -293,6 +293,10 @@ export function IngestSourcesContent(ingestSources, notify, api, $location,
                     }
 
                     _.forEach($scope.currentFeedingService.fields, (field) => {
+                        if (field.default_value !== undefined && $scope.provider.config[field.id] === undefined) {
+                            $scope.provider.config[field.id] = field.default_value;
+                        }
+
                         if (field.type === 'mapping') {
                             let aliases = angular.isDefined($scope.provider.config)
                                 && $scope.provider.config[field.id] || [];
