@@ -1,9 +1,11 @@
 /* eslint-disable react/no-multi-comp */
 
 import React from 'react';
+import classNames from 'classnames';
 
 interface IListItemProps {
     onClick?: () => void;
+    inactive?: boolean;
 }
 
 export class ListItem extends React.Component<IListItemProps, any> {
@@ -11,7 +13,7 @@ export class ListItem extends React.Component<IListItemProps, any> {
         return (
             <div
                 onClick={this.props.onClick || null}
-                className="sd-list-item sd-shadow--z1">
+                className={classNames('sd-list-item sd-shadow--z1', {'inactive': this.props.inactive})}>
                 {this.props.children}
             </div>
         );
@@ -25,15 +27,15 @@ interface IPropsListItemColumn {
 
 export class ListItemColumn extends React.Component<IPropsListItemColumn, any> {
     render() {
-        const classNames = [];
+        const cssClasses = [];
 
         if (this.props.noBorder) {
-            classNames.push('sd-list-item__column--no-border');
+            cssClasses.push('sd-list-item__column--no-border');
         }
 
         if (this.props.ellipsisAndGrow) {
             return (
-                <div className={classNames.concat(['sd-list-item__column', 'sd-list-item__column--grow']).join(' ')}>
+                <div className={cssClasses.concat(['sd-list-item__column', 'sd-list-item__column--grow']).join(' ')}>
                     <div className="sd-list-item__row">
                         <span className="sd-overflow-ellipsis">{this.props.children}</span>
                     </div>
@@ -41,7 +43,7 @@ export class ListItemColumn extends React.Component<IPropsListItemColumn, any> {
             );
         } else {
             return (
-                <div className={classNames.concat(['sd-list-item__column']).join(' ')}>
+                <div className={cssClasses.concat(['sd-list-item__column']).join(' ')}>
                     {this.props.children}
                 </div>
             );
