@@ -84,7 +84,12 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
         isDirty: false,
         isChange: false
     };
-
+    $scope.quality = {
+        is720: false,
+        is480: false,
+        is240: false,
+        is120: false
+    }
     $scope.data.isDirty = false;
     $scope.isNew = $scope.data.isNew === true;
     // should show the metadata form in the view
@@ -280,6 +285,26 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
             }
             barright.setAttribute("data-content", getstrtime(video.duration));
             barleft.setAttribute("data-content", getstrtime(0));
+            if (video)
+            {
+                if(video.videoWidth >720)
+                {
+                    $scope.quality.is720 = true;
+                }
+                if(video.videoWidth >480)
+                {
+                    $scope.quality.is480 = true;
+                }
+                if(video.videoWidth >240)
+                {
+                    $scope.quality.is240 = true;
+                }
+                if(video.videoWidth >120)
+                {
+                    $scope.quality.is120 = true;
+                }
+            }
+
         }
 
         barleft.ondragstart = function () {
@@ -389,7 +414,7 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
                 output.append(canvas);
                 var nothumbnail = document.getElementById('no-thumbnail');
                 nothumbnail.style = "visibility: collapse";
-                
+
             };
         } else {
             var output = document.getElementById('output');
