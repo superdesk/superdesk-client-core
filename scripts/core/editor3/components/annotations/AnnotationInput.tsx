@@ -258,6 +258,6 @@ const AnnotationInputBodyWithDependenciesLoaded = connectPromiseResults(() => ({
     extensionPoints: ng.getService('extensionPoints'),
 }))(AnnotationInputBody);
 
-export const AnnotationInput = connect(mapStateToProps, {
+export const AnnotationInput: any = connect(mapStateToProps, {
     hidePopups,
 })(AnnotationInputBodyWithDependenciesLoaded);

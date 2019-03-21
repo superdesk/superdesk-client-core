@@ -27,7 +27,7 @@ export const ignoreInternalAnnotationFields = (annotations) =>
 export const isEditorPlainText = (props) => props.singleLine || (props.editorFormat || []).length === 0;
 
 interface IProps {
-    editorState: RawDraftContentState;
+    editorState?: RawDraftContentState;
     disableSpellchecker?: boolean;
     language?: any;
     debounce?: any;
