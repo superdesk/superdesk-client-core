@@ -222,7 +222,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                     }
 
                     // clonedeep associations so that diff can be calculated for saving next time.
-                    if (res.associations && !_.isEqual($scope.item.associations, res.associations)) {
+                    if (res.associations) {
                         $scope.item.associations = _.cloneDeep(res.associations);
                     }
 
