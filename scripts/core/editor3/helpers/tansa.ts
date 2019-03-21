@@ -220,7 +220,9 @@ function insertText(editorState, content, block, offset, text) {
     const selection = createSelectionForBlock(editorState, block, offset);
     const newContent = Modifier.insertText(content, selection, text);
 
-    return {newContent: newContent, offset: offset + text.length};
+    // eslint-disable-next-line
+    offset += text.length;
+    return {newContent, offset};
 }
 
 /**
@@ -234,9 +236,7 @@ function insertText(editorState, content, block, offset, text) {
  * @param {String} newText
  * @returns {ContentState, Integer}
  */
-function replaceText(editorState, content, block, _offset, text, newText) {
-    let offset = _offset;
-
+function replaceText(editorState, content, block, offset, text, newText) {
     const overlapLength = text.length < newText.length ? text.length : newText.length;
     let newContent = content;
 
@@ -249,6 +249,7 @@ function replaceText(editorState, content, block, _offset, text, newText) {
         newContent = Modifier.replaceText(newContent, selection, newCharacter, inlineStyle, entity);
     }
 
+    // eslint-disable-next-line no-param-reassign
     offset += overlapLength;
 
     if (overlapLength < text.length) {
@@ -264,6 +265,7 @@ function replaceText(editorState, content, block, _offset, text, newText) {
         const selection = createSelectionForBlock(editorState, block, offset, extraText.length);
 
         newContent = Modifier.insertText(newContent, selection, extraText, lastInlineStyle, lastEntity);
+        // eslint-disable-next-line no-param-reassign
         offset += extraText.length;
     }
 

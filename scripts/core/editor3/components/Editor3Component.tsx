@@ -352,7 +352,7 @@ export class Editor3Component extends React.Component<any, any> {
 
     componentDidUpdate() {
         if (window.hasOwnProperty('instgrm')) {
-            window['instgrm'].Embeds.process();
+            window.instgrm.Embeds.process();
         }
     }
 

@@ -1,5 +1,8 @@
 <!-- <form name="viewsForm"> -->
     <fieldset>
+        <div class="field" ng-hide="{{edit.filter.query.raw === undefined}}">
+            <input id="search_query" type="text" class="fullwidth-input line-input" ng-model="edit.filter.query.raw" placeholder="{{:: 'Query' | translate}}">
+        </div>
         <div class="field">
             <input id="search_name" type="text" class="fullwidth-input line-input" ng-model="edit.name" placeholder="{{:: 'Name' | translate}}" required>
         </div>

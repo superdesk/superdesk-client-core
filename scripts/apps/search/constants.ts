@@ -67,6 +67,7 @@ export const DEFAULT_LIST_CONFIG = {
         'desk',
         'fetchedDesk',
         'nestedlink',
+        'associatedItems',
     ],
 };
 

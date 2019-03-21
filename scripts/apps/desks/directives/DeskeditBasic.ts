@@ -3,15 +3,20 @@ import _ from 'lodash';
 import {gettext} from 'core/utils';
 
 DeskeditBasic.$inject = ['desks', 'WizardHandler', 'metadata', 'config',
-    '$filter'];
+    '$filter', 'deployConfig'];
 export function DeskeditBasic(desks, WizardHandler, metadata, config,
-    $filter) {
+    $filter, deployConfig) {
     return {
         link: function(scope, elem, attrs) {
             scope.limits = limits;
             scope.deskTypes = [];
             scope.saving = false;
             scope.message = null;
+
+            /**
+             * Is Published Content Expiry is set
+             */
+            scope.isPublishedContentExpired = () => deployConfig.getSync('publish_content_expiry_minutes', 0) > 0;
 
             scope.$watch('step.current', (step) => {
                 if (step === 'general') {

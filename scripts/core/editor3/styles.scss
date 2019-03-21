@@ -233,8 +233,12 @@ $editor-styleButton-size: 3rem;
 	.image-block__icons-block {
 		@include image-overlay_actions-block;
 	}
-	.image-block__image-edit {
-		@include image-overlay_action-button;
+	.image-block__image-action {
+        @include image-overlay_action-button;
+        
+        & + .image-block__image-action {
+            margin-left: 2rem;
+        }
 	}
 
 	[class^="__image-overlay"],

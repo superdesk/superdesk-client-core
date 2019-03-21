@@ -48,9 +48,13 @@ export function VocabularyEditController($scope, notify, api, vocabularies, meta
     function checkForUniqueValues() {
         const uniqueField = $scope.vocabulary.unique_field || 'qcode';
         const list = $scope.vocabulary.items || {};
-        const uniqueList = _.uniqBy(list, (item) => item[uniqueField]);
 
-        return list.length === uniqueList.length;
+        if (list.find((item) => uniqueField in item)) {
+            const uniqueList = _.uniqBy(list, (item) => item[uniqueField]);
+
+            return list.length === uniqueList.length;
+        }
+        return true;
     }
 
     /**

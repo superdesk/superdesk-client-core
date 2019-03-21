@@ -1,8 +1,5 @@
-
 <div ng-if="isUpload !== true" class="modal__header modal__header--flex">
-    <h3 class="modal__heading modal__heading--no-grow" translate>Edit metadata</h3>
-
-    <div class="modal__header-buttons  modal__header-buttons--center modal__header-element-grow button-nav"></div>
+    <h3 class="modal__heading modal__heading--grow" translate>Edit metadata</h3>
 
     <div class="modal__header-buttons modal__header-buttons--right">
         <button class="btn btn--ui-dark btn--hollow" ng-click="close()" translate>Close</button>
@@ -10,6 +7,7 @@
         <button class="btn btn--primary btn--hollow" ng-click="save(true)" ng-disabled="!isDirty()" translate>Save & Close</button>
     </div>
 </div>
+
 <div ng-if="isUpload === true" class="modal__header modal__header--flex">
     <h3 class="modal__heading modal__heading--grow" translate>Upload media</h3>
 
@@ -33,9 +31,9 @@
                              ng-class="{'sd-grid-item--selected' : image.selected}"
                              style="z-index: 1;"><!--  // required so it's visible on top or drag-and-drop layer -->
                             <div class="sd-grid-item__thumb">
-                                <div
-                                    ng-bind-html="trustAsHtml(getThumbnailHtml(image))"
-                                    style="display: flex; align-items: center; justify-content: center;"></div>
+                                <div ng-bind-html="trustAsHtml(getThumbnailHtml(image))"
+                                    style="display: flex; align-items: center; justify-content: center;">
+                                </div>
 
                                 <a ng-if="onRemoveItem" class="icn-btn sd-grid-item__remove" sd-tooltip="Remove item" flow="left">
                                     <i class="icon-close-small"></i>
@@ -66,7 +64,7 @@
             </div>
         </div>
 
-        <div ng-if="hideEditPane !== true" class="sd-column-box__slide-in-column sd-column-box__slide-in-column--large sd-column-box__slide-in-column--dark-ui">
+        <div class="sd-column-box__slide-in-column sd-column-box__slide-in-column--large sd-column-box__slide-in-column--dark-ui">
             <div class="sd-column-box__slide-in-column-inner sd-slide-in-panel">
                 <div class="sd-slide-in-panel__header">
                     <h3 class="sd-slide-in-panel__heading" translate>Metadata</h3>
@@ -87,14 +85,7 @@
                         ></div>
                     </div>
                 </div>
-                <div class="sd-slide-in-panel__footer">
-                    <div class="btn-group--flex sd-margin-b--1">
-                        <button type="button" class="btn btn--hollow btn--primary btn--expanded" ng-click="copyMetadata(metadata)" ng-disabled="!isDirty()" translate>Copy metadata</button>
-                        <button type="button" class="btn btn--hollow btn--expanded" ng-click="pasteMetadata()" ng-disabled="!metadataFromStorage" translate>Paste metadata</button>
-                    </div>
-                    <sd-check ng-model="autoFill" ng-click="toggleAutofill()">{{ :: 'Autofill' | translate }}</sd-check>
-                    <a ng-click="clearSavedMetadata()" class="text-link text-link--white pull-right" ng-show="metadataFromStorage" translate>Clear saved metadata</a>
-                </div>
+                <div sd-media-copy-metadata class="sd-slide-in-panel__footer" data-metadata="metadata" data-on-change="updateMetadata()"></div>
             </div>
         </div>
     </div>

@@ -69,7 +69,8 @@ export class DesksDropdown extends React.Component<any, any> {
             onMouseLeave: this.close,
         }, React.createElement('ul', {}, desks));
 
-        const icon = ReactDOM.findDOMNode(this).getElementsByClassName('dropdown__toggle')[0];
+        const thisNode = ReactDOM.findDOMNode(this) as HTMLElement;
+        const icon = thisNode.getElementsByClassName('dropdown__toggle')[0];
 
         renderToBody(elem, icon);
     }

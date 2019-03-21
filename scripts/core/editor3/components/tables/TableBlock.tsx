@@ -166,7 +166,7 @@ const mapStateToProps = (state) => ({
     activeCell: state.activeCell,
 });
 
-export const TableBlock: React.StatelessComponent<any> = connect(
+export const TableBlock = connect(
     mapStateToProps,
     mapDispatchToProps,
 )(TableBlockComponent);

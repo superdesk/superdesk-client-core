@@ -127,7 +127,7 @@ const mapDispatchToProps = (dispatch) => ({
     replaceWord: (word) => setTimeout(() => dispatch(actions.replaceWord(word)), 0),
 });
 
-export const SpellcheckerContextMenu: React.StatelessComponent<any> = connect(
+export const SpellcheckerContextMenu = connect(
     null,
     mapDispatchToProps,
 )(SpellcheckerContextMenuComponent);

@@ -258,6 +258,6 @@ const AnnotationInputBodyWithDependenciesLoaded = connectPromiseResults(() => ({
     extensionPoints: ng.getService('extensionPoints'),
 }))(AnnotationInputBody);
 
-export const AnnotationInput: React.StatelessComponent<any> = connect(mapStateToProps, {
+export const AnnotationInput = connect(mapStateToProps, {
     hidePopups,
 })(AnnotationInputBodyWithDependenciesLoaded);

@@ -297,6 +297,9 @@
                 font-weight: 500;
                 margin-bottom: 16px;
             }
+            .text.sign-off {
+                word-break: break-all;
+            }
             p {
                 font-size: 15px;
                 line-height: 140%;

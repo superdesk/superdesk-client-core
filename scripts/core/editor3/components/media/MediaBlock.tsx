@@ -70,7 +70,7 @@ export class MediaBlockComponent extends React.Component<any, any> {
      * @description Handles clicking on the image event. Dispatches the crop image
      * action.
      */
-    onClick() {
+    onClick(tab) {
         const {block, cropImage, contentState} = this.props;
         const entityKey = block.getEntityAt(0);
         const entity = contentState.getEntity(entityKey);
@@ -78,7 +78,7 @@ export class MediaBlockComponent extends React.Component<any, any> {
         const isNew = false;
         const showMetadata = true;
 
-        cropImage(entityKey, data, {isNew, showMetadata});
+        cropImage(entityKey, data, {isNew, showMetadata, tab});
     }
 
     /**
@@ -191,8 +191,18 @@ export class MediaBlockComponent extends React.Component<any, any> {
                                 {
                                     editable && (
                                         <div className="image-block__icons-block">
-                                            <a className="image-block__image-edit"
-                                                onClick={this.onClick}><i className="icon-pencil"/></a>
+                                            <a className="image-block__image-action"
+                                                onClick={() => {
+                                                    this.onClick('view');
+                                                }}><i className="icon-pencil"/></a>
+                                            <a className="image-block__image-action"
+                                                onClick={() => {
+                                                    this.onClick('image-edit');
+                                                }}><i className="icon-switches"/></a>
+                                            <a className="image-block__image-action"
+                                                onClick={() => {
+                                                    this.onClick('crop');
+                                                }}><i className="icon-crop"/></a>
                                         </div>
                                     )
                                 }
@@ -350,7 +360,7 @@ const mapDispatchToProps = (dispatch) => ({
     setLocked: () => dispatch(actions.setLocked(true)),
 });
 
-export const MediaBlock: React.StatelessComponent<any> = connect(
+export const MediaBlock = connect(
     mapStateToProps,
     mapDispatchToProps,
 )(MediaBlockComponent);

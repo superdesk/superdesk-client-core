@@ -102,6 +102,6 @@ CommentInputBody.propTypes = {
     highlightsManager: PropTypes.object.isRequired,
 };
 
-export const CommentInput: React.StatelessComponent<any> = connect(null, {
+export const CommentInput = connect(null, {
     hidePopups,
 })(CommentInputBody);

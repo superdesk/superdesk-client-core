@@ -1,8 +1,8 @@
+import {ContentState, ContentBlock} from 'draft-js';
 import {BlockEntityWrapper} from '.';
 import {BlockInlineStyleWrapper} from '.';
 import {AtomicBlockParser} from '.';
 import {getAnnotationsFromContentState} from 'core/editor3/helpers/editor3CustomData';
-import {ContentState, ContentBlock} from 'draft-js';
 
 /**
  * @type {Object}

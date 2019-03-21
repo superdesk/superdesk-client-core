@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import {gettext} from 'core/utils';
 import {includes} from 'lodash';
 
