@@ -108,8 +108,8 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
             starttime: starttime,
             endtime: endtime
         };
-        $scope.rotatingVideo = {degree : 360+(rotate.left)};
-        $scope.qualityVideo = {quality:qualityVideo};
+        $scope.rotatingVideo = {degree: 360 + (rotate.left)};
+        $scope.qualityVideo = {quality: qualityVideo};
         $scope.editVideo.isChange = true;
     };
 
@@ -120,6 +120,8 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
      * @description
      */
     $scope.cancelEditVideo = function () {
+        var file = document.getElementById("file-upload")
+        file.value = "";
         $scope.editVideo.isChange = false;
         $scope.editVideo.isDirty = false;
         starttime = 0;
@@ -144,18 +146,18 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
             loadImage();
         }
         // disable crop video
-        if(jcrop_api){
+        if (jcrop_api) {
             jcrop_api.release();
             jcrop_api.disable();
         }
         positionCropVideo = {};
         qualityVideo = 0;
-        rotate = {left :0};
-        let video = document.getElementById('video');
-        if($scope.rotatingVideo.degree)
-            actRotate(video,$scope.rotatingVideo.degree);    
+        rotate = {left: 0};
+        let video = document.getElementById('video-preview');
+        if ($scope.rotatingVideo.degree)
+            actRotate(video, $scope.rotatingVideo.degree);
         else
-            actRotate(video,0);
+            actRotate(video, 0);
     };
 
     /**
@@ -173,9 +175,10 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
             var file = document.getElementById("file-upload")
             output.innerHTML = '';
             canvas.id = "canvas-thumnail";
-            canvas.style = "max-width: 100%;";
             file.value = "";
             output.append(canvas);
+            var nothumbnail = document.getElementById('no-thumbnail');
+            nothumbnail.style = "visibility: collapse";
             $scope.addingThumbnail = {
                 type: "capture",
                 minetype: "image/png",
@@ -188,8 +191,19 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
     };
 
 
-    function drawObjectToCanvas(object, height, width) {
+    function drawObjectToCanvas(object, object_height, object_width) {
+        var delta = 230 / 300
+        var object_delta = object_height / object_width
+        if (delta < object_delta) {
+            var height = 230
+            var width = object_width * 230 / object_height
+        } else {
+            var width = 300
+            var height = object_height * 300 / object_width
+        }
+        var top = (230 - height) / 230 / 2 * 100;
         var canvas = document.createElement('canvas');
+        canvas.style = "top: " + top + "%; position: absolute;";
         canvas.width = width;
         canvas.height = height;
         var ctx = canvas.getContext('2d');
@@ -221,7 +235,7 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
 
     var video, progressoutput, controlbar, inner, maskleft, maskright, barleft, barright, cbwrapper, iconplay, iconstop;
     var mins = 0, secs = 0, li = 0, starttime = 0, endtime = 0;
-    var positionCropVideo = {}, jcrop_api , rotate = { left:0 } , qualityVideo;
+    var positionCropVideo = {}, jcrop_api, rotate = {left: 0}, qualityVideo;
 
     /**
      * @ngdoc method
@@ -301,9 +315,10 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
                     var output = document.getElementById('output');
                     output.innerHTML = '';
                     canvas.id = "canvas-thumnail";
-                    canvas.style = "max-width: 100%;";
                     output.append(canvas);
                     $scope.editVideo.isDirty = true;
+                    var nothumbnail = document.getElementById('no-thumbnail');
+                    nothumbnail.style = "visibility: collapse";
                     $scope.addingThumbnail = {
                         type: "upload",
                         mimetype: "image/png",
@@ -322,6 +337,7 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
             loadTimeLine([]);
             api.save('video_edit', {action: 'timeline', item: $scope.data.metadata}).then(function (data) {
                 angular.extend($scope.data.metadata, data.result)
+                angular.extend($scope.data.item, data.result)
                 var list_thumbnails = data.result.renditions.timeline;
                 loadTimeLine(list_thumbnails);
                 $scope.data.isDirty = true;
@@ -337,12 +353,12 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
     }
 
     function loadTimeLine(list_thumbnails) {
-        var widthpic=88
+        var widthpic = 88
         if (list_thumbnails && list_thumbnails.length > 0) {
             widthpic = list_thumbnails[0].width
         }
         var inner_frames = document.getElementById('inner-frames');
-        var total_thumbnail = Math.ceil(controlbar.offsetWidth / widthpic);
+        var total_thumbnail = Math.floor(controlbar.offsetWidth / widthpic);
         var per_index_image = 35 / total_thumbnail;
         if (inner_frames) {
             inner_frames.innerHTML = '';
@@ -371,12 +387,16 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
                 var output = document.getElementById('output');
                 output.innerHTML = '';
                 canvas.id = "canvas-thumnail";
-                canvas.style = "max-width: 100%;";
                 output.append(canvas);
+                var nothumbnail = document.getElementById('no-thumbnail');
+                nothumbnail.style = "visibility: collapse";
+                
             };
         } else {
             var output = document.getElementById('output');
             output.innerHTML = '';
+            var nothumbnail = document.getElementById('no-thumbnail');
+            nothumbnail.style = "visibility: visible";
         }
     }
 
@@ -608,18 +628,17 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
      * @name ChangeImageController#toggleMenuQuality
      * @public
      * @description menuRatio for crop video
-     * 
+     *
      */
     $scope.toggleMenuQuality = () => {
 
         let elementIcon = document.getElementById('icon-change-quality');
         let test = elementIcon.classList.contains('icon-chevron-down-thin');
-        if(elementIcon.classList.contains('icon-chevron-down-thin') === false){
-            
+        if (elementIcon.classList.contains('icon-chevron-down-thin') === false) {
+
             elementIcon.classList.remove('icon-chevron-up-thin');
             elementIcon.classList.add('icon-chevron-down-thin');
-        }
-        else{
+        } else {
 
             elementIcon.classList.remove('icon-chevron-down-thin');
             elementIcon.classList.add('icon-chevron-up-thin');
@@ -670,8 +689,6 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
             el.classList.remove('active');
         });
         self.classList.add("active");
-
-
         let elementVideo = document.getElementById('video');
         let ratio2;
         if (ratio === "1:1")
@@ -736,11 +753,11 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
      *
      */
     $scope.rotateVideo = (direction) => {
-        let video = document.getElementById('video');
+        let video = document.getElementById('video-preview');
         switch (direction) {
             case 'left':
                 let degree = rotate.left = rotate.left - 90;
-                actRotate(video,degree);
+                actRotate(video, degree);
                 break;
 
             case 'right':
@@ -752,12 +769,12 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
         $scope.editVideo.isDirty = true;
     }
 
-    function actRotate(elementVideo,degree) {
-        let scale = (degree / 90) % 2 ? (elementVideo.clientHeight / elementVideo.clientWidth ) : 1;
+    function actRotate(elementVideo, degree) {
+        let scale = (degree / 90) % 2 ? (elementVideo.clientHeight / elementVideo.clientWidth) : 1;
         elementVideo.style.transform = `rotate(${degree}deg) scale(${scale})`;
 
         let iconRotate = document.getElementsByClassName('icon-rotate-custom')[0];
-        if((degree / 180) % 2 === 0)
+        if ((degree / 180) % 2 === 0)
             iconRotate.setAttribute("style", "color:#ffffff !important;");
         else
             iconRotate.setAttribute("style", "color:#01f18b !important;");
@@ -768,13 +785,13 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
      * @name ChangeImageController#qualityVideo
      * @public
      * @description change quality the video
-     * 
-    */
+     *
+     */
     $scope.changeQualityVideo = (currentTarget) => {
         document.getElementById('txtQuality').innerText = currentTarget.value === 0 ? 'Same' : currentTarget.value + "p";
         let self = currentTarget;
         let elementQuality = document.getElementsByClassName('quality');
-        [].forEach.call(elementQuality,function(el) {
+        [].forEach.call(elementQuality, function (el) {
             el.classList.remove('active');
         });
         self.classList.add("active");
@@ -785,11 +802,13 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
         qualityVideo = currentTarget.value;
         $scope.editVideo.isDirty = true;
     }
-    function showHideToggleMenu(elem,className){
+
+    function showHideToggleMenu(elem, className) {
         // hasClass
         function hasClass(elem, className) {
             return new RegExp(' ' + className + ' ').test(' ' + elem.className + ' ');
         }
+
         let newClass = ' ' + elem.className.replace(/[\t\r\n]/g, " ") + ' ';
         if (hasClass(elem, className)) {
             while (newClass.indexOf(" " + className + " ") >= 0) {

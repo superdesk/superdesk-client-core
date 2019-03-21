@@ -8,17 +8,20 @@
         }}</h3>
 
     <div class="modal__header-buttons  modal__header-buttons--center modal__header-element-grow button-nav">
-        <button class="button-nav__btn" ng-click="nav = 'view'; showMetadata = true" ng-class="{'button-nav__btn--active' : !nav || nav === 'view'}"
-            ng-show="!hideTabs.includes('view')" ng-disabled="!isDoneEnabled()" translate>Details / Metadata
+        <button class="button-nav__btn" ng-click="nav = 'view'; showMetadata = true"
+                ng-class="{'button-nav__btn--active' : !nav || nav === 'view'}"
+                ng-show="!hideTabs.includes('view')" ng-disabled="!isDoneEnabled()" translate>Details / Metadata
         </button>
-        <button class="button-nav__btn" ng-click="nav = 'video-edit'; showMetadata = false" ng-show="data.editable && !hideTabs.includes('video-edit')"
-            ng-class="{'button-nav__btn--active': nav === 'video-edit'}" ng-disabled="!isDoneEnabled()" translate>
+        <button class="button-nav__btn" ng-click="nav = 'video-edit'; showMetadata = false"
+                ng-show="data.editable && !hideTabs.includes('video-edit')"
+                ng-class="{'button-nav__btn--active': nav === 'video-edit'}" ng-disabled="!isDoneEnabled()" translate>
             Edit Video
         </button>
     </div>
 
     <div class="modal__header-buttons modal__header-buttons--right">
-        <button class="btn btn--primary btn--hollow" ng-click="done()" ng-disabled="!isDoneEnabled() || isAoISelectionModeEnabled">{{
+        <button class="btn btn--primary btn--hollow" ng-click="done()"
+                ng-disabled="!isDoneEnabled() || isAoISelectionModeEnabled">{{
             'Done ' | translate }}
         </button>
     </div>
@@ -26,15 +29,19 @@
 
 <div class="modal__body modal__body--no-padding">
     <div class="sd-column-box--2">
-        <div class="sd-column-box__main-column sd-column-box__main-column--photo-preview" ng-class="{'toolbar-offset': editVideo.isDirty}">
-            <a class="sd-photo-preview__slide-in-button" ng-show="!showMetadata && nav !== 'video-edit'" ng-click="showMetadata = !showMetadata"
-                data-sd-tooltip="Open metadata" data-flow="left">
+        <div class="sd-column-box__main-column sd-column-box__main-column--photo-preview"
+             ng-class="{'toolbar-offset': editVideo.isDirty}">
+            <a class="sd-photo-preview__slide-in-button" ng-show="!showMetadata && nav !== 'video-edit'"
+               ng-click="showMetadata = !showMetadata"
+               data-sd-tooltip="Open metadata" data-flow="left">
                 <i class="icon-backward-thin"></i>
             </a>
             <div class="sd-photo-preview" ng-if="!nav || nav === 'view'">
                 <div class="sd-photo-preview__image">
-                    <video controls ng-if="data.item.type === 'video'" ng-src="{{data.item.renditions.original.href}}"></video>
-                    <audio controls ng-if="data.item.type === 'audio'" ng-src="{{data.item.renditions.original.href}}"></audio>
+                    <video autoplay="autoplay" ng-if="data.item.type === 'video'"
+                           ng-src="{{data.item.renditions.original.href}}"></video>
+                    <audio controls ng-if="data.item.type === 'audio'"
+                           ng-src="{{data.item.renditions.original.href}}"></audio>
                 </div>
             </div>
             <div class="sd-photo-preview sd-photo-preview__edit-mode" ng-if="nav === 'video-edit'">
@@ -43,44 +50,54 @@
                     <a class="btn" ng-click="cancelEditVideo()" translate>Cancel</a>
                     <a class="btn btn--primary" ng-click="saveEditVideo()" translate>Save</a>
                 </div>
-                <label class="thumbnail-label">Video thumbnail</label>
                 <div class="video-preview">
                     <div id="player-overlay">
                         <div class="video-player">
-                            <video autoplay="autoplay"  id="video" class="video-display" ng-if="data.item.type === 'video'" ng-init="videoInit()"
-                                ng-src="{{data.item.renditions.original.href}}"></video>
+                            <md-videoplayer id="video-preview">
+                                <video autoplay="autoplay" id="video" class="video-display"
+                                       ng-if="data.item.type === 'video'" ng-init="videoInit()"
+                                       ng-src="{{data.item.renditions.original.href}}"></video>
+                            </md-videoplayer>
                         </div>
                         <div class="sd-photo-preview__thumb-strip video-control">
                             <div class="btn-player">
-                                <button class="btn btn--ui-dark btn--hollow btn--icon-only btn--large" style="padding: 0.35em 0.8em;"
-                                    ng-click="playVideo()" ng-class="{'btn--active' : isAoISelectionModeEnabled}"
-                                    ng-disabled="controls.isDirty">
-                                    <svg id="icon-play" xmlns="http://www.w3.org/2000/svg" style="width:24px; height:24px;"
-                                        viewBox="0 0 24 24" fill="#fff">
+                                <button class="btn btn--ui-dark btn--hollow btn--icon-only btn--large"
+                                        style="padding: 0.35em 0.8em;"
+                                        ng-click="playVideo()" ng-class="{'btn--active' : isAoISelectionModeEnabled}"
+                                        ng-disabled="controls.isDirty">
+                                    <svg id="icon-play" xmlns="http://www.w3.org/2000/svg"
+                                         style="width:24px; height:24px;"
+                                         viewBox="0 0 24 24" fill="#fff">
                                         <path d="M8 5v14l11-7z"></path>
                                         <path d="M0 0h24v24H0z" fill="none"></path>
                                     </svg>
-                                    <svg id="icon-stop" xmlns="http://www.w3.org/2000/svg" style="width:24px; height:24px; display:none"
-                                        viewBox="0 0 24 24" fill="#fff">
-                                        <path d="M0 0h24v24H0z" fill="none" />
-                                        <path d="M6 6h12v12H6z" />
+                                    <svg id="icon-stop" xmlns="http://www.w3.org/2000/svg"
+                                         style="width:24px; height:24px; display:none"
+                                         viewBox="0 0 24 24" fill="#fff">
+                                        <path d="M0 0h24v24H0z" fill="none"/>
+                                        <path d="M6 6h12v12H6z"/>
                                     </svg>
                                     </i>
                                 </button>
-                                <button class="btn btn--ui-dark btn--hollow btn--icon-only btn--large" ng-click="toggleMenuRatio()"
-                                    id="toggle">
+                                <button class="btn btn--ui-dark btn--hollow btn--icon-only btn--large"
+                                        ng-click="toggleMenuRatio()"
+                                        id="toggle">
                                     <i style="color: #ffffff" class="icon-crop"></i>
                                 </button>
                                 <div id="menuRatio">
                                     <ul>
                                         <li>Crop</li>
                                         <hr/>
-                                        <li class="ratio" ng-click="cropVideo('1:1',$event.currentTarget)"><span>1:1</span></li>
-                                        <li class="ratio" ng-click="cropVideo('4:3',$event.currentTarget)"><span>4:3</span></li>
-                                        <li class="ratio" ng-click="cropVideo('16:9',$event.currentTarget)"><span>16:9</span></li>
+                                        <li class="ratio" ng-click="cropVideo('1:1',$event.currentTarget)">
+                                            <span>1:1</span></li>
+                                        <li class="ratio" ng-click="cropVideo('4:3',$event.currentTarget)">
+                                            <span>4:3</span></li>
+                                        <li class="ratio" ng-click="cropVideo('16:9',$event.currentTarget)">
+                                            <span>16:9</span></li>
                                     </ul>
                                 </div>
-                                <button class="btn btn--ui-dark btn--hollow btn--icon-only btn--large" ng-click="rotateVideo('left')">
+                                <button class="btn btn--ui-dark btn--hollow btn--icon-only btn--large"
+                                        ng-click="rotateVideo('left')">
                                     <i class="icon-rotate-left icon--white icon-rotate-custom"></i>
                                 </button>
                             </div>
@@ -89,8 +106,10 @@
                             </label>
                             <div class="btn-quality">
                                 <div class="btn-quality" ng-click="toggleMenuQuality()" id="toggleQuality">
-                                    <div style="display: inline-block;">Quality:&#160;</div><div id="txtQuality">Same</div><i id="icon-change-quality" class="icon-chevron-down-thin"></i>
-                                    
+                                    <div style="display: inline-block;">Quality:&#160;</div>
+                                    <div id="txtQuality">Same</div>
+                                    <i id="icon-change-quality" class="icon-chevron-down-thin"></i>
+
                                 </div>
                                 <div id="menuQuality">
                                     <ul>
@@ -112,70 +131,77 @@
                         </div>
                     </div>
                 </div>
-                <div class="sd-photo-preview__thumb-strip video-cuter-tool">
-                    <div class="item-association item-association--preview video-toolbar">
+                <div>
+                    <label class="thumbnail-label">Video thumbnail</label>
+                    <div class="sd-photo-preview__thumb-strip video-cuter-tool">
+                        <div class="item-association item-association--preview video-toolbar">
 
-                        <div class="video-toolbar">
-                            <div id="output" class="thumbnail-preview">
-                                <div class='no-thumnail'>
-                                    <h2 class="upload__info-heading" translate="">No thumnail</h2>
-                                    <h2 class="upload__info-heading" translate="">Capture or upload it</h2>
+                            <div class="video-toolbar">
+                                <div id="output" class="thumbnail-preview">
+                                </div>
+                                <div class="no-thumnail" id="no-thumbnail">
+                                    <div class="upload__info-icon"></div>
+                                    <h2 class="upload__info-heading" translate="">Capture or upload video thumbnail</h2>
+                                </div>
+                            </div>
+                            <div class="item-association__image-overlay" id="thumbnail-container">
+                                <div class="item-association__icons-block">
+                                    <a class="item-association__image-action--small" sd-tooltip="Use current frame"
+                                       ng-click="captureThumbnail()"><i class="icon-photo"></i></a>
+                                    <a class="item-association__image-action--small" sd-tooltip="Upload image"
+                                       ng-click="uploadThumbnail()"><i
+                                            class="icon-upload"></i></a>
+                                    <input type="file" id="file-upload" style="display:none" accept="image/*">
                                 </div>
                             </div>
                         </div>
-                        <div class="item-association__image-overlay" id="thumbnail-container">
-                            <div class="item-association__icons-block">
-                                <a class="item-association__image-action--small" sd-tooltip="Use current frame"
-                                    ng-click="captureThumbnail()"><i class="icon-photo"></i></a>
-                                <a class="item-association__image-action--small" sd-tooltip="Upload image" ng-click="uploadThumbnail()"><i
-                                        class="icon-upload"></i></a>
-                                <input type="file" id="file-upload" style="display:none" accept="image/*">
-                            </div>
+                        <div class="video-controls">
+                            <md-frames class="thumbs">
+                                <div class="inner" id="inner-frames">
+
+                                </div>
+                            </md-frames>
+                            <md-controlbars class="control-bars" data-parser="time" ng-click="controlBarClick($event)">
+
+                                <div class="mask left" id="mask-left"></div>
+
+                                <div class="mask right" id="mask-right"></div>
+                                <div class="progress-output" style="--offset:3.92699px; --contentTop:-20.073px;">
+                                    <div class="content">
+                                        <svg width="50px" height="13px" viewBox="0 0 54 24" version="1.1"
+                                             xmlns="http://www.w3.org/2000/svg"
+                                             xmlns:xlink="http://www.w3.org/1999/xlink">
+                                            <g id="Page-1" stroke="none" stroke-width="1" fill="none"
+                                               fill-rule="evenodd">
+                                                <path d="M27,23 L27,24 L26,24 L26,23 C26,20.2385763 23.7614237,18 21,18 L9,18 C4.02943725,18 0,13.9705627 0,9 C0,4.02943725 4.02943725,0 9,0 L45,0 C49.9705627,0 54,4.02943725 54,9 C54,13.9705627 49.9705627,18 45,18 L32,18 L32,18 C29.2385763,18 27,20.2385763 27,23 Z"
+                                                      id="time_bg" fill="#FFFFFF"></path>
+                                            </g>
+                                        </svg>
+                                        <div class="inner" id="inner-play">00:00.0</div>
+                                    </div>
+                                    <div class="progress-line"></div>
+                                </div>
+                                <div class="control-bars-wrapper" id="cb-wrapper">
+                                    <div class="control-bar cb-left" id="bar-left" draggable="true">
+                                    </div>
+                                    <div class="control-bar cb-right" id="bar-right" draggable="true">
+                                    </div>
+                                </div>
+
+                            </md-controlbars>
                         </div>
-                    </div>
-                    <div class="video-controls">
-                        <md-frames class="thumbs">
-                            <div class="inner" id="inner-frames">
-
-                            </div>
-                        </md-frames>
-                        <md-controlbars class="control-bars" data-parser="time" ng-click="controlBarClick($event)">
-
-                            <div class="mask left" id="mask-left"></div>
-
-                            <div class="mask right" id="mask-right"></div>
-                            <div class="progress-output" style="--offset:3.92699px; --contentTop:-20.073px;">
-                                <div class="content">
-                                    <svg width="50px" height="13px" viewBox="0 0 54 24" version="1.1" xmlns="http://www.w3.org/2000/svg"
-                                        xmlns:xlink="http://www.w3.org/1999/xlink">
-                                        <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                            <path d="M27,23 L27,24 L26,24 L26,23 C26,20.2385763 23.7614237,18 21,18 L9,18 C4.02943725,18 0,13.9705627 0,9 C0,4.02943725 4.02943725,0 9,0 L45,0 C49.9705627,0 54,4.02943725 54,9 C54,13.9705627 49.9705627,18 45,18 L32,18 L32,18 C29.2385763,18 27,20.2385763 27,23 Z"
-                                                id="time_bg" fill="#FFFFFF"></path>
-                                        </g>
-                                    </svg>
-                                    <div class="inner" id="inner-play">00:00.0</div>
-                                </div>
-                                <div class="progress-line"></div>
-                            </div>
-                            <div class="control-bars-wrapper" id="cb-wrapper">
-                                <div class="control-bar cb-left" id="bar-left" draggable="true">
-                                </div>
-                                <div class="control-bar cb-right" id="bar-right" draggable="true">
-                                </div>
-                            </div>
-
-                        </md-controlbars>
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="sd-column-box__slide-in-column sd-column-box__slide-in-column--large sd-column-box__slide-in-column--dark-ui"
-            ng-class="{'sd-column-box__slide-in-column--closed' : !showMetadata}" ng-show="nav !== 'video-edit'">
+             ng-class="{'sd-column-box__slide-in-column--closed' : !showMetadata}" ng-show="nav !== 'video-edit'">
             <div class="sd-column-box__slide-in-column-inner sd-slide-in-panel">
                 <div class="sd-slide-in-panel__header">
                     <h3 class="sd-slide-in-panel__heading" ng-if="nav !== 'image-edit'" translate>Metadata</h3>
-                    <a class="icn-btn sd-slide-in-panel__close" sd-tooltip="Close details" flow="top" ng-click="showMetadata = !showMetadata"><i
+                    <a class="icn-btn sd-slide-in-panel__close" sd-tooltip="Close details" flow="top"
+                       ng-click="showMetadata = !showMetadata"><i
                             class="icon-close-small"></i></a>
                 </div>
                 <div class="sd-slide-in-panel__content" ng-if="nav !== 'image-edit'">
@@ -187,9 +213,10 @@
                             <a class="btn btn--primary" ng-click="applyMetadataChanges()" translate>Apply</a>
                         </div>
 
-                        <div sd-media-metadata-editor data-item="data.metadata" data-validator="validator" data-dark="true"
-                            data-boxed="true" data-on-change="metadata.isDirty = true" data-disabled="!data.editable"
-                            data-associated="data.isAssociated">
+                        <div sd-media-metadata-editor data-item="data.metadata" data-validator="validator"
+                             data-dark="true"
+                             data-boxed="true" data-on-change="metadata.isDirty = true" data-disabled="!data.editable"
+                             data-associated="data.isAssociated">
                         </div>
                     </div>
                 </div>
