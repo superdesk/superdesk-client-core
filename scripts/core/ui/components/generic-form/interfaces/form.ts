@@ -1,5 +1,12 @@
 export interface IFormField { // don't forget to update runtime type checks
-    type: 'text_single_line' | 'text_editor3' | 'vocabulary_single_value';
+    type: 'text_single_line'
+        | 'text_editor3'
+        | 'vocabulary_single_value'
+        | 'checkbox'
+        | 'content_filter_single_value'
+        | 'desk_stage_macro' // available stages and macros depend on selected desk
+    ;
+
     required?: boolean;
 
     // custom components for some fields might not require a label or want include a custom one

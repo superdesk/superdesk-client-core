@@ -40,13 +40,18 @@ export class FormViewEdit extends React.Component<IProps> {
                             return (
                                 <FieldComponent
                                     key={i}
+                                    formValues={this.props.item}
                                     formField={item}
                                     value={this.props.item[item.field]}
                                     disabled={!this.props.editMode}
                                     issues={this.props.issues[item.field] || []}
                                     previewOuput={false}
                                     onChange={
-                                        (nextValue) => this.props.handleFieldChange(item.field, nextValue)
+                                        (nextValue, fieldName?: string) =>
+                                            this.props.handleFieldChange(
+                                                item.field != null ? item.field : fieldName,
+                                                nextValue,
+                                            )
                                     }
                                 />
                             );
