@@ -36,20 +36,18 @@ interface IState {
 
 interface IProps<T extends IDefaultApiFields> {
     formConfig: IFormGroup;
-    renderRow(item: T, items: ICrudManager<T>): JSX.Element;
+    renderRow(key: string, item: T, page: GenericListPageComponent<T>): JSX.Element;
 
     // Allows creating an item with required fields which aren't editable from the GUI
-    newItemTemplate: {[key: string]: any};
+    newItemTemplate?: {[key: string]: any};
 
     // connected
     items?: ICrudManager<T>;
     modal?: any;
 }
 
-class GenericListPageComponent<T extends IDefaultApiFields> extends React.Component<IProps<T>, IState> {
+export class GenericListPageComponent<T extends IDefaultApiFields> extends React.Component<IProps<T>, IState> {
     previewInEditMode: boolean;
-
-    static defaultProps = {newItemTemplate: {}};
 
     constructor(props) {
         super(props);
@@ -71,6 +69,7 @@ class GenericListPageComponent<T extends IDefaultApiFields> extends React.Compon
         this.handleFilterFieldChange = this.handleFilterFieldChange.bind(this);
         this.openNewItemForm = this.openNewItemForm.bind(this);
         this.closeNewItemForm = this.closeNewItemForm.bind(this);
+        this.deleteItem = this.deleteItem.bind(this);
     }
     openPreview(id) {
         if (this.previewInEditMode === true) {
@@ -78,6 +77,25 @@ class GenericListPageComponent<T extends IDefaultApiFields> extends React.Compon
                 headerText: gettext('Warning'),
                 bodyText: gettext(
                     'Can\'t open a preview, because another item is in edit mode.',
+                ),
+            });
+        } else {
+            this.setState({
+                itemInPreview: id,
+            });
+        }
+    }
+    deleteItem(item: T) {
+        this.props.modal.confirm(gettext('Are you sure you want to delete this item?')).then(() => {
+            this.props.items.delete(item);
+        });
+    }
+    startEditing(id) {
+        if (this.previewInEditMode === true) {
+            this.props.modal.alert({
+                headerText: gettext('Warning'),
+                bodyText: gettext(
+                    'Can\'t edit this item, because another item is in edit mode.',
                 ),
             });
         } else {
@@ -119,7 +137,10 @@ class GenericListPageComponent<T extends IDefaultApiFields> extends React.Compon
                 ),
             });
         } else {
-            this.setState({newItem: this.props.newItemTemplate, itemInPreview: null});
+            this.setState({
+                newItem: this.props.newItemTemplate == null ? {} : this.props.newItemTemplate,
+                itemInPreview: null,
+            });
         }
     }
     componentDidMount() {
@@ -267,11 +288,9 @@ class GenericListPageComponent<T extends IDefaultApiFields> extends React.Compon
                                 )
                             }
                             {
-                                this.props.items._items.map((item) => (
-                                    <ListItem onClick={() => this.openPreview(item._id)} key={item._id}>
-                                        {renderRow(item, this.props.items)}
-                                    </ListItem>
-                                ))
+                                this.props.items._items.map(
+                                    (item) => renderRow(item._id, item, this),
+                                )
                             }
                         </div>
                     </PageContainerItem>
