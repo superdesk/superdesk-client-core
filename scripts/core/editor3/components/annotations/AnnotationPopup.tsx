@@ -92,7 +92,7 @@ const AnnotationWithDependenciesLoaded = connectPromiseResults(() => ({
         .then(() => ng.get('metadata').values.annotation_types),
 }))(Annotation);
 
-export const AnnotationPopup: React.StatelessComponent<any> = connect(
+export const AnnotationPopup = connect(
     () => ({}),
     {showPopup},
 )(AnnotationWithDependenciesLoaded);

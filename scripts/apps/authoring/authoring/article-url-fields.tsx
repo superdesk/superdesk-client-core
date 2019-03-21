@@ -74,7 +74,7 @@ export class ArticleUrlFields extends React.Component<IProps, IState> {
                                 <i className="icon-remove-sign" style={{display: 'block'}} />
                             </button>
                         </div>
-                        <textarea type="text"
+                        <textarea
                             style={{marginTop: 0.5 + 'em'}}
                             disabled={!editable}
                             className="sd-editor__default-input"

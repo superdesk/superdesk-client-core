@@ -1,5 +1,3 @@
-
-
 var grunt = require('grunt');
 var makeConfig = require('./webpack.config.js');
 
@@ -25,7 +23,7 @@ module.exports = function(config) {
 
         preprocessors: {
             '**/*.html': ['ng-html2js'],
-            'scripts/tests.js': ['webpack', 'sourcemap'],
+            'scripts/tests.ts': ['webpack', 'sourcemap'],
         },
 
         webpack: webpackConfig,
@@ -40,7 +38,7 @@ module.exports = function(config) {
         },
 
         files: [
-            'scripts/tests.js',
+            'scripts/tests.ts',
             'scripts/**/*.html',
         ],
 
@@ -69,5 +67,10 @@ module.exports = function(config) {
 
         // Seams default 10s is not enough for CI sometime, so let's try 30s
         browserNoActivityTimeout: 30000,
+
+        // Allow typescript files
+        mime: {
+            'text/x-typescript': ['ts', 'tsx'],
+        },
     });
 };

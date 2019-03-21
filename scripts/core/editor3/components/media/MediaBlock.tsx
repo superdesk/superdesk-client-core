@@ -360,7 +360,7 @@ const mapDispatchToProps = (dispatch) => ({
     setLocked: () => dispatch(actions.setLocked(true)),
 });
 
-export const MediaBlock: React.StatelessComponent<any> = connect(
+export const MediaBlock = connect(
     mapStateToProps,
     mapDispatchToProps,
 )(MediaBlockComponent);

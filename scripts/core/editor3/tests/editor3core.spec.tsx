@@ -1,5 +1,5 @@
 describe('editor3.service', () => {
-    beforeEach(window['module']('superdesk.core.editor3'));
+    beforeEach(window.module('superdesk.core.editor3'));
 
     it('should implement editor2 find & replace interface', inject((editor3) => {
         [

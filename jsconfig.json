@@ -5,17 +5,17 @@
         "jsx": "preserve",
         "paths": {
             "apps/*": [
-                "./scripts/apps/*",
+                "./scripts/apps/*"
             ],
             "core/*": [
-                "./scripts/core/*",
-            ],
+                "./scripts/core/*"
+            ]
         },
-        "baseUrl": ".",
+        "baseUrl": "."
     },
     "exclude": [
         "node_modules",
         "bower_components",
-        "po",
+        "po"
     ]
 }

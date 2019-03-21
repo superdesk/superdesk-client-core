@@ -50,7 +50,7 @@ export function getTansaHtml(editorState) {
  * @param {String} simpleReplace
  * @returns {EditorState}
  */
-export function setTansaHtml(editorState, html, simpleReplace) {
+export function setTansaHtml(editorState, html, simpleReplace?) {
     let content = editorState.getCurrentContent();
     const blockMap = content.getBlockMap();
     const htmlElement = document.createElement('div');
@@ -173,7 +173,7 @@ function updateText(editorState, content, block, newText, diffMatchPatch, simple
 
         if (diff[0] === 0) {
             if (previousDiff != null) {
-                const _previousText  = previousDiff[1];
+                const _previousText = previousDiff[1];
 
                 newContent = removeText(editorState, newContent, block, offset, _previousText);
             }
@@ -183,21 +183,21 @@ function updateText(editorState, content, block, newText, diffMatchPatch, simple
             if (previousDiff == null) {
                 ({newContent, offset} = insertText(editorState, newContent, block, offset, _text));
             } else {
-                const _previousText  = previousDiff[1];
+                const _previousText = previousDiff[1];
 
-                ({newContent, offset}  =  replaceText(editorState, newContent, block, offset, _previousText, _text));
+                ({newContent, offset} = replaceText(editorState, newContent, block, offset, _previousText, _text));
                 previousDiff = null;
             }
         } else {
             if (previousDiff != null) {
-                const _previousText  = previousDiff[1];
+                const _previousText = previousDiff[1];
 
                 newContent = removeText(editorState, newContent, block, offset, _previousText);
             }
 
             if (simpleReplace === true) {
                 newContent = removeText(editorState, newContent, block, offset, _text);
-            } else  {
+            } else {
                 previousDiff = diff;
             }
         }
@@ -220,6 +220,7 @@ function insertText(editorState, content, block, offset, text) {
     const selection = createSelectionForBlock(editorState, block, offset);
     const newContent = Modifier.insertText(content, selection, text);
 
+    // eslint-disable-next-line
     offset += text.length;
     return {newContent, offset};
 }
@@ -235,7 +236,7 @@ function insertText(editorState, content, block, offset, text) {
  * @param {String} newText
  * @returns {ContentState, Integer}
  */
-function replaceText(editorState, content, block, offset, text, newText)  {
+function replaceText(editorState, content, block, offset, text, newText) {
     const overlapLength = text.length < newText.length ? text.length : newText.length;
     let newContent = content;
 
@@ -248,6 +249,7 @@ function replaceText(editorState, content, block, offset, text, newText)  {
         newContent = Modifier.replaceText(newContent, selection, newCharacter, inlineStyle, entity);
     }
 
+    // eslint-disable-next-line no-param-reassign
     offset += overlapLength;
 
     if (overlapLength < text.length) {
@@ -263,6 +265,7 @@ function replaceText(editorState, content, block, offset, text, newText)  {
         const selection = createSelectionForBlock(editorState, block, offset, extraText.length);
 
         newContent = Modifier.insertText(newContent, selection, extraText, lastInlineStyle, lastEntity);
+        // eslint-disable-next-line no-param-reassign
         offset += extraText.length;
     }
 

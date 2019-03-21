@@ -4,7 +4,7 @@ import classNames from 'classnames';
 
 interface IProps {
     svc: object;
-    selectingDisabled: boolean;
+    selectingDisabled?: boolean;
     onMultiSelect: () => void;
     item: any;
 }

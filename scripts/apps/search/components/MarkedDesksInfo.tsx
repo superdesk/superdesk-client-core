@@ -78,8 +78,10 @@ export class MarkedDesksInfo extends React.Component<any, any> {
             svc: this.props.svc,
         });
 
-        const icon = ReactDOM.findDOMNode(this).getElementsByClassName('icon-bell')[0] ||
-        ReactDOM.findDOMNode(this).getElementsByClassName('icon-bell')[0];
+        const thisNode = ReactDOM.findDOMNode(this) as HTMLElement;
+
+        const icon = thisNode.getElementsByClassName('icon-bell')[0] ||
+        thisNode.getElementsByClassName('icon-bell')[0];
 
         openActionsMenu(elem, icon, this.props.item._id);
     }

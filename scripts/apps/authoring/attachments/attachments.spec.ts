@@ -70,6 +70,7 @@ describe('attachments', () => {
             $rootScope.$digest();
 
             const state = store.getState();
+
             expect(state.edit).toBe(null);
             expect(state.files[0].title).toBe(file.title);
             expect(state.files[0].description).toBe(updates.description);

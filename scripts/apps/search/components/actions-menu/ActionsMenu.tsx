@@ -19,7 +19,7 @@ export class ActionsMenu extends React.Component<any, any> {
     toggle(event) {
         this.stopEvent(event);
         closeActionsMenu(this.props.item._id);
-        const icon = ReactDOM.findDOMNode(this)
+        const icon = (ReactDOM.findDOMNode(this) as HTMLElement)
             .getElementsByClassName('icon-dots-vertical')[0];
 
         openActionsMenu(<MenuItems

@@ -1,5 +1,5 @@
 
-module.exports = [
+export default [
     ['EMBED_PROVIDERS', function(EMBED_PROVIDERS) {
         return {
             pattern: /twitter\.com\/widgets\.js/g,

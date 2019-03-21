@@ -96,7 +96,7 @@ describe('Image Crop', () => {
                 expect(mySpy.calls.count()).toEqual(0);
                 expect($elm.text())
                     .toBe(
-                        'Sorry, but image must be at least {{width}}x{{height}}.' + ' ' +
+                        'Sorry, but image must be at least {{width}}x{{height}}. ' +
                         'Currently the image size is {{width}}x{{height}}).',
                     );
             }));

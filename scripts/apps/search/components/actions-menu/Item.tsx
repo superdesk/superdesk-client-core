@@ -61,7 +61,8 @@ export default class Item extends React.Component<any, any> {
     }
 
     setPosition() {
-        const targetRect = ReactDOM.findDOMNode(this).getBoundingClientRect();
+        const thisNode = ReactDOM.findDOMNode(this) as HTMLElement;
+        const targetRect = thisNode.getBoundingClientRect();
         const BUFFER = 250;
 
         if (targetRect.left < LEFT_SIDEBAR_WIDTH + BUFFER) {

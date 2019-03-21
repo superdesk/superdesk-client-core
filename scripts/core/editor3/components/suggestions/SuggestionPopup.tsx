@@ -171,7 +171,7 @@ Suggestion.propTypes = {
     editorNode: PropTypes.object,
 };
 
-export const SuggestionPopup: React.StatelessComponent<any> = connect(null, {
+export const SuggestionPopup = connect(null, {
     acceptSuggestion,
     rejectSuggestion,
 })(Suggestion);
