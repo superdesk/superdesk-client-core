@@ -272,6 +272,7 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
         };
         video.onloadeddata = function () {
             starttime = 0;
+            loadImage();
             endtime = video.duration;
             $scope.cuttingVideo = {
                 starttime: starttime,
@@ -299,8 +300,6 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
         barright.ondragend = function () {
             onDragEndCb();
         };
-
-        loadImage();
 
         document.getElementById('file-upload').onchange = function (evt) {
             var tgt = evt.target || window.event.srcElement,
