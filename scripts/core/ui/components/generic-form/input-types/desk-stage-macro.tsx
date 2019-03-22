@@ -18,7 +18,9 @@ interface IState {
 }
 
 export class DeskStageMacroComponent extends React.Component<IProps, IState> {
-    constructor(props) {
+    initialValues: { readonly [fieldName: string]: any; };
+
+    constructor(props: IProps) {
         super(props);
 
         this.state = {
@@ -28,6 +30,14 @@ export class DeskStageMacroComponent extends React.Component<IProps, IState> {
         };
 
         this.fetchItems = this.fetchItems.bind(this);
+
+        const {deskField, stageField, macroField} = props.formField.component_parameters;
+
+        this.initialValues = {
+            [deskField]: props.formValues[deskField],
+            [stageField]: props.formValues[stageField],
+            [macroField]: props.formValues[macroField],
+        };
     }
     fetchItems(): void {
         const {deskField} = this.props.formField.component_parameters;
@@ -82,12 +92,17 @@ export class DeskStageMacroComponent extends React.Component<IProps, IState> {
                         value={this.props.formValues[deskField]}
                         className="sd-line-input__select"
                         onChange={(event) => {
-                            const deskId = event.target.value;
+                            const nextValue = event.target.value;
 
                             this.setState({stages: null, macros: null});
-                            this.props.onChange(event.target.value, deskField === '' ? undefined : deskField);
+                            this.props.onChange(
+                                nextValue === ''
+                                    ? this.initialValues[deskField]
+                                    : nextValue,
+                                deskField,
+                            );
 
-                            if (deskId !== '') {
+                            if (nextValue !== '') {
                                 this.fetchItems();
                             }
                         }}
@@ -119,7 +134,14 @@ export class DeskStageMacroComponent extends React.Component<IProps, IState> {
                         value={this.props.formValues[stageField]}
                         className="sd-line-input__select"
                         onChange={(event) => {
-                            this.props.onChange(event.target.value, stageField);
+                            const nextValue = event.target.value;
+
+                            this.props.onChange(
+                                nextValue === ''
+                                    ? this.initialValues[stageField]
+                                    : nextValue,
+                                stageField,
+                            );
                         }}
                     >
                         <option value="">{deskSelected ? '' : gettext('Select a desk first')}</option>
@@ -149,7 +171,14 @@ export class DeskStageMacroComponent extends React.Component<IProps, IState> {
                         value={this.props.formValues[macroField || '']}
                         className="sd-line-input__select"
                         onChange={(event) => {
-                            this.props.onChange(event.target.value, macroField);
+                            const nextValue = event.target.value;
+
+                            this.props.onChange(
+                                nextValue === ''
+                                    ? this.initialValues[macroField]
+                                    : nextValue,
+                                macroField,
+                            );
                         }}
                     >
                         <option value="">{deskSelected ? '' : gettext('Select a desk first')}</option>

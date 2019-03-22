@@ -14,12 +14,16 @@ interface IState {
 }
 
 export class ContentFilterSingleValueComponent extends React.Component<IProps, IState> {
+    initalValue: string;
+
     constructor(props) {
         super(props);
 
         this.state = {
             contentFilters: [],
         };
+
+        this.initalValue = props.value;
     }
     componentDidMount() {
         this.props.api('content_filters').query({max_results: 200}).then((res: IRestApiResponse<IContentFilter>) => {
@@ -47,7 +51,7 @@ export class ContentFilterSingleValueComponent extends React.Component<IProps, I
                     value={this.props.value}
                     className="sd-line-input__select"
                     onChange={(event) => {
-                        this.props.onChange(event.target.value);
+                        this.props.onChange(event.target.value === '' ? this.initalValue : event.target.value);
                     }}
                 >
                     <option value="" />

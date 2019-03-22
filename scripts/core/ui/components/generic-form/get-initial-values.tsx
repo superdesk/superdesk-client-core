@@ -10,14 +10,14 @@ function getInitialValueForFieldType(fieldConfig: IFormField): {readonly [field:
         return {[field]: ''};
     case 'vocabulary_single_value':
     case 'content_filter_single_value':
-        return {[field]: null};
+        return {[field]: undefined};
     case 'checkbox':
         return {[field]: false};
     case 'desk_stage_macro':
         return {
-            [component_parameters.deskField]: null,
-            [component_parameters.stageField]: null,
-            [component_parameters.macroField]: null,
+            [component_parameters.deskField]: undefined,
+            [component_parameters.stageField]: undefined,
+            [component_parameters.macroField]: undefined,
 
         };
     default:
