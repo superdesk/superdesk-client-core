@@ -260,6 +260,7 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
         maskright = document.getElementById('mask-right');
         iconplay = document.getElementById('icon-play');
         iconstop = document.getElementById('icon-stop');
+
         video.onplay = function () {
             iconplay.style.display = 'none';
             iconstop.style.display = 'initial';
@@ -285,26 +286,37 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
             }
             barright.setAttribute("data-content", getstrtime(video.duration));
             barleft.setAttribute("data-content", getstrtime(0));
-            if (video)
-            {
-                if(video.videoWidth >720)
-                {
+            if (video) {
+                if (video.videoWidth > 720) {
                     $scope.quality.is720 = true;
                 }
-                if(video.videoWidth >480)
-                {
+                if (video.videoWidth > 480) {
                     $scope.quality.is480 = true;
                 }
-                if(video.videoWidth >240)
-                {
+                if (video.videoWidth > 240) {
                     $scope.quality.is240 = true;
                 }
-                if(video.videoWidth >120)
-                {
+                if (video.videoWidth > 120) {
                     $scope.quality.is120 = true;
                 }
             }
 
+            $('#video').Jcrop({
+                onSelect: showCoords,
+                onchange: showCoords,
+                aspectRatio: null,
+                minSize: [200, 200],
+                trueSize: [video.clientWidth, video.clientHeight],
+                addClass: 'jcrop-dark',
+                bgOpacity: .4
+
+            }, function () {
+                jcrop_api = this;
+            });
+            if (jcrop_api) {
+                jcrop_api.release();
+                jcrop_api.disable();
+            };
         }
 
         barleft.ondragstart = function () {
@@ -721,18 +733,6 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
             ratio2 = 4 / 3;
         else if (ratio === "16:9")
             ratio2 = 16 / 9;
-        $('#video').Jcrop({
-            onSelect: showCoords,
-            onchange: showCoords,
-            aspectRatio: ratio2,
-            minSize: [200, 200],
-            trueSize: [elementVideo.clientWidth, elementVideo.clientHeight],
-            addClass: 'jcrop-dark',
-            bgOpacity: .4
-
-        }, function () {
-            jcrop_api = this;
-        });
         let x = elementVideo.clientWidth;
         let y = elementVideo.clientHeight;
         switch (ratio) {
