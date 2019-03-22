@@ -6,6 +6,7 @@ import classNames from 'classnames';
 interface IListItemProps {
     onClick?: () => void;
     inactive?: boolean;
+    noHover?: boolean;
 }
 
 export class ListItem extends React.Component<IListItemProps, any> {
@@ -13,7 +14,13 @@ export class ListItem extends React.Component<IListItemProps, any> {
         return (
             <div
                 onClick={this.props.onClick || null}
-                className={classNames('sd-list-item sd-shadow--z1', {'inactive': this.props.inactive})}>
+                className={
+                    classNames('sd-list-item sd-shadow--z1',
+                    {
+                        'inactive': this.props.inactive,
+                        'sd-list-item--no-hover': this.props.noHover,
+                    },
+                )}>
                 {this.props.children}
             </div>
         );

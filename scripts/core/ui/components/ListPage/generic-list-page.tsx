@@ -2,7 +2,7 @@ import React from 'react';
 import {noop, omit} from 'lodash';
 import ReactPaginate from 'react-paginate';
 
-import {ListItem} from 'core/components/ListItem';
+import {ListItem, ListItemColumn} from 'core/components/ListItem';
 import {PageContainer, PageContainerItem} from 'core/components/PageLayout';
 import {GenericListPageItemViewEdit} from './generic-list-page-item-view-edit';
 import {
@@ -174,6 +174,32 @@ export class GenericListPageComponent<T extends IDefaultApiFields> extends React
             },
         ];
 
+        const getContents = () => {
+            if (this.props.items._items.length === 0) {
+                if (Object.keys(activeFilters).length > 0) {
+                    return (
+                        <ListItem noHover>
+                            <ListItemColumn>
+                                {gettext('There are no items matching the search.')}
+                            </ListItemColumn>
+                        </ListItem>
+                    );
+                } else {
+                    return (
+                        <ListItem noHover>
+                            <ListItemColumn>
+                                {gettext('There are no items yet.')}
+                            </ListItemColumn>
+                        </ListItem>
+                    );
+                }
+            } else {
+                return this.props.items._items.map(
+                    (item) => renderRow(item._id, item, this),
+                );
+            }
+        };
+
         return (
             <div style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
                 <div className="subnav">
@@ -248,21 +274,25 @@ export class GenericListPageComponent<T extends IDefaultApiFields> extends React
                     }
                     <PageContainerItem shrink>
                         <div style={{margin: 20}}>
-                            <div style={{textAlign: 'center', marginTop: -20}}>
-                                <ReactPaginate
-                                    previousLabel={gettext('prev')}
-                                    nextLabel={gettext('next')}
-                                    pageCount={pageCount}
-                                    marginPagesDisplayed={2}
-                                    pageRangeDisplayed={5}
-                                    onPageChange={({selected}) => {
-                                        this.props.items.goToPage(selected + 1);
-                                    }}
-                                    initialPage={this.props.items._meta.page - 1}
-                                    containerClassName={'bs-pagination'}
-                                    activeClassName="active"
-                                />
-                            </div>
+                            {
+                                this.props.items._items.length === 0 ? null : (
+                                    <div style={{textAlign: 'center', marginTop: -20}}>
+                                        <ReactPaginate
+                                            previousLabel={gettext('prev')}
+                                            nextLabel={gettext('next')}
+                                            pageCount={pageCount}
+                                            marginPagesDisplayed={2}
+                                            pageRangeDisplayed={5}
+                                            onPageChange={({selected}) => {
+                                                this.props.items.goToPage(selected + 1);
+                                            }}
+                                            initialPage={this.props.items._meta.page - 1}
+                                            containerClassName={'bs-pagination'}
+                                            activeClassName="active"
+                                        />
+                                    </div>
+                                )
+                            }
                             {
                                 Object.keys(activeFilters).length < 1 ? null : (
                                     <div
@@ -287,11 +317,7 @@ export class GenericListPageComponent<T extends IDefaultApiFields> extends React
                                     </div>
                                 )
                             }
-                            {
-                                this.props.items._items.map(
-                                    (item) => renderRow(item._id, item, this),
-                                )
-                            }
+                            {getContents()}
                         </div>
                     </PageContainerItem>
 
