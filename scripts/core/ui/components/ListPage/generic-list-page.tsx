@@ -29,8 +29,14 @@ import {generateFilterForServer} from '../generic-form/generate-filter-for-serve
 import {getFormFieldsFlat} from '../generic-form/get-form-fields-flat';
 
 interface IState {
-    itemInPreview?: string;
-    newItem: null | {[key: string]: any};
+    preview: {
+        itemId: string;
+        editMode: boolean;
+    };
+    newItem: {
+        item: null | {[key: string]: any},
+        editMode: boolean;
+    };
     filtersOpen: boolean;
     filterValues: {[key: string]: any};
     searchValue: string;
@@ -56,8 +62,14 @@ export class GenericListPageComponent<T extends IDefaultApiFields> extends React
         super(props);
 
         this.state = {
-            itemInPreview: null,
-            newItem: null,
+            preview: {
+                itemId: null,
+                editMode: false,
+            },
+            newItem: {
+                item: null,
+                editMode: true,
+            },
             filtersOpen: false,
             filterValues: {},
             searchValue: '',
@@ -85,7 +97,10 @@ export class GenericListPageComponent<T extends IDefaultApiFields> extends React
             });
         } else {
             this.setState({
-                itemInPreview: id,
+                preview: {
+                    itemId: id,
+                    editMode: false,
+                },
             });
         }
     }
@@ -112,12 +127,20 @@ export class GenericListPageComponent<T extends IDefaultApiFields> extends React
             });
         } else {
             this.setState({
-                itemInPreview: id,
+                preview: {
+                    itemId: id,
+                    editMode: true,
+                },
             });
         }
     }
     closePreview() {
-        this.setState({itemInPreview: null});
+        this.setState({
+            preview: {
+                itemId: null,
+                editMode: false,
+            },
+        });
     }
     handleFilterFieldChange(field, nextValue, callback = noop) {
         this.setState((prevState) => ({
@@ -176,7 +199,7 @@ export class GenericListPageComponent<T extends IDefaultApiFields> extends React
         );
     }
     closeNewItemForm() {
-        this.setState({newItem: null});
+        this.setState({newItem: {item: null, editMode: false}});
     }
     setFiltersVisibility(nextValue: boolean) {
         this.setState({filtersOpen: nextValue});
@@ -192,10 +215,16 @@ export class GenericListPageComponent<T extends IDefaultApiFields> extends React
         } else {
             this.setState({
                 newItem: {
-                    ...getInitialValues(this.props.formConfig),
-                    ...this.props.newItemTemplate == null ? {} : this.props.newItemTemplate,
+                    item: {
+                        ...getInitialValues(this.props.formConfig),
+                        ...this.props.newItemTemplate == null ? {} : this.props.newItemTemplate,
+                    },
+                    editMode: true,
                 },
-                itemInPreview: null,
+                preview: {
+                    itemId: null,
+                    editMode: false,
+                },
             });
         }
     }
@@ -385,16 +414,23 @@ export class GenericListPageComponent<T extends IDefaultApiFields> extends React
                     </PageContainerItem>
 
                     {
-                        this.state.itemInPreview != null ? (
+                        this.state.preview.itemId != null ? (
                             <PageContainerItem>
                                 <GenericListPageItemViewEdit
-                                    onEditModeChange={(val) => {
-                                        this.previewInEditMode = val;
+                                    editMode={this.state.preview.editMode}
+                                    onEditModeChange={(nextValue) => {
+                                        this.setState((prevState) => ({
+                                            ...prevState,
+                                            preview: {
+                                                ...prevState.preview,
+                                                editMode: nextValue,
+                                            },
+                                        }));
                                     }}
                                     operation="editing"
                                     formConfig={formConfig}
                                     item={
-                                        this.props.items._items.find(({_id}) => _id === this.state.itemInPreview)
+                                        this.props.items._items.find(({_id}) => _id === this.state.preview.itemId)
                                     }
                                     onSave={(nextItem) => this.props.items.update(nextItem)}
                                     onClose={this.closePreview}
@@ -404,12 +440,19 @@ export class GenericListPageComponent<T extends IDefaultApiFields> extends React
                     }
 
                     {
-                        this.state.newItem != null ? (
+                        this.state.newItem.item != null ? (
                             <PageContainerItem>
                                 <GenericListPageItemViewEdit
                                     operation="creation"
                                     formConfig={formConfig}
-                                    item={this.state.newItem}
+                                    editMode={this.state.newItem.editMode}
+                                    onEditModeChange={(nextValue: boolean) => {
+                                        this.setState((prevState) => ({
+                                            ...prevState,
+                                            item: {...prevState.newItem, editMode: nextValue},
+                                        }));
+                                    }}
+                                    item={this.state.newItem.item}
                                     onSave={(item: T) => this.props.items.create(item).then((res) => {
                                         this.closeNewItemForm();
                                         this.openPreview(res._id);

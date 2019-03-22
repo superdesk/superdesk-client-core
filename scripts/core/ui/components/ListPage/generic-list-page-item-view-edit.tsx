@@ -15,19 +15,19 @@ import {FormViewEdit} from 'core/ui/components/generic-form/from-group';
 
 interface IProps {
     operation: 'editing' | 'creation';
+    editMode: boolean;
     formConfig: IFormGroup;
     item: {[key: string]: any};
+    onEditModeChange(nextValue: boolean): void;
     onClose: () => void;
     onCancel?: () => void;
     onSave: (nextItem) => Promise<any>;
-    onEditModeChange?(currentEditMode: boolean): void;
 
     // connected services
     modal?: any;
 }
 
 interface IState {
-    editMode: boolean;
     nextItem: IProps['item'];
     issues: {[field: string]: Array<string>};
 }
@@ -39,7 +39,6 @@ class GenericListPageItemViewEditComponent extends React.Component<IProps, IStat
         super(props);
 
         this.state = {
-            editMode: this.props.operation === 'creation',
             nextItem: this.props.item,
             issues: {},
         };
@@ -51,36 +50,24 @@ class GenericListPageItemViewEditComponent extends React.Component<IProps, IStat
         this.handleSave = this.handleSave.bind(this);
     }
     componentWillReceiveProps(nextProps) {
-        if (this.state.editMode === false) {
+        if (this.props.editMode === false) {
             // enable changing which item is previewed
             this.setState({
                 nextItem: nextProps.item,
             });
         }
     }
-    componentDidUpdate(prevProps, prevState) {
-        if (this.state.editMode !== prevState.editMode && typeof this.props.onEditModeChange === 'function') {
-            this.props.onEditModeChange(this.state.editMode);
-        }
-    }
     componentDidMount() {
         this._mounted = true;
-
-        if (typeof this.props.onEditModeChange === 'function') {
-            this.props.onEditModeChange(this.state.editMode);
-        }
     }
     componentWillUnmount() {
         this._mounted = false;
-
-        if (typeof this.props.onEditModeChange === 'function') {
-            this.props.onEditModeChange(false);
-        }
     }
     enableEditMode() {
         this.setState({
-            editMode: true,
             nextItem: this.props.item,
+        }, () => {
+            this.props.onEditModeChange(true);
         });
     }
     handleFieldChange(field: keyof IProps['item'], nextValue: valueof<IProps['item']>) {
@@ -98,8 +85,9 @@ class GenericListPageItemViewEditComponent extends React.Component<IProps, IStat
             ? this.props.onCancel
             : () => {
                 this.setState({
-                    editMode: false,
                     nextItem: this.props.item,
+                }, () => {
+                    this.props.onEditModeChange(false);
                 });
             };
 
@@ -118,7 +106,7 @@ class GenericListPageItemViewEditComponent extends React.Component<IProps, IStat
     handleSave() {
         this.props.onSave(this.state.nextItem).then(() => {
             if (this._mounted === true) {
-                this.setState({editMode: false});
+                this.props.onEditModeChange(false);
             }
         })
             .catch((res) => {
@@ -157,7 +145,7 @@ class GenericListPageItemViewEditComponent extends React.Component<IProps, IStat
                 <SidePanelHeader>
                     <SidePanelHeading>{gettext('Details:')}</SidePanelHeading>
                     {
-                        this.state.editMode
+                        this.props.editMode
                             ? (
                                 <div className="side-panel__sliding-toolbar side-panel__sliding-toolbar--right">
                                     <button className="btn" onClick={this.handleCancel}>
@@ -195,7 +183,7 @@ class GenericListPageItemViewEditComponent extends React.Component<IProps, IStat
                         <FormViewEdit
                             item={this.state.nextItem}
                             formConfig={this.props.formConfig}
-                            editMode={this.state.editMode}
+                            editMode={this.props.editMode}
                             issues={this.state.issues}
                             handleFieldChange={this.handleFieldChange}
                         />
