@@ -10,48 +10,82 @@ interface IState {
     items: ISelectSingleValueItems;
 }
 
-export function getSelectSingleValue(getItems: (props: IProps) => Promise<ISelectSingleValueItems>) {
+export function getSelectSingleValue(
+    getItems: (props: IProps) => Promise<ISelectSingleValueItems>,
+    itemsUnavailableMessage?: string,
+    getDependentFields?: (props: IProps) => Array<string>,
+) {
     return class SelectSingleValue extends React.Component<IProps, IState> {
-        constructor(props) {
+        dependentFields: Array<string>;
+        initialValue: string | undefined;
+
+        constructor(props: IProps) {
             super(props);
 
             this.state = {
                 items: null,
             };
+
+            this.initialValue = props.value;
+
+            this.dependentFields = typeof getDependentFields === 'function'
+                ? getDependentFields(props)
+                : [];
+
+            this.fetchData = this.fetchData.bind(this);
         }
-        componentDidMount() {
+        fetchData() {
             getItems(this.props)
                 .then((items) => {
                     this.setState({items});
                 });
         }
-        render() {
-            if (this.state.items == null) {
-                return null;
+        componentDidMount() {
+            this.fetchData();
+        }
+        componentDidUpdate(prevProps: IProps) {
+            if (
+                this.dependentFields.some((field) => prevProps.formValues[field] !== this.props.formValues[field])
+            ) {
+                this.props.onChange(this.initialValue); // resetting the value since dependent field changed
+                this.fetchData();
             }
-
+        }
+        render() {
             if (this.props.previewOuput) {
                 let item = this.state.items.find(({id}) => id === this.props.value);
 
                 return item == null ? <div>{this.props.value}</div> : <div>{item.label}</div>;
             }
 
+            const getFirstItemMessage = () => {
+                if (this.state.items == null) {
+                    return itemsUnavailableMessage != null ? itemsUnavailableMessage : '';
+                } else if (this.state.items.length < 1) {
+                    return gettext('No items available');
+                } else {
+                    return '';
+                }
+            };
+
             return (
                 <div className={classNames('sd-line-input', {'sd-line-input--invalid': this.props.issues.length > 0})}>
                     <label className="sd-line-input__label">{this.props.formField.label}</label>
                     <select
-                        disabled={this.props.disabled}
+                        disabled={this.props.disabled || this.state.items == null || this.state.items.length < 1}
                         value={this.props.value}
                         className="sd-line-input__select"
                         onChange={(event) => {
-                            this.props.onChange(event.target.value);
+                            this.props.onChange(event.target.value === '' ? this.initialValue : event.target.value);
                         }}
                     >
-                        <option value="" />
+                        <option value="">{getFirstItemMessage()}</option>
                         {
-                            this.state.items.map(({id, label}, i) => (
-                                <option key={i} value={id}>{label}</option>
-                            ))
+                            this.state.items == null
+                                ? null
+                                : this.state.items.map(({id, label}, i) => (
+                                    <option key={i} value={id}>{label}</option>
+                                ))
                         }
                     </select>
                     {
