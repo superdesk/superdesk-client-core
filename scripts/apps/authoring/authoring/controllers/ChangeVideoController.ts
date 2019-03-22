@@ -317,6 +317,7 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
                 jcrop_api.release();
                 jcrop_api.disable();
             };
+            video.controls = null;
         }
 
         barleft.ondragstart = function () {

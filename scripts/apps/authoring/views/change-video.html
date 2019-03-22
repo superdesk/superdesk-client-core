@@ -54,7 +54,7 @@
                     <div id="player-overlay">
                         <div class="video-player">
                             <md-videoplayer id="video-preview">
-                                <video autoplay="autoplay" id="video" class="video-display"
+                                <video controls="controls" autoplay="autoplay" id="video" class="video-display"
                                        ng-if="data.item.type === 'video'" ng-init="videoInit()"
                                        ng-src="{{data.item.renditions.original.href}}"></video>
                             </md-videoplayer>

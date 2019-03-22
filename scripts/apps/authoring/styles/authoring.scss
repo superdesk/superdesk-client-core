@@ -1920,7 +1920,7 @@ feature-image {
 .video-control {
   min-height: 5rem;
   height: 5.7rem;
-  width: 755px;
+  min-width: 755px;
   margin: 5px auto;
   border-radius: 10px;
 }
