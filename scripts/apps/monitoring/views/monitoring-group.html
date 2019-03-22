@@ -1,13 +1,28 @@
-<div class="stage">
+<div ng-class="{
+    stage: !viewColumn,
+    'sd-kanban-list__board': viewColumn,
+}">
 
-    <div sd-monitoring-group-header class="column-header" ng-if="group.header && viewType !== 'single_monitoring'">
+    <div sd-monitoring-group-header
+        class="column-header"
+        ng-class="{'sd-kanban-list__board-header': viewColumn}"
+        ng-if="group.header && viewType !== 'single_monitoring'">
     </div>
 
-    <div sd-items-list class="stage-content group"
-        ng-class="{refresh: showRefresh, 'sd-grid-group': view === 'photogrid'}"
-        ng-style="style"
-        data-hide-actions-for-monitoring-items="hideActionsForMonitoringItems"
-        data-disable-monitoring-multi-select="disableMonitoringMultiSelect"
-        on-monitoring-item-select="onMonitoringItemSelect"
-        on-monitoring-item-double-click="onMonitoringItemDoubleClick"></div>
+    <div ng-class="{
+        'sd-kanban-list__board-content': viewColumn,
+    }">
+        <div sd-items-list class="group stage-content"
+            ng-class="{
+                refresh: showRefresh,
+                'sd-grid-group': view === 'photogrid',
+                'sd-shadow--z1': viewColumn,
+                'sd-list-item-group': viewColumn,
+            }"
+            ng-style="style"
+            data-hide-actions-for-monitoring-items="hideActionsForMonitoringItems"
+            data-disable-monitoring-multi-select="disableMonitoringMultiSelect"
+            on-monitoring-item-select="onMonitoringItemSelect"
+            on-monitoring-item-double-click="onMonitoringItemDoubleClick"></div>
+    </div>
 </div>
