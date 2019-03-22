@@ -84,13 +84,14 @@ class GenericListPageItemViewEditComponent extends React.Component<IProps, IStat
         });
     }
     handleFieldChange(field: keyof IProps['item'], nextValue: valueof<IProps['item']>) {
-        this.setState({
-            ...this.state,
+        // using updater function to avoid race conditions
+        this.setState((prevState) => ({
+            ...prevState,
             nextItem: {
-                ...this.state.nextItem,
+                ...prevState.nextItem,
                 [field]: nextValue,
             },
-        });
+        }));
     }
     handleCancel() {
         const cancelFn = typeof this.props.onCancel === 'function'
