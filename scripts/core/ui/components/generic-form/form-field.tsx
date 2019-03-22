@@ -11,6 +11,7 @@ import {IInputType} from './interfaces/input-types';
 import {DeskSingleValue} from './input-types/desk_single_value';
 import {StageSingleValue} from './input-types/stage_single_value';
 import {MacroSingleValue} from './input-types/macro_single_value';
+import {YesNo} from './input-types/yes-no';
 
 export function getFormFieldComponent(type: IFormField['type']): React.ComponentType<IInputType<any>> {
     switch (type) {
@@ -30,6 +31,8 @@ export function getFormFieldComponent(type: IFormField['type']): React.Component
         return StageSingleValue;
     case 'macro_single_value':
         return MacroSingleValue;
+    case 'yes_no':
+        return YesNo;
     default:
         assertNever(type);
     }

@@ -130,7 +130,9 @@ export class GenericListPageComponent<T extends IDefaultApiFields> extends React
     executeFilters() {
         const {filterValues} = this.state;
 
-        const fieldTypesLookup = getFormFieldsFlat(this.props.formConfig).reduce((accumulator, item) => {
+        const formConfigForFilters = getFormGroupForFiltering(this.props.formConfig);
+
+        const fieldTypesLookup = getFormFieldsFlat(formConfigForFilters).reduce((accumulator, item) => {
             return {...accumulator, ...{[item.field]: item.type}};
         }, {});
 
@@ -356,8 +358,8 @@ export class GenericListPageComponent<T extends IDefaultApiFields> extends React
                                         {
                                             Object.keys(activeFilters).map((fieldName, i) => {
                                                 const filterValuePreview = getFormFieldPreviewComponent(
-                                                    this.state.filterValues,
-                                                    getFormFieldsFlat(this.props.formConfig).find(
+                                                    this.props.items.activeFilters,
+                                                    getFormFieldsFlat(formConfigForFilters).find(
                                                         ({field}) => field === fieldName,
                                                     ),
                                                 );

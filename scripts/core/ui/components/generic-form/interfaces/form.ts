@@ -7,6 +7,7 @@ export interface IFormField { // don't forget to update runtime type checks
         | 'desk_single_value'
         | 'stage_single_value'
         | 'macro_single_value'
+        | 'yes_no'
     ;
 
     required?: boolean;

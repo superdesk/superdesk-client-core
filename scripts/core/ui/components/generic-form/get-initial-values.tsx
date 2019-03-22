@@ -13,6 +13,7 @@ function getInitialValueForFieldType(fieldConfig: IFormField): {readonly [field:
     case 'desk_single_value':
     case 'stage_single_value':
     case 'macro_single_value':
+    case 'yes_no':
         return {[field]: undefined};
     case 'checkbox':
         return {[field]: false};

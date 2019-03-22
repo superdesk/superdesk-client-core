@@ -12,7 +12,7 @@ function getFieldTypeForFiltering(type: IFormField['type']): IFormField['type'] 
     case 'vocabulary_single_value':
         return 'vocabulary_single_value';
     case 'checkbox':
-        return 'checkbox';
+        return 'yes_no';
     case 'content_filter_single_value':
         return 'content_filter_single_value';
     case 'desk_single_value':
@@ -21,6 +21,8 @@ function getFieldTypeForFiltering(type: IFormField['type']): IFormField['type'] 
         return 'stage_single_value';
     case 'macro_single_value':
         return 'macro_single_value';
+    case 'yes_no':
+        return 'yes_no';
     default:
         assertNever(type);
     }

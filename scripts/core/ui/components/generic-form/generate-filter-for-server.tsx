@@ -22,6 +22,15 @@ export function generateFilterForServer(type: IFormField['type'], value: any): a
             'Operation not supported. Plaintext input has to be used to filter this component\'s output',
         );
 
+    case 'yes_no':
+        if (value === 'true') {
+            return true;
+        } else if (value === 'false') {
+            return false;
+        } else {
+            return undefined;
+        }
+
     default:
         assertNever(type);
     }
