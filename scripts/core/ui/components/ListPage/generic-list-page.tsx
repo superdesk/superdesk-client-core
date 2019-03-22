@@ -16,7 +16,7 @@ import {
 import {SearchBar} from 'core/ui/components';
 import {Button} from 'core/ui/components/Nav';
 import {SortBar, ISortFields} from 'core/ui/components/SortBar';
-import {connectCrudManager, ICrudManager} from 'core/helpers/CrudManager';
+import {connectCrudManager, ICrudManager, ICrudManagerFilters} from 'core/helpers/CrudManager';
 import {TagLabel} from 'core/ui/components/TagLabel';
 import {connectServices} from 'core/helpers/ReactRenderAsync';
 import {IFormGroup} from 'core/ui/components/generic-form/interfaces/form';
@@ -25,6 +25,8 @@ import {getFormFieldsRecursive} from 'core/ui/components/generic-form/form-field
 import {FormViewEdit} from 'core/ui/components/generic-form/from-group';
 import {IDefaultApiFields} from 'types/RestApi';
 import {getInitialValues} from '../generic-form/get-initial-values';
+import {generateFilterForServer} from '../generic-form/generate-filter-for-server';
+import {getFormFieldsFlat} from '../generic-form/get-form-fields-flat';
 
 interface IState {
     itemInPreview?: string;
@@ -109,18 +111,57 @@ export class GenericListPageComponent<T extends IDefaultApiFields> extends React
         this.setState({itemInPreview: null});
     }
     handleFilterFieldChange(field, nextValue, callback = noop) {
-        this.setState({
+        this.setState((prevState) => ({
             filterValues: {
-                ...this.state.filterValues,
+                ...prevState.filterValues,
                 [field]: nextValue,
             },
-        }, callback);
+        }), callback);
     }
     executeFilters() {
+        const {filterValues} = this.state;
+
+        const fieldTypesLookup = getFormFieldsFlat(this.props.formConfig).reduce((accumulator, item) => {
+            return {...accumulator, ...{[item.field]: item.type}};
+        }, {});
+
+        const filtersValidated = Object.keys(filterValues).reduce((accumulator, key) => {
+            const value = filterValues[key];
+
+            if (typeof value === 'string') {
+                let trimmedValue = value.trim();
+
+                if (trimmedValue.length > 1) {
+                    accumulator[key] = trimmedValue;
+                    return accumulator;
+                } else {
+                    return accumulator;
+                }
+            } else {
+                if (value !== undefined) {
+                    accumulator[key] = value;
+                }
+
+                return accumulator;
+            }
+        }, {});
+
         this.props.items.read(
             1,
             this.props.items.activeSortOption,
-            this.state.filterValues,
+            filtersValidated,
+            (filters: ICrudManagerFilters) => {
+                let filtersFormatted = {};
+
+                for (let fieldName in filters) {
+                    filtersFormatted[fieldName] = generateFilterForServer(
+                        fieldTypesLookup[fieldName],
+                        filters[fieldName],
+                    );
+                }
+
+                return filtersFormatted;
+            },
         );
     }
     closeNewItemForm() {

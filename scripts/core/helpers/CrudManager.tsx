@@ -7,8 +7,10 @@ export interface ISortOption {
     direction: 'ascending' | 'descending';
 }
 
+export type ICrudManagerFilters = {[fieldName: string]: any};
+
 interface IState<Entity extends IDefaultApiFields> extends IRestApiResponse<Entity> {
-    activeFilters: {[fieldName: string]: string};
+    activeFilters: ICrudManagerFilters;
     activeSortOption?: ISortOption;
 }
 
@@ -16,10 +18,11 @@ interface IMethods<Entity extends IDefaultApiFields> {
     read(
         page: number,
         sort?: {
-        field: string;
-        direction: 'ascending' | 'descending';
+            field: string;
+            direction: 'ascending' | 'descending';
         },
-        filterValues?: {[fieldName: string]: string},
+        filterValues?: ICrudManagerFilters,
+        formatFiltersForServer?: (filters: ICrudManagerFilters) => ICrudManagerFilters,
     ): Promise<IRestApiResponse<Entity>>;
     update(item: Entity): Promise<Entity>;
     create(item: Entity): Promise<Entity>;
@@ -73,48 +76,21 @@ export function connectCrudManager<Props, Entity extends IDefaultApiFields>(
         read(
             page: number,
             sortOption: ISortOption = {field: 'name', direction: 'ascending'},
-            filterValues: {[fieldName: string]: string} = {},
+            filterValues: ICrudManagerFilters = {},
+            formatFiltersForServer?: (filters: ICrudManagerFilters) => ICrudManagerFilters,
         ): Promise<IRestApiResponse<Entity>> {
             let query = {
                 page: page,
             };
-
-            const filtersValidated = Object.keys(filterValues).reduce((accumulator, key) => {
-                const value = filterValues[key];
-
-                if (typeof value === 'string') {
-                    let trimmedValue = value.trim();
-
-                    if (trimmedValue.length > 1) {
-                        accumulator[key] = trimmedValue;
-                        return accumulator;
-                    } else {
-                        return accumulator;
-                    }
-                } else {
-                    accumulator[key] = filterValues[key];
-                    return accumulator;
-                }
-            }, {});
 
             if (sortOption != null) {
                 query['sort'] = (sortOption.direction === 'descending' ? '-' : '') + sortOption.field;
             }
 
             if (Object.keys(filterValues).length > 0) {
-                let filters = {};
-
-                for (let key in filtersValidated) {
-                    if (typeof filtersValidated[key] === 'string' && filtersValidated[key].trim().length < 1) {
-                        continue;
-                    }
-                    filters[key] = {
-                        $regex: filtersValidated[key],
-                        $options: 'i',
-                    };
-                }
-
-                query['where'] = filters;
+                query['where'] = typeof formatFiltersForServer === 'function'
+                    ? formatFiltersForServer(filterValues)
+                    : filterValues;
             }
 
             return this.api.query(query)
@@ -122,7 +98,7 @@ export function connectCrudManager<Props, Entity extends IDefaultApiFields>(
                     this.setState({
                         ...res,
                         activeSortOption: sortOption,
-                        activeFilters: filtersValidated,
+                        activeFilters: filterValues,
                     }, () => {
                         resolve(res);
                     });
