@@ -97,7 +97,6 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
     // initialize metadata from `item`
     $scope.data.metadata = angular.copy($scope.data.item);
 
-
     /**
      * @ngdoc method
      * @name ChangeImageController#saveCrops
@@ -113,7 +112,7 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
             starttime: starttime,
             endtime: endtime
         };
-        $scope.rotatingVideo = {degree: 360 + (rotate.left)};
+        $scope.rotatingVideo = {degree: -(rotate.left)};
         $scope.qualityVideo = {quality: qualityVideo};
         $scope.editVideo.isChange = true;
     };
