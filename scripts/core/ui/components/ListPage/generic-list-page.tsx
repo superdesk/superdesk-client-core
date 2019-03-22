@@ -21,7 +21,7 @@ import {TagLabel} from 'core/ui/components/TagLabel';
 import {connectServices} from 'core/helpers/ReactRenderAsync';
 import {IFormGroup} from 'core/ui/components/generic-form/interfaces/form';
 import {getFormGroupForFiltering} from 'core/ui/components/generic-form/get-form-group-for-filtering';
-import {getFormFieldsRecursive} from 'core/ui/components/generic-form/form-field';
+import {getFormFieldsRecursive, getFormFieldPreviewComponent} from 'core/ui/components/generic-form/form-field';
 import {FormViewEdit} from 'core/ui/components/generic-form/from-group';
 import {IDefaultApiFields} from 'types/RestApi';
 import {getInitialValues} from '../generic-form/get-initial-values';
@@ -73,6 +73,7 @@ export class GenericListPageComponent<T extends IDefaultApiFields> extends React
         this.openNewItemForm = this.openNewItemForm.bind(this);
         this.closeNewItemForm = this.closeNewItemForm.bind(this);
         this.deleteItem = this.deleteItem.bind(this);
+        this.removeFilter = this.removeFilter.bind(this);
     }
     openPreview(id) {
         if (this.previewInEditMode === true) {
@@ -87,6 +88,14 @@ export class GenericListPageComponent<T extends IDefaultApiFields> extends React
                 itemInPreview: id,
             });
         }
+    }
+    removeFilter(fieldName) {
+        this.setState((prevState) => ({
+            ...prevState,
+            filterValues: omit(prevState.filterValues, fieldName),
+        }), () => {
+            this.props.items.removeFilter(fieldName);
+        });
     }
     deleteItem(item: T) {
         this.props.modal.confirm(gettext('Are you sure you want to delete this item?')).then(() => {
@@ -345,19 +354,26 @@ export class GenericListPageComponent<T extends IDefaultApiFields> extends React
                                         style={{background: 'transparent', boxShadow: 'none', marginTop: -20}}
                                     >
                                         {
-                                            Object.keys(activeFilters).map((fieldName, i) => (
-                                                <TagLabel
-                                                    key={i}
-                                                    onRemove={() => {
-                                                        this.setState({
-                                                            filterValues: omit(this.state.filterValues, [fieldName]),
-                                                        });
-                                                        this.props.items.removeFilter(fieldName);
-                                                    }}
-                                                >
-                                                    {fieldName}:{' '}<strong>{activeFilters[fieldName]}</strong>
-                                                </TagLabel>
-                                            ))
+                                            Object.keys(activeFilters).map((fieldName, i) => {
+                                                const filterValuePreview = getFormFieldPreviewComponent(
+                                                    this.state.filterValues,
+                                                    getFormFieldsFlat(this.props.formConfig).find(
+                                                        ({field}) => field === fieldName,
+                                                    ),
+                                                );
+
+                                                return (
+                                                    <TagLabel
+                                                        key={i}
+                                                        onRemove={() => {
+                                                            this.removeFilter(fieldName);
+                                                        }}
+                                                    >
+                                                        {fieldName}:{' '}
+                                                        <strong>{filterValuePreview}</strong>
+                                                    </TagLabel>
+                                                );
+                                            })
                                         }
                                     </div>
                                 )
