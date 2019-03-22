@@ -25,12 +25,27 @@ const contentFilterField: IFormField = {
     field: 'filter',
 };
 
-const deskStageMacroField: IFormField = {
-    type: 'desk_stage_macro',
+const deskField: IFormField = {
+    label : gettext('Desk'),
+    type: 'desk_single_value',
+    field: 'desk',
+};
+
+const stageField: IFormField = {
+    label : gettext('Stage'),
+    type: 'stage_single_value',
+    field: 'stage',
     component_parameters: {
         deskField: 'desk',
-        stageField: 'stage',
-        macroField: 'macro',
+    },
+};
+
+const macroField: IFormField = {
+    label : gettext('Macro'),
+    type: 'macro_single_value',
+    field: 'macro',
+    component_parameters: {
+        deskField: 'desk',
     },
 };
 
@@ -41,7 +56,9 @@ const formConfig: IFormGroup = {
         isActiveField,
         nameField,
         contentFilterField,
-        deskStageMacroField,
+        deskField,
+        stageField,
+        macroField,
     ],
 };
 

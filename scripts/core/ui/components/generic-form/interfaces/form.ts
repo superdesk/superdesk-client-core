@@ -4,7 +4,9 @@ export interface IFormField { // don't forget to update runtime type checks
         | 'vocabulary_single_value'
         | 'checkbox'
         | 'content_filter_single_value'
-        | 'desk_stage_macro' // available stages and macros depend on selected desk
+        | 'desk_single_value'
+        | 'stage_single_value'
+        | 'macro_single_value'
     ;
 
     required?: boolean;
@@ -12,10 +14,7 @@ export interface IFormField { // don't forget to update runtime type checks
     // custom components for some fields might not require a label or want include a custom one
     label?: string;
 
-    // field which will be updated in case of 1 to 1 mapping
-    // it is nullable since complex components might want to update multiple fields
-    // for example a person widget would update first_name, last_name and is_active fields
-    field?: string;
+    field: string;
 
     // can be used to pass read-only fields or display specific flags
     // component theme, variant or initial state could be set using this

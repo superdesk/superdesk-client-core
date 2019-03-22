@@ -2,7 +2,7 @@ import {assertNever} from 'core/helpers/typescript-helpers';
 import {IFormField, IFormGroup, isIFormGroup, isIFormField} from './interfaces/form';
 
 function getInitialValueForFieldType(fieldConfig: IFormField): {readonly [field: string]: any} {
-    const {type, field, component_parameters} = fieldConfig;
+    const {type, field} = fieldConfig;
 
     switch (type) {
     case 'text_single_line':
@@ -10,16 +10,12 @@ function getInitialValueForFieldType(fieldConfig: IFormField): {readonly [field:
         return {[field]: ''};
     case 'vocabulary_single_value':
     case 'content_filter_single_value':
+    case 'desk_single_value':
+    case 'stage_single_value':
+    case 'macro_single_value':
         return {[field]: undefined};
     case 'checkbox':
         return {[field]: false};
-    case 'desk_stage_macro':
-        return {
-            [component_parameters.deskField]: undefined,
-            [component_parameters.stageField]: undefined,
-            [component_parameters.macroField]: undefined,
-
-        };
     default:
         assertNever(type);
     }

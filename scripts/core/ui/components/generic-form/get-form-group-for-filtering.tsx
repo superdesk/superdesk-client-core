@@ -15,8 +15,12 @@ function getFieldTypeForFiltering(type: IFormField['type']): IFormField['type'] 
         return 'checkbox';
     case 'content_filter_single_value':
         return 'content_filter_single_value';
-    case 'desk_stage_macro':
-        return 'desk_stage_macro';
+    case 'desk_single_value':
+        return 'desk_single_value';
+    case 'stage_single_value':
+        return 'stage_single_value';
+    case 'macro_single_value':
+        return 'macro_single_value';
     default:
         assertNever(type);
     }

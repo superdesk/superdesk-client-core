@@ -7,8 +7,10 @@ import {TextEditor3} from './input-types/text-editor3';
 import {noop} from 'lodash';
 import {CheckboxInput} from './input-types/checkbox';
 import {ContentFilterSingleValue} from './input-types/content-filter-single-value';
-import {DeskStageMacro} from './input-types/desk-stage-macro';
 import {IInputType} from './interfaces/input-types';
+import {DeskSingleValue} from './input-types/desk_single_value';
+import {StageSingleValue} from './input-types/stage_single_value';
+import {MacroSingleValue} from './input-types/macro_single_value';
 
 export function getFormFieldComponent(type: IFormField['type']): React.ComponentType<IInputType<any>> {
     switch (type) {
@@ -22,8 +24,12 @@ export function getFormFieldComponent(type: IFormField['type']): React.Component
         return CheckboxInput;
     case 'content_filter_single_value':
         return ContentFilterSingleValue;
-    case 'desk_stage_macro':
-        return DeskStageMacro;
+    case 'desk_single_value':
+        return DeskSingleValue;
+    case 'stage_single_value':
+        return StageSingleValue;
+    case 'macro_single_value':
+        return MacroSingleValue;
     default:
         assertNever(type);
     }
