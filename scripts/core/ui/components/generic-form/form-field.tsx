@@ -43,6 +43,7 @@ export function getFormFieldPreviewComponent(
             formField={formFieldConfig}
             disabled={false}
             issues={[]}
+            allIssues={{}}
             onChange={noop}
         />
     );

@@ -65,11 +65,15 @@ export class DeskStageMacroComponent extends React.Component<IProps, IState> {
         const selectedDesk = this.props.formValues[deskField];
         const deskSelected: boolean = typeof selectedDesk === 'string' && selectedDesk !== '';
 
+        const deskIssues = this.props.allIssues[deskField] || [];
+        const stageIssues = this.props.allIssues[stageField] || [];
+        const macroIsssues = this.props.allIssues[macroField] || [];
+
         return (
             <div>
                 <div
                     className={
-                        classNames('sd-line-input', {'sd-line-input--invalid': this.props.issues.length > 0})
+                        classNames('sd-line-input', {'sd-line-input--invalid': deskIssues.length > 0})
                     }
                 >
                     <label className="sd-line-input__label">{gettext('Desk')}</label>
@@ -97,11 +101,16 @@ export class DeskStageMacroComponent extends React.Component<IProps, IState> {
                                 ))
                         }
                     </select>
+                    {
+                        deskIssues.map((str, i) => (
+                            <div key={i} className="sd-line-input__message">{str}</div>
+                        ))
+                    }
                 </div>
 
                 <div
                     className={
-                        classNames('sd-line-input', {'sd-line-input--invalid': this.props.issues.length > 0})
+                        classNames('sd-line-input', {'sd-line-input--invalid': stageIssues.length > 0})
                     }
                 >
                     <label className="sd-line-input__label">{gettext('Stage')}</label>
@@ -122,11 +131,16 @@ export class DeskStageMacroComponent extends React.Component<IProps, IState> {
                                 ))
                         }
                     </select>
+                    {
+                        stageIssues.map((str, i) => (
+                            <div key={i} className="sd-line-input__message">{str}</div>
+                        ))
+                    }
                 </div>
 
                 <div
                     className={
-                        classNames('sd-line-input', {'sd-line-input--invalid': this.props.issues.length > 0})
+                        classNames('sd-line-input', {'sd-line-input--invalid': macroIsssues.length > 0})
                     }
                 >
                     <label className="sd-line-input__label">{gettext('Macro')}</label>
@@ -147,6 +161,11 @@ export class DeskStageMacroComponent extends React.Component<IProps, IState> {
                                 ))
                         }
                     </select>
+                    {
+                        macroIsssues.map((str, i) => (
+                            <div key={i} className="sd-line-input__message">{str}</div>
+                        ))
+                    }
                 </div>
 
                 {
