@@ -3,7 +3,6 @@ import {getGenericListPageComponent, GenericListPageComponent} from "core/ui/com
 import {IFormField, IFormGroup} from "core/ui/components/generic-form/interfaces/form";
 import {ListItemColumn, ListItemActionsMenu, ListItem} from "core/components/ListItem";
 import {getFormFieldPreviewComponent} from "core/ui/components/generic-form/form-field";
-import {ICrudManager} from "core/helpers/CrudManager";
 import {IInternalDestination} from "superdesk-interfaces/InternalDestination";
 
 const InternalDestinationsPageComponent = getGenericListPageComponent<IInternalDestination>('internal_destinations');

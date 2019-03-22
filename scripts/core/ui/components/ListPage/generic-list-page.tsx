@@ -24,6 +24,7 @@ import {getFormGroupForFiltering} from 'core/ui/components/generic-form/get-form
 import {getFormFieldsRecursive} from 'core/ui/components/generic-form/form-field';
 import {FormViewEdit} from 'core/ui/components/generic-form/from-group';
 import {IDefaultApiFields} from 'types/RestApi';
+import {getInitialValues} from '../generic-form/get-initial-values';
 
 interface IState {
     itemInPreview?: string;
@@ -138,7 +139,10 @@ export class GenericListPageComponent<T extends IDefaultApiFields> extends React
             });
         } else {
             this.setState({
-                newItem: this.props.newItemTemplate == null ? {} : this.props.newItemTemplate,
+                newItem: {
+                    ...getInitialValues(this.props.formConfig),
+                    ...this.props.newItemTemplate == null ? {} : this.props.newItemTemplate,
+                },
                 itemInPreview: null,
             });
         }
