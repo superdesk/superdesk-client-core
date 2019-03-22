@@ -53,9 +53,13 @@ export function getSelectSingleValue(
         }
         render() {
             if (this.props.previewOuput) {
-                let item = this.state.items.find(({id}) => id === this.props.value);
+                if (this.state.items == null) {
+                    return null; // loading
+                } else {
+                    let item = this.state.items.find(({id}) => id === this.props.value);
 
-                return item == null ? <div>{this.props.value}</div> : <div>{item.label}</div>;
+                    return item == null ? <div>{this.props.value}</div> : <div>{item.label}</div>;
+                }
             }
 
             const getFirstItemMessage = () => {
@@ -73,7 +77,7 @@ export function getSelectSingleValue(
                     <label className="sd-line-input__label">{this.props.formField.label}</label>
                     <select
                         disabled={this.props.disabled || this.state.items == null || this.state.items.length < 1}
-                        value={this.props.value}
+                        value={this.props.value || ''}
                         className="sd-line-input__select"
                         onChange={(event) => {
                             this.props.onChange(event.target.value === '' ? this.initialValue : event.target.value);
