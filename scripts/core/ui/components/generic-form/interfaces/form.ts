@@ -1,14 +1,17 @@
+export enum FormFieldType {
+    textSingleLine = 'textSingleLine',
+    textEditor3 = 'textEditor3',
+    vocabularySingleValue = 'vocabularySingleValue',
+    checkbox = 'checkbox',
+    contentFilterSingleValue = 'contentFilterSingleValue',
+    deskSingleValue = 'deskSingleValue',
+    stageSingleValue = 'stage_singstageSingleValuele_value',
+    macroSingleValue = 'macroSingleValue',
+    yesNo = 'yesNo',
+}
+
 export interface IFormField { // don't forget to update runtime type checks
-    type: 'text_single_line'
-        | 'text_editor3'
-        | 'vocabulary_single_value'
-        | 'checkbox'
-        | 'content_filter_single_value'
-        | 'desk_single_value'
-        | 'stage_single_value'
-        | 'macro_single_value'
-        | 'yes_no'
-    ;
+    type: FormFieldType;
 
     required?: boolean;
 

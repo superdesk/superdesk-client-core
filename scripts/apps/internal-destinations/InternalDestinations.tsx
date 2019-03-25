@@ -1,6 +1,6 @@
 import React from "react";
 import {getGenericListPageComponent, GenericListPageComponent} from "core/ui/components/ListPage/generic-list-page";
-import {IFormField, IFormGroup} from "core/ui/components/generic-form/interfaces/form";
+import {IFormField, IFormGroup, FormFieldType} from "core/ui/components/generic-form/interfaces/form";
 import {ListItemColumn, ListItemActionsMenu, ListItem} from "core/components/ListItem";
 import {getFormFieldPreviewComponent} from "core/ui/components/generic-form/form-field";
 import {IInternalDestination} from "superdesk-interfaces/InternalDestination";
@@ -9,31 +9,31 @@ const InternalDestinationsPageComponent = getGenericListPageComponent<IInternalD
 
 const nameField: IFormField = {
     label : gettext('Destination name'),
-    type: 'text_single_line',
+    type: FormFieldType.textSingleLine,
     field: 'name',
 };
 
 const isActiveField: IFormField = {
     label : gettext('Active'),
-    type: 'checkbox',
+    type: FormFieldType.checkbox,
     field: 'is_active',
 };
 
 const contentFilterField: IFormField = {
     label : gettext('Content filter'),
-    type: 'content_filter_single_value',
+    type: FormFieldType.contentFilterSingleValue,
     field: 'filter',
 };
 
 const deskField: IFormField = {
     label : gettext('Desk'),
-    type: 'desk_single_value',
+    type: FormFieldType.deskSingleValue,
     field: 'desk',
 };
 
 const stageField: IFormField = {
     label : gettext('Stage'),
-    type: 'stage_single_value',
+    type: FormFieldType.stageSingleValue,
     field: 'stage',
     component_parameters: {
         deskField: 'desk',
@@ -42,7 +42,7 @@ const stageField: IFormField = {
 
 const macroField: IFormField = {
     label : gettext('Macro'),
-    type: 'macro_single_value',
+    type: FormFieldType.macroSingleValue,
     field: 'macro',
     component_parameters: {
         deskField: 'desk',

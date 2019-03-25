@@ -3,13 +3,13 @@ import {render} from 'enzyme';
 import {TextSingleLine} from '../input-types/text-single-line';
 import {CheckboxInput} from '../input-types/checkbox';
 import {IInputType} from '../interfaces/input-types';
-import {IFormField} from '../interfaces/form';
+import {IFormField, FormFieldType} from '../interfaces/form';
 import {noop} from 'lodash';
 
 const formFieldComponents: Array<React.ComponentType<IInputType<any>>> = [TextSingleLine, CheckboxInput];
 
 const fieldConfig: IFormField = {
-    type: 'text_single_line',
+    type: FormFieldType.textSingleLine,
     field: 'test-field',
 };
 

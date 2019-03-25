@@ -1,21 +1,21 @@
 import {assertNever} from 'core/helpers/typescript-helpers';
-import {IFormField, IFormGroup, isIFormGroup, isIFormField} from './interfaces/form';
+import {IFormField, IFormGroup, isIFormGroup, isIFormField, FormFieldType} from './interfaces/form';
 
 function getInitialValueForFieldType(fieldConfig: IFormField): {readonly [field: string]: any} {
     const {type, field} = fieldConfig;
 
     switch (type) {
-    case 'text_single_line':
-    case 'text_editor3':
+    case FormFieldType.textSingleLine:
+    case FormFieldType.textEditor3:
         return {[field]: ''};
-    case 'vocabulary_single_value':
-    case 'content_filter_single_value':
-    case 'desk_single_value':
-    case 'stage_single_value':
-    case 'macro_single_value':
-    case 'yes_no':
+    case FormFieldType.vocabularySingleValue:
+    case FormFieldType.contentFilterSingleValue:
+    case FormFieldType.deskSingleValue:
+    case FormFieldType.stageSingleValue:
+    case FormFieldType.macroSingleValue:
+    case FormFieldType.yesNo:
         return {[field]: undefined};
-    case 'checkbox':
+    case FormFieldType.checkbox:
         return {[field]: false};
     default:
         assertNever(type);

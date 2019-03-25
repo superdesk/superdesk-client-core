@@ -1,7 +1,7 @@
 import React from 'react';
 import {TextSingleLine} from './input-types/text-single-line';
 import {assertNever} from 'core/helpers/typescript-helpers';
-import {IFormField, IFormGroup, isIFormGroup, isIFormField} from './interfaces/form';
+import {IFormField, IFormGroup, isIFormGroup, isIFormField, FormFieldType} from './interfaces/form';
 import {VocabularySingleValue} from './input-types/vocabulary_single_value';
 import {TextEditor3} from './input-types/text-editor3';
 import {noop} from 'lodash';
@@ -15,23 +15,23 @@ import {YesNo} from './input-types/yes-no';
 
 export function getFormFieldComponent(type: IFormField['type']): React.ComponentType<IInputType<any>> {
     switch (type) {
-    case 'text_single_line':
+    case FormFieldType.textSingleLine:
         return TextSingleLine;
-    case 'text_editor3':
+    case FormFieldType.textEditor3:
         return TextEditor3;
-    case 'vocabulary_single_value':
+    case FormFieldType.vocabularySingleValue:
         return VocabularySingleValue;
-    case 'checkbox':
+    case FormFieldType.checkbox:
         return CheckboxInput;
-    case 'content_filter_single_value':
+    case FormFieldType.contentFilterSingleValue:
         return ContentFilterSingleValue;
-    case 'desk_single_value':
+    case FormFieldType.deskSingleValue:
         return DeskSingleValue;
-    case 'stage_single_value':
+    case FormFieldType.stageSingleValue:
         return StageSingleValue;
-    case 'macro_single_value':
+    case FormFieldType.macroSingleValue:
         return MacroSingleValue;
-    case 'yes_no':
+    case FormFieldType.yesNo:
         return YesNo;
     default:
         assertNever(type);
