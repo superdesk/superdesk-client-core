@@ -8,9 +8,6 @@ export interface IInputType<T> {
     readonly disabled: boolean;
     readonly value: T;
 
-    // required for composite inputs operating on more than one field
-    readonly allIssues: {readonly [fieldName: string]: Array<string>};
-
     // below issues only apply to primary field defined in IFormField['field']
     readonly issues: Array<string>;
 
