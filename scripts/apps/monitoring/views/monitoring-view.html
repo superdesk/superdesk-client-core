@@ -85,7 +85,7 @@
                 
                             <div ng-if="disableMonitoringCreateItem == null && (!state.opened && (type !== 'spike' && type !== 'highlights'))" class="dropdown dropdown--align-right strict" sd-tooltip="{{ :: 'Create new item' | translate }}" flow="left" dropdown>
                                 <button class="navbtn dropdown__toggle sd-create-btn" dropdown__toggle></button>
-                                <ul class="dropdown__menu dropdown__menu--scrollable pull-right" sd-content-create></ul>
+                                <div class="dropdown__menu dropdown__menu--has-head-foot pull-right" sd-content-create></div>
                             </div>
                         </div>
                     </div>
