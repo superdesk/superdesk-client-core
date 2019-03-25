@@ -726,6 +726,7 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
         });
         self.classList.add("active");
         let elementVideo = document.getElementById('video');
+        let widthVideo = elementVideo.clientWidth,heightVideo = elementVideo.clientHeight;
         let ratio2;
         if (ratio === "1:1")
             ratio2 = 1 / 1;
@@ -739,14 +740,15 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
 
             case "1:1":
                 jcrop_api.release();
-                jcrop_api.setOptions({setSelect: [0, 0, elementVideo.clientHeight, elementVideo.clientHeight]});
+
+                jcrop_api.setOptions({setSelect: [10, 0, widthVideo, widthVideo]});
                 break;
             case "4:3":
                 jcrop_api.release();
                 let xClassic = y * 4 / 3;
                 let yClassic = x * 3 / 4;
 
-                if (xClassic < x)
+                if (xClassic < x )
                     jcrop_api.setOptions({setSelect: [0, 0, xClassic, y]});
                 else
                     jcrop_api.setOptions({setSelect: [0, 0, x, yClassic]});
@@ -789,7 +791,7 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
             default:
                 break;
         }
-
+        // $scope.cropVideo(ratio, video) 
         $scope.editVideo.isDirty = true;
     }
 
