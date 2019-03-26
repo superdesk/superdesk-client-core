@@ -2,7 +2,7 @@
     <div class="sd-line-input" ng-if="field.type === 'text'" ng-show="isConfigFieldVisible(field)">
         <label class="sd-line-input__label" for="{{getConfigFieldId(field.id)}}">{{field.label | translate}}</label>
         <input class="sd-line-input__input" type="{{field.type}}" id="{{getConfigFieldId(field.id)}}" placeholder="{{:: field.placeholder | translate}}"
-            ng-model="provider.config[field.id]" ng-required="isConfigFieldRequired(field)" ng-change="$parent.setConfig(provider)"
+            ng-model="provider.config[field.id]" ng-required="isConfigFieldRequired(field)" ng-readonly="field.readonly === true" ng-change="$parent.setConfig(provider)"
             ng-show="isConfigFieldVisible(field)">
         <div sd-ingest-config-errors></div>
     </div>
@@ -10,14 +10,14 @@
     <div class="sd-line-input" ng-if="field.type === 'password'" ng-show="isConfigFieldVisible(field)">
         <label class="sd-line-input__label" for="{{getConfigFieldId(field.id)}}">{{field.label | translate}}</label>
         <input class="sd-line-input__input" type="password" id="{{getConfigFieldId(field.id)}}" placeholder="{{:: field.placeholder | translate}}"
-            ng-model="provider.config[field.id]" ng-required="isConfigFieldRequired(field)" ng-change="$parent.setConfig(provider)"
+            ng-model="provider.config[field.id]" ng-required="isConfigFieldRequired(field)" ng-readonly="field.readonly === true" ng-change="$parent.setConfig(provider)"
             ng-show="isConfigFieldVisible(field)" autocomplete="new-password">
         <div sd-ingest-config-errors></div>
     </div>
 
     <div class="form__row" ng-if="field.type === 'boolean'" ng-show="isConfigFieldVisible(field)">
         <span sd-switch id="{{getConfigFieldId(field.id)}}" ng-model="provider.config[field.id]"
-        ng-required="isConfigFieldRequired(field)"></span>
+        ng-required="isConfigFieldRequired(field)" ng-readonly="field.readonly === true"></span>
         <label for="{{getConfigFieldId(field.id)}}">{{field.label | translate}}</label>
         <div sd-ingest-config-errors></div>
     </div>
@@ -27,6 +27,7 @@
         <select id="{{getConfigFieldId(field.id)}}"
                 class="sd-line-input__select"
                 ng-required="isConfigFieldRequired(field)"
+                ng-readonly="field.readonly === true"
                 ng-options="r[0] as r[1] for r in field.choices"
                 ng-model="provider.config[field.id]">
         </select>
@@ -57,7 +58,7 @@
           </select>
         </div>
         <div class="sd-line-input sd-line-input--boxed sd-line-input--no-margin  sd-line-input--no-label">
-            <input class="sd-line-input__input" type="text" 
+            <input class="sd-line-input__input" type="text"
                   placeholder="{{:: field.second_field_options.placeholder|translate }}"
                   ng-model="item.alias">
         </div>
