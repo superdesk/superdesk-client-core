@@ -1944,4 +1944,12 @@ sd-multi-image-edit {
 
 .sd-wrap-helper {
     display: contents !important;
-} 
+
+}
+.subnav {
+    z-index: 5;
+}
+.subnav + .subnav {
+    z-index: 4;
+}
+

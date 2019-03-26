@@ -1,61 +1,64 @@
-<li>
-    <div class="dropdown__menu-label" translate>Create new item</div>
-</li>
+<ul class="dropdown__menu-header">
+    <li>
+        <div class="dropdown__menu-label" translate>Create new item</div>
+    </li>
 
-<li ng-if="!defaultTemplate">
-    <button id="create_text_article" ng-click="create()">
-        <i class="icon-plus-sign icon--blue"></i>
-        {{ :: 'Plain text' | translate }}
-    </button>
-</li>
+    <li ng-if="!defaultTemplate">
+        <button id="create_text_article" ng-click="create()">
+            <i class="icon-plus-sign icon--blue"></i>
+            {{ :: 'Plain text' | translate }}
+        </button>
+    </li>
 
-<li ng-if="defaultTemplate">
-    <button id="create_text_article" ng-click="createFromTemplate(defaultTemplate)">
-        <i class="icon-plus-sign icon--blue"></i>
-        {{ defaultTemplate.template_name }}
-    </button>
-</li>
+    <li ng-if="defaultTemplate">
+        <button id="create_text_article" ng-click="createFromTemplate(defaultTemplate)">
+            <i class="icon-plus-sign icon--blue"></i>
+            {{ defaultTemplate.template_name }}
+        </button>
+    </li>
 
-<li ng-if="item">
-    <button id="package_item" ng-click="createPackage(item)">
-        <i class="icon-plus-sign icon--blue"></i>
-        {{ :: 'Package current item' | translate }}
-    </button>
-</li>
+    <li ng-if="item">
+        <button id="package_item" ng-click="createPackage(item)">
+            <i class="icon-plus-sign icon--blue"></i>
+            {{ :: 'Package current item' | translate }}
+        </button>
+    </li>
+</ul>
 
-<li class="dropdown__menu-divider"></li>
+<!-- <li class="dropdown__menu-divider"></li> -->
+<ul class="dropdown__menu-body">
+    <li>
+        <div class="dropdown__menu-label" translate>Recent templates</div>
+    </li>
 
-<li>
-    <div class="dropdown__menu-label" translate>Recent templates</div>
-</li>
+    <li ng-repeat="template in contentTemplates | orderBy:'template_name'">
+        <button ng-click="createFromTemplate(template)">
+            <i class="icon-plus-sign icon--blue"></i> {{ :: template.template_name }}
+        </button>
+    </li>
 
-<li ng-repeat="template in contentTemplates | orderBy:'template_name'">
-    <button ng-click="createFromTemplate(template)">
-        <i class="icon-plus-sign icon--blue"></i> {{ :: template.template_name }}
-    </button>
-</li>
+    <li ng-hide="contentTemplates.length">
+        <span class="dropdown__menu-item--no-link"><em>No recent templates.</em></span>
+    </li>
 
-<li ng-hide="contentTemplates.length">
-     <span class="dropdown__menu-item--no-link"><em>No recent templates.</em></span>
-</li>
+    <li>
+        <button id="more_templates" ng-click="flags = {displayTemplateSelect: true}" translate>More templates...</button>
+    </li>
+</ul>
+<!-- <li class="dropdown__menu-divider" ng-if="openUpload"></li> -->
+<ul class="dropdown__menu-footer">
+    <li ng-if="canCreatePackage() && !$root.config.features.hideCreatePackage">
+        <button id="create_package"  ng-click="createPackage()">
+            <i class="icon-package-plus"></i>
+            {{ :: 'Create Package' | translate }}
+        </button>
+    </li>
 
-<li>
-    <button id="more_templates" ng-click="flags = {displayTemplateSelect: true}" translate>More templates...</button>
-</li>
-
-<li class="dropdown__menu-divider" ng-if="openUpload"></li>
-
-<li ng-if="canCreatePackage() && !$root.config.features.hideCreatePackage">
-    <button id="create_package"  ng-click="createPackage()">
-        <i class="icon-package-plus"></i>
-        {{ :: 'Create Package' | translate }}
-    </button>
-</li>
-
-<li ng-if="openUpload">
-    <button ng-click="openUpload()" id="start-upload-btn">
-        <i class="icon-upload"></i> {{ :: 'Upload Media' | translate }}
-    </button>
-</li>
+    <li ng-if="openUpload">
+        <button ng-click="openUpload()" id="start-upload-btn">
+            <i class="icon-upload"></i> {{ :: 'Upload Media' | translate }}
+        </button>
+    </li>
+</ul>
 
 <div ng-if="flags.displayTemplateSelect" sd-template-select data-select-action="createFromTemplate" data-open="flags.displayTemplateSelect"></div>

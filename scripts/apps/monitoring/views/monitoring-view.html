@@ -85,7 +85,7 @@
                 
                             <div ng-if="disableMonitoringCreateItem == null && (!state.opened && (type !== 'spike' && type !== 'highlights'))" class="dropdown dropdown--align-right strict" sd-tooltip="{{ :: 'Create new item' | translate }}" flow="left" dropdown>
                                 <button class="navbtn dropdown__toggle sd-create-btn" dropdown__toggle></button>
-                                <ul class="dropdown__menu dropdown__menu--scrollable pull-right" sd-content-create></ul>
+                                <div class="dropdown__menu dropdown__menu--has-head-foot pull-right" sd-content-create></div>
                             </div>
                         </div>
                     </div>
@@ -175,13 +175,14 @@
                                 </div>
                             </div>
                             <!-- swimlane view -->
-                            <div ng-if="monitoring.viewColumn && type === 'monitoring'">
-                                <div class="swimlane2" ng-if="(!monitoring.singleGroup || monitoring.isDeskChanged()) && type === 'monitoring'">
+                            <div ng-if="monitoring.viewColumn && type === 'monitoring'" class="sd-kanban-list-container">
+                                <div class="sd-kanban-list" ng-if="(!monitoring.singleGroup || monitoring.isDeskChanged()) && type === 'monitoring'">
                                     <div ng-class="{active: isActiveGroup(group), inactive: !isActiveGroup(group)}"
-                                            ng-repeat="group in aggregate.groups| limitTo:monitoring.columnsLimit track by group._id"
-                                            sd-monitoring-group data-group="group" data-num-items="group.max_items" data-view="view"
-                                            data-view-type="aggregate.isOutputType(group.type) ? group.type: 'monitoring'"
-                                            sd-header-resize>
+                                        ng-repeat="group in aggregate.groups| limitTo:monitoring.columnsLimit track by group._id"
+                                        sd-monitoring-group data-group="group" data-num-items="group.max_items" data-view="view"
+                                        data-view-type="aggregate.isOutputType(group.type) ? group.type: 'monitoring'"
+                                        class="fix-stage"
+                                    >
                                     </div>
                                 </div>
                             </div>
