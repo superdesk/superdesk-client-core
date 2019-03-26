@@ -1,52 +1,62 @@
 import React from 'react';
 import {render} from 'enzyme';
-import {TextSingleLine} from '../input-types/text-single-line';
-import {CheckboxInput} from '../input-types/checkbox';
-import {IInputType} from '../interfaces/input-types';
 import {IFormField, FormFieldType} from '../interfaces/form';
 import {noop} from 'lodash';
+import {getFormFieldComponent} from '../form-field';
+import {assertNever} from 'core/helpers/typescript-helpers';
 
-const formFieldComponents: Array<React.ComponentType<IInputType<any>>> = [TextSingleLine, CheckboxInput];
+function getAllInputTypes(): Array<FormFieldType> {
+    return Object.keys(FormFieldType).map((key) => FormFieldType[key]);
+}
 
-const fieldConfig: IFormField = {
-    type: FormFieldType.textSingleLine,
-    field: 'test-field',
-};
+function getTestFieldConfig(type: IFormField['type']): IFormField {
+    switch (type) {
+    case FormFieldType.textSingleLine:
+    case FormFieldType.textEditor3:
+    case FormFieldType.vocabularySingleValue:
+    case FormFieldType.checkbox:
+    case FormFieldType.contentFilterSingleValue:
+    case FormFieldType.deskSingleValue:
+    case FormFieldType.yesNo:
+        return {
+            type: type,
+            field: 'test-field',
+        };
+    case FormFieldType.stageSingleValue:
+    case FormFieldType.macroSingleValue:
+        return {
+            type: type,
+            field: 'test-field',
+            component_parameters: {
+                deskField: 'test-desk-field',
+            },
+        };
+    default:
+        assertNever(type);
+    }
+}
 
-fdescribe('Generic Form', () => {
-    it('All inputs types should render error messages', () => {
-        const message = 'test-error-message';
+describe('generic form', () => {
+    const message = 'error-q7w8e9r';
 
-        formFieldComponents.forEach((Component) => {
-            const wrapper = render(
-                <Component
-                    formField={fieldConfig}
-                    formValues={{}}
-                    disabled={false}
-                    value=""
-                    issues={[message]}
-                    previewOuput={false}
-                    onChange={noop}
-                />);
+    getAllInputTypes()
+        .forEach((type: FormFieldType) => {
+            it(`${type} should render error messages`, () => {
 
-            expect(wrapper.html()).toContain(message);
+                const Component = getFormFieldComponent(type);
+
+                const wrapper = render(
+                    <Component
+                        formField={getTestFieldConfig(type)}
+                        formValues={{}}
+                        disabled={false}
+                        value=""
+                        issues={[message]}
+                        previewOuput={false}
+                        onChange={noop}
+                    />);
+
+                expect(wrapper.html()).toContain(message);
+            });
         });
-    });
-
-    it('All inputs types should render test id', () => {
-        formFieldComponents.forEach((Component) => {
-            const wrapper = render(
-                <Component
-                    formField={fieldConfig}
-                    formValues={{}}
-                    disabled={false}
-                    value=""
-                    issues={['test-issue-1']}
-                    previewOuput={false}
-                    onChange={noop}
-                />);
-
-            expect(wrapper.html()).toContain(`data-test-id="gform-input--${fieldConfig.field}"`);
-        });
-    });
 });

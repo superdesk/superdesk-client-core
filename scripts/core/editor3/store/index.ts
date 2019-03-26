@@ -50,14 +50,13 @@ interface IProps {
  * @param {Boolean=} isReact True if the store is created for a React component.
  * @returns {Object} Redux store.
  */
-export default function createEditorStore(props: IProps, isReact = false) {
-    const spellcheck = ng.get('spellcheck');
-
-    if (!props.disableSpellchecker) {
-        spellcheck.setLanguage(props.language);
+export default function createEditorStore(props: IProps, spellcheck, isReact = false) {
+    if (spellcheck != null) {
+        if (!props.disableSpellchecker) {
+            spellcheck.setLanguage(props.language);
+        }
     }
 
-    const dict = spellcheck.getDict();
     const content = getInitialContent(props);
 
     const decorators = Editor3Base.getDecorator(props.disableSpellchecker || !spellcheck.isAutoSpellchecker);
@@ -96,12 +95,14 @@ export default function createEditorStore(props: IProps, isReact = false) {
         abbreviations: {},
     }, applyMiddleware(...middlewares));
 
-    // after we have the dictionary, force update the editor to highlight typos
-    dict.finally(() => store.dispatch(forceUpdate()));
+    if (spellcheck != null) {
+        // after we have the dictionary, force update the editor to highlight typos
+        spellcheck.getDict().finally(() => store.dispatch(forceUpdate()));
 
-    spellcheck.getAbbreviationsDict().then((abbreviations) => {
-        store.dispatch(setAbbreviations(abbreviations || {}));
-    });
+        spellcheck.getAbbreviationsDict().then((abbreviations) => {
+            store.dispatch(setAbbreviations(abbreviations || {}));
+        });
+    }
 
     return store;
 }

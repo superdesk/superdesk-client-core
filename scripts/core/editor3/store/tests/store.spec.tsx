@@ -12,16 +12,19 @@ describe('editor3.store', () => {
     }));
 
     it('should initialize with correct values', inject((spellcheck) => {
-        const store = createEditorStore({
-            editorState: convertToRaw(ContentState.createFromText('')),
-            language: 'en',
-            editorFormat: '123',
-            readOnly: false,
-            trim: true,
-            onChange: () => { /* no-op */ },
-            value: 'abc',
-            item: {},
-        });
+        const store = createEditorStore(
+            {
+                editorState: convertToRaw(ContentState.createFromText('')),
+                language: 'en',
+                editorFormat: '123',
+                readOnly: false,
+                trim: true,
+                onChange: () => { /* no-op */ },
+                value: 'abc',
+                item: {},
+            },
+            spellcheck,
+        );
 
         const state = store.getState();
 
