@@ -42,6 +42,7 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
     $scope.croppingVideo = {};
     $scope.rotatingVideo = {};
     $scope.qualityVideo = {};
+    $scope.video = null;
 
     $scope.validator = deployConfig.getSync('validator_media_metadata');
     const sizes = {};
@@ -175,7 +176,7 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
      * @description Capture the thumbnail video at play time in time line.
      */
     $scope.captureThumbnail = function () {
-        try {
+        try {            
             var time = video.currentTime;
             video = document.getElementById('video');
             var output = document.getElementById('output');
@@ -253,34 +254,11 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
      * @description Capture the thumbnail video at play time in time line.     *
      */
     $scope.videoInit = function () {
+        $scope.video = document.getElementById('video');
         video = document.getElementById('video');
-        progressoutput = document.getElementsByClassName('progress-output')[0];
-        inner = document.getElementById('inner-play');
-        barleft = document.getElementById('bar-left');
-        barright = document.getElementById('bar-right');
-        controlbar = document.getElementsByClassName('control-bars')[0];
-        cbwrapper = document.getElementById('cb-wrapper');
-        maskleft = document.getElementById('mask-left');
-        maskright = document.getElementById('mask-right');
         iconplay = document.getElementById('icon-play');
         iconstop = document.getElementById('icon-stop');
-
-        video.onplay = function () {
-            iconplay.style.display = 'none';
-            iconstop.style.display = 'initial';
-            TweenMax.ticker.addEventListener('tick', vidUpdate);
-        };
-        video.onpause = function () {
-            iconplay.style.display = 'initial';
-            iconstop.style.display = 'none';
-            TweenMax.ticker.removeEventListener('tick', vidUpdate);
-        };
-        video.onended = function () {
-            iconplay.style.display = 'initial';
-            iconstop.style.display = 'none';
-            TweenMax.ticker.removeEventListener('tick', vidUpdate);
-        };
-        video.onloadeddata = function () {
+        $scope.video.onloadeddata = function () {
             starttime = 0;
             loadImage();
             endtime = video.duration;
@@ -288,8 +266,6 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
                 starttime: starttime,
                 endtime: endtime
             }
-            barright.setAttribute("data-content", getstrtime(video.duration));
-            barleft.setAttribute("data-content", getstrtime(0));
             if (video) {
                 if (video.videoWidth > 720) {
                     $scope.quality.is720 = true;
@@ -320,28 +296,10 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
             if (jcrop_api) {
                 jcrop_api.release();
                 jcrop_api.disable();
-            };
+            }
+            ;
             video.controls = null;
         }
-
-        barleft.ondragstart = function () {
-            onDragStart();
-        };
-        barleft.ondrag = function () {
-            onDragCb("left");
-        };
-        barleft.ondragend = function () {
-            onDragEndCb();
-        };
-        barright.ondragstart = function () {
-            onDragStart()
-        };
-        barright.ondrag = function () {
-            onDragCb("right");
-        };
-        barright.ondragend = function () {
-            onDragEndCb();
-        };
 
         document.getElementById('file-upload').onchange = function (evt) {
             var tgt = evt.target || window.event.srcElement,
@@ -373,50 +331,24 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
             }
         }
         if ('timeline' in $scope.data.metadata.renditions && $scope.data.metadata.renditions.timeline.length > 0) {
-            loadTimeLine($scope.data.metadata.renditions['timeline']);
+            //loadTimeLine($scope.data.metadata.renditions['timeline']);
         } else {
-            loadTimeLine([]);
+            //loadTimeLine([]);
             api.save('video_edit', {action: 'timeline', item: $scope.data.metadata}).then(function (data) {
                 angular.extend($scope.data.metadata, data.result)
                 angular.extend($scope.data.item, data.result)
                 var list_thumbnails = data.result.renditions.timeline;
-                loadTimeLine(list_thumbnails);
+                //loadTimeLine(list_thumbnails);
                 $scope.data.isDirty = true;
             });
         }
 
         var observer = new ResizeObserver(function (entries) {
             entries.forEach(function (entry) {
-                loadTimeLine($scope.data.metadata.renditions['timeline'])
+                //loadTimeLine($scope.data.metadata.renditions['timeline'])
             });
         });
         observer.observe(controlbar);
-    }
-
-    function loadTimeLine(list_thumbnails) {
-        var widthpic = 88
-        if (list_thumbnails && list_thumbnails.length > 0) {
-            widthpic = list_thumbnails[0].width
-        }
-        var inner_frames = document.getElementById('inner-frames');
-        var total_thumbnail = Math.floor(controlbar.offsetWidth / widthpic);
-        var per_index_image = 35 / total_thumbnail;
-        if (inner_frames) {
-            inner_frames.innerHTML = '';
-            for (var i = 0; i <= total_thumbnail; i++) {
-                var index = Math.round(i * per_index_image);
-                var video = document.createElement("video");
-                video.width = widthpic;
-                video.height = 50;
-                if (list_thumbnails && list_thumbnails.length > 0) {
-                    video.poster = list_thumbnails[index].href;
-                }
-                video.onloadeddata = function () {
-                    video.className = 'loaded';
-                };
-                inner_frames.append(video);
-            }
-        }
     }
 
     function loadImage() {
@@ -441,111 +373,6 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
         }
     }
 
-    $scope.controlBarClick = function () {
-        var position = setTimeline();
-        if (position * video.duration < starttime) {
-            TweenMax.set(cbwrapper, {
-                left: (position * 100) + '%'
-            });
-            TweenMax.set(maskleft, {
-                width: (position * 100) + '%'
-            });
-        }
-        if (position * video.duration > endtime) {
-            TweenMax.set(cbwrapper, {
-                right: ((1 - position) * 100) + '%'
-            });
-            TweenMax.set(maskright, {
-                width: ((1 - position) * 100) + '%'
-            });
-        }
-    };
-
-
-    function vidUpdate() {
-        TweenMax.set(progressoutput, {
-            left: (video.currentTime / video.duration * 100) + "%"
-        });
-        inner.innerHTML = getstrtime(video.currentTime);
-        if (video.currentTime > endtime) {
-            video.pause();
-        }
-    };
-
-    function getPositionBar() {
-        var position = ((event.clientX - controlbar.getBoundingClientRect().left) / controlbar.offsetWidth);
-        if (position > 1) {
-            position = 1;
-        }
-        if (position < 0) {
-            position = 0;
-        }
-        position = Math.floor(position * 100) / 100;
-        return position;
-    };
-
-    function getstrtime(s) {
-        mins = Math.floor(s / 60);
-        mins = mins < 10 ? '0' + mins : mins;
-        secs = Math.floor(s % 60);
-        secs = secs < 10 ? '0' + secs : secs;
-        li = Math.floor((s * 10) % 10);
-        return mins + ':' + secs + '.' + li;
-    };
-
-    function onDragCb(type) {
-        if (event.clientX == 0) {
-            return;
-        }
-        var position = getPositionBar();
-        if (type == 'right') {
-            TweenMax.set(cbwrapper, {
-                right: ((1 - position) * 100) + '%'
-            });
-            TweenMax.set(maskright, {
-                width: ((1 - position) * 100) + '%'
-            });
-            barright.setAttribute("data-content", getstrtime(position * video.duration));
-            endtime = position * video.duration;
-        } else {
-            TweenMax.set(cbwrapper, {
-                left: (position * 100) + '%'
-            });
-            TweenMax.set(maskleft, {
-                width: (position * 100) + '%'
-            });
-            barleft.setAttribute("data-content", getstrtime(position * video.duration));
-            starttime = position * video.duration;
-        }
-    };
-
-
-    function onDragEndCb() {
-        setTimeline();
-        $scope.editVideo.isDirty = true;
-        video.click();
-    };
-
-    function onDragStart() {
-        var img = document.createElement("img");
-        event.dataTransfer.setDragImage(img, 0, 0);
-    };
-
-
-    function setTimeline() {
-        var position = getPositionBar();
-        video.currentTime = position * video.duration;
-        inner.innerHTML = getstrtime(video.currentTime);
-        TweenMax.set(progressoutput, {
-            left: (position * 100) + '%'
-        });
-        TweenMax.set(progressoutput, {
-            left: (position * 100) + '%'
-        });
-        return position;
-
-    };
-
     /**
      * @ngdoc metho d
      * @name ChangeImageController#isDoneEnabled
@@ -554,7 +381,7 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
      * @returns {Boolean}
      */
     $scope.controlBarChange = function () {
-        loadTimeLine($scope.data.metadata.renditions['timeline'])
+        //loadTimeLine($scope.data.metadata.renditions['timeline'])
     };
     /**
      * @ngdoc metho d
@@ -725,15 +552,14 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
 
             case "1:1":
                 jcrop_api.release();
-
-                jcrop_api.setOptions({setSelect: [0, 0, y, y]});
+                jcrop_api.setOptions({setSelect: [0, 0, elementVideo.clientHeight, elementVideo.clientHeight]});
                 break;
             case "4:3":
                 jcrop_api.release();
                 let xClassic = y * 4 / 3;
                 let yClassic = x * 3 / 4;
 
-                if (xClassic < x )
+                if (xClassic < x)
                     jcrop_api.setOptions({setSelect: [0, 0, xClassic, y]});
                 else
                     jcrop_api.setOptions({setSelect: [0, 0, x, yClassic]});

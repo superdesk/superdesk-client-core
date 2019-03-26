@@ -116,13 +116,13 @@
                                         <li>Quality</li>
                                         <hr/>
                                         <li class="quality" ng-click="changeQualityVideo($event.currentTarget)"
-                                            value="720" ng-if = 'quality.is720 === true'><span>720p</span></li>
+                                            value="720" ng-if='quality.is720 === true'><span>720p</span></li>
                                         <li class="quality" ng-click="changeQualityVideo($event.currentTarget)"
-                                            value="480" ng-if = 'quality.is480 === true'><span>480p</span></li>
+                                            value="480" ng-if='quality.is480 === true'><span>480p</span></li>
                                         <li class="quality" ng-click="changeQualityVideo($event.currentTarget)"
-                                            value="360" ng-if = 'quality.is240 === true'><span>360p</span></li>
+                                            value="360" ng-if='quality.is240 === true'><span>360p</span></li>
                                         <li class="quality" ng-click="changeQualityVideo($event.currentTarget)"
-                                            value="240" ng-if = 'quality.is120 === true'><span>240p</span></li>
+                                            value="240" ng-if='quality.is120 === true'><span>240p</span></li>
                                         <li class="quality active" ng-click="changeQualityVideo($event.currentTarget)"
                                             value=""><span>Same</span></li>
                                     </ul>
@@ -155,41 +155,10 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="video-controls">
-                            <md-frames class="thumbs">
-                                <div class="inner" id="inner-frames">
-
-                                </div>
-                            </md-frames>
-                            <md-controlbars class="control-bars" data-parser="time" ng-click="controlBarClick($event)">
-
-                                <div class="mask left" id="mask-left"></div>
-
-                                <div class="mask right" id="mask-right"></div>
-                                <div class="progress-output" style="--offset:3.92699px; --contentTop:-20.073px;">
-                                    <div class="content">
-                                        <svg width="50px" height="13px" viewBox="0 0 54 24" version="1.1"
-                                             xmlns="http://www.w3.org/2000/svg"
-                                             xmlns:xlink="http://www.w3.org/1999/xlink">
-                                            <g id="Page-1" stroke="none" stroke-width="1" fill="none"
-                                               fill-rule="evenodd">
-                                                <path d="M27,23 L27,24 L26,24 L26,23 C26,20.2385763 23.7614237,18 21,18 L9,18 C4.02943725,18 0,13.9705627 0,9 C0,4.02943725 4.02943725,0 9,0 L45,0 C49.9705627,0 54,4.02943725 54,9 C54,13.9705627 49.9705627,18 45,18 L32,18 L32,18 C29.2385763,18 27,20.2385763 27,23 Z"
-                                                      id="time_bg" fill="#FFFFFF"></path>
-                                            </g>
-                                        </svg>
-                                        <div class="inner" id="inner-play">00:00.0</div>
-                                    </div>
-                                    <div class="progress-line"></div>
-                                </div>
-                                <div class="control-bars-wrapper" id="cb-wrapper">
-                                    <div class="control-bar cb-left" id="bar-left" draggable="true">
-                                    </div>
-                                    <div class="control-bar cb-right" id="bar-right" draggable="true">
-                                    </div>
-                                </div>
-
-                            </md-controlbars>
-                        </div>
+                        <div sd-video-timeline class="video-controls"
+                             data-video="video"
+                             data-start-time="0"
+                             data-end-time="video.duration"></div>
                     </div>
                 </div>
             </div>
