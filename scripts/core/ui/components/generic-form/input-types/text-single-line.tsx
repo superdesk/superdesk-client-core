@@ -20,6 +20,7 @@ export class TextSingleLine extends React.Component<IInputType<string>> {
                     value={valueWithDefaultValue}
                     onChange={(event) => this.props.onChange(event.target.value)}
                     className="sd-line-input__input"
+                    data-test-id={`gform-input--${this.props.formField.field}`}
                 />
                 {
                     this.props.issues.map((str, i) => (
