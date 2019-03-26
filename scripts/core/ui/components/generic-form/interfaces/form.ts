@@ -37,7 +37,9 @@ export interface IFormGroupCollapsible { // don't forget to update runtime type 
 }
 
 export function isIFormGroupCollapsible(x: IFormGroup['type']): x is IFormGroupCollapsible {
-    return typeof x === 'object' && JSON.stringify(Object.keys(x)) === '["label","openByDefault"]';
+    const keys = Object.keys(x);
+
+    return keys.length === 2 && keys.includes('label') && keys.includes('openByDefault');
 }
 
 //
