@@ -1904,9 +1904,10 @@ feature-image {
 }
 
 .video-preview {
-  height: 550px;
+  height: 484px;
   max-height: 600px;
   margin: auto auto;
+  margin-top: 57px;
 }
 
 .video-player {
@@ -2189,7 +2190,7 @@ md-controlbars .control-bar {
 //----------------------------------------
 /* Menu toggle button  (change-video.html)*/
 /* Important styles */
-// #toggle {
+// #toggleRatio {
 //     display: block;
 //     width: 28px;
 //     height: 30px;
@@ -2201,8 +2202,8 @@ md-controlbars .control-bar {
   // padding: 0.89em 0.8em;
 }
 
-#toggle span:after,
-#toggle span:before,
+#toggleRatio span:after,
+#toggleRatio span:before,
 #toggleQuality span:after,
 #toggleQuality span:before {
   content: "";
@@ -2211,20 +2212,20 @@ md-controlbars .control-bar {
   top: -9px;
 }
 
-#toggle span:after,
+#toggleRatio span:after,
 #toggleQuality span:after {
   top: 9px;
 }
 
-#toggle span,
+#toggleRatio span,
 #toggleQuality span {
   position: relative;
   display: block;
 }
 
-#toggle span,
-#toggle span:after,
-#toggle span:before,
+#toggleRatio span,
+#toggleRatio span:after,
+#toggleRatio span:before,
 #toggleQuality span,
 #toggleQuality span:after,
 #toggleQuality span:before {
@@ -2237,22 +2238,22 @@ md-controlbars .control-bar {
 }
 
 /* on activation */
-#toggle.on span,
+#toggleRatio.on span,
 #toggleQuality.on span {
   background-color: transparent;
 }
 
-#toggle.on span:before,
+#toggleRatio.on span:before,
 #toggleQuality.on span:before {
   transform: rotate(45deg) translate(5px, 5px);
 }
 
-#toggle.on span:after,
+#toggleRatio.on span:after,
 #toggleQuality.on span:after {
   transform: rotate(-45deg) translate(7px, -8px);
 }
 
-#toggle.on + #menuRatio,
+#toggleRatio.on + #menuRatio,
 #toggleQuality.on + #menuQuality {
   opacity: 1;
   visibility: visible;
@@ -2260,20 +2261,33 @@ md-controlbars .control-bar {
 
 /* menu appearance*/
 
-#menuQuality {
-  margin-left: -21px !important;
-}
-
 #menuQuality hr, #menuRatio hr {
   margin: 5px 0;
 }
 
-#menuRatio,
+#menuRatio{
+  z-index: 999;
+  top: 392px;
+  position: fixed;
+  margin-left: 33px;
+  width: 6%;
+  padding: 10px 0 10px 0;
+  font-family: "Segoe UI", Candara, "Bitstream Vera Sans", "DejaVu Sans", "Bitstream Vera Sans", "Trebuchet MS", Verdana, "Verdana Ref", sans-serif;
+  text-align: center;
+  border-radius: 10px;
+  background-color: rgba(25, 30, 64, 0.55);
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  /* just for this demo */
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .4s;
+}
 #menuQuality {
   z-index: 999;
-  margin-top: -194px;
+  top: 336px;
   position: fixed;
-  margin-left: 23px;
+  // margin-left: 23px;
   width: 6%;
   padding: 10px 0 10px 0;
   font-family: "Segoe UI", Candara, "Bitstream Vera Sans", "DejaVu Sans", "Bitstream Vera Sans", "Trebuchet MS", Verdana, "Verdana Ref", sans-serif;

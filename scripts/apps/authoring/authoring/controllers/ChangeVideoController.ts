@@ -162,6 +162,10 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
             actRotate(video, $scope.rotatingVideo.degree);
         else
             actRotate(video, 0);
+
+        document.getElementById('rotateVideo').disabled = false;
+        document.getElementById('toggleRatio').disabled = false;
+
     };
 
     /**
@@ -240,6 +244,7 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
     var video, progressoutput, controlbar, inner, maskleft, maskright, barleft, barright, cbwrapper, iconplay, iconstop;
     var mins = 0, secs = 0, li = 0, starttime = 0, endtime = 0;
     var positionCropVideo = {}, jcrop_api, rotate = {left: 0}, qualityVideo;
+    
 
     /**
      * @ngdoc method
@@ -303,9 +308,9 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
             $('#video').Jcrop({
                 onSelect: showCoords,
                 onchange: showCoords,
-                aspectRatio: null,
-                minSize: [200, 200],
-                trueSize: [video.clientWidth, video.clientHeight],
+                //aspectRatio: null,
+                minSize: [30, 30],
+                //trueSize: [video.clientWidth, video.clientHeight],
                 addClass: 'jcrop-dark',
                 bgOpacity: .4
 
@@ -634,7 +639,7 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
         }
     };
 
-// Area of Interest
+    // Area of Interest
     $scope.data.showAoISelectionButton = $scope.data.showAoISelectionButton === true;
 
     function extractEditableMetadata(metadata) {
@@ -643,27 +648,9 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
 
     /**
      * @ngdoc method
-     * @name ChangeImageController#toggleMenu
-     * @public
-     * @description menu for crop video
-     *
-     */
-    $scope.toggleMenu = () => {
-        if (video.play) {
-            video.pause();
-        }
-
-        let theToggle = document.getElementById('toggle');
-        showHideToggleMenu(theToggle, 'on');
-        return false;
-
-    };
-
-    /**
-     * @ngdoc method
      * @name ChangeImageController#toggleMenuQuality
      * @public
-     * @description menuRatio for crop video
+     * @description The menu select to change quality of video
      *
      */
     $scope.toggleMenuQuality = () => {
@@ -690,14 +677,14 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
      * @ngdoc method
      * @name ChangeImageController#toggleMenuRatio
      * @public
-     * @description menu for crop video
+     * @description The menu select to crop video
      *
      */
     $scope.toggleMenuRatio = () => {
         if (video.play) {
             video.pause();
         }
-        let theToggle = document.getElementById('toggle');
+        let theToggle = document.getElementById('toggleRatio');
         showHideToggleMenu(theToggle, 'on');
         return false;
 
@@ -712,11 +699,9 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
      *
      */
     $scope.cropVideo = (ratio, currentTarget) => {
-        if (jcrop_api) {
-            jcrop_api.enable();
-        }
 
-        let theToggle = document.getElementById('toggle');
+
+        let theToggle = document.getElementById('toggleRatio');
         showHideToggleMenu(theToggle, 'on');
 
         let self = currentTarget;
@@ -726,7 +711,7 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
         });
         self.classList.add("active");
         let elementVideo = document.getElementById('video');
-        let widthVideo = elementVideo.clientWidth,heightVideo = elementVideo.clientHeight;
+        
         let ratio2;
         if (ratio === "1:1")
             ratio2 = 1 / 1;
@@ -741,7 +726,7 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
             case "1:1":
                 jcrop_api.release();
 
-                jcrop_api.setOptions({setSelect: [10, 0, widthVideo, widthVideo]});
+                jcrop_api.setOptions({setSelect: [0, 0, y, y]});
                 break;
             case "4:3":
                 jcrop_api.release();
@@ -768,6 +753,11 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
                 break;
         }
 
+        if (jcrop_api) {
+            jcrop_api.enable();
+        }
+
+        document.getElementById('rotateVideo').disabled = true;
         $scope.editVideo.isDirty = true;
 
     }
@@ -791,7 +781,8 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
             default:
                 break;
         }
-        // $scope.cropVideo(ratio, video) 
+        
+        document.getElementById('toggleRatio').disabled = true;
         $scope.editVideo.isDirty = true;
     }
 
