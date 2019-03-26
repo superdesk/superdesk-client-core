@@ -279,8 +279,14 @@ export class GenericListPageComponent<T extends IDefaultApiFields> extends React
                     );
                 }
             } else {
-                return this.props.items._items.map(
-                    (item) => renderRow(item._id, item, this),
+                return (
+                    <div data-test-id="items">
+                        {
+                            this.props.items._items.map(
+                                (item) => renderRow(item._id, item, this),
+                            )
+                        }
+                    </div>
                 );
             }
         };
@@ -293,6 +299,7 @@ export class GenericListPageComponent<T extends IDefaultApiFields> extends React
                         onClick={() => this.setFiltersVisibility(!this.state.filtersOpen)}
                         active={this.state.filtersOpen}
                         darker={true}
+                        data-test-id="toggle-filters"
                     />
 
                     <SearchBar
@@ -314,6 +321,7 @@ export class GenericListPageComponent<T extends IDefaultApiFields> extends React
                         onClick={this.openNewItemForm}
                         className="sd-create-btn dropdown-toggle"
                         icon="icon-plus-large"
+                        data-test-id="list-page--add-item"
                     >
                         <span className="circle" />
                     </Button>
