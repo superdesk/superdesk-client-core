@@ -4,7 +4,6 @@ import {getSelectSingleValue} from './select_single_value';
 import {IRestApiResponse} from 'types/RestApi';
 import {IStage} from 'superdesk-interfaces/Stage';
 
-
 export const StageSingleValue = getSelectSingleValue(
     (props) =>
         ng.getService('api')
