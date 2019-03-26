@@ -18,3 +18,4 @@ export {FullPreviewDirective} from './FullPreviewDirective';
 export {RemoveTagsDirective} from './RemoveTagsDirective';
 export {TansaScopeSyncDirective} from './TansaScopeSyncDirective';
 export {ItemActionsByIntentDirective} from './ItemActionsByIntentDirective';
+export {VideoTimeline} from './VideoTimeline';

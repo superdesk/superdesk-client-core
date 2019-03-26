@@ -64,6 +64,7 @@ angular.module('superdesk.apps.authoring', [
     .directive('html5vfix', directive.Html5vfix)
     .directive('sdDashboardCard', directive.DashboardCard)
     .directive('sdSendItem', directive.SendItem)
+    .directive('sdVideoTimeline', directive.VideoTimeline)
     .directive('sdCharacterCount', directive.CharacterCount)
     .directive('sdWordCount', directive.WordCount)
     .directive('sdReadingTime', directive.ReadingTime)
