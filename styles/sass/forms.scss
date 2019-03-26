@@ -1242,6 +1242,10 @@ input {
     flex-direction: row;
     justify-content: space-between;
 
+    > * {
+        flex-grow: 1;
+    }
+
     > * + * {
         margin-left: 1.2rem!important;  // line_input has margin-left: 0
     }
