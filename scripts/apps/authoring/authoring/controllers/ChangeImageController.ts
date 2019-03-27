@@ -79,7 +79,7 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, deploy
         $scope.data.renditions.forEach((rendition) => {
             const original = $scope.data.item.renditions.original;
             // only extend the item renditions if the original image can fit the rendition dimensions
-            // otherwise we will get an error saving
+            // otherwise we will get an error savingzz
 
             if (original && original.height >= rendition.height && original.width >= rendition.width) {
                 sizes[rendition.name] = {width: rendition.width, height: rendition.height};

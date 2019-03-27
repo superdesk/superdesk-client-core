@@ -1,6 +1,7 @@
 /* global _ */
 
 import {TweenMax} from "gsap/TweenMax";
+import {isEmpty} from 'lodash';
 
 
 /**
@@ -16,45 +17,76 @@ export function VideoTimeline() {
             video: '=',
             iconPlay: '=',
             iconStop: '=',
-            startTime: '=',
-            endTime: '=',
+            cut: '=',
             listFrames: '=',
+            onChange: '&'
         },
         templateUrl: 'scripts/apps/authoring/views/video-timeline.html',
         link: function (scope, element) {
             var mins = 0;
             var secs = 0;
             var li = 0;
-            var progressoutput = element.find('.progress-output');
-            var inner = element.find('.progress-output');
+            var progressoutput = element.find('.progress-output')[0];
+            var inner = element.find('#inner-play')[0];
             var barleft = element.find('.control-bar.cb-left')[0];
             var barright = element.find('.control-bar.cb-right')[0];
-            var controlbar = element.find('control-bars');
-            var cbwrapper = element.find('control-bars-wrapper');
+            var controlbar = element.find('.control-bars')[0];
+            var cbwrapper = element.find('.control-bars-wrapper')[0];
             var maskleft = element.find('.mask.left')[0];
             var maskright = element.find('.mask.right')[0];
+            var inner_frames = element.find('#inner-frames')[0];
+            var observer = new ResizeObserver(function (entries) {
+                entries.forEach(function (entry) {
+                    loadTimeLine(scope.listFrames)
+                });
+            });
+            observer.observe(controlbar);
+            scope.$watch('video', (video) => {
+                scope.video.onplay = function () {
+                    TweenMax.ticker.addEventListener('tick', vidUpdate);
+                };
+                scope.video.onpause = function () {
+                    TweenMax.ticker.removeEventListener('tick', vidUpdate);
+                };
+                scope.video.onended = function () {
+                    TweenMax.ticker.removeEventListener('tick', vidUpdate);
+                };
+            });
+            scope.$watch('listFrames', (listFrames) => {
+                loadTimeLine(listFrames)
+            });
+            scope.$watch('cut', (cut) => {
+                if (isEmpty(cut)) {
+                    return;
+                }
+                var position = cut.starttime / scope.video.duration;
+                TweenMax.set(cbwrapper, {
+                    left: (position * 100) + '%'
+                });
+                TweenMax.set(maskleft, {
+                    width: (position * 100) + '%'
+                });
+                barleft.setAttribute("data-content", getstrtime(cut.starttime));
+                var position = cut.endtime / scope.video.duration;
+                TweenMax.set(cbwrapper, {
+                    right: ((1 - position) * 100) + '%'
+                });
+                TweenMax.set(maskright, {
+                    width: ((1 - position) * 100) + '%'
+                });
+                barright.setAttribute("data-content", getstrtime(cut.endtime));
+            });
 
-            scope.video.onplay = function () {
-                TweenMax.ticker.addEventListener('tick', vidUpdate);
-            };
-            scope.video.onpause = function () {
-                TweenMax.ticker.removeEventListener('tick', vidUpdate);
-            };
-            scope.video.onended = function () {
-                TweenMax.ticker.removeEventListener('tick', vidUpdate);
-            };
 
             function vidUpdate() {
                 TweenMax.set(progressoutput, {
-                    left: (video.currentTime / video.duration * 100) + "%"
+                    left: (scope.video.currentTime / scope.video.duration * 100) + "%"
                 });
-                inner.innerHTML = getstrtime(video.currentTime);
-                var starttime = starttime;
-                if (video.currentTime > endTime) {
-                    video.pause();
+                inner.innerHTML = getstrtime(scope.video.currentTime);
+                if (scope.video.currentTime > scope.cut.endtime) {
+                    scope.video.pause();
                 }
             };
-
             barleft.ondragstart = function () {
                 onDragStart();
             };
@@ -76,7 +108,7 @@ export function VideoTimeline() {
 
             scope.controlBarClick = function () {
                 var position = setTimeline();
-                if (position * video.duration < starttime) {
+                if (position * scope.video.duration < scope.cut.starttime) {
                     TweenMax.set(cbwrapper, {
                         left: (position * 100) + '%'
                     });
@@ -84,7 +116,7 @@ export function VideoTimeline() {
                         width: (position * 100) + '%'
                     });
                 }
-                if (position * video.duration > endtime) {
+                if (position * scope.video.duration > scope.cut.endtime) {
                     TweenMax.set(cbwrapper, {
                         right: ((1 - position) * 100) + '%'
                     });
@@ -93,7 +125,6 @@ export function VideoTimeline() {
                     });
                 }
             };
-
 
             function getPositionBar() {
                 var position = ((event.clientX - controlbar.getBoundingClientRect().left) / controlbar.offsetWidth);
@@ -128,8 +159,8 @@ export function VideoTimeline() {
                     TweenMax.set(maskright, {
                         width: ((1 - position) * 100) + '%'
                     });
-                    barright.setAttribute("data-content", getstrtime(position * video.duration));
-                    endtime = position * video.duration;
+                    barright.setAttribute("data-content", getstrtime(position * scope.video.duration));
+                    scope.cut.endtime = position * scope.video.duration;
                 } else {
                     TweenMax.set(cbwrapper, {
                         left: (position * 100) + '%'
@@ -137,16 +168,17 @@ export function VideoTimeline() {
                     TweenMax.set(maskleft, {
                         width: (position * 100) + '%'
                     });
-                    barleft.setAttribute("data-content", getstrtime(position * video.duration));
-                    starttime = position * video.duration;
+                    barleft.setAttribute("data-content", getstrtime(position * scope.video.duration));
+                    scope.cut.starttime = position * scope.video.duration;
                 }
             };
 
 
             function onDragEndCb() {
                 setTimeline();
-                $scope.editVideo.isDirty = true;
-                video.click();
+                //$scope.editVideo.isDirty = true;
+                scope.onChange();
+                //scope.video.click();
             };
 
             function onDragStart() {
@@ -157,8 +189,8 @@ export function VideoTimeline() {
 
             function setTimeline() {
                 var position = getPositionBar();
-                video.currentTime = position * video.duration;
-                inner.innerHTML = getstrtime(video.currentTime);
+                scope.video.currentTime = position * scope.video.duration;
+                inner.innerHTML = getstrtime(scope.video.currentTime);
                 TweenMax.set(progressoutput, {
                     left: (position * 100) + '%'
                 });
@@ -173,7 +205,6 @@ export function VideoTimeline() {
                 if (list_thumbnails && list_thumbnails.length > 0) {
                     widthpic = list_thumbnails[0].width
                 }
-                var inner_frames = document.getElementById('inner-frames');
                 var total_thumbnail = Math.floor(controlbar.offsetWidth / widthpic);
                 var per_index_image = 35 / total_thumbnail;
                 if (inner_frames) {
