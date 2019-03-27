@@ -226,7 +226,7 @@ class Editor3Directive {
             if (field === this.pathToValue) {
                 const content = getContentStateFromHtml(value);
                 const state = store.getState();
-                const editorState = EditorState.push(state.editorState, content, 'change-block-data');
+                const editorState = EditorState.push(state.editorState, content, 'spellcheck-change');
 
                 store.dispatch(changeEditorState(editorState, true, true));
             }
