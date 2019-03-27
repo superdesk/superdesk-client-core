@@ -339,7 +339,7 @@ export function SearchService($location, config, session, multi,
 
             // inject custom date field filters { fieldname: 'string(IDateRange)' }
             if (typeof paramsObject.customFields !== 'undefined') {
-                for (let fieldname of paramsObject.customFields) {
+                for (let fieldname in paramsObject.customFields) {
                     let range = paramsObject.customFields[fieldname];
 
                     if (typeof dateRangesByKey[range] !== 'undefined') {
