@@ -9,6 +9,7 @@ import 'external-apps';
 const appConfig = __SUPERDESK_CONFIG__;
 
 if (appConfig.features.useTansaProofing) {
+    // tslint:disable-next-line:no-var-requires
     require('apps/tansa');
 }
 
