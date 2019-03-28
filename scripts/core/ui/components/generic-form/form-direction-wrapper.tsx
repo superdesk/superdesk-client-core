@@ -4,7 +4,8 @@ import {IFormGroup} from './interfaces/form';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {omit} from 'lodash';
 
-interface IProps extends React.AllHTMLAttributes<HTMLDivElement> {
+interface IProps {
+    className?: string;
     direction: IFormGroup['direction'];
 }
 
@@ -20,7 +21,7 @@ export class FormGroupDirectionWrapper extends React.Component<IProps> {
                 ? `${currentClassname} form-group-horizontal`
                 : 'form-group-horizontal';
 
-            return <div {...omit(this.props, ['direction'])} className={nextClassname} />;
+            return <div className={nextClassname} />;
         } else {
             assertNever(direction);
         }

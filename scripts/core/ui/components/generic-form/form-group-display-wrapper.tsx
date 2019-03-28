@@ -5,7 +5,7 @@ import {ToggleBoxNext} from 'superdesk-ui-framework';
 import {IFormGroup, isIFormGroupCollapsible} from './interfaces/form';
 import {assertNever} from 'core/helpers/typescript-helpers';
 
-interface IProps extends React.AllHTMLAttributes<HTMLDivElement> {
+interface IProps {
     group: IFormGroup;
 }
 

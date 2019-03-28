@@ -2,19 +2,20 @@
 
 import React from 'react';
 import classNames from 'classnames';
-import {omit} from 'lodash';
 
-interface IListItemProps extends React.AllHTMLAttributes<HTMLDivElement> {
+interface IListItemProps {
+    onClick?(): void;
+    className?: string;
     inactive?: boolean;
     noHover?: boolean;
+    'data-test-id'?: string;
 }
 
 export class ListItem extends React.Component<IListItemProps, any> {
     render() {
-        const propsExceptOwn = omit(this.props, ['inactive', 'noHover']);
         return (
             <div
-                {...propsExceptOwn}
+                onClick={this.props.onClick}
                 className={
                     classNames(
                         this.props.className,
@@ -24,7 +25,9 @@ export class ListItem extends React.Component<IListItemProps, any> {
                             'sd-list-item--no-hover': this.props.noHover,
                         },
                     )
-                }>
+                }
+                data-test-id={this.props["data-test-id"]}
+            >
                 {this.props.children}
             </div>
         );

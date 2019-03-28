@@ -4,7 +4,7 @@ import {IFormGroup} from './interfaces/form';
 import {FormGroupDisplayWrapper} from './form-group-display-wrapper';
 import {FormGroupDirectionWrapper} from './form-direction-wrapper';
 
-interface IProps extends React.AllHTMLAttributes<HTMLDivElement> {
+interface IProps {
     group: IFormGroup;
 }
 
