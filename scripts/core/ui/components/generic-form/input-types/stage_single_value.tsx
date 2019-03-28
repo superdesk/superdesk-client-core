@@ -17,10 +17,10 @@ export const StageSingleValue = getSelectSingleValue(
                         where: {desk: deskId},
                         max_results: 200,
                     })
-                    .then(
-                        (stages: IRestApiResponse<IStage>) =>
-                            stages._items.map(({_id, name}) => ({id: _id, label: name})),
-                    );
+                        .then(
+                            (stages: IRestApiResponse<IStage>) =>
+                                stages._items.map(({_id, name}) => ({id: _id, label: name})),
+                        );
                 }
             }),
     gettext('Select a desk first'),

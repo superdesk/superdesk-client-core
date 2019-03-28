@@ -1,5 +1,5 @@
-import {assertNever} from "core/helpers/typescript-helpers";
-import {IFormField, FormFieldType} from "./interfaces/form";
+import {assertNever} from 'core/helpers/typescript-helpers';
+import {IFormField, FormFieldType} from './interfaces/form';
 
 export function generateFilterForServer(type: IFormField['type'], value: any): any {
     switch (type) {

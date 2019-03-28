@@ -32,9 +32,7 @@ function getInitialValuesForForm(form: Array<IFormField | IFormGroup>): {readonl
             return assertNever(item);
         }
     })
-    .reduce((accumulator, item) => {
-        return {...accumulator, ...item};
-    }, {});
+        .reduce((accumulator, item) => ({...accumulator, ...item}), {});
 }
 
 // Some fields need to be initialized automatically.

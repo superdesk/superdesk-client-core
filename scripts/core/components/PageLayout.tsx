@@ -22,7 +22,7 @@ export class PageContainerItem extends React.Component<IPageContainerItem, any> 
         return (
             <div
                 className={this.props.shrink ? 'sd-column-box__main-column' : null}
-                data-test-id={this.props["data-test-id"]}
+                data-test-id={this.props['data-test-id']}
             >
                 {this.props.children}
             </div>

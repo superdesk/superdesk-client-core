@@ -4,7 +4,7 @@ import {IInputType} from '../interfaces/input-types';
 
 type ISelectSingleValueItems = Array<{id: string, label: string}>;
 
-type IProps =  IInputType<string>;
+type IProps = IInputType<string>;
 
 interface IState {
     items: ISelectSingleValueItems;

@@ -1,38 +1,40 @@
-import React from "react";
-import {getGenericListPageComponent, GenericListPageComponent} from "core/ui/components/ListPage/generic-list-page";
-import {IFormField, IFormGroup, FormFieldType} from "core/ui/components/generic-form/interfaces/form";
-import {ListItemColumn, ListItemActionsMenu, ListItem} from "core/components/ListItem";
-import {getFormFieldPreviewComponent} from "core/ui/components/generic-form/form-field";
-import {IInternalDestination} from "superdesk-interfaces/InternalDestination";
+/* eslint-disable react/no-multi-comp */
+
+import React from 'react';
+import {getGenericListPageComponent, GenericListPageComponent} from 'core/ui/components/ListPage/generic-list-page';
+import {IFormField, IFormGroup, FormFieldType} from 'core/ui/components/generic-form/interfaces/form';
+import {ListItemColumn, ListItemActionsMenu, ListItem} from 'core/components/ListItem';
+import {getFormFieldPreviewComponent} from 'core/ui/components/generic-form/form-field';
+import {IInternalDestination} from 'superdesk-interfaces/InternalDestination';
 
 const InternalDestinationsPageComponent = getGenericListPageComponent<IInternalDestination>('internal_destinations');
 
 const nameField: IFormField = {
-    label : gettext('Destination name'),
+    label: gettext('Destination name'),
     type: FormFieldType.textSingleLine,
     field: 'name',
 };
 
 const isActiveField: IFormField = {
-    label : gettext('Active'),
+    label: gettext('Active'),
     type: FormFieldType.checkbox,
     field: 'is_active',
 };
 
 const contentFilterField: IFormField = {
-    label : gettext('Content filter'),
+    label: gettext('Content filter'),
     type: FormFieldType.contentFilterSingleValue,
     field: 'filter',
 };
 
 const deskField: IFormField = {
-    label : gettext('Desk'),
+    label: gettext('Desk'),
     type: FormFieldType.deskSingleValue,
     field: 'desk',
 };
 
 const stageField: IFormField = {
-    label : gettext('Stage'),
+    label: gettext('Stage'),
     type: FormFieldType.stageSingleValue,
     field: 'stage',
     component_parameters: {
@@ -41,7 +43,7 @@ const stageField: IFormField = {
 };
 
 const macroField: IFormField = {
-    label : gettext('Macro'),
+    label: gettext('Macro'),
     type: FormFieldType.macroSingleValue,
     field: 'macro',
     component_parameters: {
@@ -84,7 +86,7 @@ const renderRow = (
             )
         }
         <ListItemActionsMenu>
-            <div style={{ display: 'flex' }}>
+            <div style={{display: 'flex'}}>
                 <button
                     onClick={(event) => {
                         event.stopPropagation();

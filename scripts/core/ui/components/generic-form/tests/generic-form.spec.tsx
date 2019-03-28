@@ -42,7 +42,6 @@ describe('generic form', () => {
     getAllInputTypes()
         .forEach((type: FormFieldType) => {
             it(`${type} should render error messages`, () => {
-
                 const Component = getFormFieldComponent(type);
 
                 const wrapper = render(

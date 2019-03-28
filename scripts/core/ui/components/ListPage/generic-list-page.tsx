@@ -152,9 +152,8 @@ export class GenericListPageComponent<T extends IDefaultApiFields> extends React
 
             const formConfigForFilters = getFormGroupForFiltering(this.props.formConfig);
 
-            const fieldTypesLookup = getFormFieldsFlat(formConfigForFilters).reduce((accumulator, item) => {
-                return {...accumulator, ...{[item.field]: item.type}};
-            }, {});
+            const fieldTypesLookup = getFormFieldsFlat(formConfigForFilters)
+                .reduce((accumulator, item) => ({...accumulator, ...{[item.field]: item.type}}), {});
 
             const filtersValidated = Object.keys(filterValues).reduce((accumulator, key) => {
                 const value = filterValues[key];

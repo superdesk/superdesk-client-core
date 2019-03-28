@@ -23,7 +23,6 @@ export class Checkbox extends React.Component<IProps> {
     };
 
     render() {
-
         const {
             field,
             value,

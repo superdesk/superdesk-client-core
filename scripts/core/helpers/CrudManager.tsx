@@ -1,3 +1,5 @@
+/* eslint-disable react/display-name */
+
 import {IRestApiResponse, IDefaultApiFields} from '../../types/RestApi';
 import React from 'react';
 import {connectServices} from './ReactRenderAsync';
@@ -18,8 +20,8 @@ interface IMethods<Entity extends IDefaultApiFields> {
     read(
         page: number,
         sort?: {
-            field: string;
-            direction: 'ascending' | 'descending';
+        field: string;
+        direction: 'ascending' | 'descending';
         },
         filterValues?: ICrudManagerFilters,
         formatFiltersForServer?: (filters: ICrudManagerFilters) => ICrudManagerFilters,

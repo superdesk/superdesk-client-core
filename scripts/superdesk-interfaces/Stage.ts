@@ -1,4 +1,4 @@
-import {IDefaultApiFields} from "types/RestApi";
+import {IDefaultApiFields} from 'types/RestApi';
 
 export interface IStage extends IDefaultApiFields {
     name: string;

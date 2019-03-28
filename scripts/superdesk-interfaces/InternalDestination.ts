@@ -1,4 +1,4 @@
-import {IDefaultApiFields} from "types/RestApi";
+import {IDefaultApiFields} from 'types/RestApi';
 
 export interface IInternalDestination extends IDefaultApiFields {
     name: string;

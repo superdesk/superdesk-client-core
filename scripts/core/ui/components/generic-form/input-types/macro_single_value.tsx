@@ -17,10 +17,10 @@ export const MacroSingleValue = getSelectSingleValue(
                         where: {desk: deskId},
                         max_results: 200,
                     })
-                    .then(
-                        (stages: IRestApiResponse<IMacro>) =>
-                            stages._items.map(({label}) => ({id: label, label: label})),
-                    );
+                        .then(
+                            (stages: IRestApiResponse<IMacro>) =>
+                                stages._items.map(({label}) => ({id: label, label: label})),
+                        );
                 }
             }),
     gettext('Select a desk first'),
