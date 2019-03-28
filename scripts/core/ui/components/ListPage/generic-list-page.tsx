@@ -56,8 +56,6 @@ interface IProps<T extends IDefaultApiFields> {
 }
 
 export class GenericListPageComponent<T extends IDefaultApiFields> extends React.Component<IProps<T>, IState> {
-    previewInEditMode: boolean;
-
     constructor(props) {
         super(props);
 
@@ -76,8 +74,6 @@ export class GenericListPageComponent<T extends IDefaultApiFields> extends React
             loading: true,
         };
 
-        this.previewInEditMode = false;
-
         this.openPreview = this.openPreview.bind(this);
         this.closePreview = this.closePreview.bind(this);
         this.setFiltersVisibility = this.setFiltersVisibility.bind(this);
@@ -88,7 +84,7 @@ export class GenericListPageComponent<T extends IDefaultApiFields> extends React
         this.removeFilter = this.removeFilter.bind(this);
     }
     openPreview(id) {
-        if (this.previewInEditMode === true) {
+        if (this.state.preview.editMode === true) {
             this.props.modal.alert({
                 headerText: gettext('Warning'),
                 bodyText: gettext(
@@ -118,7 +114,7 @@ export class GenericListPageComponent<T extends IDefaultApiFields> extends React
         });
     }
     startEditing(id) {
-        if (this.previewInEditMode === true) {
+        if (this.state.preview.editMode === true) {
             this.props.modal.alert({
                 headerText: gettext('Warning'),
                 bodyText: gettext(
@@ -205,7 +201,7 @@ export class GenericListPageComponent<T extends IDefaultApiFields> extends React
         this.setState({filtersOpen: nextValue});
     }
     openNewItemForm() {
-        if (this.previewInEditMode === true) {
+        if (this.state.preview.editMode === true) {
             this.props.modal.alert({
                 headerText: gettext('Warning'),
                 bodyText: gettext(
