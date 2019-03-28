@@ -226,6 +226,11 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                         $scope.item.associations = _.cloneDeep(res.associations);
                     }
 
+                    // cloneDeep fields_meta so that diff can be calculated on save
+                    if (res.fields_meta) {
+                        $scope.item.fields_meta = _.cloneDeep(res.fields_meta);
+                    }
+
                     notify.success(gettext('Item updated.'));
 
                     initMedia();
