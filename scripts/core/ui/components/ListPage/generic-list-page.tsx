@@ -147,52 +147,69 @@ export class GenericListPageComponent<T extends IDefaultApiFields> extends React
         }), callback);
     }
     executeFilters() {
-        const {filterValues} = this.state;
+        const execute = () => {
+            const {filterValues} = this.state;
 
-        const formConfigForFilters = getFormGroupForFiltering(this.props.formConfig);
+            const formConfigForFilters = getFormGroupForFiltering(this.props.formConfig);
 
-        const fieldTypesLookup = getFormFieldsFlat(formConfigForFilters).reduce((accumulator, item) => {
-            return {...accumulator, ...{[item.field]: item.type}};
-        }, {});
+            const fieldTypesLookup = getFormFieldsFlat(formConfigForFilters).reduce((accumulator, item) => {
+                return {...accumulator, ...{[item.field]: item.type}};
+            }, {});
 
-        const filtersValidated = Object.keys(filterValues).reduce((accumulator, key) => {
-            const value = filterValues[key];
+            const filtersValidated = Object.keys(filterValues).reduce((accumulator, key) => {
+                const value = filterValues[key];
 
-            if (typeof value === 'string') {
-                let trimmedValue = value.trim();
+                if (typeof value === 'string') {
+                    let trimmedValue = value.trim();
 
-                if (trimmedValue.length > 1) {
-                    accumulator[key] = trimmedValue;
-                    return accumulator;
+                    if (trimmedValue.length > 1) {
+                        accumulator[key] = trimmedValue;
+                        return accumulator;
+                    } else {
+                        return accumulator;
+                    }
                 } else {
+                    if (value !== undefined) {
+                        accumulator[key] = value;
+                    }
+
                     return accumulator;
                 }
-            } else {
-                if (value !== undefined) {
-                    accumulator[key] = value;
-                }
+            }, {});
 
-                return accumulator;
-            }
-        }, {});
+            this.props.items.read(
+                1,
+                this.props.items.activeSortOption,
+                filtersValidated,
+                (filters: ICrudManagerFilters) => {
+                    let filtersFormatted = {};
 
-        this.props.items.read(
-            1,
-            this.props.items.activeSortOption,
-            filtersValidated,
-            (filters: ICrudManagerFilters) => {
-                let filtersFormatted = {};
+                    for (let fieldName in filters) {
+                        filtersFormatted[fieldName] = generateFilterForServer(
+                            fieldTypesLookup[fieldName],
+                            filters[fieldName],
+                        );
+                    }
 
-                for (let fieldName in filters) {
-                    filtersFormatted[fieldName] = generateFilterForServer(
-                        fieldTypesLookup[fieldName],
-                        filters[fieldName],
-                    );
-                }
+                    return filtersFormatted;
+                },
+            );
+        };
 
-                return filtersFormatted;
-            },
-        );
+        if (this.state.preview.editMode) {
+            this.props.modal.alert({
+                headerText: gettext('Warning'),
+                bodyText: gettext(
+                    'Items in edit mode must be closed before you can filter.',
+                ),
+            });
+        } else if (this.state.preview.itemId != null) {
+            this.setState({
+                preview: {itemId: null, editMode: false},
+            }, execute);
+        } else {
+            execute();
+        }
     }
     closeNewItemForm() {
         this.setState({newItem: {item: null, editMode: false}});
