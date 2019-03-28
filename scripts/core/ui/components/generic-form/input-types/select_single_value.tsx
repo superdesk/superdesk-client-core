@@ -82,6 +82,7 @@ export function getSelectSingleValue(
                         onChange={(event) => {
                             this.props.onChange(event.target.value === '' ? this.initialValue : event.target.value);
                         }}
+                        data-test-id={`gform-input--${this.props.formField.field}`}
                     >
                         <option value="">{getFirstItemMessage()}</option>
                         {

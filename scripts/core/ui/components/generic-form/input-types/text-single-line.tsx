@@ -5,7 +5,7 @@ import {IInputType} from '../interfaces/input-types';
 export class TextSingleLine extends React.Component<IInputType<string>> {
     render() {
         if (this.props.previewOuput) {
-            return <div>{this.props.value}</div>;
+            return <div data-test-id={`gform-output--${this.props.formField.field}`}>{this.props.value}</div>;
         }
 
         // default value is required so React doesn't complain that uncontrolled component is changed to controlled.

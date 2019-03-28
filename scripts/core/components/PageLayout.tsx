@@ -14,12 +14,16 @@ export class PageContainer extends React.Component<any, any> {
 
 interface IPageContainerItem {
     shrink?: boolean;
+    'data-test-id'?: string;
 }
 
 export class PageContainerItem extends React.Component<IPageContainerItem, any> {
     render() {
         return (
-            <div className={this.props.shrink ? 'sd-column-box__main-column' : null}>
+            <div
+                className={this.props.shrink ? 'sd-column-box__main-column' : null}
+                data-test-id={this.props["data-test-id"]}
+            >
                 {this.props.children}
             </div>
         );

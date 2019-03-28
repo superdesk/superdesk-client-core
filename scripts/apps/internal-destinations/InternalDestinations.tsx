@@ -67,7 +67,12 @@ const renderRow = (
     item: IInternalDestination,
     page: GenericListPageComponent<IInternalDestination>,
 ) => (
-    <ListItem key={key} onClick={() => page.openPreview(item._id)} inactive={!item.is_active}>
+    <ListItem
+        key={key}
+        onClick={() => page.openPreview(item._id)}
+        inactive={!item.is_active}
+        data-test-id="internal-destinations-item"
+    >
         <ListItemColumn ellipsisAndGrow noBorder>
             {getFormFieldPreviewComponent(item, nameField)}
         </ListItemColumn>
@@ -87,6 +92,7 @@ const renderRow = (
                     }}
                     className="icn-btn"
                     title={gettext('Edit')}
+                    data-test-id="edit"
                 >
                     <i className="icon-pencil" />
                 </button>
@@ -96,7 +102,9 @@ const renderRow = (
                         page.deleteItem(item);
                     }}
                     className="icn-btn"
-                    title={gettext('Remove')}>
+                    title={gettext('Remove')}
+                    data-test-id="delete"
+                >
                     <i className="icon-trash" />
                 </button>
             </div>

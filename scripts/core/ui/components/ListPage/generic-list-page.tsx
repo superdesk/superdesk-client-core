@@ -342,7 +342,7 @@ export class GenericListPageComponent<T extends IDefaultApiFields> extends React
                 <PageContainer>
                     {
                         this.state.filtersOpen ? (
-                            <PageContainerItem>
+                            <PageContainerItem data-test-id="list-page--filters-form">
                                 <SidePanel side="left" width={240}>
                                     <SidePanelHeader>
                                         <SidePanelHeading>{gettext('Refine search')}</SidePanelHeading>
@@ -368,7 +368,11 @@ export class GenericListPageComponent<T extends IDefaultApiFields> extends React
                                                     issues={{}}
                                                     handleFieldChange={this.handleFilterFieldChange}
                                                 />
-                                                <button className="btn btn--primary btn--expanded" type="submit">
+                                                <button
+                                                    className="btn btn--primary btn--expanded"
+                                                    type="submit"
+                                                    data-test-id="filters-submit"
+                                                >
                                                     {gettext('Filter')}
                                                 </button>
                                             </form>
@@ -404,6 +408,7 @@ export class GenericListPageComponent<T extends IDefaultApiFields> extends React
                                     <div
                                         className="subnav"
                                         style={{background: 'transparent', boxShadow: 'none', marginTop: -20}}
+                                        data-test-id="list-page--filters-active"
                                     >
                                         {
                                             Object.keys(activeFilters).map((fieldName, i) => {
@@ -436,7 +441,7 @@ export class GenericListPageComponent<T extends IDefaultApiFields> extends React
 
                     {
                         this.state.preview.itemId != null ? (
-                            <PageContainerItem data-test-id="list-page--edit-item">
+                            <PageContainerItem data-test-id="list-page--view-edit">
                                 <GenericListPageItemViewEdit
                                     editMode={this.state.preview.editMode}
                                     onEditModeChange={(nextValue) => {

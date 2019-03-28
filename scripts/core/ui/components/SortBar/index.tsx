@@ -21,13 +21,13 @@ export class SortBar extends React.Component<IProps, any> {
         );
 
         return (
-            <div className="sortbar">
+            <div className="sortbar" data-test-id="sortbar">
                 <span>{gettext('Total:')}</span>
                 {' '}
                 <span className="label-total">{this.props.itemsCount}</span>
                 {' '}
                 <div className="dropdown dropdown--hover">
-                    <button className="dropdown__toggle">
+                    <button className="dropdown__toggle" data-test-id="sortbar--selected">
                         {currentSortOption.label}
                         <span className="dropdown__caret" />
                     </button>
@@ -40,6 +40,7 @@ export class SortBar extends React.Component<IProps, any> {
                                             field: option.field,
                                             direction: 'ascending',
                                         })}
+                                        data-test-id="sortbar--option"
                                     >
                                         {option.label}
                                     </button>
@@ -58,6 +59,7 @@ export class SortBar extends React.Component<IProps, any> {
                                 })}
                                 className="icn-btn direction"
                                 title={gettext('Ascending')}
+                                data-test-id="sortbar--sort-ascending"
                             >
                                 <i className="icon-ascending" />
                             </button>
@@ -69,6 +71,7 @@ export class SortBar extends React.Component<IProps, any> {
                                 })}
                                 className="icn-btn direction"
                                 title={gettext('Descending')}
+                                data-test-id="sortbar--sort-descending"
                             >
                                 <i className="icon-descending" />
                             </button>

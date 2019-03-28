@@ -7,6 +7,7 @@ interface IPropsSidePanel {
     children: Array<React.ReactElement<SidePanelHeader> | React.ReactElement<SidePanelContent>>;
     side: 'left' | 'right';
     width: number; // required because due to a bad implementation of SidePanelTools, they go on top heading text
+    'data-test-id'?: string;
 }
 
 export class SidePanel extends React.Component<IPropsSidePanel, any> {
@@ -22,7 +23,11 @@ export class SidePanel extends React.Component<IPropsSidePanel, any> {
         }
 
         return (
-            <div className={classes.join(' ')} style={{width: this.props.width}}>
+            <div
+                className={classes.join(' ')}
+                style={{width: this.props.width}}
+                data-test-id={this.props['data-test-id']}
+            >
                 {this.props.children}
             </div>
         );

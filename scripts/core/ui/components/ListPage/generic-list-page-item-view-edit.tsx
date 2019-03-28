@@ -141,20 +141,25 @@ class GenericListPageItemViewEditComponent extends React.Component<IProps, IStat
     }
     render() {
         return (
-            <SidePanel side="right" width={360}>
+            <SidePanel side="right" width={360} data-test-id="item-view-edit">
                 <SidePanelHeader>
                     <SidePanelHeading>{gettext('Details:')}</SidePanelHeading>
                     {
                         this.props.editMode
                             ? (
                                 <div className="side-panel__sliding-toolbar side-panel__sliding-toolbar--right">
-                                    <button className="btn" onClick={this.handleCancel}>
+                                    <button
+                                        className="btn"
+                                        onClick={this.handleCancel}
+                                        data-test-id="item-view-edit--cancel-save"
+                                    >
                                         {gettext('Cancel')}
                                     </button>
                                     <button
                                         disabled={!this.isFormDirty()}
                                         onClick={this.handleSave}
                                         className="btn btn--primary"
+                                        data-test-id="item-view-edit--save"
                                     >
                                         {gettext('Save')}
                                     </button>
