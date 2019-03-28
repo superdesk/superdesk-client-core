@@ -280,7 +280,7 @@ export class GenericListPageComponent<T extends IDefaultApiFields> extends React
                 }
             } else {
                 return (
-                    <div data-test-id="items">
+                    <div data-test-id="list-page--items">
                         {
                             this.props.items._items.map(
                                 (item) => renderRow(item._id, item, this),
@@ -423,7 +423,7 @@ export class GenericListPageComponent<T extends IDefaultApiFields> extends React
 
                     {
                         this.state.preview.itemId != null ? (
-                            <PageContainerItem>
+                            <PageContainerItem data-test-id="list-page--edit-item">
                                 <GenericListPageItemViewEdit
                                     editMode={this.state.preview.editMode}
                                     onEditModeChange={(nextValue) => {
@@ -449,7 +449,7 @@ export class GenericListPageComponent<T extends IDefaultApiFields> extends React
 
                     {
                         this.state.newItem.item != null ? (
-                            <PageContainerItem>
+                            <PageContainerItem data-test-id="list-page--new-item">
                                 <GenericListPageItemViewEdit
                                     operation="creation"
                                     formConfig={formConfig}
