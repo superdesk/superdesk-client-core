@@ -9,8 +9,8 @@ import 'external-apps';
 const appConfig = __SUPERDESK_CONFIG__;
 
 if (appConfig.features.useTansaProofing) {
-    // see: http://www.hiddenwebgenius.com/blog/guides/understanding-javascripts-asynchronous-code/
-    setTimeout(() => require('apps/tansa'), 0);
+    // tslint:disable-next-line:no-var-requires
+    require('apps/tansa');
 }
 
 let body = angular.element('body');
