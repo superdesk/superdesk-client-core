@@ -220,7 +220,7 @@ export function UserPreferencesDirective(
                 // values object is undefined or any of the needed
                 // data buckets are missing in it
                 buckets = [
-                    'cities', 'categories', 'default_categories', 'locators', 'calendars', 'agendas',
+                    'categories', 'default_categories', 'locators', 'calendars', 'agendas',
                 ];
 
                 initNeeded = buckets.some((bucketName) => {
@@ -252,8 +252,6 @@ export function UserPreferencesDirective(
             *   settings
             */
             function updateScopeData(helperData, userPrefs) {
-                scope.cities = helperData.cities;
-
                 // If the planning module is installed we save a list of the available agendas
                 if (scope.features.agenda) {
                     scope.agendas = helperData.agendas;

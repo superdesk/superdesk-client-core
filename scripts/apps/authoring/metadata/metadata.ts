@@ -3,6 +3,7 @@ import PreferedCvItemsConfigDirective from './PreferedCvItemsConfigDirective';
 import MetaPlaceDirective from './MetaPlaceDirective';
 import {VOCABULARY_SELECTION_TYPES} from '../../vocabularies/constants';
 import {gettext} from 'core/utils';
+import PlacesServiceFactory from './PlacesService';
 
 const SINGLE_SELECTION = VOCABULARY_SELECTION_TYPES.SINGLE_SELECTION.id;
 
@@ -951,15 +952,14 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
     };
 }
 
-MetaLocatorsDirective.$inject = [];
-function MetaLocatorsDirective() {
+MetaLocatorsDirective.$inject = ['places'];
+function MetaLocatorsDirective(places) {
     return {
         scope: {
             item: '=',
             fieldprefix: '@',
             field: '@',
             disabled: '=ngDisabled',
-            list: '=',
             change: '&',
             postprocessing: '&',
             header: '@',
@@ -967,18 +967,22 @@ function MetaLocatorsDirective() {
             keepinput: '=',
         },
 
+        controller: function() {
+            this.selectedTerm = '';
+        },
+        controllerAs: '$ctrl',
+
         templateUrl: 'scripts/apps/authoring/metadata/views/metadata-locators.html',
         link: function(scope, element) {
-            scope.selectedTerm = '';
             scope.locators = [];
 
             scope.$applyAsync(() => {
                 if (scope.item) {
                     if (scope.fieldprefix && scope.item[scope.fieldprefix] &&
                         scope.item[scope.fieldprefix][scope.field]) {
-                        scope.selectedTerm = scope.item[scope.fieldprefix][scope.field].city;
+                        scope.$ctrl.selectedTerm = scope.item[scope.fieldprefix][scope.field].city;
                     } else if (scope.item[scope.field]) {
-                        scope.selectedTerm = scope.item[scope.field].city;
+                        scope.$ctrl.selectedTerm = scope.item[scope.field].city;
                     }
                 }
 
@@ -990,11 +994,12 @@ function MetaLocatorsDirective() {
             function setLocators(list) {
                 scope.locators = list.slice(0, 10);
                 scope.total = list.length;
+                return scope.locators;
             }
 
             // update visible city on some external change, like after undo/redo
             scope.$watch('item[fieldprefix][field].city || item[field].city', (located) => {
-                scope.selectedTerm = located;
+                scope.$ctrl.selectedTerm = located;
             });
 
             /**
@@ -1003,16 +1008,16 @@ function MetaLocatorsDirective() {
              *
              * @return {Array} list of located object(s)
              */
-            scope.searchLocator = function(locatorToFind) {
-                if (!locatorToFind) {
-                    setLocators(scope.list);
-                } else {
-                    setLocators(_.filter(scope.list,
-                        (t) => t.city.toLowerCase().indexOf(locatorToFind.toLowerCase()) !== -1));
-                }
-
-                scope.selectedTerm = locatorToFind;
-                return scope.locators;
+            scope.searchLocator = (locatorToFind) => {
+                scope.$ctrl.selectedTerm = locatorToFind;
+                scope.loading = true;
+                return places.search(locatorToFind, scope.item.language, 'dateline')
+                    .then(setLocators)
+                    .finally(() => {
+                        scope.$applyAsync(() => {
+                            scope.loading = false;
+                        });
+                    });
             };
 
             /**
@@ -1025,14 +1030,14 @@ function MetaLocatorsDirective() {
                 var updates = {};
                 let loc = locator;
 
-                if (!loc && scope.selectedTerm) {
+                if (!loc && scope.$ctrl.selectedTerm) {
                     var previousLocator = scope.fieldprefix ? scope.item[scope.fieldprefix][scope.field] :
                         scope.item[scope.field];
 
-                    if (previousLocator && scope.selectedTerm === previousLocator.city) {
+                    if (previousLocator && scope.$ctrl.selectedTerm === previousLocator.city) {
                         loc = previousLocator;
                     } else {
-                        loc = {city: scope.selectedTerm, city_code: scope.selectedTerm, tz: 'UTC',
+                        loc = {city: scope.$ctrl.selectedTerm, city_code: scope.$ctrl.selectedTerm, tz: 'UTC',
                             dateline: 'city', country: '', country_code: '', state_code: '', state: ''};
                     }
                 }
@@ -1048,11 +1053,11 @@ function MetaLocatorsDirective() {
                         updates[scope.field] = loc;
                     }
 
-                    scope.selectedTerm = loc.city;
+                    scope.$ctrl.selectedTerm = loc.city;
                     _.extend(scope.item, updates);
                 }
 
-                var selectedLocator = {item: scope.item, city: scope.selectedTerm};
+                var selectedLocator = {item: scope.item, city: scope.$ctrl.selectedTerm};
 
                 scope.postprocessing(selectedLocator);
                 scope.change(selectedLocator);
@@ -1193,9 +1198,14 @@ function MetadataService(api, subscribersService, config, vocabularies, $rootSco
         fetchCities: function() {
             var self = this;
 
-            return api.get('/cities').then((result) => {
-                self.values.cities = result._items;
-            });
+            if (!self.citiesPromise) {
+                self.citiesPromise = api.get('/cities').then((result) => {
+                    self.values.cities = result._items;
+                    return self.values.cities;
+                });
+            }
+
+            return self.citiesPromise;
         },
         fetchAgendas: function() {
             var self = this;
@@ -1272,7 +1282,6 @@ function MetadataService(api, subscribersService, config, vocabularies, $rootSco
                     .then(angular.bind(this, this.fetchSubjectcodes))
                     .then(angular.bind(this, this.fetchAuthors))
                     .then(angular.bind(this, this.fetchSubscribers))
-                    .then(angular.bind(this, this.fetchCities))
                     .then(angular.bind(this, this.fetchAgendas));
             }
 
@@ -1320,6 +1329,7 @@ function MetadataListItem() {
 angular.module('superdesk.apps.authoring.metadata', [
     'superdesk.apps.authoring.widgets',
     'superdesk.apps.publish',
+    'superdesk.apps.vocabularies',
     'vs-repeat',
 ])
     .config(['authoringWidgetsProvider', function(authoringWidgetsProvider) {
@@ -1345,6 +1355,7 @@ angular.module('superdesk.apps.authoring.metadata', [
 
     .controller('MetadataWidgetCtrl', MetadataCtrl)
     .service('metadata', MetadataService)
+    .service('places', PlacesServiceFactory)
     .directive('sdMetaTarget', MetaTargetedPublishingDirective)
     .directive('sdMetadataListItem', MetadataListItem)
     .directive('sdMetaTerms', MetaTermsDirective)
