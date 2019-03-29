@@ -21,7 +21,7 @@ import {
 import {toHTML} from '..';
 import {highlightsConfig} from '../highlightsConfig';
 
-function getCustomMetadataFromContentState(contentState, highlightType) {
+function getCustomMetadataFromContentState(contentState, highlightType): Array<{styleName: string, obj: any}> {
     const editorState = initializeHighlights(EditorState.createWithContent(contentState));
 
     const allStyleNames = getUniqueStyleNamesInDraftSelection(
@@ -38,7 +38,7 @@ function getCustomMetadataFromContentState(contentState, highlightType) {
         }));
 }
 
-function getAnnotationsFromHighlights(highlights) {
+function getAnnotationsFromHighlights(highlights): Array<any> {
     return highlights.map(({styleName, obj}, index) => ({
         styleName: styleName,
         id: index + 1, // count from 1

@@ -1,4 +1,4 @@
-import {ContentState, convertFromRaw, convertToRaw} from 'draft-js';
+import {ContentState, convertFromRaw, convertToRaw, ContentBlock} from 'draft-js';
 import {HTMLGenerator} from '.';
 import {isQumuWidget, postProccessQumuEmbed} from '../../components/embeds/QumuWidget';
 import {logger} from 'core/services/logger';
@@ -30,7 +30,7 @@ export class AtomicBlockParser {
      * @returns {string} HTML
      * @description Returns the HTML representation of the passed contentBlock.
      */
-    parse(contentBlock) {
+    parse(contentBlock: ContentBlock): string | undefined {
         const entityKey = contentBlock.getEntityAt(0);
 
         if (!entityKey) {
@@ -43,14 +43,13 @@ export class AtomicBlockParser {
 
         switch (entity.getType()) {
         case 'MEDIA':
-            return this.parseMedia(data, rawKey);
+            return this.parseMedia(data, rawKey).trim();
         case 'EMBED':
-            return this.parseEmbed(data);
+            return this.parseEmbed(data).trim();
         case 'TABLE':
-            return this.parseTable(tableHelpers.getData(this.contentState, contentBlock.getKey()));
+            return this.parseTable(tableHelpers.getData(this.contentState, contentBlock.getKey())).trim();
         default:
             logger.warn(`Editor3: Cannot generate HTML for entity type of ${entity.getType()}`, data);
-            return '';
         }
     }
 
