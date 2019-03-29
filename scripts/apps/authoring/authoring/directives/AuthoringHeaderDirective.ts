@@ -1,4 +1,5 @@
 import {isNull, isUndefined, find, filter, keys, findIndex, defer, sortBy, map, forEach, startsWith} from 'lodash';
+import {FIELD_KEY_SEPARATOR} from 'core/editor3/helpers/fieldsMeta';
 
 AuthoringHeaderDirective.$inject = [
     'api',
@@ -40,6 +41,7 @@ export function AuthoringHeaderDirective(
             scope.displayCompanyCodes = null;
             scope.features = features;
             scope.translationService = TranslationService;
+            scope.FIELD_KEY_SEPARATOR = FIELD_KEY_SEPARATOR;
 
             scope.isCollapsed = authoringWorkspace.displayAuthoringHeaderCollapedByDefault == null
                 ? false :
