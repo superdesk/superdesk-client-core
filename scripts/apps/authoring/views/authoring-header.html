@@ -364,7 +364,7 @@
                 order="{{ editor[field._id].order }}"
                 sd-validation-error="error[field._id.toLowerCase()]">
     
-                <label class="authoring-header__item-label"">{{field.display_name}}</label>
+                <label class="authoring-header__item-label">{{field.display_name}}</label>
                 <span ng-if="schema[field._id].maxlength || schema[field._id].minlength" sd-character-count
                     data-item="item.extra[field._id]" data-html="true" data-limit="schema[field._id].maxlength"></span>
                 <div class="authoring-header__input-holder">
