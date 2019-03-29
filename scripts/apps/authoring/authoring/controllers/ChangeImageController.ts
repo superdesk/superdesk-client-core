@@ -217,6 +217,7 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, deploy
     * @description
     */
     $scope.cancelMetadataChanges = () => {
+        $rootScope.$broadcast('clear: selectedUsageTerms');
         $scope.data.metadata = angular.copy($scope.data.item);
         $scope.metadata.isDirty = false;
     };
