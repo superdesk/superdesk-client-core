@@ -91,9 +91,13 @@ describe('Content profiles', () => {
         contentProfiles.addNew('Simple');
 
         element(by.buttonText('Content fields')).click();
-        expect(element(by.buttonText(FIELD_LABEL)).isDisplayed()).toBeFalsy();
+
+        const btns = element.all(by.partialButtonText(FIELD_LABEL));
+
+        expect(btns.filter((elem) => elem.isDisplayed()).count()).toBe(0);
 
         contentProfiles.openAddFieldDropdown();
-        expect(element(by.buttonText('A custom text field')).isPresent()).toBeTruthy();
+
+        expect(btns.filter((elem) => elem.isDisplayed()).count()).toBe(1);
     });
 });
