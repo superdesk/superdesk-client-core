@@ -144,7 +144,7 @@ angular.module('superdesk.apps.authoring', [
                 label: gettext('Edit Media Metadata'),
                 priority: 3,
                 icon: 'edit-line',
-                keyboardShortcut: 'ctrl+alt+i',
+                keyboardShortcut: 'ctrl+alt+m',
                 controller: ['data', 'multiImageEdit', 'authoring', 'api',
                     function(data, multiImageEdit, authoring, api) {
                         api.find('archive', data.item._id).then((item) => {
