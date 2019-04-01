@@ -4,7 +4,7 @@ import sys
 def get_command(branch=None):
     arguments_list = ["git", "grep", "-P", rule_regex]
 
-    if(branch is not None):
+    if branch is not None:
         arguments_list.append(branch)
     
     arguments_list.append("--")
@@ -65,7 +65,7 @@ for rule in rules_to_check:
         )
     except subprocess.CalledProcessError as e:
         # ignore exception if grep simply didn't find matches
-        if(len(e.output) is not 0):
+        if len(e.output) != 0:
             raise e
         else:
             violations_count_master = 0
@@ -75,20 +75,20 @@ for rule in rules_to_check:
         violations = subprocess.check_output(get_command(), stderr=subprocess.STDOUT).decode('utf-8')
     except subprocess.CalledProcessError as e:
         # ignore exception if grep simply didn't find matches
-        if(len(e.output) is not 0):
+        if len(e.output) != 0:
             raise e
         else:
             violations = ''
 
     violations_count = len(violations.splitlines())
 
-    if((violations_count > 0 and rule_tolerance is False) or violations_count > violations_count_master):
+    if (violations_count > 0 and rule_tolerance is False) or violations_count > violations_count_master:
         any_rule_violated = True
         print(f'\n\n{violations}\n\n')
         print(f"GREP-LINT RULE VIOLATED! '{rule_name}'")
         print(f"Rule regex: `{rule_regex}`")
 
-        if (rule_tolerance is True):
+        if rule_tolerance is True:
             print(f'Tolerance is enabled, but {violations_count} violations were found in the working while there only are {violations_count_master} violations on master. See grep-lint.py for details.')
 
 sys.exit(1 if any_rule_violated else 0)
