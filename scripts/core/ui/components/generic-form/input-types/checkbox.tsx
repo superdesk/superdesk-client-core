@@ -5,7 +5,7 @@ import {Checkbox} from '../../Form';
 
 export class CheckboxInput extends React.Component<IInputType<boolean>> {
     render() {
-        if (this.props.previewOuput) {
+        if (this.props.previewOutput) {
             return <div>{this.props.value ? gettext('Yes') : gettext('No')}</div>;
         }
 

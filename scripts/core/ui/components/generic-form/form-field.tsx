@@ -47,7 +47,7 @@ export function getFormFieldPreviewComponent(
     return (
         <Component
             formValues={item}
-            previewOuput={true}
+            previewOutput={true}
             value={item[formFieldConfig.field]}
             formField={formFieldConfig}
             disabled={false}

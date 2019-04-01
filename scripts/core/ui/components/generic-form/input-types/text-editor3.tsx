@@ -45,7 +45,7 @@ export class TextEditor3 extends React.Component<IProps, IState> {
         }
     }
     render() {
-        if (this.props.previewOuput) {
+        if (this.props.previewOutput) {
             return <UserHtmlSingleLine html={this.props.value} />;
         }
 

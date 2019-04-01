@@ -51,7 +51,7 @@ describe('generic form', () => {
                         disabled={false}
                         value=""
                         issues={[message]}
-                        previewOuput={false}
+                        previewOutput={false}
                         onChange={noop}
                     />);
 

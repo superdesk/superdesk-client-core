@@ -52,7 +52,7 @@ export function getSelectSingleValue(
             }
         }
         render() {
-            if (this.props.previewOuput) {
+            if (this.props.previewOutput) {
                 if (this.state.items == null) {
                     return null; // loading
                 } else {
