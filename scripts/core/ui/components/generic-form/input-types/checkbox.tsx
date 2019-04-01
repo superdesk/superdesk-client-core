@@ -10,7 +10,15 @@ export class CheckboxInput extends React.Component<IInputType<boolean>> {
         }
 
         return (
-            <div className={classNames('sd-line-input', {'sd-line-input--invalid': this.props.issues.length > 0})}>
+            <div className={
+                classNames(
+                    'sd-line-input',
+                    {
+                        'sd-line-input--invalid': this.props.issues.length > 0,
+                        'sd-line-input--required': this.props.formField.required === true,
+                    },
+                )
+            }>
                 <Checkbox
                     value={this.props.value}
                     label={this.props.formField.label}

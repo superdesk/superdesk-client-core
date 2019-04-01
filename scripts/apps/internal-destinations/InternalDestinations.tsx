@@ -13,6 +13,7 @@ const nameField: IFormField = {
     label: gettext('Destination name'),
     type: FormFieldType.textSingleLine,
     field: 'name',
+    required: true,
 };
 
 const isActiveField: IFormField = {
@@ -31,6 +32,7 @@ const deskField: IFormField = {
     label: gettext('Desk'),
     type: FormFieldType.deskSingleValue,
     field: 'desk',
+    required: true,
 };
 
 const stageField: IFormField = {

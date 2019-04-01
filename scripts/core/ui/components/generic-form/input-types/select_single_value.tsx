@@ -73,7 +73,15 @@ export function getSelectSingleValue(
             };
 
             return (
-                <div className={classNames('sd-line-input', {'sd-line-input--invalid': this.props.issues.length > 0})}>
+                <div className={
+                    classNames(
+                        'sd-line-input',
+                        {
+                            'sd-line-input--invalid': this.props.issues.length > 0,
+                            'sd-line-input--required': this.props.formField.required === true,
+                        },
+                    )
+                }>
                     <label className="sd-line-input__label">{this.props.formField.label}</label>
                     <select
                         disabled={this.props.disabled || this.state.items == null || this.state.items.length < 1}

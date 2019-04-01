@@ -36,7 +36,7 @@ function getTestFieldConfig(type: IFormField['type']): IFormField {
     }
 }
 
-describe('generic form', () => {
+fdescribe('generic form', () => {
     const message = 'error-q7w8e9r';
 
     getAllInputTypes()
@@ -56,6 +56,29 @@ describe('generic form', () => {
                     />);
 
                 expect(wrapper.html()).toContain(message);
+            });
+        });
+
+    getAllInputTypes()
+        .forEach((type: FormFieldType) => {
+            it(`${type} should add a classname for required fields`, () => {
+                const Component = getFormFieldComponent(type);
+
+                const wrapper = render(
+                    <div>
+                        <Component
+                            formField={{...getTestFieldConfig(type), required: true}}
+                            formValues={{}}
+                            disabled={false}
+                            value=""
+                            issues={[]}
+                            previewOutput={false}
+                            onChange={noop}
+                        />
+                    </div>,
+                );
+
+                expect(wrapper.find('.sd-line-input--required').length).toBe(1);
             });
         });
 });
