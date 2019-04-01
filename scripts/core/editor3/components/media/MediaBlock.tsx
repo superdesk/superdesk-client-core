@@ -77,8 +77,9 @@ export class MediaBlockComponent extends React.Component<any, any> {
         const data = entity.getData();
         const isNew = false;
         const showMetadata = true;
+        const defaultTab = tab;
 
-        cropImage(entityKey, data, {isNew, showMetadata, tab});
+        cropImage(entityKey, data, {isNew, showMetadata, defaultTab});
     }
 
     /**
@@ -192,14 +193,17 @@ export class MediaBlockComponent extends React.Component<any, any> {
                                     editable && (
                                         <div className="image-block__icons-block">
                                             <a className="image-block__image-action"
+                                                data-sd-tooltip={gettext('Edit metadata')}
                                                 onClick={() => {
                                                     this.onClick('view');
                                                 }}><i className="icon-pencil"/></a>
                                             <a className="image-block__image-action"
+                                                data-sd-tooltip={gettext('Edit image')}
                                                 onClick={() => {
                                                     this.onClick('image-edit');
                                                 }}><i className="icon-switches"/></a>
                                             <a className="image-block__image-action"
+                                                data-sd-tooltip={gettext('Edit crops')}
                                                 onClick={() => {
                                                     this.onClick('crop');
                                                 }}><i className="icon-crop"/></a>
