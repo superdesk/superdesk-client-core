@@ -5,7 +5,7 @@
 import * as testUtils from '../../components/tests/utils';
 import {AtomicBlockParser} from '../to-html';
 import {ContentState, convertToRaw, convertFromRaw} from 'draft-js';
-import {BlockInlineStyleWrapper, BlockEntityWrapper, HTMLGenerator} from '../to-html';
+import {HTMLGenerator} from '../to-html';
 import {OrderedSet as OS} from 'immutable';
 import {getInitialContent} from 'core/editor3/store';
 
@@ -440,52 +440,5 @@ describe('core.editor3.html.to-html.AtomicBlockParser', () => {
 
         expect(html).toBe('<table><tbody><tr><td></td><td></td><td></td></tr>' +
             '<tr><td></td><td></td><td></td></tr></tbody></table>');
-    });
-});
-
-describe('core.editor3.html.to-html.BlockInlineStyleWrapper', () => {
-    it('should get correct tags', () => {
-        const wrapper = new BlockInlineStyleWrapper();
-
-        expect(wrapper.tags(OS([]))).toEqual('');
-        expect(wrapper.tags(OS(['BOLD', 'ITALIC']))).toEqual('<b><i>');
-        expect(wrapper.tags(OS(['BOLD', 'ITALIC']))).toEqual('');
-        expect(wrapper.tags(OS(['ITALIC']))).toEqual('</i></b><i>');
-        expect(wrapper.tags(OS(['ITALIC', 'UNDERLINE']))).toEqual('<u>');
-        expect(wrapper.tags(OS(['UNDERLINE', 'BOLD']))).toEqual('</u></i><u><b>');
-        expect(wrapper.tags(OS([]))).toEqual('</b></u>');
-        expect(wrapper.tags(OS(['ITALIC', 'UNDERLINE']))).toEqual('<i><u>');
-
-        expect(wrapper.flush()).toEqual('</u></i>');
-        expect(wrapper.flush()).toEqual('');
-
-        expect(wrapper.tags(OS(['SUBSCRIPT']))).toEqual('<sub>');
-        expect(wrapper.tags(OS(['SUPERSCRIPT']))).toEqual('</sub><sup>');
-        expect(wrapper.tags(OS(['STRIKETHROUGH']))).toEqual('</sup><s>');
-    });
-});
-
-describe('core.editor3.html.to-html.BlockEntityWrapper', () => {
-    it('should get correct tags', () => {
-        const contentState = ContentState.createFromText('abcdefghijklmn');
-
-        const ek = [ // entity keys
-            contentState.createEntity('LINK', 'MUTABLE', {url: 'abc'}).getLastCreatedEntityKey(),
-            contentState.createEntity('LINK', 'MUTABLE', {url: 'def'}).getLastCreatedEntityKey(),
-            contentState.createEntity('LINK', 'MUTABLE', {url: 'jkl'}).getLastCreatedEntityKey(),
-        ];
-
-        const wrapper = new BlockEntityWrapper(contentState);
-
-        expect(wrapper.tags(ek[0])).toEqual('<a href="abc">');
-        expect(wrapper.tags(ek[1])).toEqual('</a><a href="def">');
-        expect(wrapper.tags(ek[1])).toEqual('');
-        expect(wrapper.tags(ek[1])).toEqual('');
-        expect(wrapper.tags(null)).toEqual('</a>');
-        expect(wrapper.tags(ek[2])).toEqual('<a href="jkl">');
-        expect(wrapper.tags(ek[2])).toEqual('');
-
-        expect(wrapper.flush()).toEqual('</a>');
-        expect(wrapper.flush()).toEqual('');
     });
 });
