@@ -140,6 +140,27 @@ angular.module('superdesk.apps.authoring', [
                     return authoring.itemActions(item).edit;
                 }],
             })
+            .activity('edit.media.metadata', {
+                label: gettext('Edit Media Metadata'),
+                priority: 3,
+                icon: 'edit-line',
+                keyboardShortcut: 'ctrl+alt+i',
+                controller: ['data', 'multiImageEdit', 'authoring', 'api',
+                    function(data, multiImageEdit, authoring, api) {
+                        api.find('archive', data.item._id).then((item) => {
+                            multiImageEdit.edit([item], (response) => authoring.save(item, response[0]));
+                        });
+                    }],
+                filters: [
+                    {action: 'list', type: 'archive'},
+                    {action: 'edit', type: 'metadata'},
+                ],
+                additionalCondition: ['item', 'authoring', (item, authoring) => {
+                    const mediaTypes = ['audio', 'picture', 'video'];
+
+                    return mediaTypes.includes(item.type) && authoring.itemActions(item).edit;
+                }],
+            })
             .activity('move.item', {
                 label: gettext('Send to'),
                 icon: 'share-alt',
