@@ -36,7 +36,7 @@ function getTestFieldConfig(type: IFormField['type']): IFormField {
     }
 }
 
-fdescribe('generic form', () => {
+describe('generic form', () => {
     const message = 'error-q7w8e9r';
 
     getAllInputTypes()
@@ -45,16 +45,20 @@ fdescribe('generic form', () => {
                 const Component = getFormFieldComponent(type);
 
                 const wrapper = render(
-                    <Component
-                        formField={getTestFieldConfig(type)}
-                        formValues={{}}
-                        disabled={false}
-                        value=""
-                        issues={[message]}
-                        previewOutput={false}
-                        onChange={noop}
-                    />);
+                    <div>
+                        <Component
+                            formField={getTestFieldConfig(type)}
+                            formValues={{}}
+                            disabled={false}
+                            value=""
+                            issues={[message]}
+                            previewOutput={false}
+                            onChange={noop}
+                        />
+                    </div>,
+                );
 
+                expect(wrapper.find('.sd-line-input--invalid').length).toBe(1);
                 expect(wrapper.html()).toContain(message);
             });
         });
