@@ -4,10 +4,9 @@ import {createLogger} from 'redux-logger';
 import thunk from 'redux-thunk';
 import {pick, get, debounce} from 'lodash';
 
-import {toHTML} from 'core/editor3/html';
 import ng from 'core/services/ng';
 
-import {Editor3, Editor3Base} from '../components/Editor3';
+import {Editor3Base} from '../components/Editor3';
 import {PopupTypes, forceUpdate, setAbbreviations} from '../actions';
 import {fieldsMetaKeys, setFieldMetadata, getFieldMetadata, FIELD_KEY_SEPARATOR} from '../helpers/fieldsMeta';
 import {getContentStateFromHtml} from '../html/from-html';
@@ -18,6 +17,7 @@ import {
 } from '../helpers/highlights';
 import {removeInlineStyles} from '../helpers/removeFormat';
 import reducers from '../reducers';
+import {editor3StateToHtml} from '../html/to-html/editor3StateToHtml';
 
 export const ignoreInternalAnnotationFields = (annotations) =>
     annotations.map(
@@ -147,7 +147,7 @@ export function onChange(contentState, {plainText = false} = {}) {
     if (plainText) {
         objectToUpdate[fieldName] = contentStateHighlightsReadyForExport.getPlainText();
     } else {
-        objectToUpdate[fieldName] = toHTML(contentStateHighlightsReadyForExport);
+        objectToUpdate[fieldName] = editor3StateToHtml(contentStateHighlightsReadyForExport);
         generateAnnotations(this.item);
     }
 

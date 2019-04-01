@@ -1,13 +1,13 @@
 import {ContentState, convertFromRaw, convertToRaw, ContentBlock} from 'draft-js';
-import {HTMLGenerator} from '.';
 import {isQumuWidget, postProccessQumuEmbed} from '../../components/embeds/QumuWidget';
 import {logger} from 'core/services/logger';
 import * as tableHelpers from 'core/editor3/helpers/table';
+import {editor3StateToHtml} from './editor3StateToHtml';
 
 /**
  * @ngdoc class
  * @name AtomicBlockParser
- * @description AtomicBlockParser is a helper class for the HTMLGenerator. It parses
+ * @description AtomicBlockParser is a helper class for `editor3StateToHtml`. It parses
  * Editor3 atomic blocks (image, table, embed, etc.).
  * @param {Object} contentState
  * @param {Array=} disabled A set of disabled elements (ie. ['table'] will ignore tables.
@@ -152,7 +152,7 @@ export class AtomicBlockParser {
                 ? convertFromRaw(cells[i][j])
                 : ContentState.createFromText('');
 
-            return new HTMLGenerator(cellContentState, ['table']).html();
+            return editor3StateToHtml(cellContentState, ['table']);
         };
 
         let html = '<table>';

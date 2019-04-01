@@ -18,8 +18,8 @@ import {
 import {
     getUniqueStyleNamesInDraftSelection,
 } from './getUniqueStyleNamesInDraftSelection';
-import {toHTML} from '..';
 import {highlightsConfig} from '../highlightsConfig';
+import {editor3StateToHtml} from '../html/to-html/editor3StateToHtml';
 
 function getCustomMetadataFromContentState(contentState, highlightType): Array<{styleName: string, obj: any}> {
     const editorState = initializeHighlights(EditorState.createWithContent(contentState));
@@ -44,7 +44,7 @@ function getAnnotationsFromHighlights(highlights): Array<any> {
         id: index + 1, // count from 1
         index: index + 1, // count from 1
         type: obj.data.annotationType,
-        body: toHTML(convertFromRaw(JSON.parse(obj.data.msg))),
+        body: editor3StateToHtml(convertFromRaw(JSON.parse(obj.data.msg))),
     }));
 }
 

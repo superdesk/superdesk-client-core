@@ -121,7 +121,6 @@ The structure of this module (as of commit [`5e9d904`](https://github.com/superd
 │   ├── from-html                         // Create an Editor-compatible ContentState from HTML
 │   └── to-html                           // Create HTML from Editor's DraftJS ContentState
 │       ├── AtomicBlockParser.js          // Creates HTML from atomic blocks
-│       └── HTMLGenerator.js              // Wrapper classs for HTML generation
 ├── reducers
 │   ├── highlights                        // Highlights. See corresponding section in README document.
 │   │   ├── highlights.js                 // Contains a function to update highlights positions when content changes
