@@ -126,9 +126,4 @@ ul.list-view.list-without-items {
     p {
         display: inline;
     }
-
-    // Simulate a space between words.
-    p + p {
-        margin-left: 4px;
-    }
 }
