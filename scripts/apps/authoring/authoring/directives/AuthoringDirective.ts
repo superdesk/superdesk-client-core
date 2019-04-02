@@ -647,6 +647,9 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             }
 
             $scope.showCustomButtons = function(item) {
+                if ($location.path() === '/workspace/personal') {
+                    return false;
+                }
                 return item.task && item.task.desk && item.state !== 'draft' || $scope.dirty;
             };
 
