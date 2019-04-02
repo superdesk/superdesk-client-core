@@ -51,7 +51,10 @@ interface IProps {
  * @returns {Object} Redux store.
  */
 export default function createEditorStore(props: IProps, spellcheck, isReact = false) {
+    let disableSpellchecker = false;
     if (spellcheck != null) {
+        disableSpellchecker = props.disableSpellchecker || !spellcheck.isAutoSpellchecker;
+
         if (!props.disableSpellchecker) {
             spellcheck.setLanguage(props.language);
         }
@@ -59,7 +62,7 @@ export default function createEditorStore(props: IProps, spellcheck, isReact = f
 
     const content = getInitialContent(props);
 
-    const decorators = Editor3Base.getDecorator(props.disableSpellchecker || !spellcheck.isAutoSpellchecker);
+    const decorators = Editor3Base.getDecorator(disableSpellchecker);
     const showToolbar = !isEditorPlainText(props);
 
     const onChangeValue = isReact ? props.onChange : debounce(onChange.bind(props), props.debounce);
