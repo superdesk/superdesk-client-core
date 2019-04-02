@@ -28,7 +28,7 @@ export default function MetaPlaceDirective(places: IPlacesService) {
                 }
 
                 scope.loading = true;
-                places.search(name, scope.item.language, 'geonames')
+                places.searchGeonames(name, scope.item.language)
                     .then((results) => {
                         scope.loading = false;
                         scope.terms = results;

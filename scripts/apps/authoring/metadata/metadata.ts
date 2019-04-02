@@ -1011,7 +1011,7 @@ function MetaLocatorsDirective(places) {
             scope.searchLocator = (locatorToFind) => {
                 scope.$ctrl.selectedTerm = locatorToFind;
                 scope.loading = true;
-                return places.search(locatorToFind, scope.item.language, 'dateline')
+                return places.searchDateline(locatorToFind, scope.item.language)
                     .then(setLocators)
                     .finally(() => {
                         scope.$applyAsync(() => {
