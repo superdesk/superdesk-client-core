@@ -137,9 +137,11 @@ export function onChange(contentState, {plainText = false} = {}) {
     let objectToUpdate = pathToValueArray.length < 2 ?
         this.item :
         pathToValueArray.slice(0, -1).reduce((obj, pathSegment) => {
-            const nextObj = obj[pathSegment];
+            if (obj[pathSegment] == null) {
+                obj[pathSegment] = {};
+            }
 
-            return nextObj;
+            return obj[pathSegment];
         }, this.item);
 
     const fieldName = pathToValueArray[pathToValueArray.length - 1];
