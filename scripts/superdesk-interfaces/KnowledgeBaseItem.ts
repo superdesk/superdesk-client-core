@@ -4,7 +4,8 @@ export interface IKnowledgeBaseItem extends IDefaultApiFields {
     name: string;
     labels?: Array<string>;
     language: string;
-    definition: string;
+    definition_text: string;
+    definition_html: string;
 
     // http://cv.iptc.org/newscodes/cpnature/
     cpnat_type: 'cpnat:abstract' | 'cpnat:event' | 'cpnat:geoArea'
