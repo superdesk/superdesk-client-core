@@ -161,7 +161,7 @@ export class GenericListPageComponent<T extends IDefaultApiFields> extends React
                 if (typeof value === 'string') {
                     let trimmedValue = value.trim();
 
-                    if (trimmedValue.length > 1) {
+                    if (trimmedValue.length > 0) {
                         accumulator[key] = trimmedValue;
                         return accumulator;
                     } else {
