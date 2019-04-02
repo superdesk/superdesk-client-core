@@ -213,22 +213,8 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                     $scope.dirty = false;
                     _.merge($scope.item, res);
 
-                    if (res.cropData) {
-                        $scope.item.hasCrops = true;
-                    }
-
                     if (res.highlight) {
                         _previewHighlight(res._id);
-                    }
-
-                    // clonedeep associations so that diff can be calculated for saving next time.
-                    if (res.associations) {
-                        $scope.item.associations = _.cloneDeep(res.associations);
-                    }
-
-                    // cloneDeep fields_meta so that diff can be calculated on save
-                    if (res.fields_meta) {
-                        $scope.item.fields_meta = _.cloneDeep(res.fields_meta);
                     }
 
                     notify.success(gettext('Item updated.'));
