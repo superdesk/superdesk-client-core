@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import {connect} from 'react-redux';
 import {showPopup, PopupTypes} from '../../actions';
-import {toHTML} from 'core/editor3';
 import {convertFromRaw} from 'draft-js';
 import ng from 'core/services/ng';
 import {HighlightsPopupPositioner} from '../HighlightsPopupPositioner';
@@ -13,6 +12,7 @@ import {EditorHighlightsHeader} from '../../editorPopup/EditorHighlightsHeader';
 import {FluidRows} from '../../fluid-flex-rows/fluid-rows';
 import {FluidRow} from '../../fluid-flex-rows/fluid-row';
 import {gettext} from 'core/utils';
+import {editor3StateToHtml} from 'core/editor3/html/to-html/editor3StateToHtml';
 
 class Annotation extends React.Component<any, any> {
     static propTypes: any;
@@ -25,7 +25,7 @@ class Annotation extends React.Component<any, any> {
         const {name: type} = annotationTypes.find((t) => t.qcode === annotationType);
         const relativeDateString = moment(date).calendar();
         const absoluteDateString = moment(date).format('MMMM Do YYYY, h:mm:ss a');
-        const html = toHTML(convertFromRaw(JSON.parse(msg)));
+        const html = editor3StateToHtml(convertFromRaw(JSON.parse(msg)));
         const modal = ng.get('modal');
 
         const onEdit = () => _showPopup(PopupTypes.Annotation, {annotation, highlightId});

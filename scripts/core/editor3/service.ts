@@ -1,8 +1,8 @@
 import * as action from './actions';
 import {forEachMatch} from './helpers/find-replace';
-import {toHTML} from './html';
 import {clearHighlights} from './helpers/find-replace';
 import {getTansaHtml} from './helpers/tansa';
+import {editor3StateToHtml} from './html/to-html/editor3StateToHtml';
 
 /**
  * @type {Object} Redux stores
@@ -211,7 +211,7 @@ export class EditorService {
         const content = state.editorState.getCurrentContent();
         const cleanedContent = clearHighlights(content).content;
 
-        return toHTML(cleanedContent);
+        return editor3StateToHtml(cleanedContent);
     }
 
     /**
