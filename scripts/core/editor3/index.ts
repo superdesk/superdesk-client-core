@@ -24,5 +24,3 @@ export default angular.module('superdesk.core.editor3', ['superdesk.apps.spellch
         };
     }])
     .directive('sdEditor3', sdEditor3);
-
-export {toHTML} from './html';

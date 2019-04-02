@@ -84,7 +84,7 @@
 </div>
 <!-- END Create profile modal -->
 <!-- Edit profile modal -->
-<div sd-modal class="modal--large" data-model="!!editing" data-close="ctrl.toggleEdit()">
+<div sd-modal class="modal--large" data-model="editing" data-close="ctrl.toggleEdit()">
     <div class="modal__header"> <a href="" class="close" ng-click="ctrl.toggleEdit()"><i class="icon-close-small"></i></a>
         <h3 class="modal__heading">{{ :: 'Editing' | translate }} "{{ editing.form.label}}"</h3>
     </div>
@@ -111,13 +111,31 @@
                     <span ng-model="editing.form.editor.body_html.editor3" sd-switch></span><label>{{:: 'Editor3' | translate }}</label>
                 </div>
 
-                <div class="field">
-                    <div sd-wizard data-name="profile-settings-content-profiles" data-current-step="'header'">
+                <div class="field" ng-if="editing" ng-controller="ContentProfileFields as fields">
+                    <div sd-wizard data-name="profile-settings-content-profiles" data-current-step="'header'" ng-if="fields.sections">
                         <div sd-wizard-step data-title="{{ 'Header fields' | translate }}" data-code="header">
-                            <sd-content-schema-editor data-section-to-render="'header'" data-model="editing.form"></sd-content-schema-editor>
+                            <sd-content-schema-editor
+                                data-model="fields.model"
+                                data-fields="fields.fieldsById"
+                                data-enabled="fields.sections.header.enabled"
+                                data-available="fields.sections.header.available"
+                                data-on-remove="fields.remove(key)"
+                                data-on-toggle="fields.add(key, dest, position, 'header')"
+                                data-on-order-update="fields.reorder(key)"
+                                data-on-drag="fields.drag(start, end, key)"
+                            />
                         </div>
                         <div sd-wizard-step data-title="{{ :: 'Content fields' | translate }}" data-code="content">
-                            <sd-content-schema-editor data-section-to-render="'content'" data-model="editing.form"></sd-content-schema-editor>
+                            <sd-content-schema-editor
+                                data-model="fields.model"
+                                data-fields="fields.fieldsById"
+                                data-enabled="fields.sections.content.enabled"
+                                data-available="fields.sections.content.available"
+                                data-on-remove="fields.remove(key)"
+                                data-on-toggle="fields.add(key, dest, position, 'content')"
+                                data-on-order-update="fields.reorder(key)"
+                                data-on-drag="fields.drag(start, end, key)"
+                            />
                         </div>
                         <div sd-wizard-step data-title="{{ :: 'Widgets' | translate }}" data-code="widgets">
                             <sd-widgets-config initial-widgets-config="editing.form.widgets_config" on-update="saveContentProfileWidgetsConfig"></sd-widgets-config>

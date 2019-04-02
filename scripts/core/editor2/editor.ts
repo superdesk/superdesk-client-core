@@ -11,7 +11,7 @@ import MediumEditor from 'medium-editor';
 import MediumEditorTable from 'medium-editor-tables';
 import _ from 'lodash';
 import {get} from 'lodash';
-import {gettext} from 'core/utils';
+import {gettext, escapeRegExp} from 'core/utils';
 
 import './customAnchor';
 
@@ -71,18 +71,6 @@ function HistoryStack(initialValue) {
     this.getIndex = function() {
         return index;
     };
-}
-
-/**
- * Escape given string for reg exp
- *
- * @url https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
- *
- * @param {string} string
- * @return {string}
- */
-function escapeRegExp(string) {
-    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 EditorService.$inject = ['spellcheck', '$q', 'renditions', 'editorUtils'];

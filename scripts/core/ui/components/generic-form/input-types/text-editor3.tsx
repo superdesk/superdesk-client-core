@@ -3,9 +3,9 @@ import classNames from 'classnames';
 import {IInputType} from '../interfaces/input-types';
 import {RawDraftContentState, convertFromRaw, ContentState, convertToRaw} from 'draft-js';
 import {Editor3Standalone} from 'core/editor3/react';
-import {HTMLGenerator} from 'core/editor3/html/to-html/HTMLGenerator';
 import {UserHtmlSingleLine} from 'core/helpers/UserHtmlSingleLine';
 import {getContentStateFromHtml} from 'core/editor3/html/from-html';
+import {editor3StateToHtml} from 'core/editor3/html/to-html/editor3StateToHtml';
 
 type IProps = IInputType<string>;
 
@@ -31,10 +31,10 @@ export class TextEditor3 extends React.Component<IProps, IState> {
     }
     handleChange(rawDraftContentState: RawDraftContentState): void {
         this.setState({rawDraftContentState});
-        this.props.onChange(new HTMLGenerator(convertFromRaw(rawDraftContentState)).html());
+        this.props.onChange(editor3StateToHtml(convertFromRaw(rawDraftContentState)));
     }
     componentDidUpdate() {
-        if (this.props.value !== new HTMLGenerator(convertFromRaw(this.state.rawDraftContentState)).html()) {
+        if (this.props.value !== editor3StateToHtml(convertFromRaw(this.state.rawDraftContentState))) {
             // This component holds it's own state which is derived from props
             // internal state is reloaded when it doesn't match with what's in the props
             // holding own state is required to prevent infinite loops which would happen because

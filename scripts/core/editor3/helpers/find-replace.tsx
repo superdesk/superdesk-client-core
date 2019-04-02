@@ -1,5 +1,6 @@
 import {Modifier, EditorState, EditorChangeType, SelectionState} from 'draft-js';
 import {getData, setDataForContent, getCell, setCell} from './table';
+import {escapeRegExp} from 'core/utils';
 
 /**
  * @name clearHighlights
@@ -78,7 +79,7 @@ export const forEachBlock = (content, cb) => {
  * @description Iterates the table content and calls the given callback
  * for each block, passing it current index, block and content.
  */
-export const forEachBlockInTable = (content, block, _blockIndex, cb) => {
+const forEachBlockInTable = (content, block, _blockIndex, cb) => {
     const key = block.getKey();
     const selection = createSelection(key, 0, 1);
     const data = getData(content, key);
@@ -151,7 +152,7 @@ export const forEachMatch = (content, pattern, caseSensitive, cb) => {
  * @description Searches the block for the given pattern and calls the given callback
  * for each occurrence, passing it the index of the match and its SelectionState.
  */
-export const forEachMatchInParagraph = (content, block, pattern, caseSensitive, _matchIndex, cb) => {
+const forEachMatchInParagraph = (content, block, pattern, caseSensitive, _matchIndex, cb) => {
     const re = getRegExp({pattern, caseSensitive});
     const key = block.getKey();
     const text = block.getText();
@@ -164,9 +165,10 @@ export const forEachMatchInParagraph = (content, block, pattern, caseSensitive, 
     while (match = re.exec(text)) {
         newContent = cb(
             ++matchIndex,
-            createSelection(key, match.index, match.index + pattern.length),
+            createSelection(key, match.index, match.index + match[0].length),
             block,
             newContent,
+            match[0],
         );
     }
 
@@ -185,7 +187,7 @@ export const forEachMatchInParagraph = (content, block, pattern, caseSensitive, 
  * @description Searches the table content for the given pattern and calls the given callback
  * for each occurrence, passing it the index of the match and its SelectionState.
  */
-export const forEachMatchInTable = (content, block, pattern, caseSensitive, _matchIndex, cb) => {
+const forEachMatchInTable = (content, block, pattern, caseSensitive, _matchIndex, cb) => {
     const key = block.getKey();
     const selection = createSelection(key, 0, 1);
     const data = getData(content, key);
@@ -213,8 +215,9 @@ export const forEachMatchInTable = (content, block, pattern, caseSensitive, _mat
     return {newContent, matchIndex};
 };
 
-export const getRegExp = ({pattern, caseSensitive}) =>
-    new RegExp(pattern.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'g' + (caseSensitive ? '' : 'i'));
+// create reg exp from pattern if neede
+const getRegExp = ({pattern, caseSensitive}) =>
+    typeof pattern === 'string' ? new RegExp(escapeRegExp(pattern), 'g' + (caseSensitive ? '' : 'i')) : pattern;
 
 /**
  * @name quietPush

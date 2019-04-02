@@ -809,6 +809,7 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                     }));
 
                     o[scope.field] = t;
+
                     _.extend(scope.item, o);
                 }
             }
@@ -940,6 +941,12 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                         scope.list.find((item) => item[scope.uniqueField] === preferedItem[scope.uniqueField]))
                     .filter((item) => item != null); // filter out items missing in cv
             }
+
+            scope.$on('clear: selectedUsageTerms', (e) => {
+                scope.selectedItems = [];
+                scope.activeTree = scope.tree.null;
+                scope.allSelected = false;
+            });
         },
     };
 }
