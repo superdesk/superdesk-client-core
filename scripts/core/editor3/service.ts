@@ -240,6 +240,7 @@ export class EditorService {
      * If the simpleReplace is true try to preserve the existing inline styles and entities
      */
     setHtmlFromTansa(html, simpleReplace = false) {
+        console.info('set', html, ok());
         if (ok()) {
             store.dispatch(action.setHtmlFromTansa(html, simpleReplace));
         }
