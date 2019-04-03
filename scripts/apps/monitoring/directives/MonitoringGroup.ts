@@ -310,6 +310,10 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             scope.refreshGroup = function() {
                 monitoring.showRefresh = scope.showRefresh = false;
                 scheduleQuery(null, {force: true});
+                // update scroll position to top when forced refresh
+                if (containerElem[0].scrollTop > 0) {
+                    containerElem[0].scrollTop = 0;
+                }
             };
 
             function updateGroupStyle() {
@@ -339,11 +343,13 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             function scheduleQuery(event, data) {
                 if (!queryTimeout) {
                     queryTimeout = $timeout(() => {
-                        queryItems(event, data, {auto: (data && data.force) ? 0 : 1});
-                        scope.$applyAsync(() => {
-                            // ignore any updates requested in current $digest
-                            queryTimeout = null;
-                        });
+                        queryItems(event, data, {auto: (data && data.force) ? 0 : 1})
+                            .finally(() => {
+                                scope.$applyAsync(() => {
+                                    // ignore any updates requested in current $digest
+                                    queryTimeout = null;
+                                });
+                            });
                     }, 1000, false);
                 }
             }
@@ -465,7 +471,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                     multi.reset();
                 }
 
-                (function() {
+                return (function() {
                     if (scope.customDataSource != null && typeof scope.customDataSource.getItems === 'function') {
                         return scope.customDataSource.getItems(0, PAGE_SIZE);
                     } else {
@@ -535,12 +541,6 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                         } else {
                             // update scope items only with the matching fetched items
                             scope.items = search.updateItems(items, scope.items);
-                        }
-                    })
-                    .finally(() => {
-                        // update scroll position to top, when forced refresh
-                        if (data && data.force) {
-                            containerElem[0].scrollTop = 0;
                         }
                     });
             }
