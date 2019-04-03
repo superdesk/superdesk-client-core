@@ -51,7 +51,7 @@ interface IProps {
  * @returns {Object} Redux store.
  */
 export default function createEditorStore(props: IProps, spellcheck, isReact = false) {
-    let disableSpellchecker = false;
+    let disableSpellchecker = true;
     if (spellcheck != null) {
         disableSpellchecker = props.disableSpellchecker || !spellcheck.isAutoSpellchecker;
 
