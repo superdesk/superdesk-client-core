@@ -1,35 +1,64 @@
 import {omit} from 'lodash';
 
 interface IGeoname {
+    /** name of the place */
     name: string;
-    code: string;
 
     state: string;
-    country: string;
-
     state_code: string;
+
+    country: string;
     country_code: string;
 
+    /** timezone identifier, eg. Europe/Prague */
     tz: string;
-    scheme: string;
+
+    /** geonames id */
+    code: string;
+
+    scheme: 'geonames';
 }
 
 interface ILocated {
-    dateline: string;
-    country_code: string;
-    city_code: string;
-    tz: string;
-    state_code: string;
-    state: string;
+    /** dateline format - list of fields which should be used to identify the place */
+    dateline: 'city' | 'city,state' | 'city,country' | 'city,state,country';
+
     city: string;
-    alt_name: string;
+    state: string;
     country: string;
-    code: string;
+
+    city_code: string;
+    state_code: string;
+    country_code: string;
+
+    /** timezone identifier, eg. Europe/Prague  */
+    tz: string;
+
+    /** scheme identifier */
     scheme: string;
+
+    /** code for place in the scheme */
+    code: string;
 }
 
 export interface IPlacesService {
+
+    /**
+     * Search for dateline
+     *
+     * it will use geonames if available, cities cv otherwise
+     *
+     * @param name part of the name to search for
+     * @param lang language to use for search
+     */
     searchDateline: (name: string, lang: string) => Promise<Array<IGeoname>>;
+
+    /**
+     * Search for place using geonames
+     *
+     * @param name part of the name to search for
+     * @param lang language to use for search
+     */
     searchGeonames: (name: string, lang: string) => Promise<Array<ILocated>>;
 }
 
@@ -44,7 +73,6 @@ export default function PlacesServiceFactory(api, features, metadata) {
         state_code: data.state_code,
         state: data.state,
         city: data.name,
-        alt_name: '',
         country: data.country,
         code: data.code,
         scheme: data.scheme,
@@ -52,26 +80,12 @@ export default function PlacesServiceFactory(api, features, metadata) {
 
     class PlacesService implements IPlacesService {
 
-        /**
-         * Search for dateline
-         *
-         * it will use geonames if available, cities cv otherwise
-         *
-         * @param name
-         * @param lang
-         */
         searchDateline(name: string, lang: string) {
             return this._searchGeonames(name, lang, true)
                 .then((geonames) => geonames.map(geonameToCity))
                 .catch(() => this._searchCities(name));
         }
 
-        /**
-         * Search for place using geonames
-         *
-         * @param name
-         * @param lang
-         */
         searchGeonames(name: string, lang: string) {
             return this._searchGeonames(name, lang);
         }
