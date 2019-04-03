@@ -109,9 +109,25 @@ export class GenericListPageComponent<T extends IDefaultApiFields> extends React
         });
     }
     deleteItem(item: T) {
-        this.props.modal.confirm(gettext('Are you sure you want to delete this item?')).then(() => {
-            this.props.items.delete(item);
-        });
+        const deleteNow = () => this.props.items.delete(item);
+
+        this.props.modal.confirm(gettext('Are you sure you want to delete this item?'))
+            .then(() => {
+                if (this.state.preview.editMode) {
+                    this.props.modal.alert({
+                        headerText: gettext('Warning'),
+                        bodyText: gettext(
+                            'The item in edit mode must be closed before you can delete.',
+                        ),
+                    });
+                } else if (this.state.preview.itemId != null) {
+                    this.setState({
+                        preview: {itemId: null, editMode: false},
+                    }, deleteNow);
+                } else {
+                    deleteNow();
+                }
+            });
     }
     startEditing(id) {
         if (this.state.preview.editMode === true) {
@@ -199,7 +215,7 @@ export class GenericListPageComponent<T extends IDefaultApiFields> extends React
             this.props.modal.alert({
                 headerText: gettext('Warning'),
                 bodyText: gettext(
-                    'Items in edit mode must be closed before you can filter.',
+                    'The item in edit mode must be closed before you can filter.',
                 ),
             });
         } else if (this.state.preview.itemId != null) {
