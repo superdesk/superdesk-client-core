@@ -33,7 +33,7 @@ function getFormForFiltering(form: Array<IFormField | IFormGroup>): Array<IFormF
         if (isIFormGroup(item)) {
             return getFormGroupForFiltering(item);
         } else if (isIFormField(item)) {
-            return {...item, type: getFieldTypeForFiltering(item.type)};
+            return {...item, type: getFieldTypeForFiltering(item.type), required: false};
         } else {
             return assertNever(item);
         }
