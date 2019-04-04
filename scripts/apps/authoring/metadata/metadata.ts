@@ -1223,6 +1223,16 @@ function MetadataService(api, subscribersService, config, vocabularies, $rootSco
                 });
             }
         },
+        fetchEventsPlanningFilters: function() {
+            var self = this;
+
+            if ($rootScope.features.events_planning_filters) {
+                return api.get('/events_planning_filters').then((result) => {
+                    self.values.eventsPlanningFilters = _.get(result, '_items', [])
+                        .map((item) => ({name: item.name, qcode: item._id}));
+                });
+            }
+        },
         getFilteredCustomVocabularies: function(qcodes) {
             return this.fetchMetadataValues().then(() => this.cvs.filter((cv) => {
                 var cvService = cv.service || {};
@@ -1282,7 +1292,9 @@ function MetadataService(api, subscribersService, config, vocabularies, $rootSco
                     .then(angular.bind(this, this.fetchSubjectcodes))
                     .then(angular.bind(this, this.fetchAuthors))
                     .then(angular.bind(this, this.fetchSubscribers))
-                    .then(angular.bind(this, this.fetchAgendas));
+                    .then(angular.bind(this, this.fetchCities))
+                    .then(angular.bind(this, this.fetchAgendas))
+                    .then(angular.bind(this, this.fetchEventsPlanningFilters));
             }
 
             return this.loaded;

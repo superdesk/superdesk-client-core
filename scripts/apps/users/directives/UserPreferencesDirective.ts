@@ -220,7 +220,12 @@ export function UserPreferencesDirective(
                 // values object is undefined or any of the needed
                 // data buckets are missing in it
                 buckets = [
-                    'categories', 'default_categories', 'locators', 'calendars', 'agendas',
+                    'categories',
+                    'default_categories',
+                    'locators',
+                    'calendars',
+                    'agendas',
+                    'eventsPlanningFilters',
                 ];
 
                 initNeeded = buckets.some((bucketName) => {
@@ -255,6 +260,11 @@ export function UserPreferencesDirective(
                 // If the planning module is installed we save a list of the available agendas
                 if (scope.features.agenda) {
                     scope.agendas = helperData.agendas;
+                }
+
+                // If the planning module is installed we save a list of the available events_planning_filters
+                if (scope.features.events_planning_filters) {
+                    scope.eventsPlanningFilters = helperData.eventsPlanningFilters;
                 }
 
                 // A list of category codes that are considered
