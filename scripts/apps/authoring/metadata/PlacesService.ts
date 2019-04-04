@@ -1,7 +1,7 @@
 import {omit} from 'lodash';
 
 interface IGeoname {
-    /** name of the place */
+    /** name of the place, eg. Prague */
     name: string;
 
     state: string;
@@ -13,7 +13,7 @@ interface IGeoname {
     /** timezone identifier, eg. Europe/Prague */
     tz: string;
 
-    /** geonames id */
+    /** geonames id, eg. "3073494" */
     code: string;
 
     scheme: 'geonames';
@@ -41,6 +41,9 @@ interface ILocated {
     code: string;
 }
 
+/**
+ * Search service for populated places (city, village)
+ */
 export interface IPlacesService {
 
     /**
@@ -48,18 +51,18 @@ export interface IPlacesService {
      *
      * it will use geonames if available, cities cv otherwise
      *
-     * @param name part of the name to search for
-     * @param lang language to use for search
+     * @param query must be included in place name
+     * @param lang ISO-639 2-letter language code (en)
      */
-    searchDateline: (name: string, lang: string) => Promise<Array<IGeoname>>;
+    searchDateline: (query: string, lang: string) => Promise<Array<IGeoname>>;
 
     /**
      * Search for place using geonames
      *
-     * @param name part of the name to search for
-     * @param lang language to use for search
+     * @param query must be included in place name
+     * @param lang ISO-639 2-letter language code (en)
      */
-    searchGeonames: (name: string, lang: string) => Promise<Array<ILocated>>;
+    searchGeonames: (query: string, lang: string) => Promise<Array<ILocated>>;
 }
 
 PlacesServiceFactory.$inject = ['api', 'features', 'metadata'];
@@ -80,14 +83,14 @@ export default function PlacesServiceFactory(api, features, metadata) {
 
     class PlacesService implements IPlacesService {
 
-        searchDateline(name: string, lang: string) {
-            return this._searchGeonames(name, lang, true)
+        searchDateline(query: string, lang: string) {
+            return this._searchGeonames(query, lang, true)
                 .then((geonames) => geonames.map(geonameToCity))
                 .catch(() => this._searchCities(name));
         }
 
-        searchGeonames(name: string, lang: string) {
-            return this._searchGeonames(name, lang);
+        searchGeonames(query: string, lang: string) {
+            return this._searchGeonames(query, lang);
         }
 
         _searchCities(name: string) {
