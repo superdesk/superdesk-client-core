@@ -149,25 +149,40 @@
                     </div>
                 </div>
             </li>
-            <li class="simple-list__item terms-box" ng-if="showPlanning()">
+            <li class="simple-list__item" ng-if="showPlanning()">
                 <div class="user-preferences__heading" translate>Planning</div>
                 <div sd-info-item>
-                    <label translate>Default Calendar</label>
-                    <span sd-meta-dropdown
-                          data-item="preferences['planning:calendar'].calendar"
-                          data-list="calendars"
-                          data-key="qcode"
-                          data-field="qcode"
-                          data-change="articleDefaultsChanged(item)"></span>
+                    <label class="form-label" translate>Default Calendar</label>
+                    <div class="form__row form__row--s-padding">
+                        <span sd-meta-dropdown
+                              data-item="preferences['planning:calendar'].calendar"
+                              data-list="calendars"
+                              data-key="qcode"
+                              data-field="qcode"
+                              data-change="articleDefaultsChanged(item)"></span>
+                    </div>
                 </div>
                 <div sd-info-item>
-                    <label translate>Default Agenda</label>
-                    <span sd-meta-dropdown
-                          data-item="preferences['planning:agenda'].agenda"
-                          data-list="agendas"
-                          data-key="name"
-                          data-field="name"
-                          data-change="articleDefaultsChanged(item)"></span>
+                    <label class="form-label" translate>Default Agenda</label>
+                    <div class="form__row form__row--s-padding">
+                        <span sd-meta-dropdown
+                              data-item="preferences['planning:agenda'].agenda"
+                              data-list="agendas"
+                              data-key="name"
+                              data-field="name"
+                              data-change="articleDefaultsChanged(item)"></span>
+                    </div>
+                </div>
+                <div sd-info-item>
+                    <label class="form-label" translate>Default Events & Planning Filter</label>
+                    <div class="form__row form__row--s-padding">
+                        <span sd-meta-dropdown
+                              data-item="preferences['planning:events_planning_filter'].filter"
+                              data-list="eventsPlanningFilters"
+                              data-key="qcode"
+                              data-field="qcode"
+                              data-change="articleDefaultsChanged(item)"></span>
+                    </div>
                 </div>
             </li>
 
