@@ -258,7 +258,7 @@ function AuthoringWidgetsDir(desks, commentsService, $injector) {
                 if (order < 10) {
                     return `ctrl+alt+${order}`;
                 } else if (order === 10) {
-                    return `ctrl+alt+0`;
+                    return 'ctrl+alt+0';
                 } else if (order > 10) {
                     return `ctrl+alt+shift+${order - 10}`;
                 }

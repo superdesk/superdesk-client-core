@@ -106,7 +106,6 @@ export function ContentProfileSchemaEditor(vocabularies) {
             onDrag: '&',
         },
         link: function(scope: IScope, elem, attr, form) {
-
             scope.formattingOptions = FORMATTING_OPTIONS;
             scope.formattingOptionsEditor3 = FORMATTING_OPTIONS_EDITOR3;
 

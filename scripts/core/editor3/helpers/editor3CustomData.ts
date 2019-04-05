@@ -75,6 +75,7 @@ export function setAllCustomDataForEditor(editorState, value: {[key: string]: an
     }) as ContentState;
 
     let editorStateNext = EditorState.set(editorState, {allowUndo: false});
+
     editorStateNext = EditorState.push(editorStateNext, nextContentState, 'change-block-data');
     editorStateNext = EditorState.set(editorStateNext, {allowUndo: true});
 

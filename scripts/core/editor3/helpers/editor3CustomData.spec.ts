@@ -1,3 +1,5 @@
+/* eslint-disable newline-per-chained-call */
+
 import {ignoreInternalAnnotationFields} from '../store';
 import inputJson from './editor3CustomData.snapshot.input.json';
 import outputJson from './editor3CustomData.snapshot.output.json';
@@ -42,18 +44,21 @@ describe('setAllCustomDataForEditor', () => {
         expect(editorState2.getSelection().getFocusOffset()).toBe(6);
 
         const editorState3 = setAllCustomDataForEditor(editorState2, {testData: 'str'});
+
         expect(editorState3.getSelection().getAnchorOffset()).toBe(6);
         expect(editorState3.getSelection().getFocusOffset()).toBe(6);
         expect(
             JSON.stringify(editorState3.getCurrentContent().getFirstBlock().getData().toJS()),
-        ).toBe(`{"testData":"str"}`);
+        ).toBe('{"testData":"str"}');
 
         const editorState4 = EditorState.undo(editorState3);
+
         expect(editorState4.getCurrentContent().getFirstBlock().getText()).toBe('test');
         expect(editorState4.getSelection().getAnchorOffset()).toBe(3);
         expect(editorState4.getSelection().getFocusOffset()).toBe(3);
 
         const editorState5 = EditorState.redo(editorState3);
+
         expect(editorState5.getSelection().getAnchorOffset()).toBe(6);
         expect(editorState5.getSelection().getFocusOffset()).toBe(6);
     });

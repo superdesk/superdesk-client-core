@@ -755,6 +755,7 @@ function getLeftRangeAndTextForStyle(editorState, style) {
 }
 
 function getRightRangeAndTextForStyle(editorState, style) {
+    /* eslint-disable complexity */
     const type = getHighlightTypeFromStyleName(style);
     const selection = editorState.getSelection();
     const content = editorState.getCurrentContent();

@@ -3,7 +3,7 @@ import {EditorState, ContentState, SelectionState, convertFromRaw, RawDraftConte
 import {cursorAtEndPosition, cursorAtPosition} from './utils';
 import {Editor3Component} from '../Editor3Component';
 import {insertContentInState} from '../handlePastedText';
-import { getAnnotationsFromContentState } from 'core/editor3/helpers/editor3CustomData';
+import {getAnnotationsFromContentState} from 'core/editor3/helpers/editor3CustomData';
 
 const stubForHighlights = {
     highlightsManager: {
@@ -83,8 +83,9 @@ describe('editor3.handlePastedText', () => {
 
     describe('insertContentInState', () => {
         it('should maintain the data stored on the first block after pasting', () => {
-            // tslint:disable-next-line:max-line-length whitespace
-            const rawState: RawDraftContentState = {"blocks":[{"key":"38k8j","text":"","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{"MULTIPLE_HIGHLIGHTS":{"lastHighlightIds":{"COMMENT":0,"ANNOTATION":1,"ADD_SUGGESTION":0,"DELETE_SUGGESTION":0,"TOGGLE_BOLD_SUGGESTION":0,"TOGGLE_ITALIC_SUGGESTION":0,"TOGGLE_UNDERLINE_SUGGESTION":0,"TOGGLE_SUBSCRIPT_SUGGESTION":0,"TOGGLE_SUPERSCRIPT_SUGGESTION":0,"TOGGLE_STRIKETHROUGH_SUGGESTION":0,"BLOCK_STYLE_SUGGESTION":0,"SPLIT_PARAGRAPH_SUGGESTION":0,"MERGE_PARAGRAPHS_SUGGESTION":0,"DELETE_EMPTY_PARAGRAPH_SUGGESTION":0,"ADD_LINK_SUGGESTION":0,"REMOVE_LINK_SUGGESTION":0,"CHANGE_LINK_SUGGESTION":0},"highlightsStyleMap":{"ANNOTATION-1":{"borderBottom":"4px solid rgba(100, 205, 0, 0.6)"}},"highlightsData":{"ANNOTATION-1":{"data":{"msg":"{\"blocks\":[{\"key\":\"67k35\",\"text\":\"test annotation\",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}","annotationType":"regular","authorId":"5acb79292e03ed5d2a84bbd6","author":"John Doe","email":"a@a.com","date":"2019-04-05T10:41:55.672Z","avatar":null},"type":"ANNOTATION"}}}}},{"key":"eh526","text":"second line","type":"unstyled","depth":0,"inlineStyleRanges":[{"offset":7,"length":4,"style":"ANNOTATION-1"}],"entityRanges":[],"data":{}}],"entityMap":{}};
+            // tslint:disable
+            /* eslint-disable */
+            const rawState: any = {"blocks":[{"key":"38k8j","text":"","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{"MULTIPLE_HIGHLIGHTS":{"lastHighlightIds":{"COMMENT":0,"ANNOTATION":1,"ADD_SUGGESTION":0,"DELETE_SUGGESTION":0,"TOGGLE_BOLD_SUGGESTION":0,"TOGGLE_ITALIC_SUGGESTION":0,"TOGGLE_UNDERLINE_SUGGESTION":0,"TOGGLE_SUBSCRIPT_SUGGESTION":0,"TOGGLE_SUPERSCRIPT_SUGGESTION":0,"TOGGLE_STRIKETHROUGH_SUGGESTION":0,"BLOCK_STYLE_SUGGESTION":0,"SPLIT_PARAGRAPH_SUGGESTION":0,"MERGE_PARAGRAPHS_SUGGESTION":0,"DELETE_EMPTY_PARAGRAPH_SUGGESTION":0,"ADD_LINK_SUGGESTION":0,"REMOVE_LINK_SUGGESTION":0,"CHANGE_LINK_SUGGESTION":0},"highlightsStyleMap":{"ANNOTATION-1":{"borderBottom":"4px solid rgba(100, 205, 0, 0.6)"}},"highlightsData":{"ANNOTATION-1":{"data":{"msg":"{\"blocks\":[{\"key\":\"67k35\",\"text\":\"test annotation\",\"type\":\"unstyled\",\"depth\":0,\"inlineStyleRanges\":[],\"entityRanges\":[],\"data\":{}}],\"entityMap\":{}}","annotationType":"regular","authorId":"5acb79292e03ed5d2a84bbd6","author":"John Doe","email":"a@a.com","date":"2019-04-05T10:41:55.672Z","avatar":null},"type":"ANNOTATION"}}}}},{"key":"eh526","text":"second line","type":"unstyled","depth":0,"inlineStyleRanges":[{"offset":7,"length":4,"style":"ANNOTATION-1"}],"entityRanges":[],"data":{}}],"entityMap":{}};
 
             const contentState = convertFromRaw(rawState);
 

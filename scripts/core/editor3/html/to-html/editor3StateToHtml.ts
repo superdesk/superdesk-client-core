@@ -9,9 +9,7 @@ export const editor3StateToHtml = (
     disabled: Array<string> = [], // A set of disabled elements (ie. ['table'] will ignore
 ) => {
     const annotationsByStyleName = getAnnotationsFromContentState(contentState)
-        .reduce((accumulator, item) => {
-            return {...accumulator, [item.styleName]: item};
-        }, {});
+        .reduce((accumulator, item) => ({...accumulator, [item.styleName]: item}), {});
 
     let options = {
         inlineStyles: {
