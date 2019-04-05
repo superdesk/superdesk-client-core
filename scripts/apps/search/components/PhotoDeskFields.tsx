@@ -1,12 +1,20 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import * as fields from '../components/fields';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 import {connectPromiseResults} from 'core/helpers/ReactRenderAsync';
 
-const availablelabelModes = ['always', 'never', 'never-with-custom-renderer'];
+interface IProps {
+    svc: any;
+    item: any;
+    fieldsConfig: any;
+    labelMode?: 'always' | 'never' | 'never-with-custom-renderer';
+    itemClassName: string;
 
-export const PhotoDeskFieldsComponent: React.StatelessComponent<any> = (props) => {
+    // connected
+    getLabelForFieldId?: any;
+}
+
+export const PhotoDeskFieldsComponent: React.StatelessComponent<IProps> = (props) => {
     const {item, getLabelForFieldId, itemClassName} = props;
 
     return props.fieldsConfig
@@ -37,15 +45,6 @@ export const PhotoDeskFieldsComponent: React.StatelessComponent<any> = (props) =
         });
 };
 
-export const PhotoDeskFields: React.StatelessComponent<any> = connectPromiseResults(() => ({
+export const PhotoDeskFields = connectPromiseResults<IProps>(() => ({
     getLabelForFieldId: getLabelNameResolver(),
 }))(PhotoDeskFieldsComponent);
-
-PhotoDeskFieldsComponent.propTypes = {
-    svc: PropTypes.object.isRequired,
-    item: PropTypes.any,
-    getLabelForFieldId: PropTypes.func.isRequired,
-    fieldsConfig: PropTypes.array,
-    labelMode: PropTypes.oneOf(availablelabelModes),
-    itemClassName: PropTypes.string,
-};

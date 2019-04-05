@@ -1,82 +1,10 @@
 <sd-settings-view>
     <div class="sd-page__main-content">
-        <div class="sd-page__header sd-page__header--white">
-            <h2 class="sd-page__page-heading" translate>Internal Destinations</h2>
-        </div>
-        <div class="sd-page__header">
-            <sd-search-handler ng-model="query.name" data-debounce="200"></sd-search-handler>    
-            <sd-check type="radio" ng-model="active_only" label-position="inside" style="margin-left: 0;">{{:: 'All'| translate}}</sd-check>
-            <sd-check type="radio" ng-model="active_only" label-position="inside" ng-value="true" ng-checked="true">{{:: 'Active only'| translate}}</sd-check>
-            <span class="sd-page__element-grow"></span>
-            <button class="btn btn--primary" ng-click="dest.create()">
-                <i class="icon-plus-sign icon--white"></i>{{ :: 'Add New' | translate }}
-            </button>
-        </div>
-        <div class="sd-page__content">
-            <ul class="sd-list-item-group sd-list-item-group--space-between-items" style="max-width: 1000px;">
-                <li ng-repeat="destination in dest.destinations | filter: query track by destination._id"
-                    ng-class="{inactive: !destination.is_active}" ng-show="!active_only || (active_only && destination.is_active)"
-                    class="sd-list-item sd-shadow--z1">
-                    <div class="sd-list-item__border"></div>
-                    <div class="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border">
-                        <div class="sd-list-item__row">
-                            <span class="sd-overflow-ellipsis sd-list-item--element-grow">{{ destination.name}}</span>
-                            <span class="label label--hollow label--alert" ng-show="!destination.is_active" translate>Inactive</span>
-                        </div>
-                    </div>
-                    
-                    <div class="sd-list-item__action-menu sd-list-item__action-menu--direction-row">
-                        <button class="icn-btn" ng-click="dest.edit(destination)" title="{{:: 'Edit' | translate }}"><i class="icon-pencil"></i></button>
-                        <button class="icn-btn" ng-click="dest.remove(destination)" title="{{:: 'Remove' | translate }}"><i class="icon-trash"></i></button>
-                    </div>
-                </li>
-                <li class="sd-list-item sd-list-item--no-hover sd-shadow--z1" ng-show="dest.destinations.length === 0">
-                    <div class="sd-list-item__border"></div>
-                    <div class="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border">
-                        <div class="sd-list-item__row">
-                            <span class="sd-overflow-ellipsis sd-list-item--element-grow" translate>There are no destinations defined.</span>
-                        </div>
-                    </div>
-                </li>
-            </ul>
+        <div className="sd-page__content" style="height: 100%; display: flex;flex-direction: column;">
+            <div class="sd-page__header sd-page__header--white">
+                <h2 class="sd-page__page-heading" translate>Internal Destinations</h2>
+            </div>
+            <sd-internal-destinations style="display: contents"></sd-internal-destinations>
         </div>
     </div>
 </sd-settings-view>
-
-<div sd-modal data-model="dest.active" class="modal--large">
-    <div class="modal__header modal__header--flex">
-        <h3 class="modal__heading" ng-show="!dest.active._id" translate>Add New Destination</h3>
-        <h3 class="modal__heading" ng-show="dest.active._id" translate>Edit Destination</h3>
-        <a href="" class="icn-btn" ng-click="dest.stopEdit()"><i class="icon-close-small"></i></a>
-    </div>
-    <div class="modal__body">
-        <form name="editForm">
-            <fieldset>
-                <div class="form__row">
-                    <span sd-switch ng-model="dest.active.is_active"></span><label ng-click="dest.active.is_active = !dest.active.is_active" translate>Active</label> 
-                </div>
-                <div class="form__row">
-                    <div class="sd-line-input sd-line-input--required sd-line-input--boxed">
-                        <label for="dest-name" class="sd-line-input__label" translate>Destination name</label>
-                        <input id="dest-name" type="text" class="sd-line-input__input" ng-model="dest.active.name" required>
-                    </div>
-                </div>
-                <div class="form__row">
-                    <div sd-content-filter-select data-model="dest.active.filter"></div>
-                </div>
-                <div class="form__row">
-                    <div sd-action-picker
-                        data-desk="dest.active.desk"
-                        data-stage="dest.active.stage"
-                        data-macro="dest.active.macro"
-                        data-required="{desk: true}">
-                    </div>
-                </div>
-            </fieldset>
-        </form>
-    </div>
-    <div class="modal__footer">
-        <button class="btn" ng-click="dest.stopEdit()" translate>Cancel</button>
-        <button class="btn btn--primary" ng-click="dest.save(dest.active)" ng-disabled="editForm.$invalid || !editForm.$dirty" translate>Save</button>
-    </div>
-</div>

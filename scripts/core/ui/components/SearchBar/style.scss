@@ -2,7 +2,7 @@
     .search-handler {
         display: flex;
         height: 47px;
-        box-shadow: inset 7px 0 10px -7px rgba(0, 0, 0, 0.5);
+        border-left: 1px solid #e0e0e0;
         input {
             flex-grow: 1;
         }

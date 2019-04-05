@@ -249,7 +249,6 @@
                 width: auto;
                 padding: 0 6px;
             }
-            background: #fff;
             border-right: 1px solid #e0e0e0;
         }
         .separator-handler {
@@ -1945,6 +1944,7 @@ sd-multi-image-edit {
 
 .sd-wrap-helper {
     display: contents !important;
+
 }
 .subnav {
     z-index: 5;
@@ -1952,3 +1952,4 @@ sd-multi-image-edit {
 .subnav + .subnav {
     z-index: 4;
 }
+

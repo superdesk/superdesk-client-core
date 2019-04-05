@@ -1,3 +1,5 @@
+/* tslint:disable:max-line-length */
+/* eslint-disable max-len */
 
 describe('Image Crop', () => {
     beforeEach(window.module('superdesk.core.upload'));

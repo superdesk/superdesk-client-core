@@ -1,15 +1,49 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Dropdown} from 'core/ui/components';
-import {Editor} from 'core/editor3';
 import {connect} from 'react-redux';
-import {convertToRaw} from 'draft-js';
+
+import {convertToRaw, ContentState, SelectionState, EditorState, RawDraftContentState, convertFromRaw} from 'draft-js';
 import {highlightsConfig} from '../../highlightsConfig';
 import {getAuthorInfo} from '../../actions';
 import {connectPromiseResults} from 'core/helpers/ReactRenderAsync';
 import {hidePopups} from '../../actions';
 import ng from 'core/services/ng';
 import {gettext} from 'core/utils';
+import {Editor3Standalone} from 'core/editor3/react';
+import {AnnotationInputDefault} from './AnnotationInputDefault';
+import {getContentStateFromHtml} from 'core/editor3/html/from-html';
+
+// used in superdesk-fi
+export interface IPropsAnnotationInputComponent {
+    annotationText: string;
+    annotationInputComponent: React.ReactElement<any>;
+    annotationTypeSelect: JSX.Element;
+    onCancel(): void;
+    onApplyAnnotation(html: string): void;
+}
+
+interface IProps {
+    editorState: EditorState;
+    extensionPoints: any;
+    data: {
+        highlightId: any;
+        selection: SelectionState;
+        annotation: any;
+    };
+    highlightsManager: any;
+    spellcheckerEnabled: boolean;
+    annotationTypes: Array<any>;
+    language: string;
+    hidePopups(): void;
+
+}
+
+interface IState {
+    body: any;
+    type: any;
+    isEmpty: boolean;
+}
 
 /**
  * @ngdoc React
@@ -18,11 +52,9 @@ import {gettext} from 'core/utils';
  * @description AnnotationInput is the popup containing the fields needed to fill in information
  * about an annotation.
  */
-class AnnotationInputBody extends React.Component<any, any> {
+class AnnotationInputBody extends React.Component<IProps, IState> {
     static propTypes: any;
     static defaultProps: any;
-
-    initialContent: any;
 
     constructor(props) {
         super(props);
@@ -40,8 +72,11 @@ class AnnotationInputBody extends React.Component<any, any> {
             isEmpty = false;
         }
 
-        this.state = {body, type, isEmpty};
-        this.initialContent = body;
+        this.state = {
+            body: body != null ? body : convertToRaw(ContentState.createFromText('')),
+            type: type,
+            isEmpty: isEmpty,
+        };
 
         this.onSubmit = this.onSubmit.bind(this);
         this.onChange = this.onChange.bind(this);
@@ -89,17 +124,11 @@ class AnnotationInputBody extends React.Component<any, any> {
         }
     }
 
-    /**
-     * @ngdoc method
-     * @name AnnotationInput#onChange
-     * @param {ContentState} content
-     * @description onChange is triggered when the content of the editor changes.
-     */
-    onChange(content) {
+    onChange(rawDraftContentState: RawDraftContentState, callback?) {
         this.setState({
-            body: convertToRaw(content),
-            isEmpty: content == null || !content.hasText(),
-        });
+            body: rawDraftContentState,
+            isEmpty: rawDraftContentState == null || !convertFromRaw(rawDraftContentState).hasText(),
+        }, callback);
     }
 
     /**
@@ -136,45 +165,73 @@ class AnnotationInputBody extends React.Component<any, any> {
         const {annotation} = data;
         const {type, isEmpty} = this.state;
 
+        const selection: SelectionState = data.selection;
+        const blockKey = data.selection.getStartKey();
+        const contentState = this.props.editorState.getCurrentContent();
+        const block = contentState.getBlockForKey(blockKey);
+        const text = block.getText().slice(selection.getStartOffset(), selection.getEndOffset());
+
+        const annotationTypeSelect = annotationTypes == null ? null : (
+            <div className="sd-line-input sd-line-input--is-select">
+                <label className="sd-line-input__label">{gettext('Annotation Type')}</label>
+                <select className="sd-line-input__select" onChange={this.onSelect} value={type}>
+                    {annotationTypes.map((annotationType) =>
+                        <option key={annotationType.qcode} value={annotationType.qcode}>
+                            {annotationType.name}
+                        </option>,
+                    )}
+                </select>
+            </div>
+        );
+
+        const annotationInputComponent = (
+            <div>
+                {annotationTypeSelect}
+                <div className="sd-line-input">
+                    <label className="sd-line-input__label">{gettext('Annotation Body')}</label>
+                    <Editor3Standalone
+                        onChange={this.onChange}
+                        editorFormat={['bold', 'italic', 'underline', 'link']}
+                        rawDraftContentState={this.state.body}
+                        language={language}
+                        disableSpellchecker={!spellcheckerEnabled}
+                        scrollContainer={'body'}
+                    />
+                </div>
+                <div className="pull-right">
+                    {typeof annotation === 'object' &&
+                        <button
+                            className="btn btn--cancel"
+                            onClick={this.deleteAnnotation}>
+                            {gettext('Delete')}
+                        </button>}
+                    <button className="btn btn--cancel" onClick={_hidePopups}>
+                        {gettext('Cancel')}
+                    </button>
+                    <button className="btn btn--primary" onClick={this.onSubmit} disabled={isEmpty}>
+                        {gettext('Submit')}
+                    </button>
+                </div>
+            </div>
+        );
+
+        const annotationExtensionPoints = this.props.extensionPoints.get('authoring:editor3:annotations');
+        const AnnotationInputComponent = annotationExtensionPoints[0] == null
+            ? AnnotationInputDefault
+            : annotationExtensionPoints[0].componentClass;
+
         return (
             <div className="annotation-input">
                 <Dropdown open={true} scrollable={false}>
-                    {annotationTypes &&
-                        <div className="sd-line-input sd-line-input--is-select">
-                            <label className="sd-line-input__label">Annotation Type</label>
-                            <select className="sd-line-input__select" onChange={this.onSelect} value={type}>
-                                {annotationTypes.map((annotationType) =>
-                                    <option key={annotationType.qcode} value={annotationType.qcode}>
-                                        {annotationType.name}
-                                    </option>,
-                                )}
-                            </select>
-                        </div>
-                    }
-                    <div className="sd-line-input">
-                        <label className="sd-line-input__label">Annotation Body</label>
-                        <Editor
-                            onChange={this.onChange}
-                            editorFormat={['bold', 'italic', 'underline', 'link']}
-                            editorState={this.initialContent}
-                            language={language}
-                            disableSpellchecker={!spellcheckerEnabled}
-                        />
-                    </div>
-                    <div className="pull-right">
-                        {typeof annotation === 'object' &&
-                            <button
-                                className="btn btn--cancel"
-                                onClick={this.deleteAnnotation}>
-                                {gettext('Delete')}
-                            </button>}
-                        <button className="btn btn--cancel" onClick={_hidePopups}>
-                            {gettext('Cancel')}
-                        </button>
-                        <button className="btn btn--primary" onClick={this.onSubmit} disabled={isEmpty}>
-                            {gettext('Submit')}
-                        </button>
-                    </div>
+                    <AnnotationInputComponent
+                        annotationText={text}
+                        onCancel={_hidePopups}
+                        annotationTypeSelect={annotationTypeSelect}
+                        annotationInputComponent={annotationInputComponent}
+                        onApplyAnnotation={(html: string) => {
+                            this.onChange(convertToRaw(getContentStateFromHtml(html)), this.onSubmit);
+                        }}
+                    />
                 </Dropdown>
             </div>
         );
@@ -198,8 +255,9 @@ const mapStateToProps = (state) => ({
 const AnnotationInputBodyWithDependenciesLoaded = connectPromiseResults(() => ({
     annotationTypes: ng.get('metadata').initialize()
         .then(() => ng.get('metadata').values.annotation_types),
+    extensionPoints: ng.getService('extensionPoints'),
 }))(AnnotationInputBody);
 
-export const AnnotationInput = connect(mapStateToProps, {
+export const AnnotationInput: any = connect(mapStateToProps, {
     hidePopups,
 })(AnnotationInputBodyWithDependenciesLoaded);

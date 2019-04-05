@@ -11,7 +11,6 @@ import './styles/content-filters.scss';
 
 import {ContentFiltersService} from './services';
 import {ManageFiltersTab} from './directives';
-import {ContentFilterSelectDirective} from './directives';
 import * as ctrl from './controllers';
 import {coreMenuGroups} from 'core/activity/activity';
 import {gettext} from 'core/utils';
@@ -53,5 +52,4 @@ angular.module('superdesk.apps.content_filters', ['superdesk.apps.publish'])
     .controller('ProductionTestCtrl', ctrl.ProductionTestController)
     .controller('FilterSearchCtrl', ctrl.FilterSearchController)
     .directive('sdManageFiltersTab', ManageFiltersTab)
-    .directive('sdContentFilterSelect', ContentFilterSelectDirective)
 ;

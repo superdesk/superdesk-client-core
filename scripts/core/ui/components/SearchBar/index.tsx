@@ -40,6 +40,10 @@ export default class SearchBar extends React.Component<any, any> {
     }
 
     toggleSearchBar() {
+        if (this.props.allowCollapsed === false) {
+            return;
+        }
+
         this.setState({searchBarExtended: !this.state.searchBarExtended});
     }
 

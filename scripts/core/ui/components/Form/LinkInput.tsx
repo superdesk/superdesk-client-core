@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import 'whatwg-fetch';
 import {get} from 'lodash';
+
 import {gettext} from 'core/utils';
 
 import {Row, LineInput, Label, TextArea} from './';

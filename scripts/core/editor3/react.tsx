@@ -2,33 +2,130 @@ import React from 'react';
 import createEditorStore from './store';
 import {Editor3} from './components';
 import {Provider} from 'react-redux';
-import PropTypes from 'prop-types';
 import ng from 'core/services/ng';
+import {ContentState, RawDraftContentState, convertFromRaw, EditorState, convertToRaw} from 'draft-js';
+import {setReadOnly, changeEditorState} from './actions/editor3';
+import {isEqual} from 'lodash';
 
-/* eslint-disable react/no-unused-prop-types */
+interface IProps {
+    // If set, it will be used to make sure the toolbar is always
+    // visible when scrolling. If not set, window object is used as reference.
+    // Any valid jQuery selector will do.
+    scrollContainer?: any;
+
+    // Whether this editor is the target for find & replace
+    // operations. The Find & Replace service can only have one editor as
+    // target.
+    findReplaceTarget: boolean;
+
+    // If true, allows inline highlights (commenting, annotating, etc.).
+    highlights: boolean;
+
+    // Editor format options that are enabled and should be displayed
+    // in the toolbar.
+    editorFormat: Array<string>;
+
+    rawDraftContentState: RawDraftContentState;
+
+    onChange(contentState: RawDraftContentState): void;
+
+    // HTML value of editor. If contentState is not set, this is used.
+    html: string;
+
+    readOnly: boolean;
+    singleLine: boolean;
+    onChangeDebounce: 100;
+
+    // Spellchecker's language.
+    language?: string;
+
+    disableSpellchecker: boolean;
+
+    // If true, images may have an editable title.
+    showTitle: boolean;
+    tabindex: number;
+}
 
 /**
  * @ngdoc React
  * @name Editor
- * @description Editor as a React component.
+ * @description Editor as a React component. Standalone means that it isn't connected to article item.
  */
-export class Editor extends React.Component<any, any> {
-    static propTypes: any;
-    static defaultProps: any;
+export class Editor3Standalone extends React.Component<IProps> {
+    static defaultProps = {
+        findReplaceTarget: false,
+        highlights: false,
+        editorFormat: [],
+        html: '',
+        readOnly: false,
+        singleLine: false,
+        onChangeDebounce: 100,
+        disableSpellchecker: true,
+        showTitle: false,
+        tabindex: 0,
+    };
 
     store: any;
 
-    constructor(props) {
+    constructor(props: IProps) {
         super(props);
 
-        const forReact = true;
-        const store = createEditorStore(props, forReact);
+        this.onChangeInterceptor = this.onChangeInterceptor.bind(this);
+
+        const {
+            disableSpellchecker,
+            language,
+            readOnly,
+            singleLine,
+            tabindex,
+            showTitle,
+            editorFormat,
+        } = this.props;
+
+        const store = createEditorStore(
+            {
+                disableSpellchecker: disableSpellchecker,
+                language: language,
+                readOnly: readOnly,
+                singleLine: singleLine,
+                tabindex: tabindex,
+                showTitle: showTitle,
+                editorFormat: editorFormat,
+                editorState: this.props.rawDraftContentState,
+                onChange: this.onChangeInterceptor,
+            },
+            null,
+            true,
+        );
 
         if (props.findReplaceTarget) {
             ng.get('editor3').setStore(store);
         }
 
         this.store = store;
+    }
+
+    onChangeInterceptor(contentState: ContentState): void {
+        // ensure that onChange value is of the same type as received from the props
+        const rawState = convertToRaw(contentState);
+
+        this.props.onChange(rawState);
+    }
+
+    componentDidUpdate(prevProps: IProps) {
+        if (this.props.readOnly !== prevProps.readOnly) {
+            this.store.dispatch(setReadOnly(this.props.readOnly));
+        }
+
+        const rawStateFromStore = convertToRaw(this.store.getState().editorState.getCurrentContent());
+
+        if (isEqual(this.props.rawDraftContentState, rawStateFromStore) === false) {
+            // This component holds it's own state which is derived from props
+            // internal state is reloaded when it doesn't match with what's in the props
+            this.store.dispatch(
+                changeEditorState(EditorState.createWithContent(convertFromRaw(this.props.rawDraftContentState)), true),
+            );
+        }
     }
 
     render() {
@@ -41,64 +138,3 @@ export class Editor extends React.Component<any, any> {
         );
     }
 }
-
-Editor.defaultProps = {
-    findReplaceTarget: false,
-    highlights: false,
-    editorFormat: [],
-    html: '',
-    readOnly: false,
-    singleLine: false,
-    onChangeDebounce: 100,
-    disableSpellchecker: true,
-    showTitle: false,
-    tabindex: 0,
-};
-
-Editor.propTypes = {
-    // If set, it will be used to make sure the toolbar is always
-    // visible when scrolling. If not set, window object is used as reference.
-    // Any valid jQuery selector will do.
-    scrollContainer: PropTypes.string.isRequired,
-
-    // Whether this editor is the target for find & replace
-    // operations. The Find & Replace service can only have one editor as
-    // target.
-    findReplaceTarget: PropTypes.bool,
-
-    // If true, allows inline highlights (commenting, annotating, etc.).
-    highlights: PropTypes.bool,
-
-    // Editor format options that are enabled and should be displayed
-    // in the toolbar.
-    editorFormat: PropTypes.array,
-
-    // A JSON object representing the initial Content State of the Draft editor.
-    // It is transformed using `convertFromRaw` and its value is expected to be the
-    // result of `converToRaw`.
-    editorState: PropTypes.object,
-
-    // HTML value of editor. If contentState is not set, this is used.
-    html: PropTypes.string,
-
-    // If true, editor is read-only.
-    readOnly: PropTypes.bool,
-
-    // Function that gets called on every content change. Receives editorState.
-    onChange: PropTypes.func.isRequired,
-
-    // Spellchecker's language.
-    language: PropTypes.string,
-
-    // If true, disables the spellchecker.
-    disableSpellchecker: PropTypes.bool,
-
-    // If true, editor is single-line.
-    singleLine: PropTypes.bool,
-
-    // If true, images may have an editable title.
-    showTitle: PropTypes.bool,
-
-    // Tab index
-    tabindex: PropTypes.number,
-};

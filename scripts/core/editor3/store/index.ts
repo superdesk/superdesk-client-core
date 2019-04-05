@@ -1,4 +1,4 @@
-import {EditorState, convertFromRaw, convertToRaw, ContentState} from 'draft-js';
+import {EditorState, convertFromRaw, convertToRaw, ContentState, RawDraftContentState} from 'draft-js';
 import {createStore, applyMiddleware} from 'redux';
 import {createLogger} from 'redux-logger';
 import thunk from 'redux-thunk';
@@ -26,6 +26,23 @@ export const ignoreInternalAnnotationFields = (annotations) =>
 
 export const isEditorPlainText = (props) => props.singleLine || (props.editorFormat || []).length === 0;
 
+interface IProps {
+    editorState?: RawDraftContentState;
+    disableSpellchecker?: boolean;
+    language?: any;
+    debounce?: any;
+    onChange?: any;
+    readOnly?: any;
+    singleLine?: any;
+    tabindex?: any;
+    showTitle?: any;
+    editorFormat?: any;
+    item?: any;
+    svc?: any;
+    trim?: any;
+    value?: any;
+}
+
 /**
  * @name createEditorStore
  * @description Returns a new redux store.
@@ -33,25 +50,29 @@ export const isEditorPlainText = (props) => props.singleLine || (props.editorFor
  * @param {Boolean=} isReact True if the store is created for a React component.
  * @returns {Object} Redux store.
  */
-export default function createEditorStore(props, isReact = false) {
-    const spellcheck = ng.get('spellcheck');
+export default function createEditorStore(props: IProps, spellcheck, isReact = false) {
+    let disableSpellchecker = true;
+    if (spellcheck != null) {
+        disableSpellchecker = props.disableSpellchecker || !spellcheck.isAutoSpellchecker;
 
-    if (!props.disableSpellchecker) {
-        spellcheck.setLanguage(props.language);
+        if (!props.disableSpellchecker) {
+            spellcheck.setLanguage(props.language);
+        }
     }
 
-    const dict = spellcheck.getDict();
     const content = getInitialContent(props);
 
-    const decorators = Editor3Base.getDecorator(props.disableSpellchecker || !spellcheck.isAutoSpellchecker);
+    const decorators = Editor3Base.getDecorator(disableSpellchecker);
     const showToolbar = !isEditorPlainText(props);
 
     const onChangeValue = isReact ? props.onChange : debounce(onChange.bind(props), props.debounce);
 
     const middlewares = [thunk];
 
-    if (process.env.NODE_ENV !== 'production') {
-        // activate logs actions for non production instances.
+    const devtools = localStorage.getItem('devtools');
+    const reduxLoggerEnabled = devtools == null ? false : JSON.stringify(devtools).includes('redux-logger');
+
+    if (reduxLoggerEnabled) {
         // (this should always be the last middleware)
         middlewares.push(createLogger());
     }
@@ -77,12 +98,14 @@ export default function createEditorStore(props, isReact = false) {
         abbreviations: {},
     }, applyMiddleware(...middlewares));
 
-    // after we have the dictionary, force update the editor to highlight typos
-    dict.finally(() => store.dispatch(forceUpdate()));
+    if (spellcheck != null) {
+        // after we have the dictionary, force update the editor to highlight typos
+        spellcheck.getDict().finally(() => store.dispatch(forceUpdate()));
 
-    spellcheck.getAbbreviationsDict().then((abbreviations) => {
-        store.dispatch(setAbbreviations(abbreviations || {}));
-    });
+        spellcheck.getAbbreviationsDict().then((abbreviations) => {
+            store.dispatch(setAbbreviations(abbreviations || {}));
+        });
+    }
 
     return store;
 }

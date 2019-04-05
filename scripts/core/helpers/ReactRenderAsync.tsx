@@ -3,7 +3,18 @@ import PropTypes from 'prop-types';
 import {promiseAllObject} from 'core/utils';
 import ng from 'core/services/ng';
 
-class ReactRenderAsync extends React.Component<any, any> {
+interface IPropsReactRenderAsync {
+    promises: any;
+    originalProps: any;
+    component: React.ComponentType;
+}
+
+interface IStateReactRenderAsync {
+    loading: boolean;
+    mappedProps: any;
+}
+
+class ReactRenderAsync extends React.Component<IPropsReactRenderAsync, IStateReactRenderAsync> {
     static propTypes: any;
     static defaultProps: any;
 
@@ -44,8 +55,8 @@ ReactRenderAsync.propTypes = {
 };
 
 /* eslint-disable react/no-multi-comp */
-export function connectPromiseResults(getPromises) {
-    return function(component) {
+export function connectPromiseResults<T>(getPromises) {
+    return function(component): React.ComponentType<T> {
         return function connectPromiseComponent(props) {
             return (
                 <ReactRenderAsync
@@ -58,8 +69,8 @@ export function connectPromiseResults(getPromises) {
     };
 }
 
-export function connectServices<T>(component, services): React.ComponentType<T> {
-    return connectPromiseResults(() => {
+export function connectServices<T>(component: React.ComponentType<T>, services) {
+    return connectPromiseResults<T>(() => {
         const promisesObject = {};
 
         services.forEach((serviceName) => {
