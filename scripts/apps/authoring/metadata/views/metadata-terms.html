@@ -13,7 +13,7 @@
     </button>
     <ul class="dropdown__menu nested-menu pull-right" style="{{ cv.popup_width ? 'min-width: 0; width: ' + cv.popup_width + 'px' : ''}}">
         <li ng-show="!activeTerm && header">
-            <div sd-typeahead items="terms" term="selectedTerm" search="searchTerms(term)" select="allowEntireCat && selectTerm(item)" always-visible="header" data-disabled="disabled || allSelected">
+            <div sd-typeahead items="terms" term="selectedTerm" search="searchTerms(term)" select="allowEntireCat && selectTerm(item, $event)" always-visible="header" data-disabled="disabled || allSelected">
                 <ul class="item-list" vs-repeat vs-scroll-parent=".item-list" ng-if="!activeTree.length || activeList">
                     <li typeahead-item="t" ng-repeat="t in terms track by t[uniqueField]">
                         <button ng-click="!allowEntireCat && openTree(t, $event)" title="{{getLocaleName(t)}}">
@@ -29,7 +29,7 @@
 
         <li class="levelup" ng-if="activeTerm && !preferredView">
             <i class="backlink" ng-click="openParent(activeTerm, $event)"></i>
-            <button ng-click="allowEntireCat && selectTerm(activeTerm)">
+            <button ng-click="allowEntireCat && selectTerm(activeTerm, $event)">
                 <b class="category">{{getLocaleName(activeTerm)}}</b>
                 <b class="category-hover" ng-if="allowEntireCat">{{ :: "Choose entire category" | translate }}</b>
             </button>
@@ -41,7 +41,7 @@
                     <button ng-click="setPreferredView('user', $event)"><b translate>User</b></button>
                 </li>
                 <li ng-if="preferredView === 'user'" ng-repeat="term in userPreferredItems track by term[uniqueField]">
-                    <button ng-click="selectTerm(term)" ng-class="{'greyout': isSelected(term)}" ng-disabled="isSelected(term)">
+                    <button ng-click="selectTerm(term, $event)" ng-class="{'greyout': isSelected(term)}" ng-disabled="isSelected(term)">
                         {{ getLocaleName(term) }}
                     </button>
                 </li>
@@ -51,7 +51,7 @@
                     <button ng-click="setPreferredView('desk', $event)"><b translate>Desk</b></button>
                 </li>
                 <li ng-if="preferredView === 'desk'" ng-repeat="term in deskPreferredItems track by term[uniqueField]">
-                    <button ng-click="selectTerm(term)" ng-class="{'greyout': isSelected(term)}" ng-disabled="isSelected(term)">
+                    <button ng-click="selectTerm(term, $event)" ng-class="{'greyout': isSelected(term)}" ng-disabled="isSelected(term)">
                         {{ getLocaleName(term) }}
                     </button>
                 </li>
