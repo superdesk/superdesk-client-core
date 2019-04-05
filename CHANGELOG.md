@@ -1,5 +1,24 @@
 # Superdesk Client Changelog
 
+## [1.28.2] 2019-04-05
+
+### Added
+
+- Published content won't expire if `preserve_published_content` flag is set.
+
+### Fixed
+
+- Fix list scrolling up and refreshing in a loop.
+- Hide publishing shortcuts in personal space.
+- Use clone deep for assocations so diff is calculated properly on save.
+- Fix CV validated unique qcode on save even if there was no qcode.
+- Fix raw saved search not being editable.
+- Fix warning in ingest menu when adding new source.
+- Fix editing menu displayed for external pictures.
+- Fix long sing off overflow in UI.
+- Fix bug when saving dateline.
+- Fix associations not being updated on correction.
+
 ## [1.28.1] 2019-03-07
 
 ### Added
