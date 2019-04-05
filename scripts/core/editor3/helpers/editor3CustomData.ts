@@ -4,6 +4,8 @@ import {
     Modifier,
     EditorState,
     convertFromRaw,
+    ContentState,
+    ContentBlock,
 } from 'draft-js';
 import {fieldsMetaKeys, getFieldMetadata} from './fieldsMeta';
 import {
@@ -62,21 +64,21 @@ export function keyValid(key) {
     return Object.keys(editor3DataKeys).includes(key);
 }
 
-export function setAllCustomDataForEditor(editorState, value) {
-    const currentSelectionToPreserve = editorState.getSelection();
+export function setAllCustomDataForEditor(editorState, value: {[key: string]: any}) {
+    let contentState: ContentState = editorState.getCurrentContent();
 
-    let content = editorState.getCurrentContent();
-    const firstBlockSelection = SelectionState.createEmpty(content.getFirstBlock().getKey());
+    const firstBlock = contentState.getFirstBlock();
+    const firstBlockWithCustomData = firstBlock.merge({data: firstBlock.getData().merge(value)}) as ContentBlock;
 
-    content = Modifier.mergeBlockData(content, firstBlockSelection, value);
+    const nextContentState = contentState.merge({
+        blockMap: contentState.getBlockMap().set(firstBlock.getKey(), firstBlockWithCustomData),
+    }) as ContentState;
 
-    const editorStateWithDataSet = EditorState.push(editorState, content, 'change-block-data');
-    const editorStateWithSelectionRestored = EditorState.acceptSelection(
-        editorStateWithDataSet,
-        currentSelectionToPreserve,
-    );
+    let editorStateNext = EditorState.set(editorState, {allowUndo: false});
+    editorStateNext = EditorState.push(editorStateNext, nextContentState, 'change-block-data');
+    editorStateNext = EditorState.set(editorStateNext, {allowUndo: true});
 
-    return editorStateWithSelectionRestored;
+    return editorStateNext;
 }
 
 export function getAllCustomDataFromEditor(editorState) {
