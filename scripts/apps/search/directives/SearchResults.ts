@@ -173,10 +173,12 @@ export function SearchResults(
 
                     scope.loading = true;
                     nextUpdate = $timeout(() => {
-                        _queryItems(event, data);
-                        scope.$applyAsync(() => {
-                            nextUpdate = null; // reset for next $digest
-                        });
+                        _queryItems(event, data)
+                            .finally(() => {
+                                scope.$applyAsync(() => {
+                                    nextUpdate = null;
+                                });
+                            });
                     }, 1000, false);
                 }
             }
@@ -227,12 +229,11 @@ export function SearchResults(
                     }
 
                     if (!scope.showRefresh && data && !data.force && data.user !== session.identity._id) {
-                        var isItemPreviewing = !!scope.selected.preview;
-                        var _data = {
+                        const _data = {
                             newItems: items,
                             scopeItems: scope.items,
                             scrollTop: containerElem.scrollTop(),
-                            isItemPreviewing: isItemPreviewing,
+                            isItemPreviewing: !!scope.selected.preview,
                         };
 
                         scope.showRefresh = search.canShowRefresh(_data);
@@ -247,20 +248,16 @@ export function SearchResults(
                         // update scope items only with the matching fetched items
                         scope.items = search.updateItems(items, scope.items);
                     }
+
+                    if (originalQuery) {
+                        criteria.source.query = originalQuery;
+                    }
                 }, (error) => {
                     notify.error(gettext('Failed to run the query!'));
                     console.error(error, getProvider(criteria));
                 })
                     .finally(() => {
                         scope.loading = false;
-                        if (originalQuery) {
-                            criteria.source.query = originalQuery;
-                        }
-
-                        // update scroll position to top, when forced refresh
-                        if (data && data.force) {
-                            containerElem[0].scrollTop = 0;
-                        }
                     });
             }
 
@@ -303,6 +300,9 @@ export function SearchResults(
             scope.refreshList = function() {
                 scope.showRefresh = false;
                 queryItems(null, {force: true});
+                if (containerElem[0].scrollTop > 0) {
+                    containerElem[0].scrollTop = 0;
+                }
             };
 
             /*
