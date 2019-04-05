@@ -81,6 +81,25 @@ export function setAllCustomDataForEditor(editorState, value: {[key: string]: an
     return editorStateNext;
 }
 
+// it messes up the selection and won't pass the tests
+// but is heavily used in suggestions which seem to rely on broken behaviour
+export function setAllCustomDataForEditor__deprecated(editorState, value) {
+    const currentSelectionToPreserve = editorState.getSelection();
+
+    let content = editorState.getCurrentContent();
+    const firstBlockSelection = SelectionState.createEmpty(content.getFirstBlock().getKey());
+
+    content = Modifier.mergeBlockData(content, firstBlockSelection, value);
+
+    const editorStateWithDataSet = EditorState.push(editorState, content, 'change-block-data');
+    const editorStateWithSelectionRestored = EditorState.acceptSelection(
+        editorStateWithDataSet,
+        currentSelectionToPreserve,
+    );
+
+    return editorStateWithSelectionRestored;
+}
+
 export function getAllCustomDataFromEditor(editorState) {
     return editorState
         .getCurrentContent()
@@ -95,6 +114,14 @@ export function setCustomDataForEditor(editorState, key, value) {
     }
 
     return setAllCustomDataForEditor(editorState, Map().set(key, value));
+}
+
+export function setCustomDataForEditor__deprecated(editorState, key, value) {
+    if (!keyValid(key)) {
+        throw new Error(`Key '${key}' is not defined`);
+    }
+
+    return setAllCustomDataForEditor__deprecated(editorState, Map().set(key, value));
 }
 
 export function getCustomDataFromEditor(editorState, key) {

@@ -5,7 +5,7 @@ import {List, OrderedMap} from 'immutable';
 import {getContentStateFromHtml} from '../html/from-html';
 import * as Suggestions from '../helpers/suggestions';
 import {sanitizeContent, inlineStyles} from '../helpers/inlineStyles';
-import {getAllCustomDataFromEditor, setAllCustomDataForEditor} from '../helpers/editor3CustomData';
+import {getAllCustomDataFromEditor, setAllCustomDataForEditor__deprecated} from '../helpers/editor3CustomData';
 import {getCurrentAuthor} from '../helpers/author';
 import {htmlComesFromDraftjsEditor} from '../helpers/htmlComesFromDraftjsEditor';
 import {EDITOR_GLOBAL_REFS} from 'core/editor3/components/Editor3Component';
@@ -156,7 +156,7 @@ export function insertContentInState(
 
     // for the first block recover the initial block data because on replaceWithFragment the block data is
     // replaced with the data from pasted fragment
-    const editorStateWithCustomData = setAllCustomDataForEditor(editorState, customData);
+    const editorStateWithCustomData = setAllCustomDataForEditor__deprecated(editorState, customData);
     const newContent = Modifier.replaceWithFragment(
         editorStateWithCustomData.getCurrentContent(),
         editorState.getSelection(),
