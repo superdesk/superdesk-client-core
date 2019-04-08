@@ -1,4 +1,4 @@
-import {pickBy} from 'lodash';
+import {pickBy, zipObject} from 'lodash';
 import {IArticle} from 'superdesk-interfaces/Article';
 
 RelationsService.$inject = ['archiveService', 'mediaIdGenerator', 'api', '$q'];
@@ -17,7 +17,7 @@ export function RelationsService(archiveService, mediaIdGenerator, api, $q) {
         });
 
         const related = Object.values(relatedWithoutMedia);
-        const relatedWithoutNull = related.filter((o) => o !== null);
+        const relatedWithoutNull = related.filter((o) => o != null && Object.keys(o).length < 2);
 
         const relatedItems = relatedWithoutNull.map((o) => api.find('archive', o._id));
 
@@ -36,15 +36,15 @@ export function RelationsService(archiveService, mediaIdGenerator, api, $q) {
     };
 
     this.getRelatedItemsForField = function(item: IArticle, fieldId: string) {
-        const related = this.getRelatedKeys(item, fieldId);
-        const relatedItemsApi = related.map((o) => api.find('archive', item.associations[o]._id));
+        const relatedItemsKeys = this.getRelatedKeys(item, fieldId);
+        const associations = item.associations || {};
 
-        return $q.all(relatedItemsApi)
-            .then((response) => {
-                const relatedItems = {};
+        return $q.all(relatedItemsKeys.map((key) => {
+            if (associations[key] && Object.keys(associations[key]).length < 2) {
+                return api.find('archive', associations[key]._id);
+            }
 
-                related.forEach((key, index) => relatedItems[key] = response[index]);
-                return relatedItems;
-            });
+            return $q.when(associations[key]);
+        })).then((values) => zipObject(relatedItemsKeys, values));
     };
 }
