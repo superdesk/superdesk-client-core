@@ -350,6 +350,7 @@ function MetaDropdownDirective($filter) {
             icon: '@',
             label: '@',
             change: '&',
+            cv: '=',
             key: '@',
             tabindex: '=',
             containingDirective: '@',
@@ -362,7 +363,15 @@ function MetaDropdownDirective($filter) {
                 var o = {};
 
                 if (item) {
-                    o[scope.field] = scope.key ? item[scope.key] : [item];
+                    if (scope.cv) {
+                        item.scheme = scope.cv._id;
+                        o[scope.field] = scope.item[scope.field].filter((v) => v.scheme !== scope.cv._id);
+                        o[scope.field].push(item);
+                    } else {
+                        o[scope.field] = scope.key ? item[scope.key] : [item];
+                    }
+                } else if (scope.cv) {
+                    o[scope.field] = scope.item[scope.field].filter((v) => v.scheme !== scope.cv._id);
                 } else {
                     o[scope.field] = null;
                 }
@@ -388,6 +397,8 @@ function MetaDropdownDirective($filter) {
             if (scope.containingDirective === 'sdContentSchemaEditor') {
                 scope.item[scope.field] = scope.item.default;
             }
+
+            scope.findItemByScheme = (item, scheme) => item.find((o) => o.scheme === scheme);
 
             scope.$applyAsync(() => {
                 if (scope.list) {

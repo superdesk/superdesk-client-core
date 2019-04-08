@@ -337,10 +337,11 @@
                 </label>
                 <div class="authoring-header__input-holder">
                     <div sd-meta-terms
+                        ng-if="cv.selection_type === 'multi selection'"
                         class="data"
                         data-tabindex="editor[cv._id].order"
                         data-item="item"
-                        data-field="{{cv.schema_field|| 'subject'}}"
+                        data-field="{{cv.schema_field || 'subject'}}"
                         data-unique="qcode"
                         data-list="cv.terms"
                         data-cv="cv"
@@ -350,6 +351,20 @@
                         data-reload-list="true"
                         data-include-parent="{{editor[cv._id].includeparent}}"
                         tabindex="{{editor[cv._id].order}}">
+                   </div>
+                   <div sd-meta-dropdown
+                        ng-if="cv.selection_type !== 'multi selection'"
+                        data-tabindex="editor[cv._id].order"
+                        data-item="item"
+                        data-field="{{cv.schema_field || 'subject'}}"
+                        data-list="cv.terms"
+                        data-cv="cv"
+                        ng-disabled="!_editable"
+                        data-header="true"
+                        data-change="autosave(item)"
+                        tabindex="{{editor[cv._id].order}}"
+                        data-key="qcode"
+                        >
                    </div>
                    <div class="authoring-header__hint" ng-if="helper_text[cv._id]">{{helper_text[cv._id]}}</div>
                 </div>
