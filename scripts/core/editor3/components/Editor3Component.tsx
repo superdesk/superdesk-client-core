@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import {
     Editor,
-    CompositeDecorator,
     RichUtils,
     Modifier,
     EditorState,
@@ -15,8 +14,6 @@ import {getVisibleSelectionRect} from 'draft-js';
 
 import {Map} from 'immutable';
 import Toolbar from './toolbar';
-import {SpellcheckerDecorator} from './spellchecker';
-import {LinkDecorator} from './links';
 import {getBlockRenderer} from './blockRenderer';
 import {customStyleMap} from './customStyleMap';
 import classNames from 'classnames';
