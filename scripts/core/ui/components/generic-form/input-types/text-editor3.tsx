@@ -65,7 +65,6 @@ export class TextEditor3 extends React.Component<IProps, IState> {
                     onChange={this.handleChange}
                     editorFormat={['bold', 'italic', 'underline', 'link']}
                     rawDraftContentState={this.state.rawDraftContentState}
-                    disableSpellchecker={true}
                     readOnly={this.props.disabled}
                 />
                 {

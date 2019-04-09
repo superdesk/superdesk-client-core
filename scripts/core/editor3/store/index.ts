@@ -23,6 +23,7 @@ import reducers from '../reducers';
 import {editor3StateToHtml} from '../html/to-html/editor3StateToHtml';
 import {LinkDecorator} from '../components/links';
 import {SpellcheckerDecorator} from '../components/spellchecker';
+import {appConfig} from 'index';
 
 export const ignoreInternalAnnotationFields = (annotations) =>
     annotations.map(
@@ -33,7 +34,6 @@ export const isEditorPlainText = (props) => props.singleLine || (props.editorFor
 
 interface IProps {
     editorState?: RawDraftContentState;
-    disableSpellchecker?: boolean;
     language?: any;
     debounce?: any;
     onChange?: any;
@@ -68,11 +68,12 @@ export const getCustomDecorator = (disableSpellchecker) => {
  * @returns {Object} Redux store.
  */
 export default function createEditorStore(props: IProps, spellcheck, isReact = false) {
+    const spellcheckerDisabledInConfig = get(appConfig, 'features.useTansaProofing') === true;
     let disableSpellchecker = true;
     if (spellcheck != null) {
-        disableSpellchecker = props.disableSpellchecker || !spellcheck.isAutoSpellchecker;
+        disableSpellchecker = spellcheckerDisabledInConfig || !spellcheck.isAutoSpellchecker;
 
-        if (!props.disableSpellchecker) {
+        if (!spellcheckerDisabledInConfig) {
             spellcheck.setLanguage(props.language);
         }
     }
@@ -108,7 +109,7 @@ export default function createEditorStore(props: IProps, spellcheck, isReact = f
         editorFormat: props.editorFormat || [],
         onChangeValue: onChangeValue,
         item: props.item,
-        spellcheckerEnabled: !props.disableSpellchecker,
+        spellcheckerEnabled: !spellcheckerDisabledInConfig,
         suggestingMode: false,
         invisibles: false,
         svc: props.svc,

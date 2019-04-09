@@ -160,7 +160,7 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
     }
 
     render() {
-        const {data, spellcheckerEnabled, language, annotationTypes} = this.props;
+        const {data, language, annotationTypes} = this.props;
         const _hidePopups = this.props.hidePopups;
         const {annotation} = data;
         const {type, isEmpty} = this.state;
@@ -194,7 +194,6 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
                         editorFormat={['bold', 'italic', 'underline', 'link']}
                         rawDraftContentState={this.state.body}
                         language={language}
-                        disableSpellchecker={!spellcheckerEnabled}
                         scrollContainer={'body'}
                     />
                 </div>

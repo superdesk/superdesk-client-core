@@ -34,7 +34,6 @@ class Editor3Directive {
     findReplaceTarget: any;
     singleLine: any;
     debounce: any;
-    disableSpellchecker: any;
     bindToValue: any;
     tabindex: any;
     showTitle: any;
@@ -140,12 +139,6 @@ class Editor3Directive {
             debounce: '@',
 
             /**
-             * @type {Boolean}
-             * @description Disable internal spellchecker.
-             */
-            disableSpellchecker: '=?',
-
-            /**
 
              * @type {Object}
              * @description Item which is being edited
@@ -177,7 +170,6 @@ class Editor3Directive {
         this.findReplaceTarget = typeof this.findReplaceTarget !== 'undefined';
         this.singleLine = this.singleLine || false;
         this.debounce = parseInt(this.debounce || '100', 10);
-        this.disableSpellchecker = this.disableSpellchecker || false;
         this.bindToValue = this.bindToValue || false;
         this.tabindex = this.tabindex || 0;
         this.refreshTrigger = this.refreshTrigger || 0;

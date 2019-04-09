@@ -6,7 +6,7 @@ import 'apps';
 import 'external-apps';
 
 /* globals __SUPERDESK_CONFIG__: true */
-const appConfig = __SUPERDESK_CONFIG__;
+export const appConfig = __SUPERDESK_CONFIG__;
 
 if (appConfig.features.useTansaProofing) {
     // tslint:disable-next-line:no-var-requires
