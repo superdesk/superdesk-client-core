@@ -14,13 +14,12 @@ import ng from 'core/services/ng';
 /**
  * @ngdoc directive
  * @module superdesk.core.editor3
- * @name sdEditor3
  * @param {Array} editorFormat the formating settings available for editor
  * @param {String} value the model for editor value
  * @param {Boolean} readOnly true if the editor is read only
  * @param {Function} onChange the callback executed when the editor value is changed
  * @param {String} language the current language used for spellchecker
- * @description sdEditor3 integrates react Editor3 component with superdesk app.
+ * @description integrates react Editor3 component with superdesk app.
  */
 export const sdEditor3 = () => new Editor3Directive();
 
