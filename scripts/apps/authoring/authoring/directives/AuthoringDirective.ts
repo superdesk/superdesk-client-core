@@ -211,7 +211,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             $scope.save = function() {
                 return authoring.save($scope.origItem, $scope.item).then((res) => {
                     $scope.dirty = false;
-                    angular.extend($scope.item, res);
+                    $scope.item = _.merge($scope.item, res);
 
                     if (res.cropData) {
                         $scope.item.hasCrops = true;
