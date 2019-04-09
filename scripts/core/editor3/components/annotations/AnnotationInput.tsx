@@ -32,7 +32,6 @@ interface IProps {
         annotation: any;
     };
     highlightsManager: any;
-    spellcheckerEnabled: boolean;
     annotationTypes: Array<any>;
     language: string;
     hidePopups(): void;
@@ -241,14 +240,12 @@ AnnotationInputBody.propTypes = {
     hidePopups: PropTypes.func,
     data: PropTypes.object,
     language: PropTypes.string,
-    spellcheckerEnabled: PropTypes.bool,
     highlightsManager: PropTypes.object.isRequired,
     annotationTypes: PropTypes.array.isRequired,
 };
 
 const mapStateToProps = (state) => ({
     language: state.item.language,
-    spellcheckerEnabled: state.spellcheckerEnabled,
 });
 
 const AnnotationInputBodyWithDependenciesLoaded = connectPromiseResults(() => ({
