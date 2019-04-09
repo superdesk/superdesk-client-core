@@ -90,18 +90,6 @@ export class Editor3Component extends React.Component<any, any> {
     div: any;
     editor: any;
 
-    static getDecorator(disableSpellchecker) {
-        const decorators: any = [
-            LinkDecorator,
-        ];
-
-        if (!disableSpellchecker) {
-            decorators.push(SpellcheckerDecorator);
-        }
-
-        return new CompositeDecorator(decorators);
-    }
-
     constructor(props) {
         super(props);
 

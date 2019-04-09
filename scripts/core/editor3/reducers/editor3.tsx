@@ -54,10 +54,10 @@ const editor3 = (state = {}, action) => {
  * until a better solution is found.
  */
 export const forceUpdate = (state, keepSelection = false) => {
-    const {editorState, spellcheckerEnabled} = state;
+    const editorState: EditorState = state.editorState;
     const content = editorState.getCurrentContent();
     const selection = editorState.getSelection();
-    const decorator = editorState.getDecorator(!spellcheckerEnabled);
+    const decorator = editorState.getDecorator();
     let newState = EditorState.createWithContent(content, decorator);
 
     newState = EditorState.set(newState, {

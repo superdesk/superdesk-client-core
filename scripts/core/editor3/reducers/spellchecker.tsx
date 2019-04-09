@@ -1,8 +1,8 @@
 import {EditorState, Modifier} from 'draft-js';
 import {onChange} from './editor3';
-import {Editor3} from '../components/Editor3';
 import {createAddSuggestion} from './suggestions';
 import {getSuggestionMetadata} from '../actions/suggestions';
+import {getCustomDecorator} from '../store';
 
 const spellchecker = (state = {}, action) => {
     switch (action.type) {
@@ -121,8 +121,7 @@ const refreshWord = (state, word) => replaceWord(state, {word: word, newWord: wo
  */
 const autoSpellchecker = (state, spellcheckerEnabled) => {
     const {editorState} = state;
-    const Editor3Alias: any = Editor3;
-    const decorator = Editor3Alias.getDecorator(!spellcheckerEnabled);
+    const decorator = getCustomDecorator(!spellcheckerEnabled);
     const newState = EditorState.set(editorState, {decorator});
     const stateNotChanged = false;
 

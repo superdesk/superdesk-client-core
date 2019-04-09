@@ -10,10 +10,6 @@ export class Editor3Base extends React.Component<any, any> {
     static propTypes: any;
     static defaultProps: any;
 
-    static getDecorator(disableSpellchecker) {
-        return Editor3Component.getDecorator(disableSpellchecker);
-    }
-
     render() {
         return (
             <MultipleHighlights {...this.props}>

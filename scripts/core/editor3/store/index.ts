@@ -1,12 +1,15 @@
-import {EditorState, convertFromRaw, convertToRaw, ContentState, RawDraftContentState} from 'draft-js';
+import {
+    EditorState,
+    convertFromRaw,
+    convertToRaw,
+    ContentState,
+    RawDraftContentState,
+    CompositeDecorator
+} from 'draft-js';
 import {createStore, applyMiddleware} from 'redux';
 import {createLogger} from 'redux-logger';
 import thunk from 'redux-thunk';
 import {pick, get, debounce} from 'lodash';
-
-import ng from 'core/services/ng';
-
-import {Editor3Base} from '../components/Editor3';
 import {PopupTypes, forceUpdate, setAbbreviations} from '../actions';
 import {fieldsMetaKeys, setFieldMetadata, getFieldMetadata, FIELD_KEY_SEPARATOR} from '../helpers/fieldsMeta';
 import {getContentStateFromHtml} from '../html/from-html';
@@ -18,6 +21,8 @@ import {
 import {removeInlineStyles} from '../helpers/removeFormat';
 import reducers from '../reducers';
 import {editor3StateToHtml} from '../html/to-html/editor3StateToHtml';
+import {LinkDecorator} from '../components/links';
+import {SpellcheckerDecorator} from '../components/spellchecker';
 
 export const ignoreInternalAnnotationFields = (annotations) =>
     annotations.map(
@@ -43,6 +48,18 @@ interface IProps {
     value?: any;
 }
 
+export const getCustomDecorator = (disableSpellchecker) => {
+    const decorators: any = [
+        LinkDecorator,
+    ];
+
+    if (!disableSpellchecker) {
+        decorators.push(SpellcheckerDecorator);
+    }
+
+    return new CompositeDecorator(decorators);
+};
+
 /**
  * @name createEditorStore
  * @description Returns a new redux store.
@@ -62,7 +79,7 @@ export default function createEditorStore(props: IProps, spellcheck, isReact = f
 
     const content = getInitialContent(props);
 
-    const decorators = Editor3Base.getDecorator(disableSpellchecker);
+    const decorators = getCustomDecorator(disableSpellchecker);
     const showToolbar = !isEditorPlainText(props);
 
     const onChangeValue = isReact ? props.onChange : debounce(onChange.bind(props), props.debounce);
