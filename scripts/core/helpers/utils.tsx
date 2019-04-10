@@ -13,3 +13,14 @@ export const trimEndExact = (str: string, toTrim: string) => {
 
     return checkEnd === toTrim ? str.slice(0, str.length - toTrim.length) : str;
 };
+
+// type-safe alternative to lodash.pick
+export function pick<T, K extends keyof T>(obj: T, ...keys: Array<K>): Pick<T, K> {
+    var picked: any = {};
+
+    for (const key of keys) {
+        picked[key] = obj[key];
+    }
+
+    return picked;
+}
