@@ -56,14 +56,17 @@ export function MultiImageEditController(
     $scope.isDirty = () => unsavedChangesExist;
 
     $scope.selectImage = (image) => {
-        image.selected = !image.selected;
+        if ($scope.images.length === 1) {
+            $scope.images[0].selected = true;
+        } else {
+            image.selected = !image.selected;
+        }
         updateMetadata();
     };
 
     // wait for images for initial load
     const stopInitWatch = $scope.$watch('images', (images: Array<any>) => {
         if (images != null && images.length) {
-            stopInitWatch();
             images.forEach($scope.selectImage);
         }
     });
@@ -105,7 +108,10 @@ export function MultiImageEditController(
         }
 
         saveHandler(imagesForSaving)
-            .then(() => {
+            .then((res) => {
+                if (res != null) {
+                    $scope.images = angular.copy(Array.isArray(res) && res.length > 0 ? res : [res]);
+                }
                 unsavedChangesExist = false;
 
                 if (close && typeof $scope.successHandler === 'function') {
