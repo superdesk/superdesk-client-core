@@ -48,6 +48,27 @@ interface IProps {
     value?: any;
 }
 
+export interface IEditorStore {
+    editorState: EditorState;
+    searchTerm: {pattern: string, index: number, caseSensitive: boolean};
+    popup: {type: any};
+    readOnly: any;
+    locked: boolean;
+    showToolbar: any;
+    singleLine: any;
+    tabindex: any;
+    showTitle: any;
+    activeCell: any;
+    editorFormat: any;
+    onChangeValue: any;
+    item: any;
+    spellcheckerEnabled: any;
+    suggestingMode: any;
+    invisibles: any;
+    svc: any;
+    abbreviations: any;
+}
+
 export const getCustomDecorator = (disableSpellchecker) => {
     const decorators: any = [
         LinkDecorator,
@@ -95,7 +116,7 @@ export default function createEditorStore(props: IProps, spellcheck, isReact = f
         middlewares.push(createLogger());
     }
 
-    const store = createStore(reducers, {
+    const store = createStore<IEditorStore>(reducers, {
         editorState: EditorState.createWithContent(content, decorators),
         searchTerm: {pattern: '', index: -1, caseSensitive: false},
         popup: {type: PopupTypes.Hidden},
