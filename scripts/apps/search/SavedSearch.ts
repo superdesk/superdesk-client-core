@@ -19,9 +19,11 @@ export interface IDeskSubscription {
 }
 
 export interface ISavedSearch {
+    _id?: string;
     name: string;
     description: string;
     is_global: boolean;
+    shortcut: boolean;
     filter: any;
     user: IUser['_id'];
     subscribers: {
