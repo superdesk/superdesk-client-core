@@ -1,11 +1,11 @@
 import React from 'react';
 import {shallow, mount} from 'enzyme';
-import {SpellcheckerDecorator} from '../spellchecker';
 import {SpellcheckerContextMenuComponent as SpellcheckerContextMenu} from '../spellchecker/SpellcheckerContextMenu';
 import mockStore from './utils';
+import {getSpellcheckingDecorator} from '../spellchecker/SpellcheckerDecorator';
 
 describe('editor3.components.spellchecker-decorator', () => {
-    const SpellcheckerError = SpellcheckerDecorator.component;
+    const SpellcheckerError = getSpellcheckingDecorator({}).component;
 
     function getWrapper() {
         // to avoid React warning about 'text' prop, we need to create a custom

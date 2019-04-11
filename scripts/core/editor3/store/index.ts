@@ -22,8 +22,9 @@ import {removeInlineStyles} from '../helpers/removeFormat';
 import reducers from '../reducers';
 import {editor3StateToHtml} from '../html/to-html/editor3StateToHtml';
 import {LinkDecorator} from '../components/links';
-import {SpellcheckerDecorator} from '../components/spellchecker';
 import {appConfig} from 'index';
+import {getSpellcheckingDecorator} from '../components/spellchecker/SpellcheckerDecorator';
+import {ISpellcheckWarning} from '../components/spellchecker/interfaces';
 
 export const ignoreInternalAnnotationFields = (annotations) =>
     annotations.map(
@@ -69,13 +70,13 @@ export interface IEditorStore {
     abbreviations: any;
 }
 
-export const getCustomDecorator = (disableSpellchecker) => {
+export const getCustomDecorator = (spellcheckWarnings: {[blockKey: string]: Array<ISpellcheckWarning>} = null) => {
     const decorators: any = [
         LinkDecorator,
     ];
 
-    if (!disableSpellchecker) {
-        decorators.push(SpellcheckerDecorator);
+    if (spellcheckWarnings != null) {
+        decorators.push(getSpellcheckingDecorator(spellcheckWarnings));
     }
 
     return new CompositeDecorator(decorators);
@@ -101,7 +102,6 @@ export default function createEditorStore(props: IProps, spellcheck, isReact = f
 
     const content = getInitialContent(props);
 
-    const decorators = getCustomDecorator(disableSpellchecker);
     const showToolbar = !isEditorPlainText(props);
 
     const onChangeValue = isReact ? props.onChange : debounce(onChange.bind(props), props.debounce);
@@ -117,7 +117,7 @@ export default function createEditorStore(props: IProps, spellcheck, isReact = f
     }
 
     const store = createStore<IEditorStore>(reducers, {
-        editorState: EditorState.createWithContent(content, decorators),
+        editorState: EditorState.createWithContent(content),
         searchTerm: {pattern: '', index: -1, caseSensitive: false},
         popup: {type: PopupTypes.Hidden},
         readOnly: props.readOnly,

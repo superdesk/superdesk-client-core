@@ -40,3 +40,9 @@ export function setAutoSpellchecker(enabled) {
         payload: enabled,
     };
 }
+
+export function applySpellcheck() {
+    return {
+        type: 'APPLY_SPELLCHECK',
+    };
+}

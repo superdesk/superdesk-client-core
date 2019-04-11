@@ -5,6 +5,8 @@ import {connect} from 'react-redux';
 import {Editor3Component} from './Editor3Component';
 import {MultipleHighlights} from './MultipleHighlights';
 import * as actions from '../actions';
+import {EditorState} from 'draft-js';
+import {applySpellcheck} from '../actions';
 
 export class Editor3Base extends React.Component<any, any> {
     static propTypes: any;
@@ -36,7 +38,10 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    onChange: (editorState) => dispatch(actions.changeEditorState(editorState)),
+    onChange: (editorState: EditorState) => {
+        dispatch(actions.changeEditorState(editorState));
+        dispatch(applySpellcheck());
+    },
     onTab: (e) => dispatch(actions.handleEditorTab(e)),
     dragDrop: (transfer, mediaType) => dispatch(actions.dragDrop(transfer, mediaType)),
     unlock: () => dispatch(actions.setLocked(false)),

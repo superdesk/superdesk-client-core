@@ -1,8 +1,10 @@
 import ReactDOM from 'react-dom';
 import React from 'react';
 import PropTypes from 'prop-types';
+import {ContentBlock} from 'draft-js';
 import ng from 'core/services/ng';
 import {SpellcheckerContextMenu} from './SpellcheckerContextMenu';
+import {ISpellcheckWarning} from './interfaces';
 
 function getElementForPortal() {
     const existingElement = document.querySelector('.spellchecker-suggestions');
@@ -119,29 +121,47 @@ SpellcheckerError.propTypes = {
     children: PropTypes.array,
 };
 
-export const SpellcheckerDecorator = {
-    strategy: spellcheckStrategy,
-    component: SpellcheckerError,
+export const getSpellcheckingDecorator = (spellcheckWarnings: {[blockKey: string]: Array<ISpellcheckWarning>}) => {
+    return {
+        strategy: (contentBlock: ContentBlock, callback) => {
+            const blockKey = contentBlock.getKey();
+
+            if (spellcheckWarnings[blockKey] != null) {
+                spellcheckWarnings[blockKey].forEach((warning) => {
+                    callback(warning.startOffset, warning.startOffset + warning.text.length);
+                });
+            }
+        },
+        component: SpellcheckerError,
+    };
 };
 
-/**
- * @description The function that defines the strategy to identify ranges of text that
- * should be highlighted as spellchecker typos.
- */
-function spellcheckStrategy(contentBlock, callback) {
+export function getSpellcheckWarnings(str: string): Array<ISpellcheckWarning> {
+    const info: Array<ISpellcheckWarning> = [];
     const spellcheck = ng.get('spellcheck');
     const WORD_REGEXP = /[0-9a-zA-Z\u00C0-\u1FFF\u2C00-\uD7FF]+/g;
-    const text = contentBlock.getText();
-
-    let matchArr;
-    let start;
     const regex = WORD_REGEXP;
 
-    // tslint:disable-next-line no-conditional-assignment
-    while ((matchArr = regex.exec(text)) !== null) {
-        start = matchArr.index;
-        if (!spellcheck.isCorrectWord(matchArr[0])) {
-            callback(start, start + matchArr[0].length);
+    let lastOffset = 0;
+
+    str.split('\n').forEach((paragraph) => {
+        let matchArr;
+        let start;
+
+        // tslint:disable-next-line no-conditional-assignment
+        while ((matchArr = regex.exec(paragraph)) !== null) {
+            start = matchArr.index;
+            if (!spellcheck.isCorrectWord(matchArr[0])) {
+                info.push({
+                    startOffset: lastOffset + start,
+                    text: matchArr[0],
+                    suggestions: [],
+                });
+            }
         }
-    }
+
+        lastOffset += paragraph.length;
+    });
+
+    return info;
 }
