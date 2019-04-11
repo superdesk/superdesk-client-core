@@ -65,7 +65,7 @@ export function MultiImageEditController(
     };
 
     // wait for images for initial load
-    const stopInitWatch = $scope.$watch('images', (images: Array<any>) => {
+    $scope.$watch('images', (images: Array<any>) => {
         if (images != null && images.length) {
             images.forEach($scope.selectImage);
         }
