@@ -254,13 +254,15 @@ function AuthoringWidgetsDir(desks, commentsService, $injector) {
                 }
             };
 
-            scope.generateHotkey = (order) => {
+            scope.generateHotkey = (order, tooltip?) => {
+                const shiftNums = {1: '!', 2: '@', 3: '#', 4: '$', 5: '%', 6: '^', 7: '&', 8: '*', 9: '('};
+
                 if (order < 10) {
                     return `ctrl+alt+${order}`;
                 } else if (order === 10) {
                     return `ctrl+alt+0`;
                 } else if (order > 10) {
-                    return `ctrl+alt+shift+${order - 10}`;
+                    return tooltip ? `ctrl+shift+${order - 10}` : `ctrl+shift+${shiftNums[order - 10]}`;
                 }
             };
 
