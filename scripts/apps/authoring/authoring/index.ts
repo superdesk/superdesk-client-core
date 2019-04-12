@@ -12,6 +12,16 @@ import {ArticleUrlFields} from './article-url-fields';
 import {PopulateAuthorsController} from './controllers/PopulateAuthorsController';
 
 import {gettext} from 'core/utils';
+import {IArticle} from 'superdesk-interfaces/Article';
+
+export interface IOnChangeParams {
+    item: IArticle;
+    original: IArticle;
+}
+
+type IOnChangeMiddleware = (params: IOnChangeParams) => any;
+
+export const onChangeMiddleware: Array<IOnChangeMiddleware> = [];
 
 angular.module('superdesk.apps.authoring.autosave', []).service('autosave', svc.AutosaveService);
 

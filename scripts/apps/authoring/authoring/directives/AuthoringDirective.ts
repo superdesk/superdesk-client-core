@@ -5,6 +5,8 @@ import thunk from 'redux-thunk';
 import {gettext} from 'core/utils';
 import {combineReducers, createStore, applyMiddleware} from 'redux';
 import {attachments, initAttachments} from '../../attachments';
+import {applyMiddleware as coreApplyMiddleware} from 'core/middleware';
+import {onChangeMiddleware} from '..';
 
 /**
  * @ngdoc directive
@@ -854,12 +856,14 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             $scope.autosave = function(item, timeout) {
                 $scope.dirty = true;
                 angular.extend($scope.item, item); // make sure all changes are available
+                return coreApplyMiddleware(onChangeMiddleware, {item: $scope.item, original: $scope.origItem})
+                    .then(() => {
+                        var autosavedItem = authoring.autosave($scope.item, $scope.origItem, timeout);
 
-                var autosavedItem = authoring.autosave($scope.item, $scope.origItem, timeout);
-
-                authoringWorkspace.addAutosave();
-                initMedia();
-                return autosavedItem;
+                        authoringWorkspace.addAutosave();
+                        initMedia();
+                        return autosavedItem;
+                    });
             };
 
             $scope.sendToNextStage = function() {
