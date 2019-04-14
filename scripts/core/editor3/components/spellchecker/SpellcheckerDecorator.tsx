@@ -5,6 +5,7 @@ import {ContentBlock} from 'draft-js';
 import ng from 'core/services/ng';
 import {SpellcheckerContextMenu} from './SpellcheckerContextMenu';
 import {ISpellcheckWarning} from './interfaces';
+import {ISpellcheckWarningsByBlock} from 'core/editor3/actions';
 
 function getElementForPortal() {
     const existingElement = document.querySelector('.spellchecker-suggestions');
@@ -121,7 +122,7 @@ SpellcheckerError.propTypes = {
     children: PropTypes.array,
 };
 
-export const getSpellcheckingDecorator = (spellcheckWarnings: {[blockKey: string]: Array<ISpellcheckWarning>}) => {
+export const getSpellcheckingDecorator = (spellcheckWarnings: ISpellcheckWarningsByBlock) => {
     return {
         strategy: (contentBlock: ContentBlock, callback) => {
             const blockKey = contentBlock.getKey();
@@ -136,32 +137,36 @@ export const getSpellcheckingDecorator = (spellcheckWarnings: {[blockKey: string
     };
 };
 
-export function getSpellcheckWarnings(str: string): Array<ISpellcheckWarning> {
-    const info: Array<ISpellcheckWarning> = [];
+export function getSpellcheckWarnings(str: string): Promise<Array<ISpellcheckWarning>> {
     const spellcheck = ng.get('spellcheck');
-    const WORD_REGEXP = /[0-9a-zA-Z\u00C0-\u1FFF\u2C00-\uD7FF]+/g;
-    const regex = WORD_REGEXP;
 
-    let lastOffset = 0;
+    return spellcheck.getDict()
+        .then(() => {
+            const info: Array<ISpellcheckWarning> = [];
+            const WORD_REGEXP = /[0-9a-zA-Z\u00C0-\u1FFF\u2C00-\uD7FF]+/g;
+            const regex = WORD_REGEXP;
 
-    str.split('\n').forEach((paragraph) => {
-        let matchArr;
-        let start;
+            let lastOffset = 0;
 
-        // tslint:disable-next-line no-conditional-assignment
-        while ((matchArr = regex.exec(paragraph)) !== null) {
-            start = matchArr.index;
-            if (!spellcheck.isCorrectWord(matchArr[0])) {
-                info.push({
-                    startOffset: lastOffset + start,
-                    text: matchArr[0],
-                    suggestions: [],
-                });
-            }
-        }
+            str.split('\n').forEach((paragraph) => {
+                let matchArr;
+                let start;
 
-        lastOffset += paragraph.length;
-    });
+                // tslint:disable-next-line no-conditional-assignment
+                while ((matchArr = regex.exec(paragraph)) !== null) {
+                    start = matchArr.index;
+                    if (!spellcheck.isCorrectWord(matchArr[0])) {
+                        info.push({
+                            startOffset: lastOffset + start,
+                            text: matchArr[0],
+                            suggestions: [],
+                        });
+                    }
+                }
 
-    return info;
+                lastOffset += paragraph.length;
+            });
+
+            return info;
+        });
 }

@@ -6,7 +6,6 @@ import {Editor3Component} from './Editor3Component';
 import {MultipleHighlights} from './MultipleHighlights';
 import * as actions from '../actions';
 import {EditorState} from 'draft-js';
-import {applySpellcheck} from '../actions';
 
 export class Editor3Base extends React.Component<any, any> {
     static propTypes: any;
@@ -33,15 +32,13 @@ const mapStateToProps = (state) => ({
     editorFormat: state.editorFormat,
     tabindex: state.tabindex,
     suggestingMode: state.suggestingMode,
+    spellchecking: state.spellchecking,
     invisibles: state.invisibles,
     svc: state.svc,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    onChange: (editorState: EditorState) => {
-        dispatch(actions.changeEditorState(editorState));
-        dispatch(applySpellcheck());
-    },
+    onChange: (editorState: EditorState) => dispatch(actions.changeEditorState(editorState)),
     onTab: (e) => dispatch(actions.handleEditorTab(e)),
     dragDrop: (transfer, mediaType) => dispatch(actions.dragDrop(transfer, mediaType)),
     unlock: () => dispatch(actions.setLocked(false)),

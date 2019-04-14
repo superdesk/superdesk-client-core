@@ -10,7 +10,7 @@ import {createStore, applyMiddleware} from 'redux';
 import {createLogger} from 'redux-logger';
 import thunk from 'redux-thunk';
 import {pick, get, debounce} from 'lodash';
-import {PopupTypes, forceUpdate, setAbbreviations} from '../actions';
+import {PopupTypes, forceUpdate, setAbbreviations, ISpellcheckWarningsByBlock} from '../actions';
 import {fieldsMetaKeys, setFieldMetadata, getFieldMetadata, FIELD_KEY_SEPARATOR} from '../helpers/fieldsMeta';
 import {getContentStateFromHtml} from '../html/from-html';
 import {getAnnotationsFromItem} from '../helpers/editor3CustomData';
@@ -24,7 +24,6 @@ import {editor3StateToHtml} from '../html/to-html/editor3StateToHtml';
 import {LinkDecorator} from '../components/links';
 import {appConfig} from 'index';
 import {getSpellcheckingDecorator} from '../components/spellchecker/SpellcheckerDecorator';
-import {ISpellcheckWarning} from '../components/spellchecker/interfaces';
 
 export const ignoreInternalAnnotationFields = (annotations) =>
     annotations.map(
@@ -64,13 +63,16 @@ export interface IEditorStore {
     onChangeValue: any;
     item: any;
     spellcheckerEnabled: any;
+    spellchecking: {
+        inProgress: boolean;
+    };
     suggestingMode: any;
     invisibles: any;
     svc: any;
     abbreviations: any;
 }
 
-export const getCustomDecorator = (spellcheckWarnings: {[blockKey: string]: Array<ISpellcheckWarning>} = null) => {
+export const getCustomDecorator = (spellcheckWarnings: ISpellcheckWarningsByBlock = null) => {
     const decorators: any = [
         LinkDecorator,
     ];
@@ -131,6 +133,9 @@ export default function createEditorStore(props: IProps, spellcheck, isReact = f
         onChangeValue: onChangeValue,
         item: props.item,
         spellcheckerEnabled: !spellcheckerDisabledInConfig,
+        spellchecking: {
+            inProgress: false,
+        },
         suggestingMode: false,
         invisibles: false,
         svc: props.svc,

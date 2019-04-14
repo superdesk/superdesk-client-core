@@ -25,6 +25,13 @@ import UnstyledWrapper from './UnstyledWrapper';
 import {handleBeforeInputHighlights} from '../helpers/handleBeforeInputHighlights';
 import * as Suggestions from '../helpers/suggestions';
 import {getCurrentAuthor} from '../helpers/author';
+import {
+    getSpellcheckWarningsByBlock,
+    setSpellcheckerProgress,
+    applySpellcheck
+} from '../actions';
+import {getCustomDecorator} from '../store';
+import {noop} from 'lodash';
 
 const VALID_MEDIA_TYPES = [
     'application/superdesk.item.picture',
@@ -66,6 +73,19 @@ export function canDropMedia(e, editorConfig) {
     return supportsMedia && isValidMedia;
 }
 
+function clearSpellcheckInfo(editorStateCurrent: EditorState, editorStateNext: EditorState): EditorState {
+    if (editorStateCurrent.getCurrentContent() === editorStateNext.getCurrentContent()) {
+        return editorStateNext;
+    } else {
+        // Clear only when content changes. Otherwise, it will get cleared on caret changes, but
+        // won't get repopulated, because spellchecker only runs when content changes.
+        return EditorState.set(
+            editorStateNext,
+            {decorator: getCustomDecorator()},
+        );
+    }
+}
+
 /**
  * @ngdoc React
  * @module superdesk.core.editor3
@@ -86,6 +106,7 @@ export class Editor3Component extends React.Component<any, any> {
     editorNode: any;
     div: any;
     editor: any;
+    spellcheckCancelFn: () => void;
 
     constructor(props) {
         super(props);
@@ -98,6 +119,8 @@ export class Editor3Component extends React.Component<any, any> {
         this.handleKeyCommand = this.handleKeyCommand.bind(this);
         this.handleBeforeInput = this.handleBeforeInput.bind(this);
         this.keyBindingFn = this.keyBindingFn.bind(this);
+        this.spellcheck = this.spellcheck.bind(this);
+        this.spellcheckCancelFn = noop;
     }
 
     /**
@@ -107,6 +130,31 @@ export class Editor3Component extends React.Component<any, any> {
      */
     focus() {
         this.props.unlock();
+    }
+
+    spellcheck() {
+        this.spellcheckCancelFn();
+
+        this.spellcheckCancelFn = (() => {
+            let canceled = false;
+
+            setTimeout(() => {
+                if (!canceled) {
+                    if (this.props.spellchecking.inProgress !== true) {
+                        this.props.dispatch(setSpellcheckerProgress(true));
+                    }
+
+                    getSpellcheckWarningsByBlock(this.props.editorState).then((spellcheckWarningsByBlock) => {
+                        if (!canceled) {
+                            this.props.dispatch(applySpellcheck(spellcheckWarningsByBlock));
+                            this.spellcheckCancelFn = noop;
+                        }
+                    });
+                }
+            }, 500);
+
+            return () => canceled = true;
+        })();
     }
 
     /**
@@ -320,6 +368,8 @@ export class Editor3Component extends React.Component<any, any> {
         }
 
         window[EDITOR_GLOBAL_REFS][this.editorKey] = this.editor;
+
+        this.spellcheck();
     }
 
     handleRefs(editor) {
@@ -335,12 +385,15 @@ export class Editor3Component extends React.Component<any, any> {
         delete window[EDITOR_GLOBAL_REFS][this.editorKey];
     }
 
-    componentDidUpdate() {
+    componentDidUpdate(prevProps) {
         if (window.hasOwnProperty('instgrm')) {
             window.instgrm.Embeds.process();
         }
-    }
 
+        if (prevProps.editorState.getCurrentContent() !== this.props.editorState.getCurrentContent()) {
+            this.spellcheck();
+        }
+    }
     render() {
         const {
             readOnly,
@@ -397,7 +450,7 @@ export class Editor3Component extends React.Component<any, any> {
                         blockRenderMap={blockRenderMap}
                         blockRendererFn={getBlockRenderer({svc: this.props.svc})}
                         customStyleMap={{...customStyleMap, ...this.props.highlightsManager.styleMap}}
-                        onChange={(...args) => {
+                        onChange={(editorStateNext) => {
                             // in order to position the popup component we need to know the position of editor selection
                             // even when it's not focused, or another input is focused
 
@@ -407,7 +460,19 @@ export class Editor3Component extends React.Component<any, any> {
                                 this.editorNode.dataset.editorSelectionRect = JSON.stringify(selectionRect);
                             }
 
-                            onChange(...args);
+                            /*
+                                Spellchecker info must be cleared on contentState change because:
+                                1. User might have deleted a piece of text marked by spellchecker
+                                when the decorator runs again, it will attempt to decorate the same ranges
+                                and will crash, because that content is no longer there.
+                                2. User might insert content before spellchecker decorated content which
+                                will make offsets inaccurate and when the decorator runs again
+                                it will decorate the wrong ranges.
+                            */
+                            const editorStateWithoutSpellcheckerInfo =
+                                clearSpellcheckInfo(this.props.editorState, editorStateNext);
+
+                            onChange(editorStateWithoutSpellcheckerInfo);
                         }}
                         onTab={onTab}
                         tabIndex={tabindex}

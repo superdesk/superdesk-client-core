@@ -1,46 +1,9 @@
-import {EditorState, Modifier, CompositeDecorator} from 'draft-js';
+import {EditorState, Modifier} from 'draft-js';
 import {onChange} from './editor3';
 import {createAddSuggestion} from './suggestions';
 import {getSuggestionMetadata} from '../actions/suggestions';
-import {getCustomDecorator} from '../store';
-import {ISpellcheckWarning} from '../components/spellchecker/interfaces';
-import {getSpellcheckWarnings} from '../components/spellchecker/SpellcheckerDecorator';
-
-function getSpellcheckWarningsByBlock(editorState: EditorState): {[blockKey: string]: Array<ISpellcheckWarning>} {
-    const rangesByBlock: Array<{blockKey: string, startOffset: number, endOffset: number}> = [];
-
-    let lastOffset = 0;
-    const blocks = editorState.getCurrentContent().getBlocksAsArray();
-
-    blocks.forEach((block, i) => {
-        const blockLength = block.getLength();
-        rangesByBlock.push({
-            blockKey: block.getKey(), startOffset: lastOffset, endOffset: lastOffset + blockLength,
-        });
-        lastOffset += blockLength;
-    });
-
-    const text = editorState.getCurrentContent().getPlainText();
-
-    let spellcheckWarningsByBlock: {[blockKey: string]: Array<ISpellcheckWarning>} = {};
-
-    getSpellcheckWarnings(text).forEach((warning) => {
-        const range = rangesByBlock.find(({startOffset, endOffset}) =>
-            warning.startOffset >= startOffset && warning.startOffset < endOffset);
-
-        const {blockKey} = range;
-
-        if (spellcheckWarningsByBlock[blockKey] == null) {
-            spellcheckWarningsByBlock[blockKey] = [];
-        }
-        spellcheckWarningsByBlock[blockKey].push({
-            ...warning,
-            startOffset: warning.startOffset - range.startOffset,
-        });
-    });
-
-    return spellcheckWarningsByBlock;
-}
+import {getCustomDecorator, IEditorStore} from '../store';
+import {ISpellcheckWarningsByBlock} from '../actions';
 
 const spellchecker = (state: any = {}, action) => {
     switch (action.type) {
@@ -50,18 +13,10 @@ const spellchecker = (state: any = {}, action) => {
         return refreshWord(state, action.payload);
     case 'SPELLCHECKER_AUTO':
         return autoSpellchecker(state, action.payload);
+    case 'SET_SPELLCHEKCER_PROGRESS':
+        return {...state, spellchecking: {...state.spellchecking, inProgress: action.payload}};
     case 'APPLY_SPELLCHECK':
-        const {editorState} = state;
-
-        const nextEditorState = EditorState.set(
-            editorState,
-            {decorator: getCustomDecorator(getSpellcheckWarningsByBlock(editorState))},
-        );
-
-        return {
-            ...state,
-            editorState: nextEditorState,
-        };
+        return applySpellcheck(state, action.payload);
     default:
         return state;
     }
@@ -180,5 +135,21 @@ const autoSpellchecker = (state, spellcheckerEnabled) => {
         spellcheckerEnabled,
     };
 };
+
+function applySpellcheck(state: IEditorStore, payload) {
+    const {editorState} = state;
+    const spellcheckWarningsByBlock: ISpellcheckWarningsByBlock = payload;
+
+    const nextEditorState = EditorState.set(
+        editorState,
+        {decorator: getCustomDecorator(spellcheckWarningsByBlock)},
+    );
+
+    return {
+        ...state,
+        editorState: nextEditorState,
+        spellchecking: {...state.spellchecking, inProgress: false},
+    };
+}
 
 export default spellchecker;
