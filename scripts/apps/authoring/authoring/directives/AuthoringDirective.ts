@@ -577,7 +577,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                         ),
                     });
 
-                    return;
+                    return Promise.reject();
                 }
 
                 if (helpers.itemHasUnresolvedComments($scope.item)) {
@@ -592,11 +592,11 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                         cancelText: gettext('Cancel'),
                     }).then((ok) => ok ? performPublish() : false);
 
-                    return;
+                    return Promise.reject();
                 }
 
                 // Check if there are unpublished related items without media-gallery
-                relationsService.getRelatedItemsWithoutMediaGallery($scope.item, $scope.fields)
+                return relationsService.getRelatedItemsWithoutMediaGallery($scope.item, $scope.fields)
                     .then((related) => {
                         if (related.length > 0) {
                             return modal.confirm({
