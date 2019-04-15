@@ -62,6 +62,7 @@ class SettingsComponent extends React.Component<IProps, IState> {
         }, {});
 
         const listToRender = [];
+        const blockToRender = [];
         let reactKey = 0;
 
         const currentRoute = this.props.$route.current;
@@ -87,6 +88,17 @@ class SettingsComponent extends React.Component<IProps, IState> {
                 <li key={++reactKey} className="sd-left-nav__group-header">{groupLabel}</li>,
             );
 
+            let blockGroupHeading = (
+                <div key={++reactKey}
+                    className="sd-card__header sd-card__header--with-thumb sd-card__header--gradient-1">
+                    <div className="sd-card__thumbnail sd-card__thumbnail--size-s">
+                        <h4 className="sd-card__thumbnail-heading">{groupLabel}</h4>
+                    </div>
+                </div>
+            );
+
+            let blockListItems = [];
+
             menuItemsByGroup[key].forEach((item) => {
                 const className = 'sd-left-nav__btn'
                     + (currentRoute._id === item._id ? ' sd-left-nav__btn--active' : '');
@@ -100,15 +112,35 @@ class SettingsComponent extends React.Component<IProps, IState> {
                         </li>
                     ),
                 );
+
+                blockListItems.push(<a key={++reactKey}
+                    href={'#' + item.href} className="text-link">{gettext(item.label)}</a>);
             });
+
+            blockToRender.push(<div className="sd-card" key={++reactKey}>
+                {blockGroupHeading}
+                <div className="sd-card__content sd-padding-all--3">
+                    <div className="text-link__group">
+                        {blockListItems}
+                    </div>
+                </div>
+            </div>);
         }
+
+        const defaultSettingsPage = (
+            <div className="sd-page__content sd-page__content--centered-dashboard">
+                <div className="sd-grid-list sd-grid-list--auto-fit">{blockToRender}</div>
+            </div>
+        );
 
         return (
             <div className="sd-page">
                 <nav className="sd-page__sidebar sd-left-nav">
                     <ul>{listToRender}</ul>
                 </nav>
-                <section className="sd-page__main-content">{this.props.children}</section>
+                <section className="sd-page__main-content">
+                    {currentRoute.$$route.label === 'Settings' ? defaultSettingsPage : this.props.children}
+                </section>
             </div>
         );
     }
