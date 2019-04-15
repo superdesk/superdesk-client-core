@@ -11,12 +11,12 @@ const spellchecker = (state: any = {}, action) => {
         return replaceWord(state, action.payload);
     case 'SPELLCHECKER_REFRESH_WORD':
         return refreshWord(state, action.payload);
-    case 'SPELLCHECKER_AUTO':
-        return autoSpellchecker(state, action.payload);
     case 'SET_SPELLCHEKCER_PROGRESS':
         return {...state, spellchecking: {...state.spellchecking, inProgress: action.payload}};
+    case 'DISABLE_SPELLCHECKER':
+        return applySpellcheck(false, state);
     case 'APPLY_SPELLCHECK':
-        return applySpellcheck(state, action.payload);
+        return applySpellcheck(true, state, action.payload);
     default:
         return state;
     }
@@ -116,39 +116,19 @@ export const replaceWord = (state, {word, newWord}, skipOnChange = false) => {
  */
 const refreshWord = (state, word) => replaceWord(state, {word: word, newWord: word.text});
 
-/**
- * @ngdoc method
- * @name autoSpelchecker
- * @param {Object} state
- * @param {Boolean} spellcheckerEnabled True if the autospellchecker should be enabled
- * @return {Object} returns new state
- * @description Disable/enable auto mode for spellchecker.
- */
-const autoSpellchecker = (state, spellcheckerEnabled) => {
-    const {editorState} = state;
-    const decorator = getCustomDecorator();
-    const newState = EditorState.set(editorState, {decorator});
-    const stateNotChanged = false;
-
-    return {
-        ...onChange(state, newState, stateNotChanged),
-        spellcheckerEnabled,
-    };
-};
-
-function applySpellcheck(state: IEditorStore, payload) {
+function applySpellcheck(enabled: boolean, state: IEditorStore, payload?) {
     const {editorState} = state;
     const spellcheckWarningsByBlock: ISpellcheckWarningsByBlock = payload;
 
     const nextEditorState = EditorState.set(
         editorState,
-        {decorator: getCustomDecorator(spellcheckWarningsByBlock)},
+        {decorator: enabled ? getCustomDecorator(spellcheckWarningsByBlock) : getCustomDecorator()},
     );
 
     return {
         ...state,
         editorState: nextEditorState,
-        spellchecking: {...state.spellchecking, inProgress: false},
+        spellchecking: {...state.spellchecking, enabled: enabled, inProgress: false},
     };
 }
 

@@ -72,17 +72,21 @@ export function refreshWord(word) {
     };
 }
 
-/**
- * @ngdoc method
- * @name setAutoSpellchecker
- * @param {Boolean} enabled True if the autospellchecker should be enabled
- * @return {String} action
- * @description Enable/disable auto mode for spellchecker.
- */
-export function setAutoSpellchecker(enabled) {
+export function setSpellcheckerStatus(enabled: boolean) {
+    if (enabled) {
+        return function(dispatch, getState) {
+            getSpellcheckWarningsByBlock(getState().editorState).then((spellcheckWarningsByBlock) => {
+                dispatch(applySpellcheck(spellcheckWarningsByBlock));
+            });
+        };
+    } else {
+        return disableSpellchecker();
+    }
+}
+
+export function disableSpellchecker() {
     return {
-        type: 'SPELLCHECKER_AUTO',
-        payload: enabled,
+        type: 'DISABLE_SPELLCHECKER',
     };
 }
 

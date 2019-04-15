@@ -62,8 +62,8 @@ export interface IEditorStore {
     editorFormat: any;
     onChangeValue: any;
     item: any;
-    spellcheckerEnabled: any;
     spellchecking: {
+        enabled: boolean;
         inProgress: boolean;
     };
     suggestingMode: any;
@@ -132,8 +132,8 @@ export default function createEditorStore(props: IProps, spellcheck, isReact = f
         editorFormat: props.editorFormat || [],
         onChangeValue: onChangeValue,
         item: props.item,
-        spellcheckerEnabled: !spellcheckerDisabledInConfig,
         spellchecking: {
+            enabled: !spellcheckerDisabledInConfig,
             inProgress: false,
         },
         suggestingMode: false,

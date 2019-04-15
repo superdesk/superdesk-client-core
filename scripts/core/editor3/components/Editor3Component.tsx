@@ -133,6 +133,10 @@ export class Editor3Component extends React.Component<any, any> {
     }
 
     spellcheck() {
+        if (this.props.spellchecking.enabled !== true) {
+            return;
+        }
+
         this.spellcheckCancelFn();
 
         this.spellcheckCancelFn = (() => {
