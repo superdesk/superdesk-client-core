@@ -26,7 +26,6 @@ export function AuthoringTopbarDirective(TranslationService, privileges, authori
             scope.saveTopbar = function() {
                 scope.saveDisabled = true;
                 return scope.save(scope.item)
-                    .then((item) => angular.extend(scope.item, item))
                     .finally(() => {
                         scope.saveDisabled = false;
                     });
