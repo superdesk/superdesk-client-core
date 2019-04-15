@@ -86,7 +86,7 @@ export default function PlacesServiceFactory(api, features, metadata) {
         searchDateline(query: string, lang: string) {
             return this._searchGeonames(query, lang, true)
                 .then((geonames) => geonames.map(geonameToCity))
-                .catch(() => this._searchCities(name));
+                .catch(() => this._searchCities(query));
         }
 
         searchGeonames(query: string, lang: string) {
@@ -104,12 +104,16 @@ export default function PlacesServiceFactory(api, features, metadata) {
         _searchGeonames(name: string, lang: string, dateline: boolean = false) {
             const params = {name, lang};
 
+            if (name == null || name.length === 0) {
+                return Promise.resolve([]);
+            }
+
             if (dateline) {
                 params['style'] = 'full';
                 params['featureClass'] = 'P';
             }
 
-            return name != null && name.length && features.places_autocomplete
+            return features.places_autocomplete
                 ? api.query('places_autocomplete', params)
                     .then((response) => response._items.map((place) => omit(place, ['_created', '_updated', '_etag'])))
                 : Promise.reject();
