@@ -1,5 +1,16 @@
 # Superdesk Client Changelog
 
+## [1.28.3] 2019-04-16
+
+### Added
+
+- Add user preferences for default event and planning filters.
+
+### Fixed
+
+- Fix issue where origItem and item were pointing to same reference in authoring.
+- Fix issue when pressing save button twice.
+
 ## [1.28.2] 2019-04-05
 
 ### Added
