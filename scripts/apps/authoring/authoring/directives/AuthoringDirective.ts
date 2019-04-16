@@ -82,13 +82,14 @@ AuthoringDirective.$inject = [
     'relationsService',
     '$injector',
     'functionPoints',
+    'limits',
 ];
 export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace, notify,
     desks, authoring, api, session, lock, privileges, content, $location,
     referrer, macros, $timeout, $q, modal, archiveService, confirm, reloadService,
     $rootScope, $interpolate, metadata, suggest, config, deployConfig, editorResolver,
     compareVersions, embedService, $sce, mediaIdGenerator, relationsService, $injector,
-    functionPoints: IFunctionPointsService) {
+    functionPoints: IFunctionPointsService, limits) {
     return {
         link: function($scope, elem, attrs) {
             var _closing;
@@ -119,6 +120,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             $scope.mediaFieldVersions = {};
             $scope.refreshTrigger = 0;
             $scope.isPreview = false;
+            $scope.limits = limits;
 
             $scope.$watch('origItem', (newValue, oldValue) => {
                 $scope.itemActions = null;

@@ -12,6 +12,7 @@ import {ArticleUrlFields} from './article-url-fields';
 import {PopulateAuthorsController} from './controllers/PopulateAuthorsController';
 
 import {gettext} from 'core/utils';
+import LimitsService from './services/LimitsService';
 
 angular.module('superdesk.apps.authoring.autosave', []).service('autosave', svc.AutosaveService);
 
@@ -58,6 +59,7 @@ angular.module('superdesk.apps.authoring', [
     .service('authoringWorkspace', svc.AuthoringWorkspaceService)
     .service('renditions', svc.RenditionsService)
     .service('mediaIdGenerator', svc.MediaIdGeneratorService)
+    .service('limits', LimitsService)
 
     .factory('history', svc.HistoryFactory)
 

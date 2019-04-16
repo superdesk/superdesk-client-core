@@ -90,7 +90,7 @@
                            ng-disabled="!_editable"
                            ng-trim="false"
                            tabindex="{{editor.slugline.order}}">
-                    <span ng-if="schema.slugline.maxlength" sd-character-count data-item="item.slugline" data-html="true" data-limit="schema.slugline.maxlength"></span>
+                    <span ng-if="limits.maxlength('slugline', schema, item)" sd-character-count data-item="item.slugline" data-html="true" data-limit="limits.maxlength('slugline', schema, item)"></span>
                 </div>
             </div>
     
@@ -380,8 +380,8 @@
                 sd-validation-error="error[field._id.toLowerCase()]">
     
                 <label class="authoring-header__item-label">{{field.display_name}}</label>
-                <span ng-if="schema[field._id].maxlength || schema[field._id].minlength" sd-character-count
-                    data-item="item.extra[field._id]" data-html="true" data-limit="schema[field._id].maxlength"></span>
+                <span ng-if="limits.maxlength(field._id, schema, item) || limits.minlength(field._id, schema, item)" sd-character-count
+                    data-item="item.extra[field._id]" data-html="true" data-limit="limits.maxlength(field._id, schema, item)"></span>
                 <div class="authoring-header__input-holder">
                     <div sd-editor3
                         class="authoring-header__input-editor3"

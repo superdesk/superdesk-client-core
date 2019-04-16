@@ -6,7 +6,7 @@
      data-required="schema.headline.required">
 
     <label class="field__label">{{label('headline')}}</label>
-    <span ng-if="schema.headline.maxlength" sd-character-count data-item="item.headline" data-html="true" data-limit="schema.headline.maxlength"></span>
+    <span ng-if="limits.maxlength('headline', schema, item)" sd-character-count data-item="item.headline" data-html="true" data-limit="limits.maxlength('headline', schema, item)"></span>
     <div id="title" class="headline"
          sd-text-editor
          data-config="{toolbar: false, imageDragging: false, disableReturn: true, disableEditing: isPublished(item), tabindex: editor.headline.order, paste: {cleanPastedHTML: editor.headline.cleanPastedHTML}}"
@@ -27,7 +27,7 @@
      data-required="schema.headline.required">
 
     <label class="field__label">{{label('headline')}}</label>
-    <span ng-if="schema.headline.maxlength" sd-character-count data-item="item.headline" data-html="true" data-limit="schema.headline.maxlength"></span>
+    <span ng-if="limits.maxlength('headline', schema, item)" sd-character-count data-item="item.headline" data-html="true" data-limit="limits.maxlength('headline', schema, item)"></span>
     <div id="title" class="headline"
          sd-editor3
          data-path-to-value="'headline'"
@@ -127,7 +127,7 @@
      data-required="schema.abstract.required">
 
     <label class="field__label">{{label('abstract')}}</label>
-    <span sd-character-count data-item="item.abstract" data-html="true" data-limit="schema.abstract.maxlength"></span>
+    <span sd-character-count data-item="item.abstract" data-html="true" data-limit="limits.maxlength('abstract', schema, item)"></span>
     <span sd-word-count data-item="item.abstract" data-html="true"></span>
     <div id="abstract" class="abstract"
          sd-text-editor
@@ -151,7 +151,7 @@
      data-required="schema.abstract.required">
 
     <label class="field__label">{{label('abstract')}}</label>
-    <span sd-character-count data-item="item.abstract" data-html="true" data-limit="schema.abstract.maxlength"></span>
+    <span sd-character-count data-item="item.abstract" data-html="true" data-limit="limits.maxlength('abstract', schema, item)"></span>
     <span sd-word-count data-item="item.abstract" data-html="true"></span>
     <div id="abstract" class="abstract"
          sd-editor3
@@ -374,7 +374,7 @@
      sd-width="{{editor.media_description.sdWidth|| 'full'}}"
      data-required="schema.media_description.required">
     <label class="field__label" translate>Caption</label>
-    <span ng-if="validator.description_text.maxlength" sd-character-count data-item="item.description_text" data-html="true" data-limit="validator.description_text.maxlength"></span>
+    <span ng-if="limits.maxlength(description_text, validator, item)" sd-character-count data-item="item.description_text" data-html="true" data-limit="limits.maxlength('description_text', validator, item)"></span>
     <div id="title" class="abstract"
          sd-text-editor
          data-config="{disableToolbar: true, disableReturn: true, disableEditing: isPublished(item), tabindex: editor.description_text.order, paste: {cleanPastedHTML: editor.description_text.cleanPastedHTML}}"
@@ -395,7 +395,7 @@
      sd-width="{{editor.media_description.sdWidth|| 'full'}}"
      data-required="schema.media_description.required">
     <label class="field__label" translate>Caption</label>
-    <span ng-if="validator.description_text.maxlength" sd-character-count data-item="item.description_text" data-html="true" data-limit="validator.description_text.maxlength"></span>
+    <span ng-if="limits.maxlength('description_text', validator, item)" sd-character-count data-item="item.description_text" data-html="true" data-limit="limits.maxlength('description_text', validator, item)"></span>
     <div id="title" class="abstract"
          sd-editor3
          data-path-to-value="'description_text'"
@@ -548,8 +548,8 @@
     sd-validation-error="error[field.display_name.toLowerCase()]">
 
     <label class="field__label">{{field.display_name}}</label>
-    <span ng-if="schema[field._id].maxlength || schema[field._id].minlength" sd-character-count
-        data-item="item.extra[field._id]" data-html="true" data-limit="schema[field._id].maxlength"></span>
+    <span ng-if="limits.maxlength(field._id, schema, item) || limits.minlength(field._id, schema, item)" sd-character-count
+        data-item="item.extra[field._id]" data-html="true" data-limit="limits.maxlength(field._id, schema, item)"></span>
     <div sd-editor3
         data-path-to-value="'extra' + FIELD_KEY_SEPARATOR + field._id"
         data-single-line="field.field_options.single"
@@ -706,7 +706,7 @@
      sd-width="{{editor.slugline.sdWidth}}"
      order="{{editor.slugline.order}}">
     <label class="field__label">{{label('slugline')}}</label>
-    <span ng-if="schema.slugline.maxlength" sd-character-count data-item="item.slugline" data-html="true" data-limit="schema.slugline.maxlength"></span>
+    <span ng-if="limits.maxlength('slugline', schema, item)" sd-character-count data-item="item.slugline" data-html="true" data-limit="limits.maxlength('slugline', schema, item)"></span>
     <input type="text" class="slugline"
        id="slugline"
        data-language="item.language"
@@ -724,7 +724,7 @@
      sd-validation-error="error.slugline"
      data-required="schema.slugline.required">
     <label class="field__label">{{label('slugline')}}</label>
-    <span ng-if="schema.slugline.maxlength" sd-character-count data-item="item.slugline" data-html="true" data-limit="schema.slugline.maxlength"></span>
+    <span ng-if="limits.maxlength('slugline', schema, item)" sd-character-count data-item="item.slugline" data-html="true" data-limit="limits.maxlength('slugline', schema, item)"></span>
     <div id="title" class="slugline"
          sd-editor3
          data-path-to-value="'slugline'"
