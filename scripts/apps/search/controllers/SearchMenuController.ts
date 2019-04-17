@@ -68,15 +68,25 @@ export default function SearchMenuController(
     // init saved searches
     const initSavedSearches = () => {
         savedSearch.getAllSavedSearches().then((savedSearches: Array<ISavedSearch>) => {
-            this.providers = this.providers.concat(savedSearches
+            let providers = [];
+            const shortcuts = savedSearches
                 .filter((search) => search.shortcut && search.is_global)
                 .map((search) => ({
                     _id: search._id,
                     name: search.name,
                     filter: search.filter,
-                })),
-            );
+                }));
 
+            // bundle repo and its shortcuts
+            this.providers.forEach((provider) => {
+                providers.push(provider);
+                providers = providers.concat($filter('sortByName')(
+                    shortcuts.filter((shortcut) => get(shortcut, 'filter.query.repo', '') === provider._id),
+                    'search_provider',
+                ));
+            });
+
+            this.providers = providers;
             initActiveProvider();
         });
     };
