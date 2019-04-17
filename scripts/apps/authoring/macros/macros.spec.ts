@@ -43,6 +43,7 @@ describe('macros', () => {
 
     beforeEach(window.module('superdesk.apps.authoring.macros'));
     beforeEach(window.module('superdesk.apps.authoring.autosave'));
+    beforeEach(window.module('superdesk.apps.extension-points'));
 
     beforeEach(window.module(($provide) => {
         $provide.service('editorResolver', () => ({get: () => ({

@@ -37,6 +37,7 @@ import postscribe from 'postscribe';
  * @requires editorResolver
  * @requires $sce
  * @requires mediaIdGenerator
+ * @requires functionPoints
  *
  * @description
  *   This directive is responsible for generating superdesk content authoring form.
@@ -76,12 +77,13 @@ AuthoringDirective.$inject = [
     '$sce',
     'mediaIdGenerator',
     'relationsService',
+    'functionPoints',
 ];
 export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace, notify,
     gettext, desks, authoring, api, session, lock, privileges, content, $location,
     referrer, macros, $timeout, $q, modal, archiveService, confirm, reloadService,
     $rootScope, $interpolate, metadata, suggest, config, deployConfig, editorResolver,
-    compareVersions, embedService, $sce, mediaIdGenerator, relationsService) {
+    compareVersions, embedService, $sce, mediaIdGenerator, relationsService, functionPoints) {
     return {
         link: function($scope, elem, attrs) {
             var _closing;
@@ -421,7 +423,8 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
                 $scope.error = {};
 
-                return checkMediaAssociatedToUpdate()
+                return functionPoints.run('authoring:publish', item)
+                    .then(() => checkMediaAssociatedToUpdate())
                     .then((result) => {
                         if (result) {
                             return authoring.publish(orig, item, action);
