@@ -1,8 +1,8 @@
 import React from 'react';
 import {shallow, mount} from 'enzyme';
-import {SpellcheckerContextMenuComponent as SpellcheckerContextMenu} from '../spellchecker/SpellcheckerContextMenu';
 import mockStore from './utils';
 import {getSpellcheckingDecorator} from '../spellchecker/SpellcheckerDecorator';
+import {SpellcheckerContextMenu} from '../spellchecker/SpellcheckerContextMenu';
 
 describe('editor3.components.spellchecker-decorator', () => {
     const SpellcheckerError = getSpellcheckingDecorator({}).component;
@@ -82,11 +82,17 @@ describe('editor3.components.spellchecker-decorator', () => {
 });
 
 describe('editor3.components.spellchecker-context-menu', () => {
-    const suggestions = [
-        {value: 'one', key: 'oneKey'},
-        {value: 'two', key: 'twoKey'},
-        {value: 'three', key: 'threeKey'},
-    ];
+    const warningWithoutSuggestions = {
+        startOffset: 0,
+        text: 'abc',
+        suggestions: null,
+    };
+
+    const warningWithSuggestions = {
+        startOffset: 0,
+        text: 'abc',
+        suggestions: ['one', 'two', 'three'],
+    };
 
     beforeEach(window.module(($provide) => {
         $provide.service('spellcheck', ($q) => ({
@@ -99,7 +105,7 @@ describe('editor3.components.spellchecker-context-menu', () => {
 
         document.body.appendChild(element);
 
-        const wrapper = mount(<SpellcheckerContextMenu targetElement={element} suggestions={[]} />);
+        const wrapper = mount(<SpellcheckerContextMenu targetElement={element} warning={warningWithoutSuggestions} />);
         const buttons = wrapper.find('button');
 
         expect(buttons.first().text()).toBe('SORRY, NO SUGGESTIONS.');
@@ -112,35 +118,11 @@ describe('editor3.components.spellchecker-context-menu', () => {
 
         document.body.appendChild(element);
 
-        const wrapper = mount(<SpellcheckerContextMenu targetElement={element} suggestions={suggestions} />);
+        const wrapper = mount(<SpellcheckerContextMenu targetElement={element} warning={warningWithSuggestions} />);
         const buttons = wrapper.find('button');
 
         expect(buttons.at(0).text()).toBe('one');
         expect(buttons.at(1).text()).toBe('two');
         expect(buttons.at(2).text()).toBe('three');
     });
-
-    it('should replace word when requested', inject((spellcheck) => {
-        const element = document.createElement('div'); // required for positioning
-
-        document.body.appendChild(element);
-
-        const replaceWord = jasmine.createSpy();
-        const wrapper = mount(
-            <SpellcheckerContextMenu
-                targetElement={element}
-                word={{text: 'abc'}}
-                replaceWord={replaceWord}
-                suggestions={suggestions} />);
-
-        wrapper
-            .find('button')
-            .first()
-            .simulate('mousedown');
-
-        expect(replaceWord).toHaveBeenCalledWith({
-            word: {text: 'abc'},
-            newWord: 'oneKey',
-        });
-    }));
 });
