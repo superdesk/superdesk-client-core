@@ -24,6 +24,7 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _, pref
     this.setLanguage = function(_lang) {
         if (lang !== _lang) {
             lang = _lang;
+            dict = {};
         }
     };
 
