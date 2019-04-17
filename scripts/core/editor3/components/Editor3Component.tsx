@@ -73,19 +73,6 @@ export function canDropMedia(e, editorConfig) {
     return supportsMedia && isValidMedia;
 }
 
-function clearSpellcheckInfo(editorStateCurrent: EditorState, editorStateNext: EditorState): EditorState {
-    if (editorStateCurrent.getCurrentContent() === editorStateNext.getCurrentContent()) {
-        return editorStateNext;
-    } else {
-        // Clear only when content changes. Otherwise, it will get cleared on caret changes, but
-        // won't get repopulated, because spellchecker only runs when content changes.
-        return EditorState.set(
-            editorStateNext,
-            {decorator: getCustomDecorator()},
-        );
-    }
-}
-
 /**
  * @ngdoc React
  * @module superdesk.core.editor3
@@ -464,19 +451,7 @@ export class Editor3Component extends React.Component<any, any> {
                                 this.editorNode.dataset.editorSelectionRect = JSON.stringify(selectionRect);
                             }
 
-                            /*
-                                Spellchecker info must be cleared on contentState change because:
-                                1. User might have deleted a piece of text marked by spellchecker
-                                when the decorator runs again, it will attempt to decorate the same ranges
-                                and will crash, because that content is no longer there.
-                                2. User might insert content before spellchecker decorated content which
-                                will make offsets inaccurate and when the decorator runs again
-                                it will decorate the wrong ranges.
-                            */
-                            const editorStateWithoutSpellcheckerInfo =
-                                clearSpellcheckInfo(this.props.editorState, editorStateNext);
-
-                            onChange(editorStateWithoutSpellcheckerInfo);
+                            onChange(editorStateNext);
                         }}
                         onTab={onTab}
                         tabIndex={tabindex}

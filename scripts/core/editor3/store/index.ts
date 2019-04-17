@@ -65,6 +65,7 @@ export interface IEditorStore {
     spellchecking: {
         enabled: boolean;
         inProgress: boolean;
+        warningsByBlock: ISpellcheckWarningsByBlock;
     };
     suggestingMode: any;
     invisibles: any;
@@ -135,6 +136,7 @@ export default function createEditorStore(props: IProps, spellcheck, isReact = f
         spellchecking: {
             enabled: !spellcheckerDisabledInConfig,
             inProgress: false,
+            warningsByBlock: {},
         },
         suggestingMode: false,
         invisibles: false,

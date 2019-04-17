@@ -120,51 +120,6 @@ describe('editor3.components.spellchecker-context-menu', () => {
         expect(buttons.at(2).text()).toBe('three');
     });
 
-    it('should add word to dictionary when requested', inject((spellcheck) => {
-        const element = document.createElement('div'); // required for positioning
-
-        document.body.appendChild(element);
-
-        const refreshWord = jasmine.createSpy();
-        const wrapper = mount(
-            <SpellcheckerContextMenu
-                targetElement={element}
-                word={{text: 'abc'}}
-                refreshWord={refreshWord}
-                suggestions={[]} />,
-        );
-
-        wrapper
-            .find('button')
-            .at(1)
-            .simulate('mousedown');
-
-        expect(spellcheck.addWord).toHaveBeenCalledWith('abc', false);
-        expect(refreshWord).toHaveBeenCalledWith({text: 'abc'});
-    }));
-
-    it('should ignore word when requested', inject((spellcheck) => {
-        const element = document.createElement('div'); // required for positioning
-
-        document.body.appendChild(element);
-
-        const refreshWord = jasmine.createSpy();
-        const wrapper = mount(
-            <SpellcheckerContextMenu
-                targetElement={element}
-                word={{text: 'abc'}}
-                refreshWord={refreshWord}
-                suggestions={[]} />);
-
-        wrapper
-            .find('button')
-            .at(2)
-            .simulate('mousedown');
-
-        expect(spellcheck.addWord).toHaveBeenCalledWith('abc', true);
-        expect(refreshWord).toHaveBeenCalledWith({text: 'abc'});
-    }));
-
     it('should replace word when requested', inject((spellcheck) => {
         const element = document.createElement('div'); // required for positioning
 

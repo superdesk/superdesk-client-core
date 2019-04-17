@@ -1,7 +1,7 @@
 import {RichUtils, EditorState, AtomicBlockUtils, SelectionState} from 'draft-js';
 import {setTansaHtml} from '../helpers/tansa';
 import {addMedia} from './toolbar';
-import {isEditorPlainText} from '../store';
+import {isEditorPlainText, getCustomDecorator, IEditorStore} from '../store';
 import {replaceWord} from './spellchecker';
 import {DELETE_SUGGESTION} from '../highlightsConfig';
 import {moveBlockWithoutDispatching} from '../helpers/draftMoveBlockWithoutDispatching';
@@ -75,6 +75,19 @@ export const forceUpdate = (state, keepSelection = false) => {
     };
 };
 
+function clearSpellcheckInfo(editorStateCurrent: EditorState, editorStateNext: EditorState): EditorState {
+    if (editorStateCurrent.getCurrentContent() === editorStateNext.getCurrentContent()) {
+        return editorStateNext;
+    } else {
+        // Clear only when content changes. Otherwise, it will get cleared on caret changes, but
+        // won't get repopulated, because spellchecker only runs when content changes.
+        return EditorState.set(
+            editorStateNext,
+            {decorator: getCustomDecorator()},
+        );
+    }
+}
+
 /**
  * @ngdoc method
  * @name onChange
@@ -89,23 +102,38 @@ export const forceUpdate = (state, keepSelection = false) => {
  * @return {Object} returns new state
  * @description Handle the editor state has been changed event
  */
-export const onChange = (state, newState: EditorState, force = false, keepSelection = false, skipOnChange = false) => {
-    // TODO(x): Remove `force` once Draft v0.11.0 is in
-    const editorState = newState;
 
-    const contentChanged = state.editorState.getCurrentContent() !== newState.getCurrentContent();
+export const onChange = (
+    state: IEditorStore,
+    newState: EditorState,
+    force = false, // TODO: Remove `force` once Draft v0.11.0 is in
+    keepSelection = false,
+    skipOnChange = false,
+) => {
+    /*
+        Spellchecker info must be cleared on contentState change because:
+        1. User might have deleted a piece of text marked by spellchecker
+        when the decorator runs again, it will attempt to decorate the same ranges
+        and will crash, because that content is no longer there.
+        2. User might insert content before spellchecker decorated content which
+        will make offsets inaccurate and when the decorator runs again
+        it will decorate the wrong ranges.
+    */
+    const editorStateNext = clearSpellcheckInfo(state.editorState, newState);
+
+    const contentChanged = state.editorState.getCurrentContent() !== editorStateNext.getCurrentContent();
 
     if (!skipOnChange && (contentChanged || force)) {
         const plainText = isEditorPlainText(state);
 
-        state.onChangeValue(editorState.getCurrentContent(), {plainText});
+        state.onChangeValue(editorStateNext.getCurrentContent(), {plainText});
     }
 
     if (force) {
         return forceUpdate(
             applyAbbreviations({
                 ...state,
-                editorState,
+                editorState: editorStateNext,
             }),
             keepSelection,
         );
@@ -113,7 +141,7 @@ export const onChange = (state, newState: EditorState, force = false, keepSelect
 
     return applyAbbreviations({
         ...state,
-        editorState,
+        editorState: editorStateNext,
     });
 };
 

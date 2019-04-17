@@ -10,9 +10,16 @@ export interface ISpellcheckWarning {
     suggestions: Array<string>;
 }
 
+export interface ISpellcheckerAction {
+    label: string;
+    perform: (warning: ISpellcheckWarning) => Promise<void>;
+}
+
 export interface ISpellchecker {
     check(
         // formatting-free text, can be multiline
         text: string,
-    ): Array<ISpellcheckWarning>;
+    ): Promise<Array<ISpellcheckWarning>>;
+
+    actions: Array<ISpellcheckerAction>;
 }

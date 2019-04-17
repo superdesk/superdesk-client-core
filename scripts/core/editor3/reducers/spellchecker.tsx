@@ -9,8 +9,6 @@ const spellchecker = (state: any = {}, action) => {
     switch (action.type) {
     case 'SPELLCHECKER_REPLACE_WORD':
         return replaceWord(state, action.payload);
-    case 'SPELLCHECKER_REFRESH_WORD':
-        return refreshWord(state, action.payload);
     case 'SET_SPELLCHEKCER_PROGRESS':
         return {...state, spellchecking: {...state.spellchecking, inProgress: action.payload}};
     case 'DISABLE_SPELLCHECKER':
@@ -22,6 +20,14 @@ const spellchecker = (state: any = {}, action) => {
     }
 };
 
+export interface IReplaceWordData {
+    word: {
+        text: string;
+        offset: number;
+    };
+    newWord: string;
+}
+
 /**
  * @ngdoc method
  * @name replaceWord
@@ -30,8 +36,10 @@ const spellchecker = (state: any = {}, action) => {
  * @return {Object} returns new state
  * @description Replace the current word with the new selected one
  */
-export const replaceWord = (state, {word, newWord}, skipOnChange = false) => {
+export const replaceWord = (state, replaceWordData: IReplaceWordData, skipOnChange = false) => {
     const {editorState, suggestingMode} = state;
+
+    const {word, newWord} = replaceWordData;
 
     if (word.text === newWord) {
         return onChange(state, editorState, true);
@@ -105,18 +113,7 @@ export const replaceWord = (state, {word, newWord}, skipOnChange = false) => {
     }
 };
 
-/**
- * @ngdoc method
- * @name refreshWord
- * @param {Object} state
- * @param {String} word
- * @return {Object} returns new state
- * @description Refreshes the current word (usually after having being added to the
- * dictionary).
- */
-const refreshWord = (state, word) => replaceWord(state, {word: word, newWord: word.text});
-
-function applySpellcheck(enabled: boolean, state: IEditorStore, payload?) {
+function applySpellcheck(enabled: boolean, state: IEditorStore, payload?): IEditorStore {
     const {editorState} = state;
     const spellcheckWarningsByBlock: ISpellcheckWarningsByBlock = payload;
 
@@ -128,7 +125,12 @@ function applySpellcheck(enabled: boolean, state: IEditorStore, payload?) {
     return {
         ...state,
         editorState: nextEditorState,
-        spellchecking: {...state.spellchecking, enabled: enabled, inProgress: false},
+        spellchecking: {
+            ...state.spellchecking,
+            enabled: enabled,
+            inProgress: false,
+            warningsByBlock: enabled ? spellcheckWarningsByBlock : {},
+        },
     };
 }
 

@@ -1,10 +1,9 @@
 import ReactDOM from 'react-dom';
 import React from 'react';
-import PropTypes from 'prop-types';
 import {ContentBlock} from 'draft-js';
 import ng from 'core/services/ng';
 import {SpellcheckerContextMenu} from './SpellcheckerContextMenu';
-import {ISpellcheckWarning} from './interfaces';
+import {ISpellcheckWarning, ISpellcheckerAction} from './interfaces';
 import {ISpellcheckWarningsByBlock} from 'core/editor3/actions';
 
 function getElementForPortal() {
@@ -22,105 +21,10 @@ function getElementForPortal() {
     }
 }
 
-/**
- * @ngdoc React
- * @module superdesk.core.editor3
- * @name SpellcheckerError
- * @param {Array} children the children prop of the component
- * @description This is the component that decorates spellchecker typos.
- */
-class SpellcheckerError extends React.Component<any, any> {
-    static propTypes: any;
-    static defaultProps: any;
-
-    wordTypoElement: any;
-
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            menuShowing: false,
-            suggestions: [],
-        };
-
-        this.showContextMenu = this.showContextMenu.bind(this);
-        this.closeContextMenu = this.closeContextMenu.bind(this);
-    }
-
-    /**
-     * @ngdoc method
-     * @name SpellcheckerError#showContextMenu
-     * @param {String} txt The word that suggestions are being showed for.
-     * @returns {Function} The event listener
-     * @description Creates a new event listener that shows the context menu
-     * for the passed word.
-     */
-    showContextMenu(txt) {
-        const spellcheck = ng.get('spellcheck');
-
-        return (e) => {
-            e.preventDefault();
-
-            spellcheck.suggest(txt).then((suggestions) => {
-                this.setState({menuShowing: true, suggestions: suggestions});
-            });
-        };
-    }
-
-    /**
-     * @ngdoc method
-     * @name SpellcheckerError#closeContextMenu
-     * @description Closes the context menu.
-     */
-    closeContextMenu() {
-        this.setState({menuShowing: false});
-    }
-
-    componentDidUpdate(prevProps, prevState) {
-        const {menuShowing} = this.state;
-
-        if (prevState.menuShowing === menuShowing) {
-            return;
-        }
-
-        const fn = menuShowing ? 'on' : 'off';
-
-        $(window)[fn]('mousedown', this.closeContextMenu);
-    }
-
-    componentWillUnmount() {
-        $(window).off('mousedown', this.closeContextMenu);
-    }
-
-    render() {
-        const {menuShowing, suggestions} = this.state;
-        const {children} = this.props;
-        const word = {text: children[0].props.text, offset: children[0].props.start};
-
-        return (
-            <span
-                className="word-typo"
-                onContextMenu={this.showContextMenu(word.text)}
-                ref={(el) => this.wordTypoElement = el}>
-                {menuShowing ?
-                    ReactDOM.createPortal(
-                        <SpellcheckerContextMenu
-                            targetElement={this.wordTypoElement}
-                            suggestions={suggestions}
-                            word={word}
-                        />,
-                        getElementForPortal(),
-                    )
-                    : null}
-                {this.props.children}
-            </span>
-        );
-    }
+interface IState {
+    menuShowing: boolean;
+    warning: ISpellcheckWarning;
 }
-
-SpellcheckerError.propTypes = {
-    children: PropTypes.array,
-};
 
 export const getSpellcheckingDecorator = (spellcheckWarnings: ISpellcheckWarningsByBlock) => {
     return {
@@ -133,7 +37,99 @@ export const getSpellcheckingDecorator = (spellcheckWarnings: ISpellcheckWarning
                 });
             }
         },
-        component: SpellcheckerError,
+        component: class SpellcheckerError extends React.Component<any, IState> {
+            static propTypes: any;
+            static defaultProps: any;
+
+            wordTypoElement: any;
+
+            constructor(props) {
+                super(props);
+
+                this.state = {
+                    menuShowing: false,
+                    warning: null,
+                };
+
+                this.closeContextMenu = this.closeContextMenu.bind(this);
+            }
+
+            closeContextMenu() {
+                this.setState({menuShowing: false});
+            }
+
+            componentDidUpdate(prevProps, prevState) {
+                const {menuShowing} = this.state;
+
+                if (prevState.menuShowing === menuShowing) {
+                    return;
+                }
+
+                const fn = menuShowing ? 'on' : 'off';
+
+                $(window)[fn]('mousedown', this.closeContextMenu);
+            }
+
+            componentWillUnmount() {
+                $(window).off('mousedown', this.closeContextMenu);
+            }
+
+            render() {
+                const {menuShowing} = this.state;
+
+                return (
+                    <span
+                        className="word-typo"
+                        onContextMenu={(e) => {
+                            e.preventDefault();
+
+                            const blockKey = this.props.offsetKey.split('-')[0];
+                            const warningsForBlock = spellcheckWarnings[blockKey];
+
+                            if (warningsForBlock == null) {
+                                return;
+                            }
+
+                            const startOffset = this.props.contentState
+                                .getBlockForKey(blockKey)
+                                .getText()
+                                .indexOf(this.props.decoratedText);
+
+                            const warningForDecoration = warningsForBlock.find((warning) =>
+                                warning.startOffset === startOffset && warning.text === this.props.decoratedText);
+
+                            if (Array.isArray(warningForDecoration.suggestions)) {
+                                this.setState({
+                                    menuShowing: true,
+                                    warning: warningForDecoration,
+                                });
+                            } else {
+                                getSuggestions(warningForDecoration.text).then((suggestions) => {
+                                    this.setState({
+                                        menuShowing: true,
+                                        warning: {
+                                            ...warningForDecoration,
+                                            suggestions: suggestions == null ? [] : suggestions,
+                                        },
+                                    });
+                                });
+                            }
+                        }}
+                        ref={(el) => this.wordTypoElement = el}>
+                        {menuShowing ?
+                            ReactDOM.createPortal(
+                                <SpellcheckerContextMenu
+                                    targetElement={this.wordTypoElement}
+                                    warning={this.state.warning}
+                                />,
+                                getElementForPortal(),
+                            )
+                            : null}
+                        {this.props.children}
+                    </span>
+                );
+            }
+        },
     };
 };
 
@@ -159,7 +155,7 @@ export function getSpellcheckWarnings(str: string): Promise<Array<ISpellcheckWar
                         info.push({
                             startOffset: lastOffset + start,
                             text: matchArr[0],
-                            suggestions: [],
+                            suggestions: null,
                         });
                     }
                 }
@@ -169,4 +165,29 @@ export function getSpellcheckWarnings(str: string): Promise<Array<ISpellcheckWar
 
             return info;
         });
+}
+
+export const spellcheckerActions: {[key: string]: ISpellcheckerAction} = {
+    addToDictionary: {
+        label: gettext('Add to dictionary'),
+        perform: (warning: ISpellcheckWarning) => {
+            return ng.getService('spellcheck').then((spellcheck) => {
+                spellcheck.addWord(warning.text, false);
+            });
+        },
+    },
+    ignoreWord: {
+        label: gettext('Ignore word'),
+        perform: (warning: ISpellcheckWarning) => {
+            return ng.getService('spellcheck').then((spellcheck) => {
+                spellcheck.addWord(warning.text, false);
+            });
+        },
+    },
+};
+
+export function getSuggestions(text: string): Promise<Array<string>> {
+    return ng.getService('spellcheck')
+        .then((spellcheck) => spellcheck.suggest(text))
+        .then((result) => result.map(({value}) => value));
 }
