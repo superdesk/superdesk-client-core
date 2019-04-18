@@ -364,6 +364,9 @@ function MetaDropdownDirective($filter) {
 
                 if (item) {
                     if (scope.cv) {
+                        // if there is cv as well as field, store cv._id as scheme
+                        // so that it can be differentiated from another cv inside same parent field(subject).
+                        // ex: subject:[{name: "a", qcode: "a", scheme: "new-cv"}]
                         item.scheme = scope.cv._id;
                         o[scope.field] = scope.item[scope.field].filter((v) => v.scheme !== scope.cv._id);
                         o[scope.field].push(item);
@@ -371,6 +374,7 @@ function MetaDropdownDirective($filter) {
                         o[scope.field] = scope.key ? item[scope.key] : [item];
                     }
                 } else if (scope.cv) {
+                    // if there is cv as well as field don't set o[scope.field] to null.
                     o[scope.field] = scope.item[scope.field].filter((v) => v.scheme !== scope.cv._id);
                 } else {
                     o[scope.field] = null;
