@@ -25,13 +25,9 @@ import UnstyledWrapper from './UnstyledWrapper';
 import {handleBeforeInputHighlights} from '../helpers/handleBeforeInputHighlights';
 import * as Suggestions from '../helpers/suggestions';
 import {getCurrentAuthor} from '../helpers/author';
-import {
-    getSpellcheckWarningsByBlock,
-    setSpellcheckerProgress,
-    applySpellcheck
-} from '../actions';
-import {getCustomDecorator} from '../store';
+import {setSpellcheckerProgress, applySpellcheck} from '../actions';
 import {noop} from 'lodash';
+import {getSpellcheckWarningsByBlock} from './spellchecker/SpellcheckerDecorator';
 
 const VALID_MEDIA_TYPES = [
     'application/superdesk.item.picture',

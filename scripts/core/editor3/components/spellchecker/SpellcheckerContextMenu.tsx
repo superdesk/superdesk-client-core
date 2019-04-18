@@ -2,13 +2,13 @@ import React from 'react';
 import {connect} from 'react-redux';
 import * as actions from '../../actions';
 import {StickElementsWithTracking} from 'core/helpers/dom/stickElementsWithTracking';
-import {spellcheckerActions} from './SpellcheckerDecorator';
-import {ISpellcheckWarning} from './interfaces';
+import {ISpellcheckWarning, ISpellchecker} from './interfaces';
 import {reloadSpellcheckerWarnings} from '../../actions';
 
 interface IProps {
     warning: ISpellcheckWarning;
     targetElement: any;
+    spellchecker: ISpellchecker;
     dispatch: any;
 }
 
@@ -25,6 +25,7 @@ export class SpellcheckerContextMenuComponent extends React.Component<IProps> {
 
     render() {
         const {suggestions} = this.props.warning;
+        const {spellchecker} = this.props;
 
         return (
             <div className={'dropdown open suggestions-dropdown'}
@@ -50,8 +51,8 @@ export class SpellcheckerContextMenuComponent extends React.Component<IProps> {
                     <li className="divider"/>
                     <div className="form-label" style={{margin: '0 16px'}}>{gettext('Actions')}</div>
                     {
-                        Object.keys(spellcheckerActions).map((key, i) => {
-                            const action = spellcheckerActions[key];
+                        Object.keys(spellchecker.actions).map((key, i) => {
+                            const action = spellchecker.actions[key];
 
                             return (
                                 <li key={i}>

@@ -10,7 +10,7 @@ import {createStore, applyMiddleware} from 'redux';
 import {createLogger} from 'redux-logger';
 import thunk from 'redux-thunk';
 import {pick, get, debounce} from 'lodash';
-import {PopupTypes, forceUpdate, setAbbreviations, ISpellcheckWarningsByBlock} from '../actions';
+import {PopupTypes, forceUpdate, setAbbreviations} from '../actions';
 import {fieldsMetaKeys, setFieldMetadata, getFieldMetadata, FIELD_KEY_SEPARATOR} from '../helpers/fieldsMeta';
 import {getContentStateFromHtml} from '../html/from-html';
 import {getAnnotationsFromItem} from '../helpers/editor3CustomData';
@@ -23,7 +23,7 @@ import reducers from '../reducers';
 import {editor3StateToHtml} from '../html/to-html/editor3StateToHtml';
 import {LinkDecorator} from '../components/links';
 import {appConfig} from 'index';
-import {getSpellcheckingDecorator} from '../components/spellchecker/SpellcheckerDecorator';
+import {getSpellcheckingDecorator, ISpellcheckWarningsByBlock} from '../components/spellchecker/SpellcheckerDecorator';
 
 export const ignoreInternalAnnotationFields = (annotations) =>
     annotations.map(

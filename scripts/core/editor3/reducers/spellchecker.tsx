@@ -3,7 +3,7 @@ import {onChange} from './editor3';
 import {createAddSuggestion} from './suggestions';
 import {getSuggestionMetadata} from '../actions/suggestions';
 import {getCustomDecorator, IEditorStore} from '../store';
-import {ISpellcheckWarningsByBlock} from '../actions';
+import {ISpellcheckWarningsByBlock} from '../components/spellchecker/SpellcheckerDecorator';
 
 const spellchecker = (state: any = {}, action) => {
     switch (action.type) {

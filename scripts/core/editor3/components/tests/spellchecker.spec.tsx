@@ -3,6 +3,9 @@ import {shallow, mount} from 'enzyme';
 import mockStore from './utils';
 import {getSpellcheckingDecorator} from '../spellchecker/SpellcheckerDecorator';
 import {SpellcheckerContextMenu} from '../spellchecker/SpellcheckerContextMenu';
+import {getSpellchecker} from '../spellchecker/default-spellcheckers';
+
+const spellchecker = getSpellchecker();
 
 describe('editor3.components.spellchecker-decorator', () => {
     const SpellcheckerError = getSpellcheckingDecorator({}).component;
@@ -105,7 +108,13 @@ describe('editor3.components.spellchecker-context-menu', () => {
 
         document.body.appendChild(element);
 
-        const wrapper = mount(<SpellcheckerContextMenu targetElement={element} warning={warningWithoutSuggestions} />);
+        const wrapper = mount(
+            <SpellcheckerContextMenu
+                targetElement={element}
+                warning={warningWithoutSuggestions}
+                spellchecker={spellchecker}
+            />,
+        );
         const buttons = wrapper.find('button');
 
         expect(buttons.first().text()).toBe('SORRY, NO SUGGESTIONS.');
@@ -118,7 +127,13 @@ describe('editor3.components.spellchecker-context-menu', () => {
 
         document.body.appendChild(element);
 
-        const wrapper = mount(<SpellcheckerContextMenu targetElement={element} warning={warningWithSuggestions} />);
+        const wrapper = mount(
+            <SpellcheckerContextMenu
+                targetElement={element}
+                warning={warningWithSuggestions}
+                spellchecker={spellchecker}
+            />,
+        );
         const buttons = wrapper.find('button');
 
         expect(buttons.at(0).text()).toBe('one');

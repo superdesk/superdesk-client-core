@@ -16,10 +16,11 @@ export interface ISpellcheckerAction {
 }
 
 export interface ISpellchecker {
-    check(
-        // formatting-free text, can be multiline
-        text: string,
-    ): Promise<Array<ISpellcheckWarning>>;
+    // text - formatting-free text, can be multiline
+    check(text: string): Promise<Array<ISpellcheckWarning>>;
 
-    actions: Array<ISpellcheckerAction>;
+    // text - formatting-free text, must be single-line
+    getSuggestions(text: string): Promise<Array<string>>;
+
+    actions: {[key: string]: ISpellcheckerAction};
 }

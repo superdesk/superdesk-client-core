@@ -1,10 +1,51 @@
 import ReactDOM from 'react-dom';
 import React from 'react';
-import {ContentBlock} from 'draft-js';
-import ng from 'core/services/ng';
+import {ContentBlock, EditorState} from 'draft-js';
 import {SpellcheckerContextMenu} from './SpellcheckerContextMenu';
-import {ISpellcheckWarning, ISpellcheckerAction} from './interfaces';
-import {ISpellcheckWarningsByBlock} from 'core/editor3/actions';
+import {ISpellcheckWarning} from './interfaces';
+import {getSpellchecker} from './default-spellcheckers';
+
+const spellchecker = getSpellchecker();
+
+export type ISpellcheckWarningsByBlock = {[blockKey: string]: Array<ISpellcheckWarning>};
+
+export function getSpellcheckWarningsByBlock(editorState: EditorState): Promise<ISpellcheckWarningsByBlock> {
+    const rangesByBlock: Array<{blockKey: string, startOffset: number, endOffset: number}> = [];
+
+    let lastOffset = 0;
+    const blocks = editorState.getCurrentContent().getBlocksAsArray();
+
+    blocks.forEach((block) => {
+        const blockLength = block.getLength();
+        rangesByBlock.push({
+            blockKey: block.getKey(), startOffset: lastOffset, endOffset: lastOffset + blockLength,
+        });
+        lastOffset += blockLength;
+    });
+
+    const text = editorState.getCurrentContent().getPlainText();
+
+    return spellchecker.check(text).then((warnings) => {
+        let spellcheckWarningsByBlock: ISpellcheckWarningsByBlock = {};
+
+        warnings.forEach((warning) => {
+            const range = rangesByBlock.find(({startOffset, endOffset}) =>
+                warning.startOffset >= startOffset && warning.startOffset < endOffset);
+
+            const {blockKey} = range;
+
+            if (spellcheckWarningsByBlock[blockKey] == null) {
+                spellcheckWarningsByBlock[blockKey] = [];
+            }
+            spellcheckWarningsByBlock[blockKey].push({
+                ...warning,
+                startOffset: warning.startOffset - range.startOffset,
+            });
+        });
+
+        return spellcheckWarningsByBlock;
+    });
+}
 
 function getElementForPortal() {
     const existingElement = document.querySelector('.spellchecker-suggestions');
@@ -104,7 +145,7 @@ export const getSpellcheckingDecorator = (spellcheckWarnings: ISpellcheckWarning
                                     warning: warningForDecoration,
                                 });
                             } else {
-                                getSuggestions(warningForDecoration.text).then((suggestions) => {
+                                spellchecker.getSuggestions(warningForDecoration.text).then((suggestions) => {
                                     this.setState({
                                         menuShowing: true,
                                         warning: {
@@ -121,6 +162,7 @@ export const getSpellcheckingDecorator = (spellcheckWarnings: ISpellcheckWarning
                                 <SpellcheckerContextMenu
                                     targetElement={this.wordTypoElement}
                                     warning={this.state.warning}
+                                    spellchecker={spellchecker}
                                 />,
                                 getElementForPortal(),
                             )
@@ -132,62 +174,3 @@ export const getSpellcheckingDecorator = (spellcheckWarnings: ISpellcheckWarning
         },
     };
 };
-
-export function getSpellcheckWarnings(str: string): Promise<Array<ISpellcheckWarning>> {
-    const spellcheck = ng.get('spellcheck');
-
-    return spellcheck.getDict()
-        .then(() => {
-            const info: Array<ISpellcheckWarning> = [];
-            const WORD_REGEXP = /[0-9a-zA-Z\u00C0-\u1FFF\u2C00-\uD7FF]+/g;
-            const regex = WORD_REGEXP;
-
-            let lastOffset = 0;
-
-            str.split('\n').forEach((paragraph) => {
-                let matchArr;
-                let start;
-
-                // tslint:disable-next-line no-conditional-assignment
-                while ((matchArr = regex.exec(paragraph)) !== null) {
-                    start = matchArr.index;
-                    if (!spellcheck.isCorrectWord(matchArr[0])) {
-                        info.push({
-                            startOffset: lastOffset + start,
-                            text: matchArr[0],
-                            suggestions: null,
-                        });
-                    }
-                }
-
-                lastOffset += paragraph.length;
-            });
-
-            return info;
-        });
-}
-
-export const spellcheckerActions: {[key: string]: ISpellcheckerAction} = {
-    addToDictionary: {
-        label: gettext('Add to dictionary'),
-        perform: (warning: ISpellcheckWarning) => {
-            return ng.getService('spellcheck').then((spellcheck) => {
-                spellcheck.addWord(warning.text, false);
-            });
-        },
-    },
-    ignoreWord: {
-        label: gettext('Ignore word'),
-        perform: (warning: ISpellcheckWarning) => {
-            return ng.getService('spellcheck').then((spellcheck) => {
-                spellcheck.addWord(warning.text, false);
-            });
-        },
-    },
-};
-
-export function getSuggestions(text: string): Promise<Array<string>> {
-    return ng.getService('spellcheck')
-        .then((spellcheck) => spellcheck.suggest(text))
-        .then((result) => result.map(({value}) => value));
-}
