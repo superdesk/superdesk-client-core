@@ -22,8 +22,8 @@ import {removeInlineStyles} from '../helpers/removeFormat';
 import reducers from '../reducers';
 import {editor3StateToHtml} from '../html/to-html/editor3StateToHtml';
 import {LinkDecorator} from '../components/links';
-import {appConfig} from 'index';
 import {getSpellcheckingDecorator, ISpellcheckWarningsByBlock} from '../components/spellchecker/SpellcheckerDecorator';
+import {appConfig} from 'appConfig';
 
 export const ignoreInternalAnnotationFields = (annotations) =>
     annotations.map(
