@@ -4,6 +4,8 @@ import mockStore from './utils';
 import {getSpellcheckingDecorator} from '../spellchecker/SpellcheckerDecorator';
 import {SpellcheckerContextMenu} from '../spellchecker/SpellcheckerContextMenu';
 import {getSpellchecker} from '../spellchecker/default-spellcheckers';
+import {Provider} from 'react-redux';
+import {createStore} from 'redux';
 
 const spellchecker = getSpellchecker('en');
 
@@ -18,7 +20,7 @@ describe('editor3.components.spellchecker-decorator', () => {
         const {options} = mockStore();
 
         // eslint-disable-next-line react/no-children-prop
-        return mount(<SpellcheckerError children={children} />, options);
+        return mount(<SpellcheckerError offsetKey="wdkow-4236" children={children} />, options);
     }
 
     beforeEach(window.module(($provide) => {
@@ -38,57 +40,13 @@ describe('editor3.components.spellchecker-decorator', () => {
         expect(wrapper.find('strong').length).toBe(2);
         expect(wrapper.text()).toBe('hello world');
     }));
-
-    it('should obtain correct state when context menu is triggered', inject((spellcheck, $rootScope) => {
-        const wrapper = getWrapper();
-
-        expect(wrapper.state().menuShowing).toBeFalsy();
-
-        wrapper.simulate('contextmenu', new Event('contextmenu'));
-        $rootScope.$apply();
-
-        expect(spellcheck.suggest).toHaveBeenCalledWith('tihs');
-        expect(wrapper.state().menuShowing).toBeTruthy();
-        expect(wrapper.state().suggestions).toEqual(['this', 'tish', 'fish']);
-    }));
-
-    it('should show context menu with correct props', inject(($rootScope) => {
-        const wrapper = getWrapper();
-
-        wrapper.simulate('contextmenu', new Event('contextmenu'));
-        $rootScope.$apply();
-        wrapper.update();
-
-        const ctxMenu = wrapper.find('SpellcheckerContextMenuComponent');
-
-        expect(ctxMenu.length).toBe(1);
-        expect(ctxMenu.prop('suggestions')).toEqual(['this', 'tish', 'fish']);
-        expect(ctxMenu.prop('word')).toEqual({text: 'tihs', offset: 3});
-    }));
-
-    it('should hide context menu when window is clicked', inject(($rootScope) => {
-        const wrapper = getWrapper();
-
-        wrapper.simulate('contextmenu', new Event('contextmenu'));
-        $rootScope.$apply();
-        wrapper.update();
-
-        expect(wrapper.state().menuShowing).toBeTruthy();
-        expect(wrapper.find('SpellcheckerContextMenuComponent').length).toBe(1);
-
-        $(window).trigger('mousedown');
-        wrapper.update();
-
-        expect(wrapper.state().menuShowing).toBeFalsy();
-        expect(wrapper.find('SpellcheckerContextMenuComponent').length).toBe(0);
-    }));
 });
 
 describe('editor3.components.spellchecker-context-menu', () => {
     const warningWithoutSuggestions = {
         startOffset: 0,
         text: 'abc',
-        suggestions: null,
+        suggestions: [],
     };
 
     const warningWithSuggestions = {
@@ -109,11 +67,13 @@ describe('editor3.components.spellchecker-context-menu', () => {
         document.body.appendChild(element);
 
         const wrapper = mount(
-            <SpellcheckerContextMenu
-                targetElement={element}
-                warning={warningWithoutSuggestions}
-                spellchecker={spellchecker}
-            />,
+            <Provider store={createStore(() => ({}))}>
+                <SpellcheckerContextMenu
+                    targetElement={element}
+                    warning={warningWithoutSuggestions}
+                    spellchecker={spellchecker}
+                />
+            </Provider>,
         );
         const buttons = wrapper.find('button');
 
@@ -128,11 +88,13 @@ describe('editor3.components.spellchecker-context-menu', () => {
         document.body.appendChild(element);
 
         const wrapper = mount(
-            <SpellcheckerContextMenu
-                targetElement={element}
-                warning={warningWithSuggestions}
-                spellchecker={spellchecker}
-            />,
+            <Provider store={createStore(() => ({}))}>
+                <SpellcheckerContextMenu
+                    targetElement={element}
+                    warning={warningWithSuggestions}
+                    spellchecker={spellchecker}
+                />
+            </Provider>,
         );
         const buttons = wrapper.find('button');
 
