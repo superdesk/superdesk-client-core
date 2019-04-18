@@ -3,6 +3,8 @@ import {
     getSpellcheckWarningsByBlock,
     ISpellcheckWarningsByBlock
 } from "../components/spellchecker/SpellcheckerDecorator";
+import {IEditorStore} from "../store";
+import {getSpellchecker} from "../components/spellchecker/default-spellcheckers";
 
 export function replaceWord(data: IReplaceWordData) {
     return {
@@ -21,7 +23,10 @@ export function setSpellcheckerStatus(enabled: boolean) {
 
 export function reloadSpellcheckerWarnings() {
     return function(dispatch, getState) {
-        getSpellcheckWarningsByBlock(getState().editorState).then((spellcheckWarningsByBlock) => {
+        const state: IEditorStore = getState();
+        const spellchecker = getSpellchecker(state.spellchecking.language);
+
+        getSpellcheckWarningsByBlock(spellchecker, getState().editorState).then((spellcheckWarningsByBlock) => {
             dispatch(applySpellcheck(spellcheckWarningsByBlock));
         });
     };

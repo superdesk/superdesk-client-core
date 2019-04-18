@@ -28,6 +28,7 @@ import {getCurrentAuthor} from '../helpers/author';
 import {setSpellcheckerProgress, applySpellcheck} from '../actions';
 import {noop} from 'lodash';
 import {getSpellcheckWarningsByBlock} from './spellchecker/SpellcheckerDecorator';
+import {getSpellchecker} from './spellchecker/default-spellcheckers';
 
 const VALID_MEDIA_TYPES = [
     'application/superdesk.item.picture',
@@ -131,12 +132,15 @@ export class Editor3Component extends React.Component<any, any> {
                         this.props.dispatch(setSpellcheckerProgress(true));
                     }
 
-                    getSpellcheckWarningsByBlock(this.props.editorState).then((spellcheckWarningsByBlock) => {
-                        if (!canceled) {
-                            this.props.dispatch(applySpellcheck(spellcheckWarningsByBlock));
-                            this.spellcheckCancelFn = noop;
-                        }
-                    });
+                    const spellchecker = getSpellchecker(this.props.spellchecking.language);
+
+                    getSpellcheckWarningsByBlock(spellchecker, this.props.editorState)
+                        .then((spellcheckWarningsByBlock) => {
+                            if (!canceled) {
+                                this.props.dispatch(applySpellcheck(spellcheckWarningsByBlock));
+                                this.spellcheckCancelFn = noop;
+                            }
+                        });
                 }
             }, 500);
 

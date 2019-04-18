@@ -5,16 +5,16 @@ import {getSuggestionMetadata} from '../actions/suggestions';
 import {getCustomDecorator, IEditorStore} from '../store';
 import {ISpellcheckWarningsByBlock} from '../components/spellchecker/SpellcheckerDecorator';
 
-const spellchecker = (state: any = {}, action) => {
+const spellchecker = (state: IEditorStore, action) => {
     switch (action.type) {
     case 'SPELLCHECKER_REPLACE_WORD':
         return replaceWord(state, action.payload);
     case 'SET_SPELLCHEKCER_PROGRESS':
         return {...state, spellchecking: {...state.spellchecking, inProgress: action.payload}};
     case 'DISABLE_SPELLCHECKER':
-        return applySpellcheck(false, state);
+        return applySpellcheck(state.spellchecking.language, false, state);
     case 'APPLY_SPELLCHECK':
-        return applySpellcheck(true, state, action.payload);
+        return applySpellcheck(state.spellchecking.language, true, state, action.payload);
     default:
         return state;
     }
@@ -113,13 +113,13 @@ export const replaceWord = (state, replaceWordData: IReplaceWordData, skipOnChan
     }
 };
 
-function applySpellcheck(enabled: boolean, state: IEditorStore, payload?): IEditorStore {
+function applySpellcheck(language: string, enabled: boolean, state: IEditorStore, payload?): IEditorStore {
     const {editorState} = state;
     const spellcheckWarningsByBlock: ISpellcheckWarningsByBlock = payload;
 
     const nextEditorState = EditorState.set(
         editorState,
-        {decorator: enabled ? getCustomDecorator(spellcheckWarningsByBlock) : getCustomDecorator()},
+        {decorator: enabled ? getCustomDecorator(language, spellcheckWarningsByBlock) : getCustomDecorator()},
     );
 
     return {

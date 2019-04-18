@@ -2,14 +2,15 @@ import ReactDOM from 'react-dom';
 import React from 'react';
 import {ContentBlock, EditorState} from 'draft-js';
 import {SpellcheckerContextMenu} from './SpellcheckerContextMenu';
-import {ISpellcheckWarning} from './interfaces';
+import {ISpellcheckWarning, ISpellchecker} from './interfaces';
 import {getSpellchecker} from './default-spellcheckers';
-
-const spellchecker = getSpellchecker();
 
 export type ISpellcheckWarningsByBlock = {[blockKey: string]: Array<ISpellcheckWarning>};
 
-export function getSpellcheckWarningsByBlock(editorState: EditorState): Promise<ISpellcheckWarningsByBlock> {
+export function getSpellcheckWarningsByBlock(
+    spellchecker: ISpellchecker,
+    editorState: EditorState,
+): Promise<ISpellcheckWarningsByBlock> {
     const rangesByBlock: Array<{blockKey: string, startOffset: number, endOffset: number}> = [];
 
     let lastOffset = 0;
@@ -67,7 +68,9 @@ interface IState {
     warning: ISpellcheckWarning;
 }
 
-export const getSpellcheckingDecorator = (spellcheckWarnings: ISpellcheckWarningsByBlock) => {
+export const getSpellcheckingDecorator = (language: string, spellcheckWarnings: ISpellcheckWarningsByBlock) => {
+    const spellchecker = getSpellchecker(language);
+
     return {
         strategy: (contentBlock: ContentBlock, callback) => {
             const blockKey = contentBlock.getKey();

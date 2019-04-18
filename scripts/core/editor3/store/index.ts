@@ -63,6 +63,7 @@ export interface IEditorStore {
     onChangeValue: any;
     item: any;
     spellchecking: {
+        language: string;
         enabled: boolean;
         inProgress: boolean;
         warningsByBlock: ISpellcheckWarningsByBlock;
@@ -73,13 +74,13 @@ export interface IEditorStore {
     abbreviations: any;
 }
 
-export const getCustomDecorator = (spellcheckWarnings: ISpellcheckWarningsByBlock = null) => {
+export const getCustomDecorator = (language?: string, spellcheckWarnings: ISpellcheckWarningsByBlock = null) => {
     const decorators: any = [
         LinkDecorator,
     ];
 
-    if (spellcheckWarnings != null) {
-        decorators.push(getSpellcheckingDecorator(spellcheckWarnings));
+    if (spellcheckWarnings != null && language != null) {
+        decorators.push(getSpellcheckingDecorator(language, spellcheckWarnings));
     }
 
     return new CompositeDecorator(decorators);
@@ -134,6 +135,7 @@ export default function createEditorStore(props: IProps, spellcheck, isReact = f
         onChangeValue: onChangeValue,
         item: props.item,
         spellchecking: {
+            language: props.language,
             enabled: !spellcheckerDisabledInConfig,
             inProgress: false,
             warningsByBlock: {},

@@ -5,10 +5,10 @@ import {getSpellcheckingDecorator} from '../spellchecker/SpellcheckerDecorator';
 import {SpellcheckerContextMenu} from '../spellchecker/SpellcheckerContextMenu';
 import {getSpellchecker} from '../spellchecker/default-spellcheckers';
 
-const spellchecker = getSpellchecker();
+const spellchecker = getSpellchecker('en');
 
 describe('editor3.components.spellchecker-decorator', () => {
-    const SpellcheckerError = getSpellcheckingDecorator({}).component;
+    const SpellcheckerError = getSpellcheckingDecorator('en', {}).component;
 
     function getWrapper() {
         // to avoid React warning about 'text' prop, we need to create a custom

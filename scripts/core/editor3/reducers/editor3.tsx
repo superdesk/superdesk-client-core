@@ -1,4 +1,4 @@
-import {RichUtils, EditorState, AtomicBlockUtils, SelectionState} from 'draft-js';
+import {RichUtils, EditorState} from 'draft-js';
 import {setTansaHtml} from '../helpers/tansa';
 import {addMedia} from './toolbar';
 import {isEditorPlainText, getCustomDecorator, IEditorStore} from '../store';
@@ -10,7 +10,7 @@ import {insertEntity} from '../helpers/draftInsertEntity';
 /**
  * @description Contains the list of editor related reducers.
  */
-const editor3 = (state = {}, action) => {
+const editor3 = (state: IEditorStore, action) => {
     switch (action.type) {
     case 'EDITOR_CHANGE_STATE':
         return onChange(state, action.payload.editorState, action.payload.force, false, action.payload.skipOnChange);

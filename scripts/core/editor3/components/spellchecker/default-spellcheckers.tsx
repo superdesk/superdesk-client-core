@@ -60,6 +60,6 @@ function check(str: string): Promise<Array<ISpellcheckWarning>> {
         });
 }
 
-export function getSpellchecker(): ISpellchecker {
+export function getSpellchecker(language: string): ISpellchecker {
     return {check, getSuggestions, actions};
 }
