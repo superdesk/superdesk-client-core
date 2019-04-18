@@ -18,6 +18,7 @@ export function getSpellcheckWarningsByBlock(
 
     blocks.forEach((block) => {
         const blockLength = block.getLength();
+
         rangesByBlock.push({
             blockKey: block.getKey(), startOffset: lastOffset, endOffset: lastOffset + blockLength,
         });

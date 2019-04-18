@@ -1,22 +1,18 @@
 import ng from 'core/services/ng';
-import {ISpellchecker, ISpellcheckerAction, ISpellcheckWarning} from "./interfaces";
+import {ISpellchecker, ISpellcheckerAction, ISpellcheckWarning} from './interfaces';
 
 const actions: {[key: string]: ISpellcheckerAction} = {
     addToDictionary: {
         label: gettext('Add to dictionary'),
-        perform: (warning: ISpellcheckWarning) => {
-            return ng.getService('spellcheck').then((spellcheck) => {
-                spellcheck.addWord(warning.text, false);
-            });
-        },
+        perform: (warning: ISpellcheckWarning) => ng.getService('spellcheck').then((spellcheck) => {
+            spellcheck.addWord(warning.text, false);
+        }),
     },
     ignoreWord: {
         label: gettext('Ignore word'),
-        perform: (warning: ISpellcheckWarning) => {
-            return ng.getService('spellcheck').then((spellcheck) => {
-                spellcheck.addWord(warning.text, false);
-            });
-        },
+        perform: (warning: ISpellcheckWarning) => ng.getService('spellcheck').then((spellcheck) => {
+            spellcheck.addWord(warning.text, false);
+        }),
     },
 };
 

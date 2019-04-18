@@ -1,10 +1,10 @@
-import {IReplaceWordData} from "../reducers/spellchecker";
+import {IReplaceWordData} from '../reducers/spellchecker';
 import {
     getSpellcheckWarningsByBlock,
     ISpellcheckWarningsByBlock
-} from "../components/spellchecker/SpellcheckerDecorator";
-import {IEditorStore} from "../store";
-import {getSpellchecker} from "../components/spellchecker/default-spellcheckers";
+} from '../components/spellchecker/SpellcheckerDecorator';
+import {IEditorStore} from '../store';
+import {getSpellchecker} from '../components/spellchecker/default-spellcheckers';
 
 export function replaceWord(data: IReplaceWordData) {
     return {
