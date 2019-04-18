@@ -360,7 +360,7 @@ function MetaDropdownDirective($filter) {
             scope.multiInputFields = ['place', 'genre', 'anpa_category', 'subject', 'authors'];
 
             scope.select = function(item) {
-                var fieldObject = {};
+                var fieldObject: {[fieldId: string]: any} = {};
 
                 if (item) {
                     if (scope.cv) {
