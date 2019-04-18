@@ -13,15 +13,23 @@ import {PopulateAuthorsController} from './controllers/PopulateAuthorsController
 
 import {gettext} from 'core/utils';
 import {IArticle} from 'superdesk-interfaces/Article';
+import {IArticleSchema} from 'superdesk-interfaces/ArticleSchema';
 
 export interface IOnChangeParams {
     item: IArticle;
     original: IArticle;
 }
 
+export interface IArticleSchemaParams {
+    item: IArticle;
+    schema: IArticleSchema;
+}
+
 type IOnChangeMiddleware = (params: IOnChangeParams) => any;
+type IArticleSchemaMiddleware = (params: IArticleSchemaParams) => any;
 
 export const onChangeMiddleware: Array<IOnChangeMiddleware> = [];
+export const ArticleSchemaMiddleware: Array<IArticleSchemaMiddleware> = [];
 
 angular.module('superdesk.apps.authoring.autosave', []).service('autosave', svc.AutosaveService);
 

@@ -1,12 +1,14 @@
 import * as helpers from 'apps/authoring/authoring/helpers';
 import _ from 'lodash';
+import {merge} from 'lodash';
 import postscribe from 'postscribe';
 import thunk from 'redux-thunk';
 import {gettext} from 'core/utils';
 import {combineReducers, createStore, applyMiddleware} from 'redux';
 import {attachments, initAttachments} from '../../attachments';
 import {applyMiddleware as coreApplyMiddleware} from 'core/middleware';
-import {onChangeMiddleware} from '..';
+import {onChangeMiddleware, ArticleSchemaMiddleware} from '..';
+import {IArticleSchema} from 'superdesk-interfaces/ArticleSchema';
 
 /**
  * @ngdoc directive
@@ -88,7 +90,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
     $rootScope, $interpolate, metadata, suggest, config, deployConfig, editorResolver,
     compareVersions, embedService, $sce, mediaIdGenerator, relationsService, $injector) {
     return {
-        link: function($scope, elem, attrs) {
+        link: function($scope: IScope, elem, attrs) {
             var _closing;
             var mediaFields = {};
             var userDesks;
@@ -861,7 +863,9 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                         var autosavedItem = authoring.autosave($scope.item, $scope.origItem, timeout);
 
                         authoringWorkspace.addAutosave();
+
                         initMedia();
+                        updateSchema();
                         return autosavedItem;
                     });
             };
@@ -1186,6 +1190,32 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             })));
 
             $scope.store.dispatch(initAttachments($scope.item));
+
+            $scope.$watch('item.profile', (profile) => {
+                if (profile) {
+                    content.getType(profile)
+                        .then((type) => {
+                            $scope.contentType = type;
+                            $scope.editor = authoring.editor = content.editor(type, $scope.item.type);
+                            $scope.schema = authoring.schema = content.schema(type, $scope.item.type);
+                            $scope.fields = content.fields(type);
+                            updateSchema();
+                        });
+                } else {
+                    $scope.editor = authoring.editor = content.editor(null, $scope.item.type);
+                    $scope.schema = authoring.schema = content.schema(null, $scope.item.type);
+                    $scope.fields = null;
+                    updateSchema();
+                }
+            });
+
+            const updateSchema = () => {
+                const schema = merge({}, authoring.schema); // always start from initial schema
+                coreApplyMiddleware(ArticleSchemaMiddleware, {item: $scope.item, schema: schema})
+                    .then(() => {
+                        $scope.schema = schema;
+                    });
+            };
         },
     };
 }
