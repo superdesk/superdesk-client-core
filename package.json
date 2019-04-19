@@ -108,7 +108,7 @@
     "superdesk-ui-framework": "1.8.12",
     "ts-loader": "3.5.0",
     "tslint": "5.11.0",
-    "typescript": "3.0.1",
+    "typescript": "3.4.4",
     "webpack": "3.11.0",
     "webpack-dev-server": "2.11.1"
   },
