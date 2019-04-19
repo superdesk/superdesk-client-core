@@ -40,7 +40,7 @@ describe('editor3.spellchecker', () => {
     }));
 
     it('displays spellchecking errors in the editor', (done) => inject(() => {
-        spyOn(defaultSpellcheckers, "getSpellchecker").and.returnValue(testSpellchecker);
+        spyOn(defaultSpellcheckers, 'getSpellchecker').and.returnValue(testSpellchecker);
 
         const initialState = {
             editorState: editorStateInitial,
@@ -77,7 +77,7 @@ describe('editor3.spellchecker', () => {
     }));
 
     it('doesn\'t display the errors if the spellchecker is off', (done) => inject(() => {
-        spyOn(defaultSpellcheckers, "getSpellchecker").and.returnValue(testSpellchecker);
+        spyOn(defaultSpellcheckers, 'getSpellchecker').and.returnValue(testSpellchecker);
 
         const initialState = {
             editorState: editorStateInitial,
