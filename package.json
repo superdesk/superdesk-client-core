@@ -117,7 +117,7 @@
     "@types/moment-timezone": "^0.5.12",
     "@types/webpack-env": "^1.13.9",
     "btoa": "^1.1.2",
-    "enzyme": "^3.3.0",
+    "enzyme": "3.9.0",
     "enzyme-adapter-react-16": "^1.1.1",
     "grunt-eslint": "^20.1.0",
     "grunt-karma": "^2.0.0",
