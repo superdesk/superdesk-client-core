@@ -41,7 +41,7 @@ describe('editor3.component', () => {
                 {...stubForHighlights}
             />,
         );
-        const {onDragOver} = wrapper.instance();
+        const {onDragOver} = wrapper.instance() as any;
         const makeEvent = (t) => ({originalEvent: {dataTransfer: {types: ['foo', t]}}});
 
         [
@@ -73,7 +73,7 @@ describe('editor3.component', () => {
                 {...stubForHighlights}
             />,
         );
-        const {onDragOver} = wrapper.instance();
+        const {onDragOver} = wrapper.instance() as any;
         const makeEvent = (t) => ({originalEvent: {dataTransfer: {types: [t]}}});
 
         [
@@ -95,7 +95,7 @@ describe('editor3.component', () => {
                 {...stubForHighlights}
             />,
         );
-        const {onDragOver} = wrapper.instance();
+        const {onDragOver} = wrapper.instance() as any;
         const makeEvent = (t) => ({originalEvent: {dataTransfer: {types: [t]}}});
 
         [
@@ -119,7 +119,7 @@ describe('editor3.component', () => {
                 {...stubForHighlights}
             />,
         );
-        const {onDragOver} = wrapper.instance();
+        const {onDragOver} = wrapper.instance() as any;
         const makeEvent = (t) => ({originalEvent: {dataTransfer: {types: [t]}}});
 
         [
