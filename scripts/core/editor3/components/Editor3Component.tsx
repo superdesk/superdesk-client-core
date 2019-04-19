@@ -29,6 +29,7 @@ import {setSpellcheckerProgress, applySpellcheck} from '../actions';
 import {noop} from 'lodash';
 import {getSpellcheckWarningsByBlock} from './spellchecker/SpellcheckerDecorator';
 import {getSpellchecker} from './spellchecker/default-spellcheckers';
+import {IEditorStore} from '../store';
 
 const VALID_MEDIA_TYPES = [
     'application/superdesk.item.picture',
@@ -70,6 +71,33 @@ export function canDropMedia(e, editorConfig) {
     return supportsMedia && isValidMedia;
 }
 
+interface IProps {
+    readOnly?: boolean;
+    locked?: boolean;
+    showToolbar?: boolean;
+    editorState?: EditorState;
+    scrollContainer?: string;
+    singleLine?: boolean;
+    editorFormat?: Array<string>;
+    tabindex?: number;
+    suggestingMode?: boolean;
+    svc?: any;
+    invisibles?: boolean;
+    highlights?: any;
+    highlightsManager?: any;
+    spellchecking?: IEditorStore['spellchecking'];
+    onCreateAddSuggestion?(chars): void;
+    onCreateDeleteSuggestion?(type): void;
+    onPasteFromSuggestingMode?(): void;
+    onCreateSplitParagraphSuggestion?(): void;
+    onCreateChangeStyleSuggestion?(style, active): void;
+    onChange?(editorState: EditorState): void;
+    unlock?(): void;
+    onTab?(): void;
+    dragDrop?(): void;
+    dispatch?(action: any): void;
+}
+
 /**
  * @ngdoc React
  * @module superdesk.core.editor3
@@ -82,7 +110,7 @@ export function canDropMedia(e, editorConfig) {
  * @description Editor3 is a draft.js based editor that support customizable
  *  formatting, spellchecker and media files.
  */
-export class Editor3Component extends React.Component<any, any> {
+export class Editor3Component extends React.Component<IProps> {
     static propTypes: any;
     static defaultProps: any;
 
@@ -285,8 +313,8 @@ export class Editor3Component extends React.Component<any, any> {
             const block = content.getBlockForKey(key);
             const commands = ['unordered-list-item', 'ordered-list-item'];
 
-            if (block.text === '' && commands.indexOf(block.type) !== -1) {
-                newState = RichUtils.toggleBlockType(editorState, block.type);
+            if (block.getText() === '' && commands.indexOf(block.getType()) !== -1) {
+                newState = RichUtils.toggleBlockType(editorState, block.getType());
                 break;
             }
         } // fall through
@@ -464,32 +492,6 @@ export class Editor3Component extends React.Component<any, any> {
         );
     }
 }
-
-Editor3Component.propTypes = {
-    readOnly: PropTypes.bool,
-    locked: PropTypes.bool,
-    showToolbar: PropTypes.bool,
-    editorState: PropTypes.object,
-    onChange: PropTypes.func,
-    unlock: PropTypes.func,
-    onTab: PropTypes.func,
-    dragDrop: PropTypes.func,
-    scrollContainer: PropTypes.string.isRequired,
-    singleLine: PropTypes.bool,
-    editorFormat: PropTypes.array,
-    tabindex: PropTypes.number,
-    dispatch: PropTypes.func,
-    suggestingMode: PropTypes.bool,
-    onCreateAddSuggestion: PropTypes.func,
-    onCreateDeleteSuggestion: PropTypes.func,
-    onPasteFromSuggestingMode: PropTypes.func,
-    onCreateSplitParagraphSuggestion: PropTypes.func,
-    onCreateChangeStyleSuggestion: PropTypes.func,
-    svc: PropTypes.object,
-    invisibles: PropTypes.bool,
-    highlights: PropTypes.object,
-    highlightsManager: PropTypes.object,
-};
 
 Editor3Component.defaultProps = {
     readOnly: false,

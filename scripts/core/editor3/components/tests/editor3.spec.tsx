@@ -8,7 +8,12 @@ import mockStore from './utils';
 const editorState = EditorState.createEmpty();
 
 const editor3mandatoryProps = {
-    spellchecking: {},
+    spellchecking: {
+        language: 'en',
+        enabled: false,
+        inProgress: false,
+        warningsByBlock: {},
+    },
 };
 
 const stubForHighlights = {
