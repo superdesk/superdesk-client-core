@@ -155,7 +155,7 @@ describe('editor3.spellchecker', () => {
         }, 1000);
     });
 
-    it('can apply spellchecker suggestion', (done) => {
+    it('can apply spellchecker suggestionz', (done) => {
         spyOn(defaultSpellcheckers, 'getSpellchecker').and.returnValue(testSpellchecker);
 
         const initialState = {
@@ -178,6 +178,7 @@ describe('editor3.spellchecker', () => {
         // waiting for the spellchecker to load
         // the spellchecker is intentionally asynchronous to allow the editor to load faster
         setTimeout(() => {
+            console.log('t1');
             wrapper.update();
             wrapper.find('[data-test-id="spellchecker-warning"]')
                 .at(1)
@@ -203,5 +204,14 @@ describe('editor3.spellchecker', () => {
 
             done();
         }, 1000);
+    });
+
+    it('works around around jasmine\'s buggy behaviour', (done) => {
+        // it looks like jasmine is starting one test before previous has finished
+        // & destroying spies sooner the test finishes(at least in case of an async test)
+        // I don't see how this could have an any effect otherwise.
+
+        spyOn(defaultSpellcheckers, 'getSpellchecker').and.returnValue(testSpellchecker);
+        setTimeout(done, 1000);
     });
 });
