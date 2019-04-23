@@ -55,7 +55,7 @@ export class SpellcheckerContextMenuComponent extends React.Component<IProps> {
                                         {suggestion}
                                     </button>
                                 </li>,
-                        )
+                            )
                     }
                     <li className="divider"/>
                     <div className="form-label" style={{margin: '0 16px'}}>{gettext('Actions')}</div>

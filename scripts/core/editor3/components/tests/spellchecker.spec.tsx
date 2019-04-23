@@ -155,7 +155,7 @@ describe('editor3.spellchecker', () => {
         }, 1000);
     });
 
-    it('can apply spellchecker suggestionz', (done) => {
+    it('can apply spellchecker suggestion', (done) => {
         spyOn(defaultSpellcheckers, 'getSpellchecker').and.returnValue(testSpellchecker);
 
         const initialState = {
@@ -178,7 +178,6 @@ describe('editor3.spellchecker', () => {
         // waiting for the spellchecker to load
         // the spellchecker is intentionally asynchronous to allow the editor to load faster
         setTimeout(() => {
-            console.log('t1');
             wrapper.update();
             wrapper.find('[data-test-id="spellchecker-warning"]')
                 .at(1)
