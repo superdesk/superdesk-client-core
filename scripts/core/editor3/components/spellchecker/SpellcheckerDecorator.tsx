@@ -160,7 +160,9 @@ export const getSpellcheckingDecorator = (language: string, spellcheckWarnings: 
                                 });
                             }
                         }}
-                        ref={(el) => this.wordTypoElement = el}>
+                        ref={(el) => this.wordTypoElement = el}
+                        data-test-id="spellchecker-warning"
+                    >
                         {menuShowing ?
                             ReactDOM.createPortal(
                                 <SpellcheckerContextMenu

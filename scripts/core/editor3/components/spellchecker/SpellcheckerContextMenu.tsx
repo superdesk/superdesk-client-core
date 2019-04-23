@@ -31,21 +31,30 @@ export class SpellcheckerContextMenuComponent extends React.Component<IProps> {
             <div className={'dropdown open suggestions-dropdown'}
                 ref={(el) => this.dropdownElement = el}
                 style={{zIndex: 999, border: 'solid transparent', borderWidth: '6px 0'}}
+                data-test-id="spellchecker-menu"
             >
                 <ul className={'dropdown__menu'} style={{position: 'static'}}>
                     <div className="form-label" style={{margin: '0 16px'}}>{gettext('Suggestions')}</div>
-                    {suggestions.length === 0 ? <li><button>{gettext('SORRY, NO SUGGESTIONS.')}</button></li>
-                        : suggestions.map((suggestion, index) =>
-                            <li key={index}>
-                                <button onMouseDown={() => {
-                                    this.props.dispatch(actions.replaceWord({
-                                        word: {text: this.props.warning.text, offset: this.props.warning.startOffset},
-                                        newWord: suggestion,
-                                    }));
-                                }}>
-                                    {suggestion}
-                                </button>
-                            </li>,
+                    {
+                        suggestions.length === 0
+                            ? <li><button>{gettext('SORRY, NO SUGGESTIONS.')}</button></li>
+                            : suggestions.map((suggestion, index) =>
+                                <li key={index}>
+                                    <button
+                                        onMouseDown={() => {
+                                            this.props.dispatch(actions.replaceWord({
+                                                word: {
+                                                    text: this.props.warning.text,
+                                                    offset: this.props.warning.startOffset,
+                                                },
+                                                newWord: suggestion,
+                                            }));
+                                        }}
+                                        data-test-id="spellchecker-menu--suggestion"
+                                    >
+                                        {suggestion}
+                                    </button>
+                                </li>,
                         )
                     }
                     <li className="divider"/>
@@ -62,6 +71,7 @@ export class SpellcheckerContextMenuComponent extends React.Component<IProps> {
                                                 this.props.dispatch(reloadSpellcheckerWarnings());
                                             },
                                         )}
+                                        data-test-id="spellchecker-menu--action"
                                     >
                                         {action.label}
                                     </button>

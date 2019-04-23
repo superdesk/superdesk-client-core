@@ -1,17 +1,16 @@
 import React from 'react';
 import {mount} from 'enzyme';
-import {SpellcheckerContextMenu} from '../spellchecker/SpellcheckerContextMenu';
 import * as defaultSpellcheckers from '../spellchecker/default-spellcheckers';
 import {Provider} from 'react-redux';
 import {createStore} from 'redux';
 import {EditorState, ContentState} from 'draft-js';
-import {ISpellchecker} from '../spellchecker/interfaces';
 import editorReducers from 'core/editor3/reducers';
 import {Editor3} from '..';
+import {noop} from 'lodash';
 
 const editorStateInitial = EditorState.createWithContent(ContentState.createFromText('This speling is not correkt.'));
 
-const testSpellchecker: ISpellchecker = {
+const testSpellchecker = {
     check: () => Promise.resolve([
         {
             startOffset: 5,
@@ -21,7 +20,7 @@ const testSpellchecker: ISpellchecker = {
         {
             startOffset: 20,
             text: 'correkt',
-            suggestions: ['correct'],
+            suggestions: ['correct', 'incorrect'],
         },
     ]),
     actions: {
@@ -29,17 +28,15 @@ const testSpellchecker: ISpellchecker = {
             label: 'test action',
             perform: (warning) => Promise.resolve(),
         },
+        testAction2: {
+            label: 'test action 2',
+            perform: (warning) => Promise.resolve(),
+        },
     },
 };
 
 describe('editor3.spellchecker', () => {
-    beforeEach(window.module(($provide) => {
-        $provide.service('spellcheck', ($q) => ({
-            suggest: jasmine.createSpy().and.returnValue($q.when(['this', 'tish', 'fish'])),
-        }));
-    }));
-
-    it('displays spellchecking errors in the editor', (done) => inject(() => {
+    it('displays spellchecking errors in the editor', (done) => {
         spyOn(defaultSpellcheckers, 'getSpellchecker').and.returnValue(testSpellchecker);
 
         const initialState = {
@@ -62,7 +59,7 @@ describe('editor3.spellchecker', () => {
         setTimeout(() => {
             wrapper.update();
 
-            const warningsInDom = wrapper.find('.word-typo');
+            const warningsInDom = wrapper.find('[data-test-id="spellchecker-warning"]');
 
             expect(warningsInDom.length).toBe(2);
 
@@ -72,11 +69,13 @@ describe('editor3.spellchecker', () => {
             expect(wrapper.text().indexOf('speling')).toBe(5);
             expect(wrapper.text().indexOf('correkt')).toBe(20);
 
+            wrapper.unmount();
+
             done();
         }, 1000);
-    }));
+    });
 
-    it('doesn\'t display the errors if the spellchecker is off', (done) => inject(() => {
+    it('doesn\'t display the errors if the spellchecker is off', (done) => {
         spyOn(defaultSpellcheckers, 'getSpellchecker').and.returnValue(testSpellchecker);
 
         const initialState = {
@@ -96,76 +95,113 @@ describe('editor3.spellchecker', () => {
         );
 
         // waiting for the spellchecker to load
+        // the spellchecker is intentionally asynchronous to allow the editor to load faster
         setTimeout(() => {
             wrapper.update();
 
-            const warningsInDom = wrapper.find('.word-typo');
+            const warningsInDom = wrapper.find('[data-test-id="spellchecker-warning"]');
 
             expect(warningsInDom.length).toBe(0);
 
+            wrapper.unmount();
+
             done();
         }, 1000);
-    }));
-});
-
-describe('editor3.components.spellchecker-context-menu', () => {
-    const warningWithoutSuggestions = {
-        startOffset: 0,
-        text: 'abc',
-        suggestions: [],
-    };
-
-    const warningWithSuggestions = {
-        startOffset: 0,
-        text: 'abc',
-        suggestions: ['one', 'two', 'three'],
-    };
-
-    beforeEach(window.module(($provide) => {
-        $provide.service('spellcheck', ($q) => ({
-            addWord: jasmine.createSpy().and.returnValue(null),
-        }));
-    }));
-
-    it('should correctly render no suggestions', () => {
-        const element = document.createElement('div'); // required for positioning
-
-        document.body.appendChild(element);
-
-        const wrapper = mount(
-            <Provider store={createStore(() => ({}))}>
-                <SpellcheckerContextMenu
-                    targetElement={element}
-                    warning={warningWithoutSuggestions}
-                    spellchecker={defaultSpellcheckers.getSpellchecker('en')}
-                />
-            </Provider>,
-        );
-        const buttons = wrapper.find('button');
-
-        expect(buttons.first().text()).toBe('SORRY, NO SUGGESTIONS.');
-        expect(buttons.at(1).text()).toBe('Add to dictionary');
-        expect(buttons.at(2).text()).toBe('Ignore word');
     });
 
-    it('should correctly render with suggestions', () => {
-        const element = document.createElement('div'); // required for positioning
+    it('displays suggestions and actions', (done) => {
+        spyOn(defaultSpellcheckers, 'getSpellchecker').and.returnValue(testSpellchecker);
 
-        document.body.appendChild(element);
+        const initialState = {
+            editorState: editorStateInitial,
+            spellchecking: {
+                enabled: true,
+                language: 'en',
+                inProgress: false,
+                warningsByBlock: {},
+            },
+        };
 
         const wrapper = mount(
-            <Provider store={createStore(() => ({}))}>
-                <SpellcheckerContextMenu
-                    targetElement={element}
-                    warning={warningWithSuggestions}
-                    spellchecker={defaultSpellcheckers.getSpellchecker('en')}
-                />
+            <Provider store={createStore(editorReducers, initialState)}>
+                <Editor3 />
             </Provider>,
         );
-        const buttons = wrapper.find('button');
 
-        expect(buttons.at(0).text()).toBe('one');
-        expect(buttons.at(1).text()).toBe('two');
-        expect(buttons.at(2).text()).toBe('three');
+        // waiting for the spellchecker to load
+        // the spellchecker is intentionally asynchronous to allow the editor to load faster
+        setTimeout(() => {
+            wrapper.update();
+
+            wrapper.find('[data-test-id="spellchecker-warning"]')
+                .at(1)
+                .simulate('contextmenu');
+
+            const suggestions = Array.from(document.querySelectorAll('[data-test-id="spellchecker-menu--suggestion"]'))
+                .map((el) => el.textContent);
+
+            expect(suggestions[0]).toBe('correct');
+            expect(suggestions[1]).toBe('incorrect');
+
+            const actions = Array.from(document.querySelectorAll('[data-test-id="spellchecker-menu--action"]'))
+                .map((el) => el.textContent);
+
+            expect(actions[0]).toBe('test action');
+            expect(actions[1]).toBe('test action 2');
+
+            wrapper.unmount();
+
+            done();
+        }, 1000);
+    });
+
+    it('can apply spellchecker suggestion', (done) => {
+        spyOn(defaultSpellcheckers, 'getSpellchecker').and.returnValue(testSpellchecker);
+
+        const initialState = {
+            editorState: editorStateInitial,
+            spellchecking: {
+                enabled: true,
+                language: 'en',
+                inProgress: false,
+                warningsByBlock: {},
+            },
+            onChangeValue: noop,
+        };
+
+        const wrapper = mount(
+            <Provider store={createStore(editorReducers, initialState)}>
+                <Editor3 />
+            </Provider>,
+        );
+
+        // waiting for the spellchecker to load
+        // the spellchecker is intentionally asynchronous to allow the editor to load faster
+        setTimeout(() => {
+            wrapper.update();
+            wrapper.find('[data-test-id="spellchecker-warning"]')
+                .at(1)
+                .simulate('contextmenu');
+
+            expect(document.querySelectorAll('[data-test-id="spellchecker-menu--suggestion"]').length).toBe(2);
+            expect(wrapper.text()).toBe('This speling is not correkt.');
+
+            const suggestion: HTMLButtonElement =
+                document.querySelector('[data-test-id="spellchecker-menu--suggestion"]');
+
+            const event = new MouseEvent('mousedown');
+
+            event.initEvent('mousedown', true, true);
+
+            suggestion.dispatchEvent(event);
+
+            wrapper.update();
+            expect(wrapper.text()).toBe('This speling is not correct.');
+            // the word "correkt" was replaced to "correct"  ^
+
+            wrapper.unmount();
+
+            done();
+        }, 1000);
     });
 });
