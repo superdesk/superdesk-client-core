@@ -36,7 +36,8 @@ function isDeskSubscription(x: IModel['subscriptionInCreateOrEditMode']): x is I
 
 interface IScope extends IDirectiveScope<IModel> {
     savedSearch: ISavedSearch;
-    manageSubscriptions(active: boolean): void;
+    setIsManagingSubscriptions(active: boolean): void;
+    onSubscriptionsChange(nextValue: ISavedSearch): void;
     unsubscribeUser(user: IUser): Promise<void>;
     unsubscribeDesk(desk: IDesk): Promise<void>;
     editUserSubscription(user: IUser): void;
@@ -60,7 +61,8 @@ export function SavedSearchManageSubscribers(asset, userList, api, modal, desks)
     return {
         scope: {
             savedSearch: '=',
-            manageSubscriptions: '=',
+            setIsManagingSubscriptions: '=',
+            onSubscriptionsChange: '=',
         },
         templateUrl: asset.templateUrl('apps/search/views/saved-search-manage-subscribers.html'),
         link: function(scope: IScope) {
@@ -194,7 +196,11 @@ export function SavedSearchManageSubscribers(asset, userList, api, modal, desks)
                     desk_subscriptions: nextDeskSubscriptions,
                 };
 
-                updateSubscribers(scope.savedSearch, nextSubscribers, api).then(scope.backToList);
+                updateSubscribers(scope.savedSearch, nextSubscribers, api)
+                    .then((newSavedSearch: ISavedSearch) => {
+                        scope.onSubscriptionsChange(newSavedSearch)
+                        scope.backToList()
+                    });
             };
 
             scope.handleIntervalChange = (cronExpression: CronTimeInterval) => {
@@ -279,7 +285,7 @@ export function SavedSearchManageSubscribers(asset, userList, api, modal, desks)
                 () => {
                     // when modal is closed via ESC key, stop managing subscription so it can be started again.
                     if (!scope.wrapper.modalOpen) {
-                        scope.manageSubscriptions(false);
+                        scope.setIsManagingSubscriptions(false);
                     }
                 },
             );

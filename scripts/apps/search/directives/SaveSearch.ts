@@ -2,19 +2,19 @@ import {create, clone, each} from 'lodash';
 import {saveOrUpdateSavedSearch} from '../SavedSearch';
 import {gettext} from 'core/utils';
 import {isEmptyString} from 'core/helpers/utils';
-SaveSearch.$inject = ['$location', 'asset', 'api', 'session', 'notify', '$rootScope'];
+SaveSearch.$inject = ['$location', 'asset', 'api', 'notify', '$rootScope'];
 
 /**
  * Opens and manages save search panel
  */
-export function SaveSearch($location, asset, api, session, notify, $rootScope) {
+export function SaveSearch($location, asset, api, notify, $rootScope) {
     return {
         templateUrl: asset.templateUrl('apps/search/views/save-search.html'),
-        link: function(scope, elem) {
+        link: function(scope, _elem) {
             scope.edit = null;
             scope.activateSearchPane = false;
 
-            scope.$on('edit:search', (event, args) => {
+            scope.$on('edit:search', (_event, args) => {
                 scope.activateSearchPane = false;
                 scope.editingSearch = args;
                 scope.edit = create(scope.editingSearch) || {};
@@ -51,7 +51,7 @@ export function SaveSearch($location, asset, api, session, notify, $rootScope) {
             scope.clear = function() {
                 scope.editingSearch = false;
                 scope.edit = null;
-                each($location.search(), (item, key) => {
+                each($location.search(), (_item, key) => {
                     if (key !== 'repo') {
                         $location.search(key, null);
                     }
