@@ -5,6 +5,7 @@ import thunk from 'redux-thunk';
 import {gettext} from 'core/utils';
 import {combineReducers, createStore, applyMiddleware} from 'redux';
 import {attachments, initAttachments} from '../../attachments';
+import {IFunctionPointsService} from "apps/extension-points/services/FunctionPoints";
 
 /**
  * @ngdoc directive
@@ -40,6 +41,7 @@ import {attachments, initAttachments} from '../../attachments';
  * @requires editorResolver
  * @requires $sce
  * @requires mediaIdGenerator
+ * @requires functionPoints
  *
  * @description
  *   This directive is responsible for generating superdesk content authoring form.
@@ -79,12 +81,14 @@ AuthoringDirective.$inject = [
     'mediaIdGenerator',
     'relationsService',
     '$injector',
+    'functionPoints',
 ];
 export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace, notify,
     desks, authoring, api, session, lock, privileges, content, $location,
     referrer, macros, $timeout, $q, modal, archiveService, confirm, reloadService,
     $rootScope, $interpolate, metadata, suggest, config, deployConfig, editorResolver,
-    compareVersions, embedService, $sce, mediaIdGenerator, relationsService, $injector) {
+    compareVersions, embedService, $sce, mediaIdGenerator, relationsService, $injector,
+    functionPoints: IFunctionPointsService) {
     return {
         link: function($scope, elem, attrs) {
             var _closing;
@@ -425,7 +429,8 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
                 $scope.error = {};
 
-                return checkMediaAssociatedToUpdate()
+                return functionPoints.run('authoring:publish', item)
+                    .then(() => checkMediaAssociatedToUpdate())
                     .then((result) => {
                         if (result) {
                             return authoring.publish(orig, item, action);
