@@ -108,6 +108,10 @@ class GenericListPageItemViewEditComponent extends React.Component<IProps, IStat
             if (this._mounted === true) {
                 this.props.onEditModeChange(false);
             }
+
+            this.setState({
+                issues: {},
+            });
         })
             .catch((res) => {
                 let issues = {};
