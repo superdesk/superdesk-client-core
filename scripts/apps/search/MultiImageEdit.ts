@@ -202,6 +202,7 @@ export function MultiImageEditDirective(asset, $sce) {
         templateUrl: asset.templateUrl('apps/search/views/multi-image-edit.html'),
         link: function(scope) {
             scope.trustAsHtml = $sce.trustAsHtml;
+            scope.metadataDirty = false;
 
             scope.handleItemClick = function(event, image) {
                 if (event.target != null && event.target.classList.contains('icon-close-small')) {
@@ -211,11 +212,13 @@ export function MultiImageEditDirective(asset, $sce) {
                 }
             };
 
-            scope.updateMetadata = () => {
-                forEach(scope.metadata, (metadata, key) => {
-                    scope.onChange(key);
-                });
-            };
+            scope.$watch('metadataDirty', (newValue: boolean, oldValue: boolean) => {
+                if (newValue !== oldValue) {
+                    forEach(scope.metadata, (metadata, key) => {
+                        scope.onChange(key);
+                    });
+                }
+            });
         },
     };
 }
