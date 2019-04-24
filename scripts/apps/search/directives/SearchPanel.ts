@@ -68,7 +68,7 @@ export function SearchPanel($location,
             scope.onSubscriptionsChange = (udpatedSavedSearch) => {
                 // subscriptions were updated via API so the etag has changed
                 scope.editingSearch._etag = udpatedSavedSearch._etag;
-            }
+            };
 
             scope.aggregations = {};
             scope.privileges = privileges.privileges;

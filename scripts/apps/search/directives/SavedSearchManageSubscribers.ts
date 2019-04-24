@@ -198,8 +198,8 @@ export function SavedSearchManageSubscribers(asset, userList, api, modal, desks)
 
                 updateSubscribers(scope.savedSearch, nextSubscribers, api)
                     .then((newSavedSearch: ISavedSearch) => {
-                        scope.onSubscriptionsChange(newSavedSearch)
-                        scope.backToList()
+                        scope.onSubscriptionsChange(newSavedSearch);
+                        scope.backToList();
                     });
             };
 
