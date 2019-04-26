@@ -351,24 +351,38 @@ function MetaDropdownDirective($filter) {
             icon: '@',
             label: '@',
             change: '&',
+            cv: '=',
             key: '@',
             tabindex: '=',
             containingDirective: '@',
         },
         templateUrl: 'scripts/apps/authoring/metadata/views/metadata-dropdown.html',
         link: function(scope, elem) {
-            scope.listFields = ['place', 'genre', 'anpa_category', 'subject', 'authors'];
+            scope.multiInputFields = ['place', 'genre', 'anpa_category', 'subject', 'authors'];
 
             scope.select = function(item) {
-                var o = {};
+                var fieldObject: {[fieldId: string]: any} = {};
 
                 if (item) {
-                    o[scope.field] = scope.key ? item[scope.key] : [item];
+                    if (scope.cv) {
+                        // if there is cv as well as field, store cv._id as scheme
+                        // so that it can be differentiated from another cv inside same parent field(subject).
+                        // ex: subject:[{name: "a", qcode: "a", scheme: "new-cv"}]
+                        item.scheme = scope.cv._id;
+                        fieldObject[scope.field] = scope.item[scope.field].filter((v) => v.scheme !== scope.cv._id);
+                        fieldObject[scope.field].push(item);
+                    } else {
+                        fieldObject[scope.field] = scope.key ? item[scope.key] : [item];
+                    }
+                } else if (scope.cv) {
+                    // if there is cv as well as field don't set fieldObject[scope.field] to null.
+                    // as in the backend it is set to "nullable: false" for ex: subject.
+                    fieldObject[scope.field] = scope.item[scope.field].filter((v) => v.scheme !== scope.cv._id);
                 } else {
-                    o[scope.field] = null;
+                    fieldObject[scope.field] = null;
                 }
 
-                _.extend(scope.item, o);
+                _.extend(scope.item, fieldObject);
                 scope.change({item: scope.item, field: scope.field});
 
                 // retain focus on same dropdown control after selection.
@@ -377,7 +391,7 @@ function MetaDropdownDirective($filter) {
                 });
 
                 if (scope.values) {
-                    scope.selected = scope.values[o[scope.field]] || null;
+                    scope.selected = scope.values[fieldObject[scope.field]] || null;
                 }
             };
 
@@ -389,6 +403,8 @@ function MetaDropdownDirective($filter) {
             if (scope.containingDirective === 'sdContentSchemaEditor') {
                 scope.item[scope.field] = scope.item.default;
             }
+
+            scope.findItemByScheme = (item, scheme) => item.find((o) => o.scheme === scheme);
 
             scope.$applyAsync(() => {
                 if (scope.list) {
