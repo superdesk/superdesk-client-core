@@ -1,6 +1,6 @@
 import {RichUtils, EditorState} from 'draft-js';
 import {highlightsConfig} from '../highlightsConfig';
-import {editor3DataKeys, getCustomDataFromEditor, setCustomDataForEditor} from './editor3CustomData';
+import {editor3DataKeys, getCustomDataFromEditor, setCustomDataForEditor__deprecated} from './editor3CustomData';
 import {getDraftCharacterListForSelection} from './getDraftCharacterListForSelection';
 import {getDraftSelectionForEntireContent} from './getDraftSelectionForEntireContent';
 import {resizeDraftSelection} from './resizeDraftSelection';
@@ -86,7 +86,7 @@ function getHighlightsState(editorState) {
 }
 
 function setHighlightsState(editorState, hightlightsState) {
-    return setCustomDataForEditor(editorState, editor3DataKeys.MULTIPLE_HIGHLIGHTS, hightlightsState);
+    return setCustomDataForEditor__deprecated(editorState, editor3DataKeys.MULTIPLE_HIGHLIGHTS, hightlightsState);
 }
 
 function getHighlightType(styleName) {
@@ -755,6 +755,7 @@ function getLeftRangeAndTextForStyle(editorState, style) {
 }
 
 function getRightRangeAndTextForStyle(editorState, style) {
+    /* eslint-disable complexity */
     const type = getHighlightTypeFromStyleName(style);
     const selection = editorState.getSelection();
     const content = editorState.getCurrentContent();
@@ -994,7 +995,7 @@ function addCommentsForServer(editorState) {
         .filter((key) => key.indexOf(highlightsConfig.COMMENT.type) === 0)
         .map((key) => highlightsData[key].data);
 
-    return setCustomDataForEditor(editorState, editor3DataKeys.__PUBLIC_API__comments, comments);
+    return setCustomDataForEditor__deprecated(editorState, editor3DataKeys.__PUBLIC_API__comments, comments);
 }
 
 /**
@@ -1020,7 +1021,7 @@ function applyHighlightsStyleMap(editorState) {
         }, {}),
     };
 
-    return setCustomDataForEditor(
+    return setCustomDataForEditor__deprecated(
         editorState,
         editor3DataKeys.MULTIPLE_HIGHLIGHTS,
         highlightsWithStyleMapApplied,
@@ -1043,7 +1044,7 @@ function removeHighlightsStyleMap(editorState) {
 
     delete nextHighlights.highlightsStyleMap;
 
-    return setCustomDataForEditor(
+    return setCustomDataForEditor__deprecated(
         editorState,
         editor3DataKeys.MULTIPLE_HIGHLIGHTS,
         nextHighlights,

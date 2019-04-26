@@ -6,7 +6,11 @@ import ng from 'core/services/ng';
 import {Comment} from './Comment';
 import CommentTextArea from './CommentTextArea';
 import {getAuthorInfo} from '../../actions';
-import {editor3DataKeys, getCustomDataFromEditor, setCustomDataForEditor} from '../../helpers/editor3CustomData';
+import {
+    editor3DataKeys,
+    getCustomDataFromEditor,
+    setCustomDataForEditor__deprecated
+} from '../../helpers/editor3CustomData';
 import * as Highlights from '../../helpers/highlights';
 import {HighlightsPopupPositioner} from '../HighlightsPopupPositioner';
 import {gettext} from 'core/utils';
@@ -117,7 +121,7 @@ export class CommentPopup extends React.Component<any, any> {
             editor3DataKeys.RESOLVED_COMMENTS_HISTORY,
         );
 
-        const editorStateWithResolvedCommentAdded = setCustomDataForEditor(
+        const editorStateWithResolvedCommentAdded = setCustomDataForEditor__deprecated(
             editorStateWithCommentRemoved,
             editor3DataKeys.RESOLVED_COMMENTS_HISTORY,
             (allResolvedComments || []).concat(resolvedCommentData),
