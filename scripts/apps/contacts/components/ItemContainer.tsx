@@ -111,10 +111,11 @@ export class ItemContainer extends React.Component<any, any> {
             _class = _link;
             break;
         case 'facebook':
+        case 'instagram':
             value = (
-                <a href={item.facebook} target="_blank" rel="noopener noreferrer"><i className="icon-facebook" /></a>
+                <a href={item[key]} target="_blank" rel="noopener noreferrer"><i className={`icon-${key}`} /></a>
             );
-            title = value && item.facebook;
+            title = value && item[key];
             _class = _link;
             break;
         case 'location':
@@ -153,6 +154,5 @@ export class ItemContainer extends React.Component<any, any> {
 
 ItemContainer.propTypes = {
     item: PropTypes.object,
-    svc: PropTypes.object.isRequired,
     field: PropTypes.string,
 };
