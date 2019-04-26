@@ -154,15 +154,17 @@ export function insertContentInState(
     const newBlockMap = OrderedMap<string, ContentBlock>(blocks.map((b) => ([b.getKey(), b])));
     const customData = getAllCustomDataFromEditor(editorState);
 
-    // for the first block recover the initial block data because on replaceWithFragment the block data is
-    // replaced with the data from pasted fragment
-    const editorStateWithCustomData = setAllCustomDataForEditor(editorState, customData);
     const newContent = Modifier.replaceWithFragment(
-        editorStateWithCustomData.getCurrentContent(),
+        editorState.getCurrentContent(),
         editorState.getSelection(),
         newBlockMap,
     );
-    const nextEditorState = EditorState.push(editorStateWithCustomData, newContent, 'insert-fragment');
+
+    let nextEditorState = EditorState.push(editorState, newContent, 'insert-fragment');
+
+    // for the first block recover the initial block data because on replaceWithFragment the block data is
+    // replaced with the data from pasted fragment
+    nextEditorState = setAllCustomDataForEditor(nextEditorState, customData);
 
     return nextEditorState;
 }
