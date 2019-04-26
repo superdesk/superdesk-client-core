@@ -395,6 +395,7 @@ export function ArticleEditDirective(
                                 scope.editor = authoring.editor = content.editor(type, scope.item.type);
                                 scope.schema = authoring.schema = content.schema(type, scope.item.type);
                                 scope.fields = content.fields(type);
+                                console.info('schema', scope.schema, scope.editor);
                             });
                     } else {
                         scope.editor = authoring.editor = content.editor(null, scope.item.type);
