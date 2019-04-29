@@ -43,7 +43,7 @@
         <button id="send-to-btn" class="navbtn strict" title="{{ :: 'Send to' | translate }}" ng-if="activity['edit.item']" ng-click="action.sendAs()">
             <i class="big-icon--send-to"></i>
         </button>
-        <button id="publish-btn" class="navbtn strict" title="{{ :: 'Publish' | translate }}" ng-if="activity['edit.item']" ng-click="action.publish()">
+        <button id="publish-btn" class="navbtn strict" title="{{ :: 'Publish' | translate }}" ng-if="activity['edit.item'] && state !== 'draft'" ng-click="action.publish()">
             <i class="svg-icon-ok"></i>
         </button>
     </div>
@@ -101,7 +101,7 @@
                     <button id="send-to-btn" ng-if="activity['edit.item']" ng-click="action.sendAs()">
                         <i class="icon-expand-thin"></i><span>{{ :: 'Send to' | translate }}</span>
                     </button>
-                    <button id="publish-btn" ng-if="activity['edit.item']" ng-click="action.publish()">
+                    <button id="publish-btn" ng-if="activity['edit.item'] && state !== 'draft'" ng-click="action.publish()">
                         <i class="icon-ok"></i><span>{{ :: 'Publish' | translate }}</span>
                     </button>
                 </li>
