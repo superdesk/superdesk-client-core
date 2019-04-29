@@ -1,31 +1,58 @@
-import {EditorState} from 'draft-js';
-import insertAtomicBlockWithoutEmptyLines from './insertAtomicBlockWithoutEmptyLines';
-import {moveBlockWithoutDispatching} from './draftMoveBlockWithoutDispatching';
+import {
+    EditorState,
+    ContentState,
+    ContentBlock,
+    BlockMapBuilder,
+    Modifier,
+    SelectionState,
+    genKey,
+    CharacterMetadata,
+} from 'draft-js';
+import {List, Repeat} from 'immutable';
 
-export function insertEntity(editorState, draftEntityType, mutability, data, targetBlockKey = null): EditorState {
-    const contentState = editorState.getCurrentContent();
-    const contentStateWithEntity = contentState.createEntity(draftEntityType, mutability, data);
+export function insertEntity(
+    editorState: EditorState,
+    draftEntityType,
+    mutability,
+    data,
+    targetBlockKey = null,
+): EditorState {
+    const contentStateWithEntity = editorState.getCurrentContent().createEntity(draftEntityType, mutability, data);
     const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+    const contentBlock = new ContentBlock({
+        key: genKey(),
+        type: 'atomic',
+        text: ' ',
+        characterList: List(Repeat(CharacterMetadata.create({entity: entityKey}), 1)),
+    });
+    const targetBlockKeyFinal = targetBlockKey != null ? targetBlockKey : editorState.getSelection().getEndKey();
+    const contentStateWithBlockInserted = insertBlock(contentStateWithEntity, contentBlock, targetBlockKeyFinal);
 
-    const insertResult = insertAtomicBlockWithoutEmptyLines(
-        editorState,
-        entityKey,
-        ' ',
-    );
+    return EditorState.push(editorState, contentStateWithBlockInserted, 'insert-fragment');
+}
 
-    let stateWithBlock = insertResult.editorState;
-    const newBlockKey = insertResult.blockKey;
+// inserts a block after a given block key
+function insertBlock(contentState: ContentState, blockToInsert: ContentBlock, afterKey: string): ContentState {
+    const blocksArray: Array<ContentBlock> = [];
 
-    if (targetBlockKey) {
-        stateWithBlock = moveBlockWithoutDispatching(
-            {editorState: stateWithBlock},
-            {
-                block: newBlockKey,
-                dest: targetBlockKey,
-                insertionMode: 'after',
-            },
-        ).editorState;
-    }
+    contentState.getBlocksAsArray().forEach((block) => {
+        blocksArray.push(block);
 
-    return stateWithBlock;
+        const key = block.getKey();
+
+        if (key === afterKey) {
+            blocksArray.push(blockToInsert);
+        }
+    });
+
+    const selection = new SelectionState({
+        anchorKey: contentState.getFirstBlock().getKey(),
+        anchorOffset: 0,
+        focusKey: contentState.getLastBlock().getKey(),
+        focusOffset: contentState.getLastBlock().getLength(),
+        isBackward: false,
+        hasFocus: false,
+    });
+
+    return Modifier.replaceWithFragment(contentState, selection, BlockMapBuilder.createFromArray(blocksArray));
 }

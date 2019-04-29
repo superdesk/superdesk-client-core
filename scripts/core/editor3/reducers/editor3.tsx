@@ -253,7 +253,16 @@ const dragDrop = (state, {data, blockKey}) => {
     const media = JSON.parse(data);
     const editorState = addMedia(state.editorState, media, blockKey);
 
-    return onChange(state, editorState);
+    return {
+        ...onChange(state, editorState),
+
+        // Exit table edit mode.
+        // It usually exits when the main editor is focused
+        // but in case of drag and drop, the main editor is not getting focused.
+        // Ideally, the table component would exit editmode itself onBlur,
+        // but I wasn't able to implement it.
+        activeCell: null,
+    };
 };
 
 /**
