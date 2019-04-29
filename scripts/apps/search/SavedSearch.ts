@@ -19,9 +19,16 @@ export interface IDeskSubscription {
 }
 
 export interface ISavedSearch {
+    _id?: string;
     name: string;
     description: string;
     is_global: boolean;
+
+    /**
+     * When true it will display Saved Search in search dropdown menu as a shortuct
+     */
+    shortcut: boolean;
+
     filter: any;
     user: IUser['_id'];
     subscribers: {
