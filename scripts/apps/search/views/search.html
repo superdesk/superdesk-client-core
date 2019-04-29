@@ -2,10 +2,7 @@
     <header class="search-page-header">
         <div class="filter-trigger" title="{{ :: 'Filters' | translate }}" ng-click="flags.facets = !flags.facets" ng-class="{'filter-trigger--active': flags.facets}"><i class="icon-filter-large"></i></div>
 
-        <div sd-repo-dropdown class="sortbar-flex-handler"
-             data-active-provider="search.activeProvider"
-             data-toggle-provider="search.toggleProvider" style="white-space: nowrap;">
-        </div>
+        <div sd-repo-dropdown class="sortbar-flex-handler" style="white-space: nowrap;"></div>
         <div sd-item-searchbar data-context="context" class="searchbar-flex-handler"></div>
         <div sd-item-sortbar data-total="total_records" class="sortbar-flex-handler"></div>
 

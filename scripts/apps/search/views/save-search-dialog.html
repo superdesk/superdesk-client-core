@@ -13,5 +13,9 @@
             <span id="search_global" sd-switch ng-model="edit.is_global"></span>
             <label class="label--inline" translate>Make global</label>
         </div>
+        <div class="field" ng-if="edit.is_global && config.features.searchShortcut">
+            <span id="search_shortcut" sd-switch ng-model="edit.shortcut"></span>
+            <label class="label--inline" translate>Search shortcut</label>
+        </div>
     </fieldset>
 <!-- </form> -->
