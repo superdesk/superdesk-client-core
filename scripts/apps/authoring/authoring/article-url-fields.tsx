@@ -13,6 +13,7 @@ interface IProps {
     fieldId: string;
     onChange: (fieldId: string, urls: Array<IUrl>) => void;
     editable: boolean;
+    required: boolean;
 }
 
 interface IState {
@@ -58,11 +59,14 @@ export class ArticleUrlFields extends React.Component<IProps, IState> {
         });
     }
     render() {
-        const {label, helperText, editable} = this.props;
+        const {label, helperText, editable, required} = this.props;
 
         return (
             <div>
                 <label className="field__label">{label}</label>
+                {editable && required && (
+                    <span className="sd-required">{gettext('Required')}</span>
+                )}
 
                 {this.state.urls.map((item, i) => (
                     <div key={i}>
