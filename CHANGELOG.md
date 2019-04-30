@@ -1,5 +1,69 @@
 # Superdesk Client Changelog
 
+## [1.29.0] 2019-04-30
+
+### Added
+
+- Add user preferences for default event and planning filters.
+- Implement status filter for Subscribers settings.
+- Add knowledge base feature.
+- Support `readonly` and `default` attributes in ingest provider config.
+- Allow async badge in authoring widgets.
+- Add edit and crop button for media items in editor3.
+- Extend search service support for custom queries.
+- Allow slugline field in both header and content authoring sections.
+- Add associated item type icons to list views.
+- Add attachments in editor content section.
+- Add desk routing config widget.
+- Make it possible to override login template.
+- Add abitlity to copy&paste media metadata.
+- Allow configuring article metadata header to open/collapsed.
+- Allow quickly fetching content without opening it.
+- Show field type in field dropdown when editing content profile. 
+- Add support for custom text/date fields in authoring header.
+- Allow nesting of items in output stage.
+- Add widgets config to content profile settings.
+- Populate item authors with current user when author role is configured.
+- Implement new swimlane view.
+- Add author/editor role config to user roles.
+- Add async publishing config to subscriber settings.
+- As a user I want to add urls to a story.
+
+### Changed
+
+- Use geonames for dateline place search when available.
+- Make HTML generated for media blocks in editor3 consistent with editor2.
+
+### Fixed
+
+- Ingest source Critical errors tab is not loaded properly.
+- Fix publishing error although suggestions were resolved.
+- Fix issues in authoring when user presses Save button twice.
+- Fix related items handling media from external source.
+- Fix find & replace feature in editor3.
+- Hide field from both sections when used in content profile config.
+- Fix shortcuts behaviour for widgets in authoring.
+- Canceling changes in media metadata does not reset the usage terms field.
+- Fix infinite scrolling in swimlane view.
+- Templates which are not associated to any desk show up in all desks.
+- Fix editing raw query in saved search.
+- Fix editing of custom fields in templates.
+- Fix empty confirm modals when using translated UI.
+- Support search & replace in tables in editor3.
+- Use `ingest_provider` instead of source for `go to items` link in ingest settings.
+- Save button is enabled even when item is not added to media gallery due to limit.
+- Hide Send To dropdown when uploading media to article.
+- Opening an item by pasting the URL does not show all actions.
+- Disable spell-checker if there is no dictionary for item language.
+- Display latest properties for related items.
+- Allow upload of multiple images on corrected items.
+- Fix versions display on about screen.
+- When moving preview from right to let the top part is partly visible.
+- Fix error message when creating cv with existing ID.
+- Fix gettext string extraction for ts files.
+- Changes in ingest modal not enabling save button.
+- Send params to search proxy in search.
+
 ## [1.28.0] 2019-01-18
 
 ### Added
