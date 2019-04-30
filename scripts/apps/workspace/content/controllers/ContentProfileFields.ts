@@ -68,7 +68,7 @@ export default function ContentProfileFields($scope, content, vocabularies, meta
             return articleCommonFields;
         };
 
-        const initFields  = (customVocabulariesForArticleHeader, customTextAndDateVocabularies) => {
+        const initFields = (customVocabulariesForArticleHeader, customTextAndDateVocabularies) => {
             this.articleHeaderFields = getArticleHeaderFields(customVocabulariesForArticleHeader);
             this.articleCommonFields = getArticleCommonFields(customTextAndDateVocabularies);
 
@@ -119,20 +119,22 @@ export default function ContentProfileFields($scope, content, vocabularies, meta
                 this.model.editor[key].order = index + 1; // keep order in sync
             });
 
-            Object.keys(this.model.editor).filter((key) => !isEnabled(key)).forEach((key) => {
-                const headerField = this.articleHeaderFields.has(key) || this.articleCommonFields.has(key);
-                const contentField = this.articleCommonFields.has(key) || !headerField;
+            Object.keys(this.model.editor)
+                .filter((key) => !isEnabled(key))
+                .forEach((key) => {
+                    const headerField = this.articleHeaderFields.has(key) || this.articleCommonFields.has(key);
+                    const contentField = this.articleCommonFields.has(key) || !headerField;
 
-                if (headerField) {
-                    this.sections.header.available.push(formatKey(key));
-                }
+                    if (headerField) {
+                        this.sections.header.available.push(formatKey(key));
+                    }
 
-                if (contentField) {
-                    this.sections.content.available.push(formatKey(key));
-                }
+                    if (contentField) {
+                        this.sections.content.available.push(formatKey(key));
+                    }
 
-                this.model.editor[key].order = null;
-            });
+                    this.model.editor[key].order = null;
+                });
         };
 
         const updateModel = (key, editorUpdates, schemaUpdates) => {

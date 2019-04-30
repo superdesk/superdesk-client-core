@@ -4,6 +4,8 @@ import {
     Modifier,
     EditorState,
     convertFromRaw,
+    ContentState,
+    ContentBlock,
 } from 'draft-js';
 import {fieldsMetaKeys, getFieldMetadata} from './fieldsMeta';
 import {
@@ -62,7 +64,27 @@ export function keyValid(key) {
     return Object.keys(editor3DataKeys).includes(key);
 }
 
-export function setAllCustomDataForEditor(editorState, value) {
+export function setAllCustomDataForEditor(editorState, value: {[key: string]: any}) {
+    let contentState: ContentState = editorState.getCurrentContent();
+
+    const firstBlock = contentState.getFirstBlock();
+    const firstBlockWithCustomData = firstBlock.merge({data: firstBlock.getData().merge(value)}) as ContentBlock;
+
+    const nextContentState = contentState.merge({
+        blockMap: contentState.getBlockMap().set(firstBlock.getKey(), firstBlockWithCustomData),
+    }) as ContentState;
+
+    let editorStateNext = EditorState.set(editorState, {allowUndo: false});
+
+    editorStateNext = EditorState.push(editorStateNext, nextContentState, 'change-block-data');
+    editorStateNext = EditorState.set(editorStateNext, {allowUndo: true});
+
+    return editorStateNext;
+}
+
+// it messes up the selection and won't pass the tests
+// but is heavily used in suggestions which seem to rely on broken behaviour
+export function setAllCustomDataForEditor__deprecated(editorState, value) {
     const currentSelectionToPreserve = editorState.getSelection();
 
     let content = editorState.getCurrentContent();
@@ -93,6 +115,14 @@ export function setCustomDataForEditor(editorState, key, value) {
     }
 
     return setAllCustomDataForEditor(editorState, Map().set(key, value));
+}
+
+export function setCustomDataForEditor__deprecated(editorState, key, value) {
+    if (!keyValid(key)) {
+        throw new Error(`Key '${key}' is not defined`);
+    }
+
+    return setAllCustomDataForEditor__deprecated(editorState, Map().set(key, value));
 }
 
 export function getCustomDataFromEditor(editorState, key) {

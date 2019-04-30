@@ -157,6 +157,7 @@ describe('send', () => {
             dropdown = sidebar.element(by.css('.dropdown--dark .dropdown__toggle')),
             dropdownSelected = dropdown.element(by.css('[ng-show="selectedDesk"]'));
 
+        browser.sleep(100);
         expect(dropdownSelected.getText()).toEqual('Sports Desk'); // desk remembered
 
         var btnStage = sidebar.element(by.buttonText('Working Stage'));

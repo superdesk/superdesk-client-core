@@ -2,6 +2,7 @@
 
 import {IRestApiResponse, IDefaultApiFields} from '../../types/RestApi';
 import React from 'react';
+import {generate} from 'json-merge-patch';
 import {connectServices} from './ReactRenderAsync';
 
 export interface ISortOption {
@@ -108,8 +109,12 @@ export function connectCrudManager<Props, Entity extends IDefaultApiFields>(
         }
 
         update(nextItem: Entity): Promise<Entity> {
+            const currentItem = this.state._items.find(({_id}) => _id === nextItem._id);
+            const patch = generate(currentItem, nextItem);
+
             // updating an item impacts sorting/filtering/pagination. Data is re-fetched to correct it.
-            return this.api.save(nextItem).then((res) => this.refresh().then(() => res));
+            return this.api.save(currentItem, patch)
+                .then((res) => this.refresh().then(() => res));
         }
 
         delete(item: Entity): Promise<void> {

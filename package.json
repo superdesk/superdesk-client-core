@@ -1,6 +1,6 @@
 {
   "name": "superdesk-core",
-  "version": "1.28.0",
+  "version": "1.29.0-rc.1",
   "license": "AGPL-3.0",
   "repository": {
     "type": "git",
@@ -75,6 +75,7 @@
     "jquery-ui": "components/jqueryui#1.11.4",
     "jquery.gridster": "dustmoo/gridster.js#c306335397816beceb74e4a176067baef34a0359",
     "json-loader": "~0.5.4",
+    "json-merge-patch": "0.2.3",
     "json5": "0.5.1",
     "load-grunt-config": "0.19.2",
     "load-grunt-tasks": "3.5.2",
@@ -106,7 +107,7 @@
     "sass-loader": "6.0.6",
     "shortid": "2.2.8",
     "style-loader": "0.20.2",
-    "superdesk-ui-framework": "1.8.12",
+    "superdesk-ui-framework": "1.8.13",
     "ts-loader": "3.5.0",
     "tslint": "5.11.0",
     "typescript": "3.4.4",

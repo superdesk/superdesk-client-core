@@ -867,7 +867,7 @@ function Authoring() {
 
     this.getNextLevelSelectedCategory = function() {
         return this.subject.all(by.className('levelup')).all(
-            by.css('[ng-click="allowEntireCat && selectTerm(activeTerm)"]'));
+            by.css('[ng-click="allowEntireCat && selectTerm(activeTerm, $event)"]'));
     };
 
     this.getItemSource = function() {

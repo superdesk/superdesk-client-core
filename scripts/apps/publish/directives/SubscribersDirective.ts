@@ -42,6 +42,7 @@ export function SubscribersDirective(
             $scope.apiProducts = null;
             $scope.directProducts = null;
             $scope.subTypes = null;
+            $scope.search = {};
 
             if (angular.isDefined(metadata.values.subscriber_types)) {
                 $scope.subTypes = metadata.values.subscriber_types;
@@ -51,6 +52,12 @@ export function SubscribersDirective(
                 });
             }
 
+            $scope.statusFilters = [
+                {label: gettext('Active'), value: true, id: 'active'},
+                {label: gettext('Both'), value: null, id: 'both'},
+                {label: gettext('Inactive'), value: false, id: 'inactive'},
+            ];
+            $scope.search.subscriber_status = $scope.statusFilters[0];
             /**
              * Fetches all subscribers from backend
              */
