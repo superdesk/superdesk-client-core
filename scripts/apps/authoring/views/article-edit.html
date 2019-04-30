@@ -550,7 +550,7 @@
     sd-width="{{ editor[field._id].sdWidth || 'full' }}"
     data-required="schema[field._id].required"
     order="{{ editor[field._id].order }}"
-    sd-validation-error="error[field._id.toLowerCase()]">
+    sd-validation-error="error[field.display_name.toLowerCase()]">
 
     <label class="field__label">{{field.display_name}}</label>
     <span ng-if="schema[field._id].maxlength || schema[field._id].minlength" sd-character-count
@@ -678,7 +678,7 @@
 <div class="field" ng-repeat="field in fields track by field._id"
     ng-if="field.field_type === 'urls'"
     sd-width="{{editor[field._id].sdWidth || 'full'}}"
-    sd-validation-error="error[field._id.toLowerCase()]"
+    sd-validation-error="error[field.display_name.toLowerCase()]"
     order="{{editor[field._id].order}}"
     data-required="schema[field._id].required">
 
@@ -688,7 +688,9 @@
         helper-text="helper_text[field._id]"
         field-id="field._id"
         urls="item.extra[field._id]"
-        on-change="handleUrlsChange"></sd-article-url-fields>
+        on-change="handleUrlsChange"
+        required="schema[field._id].required"
+        ></sd-article-url-fields>
 </div>
 
 <div class="field"
