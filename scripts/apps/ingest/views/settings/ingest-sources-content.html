@@ -236,7 +236,7 @@
                     </ul>
                 </div>
 
-                <div sd-wizard-step data-title="{{ 'Critical Errors' | translate }}" data-code="critial-errors" ng-show="provider.feeding_service" ng-click="fetchSourceErrors()">
+                <div sd-wizard-step data-title="{{ 'Critical Errors' | translate }}" data-code="critial-errors" ng-show="provider.feeding_service" ng-init="fetchSourceErrors()">
                     <ul class="simple-list simple-list--dotted">
                         <li class="simple-list__item" ng-repeat="(key, val) in provider.source_errors">
                             <span sd-switch ng-model="provider.critical_errors[key]"></span>
