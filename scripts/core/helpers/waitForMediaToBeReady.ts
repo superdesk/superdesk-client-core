@@ -10,9 +10,9 @@ const waitForEventToFireForAllElements = (elements, eventName) => new Promise((r
         return;
     }
 
-    const onItemLoaded = (event) => {
+    const eventHandler = (event) => {
         itemsLeftToLoad--;
-        event.target.removeEventListener(eventName, onItemLoaded);
+        event.target.removeEventListener(eventName, eventHandler);
 
         if (itemsLeftToLoad === 0) {
             resolve();
@@ -20,7 +20,16 @@ const waitForEventToFireForAllElements = (elements, eventName) => new Promise((r
     };
 
     elements.forEach((element) => {
-        element.addEventListener(eventName, onItemLoaded);
+        // check for error in image src
+        if (element.tagName === 'IMG') {
+            element.addEventListener('error', eventHandler, {once: true});
+        } else {
+            // for audio and video check for the error in source
+            const source = element.getElementsByTagName('source')[0];
+
+            source.addEventListener('error', eventHandler, {once: true});
+        }
+        element.addEventListener(eventName, eventHandler);
     });
 });
 
