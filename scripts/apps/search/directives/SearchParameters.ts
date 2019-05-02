@@ -80,10 +80,17 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                 scope.params = params.params ? JSON.parse(params.params) : {};
 
                 if (scope.query && !Object.keys(scope.meta).length) {
-                    let queryTerms = scope.query.split(/(?!\(.*)\s(?![^(]*?\))/g);
+                    // split scope.query by spaces outside the parentheses
+                    // ex: "slugline:(abc) headline:(xyz)" will become ["slugline:(abc)", "headline:(xyz)"]
+                    const queryTerms = scope.query.split(/(?!\(.*)\s(?![^(]*?\))/g);
 
-                    scope.meta = Object.assign(...queryTerms.map((t) => ((k, v) =>
-                        ({[k]: v}))(...t.replace(/[()]/g, '').split(':'))));
+                    queryTerms.forEach((query) => {
+                        // remove the parentheses and split by ':'
+                        // ex: "slugline:(abc)" becomes ["slugline", "abc"]
+                        const [key, value] = query.replace(/[()]/g, '').split(':');
+
+                        Object.assign(scope.meta, {[key]: value});
+                    });
                 }
 
                 angular.forEach(scope.cvs, (cv) => {
