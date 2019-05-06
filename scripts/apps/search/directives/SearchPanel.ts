@@ -66,7 +66,7 @@ export function SearchPanel($location,
 
             // called after changing the subscriptions for current search
             scope.onSubscriptionsChange = (updatedSavedSearch) => {
-                // subscriptions were updated via API so the etag has changed
+                // subscriptions were updated via API so the object has changed
                 for (const key in updatedSavedSearch) {
                     scope.editingSearch[key] = updatedSavedSearch[key]
                 }
