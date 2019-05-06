@@ -73,8 +73,10 @@ export function ItemCarouselDirective($timeout, notify) {
                         carousel.trigger('destroy.owl.carousel');
                     }
 
-                    const carouselImages = Array.from(elem.get(0).querySelectorAll(`${carouselContainerSelector} img`));
-                    const carouselAudiosAndVideos = Array.from(
+                    const carouselImages: Array<HTMLImageElement> = Array.from(
+                        elem.get(0).querySelectorAll(`${carouselContainerSelector} img`),
+                    );
+                    const carouselAudiosAndVideos: Array<HTMLAudioElement | HTMLVideoElement> = Array.from(
                         elem.get(0).querySelectorAll(
                             `${carouselContainerSelector} video, ${carouselContainerSelector} audio`,
                         ),
