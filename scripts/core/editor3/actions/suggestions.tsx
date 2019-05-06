@@ -35,7 +35,7 @@ export function createAddSuggestion(chars) {
  * @return {Object} action
  * @description add a new suggestion of type DELETE.
  */
-export function createDeleteSuggestion(action) {
+export function createDeleteSuggestion(action: 'delete' | 'backspace') {
     return {
         type: 'CREATE_DELETE_SUGGESTION',
         payload: {

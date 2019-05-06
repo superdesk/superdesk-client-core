@@ -14,13 +14,12 @@ import ng from 'core/services/ng';
 /**
  * @ngdoc directive
  * @module superdesk.core.editor3
- * @name sdEditor3
  * @param {Array} editorFormat the formating settings available for editor
  * @param {String} value the model for editor value
  * @param {Boolean} readOnly true if the editor is read only
  * @param {Function} onChange the callback executed when the editor value is changed
  * @param {String} language the current language used for spellchecker
- * @description sdEditor3 integrates react Editor3 component with superdesk app.
+ * @description integrates react Editor3 component with superdesk app.
  */
 export const sdEditor3 = () => new Editor3Directive();
 
@@ -35,7 +34,6 @@ class Editor3Directive {
     findReplaceTarget: any;
     singleLine: any;
     debounce: any;
-    disableSpellchecker: any;
     bindToValue: any;
     tabindex: any;
     showTitle: any;
@@ -141,12 +139,6 @@ class Editor3Directive {
             debounce: '@',
 
             /**
-             * @type {Boolean}
-             * @description Disable internal spellchecker.
-             */
-            disableSpellchecker: '=?',
-
-            /**
 
              * @type {Object}
              * @description Item which is being edited
@@ -178,7 +170,6 @@ class Editor3Directive {
         this.findReplaceTarget = typeof this.findReplaceTarget !== 'undefined';
         this.singleLine = this.singleLine || false;
         this.debounce = parseInt(this.debounce || '100', 10);
-        this.disableSpellchecker = this.disableSpellchecker || false;
         this.bindToValue = this.bindToValue || false;
         this.tabindex = this.tabindex || 0;
         this.refreshTrigger = this.refreshTrigger || 0;

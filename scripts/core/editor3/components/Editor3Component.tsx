@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import {
     Editor,
-    CompositeDecorator,
     RichUtils,
     Modifier,
     EditorState,
@@ -15,8 +14,6 @@ import {getVisibleSelectionRect} from 'draft-js';
 
 import {Map} from 'immutable';
 import Toolbar from './toolbar';
-import {SpellcheckerDecorator} from './spellchecker';
-import {LinkDecorator} from './links';
 import {getBlockRenderer} from './blockRenderer';
 import {customStyleMap} from './customStyleMap';
 import classNames from 'classnames';
@@ -28,6 +25,11 @@ import UnstyledWrapper from './UnstyledWrapper';
 import {handleBeforeInputHighlights} from '../helpers/handleBeforeInputHighlights';
 import * as Suggestions from '../helpers/suggestions';
 import {getCurrentAuthor} from '../helpers/author';
+import {setSpellcheckerProgress, applySpellcheck} from '../actions';
+import {noop} from 'lodash';
+import {getSpellcheckWarningsByBlock} from './spellchecker/SpellcheckerDecorator';
+import {getSpellchecker} from './spellchecker/default-spellcheckers';
+import {IEditorStore} from '../store';
 
 const VALID_MEDIA_TYPES = [
     'application/superdesk.item.picture',
@@ -69,6 +71,33 @@ export function canDropMedia(e, editorConfig) {
     return supportsMedia && isValidMedia;
 }
 
+interface IProps {
+    readOnly?: boolean;
+    locked?: boolean;
+    showToolbar?: boolean;
+    editorState?: EditorState;
+    scrollContainer?: string;
+    singleLine?: boolean;
+    editorFormat?: Array<string>;
+    tabindex?: number;
+    suggestingMode?: boolean;
+    svc?: any;
+    invisibles?: boolean;
+    highlights?: any;
+    highlightsManager?: any;
+    spellchecking?: IEditorStore['spellchecking'];
+    onCreateAddSuggestion?(chars): void;
+    onCreateDeleteSuggestion?(type): void;
+    onPasteFromSuggestingMode?(): void;
+    onCreateSplitParagraphSuggestion?(): void;
+    onCreateChangeStyleSuggestion?(style, active): void;
+    onChange?(editorState: EditorState): void;
+    unlock?(): void;
+    onTab?(): void;
+    dragDrop?(): void;
+    dispatch?(action: any): void;
+}
+
 /**
  * @ngdoc React
  * @module superdesk.core.editor3
@@ -81,7 +110,7 @@ export function canDropMedia(e, editorConfig) {
  * @description Editor3 is a draft.js based editor that support customizable
  *  formatting, spellchecker and media files.
  */
-export class Editor3Component extends React.Component<any, any> {
+export class Editor3Component extends React.Component<IProps> {
     static propTypes: any;
     static defaultProps: any;
 
@@ -89,18 +118,7 @@ export class Editor3Component extends React.Component<any, any> {
     editorNode: any;
     div: any;
     editor: any;
-
-    static getDecorator(disableSpellchecker) {
-        const decorators: any = [
-            LinkDecorator,
-        ];
-
-        if (!disableSpellchecker) {
-            decorators.push(SpellcheckerDecorator);
-        }
-
-        return new CompositeDecorator(decorators);
-    }
+    spellcheckCancelFn: () => void;
 
     constructor(props) {
         super(props);
@@ -113,6 +131,8 @@ export class Editor3Component extends React.Component<any, any> {
         this.handleKeyCommand = this.handleKeyCommand.bind(this);
         this.handleBeforeInput = this.handleBeforeInput.bind(this);
         this.keyBindingFn = this.keyBindingFn.bind(this);
+        this.spellcheck = this.spellcheck.bind(this);
+        this.spellcheckCancelFn = noop;
     }
 
     /**
@@ -122,6 +142,38 @@ export class Editor3Component extends React.Component<any, any> {
      */
     focus() {
         this.props.unlock();
+    }
+
+    spellcheck() {
+        if (this.props.spellchecking.enabled !== true) {
+            return;
+        }
+
+        this.spellcheckCancelFn();
+
+        this.spellcheckCancelFn = (() => {
+            let canceled = false;
+
+            setTimeout(() => {
+                if (!canceled) {
+                    if (this.props.spellchecking.inProgress !== true) {
+                        this.props.dispatch(setSpellcheckerProgress(true));
+                    }
+
+                    const spellchecker = getSpellchecker(this.props.spellchecking.language);
+
+                    getSpellcheckWarningsByBlock(spellchecker, this.props.editorState)
+                        .then((spellcheckWarningsByBlock) => {
+                            if (!canceled) {
+                                this.props.dispatch(applySpellcheck(spellcheckWarningsByBlock));
+                                this.spellcheckCancelFn = noop;
+                            }
+                        });
+                }
+            }, 500);
+
+            return () => canceled = true;
+        })();
     }
 
     /**
@@ -261,8 +313,8 @@ export class Editor3Component extends React.Component<any, any> {
             const block = content.getBlockForKey(key);
             const commands = ['unordered-list-item', 'ordered-list-item'];
 
-            if (block.text === '' && commands.indexOf(block.type) !== -1) {
-                newState = RichUtils.toggleBlockType(editorState, block.type);
+            if (block.getText() === '' && commands.indexOf(block.getType()) !== -1) {
+                newState = RichUtils.toggleBlockType(editorState, block.getType());
                 break;
             }
         } // fall through
@@ -335,6 +387,8 @@ export class Editor3Component extends React.Component<any, any> {
         }
 
         window[EDITOR_GLOBAL_REFS][this.editorKey] = this.editor;
+
+        this.spellcheck();
     }
 
     handleRefs(editor) {
@@ -350,12 +404,15 @@ export class Editor3Component extends React.Component<any, any> {
         delete window[EDITOR_GLOBAL_REFS][this.editorKey];
     }
 
-    componentDidUpdate() {
+    componentDidUpdate(prevProps) {
         if (window.hasOwnProperty('instgrm')) {
             window.instgrm.Embeds.process();
         }
-    }
 
+        if (prevProps.editorState.getCurrentContent() !== this.props.editorState.getCurrentContent()) {
+            this.spellcheck();
+        }
+    }
     render() {
         const {
             readOnly,
@@ -412,7 +469,7 @@ export class Editor3Component extends React.Component<any, any> {
                         blockRenderMap={blockRenderMap}
                         blockRendererFn={getBlockRenderer({svc: this.props.svc})}
                         customStyleMap={{...customStyleMap, ...this.props.highlightsManager.styleMap}}
-                        onChange={(...args) => {
+                        onChange={(editorStateNext) => {
                             // in order to position the popup component we need to know the position of editor selection
                             // even when it's not focused, or another input is focused
 
@@ -422,7 +479,7 @@ export class Editor3Component extends React.Component<any, any> {
                                 this.editorNode.dataset.editorSelectionRect = JSON.stringify(selectionRect);
                             }
 
-                            onChange(...args);
+                            onChange(editorStateNext);
                         }}
                         onTab={onTab}
                         tabIndex={tabindex}
@@ -435,32 +492,6 @@ export class Editor3Component extends React.Component<any, any> {
         );
     }
 }
-
-Editor3Component.propTypes = {
-    readOnly: PropTypes.bool,
-    locked: PropTypes.bool,
-    showToolbar: PropTypes.bool,
-    editorState: PropTypes.object,
-    onChange: PropTypes.func,
-    unlock: PropTypes.func,
-    onTab: PropTypes.func,
-    dragDrop: PropTypes.func,
-    scrollContainer: PropTypes.string.isRequired,
-    singleLine: PropTypes.bool,
-    editorFormat: PropTypes.array,
-    tabindex: PropTypes.number,
-    dispatch: PropTypes.func,
-    suggestingMode: PropTypes.bool,
-    onCreateAddSuggestion: PropTypes.func,
-    onCreateDeleteSuggestion: PropTypes.func,
-    onPasteFromSuggestingMode: PropTypes.func,
-    onCreateSplitParagraphSuggestion: PropTypes.func,
-    onCreateChangeStyleSuggestion: PropTypes.func,
-    svc: PropTypes.object,
-    invisibles: PropTypes.bool,
-    highlights: PropTypes.object,
-    highlightsManager: PropTypes.object,
-};
 
 Editor3Component.defaultProps = {
     readOnly: false,

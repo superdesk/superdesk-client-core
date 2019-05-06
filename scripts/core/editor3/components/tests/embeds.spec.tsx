@@ -71,7 +71,9 @@ describe('editor3.components.embed-input', () => {
             responseJSON: {error: 'this is the error'},
         }));
 
-        wrapper.find('input').instance().value = 'http://will.fail';
+        const instance: any = wrapper.find('input').instance();
+
+        instance.value = 'http://will.fail';
         wrapper.simulate('submit');
 
         $rootScope.$apply();
@@ -90,7 +92,10 @@ describe('editor3.components.embed-input', () => {
         spyOn($, 'ajax').and.returnValue($q.resolve('resolve-value'));
 
         wrapper.setState({error: 'some error'});
-        wrapper.find('input').instance().value = 'http://will.fail';
+
+        const instance: any = wrapper.find('input').instance();
+
+        instance.value = 'http://will.fail';
         wrapper.simulate('submit');
 
         $rootScope.$apply();

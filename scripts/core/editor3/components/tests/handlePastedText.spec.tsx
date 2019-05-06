@@ -1,15 +1,8 @@
-import React from 'react';
-import {EditorState, ContentState, SelectionState, convertFromRaw, RawDraftContentState} from 'draft-js';
+
+import {EditorState, ContentState, SelectionState, convertFromRaw} from 'draft-js';
 import {cursorAtEndPosition, cursorAtPosition} from './utils';
-import {Editor3Component} from '../Editor3Component';
 import {insertContentInState} from '../handlePastedText';
 import {getAnnotationsFromContentState} from 'core/editor3/helpers/editor3CustomData';
-
-const stubForHighlights = {
-    highlightsManager: {
-        styleMap: {},
-    },
-};
 
 describe('editor3.handlePastedText', () => {
     it('should insert text without selection', () => {

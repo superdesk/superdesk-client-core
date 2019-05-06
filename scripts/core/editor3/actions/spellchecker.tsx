@@ -1,42 +1,53 @@
-/**
- * @ngdoc method
- * @name replaceWord
- * @param {String} word
- * @return {String} action
- * @description Creates the replace word action
- */
-export function replaceWord(word) {
+import {IReplaceWordData} from '../reducers/spellchecker';
+import {
+    getSpellcheckWarningsByBlock,
+    ISpellcheckWarningsByBlock
+} from '../components/spellchecker/SpellcheckerDecorator';
+import {IEditorStore} from '../store';
+import {getSpellchecker} from '../components/spellchecker/default-spellcheckers';
+
+export function replaceWord(data: IReplaceWordData) {
     return {
         type: 'SPELLCHECKER_REPLACE_WORD',
-        payload: word,
+        payload: data,
     };
 }
 
-/**
- * @ngdoc method
- * @name refreshWord
- * @param {String} word
- * @return {String} action
- * @description Refreshes the passed word (usually after having being added
- * to the dictionary).
- */
-export function refreshWord(word) {
-    return {
-        type: 'SPELLCHECKER_REFRESH_WORD',
-        payload: word,
+export function setSpellcheckerStatus(enabled: boolean) {
+    if (enabled) {
+        return reloadSpellcheckerWarnings();
+    } else {
+        return disableSpellchecker();
+    }
+}
+
+export function reloadSpellcheckerWarnings() {
+    return function(dispatch, getState) {
+        const state: IEditorStore = getState();
+        const spellchecker = getSpellchecker(state.spellchecking.language);
+
+        getSpellcheckWarningsByBlock(spellchecker, getState().editorState).then((spellcheckWarningsByBlock) => {
+            dispatch(applySpellcheck(spellcheckWarningsByBlock));
+        });
     };
 }
 
-/**
- * @ngdoc method
- * @name setAutoSpellchecker
- * @param {Boolean} enabled True if the autospellchecker should be enabled
- * @return {String} action
- * @description Enable/disable auto mode for spellchecker.
- */
-export function setAutoSpellchecker(enabled) {
+export function disableSpellchecker() {
     return {
-        type: 'SPELLCHECKER_AUTO',
-        payload: enabled,
+        type: 'DISABLE_SPELLCHECKER',
+    };
+}
+
+export function applySpellcheck(spellcheckWarningsByBlock: ISpellcheckWarningsByBlock) {
+    return {
+        type: 'APPLY_SPELLCHECK',
+        payload: spellcheckWarningsByBlock,
+    };
+}
+
+export function setSpellcheckerProgress(inProgress: boolean) {
+    return {
+        type: 'SET_SPELLCHEKCER_PROGRESS',
+        payload: inProgress,
     };
 }

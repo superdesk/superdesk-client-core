@@ -5,14 +5,11 @@ import {connect} from 'react-redux';
 import {Editor3Component} from './Editor3Component';
 import {MultipleHighlights} from './MultipleHighlights';
 import * as actions from '../actions';
+import {EditorState} from 'draft-js';
 
 export class Editor3Base extends React.Component<any, any> {
     static propTypes: any;
     static defaultProps: any;
-
-    static getDecorator(disableSpellchecker) {
-        return Editor3Component.getDecorator(disableSpellchecker);
-    }
 
     render() {
         return (
@@ -35,12 +32,13 @@ const mapStateToProps = (state) => ({
     editorFormat: state.editorFormat,
     tabindex: state.tabindex,
     suggestingMode: state.suggestingMode,
+    spellchecking: state.spellchecking,
     invisibles: state.invisibles,
     svc: state.svc,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    onChange: (editorState) => dispatch(actions.changeEditorState(editorState)),
+    onChange: (editorState: EditorState) => dispatch(actions.changeEditorState(editorState)),
     onTab: (e) => dispatch(actions.handleEditorTab(e)),
     dragDrop: (transfer, mediaType) => dispatch(actions.dragDrop(transfer, mediaType)),
     unlock: () => dispatch(actions.setLocked(false)),
