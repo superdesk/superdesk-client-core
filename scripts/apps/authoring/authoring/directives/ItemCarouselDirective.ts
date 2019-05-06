@@ -3,7 +3,7 @@
 import 'owl.carousel';
 import _ from 'lodash';
 import * as ctrl from '../controllers';
-import {waitForImagesToLoad, waitForAudioAndVideoToLoadMetadata} from 'core/helpers/waitForMediaToBeReady';
+import {waitForMediaToLoad} from 'core/helpers/waitForMediaToBeReady';
 import {getSuperdeskType} from 'core/utils';
 import {gettext} from 'core/utils';
 
@@ -85,8 +85,10 @@ export function ItemCarouselDirective($timeout, notify) {
                     }
 
                     Promise.all([
-                        waitForImagesToLoad(carouselImages),
-                        waitForAudioAndVideoToLoadMetadata(carouselAudiosAndVideos),
+                        waitForMediaToLoad(carouselImages.filter(
+                            (img: HTMLImageElement) => img.complete === false), 'load'),
+                        waitForMediaToLoad(carouselAudiosAndVideos.filter(
+                            (media: HTMLAudioElement | HTMLVideoElement) => media.readyState < 1), 'loadedmetadata'),
                     ]).then(initCarousel);
                 });
             });

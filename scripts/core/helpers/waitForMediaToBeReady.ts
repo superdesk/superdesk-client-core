@@ -1,9 +1,9 @@
 /**
- * @param {Array<Node>} elements
- * @param {string} eventName
+ * @param elements An array of img, audio and video elements
+ * @param eventName EventListener's name
  */
-const waitForEventToFireForAllElements = (elements, eventName) => new Promise((resolve) => {
-    let itemsLeftToLoad = elements.length;
+export const waitForMediaToLoad = (elements: Array<any>, eventName: string): Promise<void> => new Promise((resolve) => {
+    let itemsLeftToLoad: number = elements.length;
 
     if (itemsLeftToLoad === 0) {
         resolve();
@@ -32,15 +32,3 @@ const waitForEventToFireForAllElements = (elements, eventName) => new Promise((r
         element.addEventListener(eventName, eventHandler);
     });
 });
-
-/**
- * @param {Array<Node>} elements
- */
-export const waitForImagesToLoad =
-    (elements) => waitForEventToFireForAllElements(elements.filter((img) => img.complete === false), 'load');
-
-/**
- * @param {Array<Node>} elements
- */
-export const waitForAudioAndVideoToLoadMetadata =
-    (elements) => waitForEventToFireForAllElements(elements.filter((media) => media.readyState < 1), 'loadedmetadata');
