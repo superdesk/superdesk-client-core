@@ -214,12 +214,13 @@ export function SavedSearchManageSubscribers(asset, userList, api, modal, desks)
                 modal.confirm(
                     gettext('Are you sure to remove this subscription?'),
                     gettext('Unsubscribe user'),
-                ).then(() => {
-                    unsubscribeUser(
+                ).then(async () => {
+                    const updatedSearch = await unsubscribeUser(
                         scope.savedSearch,
                         user._id,
                         api,
                     );
+                    scope.onSubscriptionsChange(updatedSearch);
                 });
 
             scope.unsubscribeDesk = (desk: IDesk) =>
