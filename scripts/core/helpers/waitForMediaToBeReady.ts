@@ -1,9 +1,17 @@
 /**
  * @param elements An array of img, audio and video elements
- * @param eventName EventListener's name
  */
-export const waitForMediaToLoad = (elements: Array<any>, eventName: string): Promise<void> => new Promise((resolve) => {
-    let itemsLeftToLoad: number = elements.length;
+export const waitForMediaToLoad = (elements: Array<Element>): Promise<void> => new Promise((resolve) => {
+    // EventListener's name
+    let eventName: string = 'load';
+
+    const filteredElelemnts = elements.filter((element: Element) => {
+        if (element.tagName === 'IMG') {
+            return element.complete === false;
+        }
+        return element.readyState < 1;
+    });
+    let itemsLeftToLoad: number = filteredElelemnts.length;
 
     if (itemsLeftToLoad === 0) {
         resolve();
@@ -19,11 +27,12 @@ export const waitForMediaToLoad = (elements: Array<any>, eventName: string): Pro
         }
     };
 
-    elements.forEach((element) => {
-        // check for error in image src
+    filteredElelemnts.forEach((element: Element) => {
         if (element.tagName === 'IMG') {
+            // check for error in image src
             element.addEventListener('error', eventHandler, {once: true});
         } else {
+            eventName = 'loadedmetadata';
             // for audio and video check for the error in source
             const source = element.getElementsByTagName('source')[0];
 

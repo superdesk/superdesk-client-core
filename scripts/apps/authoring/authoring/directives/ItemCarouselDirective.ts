@@ -85,10 +85,8 @@ export function ItemCarouselDirective($timeout, notify) {
                     }
 
                     Promise.all([
-                        waitForMediaToLoad(carouselImages.filter(
-                            (img: HTMLImageElement) => img.complete === false), 'load'),
-                        waitForMediaToLoad(carouselAudiosAndVideos.filter(
-                            (media: HTMLAudioElement | HTMLVideoElement) => media.readyState < 1), 'loadedmetadata'),
+                        waitForMediaToLoad(carouselImages),
+                        waitForMediaToLoad(carouselAudiosAndVideos),
                     ]).then(initCarousel);
                 });
             });
