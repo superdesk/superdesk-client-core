@@ -65,9 +65,11 @@ export function SearchPanel($location,
             };
 
             // called after changing the subscriptions for current search
-            scope.onSubscriptionsChange = (udpatedSavedSearch) => {
+            scope.onSubscriptionsChange = (updatedSavedSearch) => {
                 // subscriptions were updated via API so the etag has changed
-                scope.editingSearch._etag = udpatedSavedSearch._etag;
+                for (const key in updatedSavedSearch) {
+                    scope.editingSearch[key] = updatedSavedSearch[key]
+                }
             };
 
             scope.aggregations = {};
