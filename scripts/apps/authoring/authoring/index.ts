@@ -139,8 +139,8 @@ angular.module('superdesk.apps.authoring', [
                     authoringWorkspace.popup(data.item, 'edit');
                 }],
                 filters: [{action: 'list', type: 'archive'}],
-                additionalCondition: ['authoring', 'item', 'config', function(authoring, item, config) {
-                    return authoring.itemActions(item).edit;
+                additionalCondition: ['authoring', 'item', 'config', 'lock', function(authoring, item, config, lock) {
+                    return authoring.itemActions(item).edit && !lock.isLockedByMe(item);
                 }],
             })
             .activity('edit.media.metadata', {
