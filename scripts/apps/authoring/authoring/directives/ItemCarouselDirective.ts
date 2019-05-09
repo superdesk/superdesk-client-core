@@ -86,10 +86,9 @@ export function ItemCarouselDirective($timeout, notify) {
                         return;
                     }
 
-                    Promise.all([
-                        waitForMediaToLoad(carouselImages),
-                        waitForMediaToLoad(carouselAudiosAndVideos),
-                    ]).then(initCarousel);
+                    const mediaItems = carouselImages.concat(carouselAudiosAndVideos);
+
+                    waitForMediaToLoad(mediaItems).then(initCarousel);
                 });
             });
             /*

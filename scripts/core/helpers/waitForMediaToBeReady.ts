@@ -1,13 +1,16 @@
+import {isImage, isAudio, isVideo} from './utils';
+
 /**
  * @param elements An array of img, audio and video elements
  */
 export const waitForMediaToLoad = (elements: Array<HTMLImageElement | HTMLAudioElement | HTMLVideoElement>):
 Promise<void> => new Promise((resolve) => {
-    const filteredElements = elements.filter((element) => {
+    const filteredElements = elements.filter((element) => { // eslint-disable-line array-callback-return
         if (isImage(element)) {
             return element.complete === false;
+        } else if (isAudio(element) || isVideo(element)) {
+            return element.readyState < 1;
         }
-        return element.readyState < 1;
     });
     let itemsLeftToLoad: number = filteredElements.length;
 
@@ -37,15 +40,3 @@ Promise<void> => new Promise((resolve) => {
         element.addEventListener(isImage(element) ? 'load' : 'loadedmetadata', eventHandler, {once: true});
     });
 });
-
-export function isImage(e: Element): e is HTMLImageElement {
-    return e.tagName === 'IMG';
-}
-
-export function isAudio(e: Element): e is HTMLAudioElement {
-    return e.tagName === 'AUDIO';
-}
-
-export function isVideo(e: Element): e is HTMLVideoElement {
-    return e.tagName === 'VIDEO';
-}
