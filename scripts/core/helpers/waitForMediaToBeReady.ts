@@ -34,12 +34,13 @@ Promise<void> => new Promise((resolve) => {
         if (isImage(element)) {
             // check for error in image src
             element.addEventListener('error', eventHandler, {once: true});
+            element.addEventListener('load', eventHandler, {once: true});
         } else if (isAudio(element) || isVideo(element)) {
             // for audio and video check for the error in source
             const source = element.getElementsByTagName('source')[0];
 
             source.addEventListener('error', eventHandler, {once: true});
+            element.addEventListener('loadedmetadata', eventHandler, {once: true});
         }
-        element.addEventListener(isImage(element) ? 'load' : 'loadedmetadata', eventHandler, {once: true});
     });
 });
