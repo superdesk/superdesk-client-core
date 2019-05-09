@@ -5,5 +5,5 @@ export interface IArticleSchema {
         required: boolean;
         minlength: number;
         maxlength: number;
-    }
+    };
 }
