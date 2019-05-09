@@ -142,7 +142,7 @@
     "test": "grunt ci:travis",
     "debug-unit-tests": "karma start karma.conf.js --browsers=Chrome",
     "unit": "grunt unit",
-    "build": "grunt build",
+    "build": "node ./tasks/generate-extension-imports.js && grunt build",
     "lint": "python3 grep-lint.py && tsc --noEmit && tslint -c tslint.json 'scripts/**/*.{ts,tsx}' && eslint --ignore-pattern=*.d.ts --parser=typescript-eslint-parser --ext .js --ext .jsx --ext .ts --ext .tsx scripts spec tasks *.js",
     "lint-fix": "tsc --noEmit && tslint --fix -c tslint.json 'scripts/**/*.{ts,tsx}' && eslint --fix --ignore-pattern=*.d.ts --parser=typescript-eslint-parser --ext .js --ext .jsx --ext .ts --ext .tsx scripts spec tasks *.js",
     "tslint": "tslint -c tslint.json 'scripts/**/*.{ts,tsx}'",

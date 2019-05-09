@@ -33,6 +33,8 @@ import 'core/form';
 
 import ng from 'core/services/ng';
 
+import {extensions} from 'core/extension-imports.generated';
+
 /* globals __SUPERDESK_CONFIG__: true */
 const appConfig = __SUPERDESK_CONFIG__;
 
@@ -92,6 +94,12 @@ core.run(['$document', ($document) => {
         $document.on('dragover', (event) => {
             window.dragPageY = event.pageY;
         });
+    }
+}]);
+
+core.run([() => {
+    for (const key in extensions) {
+        extensions[key].activate();
     }
 }]);
 
