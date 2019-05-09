@@ -369,7 +369,7 @@ export function ArticleEditDirective(
                 scope.maxUploads = function(fieldOptions) {
                     if (fieldOptions && fieldOptions.multiple_items &&
                         fieldOptions.multiple_items.enabled) {
-                        return fieldOptions.multiple_items.max_items ? fieldOptions.multiple_items.max_items : 2;
+                        return fieldOptions.multiple_items.max_items ? fieldOptions.multiple_items.max_items : 1;
                     }
                     return 1;
                 };
