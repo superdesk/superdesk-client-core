@@ -5,11 +5,14 @@ import {isImage, isAudio, isVideo} from './utils';
  */
 export const waitForMediaToLoad = (elements: Array<HTMLImageElement | HTMLAudioElement | HTMLVideoElement>):
 Promise<void> => new Promise((resolve) => {
-    const filteredElements = elements.filter((element) => { // eslint-disable-line array-callback-return
+    const filteredElements = elements.filter((element) => {
         if (isImage(element)) {
             return element.complete === false;
         } else if (isAudio(element) || isVideo(element)) {
             return element.readyState < 1;
+        } else {
+            logger.error(new Error('Unexpected element type'));
+            return false;
         }
     });
     let itemsLeftToLoad: number = filteredElements.length;
