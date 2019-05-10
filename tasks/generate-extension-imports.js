@@ -11,13 +11,28 @@ must only contain alphanumerical characters and underscores`);
     return;
 }
 
-let codeToImportExtensions = 'export const extensions = {};\n\n';
+let codeToImportExtensions =
+`
+/* tslint:disable */
+
+import {IExtensions} from 'superdesk-api';
+
+export const extensions: IExtensions = {};
+`;
+
 const importStatements = [];
 const insertIntoObjectStatements = [];
 
 directories.forEach((extensionName) => {
     importStatements.push(`import * as ${extensionName} from '../extensions/${extensionName}/dist/extension';`);
-    insertIntoObjectStatements.push(`extensions['${extensionName}'] = ${extensionName};`);
+
+    const manifestFile = fs.readFileSync(
+        path.resolve(`${__dirname}/../scripts/extensions/${extensionName}/package.json`)
+    );
+
+    insertIntoObjectStatements.push(
+        `extensions['${extensionName}'] = {extension: ${extensionName}, manifest: ${manifestFile}}`
+    );
 });
 
 codeToImportExtensions += importStatements.join('\n') + '\n\n' + insertIntoObjectStatements.join('\n') + '\n';
