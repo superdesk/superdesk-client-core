@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "sourceRoot": "src",
+        "outDir": "dist",
+        "sourceMap": true,
+        "module": "commonjs",
+        "target": "es5",
+        "lib": [
+            "dom",
+            "es2017"
+        ],
+        "skipLibCheck": true,
+    },
+}
