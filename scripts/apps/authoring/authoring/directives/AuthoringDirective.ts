@@ -7,8 +7,7 @@ import {gettext} from 'core/utils';
 import {combineReducers, createStore, applyMiddleware} from 'redux';
 import {attachments, initAttachments} from '../../attachments';
 import {applyMiddleware as coreApplyMiddleware} from 'core/middleware';
-import {onChangeMiddleware, ArticleSchemaMiddleware} from '..';
-import {IArticleSchema} from 'superdesk-interfaces/ArticleSchema';
+import {onChangeMiddleware, getArticleSchemaMiddleware} from '..';
 
 /**
  * @ngdoc directive
@@ -858,7 +857,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             $scope.autosave = function(item, timeout) {
                 $scope.dirty = true;
                 angular.extend($scope.item, item); // make sure all changes are available
-                return coreApplyMiddleware(onChangeMiddleware, {item: $scope.item, original: $scope.origItem})
+                return coreApplyMiddleware(onChangeMiddleware, {item: $scope.item, original: $scope.origItem}, 'item')
                     .then(() => {
                         var autosavedItem = authoring.autosave($scope.item, $scope.origItem, timeout);
 
@@ -1211,9 +1210,9 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
             const updateSchema = () => {
                 const schema = merge({}, authoring.schema); // always start from initial schema
-                coreApplyMiddleware(ArticleSchemaMiddleware, {item: $scope.item, schema: schema})
-                    .then(() => {
-                        $scope.schema = schema;
+                coreApplyMiddleware(getArticleSchemaMiddleware, {item: $scope.item, schema: schema}, 'schema')
+                    .then((_schema) => {
+                        $scope.schema = _schema;
                     });
             };
         },

@@ -25,11 +25,11 @@ export interface IArticleSchemaParams {
     schema: IArticleSchema;
 }
 
-type IOnChangeMiddleware = (params: IOnChangeParams) => any;
-type IArticleSchemaMiddleware = (params: IArticleSchemaParams) => any;
+type IOnChangeMiddleware = (params: IOnChangeParams) => IArticle;
+type IArticleSchemaMiddleware = (params: IArticleSchemaParams) => IArticleSchema;
 
 export const onChangeMiddleware: Array<IOnChangeMiddleware> = [];
-export const ArticleSchemaMiddleware: Array<IArticleSchemaMiddleware> = [];
+export const getArticleSchemaMiddleware: Array<IArticleSchemaMiddleware> = [];
 
 angular.module('superdesk.apps.authoring.autosave', []).service('autosave', svc.AutosaveService);
 

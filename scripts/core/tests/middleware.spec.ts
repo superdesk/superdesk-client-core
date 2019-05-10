@@ -2,11 +2,11 @@
 import {applyMiddleware} from '../middleware';
 
 describe('middleware', () => {
-    const incMiddleware = (params) => params.foo += 1;
+    const incMiddleware = ({foo}) => foo + 1;
 
     it('can run empty', (done) => {
-        applyMiddleware([], 'foo').then((result) => {
-            expect(result).toBe('foo');
+        applyMiddleware([], {'foo': 1}, 'foo').then((result) => {
+            expect(result).toBe(1);
             done();
         });
     });
@@ -18,7 +18,7 @@ describe('middleware', () => {
             incMiddleware,
         ];
 
-        applyMiddleware(middleware, {foo: 0}).then(({foo}) => {
+        applyMiddleware(middleware, {foo: 0}, 'foo').then((foo) => {
             expect(foo).toBe(3);
             done();
         });
@@ -26,15 +26,15 @@ describe('middleware', () => {
 
     it('chains promises', (done) => {
         const middleware = [
-            (params) => new Promise((resolve) => setTimeout(() => {
-                params.calls.push('first');
-                resolve();
+            ({calls}) => new Promise((resolve) => setTimeout(() => {
+                calls.push('first');
+                resolve(calls);
             }, 100)),
-            (params) => params.calls.push('second'),
+            ({calls}) => calls.concat(['second']),
         ];
 
-        applyMiddleware(middleware, {calls: []})
-            .then(({calls}) => {
+        applyMiddleware(middleware, {calls: []}, 'calls')
+            .then((calls) => {
                 expect(calls).toEqual(['first', 'second']);
                 done();
             });
@@ -59,10 +59,16 @@ describe('middleware', () => {
             });
     });
 
-    it('passes the same params to all middlewares', (done) => {
+    it('passes the same params to all middlewares with no key', (done) => {
         const middleware = [
-            (x) => x.bar = 'bar',
-            (y) => y.foo = 'foo',
+            (x) => {
+                x.bar = 'bar';
+                return x;
+            },
+            (y) => {
+                y.foo = 'foo';
+                return y;
+            },
         ];
 
         const reject = jasmine.createSpy('reject');
