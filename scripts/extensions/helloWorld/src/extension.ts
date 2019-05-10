@@ -1,5 +1,7 @@
 import {ISuperdesk} from 'superdesk-api';
 
 export function activate(superdesk: ISuperdesk) {
-    // superdesk.ui.alert('Hello world');
+    const {gettext} = superdesk.localization;
+
+    // superdesk.ui.alert(gettext('Hello world'));
 }

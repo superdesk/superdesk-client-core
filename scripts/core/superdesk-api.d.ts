@@ -4,5 +4,8 @@ declare module 'superdesk-api' {
             alert(message: string): Promise<void>;
             confirm(message: string): Promise<boolean>;
         };
+        localization: {
+            gettext(message: string): string;
+        }
     }
 }

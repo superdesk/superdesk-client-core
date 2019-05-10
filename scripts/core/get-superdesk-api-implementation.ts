@@ -11,5 +11,8 @@ export function getSuperdeskApiImplementation(modal): ISuperdesk {
                     .catch(() => resolve(false));
             }),
         },
+        localization: {
+            gettext: (message) => gettext(message),
+        },
     };
 }
