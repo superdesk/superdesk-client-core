@@ -423,7 +423,10 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
                 $scope.error = {};
 
-                return functionPoints.run('authoring:publish', item)
+                return functionPoints.run('authoring:publish', Object.assign({
+                    _id: _.get(orig, '_id'),
+                    type: _.get(orig, 'type'),
+                }, item))
                     .then(() => checkMediaAssociatedToUpdate())
                     .then((result) => {
                         if (result) {
