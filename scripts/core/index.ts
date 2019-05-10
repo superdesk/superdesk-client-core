@@ -34,6 +34,7 @@ import 'core/form';
 import ng from 'core/services/ng';
 
 import {extensions} from 'core/extension-imports.generated';
+import {getSuperdeskApiImplementation} from './get-superdesk-api-implementation';
 
 /* globals __SUPERDESK_CONFIG__: true */
 const appConfig = __SUPERDESK_CONFIG__;
@@ -97,9 +98,11 @@ core.run(['$document', ($document) => {
     }
 }]);
 
-core.run([() => {
+core.run(['modal', (modal) => {
+    const superdesk = getSuperdeskApiImplementation(modal);
+
     for (const key in extensions) {
-        extensions[key].activate();
+        extensions[key].activate(superdesk);
     }
 }]);
 

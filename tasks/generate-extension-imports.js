@@ -16,7 +16,7 @@ const importStatements = [];
 const insertIntoObjectStatements = [];
 
 directories.forEach((extensionName) => {
-    importStatements.push(`import * as ${extensionName} from '../extensions/${extensionName}/extension';`);
+    importStatements.push(`import * as ${extensionName} from '../extensions/${extensionName}/dist/extension';`);
     insertIntoObjectStatements.push(`extensions['${extensionName}'] = ${extensionName};`);
 });
 
