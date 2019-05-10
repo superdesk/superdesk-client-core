@@ -8,8 +8,8 @@ import {
 import * as Highlights from '../helpers/highlights';
 import {initSelectionIterator, hasNextSelection} from '../helpers/selection';
 import {
-    editor3DataKeys, getCustomDataFromEditor, setCustomDataForEditor,
-    getAllCustomDataFromEditor, setAllCustomDataForEditor,
+    editor3DataKeys, getCustomDataFromEditor, setCustomDataForEditor__deprecated,
+    getAllCustomDataFromEditor, setAllCustomDataForEditor__deprecated,
 } from '../helpers/editor3CustomData';
 import * as Links from '../helpers/links';
 import {replaceSelectedEntityData} from '../components/links/entityUtils';
@@ -438,7 +438,7 @@ const pasteAddSuggestion = (state, {content, data}) => {
 
     // for the first block recover the initial block data because on replaceWithFragment the block data is
     // replaced with the data from pasted fragment
-    editorState = setAllCustomDataForEditor(editorState, customData);
+    editorState = setAllCustomDataForEditor__deprecated(editorState, customData);
 
     // select pasted content
     editorState = EditorState.acceptSelection(editorState, newSelection);
@@ -473,7 +473,7 @@ function moveToSuggestionsHistory(editorState, data, suggestion, accepted) {
 
     let nextEditorState = editorState;
 
-    nextEditorState = setCustomDataForEditor(
+    nextEditorState = setCustomDataForEditor__deprecated(
         editorState,
         editor3DataKeys.RESOLVED_SUGGESTIONS_HISTORY,
         resolvedSuggestions.concat({

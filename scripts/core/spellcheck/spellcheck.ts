@@ -5,7 +5,7 @@ SpellcheckService.$inject = ['$q', 'api', 'dictionaries', '$rootScope', '$locati
 function SpellcheckService($q, api, dictionaries, $rootScope, $location, _, preferencesService) {
     var PREFERENCES_KEY = 'spellchecker:status',
         lang,
-        dict,
+        dict = {},
         ignored = {},
         abbreviationList = [],
         self;
@@ -24,7 +24,7 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _, pref
     this.setLanguage = function(_lang) {
         if (lang !== _lang) {
             lang = _lang;
-            dict = null;
+            dict = {};
         }
     };
 
@@ -56,7 +56,7 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _, pref
 
         var baseLang = getBaseLanguage(lang);
 
-        if (!dict) {
+        if (Object.keys(dict).length === 0) {
             dict = dictionaries.getActive(lang, baseLang).then((items) => {
                 dict = dict || {};
                 dict.content = {};

@@ -35,6 +35,9 @@ describe('item association directive', () => {
         }));
 
         elem = $compile(`<div sd-item-association
+            data-allow-picture="true"
+            data-allow-video="true"
+            data-allow-audio="true"
             data-item="item"
             data-rel="rel"
             data-editable="editable"
@@ -49,7 +52,7 @@ describe('item association directive', () => {
 
         scope.item.state = 'in_progress';
         event.originalEvent = {dataTransfer: {
-            types: ['video'],
+            types: ['application/superdesk.item.video'],
             getData: () => angular.toJson({headline: 'foo', _type: 'externalsource'}),
         }};
 
@@ -73,7 +76,7 @@ describe('item association directive', () => {
 
         scope.item.state = 'published';
         event.originalEvent = {dataTransfer: {
-            types: ['video'],
+            types: ['application/superdesk.item.video'],
             getData: () => angular.toJson({headline: 'foo', _type: 'externalsource'}),
         }};
 
@@ -101,7 +104,7 @@ describe('item association directive', () => {
             };
             scope.item.state = 'in_progress';
             event.originalEvent = {dataTransfer: {
-                types: ['image'],
+                types: ['application/superdesk.item.picture'],
                 getData: () => angular.toJson({headline: 'foo', _type: 'externalsource'}),
             }};
 
@@ -124,7 +127,7 @@ describe('item association directive', () => {
 
         scope.item.state = 'in_progress';
         event.originalEvent = {dataTransfer: {
-            types: ['image'],
+            types: ['application/superdesk.item.picture'],
             getData: () => angular.toJson({headline: 'foo', _type: 'externalsource', lock_user: 'foo'}),
         }};
 

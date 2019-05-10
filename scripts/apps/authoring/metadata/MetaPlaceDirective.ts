@@ -33,7 +33,7 @@ export default function MetaPlaceDirective(places: IPlacesService) {
                         scope.loading = false;
                         scope.terms = results;
                     })
-                    .finally(() => {
+                    .catch(() => {
                         scope.loading = false;
                     });
             };

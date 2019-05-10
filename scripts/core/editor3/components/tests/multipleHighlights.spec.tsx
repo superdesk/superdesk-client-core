@@ -93,7 +93,8 @@ describe('multipleHighlights.component', () => {
 
         const editorStateWithSelection = EditorState.acceptSelection(editorState, selection);
         const wrapper = mount(<MultipleHighlightsTester editorState={editorStateWithSelection} />);
-        const child = wrapper.instance().childRef;
+        const instance: any = wrapper.instance();
+        const child = instance.childRef;
 
         getEditorState = () => child.props.editorState;
         highlightsManager = child.props.highlightsManager;

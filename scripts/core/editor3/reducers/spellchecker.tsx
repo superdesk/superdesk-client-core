@@ -1,21 +1,32 @@
 import {EditorState, Modifier} from 'draft-js';
 import {onChange} from './editor3';
-import {Editor3} from '../components/Editor3';
 import {createAddSuggestion} from './suggestions';
 import {getSuggestionMetadata} from '../actions/suggestions';
+import {getCustomDecorator, IEditorStore} from '../store';
+import {ISpellcheckWarningsByBlock} from '../components/spellchecker/SpellcheckerDecorator';
 
-const spellchecker = (state = {}, action) => {
+const spellchecker = (state: IEditorStore, action) => {
     switch (action.type) {
     case 'SPELLCHECKER_REPLACE_WORD':
         return replaceWord(state, action.payload);
-    case 'SPELLCHECKER_REFRESH_WORD':
-        return refreshWord(state, action.payload);
-    case 'SPELLCHECKER_AUTO':
-        return autoSpellchecker(state, action.payload);
+    case 'SET_SPELLCHEKCER_PROGRESS':
+        return {...state, spellchecking: {...state.spellchecking, inProgress: action.payload}};
+    case 'DISABLE_SPELLCHECKER':
+        return applySpellcheck(state.spellchecking.language, false, state);
+    case 'APPLY_SPELLCHECK':
+        return applySpellcheck(state.spellchecking.language, true, state, action.payload);
     default:
         return state;
     }
 };
+
+export interface IReplaceWordData {
+    word: {
+        text: string;
+        offset: number;
+    };
+    newWord: string;
+}
 
 /**
  * @ngdoc method
@@ -25,8 +36,10 @@ const spellchecker = (state = {}, action) => {
  * @return {Object} returns new state
  * @description Replace the current word with the new selected one
  */
-export const replaceWord = (state, {word, newWord}, skipOnChange = false) => {
+export const replaceWord = (state, replaceWordData: IReplaceWordData, skipOnChange = false) => {
     const {editorState, suggestingMode} = state;
+
+    const {word, newWord} = replaceWordData;
 
     if (word.text === newWord) {
         return onChange(state, editorState, true);
@@ -100,36 +113,25 @@ export const replaceWord = (state, {word, newWord}, skipOnChange = false) => {
     }
 };
 
-/**
- * @ngdoc method
- * @name refreshWord
- * @param {Object} state
- * @param {String} word
- * @return {Object} returns new state
- * @description Refreshes the current word (usually after having being added to the
- * dictionary).
- */
-const refreshWord = (state, word) => replaceWord(state, {word: word, newWord: word.text});
-
-/**
- * @ngdoc method
- * @name autoSpelchecker
- * @param {Object} state
- * @param {Boolean} spellcheckerEnabled True if the autospellchecker should be enabled
- * @return {Object} returns new state
- * @description Disable/enable auto mode for spellchecker.
- */
-const autoSpellchecker = (state, spellcheckerEnabled) => {
+function applySpellcheck(language: string, enabled: boolean, state: IEditorStore, payload?): IEditorStore {
     const {editorState} = state;
-    const Editor3Alias: any = Editor3;
-    const decorator = Editor3Alias.getDecorator(!spellcheckerEnabled);
-    const newState = EditorState.set(editorState, {decorator});
-    const stateNotChanged = false;
+    const spellcheckWarningsByBlock: ISpellcheckWarningsByBlock = payload;
+
+    const nextEditorState = EditorState.set(
+        editorState,
+        {decorator: enabled ? getCustomDecorator(language, spellcheckWarningsByBlock) : getCustomDecorator()},
+    );
 
     return {
-        ...onChange(state, newState, stateNotChanged),
-        spellcheckerEnabled,
+        ...state,
+        editorState: nextEditorState,
+        spellchecking: {
+            ...state.spellchecking,
+            enabled: enabled,
+            inProgress: false,
+            warningsByBlock: enabled ? spellcheckWarningsByBlock : {},
+        },
     };
-};
+}
 
 export default spellchecker;

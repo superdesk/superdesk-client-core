@@ -56,14 +56,17 @@ export function MultiImageEditController(
     $scope.isDirty = () => unsavedChangesExist;
 
     $scope.selectImage = (image) => {
-        image.selected = !image.selected;
+        if ($scope.images.length === 1) {
+            $scope.images[0].selected = true;
+        } else {
+            image.selected = !image.selected;
+        }
         updateMetadata();
     };
 
     // wait for images for initial load
-    const stopInitWatch = $scope.$watch('images', (images: Array<any>) => {
+    $scope.$watch('images', (images: Array<any>) => {
         if (images != null && images.length) {
-            stopInitWatch();
             images.forEach($scope.selectImage);
         }
     });
@@ -105,7 +108,10 @@ export function MultiImageEditController(
         }
 
         saveHandler(imagesForSaving)
-            .then(() => {
+            .then((res) => {
+                if (res != null) {
+                    $scope.images = angular.copy(Array.isArray(res) && res.length > 0 ? res : [res]);
+                }
                 unsavedChangesExist = false;
 
                 if (close && typeof $scope.successHandler === 'function') {
@@ -196,6 +202,7 @@ export function MultiImageEditDirective(asset, $sce) {
         templateUrl: asset.templateUrl('apps/search/views/multi-image-edit.html'),
         link: function(scope) {
             scope.trustAsHtml = $sce.trustAsHtml;
+            scope.metadataDirty = false;
 
             scope.handleItemClick = function(event, image) {
                 if (event.target != null && event.target.classList.contains('icon-close-small')) {
@@ -205,11 +212,13 @@ export function MultiImageEditDirective(asset, $sce) {
                 }
             };
 
-            scope.updateMetadata = () => {
-                forEach(scope.metadata, (metadata, key) => {
-                    scope.onChange(key);
-                });
-            };
+            scope.$watch('metadataDirty', (newValue: boolean, oldValue: boolean) => {
+                if (newValue !== oldValue) {
+                    forEach(scope.metadata, (metadata, key) => {
+                        scope.onChange(key);
+                    });
+                }
+            });
         },
     };
 }

@@ -7,7 +7,7 @@ import {
     EditorState,
     genKey,
 } from 'draft-js';
-import {getAllCustomDataFromEditor, setAllCustomDataForEditor} from './editor3CustomData';
+import {getAllCustomDataFromEditor, setAllCustomDataForEditor__deprecated} from './editor3CustomData';
 
 import Immutable from 'immutable';
 
@@ -101,7 +101,7 @@ function insertAtomicBlockWithoutEmptyLines(editorState, entityKey, character) {
 
     // for the first block recover the initial block data because on replaceWithFragment the block data is
     // replaced with the data from pasted fragment
-    newEditorState = setAllCustomDataForEditor(newEditorState, customData);
+    newEditorState = setAllCustomDataForEditor__deprecated(newEditorState, customData);
 
     newEditorState = EditorState.push(editorState, newEditorState.getCurrentContent(), 'insert-fragment');
 

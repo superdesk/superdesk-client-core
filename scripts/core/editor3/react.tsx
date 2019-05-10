@@ -39,8 +39,6 @@ interface IProps {
     // Spellchecker's language.
     language?: string;
 
-    disableSpellchecker: boolean;
-
     // If true, images may have an editable title.
     showTitle: boolean;
     tabindex: number;
@@ -60,7 +58,6 @@ export class Editor3Standalone extends React.Component<IProps> {
         readOnly: false,
         singleLine: false,
         onChangeDebounce: 100,
-        disableSpellchecker: true,
         showTitle: false,
         tabindex: 0,
     };
@@ -73,7 +70,6 @@ export class Editor3Standalone extends React.Component<IProps> {
         this.onChangeInterceptor = this.onChangeInterceptor.bind(this);
 
         const {
-            disableSpellchecker,
             language,
             readOnly,
             singleLine,
@@ -84,7 +80,6 @@ export class Editor3Standalone extends React.Component<IProps> {
 
         const store = createEditorStore(
             {
-                disableSpellchecker: disableSpellchecker,
                 language: language,
                 readOnly: readOnly,
                 singleLine: singleLine,

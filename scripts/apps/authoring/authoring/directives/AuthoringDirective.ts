@@ -8,6 +8,7 @@ import {combineReducers, createStore, applyMiddleware} from 'redux';
 import {attachments, initAttachments} from '../../attachments';
 import {applyMiddleware as coreApplyMiddleware} from 'core/middleware';
 import {onChangeMiddleware, getArticleSchemaMiddleware} from '..';
+import {IFunctionPointsService} from "apps/extension-points/services/FunctionPoints";
 
 /**
  * @ngdoc directive
@@ -43,6 +44,7 @@ import {onChangeMiddleware, getArticleSchemaMiddleware} from '..';
  * @requires editorResolver
  * @requires $sce
  * @requires mediaIdGenerator
+ * @requires functionPoints
  *
  * @description
  *   This directive is responsible for generating superdesk content authoring form.
@@ -82,12 +84,14 @@ AuthoringDirective.$inject = [
     'mediaIdGenerator',
     'relationsService',
     '$injector',
+    'functionPoints',
 ];
 export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace, notify,
     desks, authoring, api, session, lock, privileges, content, $location,
     referrer, macros, $timeout, $q, modal, archiveService, confirm, reloadService,
     $rootScope, $interpolate, metadata, suggest, config, deployConfig, editorResolver,
-    compareVersions, embedService, $sce, mediaIdGenerator, relationsService, $injector) {
+    compareVersions, embedService, $sce, mediaIdGenerator, relationsService, $injector,
+    functionPoints: IFunctionPointsService) {
     return {
         link: function($scope: IScope, elem, attrs) {
             var _closing;
@@ -216,17 +220,8 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                     $scope.dirty = false;
                     _.merge($scope.item, res);
 
-                    if (res.cropData) {
-                        $scope.item.hasCrops = true;
-                    }
-
                     if (res.highlight) {
                         _previewHighlight(res._id);
-                    }
-
-                    // clonedeep associations so that diff can be calculated for saving next time.
-                    if (res.associations) {
-                        $scope.item.associations = _.cloneDeep(res.associations);
                     }
 
                     notify.success(gettext('Item updated.'));
@@ -437,7 +432,8 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
                 $scope.error = {};
 
-                return checkMediaAssociatedToUpdate()
+                return functionPoints.run('authoring:publish', item)
+                    .then(() => checkMediaAssociatedToUpdate())
                     .then((result) => {
                         if (result) {
                             return authoring.publish(orig, item, action);
@@ -589,7 +585,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                         ),
                     });
 
-                    return;
+                    return Promise.reject();
                 }
 
                 if (helpers.itemHasUnresolvedComments($scope.item)) {
@@ -604,11 +600,11 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                         cancelText: gettext('Cancel'),
                     }).then((ok) => ok ? performPublish() : false);
 
-                    return;
+                    return Promise.reject();
                 }
 
                 // Check if there are unpublished related items without media-gallery
-                relationsService.getRelatedItemsWithoutMediaGallery($scope.item, $scope.fields)
+                return relationsService.getRelatedItemsWithoutMediaGallery($scope.item, $scope.fields)
                     .then((related) => {
                         if (related.length > 0) {
                             return modal.confirm({

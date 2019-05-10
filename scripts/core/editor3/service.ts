@@ -149,7 +149,7 @@ export class EditorService {
         }
 
         if (typeof spellcheck !== 'undefined') {
-            spellcheckerStores.map((s) => s.dispatch(action.setAutoSpellchecker(spellcheck)));
+            spellcheckerStores.map((s) => s.dispatch(action.setSpellcheckerStatus(spellcheck)));
         }
     }
 

@@ -159,7 +159,13 @@ export class HighlightsPopup extends React.Component<any, any> {
      * @description Unmounts the popup.
      */
     unmountCustom() {
-        unmountComponentAtNode(document.getElementById('react-placeholder'));
+        const reactPlaceholder = document.getElementById('react-placeholder');
+
+        // null in tests. TODO: refactor this not to rely on a global element.
+        if (reactPlaceholder != null) {
+            unmountComponentAtNode(reactPlaceholder);
+        }
+
         document.removeEventListener('click', this.onDocumentClick);
         this.rendered = false;
     }

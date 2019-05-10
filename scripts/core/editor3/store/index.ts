@@ -1,12 +1,15 @@
-import {EditorState, convertFromRaw, convertToRaw, ContentState, RawDraftContentState} from 'draft-js';
+import {
+    EditorState,
+    convertFromRaw,
+    convertToRaw,
+    ContentState,
+    RawDraftContentState,
+    CompositeDecorator
+} from 'draft-js';
 import {createStore, applyMiddleware} from 'redux';
 import {createLogger} from 'redux-logger';
 import thunk from 'redux-thunk';
 import {pick, get, debounce} from 'lodash';
-
-import ng from 'core/services/ng';
-
-import {Editor3Base} from '../components/Editor3';
 import {PopupTypes, forceUpdate, setAbbreviations} from '../actions';
 import {fieldsMetaKeys, setFieldMetadata, getFieldMetadata, FIELD_KEY_SEPARATOR} from '../helpers/fieldsMeta';
 import {getContentStateFromHtml} from '../html/from-html';
@@ -18,6 +21,9 @@ import {
 import {removeInlineStyles} from '../helpers/removeFormat';
 import reducers from '../reducers';
 import {editor3StateToHtml} from '../html/to-html/editor3StateToHtml';
+import {LinkDecorator} from '../components/links';
+import {getSpellcheckingDecorator, ISpellcheckWarningsByBlock} from '../components/spellchecker/SpellcheckerDecorator';
+import {appConfig} from 'appConfig';
 
 export const ignoreInternalAnnotationFields = (annotations) =>
     annotations.map(
@@ -28,7 +34,6 @@ export const isEditorPlainText = (props) => props.singleLine || (props.editorFor
 
 interface IProps {
     editorState?: RawDraftContentState;
-    disableSpellchecker?: boolean;
     language?: any;
     debounce?: any;
     onChange?: any;
@@ -43,6 +48,44 @@ interface IProps {
     value?: any;
 }
 
+export interface IEditorStore {
+    editorState: EditorState;
+    searchTerm: {pattern: string, index: number, caseSensitive: boolean};
+    popup: {type: any};
+    readOnly: any;
+    locked: boolean;
+    showToolbar: any;
+    singleLine: any;
+    tabindex: any;
+    showTitle: any;
+    activeCell: any;
+    editorFormat: any;
+    onChangeValue: any;
+    item: any;
+    spellchecking: {
+        language: string;
+        enabled: boolean;
+        inProgress: boolean;
+        warningsByBlock: ISpellcheckWarningsByBlock;
+    };
+    suggestingMode: any;
+    invisibles: any;
+    svc: any;
+    abbreviations: any;
+}
+
+export const getCustomDecorator = (language?: string, spellcheckWarnings: ISpellcheckWarningsByBlock = null) => {
+    const decorators: any = [
+        LinkDecorator,
+    ];
+
+    if (spellcheckWarnings != null && language != null) {
+        decorators.push(getSpellcheckingDecorator(language, spellcheckWarnings));
+    }
+
+    return new CompositeDecorator(decorators);
+};
+
 /**
  * @name createEditorStore
  * @description Returns a new redux store.
@@ -51,18 +94,18 @@ interface IProps {
  * @returns {Object} Redux store.
  */
 export default function createEditorStore(props: IProps, spellcheck, isReact = false) {
+    const spellcheckerDisabledInConfig = get(appConfig, 'features.useTansaProofing') === true;
     let disableSpellchecker = true;
     if (spellcheck != null) {
-        disableSpellchecker = props.disableSpellchecker || !spellcheck.isAutoSpellchecker;
+        disableSpellchecker = spellcheckerDisabledInConfig || !spellcheck.isAutoSpellchecker;
 
-        if (!props.disableSpellchecker) {
+        if (!spellcheckerDisabledInConfig) {
             spellcheck.setLanguage(props.language);
         }
     }
 
     const content = getInitialContent(props);
 
-    const decorators = Editor3Base.getDecorator(disableSpellchecker);
     const showToolbar = !isEditorPlainText(props);
 
     const onChangeValue = isReact ? props.onChange : debounce(onChange.bind(props), props.debounce);
@@ -77,8 +120,8 @@ export default function createEditorStore(props: IProps, spellcheck, isReact = f
         middlewares.push(createLogger());
     }
 
-    const store = createStore(reducers, {
-        editorState: EditorState.createWithContent(content, decorators),
+    const store = createStore<IEditorStore>(reducers, {
+        editorState: EditorState.createWithContent(content),
         searchTerm: {pattern: '', index: -1, caseSensitive: false},
         popup: {type: PopupTypes.Hidden},
         readOnly: props.readOnly,
@@ -91,7 +134,12 @@ export default function createEditorStore(props: IProps, spellcheck, isReact = f
         editorFormat: props.editorFormat || [],
         onChangeValue: onChangeValue,
         item: props.item,
-        spellcheckerEnabled: !props.disableSpellchecker,
+        spellchecking: {
+            language: props.language,
+            enabled: !spellcheckerDisabledInConfig,
+            inProgress: false,
+            warningsByBlock: {},
+        },
         suggestingMode: false,
         invisibles: false,
         svc: props.svc,
