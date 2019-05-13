@@ -5,7 +5,7 @@ SpellcheckService.$inject = ['$q', 'api', 'dictionaries', '$rootScope', '$locati
 function SpellcheckService($q, api, dictionaries, $rootScope, $location, _, preferencesService) {
     var PREFERENCES_KEY = 'spellchecker:status',
         lang,
-        dict = {},
+        dict = {} as any,
         ignored = {},
         abbreviationList = [],
         self;
