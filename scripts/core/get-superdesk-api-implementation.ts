@@ -1,4 +1,4 @@
-import {ISuperdesk, IExtensions} from "superdesk-api";
+import {ISuperdesk, IExtensions} from 'superdesk-api';
 import {gettext} from 'core/utils';
 
 export function getSuperdeskApiImplementation(
@@ -8,7 +8,7 @@ export function getSuperdeskApiImplementation(
 ): ISuperdesk {
     return {
         ui: {
-            alert: (message: string) => modal.alert({ bodyText: message }),
+            alert: (message: string) => modal.alert({bodyText: message}),
             confirm: (message: string) => new Promise((resolve) => {
                 modal.confirm(message, gettext('Cancel'))
                     .then(() => resolve(true))
@@ -33,12 +33,12 @@ export function getSuperdeskApiImplementation(
                     manifest.superdeskExtension != null
                     && Array.isArray(manifest.superdeskExtension.dependencies)
                     && manifest.superdeskExtension.dependencies.includes(id)
-                    ) {
-                        const extensionShallowCopy = {...extension};
+                ) {
+                    const extensionShallowCopy = {...extension};
 
-                        delete extensionShallowCopy['activate'];
+                    delete extensionShallowCopy['activate'];
 
-                        return Promise.resolve(extensionShallowCopy);
+                    return Promise.resolve(extensionShallowCopy);
                 } else {
                     console.error('Not authorized.');
                     return Promise.resolve(null);

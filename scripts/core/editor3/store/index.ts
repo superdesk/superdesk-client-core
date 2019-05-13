@@ -96,6 +96,7 @@ export const getCustomDecorator = (language?: string, spellcheckWarnings: ISpell
 export default function createEditorStore(props: IProps, spellcheck, isReact = false) {
     const spellcheckerDisabledInConfig = get(appConfig, 'features.useTansaProofing') === true;
     let disableSpellchecker = true;
+
     if (spellcheck != null) {
         disableSpellchecker = spellcheckerDisabledInConfig || !spellcheck.isAutoSpellchecker;
 

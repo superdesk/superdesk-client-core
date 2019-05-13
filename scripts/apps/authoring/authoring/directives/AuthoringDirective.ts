@@ -5,7 +5,7 @@ import thunk from 'redux-thunk';
 import {gettext} from 'core/utils';
 import {combineReducers, createStore, applyMiddleware} from 'redux';
 import {attachments, initAttachments} from '../../attachments';
-import {IFunctionPointsService} from "apps/extension-points/services/FunctionPoints";
+import {IFunctionPointsService} from 'apps/extension-points/services/FunctionPoints';
 
 /**
  * @ngdoc directive

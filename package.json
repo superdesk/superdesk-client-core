@@ -144,7 +144,7 @@
     "unit": "grunt unit",
     "setup-extensions": "node ./tasks/install-extensions.js && node ./tasks/generate-extension-imports.js",
     "build": "npm run setup-extensions && grunt build",
-    "lint": "python3 grep-lint.py && tsc --noEmit && tslint -c tslint.json 'scripts/**/*.{ts,tsx}' && eslint --ignore-pattern=*.d.ts --parser=typescript-eslint-parser --ext .js --ext .jsx --ext .ts --ext .tsx scripts spec tasks *.js",
+    "lint": "python3 grep-lint.py && tsc --noEmit && tslint -c tslint.json 'scripts/**/*.{ts,tsx}' && eslint --parser=typescript-eslint-parser --ext .js --ext .jsx --ext .ts --ext .tsx scripts spec tasks *.js",
     "lint-fix": "tsc --noEmit && tslint --fix -c tslint.json 'scripts/**/*.{ts,tsx}' && eslint --fix --ignore-pattern=*.d.ts --parser=typescript-eslint-parser --ext .js --ext .jsx --ext .ts --ext .tsx scripts spec tasks *.js",
     "tslint": "tslint -c tslint.json 'scripts/**/*.{ts,tsx}'",
     "start-test-server": "cd test-server && python3 -m venv env && . env/bin/activate && pip install -Ur requirements.txt && honcho start",
