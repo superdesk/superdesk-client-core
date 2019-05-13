@@ -1,11 +1,9 @@
 var fs = require('fs');
 var path = require('path');
-var lstatSync = fs.lstatSync;
 
-var directories = fs.readdirSync(path.resolve(`${__dirname}/../scripts/extensions`)).filter(
-    (name) => lstatSync(path.resolve(`${__dirname}/../scripts/extensions/${name}`)).isDirectory()
-);
+var getExtensionDirectoriesSync = require('./get-extension-directories-sync');
 
+const directories = getExtensionDirectoriesSync();
 const directoryNamingViolation = directories.find((name) => name.match(/^\w+$/g) == null);
 
 if (directoryNamingViolation != null) {

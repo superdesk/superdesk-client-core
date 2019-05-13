@@ -1,12 +1,8 @@
-var fs = require('fs');
 var path = require('path');
-var lstatSync = fs.lstatSync;
+var getExtensionDirectoriesSync = require('./get-extension-directories-sync');
 
 const execSync = require('child_process').execSync;
-
-var directories = fs.readdirSync(path.resolve(`${__dirname}/../scripts/extensions`)).filter(
-    (name) => lstatSync(path.resolve(`${__dirname}/../scripts/extensions/${name}`)).isDirectory()
-);
+const directories = getExtensionDirectoriesSync();
 
 directories.forEach((extensionName) => {
     const extensionPath = path.resolve(`${__dirname}/../scripts/extensions/${extensionName}`);
