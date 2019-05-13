@@ -1187,21 +1187,12 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             $scope.store.dispatch(initAttachments($scope.item));
 
             $scope.$watch('item.profile', (profile) => {
-                if (profile) {
-                    content.getType(profile)
-                        .then((type) => {
-                            $scope.contentType = type;
-                            $scope.editor = authoring.editor = content.editor(type, $scope.item.type);
-                            $scope.schema = authoring.schema = content.schema(type, $scope.item.type);
-                            $scope.fields = content.fields(type);
-                            updateSchema();
-                        });
-                } else {
-                    $scope.editor = authoring.editor = content.editor(null, $scope.item.type);
-                    $scope.schema = authoring.schema = content.schema(null, $scope.item.type);
-                    $scope.fields = null;
-                    updateSchema();
-                }
+                content.setupAuthoring(profile, $scope, $scope.item)
+                    .then(() => {
+                        authoring.schema = $scope.schema;
+                        authoring.editor = $scope.editor;
+                    })
+                    .then(updateSchema);
             });
 
             const updateSchema = () => {

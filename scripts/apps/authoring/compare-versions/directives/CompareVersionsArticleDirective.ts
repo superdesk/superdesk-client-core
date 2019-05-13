@@ -82,6 +82,7 @@ class LinkFunction {
         }
 
         this.scope.isLocked = this.lock.isLocked(item);
+        this.content.setupAuthoring(this.scope.item.profile, this.scope, this.scope.item);
     }
 
     /**
