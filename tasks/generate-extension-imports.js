@@ -27,14 +27,16 @@ const importStatements = [];
 const insertIntoObjectStatements = [];
 
 directories.forEach((extensionName) => {
-    importStatements.push(`import * as ${extensionName} from '../extensions/${extensionName}/dist/extension';`);
-
-    const manifestFile = fs.readFileSync(
-        path.resolve(`${__dirname}/../scripts/extensions/${extensionName}/package.json`)
+    const manifestFile = JSON.parse(
+        fs.readFileSync(
+            path.resolve(`${__dirname}/../scripts/extensions/${extensionName}/package.json`)
+        ).toString()
     );
 
+    importStatements.push(`import * as ${extensionName} from '../extensions/${extensionName}/${manifestFile.main}';`);
+
     insertIntoObjectStatements.push(
-        `extensions['${extensionName}'] = {extension: ${extensionName}, manifest: ${manifestFile}}`
+        `extensions['${extensionName}'] = {extension: ${extensionName}, manifest: ${JSON.stringify(manifestFile)}}`
     );
 });
 

@@ -7,6 +7,7 @@ declare module 'superdesk-api' {
         extension: IExtension;
         manifest: {
             [key: string]: any;
+            main: string; // extension will be imported from here
             superdeskExtension?: {
                 dependencies?: Array<string>;
             };
