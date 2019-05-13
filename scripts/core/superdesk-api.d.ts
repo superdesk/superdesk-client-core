@@ -4,13 +4,13 @@ declare module 'superdesk-api' {
     }
 
     export interface IExtensionObject {
-        extension: IExtension,
+        extension: IExtension;
         manifest: {
             [key: string]: any;
             superdeskExtension?: {
                 dependencies?: Array<string>;
             };
-        },
+        };
     }
 
     export type IExtensions = {[key: string]: IExtensionObject};
@@ -22,9 +22,9 @@ declare module 'superdesk-api' {
         };
         localization: {
             gettext(message: string): string;
-        }
+        };
         extensions: {
             getExtension(id: string): Promise<Omit<IExtension, 'activate'>>;
-        }
+        };
     }
 }
