@@ -1,5 +1,4 @@
 {
-  "name": "hello-world",
   "private": true,
   "main": "dist/extension.js",
   "scripts": {
@@ -8,5 +7,8 @@
   },
   "devDependencies": {
     "typescript": "3.4.4"
+  },
+  "superdeskExtension": {
+    "dependencies": ["other-extension"]
   }
 }
