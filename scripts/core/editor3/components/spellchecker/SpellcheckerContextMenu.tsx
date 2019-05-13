@@ -47,7 +47,7 @@ export class SpellcheckerContextMenuComponent extends React.Component<IProps> {
                                                     text: this.props.warning.text,
                                                     offset: this.props.warning.startOffset,
                                                 },
-                                                newWord: suggestion,
+                                                newWord: suggestion.text,
                                             }));
                                         }}
                                         data-test-id="spellchecker-menu--suggestion"
