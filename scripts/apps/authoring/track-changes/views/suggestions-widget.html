@@ -1,6 +1,6 @@
-<div class="widget" ng-controller="SuggestionsCtrl">
-    <div class="notification-list white field" ng-repeat="annotationObj in items" class="item">
-        <h4 class="label label--large">{{annotationObj.fieldName}}</h4>
+<div class="sd-padding-all--2 widget-content__main" ng-controller="SuggestionsCtrl">
+    <div class="notification-list white sd-margin-all--0 sd-margin-b--2" ng-repeat="annotationObj in items" class="item">
+        <h4 class="label">{{annotationObj.fieldName}}</h4>
 
         <ul ng-class="{ 'notification-list--empty': items.length === 0 }">
             <li class="item" ng-repeat="item in annotationObj.suggestions">

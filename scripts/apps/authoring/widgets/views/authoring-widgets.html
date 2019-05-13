@@ -1,8 +1,7 @@
 <div class="widget-wrapper"
     ng-class="{
         'active-right': active,
-        'right-extended': active.extended
-    }">
+        'right-extended': active.extended}">
     <div class="sd-sidetab-menu sd-sidetab-menu--right" ng-if="item">
         <ul class="navigation-tabs">
             <li ng-repeat="widget in widgets | orderBy:'order'"
@@ -31,7 +30,7 @@
         <section class="tabcontent" ng-init="widget=active">
             <div sd-widget data-widget="active" data-configurable="active.configurable"
             data-save="active.save()">
-                <div ng-include="active.template"></div>
+                <div ng-include="active.template" class="sd-wrap-helper"></div>
             </div>
         </section>
     </div>

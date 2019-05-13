@@ -61,7 +61,7 @@
 // TABS AND PILLS
 // -------------
 
-// Common styles
+//Common styles
 .nav-tabs,
 .nav-pills {
     @include clearfix();
@@ -84,9 +84,8 @@
 // ----
 
 
-// Make the list-items overlay the bottom border
+//Make the list-items overlay the bottom border
 .nav-tabs {
-    @include box-sizing(border-box);
     height: $nav-height;
     > li {
         margin-bottom: -1px;
@@ -114,7 +113,7 @@
 .nav-tabs > li > a {
     @include box-sizing(border-box);
 }
-// Active state, and it's :hover to override normal :hover
+//Active state, and it's :hover to override normal :hover
 .nav-tabs > .active > a,
 .nav-tabs > .active > a:hover,
 .nav-tabs > .active > button,
@@ -125,10 +124,6 @@
     color: $grayDark;
 }
 
-.nav-tabs > li:first-child > a,
-.nav-tabs > li:first-child > button {
-    //margin-left: 0;
-}
 
 // PILLS
 // -----

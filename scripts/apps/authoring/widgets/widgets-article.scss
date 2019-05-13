@@ -39,9 +39,9 @@
 
 .tabpane {
     .sd-widget {
-        width: auto; height: auto;
-        position: absolute;
-        top: 0; left: 0; right: 0; bottom: 0;
+        width: auto; 
+        height: 100%;
+        position: relative;
         border:0;
         .widget-line {
             display: none;
@@ -53,11 +53,9 @@
                 display: none;
             }
             .widget-title {
-                left: 0;
-                line-height: 48px;
-                font-size: 16px;
-                padding: 0 10px;
-                right: 0;
+                line-height: 100%;
+                font-size: 1.4rem;
+                padding: 0 1rem;
             }
         }
         .widget-settings {
@@ -65,12 +63,12 @@
         }
         .widget-content {
             background-color: $sd-background;
-            padding-bottom: 65px;
-            top: 47px;
-            border-top:1px solid #e0e0e0;
             margin-top: 0;
             overflow: auto;
             bottom: 0;
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+            grid-template-columns: 1fr;
             fieldset {
                 padding: 10px;
                 &.fieldset--no-padding {
@@ -87,7 +85,7 @@
                 }
             }
             .nav-tabs {
-                padding: 0 10px;
+                padding: 0 6px;
                 background-color: $white;
                 @include box-shadow(0 1px 0 0 rgba(0, 0, 0, 0.1));
             }
@@ -101,10 +99,32 @@
                 z-index: 999;
             }
         }
-        &.remove-header {
-                .widget-content {
-                    top: 0;
-                }
+        .widget-content__header {
+            grid-row: 1/2;
+            grid-column: 1/2;
+            position: relative;
         }
+        .widget-content__main {
+            grid-row: 2/3;
+            grid-column: 1/2;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+        .widget-content__footer {
+            grid-row: 3/4;
+            grid-column: 1/2;
+            position: relative;
+        }
+    }
+}
+
+.sd-widget.macros {
+    .macro-option {
+        margin-bottom: 20px;
+    }
+    .link-list .btn {
+        display: block;
+        width: 100%;
+        margin-bottom: 10px;
     }
 }
