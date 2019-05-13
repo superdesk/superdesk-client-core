@@ -23,8 +23,7 @@ export function getSuperdeskApiImplementation(
                 const extension = extensions[id].extension;
 
                 if (extension == null) {
-                    console.error('Extension not found.');
-                    return Promise.resolve(null);
+                    return Promise.reject('Extension not found.');
                 }
 
                 const {manifest} = extensions[requestingExtensionId];
@@ -40,8 +39,7 @@ export function getSuperdeskApiImplementation(
 
                     return Promise.resolve(extensionShallowCopy);
                 } else {
-                    console.error('Not authorized.');
-                    return Promise.resolve(null);
+                    return Promise.reject('Not authorized.');
                 }
             },
         },
