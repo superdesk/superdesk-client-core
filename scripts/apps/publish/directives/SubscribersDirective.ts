@@ -262,9 +262,13 @@ export function SubscribersDirective(
                 $scope.newDestination = null;
             };
 
-            $scope.enableSave = function(editForm) {
-                editForm.$setDirty();
-            };
+            $scope.$watchCollection('subscriber', (newValue, oldValue) => {
+                if (newValue && oldValue && newValue !== oldValue) {
+                    $scope.saveEnabled = true;
+                } else {
+                    $scope.saveEnabled = false;
+                }
+            });
 
             /**
              * Invoked when Subscriber Type is changed. Responsible for populating $scope.formats variable.
