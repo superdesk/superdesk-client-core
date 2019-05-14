@@ -52,7 +52,7 @@ export class SpellcheckerContextMenuComponent extends React.Component<IProps> {
                                         }}
                                         data-test-id="spellchecker-menu--suggestion"
                                     >
-                                        {suggestion}
+                                        {suggestion.text}
                                     </button>
                                 </li>,
                             )
