@@ -12,7 +12,7 @@ describe('notifications', () => {
         monitoring.openMonitoring();
     });
 
-    fit('create a new user mention', () => {
+    it('create a new user mention', () => {
         expect(monitoring.getTextItem(2, 0)).toBe('item5');
         monitoring.actionOnItem('Edit', 2, 0);
         authoring.showComments();
