@@ -262,6 +262,10 @@ export function SubscribersDirective(
                 $scope.newDestination = null;
             };
 
+            $scope.enableSave = function(editForm) {
+                editForm.$setDirty();
+            };
+
             /**
              * Invoked when Subscriber Type is changed. Responsible for populating $scope.formats variable.
              * The $scope.formats variable is used to display format field in destination. The new value is changed.
