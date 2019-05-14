@@ -8,7 +8,6 @@ import _, {cloneDeep} from 'lodash';
  * @requires $location
  * @requires desks
  * @requires privileges
- * @requires tags
  * @requires asset
  * @requires metadata
  * @requires $rootScope
@@ -23,7 +22,6 @@ SearchPanel.$inject = [
     '$location',
     'desks',
     'privileges',
-    'tags',
     'asset',
     'metadata',
     '$rootScope',
@@ -34,7 +32,6 @@ SearchPanel.$inject = [
 export function SearchPanel($location,
     desks,
     privileges,
-    tags,
     asset,
     metadata,
     $rootScope,
@@ -63,8 +60,16 @@ export function SearchPanel($location,
             scope.isManagingSubscriptions = false;
             scope.wrapper = {};
 
-            scope.manageSubscriptions = (nextValue) => {
+            scope.setIsManagingSubscriptions = (nextValue: boolean) => {
                 scope.isManagingSubscriptions = nextValue;
+            };
+
+            // called after changing the subscriptions for current search
+            scope.onSubscriptionsChange = (updatedSavedSearch) => {
+                // subscriptions were updated via API so the object has changed
+                for (const key in updatedSavedSearch) {
+                    scope.editingSearch[key] = updatedSavedSearch[key];
+                }
             };
 
             scope.aggregations = {};
@@ -72,7 +77,7 @@ export function SearchPanel($location,
             scope.userHasPrivileges = privileges.userHasPrivileges;
             scope.search_config = metadata.search_config;
 
-            scope.$on('edit:search', (event, args) => {
+            scope.$on('edit:search', (_event, args) => {
                 scope.sTab = 'advancedSearch';
                 scope.innerTab = 'parameters';
                 scope.activateSearchPane = false;
