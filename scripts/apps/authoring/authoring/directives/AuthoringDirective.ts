@@ -93,7 +93,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
     compareVersions, embedService, $sce, mediaIdGenerator, relationsService, $injector,
     functionPoints: IFunctionPointsService) {
     return {
-        link: function($scope: IScope, elem, attrs) {
+        link: function($scope, elem, attrs) {
             var _closing;
             var mediaFields = {};
             var userDesks;
