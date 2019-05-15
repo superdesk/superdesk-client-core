@@ -1,15 +1,25 @@
 declare module 'superdesk-api' {
     export type IExtension = DeepReadonly<{
-        activate: (superdesk: ISuperdesk) => void;
+        activate: (superdesk: ISuperdesk) => Promise<void>;
         contribute?: {
-            sideMenuItems?: (superdesk: ISuperdesk) => Promise<Array<ISideMenuItem>>
-        }
+            sideMenuItems?: (superdesk: ISuperdesk) => Promise<Array<ISideMenuItem>>;
+            pages?: Array<IPage>;
+        };
     }>;
 
     export type ISideMenuItem = DeepReadonly<{
-        readonly label: string;
-        readonly url: string;
+        label: string;
+        url: string;
     }>;
+
+    export type IPage = DeepReadonly<{
+        url: string;
+        component: React.ComponentClass<IPageComponentProps>;
+    }>;
+
+    export interface IPageComponentProps {
+        superdesk: ISuperdesk;
+    }
 
     export type IExtensionObject = {
         extension: IExtension;

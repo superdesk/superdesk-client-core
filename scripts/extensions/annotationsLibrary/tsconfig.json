@@ -10,5 +10,6 @@
             "es2017"
         ],
         "skipLibCheck": true,
+        "jsx": "react",
     },
 }

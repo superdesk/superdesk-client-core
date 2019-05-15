@@ -5,6 +5,8 @@ const extension: IExtension = {
         const {gettext} = superdesk.localization;
 
         // superdesk.ui.alert(gettext('Hello world'));
+
+        return Promise.resolve();
     },
 };
 

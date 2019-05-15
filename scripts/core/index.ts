@@ -33,8 +33,12 @@ import 'core/form';
 
 import ng from 'core/services/ng';
 
+import {reactToAngular1} from 'superdesk-ui-framework';
+
 import {extensions} from 'core/extension-imports.generated';
 import {getSuperdeskApiImplementation} from './get-superdesk-api-implementation';
+import { CollapseBox } from './ui/components/CollapseBox';
+import { ExtensionPage } from './extension-page';
 
 /* globals __SUPERDESK_CONFIG__: true */
 const appConfig = __SUPERDESK_CONFIG__;
@@ -77,10 +81,25 @@ let core = angular.module('superdesk.core', [
 
 core.constant('lodash', _);
 
+core.component('sdExtensionPage', reactToAngular1(ExtensionPage, []));
 core.config(['$routeProvider', ($routeProvider) => {
     $routeProvider.when('/', {
         redirectTo: appConfig.defaultRoute,
     });
+
+    for (const extensionId in extensions) {
+        const {extension} = extensions[extensionId];
+
+        if (extension.contribute != null && extension.contribute.pages != null) {
+            extension.contribute.pages.forEach((page) => {
+                $routeProvider.when(page.url, {
+                    controller: angular.noop,
+                    template: '<sd-extension-page></<sd-extension-page>',
+                });
+            });
+        }
+    }
+
 }]);
 
 // due to angular 1.6
