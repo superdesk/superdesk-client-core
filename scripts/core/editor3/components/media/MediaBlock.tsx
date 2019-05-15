@@ -150,7 +150,7 @@ export class MediaBlockComponent extends React.Component<any, any> {
         const {features} = ng.get('config');
 
         const editable =
-            !readOnly && !data.fetch_endpoint &&
+            !readOnly &&
             (data._type !== 'externalsource'
             || get(features, 'editFeaturedImage', true));
 

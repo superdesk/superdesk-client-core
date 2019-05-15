@@ -83,8 +83,8 @@ export function ItemAssociationDirective(renditions) {
                         removeDragOverClass();
                         event.preventDefault();
                         event.stopPropagation();
-
                         _ctrl.initializeUploadOnDrop(scope, event);
+                        scope.$apply();
                     }
                 });
             }

@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import {
     Editor,
@@ -74,6 +73,7 @@ export function canDropMedia(e, editorConfig) {
 interface IProps {
     readOnly?: boolean;
     locked?: boolean;
+    loading?: boolean;
     showToolbar?: boolean;
     editorState?: EditorState;
     scrollContainer?: string;
@@ -487,6 +487,8 @@ export class Editor3Component extends React.Component<IProps> {
                         readOnly={locked || readOnly}
                         ref={(editor) => this.handleRefs(editor)}
                     />
+
+                    {this.props.loading && <div className="loading-overlay active" />}
                 </div>
             </div>
         );

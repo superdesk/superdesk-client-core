@@ -1,6 +1,7 @@
 import * as constant from '../constants';
 import {get, omit, isEmpty, zipObject} from 'lodash';
 import {gettext} from 'core/utils';
+import {isMediaEditable} from 'core/config';
 
 /**
  * @ngdoc service
@@ -37,9 +38,12 @@ ContentService.$inject = [
     '$rootScope',
     'session',
     'deployConfig',
+    'send',
+    'config',
+    'renditions',
 ];
 export function ContentService(api, superdesk, templates, desks, packages, archiveService, notify,
-    $filter, $q, $rootScope, session, deployConfig) {
+    $filter, $q, $rootScope, session, deployConfig, send, config, renditions) {
     const TEXT_TYPE = 'text';
 
     const self = this;
@@ -358,4 +362,27 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
         self._fields = null;
         self._fieldsPromise = null;
     }
+
+    /**
+     * Handle drop event transfer data and convert it to an item
+     */
+    this.dropItem = (transferData, {fetchExternal} = {fetchExternal: true}) => {
+        const item = JSON.parse(transferData);
+
+        if (item._type !== 'externalsource') {
+            if (item._type === 'ingest') {
+                return send.one(item);
+            }
+
+            if (item.archive_item != null) {
+                return $q.when(item.archive_item);
+            }
+
+            return api.find(item._type, item._id);
+        } else if (isMediaEditable(config) && fetchExternal) {
+            return renditions.ingest(item);
+        }
+
+        return $q.when(item);
+    };
 }
