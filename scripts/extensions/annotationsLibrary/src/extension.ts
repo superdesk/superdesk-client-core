@@ -1,5 +1,21 @@
-import {ISuperdesk} from 'superdesk-api';
+import {ISuperdesk, IExtension} from 'superdesk-api';
 
-export function activate(superdesk: ISuperdesk) {
-    //
-}
+var extension: IExtension = {
+    activate: (superdesk: ISuperdesk) => {
+        //
+    },
+    contribute: {
+        sideMenuItems: (superdesk: ISuperdesk) => new Promise((resolve) => {
+            const {gettext} = superdesk.localization;
+
+            resolve([
+                {
+                    label: gettext('Annotations library'),
+                    url: 'annotations-library',
+                },
+            ]);
+        }),
+    },
+};
+
+export default extension;

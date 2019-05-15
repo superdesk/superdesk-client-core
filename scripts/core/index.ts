@@ -98,9 +98,15 @@ core.run(['$document', ($document) => {
     }
 }]);
 
-core.run(['modal', (modal) => {
+core.run(['superdesk', 'modal', (superdesk, modal) => {
     for (const extensionId in extensions) {
-        extensions[extensionId].extension.activate(getSuperdeskApiImplementation(extensionId, extensions, modal));
+        const extensionObject = extensions[extensionId];
+
+        const superdeskApi = getSuperdeskApiImplementation(extensionId, extensions, modal);
+
+        extensionObject.apiInstance = superdeskApi;
+
+        extensionObject.extension.activate(superdeskApi);
     }
 }]);
 

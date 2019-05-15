@@ -1,3 +1,6 @@
+import {extensions} from "core/extension-imports.generated";
+import {ISideMenuItem} from "superdesk-api";
+
 SuperdeskFlagsService.$inject = ['config'];
 function SuperdeskFlagsService(config) {
     this.flags = {
@@ -136,6 +139,29 @@ angular.module('superdesk.core.menu', [
                     scope.closeAbout = function() {
                         scope.aboutActive = false;
                     };
+
+                    // register menus from extensions
+                    Promise.all(
+                        Object.values(extensions)
+                            .filter(
+                                ({extension}) =>
+                                    extension.contribute != null && extension.contribute.sideMenuItems != null,
+                            )
+                            .map(
+                                ({extension, apiInstance}) =>
+                                    extension.contribute.sideMenuItems(apiInstance),
+                            ),
+                    ).then((res) => {
+                        const extensionMenus: Array<ISideMenuItem> = [];
+
+                        res.forEach((_extensionMenus) => {
+                            _extensionMenus.forEach((menu) => {
+                                extensionMenus.push(menu);
+                            });
+                        });
+
+                        scope.extensionMenus = extensionMenus;
+                    });
                 },
             };
         }])

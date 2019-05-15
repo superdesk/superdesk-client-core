@@ -1,9 +1,17 @@
 declare module 'superdesk-api' {
-    export interface IExtension {
+    export type IExtension = DeepReadonly<{
         activate: (superdesk: ISuperdesk) => void;
-    }
+        contribute?: {
+            sideMenuItems?: (superdesk: ISuperdesk) => Promise<Array<ISideMenuItem>>
+        }
+    }>;
 
-    export interface IExtensionObject {
+    export type ISideMenuItem = DeepReadonly<{
+        readonly label: string;
+        readonly url: string;
+    }>;
+
+    export type IExtensionObject = {
         extension: IExtension;
         manifest: {
             [key: string]: any;
@@ -12,11 +20,12 @@ declare module 'superdesk-api' {
                 dependencies?: Array<string>;
             };
         };
-    }
+        apiInstance?: ISuperdesk;
+    };
 
     export type IExtensions = {[key: string]: IExtensionObject};
 
-    export interface ISuperdesk {
+    export type ISuperdesk = DeepReadonly<{
         ui: {
             alert(message: string): Promise<void>;
             confirm(message: string): Promise<boolean>;
@@ -27,5 +36,5 @@ declare module 'superdesk-api' {
         extensions: {
             getExtension(id: string): Promise<Omit<IExtension, 'activate'>>;
         };
-    }
+    }>;
 }

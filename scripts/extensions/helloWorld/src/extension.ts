@@ -1,7 +1,11 @@
-import {ISuperdesk} from 'superdesk-api';
+import {ISuperdesk, IExtension} from 'superdesk-api';
 
-export function activate(superdesk: ISuperdesk) {
-    const {gettext} = superdesk.localization;
+const extension: IExtension = {
+    activate: (superdesk: ISuperdesk) => {
+        const {gettext} = superdesk.localization;
 
-    // superdesk.ui.alert(gettext('Hello world'));
-}
+        // superdesk.ui.alert(gettext('Hello world'));
+    },
+};
+
+export default extension;
