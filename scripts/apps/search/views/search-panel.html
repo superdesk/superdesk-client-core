@@ -5,13 +5,13 @@
       </div>
         <ul ng-show="!editingSearch || activateSearchPane">
             <li ng-class="{active: sTab === 'advancedSearch'}" ng-click="changeTab('advancedSearch')" translate>Advanced Search</li>
-            <li id="saved_searches_tab" 
-                ng-show="privileges.saved_searches == 1" 
-                ng-class="{active: sTab === 'savedSearches'}" 
+            <li id="saved_searches_tab"
+                ng-show="privileges.saved_searches == 1"
+                ng-class="{active: sTab === 'savedSearches'}"
                 ng-click="changeTab('savedSearches')" translate>Saved
             </li>
             <li id="raw_search_tab"
-                ng-if="isAdmin()" 
+                ng-if="isAdmin()"
                 ng-class="{active: sTab === 'rawSearch'}"
                 ng-click="changeTab('rawSearch')"
                 translate>Raw</li>
@@ -31,12 +31,13 @@
                     </strong>
                     <span translate>subscriptions</span>
                 </span>
-                <button class="btn btn--small btn--hollow" ng-click="manageSubscriptions(true)" translate>Manage</button>
+                <button class="btn btn--small btn--hollow" ng-click="setIsManagingSubscriptions(true)" translate>Manage</button>
             </div>
 
             <div
                 ng-if="isManagingSubscriptions"
-                manage-subscriptions="manageSubscriptions"
+                set-is-managing-subscriptions="setIsManagingSubscriptions"
+                on-subscriptions-change="onSubscriptionsChange"
                 sd-saved-search-manage-subscribers data-saved-search="wrapper.edit"></div>
 
             <form name="viewsForm">
