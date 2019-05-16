@@ -12,7 +12,7 @@ import {gettext} from 'core/utils';
 
 SavedSearches.$inject = [
     '$rootScope', 'api', 'session', 'modal', 'notify', 'asset',
-    '$location', 'desks', 'privileges', 'search', 'savedSearch', 'config',
+    '$location', 'desks', 'privileges', 'savedSearch', 'config',
 ];
 
 interface ISavedSearchesScope extends ng.IScope {
@@ -39,7 +39,7 @@ interface ISavedSearchesScope extends ng.IScope {
 }
 
 export function SavedSearches($rootScope, api, session, modal, notify, asset, $location,
-    desks, privileges, search, savedSearch, config): ng.IDirective {
+    desks, privileges, savedSearch, config): ng.IDirective {
     return {
         templateUrl: asset.templateUrl('apps/search/views/saved-searches.html'),
         scope: {},
