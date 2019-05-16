@@ -1,13 +1,13 @@
 import * as React from 'react';
 import {
     IPageComponentProps,
-    IDefaultApiFields,
+    IBaseRestApiResponse,
     IFormField,
     IFormGroup,
     IGenericListPageComponent
 } from 'superdesk-api';
 
-interface IKnowledgeBaseItem extends IDefaultApiFields {
+interface IKnowledgeBaseItem extends IBaseRestApiResponse {
     name: string;
     labels?: Array<string>;
     language: string;

@@ -25,7 +25,7 @@ import {FormViewEdit} from 'core/ui/components/generic-form/from-group';
 import {getInitialValues} from '../generic-form/get-initial-values';
 import {generateFilterForServer} from '../generic-form/generate-filter-for-server';
 import {getFormFieldsFlat} from '../generic-form/get-form-fields-flat';
-import { IDefaultApiFields, IPropsGenericForm, IGenericListPageComponent } from 'superdesk-api';
+import {IBaseRestApiResponse, IPropsGenericForm, IGenericListPageComponent} from 'superdesk-api';
 
 interface IState {
     preview: {
@@ -42,7 +42,7 @@ interface IState {
     loading: boolean;
 }
 
-export class GenericListPageComponent<T extends IDefaultApiFields>
+export class GenericListPageComponent<T extends IBaseRestApiResponse>
     extends React.Component<IPropsGenericForm<T>, IState>
     implements IGenericListPageComponent<T> {
     constructor(props) {
@@ -499,7 +499,7 @@ export class GenericListPageComponent<T extends IDefaultApiFields>
     }
 }
 
-export const getGenericListPageComponent = <T extends IDefaultApiFields>(resource: string) =>
+export const getGenericListPageComponent = <T extends IBaseRestApiResponse>(resource: string) =>
     connectServices<IPropsGenericForm<T>>(
         connectCrudManager<IPropsGenericForm<T>, T>(
             GenericListPageComponent,

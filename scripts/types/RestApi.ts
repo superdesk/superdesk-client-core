@@ -1,4 +1,4 @@
-import {IDefaultApiFields} from "superdesk-api";
+import {IBaseRestApiResponse} from "superdesk-api";
 
 export interface IRestApiLink {
     title: string;
@@ -6,7 +6,7 @@ export interface IRestApiLink {
 }
 
 // Eve properties
-export interface IRestApiResponse<T extends IDefaultApiFields> {
+export interface IRestApiResponse<T extends IBaseRestApiResponse> {
     _items: Array<T>;
     _links: {
         parent: IRestApiLink;

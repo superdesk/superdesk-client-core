@@ -1,6 +1,6 @@
-import {IDefaultApiFields} from "superdesk-api";
+import {IBaseRestApiResponse} from "superdesk-api";
 
-export interface IStage extends IDefaultApiFields {
+export interface IStage extends IBaseRestApiResponse {
     name: string;
     description: string;
     working_stage: boolean;

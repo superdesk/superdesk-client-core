@@ -45,7 +45,7 @@ declare module 'superdesk-api' {
 
     // REST API
 
-    interface IDefaultApiFields {
+    export interface IBaseRestApiResponse {
         _created: string;
         _updated: string;
         _etag: string;
@@ -56,7 +56,7 @@ declare module 'superdesk-api' {
 
     // GENERIC FORM
 
-    interface IPropsGenericForm<T extends IDefaultApiFields> {
+    interface IPropsGenericForm<T extends IBaseRestApiResponse> {
         formConfig: IFormGroup;
         renderRow(key: string, item: T, page: GenericListPageComponent<T>): JSX.Element;
     
@@ -124,7 +124,7 @@ declare module 'superdesk-api' {
     }
 
 
-    interface IGenericListPageComponent<T extends IDefaultApiFields> {
+    interface IGenericListPageComponent<T extends IBaseRestApiResponse> {
         openPreview(id: string): void;
         startEditing(id: string): void;
         closePreview(): void;
@@ -146,7 +146,7 @@ declare module 'superdesk-api' {
             confirm(message: string): Promise<boolean>;
         };
         helpers: {
-            getGenericListPageComponent<T extends IDefaultApiFields>(resource: string): React.ComponentType<IPropsGenericForm<T>>;
+            getGenericListPageComponent<T extends IBaseRestApiResponse>(resource: string): React.ComponentType<IPropsGenericForm<T>>;
             isIFormGroupCollapsible(x: "inline" | IFormGroupCollapsible): x is IFormGroupCollapsible;
             isIFormGroup(x: IFormGroup | IFormField): x is IFormGroup;
             isIFormField(x: IFormGroup | IFormField): x is IFormField;

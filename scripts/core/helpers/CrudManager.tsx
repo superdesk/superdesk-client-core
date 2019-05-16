@@ -4,7 +4,7 @@ import {IRestApiResponse} from '../../types/RestApi';
 import React from 'react';
 import {generate} from 'json-merge-patch';
 import {connectServices} from './ReactRenderAsync';
-import {IDefaultApiFields} from 'superdesk-api';
+import {IBaseRestApiResponse} from 'superdesk-api';
 
 export interface ISortOption {
     field: string;
@@ -13,12 +13,12 @@ export interface ISortOption {
 
 export type ICrudManagerFilters = {[fieldName: string]: any};
 
-interface IState<Entity extends IDefaultApiFields> extends IRestApiResponse<Entity> {
+interface IState<Entity extends IBaseRestApiResponse> extends IRestApiResponse<Entity> {
     activeFilters: ICrudManagerFilters;
     activeSortOption?: ISortOption;
 }
 
-interface IMethods<Entity extends IDefaultApiFields> {
+interface IMethods<Entity extends IBaseRestApiResponse> {
     read(
         page: number,
         sort?: {
@@ -37,11 +37,11 @@ interface IMethods<Entity extends IDefaultApiFields> {
     goToPage(nextPage: number): Promise<IRestApiResponse<Entity>>;
 }
 
-export interface ICrudManager<Entity extends IDefaultApiFields> extends IState<Entity>, IMethods<Entity> {
+export interface ICrudManager<Entity extends IBaseRestApiResponse> extends IState<Entity>, IMethods<Entity> {
     // allow exposing it as one interface for consumer components
 }
 
-export function connectCrudManager<Props, Entity extends IDefaultApiFields>(
+export function connectCrudManager<Props, Entity extends IBaseRestApiResponse>(
     WrappedComponent: React.ComponentType<Props>,
     name: string,
     endpoint: string,

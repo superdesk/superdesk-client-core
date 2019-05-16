@@ -1,6 +1,6 @@
-import {IDefaultApiFields} from "superdesk-api";
+import {IBaseRestApiResponse} from "superdesk-api";
 
-export interface IInternalDestination extends IDefaultApiFields {
+export interface IInternalDestination extends IBaseRestApiResponse {
     name: string;
     is_active: boolean;
     filter?: string;
