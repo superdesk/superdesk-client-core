@@ -1,7 +1,7 @@
 declare module 'superdesk-api' {
     // EXTENSIONS
 
-    type IExtension = DeepReadonly<{
+    export type IExtension = DeepReadonly<{
         activate: (superdesk: ISuperdesk) => Promise<void>;
         contribute?: {
             sideMenuItems?: (superdesk: ISuperdesk) => Promise<Array<ISideMenuItem>>;
@@ -9,7 +9,7 @@ declare module 'superdesk-api' {
         };
     }>;
 
-    type IExtensionObject = {
+    export type IExtensionObject = {
         extension: IExtension;
         manifest: {
             [key: string]: any;
@@ -21,9 +21,9 @@ declare module 'superdesk-api' {
         apiInstance?: ISuperdesk;
     };
 
-    type IExtensions = {[key: string]: IExtensionObject};
+    export type IExtensions = {[key: string]: IExtensionObject};
 
-    type ISideMenuItem = DeepReadonly<{
+    export type ISideMenuItem = DeepReadonly<{
         label: string;
         url: string;
     }>;
@@ -32,12 +32,12 @@ declare module 'superdesk-api' {
 
     // PAGE
 
-    type IPage = DeepReadonly<{
+    export type IPage = DeepReadonly<{
         url: string;
         component: React.ComponentClass<IPageComponentProps>;
     }>;
 
-    interface IPageComponentProps {
+    export interface IPageComponentProps {
         superdesk: ISuperdesk;
     }
 
@@ -45,7 +45,7 @@ declare module 'superdesk-api' {
 
     // REST API
 
-    export interface IBaseRestApiResponse {
+    export interface IDefaultApiFields {
         _created: string;
         _updated: string;
         _etag: string;
@@ -56,7 +56,7 @@ declare module 'superdesk-api' {
 
     // GENERIC FORM
 
-    interface IPropsGenericForm<T extends IBaseRestApiResponse> {
+    export interface IPropsGenericForm<T extends IDefaultApiFields> {
         formConfig: IFormGroup;
         renderRow(key: string, item: T, page: GenericListPageComponent<T>): JSX.Element;
     
@@ -68,7 +68,7 @@ declare module 'superdesk-api' {
         modal?: any;
     }
 
-    enum FormFieldType {
+    export enum FormFieldType {
         textSingleLine = 'textSingleLine',
         textEditor3 = 'textEditor3',
         vocabularySingleValue = 'vocabularySingleValue',
@@ -80,7 +80,7 @@ declare module 'superdesk-api' {
         yesNo = 'yesNo',
     }
 
-    interface IFormField { // don't forget to update runtime type checks
+    export interface IFormField { // don't forget to update runtime type checks
         type: FormFieldType;
     
         required?: boolean;
@@ -95,12 +95,12 @@ declare module 'superdesk-api' {
         component_parameters?: {[key: string]: any};
     }
     
-    interface IFormGroupCollapsible { // don't forget to update runtime type checks
+    export interface IFormGroupCollapsible { // don't forget to update runtime type checks
         label: string;
         openByDefault: boolean;
     }
     
-    interface IFormGroup { // don't forget to update runtime type checks
+    export interface IFormGroup { // don't forget to update runtime type checks
         direction: 'vertical' | 'horizontal';
         type: 'inline' | IFormGroupCollapsible;
         form: Array<IFormField | IFormGroup>;
@@ -110,7 +110,7 @@ declare module 'superdesk-api' {
 
     // REACT COMPONENTS
 
-    interface IListItemProps {
+    export interface IListItemProps {
         onClick?(): void;
         className?: string;
         inactive?: boolean;
@@ -118,13 +118,13 @@ declare module 'superdesk-api' {
         'data-test-id'?: string;
     }
 
-    interface IPropsListItemColumn {
+    export interface IPropsListItemColumn {
         ellipsisAndGrow?: boolean;
         noBorder?: boolean;
     }
 
 
-    interface IGenericListPageComponent<T extends IBaseRestApiResponse> {
+    export interface IGenericListPageComponent<T extends IDefaultApiFields> {
         openPreview(id: string): void;
         startEditing(id: string): void;
         closePreview(): void;
@@ -140,13 +140,13 @@ declare module 'superdesk-api' {
 
     // EXPORTED API
 
-    type ISuperdesk = DeepReadonly<{
+    export type ISuperdesk = DeepReadonly<{
         ui: {
             alert(message: string): Promise<void>;
             confirm(message: string): Promise<boolean>;
         };
         helpers: {
-            getGenericListPageComponent<T extends IBaseRestApiResponse>(resource: string): React.ComponentType<IPropsGenericForm<T>>;
+            getGenericListPageComponent<T extends IDefaultApiFields>(resource: string): React.ComponentType<IPropsGenericForm<T>>;
             isIFormGroupCollapsible(x: "inline" | IFormGroupCollapsible): x is IFormGroupCollapsible;
             isIFormGroup(x: IFormGroup | IFormField): x is IFormGroup;
             isIFormField(x: IFormGroup | IFormField): x is IFormField;
