@@ -26,19 +26,23 @@ export const extensions: IExtensions = {};
 const importStatements = [];
 const insertIntoObjectStatements = [];
 
-directories.forEach((extensionName) => {
-    const manifestFile = JSON.parse(
-        fs.readFileSync(
-            path.resolve(`${__dirname}/../scripts/extensions/${extensionName}/package.json`)
-        ).toString()
-    );
+const superdeskSettings = require('../superdesk.config')();
 
-    importStatements.push(`import * as ${extensionName} from '../extensions/${extensionName}/${manifestFile.main}';`);
+directories
+    .filter((extensionName) => superdeskSettings.enabledExtensions.includes(extensionName))
+    .forEach((extensionName) => {
+        const manifestFile = JSON.parse(
+            fs.readFileSync(
+                path.resolve(`${__dirname}/../scripts/extensions/${extensionName}/package.json`)
+            ).toString()
+        );
 
-    insertIntoObjectStatements.push(
-        `extensions['${extensionName}'] = {extension: ${extensionName}.default, manifest: ${JSON.stringify(manifestFile)}}`
-    );
-});
+        importStatements.push(`import * as ${extensionName} from '../extensions/${extensionName}/${manifestFile.main}';`);
+
+        insertIntoObjectStatements.push(
+            `extensions['${extensionName}'] = {extension: ${extensionName}.default, manifest: ${JSON.stringify(manifestFile)}}`
+        );
+    });
 
 codeToImportExtensions += importStatements.join('\n') + '\n\n' + insertIntoObjectStatements.join('\n') + '\n';
 

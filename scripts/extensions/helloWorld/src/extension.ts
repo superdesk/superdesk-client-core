@@ -4,7 +4,7 @@ const extension: IExtension = {
     activate: (superdesk: ISuperdesk) => {
         const {gettext} = superdesk.localization;
 
-        // superdesk.ui.alert(gettext('Hello world'));
+        superdesk.ui.alert(gettext('Hello world'));
 
         return Promise.resolve();
     },
