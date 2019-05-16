@@ -1,4 +1,5 @@
 import {isImage, isAudio, isVideo} from './utils';
+import {logger} from 'core/services/logger';
 
 /**
  * @param elements An array of img, audio and video elements
