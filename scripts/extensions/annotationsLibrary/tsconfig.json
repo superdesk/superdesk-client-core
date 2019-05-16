@@ -1,8 +1,6 @@
 {
     "compilerOptions": {
-        "sourceRoot": "src",
         "outDir": "dist",
-        "sourceMap": true,
         "module": "commonjs",
         "target": "es6",
         "lib": [
@@ -11,5 +9,20 @@
         ],
         "skipLibCheck": true,
         "jsx": "react",
+
+        "strict": true,
+        "alwaysStrict": true,
+        "strictBindCallApply": true,
+        "strictFunctionTypes": true,
+        "strictPropertyInitialization": true,
+        "strictNullChecks": true,
+        "noImplicitAny": true,
+        "noImplicitReturns": true,
+        "noImplicitThis": true,
+        
+        "forceConsistentCasingInFileNames": true,
+        "noFallthroughCasesInSwitch": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,  
     },
 }

@@ -1,8 +1,8 @@
-import {ISuperdesk, IExtension, IPageComponentProps} from 'superdesk-api';
+import {ISuperdesk, IExtension} from 'superdesk-api';
 import {AnnotationsLibraryPage} from './annotations-library-page';
 
 var extension: IExtension = {
-    activate: (superdesk: ISuperdesk) => Promise.resolve(),
+    activate: () => Promise.resolve(),
     contribute: {
         sideMenuItems: (superdesk: ISuperdesk) => new Promise((resolve) => {
             const {gettext} = superdesk.localization;
