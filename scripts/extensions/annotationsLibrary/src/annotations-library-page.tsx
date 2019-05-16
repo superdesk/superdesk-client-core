@@ -21,7 +21,6 @@ interface IKnowledgeBaseItem extends IBaseRestApiResponse {
 
 export class AnnotationsLibraryPage extends React.Component<IPageComponentProps> {
     render() {
-        // const {getGenericListPageComponent} = this.props.superdesk
         const {gettext} = this.props.superdesk.localization;
         const {
             getGenericListPageComponent,
