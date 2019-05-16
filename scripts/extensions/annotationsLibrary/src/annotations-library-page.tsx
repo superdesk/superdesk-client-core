@@ -7,7 +7,7 @@ import {
     IGenericListPageComponent
 } from 'superdesk-api';
 
-interface IKnowledgeBaseItem extends IBaseRestApiResponse {
+export interface IKnowledgeBaseItem extends IBaseRestApiResponse {
     name: string;
     labels?: Array<string>;
     language: string;
