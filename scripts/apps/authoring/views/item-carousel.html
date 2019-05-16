@@ -11,110 +11,110 @@
         <a ng-click="navNext()" class="sd-media-carousel__nav-button sd-media-carousel__nav-button--next-inner"></a>
 
         <div class="sd-media-carousel__content owl-carousel">
-            <div class="sd-media-carousel__page" ng-repeat="item in carouselItems">
+            <div class="sd-media-carousel__page" ng-repeat="carouselItem in carouselItems">
                 <figure class="item-association"
-                        ng-class="{'item-association--preview': item[item.fieldId], 'item-association--loading': loading}"
-                        ng-click="editable && associations.isMediaEditable() && !item[item.fieldId] && upload()">
+                        ng-class="{'item-association--preview': carouselItem[carouselItem.fieldId], 'item-association--loading': loading}"
+                        ng-click="editable && associations.isMediaEditable() && !carouselItem[carouselItem.fieldId] && upload()">
 
-                    <a ng-if="item[item.fieldId] && editable" class="item-association__remove-item" ng-click="remove(item); $event.stopPropagation()">
+                    <a ng-if="carouselItem[carouselItem.fieldId] && editable" class="item-association__remove-item" ng-click="remove(carouselItem); $event.stopPropagation()">
                         <i class="icon-close-small"></i>
                     </a>
                     <!-- video -->
-                    <div class="item-association__video-container" ng-if="item[item.fieldId] && item[item.fieldId].type === 'video'">
+                    <div class="item-association__video-container" ng-if="carouselItem[carouselItem.fieldId] && carouselItem[carouselItem.fieldId].type === 'video'">
                         <video controls="controls">
                             <source vsrc="{{rendition.href}}"
-                                    ng-repeat="(key, rendition) in item[item.fieldId].renditions"
+                                    ng-repeat="(key, rendition) in carouselItem[carouselItem.fieldId].renditions"
                                     ng-if="associations.isVideo(rendition)" html5vfix>
                         </video>
                         <div class="item-association__metadata item-association__metadata--plain">
                             <span>
                                 <em>{{:: 'Credit:' | translate}}</em>
-                                {{item[item.fieldId].byline || ('[No Value]' | translate)}}
+                                {{carouselItem[carouselItem.fieldId].byline || ('[No Value]' | translate)}}
                             </span>
                             <span>
                                 <em>{{:: 'Copyright holder:' | translate}}</em>
-                                {{item[item.fieldId].copyrightholder || ('[No Value]' | translate)}}
+                                {{carouselItem[carouselItem.fieldId].copyrightholder || ('[No Value]' | translate)}}
                             </span>
                             <span>
                                 <em>{{:: 'Assign rights:' | translate}}</em>
-                                {{item[item.fieldId].usageterms || ('[No Value]' | translate)}}
+                                {{carouselItem[carouselItem.fieldId].usageterms || ('[No Value]' | translate)}}
                             </span>
                             <span>
                                 <em>{{:: 'Copyright notice:' | translate}}</em>
-                                {{item[item.fieldId].copyrightnotice || ('[No Value]' | translate)}}
+                                {{carouselItem[carouselItem.fieldId].copyrightnotice || ('[No Value]' | translate)}}
                             </span>
                         </div>
-                        <div class="item-association__action-bar" ng-if="item[item.fieldId] && editable">
-                            <a class="btn btn--hollow btn--small" ng-click="associations.isMediaEditable() && associations.edit(this, item[item.fieldId]); $event.stopPropagation()"><span translate>Edit metadata</span></a>
+                        <div class="item-association__action-bar" ng-if="carouselItem[carouselItem.fieldId] && editable">
+                            <a class="btn btn--hollow btn--small" ng-click="associations.isMediaEditable() && associations.edit(this, carouselItem[carouselItem.fieldId]); $event.stopPropagation()"><span translate>Edit metadata</span></a>
                         </div>
                     </div>
                     <!-- audio -->
-                    <div class="item-association__audio-container" ng-if="item[item.fieldId] && item[item.fieldId].type === 'audio'" >
+                    <div class="item-association__audio-container" ng-if="carouselItem[carouselItem.fieldId] && carouselItem[carouselItem.fieldId].type === 'audio'" >
                         <audio controls="controls">
                             <source vsrc="{{rendition.href}}"
-                                    ng-repeat="(key, rendition) in item[item.fieldId].renditions"
+                                    ng-repeat="(key, rendition) in carouselItem[carouselItem.fieldId].renditions"
                                     ng-if="associations.isAudio(rendition)" html5vfix>
                         </audio>
                         <div class="item-association__metadata item-association__metadata--plain">
                             <span>
                                 <em>{{:: 'Credit:' | translate}}</em>
-                                {{item[item.fieldId].byline || ('[No Value]' | translate)}}
+                                {{carouselItem[carouselItem.fieldId].byline || ('[No Value]' | translate)}}
                             </span>
                             <span>
                                 <em>{{:: 'Copyright holder:' | translate}}</em>
-                                {{item[item.fieldId].copyrightholder || ('[No Value]' | translate)}}
+                                {{carouselItem[carouselItem.fieldId].copyrightholder || ('[No Value]' | translate)}}
                             </span>
                             <span>
                                 <em>{{:: 'Assign rights:' | translate}}</em>
-                                {{item[item.fieldId].usageterms || ('[No Value]' | translate)}}
+                                {{carouselItem[carouselItem.fieldId].usageterms || ('[No Value]' | translate)}}
                             </span>
                             <span>
                                 <em>{{:: 'Copyright notice:' | translate}}</em>
-                                {{item[item.fieldId].copyrightnotice || ('[No Value]' | translate)}}
+                                {{carouselItem[carouselItem.fieldId].copyrightnotice || ('[No Value]' | translate)}}
                             </span>
                         </div>
-                        <div class="item-association__action-bar" ng-if="item[item.fieldId] && editable">
-                            <a class="btn btn--hollow btn--small" ng-click="associations.isMediaEditable() && associations.edit(this, item[item.fieldId]); $event.stopPropagation()"><span translate>Edit metadata</span></a>
+                        <div class="item-association__action-bar" ng-if="carouselItem[carouselItem.fieldId] && editable">
+                            <a class="btn btn--hollow btn--small" ng-click="associations.isMediaEditable() && associations.edit(this, carouselItem[carouselItem.fieldId]); $event.stopPropagation()"><span translate>Edit metadata</span></a>
                         </div>
                     </div>
                     <!-- image -->
-                    <div class="item-association__image-container" ng-if="item[item.fieldId] && (item[item.fieldId].type === 'picture' || item[item.fieldId].type === 'graphic')">
-                        <div class="item-association__image-overlay" ng-if="item[item.fieldId]">
+                    <div class="item-association__image-container" ng-if="carouselItem[carouselItem.fieldId] && (carouselItem[carouselItem.fieldId].type === 'picture' || carouselItem[carouselItem.fieldId].type === 'graphic')">
+                        <div class="item-association__image-overlay" ng-if="carouselItem[carouselItem.fieldId]">
                             <div class="item-association__metadata item-association__metadata--top-overlay">
                                 <span>
                                     <em>{{:: 'Title:' | translate}}</em>
-                                    {{item[item.fieldId].headline || ('[No Value]' | translate)}}
+                                    {{carouselItem[carouselItem.fieldId].headline || ('[No Value]' | translate)}}
                                 </span>
                             </div>
                             <div class="item-association__icons-block">
-                                <a class="item-association__image-action" ng-if="item[item.fieldId] && editable" ng-click="associations.isMediaEditable() && associations.edit(this, item[item.fieldId], {defaultTab: 'view'}); $event.stopPropagation()" sd-tooltip="Edit metadata"><i class="icon-pencil"></i></a>
-                                <a class="item-association__image-action" ng-if="item[item.fieldId] && editable" ng-click="associations.isMediaEditable() && associations.edit(this, item[item.fieldId], {defaultTab: 'image-edit'}); $event.stopPropagation()" sd-tooltip="Edit image"><i class="icon-switches"></i></a>
-                                <a class="item-association__image-action" ng-if="item[item.fieldId] && editable" ng-click="associations.isMediaEditable() && associations.edit(this, item[item.fieldId], {defaultTab: 'crop', showMetadata: false}); $event.stopPropagation()" sd-tooltip="Edit crops"><i class="icon-crop"></i></a>
+                                <a class="item-association__image-action" ng-if="carouselItem[carouselItem.fieldId] && editable" ng-click="associations.isMediaEditable() && associations.edit(this, carouselItem[carouselItem.fieldId], {defaultTab: 'view'}); $event.stopPropagation()" sd-tooltip="Edit metadata"><i class="icon-pencil"></i></a>
+                                <a class="item-association__image-action" ng-if="carouselItem[carouselItem.fieldId] && editable" ng-click="associations.isMediaEditable() && associations.edit(this, carouselItem[carouselItem.fieldId], {defaultTab: 'image-edit'}); $event.stopPropagation()" sd-tooltip="Edit image"><i class="icon-switches"></i></a>
+                                <a class="item-association__image-action" ng-if="carouselItem[carouselItem.fieldId] && editable" ng-click="associations.isMediaEditable() && associations.edit(this, carouselItem[carouselItem.fieldId], {defaultTab: 'crop', showMetadata: false}); $event.stopPropagation()" sd-tooltip="Edit crops"><i class="icon-crop"></i></a>
                             </div>
                             <div class="item-association__metadata item-association__metadata--bottom-overlay">
                                 <span>
                                     <em>{{:: 'Alt text:' | translate}}</em>
-                                    {{item[item.fieldId].alt_text || ('[No Value]' | translate)}}
+                                    {{carouselItem[carouselItem.fieldId].alt_text || ('[No Value]' | translate)}}
                                 </span>
                                 <span>
                                     <em>{{:: 'Credit:' | translate}}</em>
-                                    {{item[item.fieldId].byline || ('[No Value]' | translate)}}
+                                    {{carouselItem[carouselItem.fieldId].byline || ('[No Value]' | translate)}}
                                 </span>
                                 <span>
                                     <em>{{:: 'Copyright holder:' | translate}}</em>
-                                    {{item[item.fieldId].copyrightholder || ('[No Value]' | translate)}}
+                                    {{carouselItem[carouselItem.fieldId].copyrightholder || ('[No Value]' | translate)}}
                                 </span>
                                 <span>
                                     <em>{{:: 'Assign rights:' | translate}}</em>
-                                    {{item[item.fieldId].usageterms || ('[No Value]' | translate)}}
+                                    {{carouselItem[carouselItem.fieldId].usageterms || ('[No Value]' | translate)}}
                                 </span>
                                 <span>
                                     <em>{{:: 'Copyright notice:' | translate}}</em>
-                                    {{item[item.fieldId].copyrightnotice || ('[No Value]' | translate)}}
+                                    {{carouselItem[carouselItem.fieldId].copyrightnotice || ('[No Value]' | translate)}}
                                 </span>
                             </div>
                         </div>
-                        <img ng-src="{{ item[item.fieldId].renditions.viewImage.href}}"
+                        <img ng-src="{{ carouselItem[carouselItem.fieldId].renditions.viewImage.href}}"
                         ng-class="{'not-editable': !associations.isMediaEditable() || !editable}">
                     </div>
                 </figure>
@@ -122,21 +122,21 @@
                 <div contenteditable="{{editable}}"
                      sd-auto-height
                      tansa-scope-sync
-                     ng-model="item[item.fieldId].headline"
+                     ng-model="carouselItem[carouselItem.fieldId].headline"
                      ng-model-options="{debounce: 1000}"
                      ng-change="onchange()"
                      sd-placeholder="Add title"
-                     ng-if="item[item.fieldId] && showTitle"
+                     ng-if="carouselItem[carouselItem.fieldId] && showTitle"
                      class="sd-media-carousel__media-title">
                 </div>
                 <div contenteditable="{{editable}}"
                      sd-auto-height
                      tansa-scope-sync
-                     ng-model="item[item.fieldId].description_text"
+                     ng-model="carouselItem[carouselItem.fieldId].description_text"
                      ng-model-options="{debounce: 1000}"
                      ng-change="onchange()"
                      sd-placeholder="Add caption"
-                     ng-if="item[item.fieldId]"
+                     ng-if="carouselItem[carouselItem.fieldId]"
                      class="sd-media-carousel__media-caption">
                 </div>
 
@@ -149,19 +149,19 @@
         </div>
 
         <div class="sd-media-carousel__thumb-strip">
-            <div class="sd-media-carousel__thumb-strip-item" ng-repeat="item in carouselItems">
-                <div class="sd-media-carousel__thumb" ng-click="goTo($index)" ng-if="item[item.fieldId] && item[item.fieldId].type === 'picture'">
-                    <img ng-src="{{item[item.fieldId].renditions.thumbnail.href}}">
+            <div class="sd-media-carousel__thumb-strip-item" ng-repeat="carouselItem in carouselItems">
+                <div class="sd-media-carousel__thumb" ng-click="goTo($index)" ng-if="carouselItem[carouselItem.fieldId] && carouselItem[carouselItem.fieldId].type === 'picture'">
+                    <img ng-src="{{carouselItem[carouselItem.fieldId].renditions.thumbnail.href}}">
                 </div>
-                <div class="sd-media-carousel__thumb" ng-click="goTo($index)" ng-if="item[item.fieldId] && item[item.fieldId].type === 'audio'">
+                <div class="sd-media-carousel__thumb" ng-click="goTo($index)" ng-if="carouselItem[carouselItem.fieldId] && carouselItem[carouselItem.fieldId].type === 'audio'">
                     <i class="icon--2x icon-audio"></i>
                 </div>
-                <div class="sd-media-carousel__thumb" ng-click="goTo($index)" ng-if="item[item.fieldId] && item[item.fieldId].type === 'video'">
-                    <i class="icon--2x icon-video" ng-if="!item[item.fieldId].renditions.thumbnail"></i>
-                    <img ng-if="item[item.fieldId] && item[item.fieldId].renditions.thumbnail" ng-src="{{item[item.fieldId].renditions.thumbnail.href}}">
+                <div class="sd-media-carousel__thumb" ng-click="goTo($index)" ng-if="carouselItem[carouselItem.fieldId] && carouselItem[carouselItem.fieldId].type === 'video'">
+                    <i class="icon--2x icon-video" ng-if="!carouselItem[carouselItem.fieldId].renditions.thumbnail"></i>
+                    <img ng-if="carouselItem[carouselItem.fieldId] && carouselItem[carouselItem.fieldId].renditions.thumbnail" ng-src="{{carouselItem[carouselItem.fieldId].renditions.thumbnail.href}}">
                 </div>
             </div>
-            <div class="sd-media-carousel__thumb sd-media-carousel__thumb--add" ng-click="upload()" data-rel="{{item.fieldId}}" ng-if="carouselItems.length < maxUploads">
+            <div class="sd-media-carousel__thumb sd-media-carousel__thumb--add" ng-click="upload()" data-rel="{{carouselItem.fieldId}}" ng-if="carouselItems.length < maxUploads">
                 <i class="icon-plus-sign"></i>
             </div>
         </div>
