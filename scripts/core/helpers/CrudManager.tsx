@@ -5,8 +5,8 @@ import {generate} from 'json-merge-patch';
 import {connectServices} from './ReactRenderAsync';
 import {
     IBaseRestApiResponse,
-    IState,
-    IMethods,
+    ICrudManagerState,
+    ICrudManagerMethods,
     ISortOption,
     ICrudManagerFilters,
     IRestApiResponse,
@@ -17,7 +17,8 @@ export function connectCrudManager<Props, Entity extends IBaseRestApiResponse>(
     name: string,
     endpoint: string,
 ) {
-    const component = class extends React.Component<Props, IState<Entity>> implements IMethods<Entity> {
+    const component = class extends React.Component<Props, ICrudManagerState<Entity>>
+        implements ICrudManagerMethods<Entity> {
         api: any;
 
         constructor(props) {

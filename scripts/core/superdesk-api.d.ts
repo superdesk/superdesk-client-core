@@ -139,12 +139,12 @@ declare module 'superdesk-api' {
     }
     
 
-    export interface IState<Entity extends IBaseRestApiResponse> extends IRestApiResponse<Entity> {
+    export interface ICrudManagerState<Entity extends IBaseRestApiResponse> extends IRestApiResponse<Entity> {
         activeFilters: ICrudManagerFilters;
         activeSortOption?: ISortOption;
     }
     
-    export interface IMethods<Entity extends IBaseRestApiResponse> {
+    export interface ICrudManagerMethods<Entity extends IBaseRestApiResponse> {
         read(
             page: number,
             sort?: {
@@ -164,7 +164,7 @@ declare module 'superdesk-api' {
     }
     
 
-    export interface ICrudManager<Entity extends IBaseRestApiResponse> extends IState<Entity>, IMethods<Entity> {
+    export interface ICrudManager<Entity extends IBaseRestApiResponse> extends ICrudManagerState<Entity>, ICrudManagerMethods<Entity> {
         // allow exposing it as one interface for consumer components
     }
 
