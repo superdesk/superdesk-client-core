@@ -1,45 +1,16 @@
 /* eslint-disable react/display-name */
 
-import {IRestApiResponse} from '../../types/RestApi';
 import React from 'react';
 import {generate} from 'json-merge-patch';
 import {connectServices} from './ReactRenderAsync';
-import {IBaseRestApiResponse} from 'superdesk-api';
-
-export interface ISortOption {
-    field: string;
-    direction: 'ascending' | 'descending';
-}
-
-export type ICrudManagerFilters = {[fieldName: string]: any};
-
-interface IState<Entity extends IBaseRestApiResponse> extends IRestApiResponse<Entity> {
-    activeFilters: ICrudManagerFilters;
-    activeSortOption?: ISortOption;
-}
-
-interface IMethods<Entity extends IBaseRestApiResponse> {
-    read(
-        page: number,
-        sort?: {
-        field: string;
-        direction: 'ascending' | 'descending';
-        },
-        filterValues?: ICrudManagerFilters,
-        formatFiltersForServer?: (filters: ICrudManagerFilters) => ICrudManagerFilters,
-    ): Promise<IRestApiResponse<Entity>>;
-    update(item: Entity): Promise<Entity>;
-    create(item: Entity): Promise<Entity>;
-    delete(item: Entity): Promise<void>;
-    refresh(): Promise<IRestApiResponse<Entity>>;
-    sort(nextSortOption: ISortOption): Promise<IRestApiResponse<Entity>>;
-    removeFilter(fieldName: string): Promise<IRestApiResponse<Entity>>;
-    goToPage(nextPage: number): Promise<IRestApiResponse<Entity>>;
-}
-
-export interface ICrudManager<Entity extends IBaseRestApiResponse> extends IState<Entity>, IMethods<Entity> {
-    // allow exposing it as one interface for consumer components
-}
+import {
+    IBaseRestApiResponse,
+    IState,
+    IMethods,
+    ISortOption,
+    ICrudManagerFilters,
+    IRestApiResponse,
+} from 'superdesk-api';
 
 export function connectCrudManager<Props, Entity extends IBaseRestApiResponse>(
     WrappedComponent: React.ComponentType<Props>,

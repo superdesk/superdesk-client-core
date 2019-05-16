@@ -16,7 +16,7 @@ import {
 import {SearchBar} from 'core/ui/components';
 import {Button} from 'core/ui/components/Nav';
 import {SortBar, ISortFields} from 'core/ui/components/SortBar';
-import {connectCrudManager, ICrudManager, ICrudManagerFilters} from 'core/helpers/CrudManager';
+import {connectCrudManager} from 'core/helpers/CrudManager';
 import {TagLabel} from 'core/ui/components/TagLabel';
 import {connectServices} from 'core/helpers/ReactRenderAsync';
 import {getFormGroupForFiltering} from 'core/ui/components/generic-form/get-form-group-for-filtering';
@@ -25,7 +25,7 @@ import {FormViewEdit} from 'core/ui/components/generic-form/from-group';
 import {getInitialValues} from '../generic-form/get-initial-values';
 import {generateFilterForServer} from '../generic-form/generate-filter-for-server';
 import {getFormFieldsFlat} from '../generic-form/get-form-fields-flat';
-import {IBaseRestApiResponse, IPropsGenericForm, IGenericListPageComponent} from 'superdesk-api';
+import {IBaseRestApiResponse, IPropsGenericForm, IGenericListPageComponent, ICrudManagerFilters} from 'superdesk-api';
 
 interface IState {
     preview: {

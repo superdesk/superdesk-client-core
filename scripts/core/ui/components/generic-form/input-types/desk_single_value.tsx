@@ -1,7 +1,7 @@
 import ng from 'core/services/ng';
 import {getSelectSingleValue} from './select_single_value';
-import {IRestApiResponse} from 'types/RestApi';
 import {IDesk} from 'superdesk-interfaces/Desk';
+import {IRestApiResponse} from 'superdesk-api';
 
 export const DeskSingleValue = getSelectSingleValue(
     () =>

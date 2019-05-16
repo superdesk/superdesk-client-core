@@ -52,6 +52,26 @@ declare module 'superdesk-api' {
         _id: string;
     }
 
+    export interface IRestApiLink {
+        title: string;
+        href: string;
+    }
+    
+    // Eve properties
+    export interface IRestApiResponse<T extends IBaseRestApiResponse> {
+        _items: Array<T>;
+        _links: {
+            parent: IRestApiLink;
+            selft: IRestApiLink;
+        };
+        _meta: {
+            max_results: number;
+            page: number;
+            total: number;
+        };
+    }
+    
+
 
 
     // GENERIC FORM
@@ -105,7 +125,49 @@ declare module 'superdesk-api' {
         type: 'inline' | IFormGroupCollapsible;
         form: Array<IFormField | IFormGroup>;
     }
+
+
+
+
+    // CRUD MANAGER
+
+    export type ICrudManagerFilters = {[fieldName: string]: any};
+
+    export interface ISortOption {
+        field: string;
+        direction: 'ascending' | 'descending';
+    }
     
+
+    export interface IState<Entity extends IBaseRestApiResponse> extends IRestApiResponse<Entity> {
+        activeFilters: ICrudManagerFilters;
+        activeSortOption?: ISortOption;
+    }
+    
+    export interface IMethods<Entity extends IBaseRestApiResponse> {
+        read(
+            page: number,
+            sort?: {
+            field: string;
+            direction: 'ascending' | 'descending';
+            },
+            filterValues?: ICrudManagerFilters,
+            formatFiltersForServer?: (filters: ICrudManagerFilters) => ICrudManagerFilters,
+        ): Promise<IRestApiResponse<Entity>>;
+        update(item: Entity): Promise<Entity>;
+        create(item: Entity): Promise<Entity>;
+        delete(item: Entity): Promise<void>;
+        refresh(): Promise<IRestApiResponse<Entity>>;
+        sort(nextSortOption: ISortOption): Promise<IRestApiResponse<Entity>>;
+        removeFilter(fieldName: string): Promise<IRestApiResponse<Entity>>;
+        goToPage(nextPage: number): Promise<IRestApiResponse<Entity>>;
+    }
+    
+
+    export interface ICrudManager<Entity extends IBaseRestApiResponse> extends IState<Entity>, IMethods<Entity> {
+        // allow exposing it as one interface for consumer components
+    }
+
     
 
     // REACT COMPONENTS
