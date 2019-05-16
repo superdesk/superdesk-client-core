@@ -1,5 +1,14 @@
 import {ISuperdesk, IExtensions} from 'superdesk-api';
 import {gettext} from 'core/utils';
+import {getGenericListPageComponent} from './ui/components/ListPage/generic-list-page';
+import {ListItem, ListItemColumn, ListItemActionsMenu} from './components/ListItem';
+import {getFormFieldPreviewComponent} from './ui/components/generic-form/form-field';
+import {
+    isIFormGroupCollapsible,
+    isIFormGroup,
+    isIFormField,
+    FormFieldType,
+} from './ui/components/generic-form/interfaces/form';
 
 export function getSuperdeskApiImplementation(
     requestingExtensionId: string,
@@ -7,6 +16,17 @@ export function getSuperdeskApiImplementation(
     modal,
 ): ISuperdesk {
     return {
+        helpers: {
+            getGenericListPageComponent,
+            getFormFieldPreviewComponent,
+            ListItem,
+            ListItemColumn,
+            ListItemActionsMenu,
+            isIFormGroupCollapsible,
+            isIFormGroup,
+            isIFormField,
+            FormFieldType,
+        },
         ui: {
             alert: (message: string) => modal.alert({bodyText: message}),
             confirm: (message: string) => new Promise((resolve) => {

@@ -1,7 +1,7 @@
 import {assertNever} from 'core/helpers/typescript-helpers';
-import {IFormField, FormFieldType} from './interfaces/form';
+import {FormFieldType} from './interfaces/form';
 
-export function generateFilterForServer(type: IFormField['type'], value: any): any {
+export function generateFilterForServer(type: FormFieldType, value: any): any {
     switch (type) {
     case FormFieldType.textSingleLine:
         return {

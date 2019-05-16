@@ -1,8 +1,8 @@
 import React from 'react';
 
-import {IFormGroup} from './interfaces/form';
 import {FormGroupDisplayWrapper} from './form-group-display-wrapper';
 import {FormGroupDirectionWrapper} from './form-direction-wrapper';
+import {IFormGroup} from 'superdesk-api';
 
 interface IProps {
     group: IFormGroup;

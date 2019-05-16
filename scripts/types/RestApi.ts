@@ -1,13 +1,8 @@
+import {IDefaultApiFields} from "superdesk-api";
+
 export interface IRestApiLink {
     title: string;
     href: string;
-}
-
-export interface IDefaultApiFields {
-    _created: string;
-    _updated: string;
-    _etag: string;
-    _id: string;
 }
 
 // Eve properties

@@ -1,4 +1,4 @@
-import {IDefaultApiFields} from 'types/RestApi';
+import {IDefaultApiFields} from "superdesk-api";
 
 export interface IStage extends IDefaultApiFields {
     name: string;

@@ -81,7 +81,9 @@ let core = angular.module('superdesk.core', [
 
 core.constant('lodash', _);
 
-core.component('sdExtensionPage', reactToAngular1(ExtensionPage, []));
+const styles = 'display: flex; height: 100%;';
+
+core.component('sdExtensionPage', reactToAngular1(ExtensionPage, [], [], styles));
 core.config(['$routeProvider', ($routeProvider) => {
     $routeProvider.when('/', {
         redirectTo: appConfig.defaultRoute,

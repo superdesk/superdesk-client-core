@@ -1,4 +1,4 @@
-import {IDefaultApiFields} from 'types/RestApi';
+import {IDefaultApiFields} from "superdesk-api";
 
 export interface IContentFilter extends IDefaultApiFields {
     name: string;

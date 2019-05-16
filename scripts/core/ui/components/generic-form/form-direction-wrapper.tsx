@@ -1,8 +1,8 @@
 import React from 'react';
 
-import {IFormGroup} from './interfaces/form';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {omit} from 'lodash';
+import {IFormGroup} from 'superdesk-api';
 
 interface IProps {
     className?: string;

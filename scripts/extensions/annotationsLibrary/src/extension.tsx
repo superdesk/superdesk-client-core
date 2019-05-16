@@ -1,11 +1,5 @@
 import {ISuperdesk, IExtension, IPageComponentProps} from 'superdesk-api';
-import * as React from 'react';
-
-export class AnnotationsLibraryPage extends React.Component<IPageComponentProps> {
-    render() {
-        return <div>hello</div>;
-    }
-}
+import {AnnotationsLibraryPage} from './annotations-library-page';
 
 var extension: IExtension = {
     activate: (superdesk: ISuperdesk) => Promise.resolve(),

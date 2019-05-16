@@ -2,16 +2,9 @@
 
 import React from 'react';
 import classNames from 'classnames';
+import {IListItemProps, IPropsListItemColumn} from 'superdesk-api';
 
-interface IListItemProps {
-    onClick?(): void;
-    className?: string;
-    inactive?: boolean;
-    noHover?: boolean;
-    'data-test-id'?: string;
-}
-
-export class ListItem extends React.Component<IListItemProps, any> {
+export class ListItem extends React.Component<IListItemProps> {
     render() {
         return (
             <div
@@ -34,12 +27,7 @@ export class ListItem extends React.Component<IListItemProps, any> {
     }
 }
 
-interface IPropsListItemColumn {
-    ellipsisAndGrow?: boolean;
-    noBorder?: boolean;
-}
-
-export class ListItemColumn extends React.Component<IPropsListItemColumn, any> {
+export class ListItemColumn extends React.Component<IPropsListItemColumn> {
     render() {
         const cssClasses = [];
 
@@ -65,7 +53,7 @@ export class ListItemColumn extends React.Component<IPropsListItemColumn, any> {
     }
 }
 
-export class ListItemActionsMenu extends React.Component<any> {
+export class ListItemActionsMenu extends React.Component {
     render() {
         return (
             <div className="sd-list-item__action-menu">
@@ -75,7 +63,7 @@ export class ListItemActionsMenu extends React.Component<any> {
     }
 }
 
-export class ListItemRow extends React.Component<any, any> {
+export class ListItemRow extends React.Component {
     render() {
         return (
             <div className="sd-list-item__row">

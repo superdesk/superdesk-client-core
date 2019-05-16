@@ -1,9 +1,10 @@
 /* eslint-disable react/display-name */
 
-import {IRestApiResponse, IDefaultApiFields} from '../../types/RestApi';
+import {IRestApiResponse} from '../../types/RestApi';
 import React from 'react';
 import {generate} from 'json-merge-patch';
 import {connectServices} from './ReactRenderAsync';
+import {IDefaultApiFields} from 'superdesk-api';
 
 export interface ISortOption {
     field: string;
