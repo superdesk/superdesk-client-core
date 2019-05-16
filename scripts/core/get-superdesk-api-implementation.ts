@@ -9,6 +9,8 @@ import {
     isIFormField,
     FormFieldType,
 } from './ui/components/generic-form/interfaces/form';
+import {UserHtmlSingleLine} from './helpers/UserHtmlSingleLine';
+import {Row, Item, Column} from './ui/components/List';
 
 export function getSuperdeskApiImplementation(
     requestingExtensionId: string,
@@ -20,12 +22,18 @@ export function getSuperdeskApiImplementation(
             getGenericListPageComponent,
             getFormFieldPreviewComponent,
             ListItem,
+            List: {
+                Item,
+                Row,
+                Column,
+            },
             ListItemColumn,
             ListItemActionsMenu,
             isIFormGroupCollapsible,
             isIFormGroup,
             isIFormField,
             FormFieldType,
+            UserHtmlSingleLine,
         },
         ui: {
             alert: (message: string) => modal.alert({bodyText: message}),

@@ -160,6 +160,12 @@ declare module 'superdesk-api' {
             ListItemColumn: React.ComponentType<IPropsListItemColumn>;
             ListItemActionsMenu: React.ComponentType;
             FormFieldType: typeof FormFieldType;
+            UserHtmlSingleLine: React.ComponentType<{html: string}>;
+            List: {
+                Item: React.ComponentType<{onClick: any}>;
+                Row: React.ComponentType;
+                Column: React.ComponentType<{grow: boolean}>;
+            }
         };
         localization: {
             gettext(message: string): string;
