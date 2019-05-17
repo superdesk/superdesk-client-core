@@ -385,4 +385,22 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
 
         return $q.when(item);
     };
+
+    /**
+     * Setup authoring scope for item
+     */
+    this.setupAuthoring = (profileId, scope, item) => {
+        if (profileId) {
+            return this.getType(profileId).then((profile) => {
+                scope.schema = this.schema(profile, item.type);
+                scope.editor = this.editor(profile, item.type);
+                scope.fields = this.fields(profile);
+            });
+        } else {
+            scope.schema = this.schema(null, get(item, 'type', 'text'));
+            scope.editor = this.editor(null, get(item, 'type', 'text'));
+            scope.fields = null;
+            return $q.when();
+        }
+    };
 }

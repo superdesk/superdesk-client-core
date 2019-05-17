@@ -387,22 +387,6 @@ export function ArticleEditDirective(
 
                 scope.$watch('item.body_html', () => suggest.trigger(scope.item, scope.origItem));
 
-                scope.$watch('item.profile', (profile) => {
-                    if (profile) {
-                        content.getType(profile)
-                            .then((type) => {
-                                scope.contentType = type;
-                                scope.editor = authoring.editor = content.editor(type, scope.item.type);
-                                scope.schema = authoring.schema = content.schema(type, scope.item.type);
-                                scope.fields = content.fields(type);
-                            });
-                    } else {
-                        scope.editor = authoring.editor = content.editor(null, scope.item.type);
-                        scope.schema = authoring.schema = content.schema(null, scope.item.type);
-                        scope.fields = null;
-                    }
-                });
-
                 scope.extra = {}; // placeholder for fields not part of item
             });
         },
