@@ -43,6 +43,45 @@ interface IProps {
     value?: any;
 }
 
+export interface IEditorStore {
+    editorState: EditorState;
+    searchTerm: {pattern: string, index: number, caseSensitive: boolean};
+    popup: {type: any};
+    readOnly: any;
+    locked: boolean;
+    showToolbar: any;
+    singleLine: any;
+    tabindex: any;
+    showTitle: any;
+    activeCell: any;
+    editorFormat: any;
+    onChangeValue: any;
+    item: any;
+    spellchecking: {
+        language: string;
+        enabled: boolean;
+        inProgress: boolean;
+        warningsByBlock: ISpellcheckWarningsByBlock;
+    };
+    suggestingMode: any;
+    invisibles: any;
+    svc: any;
+    abbreviations: any;
+    loading: boolean;
+}
+
+export const getCustomDecorator = (language?: string, spellcheckWarnings: ISpellcheckWarningsByBlock = null) => {
+    const decorators: any = [
+        LinkDecorator,
+    ];
+
+    if (spellcheckWarnings != null && language != null) {
+        decorators.push(getSpellcheckingDecorator(language, spellcheckWarnings));
+    }
+
+    return new CompositeDecorator(decorators);
+};
+
 /**
  * @name createEditorStore
  * @description Returns a new redux store.

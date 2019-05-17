@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import {
     Editor,
@@ -67,6 +66,34 @@ export function canDropMedia(e, editorConfig) {
     const supportsMedia = !readOnly && !singleLine && editorFormat.indexOf('media') !== -1;
 
     return supportsMedia && isValidMedia;
+}
+
+interface IProps {
+    readOnly?: boolean;
+    locked?: boolean;
+    loading?: boolean;
+    showToolbar?: boolean;
+    editorState?: EditorState;
+    scrollContainer?: string;
+    singleLine?: boolean;
+    editorFormat?: Array<string>;
+    tabindex?: number;
+    suggestingMode?: boolean;
+    svc?: any;
+    invisibles?: boolean;
+    highlights?: any;
+    highlightsManager?: any;
+    spellchecking?: IEditorStore['spellchecking'];
+    onCreateAddSuggestion?(chars): void;
+    onCreateDeleteSuggestion?(type): void;
+    onPasteFromSuggestingMode?(): void;
+    onCreateSplitParagraphSuggestion?(): void;
+    onCreateChangeStyleSuggestion?(style, active): void;
+    onChange?(editorState: EditorState): void;
+    unlock?(): void;
+    onTab?(): void;
+    dragDrop?(): void;
+    dispatch?(action: any): void;
 }
 
 /**
@@ -430,6 +457,8 @@ export class Editor3Component extends React.Component<any, any> {
                         readOnly={locked || readOnly}
                         ref={(editor) => this.handleRefs(editor)}
                     />
+
+                    {this.props.loading && <div className="loading-overlay active" />}
                 </div>
             </div>
         );

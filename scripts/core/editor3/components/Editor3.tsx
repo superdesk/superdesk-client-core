@@ -37,6 +37,7 @@ const mapStateToProps = (state) => ({
     suggestingMode: state.suggestingMode,
     invisibles: state.invisibles,
     svc: state.svc,
+    loading: state.loading,
 });
 
 const mapDispatchToProps = (dispatch) => ({
