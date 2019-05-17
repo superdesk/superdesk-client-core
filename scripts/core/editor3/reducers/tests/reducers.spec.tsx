@@ -34,7 +34,7 @@ describe('editor3.reducers', () => {
     });
 
     it('EDITOR_DRAG_DROP', () => {
-        const data = '{"a": 1}';
+        const data = {a: 1};
 
         const startState = {
             editorState: EditorState.createEmpty(),
