@@ -279,11 +279,7 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
             };
 
             $scope.$watch('item.profile', (profile) => {
-                if (profile) {
-                    content.getType(profile).then(setupContentType);
-                } else {
-                    setupContentType();
-                }
+                content.setupAuthoring(profile, $scope, $scope.item);
             });
 
             $scope.$watch('template.schedule.is_active', (newValue, oldValue) => {
@@ -299,13 +295,6 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
                     $scope.template.schedule_stage = null;
                 }
             });
-
-            function setupContentType(type?) {
-                if (type) {
-                    $scope.schema = content.schema(type, $scope.item.type);
-                    $scope.editor = content.editor(type, $scope.item.type);
-                }
-            }
 
             $scope.remove = function(template) {
                 const _desks = _.filter($scope.desks._items, (desk) =>
