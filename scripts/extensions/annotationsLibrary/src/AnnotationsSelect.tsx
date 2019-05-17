@@ -2,7 +2,7 @@ import * as React from 'react';
 import {AnnotationSelectList} from "./AnnotationSelectList";
 import {AnnotationSelectSingleItem} from "./AnnotationSelectSingleItem";
 import {ISuperdesk, ICrudManager} from "superdesk-api";
-import {IKnowledgeBaseItem} from "./annotations-library-page";
+import {IKnowledgeBaseItem} from './interfaces';
 
 interface IProps {
     annotationText: string;

@@ -1,5 +1,5 @@
 import React from 'react';
-import {IPropsAnnotationInputComponent} from './AnnotationInput';
+import {IPropsAnnotationInputComponent} from 'superdesk-api';
 
 export class AnnotationInputDefault extends React.Component<IPropsAnnotationInputComponent> {
     render() {

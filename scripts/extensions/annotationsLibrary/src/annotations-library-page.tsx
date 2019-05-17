@@ -1,23 +1,11 @@
 import * as React from 'react';
 import {
     IPageComponentProps,
-    IBaseRestApiResponse,
-    IFormField,
     IFormGroup,
     IGenericListPageComponent
 } from 'superdesk-api';
-
-export interface IKnowledgeBaseItem extends IBaseRestApiResponse {
-    name: string;
-    labels?: Array<string>;
-    language: string;
-    definition_text: string;
-    definition_html: string;
-
-    // http://cv.iptc.org/newscodes/cpnature/
-    cpnat_type: 'cpnat:abstract' | 'cpnat:event' | 'cpnat:geoArea'
-        | 'cpnat:object' | 'cpnat:organisation' | 'cpnat:person' | 'cpnat:poi';
-}
+import {IKnowledgeBaseItem} from './interfaces';
+import {getFields} from './GetFields';
 
 export class AnnotationsLibraryPage extends React.Component<IPageComponentProps> {
     render() {
@@ -28,31 +16,14 @@ export class AnnotationsLibraryPage extends React.Component<IPageComponentProps>
             ListItem,
             ListItemColumn,
             ListItemActionsMenu,
-            FormFieldType,
         } = this.props.superdesk.helpers;
         const AnnotationsLibraryPageComponent = getGenericListPageComponent<IKnowledgeBaseItem>('concept_items');
 
-        const nameField: IFormField = {
-            label : gettext('Name'),
-            type: FormFieldType.textSingleLine,
-            field: 'name',
-            required: true,
-        };
-        const languageField: IFormField = {
-            label : gettext('Language'),
-            type: FormFieldType.vocabularySingleValue,
-            field: 'language',
-            component_parameters: {
-                vocabulary_id: 'languages',
-            },
-            required: true,
-        };
-        const definitionField: IFormField = {
-            label : gettext('Definition'),
-            type: FormFieldType.textEditor3,
-            field: 'definition_html',
-            required: true,
-        };
+        const {
+            nameField,
+            languageField,
+            definitionField,
+        } = getFields(this.props.superdesk);
 
         const formConfig: IFormGroup = {
             direction: 'vertical',

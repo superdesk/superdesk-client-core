@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-import {IKnowledgeBaseItem} from './annotations-library-page';
 import {ISuperdesk} from 'superdesk-api';
+import {IKnowledgeBaseItem} from './interfaces';
 
 interface IProps {
     item: IKnowledgeBaseItem;

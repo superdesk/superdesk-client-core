@@ -1,21 +1,8 @@
 import React from 'react';
 import classNames from 'classnames';
+import {ITabsProps, ITabsState, INavTabsComponent, ITab} from 'superdesk-api';
 
-interface ITab {
-    label: string;
-    render(): JSX.Element;
-}
-
-interface IProps {
-    tabs: Array<ITab>;
-    active: number;
-}
-
-interface IState {
-    tab: ITab;
-}
-
-export class NavTabs extends React.Component<IProps, IState> {
+export class NavTabs extends React.Component<ITabsProps, ITabsState> implements INavTabsComponent {
     static propTypes: any;
     static defaultProps: any;
 
@@ -31,7 +18,7 @@ export class NavTabs extends React.Component<IProps, IState> {
         this.setState({tab: this.props.tabs[index]});
     }
 
-    selectTab(event, tab) {
+    selectTab(event: React.MouseEvent, tab: ITab) {
         event.stopPropagation();
         this.setState({tab: tab});
     }

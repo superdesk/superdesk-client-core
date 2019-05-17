@@ -14,15 +14,6 @@ import {Editor3Standalone} from 'core/editor3/react';
 import {AnnotationInputDefault} from './AnnotationInputDefault';
 import {getContentStateFromHtml} from 'core/editor3/html/from-html';
 
-// used in superdesk-fi
-export interface IPropsAnnotationInputComponent {
-    annotationText: string;
-    annotationInputComponent: React.ReactElement<any>;
-    annotationTypeSelect: JSX.Element;
-    onCancel(): void;
-    onApplyAnnotation(html: string): void;
-}
-
 interface IProps {
     editorState: EditorState;
     extensionPoints: any;

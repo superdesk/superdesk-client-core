@@ -11,6 +11,9 @@ import {
 } from './ui/components/generic-form/interfaces/form';
 import {UserHtmlSingleLine} from './helpers/UserHtmlSingleLine';
 import {Row, Item, Column} from './ui/components/List';
+import {connectCrudManager} from './helpers/CrudManager';
+import {NavTabs} from './ui/components/nav-tabs';
+import {generateFilterForServer} from './ui/components/generic-form/generate-filter-for-server';
 
 export function getSuperdeskApiImplementation(
     requestingExtensionId: string,
@@ -34,6 +37,9 @@ export function getSuperdeskApiImplementation(
             isIFormField,
             FormFieldType,
             UserHtmlSingleLine,
+            connectCrudManager,
+            NavTabs,
+            generateFilterForServer,
         },
         ui: {
             alert: (message: string) => modal.alert({bodyText: message}),
