@@ -1,6 +1,6 @@
 import {ISuperdesk, IExtension} from 'superdesk-api';
-import {AnnotationsLibraryPage} from './annotations-library-page';
 import {getAnnotationInputWithKnowledgeBase} from './AnnotationInputWithKnowledgeBase';
+import { getAnnotationsLibraryPage } from './annotations-library-page';
 
 var extension: IExtension = {
     activate: (superdesk: ISuperdesk) => {
@@ -16,17 +16,11 @@ var extension: IExtension = {
                         },
                     ],
                 },
-                sideMenuItems: [
-                    {
-                        label: gettext('Annotations library'),
-                        url: 'annotations-library',
-                    },
-                ],
                 pages: [
                     {
                         title: gettext('Annotations library'),
                         url: '/annotations-library',
-                        component: AnnotationsLibraryPage,
+                        component: getAnnotationsLibraryPage(superdesk),
                     },
                 ],
             },

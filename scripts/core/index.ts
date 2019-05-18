@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _, { flatMap } from 'lodash';
 
 import 'core/global-fixes';
 
@@ -83,25 +83,16 @@ core.constant('lodash', _);
 
 const styles = 'display: flex; height: 100%;';
 
+let _superdesk;
+
 core.component('sdExtensionPage', reactToAngular1(ExtensionPage, [], [], styles));
-core.config(['$routeProvider', ($routeProvider) => {
+core.config(['$routeProvider', 'superdeskProvider', ($routeProvider, superdesk) => {
     $routeProvider.when('/', {
         redirectTo: appConfig.defaultRoute,
     });
 
-    for (const extensionId in extensions) {
-        const {extension} = extensions[extensionId];
-
-        if (extension.contribute != null && extension.contribute.pages != null) {
-            extension.contribute.pages.forEach((page) => {
-                $routeProvider.when(page.url, {
-                    controller: angular.noop,
-                    template: '<sd-extension-page></<sd-extension-page>',
-                });
-            });
-        }
-    }
-
+    // added to be able to register activities which didn't work using superdesk reference injected in `core.run`.
+    _superdesk = superdesk;
 }]);
 
 // due to angular 1.6
@@ -120,17 +111,38 @@ core.run(['$document', ($document) => {
 }]);
 
 core.run(['superdesk', 'modal', (superdesk, modal) => {
-    for (const extensionId in extensions) {
-        const extensionObject = extensions[extensionId];
+    Promise.all(
+        Object.keys(extensions).map((extensionId) => {
+            const extensionObject = extensions[extensionId];
 
-        const superdeskApi = getSuperdeskApiImplementation(extensionId, extensions, modal);
+            const superdeskApi = getSuperdeskApiImplementation(extensionId, extensions, modal);
 
-        extensionObject.apiInstance = superdeskApi;
+            return extensionObject.extension.activate(superdeskApi).then((activationResult) => {
+                extensionObject.activationResult = activationResult;
 
-        extensionObject.extension.activate(superdeskApi).then((activationResult) => {
-            extensionObject.activationResult = activationResult;
+                return activationResult;
+            });
+        }),
+    ).then((activationResults) => {
+        const pages = flatMap(activationResults, (activationResult) =>
+            activationResult.contributions != null
+            && activationResult.contributions.pages != null
+                ? activationResult.contributions.pages
+                : [],
+        );
+
+        pages.forEach((page) => {
+            _superdesk
+                .activity(page.url, {
+                    label: page.title,
+                    priority: 100,
+                    category: superdesk.MENU_MAIN,
+                    adminTools: false,
+                    controller: angular.noop,
+                    template: '<sd-extension-page></<sd-extension-page>',
+                });
         });
-    }
+    });
 }]);
 
 export default core;

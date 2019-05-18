@@ -1,89 +1,91 @@
 import * as React from 'react';
 import {
-    IPageComponentProps,
     IFormGroup,
-    IGenericListPageComponent
+    IGenericListPageComponent,
+    ISuperdesk
 } from 'superdesk-api';
 import {IKnowledgeBaseItem} from './interfaces';
 import {getFields} from './GetFields';
 
-export class AnnotationsLibraryPage extends React.Component<IPageComponentProps> {
-    render() {
-        const {gettext} = this.props.superdesk.localization;
-        const {
-            getGenericListPageComponent,
-            getFormFieldPreviewComponent,
-            ListItem,
-            ListItemColumn,
-            ListItemActionsMenu,
-        } = this.props.superdesk.helpers;
-        const AnnotationsLibraryPageComponent = getGenericListPageComponent<IKnowledgeBaseItem>('concept_items');
+export function getAnnotationsLibraryPage(superdesk: ISuperdesk) {
+    return class AnnotationsLibraryPage extends React.Component {
+        render() {
+            const {gettext} = superdesk.localization;
+            const {
+                getGenericListPageComponent,
+                getFormFieldPreviewComponent,
+                ListItem,
+                ListItemColumn,
+                ListItemActionsMenu,
+            } = superdesk.helpers;
+            const AnnotationsLibraryPageComponent = getGenericListPageComponent<IKnowledgeBaseItem>('concept_items');
 
-        const {
-            nameField,
-            languageField,
-            definitionField,
-        } = getFields(this.props.superdesk);
-
-        const formConfig: IFormGroup = {
-            direction: 'vertical',
-            type: 'inline',
-            form: [
+            const {
                 nameField,
                 languageField,
                 definitionField,
-            ],
-        };
+            } = getFields(superdesk);
 
-        const renderRow = (
-            key: string,
-            item: IKnowledgeBaseItem,
-            page: IGenericListPageComponent<IKnowledgeBaseItem>,
-        ) => {
+            const formConfig: IFormGroup = {
+                direction: 'vertical',
+                type: 'inline',
+                form: [
+                    nameField,
+                    languageField,
+                    definitionField,
+                ],
+            };
+
+            const renderRow = (
+                key: string,
+                item: IKnowledgeBaseItem,
+                page: IGenericListPageComponent<IKnowledgeBaseItem>,
+            ) => {
+                return (
+                    <ListItem key={key} onClick={() => page.openPreview(item._id)}>
+                        <ListItemColumn>
+                            {getFormFieldPreviewComponent(item, nameField)}
+                        </ListItemColumn>
+                        <ListItemColumn>
+                            {getFormFieldPreviewComponent(item, languageField)}
+                        </ListItemColumn>
+                        <ListItemColumn ellipsisAndGrow noBorder>
+                            {getFormFieldPreviewComponent(item, definitionField)}
+                        </ListItemColumn>
+                        <ListItemActionsMenu>
+                            <div style={{display: 'flex'}}>
+                                <button
+                                    onClick={(e) =>  {
+                                        e.stopPropagation();
+                                        page.startEditing(item._id);
+                                    }}
+                                    title={gettext('Edit')}
+                                >
+                                    <i className="icon-pencil" />
+                                </button>
+
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        page.deleteItem(item);
+                                    }}
+                                    title={gettext('Remove')}
+                                >
+                                    <i className="icon-trash" />
+                                </button>
+                            </div>
+                        </ListItemActionsMenu>
+                    </ListItem>
+                );
+            };
+
             return (
-                <ListItem key={key} onClick={() => page.openPreview(item._id)}>
-                    <ListItemColumn>
-                        {getFormFieldPreviewComponent(item, nameField)}
-                    </ListItemColumn>
-                    <ListItemColumn>
-                        {getFormFieldPreviewComponent(item, languageField)}
-                    </ListItemColumn>
-                    <ListItemColumn ellipsisAndGrow noBorder>
-                        {getFormFieldPreviewComponent(item, definitionField)}
-                    </ListItemColumn>
-                    <ListItemActionsMenu>
-                        <div style={{display: 'flex'}}>
-                            <button
-                                onClick={(e) =>  {
-                                    e.stopPropagation();
-                                    page.startEditing(item._id);
-                                }}
-                                title={gettext('Edit')}
-                            >
-                                <i className="icon-pencil" />
-                            </button>
-
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    page.deleteItem(item);
-                                }}
-                                title={gettext('Remove')}
-                            >
-                                <i className="icon-trash" />
-                            </button>
-                        </div>
-                    </ListItemActionsMenu>
-                </ListItem>
+                <AnnotationsLibraryPageComponent
+                    formConfig={formConfig}
+                    renderRow={renderRow}
+                    newItemTemplate={{cpnat_type: 'cpnat:abstract'}}
+                />
             );
-        };
-
-        return (
-            <AnnotationsLibraryPageComponent
-                formConfig={formConfig}
-                renderRow={renderRow}
-                newItemTemplate={{cpnat_type: 'cpnat:abstract'}}
-            />
-        );
-    }
+        }
+    };
 }

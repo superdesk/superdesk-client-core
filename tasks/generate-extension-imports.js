@@ -40,7 +40,7 @@ directories
         importStatements.push(`import * as ${extensionName} from '../extensions/${extensionName}/${manifestFile.main}';`);
 
         insertIntoObjectStatements.push(
-            `extensions['${extensionName}'] = {extension: ${extensionName}.default, manifest: ${JSON.stringify(manifestFile)}}`
+            `extensions['${extensionName}'] = {extension: ${extensionName}.default, manifest: ${JSON.stringify(manifestFile)}, activationResult: {}}`
         );
     });
 

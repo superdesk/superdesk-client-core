@@ -7,15 +7,17 @@ export class ExtensionPage extends React.Component {
         const currentUrl = window.location.hash.slice(1, window.location.hash.length);
 
         const extensionObject = Object.values(extensions).find(
-            ({extension}) =>
-                extension.contribute != null
-                && extension.contribute.pages.find(({url}) => url === currentUrl) != null,
+            ({activationResult}) =>
+                activationResult.contributions != null
+                && activationResult.contributions.pages.find(({url}) => url === currentUrl) != null,
         );
 
         if (extensionObject != null) {
-            const Component = extensionObject.extension.contribute.pages.find(({url}) => url === currentUrl).component;
+            const Component = extensionObject.activationResult.contributions.pages.find(
+                ({url}) => url === currentUrl,
+            ).component;
 
-            return <Component superdesk={extensionObject.apiInstance} />;
+            return <Component />;
         } else {
             logger.error(new Error(`Could not find a component for extension page. URL: ${currentUrl}`));
             return null;
