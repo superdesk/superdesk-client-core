@@ -72,6 +72,7 @@ export interface IEditorStore {
     invisibles: any;
     svc: any;
     abbreviations: any;
+    loading: boolean;
 }
 
 export const getCustomDecorator = (language?: string, spellcheckWarnings: ISpellcheckWarningsByBlock = null) => {

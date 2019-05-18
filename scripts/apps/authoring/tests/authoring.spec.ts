@@ -95,7 +95,7 @@ describe('authoring', () => {
             expect($location.path(), '/authoring/' + $scope.item._id);
         }));
 
-    it('can autosave and save an item', inject((api, $q, $timeout, $rootScope) => {
+    it('can autosave and save an item', (done) => inject((api, $q, $timeout, $rootScope) => {
         var $scope = startAuthoring({guid: GUID, _id: GUID, task: 'desk:1', _locked: true, _editable: true},
                 'edit'),
             headline = 'test headline';
@@ -104,21 +104,21 @@ describe('authoring', () => {
         expect($scope.item.guid).toBe(GUID);
         spyOn(api, 'save').and.returnValue($q.when({headline: 'foo'}));
 
-        // edit
         $scope.item.headline = headline;
-        $scope.autosave($scope.item);
-        expect($scope.dirty).toBe(true);
+        $scope.autosave($scope.item).then(() => {
+            expect($scope.dirty).toBe(true);
 
-        // autosave
-        $timeout.flush(5000);
-        expect(api.save).toHaveBeenCalled();
-        expect($scope.item.headline).toBe(headline);
+            expect(api.save).toHaveBeenCalled();
+            expect($scope.item.headline).toBe(headline);
 
-        // save
-        $scope.save();
-        $rootScope.$digest();
-        expect($scope.dirty).toBe(false);
-        expect(api.save).toHaveBeenCalled();
+            $scope.save();
+            $rootScope.$digest();
+            expect($scope.dirty).toBe(false);
+            expect(api.save).toHaveBeenCalled();
+        }).finally(done);
+
+        // it must flush timeout only when the applyMiddleware promise is resolved
+        setTimeout(() => $timeout.flush(5000), 10);
     }));
 
     it('can use a previously created autosave', inject(() => {
@@ -243,7 +243,7 @@ describe('authoring', () => {
         }));
 
     it('confirm the associated media called if rewrite_of but no associated media on edited item',
-        inject((api, $q, $rootScope, config, confirm, authoring) => {
+        (done) => inject((api, $q, $rootScope, config, confirm, authoring) => {
             let item = {
                 _id: 'test',
                 headline: 'headline',
@@ -279,8 +279,12 @@ describe('authoring', () => {
             expect(confirm.confirmFeatureMedia).toHaveBeenCalledWith(rewriteOf);
             defered.resolve(rewriteOf);
             $rootScope.$digest();
-            expect(authoring.autosave).toHaveBeenCalled();
-            expect(authoring.publish).not.toHaveBeenCalled();
+
+            setTimeout(() => { // let applyMiddleware promise resolve
+                expect(authoring.autosave).toHaveBeenCalled();
+                expect(authoring.publish).not.toHaveBeenCalled();
+                done();
+            }, 10);
         }));
 
     it('confirm the associated media but do not use the associated media',

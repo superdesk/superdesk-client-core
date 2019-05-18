@@ -38,6 +38,8 @@ const editor3 = (state: IEditorStore, action) => {
         return moveBlock(state, action.payload);
     case 'EDITOR_APPLY_EMBED':
         return applyEmbed(state, action.payload);
+    case 'EDITOR_LOADING':
+        return setLoading(state, action.payload);
     default:
         return state;
     }
@@ -278,8 +280,7 @@ const onTab = (state, e) => {
  * @description Handles the dragdrop event over the editor.
  */
 const dragDrop = (state, {data, blockKey}) => {
-    const media = JSON.parse(data);
-    const editorState = addMedia(state.editorState, media, blockKey);
+    const editorState = addMedia(state.editorState, data, blockKey);
 
     return {
         ...onChange(state, editorState),
@@ -433,3 +434,5 @@ const applyEmbed = (state, {code, targetBlockKey}) => {
 };
 
 export default editor3;
+
+const setLoading = (state, loading) => ({...state, loading});

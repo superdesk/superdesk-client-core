@@ -35,6 +35,7 @@ const mapStateToProps = (state) => ({
     spellchecking: state.spellchecking,
     invisibles: state.invisibles,
     svc: state.svc,
+    loading: state.loading,
 });
 
 const mapDispatchToProps = (dispatch) => ({
