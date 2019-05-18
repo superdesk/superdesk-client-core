@@ -16,26 +16,21 @@ var extension: IExtension = {
                         },
                     ],
                 },
+                sideMenuItems: [
+                    {
+                        label: gettext('Annotations library'),
+                        url: 'annotations-library',
+                    },
+                ],
+                pages: [
+                    {
+                        title: gettext('Annotations library'),
+                        url: '/annotations-library',
+                        component: AnnotationsLibraryPage,
+                    },
+                ],
             },
         });
-    },
-    contribute: {
-        sideMenuItems: (superdesk: ISuperdesk) => new Promise((resolve) => {
-            const {gettext} = superdesk.localization;
-
-            resolve([
-                {
-                    label: gettext('Annotations library'),
-                    url: 'annotations-library',
-                },
-            ]);
-        }),
-        pages: [
-            {
-                url: '/annotations-library',
-                component: AnnotationsLibraryPage,
-            },
-        ],
     },
 };
 

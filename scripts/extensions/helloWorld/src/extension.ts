@@ -6,7 +6,7 @@ const extension: IExtension = {
 
         superdesk.ui.alert(gettext('Hello world'));
 
-        return Promise.resolve();
+        return Promise.resolve({});
     },
 };
 

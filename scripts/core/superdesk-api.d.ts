@@ -6,15 +6,13 @@ declare module 'superdesk-api' {
             editor3?: {
                 annotationInputTabs?: Array<IEditor3AnnotationInputTab>;
             }
+            sideMenuItems?: Array<ISideMenuItem>;
+            pages?: Array<IPage>;
         }
     }
 
     export type IExtension = DeepReadonly<{
         activate: (superdesk: ISuperdesk) => Promise<IExtensionActivationResult>;
-        contribute?: {
-            sideMenuItems?: (superdesk: ISuperdesk) => Promise<Array<ISideMenuItem>>;
-            pages?: Array<IPage>;
-        };
     }>;
 
     export type IExtensionObject = {
@@ -42,6 +40,7 @@ declare module 'superdesk-api' {
     // PAGE
 
     export type IPage = DeepReadonly<{
+        title: string;
         url: string;
         component: React.ComponentClass<IPageComponentProps>;
     }>;
