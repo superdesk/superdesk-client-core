@@ -13,6 +13,7 @@ var extension: IExtension = {
                         {
                             label: gettext('Annotations library'),
                             component: getAnnotationInputWithKnowledgeBase(superdesk),
+                            selectedByDefault: () => Promise.resolve(true),
                         },
                     ],
                 },

@@ -206,6 +206,7 @@ declare module 'superdesk-api' {
 
     export interface IEditor3AnnotationInputTab {
         label: string;
+        selectedByDefault(): Promise<boolean>;
         component: React.ComponentType<IPropsAnnotationInputComponent>;
     }
 

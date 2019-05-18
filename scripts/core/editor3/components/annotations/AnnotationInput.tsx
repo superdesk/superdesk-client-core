@@ -14,6 +14,7 @@ import {Editor3Standalone} from 'core/editor3/react';
 import {getContentStateFromHtml} from 'core/editor3/html/from-html';
 import {extensions} from 'core/extension-imports.generated';
 import {flatMap} from 'lodash';
+import {IEditor3AnnotationInputTab} from 'superdesk-api';
 
 interface IProps {
     editorState: EditorState;
@@ -34,6 +35,8 @@ interface IState {
     body: any;
     type: any;
     isEmpty: boolean;
+    loaded: boolean;
+    activeTabInitial?: number;
 }
 
 /**
@@ -47,6 +50,7 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
     static propTypes: any;
     static defaultProps: any;
     tabsRef: NavTabs;
+    annotationInputTabsFromExtensions: Array<IEditor3AnnotationInputTab>;
 
     constructor(props) {
         super(props);
@@ -68,12 +72,23 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
             body: body != null ? body : convertToRaw(ContentState.createFromText('')),
             type: type,
             isEmpty: isEmpty,
+            loaded: false,
         };
 
         this.onSubmit = this.onSubmit.bind(this);
         this.onChange = this.onChange.bind(this);
         this.onSelect = this.onSelect.bind(this);
         this.deleteAnnotation = this.deleteAnnotation.bind(this);
+
+        this.annotationInputTabsFromExtensions = flatMap(
+            Object.values(extensions).map(({activationResult}) => activationResult),
+            (activationResult) =>
+                activationResult.contributions != null
+                && activationResult.contributions.editor3 != null
+                && activationResult.contributions.editor3.annotationInputTabs != null
+                    ? activationResult.contributions.editor3.annotationInputTabs
+                    : [],
+        );
     }
 
     /**
@@ -135,6 +150,24 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
 
     componentDidMount() {
         $('.annotation-input textarea').focus();
+
+        Promise.all(
+            this.annotationInputTabsFromExtensions.map(({selectedByDefault}) => selectedByDefault()),
+        ).then((result) => {
+            let active;
+
+            for (let i = 0; i < result.length; i++) {
+                if (result[i] === true) {
+                    active = i + 1;
+                    break;
+                }
+            }
+
+            this.setState({
+                loaded: true,
+                activeTabInitial: active,
+            });
+        });
     }
 
     deleteAnnotation() {
@@ -152,6 +185,10 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
     }
 
     render() {
+        if (this.state.loaded !== true) {
+            return null;
+        }
+
         const {data, language, annotationTypes} = this.props;
         const _hidePopups = this.props.hidePopups;
         const {annotation} = data;
@@ -206,21 +243,11 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
             </div>
         );
 
-        const annotationInputTabsFromExtensions = flatMap(
-            Object.values(extensions).map(({activationResult}) => activationResult),
-            (activationResult) =>
-                activationResult.contributions != null
-                && activationResult.contributions.editor3 != null
-                && activationResult.contributions.editor3.annotationInputTabs != null
-                    ? activationResult.contributions.editor3.annotationInputTabs
-                    : [],
-        );
-
         return (
             <div className="annotation-input">
                 <Dropdown open={true} scrollable={false}>
                     {
-                        annotationInputTabsFromExtensions.length > 0
+                        this.annotationInputTabsFromExtensions.length > 0
                             ? (
                                 <NavTabs
                                     tabs={[
@@ -228,7 +255,7 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
                                             label: gettext('New annotation'),
                                             render: () => annotationInputComponent,
                                         },
-                                        ...annotationInputTabsFromExtensions.map((tab, index) => {
+                                        ...this.annotationInputTabsFromExtensions.map((tab) => {
                                             const Component = tab.component;
 
                                             return {
@@ -250,7 +277,7 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
                                             };
                                         }),
                                     ]}
-                                    active={0}
+                                    active={this.state.activeTabInitial}
                                     ref={(r) => {
                                         this.tabsRef = r;
                                     }}
