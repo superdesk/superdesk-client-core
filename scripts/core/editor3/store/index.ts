@@ -146,6 +146,7 @@ export default function createEditorStore(props: IProps, spellcheck, isReact = f
         invisibles: false,
         svc: props.svc,
         abbreviations: {},
+        loading: false,
     }, applyMiddleware(...middlewares));
 
     if (spellcheck != null) {
