@@ -127,7 +127,9 @@ core.run(['superdesk', 'modal', (superdesk, modal) => {
 
         extensionObject.apiInstance = superdeskApi;
 
-        extensionObject.extension.activate(superdeskApi);
+        extensionObject.extension.activate(superdeskApi).then((activationResult) => {
+            extensionObject.activationResult = activationResult;
+        });
     }
 }]);
 

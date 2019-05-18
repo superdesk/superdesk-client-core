@@ -1,8 +1,24 @@
 import {ISuperdesk, IExtension} from 'superdesk-api';
 import {AnnotationsLibraryPage} from './annotations-library-page';
+import {getAnnotationInputWithKnowledgeBase} from './AnnotationInputWithKnowledgeBase';
 
 var extension: IExtension = {
-    activate: () => Promise.resolve(),
+    activate: (superdesk: ISuperdesk) => {
+        const {gettext} = superdesk.localization;
+
+        return Promise.resolve({
+            contributions: {
+                editor3: {
+                    annotationInputTabs: [
+                        {
+                            label: gettext('Annotations library'),
+                            component: getAnnotationInputWithKnowledgeBase(superdesk),
+                        },
+                    ],
+                },
+            },
+        });
+    },
     contribute: {
         sideMenuItems: (superdesk: ISuperdesk) => new Promise((resolve) => {
             const {gettext} = superdesk.localization;

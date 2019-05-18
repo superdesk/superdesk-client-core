@@ -1,8 +1,16 @@
 declare module 'superdesk-api' {
     // EXTENSIONS
 
+    export interface IExtensionActivationResult {
+        contributions?: {
+            editor3?: {
+                annotationInputTabs?: Array<IEditor3AnnotationInputTab>;
+            }
+        }
+    }
+
     export type IExtension = DeepReadonly<{
-        activate: (superdesk: ISuperdesk) => Promise<void>;
+        activate: (superdesk: ISuperdesk) => Promise<IExtensionActivationResult>;
         contribute?: {
             sideMenuItems?: (superdesk: ISuperdesk) => Promise<Array<ISideMenuItem>>;
             pages?: Array<IPage>;
@@ -19,6 +27,7 @@ declare module 'superdesk-api' {
             };
         };
         apiInstance?: ISuperdesk;
+        activationResult: IExtensionActivationResult;
     };
 
     export type IExtensions = {[key: string]: IExtensionObject};
@@ -223,11 +232,15 @@ declare module 'superdesk-api' {
 
 
 
-    // EDITOR3 ANNOTATIONS
+    // EDITOR3
+
+    export interface IEditor3AnnotationInputTab {
+        label: string;
+        component: React.ComponentType<IPropsAnnotationInputComponent>;
+    }
 
     export interface IPropsAnnotationInputComponent {
         annotationText: string;
-        annotationInputComponent: React.ReactElement<any>;
         annotationTypeSelect: JSX.Element;
         onCancel(): void;
         onApplyAnnotation(html: string): void;
