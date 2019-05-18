@@ -12,7 +12,6 @@ import {
 import {UserHtmlSingleLine} from './helpers/UserHtmlSingleLine';
 import {Row, Item, Column} from './ui/components/List';
 import {connectCrudManager} from './helpers/CrudManager';
-import {NavTabs} from './ui/components/nav-tabs';
 import {generateFilterForServer} from './ui/components/generic-form/generate-filter-for-server';
 
 export function getSuperdeskApiImplementation(
@@ -38,7 +37,6 @@ export function getSuperdeskApiImplementation(
             FormFieldType,
             UserHtmlSingleLine,
             connectCrudManager,
-            NavTabs,
             generateFilterForServer,
         },
         ui: {

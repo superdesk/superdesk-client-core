@@ -1,8 +1,21 @@
 import React from 'react';
 import classNames from 'classnames';
-import {ITabsProps, ITabsState, INavTabsComponent, ITab} from 'superdesk-api';
 
-export class NavTabs extends React.Component<ITabsProps, ITabsState> implements INavTabsComponent {
+interface ITab {
+    label: string;
+    render(): JSX.Element;
+}
+
+interface ITabsProps {
+    tabs: Array<ITab>;
+    active: number;
+}
+
+interface ITabsState {
+    tab: ITab;
+}
+
+export class NavTabs extends React.Component<ITabsProps, ITabsState> {
     static propTypes: any;
     static defaultProps: any;
 

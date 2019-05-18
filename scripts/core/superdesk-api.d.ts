@@ -202,29 +202,6 @@ declare module 'superdesk-api' {
 
 
 
-    // UI TABS
-
-    export interface INavTabsComponent extends React.Component<ITabsProps, ITabsState> {
-        selectTabByIndex(index: number): void;
-        selectTab(event: React.MouseEvent, tab: ITab): void;
-    }
-
-    export interface ITab {
-        label: string;
-        render(): JSX.Element;
-    }
-    
-    export interface ITabsProps {
-        tabs: Array<ITab>;
-        active: number;
-    }
-    
-    export interface ITabsState {
-        tab: ITab;
-    }
-
-
-
     // EDITOR3
 
     export interface IEditor3AnnotationInputTab {
@@ -274,7 +251,6 @@ declare module 'superdesk-api' {
                 Row: React.ComponentType;
                 Column: React.ComponentType<{grow: boolean}>;
             }
-            NavTabs: typeof INavTabsComponent;
             generateFilterForServer(type: FormFieldType, value: any): any;
         };
         localization: {
