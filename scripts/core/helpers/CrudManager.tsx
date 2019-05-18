@@ -51,7 +51,7 @@ export function connectCrudManager<Props, Entity extends IBaseRestApiResponse>(
 
         read(
             page: number,
-            sortOption: ISortOption = {field: 'name', direction: 'ascending'},
+            sortOption: ISortOption,
             filterValues: ICrudManagerFilters = {},
             formatFiltersForServer?: (filters: ICrudManagerFilters) => ICrudManagerFilters,
         ): Promise<IRestApiResponse<Entity>> {
