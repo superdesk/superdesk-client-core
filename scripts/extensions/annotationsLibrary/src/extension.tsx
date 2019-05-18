@@ -1,6 +1,21 @@
-import {ISuperdesk, IExtension} from 'superdesk-api';
+import {ISuperdesk, IExtension, IRestApiResponse} from 'superdesk-api';
 import {getAnnotationInputWithKnowledgeBase} from './AnnotationInputWithKnowledgeBase';
-import { getAnnotationsLibraryPage } from './annotations-library-page';
+import {getAnnotationsLibraryPage} from './annotations-library-page';
+import {getFields} from './GetFields';
+import {IKnowledgeBaseItem} from './interfaces';
+
+function annotationFromLibraryTabSelectedByDefault(superdesk: ISuperdesk, annotationText: string) {
+    const {dataApi} = superdesk;
+    const {nameField} = getFields(superdesk);
+    const {generateFilterForServer} = superdesk.helpers;
+
+    return dataApi.query<IKnowledgeBaseItem>(
+        'concept_items',
+        1,
+        undefined,
+        {name: generateFilterForServer(nameField.type, annotationText)},
+    ).then((res: IRestApiResponse<IKnowledgeBaseItem>) => res._items.length > 0);
+}
 
 var extension: IExtension = {
     activate: (superdesk: ISuperdesk) => {
@@ -13,7 +28,8 @@ var extension: IExtension = {
                         {
                             label: gettext('Annotations library'),
                             component: getAnnotationInputWithKnowledgeBase(superdesk),
-                            selectedByDefault: () => Promise.resolve(true),
+                            selectedByDefault: (annotationText: string) =>
+                                annotationFromLibraryTabSelectedByDefault(superdesk, annotationText),
                         },
                     ],
                 },

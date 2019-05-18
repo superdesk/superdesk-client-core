@@ -11,7 +11,7 @@ import {
 } from './ui/components/generic-form/interfaces/form';
 import {UserHtmlSingleLine} from './helpers/UserHtmlSingleLine';
 import {Row, Item, Column} from './ui/components/List';
-import {connectCrudManager} from './helpers/CrudManager';
+import {connectCrudManager, dataApi} from './helpers/CrudManager';
 import {generateFilterForServer} from './ui/components/generic-form/generate-filter-for-server';
 
 export function getSuperdeskApiImplementation(
@@ -20,6 +20,7 @@ export function getSuperdeskApiImplementation(
     modal,
 ): ISuperdesk {
     return {
+        dataApi: dataApi,
         helpers: {
             getGenericListPageComponent,
             getFormFieldPreviewComponent,

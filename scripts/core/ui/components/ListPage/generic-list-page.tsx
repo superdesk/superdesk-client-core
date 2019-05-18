@@ -246,7 +246,7 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
         }
     }
     componentDidMount() {
-        this.props.items.read(1);
+        this.props.items.read(1, this.props.defaultSortOption);
     }
     render() {
         if (this.props.items._items == null) {

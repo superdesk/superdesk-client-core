@@ -81,6 +81,7 @@ export function getAnnotationsLibraryPage(superdesk: ISuperdesk) {
 
             return (
                 <AnnotationsLibraryPageComponent
+                    defaultSortOption={{field: 'name', direction: 'ascending'}}
                     formConfig={formConfig}
                     renderRow={renderRow}
                     newItemTemplate={{cpnat_type: 'cpnat:abstract'}}

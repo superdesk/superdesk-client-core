@@ -23,7 +23,7 @@ export function getAnnotationInputWithKnowledgeBase(superdesk: ISuperdesk) {
 
             this.props.conceptItems.read(
                 1,
-                undefined,
+                {field: 'name', direction: 'ascending'},
                 {name: generateFilterForServer(nameField.type, this.props.annotationText)},
             );
         }

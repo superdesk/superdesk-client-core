@@ -80,6 +80,7 @@ declare module 'superdesk-api' {
 
     export interface IPropsGenericForm<T extends IBaseRestApiResponse> {
         formConfig: IFormGroup;
+        defaultSortOption: ISortOption;
         renderRow(key: string, item: T, page: GenericListPageComponent<T>): JSX.Element;
     
         // Allows creating an item with required fields which aren't editable from the GUI
@@ -149,10 +150,7 @@ declare module 'superdesk-api' {
     export interface ICrudManagerMethods<Entity extends IBaseRestApiResponse> {
         read(
             page: number,
-            sort?: {
-                field: string;
-                direction: 'ascending' | 'descending';
-            },
+            sort: ISortOption,
             filterValues?: ICrudManagerFilters,
             formatFiltersForServer?: (filters: ICrudManagerFilters) => ICrudManagerFilters,
         ): Promise<IRestApiResponse<Entity>>;
@@ -206,7 +204,7 @@ declare module 'superdesk-api' {
 
     export interface IEditor3AnnotationInputTab {
         label: string;
-        selectedByDefault(): Promise<boolean>;
+        selectedByDefault(annotationText: string): Promise<boolean>;
         component: React.ComponentType<IPropsAnnotationInputComponent>;
     }
 
@@ -219,9 +217,27 @@ declare module 'superdesk-api' {
 
 
 
-    // EXPORTED API
+    // DATA API
+
+    interface IDataApi {
+        create<T>(endpoint: string, item: T): Promise<T>;
+        query<T extends IBaseRestApiResponse>(
+            endpoint: string,
+            page: number,
+            sortOption: ISortOption,
+            filterValues: ICrudManagerFilters = {},
+            formatFiltersForServer?: (filters: ICrudManagerFilters) => ICrudManagerFilters,
+        ): Promise<IRestApiResponse<T>>;
+        patch<T>(endpoint, item1: T, item2: T): Promise<T>;
+        delete<T>(endpoint, item1: T): Promise<void>;
+    }
+
+
+
+    // APPLICATION API
 
     export type ISuperdesk = DeepReadonly<{
+        dataApi: IDataApi,
         ui: {
             alert(message: string): Promise<void>;
             confirm(message: string): Promise<boolean>;

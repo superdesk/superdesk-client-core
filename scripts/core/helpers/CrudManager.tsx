@@ -3,6 +3,7 @@
 import React from 'react';
 import {generate} from 'json-merge-patch';
 import {connectServices} from './ReactRenderAsync';
+import ng from 'core/services/ng';
 import {
     IBaseRestApiResponse,
     ICrudManagerState,
@@ -10,7 +11,41 @@ import {
     ISortOption,
     ICrudManagerFilters,
     IRestApiResponse,
+    IDataApi,
 } from 'superdesk-api';
+
+export const dataApi: IDataApi = {
+    create: (endpoint, item) => ng.getService('api').then((api) => api(endpoint).save(item)),
+    query: (
+        endpoint: string,
+        page: number,
+        sortOption: ISortOption,
+        filterValues: ICrudManagerFilters = {},
+        formatFiltersForServer?: (filters: ICrudManagerFilters) => ICrudManagerFilters,
+    ) => ng.getService('api').then((api) => {
+        let query = {
+            page: page,
+        };
+
+        if (sortOption != null) {
+            query['sort'] = (sortOption.direction === 'descending' ? '-' : '') + sortOption.field;
+        }
+
+        if (Object.keys(filterValues).length > 0) {
+            query['where'] = typeof formatFiltersForServer === 'function'
+                ? formatFiltersForServer(filterValues)
+                : filterValues;
+        }
+
+        return api(endpoint).query(query);
+    }),
+    patch: (endpoint, item1, item2) => ng.getService('api').then((api) => {
+        const patch = generate(item1, item2);
+
+        return api(endpoint).save(item1, patch);
+    }),
+    delete: (endpoint, item) => ng.getService('api').then((api) => api(endpoint).remove(item)),
+};
 
 export function connectCrudManager<Props, Entity extends IBaseRestApiResponse>(
     WrappedComponent: React.ComponentType<Props>,
@@ -46,7 +81,7 @@ export function connectCrudManager<Props, Entity extends IBaseRestApiResponse>(
 
         create(item: Entity): Promise<Entity> {
             // creating an item impacts sorting/filtering/pagination. Data is re-fetched to correct it.
-            return this.api.save(item).then((res) => this.refresh().then(() => res));
+            return dataApi.create<Entity>(endpoint, item).then((res) => this.refresh().then(() => res));
         }
 
         read(
@@ -55,21 +90,13 @@ export function connectCrudManager<Props, Entity extends IBaseRestApiResponse>(
             filterValues: ICrudManagerFilters = {},
             formatFiltersForServer?: (filters: ICrudManagerFilters) => ICrudManagerFilters,
         ): Promise<IRestApiResponse<Entity>> {
-            let query = {
-                page: page,
-            };
-
-            if (sortOption != null) {
-                query['sort'] = (sortOption.direction === 'descending' ? '-' : '') + sortOption.field;
-            }
-
-            if (Object.keys(filterValues).length > 0) {
-                query['where'] = typeof formatFiltersForServer === 'function'
-                    ? formatFiltersForServer(filterValues)
-                    : filterValues;
-            }
-
-            return this.api.query(query)
+            return dataApi.query(
+                endpoint,
+                page,
+                sortOption,
+                filterValues,
+                formatFiltersForServer,
+            )
                 .then((res: IRestApiResponse<Entity>) => new Promise((resolve) => {
                     this.setState({
                         ...res,
@@ -83,16 +110,15 @@ export function connectCrudManager<Props, Entity extends IBaseRestApiResponse>(
 
         update(nextItem: Entity): Promise<Entity> {
             const currentItem = this.state._items.find(({_id}) => _id === nextItem._id);
-            const patch = generate(currentItem, nextItem);
 
             // updating an item impacts sorting/filtering/pagination. Data is re-fetched to correct it.
-            return this.api.save(currentItem, patch)
+            return dataApi.patch<Entity>(endpoint, currentItem, nextItem)
                 .then((res) => this.refresh().then(() => res));
         }
 
         delete(item: Entity): Promise<void> {
             // deleting an item impacts sorting/filtering/pagination. Data is re-fetched to correct it.
-            return this.api.remove(item).then(() => this.refresh().then(() => undefined));
+            return dataApi.delete(endpoint, item).then(() => this.refresh().then(() => undefined));
         }
 
         refresh(): Promise<IRestApiResponse<Entity>> {

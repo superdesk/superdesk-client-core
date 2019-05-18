@@ -79,6 +79,7 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
         this.onChange = this.onChange.bind(this);
         this.onSelect = this.onSelect.bind(this);
         this.deleteAnnotation = this.deleteAnnotation.bind(this);
+        this.getSelectionText = this.getSelectionText.bind(this);
 
         this.annotationInputTabsFromExtensions = flatMap(
             Object.values(extensions).map(({activationResult}) => activationResult),
@@ -151,8 +152,10 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
     componentDidMount() {
         $('.annotation-input textarea').focus();
 
+        const text = this.getSelectionText();
+
         Promise.all(
-            this.annotationInputTabsFromExtensions.map(({selectedByDefault}) => selectedByDefault()),
+            this.annotationInputTabsFromExtensions.map(({selectedByDefault}) => selectedByDefault(text)),
         ).then((result) => {
             let active;
 
@@ -184,6 +187,17 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
         _hidePopups();
     }
 
+    getSelectionText(): string {
+        const {data} = this.props;
+        const selection: SelectionState = data.selection;
+        const blockKey = data.selection.getStartKey();
+        const contentState = this.props.editorState.getCurrentContent();
+        const block = contentState.getBlockForKey(blockKey);
+        const text = block.getText().slice(selection.getStartOffset(), selection.getEndOffset());
+
+        return text;
+    }
+
     render() {
         if (this.state.loaded !== true) {
             return null;
@@ -193,12 +207,6 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
         const _hidePopups = this.props.hidePopups;
         const {annotation} = data;
         const {type, isEmpty} = this.state;
-
-        const selection: SelectionState = data.selection;
-        const blockKey = data.selection.getStartKey();
-        const contentState = this.props.editorState.getCurrentContent();
-        const block = contentState.getBlockForKey(blockKey);
-        const text = block.getText().slice(selection.getStartOffset(), selection.getEndOffset());
 
         const annotationTypeSelect = annotationTypes == null ? null : (
             <div className="sd-line-input sd-line-input--is-select">
@@ -262,7 +270,7 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
                                                 label: tab.label,
                                                 render: () => (
                                                     <Component
-                                                        annotationText={text}
+                                                        annotationText={this.getSelectionText()}
                                                         onCancel={_hidePopups}
                                                         annotationTypeSelect={annotationTypeSelect}
                                                         onApplyAnnotation={(html: string) => {

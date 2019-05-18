@@ -123,6 +123,7 @@ export class InternalDestinations extends React.Component {
             <InternalDestinationsPageComponent
                 renderRow={renderRow}
                 formConfig={formConfig}
+                defaultSortOption={{field: 'name', direction: 'ascending'}}
             />
         );
     }
