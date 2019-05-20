@@ -47,11 +47,11 @@ export const dataApi: IDataApi = {
     delete: (endpoint, item) => ng.getService('api').then((api) => api(endpoint).remove(item)),
 };
 
-export function connectCrudManager<Props, Entity extends IBaseRestApiResponse>(
-    WrappedComponent: React.ComponentType<Props>,
+export function connectCrudManager<Props, PropsToConnect, Entity extends IBaseRestApiResponse>(
+    WrappedComponent: React.ComponentType<Props & PropsToConnect>,
     name: string,
     endpoint: string,
-) {
+): React.ComponentType<Props> {
     const component = class extends React.Component<Props, ICrudManagerState<Entity>>
         implements ICrudManagerMethods<Entity> {
         api: any;

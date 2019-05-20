@@ -46,8 +46,7 @@ export function getAnnotationInputWithKnowledgeBase(superdesk: ISuperdesk) {
         }
     }
 
-    // IPropsAnnotationInputComponent
-    return superdesk.components.connectCrudManager<any, IKnowledgeBaseItem>(
+    return superdesk.components.connectCrudManager<IPropsAnnotationInputComponent, IPropsConnected, IKnowledgeBaseItem>(
         AnnotationInputWithKnowledgeBaseComponent,
         'conceptItems',
         'concept_items',

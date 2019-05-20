@@ -14,6 +14,8 @@ declare module 'superdesk-api' {
                 ? DeepReadonlyArray<U>
                 : DeepReadonlyObject<T>;
 
+    type Omit<K, V> = Pick<K, Exclude<keyof K, V>>;
+
 
 
     // EXTENSIONS
@@ -103,8 +105,6 @@ declare module 'superdesk-api' {
         // Allows creating an item with required fields which aren't editable from the GUI
         newItemTemplate?: {[key: string]: any};
     
-        // connected
-        items?: ICrudManager<T>;
         modal?: any;
     }
 
@@ -262,9 +262,9 @@ declare module 'superdesk-api' {
         components: {
             UserHtmlSingleLine: React.ComponentType<{html: string}>;
             getGenericListPageComponent<T extends IBaseRestApiResponse>(resource: string): React.ComponentType<IPropsGenericForm<T>>;                        
-            connectCrudManager<Props, Entity extends IBaseRestApiResponse>(
-                WrappedComponent: React.ComponentType<Props>,
-                name: F,
+            connectCrudManager<Props, PropsToConnect, Entity extends IBaseRestApiResponse>(
+                WrappedComponent: React.ComponentType<Props & PropsToConnect>,
+                name: string,
                 endpoint: string,
             ): React.ComponentType<Props>;
             ListItem: React.ComponentType<IListItemProps>;
