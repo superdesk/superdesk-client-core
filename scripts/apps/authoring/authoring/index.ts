@@ -26,6 +26,7 @@ export interface IArticleSchemaParams {
 }
 
 type IOnChangeMiddleware = (params: IOnChangeParams) => IArticle;
+
 type IArticleSchemaMiddleware = (params: IArticleSchemaParams) => IArticleSchema;
 
 export const onChangeMiddleware: Array<IOnChangeMiddleware> = [];
