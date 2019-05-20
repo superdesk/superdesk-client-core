@@ -86,7 +86,8 @@ export function ItemCarouselDirective($timeout, notify) {
                         return;
                     }
 
-                    const mediaItems = carouselImages.concat(carouselAudiosAndVideos);
+                    const mediaItems: Array<HTMLAudioElement | HTMLVideoElement | HTMLImageElement> =
+                        [].concat(carouselImages).concat(carouselAudiosAndVideos);
 
                     waitForMediaToLoad(mediaItems).then(initCarousel);
                 });

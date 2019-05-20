@@ -108,7 +108,7 @@ export function MultiImageEditController(
         }
 
         saveHandler(imagesForSaving)
-            .then((res) => {
+            .then((res: any) => {
                 if (res != null) {
                     $scope.images = angular.copy(Array.isArray(res) && res.length > 0 ? res : [res]);
                 }

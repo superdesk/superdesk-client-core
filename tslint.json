@@ -46,7 +46,13 @@
         "object-literal-key-quotes": false,
         "no-eval": false, // already handled in eslint
         "no-conditional-assignment": false, // already handled in eslint
+        "no-reference": false,
         "only-arrow-functions": false
     },
-    "rulesDirectory": []
+    "rulesDirectory": [],
+    "linterOptions": {
+        "exclude": [
+            "scripts/extensions/**/node_modules/**"
+        ]
+    }
 }
