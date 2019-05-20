@@ -1,4 +1,4 @@
-<ul class="nav nav-tabs">
+<ul class="widget-content__header nav nav-tabs">
     <li ng-class="{active: tab === 'metadata' || !tab}">
         <button ng-click="tab = 'metadata'" translate>Metadata</button>
     </li>
@@ -8,8 +8,8 @@
         <button ng-click="tab = 'assignment'" translate>Assignment</button>
     </li>
 </ul>
-<div ng-controller="MetadataWidgetCtrl">
-    <div class="widget-content-padding" ng-if="tab === 'metadata' || !tab">
+<div ng-controller="MetadataWidgetCtrl" class="widget-content__main">
+    <div class="sd-padding-all--2" ng-if="tab === 'metadata' || !tab">
         <ul class="basic-list basic-list--dotted">
             <li class="basic-list__item" ng-if="_isInProductionStates">
                 <label class="basic-list__item-label" ng-if="_editable" translate>Not For Publication</label>
@@ -148,7 +148,7 @@
                 {{ item.byline }}
             </li>
 
-            <li sd-metadata-list-item data-label="'Sign-Off' | translate">
+            <li sd-metadata-list-item data-label="'Sign-Off' | translate" class="sd-word-break--all">
                 {{ item.sign_off }}
             </li>
 
@@ -164,8 +164,11 @@
                 <div sd-reldate-complex datetime="item.versioncreated">
             </li>
 
-            <li sd-metadata-list-item data-label="'Original ID' | translate" ng-if="item.original_id">
-                {{ item.original_id }}
+            <li class="basic-list__item basic-list__item--stacked">
+                <label class="basic-list__item-label basic-list__item-label--block" translate>Original ID</label>
+                <div class="basic-list__item-data">
+                    {{ item.original_id }}
+                </div>
             </li>
 
             <li sd-metadata-list-item data-label="'Original creator' | translate" ng-if="item.originalCreator">

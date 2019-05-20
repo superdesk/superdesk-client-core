@@ -1,6 +1,6 @@
-<div ng-if="!widget.custom" class="modal__header">
-    <a class="modal__close pull-right" ng-click="$close()"><i class="icon-close-small"></i></a>
-    <h3 class="modal__heading">{{ widget.label|translate }} {{ 'Configuration'|translate }}</h3>
+<div ng-if="!widget.custom" class="modal__header modal__header--flex">
+    <h3 class="modal__heading"><span translate>{{ widget.label }}</span> <span translate>{{ 'Configuration' }}</span></h3>
+    <a class="icn-btn modal__close" ng-click="$close()"><i class="icon-close-small"></i></a>
 </div>
 <div ng-if="!widget.custom" class="modal__body">
     <div ng-include="widget.configurationTemplate"></div>

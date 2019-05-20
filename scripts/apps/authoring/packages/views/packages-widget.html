@@ -1,18 +1,23 @@
-<div ng-controller="PackagesWidgetCtrl">
-    <div class="packages-content">
-        <ul>
+<div ng-controller="PackagesWidgetCtrl" class="widget-content__main">
+    <div class="packages-content sd-padding-t--2">
+        <ul class="boxed-list ">
             <li ng-repeat="pitem in contentItems"
-                ng-if="pitem._id !== item._id">
-                <div class="package-preview">
-                    <i class="filetype-icon-composite"></i>
-                    <div class="title" ng-show="pitem.headline || pitem.slugline">
-                        <a ng-click="openPackage(pitem)" title="{{ pitem.headline || pitem.slugline}}">
-                            <div ng-show="pitem.headline || pitem.slugline">
-                                {{ pitem.headline || pitem.slugline | uppercase}}
-                            </div>
-                            <div ng-hide="pitem.headline || pitem.slugline" translate>Blank headline received</div>
-                        </a>
-                    </div>
+                ng-if="pitem._id !== item._id"
+                class="boxed-list__item">
+                <div class="boxed-list__item-media">
+                    <i class="icon-composite icon--2x"></i>
+                </div>
+                <div class="boxed-list__item-content">
+                    <span class="sd-text__date-time sd-text__date-time--small"> {{ pitem.versioncreated}}</span>
+                    <span class="sd-text__strong" ng-show="pitem.headline || pitem.slugline" title="{{ pitem.headline || pitem.slugline}}">
+                        {{ pitem.headline || pitem.slugline}}
+                    </span>
+                    <span class="sd-text__strong-s" ng-hide="pitem.headline || pitem.slugline" translate>
+                        Blank headline received
+                    </span>
+                </div>
+                <div class="boxed-list__slide-in-actions" ng-show="pitem.headline || pitem.slugline">
+                    <button class="icn-btn" ng-click="openPackage(pitem)"><i class="icon-pencil"></i></button>
                 </div>
             </li>
         </ul>

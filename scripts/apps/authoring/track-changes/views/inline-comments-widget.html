@@ -1,12 +1,12 @@
-<div class="widget" ng-controller="InlineCommentsCtrl">
+<div class="sd-padding-all--2 widget-content__main" ng-controller="InlineCommentsCtrl">
     <div class="form__row">
         <sd-check ng-model="resolvedFilter" type="radio" ng-value="UNRESOLVED" label-position="inside">{{ :: 'Unresolved' | translate }}</sd-check>
         <sd-check ng-model="resolvedFilter" type="radio" ng-value="RESOLVED" label-position="inside">{{ :: 'Resolved' | translate }}</sd-check>
     </div>
     <ul ng-class="{ 'notification-list--empty' : items[resolvedFilter].length === 0 }">
         <li ng-repeat="commentObj in items[resolvedFilter]">
-            <h4 class="label label--large">{{commentObj.fieldName}}</h4>
-            <ul class="notification-list notification-list-fix white field" >
+            <h4 class="label">{{commentObj.fieldName}}</h4>
+            <ul class="notification-list notification-list-fix white sd-margin-all--0 sd-margin-b--2">
                 <li ng-repeat="item in commentObj.comments" class="item">
                     <figure class="avatar">
                         <img sd-user-avatar data-user="users[item.data.authorId]">

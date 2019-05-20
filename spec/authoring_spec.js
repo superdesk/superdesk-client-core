@@ -118,8 +118,9 @@ describe('authoring', () => {
         monitoring.actionOnItem('Edit', 2, 1);
         authoring.showPackages();
         expect(authoring.getPackages().count()).toBe(1);
-        expect(authoring.getPackage(0).getText()).toMatch('PACKAGE2');
-        authoring.getPackage(0).element(by.tagName('a')).click();
+        expect(authoring.getPackage(0).getText()).toContain('package2');
+        browser.actions().mouseMove(authoring.getPackage(0)).perform();
+        authoring.getPackage(0).element(by.css('[ng-click="openPackage(pitem)"]')).click();
         authoring.showInfo();
         expect(authoring.getGUID().getText()).toMatch('package2');
         authoring.close();
@@ -442,7 +443,7 @@ describe('authoring', () => {
         monitoring.actionOnItem('Edit', 0, 0);
 
         authoring.openRelatedItem(); // opens related item widget
-        expect(authoring.getRelatedItemSlugline(0)).toContain('item9 slugline');
+        expect(authoring.getRelatedItemSlugline(0)).toContain('ITEM9 SLUGLINE');
         authoring.actionOpenRelatedItem(0); // Open item
         expect(authoring.getHeaderSluglineText()).toContain('item9 slugline');
     });
