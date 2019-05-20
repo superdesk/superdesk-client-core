@@ -214,21 +214,25 @@ export function SavedSearchManageSubscribers(asset, userList, api, modal, desks)
                 modal.confirm(
                     gettext('Are you sure to remove this subscription?'),
                     gettext('Unsubscribe user'),
-                ).then(() =>
-                    unsubscribeUser(scope.savedSearch, user._id, api),
-                ).then((updatedSearch: ISavedSearch) =>
-                    scope.onSubscriptionsChange(updatedSearch),
-                );
+                )
+                    .then(() =>
+                        unsubscribeUser(scope.savedSearch, user._id, api),
+                    )
+                    .then((updatedSearch: ISavedSearch) =>
+                        scope.onSubscriptionsChange(updatedSearch),
+                    );
 
             scope.unsubscribeDesk = (desk: IDesk) =>
                 modal.confirm(
                     gettext('Are you sure to remove this subscription?'),
                     gettext('Unsubscribe desk'),
-                ).then(() =>
-                    unsubscribeDesk(scope.savedSearch, desk._id, api),
-                ).then((updatedSearch) =>
-                    scope.onSubscriptionsChange(updatedSearch),
-                );
+                )
+                    .then(() =>
+                        unsubscribeDesk(scope.savedSearch, desk._id, api),
+                    )
+                    .then((updatedSearch) =>
+                        scope.onSubscriptionsChange(updatedSearch),
+                    );
 
             scope.editUserSubscription = (user: IUser) => {
                 scope.wrapper.subscriptionInCreateOrEditMode = scope.savedSearch.subscribers.user_subscriptions.find(

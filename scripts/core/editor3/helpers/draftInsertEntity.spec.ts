@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import {insertEntity} from './draftInsertEntity';
 import {convertFromRaw, SelectionState, EditorState, RawDraftContentState, convertToRaw} from 'draft-js';
 

@@ -72,6 +72,7 @@ export interface IEditorStore {
     invisibles: any;
     svc: any;
     abbreviations: any;
+    loading: boolean;
 }
 
 export const getCustomDecorator = (language?: string, spellcheckWarnings: ISpellcheckWarningsByBlock = null) => {
@@ -96,6 +97,7 @@ export const getCustomDecorator = (language?: string, spellcheckWarnings: ISpell
 export default function createEditorStore(props: IProps, spellcheck, isReact = false) {
     const spellcheckerDisabledInConfig = get(appConfig, 'features.useTansaProofing') === true;
     let disableSpellchecker = true;
+
     if (spellcheck != null) {
         disableSpellchecker = spellcheckerDisabledInConfig || !spellcheck.isAutoSpellchecker;
 
@@ -144,6 +146,7 @@ export default function createEditorStore(props: IProps, spellcheck, isReact = f
         invisibles: false,
         svc: props.svc,
         abbreviations: {},
+        loading: false,
     }, applyMiddleware(...middlewares));
 
     if (spellcheck != null) {

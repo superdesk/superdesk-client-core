@@ -84,11 +84,11 @@ for rule in rules_to_check:
 
     if (violations_count > 0 and rule_tolerance is False) or violations_count > violations_count_master:
         any_rule_violated = True
-        print(f'\n\n{violations}\n\n')
-        print(f"GREP-LINT RULE VIOLATED! '{rule_name}'")
-        print(f"Rule regex: `{rule_regex}`")
+        print('\n\n' + violations + '\n\n')
+        print("GREP-LINT RULE VIOLATED! '" + rule_name + "'")
+        print("Rule regex: `" + rule_regex + "`")
 
         if rule_tolerance is True:
-            print(f'Tolerance is enabled, but {violations_count} violations were found in the working while there only are {violations_count_master} violations on master. See grep-lint.py for details.')
+            print('Tolerance is enabled, but ' + str(violations_count) + ' violations were found in the working while there only are ' + str(violations_count_master) + ' violations on master. See grep-lint.py for details.')
 
 sys.exit(1 if any_rule_violated else 0)

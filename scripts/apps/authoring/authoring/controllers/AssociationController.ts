@@ -1,6 +1,7 @@
 import {startsWith, endsWith, some, forEach, get} from 'lodash';
 import {getSuperdeskType} from 'core/utils';
 import {gettext} from 'core/utils';
+import {isMediaEditable} from 'core/config';
 
 /**
  * @ngdoc controller
@@ -11,9 +12,9 @@ import {gettext} from 'core/utils';
  *
  * @description Controller for handling adding/uploading images to association fields
  */
-AssociationController.$inject = ['config', 'send', 'api', '$q', 'superdesk',
+AssociationController.$inject = ['config', 'content', 'superdesk',
     'mediaIdGenerator', 'authoring', 'renditions', 'notify'];
-export function AssociationController(config, send, api, $q, superdesk,
+export function AssociationController(config, content, superdesk,
     mediaIdGenerator, authoring, renditions, notify) {
     const self = this;
 
@@ -24,8 +25,7 @@ export function AssociationController(config, send, api, $q, superdesk,
      * @description Check if featured media can be edited or not. i.e. metadata/crops can be changed or not.
      */
     this.isMediaEditable = function() {
-        return !(config.features && 'editFeaturedImage' in config.features
-                && !config.features.editFeaturedImage);
+        return isMediaEditable(config);
     };
 
     /**
@@ -84,21 +84,7 @@ export function AssociationController(config, send, api, $q, superdesk,
      * @return {Object}
      */
     this.getItem = function(event, dataType) {
-        let item = angular.fromJson(event.originalEvent.dataTransfer.getData(dataType));
-
-        if (item._type !== 'externalsource') {
-            if (item._type === 'ingest') {
-                return send.one(item);
-            }
-
-            if (item.archive_item != null) {
-                return $q.when(item.archive_item);
-            }
-
-            return api.find(item._type, item._id);
-        }
-
-        return $q.when(item);
+        return content.dropItem(event.originalEvent.dataTransfer.getData(dataType));
     };
 
     /**
@@ -237,40 +223,42 @@ export function AssociationController(config, send, api, $q, superdesk,
     this.initializeUploadOnDrop = function(scope, event) {
         const superdeskType = getSuperdeskType(event);
 
+        if (!scope.editable) {
+            return;
+        }
+
         if (superdeskType === 'Files') {
             if (self.isMediaEditable()) {
                 const files = event.originalEvent.dataTransfer.files;
 
-                self.uploadAndCropImages(scope, files);
+                return self.uploadAndCropImages(scope, files);
             }
+
             return;
         }
 
-        self.getItem(event, superdeskType).then((item) => {
-            if (!scope.editable) {
-                return;
-            }
+        scope.loading = true;
+        return self.getItem(event, superdeskType, {fetchExternal: false})
+            .then((item) => {
+                if (item.lock_user) {
+                    notify.error(gettext('Item is locked. Cannot associate media item.'));
+                    return;
+                }
 
-            if (item.lock_user) {
-                notify.error(gettext('Item is locked. Cannot associate media item.'));
-                return;
-            }
+                // save generated association id in order to be able to update the same item after editing.
+                const originalRel = scope.rel;
 
-            // save generated association id in order to be able to update the same item after editing.
-            const originalRel = scope.rel;
-
-            if (self.isMediaEditable() && get(item, '_type') === 'externalsource') {
-                // if media is editable then association will be updated by self.edit method
-                scope.loading = true;
-                renditions.ingest(item)
-                    .then((_item) => self.edit(scope, _item, {customRel: originalRel}))
-                    .finally(() => {
-                        scope.loading = false;
-                    });
-            } else {
-                // Update the association is media is not editable.
-                self.updateItemAssociation(scope, item, null, null, true);
-            }
-        });
+                if (self.isMediaEditable() && get(item, '_type') === 'externalsource') {
+                    // if media is editable then association will be updated by self.edit method
+                    return renditions.ingest(item)
+                        .then((_item) => self.edit(scope, _item, {customRel: originalRel}));
+                } else {
+                    // Update the association is media is not editable.
+                    self.updateItemAssociation(scope, item, null, null, true);
+                }
+            })
+            .finally(() => {
+                scope.loading = false;
+            });
     };
 }

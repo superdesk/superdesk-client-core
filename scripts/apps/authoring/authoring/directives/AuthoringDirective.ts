@@ -8,7 +8,7 @@ import {combineReducers, createStore, applyMiddleware} from 'redux';
 import {attachments, initAttachments} from '../../attachments';
 import {applyMiddleware as coreApplyMiddleware} from 'core/middleware';
 import {onChangeMiddleware, getArticleSchemaMiddleware} from '..';
-import {IFunctionPointsService} from "apps/extension-points/services/FunctionPoints";
+import {IFunctionPointsService} from 'apps/extension-points/services/FunctionPoints';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 
 /**
@@ -1217,6 +1217,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
             const updateSchema = () => {
                 const schema = merge({}, authoring.schema); // always start from initial schema
+
                 coreApplyMiddleware(getArticleSchemaMiddleware, {item: $scope.item, schema: schema}, 'schema')
                     .then((_schema) => {
                         $scope.schema = _schema;

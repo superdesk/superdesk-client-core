@@ -14,6 +14,7 @@ cache:
         - $HOME/.cache/yarn
 
 script:
+    - grunt exec:setup_extensions
     - npm run test
-    - npm run tslint
+    - npm run lint
     - npm run build

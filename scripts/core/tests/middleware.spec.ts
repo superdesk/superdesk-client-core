@@ -5,7 +5,7 @@ describe('middleware', () => {
     const incMiddleware = ({foo}) => foo + 1;
 
     it('can run empty', (done) => {
-        applyMiddleware([], {'foo': 1}, 'foo').then((result) => {
+        applyMiddleware([], {foo: 1}, 'foo').then((result) => {
             expect(result).toBe(1);
             done();
         });

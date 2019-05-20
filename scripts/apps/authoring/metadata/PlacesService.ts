@@ -67,7 +67,6 @@ export interface IPlacesService {
 
 PlacesServiceFactory.$inject = ['api', 'features', 'metadata'];
 export default function PlacesServiceFactory(api, features, metadata) {
-
     const geonameToCity = (data: IGeoname): ILocated => ({
         dateline: 'city',
         country_code: data.country_code,
@@ -82,7 +81,6 @@ export default function PlacesServiceFactory(api, features, metadata) {
     });
 
     class PlacesService implements IPlacesService {
-
         searchDateline(query: string, lang: string) {
             return this._searchGeonames(query, lang, true)
                 .then((geonames) => geonames.map(geonameToCity))

@@ -105,17 +105,19 @@ describe('authoring', () => {
         spyOn(api, 'save').and.returnValue($q.when({headline: 'foo'}));
 
         $scope.item.headline = headline;
-        $scope.autosave($scope.item).then(() => {
-            expect($scope.dirty).toBe(true);
+        $scope.autosave($scope.item)
+            .then(() => {
+                expect($scope.dirty).toBe(true);
 
-            expect(api.save).toHaveBeenCalled();
-            expect($scope.item.headline).toBe(headline);
+                expect(api.save).toHaveBeenCalled();
+                expect($scope.item.headline).toBe(headline);
 
-            $scope.save();
-            $rootScope.$digest();
-            expect($scope.dirty).toBe(false);
-            expect(api.save).toHaveBeenCalled();
-        }).finally(done);
+                $scope.save();
+                $rootScope.$digest();
+                expect($scope.dirty).toBe(false);
+                expect(api.save).toHaveBeenCalled();
+            })
+            .finally(done);
 
         // it must flush timeout only when the applyMiddleware promise is resolved
         setTimeout(() => $timeout.flush(5000), 10);
