@@ -121,7 +121,7 @@ export class AtomicBlockParser {
 
         if (desc) {
             // eslint-disable-next-line
-            content += `\n    <figcatpion>${desc}</figcaption>`;
+            content += `\n    <figcaption>${desc}</figcaption>`;
         }
 
         return `
