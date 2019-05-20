@@ -53,11 +53,18 @@ const macroField: IFormField = {
     },
 };
 
+const sendAfterSchedule: IFormField = {
+    label: gettext('Send only after publish schedule'),
+    type: FormFieldType.checkbox,
+    field: 'send_after_schedule',
+};
+
 const formConfig: IFormGroup = {
     direction: 'vertical',
     type: 'inline',
     form: [
         isActiveField,
+        sendAfterSchedule,
         nameField,
         contentFilterField,
         deskField,
