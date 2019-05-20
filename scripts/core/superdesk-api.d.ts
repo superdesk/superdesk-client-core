@@ -1,20 +1,20 @@
 declare module 'superdesk-api' {
     // TYPESCRIPT TYPES
 
-    interface DeepReadonlyArray<T> extends ReadonlyArray<DeepReadonly<T>> {};
+    export interface DeepReadonlyArray<T> extends ReadonlyArray<DeepReadonly<T>> {};
 
-    type DeepReadonlyObject<T> = {
+    export type DeepReadonlyObject<T> = {
         readonly [P in keyof T]: DeepReadonly<T[P]>;
     }
 
-    type DeepReadonly<T> =
+    export type DeepReadonly<T> =
         T extends Function
             ? T
             : T extends Array<infer U>
                 ? DeepReadonlyArray<U>
                 : DeepReadonlyObject<T>;
 
-    type Omit<K, V> = Pick<K, Exclude<keyof K, V>>;
+    export type Omit<K, V> = Pick<K, Exclude<keyof K, V>>;
 
 
 
@@ -100,7 +100,7 @@ declare module 'superdesk-api' {
     export interface IPropsGenericForm<T extends IBaseRestApiResponse> {
         formConfig: IFormGroup;
         defaultSortOption: ISortOption;
-        renderRow(key: string, item: T, page: GenericListPageComponent<T>): JSX.Element;
+        renderRow(key: string, item: T, page: IGenericListPageComponent<T>): JSX.Element;
     
         // Allows creating an item with required fields which aren't editable from the GUI
         newItemTemplate?: {[key: string]: any};
@@ -242,7 +242,7 @@ declare module 'superdesk-api' {
             endpoint: string,
             page: number,
             sortOption: ISortOption,
-            filterValues: ICrudManagerFilters = {},
+            filterValues: ICrudManagerFilters,
             formatFiltersForServer?: (filters: ICrudManagerFilters) => ICrudManagerFilters,
         ): Promise<IRestApiResponse<T>>;
         patch<T>(endpoint, item1: T, item2: T): Promise<T>;
