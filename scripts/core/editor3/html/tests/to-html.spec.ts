@@ -89,7 +89,7 @@ describe('core.editor3.html.to-html snapshots', () => {
 `<!-- EMBED START Image {id: "editor_0"} -->
 <figure>
     <img src="http://localhost:5000/api/upload-raw/5c9d03dd149f116747b6730f.jpg" alt="pin alt" />
-    <figcatpion>pin dec</figcaption>
+    <figcaption>pin dec</figcaption>
 </figure>
 <!-- EMBED END Image {id: "editor_0"} -->`
         );
@@ -334,7 +334,7 @@ describe('core.editor3.html.to-html.AtomicBlockParser', () => {
 `<!-- EMBED START Image {id: "editor_0"} -->
 <figure>
     <img src="image_href" alt="image_alt_text" />
-    <figcatpion>image_description</figcaption>
+    <figcaption>image_description</figcaption>
 </figure>
 <!-- EMBED END Image {id: "editor_0"} -->`);
     });
