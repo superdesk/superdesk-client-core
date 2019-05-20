@@ -12,8 +12,8 @@ interface IProps {
 
 export class AnnotationSelectList extends React.Component<IProps> {
     render() {
-        const {UserHtmlSingleLine} = this.props.superdesk.helpers;
-        const {Item, Column, Row} = this.props.superdesk.helpers.List;
+        const {UserHtmlSingleLine} = this.props.superdesk.components;
+        const {Item, Column, Row} = this.props.superdesk.components.List;
 
         return (
             <div>

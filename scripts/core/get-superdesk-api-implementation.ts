@@ -21,25 +21,6 @@ export function getSuperdeskApiImplementation(
 ): ISuperdesk {
     return {
         dataApi: dataApi,
-        helpers: {
-            getGenericListPageComponent,
-            getFormFieldPreviewComponent,
-            ListItem,
-            List: {
-                Item,
-                Row,
-                Column,
-            },
-            ListItemColumn,
-            ListItemActionsMenu,
-            isIFormGroupCollapsible,
-            isIFormGroup,
-            isIFormField,
-            FormFieldType,
-            UserHtmlSingleLine,
-            connectCrudManager,
-            generateFilterForServer,
-        },
         ui: {
             alert: (message: string) => modal.alert({bodyText: message}),
             confirm: (message: string) => new Promise((resolve) => {
@@ -47,6 +28,27 @@ export function getSuperdeskApiImplementation(
                     .then(() => resolve(true))
                     .catch(() => resolve(false));
             }),
+        },
+        components: {
+            UserHtmlSingleLine,
+            getGenericListPageComponent,
+            connectCrudManager,
+            ListItem,
+            ListItemColumn,
+            ListItemActionsMenu,
+            List: {
+                Item,
+                Row,
+                Column,
+            },
+        },
+        forms: {
+            FormFieldType,
+            generateFilterForServer,
+            isIFormGroupCollapsible,
+            isIFormGroup,
+            isIFormField,
+            getFormFieldPreviewComponent,
         },
         localization: {
             gettext: (message) => gettext(message),

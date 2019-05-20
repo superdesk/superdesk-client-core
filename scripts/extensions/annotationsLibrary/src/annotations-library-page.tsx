@@ -13,11 +13,12 @@ export function getAnnotationsLibraryPage(superdesk: ISuperdesk) {
             const {gettext} = superdesk.localization;
             const {
                 getGenericListPageComponent,
-                getFormFieldPreviewComponent,
                 ListItem,
                 ListItemColumn,
                 ListItemActionsMenu,
-            } = superdesk.helpers;
+            } = superdesk.components;
+            const {getFormFieldPreviewComponent} = superdesk.forms;
+
             const AnnotationsLibraryPageComponent = getGenericListPageComponent<IKnowledgeBaseItem>('concept_items');
 
             const {

@@ -9,15 +9,15 @@ import {
 } from 'superdesk-api';
 import {getFields} from './GetFields';
 
-interface IProps extends IPropsAnnotationInputComponent {
-    // connected
+interface IPropsConnected {
     conceptItems: ICrudManager<IKnowledgeBaseItem>;
 }
 
 export function getAnnotationInputWithKnowledgeBase(superdesk: ISuperdesk) {
-    class AnnotationInputWithKnowledgeBaseComponent extends React.Component<IProps> {
+    class AnnotationInputWithKnowledgeBaseComponent
+    extends React.Component<IPropsAnnotationInputComponent & IPropsConnected> {
         componentDidMount() {
-            const {generateFilterForServer} = superdesk.helpers;
+            const {generateFilterForServer} = superdesk.forms;
 
             const {nameField} = getFields(superdesk);
 
@@ -46,7 +46,8 @@ export function getAnnotationInputWithKnowledgeBase(superdesk: ISuperdesk) {
         }
     }
 
-    return superdesk.helpers.connectCrudManager<IPropsAnnotationInputComponent, IKnowledgeBaseItem>(
+    // IPropsAnnotationInputComponent
+    return superdesk.components.connectCrudManager<any, IKnowledgeBaseItem>(
         AnnotationInputWithKnowledgeBaseComponent,
         'conceptItems',
         'concept_items',

@@ -2,7 +2,7 @@ import {ISuperdesk, IFormField} from "superdesk-api";
 
 export function getFields(superdesk: ISuperdesk) {
     const {gettext} = superdesk.localization;
-    const {FormFieldType} = superdesk.helpers;
+    const {FormFieldType} = superdesk.forms;
 
     const nameField: IFormField = {
         label : gettext('Name'),

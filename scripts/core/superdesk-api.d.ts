@@ -1,4 +1,21 @@
 declare module 'superdesk-api' {
+    // TYPESCRIPT TYPES
+
+    interface DeepReadonlyArray<T> extends ReadonlyArray<DeepReadonly<T>> {};
+
+    type DeepReadonlyObject<T> = {
+        readonly [P in keyof T]: DeepReadonly<T[P]>;
+    }
+
+    type DeepReadonly<T> =
+        T extends Function
+            ? T
+            : T extends Array<infer U>
+                ? DeepReadonlyArray<U>
+                : DeepReadonlyObject<T>;
+
+
+
     // EXTENSIONS
 
     export interface IExtensionActivationResult {
@@ -219,7 +236,7 @@ declare module 'superdesk-api' {
 
     // DATA API
 
-    interface IDataApi {
+    export interface IDataApi {
         create<T>(endpoint: string, item: T): Promise<T>;
         query<T extends IBaseRestApiResponse>(
             endpoint: string,
@@ -242,8 +259,26 @@ declare module 'superdesk-api' {
             alert(message: string): Promise<void>;
             confirm(message: string): Promise<boolean>;
         };
-        helpers: {
-            getGenericListPageComponent<T extends IBaseRestApiResponse>(resource: string): React.ComponentType<IPropsGenericForm<T>>;
+        components: {
+            UserHtmlSingleLine: React.ComponentType<{html: string}>;
+            getGenericListPageComponent<T extends IBaseRestApiResponse>(resource: string): React.ComponentType<IPropsGenericForm<T>>;                        
+            connectCrudManager<Props, Entity extends IBaseRestApiResponse>(
+                WrappedComponent: React.ComponentType<Props>,
+                name: F,
+                endpoint: string,
+            ): React.ComponentType<Props>;
+            ListItem: React.ComponentType<IListItemProps>;
+            ListItemColumn: React.ComponentType<IPropsListItemColumn>;
+            ListItemActionsMenu: React.ComponentType;
+            List: {
+                Item: React.ComponentType<{onClick: any}>;
+                Row: React.ComponentType;
+                Column: React.ComponentType<{grow: boolean}>;
+            }
+        };
+        forms: {
+            FormFieldType: typeof FormFieldType;
+            generateFilterForServer(type: FormFieldType, value: any): any;
             isIFormGroupCollapsible(x: "inline" | IFormGroupCollapsible): x is IFormGroupCollapsible;
             isIFormGroup(x: IFormGroup | IFormField): x is IFormGroup;
             isIFormField(x: IFormGroup | IFormField): x is IFormField;
@@ -253,22 +288,6 @@ declare module 'superdesk-api' {
                 },
                 formFieldConfig: any,
             ): JSX.Element;
-            ListItem: React.ComponentType<IListItemProps>;
-            ListItemColumn: React.ComponentType<IPropsListItemColumn>;
-            ListItemActionsMenu: React.ComponentType;
-            FormFieldType: typeof FormFieldType;
-            UserHtmlSingleLine: React.ComponentType<{html: string}>;
-            connectCrudManager<Props, Entity extends IBaseRestApiResponse>(
-                WrappedComponent: React.ComponentType<Props>,
-                name: string,
-                endpoint: string,
-            ): React.ComponentType<Props>
-            List: {
-                Item: React.ComponentType<{onClick: any}>;
-                Row: React.ComponentType;
-                Column: React.ComponentType<{grow: boolean}>;
-            }
-            generateFilterForServer(type: FormFieldType, value: any): any;
         };
         localization: {
             gettext(message: string): string;

@@ -59,17 +59,3 @@ declare module "*.html";
 type Dictionary<K, V> = {};
 type Omit<K, V> = Pick<K, Exclude<keyof K, V>>;
 type valueof<T> = T[keyof T];
-
-
-interface DeepReadonlyArray<T> extends ReadonlyArray<DeepReadonly<T>> {}
-
-type DeepReadonlyObject<T> = {
-    readonly [P in keyof T]: DeepReadonly<T[P]>
-}
-
-type DeepReadonly<T> =
-    T extends Function
-        ? T
-        : T extends Array<infer U>
-            ? DeepReadonlyArray<U>
-            : DeepReadonlyObject<T>

@@ -7,12 +7,12 @@ import {IKnowledgeBaseItem} from './interfaces';
 function annotationFromLibraryTabSelectedByDefault(superdesk: ISuperdesk, annotationText: string) {
     const {dataApi} = superdesk;
     const {nameField} = getFields(superdesk);
-    const {generateFilterForServer} = superdesk.helpers;
+    const {generateFilterForServer} = superdesk.forms;
 
     return dataApi.query<IKnowledgeBaseItem>(
         'concept_items',
         1,
-        undefined,
+        {field: 'name', direction: 'ascending'},
         {name: generateFilterForServer(nameField.type, annotationText)},
     ).then((res: IRestApiResponse<IKnowledgeBaseItem>) => res._items.length > 0);
 }
