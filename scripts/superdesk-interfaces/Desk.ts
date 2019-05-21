@@ -1,6 +1,6 @@
 import {IUser} from './User';
 import {IStage} from './Stage';
-import {IBaseRestApiResponse} from "superdesk-api";
+import {IBaseRestApiResponse} from 'superdesk-api';
 
 export interface IDesk extends IBaseRestApiResponse {
     incoming_stage: IStage['_id'];

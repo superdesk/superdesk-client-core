@@ -1,3 +1,5 @@
+/* tslint:disable */
+
 declare module 'superdesk-api' {
     // TYPESCRIPT TYPES
 

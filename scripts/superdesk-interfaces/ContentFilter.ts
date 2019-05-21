@@ -1,4 +1,4 @@
-import {IBaseRestApiResponse} from "superdesk-api";
+import {IBaseRestApiResponse} from 'superdesk-api';
 
 export interface IContentFilter extends IBaseRestApiResponse {
     name: string;

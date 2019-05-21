@@ -1,6 +1,3 @@
-import {extensions} from "core/extension-imports.generated";
-import {ISideMenuItem} from "superdesk-api";
-
 SuperdeskFlagsService.$inject = ['config'];
 function SuperdeskFlagsService(config) {
     this.flags = {

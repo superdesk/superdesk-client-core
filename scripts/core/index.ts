@@ -1,4 +1,4 @@
-import _, { flatMap } from 'lodash';
+import _, {flatMap} from 'lodash';
 
 import 'core/global-fixes';
 
@@ -37,8 +37,7 @@ import {reactToAngular1} from 'superdesk-ui-framework';
 
 import {extensions} from 'core/extension-imports.generated';
 import {getSuperdeskApiImplementation} from './get-superdesk-api-implementation';
-import { CollapseBox } from './ui/components/CollapseBox';
-import { ExtensionPage } from './extension-page';
+import {ExtensionPage} from './extension-page';
 
 /* globals __SUPERDESK_CONFIG__: true */
 const appConfig = __SUPERDESK_CONFIG__;

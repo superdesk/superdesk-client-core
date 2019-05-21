@@ -1,4 +1,4 @@
-import {IFormGroup, IFormField, IFormGroupCollapsible} from "superdesk-api";
+import {IFormGroup, IFormField, IFormGroupCollapsible} from 'superdesk-api';
 
 export enum FormFieldType {
     textSingleLine = 'textSingleLine',

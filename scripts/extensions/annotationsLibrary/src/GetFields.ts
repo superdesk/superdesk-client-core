@@ -1,17 +1,17 @@
-import {ISuperdesk, IFormField} from "superdesk-api";
+import {ISuperdesk, IFormField} from 'superdesk-api';
 
 export function getFields(superdesk: ISuperdesk) {
     const {gettext} = superdesk.localization;
     const {FormFieldType} = superdesk.forms;
 
     const nameField: IFormField = {
-        label : gettext('Name'),
+        label: gettext('Name'),
         type: FormFieldType.textSingleLine,
         field: 'name',
         required: true,
     };
     const languageField: IFormField = {
-        label : gettext('Language'),
+        label: gettext('Language'),
         type: FormFieldType.vocabularySingleValue,
         field: 'language',
         component_parameters: {
@@ -20,7 +20,7 @@ export function getFields(superdesk: ISuperdesk) {
         required: true,
     };
     const definitionField: IFormField = {
-        label : gettext('Definition'),
+        label: gettext('Definition'),
         type: FormFieldType.textEditor3,
         field: 'definition_html',
         required: true,
