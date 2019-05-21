@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {IKnowledgeBaseItem} from './interfaces';
-import {ISuperdesk} from "superdesk-api";
+import {ISuperdesk} from 'superdesk-api';
 
 interface IProps {
     onSelect(item: IKnowledgeBaseItem): void;

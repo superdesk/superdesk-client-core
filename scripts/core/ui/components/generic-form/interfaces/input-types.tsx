@@ -1,4 +1,4 @@
-import {IFormField} from "superdesk-api";
+import {IFormField} from 'superdesk-api';
 
 export interface IInputType<T> {
     // required for composite inputs operating on more than one field

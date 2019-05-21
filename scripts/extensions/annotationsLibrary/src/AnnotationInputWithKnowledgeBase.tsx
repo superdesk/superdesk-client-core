@@ -15,7 +15,7 @@ interface IPropsConnected {
 
 export function getAnnotationInputWithKnowledgeBase(superdesk: ISuperdesk) {
     class AnnotationInputWithKnowledgeBaseComponent
-    extends React.Component<IPropsAnnotationInputComponent & IPropsConnected> {
+        extends React.Component<IPropsAnnotationInputComponent & IPropsConnected> {
         componentDidMount() {
             const {generateFilterForServer} = superdesk.forms;
 

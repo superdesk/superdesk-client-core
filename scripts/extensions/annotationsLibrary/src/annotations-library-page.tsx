@@ -41,44 +41,42 @@ export function getAnnotationsLibraryPage(superdesk: ISuperdesk) {
                 key: string,
                 item: IKnowledgeBaseItem,
                 page: IGenericListPageComponent<IKnowledgeBaseItem>,
-            ) => {
-                return (
-                    <ListItem key={key} onClick={() => page.openPreview(item._id)}>
-                        <ListItemColumn>
-                            {getFormFieldPreviewComponent(item, nameField)}
-                        </ListItemColumn>
-                        <ListItemColumn>
-                            {getFormFieldPreviewComponent(item, languageField)}
-                        </ListItemColumn>
-                        <ListItemColumn ellipsisAndGrow noBorder>
-                            {getFormFieldPreviewComponent(item, definitionField)}
-                        </ListItemColumn>
-                        <ListItemActionsMenu>
-                            <div style={{display: 'flex'}}>
-                                <button
-                                    onClick={(e) =>  {
-                                        e.stopPropagation();
-                                        page.startEditing(item._id);
-                                    }}
-                                    title={gettext('Edit')}
-                                >
-                                    <i className="icon-pencil" />
-                                </button>
+            ) => (
+                <ListItem key={key} onClick={() => page.openPreview(item._id)}>
+                    <ListItemColumn>
+                        {getFormFieldPreviewComponent(item, nameField)}
+                    </ListItemColumn>
+                    <ListItemColumn>
+                        {getFormFieldPreviewComponent(item, languageField)}
+                    </ListItemColumn>
+                    <ListItemColumn ellipsisAndGrow noBorder>
+                        {getFormFieldPreviewComponent(item, definitionField)}
+                    </ListItemColumn>
+                    <ListItemActionsMenu>
+                        <div style={{display: 'flex'}}>
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    page.startEditing(item._id);
+                                }}
+                                title={gettext('Edit')}
+                            >
+                                <i className="icon-pencil" />
+                            </button>
 
-                                <button
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        page.deleteItem(item);
-                                    }}
-                                    title={gettext('Remove')}
-                                >
-                                    <i className="icon-trash" />
-                                </button>
-                            </div>
-                        </ListItemActionsMenu>
-                    </ListItem>
-                );
-            };
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    page.deleteItem(item);
+                                }}
+                                title={gettext('Remove')}
+                            >
+                                <i className="icon-trash" />
+                            </button>
+                        </div>
+                    </ListItemActionsMenu>
+                </ListItem>
+            );
 
             return (
                 <AnnotationsLibraryPageComponent
