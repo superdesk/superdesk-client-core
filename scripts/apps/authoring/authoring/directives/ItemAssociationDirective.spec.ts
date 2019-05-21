@@ -35,6 +35,9 @@ describe('item association directive', () => {
         }));
 
         elem = $compile(`<div sd-item-association
+            data-allow-picture="true"
+            data-allow-video="true"
+            data-allow-audio="true"
             data-item="item"
             data-rel="rel"
             data-editable="editable"
@@ -49,7 +52,7 @@ describe('item association directive', () => {
 
         scope.item.state = 'in_progress';
         event.originalEvent = {dataTransfer: {
-            types: ['video'],
+            types: ['application/superdesk.item.video'],
             getData: () => angular.toJson({headline: 'foo', _type: 'externalsource'}),
         }};
 
@@ -73,7 +76,7 @@ describe('item association directive', () => {
 
         scope.item.state = 'published';
         event.originalEvent = {dataTransfer: {
-            types: ['video'],
+            types: ['application/superdesk.item.video'],
             getData: () => angular.toJson({headline: 'foo', _type: 'externalsource'}),
         }};
 
@@ -101,7 +104,7 @@ describe('item association directive', () => {
             };
             scope.item.state = 'in_progress';
             event.originalEvent = {dataTransfer: {
-                types: ['image'],
+                types: ['application/superdesk.item.picture'],
                 getData: () => angular.toJson({headline: 'foo', _type: 'externalsource'}),
             }};
 
@@ -119,24 +122,22 @@ describe('item association directive', () => {
             expect(scope.item.associations.featured.headline).toBe('foo');
         }));
 
-    it('cannot associated media if item is locked.', inject(($rootScope, renditions, notify) => {
+    it('cannot associated media if item is locked.', inject(($rootScope, renditions, notify, api, $q) => {
         var event = new window.$.Event('drop');
+
+        spyOn(api, 'find').and.returnValue($q.when({lock_user: 'foo'}));
 
         scope.item.state = 'in_progress';
         event.originalEvent = {dataTransfer: {
-            types: ['image'],
-            getData: () => angular.toJson({headline: 'foo', _type: 'externalsource', lock_user: 'foo'}),
+            types: ['application/superdesk.item.picture'],
+            getData: () => angular.toJson({_id: 'foo', _type: 'archive'}),
         }};
 
         notify.error = jasmine.createSpy('error');
         event.preventDefault = jasmine.createSpy('preventDefault');
         event.stopPropagation = jasmine.createSpy('stopPropagation');
-        scope.onChange = jasmine.createSpy('onchange');
-        scope.save = jasmine.createSpy('save');
         elem.triggerHandler(event);
         $rootScope.$digest();
         expect(notify.error).toHaveBeenCalled();
-        expect(renditions.ingest).not.toHaveBeenCalled();
-        expect(renditions.crop).not.toHaveBeenCalled();
     }));
 });

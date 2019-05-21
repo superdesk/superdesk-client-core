@@ -24,3 +24,15 @@ export function pick<T, K extends keyof T>(obj: T, ...keys: Array<K>): Pick<T, K
 
     return picked;
 }
+
+export function isImage(e: Element): e is HTMLImageElement {
+    return e.tagName === 'IMG';
+}
+
+export function isAudio(e: Element): e is HTMLAudioElement {
+    return e.tagName === 'AUDIO';
+}
+
+export function isVideo(e: Element): e is HTMLVideoElement {
+    return e.tagName === 'VIDEO';
+}

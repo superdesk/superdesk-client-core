@@ -1,7 +1,7 @@
 <div class="widget-container" ng-controller="AggregateCtrl as agg" ng-init="agg.setWidget(widget)">
-    <div class="widget-header" style="margin-top: 3px;" ng-init="!searchOpen">
+    <div class="widget-header" ng-init="!searchOpen">
         <button class="widget-header__search-button" ng-click="searchOpen = !searchOpen; agg.search(); query = ''" ng-class="{'widget-header__search-button--active': searchOpen}"><i class="icon-search"></i></button>
-        <div class="widget-title">{{ widget.configuration.label || widget.label | translate}}</div>
+        <div class="widget-title" translate>{{ widget.configuration.label || widget.label }}</div>
     </div>
     <div class="main-list" 
         ng-class="{wrap: agg.selected && !$root.config.features.customMonitoringWidget, 'custom-widget': $root.config.features.customMonitoringWidget}">

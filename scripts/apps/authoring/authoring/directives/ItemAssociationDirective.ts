@@ -74,11 +74,18 @@ export function ItemAssociationDirective(renditions) {
 
                 // update item associations on drop
                 elem.on('drop dragdrop', (event) => {
-                    removeDragOverClass();
-                    event.preventDefault();
-                    event.stopPropagation();
-
-                    _ctrl.initializeUploadOnDrop(scope, event);
+                    // drop event should only fire if dragover event is prevented
+                    // however, `ng-file-upload` library calls preventDefault on this event
+                    // which it shouldn't do, since the element is not controlled by the library.
+                    // Because of this, drop is triggered when it shouldn't have been on firefox, but not on chrome.
+                    // The same media types check is added from `dragover` method to work around the situation.
+                    if (MEDIA_TYPES.includes(getSuperdeskType(event))) {
+                        removeDragOverClass();
+                        event.preventDefault();
+                        event.stopPropagation();
+                        _ctrl.initializeUploadOnDrop(scope, event);
+                        scope.$apply();
+                    }
                 });
             }
 

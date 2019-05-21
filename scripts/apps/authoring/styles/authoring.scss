@@ -406,21 +406,10 @@
     }
 }
 
-.widget {
-    padding: 12px;
 
+.widget {
     h3 {
         margin-bottom: 0.5em;
-    }
-
-    .macro-option {
-        margin-bottom: 20px;
-    }
-
-    .link-list .btn {
-        display: block;
-        width: 100%;
-        margin-bottom: 10px;
     }
 }
 
@@ -1626,6 +1615,10 @@ feature-image {
     &.dragover {
         border: 1px dashed $sd-blue;
         background-color: scale-color($sd-blue, $alpha: -90%);
+    }
+    .groups {
+        padding: 0 !important;
+        margin: 0 !important; 
     }
 }
 

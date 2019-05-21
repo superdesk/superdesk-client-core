@@ -41,7 +41,8 @@
                         <div class="content" ng-if="notification.name !== 'notify' && notification.name !== 'user:mention' && notification.name !== 'translated:changed' "
                             ng-click="onNotificationClick(notification)">
                             <time sd-datetime data-date="notification._created"></time>
-                            <p class="text"><b>{{:: notification.user_name || "System" }}</b>: <span sd-activity-message data-activity="notification"></span></p>
+                            <a class="text" ng-if="notification.data.is_link"><b>{{:: notification.user_name || "System" }}</b>: <span sd-activity-message data-activity="notification"></span></a>
+                            <p class="text" ng-if="!notification.data.is_link"><b>{{:: notification.user_name || "System" }}</b>: <span sd-activity-message data-activity="notification"></span></p>
                         </div>
                     </li>
                     <div class="info" ng-show="notifications._items.length === 0" translate>All good so far.</div>

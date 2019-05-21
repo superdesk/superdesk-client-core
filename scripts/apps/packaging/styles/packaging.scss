@@ -88,6 +88,9 @@
     }
     &__item-abstract {
         margin-top: 5px;
+        img {
+            max-width: 100%;
+        }
     }
     &__item-creator {
         color: #909090;

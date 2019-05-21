@@ -23,14 +23,14 @@ describe('notifications', () => {
         browser.wait(() => comments.count(), 2000);
 
         expect(comments.count()).toBe(1);
-        expect(element(by.id('unread-count')).getText()).toBe('2');
+        expect(element(by.id('unread-count')).getText()).toBe('3');
 
         logout();
         var modal = new Login();
 
         modal.login('admin1', 'admin');
 
-        expect(element(by.id('unread-count')).getText()).toBe('3');
+        expect(element(by.id('unread-count')).getText()).toBe('4');
         element(by.css('button.current-user')).click();
         expect(element(by.id('unread-count')).getText()).toBe('');
     });

@@ -1,10 +1,13 @@
 import * as helpers from 'apps/authoring/authoring/helpers';
 import _ from 'lodash';
+import {merge} from 'lodash';
 import postscribe from 'postscribe';
 import thunk from 'redux-thunk';
 import {gettext} from 'core/utils';
 import {combineReducers, createStore, applyMiddleware} from 'redux';
 import {attachments, initAttachments} from '../../attachments';
+import {applyMiddleware as coreApplyMiddleware} from 'core/middleware';
+import {onChangeMiddleware, getArticleSchemaMiddleware} from '..';
 import {IFunctionPointsService} from 'apps/extension-points/services/FunctionPoints';
 
 /**
@@ -429,7 +432,10 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
                 $scope.error = {};
 
-                return functionPoints.run('authoring:publish', item)
+                return functionPoints.run('authoring:publish', Object.assign({
+                    _id: _.get(orig, '_id'),
+                    type: _.get(orig, 'type'),
+                }, item))
                     .then(() => checkMediaAssociatedToUpdate())
                     .then((result) => {
                         if (result) {
@@ -850,12 +856,16 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             $scope.autosave = function(item, timeout) {
                 $scope.dirty = true;
                 angular.extend($scope.item, item); // make sure all changes are available
+                return coreApplyMiddleware(onChangeMiddleware, {item: $scope.item, original: $scope.origItem}, 'item')
+                    .then(() => {
+                        var autosavedItem = authoring.autosave($scope.item, $scope.origItem, timeout);
 
-                var autosavedItem = authoring.autosave($scope.item, $scope.origItem, timeout);
+                        authoringWorkspace.addAutosave();
 
-                authoringWorkspace.addAutosave();
-                initMedia();
-                return autosavedItem;
+                        initMedia();
+                        updateSchema();
+                        return autosavedItem;
+                    });
             };
 
             $scope.sendToNextStage = function() {
@@ -1178,6 +1188,24 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
             })));
 
             $scope.store.dispatch(initAttachments($scope.item));
+
+            $scope.$watch('item.profile', (profile) => {
+                content.setupAuthoring(profile, $scope, $scope.item)
+                    .then(() => {
+                        authoring.schema = $scope.schema;
+                        authoring.editor = $scope.editor;
+                    })
+                    .then(updateSchema);
+            });
+
+            const updateSchema = () => {
+                const schema = merge({}, authoring.schema); // always start from initial schema
+
+                coreApplyMiddleware(getArticleSchemaMiddleware, {item: $scope.item, schema: schema}, 'schema')
+                    .then((_schema) => {
+                        $scope.schema = _schema;
+                    });
+            };
         },
     };
 }

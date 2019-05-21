@@ -61,6 +61,7 @@
 
         .search-box {
             transition: all ease-in-out 0.2s;
+            position: relative;
             height: 34px;
             box-shadow: 0 1px 2px 0 rgba(0,0,0,0.12);
             background-color: $white;
@@ -70,26 +71,24 @@
             align-items: center;
             overflow: hidden;
             z-index: 1;
+            background-color: $white;
+            &:hover {
+                box-shadow: 0 1px 2px 0 rgba(0,0,0,0.2), 0 1px 0 0 rgba(0,0,0,0.1);
+            }
+            &:focus-within {
+                box-shadow: 0 1px 2px 0 rgba(0,0,0,0.2), 0 1px 0 0 $sd-blue;
+            }
             input {
                 transition: all ease-in-out 0.16s;
                 flex-grow: 1;
                 height: 100%;
-                background-color: rgba(123, 123, 123, 0);
-                border-width: 0 0 1px 0 !important;
-                border-bottom: 1px solid rgba(0, 0, 0, 0) !important;
+                border: none !important;
                 border-radius: 0;
                 padding: 0 30px 0 0.8rem;
                 margin: 0;
                 box-shadow: none;
-                &:hover {
-                    border-bottom: 1px solid rgba(0, 0, 0, 0) !important;
-                    box-shadow: none;
-                    background-color: rgba(123, 123, 123, 0.06);
-                }
-                &:focus {
-                    border-bottom: 1px solid $sd-blue !important;
-                    background-color: rgba(123, 123, 123, 0);
-                }
+                display: block;
+                background-color: transparent;
             }
             &.blank {
                 background: $white;
@@ -106,9 +105,18 @@
                 right: 0px;
                 top: 6px;
             }
+            .search-box__btn {
+                flex: 0 0 auto;
+                margin: 0 0.8rem 0 auto;
+            }
+            .search-box__icon {
+                opacity: 0.3;
+                margin-left: 0.6rem;
+            }
             &--hidden {
                 height:0;
-                box-shadow: 0 1px 0 0 rgba(123,123,123,0.2), 0 1px 2px 0 rgba(0,0,0,0.2);
+                box-shadow: none;
+                border: none;
                 .search-box__content {
                     opacity: 0;
                 }
@@ -167,7 +175,7 @@
         }
         .ingest-list-holder {
             position: absolute;
-            top: 2*($nav-height - 10px);
+            top: 3.6rem;
             left: 0; right: 0;
             bottom: 0;
             &.mode-detailed {
@@ -330,7 +338,7 @@
             left: 0;
             right: 0; 
             bottom: 0; 
-            top: 38px;
+            top: 34px;
             width: 100%;
             @include transition(all ease 0.2s);
             overflow: hidden;
@@ -481,15 +489,33 @@
             }
 
             .existing-items {
-                top: -70px;
+                top: -35px;
             }
 
             .ingest-list-holder {
-                bottom: 60px;
+                bottom: 0;
             }
 
             .preview {
                 top: 44px;
+            }
+        }
+    }
+    &.widget-related-item {
+        .boxed-list__static-actions {
+            .more-activity-toggle {
+                height: 2.4rem;
+                width: 2.4rem;
+                padding: 0;
+                background: transparent;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                position: static;
+                i {
+                    margin: 0;
+                    vertical-align: middle;
+                }
             }
         }
     }

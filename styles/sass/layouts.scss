@@ -260,6 +260,10 @@ a:hover {
             left: 0; right: 0; top: 0;
             @include box-shadow(0 1px 0 0 rgba(0,0,0,0.1));
             z-index: 1;
+            padding-right: 3.6rem;
+            .nav-tabs {
+                box-shadow: none;
+            }
         }
         > .content {
             position: absolute;
@@ -1515,6 +1519,7 @@ body.prepare-print {
         height: 100%;
         background: #fff url('~images/loading-large.gif') no-repeat center;
         z-index: 1000;
+        opacity: 0.5;
     }
 }
 

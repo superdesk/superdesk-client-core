@@ -1,3 +1,4 @@
+import ng from 'core/services/ng';
 import {insertMedia} from './toolbar';
 
 /**
@@ -67,9 +68,20 @@ export function dragDrop(transfer, mediaType, blockKey = null) {
         return insertMedia(transfer.files);
     }
 
-    return {
-        type: 'EDITOR_DRAG_DROP',
-        payload: {data: transfer.getData(mediaType), blockKey: blockKey},
+    return (dispatch) => {
+        const content = ng.get('content');
+
+        dispatch({type: 'EDITOR_LOADING', payload: true});
+        return content.dropItem(transfer.getData(mediaType), {fetchExternal: true})
+            .then((data) => {
+                dispatch({
+                    type: 'EDITOR_DRAG_DROP',
+                    payload: {data, blockKey},
+                });
+            })
+            .finally(() => {
+                dispatch({type: 'EDITOR_LOADING', payload: false});
+            });
     };
 }
 
