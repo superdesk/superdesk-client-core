@@ -3,6 +3,8 @@
 var fs = require('fs');
 var path = require('path');
 
+var merge = require('lodash/object').merge;
+
 var getExtensionDirectoriesSync = require('./get-extension-directories-sync');
 
 const directories = getExtensionDirectoriesSync();
@@ -26,10 +28,26 @@ export const extensions: IExtensions = {};
 const importStatements = [];
 const insertIntoObjectStatements = [];
 
-const superdeskSettings = require('../superdesk.config')();
+const defaultConfig = require('../superdesk.config')();
+let customConfig = {};
+
+try {
+    customConfig = require('../../../superdesk.config')();
+} catch (e) {
+    console.warn('custom `superdesk.config` not found');
+}
+
+const mergedConfig = merge(defaultConfig, customConfig);
+const enabledExtensions = [];
+
+for (const key in mergedConfig.enabledExtensions) {
+    if (mergedConfig.enabledExtensions[key] === 1) {
+        enabledExtensions.push(key);
+    }
+}
 
 directories
-    .filter((extensionName) => superdeskSettings.enabledExtensions.includes(extensionName))
+    .filter((extensionName) => enabledExtensions.includes(extensionName))
     .forEach((extensionName) => {
         const manifestFile = JSON.parse(
             fs.readFileSync(
