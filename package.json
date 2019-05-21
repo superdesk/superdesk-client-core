@@ -140,6 +140,7 @@
     "typescript-eslint-parser": "^18.0.0"
   },
   "scripts": {
+    "postinstall": "node ./tasks/install-extensions.js && node ./tasks/generate-extension-imports.js",
     "test": "grunt ci:travis",
     "debug-unit-tests": "karma start karma.conf.js --browsers=Chrome",
     "unit": "grunt unit",
