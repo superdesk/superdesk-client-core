@@ -13,9 +13,6 @@ module.exports = function(grunt) {
         coreDir: __dirname,
         poDir: 'po',
         livereloadPort: 35729,
-        exec: {
-            setup_extensions: 'node ./tasks/install-extensions.js && node ./tasks/generate-extension-imports.js',
-        },
     };
 
     grunt.initConfig(config);
@@ -74,7 +71,6 @@ module.exports = function(grunt) {
     // Production build
     grunt.registerTask('build', '', () => {
         grunt.task.run([
-            'exec:setup_extensions',
             'clean',
             'ngtemplates:index',
             'copy:index',

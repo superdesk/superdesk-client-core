@@ -65,7 +65,6 @@
     "grunt-angular-templates": "1.1.0",
     "grunt-contrib-clean": "1.1.0",
     "grunt-contrib-copy": "1.0.0",
-    "grunt-exec": "3.0.0",
     "grunt-filerev": "2.3.1",
     "grunt-usemin": "3.1.1",
     "grunt-webpack": "3.0.2",
