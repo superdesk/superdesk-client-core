@@ -57,7 +57,7 @@ export function TagService($location, desks, userList, metadata, search,
     function getParamObject(paramArray: Array<string>) {
         const key = paramArray[0].trim();
         // remove parentheses ex: "(two)" becomes "two"
-        const value = paramArray[1].replace(/[()]/g, '');
+        const value = paramArray[1].replace(/^\(|\)$/g, '');
 
         return {[key]: value};
     }
