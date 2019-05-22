@@ -9,7 +9,6 @@ import {attachments, initAttachments} from '../../attachments';
 import {applyMiddleware as coreApplyMiddleware} from 'core/middleware';
 import {onChangeMiddleware, getArticleSchemaMiddleware} from '..';
 import {IFunctionPointsService} from 'apps/extension-points/services/FunctionPoints';
-import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 
 /**
  * @ngdoc directive
@@ -460,30 +459,20 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                                     .replace(/\]/g, '')
                                     .split(',');
 
-                                getLabelNameResolver().then((getLabelForFieldId) => {
-                                    for (var i = 0; i < modifiedErrors.length; i++) {
-                                        var message = _.trim(modifiedErrors[i], '\' ');
-                                        // the message format is 'Field error text' (contains ')
-                                        var field = message.split(' ')[0];
+                                modifiedErrors.forEach((error) => {
+                                    const message = _.trim(error, '\' ');
+                                    // the message format is 'Field error text' (contains ')
+                                    const field = message.split(' ')[0];
 
-                                        const hasLabel = Object.keys($scope.editor).find((fieldId) => {
-                                            const label = getLabelForFieldId(fieldId);
-
-                                            if (message.startsWith(label)) {
-                                                $scope.error[fieldId] = true;
-                                                return true;
-                                            }
-                                        });
-
-                                        if (!hasLabel) {
-                                            $scope.error[field.toLowerCase()] = true;
-                                        }
-
-                                        notify.error(message);
-                                    }
-
-                                    $scope.$applyAsync(); // make $scope.error changes visible
+                                    $scope.error[field.toLocaleLowerCase()] = true;
+                                    notify.error(message);
                                 });
+
+                                if (issues.fields) {
+                                    Object.assign($scope.error, issues.fields);
+                                }
+
+                                $scope.$applyAsync(); // make $scope.error changes visible
 
                                 if (errors.indexOf('9007') >= 0 || errors.indexOf('9009') >= 0) {
                                     authoring.open(item._id, true).then((res) => {
