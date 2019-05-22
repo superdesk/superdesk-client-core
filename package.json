@@ -65,7 +65,6 @@
     "grunt-angular-templates": "1.1.0",
     "grunt-contrib-clean": "1.1.0",
     "grunt-contrib-copy": "1.0.0",
-    "grunt-exec": "3.0.0",
     "grunt-filerev": "2.3.1",
     "grunt-usemin": "3.1.1",
     "grunt-webpack": "3.0.2",
@@ -140,6 +139,8 @@
     "typescript-eslint-parser": "^18.0.0"
   },
   "scripts": {
+    "setup-extensions": "node ./tasks/install-extensions.js && node ./tasks/generate-extension-imports.js",
+    "postinstall": "npm run setup-extensions",
     "test": "grunt ci:travis",
     "debug-unit-tests": "karma start karma.conf.js --browsers=Chrome",
     "unit": "grunt unit",
