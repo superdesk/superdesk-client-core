@@ -13,6 +13,7 @@ import {gettext} from 'core/utils';
 import {Editor3Standalone} from 'core/editor3/react';
 import {AnnotationInputDefault} from './AnnotationInputDefault';
 import {getContentStateFromHtml} from 'core/editor3/html/from-html';
+import {getRangeAndTextForStyle} from 'core/editor3/helpers/highlights';
 
 // used in superdesk-fi
 export interface IPropsAnnotationInputComponent {
@@ -27,9 +28,9 @@ interface IProps {
     editorState: EditorState;
     extensionPoints: any;
     data: {
-        highlightId: any;
-        selection: SelectionState;
-        annotation: any;
+        selection?: SelectionState; // only provided when adding a new annotation
+        highlightId?: string; // only provided when editing an existing annotation
+        annotation?: any; // only provided when editing an existing annotation
     };
     highlightsManager: any;
     annotationTypes: Array<any>;
@@ -164,11 +165,17 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
         const {annotation} = data;
         const {type, isEmpty} = this.state;
 
-        const selection: SelectionState = data.selection;
-        const blockKey = data.selection.getStartKey();
-        const contentState = this.props.editorState.getCurrentContent();
-        const block = contentState.getBlockForKey(blockKey);
-        const text = block.getText().slice(selection.getStartOffset(), selection.getEndOffset());
+        let text = '';
+
+        if (data.selection != null) { // annotation is being added
+            const selection: SelectionState = data.selection;
+            const blockKey = data.selection.getStartKey();
+            const contentState = this.props.editorState.getCurrentContent();
+            const block = contentState.getBlockForKey(blockKey);
+            text = block.getText().slice(selection.getStartOffset(), selection.getEndOffset());
+        } else { // annotation already exists
+            text = getRangeAndTextForStyle(this.props.editorState, data.highlightId).highlightedText;
+        }
 
         const annotationTypeSelect = annotationTypes == null ? null : (
             <div className="sd-line-input sd-line-input--is-select">
