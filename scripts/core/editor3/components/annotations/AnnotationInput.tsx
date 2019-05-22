@@ -172,6 +172,7 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
             const blockKey = data.selection.getStartKey();
             const contentState = this.props.editorState.getCurrentContent();
             const block = contentState.getBlockForKey(blockKey);
+
             text = block.getText().slice(selection.getStartOffset(), selection.getEndOffset());
         } else { // annotation already exists
             text = getRangeAndTextForStyle(this.props.editorState, data.highlightId).highlightedText;
