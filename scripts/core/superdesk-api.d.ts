@@ -28,6 +28,11 @@ declare module 'superdesk-api' {
                 annotationInputTabs?: Array<IEditor3AnnotationInputTab>;
             }
             pages?: Array<IPage>;
+            middlewares?: {
+                archive?: {
+                    onSpike(item: IArticle): Promise<{item: IArticle, warnings?: Array<{text: string}>}>
+                };
+            };
         }
     }
 
@@ -54,6 +59,16 @@ declare module 'superdesk-api' {
         url: string;
     }>;
 
+
+
+    // ENTITIES
+
+    // this is a subset of the main IArticle interface found in the core
+    // a subset is used in order expose things gradually as needed
+    export interface IArticle {
+        _id: string;
+        assignment_id?: string;
+    }
 
 
     // PAGE
