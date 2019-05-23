@@ -1,8 +1,8 @@
 import * as action from './actions';
 import {forEachMatch} from './helpers/find-replace';
-import {toHTML} from './html';
 import {clearHighlights} from './helpers/find-replace';
 import {getTansaHtml} from './helpers/tansa';
+import {editor3StateToHtml} from './html/to-html/editor3StateToHtml';
 
 /**
  * @type {Object} Redux stores
@@ -149,7 +149,7 @@ export class EditorService {
         }
 
         if (typeof spellcheck !== 'undefined') {
-            spellcheckerStores.map((s) => s.dispatch(action.setAutoSpellchecker(spellcheck)));
+            spellcheckerStores.map((s) => s.dispatch(action.setSpellcheckerStatus(spellcheck)));
         }
     }
 
@@ -182,13 +182,15 @@ export class EditorService {
         let txt = pattern;
 
         // find the active match
-        forEachMatch(content, pattern, caseSensitive, (i, selection, block) => {
+        forEachMatch(content, pattern, caseSensitive, (i, selection, block, newContent) => {
             if (i === index) {
                 const start = selection.getStartOffset();
                 const end = selection.getEndOffset();
 
                 txt = block.getText().slice(start, end);
             }
+
+            return newContent;
         });
 
         return txt;
@@ -209,7 +211,7 @@ export class EditorService {
         const content = state.editorState.getCurrentContent();
         const cleanedContent = clearHighlights(content).content;
 
-        return toHTML(cleanedContent);
+        return editor3StateToHtml(cleanedContent);
     }
 
     /**
@@ -238,6 +240,7 @@ export class EditorService {
      * If the simpleReplace is true try to preserve the existing inline styles and entities
      */
     setHtmlFromTansa(html, simpleReplace = false) {
+        console.info('set', html, ok());
         if (ok()) {
             store.dispatch(action.setHtmlFromTansa(html, simpleReplace));
         }

@@ -1,24 +1,37 @@
-<div ng-controller="CommentsWidgetCtrl">
-    <ul class="notification-list white">
-        <li ng-repeat="comment in comments" ng-class="{active: comment._id === active}">
-            <figure class="avatar">
-                <img sd-user-avatar data-user="comment.user">
-            </figure>
-            <div class="content">
-                <div class="text" sd-comment-text data-comment="comment" data-name="{{comment.user.display_name || comment.user.username}}" data-text="{{comment.text}}"></div>
-                <span class="date" sd-reldate datetime="comment._created"></span>
+<div ng-controller="CommentsWidgetCtrl" class="sd-wrap-helper">
+    <ul class="widget-content__main boxed-list sd-padding-all--1">
+        <li ng-repeat="comment in comments" class="boxed-list__item" ng-class="{'boxed-list__item--selcted': comment._id === active}">
+            <div class="boxed-list__item-media">
+                <figure class="avatar sd-margin-all--0">
+                    <img sd-user-avatar data-user="comment.user">
+                </figure>
+            </div>
+            <div class="boxed-list__item-content">
+                <div class="boxed-list__item-content-row boxed-list__item-content-row--fixed">
+                    <time class="sd-text__date-time sd-text__date-time--small" sd-reldate datetime="comment._created"></time>
+                </div>
+                <div class="boxed-list__item-content-row">
+                    <span class="text" sd-comment-text data-comment="comment" data-name="{{comment.user.display_name || comment.user.username}}" data-text="{{comment.text}}"></span>
+                </div>
             </div>
         </li>
 
-        <li class="no-comments" ng-show="comments.length === 0">
-          <div class="round-box">
-            <i class="big-icon--chat"></i>
-          </div>
-          <h3 translate>No comments so far.</h3><span translate>Be the first...</span>
+        <li class="boxed-list__item boxed-list__item--blank" ng-show="comments.length === 0">
+            <div class="boxed-list__item-content boxed-list__item-content--centered">
+                <div class="panel-info">
+                    <div class="panel-info__icon">
+                        <i class="big-icon--chat"></i>
+                    </div>
+                    <h3 class="panel-info__heading" translate>No comments so far.</h3>
+                    <p class="panel-info__description" translate>Be the first one...</p>
+                </div>
+            </div>
         </li>
-        <li class="loading-info" ng-show="comments === null" translate>Loading...</li>
+        <li class="boxed-list__item boxed-list__item--blank" ng-show="comments === null">
+            <div class="sd-loader"></div>
+        </li>
     </ul>
-    <div class="add-comment">
+    <div class="widget-content__footer add-comment">
         <form name="commentsForm">
             <div sd-user-mentio></div>
             <textarea class="new-comment" sd-auto-height ng-model="text" mentio id="mentio-users" ng-keyup="saveOnEnter($event)"></textarea>

@@ -1,4 +1,6 @@
+import _ from 'lodash';
 import {gettext} from 'core/utils';
+import {includes} from 'lodash';
 
 angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
 /**
@@ -125,7 +127,7 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
                  * @param {object} item
                  * @description Checks if an item is in published state
                  */
-                    scope.isPublished = (item) => _.includes(
+                    scope.isPublished = (item) => includes(
                         ['published', 'killed', 'scheduled', 'corrected', 'recalled'],
                         item.state);
 

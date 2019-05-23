@@ -1,4 +1,4 @@
-<div class="widget" ng-controller="Macros">
+<div class="sd-padding-all--2 widget-content__main" ng-controller="Macros">
     <div class="macro-option" ng-show="groupedMacros">
         <span translate>Group Macros</span>
         <span class="pull-right" sd-switch ng-model="groupedList"></span>
@@ -6,7 +6,7 @@
     <div ng-show="!groupedList">
         <ul class="link-list" sd-loading="loading">
             <li ng-repeat="macro in macros">
-                <button class="btn" ng-click="call(macro)">{{ macro.label | translate }}</button>
+                <button class="btn btn--hollow" ng-click="call(macro)" translate>{{ macro.label }}</button>
             </li>
         </ul>
     </div>
@@ -14,7 +14,7 @@
         <div sd-toggle-box data-title="{{:: 'quick list' | translate }}" data-open="true">
             <ul class="link-list" sd-loading="loading">
                 <li ng-repeat="macro in quickList | orderBy:'label'">
-                    <button class="btn" ng-click="call(macro)">{{ macro.label | translate }}</button>
+                    <button class="btn btn--hollow" ng-click="call(macro)" translate>{{ macro.label }}</button>
                 </li>
             </ul>
         </div>
@@ -23,7 +23,7 @@
                 ng-click="setGroupStatus(key)" data-open="{{getGroupStatus(key)}}">
                 <ul class="link-list" sd-loading="loading">
                     <li ng-repeat="macro in value">
-                        <button class="btn" ng-click="call(macro)">{{ macro.label | translate }}</button>
+                        <button class="btn btn--hollow" ng-click="call(macro)" translate>{{ macro.label }}</button>
                     </li>
                 </ul>
             </div>
@@ -32,7 +32,7 @@
             ng-click="setGroupStatus('miscellaneous')" data-open="{{getGroupStatus('miscellaneous')}}">
             <ul class="link-list" sd-loading="loading">
                 <li ng-repeat="macro in miscMacros | orderBy:'label'">
-                    <button class="btn" ng-click="call(macro)">{{ macro.label | translate }}</button>
+                    <button class="btn btn--hollow" ng-click="call(macro)" translate>{{ macro.label }}</button>
                 </li>
             </ul>
         </div>

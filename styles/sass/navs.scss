@@ -61,7 +61,7 @@
 // TABS AND PILLS
 // -------------
 
-// Common styles
+//Common styles
 .nav-tabs,
 .nav-pills {
     @include clearfix();
@@ -84,9 +84,8 @@
 // ----
 
 
-// Make the list-items overlay the bottom border
+//Make the list-items overlay the bottom border
 .nav-tabs {
-    @include box-sizing(border-box);
     height: $nav-height;
     > li {
         margin-bottom: -1px;
@@ -114,7 +113,7 @@
 .nav-tabs > li > a {
     @include box-sizing(border-box);
 }
-// Active state, and it's :hover to override normal :hover
+//Active state, and it's :hover to override normal :hover
 .nav-tabs > .active > a,
 .nav-tabs > .active > a:hover,
 .nav-tabs > .active > button,
@@ -125,10 +124,6 @@
     color: $grayDark;
 }
 
-.nav-tabs > li:first-child > a,
-.nav-tabs > li:first-child > button {
-    //margin-left: 0;
-}
 
 // PILLS
 // -----
@@ -337,24 +332,8 @@
 // ------------
 .subnav {
     align-items: center;
-    z-index: 1001;
-    // position: absolute;
-    // display: flex;
-    // top: $nav-height;
-    // left: 0;
-    // right: 0;
-    // height:$subnav-height;
-    // @include border-box();
-    // z-index: 1001;
-    // background: rgba(245,245,245,0.90);
-    // border-bottom: 0px;
-    // @include box-shadow-both(0 1px 3px rgba(0,0,0,0.07), 0 1px 0 0 rgba(0,0,0,0.1));
-    // @include transition( all 0.3s ease);
     &--padded {
         padding: 10px 20px;
-    }
-    + .subnav {
-        z-index: 999;
     }
 }
 
@@ -363,7 +342,7 @@
     top:48px;
     left:0;
     right:0;
-    z-index: 1001;
+    z-index: 10;
 }
 .subnav--top {
     top: 48px;

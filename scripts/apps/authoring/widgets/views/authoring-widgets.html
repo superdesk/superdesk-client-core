@@ -1,8 +1,7 @@
 <div class="widget-wrapper"
     ng-class="{
         'active-right': active,
-        'right-extended': active.extended
-    }">
+        'right-extended': active.extended}">
     <div class="sd-sidetab-menu sd-sidetab-menu--right" ng-if="item">
         <ul class="navigation-tabs">
             <li ng-repeat="widget in widgets | orderBy:'order'"
@@ -11,13 +10,13 @@
                     ng-click="activate(widget)"
                     ng-disabled="isWidgetLocked(widget)"
                     id="{{ :: widget._id }}"
-                    sd-tooltip="{{ :: widget.label | translate}} (ctrl+alt+{{widget.order}})" flow="left"
-                    sd-hotkey="ctrl+alt+{{widget.order}}"
+                    sd-tooltip="{{ :: widget.label | translate}} ({{generateHotkey($index+1, true)}})" flow="left"
+                    sd-hotkey="{{generateHotkey($index+1)}}"
                     sd-hotkey-options="{global: true}">
                     <span id="unread-count" class="sd-sidetab-menu__info-label badge badge--primary" ng-show="widget._id == 'comments' && comments.length">{{ comments.length }}</span>
 
                     <span class="sd-sidetab-menu__info-label badge badge--primary"
-                        ng-show="badge(widget)">{{ badge(widget) }}</span>
+                        ng-if="badge(widget)">{{ badge(widget) }}</span>
 
                     <i class="sd-sidetab-menu__main-icon big-icon--{{ :: widget.icon }}"></i>
                     <i class="sd-sidetab-menu__helper-icon icon-close-small"></i>
@@ -31,7 +30,7 @@
         <section class="tabcontent" ng-init="widget=active">
             <div sd-widget data-widget="active" data-configurable="active.configurable"
             data-save="active.save()">
-                <div ng-include="active.template"></div>
+                <div ng-include="active.template" class="sd-wrap-helper"></div>
             </div>
         </section>
     </div>

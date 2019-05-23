@@ -38,7 +38,6 @@
          data-value="item.headline"
          data-on-change="autosave(item)"
          data-read-only="!_editable"
-         data-disable-spellchecker="useTansaProofing()"
          data-item="item"
          data-refresh-trigger="refreshTrigger"
          data-tabindex="editor.headline.order">
@@ -164,7 +163,6 @@
          data-value="item.abstract"
          data-on-change="autosave(item)"
          data-read-only="!_editable"
-         data-disable-spellchecker="useTansaProofing()"
          data-item="item"
          data-refresh-trigger="refreshTrigger"
          data-tabindex="editor.abstract.order">
@@ -209,13 +207,11 @@
              class="dateline-city"
              data-tabindex="editor.dateline.order"
              ng-disabled="!_editable"
-             data-list="metadata.cities"
              data-item="item"
              data-fieldprefix="dateline"
              data-field="located"
              placeholder="Add location"
              data-postprocessing="updateDateline(item, city)"
-             data-change="autosave(item)"
              sd-focus-element
              data-element="input"
              data-append-element=".field"
@@ -294,7 +290,7 @@
 
     <label class="field__label">{{label('body_html')}}</label>
     <span sd-reading-time data-item="item.body_html" data-html="true" data-language="item.language"></span>
-    <span sd-character-count data-item="item.body_html" data-html="true"></span>
+    <span sd-character-count data-item="item.body_html" data-html="true" data-limit="schema.body_html.maxlength"></span>
     <span sd-word-count data-item="item.body_html" data-html="true"></span>
     <div id="bodyhtml"
          sd-editor3
@@ -308,7 +304,6 @@
          data-on-change="autosave(item, 0)"
          data-debounce="500"
          data-language="item.language"
-         data-disable-spellchecker="useTansaProofing()"
          data-item="item"
          data-refresh-trigger="refreshTrigger"
          data-show-title="editor.body_html.imageTitle"
@@ -411,7 +406,6 @@
          data-read-only="!_editable"
          data-on-change="autosave(item)"
          data-language="item.language"
-         data-disable-spellchecker="useTansaProofing()"
          data-item="item"
          data-refresh-trigger="refreshTrigger"
          data-tabindex="editor.media_description.order">
@@ -479,7 +473,6 @@
          data-read-only="!_editable"
          data-on-change="autosave(item)"
          data-language="item.language"
-         data-disable-spellchecker="useTansaProofing()"
          data-item="item"
          data-refresh-trigger="refreshTrigger"
          data-tabindex="editor.body_footer.order">
@@ -552,7 +545,7 @@
     sd-width="{{ editor[field._id].sdWidth || 'full' }}"
     data-required="schema[field._id].required"
     order="{{ editor[field._id].order }}"
-    sd-validation-error="error[field._id.toLowerCase()]">
+    sd-validation-error="error[field.display_name.toLowerCase()]">
 
     <label class="field__label">{{field.display_name}}</label>
     <span ng-if="schema[field._id].maxlength || schema[field._id].minlength" sd-character-count
@@ -566,7 +559,6 @@
         data-language="item.language"
         data-on-change="autosave(item)"
         data-read-only="!_editable"
-        data-disable-spellchecker="useTansaProofing()"
         data-editor-format="editor[field._id].formatOptions"
         data-item="item"
         data-refresh-trigger="refreshTrigger"
@@ -643,6 +635,7 @@
 
     <div sd-item-carousel
          data-item="item"
+         data-field="field"
          data-items="mediaFieldVersions[field._id]"
          data-editable="_editable"
          data-onchange="autosave(item, 0)"
@@ -679,14 +672,71 @@
 <div class="field" ng-repeat="field in fields track by field._id"
     ng-if="field.field_type === 'urls'"
     sd-width="{{editor[field._id].sdWidth || 'full'}}"
-    sd-validation-error="error[field._id.toLowerCase()]"
+    sd-validation-error="error[field.display_name.toLowerCase()]"
     order="{{editor[field._id].order}}"
     data-required="schema[field._id].required">
 
     <sd-article-url-fields
+        editable="_editable"
         label="field.display_name"
         helper-text="helper_text[field._id]"
         field-id="field._id"
         urls="item.extra[field._id]"
-        on-change="handleUrlsChange"></sd-article-url-fields>
+        on-change="handleUrlsChange"
+        required="schema[field._id].required"
+        ></sd-article-url-fields>
+</div>
+
+<div class="field"
+    ng-if="schema.attachments && editor.attachments"
+    sd-width="{{ editor.attachments.sdWidth || 'full'}}"
+    sd-validation-error="error.attachments"
+    order="{{ editor.attachments.order }}"
+    data-required="schema.attachments.required">
+    <label class="field__label" translate>{{ :: 'Attachments' | translate }}</label>
+    <div sd-attachments-editor
+    ></div>
+</div>
+
+<!-- Slugline -->
+<div class="field"
+     sd-validation-error="error.slugline"
+     data-required="schema.slugline.required"
+     ng-if="schema.slugline && editor['slugline'].section === 'content' && !(features.onlyEditor3 || editor.body_html.editor3)"
+     sd-width="{{editor.slugline.sdWidth}}"
+     order="{{editor.slugline.order}}">
+    <label class="field__label">{{label('slugline')}}</label>
+    <span ng-if="schema.slugline.maxlength" sd-character-count data-item="item.slugline" data-html="true" data-limit="schema.slugline.maxlength"></span>
+    <input type="text" class="slugline"
+       id="slugline"
+       data-language="item.language"
+       ng-model="item.slugline"
+       ng-model-options="{debounce: 500}"
+       ng-change="autosave(item)"
+       ng-disabled="!_editable"
+       ng-trim="false"
+       tabindex="{{editor.slugline.order}}">
+</div>
+<div class="field"
+     sd-width="{{editor.slugline.sdWidth|| 'full'}}"
+     ng-if="schema.slugline && editor['slugline'].section === 'content' && (features.onlyEditor3 || editor.body_html.editor3)"
+     order="{{editor.slugline.order}}"
+     sd-validation-error="error.slugline"
+     data-required="schema.slugline.required">
+    <label class="field__label">{{label('slugline')}}</label>
+    <span ng-if="schema.slugline.maxlength" sd-character-count data-item="item.slugline" data-html="true" data-limit="schema.slugline.maxlength"></span>
+    <div id="title" class="slugline"
+         sd-editor3
+         data-path-to-value="'slugline'"
+         data-single-line="true"
+         data-bind-to-value="compareView"
+         data-scroll-container=".page-content-container"
+         data-language="item.language"
+         data-value="item.slugline"
+         data-on-change="autosave(item)"
+         data-read-only="!_editable"
+         data-item="item"
+         data-refresh-trigger="refreshTrigger"
+         data-tabindex="editor.slugline.order">
+    </div>
 </div>

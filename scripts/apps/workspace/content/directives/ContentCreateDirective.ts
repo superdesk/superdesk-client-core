@@ -64,7 +64,7 @@ export function ContentCreateDirective(api, desks, templates, content, authoring
              * Start content upload modal
              */
             scope.openUpload = function openUpload() {
-                superdesk.intent('upload', 'media');
+                superdesk.intent('upload', 'media', {deskSelectionAllowed: true});
             };
 
             scope.contentTemplates = null;

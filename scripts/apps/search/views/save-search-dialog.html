@@ -1,5 +1,8 @@
 <!-- <form name="viewsForm"> -->
     <fieldset>
+        <div class="field" ng-hide="{{edit.filter.query.raw === undefined}}">
+            <input id="search_query" type="text" class="fullwidth-input line-input" ng-model="edit.filter.query.raw" placeholder="{{:: 'Query' | translate}}">
+        </div>
         <div class="field">
             <input id="search_name" type="text" class="fullwidth-input line-input" ng-model="edit.name" placeholder="{{:: 'Name' | translate}}" required>
         </div>
@@ -9,6 +12,10 @@
         <div class="field" ng-if="!wrapper.edit.subscribers.user_subscriptions.length">
             <span id="search_global" sd-switch ng-model="edit.is_global"></span>
             <label class="label--inline" translate>Make global</label>
+        </div>
+        <div class="field" ng-if="edit.is_global && config.features.searchShortcut">
+            <span id="search_shortcut" sd-switch ng-model="edit.shortcut"></span>
+            <label class="label--inline" translate>Search shortcut</label>
         </div>
     </fieldset>
 <!-- </form> -->

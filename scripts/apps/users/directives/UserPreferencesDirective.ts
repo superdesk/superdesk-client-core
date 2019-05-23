@@ -1,3 +1,5 @@
+/* eslint-disable max-len */
+/* tslint:disable:max-line-length */
 import {gettext} from 'core/utils';
 
 /**
@@ -218,7 +220,12 @@ export function UserPreferencesDirective(
                 // values object is undefined or any of the needed
                 // data buckets are missing in it
                 buckets = [
-                    'cities', 'categories', 'default_categories', 'locators', 'calendars', 'agendas',
+                    'categories',
+                    'default_categories',
+                    'locators',
+                    'calendars',
+                    'agendas',
+                    'eventsPlanningFilters',
                 ];
 
                 initNeeded = buckets.some((bucketName) => {
@@ -250,11 +257,14 @@ export function UserPreferencesDirective(
             *   settings
             */
             function updateScopeData(helperData, userPrefs) {
-                scope.cities = helperData.cities;
-
                 // If the planning module is installed we save a list of the available agendas
                 if (scope.features.agenda) {
                     scope.agendas = helperData.agendas;
+                }
+
+                // If the planning module is installed we save a list of the available events_planning_filters
+                if (scope.features.events_planning_filters) {
+                    scope.eventsPlanningFilters = helperData.eventsPlanningFilters;
                 }
 
                 // A list of category codes that are considered
@@ -333,7 +343,6 @@ export function UserPreferencesDirective(
                     return $q.when();
                 }
 
-                // tslint:disable-next-line
                 msg = gettext('No preferred categories selected. Should you choose to proceed with your choice. A default set of categories will be selected for you.');
 
                 modalResult = modal.confirm(msg).then(() => {

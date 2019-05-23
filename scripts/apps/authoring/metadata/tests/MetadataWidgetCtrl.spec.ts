@@ -455,9 +455,10 @@ describe('dateline dropdown', () => {
     beforeEach(window.module('superdesk.apps.publish'));
     beforeEach(window.module('superdesk.apps.authoring.metadata'));
 
-    beforeEach(inject((_$rootScope_, _$compile_) => {
+    beforeEach(inject((_$rootScope_, _$compile_, $q, metadata) => {
         $rootScope = _$rootScope_;
         $compile = _$compile_;
+        spyOn(metadata, 'fetchCities').and.returnValue($q.when(cities));
     }));
 
     function compileDirective(html, scopeValues) {
@@ -469,7 +470,7 @@ describe('dateline dropdown', () => {
 
     it('select city within the list', inject(() => {
         var elmHtml = '<div sd-meta-locators class="dateline-city" ng-disabled="!_editable" ' +
-                      'data-item="item" data-list="cities" data-fieldprefix="dateline" ' +
+                      'data-item="item" data-fieldprefix="dateline" ' +
                       'data-field="located"></div>';
 
         var iScope;
@@ -491,7 +492,7 @@ describe('dateline dropdown', () => {
         iScope = elm.isolateScope();
         iScope.$digest();
         iScope.searchLocator('Sydney');
-        expect(iScope.selectedTerm).toBe('Sydney');
+        expect(iScope.$ctrl.selectedTerm).toBe('Sydney');
         iScope.selectLocator(cities[1]);
         expect(iScope.item.dateline.located.city).toBe('Sydney');
     }));
@@ -520,7 +521,7 @@ describe('dateline dropdown', () => {
         iScope = elm.isolateScope();
         iScope.$digest();
         iScope.searchLocator('Foobar');
-        expect(iScope.selectedTerm).toBe('Foobar');
+        expect(iScope.$ctrl.selectedTerm).toBe('Foobar');
         iScope.selectLocator();
         expect(iScope.item.dateline.located.city).toBe('Foobar');
     }));

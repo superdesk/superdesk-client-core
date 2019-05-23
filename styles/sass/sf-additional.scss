@@ -249,7 +249,6 @@
                 width: auto;
                 padding: 0 6px;
             }
-            background: #fff;
             border-right: 1px solid #e0e0e0;
         }
         .separator-handler {
@@ -956,7 +955,7 @@
 // ---------------------------------------------
 
 .notification-list {
-    margin: 0;
+    margin: 0 1rem;
     margin-bottom: 20px;
     list-style-type: none;
 
@@ -1808,7 +1807,7 @@
 .sd-check__wrapper .sd-checkbox+label {
     font-size: 13px;
     font-weight: 400;
-    color: #333;
+    color: inherit;
     height: auto;
     text-transform: none;
     &.label--active {
@@ -1935,4 +1934,25 @@
 
 sd-tag-input + .sd-line-input__message {
     margin-top: -2rem;
+}
+
+sd-multi-image-edit {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.sd-wrap-helper {
+    display: contents !important;
+
+}
+.subnav {
+    z-index: 5;
+}
+.subnav + .subnav {
+    z-index: 4;
+}
+
+.sd-margin-all--0 {
+    margin: 0 !important;
 }

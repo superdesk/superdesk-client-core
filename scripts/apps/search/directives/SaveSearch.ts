@@ -1,20 +1,20 @@
 import {create, clone, each} from 'lodash';
 import {saveOrUpdateSavedSearch} from '../SavedSearch';
 import {gettext} from 'core/utils';
-
-SaveSearch.$inject = ['$location', 'asset', 'api', 'session', 'notify', '$rootScope'];
+import {isEmptyString} from 'core/helpers/utils';
+SaveSearch.$inject = ['$location', 'asset', 'api', 'notify', '$rootScope'];
 
 /**
  * Opens and manages save search panel
  */
-export function SaveSearch($location, asset, api, session, notify, $rootScope) {
+export function SaveSearch($location, asset, api, notify, $rootScope) {
     return {
         templateUrl: asset.templateUrl('apps/search/views/save-search.html'),
-        link: function(scope, elem) {
+        link: function(scope, _elem) {
             scope.edit = null;
             scope.activateSearchPane = false;
 
-            scope.$on('edit:search', (event, args) => {
+            scope.$on('edit:search', (_event, args) => {
                 scope.activateSearchPane = false;
                 scope.editingSearch = args;
                 scope.edit = create(scope.editingSearch) || {};
@@ -40,10 +40,18 @@ export function SaveSearch($location, asset, api, session, notify, $rootScope) {
                 scope.activateSearchPane = false;
             };
 
+            scope.isValid = function(edit) {
+                if (edit.filter.query.raw == null) {
+                    return isEmptyString(edit.name);
+                }
+                return edit.filter.query && isEmptyString(edit.filter.query.raw)
+                    && isEmptyString(edit.name);
+            };
+
             scope.clear = function() {
                 scope.editingSearch = false;
                 scope.edit = null;
-                each($location.search(), (item, key) => {
+                each($location.search(), (_item, key) => {
                     if (key !== 'repo') {
                         $location.search(key, null);
                     }
@@ -78,7 +86,13 @@ export function SaveSearch($location, asset, api, session, notify, $rootScope) {
                 // perform search with selected parameters before saving
                 // so parameters get in the url where they are later read from
                 scope.search();
+                const rawSearchQuery = editSearch.filter && editSearch.filter.query
+                    ? editSearch.filter.query.raw : null;
+
                 editSearch.filter = {query: clone($location.search())};
+                if (rawSearchQuery) {
+                    editSearch.filter.query.raw = rawSearchQuery;
+                }
                 var originalSearch = editSearch._id ? scope.editingSearch : {};
 
                 saveOrUpdateSavedSearch(api, originalSearch, editSearch)

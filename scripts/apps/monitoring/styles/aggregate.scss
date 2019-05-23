@@ -348,6 +348,12 @@ $search-widget-preview-width: 440px;
     }
 }
 
+.sd-kanban-list__board-header {
+    .stage-header {
+        margin-bottom: 0;
+    }
+}
+
 .notification-label, .label-total {
     margin: 0;
     box-sizing: border-box;

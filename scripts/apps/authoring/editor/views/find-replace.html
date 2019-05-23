@@ -1,39 +1,40 @@
-<div>
+<div class="widget-content__main">
     <form>
-    <fieldset sd-find-replace>
-        <div class="form-group field">
-            <label for="find-replace-what" translate>Find</label>
-            <input type="text" class="form-control" id="find-replace-what"
+    <fieldset sd-find-replace class="sd-padding-all--2">
+        <div class="form__row">
+            <label class="form-label form-label--marg-b10" for="find-replace-what" translate>Find</label>
+            <input type="text" class="basic-input form-control" id="find-replace-what"
                 ng-model="from"
                 sd-autofocus
                 ng-trim="false"
                 ng-model-options="{debounce: 500}">
         </div>
-        <div class="form-group field">
-            <label for="find-replace-with" translate>Replace with</label>
-            <input type="text" class="form-control" id="find-replace-with" ng-model="to" ng-trim="false">
+        <div class="form__row">
+            <label class="form-label form-label--marg-b10" for="find-replace-with" translate>Replace with</label>
+            <input type="text" class="basic-input form-control" id="find-replace-with" ng-model="to" ng-trim="false">
         </div>
 
-        <div class="btn-group" role="group">
-            <label class="pull-left" translate>Case Sensitive</label>
-            <span class="pull-right" sd-switch ng-model="caseSensitive"></span>
+        <div class="form__row">
+            <span sd-switch ng-model="caseSensitive"></span><label translate>Case Sensitive</label>
         </div>
 
-        <div class="field clearfix"></div>
-
-        <div class="btn-group pull-right" role="group">
-            <button type="button" class="btn" ng-click="prev()" ng-disabled="!from">&laquo;</button>
-            <button class="btn" ng-click="next()" ng-disabled="!from">&raquo;</button>
+        <div class="form__row form__row--flex">
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn--hollow btn--icon-only" ng-click="prev()" ng-disabled="!from"><i class="icon-chevron-left-thin"></i></button>
+                <button class="btn btn--hollow btn--icon-only" ng-click="next()" ng-disabled="!from"><i class="icon-chevron-right-thin"></i></button>
+            </div>
+    
+            <div class="btn-group ml-auto" role="group">
+                <button type="button" class="btn" ng-click="replace()" ng-disabled="!from" translate>Replace</button>
+                <button type="button" class="btn" ng-click="replaceAll()" ng-disabled="!from" translate>Replace All</button>
+            </div>
         </div>
 
-        <div class="btn-group pull-left" role="group">
-            <button type="button" class="btn" ng-click="replace()" ng-disabled="!from" translate>Replace</button>
-            <button type="button" class="btn" ng-click="replaceAll()" ng-disabled="!from" translate>Replace All</button>
+
+        <div class="form__row  form__row--flex">
+            <button type="button" class="btn btn--hollow ml-auto" ng-click="closeWidget(widget)" translate>Done</button>
         </div>
-
-        <div class="field clearfix"></div>
-
-        <button type="button" class="btn" ng-click="closeWidget(widget)" translate>Done</button>
+        
     </fieldset>
     </form>
 </div>

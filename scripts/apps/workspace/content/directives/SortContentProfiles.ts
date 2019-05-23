@@ -30,15 +30,21 @@ export function SortContentProfiles() {
 
                         var start = ui.item.data('start_index'),
                             end = ui.item.parent().find('li.schema-item')
-                                .index(ui.item);
+                                .index(ui.item),
+                            key = ui.item.data('id');
 
-                        scope.reorder(start, end, ui.item);
-                        scope.$apply();
+                        scope.$applyAsync(() => {
+                            scope.reorder(start, end, key);
+                        });
                     }
                 },
                 update: function(event, ui) {
                     updated = true;
                 },
+            });
+
+            scope.$on('$destroy', () => {
+                element.sortable('destroy');
             });
         },
     };

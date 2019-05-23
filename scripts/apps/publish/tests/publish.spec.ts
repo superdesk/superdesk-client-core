@@ -292,9 +292,9 @@ describe('publish queue', () => {
 
 describe('subscriber filter', () => {
     const subscribers = [
-        {name: 'test all', subscriber_type: 'all'},
-        {name: 'test wire', subscriber_type: 'wire'},
-        {name: 'digital', subscriber_type: 'digital'},
+        {name: 'test all', subscriber_type: 'all', is_active: true},
+        {name: 'test wire', subscriber_type: 'wire', is_active: true},
+        {name: 'digital', subscriber_type: 'digital', is_active: false},
     ];
 
     let subscribersByFilter = null;
@@ -304,10 +304,10 @@ describe('subscriber filter', () => {
         subscribersByFilter = _subscribersByFilter_;
     }));
 
-    it('can get all subscribers if no subscriber type', () => {
-        const items = subscribersByFilter(subscribers);
+    it('can get all active subscribers if no subscriber type', () => {
+        const items = subscribersByFilter(subscribers, {subscriber_status: {value: true}});
 
-        expect(items.length).toBe(subscribers.length);
+        expect(items.length).toBe(2);
     });
 
     it('can get all subscribers buy name test', () => {

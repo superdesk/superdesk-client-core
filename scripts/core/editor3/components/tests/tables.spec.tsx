@@ -33,9 +33,11 @@ describe('editor3.component.table-block', () => {
         );
 
         ['a', 'b', 'c', 'd', 'e', 'f'].forEach((letter, i) => {
-            const cellContentState = wrapper.find('TableCell').at(i)
-                .prop('editorState')
-                .getCurrentContent();
+            const cellEditorState: any = wrapper
+                .find('TableCell')
+                .at(i)
+                .prop('editorState');
+            const cellContentState = cellEditorState.getCurrentContent();
             const cellText = cellContentState.getPlainText('');
 
             expect(cellText).toBe(letter);

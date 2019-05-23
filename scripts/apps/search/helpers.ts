@@ -73,7 +73,7 @@ export function openActionsMenu(elem, target, itemId) {
 export function renderToBody(elem, target, zIndex = 1000) {
     // first render it somewhere not visible
     menuHolderElem().style.zIndex = '-1';
-    var node = ReactDOM.findDOMNode(ReactDOM.render(elem, menuHolderElem()));
+    var node = ReactDOM.findDOMNode(ReactDOM.render(elem, menuHolderElem())) as HTMLElement;
     // make sure it's rendered
 
     node.style.display = 'block';

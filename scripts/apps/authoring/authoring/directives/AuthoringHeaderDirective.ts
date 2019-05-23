@@ -1,4 +1,5 @@
 import {isNull, isUndefined, find, filter, keys, findIndex, defer, sortBy, map, forEach, startsWith} from 'lodash';
+import {FIELD_KEY_SEPARATOR} from 'core/editor3/helpers/fieldsMeta';
 
 AuthoringHeaderDirective.$inject = [
     'api',
@@ -40,6 +41,7 @@ export function AuthoringHeaderDirective(
             scope.displayCompanyCodes = null;
             scope.features = features;
             scope.translationService = TranslationService;
+            scope.FIELD_KEY_SEPARATOR = FIELD_KEY_SEPARATOR;
 
             scope.isCollapsed = authoringWorkspace.displayAuthoringHeaderCollapedByDefault == null
                 ? false :
@@ -133,18 +135,9 @@ export function AuthoringHeaderDirective(
                 WidgetsManagerCtrl.activate(authoringWidgets.find((widget) => widget._id === 'translations'));
             };
 
-            scope.$watch('item.profile', (profile) => {
-                if (profile) {
-                    content.getType(profile)
-                        .then((type) => {
-                            scope.contentType = type;
-                            scope.editor = authoring.editor = content.editor(type, scope.item.type);
-                            scope.schema = authoring.schema = content.schema(type, scope.item.type);
-                            initAnpaCategories();
-                        });
-                } else {
-                    scope.editor = authoring.editor = content.editor(null, scope.item.type);
-                    scope.schema = authoring.schema = content.schema(null, scope.item.type);
+            scope.$watch('schema.subject', (subject) => {
+                if (subject) {
+                    initAnpaCategories();
                 }
             });
 

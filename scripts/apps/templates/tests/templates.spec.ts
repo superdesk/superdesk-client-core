@@ -252,8 +252,8 @@ describe('templates', () => {
                 session.identity = {_id: 'foo'};
                 spyOn(desks, 'getCurrentDeskId').and.returnValue('sports');
                 spyOn(api, 'query').and.returnValue($q.when({_items: [
-                    {_id: 'public1'},
-                    {_id: 'public2'},
+                    {_id: 'public1', template_desks: ['foo']},
+                    {_id: 'public2', template_desks: ['foo']},
                     {_id: 'private', is_public: false},
                 ], _meta: {total: 3}}));
                 var scope = $rootScope.$new();

@@ -13,8 +13,8 @@ export function SubscribersFilter() {
      * @returns {Array<Object>} The filtered array.
      */
     return function(items, search) {
-        if (!search) {
-            return items;
+        if (!items) {
+            return;
         }
 
         let filteredItems = items;
@@ -27,6 +27,10 @@ export function SubscribersFilter() {
 
         if (search.subscriber_type && search.subscriber_type !== '') {
             filteredItems = filteredItems.filter((item) => item.subscriber_type === search.subscriber_type);
+        }
+
+        if (search.subscriber_status && search.subscriber_status.value != null) {
+            filteredItems = filteredItems.filter((item) => item.is_active === search.subscriber_status.value);
         }
 
         return filteredItems;

@@ -10,6 +10,7 @@
             select="selectTerm(item)"
             always-visible="true"
             data-disabled="disabled"
+            data-debounce="1000"
         >
             <ul class="item-list">
                 <li typeahead-item="t" ng-repeat="t in terms track by t.code"j>

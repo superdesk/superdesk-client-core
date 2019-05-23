@@ -10,7 +10,7 @@ export function CharacterCount() {
             html: '@',
         },
         template: '<span class="char-count" ng-class="{error: limit && numChars > limit}"> ' +
-                gettext(' characters') + '</span>' +
+                gettext('characters') + '</span>' +
                 '<span class="char-count" ng-class="{error: limit && numChars > limit}">{{numChars}}' +
                 '<span ng-if="limit" ng-class="{error: limit && numChars > limit}">/{{ limit }}</span></span>',
         link: function characterCountLink(scope, elem, attrs) {

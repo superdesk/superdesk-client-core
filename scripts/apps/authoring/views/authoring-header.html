@@ -74,7 +74,7 @@
             <div class="authoring-header__item"
                  sd-validation-error="error.slugline"
                  data-required="schema.slugline.required"
-                 ng-if="schema.slugline"
+                 ng-if="schema.slugline && editor['slugline'].section !== 'content'"
                  sd-width="{{editor.slugline.sdWidth}}"
                  order="{{editor.slugline.order}}">
                 <label class="authoring-header__item-label uppercase" translate>SLUGLINE</label>
@@ -337,10 +337,11 @@
                 </label>
                 <div class="authoring-header__input-holder">
                     <div sd-meta-terms
+                        ng-if="cv.selection_type === 'multi selection'"
                         class="data"
                         data-tabindex="editor[cv._id].order"
                         data-item="item"
-                        data-field="{{cv.schema_field|| 'subject'}}"
+                        data-field="{{cv.schema_field || 'subject'}}"
                         data-unique="qcode"
                         data-list="cv.terms"
                         data-cv="cv"
@@ -350,6 +351,20 @@
                         data-reload-list="true"
                         data-include-parent="{{editor[cv._id].includeparent}}"
                         tabindex="{{editor[cv._id].order}}">
+                   </div>
+                   <div sd-meta-dropdown
+                        ng-if="cv.selection_type !== 'multi selection'"
+                        data-tabindex="editor[cv._id].order"
+                        data-item="item"
+                        data-field="{{cv.schema_field || 'subject'}}"
+                        data-list="cv.terms"
+                        data-cv="cv"
+                        ng-disabled="!_editable"
+                        data-header="true"
+                        data-change="autosave(item)"
+                        tabindex="{{editor[cv._id].order}}"
+                        data-key="qcode"
+                        >
                    </div>
                    <div class="authoring-header__hint" ng-if="helper_text[cv._id]">{{helper_text[cv._id]}}</div>
                 </div>
@@ -364,11 +379,12 @@
                 order="{{ editor[field._id].order }}"
                 sd-validation-error="error[field._id.toLowerCase()]">
     
-                <label class="authoring-header__item-label"">{{field.display_name}}</label>
+                <label class="authoring-header__item-label">{{field.display_name}}</label>
                 <span ng-if="schema[field._id].maxlength || schema[field._id].minlength" sd-character-count
                     data-item="item.extra[field._id]" data-html="true" data-limit="schema[field._id].maxlength"></span>
                 <div class="authoring-header__input-holder">
                     <div sd-editor3
+                        class="authoring-header__input-editor3"
                         data-path-to-value="'extra' + FIELD_KEY_SEPARATOR + field._id"
                         data-single-line="field.field_options.single"
                         data-value="item.extra[field._id]"
@@ -377,7 +393,6 @@
                         data-language="item.language"
                         data-on-change="autosave(item)"
                         data-read-only="!_editable"
-                        data-disable-spellchecker="useTansaProofing()"
                         data-editor-format="editor[field._id].formatOptions"
                         data-item="item"
                         data-refresh-trigger="refreshTrigger"

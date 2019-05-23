@@ -1,37 +1,47 @@
+import {isImage, isAudio, isVideo} from './utils';
+import {logger} from 'core/services/logger';
+
 /**
- * @param {Array<Node>} elements
- * @param {string} eventName
+ * @param elements An array of img, audio and video elements
  */
-const waitForEventToFireForAllElements = (elements, eventName) => new Promise((resolve) => {
-    let itemsLeftToLoad = elements.length;
+export const waitForMediaToLoad = (elements: Array<HTMLImageElement | HTMLAudioElement | HTMLVideoElement>):
+Promise<void> => new Promise((resolve) => {
+    const filteredElements = elements.filter((element) => {
+        if (isImage(element)) {
+            return element.complete === false;
+        } else if (isAudio(element) || isVideo(element)) {
+            return element.readyState < 1;
+        } else {
+            logger.error(new Error('Unexpected element type'));
+            return false;
+        }
+    });
+    let itemsLeftToLoad: number = filteredElements.length;
 
     if (itemsLeftToLoad === 0) {
         resolve();
         return;
     }
 
-    const onItemLoaded = (event) => {
+    const eventHandler = (event) => {
         itemsLeftToLoad--;
-        event.target.removeEventListener(eventName, onItemLoaded);
 
         if (itemsLeftToLoad === 0) {
             resolve();
         }
     };
 
-    elements.forEach((element) => {
-        element.addEventListener(eventName, onItemLoaded);
+    filteredElements.forEach((element) => {
+        if (isImage(element)) {
+            // check for error in image src
+            element.addEventListener('error', eventHandler, {once: true});
+            element.addEventListener('load', eventHandler, {once: true});
+        } else if (isAudio(element) || isVideo(element)) {
+            // for audio and video check for the error in source
+            const source = element.getElementsByTagName('source')[0];
+
+            source.addEventListener('error', eventHandler, {once: true});
+            element.addEventListener('loadedmetadata', eventHandler, {once: true});
+        }
     });
 });
-
-/**
- * @param {Array<Node>} elements
- */
-export const waitForImagesToLoad =
-    (elements) => waitForEventToFireForAllElements(elements.filter((img) => img.complete === false), 'load');
-
-/**
- * @param {Array<Node>} elements
- */
-export const waitForAudioAndVideoToLoadMetadata =
-    (elements) => waitForEventToFireForAllElements(elements.filter((media) => media.readyState < 1), 'loadedmetadata');

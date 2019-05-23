@@ -200,10 +200,32 @@ a:hover {
     margin-bottom: -2px;
     margin-top: 10px;
 }
+
 .main-section.users {
     .preview-layout {
         .list-pane > .content {
             right: 400px;
+            transition: all ease-in-out 0.2s;
+        }
+        &.closed {
+            .list-pane > .content {
+                right: 0;
+            }
+        }
+    }
+}
+
+.main-section.contacts-section {
+    .preview-layout {
+        .content {
+            right: 560px;
+            transition: all ease-in-out 0.2s;
+        }
+        &.closed {
+            .content {
+                right: 0;
+                transition: all ease-in-out 0.2s;
+            }
         }
     }
 }
@@ -238,6 +260,10 @@ a:hover {
             left: 0; right: 0; top: 0;
             @include box-shadow(0 1px 0 0 rgba(0,0,0,0.1));
             z-index: 1;
+            padding-right: 3.6rem;
+            .nav-tabs {
+                box-shadow: none;
+            }
         }
         > .content {
             position: absolute;
@@ -264,10 +290,6 @@ a:hover {
         }
         > .content {
             overflow: auto;
-            right: $sidepreview-width + 160;
-            @media only screen and (max-width : 1430px) {
-                right: $sidepreview-width - 40;
-            }
         }
     }
     .preview-pane {
@@ -315,27 +337,8 @@ a:hover {
             max-width: 100%;
         }
     }
-
-    &.closed {
-        @include transition(right ease 0.2s);
-        .list-pane {
-            border-right: 0;
-            > .content {
-                right: 0 !important;
-            }
-        }
-    }
-
-    .content-item-preview {
-        position: absolute;
-        top:50px;
-        right: 0;
-        bottom: 0;
-        @media only screen and (max-width : 1430px) {
-            width: $sidepreview-width - 40;
-        }
-    }
 }
+
 .ingest-container {
     .list-pane {
         top:-$nav-height;
@@ -344,38 +347,6 @@ a:hover {
 .archive-container {
     .archive-sidebar {
         top:$nav-height;
-    }
-}
-
-.authoring {
-    .preview-layout {
-        .list-pane {
-            > .content {
-                right: $sidepreview-width;
-                @media only screen and (max-width : 1630px) {
-                    right: $sidepreview-width - 40;
-                }
-                @media only screen and (max-width : 1430px) {
-                    right: 0;
-                }
-            }
-        }
-        .content-item-preview {
-            @media only screen and (max-width : 1630px) {
-                width: $sidepreview-width - 40;
-            }
-            @media only screen and (max-width : 1430px) {
-                width: $sidepreview-width - 80;
-                box-shadow: inset 4px 0 8px -5px rgba(0,0,0,0.9), 0 1px 12px 2px rgba(0,0,0,0.3), 0 1px 2px 1px rgba(0,0,0,0.3);
-            }
-        }
-        &.closed {
-            .content-item-preview {
-                @media only screen and (max-width : 1430px) {
-                    box-shadow: none;
-                }
-            }
-        }
     }
 }
 
@@ -534,7 +505,10 @@ $slide-pane-width: 400px;
     }
     > .content {
         position: absolute;
-        top: $nav-height; left: 0; right: 0; bottom: 0;
+        top: $nav-height; 
+        left: 0; 
+        right: 0; 
+        bottom: 0;
         overflow: auto;
         overflow-x: hidden;
         padding: 20px;
@@ -761,6 +735,7 @@ $slide-pane-width: 400px;
         top: 65px;
         left: 0; right: 0; bottom: 0;
         border-top: 2px solid #464646;
+        overflow: auto;
         @include box-shadow(inset 4px 0 4px -2px #202020);
         .module {
             margin-top: 20px;
@@ -1544,6 +1519,7 @@ body.prepare-print {
         height: 100%;
         background: #fff url('~images/loading-large.gif') no-repeat center;
         z-index: 1000;
+        opacity: 0.5;
     }
 }
 

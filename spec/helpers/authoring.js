@@ -248,6 +248,8 @@ function Authoring() {
         browser.wait(() => this.sendToButton.isPresent(), 1000);
         this.sendToButton.click();
 
+        browser.wait(() => this.publish_panel.isPresent(), 3000);
+
         this.publish_panel.click();
 
         browser.wait(() => this.publish_button.isPresent(), 3000);
@@ -865,7 +867,7 @@ function Authoring() {
 
     this.getNextLevelSelectedCategory = function() {
         return this.subject.all(by.className('levelup')).all(
-            by.css('[ng-click="allowEntireCat && selectTerm(activeTerm)"]'));
+            by.css('[ng-click="allowEntireCat && selectTerm(activeTerm, $event)"]'));
     };
 
     this.getItemSource = function() {

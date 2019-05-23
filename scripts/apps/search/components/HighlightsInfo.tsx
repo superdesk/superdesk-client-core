@@ -121,8 +121,10 @@ export class HighlightsInfo extends React.Component<any, any> {
             scope: this.props.scope,
         });
 
-        const icon = ReactDOM.findDOMNode(this).getElementsByClassName('icon-star')[0] ||
-        ReactDOM.findDOMNode(this).getElementsByClassName('icon-multi-star')[0];
+        const thisNode = ReactDOM.findDOMNode(this) as HTMLElement;
+
+        const icon = thisNode.getElementsByClassName('icon-star')[0] ||
+        thisNode.getElementsByClassName('icon-multi-star')[0];
 
         openActionsMenu(elem, icon, this.props.item._id);
     }

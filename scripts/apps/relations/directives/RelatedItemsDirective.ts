@@ -189,7 +189,12 @@ export function RelatedItemsDirective(authoringWorkspace, relationsService, noti
                 const key = getNextKey(scope.item.associations || {}, scope.field._id);
                 let data = {};
 
-                data[key] = {_id: item._id};
+                if ('_type' in item && item._type !== 'archive') {
+                    data[key] = item;
+                } else {
+                    data[key] = {_id: item._id};
+                }
+
                 scope.item.associations = angular.extend({}, scope.item.associations, data);
                 scope.onchange();
             };

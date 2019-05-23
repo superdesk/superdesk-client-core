@@ -5,22 +5,22 @@
     <header>
         <ul class="nav-tabs" ng-class="{'nav-tabs--small': (showRelatedTab && showHistoryTab) || (showRelatedTab && isMediaUsed) || (showHistoryTab && isMediaUsed)}">
             <li class="nav-tabs__tab" ng-class="{'nav-tabs__tab--active': vm.current_tab === 'content'}">
-                <button class="nav-tabs__link" ng-click="vm.current_tab = 'content'"><span translate>Content</span></button>
+                <button class="nav-tabs__link" ng-click="vm.current_tab = 'content'" title="{{ 'Content' | translate }}"><span translate>Content</span></button>
             </li>
             <li class="nav-tabs__tab" ng-class="{'nav-tabs__tab--active': vm.current_tab === 'metadata'}">
-                <button class="nav-tabs__link" ng-click="vm.current_tab = 'metadata'"><span translate>Metadata</span></button>
+                <button class="nav-tabs__link" ng-click="vm.current_tab = 'metadata'" title="{{ 'Metadata' | translate }}"><span translate>Metadata</span></button>
             </li>
             <li class="nav-tabs__tab" ng-show="showRelatedTab" ng-class="{'nav-tabs__tab--active': vm.current_tab === 'related'}">
-                <button class="nav-tabs__link" ng-click="vm.current_tab = 'related'"><span translate>Duplicates</span></button>
+                <button class="nav-tabs__link" ng-click="vm.current_tab = 'related'" title="{{ 'Duplicates' | translate }}"><span translate>Duplicates</span></button>
             </li>
             <li class="nav-tabs__tab" ng-show="showHistoryTab" ng-class="{'nav-tabs__tab--active': vm.current_tab === 'history'}">
-                <button class="nav-tabs__link" ng-click="vm.current_tab = 'history'" translate>Item history</button>
+                <button class="nav-tabs__link" ng-click="vm.current_tab = 'history'" title="{{ 'Item history' | translate }}" translate>Item history</button>
             </li>
             <li class="nav-tabs__tab" ng-show="isMediaUsed" ng-class="{'nav-tabs__tab--active': vm.current_tab === 'used'}">
-                <button class="nav-tabs__link" ng-click="vm.current_tab = 'used'" translate>Used</button>
+                <button class="nav-tabs__link" ng-click="vm.current_tab = 'used'"  title="{{ 'Used' | translate }}" translate>Used</button>
             </li>
             <li class="nav-tabs__tab" ng-show="isAssigned" ng-class="{'nav-tabs__tab--active': vm.current_tab === 'assignment'}">
-                <button class="nav-tabs__link" ng-click="vm.current_tab = 'assignment'" translate>Assignment</button>
+                <button class="nav-tabs__link" ng-click="vm.current_tab = 'assignment'"  title="{{ 'Assignment' | translate }}" translate>Assignment</button>
             </li>
         </ul>
         <button ng-click="close()" class="icn-btn close-preview">

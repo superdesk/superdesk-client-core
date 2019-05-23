@@ -83,3 +83,15 @@ const gettextPlural = (count, text, pluralText, params = {}) => {
 export const gettextCatalog = {
     getPlural: gettextPlural,
 };
+
+/**
+ * Escape given string for reg exp
+ *
+ * @url https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
+ *
+ * @param {string} string
+ * @return {string}
+ */
+export function escapeRegExp(string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}

@@ -160,6 +160,7 @@ angular.module('superdesk.apps.ingest', [
             order: 1200,
             group: 'ingest',
             if: 'workspaceConfig.ingest && privileges.ingest',
+            shortcut: 'alt+i',
         });
     }])
 

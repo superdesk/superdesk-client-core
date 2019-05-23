@@ -37,12 +37,13 @@ describe('editor3.components.media-block', () => {
                 blockProps={servicesStub}
                 contentState={contentState} />);
 
-        wrapper.find('.image-block__image-edit').simulate('click');
+        wrapper.find('.image-block__image-action').first()
+            .simulate('click');
 
         const entityKey = block.getEntityAt(0);
         const entity = contentState.getEntity(entityKey);
 
         expect(cropImage).toHaveBeenCalledWith(entityKey, entity.getData(),
-            {isNew: false, showMetadata: true});
+            {isNew: false, showMetadata: true, defaultTab: 'view'});
     });
 });

@@ -1,12 +1,13 @@
 
-import {debounce, omit, get} from 'lodash';
+import {get} from 'lodash';
+import {IPlacesService} from './PlacesService';
 
 function getCode(item) {
     return get(item, 'code', get(item, 'qcode'));
 }
 
-MetaPlaceDirective.$inject = ['api'];
-export default function MetaPlaceDirective(api) {
+MetaPlaceDirective.$inject = ['places'];
+export default function MetaPlaceDirective(places: IPlacesService) {
     return {
         scope: {
             item: '=',
@@ -20,22 +21,22 @@ export default function MetaPlaceDirective(api) {
         link: (scope) => {
             scope.terms = [];
 
-            scope.searchTerms = debounce((name) => {
+            scope.searchTerms = (name) => {
                 if (!name) {
                     scope.terms = [];
                     return;
                 }
 
                 scope.loading = true;
-                api.query('places_autocomplete', {name: name, lang: scope.item.language})
-                    .then((response) => {
+                places.searchGeonames(name, scope.item.language)
+                    .then((results) => {
                         scope.loading = false;
-                        scope.terms = response._items.map((place) => omit(place, ['_created', '_updated', '_etag']));
+                        scope.terms = results;
                     })
-                    .finally(() => {
+                    .catch(() => {
                         scope.loading = false;
                     });
-            }, 1000);
+            };
 
             scope.selectTerm = (term) => {
                 if (!getCode(term)) { // when search is in progress and user hits enter this gets called

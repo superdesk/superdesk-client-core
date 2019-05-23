@@ -85,15 +85,7 @@ module.exports = function makeConfig(grunt) {
         module: {
             rules: [
                 {
-                    test: /\.(ts|tsx)$/,
-                    exclude: shouldExclude,
-                    loader: 'ts-loader',
-                    options: {
-                        transpileOnly: false,
-                    },
-                },
-                {
-                    test: /\.(js|jsx)$/,
+                    test: /\.(ts|tsx|js|jsx)$/,
                     exclude: shouldExclude,
                     loader: 'ts-loader',
                     options: {

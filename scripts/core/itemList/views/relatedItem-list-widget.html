@@ -1,53 +1,59 @@
 <div class="main-list" ng-class="{wrap: selected, 'existing-items': !options.searchEnabled}" sd-loading="loading">
 
     <div class="search-box" ng-class="{blank: related}" ng-show="options.searchEnabled">
+        <i class="icon-search search-box__icon"></i>
         <input type="text" placeholder="{{ :: 'Search' | translate }}" ng-keypress="($event.which === 13)?refresh():null"
             ng-model="itemListOptions.keyword">
-        <button id="search-related-items" type="button" class="btn" ng-click="refresh()" ng-disabled="!hasKeywords()" translate>Search</button>
+        <button id="search-related-items" type="button" class="btn btn--small search-box__btn" ng-click="refresh()" ng-disabled="!hasKeywords()" translate>Search</button>
     </div>
 
     <div class="ingest-list-holder" ng-class="{'mode-detailed': options.mode === 'detailed'}">
         <div sd-shadow>
-            <ul class="ingest-list list-view related-item-list">
-                <li ng-repeat="item in processedItems track by $index" class="list-item-view" ng-class="{'active': item._id === options.item._id}" ng-if="canDisplayItem(item)">
-                    
-                    <div class="dropdown more-actions pull-right" ng-if="options.searchEnabled" dropdown>
-                        <button class="dropdown__toggle" dropdown__toggle><i class="icon-dots-vertical"></i></button>
-                        <div class="dropdown__menu pull-right">
-                            <ul>
-                                 <li ng-repeat="action in actions">
-                                    <button id="{{action.title | translate}}" ng-if="action.condition(item)" ng-click="action.method(item)">{{ :: action.title | translate }}</button>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="basic item-block" ng-click="view(item)">
+            <ul class="boxed-list sd-margin-all--1">
+                <li ng-repeat="item in processedItems track by $index" class="boxed-list__item boxed-list__item--clickable" ng-class="{'boxed-list__item--selcted': item._id === options.item._id}" ng-if="canDisplayItem(item)">
+                    <div class="boxed-list__item-media" ng-click="view(item)">
                         <i sd-filetype-icon data-item="item"></i>
-                        <div class="content">
-                            <span class="keyword" ng-if="item.slugline">
-                                <span class="relate-item-label" ng-if="options.searchEnabled && actions.update && actions.update.condition(item)"
-                                      ng-class="{'update-item': actions.update && actions.update.condition(item)}" title="{{ :: 'Can be associated as an update' | translate }}">U</span>
-                                <span class="relate-item-label" ng-if="options.searchEnabled && actions.addTake && actions.addTake.condition(item)"
-                                      ng-class="{'take-item': actions.addTake && actions.addTake.condition(item)}" title="{{ :: 'Can be associated as a take' | translate }}">T</span>
-                                {{ item.slugline }}</span>
-                            <span class="headline">{{item.headline || item.type}}</span>
-                            <span class="takekey">{{item.anpa_take_key}}</span>
-                            <time sd-datetime data-date="item.versioncreated"></time>
+                    </div>
+                    <div class="boxed-list__item-content" ng-click="view(item)">
+                        <div class="boxed-list__item-content-row boxed-list__item-content-row--fixed">
+                            <span class="badge badge--square green--600 sd-margin-r--1" ng-if="options.searchEnabled && actions.update && actions.update.condition(item)" title="{{ :: 'Can be associated as an update' | translate }}">U</span>
+                            <span class="badge badge--square indigo--600 sd-margin-r--1" ng-if="options.searchEnabled && actions.addTake && actions.addTake.condition(item)" title="{{ :: 'Can be associated as a take' | translate }}">T</span>
+                            <span class="sd-text__slugline sd-overflow-ellipsis" title="{{ item.slugline }}">{{ item.slugline }}</span>
+                            <time class="sd-text__date-time sd-text__date-time--small ml-auto" sd-datetime data-date="item.versioncreated">25.04.2019</time>
+                        </div>
+                        <div class="boxed-list__item-content-row">
+                            <span class="sd-text__strong-s">{{item.headline || item.type}}</span>
+                        </div>
+                        <div class="boxed-list__item-content-row">
+                            <span class="sd-text__strong-s">{{item.anpa_take_key}}</span>
+                        </div>
+                        <div class="boxed-list__item-content-row">
                             <span ng-if="item.takes && item.takes.sequence > 1" class="state-label takes" translate>Takes</span>
                             <span class="state-label state-{{item.state}}" translate>{{item.state | removeLodash}}</span>
                             <span ng-if="item.flags.marked_for_legal" class="state-label legal" translate>Legal</span>
                             <span ng-if="item.flags.marked_for_sms" class="state-label sms" translate>Sms</span>
                             <span ng-if="item.rewritten_by" class="state-label updated" translate>Updated</span>
-                            <span class="headline">
-                                <span ng-if="item.task.desk">{{ :: 'desk:' | translate }} {{deskName(item)}}</span>
-                                <span ng-if="item.task.stage" class="pull-right">{{ :: 'stage:' | translate }} {{deskStage(item)}}</span>
-                                <span class="headline" ng-show="item.genre  && item.genre.length > 0">{{ :: 'genre:' | translate }} {{ item.genre | mergeWords:'name'}}</span>
-                            </span>
                         </div>
-
+                        <div class="boxed-list__item-content-row">
+                            <span ng-if="item.task.desk"><span class="sd-text__italic" translate>desk:</span> {{deskName(item)}}</span>
+                            <span ng-if="item.task.stage" class="ml-auto"><span class="sd-text__italic" translate>stage:</span> {{deskStage(item)}}</span>
+                        </div>
+                        <div class="boxed-list__item-content-row">
+                            <span ng-show="item.genre  && item.genre.length > 0"><span class="sd-text__italic" translate>genre:</span> {{ item.genre | mergeWords:'name'}}</span>
+                        </div>
+                    </div>
+                    <div class="boxed-list__static-actions">
+                        <div class="dropdown more-actions pull-right" ng-if="options.searchEnabled" ng-click="$event.preventDefault" dropdown>
+                            <button class="icn-btn dropdown__toggle" dropdown__toggle><i class="icon-dots-vertical"></i></button>
+                            <div class="dropdown__menu pull-right">
+                                <ul>
+                                    <li ng-repeat="action in actions">
+                                        <button id="{{action.title | translate}}" ng-if="action.condition(item)" ng-click="action.method(item)" translate>{{ :: action.title }}</button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                         <div sd-item-actions-menu data-item="item" data-active="item" ng-if="!options.searchEnabled"></div>
-
                     </div>
                 </li>
             </ul>

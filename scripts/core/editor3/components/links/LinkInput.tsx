@@ -231,7 +231,7 @@ const LinkInputComponentWithDependenciesLoaded = connectPromiseResults(() => ({
         .then(() => ng.get('metadata').values.local_domains),
 }))(LinkInputComponent);
 
-export const LinkInput: React.StatelessComponent<any> = connect(mapStateToProps, {
+export const LinkInput: any = connect(mapStateToProps, {
     applyLink,
     hidePopups,
     createLinkSuggestion,

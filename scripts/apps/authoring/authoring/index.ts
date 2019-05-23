@@ -12,6 +12,25 @@ import {ArticleUrlFields} from './article-url-fields';
 import {PopulateAuthorsController} from './controllers/PopulateAuthorsController';
 
 import {gettext} from 'core/utils';
+import {IArticle} from 'superdesk-interfaces/Article';
+import {IArticleSchema} from 'superdesk-interfaces/ArticleSchema';
+
+export interface IOnChangeParams {
+    item: IArticle;
+    original: IArticle;
+}
+
+export interface IArticleSchemaParams {
+    item: IArticle;
+    schema: IArticleSchema;
+}
+
+type IOnChangeMiddleware = (params: IOnChangeParams) => IArticle;
+
+type IArticleSchemaMiddleware = (params: IArticleSchemaParams) => IArticleSchema;
+
+export const onChangeMiddleware: Array<IOnChangeMiddleware> = [];
+export const getArticleSchemaMiddleware: Array<IArticleSchemaMiddleware> = [];
 
 angular.module('superdesk.apps.authoring.autosave', []).service('autosave', svc.AutosaveService);
 
@@ -82,7 +101,10 @@ angular.module('superdesk.apps.authoring', [
     .directive('tansaScopeSync', directive.TansaScopeSyncDirective)
     .directive('sdItemActionByIntent', directive.ItemActionsByIntentDirective)
     .component('sdArticleUrlFields',
-        reactToAngular1(ArticleUrlFields, ['label', 'urls', 'helperText', 'onChange', 'fieldId']),
+        reactToAngular1(
+            ArticleUrlFields,
+            ['label', 'urls', 'helperText', 'onChange', 'fieldId', 'editable', 'required'],
+        ),
     )
 
     .controller('PopulateAuthorsController', PopulateAuthorsController)
@@ -136,8 +158,29 @@ angular.module('superdesk.apps.authoring', [
                     authoringWorkspace.popup(data.item, 'edit');
                 }],
                 filters: [{action: 'list', type: 'archive'}],
-                additionalCondition: ['authoring', 'item', 'config', function(authoring, item, config) {
-                    return authoring.itemActions(item).edit;
+                additionalCondition: ['authoring', 'item', 'config', 'lock', function(authoring, item, config, lock) {
+                    return authoring.itemActions(item).edit && !lock.isLockedByMe(item);
+                }],
+            })
+            .activity('edit.media.metadata', {
+                label: gettext('Edit Media Metadata'),
+                priority: 3,
+                icon: 'edit-line',
+                keyboardShortcut: 'ctrl+alt+m',
+                controller: ['data', 'multiImageEdit', 'authoring', 'api',
+                    function(data, multiImageEdit, authoring, api) {
+                        api.find('archive', data.item._id).then((item) => {
+                            multiImageEdit.edit([item], (response) => authoring.save(item, response[0]));
+                        });
+                    }],
+                filters: [
+                    {action: 'list', type: 'archive'},
+                    {action: 'edit', type: 'metadata'},
+                ],
+                additionalCondition: ['item', 'authoring', (item, authoring) => {
+                    const mediaTypes = ['audio', 'picture', 'video'];
+
+                    return mediaTypes.includes(item.type) && authoring.itemActions(item).edit;
                 }],
             })
             .activity('move.item', {

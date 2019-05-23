@@ -1,3 +1,5 @@
+import {debounce} from 'lodash';
+
 export default angular.module('superdesk.core.directives.typeahead', [])
     /**
      * @ngdoc directive
@@ -44,6 +46,7 @@ export default angular.module('superdesk.core.directives.typeahead', [])
                 tabindex: '=',
                 style: '=',
                 keepinput: '=',
+                debounce: '@',
             },
             controller: ['$scope', function($scope) {
                 $scope.hide = true;
@@ -96,10 +99,12 @@ export default angular.module('superdesk.core.directives.typeahead', [])
                         && ($scope.items && $scope.items.length > 0);
                 };
 
-                $scope.query = function() {
-                    $scope.hide = false;
-                    $scope.search({term: $scope.term});
-                };
+                $scope.query = debounce(() => {
+                    $scope.$applyAsync(() => {
+                        $scope.hide = false;
+                        $scope.search({term: $scope.term});
+                    });
+                }, parseInt($scope.debounce || '0', 10));
             }],
 
             link: function(scope, element, attrs, controller) {

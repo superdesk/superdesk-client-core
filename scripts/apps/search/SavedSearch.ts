@@ -19,9 +19,16 @@ export interface IDeskSubscription {
 }
 
 export interface ISavedSearch {
+    _id?: string;
     name: string;
     description: string;
     is_global: boolean;
+
+    /**
+     * When true it will display Saved Search in search dropdown menu as a shortuct
+     */
+    shortcut: boolean;
+
     filter: any;
     user: IUser['_id'];
     subscribers: {
@@ -74,7 +81,7 @@ export const updateSubscribers = (
     savedSearch: ISavedSearch,
     nextSubscribers: ISavedSearch['subscribers'],
     api: any,
-): Promise<void> => {
+): Promise<ISavedSearch> => {
     const savedSearchNext: ISavedSearch = {
         ...savedSearch,
         subscribers: nextSubscribers,
@@ -87,7 +94,7 @@ export const unsubscribeUser = (
     savedSearch: ISavedSearch,
     userId: IUser['_id'],
     api: any,
-): Promise<void> => {
+): Promise<ISavedSearch> => {
     const nextSubscribers: ISavedSearch['subscribers'] = {
         ...savedSearch.subscribers,
         user_subscriptions: savedSearch.subscribers.user_subscriptions.filter(
@@ -102,7 +109,7 @@ export const unsubscribeDesk = (
     savedSearch: ISavedSearch,
     deskId: IDesk['_id'],
     api: any,
-): Promise<void> => {
+): Promise<ISavedSearch> => {
     const nextSubscribers: ISavedSearch['subscribers'] = {
         ...savedSearch.subscribers,
         desk_subscriptions: savedSearch.subscribers.desk_subscriptions.filter(

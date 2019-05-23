@@ -51,6 +51,12 @@ describe('Content profiles', () => {
         element(by.buttonText('Header fields')).click();
         contentProfiles.setRequired('Editorial Note');
         contentProfiles.update();
+        templates.openTemplatesSettings();
+        expect(templates.getListCount()).toBeGreaterThan(2);
+        templates.edit('Simple');
+        templates.selectDesk('Politic Desk');
+        templates.selectDesk('Sports Desk');
+        templates.save();
         monitoring.openMonitoring();
         workspace.selectDesk('Sports Desk');
         authoring.createTextItemFromTemplate('simple');
@@ -85,9 +91,13 @@ describe('Content profiles', () => {
         contentProfiles.addNew('Simple');
 
         element(by.buttonText('Content fields')).click();
-        expect(element(by.buttonText(FIELD_LABEL)).isDisplayed()).toBeFalsy();
+
+        const btns = element.all(by.partialButtonText(FIELD_LABEL));
+
+        expect(btns.filter((elem) => elem.isDisplayed()).count()).toBe(0);
 
         contentProfiles.openAddFieldDropdown();
-        expect(element(by.buttonText('A custom text field')).isPresent()).toBeTruthy();
+
+        expect(btns.filter((elem) => elem.isDisplayed()).count()).toBe(1);
     });
 });

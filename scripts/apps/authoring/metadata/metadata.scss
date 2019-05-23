@@ -7,10 +7,6 @@
 .sd-widget.metadata {
     .widget-content {
         background: $sd-background;
-        padding: 0;
-        padding-bottom: $authoring-opened-articles;
-        overflow: auto;
-        margin: 5px 0 0;
     }
     .ednote {
         @include clearfix();
@@ -62,6 +58,7 @@
         padding-right: 1rem;
         margin: 0;
         color: rgba(0, 0, 0, 0.5);
+        min-width: 6rem;
         @include text-semibold();
     }
     .basic-list__item-data {

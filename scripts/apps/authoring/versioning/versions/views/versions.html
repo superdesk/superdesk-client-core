@@ -1,22 +1,26 @@
 <div class="article-versions" ng-controller="VersioningWidgetCtrl">
-    <ul class="versions-list card-list">
-        <li class="item" ng-class="{selected: selected === version}" ng-repeat="version in versions" ng-click="openVersion(version)" ng-disabled="dirty">
-            <div class="header">
-                <time sd-absdate title="{{ :: version._created | date:'medium' }}" datetime="version._created"></time>
-                <span class="user">{{ :: 'by' | translate }} {{ version.creator }}</span>
+    <ul class="versions-list boxed-list">
+        <li class="boxed-list__item boxed-list__item--clickable" ng-class="{'boxed-list__item--selcted': selected === version}" ng-repeat="version in versions" ng-click="openVersion(version)" ng-disabled="dirty">
+            <div class="boxed-list__item-content">
+                <div class="boxed-list__item-content-row boxed-list__item-content-row--fixed">
+                    <time class="sd-text__date-time sd-text__date-time--small" sd-absdate title="{{ :: version._created | date:'medium' }}" datetime="version._created"></time>
+                    <span class="ml-auto"><span translate>by</span> {{ version.creator }}</span>
+                </div>
+                <div class="boxed-list__item-content-row boxed-list__item-content-row--fixed">
+                    <span class="sd-text__strong sd-overflow-ellipsis">{{ :: version.headline || ('Untitled' | translate) }}</span>
+                </div>
+                <div class="boxed-list__item-content-row">
+                    <span ng-show='version.desk'><span class="sd-text__italic" translate>desk:</span> {{version.desk}}</span>
+                    <span ng-show='version.stage' class="ml-auto"><span class="sd-text__italic" translate>stage:</span> {{version.stage}}</span>
+                </div>
             </div>
-            <h6 ng-class="{'no-title': !version.headline }">{{ :: version.headline || ('Untitled' | translate) }}</h6>
-            <div class="desk-details">
-                <span ng-show='version.desk'>{{ :: 'desk:' | translate }} {{version.desk}}</span>
-                <span class="pull-right" ng-show='version.stage'>{{ :: 'stage:' | translate }} {{version.stage}}</span>
-            </div>
-            <div class="footer">
-                <em>{{ :: 'version' | translate }}: {{ version._current_version }}</em>
-                <div class="state-label state-{{ :: version.state}}">{{ :: version.state | translate }}</div>
-                <button class="btn btn--light btn--mini pull-right"
-                    ng-show="canRevert && !$first && !dirty"
-                    ng-click="revert(version)"
-                    translate>revert</button>
+            <div class="boxed-list__item-footer">
+                <span class="sd-text__italic sd-padding-r--1"><span translate>version</span>: {{ version._current_version }}</span>
+                <span class="state-label state-{{ :: version.state}}" translate>{{ :: version.state | removeLodash }}</span>
+                <button class="btn btn--small btn--hollow ml-auto"
+                        ng-show="canRevert && !$first && !dirty"
+                        ng-click="revert(version)"
+                        translate>revert</button>
             </div>
         </li>
     </ul>

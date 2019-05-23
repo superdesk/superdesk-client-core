@@ -1,11 +1,35 @@
 import {debounce} from 'lodash';
-import {IContentProfile} from "superdesk-interfaces/ContentProfile";
-import {isWidgetVisibleForContentProfile} from "apps/workspace/content/components/WidgetsConfig";
+import {IContentProfile} from 'superdesk-interfaces/ContentProfile';
+import {isWidgetVisibleForContentProfile} from 'apps/workspace/content/components/WidgetsConfig';
 import {gettext} from 'core/utils';
 
 function AuthoringWidgetsProvider() {
     var widgets = [];
 
+    /**
+     * Register new widget
+     *
+     * @param {String} id
+     * @param {Object} config Widget configuration
+     *
+     *   Object properties:
+     *     - `label` - `{string}` - Widget label displayed on top
+     *     - `icon` - `{string}` - Icon to use from `big-icon` font.
+     *     - `side` - `{string}` - Side where to display it, can be `left` or `right`.
+     *     - `order` - `{number}` - Widget order in the list, lower number is higher.
+     *     - `template` - `{string}` - Widget template to include.
+     *     - `display` - `{Object}` - Controll when to display widget.
+     *     - `needEditable` - `{boolean}` - `True` if item must be editable.
+     *     - `needUnlock` - `{boolean}` - `True` will make widget locked if item is locked.
+     *     - `configurable` - `{boolean}` - `True` if widget is configurable.
+     *     - `configurationTemplate` - `{string}` - Template to use for configuration.
+     *     - `isWidgetVisible` - `{Function}` = Function which should return injectable
+     *       function and gets single param `item`.
+     *     - `badge` - `{Function}` - Injectable function to get badge number for item,
+     *       gets `item` injected.
+     *     - `badgeAsync` - `{Function}` - Injectable function to get badge number
+     *       returning a promise, gets `item` injected.
+     */
     this.widget = function(id, config) {
         widgets = widgets.filter((widget) => widget._id !== id);
         widgets.push(angular.extend({}, config, {_id: id})); // make a new instance for every widget
@@ -79,6 +103,13 @@ function WidgetsManagerCtrl($scope, $routeParams, authoringWidgets, archiveServi
 
             Promise.all(promises).then((result) => {
                 $scope.widgets = widgets.filter((__, i) => result[i] === true);
+                $scope.widgets.forEach((widget) => {
+                    if (widget.badgeAsync != null) {
+                        widget.badgeAsyncValue = null;
+                        $injector.invoke(widget.badgeAsync, null, {item})
+                            .then((value) => widget.badgeAsyncValue = value);
+                    }
+                });
                 $scope.$apply(); // tell angular to re-render
             });
         });
@@ -214,8 +245,24 @@ function AuthoringWidgetsDir(desks, commentsService, $injector) {
             });
 
             scope.badge = (widget) => {
+                if (widget.badgeAsyncValue !== undefined) {
+                    return widget.badgeAsyncValue;
+                }
+
                 if (widget.badge) {
                     return $injector.invoke(widget.badge, null, {item: scope.item});
+                }
+            };
+
+            scope.generateHotkey = (order, tooltip?) => {
+                const shiftNums = {1: '!', 2: '@', 3: '#', 4: '$', 5: '%', 6: '^', 7: '&', 8: '*', 9: '('};
+
+                if (order < 10) {
+                    return `ctrl+alt+${order}`;
+                } else if (order === 10) {
+                    return 'ctrl+alt+0';
+                } else if (order > 10) {
+                    return tooltip ? `ctrl+shift+${order - 10}` : `ctrl+shift+${shiftNums[order - 10]}`;
                 }
             };
 

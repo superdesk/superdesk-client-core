@@ -34,7 +34,7 @@ describe('editor3.reducers', () => {
     });
 
     it('EDITOR_DRAG_DROP', () => {
-        const data = '{"a": 1}';
+        const data = {a: 1};
 
         const startState = {
             editorState: EditorState.createEmpty(),
@@ -162,6 +162,21 @@ describe('editor3.reducers', () => {
         expect(block.getInlineStyleAt(26).has('HIGHLIGHT')).toBe(true);
     });
 
+    it('HIGHLIGHTS_FIND_NEXT wrong index', () => {
+        const startState = withSearchTerm(
+            'apple banana apple ananas apple prune',
+            {index: 5, pattern: 'Apple', caseSensitive: false},
+        );
+
+        const state = reducer(startState, {type: 'HIGHLIGHTS_FIND_NEXT'});
+        const block = state.editorState.getCurrentContent().getFirstBlock();
+
+        expect(state.searchTerm.index).toBe(0);
+        expect(block.getInlineStyleAt(0).has('HIGHLIGHT_STRONG')).toBe(true);
+        expect(block.getInlineStyleAt(13).has('HIGHLIGHT')).toBe(true);
+        expect(block.getInlineStyleAt(26).has('HIGHLIGHT')).toBe(true);
+    });
+
     it('HIGHLIGHTS_FIND_PREV', () => {
         const startState = withSearchTerm(
             'apple banana apple ananas apple prune',
@@ -186,10 +201,25 @@ describe('editor3.reducers', () => {
         const state = reducer(startState, {type: 'HIGHLIGHTS_FIND_PREV'});
         const block = state.editorState.getCurrentContent().getFirstBlock();
 
-        expect(state.searchTerm.index).toBe(0);
-        expect(block.getInlineStyleAt(0).has('HIGHLIGHT_STRONG')).toBe(true);
+        expect(state.searchTerm.index).toBe(2);
+        expect(block.getInlineStyleAt(0).has('HIGHLIGHT')).toBe(true);
         expect(block.getInlineStyleAt(13).has('HIGHLIGHT')).toBe(true);
-        expect(block.getInlineStyleAt(26).has('HIGHLIGHT')).toBe(true);
+        expect(block.getInlineStyleAt(26).has('HIGHLIGHT_STRONG')).toBe(true);
+    });
+
+    it('HIGHLIGHTS_FIND_PREV wrong index', () => {
+        const startState = withSearchTerm(
+            'apple banana apple ananas apple prune',
+            {index: -5, pattern: 'Apple', caseSensitive: false, diff: {Apple: 'apple'}},
+        );
+
+        const state = reducer(startState, {type: 'HIGHLIGHTS_FIND_PREV'});
+        const block = state.editorState.getCurrentContent().getFirstBlock();
+
+        expect(state.searchTerm.index).toBe(2);
+        expect(block.getInlineStyleAt(0).has('HIGHLIGHT')).toBe(true);
+        expect(block.getInlineStyleAt(13).has('HIGHLIGHT')).toBe(true);
+        expect(block.getInlineStyleAt(26).has('HIGHLIGHT_STRONG')).toBe(true);
     });
 
     it('HIGHLIGHTS_FIND_REPLACE', () => {

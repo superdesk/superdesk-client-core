@@ -1,7 +1,8 @@
 import createEditorStore from '..';
+import {convertToRaw, ContentState} from 'draft-js';
 
 describe('editor3.store', () => {
-    beforeEach(window['module'](($provide) => {
+    beforeEach(window.module(($provide) => {
         $provide.service('spellcheck', ($q) => ({
             setLanguage: jasmine.createSpy(),
             getDict: jasmine.createSpy().and.returnValue($q.when(null)),
@@ -11,15 +12,19 @@ describe('editor3.store', () => {
     }));
 
     it('should initialize with correct values', inject((spellcheck) => {
-        const store = createEditorStore({
-            language: 'en',
-            editorFormat: '123',
-            readOnly: false,
-            trim: true,
-            onChange: () => { /* no-op */ },
-            value: 'abc',
-            item: {},
-        });
+        const store = createEditorStore(
+            {
+                editorState: convertToRaw(ContentState.createFromText('')),
+                language: 'en',
+                editorFormat: '123',
+                readOnly: false,
+                trim: true,
+                onChange: () => { /* no-op */ },
+                value: 'abc',
+                item: {},
+            },
+            spellcheck,
+        );
 
         const state = store.getState();
 
