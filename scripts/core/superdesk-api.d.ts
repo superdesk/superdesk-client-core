@@ -32,7 +32,8 @@ declare module 'superdesk-api' {
             pages?: Array<IPage>;
             middlewares?: {
                 archive?: {
-                    onSpike(item: IArticle): Promise<onSpikeMiddlewareResult>
+                    onSpike?(item: IArticle): Promise<onSpikeMiddlewareResult>;
+                    onSpikeMultiple?(items: Array<IArticle>): Promise<onSpikeMiddlewareResult>;
                 };
             };
         }

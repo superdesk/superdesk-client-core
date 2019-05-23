@@ -3,20 +3,34 @@ import {IExtension, IArticle, ISuperdesk} from 'superdesk-api';
 function onSpike(superdesk: ISuperdesk, item: IArticle) {
     const {gettext} = superdesk.localization;
 
-    return superdesk.privileges.getOwnPrivileges()
-        .then((privileges) => {
-            if (privileges['planning'] != null && item.assignment_id != null) {
-                return {
-                    warnings: [
-                        {
-                            text: gettext('This item is linked to in-progress planning coverage.'),
-                        },
-                    ],
-                };
-            } else {
-                return {};
-            }
+    if (item.assignment_id != null) {
+        return Promise.resolve({
+            warnings: [
+                {
+                    text: gettext('This item is linked to in-progress planning coverage.'),
+                },
+            ],
         });
+    } else {
+        return Promise.resolve({});
+    }
+}
+
+function onSpikeMultiple(superdesk: ISuperdesk, items: Array<IArticle>) {
+    const {gettext} = superdesk.localization;
+    const itemsWithAssignmentsExist = items.some((item) => item.assignment_id != null);
+
+    if (itemsWithAssignmentsExist) {
+        return Promise.resolve({
+            warnings: [
+                {
+                    text: gettext('Some items are linked to in-progress planning coverage.'),
+                },
+            ],
+        });
+    } else {
+        return Promise.resolve({});
+    }
 }
 
 const extension: IExtension = {
@@ -26,6 +40,7 @@ const extension: IExtension = {
                 middlewares: {
                     archive: {
                         onSpike: (item: IArticle) => onSpike(superdesk, item),
+                        onSpikeMultiple: (items: Array<IArticle>) => onSpikeMultiple(superdesk, items),
                     },
                 },
             },
