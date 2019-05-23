@@ -35,6 +35,15 @@
                     </div>
                 </div>
 
+                <div class="form__row" ng-if="matchFieldTypeToTab('custom-fields', vocabulary.field_type)">
+                    <div class="sd-line-input sd-line-input--is-select sd-line-input--required">
+                        <label for="custom_field_specs" class="sd-line-input__label" translate>Field type</label>
+                        <select id="custom_field_specs" class="sd-line-input__select" ng-model="vocabulary.custom_field_type" required>
+                            <option value="{{type.id}}" ng-repeat="type in customFieldTypes" translate>{{type.label}}</option>
+                        </select>
+                    </div>
+                </div>
+
                 <div class="form__row">
                     <div class="sd-line-input sd-line-input--no-margin">
                         <label for="cv_description" class="sd-line-input__label" translate>Description</label>

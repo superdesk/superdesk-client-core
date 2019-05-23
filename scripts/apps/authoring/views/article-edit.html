@@ -675,7 +675,6 @@
     sd-validation-error="error[field.display_name.toLowerCase()]"
     order="{{editor[field._id].order}}"
     data-required="schema[field._id].required">
-
     <sd-article-url-fields
         editable="_editable"
         label="field.display_name"
@@ -685,6 +684,24 @@
         on-change="handleUrlsChange"
         required="schema[field._id].required"
         ></sd-article-url-fields>
+</div>
+
+<!-- Custom fields -->
+<div class="field" ng-repeat="field in fields track by field._id"
+    ng-if="field.field_type === 'custom'"
+    sd-width="{{editor[field._id].sdWidth || 'full'}}"
+    sd-validation-error="error[field.display_name.toLowerCase()]"
+    order="{{editor[field._id].order}}"
+    data-required="schema[field._id].required">
+
+    <label class="field__label" translate>{{field.display_name}}</label>
+
+    <sd-authoring-custom-field
+        item="item"
+        field="field"
+        on-change="autosave"
+        editable="_editable"
+    ></sd-authoring-custom-field>
 </div>
 
 <div class="field"

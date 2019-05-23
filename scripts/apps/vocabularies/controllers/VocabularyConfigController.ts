@@ -3,6 +3,7 @@ import {IVocabulary, IVocabularyTag} from 'superdesk-interfaces/Vocabulary';
 import {IDirectiveScope} from 'types/Angular/DirectiveScope';
 import {remove, reduce} from 'lodash';
 import {gettext} from 'core/utils';
+import {fields} from 'apps/fields';
 
 const OTHER = gettext('Other');
 
@@ -89,7 +90,9 @@ export function VocabularyConfigController($scope: IScope, $route, $routeParams,
             tab === 'date-fields' && fieldType === 'date' ||
             tab === 'urls-fields' && fieldType === 'urls' ||
             tab === 'related-content-fields' && MEDIA_TYPE_KEYS.includes(fieldType) ||
-            tab === 'embed-fields' && fieldType === 'embed');
+            tab === 'embed-fields' && fieldType === 'embed' ||
+            tab === 'custom-fields' && fieldType === 'custom'
+        );
 
     /**
      * Reload list of vocabularies
