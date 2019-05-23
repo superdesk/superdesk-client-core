@@ -22,7 +22,7 @@ declare module 'superdesk-api' {
 
     // EXTENSIONS
 
-    export type onSpikeMiddlewareResult= {item: IArticle, warnings?: Array<{text: string}>};
+    export type onSpikeMiddlewareResult= {warnings?: Array<{text: string}>};
 
     export interface IExtensionActivationResult {
         contributions?: {

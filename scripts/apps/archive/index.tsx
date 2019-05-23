@@ -20,7 +20,7 @@ import {ModalBody} from 'core/ui/components/Modal/ModalBody';
 import {ModalFooter} from 'core/ui/components/Modal/ModalFooter';
 import {extensions} from 'core/extension-imports.generated';
 
-import {IExtensionActivationResult, onSpikeMiddlewareResult} from 'superdesk-api';
+import {IExtensionActivationResult, onSpikeMiddlewareResult, IArticle} from 'superdesk-api';
 
 angular.module('superdesk.apps.archive.directives', [
     'superdesk.core.filters',
@@ -434,7 +434,8 @@ function spikeActivity(spike, data, modal, $location, $q, multi, privileges,
             );
 
         let warnings: onSpikeMiddlewareResult['warnings'] = [];
-        var initialValue: Promise<onSpikeMiddlewareResult> = Promise.resolve({item: data.item});
+        const initialValue: Promise<onSpikeMiddlewareResult> = Promise.resolve({});
+        const item: IArticle = data.item;
 
         onSpikeMiddlewares.reduce(
             (current, next) => {
@@ -442,7 +443,7 @@ function spikeActivity(spike, data, modal, $location, $q, multi, privileges,
                     if (result.warnings != null) {
                         warnings = warnings.concat(result.warnings);
                     }
-                    return next(result.item);
+                    return next(item);
                 });
             },
             initialValue,

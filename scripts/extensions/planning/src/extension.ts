@@ -7,7 +7,6 @@ function onSpike(superdesk: ISuperdesk, item: IArticle) {
         .then((privileges) => {
             if (privileges['planning'] != null && item.assignment_id != null) {
                 return {
-                    item,
                     warnings: [
                         {
                             text: gettext('This item is linked to in-progress planning coverage.'),
@@ -15,7 +14,7 @@ function onSpike(superdesk: ISuperdesk, item: IArticle) {
                     ],
                 };
             } else {
-                return {item};
+                return {};
             }
         });
 }
