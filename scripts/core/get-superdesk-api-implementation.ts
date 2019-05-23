@@ -18,6 +18,7 @@ export function getSuperdeskApiImplementation(
     requestingExtensionId: string,
     extensions: IExtensions,
     modal,
+    privileges,
 ): ISuperdesk {
     return {
         dataApi: dataApi,
@@ -77,6 +78,9 @@ export function getSuperdeskApiImplementation(
                     return Promise.reject('Not authorized.');
                 }
             },
+        },
+        privileges: {
+            getOwnPrivileges: () => privileges.loaded.then(() => privileges.privileges),
         },
     };
 }

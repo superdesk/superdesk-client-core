@@ -2,7 +2,7 @@
 import './styles/related-item.scss';
 import './styles/assignment.scss';
 import './styles/html-preview.scss';
-import {get, includes} from 'lodash';
+import {get, includes, flatMap} from 'lodash';
 
 // scripts
 import './related-item-widget/relatedItem';
@@ -12,6 +12,15 @@ import * as svc from './services';
 import * as ctrl from './controllers';
 
 import {gettext} from 'core/utils';
+
+import React from 'react';
+import {Modal} from 'core/ui/components/Modal/Modal';
+import {ModalHeader} from 'core/ui/components/Modal/ModalHeader';
+import {ModalBody} from 'core/ui/components/Modal/ModalBody';
+import {ModalFooter} from 'core/ui/components/Modal/ModalFooter';
+import {extensions} from 'core/extension-imports.generated';
+
+import {IExtensionActivationResult, onSpikeMiddlewareResult} from 'superdesk-api';
 
 angular.module('superdesk.apps.archive.directives', [
     'superdesk.core.filters',
@@ -406,17 +415,82 @@ function spikeActivity(spike, data, modal, $location, $q, multi, privileges,
     _spike();
 
     function _spike() {
-        let message = gettext('Are you sure you want to spike the item?');
-
         if ($location.path() === '/workspace/personal') {
-            message = gettext('Do you want to delete the item permanently?');
-        } else if (get(privileges, 'privileges.planning') && data.item && data.item.assignment_id) {
-            message = gettext('This item is linked to in-progress planning coverage, spike anyway?');
-        } else if (!get(config, 'confirm_spike', true)) {
-            return spike.spike(data.item);
+            return modal.confirm(gettext('Do you want to delete the item permanently?'), gettext('Confirm'))
+                .then(() => spike.spike(data.item));
         }
 
-        return modal.confirm(message, gettext('Confirm'))
-            .then(() => spike.spike(data.item));
+        const onSpikeMiddlewares
+            : Array<IExtensionActivationResult['contributions']['middlewares']['archive']['onSpike']>
+            = flatMap(
+                Object.values(extensions).map(({activationResult}) => activationResult),
+                (activationResult) =>
+                    activationResult.contributions != null
+                    && activationResult.contributions.middlewares != null
+                    && activationResult.contributions.middlewares.archive != null
+                    && activationResult.contributions.middlewares.archive.onSpike != null
+                        ? activationResult.contributions.middlewares.archive.onSpike
+                        : [],
+            );
+
+        let warnings: onSpikeMiddlewareResult['warnings'] = [];
+        var initialValue: Promise<onSpikeMiddlewareResult> = Promise.resolve({item: data.item});
+
+        onSpikeMiddlewares.reduce(
+            (current, next) => {
+                return current.then((result) => {
+                    if (result.warnings != null) {
+                        warnings = warnings.concat(result.warnings);
+                    }
+                    return next(result.item);
+                });
+            },
+            initialValue,
+        )
+        .then((result) => { // last result isn't processed by `reduce`
+            if (result.warnings != null) {
+                warnings = warnings.concat(result.warnings);
+            }
+
+            return result;
+        })
+        .then(() => {
+            if (!get(config, 'confirm_spike', true) && warnings.length < 1) {
+                spike.spike(data.item);
+            } else {
+                modal.createCustomModal()
+                    .then(({openModal, closeModal}) => {
+                        openModal(
+                            <Modal>
+                                <ModalHeader>{gettext('Confirm')}</ModalHeader>
+                                <ModalBody>
+                                    <div>{gettext('Are you sure you want to spike the item?')}</div>
+                                    {
+                                        warnings.length < 1 ? null : (
+                                            <ul style={{listStyle: 'initial', paddingLeft: 40}}>
+                                                {
+                                                    warnings.map(({text}, i) => <li key={i}>{text}</li>)
+                                                }
+                                            </ul>
+                                        )
+                                    }
+                                </ModalBody>
+                                <ModalFooter>
+                                    <button className="btn" onClick={closeModal}>{gettext('Cancel')}</button>
+                                    <button
+                                        className="btn btn--primary"
+                                        onClick={() => {
+                                            spike.spike(data.item)
+                                                .then(closeModal);
+                                        }}
+                                    >
+                                        {gettext('Spike')}
+                                    </button>
+                                </ModalFooter>
+                            </Modal>,
+                        );
+                    });
+            }
+        });
     }
 }

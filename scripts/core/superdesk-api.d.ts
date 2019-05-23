@@ -22,6 +22,8 @@ declare module 'superdesk-api' {
 
     // EXTENSIONS
 
+    export type onSpikeMiddlewareResult= {item: IArticle, warnings?: Array<{text: string}>};
+
     export interface IExtensionActivationResult {
         contributions?: {
             editor3?: {
@@ -30,7 +32,7 @@ declare module 'superdesk-api' {
             pages?: Array<IPage>;
             middlewares?: {
                 archive?: {
-                    onSpike(item: IArticle): Promise<{item: IArticle, warnings?: Array<{text: string}>}>
+                    onSpike(item: IArticle): Promise<onSpikeMiddlewareResult>
                 };
             };
         }
@@ -311,6 +313,9 @@ declare module 'superdesk-api' {
         };
         extensions: {
             getExtension(id: string): Promise<Omit<IExtension, 'activate'>>;
+        };
+        privileges: {
+            getOwnPrivileges(): Promise<any>;
         };
     }>;
 }

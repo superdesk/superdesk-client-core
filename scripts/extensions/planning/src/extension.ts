@@ -3,18 +3,21 @@ import {IExtension, IArticle, ISuperdesk} from 'superdesk-api';
 function onSpike(superdesk: ISuperdesk, item: IArticle) {
     const {gettext} = superdesk.localization;
 
-    if (item.assignment_id != null) {
-        return Promise.resolve({
-            item,
-            warnings: [
-                {
-                    text: gettext('This item is linked to in-progress planning coverage, spike anyway?'),
-                },
-            ],
+    return superdesk.privileges.getOwnPrivileges()
+        .then((privileges) => {
+            if (privileges['planning'] != null && item.assignment_id != null) {
+                return {
+                    item,
+                    warnings: [
+                        {
+                            text: gettext('This item is linked to in-progress planning coverage.'),
+                        },
+                    ],
+                };
+            } else {
+                return {item};
+            }
         });
-    } else {
-        return Promise.resolve({item});
-    }
 }
 
 const extension: IExtension = {

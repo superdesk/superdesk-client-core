@@ -109,12 +109,12 @@ core.run(['$document', ($document) => {
     }
 }]);
 
-core.run(['superdesk', 'modal', (superdesk, modal) => {
+core.run(['superdesk', 'modal', 'privileges', (superdesk, modal, privileges) => {
     Promise.all(
         Object.keys(extensions).map((extensionId) => {
             const extensionObject = extensions[extensionId];
 
-            const superdeskApi = getSuperdeskApiImplementation(extensionId, extensions, modal);
+            const superdeskApi = getSuperdeskApiImplementation(extensionId, extensions, modal, privileges);
 
             return extensionObject.extension.activate(superdeskApi).then((activationResult) => {
                 extensionObject.activationResult = activationResult;
