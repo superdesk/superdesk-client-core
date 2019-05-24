@@ -54,10 +54,24 @@ export function TagService($location, desks, userList, metadata, search,
         };
     }
 
-    function initSelectedParameters(params) {
+    function getParamObject(paramArray: Array<string>) {
+        const key = paramArray[0].trim();
+        // remove parentheses ex: "(two)" becomes "two"
+        const value = paramArray[1].replace(/^\(|\)$/g, '');
+
+        return {[key]: value};
+    }
+
+    /**
+    * @param params search parameters
+    * @param objectOnly A boolean to decide what needs to be returned
+    */
+    function initSelectedParameters(params, objectOnly?: boolean) {
         let parameters = params;
 
-        tags.selectedParameters = [];
+        let selectedParameters = [];
+        const paramObject = {};
+
         while (parameters.indexOf(':') > 0 &&
                parameters.indexOf(':') < parameters.indexOf('(', parameters.indexOf(':')) &&
                parameters.indexOf(':') < parameters.indexOf(')', parameters.indexOf(':'))) {
@@ -73,7 +87,7 @@ export function TagService($location, desks, userList, metadata, search,
                         name = _.result(_.find(codeList, {qcode: value}), 'name');
 
                     if (name) {
-                        tags.selectedParameters.push(tag(cv.id + '.name:(' + name + ')'));
+                        selectedParameters.push(tag(cv.id + '.name:(' + name + ')'));
                         added = true;
                     }
                 }
@@ -81,15 +95,22 @@ export function TagService($location, desks, userList, metadata, search,
 
             if (!added) {
                 var paramArr = parameter.split(':');
+
+                Object.assign(paramObject, getParamObject(paramArr));
                 var parameterTranslated = gettext(paramArr[0]) + ':' + paramArr[1];
 
-                tags.selectedParameters.push(tag(parameterTranslated, paramArr.join(':')));
+                selectedParameters.push(tag(parameterTranslated, paramArr.join(':')));
             }
 
             parameters = parameters.replace(parameter, '');
         }
 
-        return parameters;
+        if (objectOnly) {
+            return paramObject;
+        } else {
+            tags.selectedParameters = selectedParameters;
+            return parameters;
+        }
     }
 
     /*
@@ -375,5 +396,6 @@ export function TagService($location, desks, userList, metadata, search,
     return {
         initSelectedFacets: initSelectedFacets,
         removeFacet: removeFacet,
+        initSelectedParameters: initSelectedParameters,
     };
 }
