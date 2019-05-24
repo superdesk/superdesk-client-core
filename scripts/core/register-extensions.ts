@@ -2,8 +2,8 @@ import {flatMap, noop} from "lodash";
 import {getSuperdeskApiImplementation} from "./get-superdesk-api-implementation";
 import {extensions} from 'core/extension-imports.generated';
 
-export function registerExtensions(superdesk, modal, privileges) {
-    Promise.all(
+export function registerExtensions(superdesk, modal, privileges): Promise<void> {
+    return Promise.all(
         Object.keys(extensions).map((extensionId) => {
             const extensionObject = extensions[extensionId];
 

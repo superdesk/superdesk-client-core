@@ -1,5 +1,6 @@
 
 import {DuplicateController} from '../controllers';
+import {registerTestExtensions} from 'core/tests/helpers/register-test-extensions';
 
 describe('content', () => {
     var item: any = {_id: 1};
@@ -42,6 +43,58 @@ describe('content', () => {
         $rootScope.$digest();
         expect(api.update).toHaveBeenCalledWith('archive_unspike', item, {task: config});
     }));
+
+    it('onSpike middleware is called',
+        (done) => inject((superdesk, activityService, privileges, modal) => {
+            const extensionDelay = 200;
+
+            const middlewares = {
+                archive: {
+                    onSpike: () => {
+                        return new Promise((resolve) => {
+                            setTimeout(() => {
+                                resolve({});
+                            }, extensionDelay);
+                        });
+                    },
+                },
+            };
+
+            spyOn(middlewares.archive, 'onSpike').and.callThrough();
+            spyOn(modal, 'createCustomModal').and.callThrough(); // called after middlewares
+
+            registerTestExtensions(
+                [
+                    {
+                        activate: () => {
+                            return Promise.resolve({
+                                contributions: {
+                                    middlewares: middlewares,
+                                },
+                            });
+                        },
+                    },
+                ],
+                superdesk,
+                modal,
+                privileges,
+            ).then(() => {
+                activityService.start(superdesk.activities.spike, {data: {item: {_id: '0'}}});
+
+                setTimeout(() => {
+                    expect(middlewares.archive.onSpike).toHaveBeenCalled();
+                });
+
+                setTimeout(() => {
+                    expect(modal.createCustomModal).not.toHaveBeenCalled();
+                }, extensionDelay - 50);
+
+                setTimeout(() => {
+                    expect(modal.createCustomModal).toHaveBeenCalled();
+                    done();
+                }, extensionDelay + 50);
+            });
+        }));
 
     describe('archive service', () => {
         beforeEach(inject((desks, session, preferencesService) => {
@@ -268,86 +321,22 @@ describe('content', () => {
         }));
     });
 
-    describe('spike activity', () => {
-        it('spike action prompts user of confirmation for in progress assignment',
-            inject(($rootScope, superdesk, activityService, privileges, modal, $q, spike) => {
-                privileges.privileges = {planning: 1};
+    it('spike action prompts user if item has unsaved changes',
+        (done) => inject((activityService, superdesk, autosave, confirm, $q, $rootScope, spike, modal) => {
+            const itemObject = {_id: 'foo', lock_user: 'foo'};
 
-                let itemObject = {
-                    _id: 'foo1',
-                    _type: 'archive',
-                    task: {desk: 'desk1', stage: 'stage1'},
-                    type: 'text',
-                    assignment_id: 'as1',
-                };
+            spyOn(autosave, 'get').and.returnValue($q.when());
+            spyOn(confirm, 'reopen').and.returnValue($q.reject());
+            spyOn(modal, 'createCustomModal').and.returnValue($q.when());
 
-                spyOn(modal, 'confirm').and.returnValue($q.when({}));
-                spyOn(spike, 'spike').and.returnValue($q.when({}));
+            activityService.start(superdesk.activities.spike, {data: {item: itemObject}});
+            $rootScope.$digest();
 
-                activityService.start(superdesk.activities.spike, {data: {item: itemObject}});
-                $rootScope.$digest();
-
-                expect(modal.confirm).toHaveBeenCalledWith('This item is linked to in-progress ' +
-                    'planning coverage, spike anyway?', 'Confirm');
-                expect(spike.spike).toHaveBeenCalled();
-            }));
-
-        it('spike action does prompts user of confirmation if no assignment linked',
-            inject(($rootScope, superdesk, activityService, privileges, modal, $q, spike) => {
-                privileges.privileges = {planning: 1};
-
-                let itemObject = {
-                    _id: 'foo1',
-                    _type: 'archive',
-                    task: {desk: 'desk1', stage: 'stage1'},
-                    type: 'text',
-                };
-
-                spyOn(modal, 'confirm').and.returnValue($q.when({}));
-                spyOn(spike, 'spike').and.returnValue($q.when({}));
-
-                activityService.start(superdesk.activities.spike, {data: {item: itemObject}});
-                $rootScope.$digest();
-
-                expect(modal.confirm).toHaveBeenCalledWith('Are you sure you want to spike the item?', 'Confirm');
-                expect(spike.spike).toHaveBeenCalled();
-            }));
-
-        it('spike action does prompts user if planning component not activated',
-            inject(($rootScope, superdesk, activityService, privileges, modal, $q, spike) => {
-                let itemObject = {
-                    _id: 'foo1',
-                    _type: 'archive',
-                    task: {desk: 'desk1', stage: 'stage1'},
-                    type: 'text',
-                };
-
-                spyOn(modal, 'confirm').and.returnValue($q.when({}));
-                spyOn(spike, 'spike').and.returnValue($q.when({}));
-
-                activityService.start(superdesk.activities.spike, {data: {item: itemObject}});
-                $rootScope.$digest();
-
-                expect(modal.confirm).toHaveBeenCalledWith('Are you sure you want to spike the item?', 'Confirm');
-                expect(spike.spike).toHaveBeenCalled();
-            }));
-
-        it('spike action prompts user if item has unsaved changes',
-            inject((activityService, superdesk, autosave, confirm, $q, $rootScope, spike, modal) => {
-                const itemObject = {_id: 'foo', lock_user: 'foo'};
-
-                spyOn(autosave, 'get').and.returnValue($q.when());
-                spyOn(confirm, 'reopen').and.returnValue($q.reject());
-                spyOn(modal, 'confirm').and.returnValue($q.when());
-                spyOn(spike, 'spike');
-
-                activityService.start(superdesk.activities.spike, {data: {item: itemObject}});
-                $rootScope.$digest();
-
+            setTimeout(() => {
                 expect(autosave.get).toHaveBeenCalled();
                 expect(confirm.reopen).toHaveBeenCalled();
-                expect(modal.confirm).toHaveBeenCalled();
-                expect(spike.spike).toHaveBeenCalled();
-            }));
-    });
+                expect(modal.createCustomModal).toHaveBeenCalled();
+                done();
+            }, 1000);
+        }));
 });
