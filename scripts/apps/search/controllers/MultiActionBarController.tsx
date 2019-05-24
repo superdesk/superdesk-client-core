@@ -137,15 +137,15 @@ export function MultiActionBarController(
         }
 
         const onSpikeMultipleMiddlewares
-            : Array<IExtensionActivationResult['contributions']['middlewares']['archive']['onSpikeMultiple']>
+            : Array<IExtensionActivationResult['contributions']['entities']['article']['onSpikeMultiple']>
             = flatMap(
                 Object.values(extensions).map(({activationResult}) => activationResult),
                 (activationResult) =>
                     activationResult.contributions != null
-                    && activationResult.contributions.middlewares != null
-                    && activationResult.contributions.middlewares.archive != null
-                    && activationResult.contributions.middlewares.archive.onSpikeMultiple != null
-                        ? activationResult.contributions.middlewares.archive.onSpikeMultiple
+                    && activationResult.contributions.entities != null
+                    && activationResult.contributions.entities.article != null
+                    && activationResult.contributions.entities.article.onSpikeMultiple != null
+                        ? activationResult.contributions.entities.article.onSpikeMultiple
                         : [],
             );
 

@@ -30,8 +30,8 @@ declare module 'superdesk-api' {
                 annotationInputTabs?: Array<IEditor3AnnotationInputTab>;
             }
             pages?: Array<IPage>;
-            middlewares?: {
-                archive?: {
+            entities?: {
+                article?: {
                     onSpike?(item: IArticle): Promise<onSpikeMiddlewareResult>;
                     onSpikeMultiple?(items: Array<IArticle>): Promise<onSpikeMiddlewareResult>;
                 };

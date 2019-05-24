@@ -37,8 +37,8 @@ const extension: IExtension = {
     activate: (superdesk: ISuperdesk) => {
         return Promise.resolve({
             contributions: {
-                middlewares: {
-                    archive: {
+                entities: {
+                    article: {
                         onSpike: (item: IArticle) => onSpike(superdesk, item),
                         onSpikeMultiple: (items: Array<IArticle>) => onSpikeMultiple(superdesk, items),
                     },

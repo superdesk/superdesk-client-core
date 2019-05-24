@@ -423,15 +423,15 @@ function spikeActivity(spike, data, modal, $location, $q, multi, privileges,
         }
 
         const onSpikeMiddlewares
-            : Array<IExtensionActivationResult['contributions']['middlewares']['archive']['onSpike']>
+            : Array<IExtensionActivationResult['contributions']['entities']['article']['onSpike']>
             = flatMap(
                 Object.values(extensions).map(({activationResult}) => activationResult),
                 (activationResult) =>
                     activationResult.contributions != null
-                    && activationResult.contributions.middlewares != null
-                    && activationResult.contributions.middlewares.archive != null
-                    && activationResult.contributions.middlewares.archive.onSpike != null
-                        ? activationResult.contributions.middlewares.archive.onSpike
+                    && activationResult.contributions.entities != null
+                    && activationResult.contributions.entities.article != null
+                    && activationResult.contributions.entities.article.onSpike != null
+                        ? activationResult.contributions.entities.article.onSpike
                         : [],
             );
 
