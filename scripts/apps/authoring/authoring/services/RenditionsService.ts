@@ -9,6 +9,7 @@ import {gettext} from 'core/utils';
  * @description Renditions Service allows the user to generate different crops.
  */
 RenditionsService.$inject = ['metadata', '$q', 'api', 'superdesk', 'lodash', 'notify'];
+
 export function RenditionsService(metadata, $q, api, superdesk, _, notify) {
     var self = this;
 
@@ -20,7 +21,7 @@ export function RenditionsService(metadata, $q, api, superdesk, _, notify) {
      *
      *  @return {promise}
      */
-    this.ingest = function(item) {
+    this.ingest = function (item) {
         var performRenditions = $q.when(item);
         // ingest picture if it comes from an external source (create renditions)
 
@@ -39,12 +40,89 @@ export function RenditionsService(metadata, $q, api, superdesk, _, notify) {
      *
      *  @return {promise} picture crops
      */
-    this.get = function() {
+    this.get = function () {
         return metadata.initialize().then(() => {
             self.renditions = metadata.values.crop_sizes;
             return self.renditions;
         });
     };
+
+
+    /**
+     *  ngdoc method
+     *  @name renditions#videoEdit
+     *  @public
+     *  @description edit video.
+     *
+     *  @param {Object} item Media item
+     *  @param {boolean} isNew to indicate if picture is new or not
+     *  @param {boolean} editable to indicate if picture is editable or not
+     *  @param {boolean} isAssociated to indicate if picture is isAssociated or not
+     *  @return {promise} returns the modified picture item
+     */
+    this.videoEdit = function (item, options): Promise<IArticle> {
+        const clonedItem = _.extend({}, item);
+
+        clonedItem.renditions = _.cloneDeep(clonedItem.renditions);
+
+        return self.get().then((renditions) => {
+            // we want to crop only renditions that change the ratio
+            let withRatio = _.filter(renditions, (rendition) => angular.isDefined(rendition.ratio));
+
+            if (!withRatio.length) {
+                withRatio = self.renditions;
+            }
+            var hideTabs = ['crop']
+            const videoOptions = {
+                isNew: true,
+                isAssociated: false,
+                editable: true,
+                defaultTab: false,
+                hideTabs: hideTabs,
+                showMetadata: false,
+                ...options,
+            };
+
+            return superdesk.intent('edit', 'video', {
+                item: clonedItem,
+                renditions: withRatio,
+                poi: clonedItem.poi,
+                showAoISelectionButton: true,
+                showMetadataEditor: true,
+                ...videoOptions,
+            })
+                .then((result) => {
+                    const savingVideoPromises = [];
+                    if (result.hasChange==true) {
+                        savingVideoPromises.push(api.save("video_edit", {
+                            action:'edit',
+                            item: clonedItem,
+                            video_cut: result.cuttingVideo,
+                            video_crop: result.croppingVideo,
+                            video_rotate: result.rotatingVideo,
+                            video_quality: result.qualityVideo,
+                            thumbnail_add: result.addingThumbnail,
+                        }));
+                    }
+                    return $q.all(savingVideoPromises)
+                    // return the cropped images
+                        .then((editVideoitems) => {
+                            editVideoitems.forEach((editvideo) => {
+                                const url = editvideo.href;
+
+                                // update association renditions
+                                angular.extend(
+                                    result.metadata,editvideo.result);
+
+                            });
+                            angular.extend(item, result.metadata);
+                            return item;
+                        });
+                });
+
+        });
+    };
+
 
     /**
      *  ngdoc method
@@ -58,7 +136,7 @@ export function RenditionsService(metadata, $q, api, superdesk, _, notify) {
      *  @param {boolean} isAssociated to indicate if picture is isAssociated or not
      *  @return {promise} returns the modified picture item
      */
-    this.crop = function(item, options): Promise<IArticle> {
+    this.crop = function (item, options): Promise<IArticle> {
         const clonedItem = _.extend({}, item);
 
         clonedItem.renditions = _.cloneDeep(clonedItem.renditions);
@@ -101,7 +179,7 @@ export function RenditionsService(metadata, $q, api, superdesk, _, notify) {
 
                         const canAdd = !keys.every((key) => {
                             const sameCoords = angular.isDefined(item.renditions[renditionName]) &&
-                            item.renditions[renditionName][key] === croppingData[key];
+                                item.renditions[renditionName][key] === croppingData[key];
 
                             return sameCoords;
                         });
@@ -122,7 +200,7 @@ export function RenditionsService(metadata, $q, api, superdesk, _, notify) {
                     });
 
                     return $q.all(savingImagePromises)
-                        // return the cropped images
+                    // return the cropped images
                         .then((croppedImages) => {
                             // save created images in "association" property
                             croppedImages.forEach((image, index) => {

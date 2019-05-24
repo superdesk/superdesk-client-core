@@ -83,6 +83,7 @@ angular.module('superdesk.apps.authoring', [
     .directive('html5vfix', directive.Html5vfix)
     .directive('sdDashboardCard', directive.DashboardCard)
     .directive('sdSendItem', directive.SendItem)
+    .directive('sdVideoTimeline', directive.VideoTimeline)
     .directive('sdCharacterCount', directive.CharacterCount)
     .directive('sdWordCount', directive.WordCount)
     .directive('sdReadingTime', directive.ReadingTime)
@@ -298,6 +299,14 @@ angular.module('superdesk.apps.authoring', [
                 controller: ctrl.ChangeImageController,
                 templateUrl: 'scripts/apps/authoring/views/change-image.html',
                 filters: [{action: 'edit', type: 'crop'}],
+            })
+            .activity('edit.video', {
+                label: gettext('Details'),
+                modal: true,
+                cssClass: 'modal--fullscreen modal--dark-ui',
+                controller: ctrl.ChangeVideoController,
+                templateUrl: 'scripts/apps/authoring/views/change-video.html',
+                filters: [{action: 'edit', type: 'video'}],
             })
             .activity('preview', {
                 href: '/preview/:_id',

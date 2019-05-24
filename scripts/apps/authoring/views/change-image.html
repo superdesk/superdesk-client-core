@@ -23,7 +23,7 @@
             <div class="sd-photo-preview" ng-if="!nav || nav === 'view'">
                 <div class="sd-photo-preview__image">
                     <img ng-if="data.item.type === 'picture' || data.item.type === 'image'" ng-src="{{data.item.renditions.original.href}}">
-                    <video controls ng-if="data.item.type === 'video'" ng-src="{{data.item.renditions.original.href}}"></video>
+                    <video #video controls ng-if="data.item.type === 'video'" ng-src="{{data.item.renditions.original.href}}"></video>
                     <audio controls ng-if="data.item.type === 'audio'" ng-src="{{data.item.renditions.original.href}}"></audio>
                 </div>
             </div>
@@ -60,7 +60,7 @@
                     <a class="btn" ng-click="cancelCrops()" translate>Cancel</a>
                     <a class="btn btn--primary" ng-click="saveCrops()" translate>Save</a>
                 </div>
-                
+
                 <div class="sd-photo-preview__image--with-strip" ng-if="!selectedRendition">
                     <sd-image-point
                         data-src="data.item.renditions.viewImage.href"

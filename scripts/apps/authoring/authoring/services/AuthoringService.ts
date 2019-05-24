@@ -294,7 +294,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         }
 
         // if current document is image and it has been changed on 'media edit' we have to update the etag
-        if (origItem.type === 'picture' && item._etag != null) {
+        if ((origItem.type === 'picture' || origItem.type === 'video') && item._etag != null) {
             diff._etag = item._etag;
         }
 
