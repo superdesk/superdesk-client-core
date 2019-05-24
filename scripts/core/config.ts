@@ -1,7 +1,7 @@
 import _ from 'lodash';
 
 export function isMediaEditable(config) {
-    return !!_.get(config, 'features.editFeaturedImage');
+    return _.get(config, 'features.editFeaturedImage') !== false;
 }
 
 DeployConfigFactory.$inject = ['api', '$q'];
