@@ -1,3 +1,5 @@
+/* eslint-disable indent */
+
 import _, {get, flatMap} from 'lodash';
 import {IArticle} from 'superdesk-interfaces/Article';
 import {gettext} from 'core/utils';

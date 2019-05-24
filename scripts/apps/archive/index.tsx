@@ -1,3 +1,5 @@
+/* eslint-disable indent */
+
 // styles
 import './styles/related-item.scss';
 import './styles/assignment.scss';
