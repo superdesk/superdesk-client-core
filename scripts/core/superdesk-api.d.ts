@@ -85,7 +85,7 @@ declare module 'superdesk-api' {
         _items: Array<T>;
         _links: {
             parent: IRestApiLink;
-            selft: IRestApiLink;
+            self: IRestApiLink;
         };
         _meta: {
             max_results: number;
