@@ -48,19 +48,17 @@ describe('content', () => {
         (done) => inject((superdesk, activityService, privileges, modal) => {
             const extensionDelay = 200;
 
-            const middlewares = {
-                archive: {
-                    onSpike: () => {
-                        return new Promise((resolve) => {
-                            setTimeout(() => {
-                                resolve({});
-                            }, extensionDelay);
-                        });
-                    },
+            const articleEntities = {
+                onSpike: () => {
+                    return new Promise((resolve) => {
+                        setTimeout(() => {
+                            resolve({});
+                        }, extensionDelay);
+                    });
                 },
             };
 
-            spyOn(middlewares.archive, 'onSpike').and.callThrough();
+            spyOn(articleEntities, 'onSpike').and.callThrough();
             spyOn(modal, 'createCustomModal').and.callThrough(); // called after middlewares
 
             registerTestExtensions(
@@ -69,7 +67,9 @@ describe('content', () => {
                         activate: () => {
                             return Promise.resolve({
                                 contributions: {
-                                    middlewares: middlewares,
+                                    entities: {
+                                        article: articleEntities,
+                                    },
                                 },
                             });
                         },
@@ -82,7 +82,7 @@ describe('content', () => {
                 activityService.start(superdesk.activities.spike, {data: {item: {_id: '0'}}});
 
                 setTimeout(() => {
-                    expect(middlewares.archive.onSpike).toHaveBeenCalled();
+                    expect(articleEntities.onSpike).toHaveBeenCalled();
                 });
 
                 setTimeout(() => {

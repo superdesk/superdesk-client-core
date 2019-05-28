@@ -65,15 +65,13 @@ describe('Multi Action Bar', () => {
         (done) => inject((superdesk, $controller, privileges, modal) => {
             const extensionDelay = 1000;
 
-            const middlewares = {
-                archive: {
-                    onSpikeMultiple: () => {
-                        return new Promise((resolve) => {
-                            setTimeout(() => {
-                                resolve({});
-                            }, extensionDelay);
-                        });
-                    },
+            const articleEntities = {
+                onSpikeMultiple: () => {
+                    return new Promise((resolve) => {
+                        setTimeout(() => {
+                            resolve({});
+                        }, extensionDelay);
+                    });
                 },
             };
 
@@ -83,7 +81,9 @@ describe('Multi Action Bar', () => {
                         activate: () => {
                             return Promise.resolve({
                                 contributions: {
-                                    middlewares: middlewares,
+                                    entities: {
+                                        article: articleEntities,
+                                    },
                                 },
                             });
                         },
