@@ -80,7 +80,7 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
         this.onChange = this.onChange.bind(this);
         this.onSelect = this.onSelect.bind(this);
         this.deleteAnnotation = this.deleteAnnotation.bind(this);
-        this.getSelectionText = this.getSelectionText.bind(this);
+        this.getAnnotatedText = this.getAnnotatedText.bind(this);
 
         this.annotationInputTabsFromExtensions = flatMap(
             Object.values(extensions).map(({activationResult}) => activationResult),
@@ -153,7 +153,7 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
     componentDidMount() {
         $('.annotation-input textarea').focus();
 
-        const text = this.getSelectionText();
+        const text = this.getAnnotatedText();
 
         Promise.all(
             this.annotationInputTabsFromExtensions.map(({selectedByDefault}) => selectedByDefault(text)),
@@ -188,13 +188,21 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
         _hidePopups();
     }
 
-    getSelectionText(): string {
+    getAnnotatedText(): string {
         const {data} = this.props;
-        const selection: SelectionState = data.selection;
-        const blockKey = data.selection.getStartKey();
-        const contentState = this.props.editorState.getCurrentContent();
-        const block = contentState.getBlockForKey(blockKey);
-        const text = block.getText().slice(selection.getStartOffset(), selection.getEndOffset());
+
+        let text = '';
+
+        if (data.selection != null) { // annotation is being added
+            const selection: SelectionState = data.selection;
+            const blockKey = data.selection.getStartKey();
+            const contentState = this.props.editorState.getCurrentContent();
+            const block = contentState.getBlockForKey(blockKey);
+
+            text = block.getText().slice(selection.getStartOffset(), selection.getEndOffset());
+        } else { // annotation already exists
+            text = getRangeAndTextForStyle(this.props.editorState, data.highlightId).highlightedText;
+        }
 
         return text;
     }
@@ -208,14 +216,6 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
         const _hidePopups = this.props.hidePopups;
         const {annotation} = data;
         const {type, isEmpty} = this.state;
-
-        let text = '';
-
-        if (data.selection != null) { // annotation is being added
-            text = this.getSelectionText();
-        } else { // annotation already exists
-            text = getRangeAndTextForStyle(this.props.editorState, data.highlightId).highlightedText;
-        }
 
         const annotationTypeSelect = annotationTypes == null ? null : (
             <div className="sd-line-input sd-line-input--is-select">
@@ -279,7 +279,7 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
                                                 label: tab.label,
                                                 render: () => (
                                                     <Component
-                                                        annotationText={text}
+                                                        annotationText={this.getAnnotatedText()}
                                                         onCancel={_hidePopups}
                                                         annotationTypeSelect={annotationTypeSelect}
                                                         annotationInputComponent={annotationInputComponent}
