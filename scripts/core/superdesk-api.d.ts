@@ -39,6 +39,7 @@ declare module 'superdesk-api' {
         }
     }
 
+
     export type IExtension = DeepReadonly<{
         activate: (superdesk: ISuperdesk) => Promise<IExtensionActivationResult>;
     }>;
@@ -64,6 +65,7 @@ declare module 'superdesk-api' {
 
 
 
+
     // ENTITIES
 
     // this is a subset of the main IArticle interface found in the core
@@ -72,6 +74,7 @@ declare module 'superdesk-api' {
         _id: string;
         assignment_id?: string;
     }
+
 
 
     // PAGE
@@ -103,7 +106,7 @@ declare module 'superdesk-api' {
         _items: Array<T>;
         _links: {
             parent: IRestApiLink;
-            selft: IRestApiLink;
+            self: IRestApiLink;
         };
         _meta: {
             max_results: number;

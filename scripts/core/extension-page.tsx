@@ -4,8 +4,7 @@ import {logger} from './services/logger';
 
 export class ExtensionPage extends React.Component {
     render() {
-        const currentUrl = window.location.hash.slice(1, window.location.hash.length);
-
+        const currentUrl = window.location.hash.slice(1);
         const extensionObject = Object.values(extensions).find(
             ({activationResult}) =>
                 activationResult.contributions != null

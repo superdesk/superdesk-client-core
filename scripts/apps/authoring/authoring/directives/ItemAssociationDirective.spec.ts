@@ -13,7 +13,7 @@ describe('item association directive', () => {
         scope.item = item;
         scope.editable = true;
         config.features = {
-            editFeaturedImage: 1,
+            editFeaturedImage: true,
         };
 
         spyOn(renditions, 'ingest').and.returnValue($q.when({headline: 'foo',
