@@ -1,7 +1,7 @@
 import React from 'react';
 import {TextSingleLine} from './input-types/text-single-line';
 import {assertNever} from 'core/helpers/typescript-helpers';
-import {IFormField, IFormGroup, isIFormGroup, isIFormField, FormFieldType} from './interfaces/form';
+import {isIFormGroup, isIFormField, FormFieldType} from './interfaces/form';
 import {VocabularySingleValue} from './input-types/vocabulary_single_value';
 import {TextEditor3} from './input-types/text-editor3';
 import {noop} from 'lodash';
@@ -12,8 +12,9 @@ import {DeskSingleValue} from './input-types/desk_single_value';
 import {StageSingleValue} from './input-types/stage_single_value';
 import {MacroSingleValue} from './input-types/macro_single_value';
 import {YesNo} from './input-types/yes-no';
+import {IFormField, IFormGroup} from 'superdesk-api';
 
-export function getFormFieldComponent(type: IFormField['type']): React.ComponentType<IInputType<any>> {
+export function getFormFieldComponent(type: FormFieldType): React.ComponentType<IInputType<any>> {
     switch (type) {
     case FormFieldType.textSingleLine:
         return TextSingleLine;

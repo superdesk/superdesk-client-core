@@ -78,6 +78,12 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                 scope.search_config = getSearchConfig();
                 scope.lookupCvs = {};
                 scope.params = params.params ? JSON.parse(params.params) : {};
+
+                if (scope.query && !Object.keys(scope.meta).length) {
+                    // get selected parameters as object
+                    scope.meta = tags.initSelectedParameters(scope.query, true);
+                }
+
                 angular.forEach(scope.cvs, (cv) => {
                     scope.lookupCvs[cv.id] = cv;
                 });
@@ -106,7 +112,9 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                         fetchProviders();
                     }
                 } else {
-                    initializeItems();
+                    if (scope.metadata) {
+                        initializeItems();
+                    }
                     if (scope.isContentApi()) {
                         initializeSubscriber();
                     } else {
@@ -360,9 +368,6 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                 });
 
                 if (metas.length) {
-                    if (scope.query) {
-                        return scope.query + ' ' + metas.join(' ');
-                    }
                     return metas.join(' ');
                 }
 

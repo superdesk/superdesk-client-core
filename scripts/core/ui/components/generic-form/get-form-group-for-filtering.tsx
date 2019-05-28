@@ -1,8 +1,9 @@
 import {assertNever} from 'core/helpers/typescript-helpers';
-import {IFormField, IFormGroup, isIFormGroup, isIFormField, FormFieldType} from './interfaces/form';
+import {isIFormGroup, isIFormField, FormFieldType} from './interfaces/form';
+import {IFormField, IFormGroup} from 'superdesk-api';
 
 // different components must be used for filtering than for entering/updating items
-function getFieldTypeForFiltering(type: IFormField['type']): IFormField['type'] {
+function getFieldTypeForFiltering(type: FormFieldType): FormFieldType {
     switch (type) {
     case FormFieldType.textSingleLine:
         return FormFieldType.textSingleLine;

@@ -120,7 +120,7 @@ export default angular.module('superdesk.core.directives.typeahead', [])
                 $input.on('blur', () => {
                     scope.$apply(() => {
                         scope.focused = false;
-                        if (typeof scope.blur === 'function' && !scope.hide) {
+                        if (typeof scope.blur === 'function') {
                             scope.blur({item: scope.active});
                         }
                     });

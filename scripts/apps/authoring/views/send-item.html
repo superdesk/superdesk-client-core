@@ -32,7 +32,7 @@
         <!-- Content Send To-->
         <div class="side-panel__content" ng-if="currentUserAction === vm.userActions.send_to || currentUserAction === vm.userActions.duplicate_to || currentUserAction === vm.userActions.externalsource_to">
             <div class="side-panel__content-block">
-                
+
                 <div sd-toggle-box
                     ng-if="showSendButtonAndDestination()"
                     data-title="{{ currentUserAction === vm.userActions.publish ? 'From' : 'Destination' | translate }}"
@@ -44,7 +44,7 @@
                             data-selected-desk="selectedDesk"
                             on-change="selectDesk(desk)"></div>
                     </div>
-                   
+
                    <ul class="btn-list" ng-if="stages && !(vm.userActions.publish === currentUserAction)">
                        <li ng-repeat="stage in stages track by stage._id"
                            ng-if = "!disableFetchAndOpenButton() || stage.is_visible">
@@ -59,10 +59,10 @@
                </div>
 
                <div sd-toggle-box
-                    id="embargoTimestamp" 
-                    ng-if="mode === 'authoring' && showEmbargo()" 
-                    data-title="{{ 'Embargo' | translate }}" 
-                    data-open="true" 
+                    id="embargoTimestamp"
+                    ng-if="mode === 'authoring' && showEmbargo()"
+                    data-title="{{ 'Embargo' | translate }}"
+                    data-open="true"
                     data-style="circle">
                     <ul class="btn-list">
                         <li class="datepicker-input--dark">
@@ -76,12 +76,12 @@
                         <i class="icon-remove-sign icon--white"></i>{{ :: 'Clear embargo' | translate }}
                     </a>
                 </div>
-        
+
                 <div sd-toggle-box
                     id="publishScheduleTimestamp"
                     ng-if="mode === 'authoring' && showPublishSchedule()"
                     data-title="{{ 'Publishing Schedule' | translate }}"
-                    data-open="true" 
+                    data-open="true"
                     data-style="circle">
                     <ul class="btn-list">
                         <li class="datepicker-input--dark">
@@ -95,7 +95,7 @@
                         <i class="icon-remove-sign"></i>{{ :: 'Clear schedule' | translate }}
                     </a>
                 </div>
-        
+
                 <div sd-toggle-box id="timezoneTimestamp" ng-if="mode === 'authoring' && showTimezone()" data-title="Timezone" data-open="true" data-style="circle">
                     <div sd-timezone data-timezone="item.time_zone" class="timezone-input--dark"></div>
                 </div>
@@ -120,11 +120,11 @@
                         </div>
                     </div>
                </div>
-               <div sd-toggle-box 
-                    id="embargoTimestamp" 
-                    ng-if="mode === 'authoring' && showEmbargo()" 
-                    data-title="{{ 'Embargo' | translate }}" 
-                    data-open="true" 
+               <div sd-toggle-box
+                    id="embargoTimestamp"
+                    ng-if="mode === 'authoring' && showEmbargo()"
+                    data-title="{{ 'Embargo' | translate }}"
+                    data-open="true"
                     data-style="circle">
                     <ul class="btn-list">
                         <li class="datepicker-input--dark">
@@ -138,8 +138,8 @@
                         <i class="icon-remove-sign"></i>{{ :: 'Clear embargo' | translate }}
                     </a>
                 </div>
-        
-                <div sd-toggle-box 
+
+                <div sd-toggle-box
                     id="publishScheduleTimestamp"
                     ng-if="mode === 'authoring' && showPublishSchedule()"
                     data-title="{{ 'Publish Schedule' | translate }}"
@@ -157,7 +157,7 @@
                         <i class="icon-remove-sign"></i>{{ :: 'Clear schedule' | translate }}
                     </a>
                 </div>
-        
+
                 <div sd-toggle-box id="timezoneTimestamp" ng-if="mode === 'authoring' && showTimezone()" data-title="Timezone" data-open="true" data-style="circle">
                     <div sd-timezone data-timezone="item.time_zone" class="timezone-input--dark"></div>
                 </div>
@@ -199,7 +199,7 @@
                     </div>
                 </div>
             </div>
-            <div ng-if="vm.userActions.publish_pane_two_columns" class="side-panel__content-block side-panel__content-block--right">
+            <div ng-if="vm.userActions.publish_pane_two_columns" class="side-panel__content-block side-panel__content-block--right side-panel__content-block--overlay-panel-inside">
                 <div sd-extension-point="authoring:publish"
                     ng-if="canPublishItem() && currentUserAction === vm.userActions.publish">
                 </div>

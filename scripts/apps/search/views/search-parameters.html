@@ -124,8 +124,7 @@
                 <select id="search-creator"
                         class="sd-line-input__select"
                         ng-model="fields.original_creator"
-                        ng-options="user._id as user.display_name for user in userList | orderBy:'display_name'
-                        track by user._id">
+                        ng-options="user._id as user.display_name for user in userList | orderBy:'display_name'">
                         <option value="" label=""></option>
                 </select>
             </div>

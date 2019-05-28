@@ -1,51 +1,59 @@
 /* eslint-disable react/display-name */
 
-import {IRestApiResponse, IDefaultApiFields} from '../../types/RestApi';
 import React from 'react';
 import {generate} from 'json-merge-patch';
 import {connectServices} from './ReactRenderAsync';
+import ng from 'core/services/ng';
+import {
+    IBaseRestApiResponse,
+    ICrudManagerState,
+    ICrudManagerMethods,
+    ISortOption,
+    ICrudManagerFilters,
+    IRestApiResponse,
+    IDataApi,
+} from 'superdesk-api';
 
-export interface ISortOption {
-    field: string;
-    direction: 'ascending' | 'descending';
-}
-
-export type ICrudManagerFilters = {[fieldName: string]: any};
-
-interface IState<Entity extends IDefaultApiFields> extends IRestApiResponse<Entity> {
-    activeFilters: ICrudManagerFilters;
-    activeSortOption?: ISortOption;
-}
-
-interface IMethods<Entity extends IDefaultApiFields> {
-    read(
+export const dataApi: IDataApi = {
+    create: (endpoint, item) => ng.getService('api').then((api) => api(endpoint).save(item)),
+    query: (
+        endpoint: string,
         page: number,
-        sort?: {
-        field: string;
-        direction: 'ascending' | 'descending';
-        },
-        filterValues?: ICrudManagerFilters,
+        sortOption: ISortOption,
+        filterValues: ICrudManagerFilters = {},
         formatFiltersForServer?: (filters: ICrudManagerFilters) => ICrudManagerFilters,
-    ): Promise<IRestApiResponse<Entity>>;
-    update(item: Entity): Promise<Entity>;
-    create(item: Entity): Promise<Entity>;
-    delete(item: Entity): Promise<void>;
-    refresh(): Promise<IRestApiResponse<Entity>>;
-    sort(nextSortOption: ISortOption): Promise<IRestApiResponse<Entity>>;
-    removeFilter(fieldName: string): Promise<IRestApiResponse<Entity>>;
-    goToPage(nextPage: number): Promise<IRestApiResponse<Entity>>;
-}
+    ) => ng.getService('api').then((api) => {
+        let query = {
+            page: page,
+        };
 
-export interface ICrudManager<Entity extends IDefaultApiFields> extends IState<Entity>, IMethods<Entity> {
-    // allow exposing it as one interface for consumer components
-}
+        if (sortOption != null) {
+            query['sort'] = (sortOption.direction === 'descending' ? '-' : '') + sortOption.field;
+        }
 
-export function connectCrudManager<Props, Entity extends IDefaultApiFields>(
-    WrappedComponent: React.ComponentType<Props>,
+        if (Object.keys(filterValues).length > 0) {
+            query['where'] = typeof formatFiltersForServer === 'function'
+                ? formatFiltersForServer(filterValues)
+                : filterValues;
+        }
+
+        return api(endpoint).query(query);
+    }),
+    patch: (endpoint, item1, item2) => ng.getService('api').then((api) => {
+        const patch = generate(item1, item2);
+
+        return api(endpoint).save(item1, patch);
+    }),
+    delete: (endpoint, item) => ng.getService('api').then((api) => api(endpoint).remove(item)),
+};
+
+export function connectCrudManager<Props, PropsToConnect, Entity extends IBaseRestApiResponse>(
+    WrappedComponent: React.ComponentType<Props & PropsToConnect>,
     name: string,
     endpoint: string,
-) {
-    const component = class extends React.Component<Props, IState<Entity>> implements IMethods<Entity> {
+): React.ComponentType<Props> {
+    const component = class extends React.Component<Props, ICrudManagerState<Entity>>
+        implements ICrudManagerMethods<Entity> {
         api: any;
 
         constructor(props) {
@@ -73,30 +81,22 @@ export function connectCrudManager<Props, Entity extends IDefaultApiFields>(
 
         create(item: Entity): Promise<Entity> {
             // creating an item impacts sorting/filtering/pagination. Data is re-fetched to correct it.
-            return this.api.save(item).then((res) => this.refresh().then(() => res));
+            return dataApi.create<Entity>(endpoint, item).then((res) => this.refresh().then(() => res));
         }
 
         read(
             page: number,
-            sortOption: ISortOption = {field: 'name', direction: 'ascending'},
+            sortOption: ISortOption,
             filterValues: ICrudManagerFilters = {},
             formatFiltersForServer?: (filters: ICrudManagerFilters) => ICrudManagerFilters,
         ): Promise<IRestApiResponse<Entity>> {
-            let query = {
-                page: page,
-            };
-
-            if (sortOption != null) {
-                query['sort'] = (sortOption.direction === 'descending' ? '-' : '') + sortOption.field;
-            }
-
-            if (Object.keys(filterValues).length > 0) {
-                query['where'] = typeof formatFiltersForServer === 'function'
-                    ? formatFiltersForServer(filterValues)
-                    : filterValues;
-            }
-
-            return this.api.query(query)
+            return dataApi.query(
+                endpoint,
+                page,
+                sortOption,
+                filterValues,
+                formatFiltersForServer,
+            )
                 .then((res: IRestApiResponse<Entity>) => new Promise((resolve) => {
                     this.setState({
                         ...res,
@@ -110,16 +110,15 @@ export function connectCrudManager<Props, Entity extends IDefaultApiFields>(
 
         update(nextItem: Entity): Promise<Entity> {
             const currentItem = this.state._items.find(({_id}) => _id === nextItem._id);
-            const patch = generate(currentItem, nextItem);
 
             // updating an item impacts sorting/filtering/pagination. Data is re-fetched to correct it.
-            return this.api.save(currentItem, patch)
+            return dataApi.patch<Entity>(endpoint, currentItem, nextItem)
                 .then((res) => this.refresh().then(() => res));
         }
 
         delete(item: Entity): Promise<void> {
             // deleting an item impacts sorting/filtering/pagination. Data is re-fetched to correct it.
-            return this.api.remove(item).then(() => this.refresh().then(() => undefined));
+            return dataApi.delete(endpoint, item).then(() => this.refresh().then(() => undefined));
         }
 
         refresh(): Promise<IRestApiResponse<Entity>> {

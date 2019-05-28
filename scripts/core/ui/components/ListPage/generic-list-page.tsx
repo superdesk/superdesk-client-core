@@ -16,17 +16,22 @@ import {
 import {SearchBar} from 'core/ui/components';
 import {Button} from 'core/ui/components/Nav';
 import {SortBar, ISortFields} from 'core/ui/components/SortBar';
-import {connectCrudManager, ICrudManager, ICrudManagerFilters} from 'core/helpers/CrudManager';
+import {connectCrudManager} from 'core/helpers/CrudManager';
 import {TagLabel} from 'core/ui/components/TagLabel';
 import {connectServices} from 'core/helpers/ReactRenderAsync';
-import {IFormGroup} from 'core/ui/components/generic-form/interfaces/form';
 import {getFormGroupForFiltering} from 'core/ui/components/generic-form/get-form-group-for-filtering';
 import {getFormFieldsRecursive, getFormFieldPreviewComponent} from 'core/ui/components/generic-form/form-field';
 import {FormViewEdit} from 'core/ui/components/generic-form/from-group';
-import {IDefaultApiFields} from 'types/RestApi';
 import {getInitialValues} from '../generic-form/get-initial-values';
 import {generateFilterForServer} from '../generic-form/generate-filter-for-server';
 import {getFormFieldsFlat} from '../generic-form/get-form-fields-flat';
+import {
+    IBaseRestApiResponse,
+    IPropsGenericForm,
+    IGenericListPageComponent,
+    ICrudManagerFilters,
+    ICrudManager,
+} from 'superdesk-api';
 
 interface IState {
     preview: {
@@ -43,19 +48,13 @@ interface IState {
     loading: boolean;
 }
 
-interface IProps<T extends IDefaultApiFields> {
-    formConfig: IFormGroup;
-    renderRow(key: string, item: T, page: GenericListPageComponent<T>): JSX.Element;
-
-    // Allows creating an item with required fields which aren't editable from the GUI
-    newItemTemplate?: {[key: string]: any};
-
-    // connected
+interface IPropsConnected<T extends IBaseRestApiResponse> {
     items?: ICrudManager<T>;
-    modal?: any;
 }
 
-export class GenericListPageComponent<T extends IDefaultApiFields> extends React.Component<IProps<T>, IState> {
+export class GenericListPageComponent<T extends IBaseRestApiResponse>
+    extends React.Component<IPropsGenericForm<T> & IPropsConnected<T>, IState>
+    implements IGenericListPageComponent<T> {
     constructor(props) {
         super(props);
 
@@ -100,7 +99,7 @@ export class GenericListPageComponent<T extends IDefaultApiFields> extends React
             });
         }
     }
-    removeFilter(fieldName) {
+    removeFilter(fieldName: string) {
         this.setState((prevState) => ({
             ...prevState,
             filterValues: omit(prevState.filterValues, fieldName),
@@ -129,7 +128,7 @@ export class GenericListPageComponent<T extends IDefaultApiFields> extends React
                 }
             });
     }
-    startEditing(id) {
+    startEditing(id: string) {
         if (this.state.preview.editMode === true) {
             this.props.modal.alert({
                 headerText: gettext('Warning'),
@@ -257,7 +256,7 @@ export class GenericListPageComponent<T extends IDefaultApiFields> extends React
         }
     }
     componentDidMount() {
-        this.props.items.read(1);
+        this.props.items.read(1, this.props.defaultSortOption);
     }
     render() {
         if (this.props.items._items == null) {
@@ -510,9 +509,9 @@ export class GenericListPageComponent<T extends IDefaultApiFields> extends React
     }
 }
 
-export const getGenericListPageComponent = <T extends IDefaultApiFields>(resource: string) =>
-    connectServices<IProps<T>>(
-        connectCrudManager<IProps<T>, T>(
+export const getGenericListPageComponent = <T extends IBaseRestApiResponse>(resource: string) =>
+    connectServices<IPropsGenericForm<T>>(
+        connectCrudManager<IPropsGenericForm<T>, IPropsConnected<T>, T>(
             GenericListPageComponent,
             'items',
             resource,

@@ -1,15 +1,16 @@
 import React from 'react';
 import {render} from 'enzyme';
-import {IFormField, FormFieldType} from '../interfaces/form';
 import {noop} from 'lodash';
 import {getFormFieldComponent} from '../form-field';
 import {assertNever} from 'core/helpers/typescript-helpers';
+import {IFormField} from 'superdesk-api';
+import {FormFieldType} from '../interfaces/form';
 
 function getAllInputTypes(): Array<FormFieldType> {
     return Object.keys(FormFieldType).map((key) => FormFieldType[key]);
 }
 
-function getTestFieldConfig(type: IFormField['type']): IFormField {
+function getTestFieldConfig(type: FormFieldType): IFormField {
     switch (type) {
     case FormFieldType.textSingleLine:
     case FormFieldType.textEditor3:

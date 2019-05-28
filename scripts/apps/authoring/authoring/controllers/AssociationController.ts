@@ -145,11 +145,14 @@ export function AssociationController(config, content, superdesk,
      * @param {Function} callback to call after save
      */
     this.updateItemAssociation = function(scope, updated, customRel, callback = null, autosave = false) {
-        let data = {}, rel = customRel || scope.rel;
+        let data = {};
+        // if the media is of type media-gallery, update same association-key not the next one
+        // as the scope.rel contains the next association-key of the new item
+        let associationKey = scope.carouselItem ? scope.carouselItem.fieldId : customRel || scope.rel;
 
-        data[rel] = updated;
+        data[associationKey] = updated;
         scope.item.associations = angular.extend({}, scope.item.associations, data);
-        scope.rel = rel;
+        scope.rel = associationKey;
 
         let promise;
 
