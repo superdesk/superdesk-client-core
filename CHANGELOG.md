@@ -1,5 +1,11 @@
 # Superdesk Client Changelog
 
+## [1.29.1] 2019-05-28
+
+### Fixed
+
+- Fix custom location entry fails to update date in dateline.
+
 ## [1.29.0] 2019-04-30
 
 ### Added
