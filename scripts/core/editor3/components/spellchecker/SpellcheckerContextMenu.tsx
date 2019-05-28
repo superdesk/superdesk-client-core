@@ -57,29 +57,34 @@ export class SpellcheckerContextMenuComponent extends React.Component<IProps> {
                                 </li>,
                             )
                     }
-                    <li className="divider"/>
-                    <div className="form-label" style={{margin: '0 16px'}}>{gettext('Actions')}</div>
                     {
-                        Object.keys(spellchecker.actions).map((key, i) => {
-                            const action = spellchecker.actions[key];
+                        Object.keys(spellchecker.actions).length < 1 ? null : (
+                            <div>
+                                <li className="divider"/>
+                                <div className="form-label" style={{margin: '0 16px'}}>{gettext('Actions')}</div>
+                                {
+                                    Object.keys(spellchecker.actions).map((key, i) => {
+                                        const action = spellchecker.actions[key];
 
-                            return (
-                                <li key={i}>
-                                    <button
-                                        onMouseDown={() => action.perform(this.props.warning).then(
-                                            () => {
-                                                this.props.dispatch(reloadSpellcheckerWarnings());
-                                            },
-                                        )}
-                                        data-test-id="spellchecker-menu--action"
-                                    >
-                                        {action.label}
-                                    </button>
-                                </li>
-                            );
-                        })
+                                        return (
+                                            <li key={i}>
+                                                <button
+                                                    onMouseDown={() => action.perform(this.props.warning).then(
+                                                        () => {
+                                                            this.props.dispatch(reloadSpellcheckerWarnings());
+                                                        },
+                                                    )}
+                                                    data-test-id="spellchecker-menu--action"
+                                                >
+                                                    {action.label}
+                                                </button>
+                                            </li>
+                                        );
+                                    })
+                                }
+                            </div>
+                        )
                     }
-
                 </ul>
             </div>
         );
