@@ -27,26 +27,30 @@ export function getSpellcheckWarningsByBlock(
 
     const text = editorState.getCurrentContent().getPlainText();
 
-    return spellchecker.check(text).then((warnings) => {
-        let spellcheckWarningsByBlock: ISpellcheckWarningsByBlock = {};
+    if (text.length < 1) {
+        return Promise.resolve({});
+    } else {
+        return spellchecker.check(text).then((warnings) => {
+            let spellcheckWarningsByBlock: ISpellcheckWarningsByBlock = {};
 
-        warnings.forEach((warning) => {
-            const range = rangesByBlock.find(({startOffset, endOffset}) =>
-                warning.startOffset >= startOffset && warning.startOffset < endOffset);
+            warnings.forEach((warning) => {
+                const range = rangesByBlock.find(({startOffset, endOffset}) =>
+                    warning.startOffset >= startOffset && warning.startOffset < endOffset);
 
-            const {blockKey} = range;
+                const {blockKey} = range;
 
-            if (spellcheckWarningsByBlock[blockKey] == null) {
-                spellcheckWarningsByBlock[blockKey] = [];
-            }
-            spellcheckWarningsByBlock[blockKey].push({
-                ...warning,
-                startOffset: warning.startOffset - range.startOffset,
+                if (spellcheckWarningsByBlock[blockKey] == null) {
+                    spellcheckWarningsByBlock[blockKey] = [];
+                }
+                spellcheckWarningsByBlock[blockKey].push({
+                    ...warning,
+                    startOffset: warning.startOffset - range.startOffset,
+                });
             });
-        });
 
-        return spellcheckWarningsByBlock;
-    });
+            return spellcheckWarningsByBlock;
+        });
+    }
 }
 
 function getElementForPortal() {
