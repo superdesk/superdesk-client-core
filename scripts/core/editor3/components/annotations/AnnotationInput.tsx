@@ -81,6 +81,7 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
         this.onSelect = this.onSelect.bind(this);
         this.deleteAnnotation = this.deleteAnnotation.bind(this);
         this.getAnnotatedText = this.getAnnotatedText.bind(this);
+        this.getAnnotationInputMode = this.getAnnotationInputMode.bind(this);
 
         this.annotationInputTabsFromExtensions = flatMap(
             Object.values(extensions).map(({activationResult}) => activationResult),
@@ -156,7 +157,8 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
         const text = this.getAnnotatedText();
 
         Promise.all(
-            this.annotationInputTabsFromExtensions.map(({selectedByDefault}) => selectedByDefault(text)),
+            this.annotationInputTabsFromExtensions.map(({selectedByDefault}) =>
+                selectedByDefault(text, this.getAnnotationInputMode())),
         ).then((result) => {
             let active;
 
@@ -205,6 +207,16 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
         }
 
         return text;
+    }
+
+    getAnnotationInputMode(): 'edit' | 'create' {
+        const {data} = this.props;
+
+        if (data.selection == null) {
+            return 'edit';
+        } else {
+            return 'create';
+        }
     }
 
     render() {
@@ -283,6 +295,7 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
                                                         onCancel={_hidePopups}
                                                         annotationTypeSelect={annotationTypeSelect}
                                                         annotationInputComponent={annotationInputComponent}
+                                                        mode={this.getAnnotationInputMode()}
                                                         onApplyAnnotation={(html: string) => {
                                                             this.onChange(
                                                                 convertToRaw(getContentStateFromHtml(html)),
