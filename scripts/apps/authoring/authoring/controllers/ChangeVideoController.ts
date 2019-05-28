@@ -322,25 +322,34 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
                 fr.readAsDataURL(files[0]);
             }
         }
-        if ('timeline' in $scope.data.metadata.renditions && $scope.data.metadata.renditions.timeline.length > 0) {
-            $scope.listFrames = $scope.data.metadata.renditions['timeline'];
-        } else {
-            $scope.listFrames = [];
-            api.save('video_edit', {action: 'timeline', item: $scope.data.metadata}).then(function (data) {
-                angular.extend($scope.data.metadata, data.result)
-                angular.extend($scope.data.item, data.result)
-                $scope.listFrames = data.result.renditions.timeline;
-                $scope.data.isDirty = true;
-            });
-        }
+        loadListThumbnails()
     }
+    
 
     $scope.onCutChange = function () {
         $scope.$applyAsync(() => {
             $scope.editVideo.isDirty = true;
         });
     };
-
+    async function loadListThumbnails()
+    {
+        const res = await api.get(`/video_edit/${$scope.data.item.media}?action=thumbnails&amount=40`)
+        // .then(function (res) {
+            if (res && res.processing === false)
+            {
+                $scope.listFrames = res.thumbnails;
+            }
+            else
+            {
+                await delay(2000);
+                loadListThumbnails()                
+            }
+        // })
+        // .catch(function (err) { return console.log(err); });
+    }
+    function delay(ms: number) {
+        return new Promise( resolve => setTimeout(resolve, ms) );
+    }
     function loadImage() {
         if ('thumbnail' in $scope.data.metadata.renditions) {
             var img = document.createElement("img");

@@ -215,7 +215,7 @@ export function VideoTimeline() {
                         video.width = widthpic;
                         video.height = 50;
                         if (list_thumbnails && list_thumbnails.length > 0) {
-                            video.poster = list_thumbnails[index].href;
+                            video.poster = list_thumbnails[index].url;
                         }
                         video.onloadeddata = function () {
                             video.className = 'loaded';
