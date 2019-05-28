@@ -1,8 +1,8 @@
 import ng from 'core/services/ng';
 import {gettext} from 'core/utils';
 import {getSelectSingleValue} from './select_single_value';
-import {IRestApiResponse} from 'types/RestApi';
 import {IStage} from 'superdesk-interfaces/Stage';
+import {IRestApiResponse} from 'superdesk-api';
 
 export const StageSingleValue = getSelectSingleValue(
     (props) =>

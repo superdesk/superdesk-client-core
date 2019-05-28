@@ -1,7 +1,7 @@
 import {getSelectSingleValue} from './select_single_value';
-import {IRestApiResponse} from 'types/RestApi';
 import {IContentFilter} from 'superdesk-interfaces/ContentFilter';
 import ng from 'core/services/ng';
+import {IRestApiResponse} from 'superdesk-api';
 
 export const ContentFilterSingleValue = getSelectSingleValue(
     () =>

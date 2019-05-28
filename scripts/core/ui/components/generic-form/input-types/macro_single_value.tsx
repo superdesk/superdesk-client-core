@@ -1,8 +1,8 @@
 import ng from 'core/services/ng';
 import {gettext} from 'core/utils';
 import {getSelectSingleValue} from './select_single_value';
-import {IRestApiResponse} from 'types/RestApi';
 import {IMacro} from 'superdesk-interfaces/Macro';
+import {IRestApiResponse} from 'superdesk-api';
 
 export const MacroSingleValue = getSelectSingleValue(
     (props) =>

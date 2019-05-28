@@ -1,5 +1,18 @@
 import {ISuperdesk, IExtensions} from 'superdesk-api';
 import {gettext} from 'core/utils';
+import {getGenericListPageComponent} from './ui/components/ListPage/generic-list-page';
+import {ListItem, ListItemColumn, ListItemActionsMenu} from './components/ListItem';
+import {getFormFieldPreviewComponent} from './ui/components/generic-form/form-field';
+import {
+    isIFormGroupCollapsible,
+    isIFormGroup,
+    isIFormField,
+    FormFieldType,
+} from './ui/components/generic-form/interfaces/form';
+import {UserHtmlSingleLine} from './helpers/UserHtmlSingleLine';
+import {Row, Item, Column} from './ui/components/List';
+import {connectCrudManager, dataApi} from './helpers/CrudManager';
+import {generateFilterForServer} from './ui/components/generic-form/generate-filter-for-server';
 
 export function getSuperdeskApiImplementation(
     requestingExtensionId: string,
@@ -7,6 +20,7 @@ export function getSuperdeskApiImplementation(
     modal,
 ): ISuperdesk {
     return {
+        dataApi: dataApi,
         ui: {
             alert: (message: string) => modal.alert({bodyText: message}),
             confirm: (message: string) => new Promise((resolve) => {
@@ -14,6 +28,27 @@ export function getSuperdeskApiImplementation(
                     .then(() => resolve(true))
                     .catch(() => resolve(false));
             }),
+        },
+        components: {
+            UserHtmlSingleLine,
+            getGenericListPageComponent,
+            connectCrudManager,
+            ListItem,
+            ListItemColumn,
+            ListItemActionsMenu,
+            List: {
+                Item,
+                Row,
+                Column,
+            },
+        },
+        forms: {
+            FormFieldType,
+            generateFilterForServer,
+            isIFormGroupCollapsible,
+            isIFormGroup,
+            isIFormField,
+            getFormFieldPreviewComponent,
         },
         localization: {
             gettext: (message) => gettext(message),

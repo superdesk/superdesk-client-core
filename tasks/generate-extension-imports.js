@@ -1,5 +1,9 @@
+/* eslint-disable max-len */
+
 var fs = require('fs');
 var path = require('path');
+
+var merge = require('lodash/object').merge;
 
 var getExtensionDirectoriesSync = require('./get-extension-directories-sync');
 
@@ -24,19 +28,39 @@ export const extensions: IExtensions = {};
 const importStatements = [];
 const insertIntoObjectStatements = [];
 
-directories.forEach((extensionName) => {
-    const manifestFile = JSON.parse(
-        fs.readFileSync(
-            path.resolve(`${__dirname}/../scripts/extensions/${extensionName}/package.json`)
-        ).toString()
-    );
+const defaultConfig = require('../superdesk.config')();
+let customConfig = {};
 
-    importStatements.push(`import * as ${extensionName} from '../extensions/${extensionName}/${manifestFile.main}';`);
+try {
+    customConfig = require('../../../superdesk.config')();
+} catch (e) {
+    console.warn('custom `superdesk.config` not found');
+}
 
-    insertIntoObjectStatements.push(
-        `extensions['${extensionName}'] = {extension: ${extensionName}, manifest: ${JSON.stringify(manifestFile)}}`
-    );
-});
+const mergedConfig = merge(defaultConfig, customConfig);
+const enabledExtensions = [];
+
+for (const key in mergedConfig.enabledExtensions) {
+    if (mergedConfig.enabledExtensions[key] === 1) {
+        enabledExtensions.push(key);
+    }
+}
+
+directories
+    .filter((extensionName) => enabledExtensions.includes(extensionName))
+    .forEach((extensionName) => {
+        const manifestFile = JSON.parse(
+            fs.readFileSync(
+                path.resolve(`${__dirname}/../scripts/extensions/${extensionName}/package.json`)
+            ).toString()
+        );
+
+        importStatements.push(`import * as ${extensionName} from '../extensions/${extensionName}/${manifestFile.main}';`);
+
+        insertIntoObjectStatements.push(
+            `extensions['${extensionName}'] = {extension: ${extensionName}.default, manifest: ${JSON.stringify(manifestFile)}, activationResult: {}}`
+        );
+    });
 
 codeToImportExtensions += importStatements.join('\n') + '\n\n' + insertIntoObjectStatements.join('\n') + '\n';
 

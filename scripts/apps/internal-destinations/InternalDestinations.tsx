@@ -2,10 +2,11 @@
 
 import React from 'react';
 import {getGenericListPageComponent, GenericListPageComponent} from 'core/ui/components/ListPage/generic-list-page';
-import {IFormField, IFormGroup, FormFieldType} from 'core/ui/components/generic-form/interfaces/form';
 import {ListItemColumn, ListItemActionsMenu, ListItem} from 'core/components/ListItem';
 import {getFormFieldPreviewComponent} from 'core/ui/components/generic-form/form-field';
 import {IInternalDestination} from 'superdesk-interfaces/InternalDestination';
+import {IFormField, IFormGroup} from 'superdesk-api';
+import {FormFieldType} from 'core/ui/components/generic-form/interfaces/form';
 
 const InternalDestinationsPageComponent = getGenericListPageComponent<IInternalDestination>('internal_destinations');
 
@@ -129,6 +130,7 @@ export class InternalDestinations extends React.Component {
             <InternalDestinationsPageComponent
                 renderRow={renderRow}
                 formConfig={formConfig}
+                defaultSortOption={{field: 'name', direction: 'ascending'}}
             />
         );
     }

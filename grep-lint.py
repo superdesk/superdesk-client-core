@@ -38,16 +38,16 @@ rules_to_check = [
         'perl_regex': 'templateUrl\s*?:\s*[\'|"|`].+?\.html[\'|"|`]',
         'tolerance': True
     },
-    {
-        'name': 'Do not use angularjs for views anymore. Use React components and use `reactToAngular1` if you need to use React components inside existing angular templates.',
+    # {
+    #     'name': 'Do not use angularjs for views anymore. Use React components and use `reactToAngular1` if you need to use React components inside existing angular templates.',
 
-        # must match:
-        # template: '<'
-        # must not match:
-        # template: 'a', b: '<'
-        'perl_regex': 'template\s*?:\s*[\'|"|`][^\'|"|`]*<[^\'|"|`]*[\'|"|`]',
-        'tolerance': True
-    },
+    #     # must match:
+    #     # template: '<'
+    #     # must not match:
+    #     # template: 'a', b: '<'
+    #     'perl_regex': 'template\s*?:\s*[\'|"|`][^\'|"|`]*<[^\'|"|`]*[\'|"|`]',
+    #     'tolerance': True
+    # },
 ]
 
 any_rule_violated = False

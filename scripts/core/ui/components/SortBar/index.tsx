@@ -1,5 +1,5 @@
 import React from 'react';
-import {ISortOption} from 'core/helpers/CrudManager';
+import {ISortOption} from 'superdesk-api';
 
 export interface ISortFields {
     label: string;

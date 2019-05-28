@@ -10,8 +10,8 @@ import {
     SidePanelContentBlock,
 } from 'core/components/SidePanel';
 import {connectServices} from 'core/helpers/ReactRenderAsync';
-import {IFormGroup} from 'core/ui/components/generic-form/interfaces/form';
 import {FormViewEdit} from 'core/ui/components/generic-form/from-group';
+import {IFormGroup} from 'superdesk-api';
 
 interface IProps {
     operation: 'editing' | 'creation';

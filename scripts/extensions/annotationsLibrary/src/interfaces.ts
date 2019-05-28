@@ -1,6 +1,6 @@
-import {IDefaultApiFields} from '../types/RestApi';
+import {IBaseRestApiResponse} from 'superdesk-api';
 
-export interface IKnowledgeBaseItem extends IDefaultApiFields {
+export interface IKnowledgeBaseItem extends IBaseRestApiResponse {
     name: string;
     labels?: Array<string>;
     language: string;

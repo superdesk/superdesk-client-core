@@ -2,8 +2,9 @@ import React from 'react';
 import {omit} from 'lodash';
 
 import {ToggleBoxNext} from 'superdesk-ui-framework';
-import {IFormGroup, isIFormGroupCollapsible} from './interfaces/form';
+import {isIFormGroupCollapsible} from './interfaces/form';
 import {assertNever} from 'core/helpers/typescript-helpers';
+import {IFormGroup} from 'superdesk-api';
 
 interface IProps {
     group: IFormGroup;
