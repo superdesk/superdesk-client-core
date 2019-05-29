@@ -57,22 +57,28 @@
                                 <video controls="controls" autoplay="autoplay" id="video" class="video-display"
                                        ng-if="data.item.type === 'video'" ng-init="videoInit()"
                                        ng-src="{{data.item.renditions.original.href}}"></video>
+                                <div class="video-editing"></div>
                             </md-videoplayer>
                         </div>
                         <div class="sd-photo-preview__thumb-strip video-control">
                             <div class="btn-player">
                                 <button class="btn btn--ui-dark btn--hollow btn--icon-only btn--large"
                                         style="padding: 0.35em 0.8em;"
-                                        ng-click="playVideo()" ng-class="{'btn--active' : isAoISelectionModeEnabled}"
-                                        ng-disabled="controls.isDirty">
+                                        ng-click="
+                                            playVideo();
+                                            isPlaying = video.currentTime > 0 && video.paused && !video.ended"
+                                        ng-class="{'btn--active' : isAoISelectionModeEnabled}"
+                                        ng-disabled="controls.isDirty || isAoISelectionModeEnabled">
                                     <svg id="icon-play" xmlns="http://www.w3.org/2000/svg"
                                          style="width:24px; height:24px;"
+                                         ng-show="isPlaying"
                                          viewBox="0 0 24 24" fill="#fff">
                                         <path d="M8 5v14l11-7z"></path>
                                         <path d="M0 0h24v24H0z" fill="none"></path>
                                     </svg>
                                     <svg id="icon-stop" xmlns="http://www.w3.org/2000/svg"
-                                         style="width:24px; height:24px; display:none"
+                                         style="width:24px; height:24px;"
+                                         ng-show="!isPlaying"
                                          viewBox="0 0 24 24" fill="#fff">
                                         <path d="M0 0h24v24H0z" fill="none"/>
                                         <path d="M6 6h12v12H6z"/>
@@ -81,6 +87,7 @@
                                 </button>
                                 <button class="btn btn--ui-dark btn--hollow btn--icon-only btn--large"
                                         ng-click="toggleMenuRatio()"
+                                        ng-disabled="isAoISelectionModeEnabled"
                                         id="toggleRatio">
                                     <i style="color: #ffffff" class="icon-crop"></i>
                                 </button>
@@ -97,6 +104,7 @@
                                     </ul>
                                 </div>
                                 <button class="btn btn--ui-dark btn--hollow btn--icon-only btn--large"
+                                        ng-disabled="isAoISelectionModeEnabled"
                                         ng-click="rotateVideo('left')" id="rotateVideo">
                                     <i class="icon-rotate-left icon--white icon-rotate-custom"></i>
                                 </button>

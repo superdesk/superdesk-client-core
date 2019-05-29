@@ -1,8 +1,6 @@
-import {get} from 'lodash';
-import {TweenMax, Power2, TimelineLite} from "gsap/TweenMax";
-import {gettext} from 'core/utils';
-import {IArticle} from "superdesk-core/scripts/superdesk-interfaces/Article";
-import angular = require("angular");
+import { get } from 'lodash';
+import { gettext } from 'core/utils';
+import angular from "angular";
 
 /**
  * @ngdoc controller
@@ -32,10 +30,10 @@ export function validateMediaFieldsThrows(validator, metadata) {
     }
 }
 
-ChangeVideoController.$inject = ['$scope', 'gettext', 'notify', 'lodash', 'api', '$rootScope',
+ChangeVideoController.$inject = ['$scope', '$interval', 'gettext', 'notify', 'lodash', 'api', '$rootScope',
     'deployConfig', '$q', 'config'];
 
-export function ChangeVideoController($scope, gettext, notify, _, api, $rootScope, deployConfig, $q, config) {
+export function ChangeVideoController($scope, $interval, gettext, notify, _, api, $rootScope, deployConfig, $q, config) {
     $scope.data = $scope.locals.data;
     $scope.addingThumbnail = {};
     $scope.cut = {};
@@ -106,28 +104,61 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
      * @description Validate new crop-coordinates and resolve the promise and return
      * modified crop information, point of interest and metadata changes.
      */
+    let stopIntervalID;
     $scope.saveEditVideo = function () {
         $scope.croppingVideo = positionCropVideo;
-        $scope.rotatingVideo = {degree: -(rotate.left)};
-        $scope.qualityVideo = {quality: qualityVideo};
+        $scope.rotatingVideo = { degree: -(rotate.left) };
+        $scope.qualityVideo = { quality: qualityVideo };
+        const videoEditing = document.querySelector('.video-editing');
+        videoEditing.classList.add('video-loading');
+        $scope.video.pause();
+        $scope.listFrames = null;
+        $scope.isAoISelectionModeEnabled = true;
 
         api.save("video_edit", {
-            action: 'edit',
             item: $scope.data.item,
-            video_cut: $scope.cuttingVideo,
-            video_crop: $scope.croppingVideo,
-            video_rotate: $scope.rotatingVideo,
-            video_quality: $scope.qualityVideo,
-            thumbnail_add: $scope.addingThumbnail,
-        }).then(
+            video: {
+                cut: $scope.cuttingVideo,
+                crop: $scope.croppingVideo,
+                rotate: $scope.rotatingVideo,
+                quality: $scope.qualityVideo,
+            },
+            thumbnail: $scope.addingThumbnail,
+        })
+        .then(
+            response => {
+                const mediaID = response.item.media;
+                $scope.data.item = angular.extend($scope.data.item, response._id);
 
+                (function checkVideoProcessing(mediaID) {
+                    stopIntervalID = $interval(async function() {
+                        const item = await api.get(`/video_edit/${mediaID}`);
+                        if (item.processing === false) {
+                            stopInterval(stopIntervalID);
+                            $scope.isAoISelectionModeEnabled = false;
+                            videoEditing.classList.remove('video-loading');
+                            $scope.video.load();
+
+                            loadListThumbnails();
+                        }
+                    }, 2500);
+                })(mediaID);
+            }
+        ).catch (
+            err => console.log(err)
         );
         $scope.editVideo.isDirty = false;
         $scope.data.isDirty = true;
-
         $scope.editVideo.isChange = true;
-
     };
+
+    const stopInterval = (id) => {
+        $interval.cancel(id);
+        id = undefined;
+    }
+
+    $scope.$on('$destroy', () => stopInterval(stopIntervalID))
+
 
     /**
      * @ngdoc method
@@ -141,8 +172,8 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
         $scope.editVideo.isChange = false;
         $scope.editVideo.isDirty = false;
         $scope.cuttingVideo = {
-            starttime: 0,
-            endtime: $scope.video.duration
+            start: 0,
+            end: $scope.video.duration
         }
         if ($scope.addingThumbnail) {
             loadImage();
@@ -154,7 +185,7 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
         }
         positionCropVideo = {};
         qualityVideo = 0;
-        rotate = {left: 0};
+        rotate = { left: 0 };
         let video = document.getElementById('video-preview');
         if ($scope.rotatingVideo.degree)
             actRotate(video, $scope.rotatingVideo.degree);
@@ -223,7 +254,7 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
      */
     $scope.playVideo = () => {
         if ($scope.video.paused) {
-            if ($scope.video.currentTime > $scope.cuttingVideo.endtime) {
+            if ($scope.video.currentTime > $scope.cuttingVideo.end) {
                 $scope.video.pause();
             } else {
                 $scope.video.play();
@@ -237,7 +268,8 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
     }
 
     var iconplay, iconstop;
-    var positionCropVideo = {}, jcrop_api, rotate = {left: 0}, qualityVideo;
+    var positionCropVideo = {},
+        jcrop_api, rotate = { left: 0 }, qualityVideo;
 
 
     /**
@@ -255,8 +287,8 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
             loadImage();
             $scope.$applyAsync(() => {
                 $scope.cuttingVideo = {
-                    starttime: 0,
-                    endtime: $scope.video.duration
+                    start: 0,
+                    end: $scope.video.duration
                 }
             });
 
@@ -324,7 +356,7 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
         }
         loadListThumbnails()
     }
-    
+
 
     $scope.onCutChange = function () {
         $scope.$applyAsync(() => {
@@ -342,7 +374,7 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
             else
             {
                 await delay(2000);
-                loadListThumbnails()                
+                loadListThumbnails()
             }
         // })
         // .catch(function (err) { return console.log(err); });
@@ -442,7 +474,7 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
                 }
             }
             if ($scope.cuttingVideo) {
-                if ($scope.cuttingVideo.starttime == 0 && $scope.cuttingVideo.endtime == $scope.video.duration) {
+                if ($scope.cuttingVideo.start == 0 && $scope.cuttingVideo.end == $scope.video.duration) {
                     $scope.cuttingVideo = {};
                 }
             }
@@ -542,7 +574,7 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
         switch (ratio) {
             case "1:1":
                 jcrop_api.release();
-                jcrop_api.setOptions({setSelect: [0, 0, elementVideo.clientHeight, elementVideo.clientHeight]});
+                jcrop_api.setOptions({ setSelect: [0, 0, elementVideo.clientHeight, elementVideo.clientHeight] });
                 break;
             case "4:3":
                 jcrop_api.release();
@@ -550,9 +582,9 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
                 let yClassic = x * 3 / 4;
 
                 if (xClassic < x)
-                    jcrop_api.setOptions({setSelect: [0, 0, xClassic, y]});
+                    jcrop_api.setOptions({ setSelect: [0, 0, xClassic, y] });
                 else
-                    jcrop_api.setOptions({setSelect: [0, 0, x, yClassic]});
+                    jcrop_api.setOptions({ setSelect: [0, 0, x, yClassic] });
 
                 break;
             case "16:9":
@@ -561,9 +593,9 @@ export function ChangeVideoController($scope, gettext, notify, _, api, $rootScop
                 let yWide = x * 9 / 16;
 
                 if (xWide < x)
-                    jcrop_api.setOptions({setSelect: [0, 0, xWide, y]});
+                    jcrop_api.setOptions({ setSelect: [0, 0, xWide, y] });
                 else
-                    jcrop_api.setOptions({setSelect: [0, 0, x, yWide]});
+                    jcrop_api.setOptions({ setSelect: [0, 0, x, yWide] });
                 break;
             default:
                 break;

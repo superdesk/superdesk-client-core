@@ -2,7 +2,7 @@
 
 import {TweenMax} from "gsap/TweenMax";
 import {isEmpty} from 'lodash';
-
+import ResizeObserver from 'resize-observer-polyfill';
 
 /**
  * @ngdoc directive
