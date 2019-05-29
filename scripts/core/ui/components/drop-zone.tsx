@@ -1,10 +1,10 @@
 import React from 'react';
-import classnames from 'classnames';
 
 interface IProps {
-    text: string;
-    allowedTypes: Array<string>;
-    onDrop: ({data: any}) => any;
+    label: string;
+
+    onDrop: (event: DragEvent) => void;
+    canDrop: (event: DragEvent) => boolean;
 }
 
 interface IState {
@@ -28,37 +28,22 @@ export class DropZone extends React.PureComponent<IProps, IState> {
         this.onDragLeave = this.onDragLeave.bind(this);
     }
 
-    getAllowed(event: DragEvent) {
-        return this.props.allowedTypes.find((allowedType) => event.dataTransfer.types.includes(allowedType));
-    }
-
-    isAllowed(event: DragEvent) {
-        return this.getAllowed(event) != null;
-    }
-
     onDrop(event: IJQueryDragEvent) {
         event.stopPropagation();
-        if (this.isAllowed(event.originalEvent)) {
+        if (this.props.canDrop(event.originalEvent)) {
             event.preventDefault();
 
             if (this.state.hover) {
                 this.setState({hover: false});
             }
 
-            const allowedType = this.getAllowed(event.originalEvent);
-            const data = event.originalEvent.dataTransfer.getData(allowedType);
-
-            if (data) {
-                this.props.onDrop({data});
-            } else {
-                console.error('no data for type', allowedType);
-            }
+            this.props.onDrop(event.originalEvent);
         }
     }
 
     onDragEnter(event: IJQueryDragEvent) {
         event.stopPropagation();
-        const isAllowed = this.isAllowed(event.originalEvent);
+        const isAllowed = this.props.canDrop(event.originalEvent);
 
         if (isAllowed) {
             event.preventDefault();
@@ -87,13 +72,13 @@ export class DropZone extends React.PureComponent<IProps, IState> {
     }
 
     render() {
+        const className = 'item-association' + (this.state.hover ? ' dragover' : '');
+
         return (
-            <button className={classnames('item-association', {
-                dragover: this.state.hover,
-            })} ref={(elem) => this.elem = elem}>
+            <button className={className} ref={(elem) => this.elem = elem}>
                 {this.props.children ? this.props.children : (
                     <span className="item-association__text-label">
-                        {this.props.text}
+                        {this.props.label}
                     </span>
                 )}
             </button>
