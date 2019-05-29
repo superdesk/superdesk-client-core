@@ -174,8 +174,8 @@ export function VocabularyEditController($scope, notify, api, vocabularies, meta
         $scope.vocabulary.items = $scope.vocabulary.items.slice(); // trigger watch on items collection
     };
 
-    $scope.customFieldTypes = Object.keys(fields.fields).map((id) => ({
+    $scope.customFieldTypes = Object.keys(fields).map((id) => ({
         id: id,
-        label: fields.fields[id].label,
+        label: fields[id].label,
     }));
 }

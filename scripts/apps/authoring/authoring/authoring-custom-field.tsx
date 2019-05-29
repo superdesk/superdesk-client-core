@@ -25,7 +25,7 @@ export class AuthoringCustomField extends React.PureComponent<IProps> {
 
     render() {
         const {item, field, readonly} = this.props;
-        const FieldType = fields.fields[field.custom_field_type];
+        const FieldType = fields[field.custom_field_type];
 
         if (FieldType == null) {
             console.warn('unkwnow custom type', field.custom_field_type);

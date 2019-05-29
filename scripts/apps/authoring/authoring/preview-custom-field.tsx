@@ -13,15 +13,13 @@ interface IProps {
 export class PreviewCustomField extends React.PureComponent<IProps> {
     render() {
         const {item, field} = this.props;
-
-        const FieldType = fields.fields[field.custom_field_type];
+        const FieldType = fields[field.custom_field_type];
+        const value = get(item.extra, field._id);
 
         if (FieldType == null) {
             console.warn('unkwnow custom type', field.custom_field_type);
             return null;
         }
-
-        const value = get(item.extra, field._id);
 
         if (isEmpty(value)) {
             return null;

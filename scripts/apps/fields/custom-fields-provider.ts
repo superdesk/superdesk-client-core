@@ -18,16 +18,8 @@ interface IFieldOptions {
     previewComponent: React.ComponentClass<IPreviewComponentProps>;
 }
 
-export class CustomFields {
-    fields: {[key: string]: IFieldOptions};
+export const fields: {[key: string]: IFieldOptions} = {};
 
-    constructor() {
-        this.fields = {};
-    }
-
-    add(fieldId: string, options: IFieldOptions) {
-        this.fields[fieldId] = options;
-    }
-}
-
-export const fields = new CustomFields();
+export const customField = (fieldId: string, options: IFieldOptions) => {
+    fields[fieldId] = options;
+};
