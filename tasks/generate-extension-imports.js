@@ -8,7 +8,7 @@ var merge = require('lodash/object').merge;
 var getExtensionDirectoriesSync = require('./get-extension-directories-sync');
 
 const directories = getExtensionDirectoriesSync();
-const directoryNamingViolation = directories.find((name) => name.match(/^\w+$/g) == null);
+const directoryNamingViolation = directories.find(({extensionName}) => extensionName.match(/^\w+$/g) == null);
 
 if (directoryNamingViolation != null) {
     console.error(`"${directoryNamingViolation}" - extension directory names \
@@ -47,15 +47,13 @@ for (const key in mergedConfig.enabledExtensions) {
 }
 
 directories
-    .filter((extensionName) => enabledExtensions.includes(extensionName))
-    .forEach((extensionName) => {
+    .filter(({extensionName}) => enabledExtensions.includes(extensionName))
+    .forEach(({extensionName, relativePath, absolutePath}) => {
         const manifestFile = JSON.parse(
-            fs.readFileSync(
-                path.resolve(`${__dirname}/../scripts/extensions/${extensionName}/package.json`)
-            ).toString()
+            fs.readFileSync(`${absolutePath}/${extensionName}/package.json`).toString()
         );
 
-        importStatements.push(`import * as ${extensionName} from '../extensions/${extensionName}/${manifestFile.main}';`);
+        importStatements.push(`import * as ${extensionName} from '../${relativePath}/${extensionName}/${manifestFile.main}';`);
 
         insertIntoObjectStatements.push(
             `extensions['${extensionName}'] = {extension: ${extensionName}.default, manifest: ${JSON.stringify(manifestFile)}, activationResult: {}}`
