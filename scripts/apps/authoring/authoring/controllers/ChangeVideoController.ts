@@ -151,7 +151,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
                 })(mediaID);
             }
         ).catch (
-            err => console.log(err)
+            err => {console.log(err); videoEditing.classList.remove('video-loading');}
         );
         $scope.editVideo.isDirty = false;
         $scope.data.isDirty = true;
