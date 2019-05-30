@@ -1,15 +1,29 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import PropTypes from 'prop-types';
 import Label from './Label';
 import Divider from './Divider';
 import Item from './Item';
 import SubmenuDropdown from './SubmenuDropdown';
 import {AUTHORING_MENU_GROUPS} from '../../../authoring/authoring/constants';
-import {closeActionsMenu, menuHolderElem} from '../../helpers';
+import {closeActionsMenu, menuHolderElem, positionPopup} from '../../helpers';
 import {gettext} from 'core/utils';
+import {IExtensionActivationResult, IArticle, IArticleAction} from 'superdesk-api';
+import {extensions} from 'core/extension-imports.generated';
+import {flatMap} from 'lodash';
 
-export default class MenuItems extends React.Component<any, any> {
+interface IProps {
+    item: IArticle;
+    svc: any;
+    scope: any;
+    onActioning: any;
+    target?: Element;
+}
+
+interface IState {
+    actionsFromExtensions: Array<IArticleAction> | null;
+}
+
+export default class MenuItems extends React.Component<IProps, IState> {
     static propTypes: any;
     static defaultProps: any;
 
@@ -20,10 +34,38 @@ export default class MenuItems extends React.Component<any, any> {
         this.getType = this.getType.bind(this);
         this.renderMenu = this.renderMenu.bind(this);
         this.handleClickOutside = this.handleClickOutside.bind(this);
+        this.state = {
+            actionsFromExtensions: null,
+        };
     }
 
     componentDidMount() {
         document.addEventListener('click', this.handleClickOutside, true);
+
+        const getActionsFromExtensions
+            : Array<IExtensionActivationResult['contributions']['entities']['article']['getActions']>
+            = flatMap(
+                Object.values(extensions).map(({activationResult}) => activationResult),
+                (activationResult) =>
+                    activationResult.contributions != null
+                    && activationResult.contributions.entities != null
+                    && activationResult.contributions.entities.article != null
+                    && activationResult.contributions.entities.article.getActions != null
+                        ? activationResult.contributions.entities.article.getActions
+                        : [],
+            );
+
+        Promise.all(getActionsFromExtensions.map((getPromise) => getPromise(this.props.item))).then((res) => {
+            this.setState({
+                actionsFromExtensions: flatMap(res),
+            });
+        });
+    }
+
+    componentDidUpdate() {
+        if (this.props.target != null) {
+            positionPopup(this.props.target);
+        }
     }
 
     componentWillUnmount() {
@@ -64,7 +106,7 @@ export default class MenuItems extends React.Component<any, any> {
     }
 
     renderMenu() {
-        const menu = [];
+        const menu: Array<JSX.Element> = [];
         const item = this.props.item;
 
         const createAction = (activity) =>
@@ -77,7 +119,7 @@ export default class MenuItems extends React.Component<any, any> {
 
         const actions = this.getActions();
 
-        AUTHORING_MENU_GROUPS.map((group) => {
+        AUTHORING_MENU_GROUPS.forEach((group) => {
             if (actions[group._id]) {
                 if (group.label === 'Actions') {
                     menu.push(
@@ -99,18 +141,16 @@ export default class MenuItems extends React.Component<any, any> {
                             />
                         </li>,
                     );
-                    return null;
+                    return;
                 } else {
                     menu.push(<Divider key={`group-divider-${group._id}`} />);
                 }
 
                 menu.push(...actions[group._id].map(createAction));
             }
-
-            return null;
         });
 
-        // adding menu item for the groups that are not define above
+        // adding menu items for the groups that are not defined above
         Object.keys(actions).forEach((groupName) => {
             const existingGroup = AUTHORING_MENU_GROUPS.find((g) => g._id === groupName);
 
@@ -120,26 +160,32 @@ export default class MenuItems extends React.Component<any, any> {
             }
         });
 
+        this.state.actionsFromExtensions.forEach((action, i) => {
+            menu.push((
+                <li key={`extension-item-${i}`}>
+                    <button onClick={action.onTrigger}>
+                        {action.icon == null ? null : <i className={action.icon} />}
+                        {action.label}
+                    </button>
+                </li>
+            ));
+        });
+
         return menu;
     }
 
     render() {
-        if (this.renderMenu().length > 0) {
-            return (
-                <ul
-                    className="dropdown dropdown__menu more-activity-menu open"
-                    style={{display: 'block', minWidth: 200}}
-                >{this.renderMenu()}</ul>
-            );
-        } else {
-            return <ul />;
+        if (this.state.actionsFromExtensions == null || this.renderMenu().length < 1) {
+            return null;
         }
+
+        return (
+            <ul
+                className="dropdown dropdown__menu more-activity-menu open"
+                style={{display: 'block', minWidth: 200}}
+            >
+                {this.renderMenu()}
+            </ul>
+        );
     }
 }
-
-MenuItems.propTypes = {
-    svc: PropTypes.object.isRequired,
-    scope: PropTypes.any.isRequired,
-    item: PropTypes.any,
-    onActioning: PropTypes.func,
-};

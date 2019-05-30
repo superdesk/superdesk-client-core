@@ -24,6 +24,27 @@ declare module 'superdesk-api' {
 
     export type onSpikeMiddlewareResult= {warnings?: Array<{text: string}>};
 
+    // float number 0 < x < 1. Larger the number, closer the component will be rendered to its side.
+    // for example, if we had a list with 'start' positioned items with the following priorities [0.1, 0.2, 0.3]
+    // we could add an item so it's the first in the list by setting priority to be less than 0.1, for example, 0.05.
+    // to insert an item between 0.2 and 0.3 we could set its priority to 0.25
+    export type IDisplayPriority = number;
+
+    export interface IArticleAction {
+        groupLabel?: string;
+        priotity?: IDisplayPriority;
+        label: string;
+        icon: string;
+        onTrigger(): void;
+    }
+    
+    export interface IArticleActionBulk {
+        priotity?: IDisplayPriority;
+        label: string;
+        icon: string;
+        onTrigger(): void;
+    }
+
     export interface IExtensionActivationResult {
         contributions?: {
             editor3?: {
@@ -32,6 +53,8 @@ declare module 'superdesk-api' {
             pages?: Array<IPage>;
             entities?: {
                 article?: {
+                    getActions?(article: IArticle): Promise<Array<IArticleAction>>;
+                    getActionsBulk?(mode: 'include' | 'exclude', articles: Array<IArticle>): Promise<Array<IArticleActionBulk>>;
                     onSpike?(item: IArticle): Promise<onSpikeMiddlewareResult>;
                     onSpikeMultiple?(items: Array<IArticle>): Promise<onSpikeMiddlewareResult>;
                 };

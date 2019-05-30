@@ -71,9 +71,19 @@ export function openActionsMenu(elem, target, itemId) {
  * @param {integer} zIndex z-index styling to be applied to the elem
  */
 export function renderToBody(elem, target, zIndex = 1000) {
+    ReactDOM.findDOMNode(ReactDOM.render(elem, menuHolderElem()));
+    positionPopup(target, zIndex);
+}
+
+export function positionPopup(target, zIndex = 1000) {
+    const node: any = menuHolderElem().firstChild;
+
+    if (node == null) { // when loading
+        return;
+    }
+
     // first render it somewhere not visible
     menuHolderElem().style.zIndex = '-1';
-    var node = ReactDOM.findDOMNode(ReactDOM.render(elem, menuHolderElem())) as HTMLElement;
     // make sure it's rendered
 
     node.style.display = 'block';
