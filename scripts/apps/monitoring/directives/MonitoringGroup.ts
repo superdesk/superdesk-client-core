@@ -1,13 +1,13 @@
 /* eslint-disable complexity */
 import _ from 'lodash';
-import getCustomSortForGroup, { GroupSortOptions, DEFAULT_SORT_FIELD } from '../helpers/CustomSortOfGroups'
+import getCustomSortForGroup, {GroupSortOptions, DEFAULT_SORT_FIELD} from '../helpers/CustomSortOfGroups';
 
-export interface StageGroup {
+export type StageGroup = {
     _id?: any;
     type?: string;
     search?: 'ingest';
     max_items?: any;
-}
+};
 
 interface IScope extends ng.IScope {
     customDataSource: {
@@ -123,14 +123,15 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             ITEM_HEIGHT = search.singleLine ? 29 : 57;
 
             const customSort = getCustomSortForGroup(config, scope.group);
+
             if (customSort) {
                 scope.customSortOptions = {
                     ...customSort,
-                    [DEFAULT_SORT_FIELD]: { label: 'Default' }
+                    [DEFAULT_SORT_FIELD]: {label: 'Default'},
                 };
                 scope.customSortOptionActive = DEFAULT_SORT_FIELD;
                 scope.customSortOrder = 'desc';
-            };
+            }
 
             scope.page = 1;
             scope.fetching = false;
@@ -489,7 +490,6 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                     multi.reset();
                 }
 
-
                 return (function() {
                     if (scope.customDataSource != null && typeof scope.customDataSource.getItems === 'function') {
                         return scope.customDataSource.getItems(0, PAGE_SIZE);
@@ -523,7 +523,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
 
                         // custom sort for group (if it exists)
                         if (scope.customSortOptionActive && scope.customSortOptionActive !== DEFAULT_SORT_FIELD) {
-                            criteria.source.sort = [ { [scope.customSortOptionActive]: scope.customSortOrder } ]
+                            criteria.source.sort = [{[scope.customSortOptionActive]: scope.customSortOrder}];
                         }
 
                         return apiquery(criteria, true)
@@ -573,16 +573,16 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                 scope.customSortOptionActive = field;
                 scope.customSortOrder = 'desc';
                 queryItems();
-            }
+            };
 
             scope.toggleCustomSortOrder = function() {
                 if (scope.customSortOrder === 'asc') {
-                    scope.customSortOrder = 'desc'
+                    scope.customSortOrder = 'desc';
                 } else {
-                    scope.customSortOrder = 'asc'
+                    scope.customSortOrder = 'asc';
                 }
                 queryItems();
-            }
+            };
 
             scope.fetchNext = function(from) {
                 if (typeof criteria === 'object' && typeof criteria.source === 'object') {

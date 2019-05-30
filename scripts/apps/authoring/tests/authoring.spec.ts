@@ -117,7 +117,14 @@ describe('authoring', () => {
                 expect($scope.dirty).toBe(false);
                 expect(api.save).toHaveBeenCalled();
             })
-            .finally(done);
+            .finally.catch(done.fail).catch(done.fail).catch(done.fail)
+.catch(done.fail)
+            .catch(done.fail)
+            .catch(done.fail)
+            .catch(done.fail)
+            .catch(done.fail)
+            .catch(done.fail)
+            .catch(done.fail)(done);
 
         // it must flush timeout only when the applyMiddleware promise is resolved
         setTimeout(() => $timeout.flush(5000), 10);

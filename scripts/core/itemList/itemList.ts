@@ -43,8 +43,8 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
                                 scope.itemListOptions.sluglineMatch,
                                 scope.options.item,
                                 scope.itemListOptions.modificationDateAfter).then((items) => {
-                                    scope.processedItems = items._items;
-                                })
+                                scope.processedItems = items._items;
+                            })
                                 .finally(() => {
                                     scope.loading = false;
                                 });
