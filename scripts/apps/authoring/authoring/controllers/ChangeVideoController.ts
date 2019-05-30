@@ -128,24 +128,25 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         .then(
             response => {
                 const mediaID = response.item.media;
-                $scope.data.item = angular.extend($scope.data.item, response._id);
+                
 
                 (function checkVideoProcessing(mediaID) {
                     stopIntervalID = $interval(async function() {
                         const item = await api.get(`/video_edit/${mediaID}`);
-                        if (item.processing === false) {
+                        if (item.processing === false && item.metadata) {
+                            
                             stopInterval(stopIntervalID);
                             $scope.isAoISelectionModeEnabled = false;
-                            videoEditing.classList.remove('video-loading');
+                            $scope.data.item = angular.extend($scope.data.item, response._id);
+                            videoEditing.classList.remove('video-loading');                          
                             $scope.video.load();
-
                             loadListThumbnails();
                         }
                     }, 2500);
                 })(mediaID);
             }
         ).catch (
-            err => console.log(err)
+            err => {console.log(err); videoEditing.classList.remove('video-loading');}
         );
         $scope.editVideo.isDirty = false;
         $scope.data.isDirty = true;

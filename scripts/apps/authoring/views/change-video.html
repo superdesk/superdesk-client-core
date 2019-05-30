@@ -2,6 +2,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.0/TweenMax.min.js"></script>
 <link rel="stylesheet" href="https://unpkg.com/jcrop/dist/jcrop.css">
 <script src="https://unpkg.com/jcrop"></script>
+<div class="video-editing"></div>
 <div class="modal__header modal__header--flex">
     <h3 class="modal__heading modal__heading--no-grow" ng-if="!nav || nav === 'view'">{{ :: activity.label}}</h3>
     <h3 class="modal__heading modal__heading--no-grow" ng-if="nav === 'video-edit'">{{ :: 'Edit video' | translate
@@ -57,7 +58,7 @@
                                 <video controls="controls" autoplay="autoplay" id="video" class="video-display"
                                        ng-if="data.item.type === 'video'" ng-init="videoInit()"
                                        ng-src="{{data.item.renditions.original.href}}"></video>
-                                <div class="video-editing"></div>
+                                
                             </md-videoplayer>
                         </div>
                         <div class="sd-photo-preview__thumb-strip video-control">
