@@ -35,12 +35,11 @@ ChangeVideoController.$inject = ['$scope', '$interval', 'gettext', 'notify', 'lo
 
 export function ChangeVideoController($scope, $interval, gettext, notify, _, api, $rootScope, deployConfig, $q, config) {
     $scope.data = $scope.locals.data;
-    $scope.addingThumbnail = {};
+    $scope.thumbnail = {};
     $scope.cut = {};
-    $scope.cuttingVideo = {};
-    $scope.croppingVideo = {};
-    $scope.rotatingVideo = {};
-    $scope.qualityVideo = {};
+    $scope.crop = {};
+    $scope.rotate = { degree: 0 };
+    $scope.quality = {};
     $scope.video = null;
     $scope.listFrames = [];
 
@@ -84,7 +83,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         isDirty: false,
         isChange: false
     };
-    $scope.quality = {
+    $scope.qualityVideo = {
         is720: false,
         is480: false,
         is240: false,
@@ -106,53 +105,50 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
      */
     let stopIntervalID;
     $scope.saveEditVideo = function () {
-        $scope.croppingVideo = positionCropVideo;
-        $scope.rotatingVideo = { degree: -(rotate.left) };
-        $scope.qualityVideo = { quality: qualityVideo };
         const videoEditing = document.querySelector('.video-editing');
         videoEditing.classList.add('video-loading');
         $scope.video.pause();
         $scope.listFrames = null;
-        $scope.isAoISelectionModeEnabled = true;
-
+        $scope.isAoISelectionModeEnabled = true;        
+        const cut = ($scope.cut.end - $scope.cut.start) === $scope.video.duration  ? {} : $scope.cut;
+        const rotate = $scope.rotate.degree % 360 === 0 ? {} : $scope.rotate;
         api.save("video_edit", {
             item: $scope.data.item,
-            video: {
-                cut: $scope.cuttingVideo,
-                crop: $scope.croppingVideo,
-                rotate: $scope.rotatingVideo,
-                quality: $scope.qualityVideo,
+            edit: {                
+                cut: cut,
+                crop: $scope.crop,
+                rotate: rotate,
+                quality: $scope.quality,
             },
-            thumbnail: $scope.addingThumbnail,
+            thumbnail: $scope.thumbnail,
         })
-        .then(
-            response => {
-                const mediaID = response._id.media;
-                (function checkVideoProcessing(mediaID) {
-                    stopIntervalID = $interval(async function() {
-                        const item = await api.get(`/video_edit/${mediaID}`);
-                        if (item.processing === false) {
-                            $scope.data.item = angular.extend($scope.data.item, response._id);
-                            stopInterval(stopIntervalID);
-                            $scope.isAoISelectionModeEnabled = false;
-                            videoEditing.classList.remove('video-loading');
-                            $scope.cancelEditVideo()                            
-                            $scope.video.pause();
-                            $scope.video.currentTime=0;                            
-                            $scope.video.load();
-                            $scope.$applyAsync()
-                            {
-                                $scope.listFrames = null;                            
+            .then(
+                response => {
+                    const mediaID = response._id.media;
+                    (function checkVideoProcessing(mediaID) {
+                        stopIntervalID = $interval(async function () {
+                            const item = await api.get(`/video_edit/${mediaID}`);
+                            if (item.processing === false) {
+                                $scope.data.item = angular.extend($scope.data.item, response._id);
+                                stopInterval(stopIntervalID);
+                                $scope.isAoISelectionModeEnabled = false;
+                                videoEditing.classList.remove('video-loading');
+                                $scope.cancelEditVideo()
+                                $scope.video.pause();
+                                $scope.video.currentTime = 0;
+                                $scope.video.load();
+                                $scope.$applyAsync()
+                                {
+                                    $scope.listFrames = null;
+                                }
+                                loadListThumbnails();
                             }
-                            
-                            loadListThumbnails();
-                        }
-                    }, 2500);
-                })(mediaID);
-            }
-        ).catch (
-            err => {console.log(err); videoEditing.classList.remove('video-loading');}
-        );
+                        }, 2500);
+                    })(mediaID);
+                }
+            ).catch(
+                err => { console.log(err); videoEditing.classList.remove('video-loading'); }
+            );
         $scope.editVideo.isDirty = false;
         $scope.data.isDirty = true;
         $scope.editVideo.isChange = true;
@@ -181,7 +177,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
             start: 0,
             end: $scope.video.duration
         }
-        if ($scope.addingThumbnail) {
+        if ($scope.thumbnail) {
             loadImage();
         }
         // disable crop video
@@ -189,11 +185,11 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
             jcrop_api.release();
             jcrop_api.disable();
         }
-        positionCropVideo = {};
-        qualityVideo = 0;
-        rotate = { left: 0 };        
+        $scope.crop = {};
+        $scope.quality = 0;
+        $scope.rotate.degree = 0;
         let video = document.getElementById('video-preview');
-        actRotate(video, 0);
+        actRotate(video, $scope.rotate.degree);
 
         document.getElementById('rotateVideo').disabled = false;
         document.getElementById('toggleRatio').disabled = false;
@@ -217,7 +213,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
             output.append(canvas);
             var nothumbnail = document.getElementById('no-thumbnail');
             nothumbnail.style = "visibility: collapse";
-            $scope.addingThumbnail = {
+            $scope.thumbnail = {
                 type: "capture",
                 minetype: "image/png",
                 time: time
@@ -271,8 +267,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
     }
 
     var iconplay, iconstop;
-    var positionCropVideo = {},
-        jcrop_api, rotate = { left: 0 }, qualityVideo;
+    var jcrop_api;
 
 
     /**
@@ -297,16 +292,16 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
 
             if ($scope.video) {
                 if ($scope.video.videoWidth > 720) {
-                    $scope.quality.is720 = true;
+                    $scope.qualityVideo.is720 = true;
                 }
                 if ($scope.video.videoWidth > 480) {
-                    $scope.quality.is480 = true;
+                    $scope.qualityVideo.is480 = true;
                 }
                 if ($scope.video.videoWidth > 240) {
-                    $scope.quality.is240 = true;
+                    $scope.qualityVideo.is240 = true;
                 }
                 if ($scope.video.videoWidth > 120) {
-                    $scope.quality.is120 = true;
+                    $scope.qualityVideo.is120 = true;
                 }
             }
             $('#video').Jcrop({
@@ -345,7 +340,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
                     $scope.editVideo.isDirty = true;
                     var nothumbnail = document.getElementById('no-thumbnail');
                     nothumbnail.style = "visibility: collapse";
-                    $scope.addingThumbnail = {
+                    $scope.thumbnail = {
                         type: "upload",
                         mimetype: "image/png",
                         data: canvas.toDataURL()
@@ -366,27 +361,24 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
             $scope.editVideo.isDirty = true;
         });
     };
-    async function loadListThumbnails()
-    {
+    async function loadListThumbnails() {
         const res = await api.get(`/video_edit/${$scope.data.item.media}?action=thumbnails&amount=40`)
         // .then(function (res) {
-            if (res && res.processing === false)
+        if (res && res.processing === false) {
+            $scope.$applyAsync()
             {
-                $scope.$applyAsync()
-                {
-                    $scope.listFrames = res.thumbnails;
-                }
+                $scope.listFrames = res.thumbnails;
             }
-            else
-            {
-                await delay(2000);
-                loadListThumbnails()
-            }
+        }
+        else {
+            await delay(2000);
+            loadListThumbnails()
+        }
         // })
         // .catch(function (err) { return console.log(err); });
     }
     function delay(ms: number) {
-        return new Promise( resolve => setTimeout(resolve, ms) );
+        return new Promise(resolve => setTimeout(resolve, ms));
     }
     function loadImage() {
         if ('thumbnail' in $scope.data.metadata.renditions) {
@@ -479,18 +471,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
                     return;
                 }
             }
-            if ($scope.cuttingVideo) {
-                if ($scope.cuttingVideo.start == 0 && $scope.cuttingVideo.end == $scope.video.duration) {
-                    $scope.cuttingVideo = {};
-                }
-            }
-            $scope.resolve({
-                addingThumbnail: $scope.addingThumbnail,
-                cuttingVideo: $scope.cuttingVideo,
-                croppingVideo: $scope.croppingVideo,
-                rotatingVideo: $scope.rotatingVideo,
-                qualityVideo: $scope.qualityVideo,
-                hasChange: $scope.editVideo.isChange,
+            $scope.resolve({                
                 metadata: _.pick($scope.data.metadata, [
                     ...EDITABLE_METADATA,
                     'renditions',
@@ -626,7 +607,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         let video = document.getElementById('video-preview');
         switch (direction) {
             case 'left':
-                let degree = rotate.left = rotate.left - 90;
+                let degree = $scope.rotate.degree = $scope.rotate.degree - 90;
                 actRotate(video, degree);
                 break;
 
@@ -669,7 +650,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         let theToggle = document.getElementById('toggleQuality');
         showHideToggleMenu(theToggle, 'on');
 
-        qualityVideo = currentTarget.value;
+        $scope.quality = currentTarget.value;
         $scope.editVideo.isDirty = true;
 
     }
@@ -696,7 +677,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         // c.x, c.y, c.x2, c.y2, c.w, c.h
         let delta_width = $scope.video.videoWidth / $scope.video.offsetWidth;
         let delta_height = $scope.video.videoHeight / $scope.video.offsetHeight;
-        positionCropVideo = {
+        $scope.crop = {
             x: c.x * delta_width,
             y: c.y * delta_height,
             width: c.w * delta_width,
