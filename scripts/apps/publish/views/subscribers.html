@@ -257,7 +257,10 @@
                                     </div>
                                     <div class="form__row-item">
                                         <div class="sd-line-input sd-line-input--is-select">
-                                            <select class="sd-line-input__select" ng-model="tokens.ttl" title="{{ :: 'Token expiry' | translate }}">
+                                            <select class="sd-line-input__select"
+                                                ng-model="tokens.ttl"
+                                                ng-change="tokens.enableSave()"
+                                                title="{{ :: 'Token expiry' | translate }}">
                                                 <option value="7" translate>1 week</option>
                                                 <option value="14" translate>2 weeks</option>
                                                 <option value="30" translate>1 month</option>

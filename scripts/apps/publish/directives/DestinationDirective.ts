@@ -1,5 +1,7 @@
-DestinationDirective.$inject = ['adminPublishSettingsService'];
-export function DestinationDirective(adminPublishSettingsService) {
+import {isEqual} from 'lodash';
+
+DestinationDirective.$inject = ['adminPublishSettingsService', '$rootScope'];
+export function DestinationDirective(adminPublishSettingsService, $rootScope) {
     return {
         templateUrl: 'scripts/apps/publish/views/destination.html',
         scope: {
@@ -14,6 +16,11 @@ export function DestinationDirective(adminPublishSettingsService) {
                     $scope.destination.config = angular.extend({}, $scope.types[type].config);
                 }
             });
+            $scope.$watch('destination', (newVal, oldVal) => {
+                if (!isEqual(newVal, oldVal)) {
+                    $rootScope.$broadcast('subcriber: saveEnabled');
+                }
+            }, true);
         },
     };
 }
