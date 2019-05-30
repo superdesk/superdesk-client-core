@@ -12,14 +12,14 @@ export interface IPreviewComponentProps {
     value: any;
 }
 
-interface IFieldOptions {
+interface IFieldTypeOptions {
     label: string;
     editorComponent: React.ComponentClass<IEditorComponentProps>;
     previewComponent: React.ComponentClass<IPreviewComponentProps>;
 }
 
-export const fields: {[key: string]: IFieldOptions} = {};
+export const fields: {[key: string]: IFieldTypeOptions} = {};
 
-export const customField = (fieldId: string, options: IFieldOptions) => {
+export const addFieldType = (fieldId: string, options: IFieldTypeOptions) => {
     fields[fieldId] = options;
 };

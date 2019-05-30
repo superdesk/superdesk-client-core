@@ -3,6 +3,7 @@ import React from 'react';
 interface IProps {
     type: 'info' | 'warning' | 'error';
     hollow?: boolean;
+    children: React.ReactNode;
 }
 
 const CLASSNAMES = {
@@ -11,7 +12,7 @@ const CLASSNAMES = {
     error: 'sd-alert--alert',
 };
 
-export const Alert: React.StatelessComponent<IProps> = (props) => {
+export const Alert: React.StatelessComponent<IProps> = (props: IProps) => {
     const className = [
         'sd-alert',
         props.hollow ? 'sd-alert--hollow' : '',
@@ -21,4 +22,4 @@ export const Alert: React.StatelessComponent<IProps> = (props) => {
     return (
         <div className={className}>{props.children}</div>
     );
-}
+};

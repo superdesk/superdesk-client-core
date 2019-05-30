@@ -3,9 +3,10 @@ import React from 'react';
 interface IProps {
     caption: string;
     onRemove?: () => void;
+    children: React.ReactNode;
 }
 
-export const Figure: React.StatelessComponent<IProps> = (props) => {
+export const Figure: React.StatelessComponent<IProps> = (props: IProps) => {
     const editable = props.onRemove != null;
 
     return (
@@ -24,4 +25,4 @@ export const Figure: React.StatelessComponent<IProps> = (props) => {
             <div className={editable ? 'sd-media-carousel__media-caption' : ''}>{props.caption}</div>
         </div>
     );
-}
+};

@@ -17,7 +17,7 @@ export class PreviewCustomField extends React.PureComponent<IProps> {
         const value = get(item.extra, field._id);
 
         if (FieldType == null) {
-            console.warn('unkwnow custom type', field.custom_field_type);
+            console.warn('unkwnow custom type', field);
             return null;
         }
 

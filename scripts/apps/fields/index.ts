@@ -1,2 +1,2 @@
 
-export {fields, customField, IEditorComponentProps, IPreviewComponentProps} from './custom-fields-provider';
+export {fields, addFieldType, IEditorComponentProps, IPreviewComponentProps} from './custom-fields-provider';
