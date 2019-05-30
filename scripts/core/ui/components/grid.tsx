@@ -6,7 +6,7 @@ interface IProps {
     children: React.ReactNodeArray;
 }
 
-export function Grid(props: IProps) {
+export const Grid: React.StatelessComponent<IProps> = (props) => {
     const className = [
         'flex-grid',
         'flex-grid--wrap-items',
