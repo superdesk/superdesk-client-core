@@ -1,3 +1,7 @@
+export interface ISpellcheckerSuggestion {
+    text: string;
+}
+
 export interface ISpellcheckWarning {
     // zero-based, line-break agnostic index
     startOffset: number;
@@ -8,7 +12,7 @@ export interface ISpellcheckWarning {
     // list of text fragments suggested to replace offending text fragment.
     // Can consist of multiple words. Can NOT span multiple paragraphs.
     // Can be omited if `ISpellchecker['getSuggestions']` method is defined.
-    suggestions?: Array<string>;
+    suggestions?: Array<ISpellcheckerSuggestion>;
 }
 
 export interface ISpellcheckerAction {
@@ -22,7 +26,7 @@ export interface ISpellchecker {
 
     // text - formatting-free text, must be single-line
     // can be ommited if suggestions are provided in `ISpellcheckWarning`s returned from the `check` method.
-    getSuggestions?(text: string): Promise<Array<string>>;
+    getSuggestions?(text: string): Promise<Array<ISpellcheckerSuggestion>>;
 
     actions: {[key: string]: ISpellcheckerAction};
 }

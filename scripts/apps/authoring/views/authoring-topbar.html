@@ -40,14 +40,22 @@
     </div>
 
     <div class="subnav__stretch-bar" ng-if="showCustomButtons(item)">
-      <div class="subnav__button-stack subnav__button-stack--custom-buttons" ng-if="$root.config.features.customAuthoringTopbar" ng-show="_editable && itemActions.save && action === 'edit'">
-        <button class="btn btn--custom"
+      <div
+        class="subnav__button-stack subnav__button-stack--custom-buttons"
+        ng-if="$root.config.features.customAuthoringTopbar != null && ($root.config.features.customAuthoringTopbar.toDesk === true || $root.config.features.customAuthoringTopbar.publish === true || $root.config.features.customAuthoringTopbar.publishAndContinue == true)"
+        ng-show="_editable && itemActions.save && action === 'edit'"
+      >
+        <button
+                ng-if="$root.config.features.customAuthoringTopbar.toDesk === true"
+                class="btn btn--custom"
                 ng-click="saveAndContinue(sendToNextStage, false)"
                 title="{{ :: 'To Desk' | translate }}">
                 <span class="btn__text" translate>To Desk</span>
                 <span class="btn__text--short" translate>T D</span>
         </button>
-        <button class="btn btn--custom btn--publish"
+        <button
+                ng-if="$root.config.features.customAuthoringTopbar.publish === true"
+                class="btn btn--custom btn--publish"
                 type="submit"
                 ng-if="canPublishOnDesk()"
                 ng-click="saveAndContinue(publish, true)"
@@ -55,7 +63,9 @@
                 <span class="btn__text" translate>Publish</span>
                 <span class="btn__text--short" translate>P</span>
         </button>
-        <button class="btn btn--custom btn--publish-plus"
+        <button
+                ng-if="$root.config.features.customAuthoringTopbar.publishAndContinue === true"
+                class="btn btn--custom btn--publish-plus"
                 ng-if="canPublishOnDesk()"
                 ng-click="saveAndContinue(publishAndContinue, true)"
                 title="{{ :: 'Publish and Continue' | translate }}">
