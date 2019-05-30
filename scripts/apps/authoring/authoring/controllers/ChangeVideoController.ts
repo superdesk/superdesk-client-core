@@ -127,18 +127,24 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         })
         .then(
             response => {
-                const mediaID = response.item.media;
-                $scope.data.item = angular.extend($scope.data.item, response._id);
-
+                const mediaID = response._id.media;
                 (function checkVideoProcessing(mediaID) {
                     stopIntervalID = $interval(async function() {
                         const item = await api.get(`/video_edit/${mediaID}`);
                         if (item.processing === false) {
+                            $scope.data.item = angular.extend($scope.data.item, response._id);
                             stopInterval(stopIntervalID);
                             $scope.isAoISelectionModeEnabled = false;
                             videoEditing.classList.remove('video-loading');
+                            $scope.cancelEditVideo()                            
+                            $scope.video.pause();
+                            $scope.video.currentTime=0;                            
                             $scope.video.load();
-
+                            $scope.$applyAsync()
+                            {
+                                $scope.listFrames = null;                            
+                            }
+                            
                             loadListThumbnails();
                         }
                     }, 2500);
@@ -185,12 +191,9 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         }
         positionCropVideo = {};
         qualityVideo = 0;
-        rotate = { left: 0 };
+        rotate = { left: 0 };        
         let video = document.getElementById('video-preview');
-        if ($scope.rotatingVideo.degree)
-            actRotate(video, $scope.rotatingVideo.degree);
-        else
-            actRotate(video, 0);
+        actRotate(video, 0);
 
         document.getElementById('rotateVideo').disabled = false;
         document.getElementById('toggleRatio').disabled = false;
@@ -369,7 +372,10 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         // .then(function (res) {
             if (res && res.processing === false)
             {
-                $scope.listFrames = res.thumbnails;
+                $scope.$applyAsync()
+                {
+                    $scope.listFrames = res.thumbnails;
+                }
             }
             else
             {

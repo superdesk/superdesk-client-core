@@ -59,22 +59,22 @@ export function VideoTimeline() {
                 if (isEmpty(cut)) {
                     return;
                 }
-                var position = cut.starttime / scope.video.duration;
+                var position = cut.start / scope.video.duration;
                 TweenMax.set(cbwrapper, {
                     left: (position * 100) + '%'
                 });
                 TweenMax.set(maskleft, {
                     width: (position * 100) + '%'
                 });
-                barleft.setAttribute("data-content", getstrtime(cut.starttime));
-                var position = cut.endtime / scope.video.duration;
+                barleft.setAttribute("data-content", getstrtime(cut.start));
+                var position = cut.end / scope.video.duration;
                 TweenMax.set(cbwrapper, {
                     right: ((1 - position) * 100) + '%'
                 });
                 TweenMax.set(maskright, {
                     width: ((1 - position) * 100) + '%'
                 });
-                barright.setAttribute("data-content", getstrtime(cut.endtime));
+                barright.setAttribute("data-content", getstrtime(cut.end));
             });
 
 
@@ -83,7 +83,7 @@ export function VideoTimeline() {
                     left: (scope.video.currentTime / scope.video.duration * 100) + "%"
                 });
                 inner.innerHTML = getstrtime(scope.video.currentTime);
-                if (scope.video.currentTime > scope.cut.endtime) {
+                if (scope.video.currentTime > scope.cut.end) {
                     scope.video.pause();
                 }
             };
@@ -108,7 +108,7 @@ export function VideoTimeline() {
 
             scope.controlBarClick = function () {
                 var position = setTimeline();
-                if (position * scope.video.duration < scope.cut.starttime) {
+                if (position * scope.video.duration < scope.cut.start) {
                     TweenMax.set(cbwrapper, {
                         left: (position * 100) + '%'
                     });
@@ -116,7 +116,7 @@ export function VideoTimeline() {
                         width: (position * 100) + '%'
                     });
                 }
-                if (position * scope.video.duration > scope.cut.endtime) {
+                if (position * scope.video.duration > scope.cut.end) {
                     TweenMax.set(cbwrapper, {
                         right: ((1 - position) * 100) + '%'
                     });
@@ -160,7 +160,7 @@ export function VideoTimeline() {
                         width: ((1 - position) * 100) + '%'
                     });
                     barright.setAttribute("data-content", getstrtime(position * scope.video.duration));
-                    scope.cut.endtime = position * scope.video.duration;
+                    scope.cut.end = position * scope.video.duration;
                 } else {
                     TweenMax.set(cbwrapper, {
                         left: (position * 100) + '%'
@@ -169,7 +169,7 @@ export function VideoTimeline() {
                         width: (position * 100) + '%'
                     });
                     barleft.setAttribute("data-content", getstrtime(position * scope.video.duration));
-                    scope.cut.starttime = position * scope.video.duration;
+                    scope.cut.start = position * scope.video.duration;
                 }
             };
 
@@ -202,8 +202,12 @@ export function VideoTimeline() {
 
             function loadTimeLine(list_thumbnails) {
                 var widthpic = 88
+                if (controlbar.offsetWidth <= 0)
+                {
+                    return;
+                }
                 if (list_thumbnails && list_thumbnails.length > 0) {
-                    widthpic = list_thumbnails[0].width
+                    widthpic = list_thumbnails[0].width;           
                 }
                 var total_thumbnail = Math.floor(controlbar.offsetWidth / widthpic);
                 var per_index_image = 35 / total_thumbnail;
@@ -216,13 +220,12 @@ export function VideoTimeline() {
                         video.height = 50;
                         if (list_thumbnails && list_thumbnails.length > 0) {
                             video.poster = list_thumbnails[index].url;
-                        }
-                        video.onloadeddata = function () {
                             video.className = 'loaded';
-                        };
+                        }
                         inner_frames.append(video);
                     }
                 }
+                
             }
         },
     }

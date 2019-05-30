@@ -92,32 +92,7 @@ export function RenditionsService(metadata, $q, api, superdesk, _, notify) {
                 ...videoOptions,
             })
                 .then((result) => {
-                    const savingVideoPromises = [];
-                    if (result.hasChange==true) {
-                        savingVideoPromises.push(api.save("video_edit", {
-                            action:'edit',
-                            item: clonedItem,
-                            video_cut: result.cuttingVideo,
-                            video_crop: result.croppingVideo,
-                            video_rotate: result.rotatingVideo,
-                            video_quality: result.qualityVideo,
-                            thumbnail_add: result.addingThumbnail,
-                        }));
-                    }
-                    return $q.all(savingVideoPromises)
-                    // return the cropped images
-                        .then((editVideoitems) => {
-                            editVideoitems.forEach((editvideo) => {
-                                const url = editvideo.href;
-
-                                // update association renditions
-                                angular.extend(
-                                    result.metadata,editvideo.result);
-
-                            });
-                            angular.extend(item, result.metadata);
-                            return item;
-                        });
+                    return item
                 });
 
         });
