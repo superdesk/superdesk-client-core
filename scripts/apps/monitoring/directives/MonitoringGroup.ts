@@ -39,8 +39,7 @@ interface IScope extends ng.IScope {
     fetchNext(i: number): any;
     refreshGroup(): void;
     customSortOptions: GroupSortOptions;
-    customSortOptionActive?: string;
-    customSortOrder?: 'asc' | 'desc';
+    customSortOptionActive?: { field: string, order: 'asc' | 'desc' };
 
     hideActionsForMonitoringItems: boolean;
     disableMonitoringMultiSelect: boolean;
@@ -129,8 +128,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                     ...customSort,
                     [DEFAULT_SORT_FIELD]: {label: 'Default'},
                 };
-                scope.customSortOptionActive = DEFAULT_SORT_FIELD;
-                scope.customSortOrder = 'desc';
+                scope.customSortOptionActive = { field :DEFAULT_SORT_FIELD, order: 'desc' };
             }
 
             scope.page = 1;
@@ -522,8 +520,8 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                         }
 
                         // custom sort for group (if it exists)
-                        if (scope.customSortOptionActive && scope.customSortOptionActive !== DEFAULT_SORT_FIELD) {
-                            criteria.source.sort = [{[scope.customSortOptionActive]: scope.customSortOrder}];
+                        if (scope.customSortOptionActive && scope.customSortOptionActive.field !== DEFAULT_SORT_FIELD) {
+                            criteria.source.sort = [{[scope.customSortOptionActive.field]: scope.customSortOptionActive.order}];
                         }
 
                         return apiquery(criteria, true)
@@ -570,16 +568,15 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             }
 
             scope.selectCustomSortOption = function(field: string) {
-                scope.customSortOptionActive = field;
-                scope.customSortOrder = 'desc';
+                scope.customSortOptionActive = { field, order: 'desc' };
                 queryItems();
             };
 
             scope.toggleCustomSortOrder = function() {
-                if (scope.customSortOrder === 'asc') {
-                    scope.customSortOrder = 'desc';
+                if (scope.customSortOptionActive.order === 'asc') {
+                    scope.customSortOptionActive.order = 'desc';
                 } else {
-                    scope.customSortOrder = 'asc';
+                    scope.customSortOptionActive.order = 'asc';
                 }
                 queryItems();
             };

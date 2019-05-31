@@ -36,9 +36,9 @@
                     </li>
                 </ul>
             </div>
-            <button ng-click="toggleCustomSortOrder()" class="icn-btn direction" title="{{customSortOrder}}">
-                <i class="icon-ascending" ng-if="customSortOrder === 'asc'"></i>
-                <i class="icon-descending" ng-if="customSortOrder === 'desc'"></i>
+            <button ng-click="toggleCustomSortOrder()" class="icn-btn direction" title="{{customSortOptionActive.order}}">
+                <i class="icon-ascending" ng-if="customSortOptionActive.order === 'asc'"></i>
+                <i class="icon-descending" ng-if="customSortOptionActive.order === 'desc'"></i>
             </button>
         </div>
     </div>
