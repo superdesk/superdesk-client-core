@@ -75,9 +75,8 @@ export function VideoTimeline() {
                     width: ((1 - position) * 100) + '%'
                 });
                 barright.setAttribute("data-content", getstrtime(cut.end));
-            });
-
-
+            });    
+                    
             function vidUpdate() {
                 TweenMax.set(progressoutput, {
                     left: (scope.video.currentTime / scope.video.duration * 100) + "%"
@@ -90,7 +89,7 @@ export function VideoTimeline() {
             barleft.ondragstart = function () {
                 onDragStart();
             };
-            barleft.ondrag = function () {
+            barleft.ondrag = function () {                
                 onDragCb("left");
             };
             barleft.ondragend = function () {
@@ -105,6 +104,10 @@ export function VideoTimeline() {
             barright.ondragend = function () {
                 onDragEndCb();
             };
+            var PositionX=0;
+            ondragover = function() {
+                PositionX = event.clientX;
+            }
 
             scope.controlBarClick = function () {
                 var position = setTimeline();
@@ -126,8 +129,8 @@ export function VideoTimeline() {
                 }
             };
 
-            function getPositionBar() {
-                var position = ((event.clientX - controlbar.getBoundingClientRect().left) / controlbar.offsetWidth);
+            function getPositionBar(pX) {
+                var position = ((pX - controlbar.getBoundingClientRect().left) / controlbar.offsetWidth);
                 if (position > 1) {
                     position = 1;
                 }
@@ -148,10 +151,7 @@ export function VideoTimeline() {
             };
 
             function onDragCb(type) {
-                if (event.clientX == 0) {
-                    return;
-                }
-                var position = getPositionBar();
+                var position = getPositionBar(PositionX);
                 if (type == 'right') {
                     TweenMax.set(cbwrapper, {
                         right: ((1 - position) * 100) + '%'
@@ -184,11 +184,12 @@ export function VideoTimeline() {
             function onDragStart() {
                 var img = document.createElement("img");
                 event.dataTransfer.setDragImage(img, 0, 0);
+                event.dataTransfer.setData('text/plain', null)
             };
 
 
             function setTimeline() {
-                var position = getPositionBar();
+                var position = getPositionBar(event.clientX);
                 scope.video.currentTime = position * scope.video.duration;
                 inner.innerHTML = getstrtime(scope.video.currentTime);
                 TweenMax.set(progressoutput, {
