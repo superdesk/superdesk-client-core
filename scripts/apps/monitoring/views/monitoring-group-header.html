@@ -27,12 +27,12 @@
         <div class="sortbar" ng-show="customSortOptions">
             <div class="dropdown dropdown--align-right dropdown--hover" dropdown__toggle>
                 <button id="order_button" class="dropdown__toggle" dropdown__toggle>
-                    <span translate>{{ customSortOptions[customSortOptionActive].label }}</span>
+                    <span>{{ customSortOptions[customSortOptionActive].label }}</span>
                     <span class="dropdown__caret"></span>
                 </button>
                 <ul class="dropdown__menu">
                     <li ng-repeat="(field, option) in customSortOptions">
-                        <button ng-click="selectCustomSortOption(field)" translate>{{ option.label }}</button>
+                        <button ng-click="selectCustomSortOption(field)">{{ option.label }}</button>
                     </li>
                 </ul>
             </div>

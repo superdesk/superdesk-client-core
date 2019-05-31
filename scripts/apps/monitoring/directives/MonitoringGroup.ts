@@ -126,7 +126,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             if (customSort) {
                 scope.customSortOptions = {
                     ...customSort,
-                    [DEFAULT_SORT_FIELD]: {label: 'Default'},
+                    [DEFAULT_SORT_FIELD]: {label: gettext('Default')},
                 };
                 scope.customSortOptionActive = {field: DEFAULT_SORT_FIELD, order: 'desc'};
             }
