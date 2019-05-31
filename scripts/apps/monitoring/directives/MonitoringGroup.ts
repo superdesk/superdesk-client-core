@@ -123,12 +123,12 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
 
             const customSort = getCustomSortForGroup(config, scope.group);
 
-            if (customSort) {
+            if (customSort) {
                 scope.customSortOptions = {
                     ...customSort,
                     [DEFAULT_SORT_FIELD]: {label: 'Default'},
                 };
-                scope.customSortOptionActive = { field :DEFAULT_SORT_FIELD, order: 'desc' };
+                scope.customSortOptionActive = {field: DEFAULT_SORT_FIELD, order: 'desc'};
             }
 
             scope.page = 1;
@@ -521,7 +521,8 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
 
                         // custom sort for group (if it exists)
                         if (scope.customSortOptionActive && scope.customSortOptionActive.field !== DEFAULT_SORT_FIELD) {
-                            criteria.source.sort = [{[scope.customSortOptionActive.field]: scope.customSortOptionActive.order}];
+                            criteria.source.sort =
+                                [{[scope.customSortOptionActive.field]: scope.customSortOptionActive.order}];
                         }
 
                         return apiquery(criteria, true)
@@ -568,7 +569,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             }
 
             scope.selectCustomSortOption = function(field: string) {
-                scope.customSortOptionActive = { field, order: 'desc' };
+                scope.customSortOptionActive = {field, order: 'desc'};
                 queryItems();
             };
 
