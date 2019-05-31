@@ -391,6 +391,10 @@
         flex-wrap: wrap;
         align-content: flex-start;
 
+        > * {
+            width: 100%;
+        }
+
         .media-block, .embed-block {
             margin: 2rem 0;
         }
