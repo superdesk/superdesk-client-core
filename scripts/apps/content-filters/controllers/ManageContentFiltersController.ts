@@ -235,6 +235,18 @@ export function ManageContentFiltersController($scope, contentFilters, notify, m
             });
         };
 
+        $scope.$watch('contentFilter', (newVal, oldVal) => {
+            if (newVal && oldVal && !_.isEqual(newVal, oldVal)) {
+                $scope.saveEnabled = true;
+            } else {
+                $scope.saveEnabled = false;
+            }
+            // if there is filter-statement in contentFilter and preview is not available then disable the save button
+            if (newVal && newVal.content_filter.length > 0 && !$scope.preview) {
+                $scope.saveEnabled = false;
+            }
+        }, true);
+
         fetchFilterConditions();
         fetchContentFilters();
     });
