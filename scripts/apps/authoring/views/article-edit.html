@@ -550,7 +550,7 @@
     sd-width="{{ editor[field._id].sdWidth || 'full' }}"
     data-required="schema[field._id].required"
     order="{{ editor[field._id].order }}"
-    sd-validation-error="error[field.display_name.toLowerCase()]">
+    sd-validation-error="error[field.display_name.toLowerCase()] || error.extra[field._id]">
 
     <label class="field__label">{{field.display_name}}</label>
     <span ng-if="schema[field._id].maxlength || schema[field._id].minlength" sd-character-count
@@ -579,7 +579,7 @@
     sd-width="{{ editor[field._id].sdWidth || 'full' }}"
     data-required="schema[field._id].required"
     order="{{ editor[field._id].order }}"
-    sd-validation-error="error[field._id.toLowerCase()]">
+    sd-validation-error="error[field._id] || error.extra[field._id]">
 
     <label class="field__label">{{field.display_name}}</label>
     <div sd-datepicker ng-disabled="!_editable" data-tabindex="editor[field._id].order" ng-model="item.extra[field._id]" data-format="YYYY-MM-DDT00:00:00+0000" data-on-change="autosave(item)" shortcuts="field.date_shortcuts"></div>
@@ -590,7 +590,7 @@
     ng-if="field.field_type === 'embed'"
     sd-width="{{ editor[field._id].sdWidth || 'full' }}"
     order="{{ editor[field._id].order }}"
-    sd-validation-error="error[field._id.toLowerCase()]"
+    sd-validation-error="error[field.display_name.toLowerCase()] || error.extra[field_id]"
     data-required="schema[field._id].required">
     <label class="field__label" translate>{{field.display_name}}</label>
     <span>
@@ -634,7 +634,7 @@
 <div class="field" ng-repeat="field in fields track by field._id"
      ng-if="field.field_type === 'media'"
      sd-width="{{editor[field._id].sdWidth || 'full'}}"
-     sd-validation-error="error[field._id.toLowerCase()]"
+     sd-validation-error="error[field._id]"
      order="{{editor[field._id].order}}"
      data-required="schema[field._id].required">
     <label class="field__label" translate>{{field.display_name}}</label>
@@ -659,7 +659,7 @@
 <div class="field" ng-repeat="field in fields track by field._id"
      ng-if="field.field_type === mediaTypes.RELATED_CONTENT.id"
      sd-width="{{editor[field._id].sdWidth || 'full'}}"
-     sd-validation-error="error[field._id.toLowerCase()]"
+     sd-validation-error="error[field._id]"
      order="{{editor[field._id].order}}"
      data-required="schema[field._id].required">
     <label class="field__label" translate>{{field.display_name}}</label>
@@ -678,7 +678,7 @@
 <div class="field" ng-repeat="field in fields track by field._id"
     ng-if="field.field_type === 'urls'"
     sd-width="{{editor[field._id].sdWidth || 'full'}}"
-    sd-validation-error="error[field.display_name.toLowerCase()]"
+    sd-validation-error="error[field.display_name.toLowerCase()] || error.extra[field._id]"
     order="{{editor[field._id].order}}"
     data-required="schema[field._id].required">
 
