@@ -20,7 +20,7 @@ export default function getCustomSortForGroup(config: any, group: StageGroup): G
 
     const customConfig = get(config, CUSTOM_SORT_SETTING, {});
     const groupConfig = get(customConfig, group.type, null);
-    const groupConfigWithLabels = {}
+    const groupConfigWithLabels = {};
 
     for (let field in groupConfig) {
         groupConfigWithLabels[field] = groupConfig[field](gettext);
