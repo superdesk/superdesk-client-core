@@ -40,7 +40,7 @@
             <div class="sd-photo-preview" ng-if="!nav || nav === 'view'">
                 <div class="sd-photo-preview__image">
                     <video autoplay="autoplay" ng-if="data.item.type === 'video'"
-                           ng-src="{{data.item.renditions.original.href}}"></video>
+                           ng-src="{{data.item.renditions.original.href}}?tag={{data.item._etag}}"></video>
                     <audio controls ng-if="data.item.type === 'audio'"
                            ng-src="{{data.item.renditions.original.href}}"></audio>
                 </div>
@@ -57,7 +57,7 @@
                             <md-videoplayer id="video-preview">
                                 <video controls="controls" autoplay="autoplay" id="video" class="video-display"
                                        ng-if="data.item.type === 'video'" ng-init="videoInit()"
-                                       ng-src="{{data.item.renditions.original.href}}"></video>
+                                       ng-src="{{data.item.renditions.original.href}}?tag={{data.item._etag}}"></video>
                                 
                             </md-videoplayer>
                         </div>

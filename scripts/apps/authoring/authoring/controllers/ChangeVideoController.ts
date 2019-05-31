@@ -107,7 +107,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
     $scope.saveEditVideo = function () {
         const videoEditing = document.querySelector('.video-editing');
         videoEditing.classList.add('video-loading');
-        $scope.video.pause();
+        $scope.video.pause();        
         $scope.listFrames = null;
         $scope.isAoISelectionModeEnabled = true;        
         const cut = ($scope.cut.end - $scope.cut.start) === $scope.video.duration  ? {} : $scope.cut;
@@ -176,15 +176,14 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         $scope.cut = {
             start: 0,
             end: $scope.video.duration
-        }
-        if ($scope.thumbnail) {
-            loadImage();
-        }
+        }        
+        loadImage();        
         // disable crop video
         if (jcrop_api) {
             jcrop_api.release();
             jcrop_api.disable();
         }
+        $scope.thumbnail ={}
         $scope.crop = {};
         $scope.quality = 0;
         $scope.rotate.degree = 0;
@@ -262,6 +261,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
             $scope.video.pause();
         }
     };
+
     $scope.uploadThumbnail = function () {
         document.getElementById("file-upload").click();
     }
@@ -276,17 +276,17 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
      * @description Capture the thumbnail video at play time in time line.     *
      */
     $scope.videoInit = function () {
+
         $scope.cut = {};
         $scope.video = document.getElementById('video');
-        $scope.video.onloadeddata = function () {
-            loadImage();
+        loadImage();
+        $scope.video.onloadeddata = function () {            
             $scope.$applyAsync(() => {
                 $scope.cut = {
                     start: 0,
                     end: $scope.video.duration
                 }
             });
-
             if ($scope.video) {
                 if ($scope.video.videoWidth > 720) {
                     $scope.qualityVideo.is720 = true;
@@ -378,9 +378,9 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         return new Promise(resolve => setTimeout(resolve, ms));
     }
     function loadImage() {
-        if ('thumbnail' in $scope.data.metadata.renditions) {
+        if ('thumbnail' in $scope.data.item.renditions) {
             var img = document.createElement("img");
-            img.src = $scope.data.metadata.renditions.thumbnail.href
+            img.src = $scope.data.item.renditions.thumbnail.href
             img.onload = function () {
                 var canvas = drawObjectToCanvas(img, $scope.video.offsetHeight, $scope.video.offsetWidth);
                 var output = document.getElementById('output');

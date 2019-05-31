@@ -1,7 +1,7 @@
 /* global _ */
 
-import {TweenMax} from "gsap/TweenMax";
-import {isEmpty} from 'lodash';
+import { TweenMax } from "gsap/TweenMax";
+import { isEmpty } from 'lodash';
 import ResizeObserver from 'resize-observer-polyfill';
 
 /**
@@ -75,8 +75,8 @@ export function VideoTimeline() {
                     width: ((1 - position) * 100) + '%'
                 });
                 barright.setAttribute("data-content", getstrtime(cut.end));
-            });    
-                    
+            });
+
             function vidUpdate() {
                 TweenMax.set(progressoutput, {
                     left: (scope.video.currentTime / scope.video.duration * 100) + "%"
@@ -89,7 +89,7 @@ export function VideoTimeline() {
             barleft.ondragstart = function () {
                 onDragStart();
             };
-            barleft.ondrag = function () {                
+            barleft.ondrag = function () {
                 onDragCb("left");
             };
             barleft.ondragend = function () {
@@ -104,8 +104,8 @@ export function VideoTimeline() {
             barright.ondragend = function () {
                 onDragEndCb();
             };
-            var PositionX=0;
-            ondragover = function() {
+            var PositionX = 0;
+            ondragover = function () {
                 PositionX = event.clientX;
             }
 
@@ -200,18 +200,22 @@ export function VideoTimeline() {
                 });
                 return position;
             };
+            function getRandomSpan() {
+                var random = Math.floor(1000 + Math.random() * 9000);
+                return random
+            }
 
             function loadTimeLine(list_thumbnails) {
                 var widthpic = 88
-                if (controlbar.offsetWidth <= 0)
-                {
+                if (controlbar.offsetWidth <= 0) {
                     return;
                 }
                 if (list_thumbnails && list_thumbnails.length > 0) {
-                    widthpic = list_thumbnails[0].width;           
+                    widthpic = list_thumbnails[0].width;
                 }
                 var total_thumbnail = Math.floor(controlbar.offsetWidth / widthpic);
                 var per_index_image = 35 / total_thumbnail;
+                var number = getRandomSpan()
                 if (inner_frames) {
                     inner_frames.innerHTML = '';
                     for (var i = 0; i <= total_thumbnail; i++) {
@@ -220,13 +224,13 @@ export function VideoTimeline() {
                         video.width = widthpic;
                         video.height = 50;
                         if (list_thumbnails && list_thumbnails.length > 0) {
-                            video.poster = list_thumbnails[index].url;
+                            video.poster = list_thumbnails[index].url + '&tag=' + number;
                             video.className = 'loaded';
                         }
                         inner_frames.append(video);
                     }
                 }
-                
+
             }
         },
     }
