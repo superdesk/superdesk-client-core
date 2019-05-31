@@ -18,8 +18,8 @@ export function SubscriberTokenController($scope, api, $rootScope) {
             api.query('subscriber_token', {where: {subscriber: subscriber._id}})
                 .then((response) => {
                     this.tokens = response._items;
-                    $scope.$watch(() => this.tokens, (newVal, oldVal) => {
-                        if (newVal.length !== oldVal.length) {
+                    $scope.$watch(() => this.tokens.length, (newVal, oldVal) => {
+                        if (newVal !== oldVal) {
                             this.enableSave();
                         }
                     });

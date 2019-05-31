@@ -17,7 +17,7 @@ export function DestinationDirective(adminPublishSettingsService, $rootScope) {
                 }
             });
             $scope.$watch('destination', (newVal, oldVal) => {
-                if (!isEqual(newVal, oldVal)) {
+                if (newVal && oldVal) {
                     $rootScope.$broadcast('subcriber: saveEnabled');
                 }
             }, true);

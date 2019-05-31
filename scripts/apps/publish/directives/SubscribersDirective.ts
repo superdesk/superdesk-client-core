@@ -265,7 +265,7 @@ export function SubscribersDirective(
             };
 
             $scope.$watch('subscriber', (newValue, oldValue) => {
-                if (newValue && oldValue && !_.isEqual(newValue, oldValue)) {
+                if (newValue && oldValue) {
                     $scope.saveEnabled = true;
                 } else {
                     $scope.saveEnabled = false;
