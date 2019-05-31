@@ -22,14 +22,15 @@ export interface IPropsAnnotationInputComponent {
     onCancel(): void;
     onApplyAnnotation(html: string): void;
 }
+import {getRangeAndTextForStyle} from 'core/editor3/helpers/highlights';
 
 interface IProps {
     editorState: EditorState;
     extensionPoints: any;
     data: {
-        highlightId: any;
-        selection: SelectionState;
-        annotation: any;
+        selection?: SelectionState; // only provided when adding a new annotation
+        highlightId?: string; // only provided when editing an existing annotation
+        annotation?: any; // only provided when editing an existing annotation
     };
     highlightsManager: any;
     spellcheckerEnabled: boolean;
@@ -82,6 +83,8 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
         this.onChange = this.onChange.bind(this);
         this.onSelect = this.onSelect.bind(this);
         this.deleteAnnotation = this.deleteAnnotation.bind(this);
+
+        this.getAnnotatedText = this.getAnnotatedText.bind(this);
     }
 
     /**
@@ -159,17 +162,30 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
         _hidePopups();
     }
 
+    getAnnotatedText(): string {
+        const {data} = this.props;
+
+        let text = '';
+
+        if (data.selection != null) { // annotation is being added
+            const selection: SelectionState = data.selection;
+            const blockKey = data.selection.getStartKey();
+            const contentState = this.props.editorState.getCurrentContent();
+            const block = contentState.getBlockForKey(blockKey);
+
+            text = block.getText().slice(selection.getStartOffset(), selection.getEndOffset());
+        } else { // annotation already exists
+            text = getRangeAndTextForStyle(this.props.editorState, data.highlightId).highlightedText;
+        }
+
+        return text;
+    }
+
     render() {
         const {data, spellcheckerEnabled, language, annotationTypes} = this.props;
         const _hidePopups = this.props.hidePopups;
         const {annotation} = data;
         const {type, isEmpty} = this.state;
-
-        const selection: SelectionState = data.selection;
-        const blockKey = data.selection.getStartKey();
-        const contentState = this.props.editorState.getCurrentContent();
-        const block = contentState.getBlockForKey(blockKey);
-        const text = block.getText().slice(selection.getStartOffset(), selection.getEndOffset());
 
         const annotationTypeSelect = annotationTypes == null ? null : (
             <div className="sd-line-input sd-line-input--is-select">
@@ -224,7 +240,7 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
             <div className="annotation-input">
                 <Dropdown open={true} scrollable={false}>
                     <AnnotationInputComponent
-                        annotationText={text}
+                        annotationText={this.getAnnotatedText()}
                         onCancel={_hidePopups}
                         annotationTypeSelect={annotationTypeSelect}
                         annotationInputComponent={annotationInputComponent}
