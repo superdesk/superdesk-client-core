@@ -236,7 +236,7 @@ export function ManageContentFiltersController($scope, contentFilters, notify, m
         };
 
         $scope.$watch('contentFilter', (newVal, oldVal) => {
-            if (newVal && oldVal && !_.isEqual(newVal, oldVal)) {
+            if (newVal && oldVal) {
                 $scope.saveEnabled = true;
             } else {
                 $scope.saveEnabled = false;
