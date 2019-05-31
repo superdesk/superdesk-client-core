@@ -32,14 +32,14 @@ declare module 'superdesk-api' {
 
     export interface IArticleAction {
         groupLabel?: string;
-        priotity?: IDisplayPriority;
+        priority?: IDisplayPriority;
+        icon?: string;
         label: string;
-        icon: string;
         onTrigger(): void;
     }
     
     export interface IArticleActionBulk {
-        priotity?: IDisplayPriority;
+        priority?: IDisplayPriority;
         label: string;
         icon: string;
         onTrigger(): void;

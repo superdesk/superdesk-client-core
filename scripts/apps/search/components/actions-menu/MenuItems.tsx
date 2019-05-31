@@ -7,7 +7,7 @@ import SubmenuDropdown from './SubmenuDropdown';
 import {AUTHORING_MENU_GROUPS} from '../../../authoring/authoring/constants';
 import {closeActionsMenu, menuHolderElem, positionPopup} from '../../helpers';
 import {gettext} from 'core/utils';
-import {IExtensionActivationResult, IArticle, IArticleAction} from 'superdesk-api';
+import {IExtensionActivationResult, IArticle, IArticleAction, IDisplayPriority} from 'superdesk-api';
 import {extensions} from 'core/extension-imports.generated';
 import {flatMap} from 'lodash';
 
@@ -106,7 +106,6 @@ export default class MenuItems extends React.Component<IProps, IState> {
     }
 
     renderMenu() {
-        const menu: Array<JSX.Element> = [];
         const item = this.props.item;
 
         const createAction = (activity) =>
@@ -119,34 +118,39 @@ export default class MenuItems extends React.Component<IProps, IState> {
 
         const actions = this.getActions();
 
+        var groupedItems: {
+            [groupLabel: string]: Array<{
+                priority?: IDisplayPriority;
+                element: JSX.Element;
+            }>;
+        } = {};
+
         AUTHORING_MENU_GROUPS.forEach((group) => {
             if (actions[group._id]) {
-                if (group.label === 'Actions') {
-                    menu.push(
-                        <Label
-                            label={group.label}
-                            key={`group-label-${group._id}`}
-                            item={this.props.item} />,
-                        <Divider key={`group-divider-${group._id}`} />,
-                    );
-                } else if (group.concate) {
+                groupedItems[group._id] = [];
+
+                if (group.concate) {
                     const submenu = actions[group._id].map((action) => createAction(action));
 
-                    menu.push(
-                        <li key={`group-label-${group._id}`}>
-                            <SubmenuDropdown
-                                label={gettext(group.label)}
-                                submenu={submenu}
-                                icon={actions[group._id][0].icon}
-                            />
-                        </li>,
-                    );
+                    groupedItems[group._id].push({
+                        element: (
+                            <li key={`group-label-${group._id}`}>
+                                <SubmenuDropdown
+                                    label={gettext(group.label)}
+                                    submenu={submenu}
+                                    icon={actions[group._id][0].icon}
+                                />
+                            </li>
+                        ),
+                    });
                     return;
-                } else {
-                    menu.push(<Divider key={`group-divider-${group._id}`} />);
                 }
 
-                menu.push(...actions[group._id].map(createAction));
+                actions[group._id].map(createAction).forEach((element) => {
+                    groupedItems[group._id].push({
+                        element,
+                    });
+                });
             }
         });
 
@@ -155,20 +159,63 @@ export default class MenuItems extends React.Component<IProps, IState> {
             const existingGroup = AUTHORING_MENU_GROUPS.find((g) => g._id === groupName);
 
             if (!existingGroup) {
-                menu.push(<Divider key={`group-divider-${groupName}`} />);
-                menu.push(...actions[groupName].map(createAction));
+                if (groupedItems[groupName] == null) {
+                    groupedItems[groupName] = [];
+                }
+
+                actions[groupName].map(createAction).forEach((element) => {
+                    groupedItems[groupName].push({element});
+                });
             }
         });
 
         this.state.actionsFromExtensions.forEach((action, i) => {
-            menu.push((
+            const element = (
                 <li key={`extension-item-${i}`}>
                     <button onClick={action.onTrigger}>
                         {action.icon == null ? null : <i className={action.icon} />}
                         {action.label}
                     </button>
                 </li>
-            ));
+            );
+            const {priority} = action;
+
+            if (action.groupLabel == null) {
+                if (groupedItems['default'] == null) {
+                    groupedItems['default'] = [];
+                }
+                groupedItems['default'].push({element, priority});
+            } else {
+                if (groupedItems[action.groupLabel] == null) {
+                    groupedItems[action.groupLabel] = [];
+                }
+
+                groupedItems[action.groupLabel].push({element, priority});
+            }
+        });
+
+        var menu: Array<JSX.Element> = [];
+
+        Object.values(groupedItems).forEach((group, i) => {
+            if (i !== 0) {
+                menu.push(<Divider key={`group-divider-${i}`} />);
+            }
+
+            const step = parseFloat((0.9 / group.length).toPrecision(2));
+            let nextPriority = 0.1;
+
+            group.forEach((groupItem) => {
+                if (groupItem.priority == null) {
+                    groupItem.priority = nextPriority;
+                    nextPriority += step;
+                }
+            });
+
+            group
+                .sort((a, b) => a.priority - b.priority)
+                .forEach(({element}) => {
+                    menu.push(element);
+                });
         });
 
         return menu;
@@ -184,6 +231,10 @@ export default class MenuItems extends React.Component<IProps, IState> {
                 className="dropdown dropdown__menu more-activity-menu open"
                 style={{display: 'block', minWidth: 200}}
             >
+                <Label
+                    label={gettext('Actions')}
+                    item={this.props.item}
+                />
                 {this.renderMenu()}
             </ul>
         );
