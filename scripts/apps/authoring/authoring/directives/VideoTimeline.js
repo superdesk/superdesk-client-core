@@ -75,9 +75,8 @@ export function VideoTimeline() {
                     width: ((1 - position) * 100) + '%'
                 });
                 barright.setAttribute("data-content", getstrtime(cut.end));
-            });
-
-
+            });    
+                    
             function vidUpdate() {
                 TweenMax.set(progressoutput, {
                     left: (scope.video.currentTime / scope.video.duration * 100) + "%"

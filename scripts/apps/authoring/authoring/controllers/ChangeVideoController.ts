@@ -266,7 +266,6 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         document.getElementById("file-upload").click();
     }
 
-    var iconplay, iconstop;
     var jcrop_api;
 
 
@@ -279,8 +278,6 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
     $scope.videoInit = function () {
         $scope.cut = {};
         $scope.video = document.getElementById('video');
-        iconplay = document.getElementById('icon-play');
-        iconstop = document.getElementById('icon-stop');
         $scope.video.onloadeddata = function () {
             loadImage();
             $scope.$applyAsync(() => {
