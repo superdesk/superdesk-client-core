@@ -173,7 +173,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         file.value = "";
         $scope.editVideo.isChange = false;
         $scope.editVideo.isDirty = false;
-        $scope.cuttingVideo = {
+        $scope.cut = {
             start: 0,
             end: $scope.video.duration
         }
@@ -253,7 +253,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
      */
     $scope.playVideo = () => {
         if ($scope.video.paused) {
-            if ($scope.video.currentTime > $scope.cuttingVideo.end) {
+            if ($scope.video.currentTime > $scope.cut.end) {
                 $scope.video.pause();
             } else {
                 $scope.video.play();
@@ -277,14 +277,14 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
      * @description Capture the thumbnail video at play time in time line.     *
      */
     $scope.videoInit = function () {
-        $scope.cuttingVideo = {};
+        $scope.cut = {};
         $scope.video = document.getElementById('video');
         iconplay = document.getElementById('icon-play');
         iconstop = document.getElementById('icon-stop');
         $scope.video.onloadeddata = function () {
             loadImage();
             $scope.$applyAsync(() => {
-                $scope.cuttingVideo = {
+                $scope.cut = {
                     start: 0,
                     end: $scope.video.duration
                 }
