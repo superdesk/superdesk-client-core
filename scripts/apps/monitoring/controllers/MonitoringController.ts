@@ -97,6 +97,7 @@ export function MonitoringController($rootScope, $scope, $location, desks, confi
     function viewSingleGroup(group, type) {
         group.singleViewType = type;
         self.singleGroup = group;
+        $rootScope.$broadcast('stage:single');
     }
 
     function viewMonitoringHome() {
