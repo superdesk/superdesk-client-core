@@ -125,44 +125,22 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         })
             .then(
                 response => {
-                    $scope.flag = false;
-                    const mediaID = response._id.media;
+                    const mediaID = response._id.media; 
                     (function checkVideoProcessing(mediaID) {
                         stopIntervalID = $interval(async function () {
                             const item = await api.get(`/video_edit/${mediaID}`);
                             if (item.processing === false) {
-                                $scope.data.item = angular.extend($scope.data.item, response._id);
-                                let elementJcrop: any = document.getElementsByClassName('jcrop-holder')[0];
-                                let w: any = elementJcrop.style.width;
-                                let h: any = elementJcrop.style.height;
-                                w = w.substring(0,w.indexOf('px'));
-                                h = h.substring(0,h.indexOf('px'));
-                                var x = (item.metadata.width * w) / $scope.video.videoWidth;
-                                var y = (item.metadata.height * h) / $scope.video.videoHeight;
-
+                                
                                 stopInterval(stopIntervalID);
                                 $scope.isAoISelectionModeEnabled = false;
-                                
-                                $scope.cancelEditVideo()
-                                $scope.video.pause();
-                                $scope.video.currentTime = 0;
-                                
-                                $scope.$applyAsync()
+                                $scope.cancelEditVideo();     
+                                $scope.$applyAsync()                                 
                                 {
+                                    $scope.data.item = angular.extend($scope.data.item, response._id);
                                     $scope.listFrames = null;
+                                    loadListThumbnails(); 
+                                    videoEditing.classList.remove('video-loading');
                                 }
-                                loadListThumbnails();
-                                
-                                await delay(1000);
-                                elementJcrop.style.width = x + 'px';
-                                elementJcrop.style.height = y + 'px';
-                                $scope.video.style = '';   
-                                $scope.flag = true;
-                                
-                                await delay(2000);
-                                document.getElementsByClassName('jcrop-dark')[1].remove();
-                                $scope.video.load();
-                                videoEditing.classList.remove('video-loading');
                             }
                         }, 2500);
                     })(mediaID);
@@ -246,22 +224,15 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
 
 
     function drawObjectToCanvas(object, object_height, object_width) {
-        var delta = 230 / 300
-        var object_delta = object_height / object_width
-        if (delta < object_delta) {
-            var height = 230
-            var width = object_width * 230 / object_height
-        } else {
-            var width = 300
-            var height = object_height * 300 / object_width
-        }
-        var top = (230 - height) / 230 / 2 * 100;
         var canvas = document.createElement('canvas');
-        canvas.style = "top: " + top + "%; position: absolute;";
-        canvas.width = width;
-        canvas.height = height;
-        var ctx = canvas.getContext('2d');
-        ctx.drawImage(object, 0, 0, width, height);
+        var context = canvas.getContext("2d");
+
+        var canvas = document.createElement('canvas');
+        canvas.width = object_width;
+        canvas.height = object_height;
+        var ctx = canvas.getContext('2d');        
+        ctx.rotate(Math.PI / 2);
+        ctx.drawImage(object, 0, 0, object_width, object_height);
         return canvas;
     }
 
@@ -322,23 +293,26 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
                     $scope.qualityVideo.is120 = true;
                 }
             }
-            $('#video').Jcrop({
-                onSelect: showCoords,
-                onchange: showCoords,
-                //aspectRatio: null,
-                minSize: [30, 30],
-                //trueSize: [video.clientWidth, video.clientHeight],
-                addClass: 'jcrop-dark',
-                bgOpacity: .4
-
-            }, function () {
-                jcrop_api = this;
-            });
-            if (jcrop_api) {
+            if (jcrop_api) {                
                 jcrop_api.release();
                 jcrop_api.disable();
+                jcrop_api = $scope.video;
             }
-            ;
+            else
+            {
+                $('#video').Jcrop({
+                    onSelect: showCoords,
+                    onchange: showCoords,
+                    //aspectRatio: null,
+                    minSize: [30, 30],
+                    //trueSize: [video.clientWidth, video.clientHeight],
+                    addClass: 'jcrop-dark',
+                    bgOpacity: .4
+
+                }, function () {
+                    jcrop_api = this;
+                });
+            }
             $scope.video.controls = null;
         }
 
