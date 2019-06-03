@@ -41,6 +41,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
     $scope.rotate = { degree: 0 };
     $scope.quality = {};
     $scope.video = null;
+    $scope.flag = true;
     $scope.listFrames = [];
 
     $scope.validator = deployConfig.getSync('validator_media_metadata');
@@ -124,24 +125,44 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         })
             .then(
                 response => {
+                    $scope.flag = false;
                     const mediaID = response._id.media;
                     (function checkVideoProcessing(mediaID) {
                         stopIntervalID = $interval(async function () {
                             const item = await api.get(`/video_edit/${mediaID}`);
                             if (item.processing === false) {
                                 $scope.data.item = angular.extend($scope.data.item, response._id);
+                                let elementJcrop: any = document.getElementsByClassName('jcrop-holder')[0];
+                                let w: any = elementJcrop.style.width;
+                                let h: any = elementJcrop.style.height;
+                                w = w.substring(0,w.indexOf('px'));
+                                h = h.substring(0,h.indexOf('px'));
+                                var x = (item.metadata.width * w) / $scope.video.videoWidth;
+                                var y = (item.metadata.height * h) / $scope.video.videoHeight;
+
                                 stopInterval(stopIntervalID);
                                 $scope.isAoISelectionModeEnabled = false;
-                                videoEditing.classList.remove('video-loading');
+                                
                                 $scope.cancelEditVideo()
                                 $scope.video.pause();
                                 $scope.video.currentTime = 0;
-                                $scope.video.load();
+                                
                                 $scope.$applyAsync()
                                 {
                                     $scope.listFrames = null;
                                 }
                                 loadListThumbnails();
+                                
+                                await delay(1000);
+                                elementJcrop.style.width = x + 'px';
+                                elementJcrop.style.height = y + 'px';
+                                $scope.video.style = '';   
+                                $scope.flag = true;
+                                
+                                await delay(2000);
+                                document.getElementsByClassName('jcrop-dark')[1].remove();
+                                $scope.video.load();
+                                videoEditing.classList.remove('video-loading');
                             }
                         }, 2500);
                     })(mediaID);

@@ -56,7 +56,7 @@
                         <div class="video-player">
                             <md-videoplayer id="video-preview">
                                 <video controls="controls" autoplay="autoplay" id="video" class="video-display"
-                                       ng-if="data.item.type === 'video'" ng-init="videoInit()"
+                                       ng-if="data.item.type === 'video' && flag" ng-init="videoInit()" 
                                        ng-src="{{data.item.renditions.original.href}}?tag={{data.item._etag}}"></video>
                                 
                             </md-videoplayer>
