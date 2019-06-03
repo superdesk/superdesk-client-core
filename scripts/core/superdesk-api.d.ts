@@ -55,6 +55,8 @@ declare module 'superdesk-api' {
                 article?: {
                     getActions?(article: IArticle): Promise<Array<IArticleAction>>;
                     getActionsBulk?(mode: 'include' | 'exclude', articles: Array<IArticle>): Promise<Array<IArticleActionBulk>>;
+                    onUpdateBefore?(article: IArticle): Promise<IArticle>; // can alter item(immutably), can cancel update
+                    onUpdateAfter?(article: IArticle): void; // can't alter item, can't cancel
                     onSpike?(item: IArticle): Promise<onSpikeMiddlewareResult>;
                     onSpikeMultiple?(items: Array<IArticle>): Promise<onSpikeMiddlewareResult>;
                 };
@@ -93,10 +95,89 @@ declare module 'superdesk-api' {
 
     // this is a subset of the main IArticle interface found in the core
     // a subset is used in order expose things gradually as needed
-    export interface IArticle {
+    export interface IArticle extends IBaseRestApiResponse {
         _id: string;
+        slugline: string;
+
+        // remove when SDESK-4343 is done.
+        selected: boolean;
+
+        // planning extension
         assignment_id?: string;
+
+        // markForUser extension
+        marked_for_user?: string;
     }
+
+    export interface IUserRole extends IBaseRestApiResponse {
+        _id: string;
+        name: string;
+        privileges: any;
+        author_role: string;
+        editor_role: string;
+    }
+
+    export interface IDesk extends IBaseRestApiResponse {
+        incoming_stage: IStage['_id'];
+        members: Array<IUser['_id']>;
+        name: string;
+        desk_type: 'authoring' | 'production';
+        working_stage: IStage['_id'];
+    }
+
+    export interface IStage extends IBaseRestApiResponse {
+        name: string;
+        description: string;
+        working_stage: boolean;
+        default_incoming: boolean;
+        task_status: 'todo' | 'in_progress' | 'done';
+        desk_order: number;
+        desk: any;
+        content_expiry: number;
+        is_visible: boolean;
+        local_readonly: boolean;
+        incoming_macro: string;
+        outgoing_macro: string;
+        onstage_macro: string;
+    }
+
+    export interface IUser {
+        _id: string;
+        username: string;
+        password: string;
+        password_changed_on: string;
+        first_name?: string; // not mandatory, empty when user is created programatically
+        last_name?: string; // not mandatory, empty when user is created programatically
+        display_name: string;
+        email: string;
+        phone: string;
+        job_title: string;
+        biography: string;
+        facebook: string;
+        instagram: string;
+        twitter: string;
+        jid: string;
+        language: string;
+        user_info: {};
+        picture_url: string;
+        avatar: string;
+        avatar_renditions: {};
+        role?: IUserRole['_id'];
+        privileges: {};
+        user_type: 'user' | 'administrator';
+        is_support: boolean;
+        is_author: boolean;
+        is_active: boolean;
+        is_enabled: boolean;
+        needs_activation: boolean;
+        desk: IDesk;
+        SIGN_OFF: string;
+        BYLINE: string;
+        invisible_stages: Array<any>;
+        slack_username: string;
+        slack_user_id: string;
+    }
+    
 
 
 
@@ -116,6 +197,10 @@ declare module 'superdesk-api' {
         _created: string;
         _updated: string;
         _etag: string;
+        _links: {
+            parent?: any;
+            collection?: any;
+        };
         _id: string;
     }
 
@@ -283,6 +368,7 @@ declare module 'superdesk-api' {
     // DATA API
 
     export interface IDataApi {
+        findOne<T>(endpoint: string, id: string): Promise<T>;
         create<T>(endpoint: string, item: T): Promise<T>;
         query<T extends IBaseRestApiResponse>(
             endpoint: string,
@@ -291,8 +377,8 @@ declare module 'superdesk-api' {
             filterValues: ICrudManagerFilters,
             formatFiltersForServer?: (filters: ICrudManagerFilters) => ICrudManagerFilters,
         ): Promise<IRestApiResponse<T>>;
-        patch<T>(endpoint, item1: T, item2: T): Promise<T>;
-        delete<T>(endpoint, item1: T): Promise<void>;
+        patch<T extends IBaseRestApiResponse>(endpoint, current: T, next: T): Promise<T>;
+        delete<T extends IBaseRestApiResponse>(endpoint, item: T): Promise<void>;
     }
 
 
@@ -304,6 +390,11 @@ declare module 'superdesk-api' {
         ui: {
             alert(message: string): Promise<void>;
             confirm(message: string): Promise<boolean>;
+        };
+        entities: {
+            article: {
+                update(nextArticle: IArticle): void;
+            };
         };
         components: {
             UserHtmlSingleLine: React.ComponentType<{html: string}>;

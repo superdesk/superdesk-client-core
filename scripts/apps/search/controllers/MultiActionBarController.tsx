@@ -81,7 +81,7 @@ export function MultiActionBarController(
 
         Promise.all(multi.getIds().map((id) => api.find('archive', id)))
             .then((imagesFromDatabase) => {
-                // <TECHNICAL DEBT>
+                // SDESK-4343
                 // UI state(`selected` property of the article) is stored on a database/API entity
                 // because of that, it's not possible to use the latest data from the API
                 // and it has to be patched on top of old data in order for UI state related properties to be preserved
@@ -93,7 +93,6 @@ export function MultiActionBarController(
                         originalImage[prop] = imageFromDb[prop];
                     }
                 });
-                // </TECHNICAL DEBT>
 
                 multiImageEdit.edit(originalImages, (editedImages) => Promise.all(
                     originalImages.map((image: IArticle) => authoring.save(

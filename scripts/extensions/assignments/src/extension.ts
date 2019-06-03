@@ -8,29 +8,40 @@ const extension: IExtension = {
             contributions: {
                 entities: {
                     article: {
-                        getActions: (item) => {
-                            const assignTo = {
-                                label: gettext('Assign to'),
+                        getActions: (articleNext) => {
+                            const markForUser = {
+                                label: gettext('Mark for user'),
+                                icon: 'icon-assign',
+                                onTrigger: () => {
+                                    superdesk.entities.article.update({
+                                        ...articleNext,
+                                        marked_for_user: '5b8e8193149f112ab9b9d974',
+                                    });
+                                },
+                            };
+
+                            const unmark = {
+                                label: gettext('Unmark'),
                                 icon: 'icon-assign',
                                 onTrigger: () => {
                                     console.log('test');
                                 },
                             };
 
-                            const unassign = {
-                                label: gettext('Unassign'),
+                            const markForOtherUser = {
+                                label: gettext('Mark for other user'),
                                 icon: 'icon-assign',
                                 onTrigger: () => {
                                     console.log('test');
                                 },
                             };
 
-                            const assigned = Object.keys(item).includes('assigned');
+                            const assigned = Object.keys(articleNext).includes('assigned');
 
                             if (assigned) {
-                                return Promise.resolve([unassign]);
+                                return Promise.resolve([unmark, markForOtherUser]);
                             } else {
-                                return Promise.resolve([assignTo]);
+                                return Promise.resolve([markForUser]);
                             }
                         },
                     },

@@ -1,4 +1,4 @@
-import {ISuperdesk, IExtensions} from 'superdesk-api';
+import {ISuperdesk, IExtensions, IExtensionActivationResult, IArticle} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {getGenericListPageComponent} from './ui/components/ListPage/generic-list-page';
 import {ListItem, ListItemColumn, ListItemActionsMenu} from './components/ListItem';
@@ -13,6 +13,37 @@ import {UserHtmlSingleLine} from './helpers/UserHtmlSingleLine';
 import {Row, Item, Column} from './ui/components/List';
 import {connectCrudManager, dataApi} from './helpers/CrudManager';
 import {generateFilterForServer} from './ui/components/generic-form/generate-filter-for-server';
+import {flatMap} from 'lodash';
+
+function getOnUpdateBeforeMiddlewares(
+    extensions: IExtensions,
+): Array<IExtensionActivationResult['contributions']['entities']['article']['onUpdateBefore']> {
+    return flatMap(
+        Object.values(extensions).map(({activationResult}) => activationResult),
+        (activationResult) =>
+            activationResult.contributions != null
+            && activationResult.contributions.entities != null
+            && activationResult.contributions.entities.article != null
+            && activationResult.contributions.entities.article.onUpdateBefore != null
+                ? activationResult.contributions.entities.article.onUpdateBefore
+                : [],
+    );
+}
+
+function getOnUpdateAfterFunctions(
+    extensions: IExtensions,
+): Array<IExtensionActivationResult['contributions']['entities']['article']['onUpdateAfter']> {
+    return flatMap(
+        Object.values(extensions).map(({activationResult}) => activationResult),
+        (activationResult) =>
+            activationResult.contributions != null
+            && activationResult.contributions.entities != null
+            && activationResult.contributions.entities.article != null
+            && activationResult.contributions.entities.article.onUpdateAfter != null
+                ? activationResult.contributions.entities.article.onUpdateAfter
+                : [],
+    );
+}
 
 export function getSuperdeskApiImplementation(
     requestingExtensionId: string,
@@ -22,6 +53,35 @@ export function getSuperdeskApiImplementation(
 ): ISuperdesk {
     return {
         dataApi: dataApi,
+        entities: {
+            article: {
+                update: (_articleNext) => {
+                    const __articleNext = {..._articleNext};
+
+                    // remove UI state property. It shoudln't be here in the first place,
+                    // but can't be removed easily. The line below should be removed when SDESK-4343 is done.
+                    delete __articleNext.selected;
+
+                    const onUpdateBeforeMiddlewares = getOnUpdateBeforeMiddlewares(extensions);
+
+                    onUpdateBeforeMiddlewares.reduce(
+                        (current, next) => current.then((result) => next(result)),
+                        Promise.resolve(__articleNext),
+                    ).then((articleNext) => {
+                        dataApi.findOne<IArticle>('archive', articleNext._id)
+                            .then((articleCurrent) => {
+                                dataApi.patch('archive', articleCurrent, articleNext).then((articleNextFromServer) => {
+                                    const onUpdateAfterFunctions = getOnUpdateAfterFunctions(extensions);
+
+                                    onUpdateAfterFunctions.forEach((fn) => {
+                                        fn(articleNextFromServer);
+                                    });
+                                });
+                            });
+                    });
+                },
+            },
+        },
         ui: {
             alert: (message: string) => modal.alert({bodyText: message}),
             confirm: (message: string) => new Promise((resolve) => {

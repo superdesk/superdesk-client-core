@@ -1,4 +1,4 @@
-import _, {flatMap} from 'lodash';
+import _ from 'lodash';
 
 import 'core/global-fixes';
 
