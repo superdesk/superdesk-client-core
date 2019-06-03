@@ -18,9 +18,9 @@ export function SubscriberTokenController($scope, api, $rootScope) {
             api.query('subscriber_token', {where: {subscriber: subscriber._id}})
                 .then((response) => {
                     this.tokens = response._items;
-                    $scope.$watch(() => this.tokens.length, (newVal, oldVal) => {
+                    $scope.$watchGroup([() => this.tokens.length, () => this.ttl], (newVal, oldVal) => {
                         if (newVal !== oldVal) {
-                            this.enableSave();
+                            $rootScope.$broadcast('subcriber: saveEnabled');
                         }
                     });
                 });
@@ -49,8 +49,6 @@ export function SubscriberTokenController($scope, api, $rootScope) {
      */
     this.revoke = (token) =>
         api.remove(token).then(fetchTokens);
-
-    this.enableSave = () => $rootScope.$broadcast('subcriber: saveEnabled');
 
     /**
      * @ngdoc property
