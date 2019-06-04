@@ -254,9 +254,13 @@ $editor-styleButton-size: 3rem;
 	}
 	
 	.table-block {
+		table td {
+			font-weight: 300;
+		}
 		&.table-header {
 			tr:first-child td {
 				background-color: rgba(150,150,150,0.2);
+				font-weight: 500;
 			}
 		}
 
