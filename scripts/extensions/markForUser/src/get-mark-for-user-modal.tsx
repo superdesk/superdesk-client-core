@@ -41,6 +41,13 @@ export function getMarkForUserModal(superdesk: ISuperdesk, articleNext: IArticle
                     </ModalBody>
                     <ModalFooter>
                         <button
+                            className="btn"
+                            onClick={() => this.props.closeModal()}
+                        >
+                            {gettext('Cancel')}
+                        </button>
+
+                        <button
                             className="btn btn--primary"
                             disabled={this.state.selectedUserId === undefined}
                             onClick={() => {
