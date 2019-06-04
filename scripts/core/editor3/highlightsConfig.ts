@@ -23,15 +23,16 @@ export const highlightsConfig = {
         type: 'CHANGE',
         description: gettext('Add'),
         draftStyleMap: {
-            color: 'rgba(0, 180, 0, 1.0)',
+            color: 'rgba(101, 156, 8, 1.0)',
         },
     },
     DELETE_SUGGESTION: {
         type: 'CHANGE',
         description: gettext('Remove'),
         draftStyleMap: {
-            color: 'rgba(255, 0, 0, 1.0)',
+            color: 'rgba(143, 43, 196, 1.0)',
             textDecoration: 'line-through',
+            backgroundColor: 'rgba(143, 43, 196, 0.1)',
         },
     },
     TOGGLE_BOLD_SUGGESTION: {
