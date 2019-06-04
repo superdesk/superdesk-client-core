@@ -1,4 +1,5 @@
 import {ISuperdesk, IExtension} from 'superdesk-api';
+import {getMarkForUserModal} from './get-mark-for-user-modal';
 
 const extension: IExtension = {
     activate: (superdesk: ISuperdesk) => {
@@ -13,10 +14,7 @@ const extension: IExtension = {
                                 label: gettext('Mark for user'),
                                 icon: 'icon-assign',
                                 onTrigger: () => {
-                                    superdesk.entities.article.update({
-                                        ...articleNext,
-                                        marked_for_user: '5b8e8193149f112ab9b9d974',
-                                    });
+                                    superdesk.ui.showModal(getMarkForUserModal(superdesk, articleNext));
                                 },
                             };
 
@@ -36,7 +34,7 @@ const extension: IExtension = {
                                 },
                             };
 
-                            const assigned = Object.keys(articleNext).includes('assigned');
+                            const assigned = Object.keys(articleNext).includes('marked_for_user');
 
                             if (assigned) {
                                 return Promise.resolve([unmark, markForOtherUser]);
