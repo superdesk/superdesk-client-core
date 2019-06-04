@@ -1,4 +1,4 @@
-import {IUser} from './User';
+import {IUser} from "superdesk-api";
 
 export interface ISession {
     identity: IUser;

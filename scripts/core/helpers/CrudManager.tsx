@@ -15,6 +15,7 @@ import {
 } from 'superdesk-api';
 
 export const dataApi: IDataApi = {
+    findOne: (endpoint, id) => ng.getService('api').then((api) => api(endpoint).getById(id)),
     create: (endpoint, item) => ng.getService('api').then((api) => api(endpoint).save(item)),
     query: (
         endpoint: string,

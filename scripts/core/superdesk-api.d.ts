@@ -334,7 +334,7 @@ declare module 'superdesk-api' {
     }
 
     export interface IPropsModalHeader {
-        onClose(): void;
+        onClose?(): void;
     }
 
     export interface IGenericListPageComponent<T extends IBaseRestApiResponse> {

@@ -13,7 +13,7 @@ import {ItemPhotoGrid} from './ItemPhotoGrid';
 import {ListItemTemplate} from './ItemListTemplate';
 import {ItemMgridTemplate} from './ItemMgridTemplate';
 import {IArticle} from 'superdesk-interfaces/Article';
-import {IDesk} from 'superdesk-interfaces/Desk';
+import {IDesk} from 'superdesk-api';
 
 const CLICK_TIMEOUT = 300;
 

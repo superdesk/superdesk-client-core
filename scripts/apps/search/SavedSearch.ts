@@ -1,10 +1,9 @@
-import {IUser} from 'superdesk-interfaces/User';
-import {IDesk} from 'superdesk-interfaces/Desk';
 import {CronTimeInterval} from 'types/DataStructures/TimeInterval';
 
 import {forOwn} from 'lodash';
 import {mapPredefinedDateFiltersClientToServer} from 'apps/search/directives/DateFilters';
 import {setFilters} from './services/SearchService';
+import {IUser, IDesk} from 'superdesk-api';
 
 export interface IUserSubscription {
     user: IUser['_id'];
