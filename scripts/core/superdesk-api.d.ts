@@ -141,7 +141,7 @@ declare module 'superdesk-api' {
         onstage_macro: string;
     }
 
-    export interface IUser {
+    export interface IUser extends IBaseRestApiResponse {
         _id: string;
         username: string;
         password: string;
@@ -333,6 +333,9 @@ declare module 'superdesk-api' {
         noBorder?: boolean;
     }
 
+    export interface IPropsModalHeader {
+        onClose(): void;
+    }
 
     export interface IGenericListPageComponent<T extends IBaseRestApiResponse> {
         openPreview(id: string): void;
@@ -344,6 +347,11 @@ declare module 'superdesk-api' {
         closeNewItemForm(): void;
         deleteItem(item: T): void;
         removeFilter(fieldName: string): void;
+    }
+
+    interface IPropsSelectUser {
+        onSelect(user: IUser): void;
+        value?: IUser;
     }
 
 
@@ -390,6 +398,7 @@ declare module 'superdesk-api' {
         ui: {
             alert(message: string): Promise<void>;
             confirm(message: string): Promise<boolean>;
+            showModal(component: React.ComponentType<{closeModal(): void}>): Promise<void>;
         };
         entities: {
             article: {
@@ -411,7 +420,12 @@ declare module 'superdesk-api' {
                 Item: React.ComponentType<{onClick: any}>;
                 Row: React.ComponentType;
                 Column: React.ComponentType<{grow: boolean}>;
-            }
+            },
+            Modal: React.ComponentType;
+            ModalHeader: React.ComponentType<IPropsModalHeader>;
+            ModalBody: React.ComponentType;
+            ModalFooter: React.ComponentType;
+            SelectUser: React.ComponentType<IPropsSelectUser>;
         };
         forms: {
             FormFieldType: typeof FormFieldType;

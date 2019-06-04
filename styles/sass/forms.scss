@@ -1250,3 +1250,13 @@ input {
         margin-left: 1.2rem!important;  // line_input has margin-left: 0
     }
 }
+
+.sd-line-input__select-custom {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    background: transparent!important;
+    border: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+}
