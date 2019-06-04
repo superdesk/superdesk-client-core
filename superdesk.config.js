@@ -32,5 +32,10 @@ module.exports = function(grunt) {
         enabledExtensions: {
             // extensionFolderName: 1,
         },
+        monitoring: {
+			customSortOfGroups: {
+                stage: [ 'headline' ]
+            }
+        },
     };
 };

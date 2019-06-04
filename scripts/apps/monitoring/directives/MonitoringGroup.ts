@@ -1,6 +1,19 @@
 /* eslint-disable complexity */
 import _ from 'lodash';
-import getCustomSortForGroup, {GroupSortOptions, DEFAULT_SORT_FIELD} from '../helpers/CustomSortOfGroups';
+import getCustomSortForGroup, {GroupSortOptions, USE_DEFAULT_SORT_FIELD} from '../helpers/CustomSortOfGroups';
+import {GET_LABEL_MAP} from '../../workspace/content/constants';
+
+const translatedFields = GET_LABEL_MAP();
+
+function translateCustomSorts(customSorts: GroupSortOptions) {
+    const translated = {};
+
+    for (let field of customSorts) {
+        translated[field] = {label: translatedFields[field]};
+    }
+
+    return translated;
+}
 
 export type StageGroup = {
     _id?: any;
@@ -38,8 +51,9 @@ interface IScope extends ng.IScope {
     currentGroup: any;
     fetchNext(i: number): any;
     refreshGroup(): void;
-    customSortOptions: GroupSortOptions;
+    customSortOptions: { [field: string]: { label: string } };
     customSortOptionActive?: { field: string, order: 'asc' | 'desc' };
+    customSortOptionActiveDefault: string;
 
     hideActionsForMonitoringItems: boolean;
     disableMonitoringMultiSelect: boolean;
@@ -121,14 +135,15 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
 
             ITEM_HEIGHT = search.singleLine ? 29 : 57;
 
-            const customSort = getCustomSortForGroup(config, scope.group);
+            const customSorts = getCustomSortForGroup(config, scope.group);
 
-            if (customSort) {
-                scope.customSortOptions = {
-                    ...customSort,
-                    [DEFAULT_SORT_FIELD]: {label: gettext('Default')},
+            if (customSorts) {
+                scope.customSortOptions = translateCustomSorts(customSorts);
+                scope.customSortOptionActive = {
+                    field: USE_DEFAULT_SORT_FIELD,
+                    order: 'desc',
                 };
-                scope.customSortOptionActive = {field: DEFAULT_SORT_FIELD, order: 'desc'};
+                scope.customSortOptionActiveDefault = USE_DEFAULT_SORT_FIELD;
             }
 
             scope.page = 1;
@@ -139,7 +154,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             scope.cachePreviousItems = [];
             scope.viewColumn = monitoring.viewColumn;
 
-            scope.$on('view:column', (event, data) => {
+            scope.$on('view:column', (_event, data) => {
                 scope.$applyAsync(() => {
                     scope.viewColumn = data.viewColumn;
                 });
@@ -520,7 +535,8 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                         }
 
                         // custom sort for group (if it exists)
-                        if (scope.customSortOptionActive && scope.customSortOptionActive.field !== DEFAULT_SORT_FIELD) {
+                        if (scope.customSortOptionActive &&
+                            scope.customSortOptionActive.field !== USE_DEFAULT_SORT_FIELD) {
                             criteria.source.sort =
                                 [{[scope.customSortOptionActive.field]: scope.customSortOptionActive.order}];
                         }
@@ -569,7 +585,10 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             }
 
             scope.selectCustomSortOption = function(field: string) {
-                scope.customSortOptionActive = {field, order: 'desc'};
+                scope.customSortOptionActive = {
+                    field,
+                    order: 'desc'
+                };
                 queryItems();
             };
 

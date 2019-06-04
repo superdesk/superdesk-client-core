@@ -27,16 +27,20 @@
         <div class="sortbar" ng-show="customSortOptions">
             <div class="dropdown dropdown--align-right dropdown--hover" dropdown__toggle>
                 <button id="order_button" class="dropdown__toggle" dropdown__toggle>
-                    <span>{{ customSortOptions[customSortOptionActive].label }}</span>
+                    <span ng-if="!customSortOptionActive.field" translate>Default</span>
+                    <span ng-if="customSortOptionActive.field">{{ customSortOptions[customSortOptionActive.field].label }}</span>
                     <span class="dropdown__caret"></span>
                 </button>
                 <ul class="dropdown__menu">
+                    <li>
+                        <button ng-click="selectCustomSortOption(customSortOptionActiveDefault)" translate>Default</button>
+                    </li>
                     <li ng-repeat="(field, option) in customSortOptions">
                         <button ng-click="selectCustomSortOption(field)">{{ option.label }}</button>
                     </li>
                 </ul>
             </div>
-            <button ng-click="toggleCustomSortOrder()" class="icn-btn direction" title="{{customSortOptionActive.order}}">
+            <button ng-click="toggleCustomSortOrder()" class="icn-btn direction" title="{{customSortOptionActive.order}}" ng-if="customSortOptionActive.field">
                 <i class="icon-ascending" ng-if="customSortOptionActive.order === 'asc'"></i>
                 <i class="icon-descending" ng-if="customSortOptionActive.order === 'desc'"></i>
             </button>
