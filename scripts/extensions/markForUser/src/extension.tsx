@@ -22,7 +22,10 @@ const extension: IExtension = {
                                 label: gettext('Unmark'),
                                 icon: 'icon-assign',
                                 onTrigger: () => {
-                                    console.log('test');
+                                    superdesk.entities.article.update({
+                                        ...articleNext,
+                                        marked_for_user: null,
+                                    });
                                 },
                             };
 
@@ -30,11 +33,11 @@ const extension: IExtension = {
                                 label: gettext('Mark for other user'),
                                 icon: 'icon-assign',
                                 onTrigger: () => {
-                                    console.log('test');
+                                    superdesk.ui.showModal(getMarkForUserModal(superdesk, articleNext));
                                 },
                             };
 
-                            const assigned = Object.keys(articleNext).includes('marked_for_user');
+                            const assigned = articleNext.marked_for_user != null;
 
                             if (assigned) {
                                 return Promise.resolve([unmark, markForOtherUser]);

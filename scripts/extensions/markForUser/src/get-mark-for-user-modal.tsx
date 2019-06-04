@@ -7,7 +7,7 @@ interface IProps {
 }
 
 interface IState {
-    selectedUser?: IUser;
+    selectedUserId?: string;
     fetchedUsers?: Array<IUser>;
 }
 
@@ -25,7 +25,9 @@ export function getMarkForUserModal(superdesk: ISuperdesk, articleNext: IArticle
         constructor(props: IProps) {
             super(props);
 
-            this.state = {};
+            this.state = {
+                selectedUserId: articleNext.marked_for_user != null ? articleNext.marked_for_user : undefined,
+            };
         }
         render() {
             return (
@@ -33,23 +35,21 @@ export function getMarkForUserModal(superdesk: ISuperdesk, articleNext: IArticle
                     <ModalHeader onClose={this.props.closeModal}>{gettext('Mark for user')}</ModalHeader>
                     <ModalBody>
                         <SelectUser
-                            onSelect={(selectedUser) => this.setState({selectedUser})}
-                            value={this.state.selectedUser}
+                            onSelect={(selectedUser) => this.setState({selectedUserId: selectedUser._id})}
+                            selectedUserId={this.state.selectedUserId}
                         />
                     </ModalBody>
                     <ModalFooter>
                         <button
                             className="btn btn--primary"
-                            disabled={this.state.selectedUser == null}
+                            disabled={this.state.selectedUserId === undefined}
                             onClick={() => {
                                 this.props.closeModal();
 
-                                if (this.state.selectedUser !== undefined) {
-                                    superdesk.entities.article.update({
-                                        ...articleNext,
-                                        marked_for_user: this.state.selectedUser._id,
-                                    });
-                                }
+                                superdesk.entities.article.update({
+                                    ...articleNext,
+                                    marked_for_user: this.state.selectedUserId,
+                                });
                             }}
                         >
                             {gettext('Confirm')}

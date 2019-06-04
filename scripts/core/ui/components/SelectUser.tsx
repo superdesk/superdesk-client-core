@@ -37,7 +37,7 @@ export class SelectUser extends React.Component<IPropsSelectUser, IState> {
         return (
             <Select2
                 placeholder={gettext('Select a user')}
-                value={this.props.value != null ? this.props.value._id : undefined}
+                value={this.props.selectedUserId == null ? undefined : this.props.selectedUserId}
                 items={keyedUsers}
                 getItemValue={(user) => user._id}
                 getItemLabel={(user) => user.display_name}

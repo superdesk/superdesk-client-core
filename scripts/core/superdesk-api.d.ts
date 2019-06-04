@@ -106,7 +106,7 @@ declare module 'superdesk-api' {
         assignment_id?: string;
 
         // markForUser extension
-        marked_for_user?: string;
+        marked_for_user?: string | null;
     }
 
     export interface IUserRole extends IBaseRestApiResponse {
@@ -351,7 +351,7 @@ declare module 'superdesk-api' {
 
     interface IPropsSelectUser {
         onSelect(user: IUser): void;
-        value?: IUser;
+        selectedUserId?: string;
     }
 
 
