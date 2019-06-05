@@ -31,7 +31,7 @@ declare module 'superdesk-api' {
     export type IDisplayPriority = number;
 
     export interface IArticleAction {
-        groupLabel?: string;
+        labelForGroup?: string;
         priority?: IDisplayPriority;
         icon?: string;
         label: string;

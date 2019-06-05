@@ -1,4 +1,4 @@
-import {ISuperdesk, IExtension} from 'superdesk-api';
+import {ISuperdesk, IExtension, IArticleAction} from 'superdesk-api';
 import {getMarkForUserModal} from './get-mark-for-user-modal';
 
 const extension: IExtension = {
@@ -10,16 +10,18 @@ const extension: IExtension = {
                 entities: {
                     article: {
                         getActions: (articleNext) => {
-                            const markForUser = {
+                            const markForUser: IArticleAction = {
                                 label: gettext('Mark for user'),
+                                labelForGroup: gettext('Relations'),
                                 icon: 'icon-assign',
                                 onTrigger: () => {
                                     superdesk.ui.showModal(getMarkForUserModal(superdesk, articleNext));
                                 },
                             };
 
-                            const unmark = {
+                            const unmark: IArticleAction = {
                                 label: gettext('Unmark'),
+                                labelForGroup: gettext('Relations'),
                                 icon: 'icon-assign',
                                 onTrigger: () => {
                                     superdesk.entities.article.update({
@@ -29,8 +31,9 @@ const extension: IExtension = {
                                 },
                             };
 
-                            const markForOtherUser = {
+                            const markForOtherUser: IArticleAction = {
                                 label: gettext('Mark for other user'),
+                                labelForGroup: gettext('Relations'),
                                 icon: 'icon-assign',
                                 onTrigger: () => {
                                     superdesk.ui.showModal(getMarkForUserModal(superdesk, articleNext));

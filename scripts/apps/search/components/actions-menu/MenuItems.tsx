@@ -125,16 +125,35 @@ export default class MenuItems extends React.Component<IProps, IState> {
             }>;
         } = {};
 
+        // convert IDs to labels so extensions can use meaningful names
+        const getGroupLabelFromId = (id: string) => {
+            switch (id) {
+                case 'corrections':
+                    return gettext('Corrections');
+                case 'highlights':
+                    return gettext('Relations');
+                case 'packaging':
+                    return gettext('Packages');
+                default:
+                    return 'default';
+            }
+        };
+
         AUTHORING_MENU_GROUPS.forEach((group) => {
+            const groupIdForLabel = group._id === 'duplicate' ? 'default' : group._id;
+            const groupLabel = getGroupLabelFromId(groupIdForLabel);
+
             if (actions[group._id]) {
-                groupedItems[group._id] = [];
+                if (groupedItems[groupLabel] == null) {
+                    groupedItems[groupLabel] = [];
+                }
 
                 if (group.concate) {
                     const submenu = actions[group._id].map((action) => createAction(action));
 
-                    groupedItems[group._id].push({
+                    groupedItems[groupLabel].push({
                         element: (
-                            <li key={`group-label-${group._id}`}>
+                            <li key={`group-label-${groupLabel}`}>
                                 <SubmenuDropdown
                                     label={gettext(group.label)}
                                     submenu={submenu}
@@ -147,7 +166,7 @@ export default class MenuItems extends React.Component<IProps, IState> {
                 }
 
                 actions[group._id].map(createAction).forEach((element) => {
-                    groupedItems[group._id].push({
+                    groupedItems[groupLabel].push({
                         element,
                     });
                 });
@@ -155,16 +174,17 @@ export default class MenuItems extends React.Component<IProps, IState> {
         });
 
         // adding menu items for the groups that are not defined above
-        Object.keys(actions).forEach((groupName) => {
-            const existingGroup = AUTHORING_MENU_GROUPS.find((g) => g._id === groupName);
+        Object.keys(actions).forEach((groupId) => {
+            const groupLabel = getGroupLabelFromId(groupId);
+            const existingGroup = AUTHORING_MENU_GROUPS.find((g) => g._id === groupId);
 
             if (!existingGroup) {
-                if (groupedItems[groupName] == null) {
-                    groupedItems[groupName] = [];
+                if (groupedItems[groupLabel] == null) {
+                    groupedItems[groupLabel] = [];
                 }
 
-                actions[groupName].map(createAction).forEach((element) => {
-                    groupedItems[groupName].push({element});
+                actions[groupId].map(createAction).forEach((element) => {
+                    groupedItems[groupLabel].push({element});
                 });
             }
         });
@@ -180,17 +200,17 @@ export default class MenuItems extends React.Component<IProps, IState> {
             );
             const {priority} = action;
 
-            if (action.groupLabel == null) {
+            if (action.labelForGroup == null) {
                 if (groupedItems['default'] == null) {
                     groupedItems['default'] = [];
                 }
                 groupedItems['default'].push({element, priority});
             } else {
-                if (groupedItems[action.groupLabel] == null) {
-                    groupedItems[action.groupLabel] = [];
+                if (groupedItems[action.labelForGroup] == null) {
+                    groupedItems[action.labelForGroup] = [];
                 }
 
-                groupedItems[action.groupLabel].push({element, priority});
+                groupedItems[action.labelForGroup].push({element, priority});
             }
         });
 
