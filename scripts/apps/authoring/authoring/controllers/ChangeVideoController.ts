@@ -138,7 +138,9 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
                                 {
                                     $scope.data.item = angular.extend($scope.data.item, response._id);
                                     $scope.listFrames = null;
-                                    loadListThumbnails(); 
+                                    $scope.video.height = item.metadata.height;
+                                    $scope.video.width = item.metadata.width;
+                                    loadListThumbnails();
                                     videoEditing.classList.remove('video-loading');
                                 }
                             }
@@ -293,25 +295,22 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
                     $scope.qualityVideo.is120 = true;
                 }
             }
-            if (jcrop_api) {                
+
+            $('#video').Jcrop({
+                onSelect: showCoords,
+                onchange: showCoords,
+                //aspectRatio: null,
+                minSize: [30, 30],
+                //trueSize: [video.clientWidth, video.clientHeight],
+                addClass: 'jcrop-dark',
+                bgOpacity: .4
+
+            }, function () {
+                jcrop_api = this;
+            });
+            if (jcrop_api) {
                 jcrop_api.release();
                 jcrop_api.disable();
-                jcrop_api = $scope.video;
-            }
-            else
-            {
-                $('#video').Jcrop({
-                    onSelect: showCoords,
-                    onchange: showCoords,
-                    //aspectRatio: null,
-                    minSize: [30, 30],
-                    //trueSize: [video.clientWidth, video.clientHeight],
-                    addClass: 'jcrop-dark',
-                    bgOpacity: .4
-
-                }, function () {
-                    jcrop_api = this;
-                });
             }
             $scope.video.controls = null;
         }
@@ -663,6 +662,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
             elem.className += ' ' + className;
         }
     }
+    
 
     function showCoords(c) {
         // variables can be accessed here as

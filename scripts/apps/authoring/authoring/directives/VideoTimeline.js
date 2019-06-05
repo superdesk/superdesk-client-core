@@ -228,6 +228,7 @@ export function VideoTimeline() {
                             video.className = 'loaded';
                         }
                         inner_frames.append(video);
+                        
                     }
                 }
 
