@@ -28,6 +28,23 @@ const arrowDownStyles = {
     opacity: 0.3,
 };
 
+// copied from https://github.com/reactjs/react-autocomplete/blob/master/lib/Autocomplete.js#L178
+const menuStyleDefault: React.CSSProperties = {
+    borderRadius: '3px',
+    boxShadow: '0 2px 12px rgba(0, 0, 0, 0.1)',
+    background: 'rgba(255, 255, 255, 0.9)',
+    padding: '2px 0',
+    fontSize: '90%',
+    position: 'fixed',
+    overflow: 'auto',
+    maxHeight: '50%',
+};
+
+const menuStyle = {
+    ...menuStyleDefault,
+    zIndex: 1, // without z-index, items that have opacity set, appear on top of the menu
+};
+
 export class Select2<T> extends React.Component<IProps<T>, IState> {
     state = {search: ''};
 
@@ -42,6 +59,7 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                 value={this.props.value}
                 items={filteredItems}
                 wrapperStyle={{}}
+                menuStyle={menuStyle}
                 renderInput={(propsAutocomplete: any) => {
                     const selectedItem = this.props.items[this.props.value];
 
