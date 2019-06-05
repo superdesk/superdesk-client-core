@@ -20,7 +20,7 @@ const extension: IExtension = {
                             };
 
                             const unmark: IArticleAction = {
-                                label: gettext('Unmark'),
+                                label: gettext('Unmark user'),
                                 labelForGroup: gettext('Relations'),
                                 icon: 'icon-assign',
                                 onTrigger: () => {
