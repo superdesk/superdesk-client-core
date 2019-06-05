@@ -587,7 +587,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             scope.selectCustomSortOption = function(field: string) {
                 scope.customSortOptionActive = {
                     field,
-                    order: 'desc'
+                    order: 'desc',
                 };
                 queryItems();
             };
