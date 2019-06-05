@@ -192,7 +192,10 @@ export default class MenuItems extends React.Component<IProps, IState> {
         this.state.actionsFromExtensions.forEach((action, i) => {
             const element = (
                 <li key={`extension-item-${i}`}>
-                    <button onClick={action.onTrigger}>
+                    <button onClick={() => {
+                        closeActionsMenu(this.props.item._id);
+                        action.onTrigger();
+                    }}>
                         {action.icon == null ? null : <i className={action.icon} />}
                         {action.label}
                     </button>
