@@ -2,7 +2,6 @@ import {get} from 'lodash';
 import {StageGroup} from '../directives/MonitoringGroup';
 
 export const CUSTOM_SORT_SETTING = 'monitoring.customSortOfGroups';
-export const USE_DEFAULT_SORT_FIELD = null;
 
 export type GroupSortOptions = Array<string>;
 

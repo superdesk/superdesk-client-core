@@ -1,6 +1,6 @@
 /* eslint-disable complexity */
 import _ from 'lodash';
-import getCustomSortForGroup, {GroupSortOptions, USE_DEFAULT_SORT_FIELD} from '../helpers/CustomSortOfGroups';
+import getCustomSortForGroup, {GroupSortOptions} from '../helpers/CustomSortOfGroups';
 import {GET_LABEL_MAP} from '../../workspace/content/constants';
 
 const translatedFields = GET_LABEL_MAP();
@@ -53,7 +53,6 @@ interface IScope extends ng.IScope {
     refreshGroup(): void;
     customSortOptions: { [field: string]: { label: string } };
     customSortOptionActive?: { field: string, order: 'asc' | 'desc' };
-    customSortOptionActiveDefault: string;
 
     hideActionsForMonitoringItems: boolean;
     disableMonitoringMultiSelect: boolean;
@@ -139,11 +138,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
 
             if (customSorts) {
                 scope.customSortOptions = translateCustomSorts(customSorts);
-                scope.customSortOptionActive = {
-                    field: USE_DEFAULT_SORT_FIELD,
-                    order: 'desc',
-                };
-                scope.customSortOptionActiveDefault = USE_DEFAULT_SORT_FIELD;
+                scope.customSortOptionActive = null; // default
             }
 
             scope.page = 1;
@@ -535,8 +530,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                         }
 
                         // custom sort for group (if it exists)
-                        if (scope.customSortOptionActive &&
-                            scope.customSortOptionActive.field !== USE_DEFAULT_SORT_FIELD) {
+                        if (scope.customSortOptionActive) {
                             criteria.source.sort =
                                 [{[scope.customSortOptionActive.field]: scope.customSortOptionActive.order}];
                         }
@@ -584,11 +578,19 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                     });
             }
 
-            scope.selectCustomSortOption = function(field: string) {
-                scope.customSortOptionActive = {
-                    field,
-                    order: 'desc',
-                };
+            scope.selectDefaultSortOption = function() {
+                scope.selectCustomSortOption(null);
+            };
+
+            scope.selectCustomSortOption = function(field: string | null) {
+                if (field === null) {
+                    scope.customSortOptionActive = null;
+                } else {
+                    scope.customSortOptionActive = {
+                        field,
+                        order: 'desc',
+                    };
+                }
                 queryItems();
             };
 
