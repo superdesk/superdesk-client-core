@@ -41,7 +41,7 @@ export const editor3StateToHtml = (
                     } else if (link.target != null) {
                         return {
                             element: 'a',
-                            attributes: {href: link.target, target: link.target},
+                            attributes: {href: link.href, target: link.target},
                         };
                     } else {
                         return {
