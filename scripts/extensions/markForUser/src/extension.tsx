@@ -1,5 +1,6 @@
-import {ISuperdesk, IExtension, IArticleAction} from 'superdesk-api';
+import {ISuperdesk, IExtension, IArticleAction, IArticle} from 'superdesk-api';
 import {getMarkForUserModal} from './get-mark-for-user-modal';
+import { uniq } from 'lodash';
 
 const extension: IExtension = {
     activate: (superdesk: ISuperdesk) => {
@@ -15,7 +16,12 @@ const extension: IExtension = {
                                 labelForGroup: gettext('Relations'),
                                 icon: 'icon-assign',
                                 onTrigger: () => {
-                                    superdesk.ui.showModal(getMarkForUserModal(superdesk, articleNext));
+                                    superdesk.ui.showModal(getMarkForUserModal(superdesk, (selectedUserId) => {
+                                        superdesk.entities.article.update({
+                                            ...articleNext,
+                                            marked_for_user: selectedUserId,
+                                        });
+                                    }));
                                 },
                             };
 
@@ -36,7 +42,12 @@ const extension: IExtension = {
                                 labelForGroup: gettext('Relations'),
                                 icon: 'icon-assign',
                                 onTrigger: () => {
-                                    superdesk.ui.showModal(getMarkForUserModal(superdesk, articleNext));
+                                    superdesk.ui.showModal(getMarkForUserModal(superdesk, (selectedUserId) => {
+                                        superdesk.entities.article.update({
+                                            ...articleNext,
+                                            marked_for_user: selectedUserId,
+                                        });
+                                    }, articleNext.marked_for_user));
                                 },
                             };
 
@@ -47,6 +58,32 @@ const extension: IExtension = {
                             } else {
                                 return Promise.resolve([markForUser]);
                             }
+                        },
+                        getActionsBulk: (_, articles: Array<IArticle>) => {
+                            const selectedUserIds = uniq(
+                                articles
+                                    .map((item) => item.marked_for_user)
+                                    .filter((marked_for_user) => marked_for_user != null),
+                            );
+
+                            const message = selectedUserIds.length > 1
+                                ? gettext('Items are marked for different users')
+                                : undefined;
+
+                            return Promise.resolve([{
+                                label: gettext('Mark for users'),
+                                icon: 'icon-assign',
+                                onTrigger: () => {
+                                    superdesk.ui.showModal(getMarkForUserModal(superdesk, (selectedUserId) => {
+                                        articles.forEach((article) => {
+                                            superdesk.entities.article.update({
+                                                ...article,
+                                                marked_for_user: selectedUserId,
+                                            });
+                                        });
+                                    }, selectedUserIds.length > 1 ? undefined : selectedUserIds[0], message));
+                                },
+                            }]);
                         },
                     },
                 },

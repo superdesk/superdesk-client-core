@@ -11,7 +11,12 @@ interface IState {
     fetchedUsers?: Array<IUser>;
 }
 
-export function getMarkForUserModal(superdesk: ISuperdesk, articleNext: IArticle): React.ComponentType<IProps> {
+export function getMarkForUserModal(
+    superdesk: ISuperdesk,
+    onUpdate: (markedForUserId: string) => void,
+    markedForUserId?: string,
+    message?: string,
+): React.ComponentType<IProps> {
     const {gettext} = superdesk.localization;
     const {
         Modal,
@@ -26,7 +31,7 @@ export function getMarkForUserModal(superdesk: ISuperdesk, articleNext: IArticle
             super(props);
 
             this.state = {
-                selectedUserId: articleNext.marked_for_user != null ? articleNext.marked_for_user : undefined,
+                selectedUserId: markedForUserId,
             };
         }
         render() {
@@ -34,6 +39,16 @@ export function getMarkForUserModal(superdesk: ISuperdesk, articleNext: IArticle
                 <Modal>
                     <ModalHeader onClose={this.props.closeModal}>{gettext('Mark for user')}</ModalHeader>
                     <ModalBody>
+                        {
+                            message == null ? null : (
+                                <div
+                                    className="sd-alert sd-alert--hollow sd-alert--primary sd-alert--small"
+                                >
+                                    {message}
+                                </div>
+                            )
+                        }
+
                         <SelectUser
                             onSelect={(selectedUser) => this.setState({selectedUserId: selectedUser._id})}
                             selectedUserId={this.state.selectedUserId}
@@ -53,10 +68,7 @@ export function getMarkForUserModal(superdesk: ISuperdesk, articleNext: IArticle
                             onClick={() => {
                                 this.props.closeModal();
 
-                                superdesk.entities.article.update({
-                                    ...articleNext,
-                                    marked_for_user: this.state.selectedUserId,
-                                });
+                                onUpdate(this.state.selectedUserId);
                             }}
                         >
                             {gettext('Confirm')}

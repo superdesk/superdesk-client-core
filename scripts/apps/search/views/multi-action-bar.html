@@ -6,6 +6,10 @@
           translate-n="multi.count"
           translate-plural="{{ multi.count}} Items selected">{{ multi.count}} Item selected</span>
 
+    <div class="pull-right">
+        <sd-multi-action-bar-from-extensions articles="multi.getItems()" hide-multi-action-bar="hideMultiActionBar"></sd-multi-action-bar-from-extensions>
+    </div>
+
     <div class="pull-right" ng-if="action.canPackageItems() && (!elementState || elementState === 'comfort')">
         <button class="navbtn strict" ng-click="action.createPackage()" title="{{ :: 'Create Package' | translate }}">
             <i class="big-icon--create-package"></i>

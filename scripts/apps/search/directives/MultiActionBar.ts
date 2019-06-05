@@ -20,6 +20,10 @@ export function MultiActionBar(asset, multi, authoringWorkspace, superdesk, keyb
                 scope.display = !scope.display;
             };
 
+            scope.hideMultiActionBar = () => {
+                scope.display = false;
+            };
+
             scope.$on('item:lock', (_e, data) => {
                 if (_.includes(multi.getIds(), data.item)) {
                     // locked item is in the selections so update lock info
