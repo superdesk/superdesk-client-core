@@ -58,6 +58,7 @@ interface IScope extends ng.IScope {
     disableMonitoringMultiSelect: boolean;
     onMonitoringItemSelect(): void;
     onMonitoringItemDoubleClick(): void;
+    selectDefaultSortOption(): void;
     selectCustomSortOption(field: string): void;
     toggleCustomSortOrder(): void;
 }
