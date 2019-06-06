@@ -1,16 +1,20 @@
 import React from "react";
+
 import { IExtensionActivationResult, IArticleActionBulk } from "superdesk-api";
-import { flatMap } from "lodash";
-import { extensions } from "core/extension-imports.generated";
-import { IArticle } from "superdesk-interfaces/Article";
+import {flatMap} from "lodash";
+import {extensions} from "core/extension-imports.generated";
+import {IArticle} from "superdesk-interfaces/Article";
 
 interface IProps {
+    context: 'archive' | 'ingest';
     articles: Array<IArticle>;
+    compact: boolean;
+    getCoreActions(): Array<IArticleActionBulk>;
     hideMultiActionBar(): void;
 }
 
 interface IState {
-    actionsBulkFromExtensions?: Array<IArticleActionBulk>;
+    actions?: Array<IArticleActionBulk>;
 }
 
 function getActionsBulk(articles): Promise<Array<IArticleActionBulk>> {
@@ -32,7 +36,7 @@ function getActionsBulk(articles): Promise<Array<IArticleActionBulk>> {
     ).then((res) => flatMap(res));
 }
 
-export class MultiActionBarOptions extends React.Component<IProps, IState> {
+export class MultiActionBarReact extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
 
@@ -41,7 +45,7 @@ export class MultiActionBarOptions extends React.Component<IProps, IState> {
     componentDidMount() {
         getActionsBulk(this.props.articles).then((actionsBulkFromExtensions) => {
             this.setState({
-                actionsBulkFromExtensions,
+                actions: [].concat(actionsBulkFromExtensions).concat(this.props.getCoreActions()),
             });
         });
     }
@@ -50,23 +54,23 @@ export class MultiActionBarOptions extends React.Component<IProps, IState> {
         if (prevProps !== this.props) {
             getActionsBulk(this.props.articles).then((actionsBulkFromExtensions) => {
                 this.setState({
-                    actionsBulkFromExtensions,
+                    actions: [].concat(actionsBulkFromExtensions).concat(this.props.getCoreActions()),
                 });
             });
         }
     }
     render() {
-        if (this.state.actionsBulkFromExtensions == null) {
+        if (this.state.actions == null) {
             return null;
         }
 
         return (
             <div>
                 {
-                    this.state.actionsBulkFromExtensions.map((menuItem, i) => (
+                    this.state.actions.map((menuItem, i) => (
                         <button
                             onClick={() => {
-                                this.props.hideMultiActionBar();
+                                // this.props.hideMultiActionBar(); // multi edit needs to read selected items
                                 menuItem.onTrigger();
                             }}
                             className="navbtn strict"

@@ -1,3 +1,5 @@
+<div sd-export ng-if="export"></div>
+
 <div class="multi-action-bar" ng-if="multi.count && display">
     <button class="toggle" ng-click="toggleDisplay()"><i class="icon-chevron-up-thin"></i></button>
     <button class="btn" ng-click="multi.reset()">cancel</button>
@@ -7,121 +9,11 @@
           translate-plural="{{ multi.count}} Items selected">{{ multi.count}} Item selected</span>
 
     <div class="pull-right">
-        <sd-multi-action-bar-from-extensions articles="multi.getItems()" hide-multi-action-bar="hideMultiActionBar"></sd-multi-action-bar-from-extensions>
-    </div>
-
-    <div class="pull-right" ng-if="action.canPackageItems() && (!elementState || elementState === 'comfort')">
-        <button class="navbtn strict" ng-click="action.createPackage()" title="{{ :: 'Create Package' | translate }}">
-            <i class="big-icon--create-package"></i>
-        </button>
-        <button class="navbtn strict" ng-if="isOpenItemType('composite')" ng-click="action.addToPackage()" title="{{ :: 'Add to Current Package' | translate }}">
-            <i class="big-icon--add-to-package"></i>
-        </button>
-
-        <div class="dropdown dropdown--align-right strict highlights-dropdown pull-right" ng-if="action.canHighlightItems()" title="{{ :: 'Mark item' | translate }}" dropdown>
-            <button class="dropdown__toggle navbtn" dropdown__toggle>
-                <i class="big-icon--marked-star"></i>
-            </button>
-            <ul class="dropdown__menu pull-right" sd-multi-mark-highlights-dropdown></ul>
-        </div>
-    </div>
-
-    <div class="pull-right" ng-if="type === 'archive' && (!elementState || elementState === 'comfort')">
-        <button class="navbtn strict" ng-if="action.canEditMetadata() && activity['edit.item']" ng-click="action.multiImageEdit()" title="{{ :: 'Edit metadata' | translate }}">
-            <i class="big-icon--annotation"></i>
-        </button>
-        <button class="navbtn strict" ng-if="activity['export']" ng-click="openExport()" title="{{ :: 'Export' | translate }}">
-            <i class="icon-download"></i>
-            <div sd-export ng-if="export"></div>
-        </button>
-        <button class="navbtn strict" ng-if="activity['edit.item']" ng-click="action.multiedit()" title="{{ :: 'Multiedit' | translate }}">
-            <i class="big-icon--multiedit"></i>
-        </button>
-        <button class="navbtn strict" ng-click="action.spikeItems()" title="{{ :: 'Spike' | translate }}"
-                ng-if="!spike && !publish && activity['spike']">
-            <i class="big-icon--spike"></i>
-        </button>
-        <button class="navbtn strict" ng-click="action.unspikeItems()" title="{{ :: 'Unspike' | translate }}" ng-if="state === 'spiked'">
-            <i class="big-icon--unspike"></i>
-        </button>
-        <button id="send-to-btn" class="navbtn strict" title="{{ :: 'Send to' | translate }}" ng-if="activity['edit.item']" ng-click="action.sendAs()">
-            <i class="big-icon--send-to"></i>
-        </button>
-        <button id="publish-btn" class="navbtn strict" title="{{ :: 'Publish' | translate }}" ng-if="activity['edit.item'] && state !== 'draft'" ng-click="action.publish()">
-            <i class="svg-icon-ok"></i>
-        </button>
-    </div>
-
-    <div class="pull-right" ng-if="type === 'ingest' && (!elementState || elementState === 'comfort')">
-        <button id="fetch-all-btn" class="navbtn strict" title="{{ :: 'Fetch' | translate }}" ng-click="action.send()">
-            <i class="big-icon--fetch"></i>
-        </button>
-        <button id="fetch-all-as-btn" class="navbtn strict" title="{{ :: 'Fetch to' | translate }}" ng-click="action.sendAs()">
-            <i class="big-icon--fetch-as"></i>
-        </button>
-        <button id="remove-all-as-btn" class="navbtn strict" class="navbtn strict" title="{{ :: 'Remove' | translate }}" ng-click="action.removeIngestItems()" ng-if="action.canRemoveIngestItems()">
-            <i class="big-icon--spike"></i>
-        </button>
-    </div>
-
-    <div class="button-stack right-stack" ng-if="elementState || elementState === 'compact'">
-        <div class="dropdown dropdown--align-right dropdown--multi-action-bar" dropdown>
-            <button class="navbtn dropdown__toggle" dropdown__toggle><i class="icon-dots-vertical"></i></button>
-
-            <ul class="dropdown__menu">
-                <li ng-if="action.canPackageItems()">
-                    <button ng-click="action.createPackage()">
-                        <i class="icon-package-create"></i><span>{{ :: 'Create Package' | translate }}</span>
-                    </button>
-                    <button ng-if="isOpenItemType('composite')" ng-click="action.addToPackage()">
-                        <i class="icon-package-plus"></i><span>{{ :: 'Add to Current Package' | translate }}</span>
-                    </button>
-
-                    <div class="dropdown dropdown--align-right highlights-dropdown" ng-if="action.canHighlightItems()" dropdown>
-                        <button class="dropdown__toggle" dropdown__toggle>
-                            <i class="icon-star"></i><span>{{ :: 'Mark item' | translate }}</span>
-                        </button>
-                        <ul class="dropdown__menu" sd-multi-mark-highlights-dropdown></ul>
-                    </div>
-                </li>
-
-                <li ng-if="type === 'archive'">
-                    <button ng-if="action.canEditMetadata() && activity['edit.item']" ng-click="action.multiImageEdit()">
-                        <i class="icon-edit-line"></i><span>{{ :: 'Edit metadata' | translate }}</span>
-                    </button>
-                    <button ng-if="activity['export']" ng-click="openExport()">
-                        <i class="icon-download"></i><span>{{ :: 'Export' | translate }}</span>
-                        <div sd-export ng-if="export"></div>
-                    </button>
-                    <button ng-if="activity['edit.item']" ng-click="action.multiedit()">
-                        <i class="icon-multiedit"></i><span>{{ :: 'Multiedit' | translate }}</span>
-                    </button>
-                    <button ng-click="action.spikeItems()" ng-if="!spike && !publish && activity['spike']">
-                        <i class="icon-trash"></i><span>{{ :: 'Spike' | translate }}</span>
-                    </button>
-                    <button ng-click="action.unspikeItems()" ng-if="state === 'spiked'">
-                        <i class="icon-unspike"></i><span>{{ :: 'Unspike' | translate }}</span>
-                    </button>
-                    <button id="send-to-btn" ng-if="activity['edit.item']" ng-click="action.sendAs()">
-                        <i class="icon-expand-thin"></i><span>{{ :: 'Send to' | translate }}</span>
-                    </button>
-                    <button id="publish-btn" ng-if="activity['edit.item'] && state !== 'draft'" ng-click="action.publish()">
-                        <i class="icon-ok"></i><span>{{ :: 'Publish' | translate }}</span>
-                    </button>
-                </li>
-
-                <li ng-if="type === 'ingest'">
-                    <button id="fetch-all-btn" ng-click="action.send()">
-                        <i class="icon-archive"></i><span>{{ :: 'Fetch' | translate }}</span>
-                    </button>
-                    <button id="fetch-all-as-btn" ng-click="action.sendAs()">
-                        <i class="icon-fetch-as"></i><span>{{ :: 'Fetch to' | translate }}</span>
-                    </button>
-                    <button id="remove-all-as-btn" ng-click="action.removeIngestItems()" ng-if="action.canRemoveIngestItems()">
-                        <i class="icon-trash"></i><span>{{ :: 'Remove' | translate }}</span>
-                    </button>
-                </li>
-            </ul>
-        </div>
+        <sd-multi-action-bar-react
+            context="type"
+            articles="multi.getItems()"
+            get-core-actions="getActions"
+            compact="elementState === 'compact'"
+        ></sd-multi-action-bar-react>
     </div>
 </div>
