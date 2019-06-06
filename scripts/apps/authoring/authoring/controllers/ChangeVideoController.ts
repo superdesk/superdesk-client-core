@@ -2,6 +2,7 @@ import { get } from 'lodash';
 import { gettext } from 'core/utils';
 import angular from "angular";
 
+
 /**
  * @ngdoc controller
  * @module superdesk.apps.authoring
@@ -108,14 +109,14 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
     $scope.saveEditVideo = function () {
         const videoEditing = document.querySelector('.video-editing');
         videoEditing.classList.add('video-loading');
-        $scope.video.pause();        
+        $scope.video.pause();
         $scope.listFrames = null;
-        $scope.isAoISelectionModeEnabled = true;        
-        const cut = ($scope.cut.end - $scope.cut.start) === $scope.video.duration  ? {} : $scope.cut;
+        $scope.isAoISelectionModeEnabled = true;
+        const cut = ($scope.cut.end - $scope.cut.start) === $scope.video.duration ? {} : $scope.cut;
         const rotate = $scope.rotate.degree % 360 === 0 ? {} : $scope.rotate;
         api.save("video_edit", {
             item: $scope.data.item,
-            edit: {                
+            edit: {
                 cut: cut,
                 crop: $scope.crop,
                 rotate: rotate,
@@ -125,21 +126,22 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         })
             .then(
                 response => {
-                    const mediaID = response._id.media; 
+                    const mediaID = response._id.media;
                     (function checkVideoProcessing(mediaID) {
                         stopIntervalID = $interval(async function () {
                             const item = await api.get(`/video_edit/${mediaID}`);
                             if (item.processing === false) {
-                                
+
                                 stopInterval(stopIntervalID);
                                 $scope.isAoISelectionModeEnabled = false;
-                                $scope.cancelEditVideo();     
-                                $scope.$applyAsync()                                 
+                                $scope.$applyAsync()
                                 {
+                                    $scope.cancelEditVideo();
                                     $scope.data.item = angular.extend($scope.data.item, response._id);
                                     $scope.listFrames = null;
                                     $scope.video.height = item.metadata.height;
                                     $scope.video.width = item.metadata.width;
+
                                     loadListThumbnails();
                                     videoEditing.classList.remove('video-loading');
                                 }
@@ -177,14 +179,14 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         $scope.cut = {
             start: 0,
             end: $scope.video.duration
-        }        
-        loadImage();        
+        }
+        loadImage();
         // disable crop video
         if (jcrop_api) {
             jcrop_api.release();
             jcrop_api.disable();
         }
-        $scope.thumbnail ={}
+        $scope.thumbnail = {}
         $scope.crop = {};
         $scope.quality = 0;
         $scope.rotate.degree = 0;
@@ -205,7 +207,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         try {
             var time = $scope.video.currentTime;
             var output = document.getElementById('output');
-            var canvas = drawObjectToCanvas($scope.video, $scope.video.videoHeight, $scope.video.videoWidth);
+            var canvas = drawObjectToCanvas($scope.video, $scope.video.clientHeight, $scope.video.clientWidth);
             var file = document.getElementById("file-upload")
             output.innerHTML = '';
             canvas.id = "canvas-thumnail";
@@ -218,6 +220,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
                 minetype: "image/png",
                 time: time
             };
+
             $scope.editVideo.isDirty = true;
         } catch (e) {
             throw gettext(e.message);
@@ -226,15 +229,26 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
 
 
     function drawObjectToCanvas(object, object_height, object_width) {
+        var height = 230
+        var width = 300
+        var delta = height / width
+        var object_delta = object_height / object_width
         var canvas = document.createElement('canvas');
-        var context = canvas.getContext("2d");
+        if (delta < object_delta) {
+            var width = object_width * height / object_height
 
-        var canvas = document.createElement('canvas');
-        canvas.width = object_width;
-        canvas.height = object_height;
-        var ctx = canvas.getContext('2d');        
-        ctx.rotate(Math.PI / 2);
-        ctx.drawImage(object, 0, 0, object_width, object_height);
+            var left = (300 - width) / 300 / 2 * 100;
+            canvas.style = "left: " + left + "%; position: absolute;";
+        } else {
+            var height = object_height * width / object_width
+            var top = (230 - height) / 230 / 2 * 100;
+            canvas.style = "top: " + top + "%; position: absolute;";
+        };
+
+        canvas.width = width;
+        canvas.height = height;
+        var ctx = canvas.getContext('2d');
+        ctx.drawImage(object, 0, 0, width, height);
         return canvas;
     }
 
@@ -274,7 +288,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         $scope.cut = {};
         $scope.video = document.getElementById('video');
         loadImage();
-        $scope.video.onloadeddata = function () {            
+        $scope.video.onloadeddata = function () {
             $scope.$applyAsync(() => {
                 $scope.cut = {
                     start: 0,
@@ -296,55 +310,42 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
                 }
             }
 
-            $('#video').Jcrop({
-                onSelect: showCoords,
-                onchange: showCoords,
-                //aspectRatio: null,
-                minSize: [30, 30],
-                //trueSize: [video.clientWidth, video.clientHeight],
-                addClass: 'jcrop-dark',
-                bgOpacity: .4
-
-            }, function () {
-                jcrop_api = this;
-            });
-            if (jcrop_api) {
-                jcrop_api.release();
-                jcrop_api.disable();
-            }
-            $scope.video.controls = null;
         }
 
-        document.getElementById('file-upload').onchange = function (evt) {
-            var tgt = evt.target || window.event.srcElement,
-                files = tgt.files;
-            // FileReader support
-            if (FileReader && files && files.length) {
-                var fr = new FileReader();
-                var img = document.createElement("img");
-                img.onload = function () {
-                    var canvas = drawObjectToCanvas(img, $scope.video.offsetHeight, $scope.video.offsetWidth);
-                    var output = document.getElementById('output');
-                    output.innerHTML = '';
-                    canvas.id = "canvas-thumnail";
-                    output.append(canvas);
-                    $scope.editVideo.isDirty = true;
-                    var nothumbnail = document.getElementById('no-thumbnail');
-                    nothumbnail.style = "visibility: collapse";
-                    $scope.thumbnail = {
-                        type: "upload",
-                        mimetype: "image/png",
-                        data: canvas.toDataURL()
-                    };
-                }
-                fr.onload = function () {
-                    img.src = fr.result;
-                }
-                fr.readAsDataURL(files[0]);
-            }
-        }
         loadListThumbnails()
     }
+
+    $scope.uploadChange = function (element) {
+        var tgt = event.target || window.event.srcElement,
+            files = tgt.files;
+        // FileReader support
+        if (FileReader && files && files.length) {
+            var fr = new FileReader();
+            var img = document.createElement("img");
+            img.onload = function () {
+                var canvas = drawObjectToCanvas(img, $scope.video.offsetHeight, $scope.video.offsetWidth);
+                var output = document.getElementById('output');
+                output.innerHTML = '';
+                canvas.id = "canvas-thumnail";
+                output.append(canvas);
+                $scope.editVideo.isDirty = true;
+                var nothumbnail = document.getElementById('no-thumbnail');
+                nothumbnail.style = "visibility: collapse";
+                $scope.thumbnail = {
+                    type: "upload",
+                    mimetype: "image/png",
+                    data: canvas.toDataURL()
+                };
+            }
+            fr.onload = function () {
+                img.src = fr.result;
+            }
+            fr.readAsDataURL(files[0]);
+        }
+        $scope.$applyAsync(() => {
+            $scope.editVideo.isDirty = true;
+        });
+    };
 
 
     $scope.onCutChange = function () {
@@ -374,9 +375,9 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
     function loadImage() {
         if ('thumbnail' in $scope.data.item.renditions) {
             var img = document.createElement("img");
-            img.src = $scope.data.item.renditions.thumbnail.href
+            img.src = $scope.data.item.renditions.thumbnail.href + '?tag=' + $scope.data.item._etag;
             img.onload = function () {
-                var canvas = drawObjectToCanvas(img, $scope.video.offsetHeight, $scope.video.offsetWidth);
+                var canvas = drawObjectToCanvas(img, img.height, img.width);
                 var output = document.getElementById('output');
                 output.innerHTML = '';
                 canvas.id = "canvas-thumnail";
@@ -389,6 +390,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
             output.innerHTML = '';
             var nothumbnail = document.getElementById('no-thumbnail');
             nothumbnail.style = "visibility: visible";
+
         }
     }
 
@@ -462,7 +464,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
                     return;
                 }
             }
-            $scope.resolve({                
+            $scope.resolve({
                 metadata: _.pick($scope.data.metadata, [
                     ...EDITABLE_METADATA,
                     'renditions',
@@ -586,6 +588,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         document.getElementById('rotateVideo').disabled = true;
         $scope.editVideo.isDirty = true;
 
+
     }
     /**
      * @ngdoc method
@@ -614,6 +617,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
     function actRotate(elementVideo, degree) {
         let scale = (degree / 90) % 2 ? (elementVideo.clientHeight / elementVideo.clientWidth) : 1;
         elementVideo.style.transform = `rotate(${degree}deg) scale(${scale})`;
+        elementVideo.style.transition = `transform 0.3s`;
 
         let iconRotate = document.getElementsByClassName('icon-rotate-custom')[0];
         if ((degree / 180) % 2 === 0)
@@ -643,7 +647,6 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
 
         $scope.quality = currentTarget.value;
         $scope.editVideo.isDirty = true;
-
     }
 
     function showHideToggleMenu(elem, className) {
@@ -662,7 +665,6 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
             elem.className += ' ' + className;
         }
     }
-    
 
     function showCoords(c) {
         // variables can be accessed here as

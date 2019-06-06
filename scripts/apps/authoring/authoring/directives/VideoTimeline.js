@@ -55,6 +55,7 @@ export function VideoTimeline() {
             scope.$watch('listFrames', (listFrames) => {
                 loadTimeLine(listFrames)
             });
+            
             scope.$watch('cut', (cut) => {
                 if (isEmpty(cut)) {
                     return;
@@ -228,7 +229,7 @@ export function VideoTimeline() {
                             video.className = 'loaded';
                         }
                         inner_frames.append(video);
-                        
+
                     }
                 }
 

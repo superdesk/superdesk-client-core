@@ -48,6 +48,7 @@
     "angular-resource": "1.6.9",
     "angular-route": "1.6.9",
     "angular-vs-repeat": "1.1.7",
+    "cropperjs":"1.5.1",
     "bootstrap": "3.3.7",
     "classnames": "2.2.5",
     "css-loader": "0.28.10",
