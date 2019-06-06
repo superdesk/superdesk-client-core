@@ -21,7 +21,7 @@ export function MultiActionBar(asset, multi, authoringWorkspace, superdesk, keyb
             };
 
             scope.hideMultiActionBar = () => {
-                scope.display = false;
+                scope.display = multi.reset();
             };
 
             scope.$on('item:lock', (_e, data) => {
