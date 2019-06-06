@@ -5,12 +5,17 @@ import { uniq } from 'lodash';
 const extension: IExtension = {
     activate: (superdesk: ISuperdesk) => {
         const {gettext} = superdesk.localization;
+        const {isPersonal} = superdesk.entities.article;
 
         return Promise.resolve({
             contributions: {
                 entities: {
                     article: {
                         getActions: (articleNext) => {
+                            if (isPersonal(articleNext)) {
+                                return Promise.resolve([]);
+                            }
+
                             const markForUser: IArticleAction = {
                                 label: gettext('Mark for user'),
                                 labelForGroup: gettext('Relations'),
@@ -67,6 +72,10 @@ const extension: IExtension = {
                             }
                         },
                         getActionsBulk: (_, articles: Array<IArticle>) => {
+                            if (articles.some(isPersonal)) {
+                                return Promise.resolve([]);
+                            }
+
                             const selectedUserIds = uniq(
                                 articles
                                     .map((item) => item.marked_for_user)

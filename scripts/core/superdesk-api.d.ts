@@ -99,6 +99,12 @@ declare module 'superdesk-api' {
         _id: string;
         slugline: string;
 
+        task: {
+            desk: IDesk['_id'];
+            stage: IStage['_id'];
+            user: IUser['_id'];
+        };
+
         // remove when SDESK-4343 is done.
         selected: boolean;
 
@@ -402,6 +408,7 @@ declare module 'superdesk-api' {
         };
         entities: {
             article: {
+                isPersonal(article: IArticle): boolean;
                 update(nextArticle: IArticle): void;
             };
         };

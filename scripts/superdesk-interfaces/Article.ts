@@ -1,5 +1,5 @@
 import {IAuthor} from './Author';
-import {IBaseRestApiResponse} from 'superdesk-api';
+import {IBaseRestApiResponse, IDesk, IStage, IUser} from 'superdesk-api';
 
 export interface IArticle extends IBaseRestApiResponse {
     _id: string;
@@ -43,6 +43,12 @@ export interface IArticle extends IBaseRestApiResponse {
     lock_user: any;
     lock_session: any;
     rewritten_by?: string;
+
+    task: {
+        desk: IDesk['_id'];
+        stage: IStage['_id'];
+        user: IUser['_id'];
+    };
 
     // might be only used for client-side state
     created: any;

@@ -62,6 +62,7 @@ export function getSuperdeskApiImplementation(
         dataApi: dataApi,
         entities: {
             article: {
+                isPersonal: (article) => article.task == null || article.task.desk == null,
                 update: (_articleNext) => {
                     const __articleNext = {..._articleNext};
 
