@@ -47,7 +47,7 @@ const extension: IExtension = {
                                             ...articleNext,
                                             marked_for_user: selectedUserId,
                                         });
-                                    }, articleNext.marked_for_user));
+                                    }, articleNext.marked_for_user === null ? undefined : articleNext.marked_for_user));
                                 },
                             };
 
@@ -66,12 +66,17 @@ const extension: IExtension = {
                                     .filter((marked_for_user) => marked_for_user != null),
                             );
 
+                            const initialUserId = selectedUserIds[0];
+                            const selectedUserIdInitial = selectedUserIds.length > 1 || initialUserId === null
+                                ? undefined
+                                : initialUserId;
+
                             const message = selectedUserIds.length > 1
                                 ? gettext('Items are marked for different users')
                                 : undefined;
 
                             return Promise.resolve([{
-                                label: gettext('Mark for users'),
+                                label: gettext('Mark for user'),
                                 icon: 'icon-assign',
                                 onTrigger: () => {
                                     superdesk.ui.showModal(getMarkForUserModal(superdesk, (selectedUserId) => {
@@ -81,7 +86,7 @@ const extension: IExtension = {
                                                 marked_for_user: selectedUserId,
                                             });
                                         });
-                                    }, selectedUserIds.length > 1 ? undefined : selectedUserIds[0], message));
+                                    }, selectedUserIdInitial, message));
                                 },
                             }]);
                         },

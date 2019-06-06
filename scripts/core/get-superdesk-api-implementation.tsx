@@ -20,6 +20,7 @@ import {ModalHeader} from './ui/components/Modal/ModalHeader';
 import {ModalBody} from './ui/components/Modal/ModalBody';
 import {ModalFooter} from './ui/components/Modal/ModalFooter';
 import {SelectUser} from './ui/components/SelectUser';
+import {logger} from './services/logger';
 
 function getOnUpdateBeforeMiddlewares(
     extensions: IExtensions,
@@ -154,6 +155,9 @@ export function getSuperdeskApiImplementation(
         },
         privileges: {
             getOwnPrivileges: () => privileges.loaded.then(() => privileges.privileges),
+        },
+        utilities: {
+            logger,
         },
     };
 }

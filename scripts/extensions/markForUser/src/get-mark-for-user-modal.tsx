@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import {ISuperdesk, IUser, IArticle} from 'superdesk-api';
+import {ISuperdesk, IUser} from 'superdesk-api';
 
 interface IProps {
     closeModal(): void;
@@ -25,6 +25,7 @@ export function getMarkForUserModal(
         ModalFooter,
         SelectUser,
     } = superdesk.components;
+    const {logger} = superdesk.utilities;
 
     return class MarkForUserModalComponent extends React.Component<IProps, IState> {
         constructor(props: IProps) {
@@ -68,7 +69,11 @@ export function getMarkForUserModal(
                             onClick={() => {
                                 this.props.closeModal();
 
-                                onUpdate(this.state.selectedUserId);
+                                if (this.state.selectedUserId !== undefined) {
+                                    onUpdate(this.state.selectedUserId);
+                                } else {
+                                    logger.error(new Error('selectedUserId can not be undefined'));
+                                }
                             }}
                         >
                             {gettext('Confirm')}

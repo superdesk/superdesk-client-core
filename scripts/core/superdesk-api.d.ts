@@ -449,5 +449,11 @@ declare module 'superdesk-api' {
         privileges: {
             getOwnPrivileges(): Promise<any>;
         };
+        utilities: {
+            logger: {
+                error(error: Error): void;
+                warn(message: string, json: {[key: string]: any}): void;
+            },
+        },
     }>;
 }
