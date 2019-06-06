@@ -4,7 +4,7 @@ import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 MediaMetadataEditorDirective.$inject = ['metadata', 'deployConfig', 'features', '$q'];
 export default function MediaMetadataEditorDirective(metadata, deployConfig, features, $q) {
     function getCV(field) {
-        const cv = metadata.cvs.find((_cv) => !_cv.field_type && (_cv._id === field || _cv.schema_field === field));
+        const cv = metadata.cvs.find((_cv) => _cv._id === field || _cv.schema_field === field);
 
         if (cv == null && field === 'subject') {
             return {items: metadata.values.subjectcodes}; // fallback for built in subjectcodes

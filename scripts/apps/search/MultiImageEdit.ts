@@ -150,6 +150,7 @@ export function MultiImageEditController(
             copyrightholder: compare('copyrightholder'),
             usageterms: compare('usageterms'),
             copyrightnotice: compare('copyrightnotice'),
+            extra: compare('extra'),
         };
     }
 

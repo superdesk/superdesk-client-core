@@ -1,7 +1,7 @@
 <div class="form__row" ng-repeat="field in fields track by field.field">
     <sd-line-input
         class="sd-line-input--no-margin"
-        ng-if="field.type === 'string' || (!field.type && !field.cv)"
+        ng-if="!field.type && !field.cv"
         ng-model="item[field.field]"
         data-sync="true"
         data-dark="dark"
@@ -18,7 +18,7 @@
 
     <sd-line-input
         class="sd-line-input--no-margin"
-        ng-if="field.type === 'text'"
+        ng-if="field.cv && field.cv.field_type === 'text'"
         data-sync="true"
         ng-model="item.extra[field.field]"
         data-dark="dark"
@@ -32,7 +32,7 @@
         data-placeholder="{{ placeholder[field.field] }}"
     />
 
-    <div ng-if="field.type === 'list' || field.cv">
+    <div ng-if="field.cv && !field.cv.field_type">
         <label class="form-label">{{ field.label }}</label>
 
         <div sd-meta-place ng-if="field.field === 'place' && features.places_autocomplete"
@@ -68,7 +68,7 @@
         ></div>
     </div>
 
-    <div ng-if="field.type === 'date'">
+    <div ng-if="field.cv && field.cv.field_type === 'date'">
         <label class="form-label">{{ field.label }}</label>
         <div sd-datepicker
             ng-disabled="isDisabled(field)"
