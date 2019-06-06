@@ -16,12 +16,15 @@ const extension: IExtension = {
                                 labelForGroup: gettext('Relations'),
                                 icon: 'icon-assign',
                                 onTrigger: () => {
-                                    superdesk.ui.showModal(getMarkForUserModal(superdesk, (selectedUserId) => {
-                                        superdesk.entities.article.update({
-                                            ...articleNext,
-                                            marked_for_user: selectedUserId,
-                                        });
-                                    }));
+                                    superdesk.ui.showModal(getMarkForUserModal(
+                                        superdesk,
+                                        (selectedUserId) => {
+                                            superdesk.entities.article.update({
+                                                ...articleNext,
+                                                marked_for_user: selectedUserId,
+                                            });
+                                        },
+                                    ));
                                 },
                             };
 
@@ -42,12 +45,16 @@ const extension: IExtension = {
                                 labelForGroup: gettext('Relations'),
                                 icon: 'icon-assign',
                                 onTrigger: () => {
-                                    superdesk.ui.showModal(getMarkForUserModal(superdesk, (selectedUserId) => {
-                                        superdesk.entities.article.update({
-                                            ...articleNext,
-                                            marked_for_user: selectedUserId,
-                                        });
-                                    }, articleNext.marked_for_user === null ? undefined : articleNext.marked_for_user));
+                                    superdesk.ui.showModal(getMarkForUserModal(
+                                        superdesk,
+                                        (selectedUserId) => {
+                                            superdesk.entities.article.update({
+                                                ...articleNext,
+                                                marked_for_user: selectedUserId,
+                                            });
+                                        },
+                                        articleNext.marked_for_user === null ? undefined : articleNext.marked_for_user,
+                                    ));
                                 },
                             };
 
@@ -79,14 +86,19 @@ const extension: IExtension = {
                                 label: gettext('Mark for user'),
                                 icon: 'icon-assign',
                                 onTrigger: () => {
-                                    superdesk.ui.showModal(getMarkForUserModal(superdesk, (selectedUserId) => {
-                                        articles.forEach((article) => {
-                                            superdesk.entities.article.update({
-                                                ...article,
-                                                marked_for_user: selectedUserId,
+                                    superdesk.ui.showModal(getMarkForUserModal(
+                                        superdesk,
+                                        (selectedUserId) => {
+                                            articles.forEach((article) => {
+                                                superdesk.entities.article.update({
+                                                    ...article,
+                                                    marked_for_user: selectedUserId,
+                                                });
                                             });
-                                        });
-                                    }, selectedUserIdInitial, message));
+                                        },
+                                        selectedUserIdInitial,
+                                        message,
+                                    ));
                                 },
                             }]);
                         },
