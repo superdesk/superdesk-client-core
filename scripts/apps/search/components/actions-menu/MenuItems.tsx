@@ -10,7 +10,7 @@ import {gettext} from 'core/utils';
 import {IExtensionActivationResult, IArticle, IArticleAction, IDisplayPriority} from 'superdesk-api';
 import {extensions} from 'core/extension-imports.generated';
 import {flatMap} from 'lodash';
-import { sortByDisplayPriority } from 'core/helpers/sortByDisplayPriority';
+import {sortByDisplayPriority} from 'core/helpers/sortByDisplayPriority';
 
 interface IProps {
     item: IArticle;

@@ -82,5 +82,5 @@ export function getMarkForUserModal(
                 </Modal>
             );
         }
-    }
+    };
 }

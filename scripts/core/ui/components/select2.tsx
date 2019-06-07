@@ -1,6 +1,6 @@
-import * as React from "react";
+import * as React from 'react';
 import * as Autocomplete from 'react-autocomplete';
-import {noop} from "lodash";
+import {noop} from 'lodash';
 
 interface IProps<T> {
     items: {[key: string]: T};
@@ -50,7 +50,9 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
 
     render() {
         const filteredItems = Object.values(this.props.items).filter(
-            (item) => this.props.getItemLabel(item).toLocaleLowerCase().includes(this.state.search.toLocaleLowerCase()),
+            (item) => this.props.getItemLabel(item)
+                .toLocaleLowerCase()
+                .includes(this.state.search.toLocaleLowerCase()),
         );
 
         return (
@@ -99,7 +101,7 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                                     ? this.props.placeholder
                                     : this.props.renderItem(selectedItem)
                             }
-                            <div style={arrowDownStyles}></div>
+                            <div style={arrowDownStyles} />
                         </button>
                     );
                 }}

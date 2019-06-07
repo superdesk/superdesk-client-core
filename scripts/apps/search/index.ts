@@ -69,7 +69,7 @@ angular.module('superdesk.apps.search', [
         'sdMultiActionBarReact',
         reactToAngular1(
             MultiActionBarReact,
-            [ 'context', 'articles', 'hideMultiActionBar', 'getCoreActions', 'compact'],
+            ['context', 'articles', 'hideMultiActionBar', 'getCoreActions', 'compact'],
         ),
     )
     .directive('sdMultiActionBar', directive.MultiActionBar)

@@ -1,12 +1,12 @@
-import React from "react";
+import React from 'react';
 
-import { IExtensionActivationResult, IArticleActionBulk } from "superdesk-api";
-import {flatMap} from "lodash";
-import {extensions} from "core/extension-imports.generated";
-import {IArticle} from "superdesk-interfaces/Article";
-import {DropdownButton} from "core/ui/components/dropdownButton";
-import {Icon} from "core/ui/components/Icon2";
-import { sortByDisplayPriority } from "core/helpers/sortByDisplayPriority";
+import {IExtensionActivationResult, IArticleActionBulk} from 'superdesk-api';
+import {flatMap} from 'lodash';
+import {extensions} from 'core/extension-imports.generated';
+import {IArticle} from 'superdesk-interfaces/Article';
+import {DropdownButton} from 'core/ui/components/dropdownButton';
+import {Icon} from 'core/ui/components/Icon2';
+import {sortByDisplayPriority} from 'core/helpers/sortByDisplayPriority';
 
 export interface IArticleActionBulkExtended extends IArticleActionBulk {
     // this is possible for all extensions since they don't depend on external state

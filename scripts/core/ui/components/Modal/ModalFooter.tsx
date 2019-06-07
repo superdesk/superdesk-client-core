@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+
 import React from 'react';
 
 export const ModalFooter: React.StatelessComponent = (props) => (

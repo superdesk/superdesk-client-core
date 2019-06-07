@@ -1,6 +1,6 @@
 import {ISuperdesk, IExtension, IArticleAction, IArticle} from 'superdesk-api';
 import {getMarkForUserModal} from './get-mark-for-user-modal';
-import { uniq } from 'lodash';
+import {uniq} from 'lodash';
 
 const extension: IExtension = {
     activate: (superdesk: ISuperdesk) => {

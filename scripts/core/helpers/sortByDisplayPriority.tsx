@@ -1,5 +1,5 @@
-import {IDisplayPriority} from "superdesk-api";
-import {hasDebugSetting} from "./debug-settings";
+import {IDisplayPriority} from 'superdesk-api';
+import {hasDebugSetting} from './debug-settings';
 
 export function sortByDisplayPriority<T extends {label: string; priority?: IDisplayPriority}>(items: Array<T>) {
     const step = items.length < 10 ? 0.1 : parseFloat((0.9 / items.length).toFixed(3));

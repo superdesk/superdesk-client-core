@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 interface IProps {
     absolute?: boolean; // will be positioned absolutely
@@ -6,7 +6,7 @@ interface IProps {
 
 export class Loader extends React.Component<IProps> {
     render() {
-        const loaderElement = <div className="sd-loader"></div>;
+        const loaderElement = <div className="sd-loader" />;
 
         return this.props.absolute === true
             ? loaderElement

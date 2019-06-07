@@ -1,10 +1,10 @@
-import React from "react";
-import {IPropsSelectUser, IUser} from "superdesk-api";
-import {Select2} from "./select2";
-import {keyBy} from "lodash";
+import React from 'react';
+import {IPropsSelectUser, IUser} from 'superdesk-api';
+import {Select2} from './select2';
+import {keyBy} from 'lodash';
 import {gettext} from 'core/utils';
-import {dataApi} from "core/helpers/CrudManager";
-import {UserAvatar} from "apps/users/components/UserAvatar";
+import {dataApi} from 'core/helpers/CrudManager';
+import {UserAvatar} from 'apps/users/components/UserAvatar';
 
 interface IState {
     fetchedUsers?: Array<IUser>;
