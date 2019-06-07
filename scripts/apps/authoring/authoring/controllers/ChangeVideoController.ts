@@ -2,6 +2,7 @@ import { get } from 'lodash';
 import { gettext } from 'core/utils';
 import angular from "angular";
 import Cropper from 'cropperjs';
+import { validateMediaFieldsThrows } from './ChangeImageController';
 
 /**
  * @ngdoc controller
@@ -20,17 +21,6 @@ import Cropper from 'cropperjs';
  * @description Controller is responsible for cropping pictures and setting Point of Interest for an image.
  */
 
-export function validateMediaFieldsThrows(validator, metadata) {
-    for (let key in validator) {
-        const value = metadata[key];
-        const regex = new RegExp('^\<*br\/*\>*$', 'i');
-
-        if (validator[key].required && (!value || value.match(regex))) {
-            throw gettext('Required field(s) missing');
-        }
-    }
-}
-
 ChangeVideoController.$inject = ['$scope', '$interval', 'gettext', 'notify', 'lodash', 'api', '$rootScope',
     'deployConfig', '$q', 'config'];
 
@@ -46,18 +36,31 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
     $scope.listFrames = [];
 
     $scope.validator = deployConfig.getSync('validator_media_metadata');
-    const sizes = {};
 
-    const DEFAULT_CONTROLS = {
-        brightness: 1,
-        contrast: 1,
-        saturation: 1,
-        rotate: 0,
-        fliph: 0,
-        flipv: 0,
+    $scope.showMetadata = $scope.data.showMetadata;
+    $scope.nav = $scope.data.defaultTab || 'view';
+    $scope.hideTabs = $scope.data.hideTabs || [];
+
+    $scope.metadata = {
         isDirty: false,
     };
+    $scope.editVideo = {
+        isDirty: false,
+        isChange: false,
+    };
+    $scope.qualityVideo = {
+        is720: false,
+        is480: false,
+        is240: false,
+        is120: false,
+    };
 
+    $scope.isNew = $scope.data.isNew === true;
+
+    $scope.data.isDirty = false;
+    $scope.data.editable = true; // enable edit metadata field
+    // should show the metadata form in the view
+    $scope.data.showMetadataEditor = $scope.data.showMetadataEditor === true;
     const EDITABLE_METADATA = [
         'subject', // required for "usage terms" and other fields based on vocabularies
         'headline',
@@ -72,29 +75,6 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         'subject',
         'keywords',
     ].concat(Object.keys(get(deployConfig.getSync('schema'), 'picture', {})));
-
-    $scope.controls = angular.copy(DEFAULT_CONTROLS);
-    $scope.showMetadata = $scope.data.showMetadata;
-    $scope.nav = $scope.data.defaultTab || 'view';
-    $scope.hideTabs = $scope.data.hideTabs || [];
-
-    $scope.metadata = {
-        isDirty: false,
-    };
-    $scope.editVideo = {
-        isDirty: false,
-        isChange: false
-    };
-    $scope.qualityVideo = {
-        is720: false,
-        is480: false,
-        is240: false,
-        is120: false
-    }
-    $scope.data.isDirty = false;
-    $scope.isNew = $scope.data.isNew === true;
-    // should show the metadata form in the view
-    $scope.data.showMetadataEditor = $scope.data.showMetadataEditor === true;
     // initialize metadata from `item`
     $scope.data.metadata = angular.copy($scope.data.item);
 
@@ -115,15 +95,15 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         const cut = ($scope.cut.end - $scope.cut.start) === $scope.video.duration ? {} : $scope.cut;
         const rotate = $scope.rotate.degree % 360 === 0 ? {} : $scope.rotate;
         api.save("video_edit", {
-            item: $scope.data.item,
-            edit: {
-                cut: cut,
-                crop: $scope.crop,
-                rotate: rotate,
-                quality: $scope.quality,
-            },
-            thumbnail: $scope.thumbnail,
-        })
+                item: $scope.data.item,
+                edit: {
+                    cut: cut,
+                    crop: $scope.crop,
+                    rotate: rotate,
+                    quality: $scope.quality,
+                },
+                thumbnail: $scope.thumbnail,
+            })
             .then(
                 response => {
                     const mediaID = response._id.media;
@@ -159,7 +139,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
     const stopInterval = (id) => {
         $interval.cancel(id);
         id = undefined;
-    }
+    };
 
     $scope.$on('$destroy', () => stopInterval(stopIntervalID))
 
@@ -177,15 +157,15 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         $scope.editVideo.isDirty = false;
         $scope.cut = {
             start: 0,
-            end: $scope.video.duration
-        }
+            end: $scope.video.duration,
+        };
         loadImage();
         // disable crop video
         if (jcrop_api) {
             jcrop_api.release();
             jcrop_api.disable();
         }
-        $scope.thumbnail = {}
+        $scope.thumbnail = {};
         $scope.crop = {};
         $scope.quality = 0;
         $scope.rotate.degree = 0;
@@ -291,8 +271,8 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
             $scope.$applyAsync(() => {
                 $scope.cut = {
                     start: 0,
-                    end: $scope.video.duration
-                }
+                    end: $scope.video.duration,
+                };
             });
             if ($scope.video) {
                 if ($scope.video.videoWidth > 720) {
@@ -308,10 +288,10 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
                     $scope.qualityVideo.is120 = true;
                 }
             }
-        }
+        };
 
-        loadListThumbnails()
-    }
+        loadListThumbnails();
+    };
 
     $scope.uploadChange = function (element) {
         var tgt = event.target || window.event.srcElement,
@@ -399,30 +379,12 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
      * @description if dirty or is new picture item.
      * @returns {Boolean}
      */
-    $scope.controlBarChange = function () {
-        //loadTimeLine($scope.data.metadata.renditions['timeline'])
-    };
-    /**
-     * @ngdoc metho d
-     * @name ChangeImageController#isDoneEnabled
-     * @public
-     * @description if dirty or is new picture item.
-     * @returns {Boolean}
-     */
     $scope.isDoneEnabled = function () {
         return !$scope.metadata.isDirty &&
-            !$scope.controls.isDirty &&
             !$scope.editVideo.isDirty &&
             !$scope.isAoISelectionModeEnabled;
     };
 
-
-    /**
-     * @ngdoc method
-     * @name ChangeImageController#applyMetadataChanges
-     * @public
-     * @description
-     */
     $scope.applyMetadataChanges = () => {
         try {
             validateMediaFieldsThrows($scope.validator, $scope.data.metadata);
@@ -437,12 +399,6 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         return true;
     };
 
-    /**
-     * @ngdoc method
-     * @name ChangeImageController#cancelMetadataChanges
-     * @public
-     * @description
-     */
     $scope.cancelMetadataChanges = () => {
         $scope.data.metadata = angular.copy($scope.data.item);
         $scope.metadata.isDirty = false;
@@ -459,16 +415,9 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         if ($scope.data.isDirty) {
             if (config.features.validatePointOfInterestForImages === true) {
                 if (!$scope.saveEditVideo() || !$scope.applyMetadataChanges()) {
-                    return;
+
                 }
             }
-            $scope.resolve({
-                metadata: _.pick($scope.data.metadata, [
-                    ...EDITABLE_METADATA,
-                    'renditions',
-                    '_etag',
-                ]),
-            });
         } else {
             $scope.reject();
         }
@@ -476,10 +425,6 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
 
     // Area of Interest
     $scope.data.showAoISelectionButton = $scope.data.showAoISelectionButton === true;
-
-    function extractEditableMetadata(metadata) {
-        return _.pick(metadata, EDITABLE_METADATA);
-    }
 
     /**
      * @ngdoc method
@@ -490,13 +435,11 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
      */
     $scope.toggleMenuQuality = () => {
         let elementIcon = document.getElementById('icon-change-quality');
-        let test = elementIcon.classList.contains('icon-chevron-down-thin');
-        if (elementIcon.classList.contains('icon-chevron-down-thin') === false) {
 
+        if (elementIcon.classList.contains('icon-chevron-down-thin') === false) {
             elementIcon.classList.remove('icon-chevron-up-thin');
             elementIcon.classList.add('icon-chevron-down-thin');
         } else {
-
             elementIcon.classList.remove('icon-chevron-down-thin');
             elementIcon.classList.add('icon-chevron-up-thin');
         }
@@ -518,6 +461,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
             $scope.video.pause();
         }
         let theToggle = document.getElementById('toggleRatio');
+
         showHideToggleMenu(theToggle, 'on');
         return false;
     };
@@ -692,5 +636,33 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
             width: c.w * delta_width,
             height: c.h * delta_height,
         };
+    };
+
+    $scope.applyMetadataChanges = () => {
+        try {
+            validateMediaFieldsThrows($scope.validator, $scope.data.metadata);
+            console.log($scope.data.metadata)
+            $scope.data.metadata =
+            api.save('archive', $scope.data.metadata, _.pick($scope.data.metadata, [
+                ...EDITABLE_METADATA,
+                'poi',
+                'renditions',
+                '_etag',
+            ]))
+            $scope.metadata.isDirty = false;
+            $scope.data.isDirty = false;
+        } catch (e) {
+            // show an error and stop the "done" operation
+            notify.error(e);
+            return false;
+        }
+
+        return true;
+    };
+
+    $scope.cancelMetadataChanges = () => {
+        $rootScope.$broadcast('clear: selectedUsageTerms');
+        $scope.data.metadata = angular.copy($scope.data.item);
+        $scope.metadata.isDirty = false;
     };
 }

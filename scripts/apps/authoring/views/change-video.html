@@ -19,6 +19,7 @@
             ng-disabled="!isDoneEnabled() || isAoISelectionModeEnabled">Done</button>
     </div>
 </div>
+-
 <div class="modal__body modal__body--no-padding">
     <div class="sd-column-box--2">
         <div class="sd-column-box__main-column sd-column-box__main-column--photo-preview">
@@ -128,70 +129,34 @@
                 </div>
                 <!-- END VIDEO Frames timeline  -->
             </div>
-
         </div>
-        <div class="sd-column-box__slide-in-column sd-column-box__slide-in-column--large sd-column-box__slide-in-column--dark-ui"
-            ng-class="{'sd-column-box__slide-in-column--closed' : !showMetadata}">
-            <div class="sd-column-box__slide-in-column-inner sd-slide-in-panel">
 
+
+        <div class="sd-column-box__slide-in-column sd-column-box__slide-in-column--large sd-column-box__slide-in-column--dark-ui"
+            ng-class="{'sd-column-box__slide-in-column--closed' : !showMetadata}" ng-show="nav !== 'video-edit'">
+            <div class="sd-column-box__slide-in-column-inner sd-slide-in-panel">
                 <div class="sd-slide-in-panel__header">
-                    <h3 class="sd-slide-in-panel__heading">Metadata</h3>
+                    <h3 class="sd-slide-in-panel__heading" ng-if="nav !== 'image-edit'" translate>Metadata</h3>
                     <a class="icn-btn sd-slide-in-panel__close" sd-tooltip="Close details" flow="top"
                         ng-click="showMetadata = !showMetadata"><i class="icon-close-small"></i></a>
                 </div>
-                <div class="sd-slide-in-panel__content">
+                <div class="sd-slide-in-panel__content" ng-if="nav !== 'image-edit'">
                     <div class="sd-slide-in-panel__content-block sd-slide-in-panel__content-block--first">
-                        <div class="form__row">
-                            <div class="sd-line-input sd-line-input--dark-ui sd-line-input--boxed">
-                                <label class="sd-line-input__label">Title</label>
-                                <input class="sd-line-input__input" type="text" value="Image title">
-                                <div class="sd-line-input__hint">Hendrerit in vulputate velit esse molestie consequat.
-                                </div>
-                            </div>
+
+                        <div class="modal__sliding-toolbar" ng-if="metadata.isDirty">
+                            <div class="sliding-toolbar__inner"></div>
+                            <a class="btn" ng-click="cancelMetadataChanges()" translate>Cancel</a>
+                            <a class="btn btn--primary" ng-click="applyMetadataChanges()" translate>Apply</a>
                         </div>
-                        <div class="form__row">
-                            <div class="sd-line-input sd-line-input--dark-ui sd-line-input--boxed">
-                                <label class="sd-line-input__label">Description</label>
-                                <textarea class="sd-line-input__input"></textarea>
-                            </div>
-                        </div>
-                        <div class="form__row">
-                            <div
-                                class="sd-line-input sd-line-input--with-button sd-line-input--dark-ui sd-line-input--boxed">
-                                <span class="sd-line-input__plus-btn"></span>
-                                <label class="sd-line-input__label">Category</label>
-                                <input class="sd-line-input__input" type="text">
-                            </div>
-                        </div>
-                        <div class="form__row">
-                            <div
-                                class="sd-line-input sd-line-input--with-button sd-line-input--dark-ui sd-line-input--boxed">
-                                <span class="sd-line-input__plus-btn"></span>
-                                <label class="sd-line-input__label">Subject</label>
-                                <input class="sd-line-input__input" type="text">
-                            </div>
-                        </div>
-                        <div class="form__row">
-                            <div
-                                class="sd-line-input sd-line-input--is-select sd-line-input--dark-ui sd-line-input--boxed">
-                                <label class="sd-line-input__label">Usage right</label>
-                                <select class="sd-line-input__select">
-                                    <option value="">--- Not selected ---</option>
-                                    <option value="single">Single usage</option>
-                                    <option value="time">Time restricted</option>
-                                    <option value="bananas">Indefinite usage</option>
-                                    <option value="indefinite">Pears</option>
-                                </select>
-                                <span class="sd-line-input__hint">Dolor in hendrerit.</span>
-                            </div>
-                        </div>
-                        <div class="form__row" ng-init="contentChanged = true">
-                            <span ng-model="contentChanged" sd-switch></span><label>For publication</label>
+
+                        <div sd-media-metadata-editor data-item="data.metadata" data-validator="validator"
+                            data-dark="true" data-boxed="true" data-on-change="metadata.isDirty = true"
+                            data-disabled="!data.editable" data-associated="data.isAssociated">
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
+        </div>
     </div>
 </div>
