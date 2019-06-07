@@ -1,8 +1,9 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
-import {IArticleActionBulk} from 'superdesk-api';
 import {showModal} from 'core/services/modalService';
 import {getModalForMultipleHighlights} from 'apps/highlights/components/SetHighlightsForMultipleArticlesModal';
+import {IArticleActionBulkExtended} from 'apps/monitoring/MultiActionBarReact';
+import {IArticle} from 'superdesk-interfaces/Article';
 
 MultiActionBar.$inject = ['asset', 'multi', 'authoringWorkspace', 'superdesk', 'keyboardManager', 'desks'];
 export function MultiActionBar(asset, multi, authoringWorkspace, superdesk, keyboardManager, desks) {
@@ -28,8 +29,8 @@ export function MultiActionBar(asset, multi, authoringWorkspace, superdesk, keyb
                 scope.display = multi.reset();
             };
 
-            scope.getActions = (): Array<IArticleActionBulk> => {
-                const actions = [];
+            scope.getActions = (articles: Array<IArticle>): Array<IArticleActionBulkExtended> => {
+                const actions: Array<IArticleActionBulkExtended> = [];
 
                 if (scope.action.canPackageItems()) {
                     actions.push({
@@ -39,6 +40,7 @@ export function MultiActionBar(asset, multi, authoringWorkspace, superdesk, keyb
                             scope.action.createPackage();
                             scope.$apply();
                         },
+                        canAutocloseMultiActionBar: false,
                     });
 
                     if (scope.isOpenItemType('composite')) {
@@ -49,6 +51,7 @@ export function MultiActionBar(asset, multi, authoringWorkspace, superdesk, keyb
                                 scope.action.addToPackage();
                                 scope.$apply();
                             },
+                            canAutocloseMultiActionBar: false,
                         });
                     }
 
@@ -59,9 +62,10 @@ export function MultiActionBar(asset, multi, authoringWorkspace, superdesk, keyb
                             label: gettext('Add to highlight'),
                             icon: 'icon-star',
                             onTrigger: () => {
-                                showModal(getModalForMultipleHighlights(multi.getItems(), currentDeskId));
+                                showModal(getModalForMultipleHighlights(articles, currentDeskId));
                                 scope.$apply();
                             },
+                            canAutocloseMultiActionBar: true,
                         });
                     }
                 }
@@ -75,6 +79,7 @@ export function MultiActionBar(asset, multi, authoringWorkspace, superdesk, keyb
                                 scope.action.multiedit();
                                 scope.$apply();
                             },
+                            canAutocloseMultiActionBar: false,
                         });
                     }
                     if (!scope.spike && !scope.publish && scope.activity['spike']) {
@@ -85,6 +90,7 @@ export function MultiActionBar(asset, multi, authoringWorkspace, superdesk, keyb
                                 scope.action.spikeItems();
                                 scope.$apply();
                             },
+                            canAutocloseMultiActionBar: false,
                         });
                     }
                     if (scope.state === 'spiked') {
@@ -95,6 +101,7 @@ export function MultiActionBar(asset, multi, authoringWorkspace, superdesk, keyb
                                 scope.action.unspikeItems();
                                 scope.$apply();
                             },
+                            canAutocloseMultiActionBar: false,
                         });
                     }
                     if (scope.action.canEditMetadata() && scope.activity['edit.item']) {
@@ -105,6 +112,7 @@ export function MultiActionBar(asset, multi, authoringWorkspace, superdesk, keyb
                                 scope.action.multiImageEdit();
                                 scope.$apply();
                             },
+                            canAutocloseMultiActionBar: false,
                         });
                     }
                     if (scope.activity['export']) {
@@ -115,6 +123,7 @@ export function MultiActionBar(asset, multi, authoringWorkspace, superdesk, keyb
                                 scope.openExport();
                                 scope.$apply();
                             },
+                            canAutocloseMultiActionBar: false,
                         });
                     }
                     if (scope.activity['edit.item']) {
@@ -125,6 +134,7 @@ export function MultiActionBar(asset, multi, authoringWorkspace, superdesk, keyb
                                 scope.action.sendAs();
                                 scope.$apply();
                             },
+                            canAutocloseMultiActionBar: false,
                         });
                     }
                     if (scope.activity['edit.item'] && scope.state !== 'draft') {
@@ -135,6 +145,7 @@ export function MultiActionBar(asset, multi, authoringWorkspace, superdesk, keyb
                                 scope.action.publish();
                                 scope.$apply();
                             },
+                            canAutocloseMultiActionBar: false,
                         });
                     }
                 } else if (scope.type === 'ingest') {
@@ -145,6 +156,7 @@ export function MultiActionBar(asset, multi, authoringWorkspace, superdesk, keyb
                             scope.action.send();
                             scope.$apply();
                         },
+                        canAutocloseMultiActionBar: false,
                     });
                     actions.push({
                         label: gettext('Fetch to'),
@@ -153,6 +165,7 @@ export function MultiActionBar(asset, multi, authoringWorkspace, superdesk, keyb
                             scope.action.sendAs();
                             scope.$apply();
                         },
+                        canAutocloseMultiActionBar: false,
                     });
 
                     if (scope.action.canRemoveIngestItems()) {
@@ -163,6 +176,7 @@ export function MultiActionBar(asset, multi, authoringWorkspace, superdesk, keyb
                                 scope.action.removeIngestItems();
                                 scope.$apply();
                             },
+                            canAutocloseMultiActionBar: false,
                         });
                     }
                 }

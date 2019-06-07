@@ -6,20 +6,27 @@ import {extensions} from "core/extension-imports.generated";
 import {IArticle} from "superdesk-interfaces/Article";
 import {DropdownButton} from "core/ui/components/dropdownButton";
 
+export interface IArticleActionBulkExtended extends IArticleActionBulk {
+    // this is possible for all extensions since they don't depend on external state
+    // most of core actions are relying on service state which would be destroyed if we closed the bar too early
+    // when `canAutocloseMultiActionBar` set to false, core actions close it themselves when they are done
+    canAutocloseMultiActionBar: boolean;
+}
+
 interface IProps {
     context: 'archive' | 'ingest';
     articles: Array<IArticle>;
     compact: boolean;
-    getCoreActions(): Array<IArticleActionBulk>;
+    getCoreActions(articles: Array<IArticle>): Array<IArticleActionBulkExtended>;
     hideMultiActionBar(): void;
 }
 
 interface IState {
-    actions?: Array<IArticleActionBulk>;
+    actions?: Array<IArticleActionBulkExtended>;
 }
 
-function getActionsBulk(articles): Promise<Array<IArticleActionBulk>> {
-    const getActionsBulkFromExtensions
+function getActionsBulkFromExtensions(articles): Promise<Array<IArticleActionBulkExtended>> {
+    const getActionsBulk
     : Array<IExtensionActivationResult['contributions']['entities']['article']['getActionsBulk']>
     = flatMap(
         Object.values(extensions).map(({activationResult}) => activationResult),
@@ -33,8 +40,8 @@ function getActionsBulk(articles): Promise<Array<IArticleActionBulk>> {
     );
 
     return Promise.all(
-        getActionsBulkFromExtensions.map((getPromise) => getPromise('include', articles)),
-    ).then((res) => flatMap(res));
+        getActionsBulk.map((getPromise) => getPromise('include', articles)),
+    ).then((res) => flatMap(res).map((action) => ({...action, canAutocloseMultiActionBar: true})));
 }
 
 export class MultiActionBarReact extends React.Component<IProps, IState> {
@@ -44,18 +51,22 @@ export class MultiActionBarReact extends React.Component<IProps, IState> {
         this.state = {};
     }
     componentDidMount() {
-        getActionsBulk(this.props.articles).then((actionsBulkFromExtensions) => {
+        getActionsBulkFromExtensions(this.props.articles).then((actionsBulkFromExtensions) => {
             this.setState({
-                actions: [].concat(actionsBulkFromExtensions).concat(this.props.getCoreActions()),
+                actions: actionsBulkFromExtensions.concat(
+                    this.props.getCoreActions(this.props.articles),
+                ),
             });
         });
     }
     componentDidUpdate(prevProps) {
         // update when more items are selected / deselected
         if (prevProps !== this.props) {
-            getActionsBulk(this.props.articles).then((actionsBulkFromExtensions) => {
+            getActionsBulkFromExtensions(this.props.articles).then((actionsBulkFromExtensions) => {
                 this.setState({
-                    actions: [].concat(actionsBulkFromExtensions).concat(this.props.getCoreActions()),
+                    actions: actionsBulkFromExtensions.concat(
+                        this.props.getCoreActions(this.props.articles),
+                    ),
                 });
             });
         }
@@ -64,6 +75,14 @@ export class MultiActionBarReact extends React.Component<IProps, IState> {
         if (this.state.actions == null) {
             return null;
         }
+
+        const onTrigger = (action: IArticleActionBulkExtended) => {
+            if (action.canAutocloseMultiActionBar) {
+                this.props.hideMultiActionBar();
+            }
+
+            action.onTrigger();
+        };
 
         if (this.props.compact) {
             return (
@@ -84,9 +103,7 @@ export class MultiActionBarReact extends React.Component<IProps, IState> {
                                 <span>{item.label}</span>
                             </div>
                         )}
-                        onSelect={(item) => {
-                            item.onTrigger();
-                        }}
+                        onSelect={onTrigger}
                     />
                 </div>
             );
@@ -94,17 +111,16 @@ export class MultiActionBarReact extends React.Component<IProps, IState> {
             return (
                 <div>
                     {
-                        this.state.actions.map((menuItem, i) => (
+                        this.state.actions.map((action, i) => (
                             <button
                                 onClick={() => {
-                                    // this.props.hideMultiActionBar(); // multi edit needs to read selected items
-                                    menuItem.onTrigger();
+                                    onTrigger(action);
                                 }}
                                 className="navbtn strict"
-                                title={menuItem.label}
+                                title={action.label}
                                 key={i}
                             >
-                                <i className={menuItem.icon} />
+                                <i className={action.icon} />
                             </button>
                         ))
                     }
