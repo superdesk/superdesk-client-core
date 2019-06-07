@@ -4,6 +4,7 @@ import { IExtensionActivationResult, IArticleActionBulk } from "superdesk-api";
 import {flatMap} from "lodash";
 import {extensions} from "core/extension-imports.generated";
 import {IArticle} from "superdesk-interfaces/Article";
+import {DropdownButton} from "core/ui/components/dropdownButton";
 
 interface IProps {
     context: 'archive' | 'ingest';
@@ -64,24 +65,51 @@ export class MultiActionBarReact extends React.Component<IProps, IState> {
             return null;
         }
 
-        return (
-            <div>
-                {
-                    this.state.actions.map((menuItem, i) => (
-                        <button
-                            onClick={() => {
-                                // this.props.hideMultiActionBar(); // multi edit needs to read selected items
-                                menuItem.onTrigger();
-                            }}
-                            className="navbtn strict"
-                            title={menuItem.label}
-                            key={i}
-                        >
-                            <i className={menuItem.icon} />
-                        </button>
-                    ))
-                }
-            </div>
-        );
+        if (this.props.compact) {
+            return (
+                <div className="right-stack">
+                    <DropdownButton
+                        getToggleElement={(onClick) => (
+                            <button onClick={onClick} className="navbtn"><i className="icon-dots-vertical" /></button>
+                        )}
+                        items={this.state.actions}
+                        renderItem={(item) => (
+                            <div
+                                style={{
+                                    display: 'flex',
+                                    justifyContent: 'flex-start',
+                                }}
+                            >
+                                <i className={item.icon} style={{marginRight: 10}} />
+                                <span>{item.label}</span>
+                            </div>
+                        )}
+                        onSelect={(item) => {
+                            item.onTrigger();
+                        }}
+                    />
+                </div>
+            );
+        } else {
+            return (
+                <div>
+                    {
+                        this.state.actions.map((menuItem, i) => (
+                            <button
+                                onClick={() => {
+                                    // this.props.hideMultiActionBar(); // multi edit needs to read selected items
+                                    menuItem.onTrigger();
+                                }}
+                                className="navbtn strict"
+                                title={menuItem.label}
+                                key={i}
+                            >
+                                <i className={menuItem.icon} />
+                            </button>
+                        ))
+                    }
+                </div>
+            );
+        }
     }
 }
