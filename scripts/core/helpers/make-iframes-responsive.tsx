@@ -5,6 +5,7 @@ export function makeIframesResponsive(
     html: string, // coming from user input, can't make assumptions about structure
 ): string {
     var el = document.createElement('div');
+
     el.innerHTML = html;
 
     el.querySelectorAll('iframe').forEach((iframeElement) => {
@@ -23,8 +24,8 @@ export function makeIframesResponsive(
         const wrapperStyles = `position: relative; overflow: hidden; padding-top: ${iframeHeight / iframeWidth * 100}%`;
 
         if (iframeWidth > 0 && iframeHeight > 0) {
-            iframeElement.removeAttribute("width");
-            iframeElement.removeAttribute("height");
+            iframeElement.removeAttribute('width');
+            iframeElement.removeAttribute('height');
 
             iframeElement.style.position = 'absolute';
             iframeElement.style.top = '0';
