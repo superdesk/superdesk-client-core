@@ -1,9 +1,11 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
 import {IArticleActionBulk} from 'superdesk-api';
+import {showModal} from 'core/services/modalService';
+import {getModalForMultipleHighlights} from 'apps/highlights/components/SetHighlightsForMultipleArticlesModal';
 
-MultiActionBar.$inject = ['asset', 'multi', 'authoringWorkspace', 'superdesk', 'keyboardManager'];
-export function MultiActionBar(asset, multi, authoringWorkspace, superdesk, keyboardManager) {
+MultiActionBar.$inject = ['asset', 'multi', 'authoringWorkspace', 'superdesk', 'keyboardManager', 'desks'];
+export function MultiActionBar(asset, multi, authoringWorkspace, superdesk, keyboardManager, desks) {
     return {
         controller: 'MultiActionBar',
         controllerAs: 'action',
@@ -50,13 +52,14 @@ export function MultiActionBar(asset, multi, authoringWorkspace, superdesk, keyb
                         });
                     }
 
-                    if (scope.action.canHighlightItems()) {
+                    const currentDeskId = desks.getCurrentDeskId();
+
+                    if (currentDeskId != null && scope.action.canHighlightItems()) {
                         actions.push({
                             label: gettext('Add to highlight'),
                             icon: 'icon-star',
                             onTrigger: () => {
-                                alert('not implemented');
-                                // sd-multi-mark-highlights-dropdown
+                                showModal(getModalForMultipleHighlights(multi.getItems(), currentDeskId));
                                 scope.$apply();
                             },
                         });

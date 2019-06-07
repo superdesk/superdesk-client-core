@@ -14,13 +14,13 @@ import {Row, Item, Column} from './ui/components/List';
 import {connectCrudManager, dataApi} from './helpers/CrudManager';
 import {generateFilterForServer} from './ui/components/generic-form/generate-filter-for-server';
 import {flatMap} from 'lodash';
-import React from 'react';
 import {Modal} from './ui/components/Modal/Modal';
 import {ModalHeader} from './ui/components/Modal/ModalHeader';
 import {ModalBody} from './ui/components/Modal/ModalBody';
 import {ModalFooter} from './ui/components/Modal/ModalFooter';
 import {SelectUser} from './ui/components/SelectUser';
 import {logger} from './services/logger';
+import {showModal} from './services/modalService';
 
 function getOnUpdateBeforeMiddlewares(
     extensions: IExtensions,
@@ -97,8 +97,7 @@ export function getSuperdeskApiImplementation(
                     .then(() => resolve(true))
                     .catch(() => resolve(false));
             }),
-            showModal: (Component) => modal.createCustomModal()
-                .then(({openModal, closeModal}) => openModal(<Component closeModal={closeModal} />)),
+            showModal,
         },
         components: {
             UserHtmlSingleLine,
