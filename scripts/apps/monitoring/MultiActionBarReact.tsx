@@ -5,6 +5,8 @@ import {flatMap} from "lodash";
 import {extensions} from "core/extension-imports.generated";
 import {IArticle} from "superdesk-interfaces/Article";
 import {DropdownButton} from "core/ui/components/dropdownButton";
+import {Icon} from "core/ui/components/Icon2";
+import { sortByDisplayPriority } from "core/helpers/sortByDisplayPriority";
 
 export interface IArticleActionBulkExtended extends IArticleActionBulk {
     // this is possible for all extensions since they don't depend on external state
@@ -53,8 +55,8 @@ export class MultiActionBarReact extends React.Component<IProps, IState> {
     componentDidMount() {
         getActionsBulkFromExtensions(this.props.articles).then((actionsBulkFromExtensions) => {
             this.setState({
-                actions: actionsBulkFromExtensions.concat(
-                    this.props.getCoreActions(this.props.articles),
+                actions: sortByDisplayPriority(
+                    this.props.getCoreActions(this.props.articles).concat(actionsBulkFromExtensions),
                 ),
             });
         });
@@ -64,8 +66,8 @@ export class MultiActionBarReact extends React.Component<IProps, IState> {
         if (prevProps !== this.props) {
             getActionsBulkFromExtensions(this.props.articles).then((actionsBulkFromExtensions) => {
                 this.setState({
-                    actions: actionsBulkFromExtensions.concat(
-                        this.props.getCoreActions(this.props.articles),
+                    actions: sortByDisplayPriority(
+                        this.props.getCoreActions(this.props.articles).concat(actionsBulkFromExtensions),
                     ),
                 });
             });
@@ -120,7 +122,7 @@ export class MultiActionBarReact extends React.Component<IProps, IState> {
                                 title={action.label}
                                 key={i}
                             >
-                                <i className={action.icon} />
+                                <Icon className={action.icon} size={22} />
                             </button>
                         ))
                     }

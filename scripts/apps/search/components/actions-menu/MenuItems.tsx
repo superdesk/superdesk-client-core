@@ -10,6 +10,7 @@ import {gettext} from 'core/utils';
 import {IExtensionActivationResult, IArticle, IArticleAction, IDisplayPriority} from 'superdesk-api';
 import {extensions} from 'core/extension-imports.generated';
 import {flatMap} from 'lodash';
+import { sortByDisplayPriority } from 'core/helpers/sortByDisplayPriority';
 
 interface IProps {
     item: IArticle;
@@ -108,18 +109,23 @@ export default class MenuItems extends React.Component<IProps, IState> {
     renderMenu() {
         const item = this.props.item;
 
-        const createAction = (activity) =>
-            <Item key={activity._id}
-                svc={this.props.svc}
-                scope={this.props.scope}
-                item={item} activity={activity}
-                onActioning={this.props.onActioning}
-            />;
+        const createAction = (activity) => ({
+            label: activity.label,
+            element: (
+                <Item key={activity._id}
+                    svc={this.props.svc}
+                    scope={this.props.scope}
+                    item={item} activity={activity}
+                    onActioning={this.props.onActioning}
+                />
+            ),
+        });
 
         const actions = this.getActions();
 
         var groupedItems: {
             [groupLabel: string]: Array<{
+                label: string;
                 priority?: IDisplayPriority;
                 element: JSX.Element;
             }>;
@@ -149,9 +155,10 @@ export default class MenuItems extends React.Component<IProps, IState> {
                 }
 
                 if (group.concate) {
-                    const submenu = actions[group._id].map((action) => createAction(action));
+                    const submenu = actions[group._id].map((action) => createAction(action).element);
 
                     groupedItems[groupLabel].push({
+                        label: group.label,
                         element: (
                             <li key={`group-label-${groupLabel}`}>
                                 <SubmenuDropdown
@@ -165,8 +172,9 @@ export default class MenuItems extends React.Component<IProps, IState> {
                     return;
                 }
 
-                actions[group._id].map(createAction).forEach((element) => {
+                actions[group._id].map(createAction).forEach(({label, element}) => {
                     groupedItems[groupLabel].push({
+                        label,
                         element,
                     });
                 });
@@ -183,8 +191,8 @@ export default class MenuItems extends React.Component<IProps, IState> {
                     groupedItems[groupLabel] = [];
                 }
 
-                actions[groupId].map(createAction).forEach((element) => {
-                    groupedItems[groupLabel].push({element});
+                actions[groupId].map(createAction).forEach(({label, element}) => {
+                    groupedItems[groupLabel].push({label, element});
                 });
             }
         });
@@ -207,13 +215,13 @@ export default class MenuItems extends React.Component<IProps, IState> {
                 if (groupedItems['default'] == null) {
                     groupedItems['default'] = [];
                 }
-                groupedItems['default'].push({element, priority});
+                groupedItems['default'].push({label: action.label, element, priority});
             } else {
                 if (groupedItems[action.labelForGroup] == null) {
                     groupedItems[action.labelForGroup] = [];
                 }
 
-                groupedItems[action.labelForGroup].push({element, priority});
+                groupedItems[action.labelForGroup].push({label: action.label, element, priority});
             }
         });
 
@@ -224,21 +232,9 @@ export default class MenuItems extends React.Component<IProps, IState> {
                 menu.push(<Divider key={`group-divider-${i}`} />);
             }
 
-            const step = parseFloat((0.9 / group.length).toPrecision(2));
-            let nextPriority = 0.1;
-
-            group.forEach((groupItem) => {
-                if (groupItem.priority == null) {
-                    groupItem.priority = nextPriority;
-                    nextPriority += step;
-                }
+            sortByDisplayPriority(group).forEach(({element}) => {
+                menu.push(element);
             });
-
-            group
-                .sort((a, b) => a.priority - b.priority)
-                .forEach(({element}) => {
-                    menu.push(element);
-                });
         });
 
         return menu;

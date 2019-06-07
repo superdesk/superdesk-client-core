@@ -32,6 +32,117 @@ export function MultiActionBar(asset, multi, authoringWorkspace, superdesk, keyb
             scope.getActions = (articles: Array<IArticle>): Array<IArticleActionBulkExtended> => {
                 const actions: Array<IArticleActionBulkExtended> = [];
 
+                if (scope.type === 'ingest') {
+                    actions.push({
+                        label: gettext('Fetch'),
+                        icon: 'icon-archive',
+                        onTrigger: () => {
+                            scope.action.send();
+                            scope.$apply();
+                        },
+                        canAutocloseMultiActionBar: false,
+                    });
+                    actions.push({
+                        label: gettext('Fetch to'),
+                        icon: 'icon-fetch-as',
+                        onTrigger: () => {
+                            scope.action.sendAs();
+                            scope.$apply();
+                        },
+                        canAutocloseMultiActionBar: false,
+                    });
+
+                    if (scope.action.canRemoveIngestItems()) {
+                        actions.push({
+                            label: gettext('Remove'),
+                            icon: 'icon-trash',
+                            onTrigger: () => {
+                                scope.action.removeIngestItems();
+                                scope.$apply();
+                            },
+                            canAutocloseMultiActionBar: false,
+                        });
+                    }
+                } else if (scope.type === 'archive') {
+                    if (scope.action.canEditMetadata() && scope.activity['edit.item']) {
+                        actions.push({
+                            label: gettext('Edit metadata'),
+                            icon: 'icon-edit-line',
+                            onTrigger: () => {
+                                scope.action.multiImageEdit();
+                                scope.$apply();
+                            },
+                            canAutocloseMultiActionBar: false,
+                        });
+                    }
+                    if (scope.activity['export']) {
+                        actions.push({
+                            label: gettext('Export'),
+                            icon: 'icon-download',
+                            onTrigger: () => {
+                                scope.openExport();
+                                scope.$apply();
+                            },
+                            canAutocloseMultiActionBar: false,
+                        });
+                    }
+                    if (scope.activity['edit.item']) {
+                        actions.push({
+                            label: gettext('Multiedit'),
+                            icon: 'icon-multiedit',
+                            onTrigger: () => {
+                                scope.action.multiedit();
+                                scope.$apply();
+                            },
+                            canAutocloseMultiActionBar: false,
+                        });
+                    }
+                    if (!scope.spike && !scope.publish && scope.activity['spike']) {
+                        actions.push({
+                            label: gettext('Spike'),
+                            icon: 'icon-trash',
+                            onTrigger: () => {
+                                scope.action.spikeItems();
+                                scope.$apply();
+                            },
+                            canAutocloseMultiActionBar: false,
+                        });
+                    }
+                    if (scope.state === 'spiked') {
+                        actions.push({
+                            label: gettext('Unspike'),
+                            icon: 'icon-unspike',
+                            onTrigger: () => {
+                                scope.action.unspikeItems();
+                                scope.$apply();
+                            },
+                            canAutocloseMultiActionBar: false,
+                        });
+                    }
+                    if (scope.activity['edit.item']) {
+                        actions.push({
+                            label: gettext('Send to'),
+                            icon: 'icon-expand-thin',
+                            onTrigger: () => {
+                                scope.action.sendAs();
+                                scope.$apply();
+                            },
+                            canAutocloseMultiActionBar: false,
+                        });
+                    }
+                    if (scope.activity['edit.item'] && scope.state !== 'draft') {
+                        actions.push({
+                            label: gettext('Publish'),
+                            icon: 'icon-ok',
+                            onTrigger: () => {
+                                scope.action.publish();
+                                scope.$apply();
+                            },
+                            canAutocloseMultiActionBar: false,
+                        });
+                    }
+                }
+
                 if (scope.action.canPackageItems()) {
                     actions.push({
                         label: gettext('Create Package'),
@@ -66,117 +177,6 @@ export function MultiActionBar(asset, multi, authoringWorkspace, superdesk, keyb
                                 scope.$apply();
                             },
                             canAutocloseMultiActionBar: true,
-                        });
-                    }
-                }
-
-                if (scope.type === 'archive') {
-                    if (scope.activity['edit.item']) {
-                        actions.push({
-                            label: gettext('Multiedit'),
-                            icon: 'icon-multiedit',
-                            onTrigger: () => {
-                                scope.action.multiedit();
-                                scope.$apply();
-                            },
-                            canAutocloseMultiActionBar: false,
-                        });
-                    }
-                    if (!scope.spike && !scope.publish && scope.activity['spike']) {
-                        actions.push({
-                            label: gettext('Spike'),
-                            icon: 'icon-trash',
-                            onTrigger: () => {
-                                scope.action.spikeItems();
-                                scope.$apply();
-                            },
-                            canAutocloseMultiActionBar: false,
-                        });
-                    }
-                    if (scope.state === 'spiked') {
-                        actions.push({
-                            label: gettext('Unspike'),
-                            icon: 'icon-unspike',
-                            onTrigger: () => {
-                                scope.action.unspikeItems();
-                                scope.$apply();
-                            },
-                            canAutocloseMultiActionBar: false,
-                        });
-                    }
-                    if (scope.action.canEditMetadata() && scope.activity['edit.item']) {
-                        actions.push({
-                            label: gettext('Edit metadata'),
-                            icon: 'icon-edit-line',
-                            onTrigger: () => {
-                                scope.action.multiImageEdit();
-                                scope.$apply();
-                            },
-                            canAutocloseMultiActionBar: false,
-                        });
-                    }
-                    if (scope.activity['export']) {
-                        actions.push({
-                            label: gettext('Export'),
-                            icon: 'icon-download',
-                            onTrigger: () => {
-                                scope.openExport();
-                                scope.$apply();
-                            },
-                            canAutocloseMultiActionBar: false,
-                        });
-                    }
-                    if (scope.activity['edit.item']) {
-                        actions.push({
-                            label: gettext('Send to'),
-                            icon: 'icon-expand-thin',
-                            onTrigger: () => {
-                                scope.action.sendAs();
-                                scope.$apply();
-                            },
-                            canAutocloseMultiActionBar: false,
-                        });
-                    }
-                    if (scope.activity['edit.item'] && scope.state !== 'draft') {
-                        actions.push({
-                            label: gettext('Publish'),
-                            icon: 'icon-ok',
-                            onTrigger: () => {
-                                scope.action.publish();
-                                scope.$apply();
-                            },
-                            canAutocloseMultiActionBar: false,
-                        });
-                    }
-                } else if (scope.type === 'ingest') {
-                    actions.push({
-                        label: gettext('Fetch'),
-                        icon: 'icon-archive',
-                        onTrigger: () => {
-                            scope.action.send();
-                            scope.$apply();
-                        },
-                        canAutocloseMultiActionBar: false,
-                    });
-                    actions.push({
-                        label: gettext('Fetch to'),
-                        icon: 'icon-fetch-as',
-                        onTrigger: () => {
-                            scope.action.sendAs();
-                            scope.$apply();
-                        },
-                        canAutocloseMultiActionBar: false,
-                    });
-
-                    if (scope.action.canRemoveIngestItems()) {
-                        actions.push({
-                            label: gettext('Remove'),
-                            icon: 'icon-trash',
-                            onTrigger: () => {
-                                scope.action.removeIngestItems();
-                                scope.$apply();
-                            },
-                            canAutocloseMultiActionBar: false,
                         });
                     }
                 }
