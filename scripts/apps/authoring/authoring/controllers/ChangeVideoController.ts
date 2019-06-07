@@ -43,7 +43,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
     $scope.quality = {};
     $scope.video = null;
     $scope.flag = true;
-    $scope.listFrames = [];
+    $scope.listFrames;
 
     $scope.validator = deployConfig.getSync('validator_media_metadata');
     const sizes = {};
@@ -106,11 +106,11 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
      * modified crop information, point of interest and metadata changes.
      */
     let stopIntervalID;
+    $scope.videoReload = true;
     $scope.saveEditVideo = function () {
         const videoEditing = document.querySelector('.video-editing');
         videoEditing.classList.add('video-loading');
         $scope.video.pause();
-        $scope.listFrames = null;
         $scope.isAoISelectionModeEnabled = true;
         const cut = ($scope.cut.end - $scope.cut.start) === $scope.video.duration ? {} : $scope.cut;
         const rotate = $scope.rotate.degree % 360 === 0 ? {} : $scope.rotate;
@@ -127,21 +127,22 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
             .then(
                 response => {
                     const mediaID = response._id.media;
+                    $scope.videoReload = false;
+                    if (jcrop_api) {
+                        jcrop_api.destroy();
+                        jcrop_api = null;
+                    }
                     (function checkVideoProcessing(mediaID) {
                         stopIntervalID = $interval(async function () {
                             const item = await api.get(`/video_edit/${mediaID}`);
                             if (item.processing === false) {
-
                                 stopInterval(stopIntervalID);
                                 $scope.isAoISelectionModeEnabled = false;
                                 $scope.$applyAsync()
                                 {
                                     $scope.cancelEditVideo();
                                     $scope.data.item = angular.extend($scope.data.item, response._id);
-                                    $scope.listFrames = null;
-                                    $scope.video.style = "width:" + item.metadata.height + "; height:" + item.metadata.width + ";"
-                                    $('#video').Jcrop({ boxWidth: item.metadata.height, boxHeight: item.metadata.width });
-                                    loadListThumbnails();
+                                    $scope.videoReload = true;
                                     videoEditing.classList.remove('video-loading');
                                 }
                             }
@@ -361,15 +362,12 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
             }
         }
         else {
-            await delay(2000);
-            loadListThumbnails()
+            $scope.listFrames = null;
         }
         // })
         // .catch(function (err) { return console.log(err); });
     }
-    function delay(ms: number) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
+
     function loadImage() {
         if ('thumbnail' in $scope.data.item.renditions) {
             var img = document.createElement("img");
@@ -531,22 +529,22 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
      *
      */
     $scope.cropVideo = (ratio, currentTarget) => {
-        $('#video').Jcrop({
-            onSelect: showCoords,
-            onchange: showCoords,
-            //aspectRatio: null,
-            minSize: [30, 30],
-            //trueSize: [video.clientWidth, video.clientHeight],
-            addClass: 'jcrop-dark',
-            bgOpacity: .4
+        if (!jcrop_api) {
+            $('#video').Jcrop({
+                onSelect: showCoords,
+                onchange: showCoords,
+                //aspectRatio: null,
+                minSize: [30, 30],
+                //trueSize: [video.clientWidth, video.clientHeight],
+                addClass: 'jcrop-dark',
+                bgOpacity: .4
 
-        }, function () {
-            jcrop_api = this;
-        });
-        if (jcrop_api) {
-            jcrop_api.release();
-            jcrop_api.disable();
-        };
+            }, function () {
+                jcrop_api = this;
+            });
+        }
+        jcrop_api.release();
+        jcrop_api.disable();
 
         let theToggle = document.getElementById('toggleRatio');
         showHideToggleMenu(theToggle, 'on');

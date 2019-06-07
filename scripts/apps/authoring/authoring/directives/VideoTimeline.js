@@ -1,8 +1,15 @@
 /* global _ */
 
-import { TweenMax } from "gsap/TweenMax";
-import { isEmpty } from 'lodash';
+import {
+    TweenMax
+} from "gsap/TweenMax";
+import {
+    isEmpty
+} from 'lodash';
 import ResizeObserver from 'resize-observer-polyfill';
+import {
+    changeEditorSelection
+} from "core/editor3/helpers/highlights";
 
 /**
  * @ngdoc directive
@@ -55,7 +62,7 @@ export function VideoTimeline() {
             scope.$watch('listFrames', (listFrames) => {
                 loadTimeLine(listFrames)
             });
-            
+
             scope.$watch('cut', (cut) => {
                 if (isEmpty(cut)) {
                     return;
@@ -201,27 +208,41 @@ export function VideoTimeline() {
                 });
                 return position;
             };
+
             function getRandomSpan() {
                 var random = Math.floor(1000 + Math.random() * 9000);
                 return random
             }
 
-            function loadTimeLine(list_thumbnails) {
-                var widthpic = 88
+            function delay(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+
+            async function loadTimeLine(list_thumbnails) {
+                var widthpic = 50 * scope.video.clientWidth / scope.video.clientHeight;
                 if (controlbar.offsetWidth <= 0) {
                     return;
                 }
                 if (list_thumbnails && list_thumbnails.length > 0) {
                     widthpic = list_thumbnails[0].width;
+                } else {
+                    let total_thumbnail = Math.floor(controlbar.offsetWidth / widthpic);
+                    let per_time_image = scope.video.duration / total_thumbnail;
+                    if (inner_frames) {
+                        inner_frames.innerHTML = '';
+                    }
+                    number = getRandomSpan()
+                    loadListThumbnails(total_thumbnail, per_time_image, widthpic, 0, number)
+                    return
                 }
-                var total_thumbnail = Math.floor(controlbar.offsetWidth / widthpic);
-                var per_index_image = 35 / total_thumbnail;
-                var number = getRandomSpan()
+                let total_thumbnail = Math.floor(controlbar.offsetWidth / widthpic);
+                let per_index_image = 39 / total_thumbnail;
+                let number = getRandomSpan()
                 if (inner_frames) {
                     inner_frames.innerHTML = '';
-                    for (var i = 0; i <= total_thumbnail; i++) {
-                        var index = Math.round(i * per_index_image);
-                        var video = document.createElement("video");
+                    for (let i = 0; i <= total_thumbnail; i++) {
+                        let index = Math.round(i * per_index_image);
+                        let video = document.createElement("video");
                         video.width = widthpic;
                         video.height = 50;
                         if (list_thumbnails && list_thumbnails.length > 0) {
@@ -229,10 +250,25 @@ export function VideoTimeline() {
                             video.className = 'loaded';
                         }
                         inner_frames.append(video);
-
                     }
                 }
 
+            }
+
+            function loadListThumbnails(total_thumbnail, per_time_image, widthpic, count, number) {
+                if (count <= total_thumbnail) {
+                    let video = document.createElement("video");
+                    video.width = widthpic;
+                    video.height = 50;
+                    video.src = scope.video.src + '&tag=' + number + '#t=' + (count * per_time_image);
+                    video.preload = 'metadata';
+                    inner_frames.append(video);
+                    count += 1;
+                    video.onloadeddata = function () {
+                        video.className = 'loaded';
+                        loadListThumbnails(total_thumbnail, per_time_image, widthpic, count);
+                    };
+                }
             }
         },
     }

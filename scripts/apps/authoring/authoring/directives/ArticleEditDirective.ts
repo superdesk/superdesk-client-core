@@ -314,7 +314,7 @@ export function ArticleEditDirective(
                                 editable: true,
                                 isAssociated: false,
                                 defaultTab: defaultTab,
-                                showMetadata: showMetadata,
+                                showMetadata: false,
                             }
                         )
                             .then((res) => {

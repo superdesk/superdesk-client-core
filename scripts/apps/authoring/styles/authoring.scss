@@ -1758,13 +1758,17 @@ md-frames {
   display: block;
   width: 100%;
 }
+.md-frames-thumbs {
+  overflow: hidden;  
+}
 
 md-frames .inner {
   width: 100%;
-  overflow: hidden;
   white-space: nowrap;
   border-radius: 5px;
   min-height: 50px;
+  position: relative;
+  left: 0px;
 }
 
 md-frames video {

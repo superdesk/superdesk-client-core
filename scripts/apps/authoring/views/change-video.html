@@ -47,7 +47,7 @@
                 <div class="sd-photo-preview__video">
                     <div class="sd-photo-preview__video-inner">
                         <div class="sd-photo-preview__video-container" id="video-preview">
-                            <video autoplay="autoplay" id="video" class="ng-isolate-scope" ng-init="videoInit()"
+                            <video autoplay="autoplay" id="video" ng-if="videoReload === true" class="ng-isolate-scope" ng-init="videoInit()"
                                 ng-src="{{data.item.renditions.original.href}}?tag={{data.item._etag}}">
                             </video>
                         </div>
