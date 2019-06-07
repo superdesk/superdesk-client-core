@@ -16,7 +16,7 @@
     </div>
     <div class="modal__header-buttons modal__header-buttons--right">
         <button class="btn btn--primary btn--ui-dark btn--hollow" ng-click="done()"
-        ng-disabled="!isDoneEnabled() || isAoISelectionModeEnabled">Done</button>
+            ng-disabled="!isDoneEnabled() || isAoISelectionModeEnabled">Done</button>
     </div>
 </div>
 <div class="modal__body modal__body--no-padding">
@@ -48,7 +48,8 @@
                     <div class="sd-photo-preview__video-inner">
                         <div class="sd-photo-preview__video-container" id="video-preview">
                             <video autoplay="autoplay" id="video" class="ng-isolate-scope" ng-init="videoInit()"
-                                ng-src="{{data.item.renditions.original.href}}?tag={{data.item._etag}}"></video>
+                                ng-src="{{data.item.renditions.original.href}}?tag={{data.item._etag}}">
+                            </video>
                         </div>
                         <div class="sd-photo-preview__video-tools">
                             <button class="btn btn--ui-dark btn--hollow btn--icon-only btn--large"
@@ -106,7 +107,9 @@
                                 <a class="image-overlay__button" sd-tooltip="Upload image" ng-click="uploadThumbnail()">
                                     <i class="icon-upload"></i>
                                 </a>
-                                <input type="file" id="file-upload" onchange="angular.element(this).scope().uploadChange(this)" style="display:none" accept="image/*">
+                                <input type="file" id="file-upload"
+                                    onchange="angular.element(this).scope().uploadChange(this)" style="display:none"
+                                    accept="image/*">
                             </div>
                         </div>
                         <div>

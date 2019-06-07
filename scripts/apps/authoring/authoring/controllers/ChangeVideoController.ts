@@ -1,7 +1,7 @@
 import { get } from 'lodash';
 import { gettext } from 'core/utils';
 import angular from "angular";
-
+import Cropper from 'cropperjs';
 
 /**
  * @ngdoc controller
@@ -139,9 +139,8 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
                                     $scope.cancelEditVideo();
                                     $scope.data.item = angular.extend($scope.data.item, response._id);
                                     $scope.listFrames = null;
-                                    $scope.video.height = item.metadata.height;
-                                    $scope.video.width = item.metadata.width;
-
+                                    $scope.video.style = "width:" + item.metadata.height + "; height:" + item.metadata.width + ";"
+                                    $('#video').Jcrop({ boxWidth: item.metadata.height, boxHeight: item.metadata.width });
                                     loadListThumbnails();
                                     videoEditing.classList.remove('video-loading');
                                 }
@@ -309,7 +308,6 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
                     $scope.qualityVideo.is120 = true;
                 }
             }
-
         }
 
         loadListThumbnails()
@@ -533,6 +531,23 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
      *
      */
     $scope.cropVideo = (ratio, currentTarget) => {
+        $('#video').Jcrop({
+            onSelect: showCoords,
+            onchange: showCoords,
+            //aspectRatio: null,
+            minSize: [30, 30],
+            //trueSize: [video.clientWidth, video.clientHeight],
+            addClass: 'jcrop-dark',
+            bgOpacity: .4
+
+        }, function () {
+            jcrop_api = this;
+        });
+        if (jcrop_api) {
+            jcrop_api.release();
+            jcrop_api.disable();
+        };
+
         let theToggle = document.getElementById('toggleRatio');
         showHideToggleMenu(theToggle, 'on');
         let self = currentTarget;

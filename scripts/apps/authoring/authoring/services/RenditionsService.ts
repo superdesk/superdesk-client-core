@@ -72,24 +72,11 @@ export function RenditionsService(metadata, $q, api, superdesk, _, notify) {
             if (!withRatio.length) {
                 withRatio = self.renditions;
             }
-            var hideTabs = ['crop']
-            const videoOptions = {
-                isNew: true,
-                isAssociated: false,
-                editable: true,
-                defaultTab: false,
-                hideTabs: hideTabs,
-                showMetadata: false,
-                ...options,
-            };
-
             return superdesk.intent('edit', 'video', {
                 item: clonedItem,
-                renditions: withRatio,
-                poi: clonedItem.poi,
                 showAoISelectionButton: true,
                 showMetadataEditor: true,
-                ...videoOptions,
+                options,
             })
                 .then((result) => {
                     return item
