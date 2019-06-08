@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 import {IDisplayPriority} from 'superdesk-api';
 import {hasDebugSetting} from './debug-settings';
 
