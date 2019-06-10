@@ -1,7 +1,5 @@
 import { get } from 'lodash';
-import { gettext } from 'core/utils';
 import angular from "angular";
-import Cropper from 'cropperjs';
 import { validateMediaFieldsThrows } from './ChangeImageController';
 
 /**
@@ -92,50 +90,57 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         videoEditing.classList.add('video-loading');
         $scope.video.pause();
         $scope.isAoISelectionModeEnabled = true;
-        const cut = ($scope.cut.end - $scope.cut.start) === $scope.video.duration ? {} : $scope.cut;
+        const cut = ($scope.cut.end - $scope.cut.start) === ($scope.video.duration || 0) ? {} : $scope.cut;
         const rotate = $scope.rotate.degree % 360 === 0 ? {} : $scope.rotate;
         api.save("video_edit", {
-                item: $scope.data.item,
-                edit: {
-                    cut: cut,
-                    crop: $scope.crop,
-                    rotate: rotate,
-                    quality: $scope.quality,
-                },
-                thumbnail: $scope.thumbnail,
-            })
+            item: $scope.data.item,
+            edit: {
+                cut: cut,
+                crop: $scope.crop,
+                rotate: rotate,
+                quality: $scope.quality,
+            },
+            thumbnail: $scope.thumbnail,
+        })
             .then(
                 response => {
                     const mediaID = response._id.media;
-                    $scope.videoReload = false;
-                    if (jcrop_api) {
-                        jcrop_api.destroy();
-                        jcrop_api = null;
-                    }
                     (function checkVideoProcessing(mediaID) {
                         stopIntervalID = $interval(async function () {
                             const item = await api.get(`/video_edit/${mediaID}`);
-                            if (item.processing === false) {
+
+                            if (await item.processing === false) {
                                 stopInterval(stopIntervalID);
+                                $scope.videoReload = false;
+                                clearJcrop();
                                 $scope.isAoISelectionModeEnabled = false;
-                                $scope.$applyAsync()
-                                {
+                                $scope.$applyAsync(() => {
                                     $scope.cancelEditVideo();
                                     $scope.data.item = angular.extend($scope.data.item, response._id);
                                     $scope.videoReload = true;
                                     videoEditing.classList.remove('video-loading');
-                                }
+                                })
                             }
                         }, 2500);
                     })(mediaID);
                 }
-            ).catch(
-                err => { console.log(err); videoEditing.classList.remove('video-loading'); }
-            );
+            ).catch(err => {
+                notify.error(err.data._message);
+                clearJcrop();
+                $scope.isAoISelectionModeEnabled = false;
+                videoEditing.classList.remove('video-loading');
+            });
         $scope.editVideo.isDirty = false;
         $scope.data.isDirty = true;
         $scope.editVideo.isChange = true;
     };
+
+    function clearJcrop() {
+        if (jcrop_api) {
+            jcrop_api.destroy();
+            jcrop_api = null;
+        }
+    }
 
     const stopInterval = (id) => {
         $interval.cancel(id);
@@ -158,7 +163,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         $scope.editVideo.isDirty = false;
         $scope.cut = {
             start: 0,
-            end: $scope.video.duration,
+            end: $scope.video.duration || 0,
         };
         loadImage();
         // disable crop video
@@ -272,7 +277,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
             $scope.$applyAsync(() => {
                 $scope.cut = {
                     start: 0,
-                    end: $scope.video.duration,
+                    end: $scope.video.duration || 0,
                 };
             });
             if ($scope.video) {
@@ -294,7 +299,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         loadListThumbnails();
     };
 
-    $scope.uploadChange = function (element) {
+    $scope.uploadChange = function (event) {
         var tgt = event.target || window.event.srcElement,
             files = tgt.files;
         // FileReader support
@@ -334,18 +339,12 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
     };
     async function loadListThumbnails() {
         const res = await api.get(`/video_edit/${$scope.data.item.media}?action=thumbnails&amount=40`)
-        // .then(function (res) {
         if (res && res.processing === false) {
-            $scope.$applyAsync()
-            {
-                $scope.listFrames = res.thumbnails;
-            }
+            $scope.$applyAsync(() => $scope.listFrames = res.thumbnails)
         }
         else {
             $scope.listFrames = null;
         }
-        // })
-        // .catch(function (err) { return console.log(err); });
     }
 
     function loadImage() {
@@ -411,12 +410,17 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
      */
     $scope.done = () => {
         if ($scope.data.isDirty) {
-            if (config.features.validatePointOfInterestForImages === true) {
-                if (!$scope.saveEditVideo() || !$scope.applyMetadataChanges()) {
-
-                }
-            }
-        } else {
+            $scope.resolve({
+                item: $scope.data.item,
+                metadata: _.pick($scope.data.metadata, [
+                    ...EDITABLE_METADATA,
+                    'poi',
+                    'renditions',
+                    '_etag',
+                ]),
+            })
+        }
+        else {
             $scope.reject();
         }
     };
@@ -636,19 +640,18 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         };
     };
 
-    $scope.applyMetadataChanges = () => {
+    $scope.applyMetadataChanges = async () => {
         try {
             validateMediaFieldsThrows($scope.validator, $scope.data.metadata);
-            console.log($scope.data.metadata)
-            $scope.data.metadata =
             api.save('archive', $scope.data.metadata, _.pick($scope.data.metadata, [
                 ...EDITABLE_METADATA,
                 'poi',
                 'renditions',
                 '_etag',
-            ]))
-            $scope.metadata.isDirty = false;
-            $scope.data.isDirty = false;
+            ])).then(_ => {
+                $scope.metadata.isDirty = false;
+                $scope.data.isDirty = false;
+            });
         } catch (e) {
             // show an error and stop the "done" operation
             notify.error(e);
