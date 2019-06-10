@@ -165,7 +165,7 @@
                             <span id="multiple_items" sd-switch ng-model="vocabulary.field_options.multiple_items.enabled"></span>
                             <label for="multiple_items" translate>Allow Multiple Items</label>
                         </div>
-                        <div class="form__row form__row--inner form__row--flex" ng-show="vocabulary.field_options.multiple_items.enabled">
+                        <div class="form__row form__row--inner form__row--flex" ng-if="vocabulary.field_options.multiple_items.enabled">
                             <div class="form__row-item form__row-item--no-grow">
                                 <span translate>Max. number of items</span>
                             </div>

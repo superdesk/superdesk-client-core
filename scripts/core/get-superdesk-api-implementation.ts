@@ -13,6 +13,7 @@ import {UserHtmlSingleLine} from './helpers/UserHtmlSingleLine';
 import {Row, Item, Column} from './ui/components/List';
 import {connectCrudManager, dataApi} from './helpers/CrudManager';
 import {generateFilterForServer} from './ui/components/generic-form/generate-filter-for-server';
+import {assertNever} from './helpers/typescript-helpers';
 
 export function getSuperdeskApiImplementation(
     requestingExtensionId: string,
@@ -21,6 +22,9 @@ export function getSuperdeskApiImplementation(
 ): ISuperdesk {
     return {
         dataApi: dataApi,
+        helpers: {
+            assertNever,
+        },
         ui: {
             alert: (message: string) => modal.alert({bodyText: message}),
             confirm: (message: string) => new Promise((resolve) => {

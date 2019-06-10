@@ -223,13 +223,15 @@ declare module 'superdesk-api' {
 
     export interface IEditor3AnnotationInputTab {
         label: string;
-        selectedByDefault(annotationText: string): Promise<boolean>;
+        selectedByDefault(annotationText: string, mode: 'create' | 'edit'): Promise<boolean>;
         component: React.ComponentType<IPropsAnnotationInputComponent>;
     }
 
     export interface IPropsAnnotationInputComponent {
         annotationText: string;
+        annotationInputComponent: React.ReactElement<any>;
         annotationTypeSelect: JSX.Element;
+        mode: 'create' | 'edit';
         onCancel(): void;
         onApplyAnnotation(html: string): void;
     }
@@ -261,6 +263,9 @@ declare module 'superdesk-api' {
             alert(message: string): Promise<void>;
             confirm(message: string): Promise<boolean>;
         };
+        helpers: {
+            assertNever(x: never): never;
+        },
         components: {
             UserHtmlSingleLine: React.ComponentType<{html: string}>;
             getGenericListPageComponent<T extends IBaseRestApiResponse>(resource: string): React.ComponentType<IPropsGenericForm<T>>;                        

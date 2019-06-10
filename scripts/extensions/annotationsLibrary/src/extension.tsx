@@ -4,17 +4,28 @@ import {getAnnotationsLibraryPage} from './annotations-library-page';
 import {getFields} from './GetFields';
 import {IKnowledgeBaseItem} from './interfaces';
 
-function annotationFromLibraryTabSelectedByDefault(superdesk: ISuperdesk, annotationText: string) {
+function annotationFromLibraryTabSelectedByDefault(
+    superdesk: ISuperdesk,
+    annotationText: string,
+    mode: 'create' | 'edit',
+) {
     const {dataApi} = superdesk;
+    const {assertNever} = superdesk.helpers;
     const {nameField} = getFields(superdesk);
     const {generateFilterForServer} = superdesk.forms;
 
-    return dataApi.query<IKnowledgeBaseItem>(
-        'concept_items',
-        1,
-        {field: 'name', direction: 'ascending'},
-        {name: generateFilterForServer(nameField.type, annotationText)},
-    ).then((res: IRestApiResponse<IKnowledgeBaseItem>) => res._items.length > 0);
+    if (mode === 'edit') {
+        return Promise.resolve(false);
+    } else if (mode === 'create') {
+        return dataApi.query<IKnowledgeBaseItem>(
+            'concept_items',
+            1,
+            {field: 'name', direction: 'ascending'},
+            {name: generateFilterForServer(nameField.type, annotationText)},
+        ).then((res: IRestApiResponse<IKnowledgeBaseItem>) => res._items.length > 0);
+    } else {
+        return assertNever(mode);
+    }
 }
 
 var extension: IExtension = {
@@ -28,8 +39,8 @@ var extension: IExtension = {
                         {
                             label: gettext('Annotations library'),
                             component: getAnnotationInputWithKnowledgeBase(superdesk),
-                            selectedByDefault: (annotationText: string) =>
-                                annotationFromLibraryTabSelectedByDefault(superdesk, annotationText),
+                            selectedByDefault: (annotationText: string, mode: 'create' | 'edit') =>
+                                annotationFromLibraryTabSelectedByDefault(superdesk, annotationText, mode),
                         },
                     ],
                 },

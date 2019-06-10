@@ -459,14 +459,20 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                                     .replace(/\]/g, '')
                                     .split(',');
 
-                                for (var i = 0; i < modifiedErrors.length; i++) {
-                                    var message = _.trim(modifiedErrors[i]);
+                                modifiedErrors.forEach((error) => {
+                                    const message = _.trim(error, '\' ');
                                     // the message format is 'Field error text' (contains ')
-                                    var field = message.split(' ')[0].substr(1);
+                                    const field = message.split(' ')[0];
 
-                                    $scope.error[field.toLowerCase()] = true;
+                                    $scope.error[field.toLocaleLowerCase()] = true;
                                     notify.error(message);
+                                });
+
+                                if (issues.fields) {
+                                    Object.assign($scope.error, issues.fields);
                                 }
+
+                                $scope.$applyAsync(); // make $scope.error changes visible
 
                                 if (errors.indexOf('9007') >= 0 || errors.indexOf('9009') >= 0) {
                                     authoring.open(item._id, true).then((res) => {

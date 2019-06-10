@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 /* tslint:disable:max-line-length */
 
-import _, {mapValues} from 'lodash';
+import _, {mapValues, isEmpty} from 'lodash';
 import moment from 'moment-timezone';
 import {gettext} from 'core/utils';
 
@@ -1047,11 +1047,11 @@ function validationDirective() {
                 }
             });
 
-            scope.$watch(attrs.sdValidationError, (isError) => {
-                if (isError === true) {
-                    elem.addClass('sd-invalid').removeClass('sd-valid');
-                } else if (isError === false) {
+            scope.$watch(attrs.sdValidationError, (errors) => {
+                if (isEmpty(errors)) { // valid
                     elem.removeClass('sd-invalid').addClass('sd-valid');
+                } else {
+                    elem.addClass('sd-invalid').removeClass('sd-valid');
                 }
             });
         },
