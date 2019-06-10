@@ -1,7 +1,7 @@
 import React from 'react';
 import {get} from 'lodash';
 
-import {fields} from 'apps/fields';
+import {getFields} from 'apps/fields';
 import {IArticle} from 'superdesk-interfaces/Article';
 import {IVocabulary} from 'superdesk-interfaces/Vocabulary';
 
@@ -24,6 +24,7 @@ export class AuthoringCustomField extends React.PureComponent<IProps> {
     }
 
     render() {
+        const fields = getFields();
         const {item, field, readonly} = this.props;
         const FieldType = fields[field.custom_field_type];
 

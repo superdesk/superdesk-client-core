@@ -1,10 +1,5 @@
 import React from 'react';
-
-interface IProps {
-    type: 'info' | 'warning' | 'error';
-    hollow?: boolean;
-    children: React.ReactNode;
-}
+import {IPropsComponentAlert} from 'superdesk-api';
 
 const CLASSNAMES = {
     info: 'sd-alert--primary',
@@ -12,7 +7,7 @@ const CLASSNAMES = {
     error: 'sd-alert--alert',
 };
 
-export const Alert: React.StatelessComponent<IProps> = (props: IProps) => {
+export const Alert: React.StatelessComponent<IPropsComponentAlert> = (props) => {
     const className = [
         'sd-alert',
         props.hollow ? 'sd-alert--hollow' : '',

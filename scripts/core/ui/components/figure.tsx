@@ -1,12 +1,7 @@
 import React from 'react';
+import {IPropsComponentFigure} from 'superdesk-api';
 
-interface IProps {
-    caption: string;
-    onRemove?: () => void;
-    children: React.ReactNode;
-}
-
-export const Figure: React.StatelessComponent<IProps> = (props: IProps) => {
+export const Figure: React.StatelessComponent<IPropsComponentFigure> = (props) => {
     const editable = props.onRemove != null;
 
     return (

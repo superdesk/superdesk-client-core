@@ -14,6 +14,10 @@ import {Row, Item, Column} from './ui/components/List';
 import {connectCrudManager, dataApi} from './helpers/CrudManager';
 import {generateFilterForServer} from './ui/components/generic-form/generate-filter-for-server';
 import {assertNever} from './helpers/typescript-helpers';
+import {Grid} from './ui/components/grid';
+import {Alert} from './ui/components/alert';
+import {Figure} from './ui/components/figure';
+import {DropZone} from './ui/components/drop-zone';
 
 export function getSuperdeskApiImplementation(
     requestingExtensionId: string,
@@ -45,6 +49,10 @@ export function getSuperdeskApiImplementation(
                 Row,
                 Column,
             },
+            Grid,
+            Alert,
+            Figure,
+            DropZone,
         },
         forms: {
             FormFieldType,

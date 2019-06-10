@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import {MEDIA_TYPES, MEDIA_TYPE_KEYS, VOCABULARY_SELECTION_TYPES} from '../constants';
 import {gettext} from 'core/utils';
-import {fields} from 'apps/fields';
+import {getFields} from 'apps/fields';
 
 VocabularyEditController.$inject = [
     '$scope',
@@ -173,6 +173,8 @@ export function VocabularyEditController($scope, notify, api, vocabularies, meta
         $scope.vocabulary.items.splice(index, 1);
         $scope.vocabulary.items = $scope.vocabulary.items.slice(); // trigger watch on items collection
     };
+
+    const fields = getFields();
 
     $scope.customFieldTypes = Object.keys(fields).map((id) => ({
         id: id,

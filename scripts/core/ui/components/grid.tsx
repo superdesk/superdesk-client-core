@@ -1,12 +1,7 @@
 import React from 'react';
+import {IPropsComponentGrid} from 'superdesk-api';
 
-interface IProps {
-    columns: number;
-    boxed?: boolean;
-    children: React.ReactNodeArray;
-}
-
-export const Grid: React.StatelessComponent<IProps> = (props: IProps) => {
+export const Grid: React.StatelessComponent<IPropsComponentGrid> = (props) => {
     const className = [
         'flex-grid',
         'flex-grid--wrap-items',

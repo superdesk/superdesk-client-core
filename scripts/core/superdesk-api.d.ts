@@ -28,6 +28,7 @@ declare module 'superdesk-api' {
                 annotationInputTabs?: Array<IEditor3AnnotationInputTab>;
             }
             pages?: Array<IPage>;
+            customFieldTypes?: Array<ICustomFieldType>;
         }
     }
 
@@ -204,6 +205,29 @@ declare module 'superdesk-api' {
         noBorder?: boolean;
     }
 
+    export interface IPropsComponentGrid {
+        columns: number;
+        boxed?: boolean;
+        children: React.ReactNodeArray;
+    }
+
+    export interface IPropsComponentAlert {
+        type: 'info' | 'warning' | 'error';
+        hollow?: boolean;
+        children: React.ReactNode;
+    }
+
+    export interface IPropsComponentFigure {
+        caption: string;
+        onRemove?: () => void;
+        children: React.ReactNode;
+    }
+
+    export interface IPropsComponentDropZone {
+        label: string;
+        onDrop: (event: DragEvent) => void;
+        canDrop: (event: DragEvent) => boolean;
+    }
 
     export interface IGenericListPageComponent<T extends IBaseRestApiResponse> {
         openPreview(id: string): void;
@@ -281,7 +305,11 @@ declare module 'superdesk-api' {
                 Item: React.ComponentType<{onClick: any}>;
                 Row: React.ComponentType;
                 Column: React.ComponentType<{grow: boolean}>;
-            }
+            },
+            Grid: React.ComponentType<IPropsComponentGrid>;
+            Alert: React.ComponentType<IPropsComponentAlert>;
+            Figure: React.ComponentType<IPropsComponentFigure>;
+            DropZone: React.ComponentType<IPropsComponentDropZone>;
         };
         forms: {
             FormFieldType: typeof FormFieldType;
@@ -303,4 +331,27 @@ declare module 'superdesk-api' {
             getExtension(id: string): Promise<Omit<IExtension, 'activate'>>;
         };
     }>;
+
+    // CUSTOM FIELD TYPES
+
+    export interface IEditorComponentProps {
+        item: any;
+        value: any;
+        setValue: (value: any) => void;
+        readOnly: boolean;
+        superdesk: ISuperdesk;
+    }
+
+    export interface IPreviewComponentProps {
+        item: any;
+        value: any;
+        superdesk: ISuperdesk;
+    }
+
+    export interface ICustomFieldType {
+        id: string;
+        label: string;
+        editorComponent: React.StatelessComponent<IEditorComponentProps>;
+        previewComponent: React.StatelessComponent<IPreviewComponentProps>;
+    }
 }

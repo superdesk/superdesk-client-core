@@ -1,11 +1,5 @@
 import React from 'react';
-
-interface IProps {
-    label: string;
-
-    onDrop: (event: DragEvent) => void;
-    canDrop: (event: DragEvent) => boolean;
-}
+import {IPropsComponentDropZone} from 'superdesk-api';
 
 interface IState {
     hover: boolean;
@@ -15,7 +9,7 @@ interface IJQueryDragEvent extends JQueryEventObject {
     originalEvent: DragEvent;
 }
 
-export class DropZone extends React.PureComponent<IProps, IState> {
+export class DropZone extends React.PureComponent<IPropsComponentDropZone, IState> {
     elem: HTMLElement;
 
     readonly state = {hover: false};

@@ -3,7 +3,6 @@ import {IVocabulary, IVocabularyTag} from 'superdesk-interfaces/Vocabulary';
 import {IDirectiveScope} from 'types/Angular/DirectiveScope';
 import {remove, reduce} from 'lodash';
 import {gettext} from 'core/utils';
-import {fields} from 'apps/fields';
 
 const OTHER = gettext('Other');
 
