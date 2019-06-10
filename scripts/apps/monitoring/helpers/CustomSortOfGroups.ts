@@ -1,17 +1,25 @@
 import {get} from 'lodash';
 import {StageGroup} from '../directives/MonitoringGroup';
 
-export const CUSTOM_SORT_SETTING = 'monitoring.customSortOfGroups';
-
 export type GroupSortOptions = Array<string>;
+
+export function matchGroupToOrderConfig(group: StageGroup) {
+    if (group._id.endsWith(':output')) {
+        return 'monitoring.output.sort';
+    } else if (group._id.endsWith(':scheduled')) {
+        return 'monitoring.scheduled.sort';
+    }
+
+    return 'monitoring.stage.sort';
+}
 
 export default function getCustomSortForGroup(config: any, group: StageGroup): GroupSortOptions {
     if (!group.type) {
-        return null;
+        return [];
     }
 
-    const customConfig = get(config, CUSTOM_SORT_SETTING, {});
-    const groupConfig: GroupSortOptions = get(customConfig, group.type, null);
+    const configForGroup = matchGroupToOrderConfig(group);
+    const customConfig = get(config, configForGroup, []);
 
-    return groupConfig;
+    return customConfig;
 }

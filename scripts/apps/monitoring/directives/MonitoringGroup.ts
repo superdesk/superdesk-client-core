@@ -137,7 +137,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
 
             const customSorts = getCustomSortForGroup(config, scope.group);
 
-            if (customSorts) {
+            if (customSorts.length > 0) {
                 scope.customSortOptions = translateCustomSorts(customSorts);
                 scope.customSortOptionActive = null; // default
             }
