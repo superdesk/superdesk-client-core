@@ -12,6 +12,7 @@ import ng from 'core/services/ng';
 import {gettext} from 'core/utils';
 import {Editor3Standalone} from 'core/editor3/react';
 import {getContentStateFromHtml} from 'core/editor3/html/from-html';
+import {getRangeAndTextForStyle} from 'core/editor3/helpers/highlights';
 import {extensions} from 'core/extension-imports.generated';
 import {flatMap} from 'lodash';
 import {IEditor3AnnotationInputTab} from 'superdesk-api';
@@ -19,9 +20,9 @@ import {IEditor3AnnotationInputTab} from 'superdesk-api';
 interface IProps {
     editorState: EditorState;
     data: {
-        highlightId: any;
-        selection: SelectionState;
-        annotation: any;
+        selection?: SelectionState; // only provided when adding a new annotation
+        highlightId?: string; // only provided when editing an existing annotation
+        annotation?: any; // only provided when editing an existing annotation
     };
     highlightsManager: any;
     annotationTypes: Array<any>;
@@ -78,7 +79,8 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
         this.onChange = this.onChange.bind(this);
         this.onSelect = this.onSelect.bind(this);
         this.deleteAnnotation = this.deleteAnnotation.bind(this);
-        this.getSelectionText = this.getSelectionText.bind(this);
+        this.getAnnotatedText = this.getAnnotatedText.bind(this);
+        this.getAnnotationInputMode = this.getAnnotationInputMode.bind(this);
 
         this.annotationInputTabsFromExtensions = flatMap(
             Object.values(extensions).map(({activationResult}) => activationResult),
@@ -151,10 +153,11 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
     componentDidMount() {
         $('.annotation-input textarea').focus();
 
-        const text = this.getSelectionText();
+        const text = this.getAnnotatedText();
 
         Promise.all(
-            this.annotationInputTabsFromExtensions.map(({selectedByDefault}) => selectedByDefault(text)),
+            this.annotationInputTabsFromExtensions.map(({selectedByDefault}) =>
+                selectedByDefault(text, this.getAnnotationInputMode())),
         ).then((result) => {
             let active;
 
@@ -186,15 +189,33 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
         _hidePopups();
     }
 
-    getSelectionText(): string {
+    getAnnotatedText(): string {
         const {data} = this.props;
-        const selection: SelectionState = data.selection;
-        const blockKey = data.selection.getStartKey();
-        const contentState = this.props.editorState.getCurrentContent();
-        const block = contentState.getBlockForKey(blockKey);
-        const text = block.getText().slice(selection.getStartOffset(), selection.getEndOffset());
+
+        let text = '';
+
+        if (data.selection != null) { // annotation is being added
+            const selection: SelectionState = data.selection;
+            const blockKey = data.selection.getStartKey();
+            const contentState = this.props.editorState.getCurrentContent();
+            const block = contentState.getBlockForKey(blockKey);
+
+            text = block.getText().slice(selection.getStartOffset(), selection.getEndOffset());
+        } else { // annotation already exists
+            text = getRangeAndTextForStyle(this.props.editorState, data.highlightId).highlightedText;
+        }
 
         return text;
+    }
+
+    getAnnotationInputMode(): 'edit' | 'create' {
+        const {data} = this.props;
+
+        if (data.selection == null) {
+            return 'edit';
+        } else {
+            return 'create';
+        }
     }
 
     render() {
@@ -269,9 +290,11 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
                                                 label: tab.label,
                                                 render: () => (
                                                     <Component
-                                                        annotationText={this.getSelectionText()}
+                                                        annotationText={this.getAnnotatedText()}
                                                         onCancel={_hidePopups}
                                                         annotationTypeSelect={annotationTypeSelect}
+                                                        annotationInputComponent={annotationInputComponent}
+                                                        mode={this.getAnnotationInputMode()}
                                                         onApplyAnnotation={(html: string) => {
                                                             this.onChange(
                                                                 convertToRaw(getContentStateFromHtml(html)),

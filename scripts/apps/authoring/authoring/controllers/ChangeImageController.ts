@@ -57,8 +57,8 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, deploy
         'usageterms',
         'copyrightnotice',
         'place',
-        'subject',
         'keywords',
+        'extra',
     ].concat(Object.keys(get(deployConfig.getSync('schema'), 'picture', {})));
 
     $scope.controls = angular.copy(DEFAULT_CONTROLS);

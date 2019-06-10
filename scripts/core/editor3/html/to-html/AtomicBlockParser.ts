@@ -74,7 +74,7 @@ export class AtomicBlockParser {
     parseEmbed({data, description}) {
         let {html} = data;
         const descriptionHtml = typeof description === 'string' && description.length > 0
-            ? `<p>${description}</p>`
+            ? `<p class="embed-block__description">${description}</p>`
             : '';
         const finalHtml = isQumuWidget(html) ? postProccessQumuEmbed(html) : data.html;
 

@@ -13,6 +13,7 @@ import {UserHtmlSingleLine} from './helpers/UserHtmlSingleLine';
 import {Row, Item, Column} from './ui/components/List';
 import {connectCrudManager, dataApi} from './helpers/CrudManager';
 import {generateFilterForServer} from './ui/components/generic-form/generate-filter-for-server';
+import {assertNever} from './helpers/typescript-helpers';
 import {flatMap} from 'lodash';
 import {Modal} from './ui/components/Modal/Modal';
 import {ModalHeader} from './ui/components/Modal/ModalHeader';
@@ -60,6 +61,9 @@ export function getSuperdeskApiImplementation(
 ): ISuperdesk {
     return {
         dataApi: dataApi,
+        helpers: {
+            assertNever,
+        },
         entities: {
             article: {
                 isPersonal: (article) => article.task == null || article.task.desk == null,

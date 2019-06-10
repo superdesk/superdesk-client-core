@@ -369,7 +369,8 @@ function MetaDropdownDirective($filter) {
                         // so that it can be differentiated from another cv inside same parent field(subject).
                         // ex: subject:[{name: "a", qcode: "a", scheme: "new-cv"}]
                         item.scheme = scope.cv._id;
-                        fieldObject[scope.field] = scope.item[scope.field].filter((v) => v.scheme !== scope.cv._id);
+                        fieldObject[scope.field] = (scope.item[scope.field] || []).filter((v) =>
+                            v.scheme !== scope.cv._id);
                         fieldObject[scope.field].push(item);
                     } else {
                         fieldObject[scope.field] = scope.key ? item[scope.key] : [item];
