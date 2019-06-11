@@ -53,11 +53,10 @@ class HTMLParser {
 
     /**
      * @name HTMLParser#createTree
-     * @param {string} html
      * @description Takes the given HTML, extracts the atomic blocks, and creates
      * the tree to be parsed by the DraftJS's convertor.
      */
-    createTree(html) {
+    createTree(html: string) {
         const _html = docsSoap.default(html); // Needed for Google docs
 
         this.tree.html(_html);
@@ -137,12 +136,17 @@ class HTMLParser {
      * @name HTMLParser#contentState
      * @description Returns the full content state corresponding to the HTML that
      * initialized the instance.
-     * @returns {ContentState} contentState
      */
-    contentState() {
+    contentState(): ContentState {
         const processBlock = this.processBlock.bind(this);
+        const html = this.tree.html();
 
-        const conversionResult = convertFromHTML(this.tree.html());
+        if (html.trim() === '') {
+            // if html is empty then create an empty content state
+            return ContentState.createFromText('');
+        }
+
+        const conversionResult = convertFromHTML(html);
 
         let contentState = ContentState.createFromBlockArray(
             conversionResult.contentBlocks,
@@ -159,21 +163,18 @@ class HTMLParser {
 
     /**
      * Convert link entity data to editor3 format
-     *
-     * @param {ContentState} initialState
-     * @returns {ContentState}
      */
-    processLinks(initialState) {
+    processLinks(initialState: ContentState): ContentState {
         let contentState = initialState;
 
         contentState.getBlocksAsArray().forEach((block) => {
-            block.findEntityRanges((characterMetadata) => characterMetadata.getEntity(), (start, end) => {
+            block.findEntityRanges((characterMetadata) => Boolean(characterMetadata.getEntity()), (start, _end) => {
                 const key = block.getEntityAt(start);
 
                 if (key != null) {
                     const entity = contentState.getEntity(key);
 
-                    if (entity.type === 'LINK') {
+                    if (entity['type'] === 'LINK') {
                         contentState = contentState.replaceEntityData(key, {
                             link: {href: entity.getData().url},
                         });
@@ -187,12 +188,10 @@ class HTMLParser {
 
     /**
      * @name HTMLParser#processBlock
-     * @param {ContentBlock} block
      * @description Processes the given block. If it's an atomic block that has text
      * indicating the ID of a pruned node, it returns the new corresponding block.
-     * @returns {ContentBlock} New block.
      */
-    processBlock(block) {
+    processBlock(block: ContentBlock): ContentBlock {
         const isAtomic = block.getType() === 'atomic';
         const isTable = block.getText().startsWith('BLOCK_TABLE_');
         const isMedia = block.getText().startsWith('BLOCK_MEDIA_');
@@ -200,24 +199,26 @@ class HTMLParser {
         const isIframe = block.getText().startsWith('BLOCK_IFRAME_');
         const isScript = block.getText().startsWith('BLOCK_SCRIPT_');
 
-        if (isAtomic && isTable) {
-            return this.createTableBlock(block);
-        }
+        if (isAtomic) {
+            if (isTable) {
+                return this.createTableBlock(block);
+            }
 
-        if (isAtomic && isMedia) {
-            return this.createMediaBlock(block);
-        }
+            if (isMedia) {
+                return this.createMediaBlock(block);
+            }
 
-        if (isAtomic && isFigure) {
-            return this.createFigureBlock(block);
-        }
+            if (isFigure) {
+                return this.createFigureBlock(block);
+            }
 
-        if (isAtomic && isIframe) {
-            return this.createEmbedBlock(block, this.iframes);
-        }
+            if (isIframe) {
+                return this.createEmbedBlock(block, this.iframes);
+            }
 
-        if (isAtomic && isScript) {
-            return this.createEmbedBlock(block, this.scripts);
+            if (isScript) {
+                return this.createEmbedBlock(block, this.scripts);
+            }
         }
 
         return block;
@@ -225,11 +226,8 @@ class HTMLParser {
 
     /**
      * Create atomic block for embeds
-     *
-     * @param {ContentBlock} block
-     * @returns {ContentBlock}
      */
-    createFigureBlock(block) {
+    createFigureBlock(block: ContentBlock): ContentBlock {
         const id = this.getBlockId(block);
 
         var htmlElement = document.createElement('div');
@@ -252,11 +250,8 @@ class HTMLParser {
 
     /**
      * Create atomic block for embeds
-     *
-     * @param {ContentBlock} block
-     * @returns {ContentBlock}
      */
-    createEmbedBlock(block, items) {
+    createEmbedBlock(block: ContentBlock, items: Array<any>): ContentBlock {
         const id = this.getBlockId(block);
 
         var htmlElement = document.createElement('div');
@@ -275,7 +270,7 @@ class HTMLParser {
      * soon-to-be table block) and processes it.
      * @returns {ContentBlock} The fully restored table block.
      */
-    createTableBlock(block) {
+    createTableBlock(block: ContentBlock): ContentBlock {
         const id = this.getBlockId(block);
         const tableHTML = this.tables[id];
         const tableNode = $('<table></table>');
@@ -305,11 +300,8 @@ class HTMLParser {
 
     /**
      * Get block id from block text
-     *
-     * @param {ContentBlock} block
-     * @returns {number}
      */
-    getBlockId(block) {
+    getBlockId(block: ContentBlock): number {
         return parseInt(block.getText()
             .split('_')
             .pop(),
@@ -318,12 +310,10 @@ class HTMLParser {
 
     /**
      * @name HTMLParser#createMediaBlock
-     * @param {ContentBlock} block
      * @description Takes an unprocessed atomic block (that is assumed to be a
      * an media block) and processes it.
-     * @returns {ContentBlock} The restored image block.
      */
-    createMediaBlock(block) {
+    createMediaBlock(block: ContentBlock): ContentBlock {
         const id = this.getBlockId(block);
         const mediaJson = this.media[id];
 
@@ -331,11 +321,7 @@ class HTMLParser {
     }
 }
 
-/**
- * @param {string} html
- * @param {Object} associations (optional)
- */
-export function getContentStateFromHtml(html, associations = null) {
+export function getContentStateFromHtml(html: string, associations: object = null): ContentState {
     return new HTMLParser(html, associations).contentState();
 }
 
