@@ -339,19 +339,17 @@ declare module 'superdesk-api' {
         value: any;
         setValue: (value: any) => void;
         readOnly: boolean;
-        superdesk: ISuperdesk;
     }
 
     export interface IPreviewComponentProps {
         item: any;
         value: any;
-        superdesk: ISuperdesk;
     }
 
     export interface ICustomFieldType {
         id: string;
         label: string;
-        editorComponent: React.StatelessComponent<IEditorComponentProps>;
-        previewComponent: React.StatelessComponent<IPreviewComponentProps>;
+        editorComponent: React.ComponentType<IEditorComponentProps>;
+        previewComponent: React.ComponentType<IPreviewComponentProps>;
     }
 }

@@ -7,7 +7,7 @@ type ICustomFieldTypeMap = {[id: string]: ICustomFieldType};
 export function getFields(): ICustomFieldTypeMap {
     const fields: ICustomFieldTypeMap = {};
 
-    Object.values(extensions).map(({activationResult}) => {
+    Object.values(extensions).forEach(({activationResult}) => {
         if (activationResult.contributions && activationResult.contributions.customFieldTypes) {
             activationResult.contributions.customFieldTypes.forEach((customType) => {
                 fields[customType.id] = customType;
@@ -16,4 +16,4 @@ export function getFields(): ICustomFieldTypeMap {
     });
 
     return fields;
-};
+}

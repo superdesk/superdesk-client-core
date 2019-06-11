@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {IPropsComponentAlert} from 'superdesk-api';
 
 const CLASSNAMES = {
@@ -17,4 +18,10 @@ export const Alert: React.StatelessComponent<IPropsComponentAlert> = (props) => 
     return (
         <div className={className}>{props.children}</div>
     );
+};
+
+Alert.propTypes = {
+    type: PropTypes.oneOf(['info', 'warning', 'error']),
+    hollow: PropTypes.bool,
+    children: PropTypes.node.isRequired,
 };

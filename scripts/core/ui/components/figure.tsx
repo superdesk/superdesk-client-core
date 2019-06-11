@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {IPropsComponentFigure} from 'superdesk-api';
 
 export const Figure: React.StatelessComponent<IPropsComponentFigure> = (props) => {
@@ -20,4 +21,10 @@ export const Figure: React.StatelessComponent<IPropsComponentFigure> = (props) =
             <div className={editable ? 'sd-media-carousel__media-caption' : ''}>{props.caption}</div>
         </div>
     );
+};
+
+Figure.propTypes = {
+    caption: PropTypes.string,
+    onRemove: PropTypes.func,
+    children: PropTypes.any,
 };

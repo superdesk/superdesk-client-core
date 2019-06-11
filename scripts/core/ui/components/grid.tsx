@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {IPropsComponentGrid} from 'superdesk-api';
 
 export const Grid: React.StatelessComponent<IPropsComponentGrid> = (props) => {
@@ -16,4 +17,10 @@ export const Grid: React.StatelessComponent<IPropsComponentGrid> = (props) => {
             ))}
         </div>
     );
+};
+
+Grid.propTypes = {
+    boxed: PropTypes.bool,
+    columns: PropTypes.number.isRequired,
+    children: PropTypes.arrayOf(PropTypes.node).isRequired,
 };
