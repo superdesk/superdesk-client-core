@@ -297,6 +297,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
                 }
             }
             $scope.loadTimelineThumbnails();
+            
         };
     };
 
