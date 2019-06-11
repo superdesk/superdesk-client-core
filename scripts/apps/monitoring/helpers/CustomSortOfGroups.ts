@@ -14,7 +14,7 @@ export function matchGroupToOrderConfig(group: StageGroup) {
 }
 
 export default function getCustomSortForGroup(config: any, group: StageGroup): GroupSortOptions {
-    if (!group.type) {
+    if (!group || !group._id || !group.type) {
         return [];
     }
 
