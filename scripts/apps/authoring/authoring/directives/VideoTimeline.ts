@@ -7,9 +7,6 @@ import {
     isEmpty
 } from 'lodash';
 import ResizeObserver from 'resize-observer-polyfill';
-import {
-    changeEditorSelection
-} from "core/editor3/helpers/highlights";
 
 /**
  * @ngdoc directive
@@ -18,7 +15,8 @@ import {
  *
  * @requires $timeout
  */
-export function VideoTimeline() {
+VideoTimeline.$inject = ['$rootScope', '$interval', 'api'];
+export function VideoTimeline($rootScope, $interval, api) {
     return {
         scope: {
             video: '=',
@@ -26,7 +24,8 @@ export function VideoTimeline() {
             iconStop: '=',
             cut: '=',
             listFrames: '=',
-            onChange: '&'
+            onChange: '&',
+            onSizeChange: '&',
         },
         templateUrl: 'scripts/apps/authoring/views/video-timeline.html',
         link: function (scope, element) {
@@ -42,9 +41,26 @@ export function VideoTimeline() {
             var maskleft = element.find('.mask.left')[0];
             var maskright = element.find('.mask.right')[0];
             var inner_frames = element.find('#inner-frames')[0];
+            let change_width=0;
+            let IntervalID;
             var observer = new ResizeObserver(function (entries) {
-                entries.forEach(function (entry) {
-                    loadTimeLine(scope.listFrames)
+                entries.forEach(function (entry) {                    
+                    if (Math.abs(change_width - entry.contentRect.width) > 10) {
+                        if (IntervalID != undefined) {
+                            stopInterval(IntervalID);
+                            inner_frames.innerHTML = '';
+                        }
+                        if (scope.listFrames == null)
+                        {
+                            scope.onSizeChange();
+                        }
+                        else
+                        {
+                            loadTimeLine(scope.listFrames);
+                        }
+                        change_width = entry.contentRect.width;                        
+                        
+                    }
                 });
             });
             observer.observe(controlbar);
@@ -67,6 +83,7 @@ export function VideoTimeline() {
                 if (isEmpty(cut)) {
                     return;
                 }
+
                 var position = cut.start / scope.video.duration;
                 TweenMax.set(cbwrapper, {
                     left: (position * 100) + '%'
@@ -216,59 +233,62 @@ export function VideoTimeline() {
 
             function delay(ms) {
                 return new Promise(resolve => setTimeout(resolve, ms));
-            }
+            }            
+            const stopInterval = (id) => {
+                $interval.cancel(id);
+                id = undefined;
+            };
 
-            async function loadTimeLine(list_thumbnails) {
-                var widthpic = 50 * scope.video.clientWidth / scope.video.clientHeight;
+            $rootScope.$on('$destroy', () => stopInterval(IntervalID))
+            function loadTimeLine(list_thumbnails) {
                 if (controlbar.offsetWidth <= 0) {
                     return;
                 }
-                if (list_thumbnails && list_thumbnails.length > 0) {
-                    widthpic = list_thumbnails[0].width;
-                } else {
-                    let total_thumbnail = Math.floor(controlbar.offsetWidth / widthpic);
-                    let per_time_image = scope.video.duration / total_thumbnail;
-                    if (inner_frames) {
-                        inner_frames.innerHTML = '';
-                    }
-                    number = getRandomSpan()
-                    loadListThumbnails(total_thumbnail, per_time_image, widthpic, 0, number)
-                    return
-                }
+                let widthpic = 50 * scope.video.clientWidth / scope.video.clientHeight;
                 let total_thumbnail = Math.floor(controlbar.offsetWidth / widthpic);
-                let per_index_image = 39 / total_thumbnail;
                 let number = getRandomSpan()
-                if (inner_frames) {
-                    inner_frames.innerHTML = '';
-                    for (let i = 0; i <= total_thumbnail; i++) {
-                        let index = Math.round(i * per_index_image);
-                        let video = document.createElement("video");
-                        video.width = widthpic;
-                        video.height = 50;
-                        if (list_thumbnails && list_thumbnails.length > 0) {
-                            video.poster = list_thumbnails[index].url + '&tag=' + number;
-                            video.className = 'loaded';
-                        }
-                        inner_frames.append(video);
-                    }
+                inner_frames.innerHTML = '';
+                let count = 0;
+                let per_delta_image;
+                let time = 0
+                if (list_thumbnails && list_thumbnails.length > 0) {
+                    per_delta_image = (list_thumbnails.length - 1) / total_thumbnail;                    
+                }   
+                else {
+                    per_delta_image = scope.video.duration / total_thumbnail;
+                    time = 500;
                 }
-
-            }
-
-            function loadListThumbnails(total_thumbnail, per_time_image, widthpic, count, number) {
-                if (count <= total_thumbnail) {
+                let thumnails=[];
+                for (let i = 0; i <= total_thumbnail; i++) {
                     let video = document.createElement("video");
                     video.width = widthpic;
                     video.height = 50;
-                    video.src = scope.video.src + '&tag=' + number + '#t=' + (count * per_time_image);
-                    video.preload = 'metadata';
+                    thumnails.push(video)       
                     inner_frames.append(video);
-                    count += 1;
-                    video.onloadeddata = function () {
-                        video.className = 'loaded';
-                        loadListThumbnails(total_thumbnail, per_time_image, widthpic, count);
-                    };
                 }
+                $rootScope.$applyAsync(() => {
+                    IntervalID = $interval(async function () {
+                        if (count <= total_thumbnail) {
+                            if (list_thumbnails && list_thumbnails.length > 0) {
+                                let index = Math.round(count * per_delta_image);
+                                thumnails[count].poster = list_thumbnails[index].url + '&tag=' + number;
+                                thumnails[count].className = 'loaded';
+                            }
+                            else {
+                                thumnails[count].src = scope.video.src + '&tag=' + number + '#t=' + (count * per_delta_image);
+                                thumnails[count].preload = 'metadata';
+                                thumnails[count].onloadeddata = function () {
+                                    this.className = 'loaded';
+                                };
+                            }
+                            count += 1;                            
+                        }
+                        else {
+
+                            stopInterval(IntervalID);
+                        }
+                    }, time)
+                });
             }
         },
     }
