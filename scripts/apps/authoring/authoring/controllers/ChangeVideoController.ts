@@ -3,6 +3,7 @@ import { gettext } from 'core/utils';
 import angular from "angular";
 import Cropper from 'cropperjs';
 import { validateMediaFieldsThrows } from './ChangeImageController';
+import { async } from 'q';
 
 /**
  * @ngdoc controller
@@ -120,8 +121,9 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
                                 $scope.isAoISelectionModeEnabled = false;
                                 $scope.$applyAsync()
                                 {
-                                    $scope.cancelEditVideo();
+                                    $scope.cancelEditVideo();                                    
                                     $scope.data.item = angular.extend($scope.data.item, response._id);
+                                    $scope.loadTimelineThumbnails();
                                     $scope.videoReload = true;
                                     videoEditing.classList.remove('video-loading');
                                 }
@@ -135,6 +137,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         $scope.editVideo.isDirty = false;
         $scope.data.isDirty = true;
         $scope.editVideo.isChange = true;
+        
     };
 
     const stopInterval = (id) => {
@@ -291,7 +294,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
             }
         };
 
-        loadListThumbnails();
+        $scope.loadTimelineThumbnails();
     };
 
     $scope.uploadChange = function (element) {
@@ -332,7 +335,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
             $scope.editVideo.isDirty = true;
         });
     };
-    async function loadListThumbnails() {
+    $scope.loadTimelineThumbnails = async function () {        
         const res = await api.get(`/video_edit/${$scope.data.item.media}?action=thumbnails&amount=40`)
         // .then(function (res) {
         if (res && res.processing === false) {

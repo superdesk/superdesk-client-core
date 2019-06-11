@@ -19,7 +19,6 @@
             ng-disabled="!isDoneEnabled() || isAoISelectionModeEnabled">Done</button>
     </div>
 </div>
--
 <div class="modal__body modal__body--no-padding">
     <div class="sd-column-box--2">
         <div class="sd-column-box__main-column sd-column-box__main-column--photo-preview">
@@ -123,8 +122,15 @@
                         </div>
                     </div>
                     <div class="sd-photo-preview__video-frames">
-                        <div sd-video-timeline class="timeline-controls" data-video="video" data-cut="cut"
-                            data-list-frames="listFrames" data-on-change="onCutChange()" />
+                        <div sd-video-timeline 
+                            class="timeline-controls" 
+                            data-video="video" 
+                            data-cut="cut"
+                            data-list-frames="listFrames" 
+                            data-on-change="onCutChange()" 
+                            data-on-size-change="loadTimelineThumbnails()"
+                            />
+                            
                     </div>
                 </div>
                 <!-- END VIDEO Frames timeline  -->
@@ -156,7 +162,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </div>
