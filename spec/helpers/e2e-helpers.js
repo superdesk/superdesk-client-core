@@ -1,10 +1,13 @@
+/**
+ * @param {Array<string>} testIds
+ */
 const getTestSelector = (testIds = null) =>
-    testIds == null ? [] : testIds.split(' ')
+    testIds == null ? [] : testIds
         .map((testId) => `[data-test-id="${testId}"]`)
         .join(' ');
 
 /**
- * @param {string} testIds - Space delimited list of ids
+ * @param {Array<string>} testIds
  */
 function el(testIds = null, byLocator = null, parent = null) {
     var locator;
@@ -20,7 +23,7 @@ function el(testIds = null, byLocator = null, parent = null) {
 
 
 /**
- * @param {string} testIds - Space delimited list of ids
+ * @param {Array<string>} testIds
  */
 function els(testIds = null, byLocator = null, parent = null) {
     var locator;
