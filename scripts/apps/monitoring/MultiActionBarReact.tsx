@@ -88,7 +88,7 @@ export class MultiActionBarReact extends React.Component<IProps, IState> {
 
         if (this.props.compact) {
             return (
-                <div className="right-stack">
+                <div className="right-stack" data-test-id="multi-select-dropdown">
                     <DropdownButton
                         getToggleElement={(onClick) => (
                             <button onClick={onClick} className="navbtn"><i className="icon-dots-vertical" /></button>
@@ -105,13 +105,14 @@ export class MultiActionBarReact extends React.Component<IProps, IState> {
                                 <span>{item.label}</span>
                             </div>
                         )}
+                        getItemLabel={(item) => item.label}
                         onSelect={onTrigger}
                     />
                 </div>
             );
         } else {
             return (
-                <div>
+                <div data-test-id="multi-select-inline">
                     {
                         this.state.actions.map((action, i) => (
                             <button
@@ -121,6 +122,7 @@ export class MultiActionBarReact extends React.Component<IProps, IState> {
                                 className="navbtn strict"
                                 title={action.label}
                                 key={i}
+                                data-test-id={action.label}
                             >
                                 <Icon className={action.icon} size={22} />
                             </button>

@@ -5,6 +5,7 @@ import classNames from 'classnames';
 interface IProps<T> {
     getToggleElement(onClick: () => void): JSX.Element;
     items: Array<T>;
+    getItemLabel(item: T): string;
     renderItem(item: T): JSX.Element;
     onSelect(item: T): void;
 }
@@ -40,6 +41,7 @@ export class DropdownButton<T> extends React.PureComponent<IProps<T>, IState> {
                                             this.setState({open: false});
                                             onSelect(item);
                                         }}
+                                        data-test-id={this.props.getItemLabel(item)}
                                     >
                                         {renderItem(item)}
                                     </button>

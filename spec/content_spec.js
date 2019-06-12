@@ -1,5 +1,6 @@
 /* eslint-disable newline-per-chained-call */
 
+var el = require('./helpers/e2e-helpers').el;
 
 var workspace = require('./helpers/pages').workspace,
     content = require('./helpers/content'),
@@ -98,7 +99,7 @@ describe('content', () => {
         toggle(boxes.last());
         expect(count.getText()).toBe('2 Items selected');
 
-        element(by.css('.big-icon--multiedit')).click();
+        el('multi-select-inline Multiedit').click();
         expect(browser.getCurrentUrl()).toMatch(/multiedit$/);
         expect(element.all(by.repeater('board in boards')).count()).toBe(2);
     });

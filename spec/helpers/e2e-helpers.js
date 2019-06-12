@@ -3,6 +3,9 @@ const getTestSelector = (testIds = null) =>
         .map((testId) => `[data-test-id="${testId}"]`)
         .join(' ');
 
+/**
+ * @param {string} testIds - Space delimited list of ids
+ */
 function el(testIds = null, byLocator = null, parent = null) {
     var locator;
 
@@ -15,6 +18,10 @@ function el(testIds = null, byLocator = null, parent = null) {
     return byLocator == null ? locator : locator.element(byLocator);
 }
 
+
+/**
+ * @param {string} testIds - Space delimited list of ids
+ */
 function els(testIds = null, byLocator = null, parent = null) {
     var locator;
 
