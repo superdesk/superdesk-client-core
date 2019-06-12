@@ -168,7 +168,7 @@ class HTMLParser {
         let contentState = initialState;
 
         contentState.getBlocksAsArray().forEach((block) => {
-            block.findEntityRanges((characterMetadata) => Boolean(characterMetadata.getEntity()), (start, _end) => {
+            block.findEntityRanges((characterMetadata) => characterMetadata.getEntity() != null, (start, _end) => {
                 const key = block.getEntityAt(start);
 
                 if (key != null) {
