@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 /* tslint:disable:max-line-length */
 import {getContentStateFromHtml} from '../from-html';
-import {convertFromRaw, ContentState} from 'draft-js';
+import {convertFromRaw, ContentState, ContentBlock} from 'draft-js';
 
 /**
  * @description Returns the set of blocks corresponding to the content state
