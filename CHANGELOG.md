@@ -1,5 +1,7 @@
 # Superdesk Client Changelog
 
+## [1.30.0] 2019-06-12
+
 ## [1.29.1] 2019-05-28
 
 ### Fixed
