@@ -1,4 +1,1 @@
-export interface IAuthor {
-    role: string;
-    parent: string;
-}
+export {IAuthor} from 'superdesk-api';

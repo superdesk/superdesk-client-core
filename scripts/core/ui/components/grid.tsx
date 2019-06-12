@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {IPropsComponentGrid} from 'superdesk-api';
+import {IGridComponentProps} from 'superdesk-api';
 
-export const Grid: React.StatelessComponent<IPropsComponentGrid> = (props) => {
+export const Grid: React.StatelessComponent<IGridComponentProps> = (props) => {
     const className = [
         'flex-grid',
         'flex-grid--wrap-items',

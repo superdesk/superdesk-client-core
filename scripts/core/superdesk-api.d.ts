@@ -94,7 +94,6 @@ declare module 'superdesk-api' {
             total: number;
         };
     }
-    
 
 
 
@@ -205,25 +204,25 @@ declare module 'superdesk-api' {
         noBorder?: boolean;
     }
 
-    export interface IPropsComponentGrid {
+    export interface IGridComponentProps {
         columns: number;
         boxed?: boolean;
         children: React.ReactNodeArray;
     }
 
-    export interface IPropsComponentAlert {
+    export interface IAlertComponentProps {
         type: 'info' | 'warning' | 'error';
         hollow?: boolean;
-        children: React.ReactNode;
+        children?: React.ReactNode;
     }
 
-    export interface IPropsComponentFigure {
+    export interface IFigureComponentProps {
         caption: string;
         onRemove?: () => void;
-        children: React.ReactNode;
+        children?: React.ReactNode;
     }
 
-    export interface IPropsComponentDropZone {
+    export interface IDropZoneComponentProps {
         label: string;
         onDrop: (event: DragEvent) => void;
         canDrop: (event: DragEvent) => boolean;
@@ -306,10 +305,10 @@ declare module 'superdesk-api' {
                 Row: React.ComponentType;
                 Column: React.ComponentType<{grow: boolean}>;
             },
-            Grid: React.ComponentType<IPropsComponentGrid>;
-            Alert: React.ComponentType<IPropsComponentAlert>;
-            Figure: React.ComponentType<IPropsComponentFigure>;
-            DropZone: React.ComponentType<IPropsComponentDropZone>;
+            Grid: React.ComponentType<IGridComponentProps>;
+            Alert: React.ComponentType<IAlertComponentProps>;
+            Figure: React.ComponentType<IFigureComponentProps>;
+            DropZone: React.ComponentType<IDropZoneComponentProps>;
         };
         forms: {
             FormFieldType: typeof FormFieldType;
@@ -332,17 +331,19 @@ declare module 'superdesk-api' {
         };
     }>;
 
+
+
     // CUSTOM FIELD TYPES
 
     export interface IEditorComponentProps {
-        item: any;
+        item: IArticle;
         value: any;
         setValue: (value: any) => void;
         readOnly: boolean;
     }
 
     export interface IPreviewComponentProps {
-        item: any;
+        item: IArticle;
         value: any;
     }
 
@@ -352,4 +353,66 @@ declare module 'superdesk-api' {
         editorComponent: React.ComponentType<IEditorComponentProps>;
         previewComponent: React.ComponentType<IPreviewComponentProps>;
     }
+
+
+
+    // SUPERDESK ENTITIES
+
+    export interface IAuthor {
+        role: string;
+        parent: string;
+    }
+
+    export interface IArticle {
+        _id: string;
+        _current_version: number;
+        guid: string;
+        translated_from: string;
+        translation_id: string;
+        usageterms: any;
+        keywords: any;
+        language: any;
+        slugline: any;
+        genre: any;
+        anpa_take_key: any;
+        place: any;
+        priority: any;
+        urgency: any;
+        anpa_category: any;
+        subject: any;
+        company_codes: Array<any>;
+        ednote: string;
+        authors: Array<IAuthor>;
+        headline: string;
+        sms: string;
+        abstract: string;
+        byline: string;
+        dateline: string;
+        body_html: string;
+        footer: string;
+        firstcreated: any;
+        versioncreated: any;
+        body_footer: string;
+        sign_off: string;
+        feature_media: any;
+        media_description: string;
+        associations: { string: IArticle };
+        type: 'text' | 'picture' | 'video' | 'audio' | 'preformatted' | 'graphic' | 'composite';
+        firstpublished?: string;
+        linked_in_packages: any;
+        gone: any;
+        lock_action: any;
+        lock_user: any;
+        lock_session: any;
+        rewritten_by?: string;
+        extra?: {[key: string]: any};
+
+        // might be only used for client-side state
+        created: any;
+        archived: any;
+
+        // TODO: remove this, it's only used for client-side state
+        selected: any;
+    }
+
 }

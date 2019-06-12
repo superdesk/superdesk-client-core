@@ -1,15 +1,15 @@
 import React from 'react';
 import {get} from 'lodash';
 
-import {getFields} from 'apps/fields';
+import {getField} from 'apps/fields';
 import {IArticle} from 'superdesk-interfaces/Article';
 import {IVocabulary} from 'superdesk-interfaces/Vocabulary';
 
 interface IProps {
     item: IArticle;
     field: IVocabulary;
+    editable: boolean;
     onChange: (item: Partial<IArticle>, time: number) => any;
-    readonly: boolean;
 }
 
 export class AuthoringCustomField extends React.PureComponent<IProps> {
@@ -24,12 +24,10 @@ export class AuthoringCustomField extends React.PureComponent<IProps> {
     }
 
     render() {
-        const fields = getFields();
-        const {item, field, readonly} = this.props;
-        const FieldType = fields[field.custom_field_type];
+        const {item, field, editable} = this.props;
+        const FieldType = getField(field.custom_field_type);
 
         if (FieldType == null) {
-            console.warn('unkwnow custom type', field.custom_field_type);
             return null;
         }
 
@@ -39,7 +37,7 @@ export class AuthoringCustomField extends React.PureComponent<IProps> {
                     item={item}
                     value={get(item.extra, field._id)}
                     setValue={(value) => this.setValue(value)}
-                    readOnly={readonly}
+                    readOnly={!editable}
                 />
             </div>
         );

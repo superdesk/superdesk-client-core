@@ -1,4 +1,5 @@
 
+import {logger} from 'core/services/logger';
 import {extensions} from 'core/extension-imports.generated';
 import {ICustomFieldType} from 'superdesk-api';
 
@@ -16,4 +17,16 @@ export function getFields(): ICustomFieldTypeMap {
     });
 
     return fields;
+}
+
+export function getField(customFieldTypeId: ICustomFieldType['id']): ICustomFieldType | null {
+    const fields = getFields();
+    const fieldType = fields[customFieldTypeId];
+
+    if (!fieldType) {
+        logger.warn('unknown custom type', customFieldTypeId);
+        return null;
+    }
+
+    return fieldType;
 }
