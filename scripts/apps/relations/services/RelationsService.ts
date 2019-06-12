@@ -1,5 +1,5 @@
 import {pickBy, zipObject} from 'lodash';
-import {IArticle} from 'superdesk-interfaces/Article';
+import {IArticle} from 'superdesk-api';
 
 RelationsService.$inject = ['archiveService', 'mediaIdGenerator', 'api', '$q'];
 

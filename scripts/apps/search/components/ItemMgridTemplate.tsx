@@ -2,7 +2,7 @@ import React from 'react';
 import {MediaPreview} from './MediaPreview';
 import {MediaInfo} from './MediaInfo';
 import {GridTypeIcon} from './GridTypeIcon';
-import {IArticle} from 'superdesk-interfaces/Article';
+import {IArticle} from 'superdesk-api';
 import {IDesk} from 'superdesk-interfaces/Desk';
 import {ItemPriority} from './ItemPriority';
 import {ItemUrgency} from './ItemUrgency';

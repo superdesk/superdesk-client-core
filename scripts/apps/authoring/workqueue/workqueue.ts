@@ -1,4 +1,4 @@
-import {IArticle} from 'superdesk-interfaces/Article';
+import {IArticle} from 'superdesk-api';
 import {find, each, without, keys, includes, get} from 'lodash';
 import {getGenericErrorMessage} from 'core/ui/constants';
 

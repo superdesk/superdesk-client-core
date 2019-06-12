@@ -2,7 +2,7 @@ import React from 'react';
 import {RelativeDate} from 'core/datetime/relativeDate';
 import {state as State} from 'apps/search/components/fields/state';
 import {connectServices} from 'core/helpers/ReactRenderAsync';
-import {IArticle} from 'superdesk-interfaces/Article';
+import {IArticle} from 'superdesk-api';
 import {gettext} from 'core/utils';
 
 interface IProps {

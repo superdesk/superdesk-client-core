@@ -1,4 +1,4 @@
-import {IArticle} from 'superdesk-interfaces/Article';
+import {IArticle} from 'superdesk-api';
 
 /**
   * Global search parameters and label mapping.
