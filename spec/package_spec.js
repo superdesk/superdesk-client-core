@@ -3,6 +3,8 @@ var search = require('./helpers/search'),
     monitoring = require('./helpers/monitoring'),
     workspace = require('./helpers/workspace');
 
+var el = require('./helpers/e2e-helpers').el;
+
 describe('package', () => {
     beforeEach(() => {
         monitoring.openMonitoring();
@@ -60,8 +62,9 @@ describe('package', () => {
         monitoring.actionOnItem('Edit', 3, 0);
         monitoring.selectItem(2, 0);
         monitoring.selectItem(3, 1);
-        monitoring.multiActionDropdown().click();
-        monitoring.addToCurrentMultipleItems();
+        el(['multi-select-dropdown', 'dropdown-toggle']).click();
+        el(['multi-select-dropdown', 'Add to Current Package']).click();
+
         expect(authoring.getGroupItems('MAIN').count()).toBe(2);
     });
 

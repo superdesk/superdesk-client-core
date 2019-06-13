@@ -4,6 +4,8 @@ var nav = require('./utils').nav,
     waitFor = require('./utils').wait,
     acceptConfirm = require('./utils').acceptConfirm;
 
+var el = require('./e2e-helpers').el;
+
 module.exports = new Monitoring();
 
 function Monitoring() {
@@ -193,10 +195,6 @@ function Monitoring() {
 
     this.compactActionDropdown = function() {
         return element(by.className('dropdown--compact-state'));
-    };
-
-    this.multiActionDropdown = function() {
-        return element(by.className('dropdown--multi-action-bar'));
     };
 
     this.previewAction = function(group, item) {
@@ -592,13 +590,7 @@ function Monitoring() {
      * Create a package and include selected items
      */
     this.createPackageFromItems = function() {
-        element(by.css('[ng-click="action.createPackage()"]')).click();
-    };
-
-    this.addToCurrentMultipleItems = function() {
-        var elem = element(by.className('multi-action-bar'));
-
-        elem.element(by.css('[ng-click="action.addToPackage()"]')).click();
+        el(['multi-select-inline', 'Create Package']).click();
     };
 
     /**

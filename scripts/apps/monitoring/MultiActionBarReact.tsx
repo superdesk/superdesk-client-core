@@ -91,7 +91,13 @@ export class MultiActionBarReact extends React.Component<IProps, IState> {
                 <div className="right-stack" data-test-id="multi-select-dropdown">
                     <DropdownButton
                         getToggleElement={(onClick) => (
-                            <button onClick={onClick} className="navbtn"><i className="icon-dots-vertical" /></button>
+                            <button
+                                onClick={onClick}
+                                className="navbtn"
+                                data-test-id="dropdown-toggle"
+                            >
+                                <i className="icon-dots-vertical" />
+                            </button>
                         )}
                         items={this.state.actions}
                         renderItem={(item) => (
