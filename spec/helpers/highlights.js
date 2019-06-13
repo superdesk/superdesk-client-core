@@ -194,7 +194,7 @@ function Highlights() {
     };
 
     this.multiMarkHighlight = function(name) {
-        el(['multi-select-inline', 'Add to highlight']).click();
+        el(['multi-actions-inline', 'Add to highlight']).click();
         el(['multiple-highlights-select', 'input-select-multiple'], by.cssContainingText('option', name)).click();
         el(['multiple-highlights-select', 'confirm']).click();
     };

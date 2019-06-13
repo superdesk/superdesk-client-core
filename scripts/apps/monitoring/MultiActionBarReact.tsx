@@ -88,7 +88,7 @@ export class MultiActionBarReact extends React.Component<IProps, IState> {
 
         if (this.props.compact) {
             return (
-                <div className="right-stack" data-test-id="multi-select-dropdown">
+                <div className="right-stack" data-test-id="multi-actions-dropdown">
                     <DropdownButton
                         getToggleElement={(onClick) => (
                             <button
@@ -118,7 +118,7 @@ export class MultiActionBarReact extends React.Component<IProps, IState> {
             );
         } else {
             return (
-                <div data-test-id="multi-select-inline">
+                <div data-test-id="multi-actions-inline">
                     {
                         this.state.actions.map((action, i) => (
                             <button

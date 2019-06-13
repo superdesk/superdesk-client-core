@@ -590,7 +590,7 @@ function Monitoring() {
      * Create a package and include selected items
      */
     this.createPackageFromItems = function() {
-        el(['multi-select-inline', 'Create Package']).click();
+        el(['multi-actions-inline', 'Create Package']).click();
     };
 
     /**

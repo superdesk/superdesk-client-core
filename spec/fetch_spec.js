@@ -141,7 +141,7 @@ describe('fetch', () => {
         workspace.openIngest();
         content.selectItem(0);
         browser.sleep(1000); // Wait for animation
-        el(['multi-select-inline', 'Fetch']).click();
+        el(['multi-actions-inline', 'Fetch']).click();
         workspace.openContent();
         expect(content.count()).toBe(3);
     });
@@ -150,7 +150,7 @@ describe('fetch', () => {
         workspace.openIngest();
         content.selectItem(0);
         browser.sleep(1000); // Wait for animation
-        el(['multi-select-inline', 'Fetch to']).click();
+        el(['multi-actions-inline', 'Fetch to']).click();
         content.send();
         workspace.openContent();
         expect(content.count()).toBe(3);
@@ -161,7 +161,7 @@ describe('fetch', () => {
         content.selectItem(0);
         browser.sleep(1000); // Wait for animation
 
-        el(['multi-select-inline', 'Remove']).click();
+        el(['multi-actions-inline', 'Remove']).click();
         browser.sleep(100);
 
         expect(content.count()).toBe(0);

@@ -99,7 +99,7 @@ describe('content', () => {
         toggle(boxes.last());
         expect(count.getText()).toBe('2 Items selected');
 
-        el(['multi-select-inline', 'Multiedit']).click();
+        el(['multi-actions-inline', 'Multiedit']).click();
         expect(browser.getCurrentUrl()).toMatch(/multiedit$/);
         expect(element.all(by.repeater('board in boards')).count()).toBe(2);
     });
