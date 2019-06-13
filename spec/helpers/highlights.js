@@ -3,6 +3,7 @@
 
 var nav = require('./utils').nav;
 var wait = require('./utils').wait;
+var el = require('./e2e-helpers').el;
 
 module.exports = new Highlights();
 
@@ -193,11 +194,8 @@ function Highlights() {
     };
 
     this.multiMarkHighlight = function(name) {
-        var elem = element(by.css('[class="multi-action-bar ng-scope"]'));
-
-        elem.element(by.className('big-icon--marked-star')).click();
-        browser.sleep(200);
-        elem.all(by.repeater('h in highlights track by h._id')).all(by.css('[option="' + name + '"]')).click();
-        browser.sleep(200);
+        el(['multi-select-inline', 'Add to highlight']).click();
+        el(['multiple-highlights-select', 'input-select-multiple'], by.cssContainingText('option', name)).click();
+        el(['multiple-highlights-select', 'confirm']).click();
     };
 }

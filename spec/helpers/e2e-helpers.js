@@ -9,7 +9,11 @@ const getTestSelector = (testIds = null) =>
 /**
  * @param {Array<string>} testIds
  */
-function el(testIds = null, byLocator = null, parent = null) {
+function el(
+    testIds = null,
+    byLocator = null, // example: by.cssContainingText('option', 'Text')
+    parent = null
+) {
     var locator;
 
     if (parent != null) {
@@ -25,7 +29,11 @@ function el(testIds = null, byLocator = null, parent = null) {
 /**
  * @param {Array<string>} testIds
  */
-function els(testIds = null, byLocator = null, parent = null) {
+function els(
+    testIds = null,
+    byLocator = null, // example: by.cssContainingText('option', 'Text')
+    parent = null
+) {
     var locator;
 
     if (parent != null) {

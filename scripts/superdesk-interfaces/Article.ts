@@ -44,6 +44,8 @@ export interface IArticle extends IBaseRestApiResponse {
     lock_session: any;
     rewritten_by?: string;
 
+    highlights?: Array<string>;
+
     task: {
         desk: IDesk['_id'];
         stage: IStage['_id'];

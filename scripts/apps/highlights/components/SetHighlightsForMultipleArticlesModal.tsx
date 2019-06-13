@@ -5,7 +5,8 @@ import {ModalBody} from 'core/ui/components/Modal/ModalBody';
 import {ModalFooter} from 'core/ui/components/Modal/ModalFooter';
 import {Modal} from 'core/ui/components/Modal/Modal';
 import {connectServices} from 'core/helpers/ReactRenderAsync';
-import {IArticle, IDesk} from 'superdesk-api';
+import {IDesk} from 'superdesk-api';
+import {IArticle} from 'superdesk-interfaces/Article';
 
 interface IProps {
     closeModal(): void;
@@ -43,7 +44,9 @@ export function getModalForMultipleHighlights(articles: Array<IArticle>, deskId:
 
             articles.forEach((article) => {
                 this.state.selectedHighlights.forEach((highlightId) => {
-                    promises.then(() => this.props.highlightsService.markItem(highlightId, article));
+                    if (article.highlights == null || article.highlights.includes(highlightId) === false) {
+                        promises.then(() => this.props.highlightsService.markItem(highlightId, article));
+                    }
                 });
             });
 
@@ -73,39 +76,47 @@ export function getModalForMultipleHighlights(articles: Array<IArticle>, deskId:
             }
 
             return (
-                <Modal>
-                    <ModalHeader onClose={this.props.closeModal}>{gettext('Set highlights')}</ModalHeader>
-                    <ModalBody>
-                        {
-                            this.state.highlightsForDesk.length < 1
-                                ? <div>{gettext('No available highlights')}</div>
-                                : (
-                                    <select multiple onChange={this.handleChange}>
-                                        {
-                                            this.state.highlightsForDesk.map((highlight, i) => (
-                                                <option
-                                                    key={i}
-                                                    value={highlight._id}
-                                                >
-                                                    {highlight.name}
-                                                </option>
-                                            ))
-                                        }
-                                    </select>
-                                )
-                        }
-                    </ModalBody>
-                    <ModalFooter>
-                        <button className="btn" onClick={this.props.closeModal}>{gettext('Cancel')}</button>
-                        <button
-                            className="btn btn--primary"
-                            disabled={this.state.selectedHighlights.length < 1}
-                            onClick={this.markHighlights}
-                        >
-                            {gettext('Confirm')}
-                        </button>
-                    </ModalFooter>
-                </Modal>
+                <div data-test-id="multiple-highlights-select">
+                    <Modal>
+                        <ModalHeader onClose={this.props.closeModal}>{gettext('Set highlights')}</ModalHeader>
+                        <ModalBody>
+                            {
+                                this.state.highlightsForDesk.length < 1
+                                    ? <div>{gettext('No available highlights')}</div>
+                                    : (
+                                        <select
+                                            multiple
+                                            value={this.state.selectedHighlights}
+                                            onChange={this.handleChange}
+                                            data-test-id="input-select-multiple"
+                                        >
+                                            {
+                                                this.state.highlightsForDesk.map((highlight, i) => (
+                                                    <option
+                                                        key={i}
+                                                        value={highlight._id}
+                                                    >
+                                                        {highlight.name}
+                                                    </option>
+                                                ))
+                                            }
+                                        </select>
+                                    )
+                            }
+                        </ModalBody>
+                        <ModalFooter>
+                            <button className="btn" onClick={this.props.closeModal}>{gettext('Cancel')}</button>
+                            <button
+                                className="btn btn--primary"
+                                disabled={this.state.selectedHighlights.length < 1}
+                                onClick={this.markHighlights}
+                                data-test-id="confirm"
+                            >
+                                {gettext('Confirm')}
+                            </button>
+                        </ModalFooter>
+                    </Modal>
+                </div>
             );
         }
     }
