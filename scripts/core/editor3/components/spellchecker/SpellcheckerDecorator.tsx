@@ -152,7 +152,7 @@ export const getSpellcheckingDecorator = (language: string, spellcheckWarnings: 
                                     menuShowing: true,
                                     warning: warningForDecoration,
                                 });
-                            } else {
+                            } else if (typeof spellchecker.getSuggestions === 'function') {
                                 spellchecker.getSuggestions(warningForDecoration.text).then((suggestions) => {
                                     this.setState({
                                         menuShowing: true,
@@ -161,6 +161,14 @@ export const getSpellcheckingDecorator = (language: string, spellcheckWarnings: 
                                             suggestions: suggestions == null ? [] : suggestions,
                                         },
                                     });
+                                });
+                            } else {
+                                this.setState({
+                                    menuShowing: true,
+                                    warning: {
+                                        ...warningForDecoration,
+                                        suggestions: [],
+                                    },
                                 });
                             }
                         }}
