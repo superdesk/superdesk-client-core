@@ -3,13 +3,10 @@
 import _, {get, flatMap} from 'lodash';
 import {IArticle} from 'superdesk-interfaces/Article';
 import {gettext} from 'core/utils';
-import React from 'react';
-import {Modal} from 'core/ui/components/Modal/Modal';
-import {ModalHeader} from 'core/ui/components/Modal/ModalHeader';
-import {ModalBody} from 'core/ui/components/Modal/ModalBody';
-import {ModalFooter} from 'core/ui/components/Modal/ModalFooter';
-import {onSpikeMiddlewareResult, IExtensionActivationResult} from 'superdesk-api';
+
+import {IExtensionActivationResult} from 'superdesk-api';
 import {extensions} from 'core/extension-imports.generated';
+import {showSpikeDialog} from 'apps/archive/show-spike-dialog';
 
 /**
  * @ngdoc controller
@@ -149,66 +146,16 @@ export function MultiActionBarController(
                         : [],
             );
 
-        let warnings: onSpikeMiddlewareResult['warnings'] = [];
-        const initialValue: Promise<onSpikeMiddlewareResult> = Promise.resolve({});
         const items: Array<IArticle> = multi.getItems();
 
-        onSpikeMultipleMiddlewares.reduce(
-            (current, next) => {
-                return current.then((result) => {
-                    if (result.warnings != null) {
-                        warnings = warnings.concat(result.warnings);
-                    }
-                    return next(items);
-                });
-            },
-            initialValue,
-        )
-        .then((result) => { // last result isn't processed by `reduce`
-            if (result.warnings != null) {
-                warnings = warnings.concat(result.warnings);
-            }
-
-            return result;
-        })
-        .then(() => {
-            if (!get(config, 'confirm_spike', true) && warnings.length < 1) {
-                spikeMultiple();
-            } else {
-                modal.createCustomModal()
-                    .then(({openModal, closeModal}) => {
-                        openModal(
-                            <Modal>
-                                <ModalHeader>{gettext('Confirm')}</ModalHeader>
-                                <ModalBody>
-                                    <div>{gettext('Are you sure you want to spike the items?')}</div>
-                                    {
-                                        warnings.length < 1 ? null : (
-                                            <ul style={{listStyle: 'initial', paddingLeft: 40}}>
-                                                {
-                                                    warnings.map(({text}, i) => <li key={i}>{text}</li>)
-                                                }
-                                            </ul>
-                                        )
-                                    }
-                                </ModalBody>
-                                <ModalFooter>
-                                    <button className="btn" onClick={closeModal}>{gettext('Cancel')}</button>
-                                    <button
-                                        className="btn btn--primary"
-                                        onClick={() => {
-                                            spikeMultiple();
-                                            closeModal();
-                                        }}
-                                    >
-                                        {gettext('Spike')}
-                                    </button>
-                                </ModalFooter>
-                            </Modal>,
-                        );
-                    });
-            }
-        });
+        showSpikeDialog(
+            config,
+            modal,
+            () => spikeMultiple(),
+            gettext('Are you sure you want to spike the items?'),
+            onSpikeMultipleMiddlewares,
+            items,
+        );
     };
 
     /**
