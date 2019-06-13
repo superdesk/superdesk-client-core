@@ -1,5 +1,26 @@
 /* eslint-disable complexity */
 import _ from 'lodash';
+import getCustomSortForGroup, {GroupSortOptions} from '../helpers/CustomSortOfGroups';
+import {GET_LABEL_MAP} from '../../workspace/content/constants';
+
+const translatedFields = GET_LABEL_MAP();
+
+function translateCustomSorts(customSorts: GroupSortOptions) {
+    const translated = {};
+
+    for (let field of customSorts) {
+        translated[field] = {label: translatedFields[field]};
+    }
+
+    return translated;
+}
+
+export type StageGroup = {
+    _id?: any;
+    type?: string;
+    search?: 'ingest';
+    max_items?: any;
+};
 
 interface IScope extends ng.IScope {
     customDataSource: {
@@ -25,21 +46,21 @@ interface IScope extends ng.IScope {
     selected: any;
     numItems: any;
     view: any;
+    group?: StageGroup;
     viewType?: any;
-    group?: {
-        _id?: any;
-        type?: string;
-        search?: 'ingest';
-        max_items?: any;
-    };
     currentGroup: any;
     fetchNext(i: number): any;
     refreshGroup(): void;
+    customSortOptions: { [field: string]: { label: string } };
+    customSortOptionActive?: { field: string, order: 'asc' | 'desc' };
 
     hideActionsForMonitoringItems: boolean;
     disableMonitoringMultiSelect: boolean;
     onMonitoringItemSelect(): void;
     onMonitoringItemDoubleClick(): void;
+    selectDefaultSortOption(): void;
+    selectCustomSortOption(field: string): void;
+    toggleCustomSortOrder(): void;
 }
 
 /**
@@ -114,6 +135,13 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
 
             ITEM_HEIGHT = search.singleLine ? 29 : 57;
 
+            const customSorts = getCustomSortForGroup(config, scope.group);
+
+            if (customSorts.length > 0) {
+                scope.customSortOptions = translateCustomSorts(customSorts);
+                scope.customSortOptionActive = null; // default
+            }
+
             scope.page = 1;
             scope.fetching = false;
             scope.previewingBroadcast = false;
@@ -122,7 +150,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             scope.cachePreviousItems = [];
             scope.viewColumn = monitoring.viewColumn;
 
-            scope.$on('view:column', (event, data) => {
+            scope.$on('view:column', (_event, data) => {
                 scope.$applyAsync(() => {
                     scope.viewColumn = data.viewColumn;
                 });
@@ -502,6 +530,12 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                             angular.extend(criteria, params);
                         }
 
+                        // custom sort for group (if it exists)
+                        if (scope.customSortOptionActive) {
+                            criteria.source.sort =
+                                [{[scope.customSortOptionActive.field]: scope.customSortOptionActive.order}];
+                        }
+
                         return apiquery(criteria, true)
                             .then((res) => {
                                 if (originalQuery) {
@@ -544,6 +578,31 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                         }
                     });
             }
+
+            scope.selectDefaultSortOption = function() {
+                scope.selectCustomSortOption(null);
+            };
+
+            scope.selectCustomSortOption = function(field: string | null) {
+                if (field === null) {
+                    scope.customSortOptionActive = null;
+                } else {
+                    scope.customSortOptionActive = {
+                        field,
+                        order: 'desc',
+                    };
+                }
+                queryItems();
+            };
+
+            scope.toggleCustomSortOrder = function() {
+                if (scope.customSortOptionActive.order === 'asc') {
+                    scope.customSortOptionActive.order = 'desc';
+                } else {
+                    scope.customSortOptionActive.order = 'asc';
+                }
+                queryItems();
+            };
 
             scope.fetchNext = function(from) {
                 if (typeof criteria === 'object' && typeof criteria.source === 'object') {

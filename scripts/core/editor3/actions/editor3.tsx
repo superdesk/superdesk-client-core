@@ -1,5 +1,6 @@
 import ng from 'core/services/ng';
 import {insertMedia} from './toolbar';
+import {makeIframesResponsive} from 'core/helpers/make-iframes-responsive';
 
 /**
  * @ngdoc method
@@ -182,6 +183,10 @@ export function moveBlock(block, dest, insertionMode) {
     };
 }
 
+export function processEmbedCode(html) {
+    return makeIframesResponsive(html);
+}
+
 /**
  * @ngdoc method
  * @name embed
@@ -193,7 +198,7 @@ export function embed(code, targetBlockKey = null) {
     return {
         type: 'EDITOR_APPLY_EMBED',
         payload: {
-            code,
+            code: processEmbedCode(code),
             targetBlockKey,
         },
     };

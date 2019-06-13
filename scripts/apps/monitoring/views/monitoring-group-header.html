@@ -24,6 +24,27 @@
         <button ng-if="showRefresh" class="btn btn--primary btn--icon-only-circle btn--small" ng-click="refreshGroup(group)" tooltip="{{:: 'Refresh' | translate}}" tooltip-placement="left">
             <i class="icon-repeat"></i>
         </button>
+        <div class="sortbar" ng-show="customSortOptions">
+            <div class="dropdown dropdown--align-right dropdown--hover" dropdown__toggle>
+                <button id="order_button" class="dropdown__toggle" dropdown__toggle>
+                    <span ng-if="!customSortOptionActive" translate>Default</span>
+                    <span ng-if="customSortOptionActive">{{ customSortOptions[customSortOptionActive.field].label }}</span>
+                    <span class="dropdown__caret"></span>
+                </button>
+                <ul class="dropdown__menu">
+                    <li>
+                        <button ng-click="selectDefaultSortOption()" translate>Default</button>
+                    </li>
+                    <li ng-repeat="(field, option) in customSortOptions">
+                        <button ng-click="selectCustomSortOption(field)">{{ option.label }}</button>
+                    </li>
+                </ul>
+            </div>
+            <button ng-click="toggleCustomSortOrder()" class="icn-btn direction" title="{{customSortOptionActive.order}}" ng-if="customSortOptionActive">
+                <i class="icon-ascending" ng-if="customSortOptionActive.order === 'asc'"></i>
+                <i class="icon-descending" ng-if="customSortOptionActive.order === 'desc'"></i>
+            </button>
+        </div>
     </div>
 </div>
 
@@ -34,7 +55,7 @@
         <div class="stage-header__name">
             <a href="" ng-click="viewSingleGroup(group, 'desk')">{{ :: group.header }}</a>
             <span class="stage-header__separator">/</span>
-            <a href="" ng-click="viewSingleGroup(group, 'stage')">{{ :: group.subheader }}</a>  
+            <a href="" ng-click="viewSingleGroup(group, 'stage')">{{ :: group.subheader }}</a>
         </div>
         <span class="stage-header__number label-total">{{ total || '0' }}</span>
         <div class="stage-header__notification">

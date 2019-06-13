@@ -15,14 +15,10 @@ import * as ctrl from './controllers';
 
 import {gettext} from 'core/utils';
 
-import React from 'react';
-import {Modal} from 'core/ui/components/Modal/Modal';
-import {ModalHeader} from 'core/ui/components/Modal/ModalHeader';
-import {ModalBody} from 'core/ui/components/Modal/ModalBody';
-import {ModalFooter} from 'core/ui/components/Modal/ModalFooter';
 import {extensions} from 'core/extension-imports.generated';
 
-import {IExtensionActivationResult, onSpikeMiddlewareResult, IArticle} from 'superdesk-api';
+import {IExtensionActivationResult, IArticle} from 'superdesk-api';
+import {showSpikeDialog} from './show-spike-dialog';
 
 angular.module('superdesk.apps.archive.directives', [
     'superdesk.core.filters',
@@ -435,65 +431,15 @@ function spikeActivity(spike, data, modal, $location, $q, multi, privileges,
                         : [],
             );
 
-        let warnings: onSpikeMiddlewareResult['warnings'] = [];
-        const initialValue: Promise<onSpikeMiddlewareResult> = Promise.resolve({});
         const item: IArticle = data.item;
 
-        onSpikeMiddlewares.reduce(
-            (current, next) => {
-                return current.then((result) => {
-                    if (result.warnings != null) {
-                        warnings = warnings.concat(result.warnings);
-                    }
-                    return next(item);
-                });
-            },
-            initialValue,
-        )
-        .then((result) => { // last result isn't processed by `reduce`
-            if (result.warnings != null) {
-                warnings = warnings.concat(result.warnings);
-            }
-
-            return result;
-        })
-        .then(() => {
-            if (!get(config, 'confirm_spike', true) && warnings.length < 1) {
-                spike.spike(data.item);
-            } else {
-                modal.createCustomModal()
-                    .then(({openModal, closeModal}) => {
-                        openModal(
-                            <Modal>
-                                <ModalHeader>{gettext('Confirm')}</ModalHeader>
-                                <ModalBody>
-                                    <div>{gettext('Are you sure you want to spike the item?')}</div>
-                                    {
-                                        warnings.length < 1 ? null : (
-                                            <ul style={{listStyle: 'initial', paddingLeft: 40}}>
-                                                {
-                                                    warnings.map(({text}, i) => <li key={i}>{text}</li>)
-                                                }
-                                            </ul>
-                                        )
-                                    }
-                                </ModalBody>
-                                <ModalFooter>
-                                    <button className="btn" onClick={closeModal}>{gettext('Cancel')}</button>
-                                    <button
-                                        className="btn btn--primary"
-                                        onClick={() => {
-                                            spike.spike(data.item)
-                                                .then(closeModal);
-                                        }}
-                                    >
-                                        {gettext('Spike')}
-                                    </button>
-                                </ModalFooter>
-                            </Modal>,
-                        );
-                    });
-            }
-        });
+        showSpikeDialog(
+            config,
+            modal,
+            () => spike.spike(data.item),
+            gettext('Are you sure you want to spike the item?'),
+            onSpikeMiddlewares,
+            item,
+        );
     }
 }
