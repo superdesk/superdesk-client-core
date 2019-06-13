@@ -45,6 +45,7 @@ describe('internal destinations & generic-page-list', () => {
         el(['list-page--view-edit', 'gform-input--name']).sendKeys('7');
 
         el(['list-page--view-edit', 'item-view-edit--save']).click();
+        browser.sleep(100);
 
         expect(
             el(['gform-output--name'], null, firstItem).getText()
