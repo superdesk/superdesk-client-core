@@ -1,5 +1,6 @@
 
 import {MultiActionBarController} from '../controllers';
+import {registerTestExtensions} from 'core/tests/helpers/register-test-extensions';
 
 describe('Multi Action Bar', () => {
     beforeEach(window.module('superdesk.templates-cache'));
@@ -23,80 +24,8 @@ describe('Multi Action Bar', () => {
         });
     }));
 
-    it('spike action prompts user of confirmation for in progress assignment',
-        inject(($controller, $rootScope, privileges, multi, modal, $q, spike) => {
-            privileges.privileges = {planning: 1};
-
-            const itemlist = [
-                {
-                    _id: 'foo1',
-                    _type: 'archive',
-                    task: {desk: 'desk1', stage: 'stage1'},
-                    type: 'text',
-                    assignment_id: 'as1',
-                },
-                {
-                    _id: 'foo2',
-                    _type: 'archive',
-                    task: {desk: 'desk1', stage: 'stage1'},
-                    type: 'text',
-                },
-            ];
-
-            spyOn(multi, 'getItems').and.returnValue(itemlist);
-            spyOn(multi, 'reset');
-            spyOn(modal, 'confirm').and.returnValue($q.when({}));
-            spyOn(spike, 'spikeMultiple').and.returnValue($q.when({}));
-
-            const ctrl = $controller(MultiActionBarController, {});
-
-            ctrl.spikeItems();
-            $rootScope.$digest();
-
-            expect(multi.getItems).toHaveBeenCalled();
-            expect(modal.confirm).toHaveBeenCalledWith('Some item/s are linked to in-progress ' +
-                'planning coverage, spike anyway?');
-            expect(spike.spikeMultiple).toHaveBeenCalled();
-            expect(multi.reset).toHaveBeenCalled();
-            expect(multi.getItems.calls.count()).toEqual(2);
-        }));
-
-    it('spike does prompt if planning component not activated',
-        inject(($controller, $rootScope, privileges, multi, modal, $q, spike) => {
-            const itemlist = [
-                {
-                    _id: 'foo1',
-                    _type: 'archive',
-                    task: {desk: 'desk1', stage: 'stage1'},
-                    type: 'text',
-                },
-                {
-                    _id: 'foo2',
-                    _type: 'archive',
-                    task: {desk: 'desk1', stage: 'stage1'},
-                    type: 'text',
-                },
-            ];
-
-            spyOn(multi, 'getItems').and.returnValue(itemlist);
-            spyOn(multi, 'reset');
-            spyOn(modal, 'confirm').and.returnValue($q.when({}));
-            spyOn(spike, 'spikeMultiple').and.returnValue($q.when({}));
-
-            const ctrl = $controller(MultiActionBarController, {});
-
-            ctrl.spikeItems();
-            $rootScope.$digest();
-
-            expect(multi.getItems).toHaveBeenCalled();
-            expect(modal.confirm).toHaveBeenCalled();
-            expect(spike.spikeMultiple).toHaveBeenCalled();
-            expect(multi.reset).toHaveBeenCalled();
-            expect(multi.getItems.calls.count()).toEqual(1);
-        }));
-
     it('spike does not prompt if confirm_spike is to false',
-        inject(($controller, $rootScope, privileges, multi, modal, $q, spike, config) => {
+        (done) => inject(($controller, $rootScope, multi, modal, $q, spike, config) => {
             config.confirm_spike = false;
             const itemlist = [
                 {
@@ -123,48 +52,61 @@ describe('Multi Action Bar', () => {
             ctrl.spikeItems();
             $rootScope.$digest();
 
-            expect(multi.getItems).toHaveBeenCalled();
-            expect(modal.confirm).not.toHaveBeenCalled();
-            expect(spike.spikeMultiple).toHaveBeenCalled();
-            expect(multi.reset).toHaveBeenCalled();
-            expect(multi.getItems.calls.count()).toEqual(1);
+            setTimeout(() => {
+                expect(multi.getItems).toHaveBeenCalled();
+                expect(modal.confirm).not.toHaveBeenCalled();
+                expect(spike.spikeMultiple).toHaveBeenCalled();
+                expect(multi.reset).toHaveBeenCalled();
+                done();
+            });
         }));
 
-    it('spike does prompt if confirm_spike is to false and item has assignment',
-        inject(($controller, $rootScope, privileges, multi, modal, $q, spike, config) => {
-            config.confirm_spike = false;
-            privileges.privileges = {planning: 1};
+    it('onSpikeMultiple middleware is called',
+        (done) => inject((superdesk, $controller, privileges, modal) => {
+            const extensionDelay = 1000;
 
-            const itemlist = [
-                {
-                    _id: 'foo1',
-                    _type: 'archive',
-                    task: {desk: 'desk1', stage: 'stage1'},
-                    type: 'text',
-                    assignment_id: 'foo',
+            const articleEntities = {
+                onSpikeMultiple: () => {
+                    return new Promise((resolve) => {
+                        setTimeout(() => {
+                            resolve({});
+                        }, extensionDelay);
+                    });
                 },
-                {
-                    _id: 'foo2',
-                    _type: 'archive',
-                    task: {desk: 'desk1', stage: 'stage1'},
-                    type: 'text',
-                },
-            ];
+            };
 
-            spyOn(multi, 'getItems').and.returnValue(itemlist);
-            spyOn(multi, 'reset');
-            spyOn(modal, 'confirm').and.returnValue($q.when({}));
-            spyOn(spike, 'spikeMultiple').and.returnValue($q.when({}));
+            registerTestExtensions(
+                [
+                    {
+                        activate: () => {
+                            return Promise.resolve({
+                                contributions: {
+                                    entities: {
+                                        article: articleEntities,
+                                    },
+                                },
+                            });
+                        },
+                    },
+                ],
+                superdesk,
+                modal,
+                privileges,
+            ).then(() => {
+                const ctrl = $controller(MultiActionBarController, {});
 
-            const ctrl = $controller(MultiActionBarController, {});
+                spyOn(modal, 'createCustomModal').and.callThrough(); // called after middlewares;
 
-            ctrl.spikeItems();
-            $rootScope.$digest();
+                ctrl.spikeItems();
 
-            expect(multi.getItems).toHaveBeenCalled();
-            expect(modal.confirm).toHaveBeenCalled();
-            expect(spike.spikeMultiple).toHaveBeenCalled();
-            expect(multi.reset).toHaveBeenCalled();
-            expect(multi.getItems.calls.count()).toEqual(2);
+                setTimeout(() => {
+                    expect(modal.createCustomModal).not.toHaveBeenCalled();
+                }, extensionDelay - 50);
+
+                setTimeout(() => {
+                    expect(modal.createCustomModal).toHaveBeenCalled();
+                    done();
+                }, extensionDelay + 50);
+            });
         }));
 });

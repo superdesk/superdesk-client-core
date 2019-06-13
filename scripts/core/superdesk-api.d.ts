@@ -22,14 +22,23 @@ declare module 'superdesk-api' {
 
     // EXTENSIONS
 
+    export type onSpikeMiddlewareResult= {warnings?: Array<{text: string}>};
+
     export interface IExtensionActivationResult {
         contributions?: {
             editor3?: {
                 annotationInputTabs?: Array<IEditor3AnnotationInputTab>;
             }
             pages?: Array<IPage>;
+            entities?: {
+                article?: {
+                    onSpike?(item: IArticle): Promise<onSpikeMiddlewareResult>;
+                    onSpikeMultiple?(items: Array<IArticle>): Promise<onSpikeMiddlewareResult>;
+                };
+            };
         }
     }
+
 
     export type IExtension = DeepReadonly<{
         activate: (superdesk: ISuperdesk) => Promise<IExtensionActivationResult>;
@@ -53,6 +62,18 @@ declare module 'superdesk-api' {
         label: string;
         url: string;
     }>;
+
+
+
+
+    // ENTITIES
+
+    // this is a subset of the main IArticle interface found in the core
+    // a subset is used in order expose things gradually as needed
+    export interface IArticle {
+        _id: string;
+        assignment_id?: string;
+    }
 
 
 
@@ -301,6 +322,9 @@ declare module 'superdesk-api' {
         };
         extensions: {
             getExtension(id: string): Promise<Omit<IExtension, 'activate'>>;
+        };
+        privileges: {
+            getOwnPrivileges(): Promise<any>;
         };
     }>;
 }

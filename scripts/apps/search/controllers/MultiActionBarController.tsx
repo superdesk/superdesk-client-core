@@ -1,6 +1,12 @@
-import _ from 'lodash';
+/* eslint-disable indent */
+
+import _, {get, flatMap} from 'lodash';
 import {IArticle} from 'superdesk-interfaces/Article';
 import {gettext} from 'core/utils';
+
+import {IExtensionActivationResult} from 'superdesk-api';
+import {extensions} from 'core/extension-imports.generated';
+import {showSpikeDialog} from 'apps/archive/show-spike-dialog';
 
 /**
  * @ngdoc controller
@@ -115,10 +121,7 @@ export function MultiActionBarController(
     /**
      * Multiple item spike
      */
-    this.spikeItems = function() {
-        let message = gettext('Are you sure you want to spike the items?');
-        const assignedItems = _.get(privileges, 'privileges.planning') ?
-            multi.getItems().filter((item) => item.assignment_id) : [];
+    this.spikeItems = function(): void {
         const spikeMultiple = () => {
             spike.spikeMultiple(multi.getItems());
             $rootScope.$broadcast('item:spike');
@@ -126,16 +129,33 @@ export function MultiActionBarController(
         };
 
         if ($location.path() === '/workspace/personal') {
-            message = gettext('Do you want to delete the items permanently?');
-        } else if (assignedItems.length) {
-            message = gettext('Some item/s are linked to in-progress planning coverage, spike anyway?');
-        } else if (!_.get(config, 'confirm_spike', true)) {
-            spikeMultiple();
+            modal.confirm(gettext('Do you want to delete the items permanently?')).then(spikeMultiple);
             return;
         }
 
-        return modal.confirm(message)
-            .then(spikeMultiple);
+        const onSpikeMultipleMiddlewares
+            : Array<IExtensionActivationResult['contributions']['entities']['article']['onSpikeMultiple']>
+            = flatMap(
+                Object.values(extensions).map(({activationResult}) => activationResult),
+                (activationResult) =>
+                    activationResult.contributions != null
+                    && activationResult.contributions.entities != null
+                    && activationResult.contributions.entities.article != null
+                    && activationResult.contributions.entities.article.onSpikeMultiple != null
+                        ? activationResult.contributions.entities.article.onSpikeMultiple
+                        : [],
+            );
+
+        const items: Array<IArticle> = multi.getItems();
+
+        showSpikeDialog(
+            config,
+            modal,
+            () => spikeMultiple(),
+            gettext('Are you sure you want to spike the items?'),
+            onSpikeMultipleMiddlewares,
+            items,
+        );
     };
 
     /**

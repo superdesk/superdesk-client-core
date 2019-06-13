@@ -30,6 +30,7 @@ module.exports = function(grunt) {
             DEFAULT_IDLE_TIME: {hours: 0, minutes: 0},
         },
         enabledExtensions: {
+            planning: 1,
             // extensionFolderName: 1,
         },
     };
