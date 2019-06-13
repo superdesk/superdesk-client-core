@@ -24,7 +24,6 @@ describe('internal destinations & generic-page-list', () => {
         el(['list-page--new-item', 'item-view-edit--save']).click();
 
         browser.sleep(100);
-
         expect(items.count()).toEqual(4);
     });
 
@@ -45,8 +44,8 @@ describe('internal destinations & generic-page-list', () => {
         el(['list-page--view-edit', 'gform-input--name']).sendKeys('7');
 
         el(['list-page--view-edit', 'item-view-edit--save']).click();
-        browser.sleep(100);
 
+        browser.sleep(100);
         expect(
             el(['gform-output--name'], null, firstItem).getText()
         ).toEqual('alpha7');
@@ -58,12 +57,15 @@ describe('internal destinations & generic-page-list', () => {
         expect(items.count()).toEqual(3);
 
         items.get(0).click();
+        browser.sleep(100);
         expect(el(['list-page--view-edit', 'gform-input--name']).getAttribute('value')).toBe('alpha');
 
         items.get(1).click();
+        browser.sleep(100);
         expect(el(['list-page--view-edit', 'gform-input--name']).getAttribute('value')).toBe('bravo');
 
         items.get(2).click();
+        browser.sleep(100);
         expect(el(['list-page--view-edit', 'gform-input--name']).getAttribute('value')).toBe('charlie');
     });
 
@@ -71,6 +73,7 @@ describe('internal destinations & generic-page-list', () => {
         var items = els(['list-page--items', 'internal-destinations-item']);
 
         items.get(0).click();
+        browser.sleep(100);
         expect(el(['list-page--view-edit', 'gform-input--name']).getAttribute('value')).toBe('alpha');
 
         // hover in order for action buttons to show up
@@ -81,6 +84,7 @@ describe('internal destinations & generic-page-list', () => {
         el(['edit'], null, items.get(1)).click();
 
         items.get(0).click();
+        browser.sleep(100);
         expect(el(['list-page--view-edit', 'gform-input--name']).getAttribute('value')).not.toBe('alpha');
     });
 
@@ -120,6 +124,7 @@ describe('internal destinations & generic-page-list', () => {
 
         element(by.buttonText('Cancel')).click(); // cancel modal
 
+        browser.sleep(100);
         expect(items.count()).toEqual(3);
     });
 
@@ -158,11 +163,15 @@ describe('internal destinations & generic-page-list', () => {
 
         el(['list-page--filters-form', 'gform-input--desk'], by.cssContainingText('option', 'Politic Desk')).click();
         el(['list-page--filters-form', 'filters-submit']).click();
+
+        browser.sleep(100);
         expect(items.count()).toEqual(1);
         expect(el(['gform-output--name'], null, items.get(0)).getText()).toBe('bravo');
 
         el(['list-page--filters-form', 'gform-input--desk'], by.cssContainingText('option', 'Sports Desk')).click();
         el(['list-page--filters-form', 'filters-submit']).click();
+
+        browser.sleep(100);
         expect(items.count()).toEqual(2);
         expect(el(['gform-output--name'], null, items.get(0)).getText()).toBe('alpha');
         expect(el(['gform-output--name'], null, items.get(1)).getText()).toBe('charlie');
@@ -178,8 +187,8 @@ describe('internal destinations & generic-page-list', () => {
 
         el(['list-page--filters-form', 'gform-input--desk'], by.cssContainingText('option', 'Sports Desk')).click();
         el(['list-page--filters-form', 'filters-submit']).click();
+        browser.sleep(100);
         expect(items.count()).toEqual(2);
-
         expect(els(['list-page--filters-active', 'tag-label']).count()).toBe(1);
 
         var activeFilter = els(['list-page--filters-active', 'tag-label']).get(0);
@@ -188,6 +197,7 @@ describe('internal destinations & generic-page-list', () => {
 
         el(['tag-label--remove'], null, activeFilter).click();
 
+        browser.sleep(100);
         expect(items.count()).toEqual(3);
         expect(els(['list-page--filters-active', 'tag-label']).count()).toBe(0);
     });
