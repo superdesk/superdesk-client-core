@@ -317,12 +317,12 @@ function Monitoring() {
     };
 
     this.spikeMultipleItems = function() {
-        element(by.css('[ng-click="action.spikeItems()"]')).click();
+        el(['multi-actions-inline', 'Spike']).click();
         acceptConfirm();
     };
 
     this.unspikeMultipleItems = function() {
-        element(by.css('[ng-click="action.unspikeItems()"]')).click();
+        el(['multi-actions-inline', 'Unspike']).click();
         return element(by.buttonText('send')).click();
     };
 
