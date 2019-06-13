@@ -1,3 +1,5 @@
+/* eslint-disable indent */
+
 import React from 'react';
 import {Modal} from 'core/ui/components/Modal/Modal';
 import {ModalHeader} from 'core/ui/components/Modal/ModalHeader';
