@@ -11,7 +11,7 @@
     </button>
     <!-- if cv stored inside other parent field ex: subject:[{name: "a", qcode: "a", scheme: cv._id}]-->
     <button ng-disabled="disabled" class="dropdown__toggle line-input" tabindex="{{tabindex}}" dropdown__toggle ng-if="multiInputFields.indexOf(field) > -1 && !icon && cv">
-        {{ findItemByScheme(item[field], cv._id).name || "none" | translate }}
+        {{ item[field].length > 0 ? findItemByScheme(item[field], cv._id).name : "none" | translate }}
         <b class="dropdown__caret"></b>
     </button>
     <button ng-disabled="disabled" class="dropdown__toggle line-input" tabindex="{{tabindex}}" dropdown__toggle ng-if="icon">

@@ -8,6 +8,7 @@ import ng from 'core/services/ng';
 import {loadIframelyEmbedJs} from './loadIframely';
 import {debounce} from 'lodash';
 import {gettext} from 'core/utils';
+import {processEmbedCode} from '../../actions';
 
 // debounce to avoid multiple widget load calls on initial load
 // when it gets executed for every embed block
@@ -92,7 +93,7 @@ export class EmbedBlockComponent extends React.Component<any, any> {
         modal.prompt(gettext('Edit embed'), embed.data.html)
             .then((html) => {
                 this.props.mergeEntityDataByKey(blockKey, entityKey, {
-                    data: {...embed.data, html},
+                    data: {...embed.data, html: processEmbedCode(html)},
                 });
             });
     }

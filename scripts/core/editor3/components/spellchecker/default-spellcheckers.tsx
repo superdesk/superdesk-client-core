@@ -1,6 +1,5 @@
 import ng from 'core/services/ng';
-import {ISpellchecker, ISpellcheckerAction, ISpellcheckWarning} from './interfaces';
-import {logger} from 'core/services/logger';
+import {ISpellchecker, ISpellcheckerAction, ISpellcheckWarning, ISpellcheckerSuggestion} from './interfaces';
 
 const actions: {[key: string]: ISpellcheckerAction} = {
     addToDictionary: {
@@ -17,10 +16,10 @@ const actions: {[key: string]: ISpellcheckerAction} = {
     },
 };
 
-function getSuggestions(text: string): Promise<Array<string>> {
+function getSuggestions(text: string): Promise<Array<ISpellcheckerSuggestion>> {
     return ng.getService('spellcheck')
         .then((spellcheck) => spellcheck.suggest(text))
-        .then((result) => result.map(({value}) => value));
+        .then((result: Array<{value: string}>) => result.map(({value}) => ({text: value})));
 }
 
 function check(str: string): Promise<Array<ISpellcheckWarning>> {
