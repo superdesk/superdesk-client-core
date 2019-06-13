@@ -59,26 +59,24 @@ function check(str: string): Promise<Array<ISpellcheckWarning>> {
 export function getSpellchecker(language: string): ISpellchecker {
     if (language === 'fr') {
         return {
-            check: (str: string) => {
-                return ng.getServices(['config', 'session']).then((services: Array<any>) => {
-                    const [config, session] = services;
+            check: (str: string) => ng.getServices(['config', 'session']).then((services: Array<any>) => {
+                const [config, session] = services;
 
-                    return new Promise((resolve) => {
-                        const xhr = new XMLHttpRequest();
+                return new Promise((resolve) => {
+                    const xhr = new XMLHttpRequest();
 
-                        xhr.open('POST', config.server.url + '/spellchecker', true);
+                    xhr.open('POST', config.server.url + '/spellchecker', true);
 
-                        xhr.setRequestHeader('Content-Type', 'application/json');
-                        xhr.setRequestHeader('Authorization', session.token);
+                    xhr.setRequestHeader('Content-Type', 'application/json');
+                    xhr.setRequestHeader('Authorization', session.token);
 
-                        xhr.onload = function() {
-                            resolve(JSON.parse(this.responseText).errors);
-                        };
+                    xhr.onload = function() {
+                        resolve(JSON.parse(this.responseText).errors);
+                    };
 
-                        xhr.send(JSON.stringify({spellchecker: 'grammalecte', text: str}));
-                    });
+                    xhr.send(JSON.stringify({spellchecker: 'grammalecte', text: str}));
                 });
-            },
+            }),
             actions: {},
         };
     } else {
