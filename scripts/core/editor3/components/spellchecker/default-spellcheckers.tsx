@@ -62,7 +62,7 @@ export function getSpellchecker(language: string): ISpellchecker {
             check: (str: string) => ng.getServices(['config', 'session']).then((services: Array<any>) => {
                 const [config, session] = services;
 
-                return new Promise((resolve) => {
+                return new Promise((resolve, reject) => {
                     const xhr = new XMLHttpRequest();
 
                     xhr.open('POST', config.server.url + '/spellchecker', true);
@@ -71,7 +71,15 @@ export function getSpellchecker(language: string): ISpellchecker {
                     xhr.setRequestHeader('Authorization', session.token);
 
                     xhr.onload = function() {
-                        resolve(JSON.parse(this.responseText).errors);
+                        if (this.status >= 200 && this.status <= 300) {
+                            try {
+                                resolve(JSON.parse(this.responseText).errors);
+                            } catch (e) {
+                                reject('invalid JSON received from server');
+                            }
+                        } else {
+                            reject('server error');
+                        }
                     };
 
                     xhr.send(JSON.stringify({spellchecker: 'grammalecte', text: str}));
