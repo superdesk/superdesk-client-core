@@ -543,7 +543,7 @@ function Monitoring() {
 
     this.openSendMenu = function() {
         browser.sleep(500);
-        element(by.className('big-icon--send-to')).click();
+        el(['multi-actions-inline', 'Send to']).click();
         browser.sleep(100);
     };
 
