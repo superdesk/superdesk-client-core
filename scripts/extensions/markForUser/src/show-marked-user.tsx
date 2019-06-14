@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {IPropsArticleListItemWidget, ISuperdesk} from 'superdesk-api';
+import {manageMarkedUserForSingleArticle} from './managed-marked-user';
 
 export function getDisplayMarkedUserComponent(superdesk: ISuperdesk) {
     const {UserAvatar} = superdesk.components;
@@ -10,9 +11,7 @@ export function getDisplayMarkedUserComponent(superdesk: ISuperdesk) {
                 return null;
             } else {
                 return (
-                    <button onClick={() => {
-                        console.log('test');
-                    }}>
+                    <button onClick={() => manageMarkedUserForSingleArticle(superdesk, this.props.article)}>
                         <UserAvatar userId={this.props.article.marked_for_user} />
                     </button>
                 );

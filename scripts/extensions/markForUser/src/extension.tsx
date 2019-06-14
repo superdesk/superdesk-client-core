@@ -2,6 +2,7 @@ import {ISuperdesk, IExtension, IArticleAction, IArticle, IExtensionActivationRe
 import {getMarkForUserModal} from './get-mark-for-user-modal';
 import {uniq} from 'lodash';
 import {getDisplayMarkedUserComponent} from './show-marked-user';
+import {manageMarkedUserForSingleArticle} from './managed-marked-user';
 
 const extension: IExtension = {
     activate: (superdesk: ISuperdesk) => {
@@ -23,15 +24,7 @@ const extension: IExtension = {
                                 labelForGroup: gettext('Relations'),
                                 icon: 'icon-assign',
                                 onTrigger: () => {
-                                    superdesk.ui.showModal(getMarkForUserModal(
-                                        superdesk,
-                                        (selectedUserId) => {
-                                            superdesk.entities.article.update({
-                                                ...articleNext,
-                                                marked_for_user: selectedUserId,
-                                            });
-                                        },
-                                    ));
+                                    manageMarkedUserForSingleArticle(superdesk, articleNext);
                                 },
                             };
 
@@ -52,16 +45,7 @@ const extension: IExtension = {
                                 labelForGroup: gettext('Relations'),
                                 icon: 'icon-assign',
                                 onTrigger: () => {
-                                    superdesk.ui.showModal(getMarkForUserModal(
-                                        superdesk,
-                                        (selectedUserId) => {
-                                            superdesk.entities.article.update({
-                                                ...articleNext,
-                                                marked_for_user: selectedUserId,
-                                            });
-                                        },
-                                        articleNext.marked_for_user === null ? undefined : articleNext.marked_for_user,
-                                    ));
+                                    manageMarkedUserForSingleArticle(superdesk, articleNext);
                                 },
                             };
 

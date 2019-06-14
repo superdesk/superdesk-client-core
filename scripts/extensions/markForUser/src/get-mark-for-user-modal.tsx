@@ -13,8 +13,8 @@ interface IState {
 
 export function getMarkForUserModal(
     superdesk: ISuperdesk,
-    onUpdate: (markedForUserId: string) => void,
-    markedForUserId?: string,
+    onUpdate: (markedForUserId: string | null) => void,
+    markedForUserInitial?: string,
     message?: string,
 ): React.ComponentType<IProps> {
     const {gettext} = superdesk.localization;
@@ -32,7 +32,7 @@ export function getMarkForUserModal(
             super(props);
 
             this.state = {
-                selectedUserId: markedForUserId,
+                selectedUserId: markedForUserInitial,
             };
         }
         render() {
@@ -63,9 +63,26 @@ export function getMarkForUserModal(
                             {gettext('Cancel')}
                         </button>
 
+                        {
+                            markedForUserInitial !== undefined ? (
+                                <button
+                                    className="btn btn--warning"
+                                    onClick={() => {
+                                        this.props.closeModal();
+                                        onUpdate(null);
+                                    }}
+                                >
+                                    {gettext('Unmark')}
+                                </button>
+                            ) : null
+                        }
+
                         <button
                             className="btn btn--primary"
-                            disabled={this.state.selectedUserId === undefined}
+                            disabled={
+                                this.state.selectedUserId === undefined
+                                || this.state.selectedUserId === markedForUserInitial
+                            }
                             onClick={() => {
                                 this.props.closeModal();
 
