@@ -14,6 +14,7 @@ import {ListItemTemplate} from './ItemListTemplate';
 import {ItemMgridTemplate} from './ItemMgridTemplate';
 import {IArticle} from 'superdesk-interfaces/Article';
 import {IDesk} from 'superdesk-api';
+import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
 
 const CLICK_TIMEOUT = 300;
 
@@ -140,6 +141,13 @@ export class Item extends React.Component<IProps, IState> {
     }
 
     select(event) {
+        // target can be an image or icon inside a button, so parents need to be checked
+        var parentButton = querySelectorParent(event.target, 'button');
+
+        if (parentButton != null) {
+            return;
+        }
+
         if (!this.props.item.gone && !this.clickTimeout) {
             event.persist(); // make event available in timeout callback
             this.clickTimeout = window.setTimeout(() => {
@@ -166,6 +174,13 @@ export class Item extends React.Component<IProps, IState> {
     }
 
     dbClick(event) {
+        // target can be an image or icon inside a button, so parents need to be checked
+        var parentButton = querySelectorParent(event.target, 'button');
+
+        if (parentButton != null) {
+            return;
+        }
+
         if (this.clickTimeout) {
             window.clearTimeout(this.clickTimeout);
             this.clickTimeout = null;
