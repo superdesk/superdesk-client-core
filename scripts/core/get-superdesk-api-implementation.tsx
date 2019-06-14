@@ -22,6 +22,7 @@ import {ModalFooter} from './ui/components/Modal/ModalFooter';
 import {SelectUser} from './ui/components/SelectUser';
 import {logger} from './services/logger';
 import {showModal} from './services/modalService';
+import {UserAvatarFromUserId} from 'apps/users/components/UserAvatarFromUserId';
 
 function getOnUpdateBeforeMiddlewares(
     extensions: IExtensions,
@@ -120,6 +121,7 @@ export function getSuperdeskApiImplementation(
             ModalBody,
             ModalFooter,
             SelectUser,
+            UserAvatar: UserAvatarFromUserId,
         },
         forms: {
             FormFieldType,

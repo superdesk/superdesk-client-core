@@ -48,11 +48,16 @@ declare module 'superdesk-api' {
         onTrigger(): void;
     }
 
+    export interface IPropsArticleListItemWidget {
+        article: IArticle;
+    }
+
     export interface IExtensionActivationResult {
         contributions?: {
             editor3?: {
                 annotationInputTabs?: Array<IEditor3AnnotationInputTab>;
             }
+            articleListItemWidgets?: Array<React.ComponentType<IPropsArticleListItemWidget>>; 
             pages?: Array<IPage>;
             entities?: {
                 article?: {
@@ -441,6 +446,7 @@ declare module 'superdesk-api' {
             ModalBody: React.ComponentType;
             ModalFooter: React.ComponentType;
             SelectUser: React.ComponentType<IPropsSelectUser>;
+            UserAvatar: React.ComponentType<{userId: string}>;
         };
         forms: {
             FormFieldType: typeof FormFieldType;

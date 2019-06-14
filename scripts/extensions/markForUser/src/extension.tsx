@@ -1,14 +1,16 @@
-import {ISuperdesk, IExtension, IArticleAction, IArticle} from 'superdesk-api';
+import {ISuperdesk, IExtension, IArticleAction, IArticle, IExtensionActivationResult} from 'superdesk-api';
 import {getMarkForUserModal} from './get-mark-for-user-modal';
 import {uniq} from 'lodash';
+import {getDisplayMarkedUserComponent} from './show-marked-user';
 
 const extension: IExtension = {
     activate: (superdesk: ISuperdesk) => {
         const {gettext} = superdesk.localization;
         const {isPersonal} = superdesk.entities.article;
 
-        return Promise.resolve({
+        const result: IExtensionActivationResult = {
             contributions: {
+                articleListItemWidgets: [getDisplayMarkedUserComponent(superdesk)],
                 entities: {
                     article: {
                         getActions: (articleNext) => {
@@ -114,7 +116,9 @@ const extension: IExtension = {
                     },
                 },
             },
-        });
+        };
+
+        return Promise.resolve(result);
     },
 };
 

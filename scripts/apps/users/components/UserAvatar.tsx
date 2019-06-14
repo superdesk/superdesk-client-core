@@ -14,7 +14,7 @@ import classNames from 'classnames';
 export const UserAvatar: React.StatelessComponent<any> = ({displayName, pictureUrl, ...rest}) =>
     <div className="user-avatar" {...rest}>
         <figure className={classNames(
-            'avatar',
+            'avatar avatar--no-margin',
             {'no-bg': pictureUrl},
             {initials: !pictureUrl},
         )}>
