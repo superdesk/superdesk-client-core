@@ -62,6 +62,8 @@ describe('package', () => {
         monitoring.actionOnItem('Edit', 3, 0);
         monitoring.selectItem(2, 0);
         monitoring.selectItem(3, 1);
+        browser.sleep(200);
+
         el(['multi-actions-dropdown', 'dropdown-toggle']).click();
         el(['multi-actions-dropdown', 'Add to Current Package']).click();
 
