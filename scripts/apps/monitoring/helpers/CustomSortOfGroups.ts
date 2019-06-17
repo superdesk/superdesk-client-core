@@ -1,7 +1,7 @@
 import {get} from 'lodash';
 import {StageGroup} from '../directives/MonitoringGroup';
 
-type OrderType = 'desc' | 'asc';
+type OrderType = 'desc' | 'asc';
 
 export type GroupSortOptions = Array<string>;
 
