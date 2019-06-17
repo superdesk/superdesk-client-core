@@ -1,4 +1,4 @@
-<div id="subnav" class="subnav subnav--authoring" ng-class="{'auth-sendto': views.send}" sd-media-query min-width="900">
+<div id="subnav" class="subnav subnav--authoring" ng-class="{'auth-sendto': views.send, 'subnav--locked': isLocked()}" sd-media-query min-width="900">
 
     <sd-authoring-topbar-react article="item"></sd-authoring-topbar-react>
 
@@ -100,14 +100,14 @@
         ng-click="openAction('kill')"
         translate>Kill</button>
 
-        <button class="btn btn--close"
+        <button class="btn btn--hollow"
                 id="closeAuthoringBtn"
                 ng-click="close()"
                 ng-if="action !== 'correct' && action !== 'kill'"
                 title="{{ :: 'Close' | translate }}"
                 sd-hotkey="ctrl+shift+e"
                 sd-hotkey-options="{global: true}">
-            <span class="btn__text" translate>Close</span><i class="icon-close-small btn__text--alt-icon"></i>
+            <span translate>Close</span>
         </button>
 
       <button class="btn btn--primary" type="submit"
@@ -160,7 +160,7 @@
                 ng-click="publish()"
                 translate>Send Takedown</button>
 
-        <button class="btn btn--close"
+        <button class="btn"
                 id="cancelAuthoringBtn"
                 ng-if="action === 'correct' || action === 'kill'"
                 ng-click="close()"
