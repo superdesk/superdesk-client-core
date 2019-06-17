@@ -6,7 +6,7 @@ export function getActionsBulkInitialize(superdesk: ISuperdesk) {
     const {gettext} = superdesk.localization;
     const {isPersonal} = superdesk.entities.article;
 
-    return function getActionsBulk(_, articles: Array<IArticle>) {
+    return function getActionsBulk(articles: Array<IArticle>) {
         if (articles.some(isPersonal)) {
             return Promise.resolve([]);
         }

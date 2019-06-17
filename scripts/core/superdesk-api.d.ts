@@ -59,7 +59,7 @@ declare module 'superdesk-api' {
             entities?: {
                 article?: {
                     getActions?(article: IArticle): Promise<Array<IArticleAction>>;
-                    getActionsBulk?(mode: 'include' | 'exclude', articles: Array<IArticle>): Promise<Array<IArticleActionBulk>>;
+                    getActionsBulk?(articles: Array<IArticle>): Promise<Array<IArticleActionBulk>>;
                     onUpdateBefore?(article: IArticle): Promise<IArticle>; // can alter item(immutably), can cancel update
                     onUpdateAfter?(article: IArticle): void; // can't alter item, can't cancel
                     onSpike?(item: IArticle): Promise<onSpikeMiddlewareResult>;
