@@ -1,6 +1,6 @@
 /* eslint-disable complexity */
 import _ from 'lodash';
-import getCustomSortForGroup, {GroupSortOptions} from '../helpers/CustomSortOfGroups';
+import getCustomSortForGroup, {GroupSortOptions, getDefaultFieldForConfig} from '../helpers/CustomSortOfGroups';
 import {GET_LABEL_MAP} from '../../workspace/content/constants';
 
 const translatedFields = GET_LABEL_MAP();
@@ -137,9 +137,18 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
 
             const customSorts = getCustomSortForGroup(config, scope.group);
 
-            if (customSorts.length > 0) {
-                scope.customSortOptions = translateCustomSorts(customSorts);
-                scope.customSortOptionActive = null; // default
+            if (customSorts != null) {
+                scope.customSortOptions = translateCustomSorts(customSorts.options);
+                if (customSorts.default) {
+                    const defaultOption = getDefaultFieldForConfig(customSorts);
+
+                    scope.customSortOptionActive = {
+                        field: defaultOption.field,
+                        order: defaultOption.order,
+                    };
+                } else {
+                    scope.customSortOptionActive = null;
+                }
             }
 
             scope.page = 1;
