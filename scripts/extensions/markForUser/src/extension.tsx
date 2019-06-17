@@ -12,6 +12,7 @@ const extension: IExtension = {
         const result: IExtensionActivationResult = {
             contributions: {
                 articleListItemWidgets: [getDisplayMarkedUserComponent(superdesk)],
+                authoringTopbarWidgets: [getDisplayMarkedUserComponent(superdesk)],
                 entities: {
                     article: {
                         getActions: (articleNext) => {

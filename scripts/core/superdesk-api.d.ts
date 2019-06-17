@@ -48,16 +48,13 @@ declare module 'superdesk-api' {
         onTrigger(): void;
     }
 
-    export interface IPropsArticleListItemWidget {
-        article: IArticle;
-    }
-
     export interface IExtensionActivationResult {
         contributions?: {
             editor3?: {
                 annotationInputTabs?: Array<IEditor3AnnotationInputTab>;
             }
-            articleListItemWidgets?: Array<React.ComponentType<IPropsArticleListItemWidget>>; 
+            articleListItemWidgets?: Array<React.ComponentType<{article: IArticle}>>;
+            authoringTopbarWidgets?: Array<React.ComponentType<{article: IArticle}>>;
             pages?: Array<IPage>;
             entities?: {
                 article?: {
