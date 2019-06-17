@@ -1,15 +1,13 @@
 /* eslint-disable max-len */
 /* tslint:disable:max-line-length */
 import {getContentStateFromHtml} from '../from-html';
-import {convertFromRaw} from 'draft-js';
+import {convertFromRaw, ContentState, ContentBlock} from 'draft-js';
 
 /**
- * @param {string} html HTML to convert
- * @returns {Array<ContentBlock>}
  * @description Returns the set of blocks corresponding to the content state
  * resulting from the conversion of the given HTML.
  */
-function blocksFor(html) {
+function blocksFor(html: string): { contentState: ContentState, blocks: Array<ContentBlock> } {
     const contentState = getContentStateFromHtml(html);
     const blocks = contentState.getBlockMap().toArray();
 
@@ -88,6 +86,14 @@ describe('core.editor3.html.from-html', () => {
 
         expect(blocks[0].getType()).toBe('code-block');
     });
+
+    it('should create an empty content state if html contains only invisible characters', () => {
+        const {contentState} = blocksFor(`
+
+            `);
+
+        expect(contentState.getPlainText()).toEqual('');
+    }),
 
     it('should parse Google Docs special paste', () => {
         const {blocks} = blocksFor('<b style="font-weight:normal;" id="docs-internal-guid-63c0f3a6-072a-245e-c39d-3f61398cba2c"><p dir="ltr" style="line-height:1.38;margin-top:0pt;margin-bottom:0pt;margin-left: 21.25984251968504pt;text-indent: 14.173228346456693pt;text-align: justify;"><span style="font-size:12pt;font-family:Roboto;color:#333333;background-color:transparent;font-weight:700;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;white-space:pre-wrap;">bold</span></p><p dir="ltr" style="line-height:1.38;margin-top:0pt;margin-bottom:0pt;margin-left: 21.25984251968504pt;text-indent: 14.173228346456693pt;text-align: justify;"><span style="font-size:12pt;font-family:Roboto;color:#333333;background-color:transparent;font-weight:400;font-style:italic;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;white-space:pre-wrap;">italic</span></p><p dir="ltr" style="line-height:1.38;margin-top:0pt;margin-bottom:0pt;margin-left: 21.25984251968504pt;text-indent: 14.173228346456693pt;text-align: justify;"><span style="font-size:12pt;font-family:Roboto;color:#333333;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:underline;-webkit-text-decoration-skip:none;text-decoration-skip-ink:none;vertical-align:baseline;white-space:pre;white-space:pre-wrap;">underline</span></p><br></b>');
