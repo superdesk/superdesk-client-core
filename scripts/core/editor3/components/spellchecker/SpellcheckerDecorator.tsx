@@ -11,6 +11,12 @@ export function getSpellcheckWarningsByBlock(
     spellchecker: ISpellchecker,
     editorState: EditorState,
 ): Promise<ISpellcheckWarningsByBlock> {
+    const text = editorState.getCurrentContent().getPlainText();
+
+    if (text.length < 1) {
+        return Promise.resolve({});
+    }
+
     const rangesByBlock: Array<{blockKey: string, startOffset: number, endOffset: number}> = [];
 
     let lastOffset = 0;
@@ -18,39 +24,34 @@ export function getSpellcheckWarningsByBlock(
 
     blocks.forEach((block) => {
         const blockLength = block.getLength();
+        const lineBreak = 1;
 
         rangesByBlock.push({
             blockKey: block.getKey(), startOffset: lastOffset, endOffset: lastOffset + blockLength,
         });
-        lastOffset += blockLength;
+        lastOffset += blockLength + lineBreak;
     });
 
-    const text = editorState.getCurrentContent().getPlainText();
+    return spellchecker.check(text).then((warnings) => {
+        let spellcheckWarningsByBlock: ISpellcheckWarningsByBlock = {};
 
-    if (text.length < 1) {
-        return Promise.resolve({});
-    } else {
-        return spellchecker.check(text).then((warnings) => {
-            let spellcheckWarningsByBlock: ISpellcheckWarningsByBlock = {};
+        warnings.forEach((warning) => {
+            const range = rangesByBlock.find(({startOffset, endOffset}) =>
+                warning.startOffset >= startOffset && warning.startOffset < endOffset);
 
-            warnings.forEach((warning) => {
-                const range = rangesByBlock.find(({startOffset, endOffset}) =>
-                    warning.startOffset >= startOffset && warning.startOffset < endOffset);
+            const {blockKey} = range;
 
-                const {blockKey} = range;
-
-                if (spellcheckWarningsByBlock[blockKey] == null) {
-                    spellcheckWarningsByBlock[blockKey] = [];
-                }
-                spellcheckWarningsByBlock[blockKey].push({
-                    ...warning,
-                    startOffset: warning.startOffset - range.startOffset,
-                });
+            if (spellcheckWarningsByBlock[blockKey] == null) {
+                spellcheckWarningsByBlock[blockKey] = [];
+            }
+            spellcheckWarningsByBlock[blockKey].push({
+                ...warning,
+                startOffset: warning.startOffset - range.startOffset,
             });
-
-            return spellcheckWarningsByBlock;
         });
-    }
+
+        return spellcheckWarningsByBlock;
+    });
 }
 
 function getElementForPortal() {

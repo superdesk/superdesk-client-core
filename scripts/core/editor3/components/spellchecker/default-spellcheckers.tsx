@@ -33,24 +33,20 @@ function check(str: string): Promise<Array<ISpellcheckWarning>> {
 
             let lastOffset = 0;
 
-            str.split('\n').forEach((paragraph) => {
-                let matchArr;
-                let start;
+            let matchArr;
+            let start;
 
-                // tslint:disable-next-line no-conditional-assignment
-                while ((matchArr = regex.exec(paragraph)) !== null) {
-                    start = matchArr.index;
-                    if (!spellcheck.isCorrectWord(matchArr[0])) {
-                        info.push({
-                            startOffset: lastOffset + start,
-                            text: matchArr[0],
-                            suggestions: null,
-                        });
-                    }
+            // tslint:disable-next-line no-conditional-assignment
+            while ((matchArr = regex.exec(str)) !== null) {
+                start = matchArr.index;
+                if (!spellcheck.isCorrectWord(matchArr[0])) {
+                    info.push({
+                        startOffset: lastOffset + start,
+                        text: matchArr[0],
+                        suggestions: null,
+                    });
                 }
-
-                lastOffset += paragraph.length;
-            });
+            }
 
             return info;
         });
