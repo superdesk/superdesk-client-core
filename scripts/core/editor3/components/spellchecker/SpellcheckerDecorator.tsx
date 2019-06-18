@@ -5,6 +5,7 @@ import {SpellcheckerContextMenu} from './SpellcheckerContextMenu';
 import {ISpellcheckWarning, ISpellchecker} from './interfaces';
 import {getSpellchecker} from './default-spellcheckers';
 import {logger} from 'core/services/logger';
+import {assertNever} from 'core/helpers/typescript-helpers';
 
 export type ISpellcheckWarningsByBlock = {[blockKey: string]: Array<ISpellcheckWarning>};
 
@@ -133,26 +134,40 @@ export const getSpellcheckingDecorator = (language: string, spellcheckWarnings: 
             render() {
                 const {menuShowing} = this.state;
 
+                const blockKey = this.props.offsetKey.split('-')[0];
+                const warningsForBlock = spellcheckWarnings[blockKey];
+
+                if (warningsForBlock == null) {
+                    return;
+                }
+
+                const startOffset = this.props.contentState
+                    .getBlockForKey(blockKey)
+                    .getText()
+                    .indexOf(this.props.decoratedText);
+
+                const warningForDecoration = warningsForBlock.find((warning) =>
+                    warning.startOffset === startOffset && warning.text === this.props.decoratedText);
+
+                if (warningForDecoration == null) {
+                    return null;
+                }
+
+                const getClassname = () => {
+                    if (warningForDecoration.type === 'spelling') {
+                        return 'spelling-error';
+                    } else if (warningForDecoration.type === 'grammar') {
+                        return 'grammar-error';
+                    } else {
+                        assertNever(warningForDecoration.type);
+                    }
+                };
+
                 return (
                     <span
-                        className="word-typo"
+                        className={getClassname()}
                         onContextMenu={(e) => {
                             e.preventDefault();
-
-                            const blockKey = this.props.offsetKey.split('-')[0];
-                            const warningsForBlock = spellcheckWarnings[blockKey];
-
-                            if (warningsForBlock == null) {
-                                return;
-                            }
-
-                            const startOffset = this.props.contentState
-                                .getBlockForKey(blockKey)
-                                .getText()
-                                .indexOf(this.props.decoratedText);
-
-                            const warningForDecoration = warningsForBlock.find((warning) =>
-                                warning.startOffset === startOffset && warning.text === this.props.decoratedText);
 
                             if (Array.isArray(warningForDecoration.suggestions)) {
                                 this.setState({

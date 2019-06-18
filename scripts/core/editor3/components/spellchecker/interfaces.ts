@@ -9,6 +9,8 @@ export interface ISpellcheckWarning {
     // offending text fragment. Can consist of multiple words. Can NOT span multiple paragraphs.
     text: string;
 
+    type: 'spelling' | 'grammar';
+
     // list of text fragments suggested to replace offending text fragment.
     // Can consist of multiple words. Can NOT span multiple paragraphs.
     // Can be omited if `ISpellchecker['getSuggestions']` method is defined.

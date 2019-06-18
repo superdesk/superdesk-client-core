@@ -44,6 +44,7 @@ function check(str: string): Promise<Array<ISpellcheckWarning>> {
                         startOffset: lastOffset + start,
                         text: matchArr[0],
                         suggestions: null,
+                        type: 'spelling',
                     });
                 }
             }
