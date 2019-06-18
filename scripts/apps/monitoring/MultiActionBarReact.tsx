@@ -42,7 +42,7 @@ function getActionsBulkFromExtensions(articles): Promise<Array<IArticleActionBul
     );
 
     return Promise.all(
-        getActionsBulk.map((getPromise) => getPromise('include', articles)),
+        getActionsBulk.map((getPromise) => getPromise(articles)),
     ).then((res) => flatMap(res).map((action) => ({...action, canAutocloseMultiActionBar: true})));
 }
 

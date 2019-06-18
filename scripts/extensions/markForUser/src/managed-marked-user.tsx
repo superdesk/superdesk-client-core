@@ -10,6 +10,7 @@ export function manageMarkedUserForSingleArticle(superdesk: ISuperdesk, article:
                 marked_for_user: selectedUserId,
             });
         },
+        superdesk.entities.article.isLocked(article),
         article.marked_for_user === null ? undefined : article.marked_for_user,
     ));
 }

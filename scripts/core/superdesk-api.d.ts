@@ -415,6 +415,7 @@ declare module 'superdesk-api' {
         };
         entities: {
             article: {
+                isLocked(article: IArticle): boolean;
                 isPersonal(article: IArticle): boolean;
                 update(nextArticle: IArticle): void;
             };

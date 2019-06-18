@@ -4,10 +4,10 @@ import {getMarkForUserModal} from './get-mark-for-user-modal';
 
 export function getActionsBulkInitialize(superdesk: ISuperdesk) {
     const {gettext} = superdesk.localization;
-    const {isPersonal} = superdesk.entities.article;
+    const {isPersonal, isLocked} = superdesk.entities.article;
 
     return function getActionsBulk(articles: Array<IArticle>) {
-        if (articles.some(isPersonal)) {
+        if (articles.some(isPersonal) || articles.some(isLocked)) {
             return Promise.resolve([]);
         }
 
@@ -40,6 +40,7 @@ export function getActionsBulkInitialize(superdesk: ISuperdesk) {
                             });
                         });
                     },
+                    false,
                     selectedUserIdInitial,
                     message,
                 ));

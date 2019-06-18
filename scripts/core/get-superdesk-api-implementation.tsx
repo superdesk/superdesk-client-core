@@ -59,6 +59,7 @@ export function getSuperdeskApiImplementation(
     extensions: IExtensions,
     modal,
     privileges,
+    lock,
 ): ISuperdesk {
     return {
         dataApi: dataApi,
@@ -68,6 +69,7 @@ export function getSuperdeskApiImplementation(
         entities: {
             article: {
                 isPersonal: (article) => article.task == null || article.task.desk == null,
+                isLocked: (article) => lock.isLocked(article),
                 update: (_articleNext) => {
                     const __articleNext = {..._articleNext};
 
