@@ -62,6 +62,7 @@ export function getMarkForUserModal(
                         }
 
                         <SelectUser
+                            disabled={locked}
                             onSelect={(selectedUser) => this.setState({selectedUserId: selectedUser._id})}
                             selectedUserId={this.state.selectedUserId}
                         />

@@ -6,6 +6,7 @@ interface IProps<T> {
     items: {[key: string]: T};
     value?: string;
     placeholder?: string;
+    disabled?: boolean;
     renderItem(item: T): JSX.Element;
     getItemLabel(item: T): string;
     getItemValue(item: T): string;
@@ -77,11 +78,14 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                         );
                     }
 
+                    const baseButtonStyle = {paddingBottom: 6};
+
                     return (
                         <button
                             {...propsAutocomplete}
                             type="button"
                             className="sd-line-input__select-custom"
+                            disabled={this.props.disabled}
                             ref={(element) => {
                                 if (element != null) {
                                     // react-autocomplete expects ref to be an input
@@ -94,7 +98,7 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
 
                                 ref(element);
                             }}
-                            style={{paddingBottom: 6}}
+                            style={this.props.disabled ? {...baseButtonStyle, opacity: 0.6} : baseButtonStyle}
                         >
                             {
                                 this.props.value === undefined

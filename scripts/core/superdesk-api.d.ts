@@ -363,6 +363,7 @@ declare module 'superdesk-api' {
     interface IPropsSelectUser {
         onSelect(user: IUser): void;
         selectedUserId?: string;
+        disabled?: boolean;
     }
 
 
