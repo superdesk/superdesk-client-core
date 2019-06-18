@@ -11,7 +11,10 @@ export function getDisplayMarkedUserComponent(superdesk: ISuperdesk) {
                 return null;
             } else {
                 return (
-                    <button onClick={() => manageMarkedUserForSingleArticle(superdesk, this.props.article)}>
+                    <button
+                        onClick={() => manageMarkedUserForSingleArticle(superdesk, this.props.article)}
+                        style={{padding: 0}}
+                    >
                         <UserAvatar userId={this.props.article.marked_for_user} />
                     </button>
                 );

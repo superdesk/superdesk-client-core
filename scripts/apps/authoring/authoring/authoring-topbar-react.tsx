@@ -19,7 +19,7 @@ export class AuthoringTopbarReact extends React.PureComponent<IProps> {
         );
 
         return (
-            <div>
+            <div style={{paddingLeft: 10}}>
                 {articleDisplayWidgets.map((Component, i) => <Component key={i} article={this.props.article} />)}
             </div>
         );
