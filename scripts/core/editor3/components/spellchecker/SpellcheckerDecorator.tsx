@@ -4,6 +4,7 @@ import {ContentBlock, EditorState} from 'draft-js';
 import {SpellcheckerContextMenu} from './SpellcheckerContextMenu';
 import {ISpellcheckWarning, ISpellchecker} from './interfaces';
 import {getSpellchecker} from './default-spellcheckers';
+import {logger} from 'core/services/logger';
 
 export type ISpellcheckWarningsByBlock = {[blockKey: string]: Array<ISpellcheckWarning>};
 
@@ -38,6 +39,11 @@ export function getSpellcheckWarningsByBlock(
         warnings.forEach((warning) => {
             const range = rangesByBlock.find(({startOffset, endOffset}) =>
                 warning.startOffset >= startOffset && warning.startOffset < endOffset);
+
+            if (range == null) {
+                logger.warn('Can not find a range for a spellchecker warning', {text, warnings, warning});
+                return;
+            }
 
             const {blockKey} = range;
 
