@@ -67,4 +67,5 @@ export const ListItemInfo: React.StatelessComponent<any> = (props) => {
 ListItemInfo.propTypes = {
     svc: PropTypes.object.isRequired,
     scope: PropTypes.any.isRequired,
+    item: PropTypes.any.isRequired,
 };

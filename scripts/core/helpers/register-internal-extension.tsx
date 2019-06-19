@@ -11,7 +11,6 @@ export function registerInternalExtension(name: string, activationResult: IExten
         manifest: {main: 'not-required-for-internal-extensions'},
         activationResult,
     };
-
 }
 
 export function unregisterInternalExtension(name: string) {

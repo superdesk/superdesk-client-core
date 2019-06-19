@@ -46,5 +46,5 @@ export function getActionsBulkInitialize(superdesk: ISuperdesk) {
                 ));
             },
         }]);
-    }
+    };
 }

@@ -1,7 +1,9 @@
+/* eslint-disable react/no-multi-comp */
+
 import React from 'react';
 import {IUser} from 'superdesk-api';
 import {UserAvatar} from '.';
-import { dataApi } from 'core/helpers/CrudManager';
+import {dataApi} from 'core/helpers/CrudManager';
 
 interface IProps {
     userId: string;

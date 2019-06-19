@@ -19,7 +19,7 @@ export class AuthoringTopbarReact extends React.PureComponent<IProps> {
                     article: {
                         onUpdateBefore: (article) => {
                             this.props.onChange(article);
-                            console.info("Article is locked and can't be updated via HTTP directly."
+                            console.info('Article is locked and can\'t be updated via HTTP directly.'
                             + 'The updates will be added to existing diff in article-edit view instead.');
                             return Promise.reject();
                         },

@@ -1,5 +1,5 @@
-import {ISuperdesk, IArticle} from "superdesk-api";
-import {getMarkForUserModal} from "./get-mark-for-user-modal";
+import {ISuperdesk, IArticle} from 'superdesk-api';
+import {getMarkForUserModal} from './get-mark-for-user-modal';
 
 export function manageMarkedUserForSingleArticle(superdesk: ISuperdesk, article: IArticle) {
     superdesk.ui.showModal(getMarkForUserModal(

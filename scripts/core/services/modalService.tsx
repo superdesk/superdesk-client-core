@@ -6,6 +6,7 @@ import {gettext} from 'core/utils';
 
 export const showModal = (Component: React.ComponentType<{closeModal(): void}>): Promise<void> => {
     const el = document.createElement('div');
+
     document.body.appendChild(el);
 
     const closeModal = () => {
