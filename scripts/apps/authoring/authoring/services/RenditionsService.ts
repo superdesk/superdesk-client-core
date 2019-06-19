@@ -79,7 +79,8 @@ export function RenditionsService(metadata, $q, api, superdesk, _, notify) {
                 options,
             })
                 .then((result) => {
-                    return item
+                    angular.extend(item, result.item);
+                    return item;
                 });
 
         });

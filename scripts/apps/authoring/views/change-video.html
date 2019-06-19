@@ -32,7 +32,7 @@
                 <div class="sd-photo-preview__video">
                     <div class="sd-photo-preview__video-inner">
                         <div class="sd-photo-preview__video-container">
-                            <video autoplay="autoplay"
+                            <video autoplay="autoplay" ng-if="nav === 'view'"
                                 ng-src="{{data.item.renditions.original.href}}?tag={{data.item._etag}}"></video>
                         </div>
                         <div class="sd-photo-preview__video-tools sd-photo-preview__video-tools--blank">
@@ -45,9 +45,9 @@
             <div class="sd-photo-preview" ng-class="{'sd-photo-preview--edit-video' : nav === 'video-edit'}"
                 ng-show="nav === 'video-edit'">
                 <div class="sd-photo-preview__video">
-                    <div class="sd-photo-preview__video-inner">
+                    <div class="sd-photo-preview__video-inner" id="video-overall">
                         <div class="sd-photo-preview__video-container" id="video-preview">
-                            <video autoplay="autoplay" id="video" ng-if="videoReload === true" class="ng-isolate-scope" ng-init="videoInit()"
+                            <video autoplay="autoplay" id="video" ng-if="nav === 'video-edit'&&videoReload === true" class="ng-isolate-scope" ng-init="videoInit()"
                                 ng-src="{{data.item.renditions.original.href}}?tag={{data.item._etag}}">
                             </video>
                         </div>
@@ -113,7 +113,7 @@
                             </div>
                         </div>
                         <div>
-                            <div id="output" class="thumbnail-preview">
+                            <div id="output" class="thumbnail-preview sd-photo-preview__video-container">
                             </div>
                             <div class="no-thumnail" id="no-thumbnail">
                                 <div class="upload__info-icon"></div>
@@ -123,12 +123,14 @@
                     </div>
                     <div class="sd-photo-preview__video-frames">
                         <div sd-video-timeline 
+                            ng-if="nav === 'video-edit'"
                             class="timeline-controls" 
                             data-video="video" 
                             data-cut="cut"
                             data-list-frames="listFrames" 
                             data-on-change="onCutChange()" 
                             data-on-size-change="loadTimelineThumbnails()"
+                            reload-thumbnails="reloadTimelineThumbnails(reload)"
                             />
                             
                     </div>

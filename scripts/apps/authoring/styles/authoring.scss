@@ -1716,6 +1716,12 @@ feature-image {
   max-height: 23rem;
   min-height: 23rem;
   width: 30rem;
+  grid-row: 1/2;
+  margin: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
 }
 
 .video-player {

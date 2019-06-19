@@ -26,6 +26,7 @@ export function VideoTimeline($rootScope, $interval, api) {
             listFrames: '=',
             onChange: '&',
             onSizeChange: '&',
+            reloadThumbnails: '&',
         },
         templateUrl: 'scripts/apps/authoring/views/video-timeline.html',
         link: function (scope, element) {
@@ -41,42 +42,43 @@ export function VideoTimeline($rootScope, $interval, api) {
             var maskleft = element.find('.mask.left')[0];
             var maskright = element.find('.mask.right')[0];
             var inner_frames = element.find('#inner-frames')[0];
-            let change_width=0;
+            let change_width = 0;
             let IntervalID;
+
+
+            scope.reloadFrames = function () {
+                stopInterval(IntervalID);
+                inner_frames.innerHTML = ''; 
+                loadTimeLine(scope.listFrames);
+            }
+            scope.reloadThumbnails({ reload: scope.reloadFrames });
             var observer = new ResizeObserver(function (entries) {
-                entries.forEach(function (entry) {                    
-                    if (Math.abs(change_width - entry.contentRect.width) > 10) {
-                        if (IntervalID != undefined) {
-                            stopInterval(IntervalID);
-                            inner_frames.innerHTML = '';
-                        }
-                        if (scope.listFrames == null)
-                        {
+                entries.forEach(function (entry) {
+                    if (Math.abs(change_width - entry.contentRect.width) > 10 && scope.video.duration) {                     
+                        if (scope.listFrames == null) {
                             scope.onSizeChange();
                         }
-                        else
-                        {
-                            loadTimeLine(scope.listFrames);
+                        else {
+                            scope.reloadFrames();
                         }
-                        change_width = entry.contentRect.width;                        
-                        
+                        change_width = entry.contentRect.width;
+
                     }
                 });
             });
             observer.observe(controlbar);
             scope.$watch('video', (video) => {
-                scope.video.onplay = function () {
+                if (!video)
+                    return;
+                video.onplay = function () {
                     TweenMax.ticker.addEventListener('tick', vidUpdate);
                 };
-                scope.video.onpause = function () {
+                video.onpause = function () {
                     TweenMax.ticker.removeEventListener('tick', vidUpdate);
                 };
-                scope.video.onended = function () {
+                video.onended = function () {
                     TweenMax.ticker.removeEventListener('tick', vidUpdate);
                 };
-            });
-            scope.$watch('listFrames', (listFrames) => {
-                loadTimeLine(listFrames)
             });
 
             scope.$watch('cut', (cut) => {
@@ -233,7 +235,7 @@ export function VideoTimeline($rootScope, $interval, api) {
 
             function delay(ms) {
                 return new Promise(resolve => setTimeout(resolve, ms));
-            }            
+            }
             const stopInterval = (id) => {
                 $interval.cancel(id);
                 id = undefined;
@@ -252,43 +254,43 @@ export function VideoTimeline($rootScope, $interval, api) {
                 let per_delta_image;
                 let time = 0
                 if (list_thumbnails && list_thumbnails.length > 0) {
-                    per_delta_image = (list_thumbnails.length - 1) / total_thumbnail;                    
-                }   
+                    per_delta_image = (list_thumbnails.length - 1) / total_thumbnail;
+                }
                 else {
                     per_delta_image = scope.video.duration / total_thumbnail;
-                    time = 500;
+                    time = 1000;
                 }
-                let thumnails=[];
+                let thumnails = [];
                 for (let i = 0; i <= total_thumbnail; i++) {
                     let video = document.createElement("video");
                     video.width = widthpic;
                     video.height = 50;
-                    thumnails.push(video)       
+                    thumnails.push(video)
                     inner_frames.append(video);
                 }
-                $rootScope.$applyAsync(() => {
-                    IntervalID = $interval(async function () {
-                        if (count <= total_thumbnail) {
-                            if (list_thumbnails && list_thumbnails.length > 0) {
-                                let index = Math.round(count * per_delta_image);
-                                thumnails[count].poster = list_thumbnails[index].url + '&tag=' + number;
-                                thumnails[count].className = 'loaded';
-                            }
-                            else {
-                                thumnails[count].src = scope.video.src + '&tag=' + number + '#t=' + (count * per_delta_image);
-                                thumnails[count].preload = 'metadata';
-                                thumnails[count].onloadeddata = function () {
-                                    this.className = 'loaded';
-                                };
-                            }
-                            count += 1;                            
+
+                IntervalID = $interval(async function () {
+                    if (count <= total_thumbnail) {
+                        if (list_thumbnails && list_thumbnails.length > 0) {
+                            let index = Math.round(count * per_delta_image);
+                            thumnails[count].poster = list_thumbnails[index].url + '&tag=' + number;
+                            thumnails[count].className = 'loaded';
                         }
                         else {
-
-                            stopInterval(IntervalID);
+                            thumnails[count].src = scope.video.src + '#t=' + (count * per_delta_image);
+                            thumnails[count].preload = 'metadata';
+                            thumnails[count].onloadeddata = function () {
+                                this.className = 'loaded';
+                            };
                         }
-                    }, time)
-                });
+                        count += 1;
+                    }
+                    else {
+
+                        stopInterval(IntervalID);
+                    }
+                }, time)
+
             }
         },
     }

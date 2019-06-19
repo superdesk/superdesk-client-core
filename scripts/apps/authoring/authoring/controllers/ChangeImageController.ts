@@ -288,7 +288,6 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, deploy
             return width !== $scope.areaOfInterestData.CropRight - $scope.areaOfInterestData.CropLeft ||
                     height !== $scope.areaOfInterestData.CropBottom - $scope.areaOfInterestData.CropTop;
         }
-
         return false;
     }
 
