@@ -50,6 +50,7 @@ export const CONTENT_FIELDS_DEFAULTS = Object.freeze({
     attachments: null,
     semantics: null,
     annotations: null,
+    marked_for_user: null,
     [META_FIELD_NAME]: {},
 });
 

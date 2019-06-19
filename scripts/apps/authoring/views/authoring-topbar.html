@@ -1,6 +1,9 @@
 <div id="subnav" class="subnav subnav--authoring" ng-class="{'auth-sendto': views.send, 'subnav--locked': isLocked()}" sd-media-query min-width="900">
 
-    <sd-authoring-topbar-react article="item"></sd-authoring-topbar-react>
+    <sd-authoring-topbar-react
+      article="item"
+      on-change="handleArticleChange"
+    ></sd-authoring-topbar-react>
 
     <div ng-show="isLocked()" style="display: flex; align-items: center; background: #EA484B; padding: 4px; padding-right: 0; margin-left: 10px; height: 32px; border-radius: 100px; color: #fff;">
       <figure class="avatar small avatar-with-info">

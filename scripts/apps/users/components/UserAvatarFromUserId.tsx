@@ -11,7 +11,7 @@ interface IState {
     user?: IUser;
 }
 
-export class UserAvatarFromUserId extends React.PureComponent<IProps, IState> {
+class UserAvatarFromUserIdComponent extends React.PureComponent<IProps, IState> {
     constructor(props: IProps) {
         super(props);
 
@@ -37,5 +37,14 @@ export class UserAvatarFromUserId extends React.PureComponent<IProps, IState> {
                 pictureUrl={user.picture_url}
             />
         );
+    }
+}
+
+export class UserAvatarFromUserId extends React.PureComponent<IProps> {
+    render() {
+        // the component has state derived from props and must be re-mounted when props change
+        // that is what `key={this.props.userId}` does.
+
+        return <UserAvatarFromUserIdComponent key={this.props.userId} userId={this.props.userId} />;
     }
 }

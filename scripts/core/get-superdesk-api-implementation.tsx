@@ -93,6 +93,10 @@ export function getSuperdeskApiImplementation(
                                     });
                                 });
                             });
+                    }).catch((err) => {
+                        if (err instanceof Error) {
+                            logger.error(err);
+                        }
                     });
                 },
             },
