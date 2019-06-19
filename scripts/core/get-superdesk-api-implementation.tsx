@@ -69,7 +69,8 @@ export function getSuperdeskApiImplementation(
         entities: {
             article: {
                 isPersonal: (article) => article.task == null || article.task.desk == null,
-                isLocked: (article) => lock.isLocked(article),
+                isLocked: (article) => article['lock_session'] != null,
+                isLockedByCurrentUser: (article) => lock.isLocked(article),
                 update: (_articleNext) => {
                     const __articleNext = {..._articleNext};
 

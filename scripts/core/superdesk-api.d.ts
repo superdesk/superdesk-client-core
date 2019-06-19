@@ -416,7 +416,11 @@ declare module 'superdesk-api' {
         };
         entities: {
             article: {
+                // returns true if locked by anyone, including the current user
                 isLocked(article: IArticle): boolean;
+
+                isLockedByCurrentUser(article: IArticle): boolean;
+
                 isPersonal(article: IArticle): boolean;
                 update(nextArticle: IArticle): void;
             };
