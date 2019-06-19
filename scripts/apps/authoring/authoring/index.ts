@@ -91,7 +91,7 @@ angular.module('superdesk.apps.authoring', [
     .directive('sdArticleEdit', directive.ArticleEditDirective)
     .directive('sdAuthoring', directive.AuthoringDirective)
     .directive('sdAuthoringTopbar', directive.AuthoringTopbarDirective)
-    .component('sdAuthoringTopbarReact', reactToAngular1(AuthoringTopbarReact, ['articleId']))
+    .component('sdAuthoringTopbarReact', reactToAngular1(AuthoringTopbarReact, ['article']))
     .directive('sdPreviewFormatted', directive.PreviewFormattedDirective)
     .directive('sdAuthoringContainer', directive.AuthoringContainerDirective)
     .directive('sdAuthoringEmbedded', directive.AuthoringEmbeddedDirective)
