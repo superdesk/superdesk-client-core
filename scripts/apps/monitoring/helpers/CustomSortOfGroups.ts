@@ -1,13 +1,13 @@
 import {get} from 'lodash';
 import {StageGroup} from '../directives/MonitoringGroup';
 
-type OrderType = 'desc' | 'asc';
-
 export type GroupSortOptions = Array<string>;
 
+type OrderType = 'desc' | 'asc';
+
 export type GroupSortConfig = {
-    default?: string, // field:order (publish_schedule:asc)
-    options: GroupSortOptions
+    default?: { field: string, order: OrderType },
+    allowed_fields_to_sort: GroupSortOptions
 };
 
 function isOrderType(o: string): o is OrderType {
@@ -32,30 +32,10 @@ export default function getCustomSortForGroup(config: any, group: StageGroup): G
     const configForGroup = matchGroupToOrderConfig(group);
     const customConfig: GroupSortConfig = get(config, configForGroup, null);
 
-    if (customConfig != null && customConfig.default) {
-        const {field, order} = getDefaultFieldForConfig(customConfig);
-
-        customConfig.default = `${field}:${order}`;
+    if (customConfig && customConfig.default && !isOrderType(customConfig.default.order)) {
+        console.warn(`Default sort order is not a valid string '${customConfig.default.order}'. Use 'asc' or 'desc'`);
+        customConfig.default.order = 'asc';
     }
 
     return customConfig;
-}
-
-export function getDefaultFieldForConfig(config: GroupSortConfig):
-    {field: string, order: OrderType} | null {
-    let [field, order] = config.default.split(':');
-
-    if (!order || !isOrderType(order)) {
-        order = 'asc';
-    }
-
-    // make sure default field exists in options
-    if (!config.options.includes(field)) {
-        return null;
-    }
-
-    return {
-        field,
-        order: order as OrderType,
-    };
 }
