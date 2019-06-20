@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
+import {IDesk} from 'superdesk-api';
 
 /**
  * @ngdoc service
@@ -222,7 +223,7 @@ export function DesksFactory($q, api, preferencesService, userList, notify,
                 }
             });
         },
-        getCurrentDeskId: function() {
+        getCurrentDeskId: function(): IDesk['_id'] | null {
             if (!this.userDesks || this.userDesks.length === 0) {
                 return null;
             }

@@ -1,7 +1,7 @@
 import {ISavedSearch, updateSubscribers, unsubscribeUser, IUserSubscription} from '../SavedSearch';
 import {IDirectiveScope} from 'types/Angular/DirectiveScope';
 import {CronTimeInterval} from 'types/DataStructures/TimeInterval';
-import {IUser} from 'superdesk-interfaces/User';
+import {IUser} from 'superdesk-api';
 import {IVocabulary} from 'superdesk-interfaces/Vocabulary';
 
 interface IScope extends IDirectiveScope<void> {

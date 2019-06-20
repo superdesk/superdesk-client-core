@@ -12,6 +12,7 @@ module.exports = Object.assign({}, sharedConfigs, {
                 'camelcase': 0,
                 'object-shorthand': 0,
                 'arrow-body-style': 0,
+                'newline-per-chained-call': 0,
             },
         },
     ],

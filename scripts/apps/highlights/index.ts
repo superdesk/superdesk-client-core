@@ -34,7 +34,6 @@ export default angular.module('superdesk.apps.highlights', [
 
     .directive('sdCreateHighlightsButton', directive.CreateHighlightsButton)
     .directive('sdMarkHighlightsDropdown', directive.MarkHighlightsDropdown)
-    .directive('sdMultiMarkHighlightsDropdown', directive.MultiMarkHighlightsDropdown)
     .directive('sdPackageHighlightsDropdown', directive.PackageHighlightsDropdown)
     .directive('sdHighlightsInfo', directive.HighlightsInfo)
     .directive('sdSearchHighlights', directive.SearchHighlights)

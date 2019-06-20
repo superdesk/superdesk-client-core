@@ -1,12 +1,9 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+/* eslint-disable react/prop-types */
 
-export const ModalBody: React.StatelessComponent<any> = (props) => (
+import React from 'react';
+
+export const ModalBody: React.StatelessComponent = (props) => (
     <div className="modal__body">
         {props.children}
     </div>
 );
-
-ModalBody.propTypes = {
-    children: PropTypes.any.isRequired,
-};

@@ -3,6 +3,13 @@ import ReactDOM from 'react-dom';
 
 import {ModalPrompt} from 'core/ui/components/Modal/ModalPrompt';
 import {gettext} from 'core/utils';
+import ng from 'core/services/ng';
+
+export const showModal = (Component: React.ComponentType<{closeModal(): void}>): Promise<void> =>
+    ng.getService('modal').then((modal) => {
+        modal.createCustomModal()
+            .then(({openModal, closeModal}) => openModal(<Component closeModal={closeModal} />));
+    });
 
 export default angular.module('superdesk.core.services.modal', [
     'superdesk-ui',

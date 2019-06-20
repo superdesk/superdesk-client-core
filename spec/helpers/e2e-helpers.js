@@ -1,9 +1,19 @@
+/**
+ * @param {Array<string>} testIds
+ */
 const getTestSelector = (testIds = null) =>
-    testIds == null ? [] : testIds.split(' ')
+    testIds == null ? [] : testIds
         .map((testId) => `[data-test-id="${testId}"]`)
         .join(' ');
 
-function el(testIds = null, byLocator = null, parent = null) {
+/**
+ * @param {Array<string>} testIds
+ */
+function el(
+    testIds = null,
+    byLocator = null, // example: by.cssContainingText('option', 'Text')
+    parent = null
+) {
     var locator;
 
     if (parent != null) {
@@ -15,7 +25,15 @@ function el(testIds = null, byLocator = null, parent = null) {
     return byLocator == null ? locator : locator.element(byLocator);
 }
 
-function els(testIds = null, byLocator = null, parent = null) {
+
+/**
+ * @param {Array<string>} testIds
+ */
+function els(
+    testIds = null,
+    byLocator = null, // example: by.cssContainingText('option', 'Text')
+    parent = null
+) {
     var locator;
 
     if (parent != null) {

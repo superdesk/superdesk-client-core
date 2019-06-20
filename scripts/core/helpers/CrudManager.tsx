@@ -13,16 +13,54 @@ import {
     IRestApiResponse,
     IDataApi,
 } from 'superdesk-api';
+import {isObject} from 'lodash';
 
 export const dataApi: IDataApi = {
-    create: (endpoint, item) => ng.getService('api').then((api) => api(endpoint).save(item)),
+    findOne: (endpoint, id) => ng.getServices(['config', 'session', 'api']).then((res: any) => {
+        const [config, session] = res;
+
+        return new Promise((resolve) => {
+            const xhr = new XMLHttpRequest();
+
+            xhr.open('GET', config.server.url + '/' + endpoint + '/' + id, true);
+
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.setRequestHeader('Authorization', session.token);
+
+            xhr.onload = function() {
+                resolve(JSON.parse(this.responseText));
+            };
+
+            xhr.send();
+        });
+    }),
+    create: (endpoint, item) => ng.getServices(['config', 'session', 'api']).then((res: any) => {
+        const [config, session] = res;
+
+        return new Promise((resolve) => {
+            const xhr = new XMLHttpRequest();
+
+            xhr.open('POST', config.server.url + '/' + endpoint, true);
+
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.setRequestHeader('Authorization', session.token);
+
+            xhr.onload = function() {
+                resolve(JSON.parse(this.responseText));
+            };
+
+            xhr.send(JSON.stringify(item));
+        });
+    }),
     query: (
         endpoint: string,
         page: number,
         sortOption: ISortOption,
         filterValues: ICrudManagerFilters = {},
         formatFiltersForServer?: (filters: ICrudManagerFilters) => ICrudManagerFilters,
-    ) => ng.getService('api').then((api) => {
+    ) => ng.getServices(['config', 'session', 'api']).then((res: any) => {
+        const [config, session] = res;
+
         let query = {
             page: page,
         };
@@ -37,14 +75,81 @@ export const dataApi: IDataApi = {
                 : filterValues;
         }
 
-        return api(endpoint).query(query);
+        const queryString = '?' + Object.keys(query).map((key) =>
+            `${key}=${isObject(query[key]) ? JSON.stringify(query[key]) : query[key]}`).join('&');
+
+        return new Promise((resolve) => {
+            const xhr = new XMLHttpRequest();
+
+            xhr.open('GET', config.server.url + '/' + endpoint + queryString, true);
+
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.setRequestHeader('Authorization', session.token);
+
+            xhr.onload = function() {
+                resolve(JSON.parse(this.responseText));
+            };
+
+            xhr.send();
+        });
     }),
-    patch: (endpoint, item1, item2) => ng.getService('api').then((api) => {
+    patch: (endpoint, item1, item2) => ng.getServices(['config', 'session']).then((res: any) => {
+        const [config, session] = res;
+
         const patch = generate(item1, item2);
 
-        return api(endpoint).save(item1, patch);
+        // due to the use of "projections"(partial entities) item2 is sometimes missing fields which item1 has
+        // which is triggering patching algorithm to think we want to set those missing fields to null
+        // the below code enforces that in order to patch to contain null,
+        // item2 must explicitly send nulls instead of missing fields
+        for (const key in patch) {
+            if (patch[key] === null && item2[key] !== null) {
+                delete patch[key];
+            }
+        }
+
+        // remove IBaseRestApiResponse fields
+        delete patch['_created'];
+        delete patch['_updated'];
+        delete patch['_id'];
+        delete patch['_etag'];
+        delete patch['_links'];
+
+        return new Promise((resolve) => {
+            const xhr = new XMLHttpRequest();
+
+            xhr.open('PATCH', config.server.url + '/' + endpoint + '/' + item1._id, true);
+
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.setRequestHeader('Authorization', session.token);
+            xhr.setRequestHeader('If-Match', item1._etag);
+
+            xhr.onload = function() {
+                resolve(JSON.parse(this.responseText));
+            };
+
+            xhr.send(JSON.stringify(patch));
+        });
     }),
-    delete: (endpoint, item) => ng.getService('api').then((api) => api(endpoint).remove(item)),
+    delete: (endpoint, item) => ng.getServices(['config', 'session']).then((res: any) => {
+        const [config, session] = res;
+
+        return new Promise((resolve) => {
+            const xhr = new XMLHttpRequest();
+
+            xhr.open('DELETE', config.server.url + '/' + endpoint + '/' + item._id, true);
+
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.setRequestHeader('Authorization', session.token);
+            xhr.setRequestHeader('If-Match', item._etag);
+
+            xhr.onload = function() {
+                resolve();
+            };
+
+            xhr.send(JSON.stringify(item));
+        });
+    }),
 };
 
 export function connectCrudManager<Props, PropsToConnect, Entity extends IBaseRestApiResponse>(

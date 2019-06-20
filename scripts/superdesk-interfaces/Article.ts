@@ -1,6 +1,7 @@
 import {IAuthor} from './Author';
+import {IBaseRestApiResponse, IDesk, IStage, IUser} from 'superdesk-api';
 
-export interface IArticle {
+export interface IArticle extends IBaseRestApiResponse {
     _id: string;
     _current_version: number;
     guid: string;
@@ -43,10 +44,24 @@ export interface IArticle {
     lock_session: any;
     rewritten_by?: string;
 
+    highlights?: Array<string>;
+
+    task: {
+        desk: IDesk['_id'];
+        stage: IStage['_id'];
+        user: IUser['_id'];
+    };
+
     // might be only used for client-side state
     created: any;
     archived: any;
 
-    // TODO: remove this, it's only used for client-side state
+    // remove when SDESK-4343 is done.
     selected: any;
+
+    // planning extension
+    assignment_id?: string;
+
+    // markForUser extension
+    marked_for_user?: string;
 }

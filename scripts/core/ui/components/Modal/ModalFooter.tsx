@@ -1,12 +1,9 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+/* eslint-disable react/prop-types */
 
-export const ModalFooter: React.StatelessComponent<any> = (props) => (
+import React from 'react';
+
+export const ModalFooter: React.StatelessComponent = (props) => (
     <div className="modal__footer">
         {props.children}
     </div>
 );
-
-ModalFooter.propTypes = {
-    children: PropTypes.any.isRequired,
-};
