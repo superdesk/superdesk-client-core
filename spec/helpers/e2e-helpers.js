@@ -45,8 +45,13 @@ function els(
     return byLocator == null ? locator : locator.all(byLocator);
 }
 
+function hasElementCount(locator, expectedElementCount) {
+    return () => locator.count().then((count) => count === expectedElementCount);
+}
+
 module.exports = {
     el: el,
     els: els,
     s: getTestSelector,
+    hasElementCount: hasElementCount,
 };

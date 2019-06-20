@@ -4,6 +4,8 @@ var open = require('./helpers/utils').open;
 var el = require('./helpers/e2e-helpers').el;
 var els = require('./helpers/e2e-helpers').els;
 var s = require('./helpers/e2e-helpers').s;
+var hasElementCount = require('./helpers/e2e-helpers').hasElementCount;
+var EC = protractor.ExpectedConditions;
 
 describe('internal destinations & generic-page-list', () => {
     // The following tests also cover all other pages using generic-page-list
@@ -23,8 +25,7 @@ describe('internal destinations & generic-page-list', () => {
 
         el(['list-page--new-item', 'item-view-edit--save']).click();
 
-        browser.sleep(100);
-        expect(items.count()).toEqual(4);
+        browser.wait(hasElementCount(items, 4));
     });
 
     it('can edit existing item', () => {
@@ -45,10 +46,7 @@ describe('internal destinations & generic-page-list', () => {
 
         el(['list-page--view-edit', 'item-view-edit--save']).click();
 
-        browser.sleep(100);
-        expect(
-            el(['gform-output--name'], null, firstItem).getText()
-        ).toEqual('alpha7');
+        browser.wait(EC.textToBePresentInElement(el(['gform-output--name'], null, firstItem), 'alpha7'));
     });
 
     it('can preview items', () => {
@@ -57,24 +55,21 @@ describe('internal destinations & generic-page-list', () => {
         expect(items.count()).toEqual(3);
 
         items.get(0).click();
-        browser.sleep(100);
-        expect(el(['list-page--view-edit', 'gform-input--name']).getAttribute('value')).toBe('alpha');
+
+        browser.wait(EC.textToBePresentInElementValue(el(['list-page--view-edit', 'gform-input--name']), 'alpha'));
 
         items.get(1).click();
-        browser.sleep(100);
-        expect(el(['list-page--view-edit', 'gform-input--name']).getAttribute('value')).toBe('bravo');
+        browser.wait(EC.textToBePresentInElementValue(el(['list-page--view-edit', 'gform-input--name']), 'bravo'));
 
         items.get(2).click();
-        browser.sleep(100);
-        expect(el(['list-page--view-edit', 'gform-input--name']).getAttribute('value')).toBe('charlie');
+        browser.wait(EC.textToBePresentInElementValue(el(['list-page--view-edit', 'gform-input--name']), 'charlie'));
     });
 
     it('does not allow previewing when in edit mode', () => {
         var items = els(['list-page--items', 'internal-destinations-item']);
 
         items.get(0).click();
-        browser.sleep(100);
-        expect(el(['list-page--view-edit', 'gform-input--name']).getAttribute('value')).toBe('alpha');
+        browser.wait(EC.textToBePresentInElementValue(el(['list-page--view-edit', 'gform-input--name']), 'alpha'));
 
         // hover in order for action buttons to show up
         browser.actions()
@@ -84,8 +79,11 @@ describe('internal destinations & generic-page-list', () => {
         el(['edit'], null, items.get(1)).click();
 
         items.get(0).click();
-        browser.sleep(100);
-        expect(el(['list-page--view-edit', 'gform-input--name']).getAttribute('value')).not.toBe('alpha');
+        browser.wait(
+            EC.not(
+                EC.textToBePresentInElementValue(el(['list-page--view-edit', 'gform-input--name']), 'alpha')
+            )
+        );
     });
 
     it('can delete an item', () => {
@@ -103,9 +101,7 @@ describe('internal destinations & generic-page-list', () => {
         el(['delete'], null, firstItem).click();
 
         element(by.buttonText('OK')).click(); // confirm
-        browser.sleep(100);
-
-        expect(items.count()).toEqual(2);
+        browser.wait(hasElementCount(items, 2));
     });
 
     it('can cancel deletion', () => {
@@ -124,8 +120,7 @@ describe('internal destinations & generic-page-list', () => {
 
         element(by.buttonText('Cancel')).click(); // cancel modal
 
-        browser.sleep(100);
-        expect(items.count()).toEqual(3);
+        browser.wait(hasElementCount(items, 3));
     });
 
     it('can sort items', () => {
@@ -139,19 +134,16 @@ describe('internal destinations & generic-page-list', () => {
             .perform();
 
         element(by.cssContainingText(s(['sortbar--option']), 'Destination name')).click();
-        browser.sleep(100);
 
-        expect(el(['sortbar--sort-ascending']).isPresent()).toBe(true);
+        browser.wait(EC.visibilityOf(el(['sortbar--sort-ascending'])));
         expect(el(['gform-output--name'], null, items.get(0)).getText()).toBe('alpha');
         expect(el(['gform-output--name'], null, items.get(1)).getText()).toBe('bravo');
         expect(el(['gform-output--name'], null, items.get(2)).getText()).toBe('charlie');
 
         el(['sortbar--sort-ascending']).click();
-        browser.sleep(100);
-
-        expect(el(['gform-output--name'], null, items.get(0)).getText()).toBe('charlie');
-        expect(el(['gform-output--name'], null, items.get(1)).getText()).toBe('bravo');
-        expect(el(['gform-output--name'], null, items.get(2)).getText()).toBe('alpha');
+        browser.wait(EC.textToBePresentInElement(el(['gform-output--name'], null, items.get(0)), 'charlie'));
+        browser.wait(EC.textToBePresentInElement(el(['gform-output--name'], null, items.get(1)), 'bravo'));
+        browser.wait(EC.textToBePresentInElement(el(['gform-output--name'], null, items.get(2)), 'alpha'));
     });
 
     it('can filter items', () => {
@@ -164,15 +156,13 @@ describe('internal destinations & generic-page-list', () => {
         el(['list-page--filters-form', 'gform-input--desk'], by.cssContainingText('option', 'Politic Desk')).click();
         el(['list-page--filters-form', 'filters-submit']).click();
 
-        browser.sleep(100);
-        expect(items.count()).toEqual(1);
+        browser.wait(hasElementCount(items, 1));
         expect(el(['gform-output--name'], null, items.get(0)).getText()).toBe('bravo');
 
         el(['list-page--filters-form', 'gform-input--desk'], by.cssContainingText('option', 'Sports Desk')).click();
         el(['list-page--filters-form', 'filters-submit']).click();
 
-        browser.sleep(100);
-        expect(items.count()).toEqual(2);
+        browser.wait(hasElementCount(items, 2));
         expect(el(['gform-output--name'], null, items.get(0)).getText()).toBe('alpha');
         expect(el(['gform-output--name'], null, items.get(1)).getText()).toBe('charlie');
     });
@@ -187,8 +177,7 @@ describe('internal destinations & generic-page-list', () => {
 
         el(['list-page--filters-form', 'gform-input--desk'], by.cssContainingText('option', 'Sports Desk')).click();
         el(['list-page--filters-form', 'filters-submit']).click();
-        browser.sleep(100);
-        expect(items.count()).toEqual(2);
+        browser.wait(hasElementCount(items, 2));
         expect(els(['list-page--filters-active', 'tag-label']).count()).toBe(1);
 
         var activeFilter = els(['list-page--filters-active', 'tag-label']).get(0);
@@ -197,8 +186,7 @@ describe('internal destinations & generic-page-list', () => {
 
         el(['tag-label--remove'], null, activeFilter).click();
 
-        browser.sleep(100);
-        expect(items.count()).toEqual(3);
+        browser.wait(hasElementCount(items, 3));
         expect(els(['list-page--filters-active', 'tag-label']).count()).toBe(0);
     });
 });
