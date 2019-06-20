@@ -62,9 +62,9 @@ describe('package', () => {
         monitoring.actionOnItem('Edit', 3, 0);
         monitoring.selectItem(2, 0);
         monitoring.selectItem(3, 1);
-        el(['multi-actions-dropdown', 'dropdown-toggle']).click();
-        el(['multi-actions-dropdown', 'Add to Current Package']).click();
+        browser.sleep(200);
 
+        el(['multi-actions-inline', 'Add to Current Package']).click();
         browser.sleep(200);
         expect(authoring.getGroupItems('MAIN').count()).toBe(2);
     });
