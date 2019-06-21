@@ -47,7 +47,29 @@ const menuStyle = {
 };
 
 export class Select2<T> extends React.Component<IProps<T>, IState> {
-    state = {search: ''};
+    /**
+        There is the following bug in the `react-autocomplete` library:
+        If you click an item from the select dropdown, it closes the dropdown without firing a `onSelect` event
+        if an internal value `ignoreBlur` is not correct. That value is set onMouseEnter of the dropdown list,
+        but if we render a different component or resize existing one *on dropdown open*, the cursor can end up
+        **inside** the dropdown menu when it first renders. This means that onMouseEnter never fires, library doesn't
+        setup the correct state and clicks on dropdown items don't trigger `onSelect`.
+        It's similar to this issue: https://github.com/reactjs/react-autocomplete/issues/254
+
+        To work around this, we use {@link Select2.lastButtonHeight} to ensure that when user clicks the dropdown
+        and we want to render the input for filtering, the height of that input will be the same as
+        of the button which was rendered there previously. This ensures the mouse pointer won't end up inside the
+        dropdown menu on render, onMouseEnter will fire and all will work as expected.
+    */
+    private lastButtonHeight: number;
+
+    constructor(props: IProps<T>) {
+        super(props);
+
+        this.state = {
+            search: '',
+        };
+    }
 
     render() {
         const filteredItems = Object.values(this.props.items).filter(
@@ -72,6 +94,7 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                                 {...propsAutocomplete}
                                 onChange={(event) => this.setState({search: event.target.value})}
                                 value={this.state.search}
+                                style={{height: this.lastButtonHeight + 'px'}}
                                 placeholder={'Search'}
                                 autoFocus
                             />
@@ -88,6 +111,8 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                             disabled={this.props.disabled}
                             ref={(element) => {
                                 if (element != null) {
+                                    this.lastButtonHeight = element.offsetHeight;
+
                                     // react-autocomplete expects ref to be an input
                                     // but input doesn't support rendering custom children
                                     // so we use a button instead and add a fake method to prevent errors
