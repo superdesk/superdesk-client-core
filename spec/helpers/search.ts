@@ -1,9 +1,7 @@
 /* eslint-disable newline-per-chained-call */
 
-
-var nav = require('./utils').nav,
-    waitFor = require('./utils').wait,
-    scrollToView = require('./utils').scrollToView;
+import {element, by, browser} from 'protractor';
+import {nav, wait as waitFor, scrollToView} from './utils';
 
 module.exports = new GlobalSearch();
 
@@ -293,7 +291,6 @@ function GlobalSearch() {
 
         expect(crtItem.element(by.className('icon-bell')).isDisplayed()).toBeTruthy();
     };
-
 
     /**
      * Show custom search right panel
