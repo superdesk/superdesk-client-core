@@ -1,19 +1,15 @@
-/**
- * @param {Array<string>} testIds
- */
-const getTestSelector = (testIds = null) =>
-    testIds == null ? [] : testIds
+import {element, by, ElementFinder, ElementArrayFinder} from 'protractor';
+
+const getTestSelector = (testIds: Array<string> = null): string =>
+    (testIds == null ? [] : testIds)
         .map((testId) => `[data-test-id="${testId}"]`)
         .join(' ');
 
-/**
- * @param {Array<string>} testIds
- */
-function el(
-    testIds = null,
+export function el(
+    testIds: Array<string> = null,
     byLocator = null, // example: by.cssContainingText('option', 'Text')
-    parent = null
-) {
+    parent = null,
+): ElementFinder {
     var locator;
 
     if (parent != null) {
@@ -25,15 +21,11 @@ function el(
     return byLocator == null ? locator : locator.element(byLocator);
 }
 
-
-/**
- * @param {Array<string>} testIds
- */
-function els(
-    testIds = null,
+export function els(
+    testIds: Array<string> = null,
     byLocator = null, // example: by.cssContainingText('option', 'Text')
-    parent = null
-) {
+    parent = null,
+): ElementArrayFinder {
     var locator;
 
     if (parent != null) {
@@ -45,13 +37,11 @@ function els(
     return byLocator == null ? locator : locator.all(byLocator);
 }
 
-function hasElementCount(locator, expectedElementCount) {
-    return () => locator.count().then((count) => count === expectedElementCount);
-}
+export const s = getTestSelector;
 
-module.exports = {
+// keep for compatibility with non-typescript tests
+export default {
     el: el,
     els: els,
     s: getTestSelector,
-    hasElementCount: hasElementCount,
 };
