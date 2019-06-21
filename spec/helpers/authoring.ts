@@ -1,6 +1,7 @@
 /* eslint-disable newline-per-chained-call */
 
 import {element, by, browser, protractor} from "protractor";
+import {waitHidden, wait} from "./utils";
 
 class Authoring {
     lock: any;
@@ -368,7 +369,7 @@ class Authoring {
 
         this.cancel = function() {
             this.cancel_button.click();
-            return utils.waitHidden(this.cancel_button);
+            return waitHidden(this.cancel_button);
         };
 
         this.addEmbed = function(embedCode, context) {
@@ -882,12 +883,12 @@ class Authoring {
 
         this.openRelatedItem = function() {
             element(by.css('a[id="related-item"]')).click();
-            utils.wait(element(by.className('widget-related-item')), 1000);
+            wait(element(by.className('widget-related-item')), 1000);
         };
 
         this.openMacros = function() {
             element(by.css('a[id="macros"]')).click();
-            utils.wait(element.all(by.repeater('macro in macros')), 1000);
+            wait(element.all(by.repeater('macro in macros')), 1000);
         };
 
         this.callMacros = function(macroName) {

@@ -23,7 +23,7 @@ class GlobalSearch {
     openItemMenu: any;
     getRelatedItems: any;
     actionOnItem: (action: any, index: any, useFullLinkText: any) => void;
-    actionOnSubmenuItem: (action: any, submenu: any, index: any, linkTypeBtn: any) => void;
+    actionOnSubmenuItem: (action: any, submenu: any, index: any, linkTypeBtn?: any) => void;
     openToggleBox: (title: any) => void;
     toggleSearchTabs: (title: any) => void;
     toggleSubjectMetadata: () => void;

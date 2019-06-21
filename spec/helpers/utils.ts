@@ -198,7 +198,7 @@ export function hover(elem) {
  * @param {number} time - The ms timeout period, defaults to 1000
  * @return {Promise}
  */
-export function waitHidden(elem, time) {
+export function waitHidden(elem, time?) {
     return browser.wait(() => elem.isPresent()
         .then((isPresent) =>
             !isPresent ? true : elem.isDisplayed()
