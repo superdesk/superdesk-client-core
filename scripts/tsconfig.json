@@ -1,9 +1,9 @@
 {
     "include": [
-        "scripts"
+        "."
     ],
     "compilerOptions": {
-        "baseUrl": "scripts",
+        "baseUrl": ".",
         "sourceMap": false,
         "allowJs": true,
         "esModuleInterop": true,
