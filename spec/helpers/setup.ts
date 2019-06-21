@@ -1,9 +1,7 @@
-
-
-/* global beforeEach */
-
-var resetApp = require('./fixtures').resetApp;
-var waitForSuperdesk = require('./utils').waitForSuperdesk;
+import {browser} from 'protractor';
+import {resetApp} from './fixtures';
+import {waitForSuperdesk} from './utils';
+import './waitReady';
 
 function clearStorage() {
     return browser.driver.executeScript('sessionStorage.clear();localStorage.clear();');
@@ -23,10 +21,9 @@ function resize(width, height) {
     });
 }
 
-module.exports = function(params) {
+export default function(params) {
     // runs before every spec
     beforeEach((done) => {
-        require('./waitReady');
         resize(1280, 800)
             .then(() => {
                 resetApp(params.fixture_profile, () => {
@@ -38,4 +35,4 @@ module.exports = function(params) {
                 });
             });
     });
-};
+}

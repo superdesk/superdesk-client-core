@@ -1,12 +1,7 @@
+import {browser} from "protractor";
+import {backendRequest, backendRequestAuth} from "./backend";
 
-
-var backendRequest = require('./backend').backendRequest;
-var backendRequestAuth = require('./backend').backendRequestAuth;
-
-exports.post = post;
-exports.resetApp = resetApp;
-
-function resetApp(profile, callback) {
+export function resetApp(profile, callback) {
     backendRequest({
         uri: '/prepopulate',
         method: 'POST',
@@ -18,7 +13,7 @@ function resetApp(profile, callback) {
     }, 0);
 }
 
-function post(params, callback) {
+export function post(params, callback) {
     params.method = 'POST';
     backendRequestAuth(params, callback);
 }

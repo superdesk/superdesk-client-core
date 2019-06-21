@@ -1,3 +1,7 @@
+import {browser, $} from 'protractor';
+
+var ElementFinder = $('').constructor;
+
 /**
  * Actively wait for an element present and displayed up to specTimeoutMs
  * ignoring useless webdriver errors like StaleElementError.
@@ -8,10 +12,6 @@
  * @example
  * expect($('.some-html-class').waitReady()).toBeTruthy();
  */
-
-
-var ElementFinder = $('').constructor;
-
 ElementFinder.prototype.waitReady = function(optStr) {
     var self = this;
     var specTimeoutMs = browser.allScriptsTimeout * 2;
@@ -27,7 +27,7 @@ ElementFinder.prototype.waitReady = function(optStr) {
 
     function _isPresentError(err) {
         /* globals error: true */
-        lastWebdriverError = typeof error !== 'undefined' && error !== null ? err.toString() : err;
+        lastWebdriverError = typeof err !== 'undefined' && err !== null ? err.toString() : err;
         return false;
     }
 

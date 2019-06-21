@@ -1,8 +1,9 @@
-const utils = require('./utils');
+import {element, by} from 'protractor';
+import {nav} from './utils';
 
 class MetadataHelper {
     open() {
-        utils.nav('settings/vocabularies');
+        nav('settings/vocabularies');
     }
 
     openCustomTextFields() {
@@ -22,4 +23,4 @@ class MetadataHelper {
     }
 }
 
-module.exports = new MetadataHelper();
+export default new MetadataHelper();

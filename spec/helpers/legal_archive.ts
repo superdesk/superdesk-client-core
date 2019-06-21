@@ -1,26 +1,30 @@
+import {element, by} from 'protractor';
+import {nav} from './utils';
 
+class LegalArchive {
+    getLegalArchiveMenuOption: any;
+    open: () => any;
 
-module.exports = new LegalArchive();
+    constructor() {
+        var legalArchiveMenuOption = element(by.id('main-menu')).element(by.linkText('Legal Archive'));
 
-var nav = require('./utils').nav;
+        this.getLegalArchiveMenuOption = function() {
+            element(by.css('[ng-click="toggleMenu()"]')).click();
+            return legalArchiveMenuOption;
+        };
 
-function LegalArchive() {
-    var legalArchiveMenuOption = element(by.id('main-menu')).element(by.linkText('Legal Archive'));
+        this.open = function() {
+            return nav('/legal_archive').then(() => {
+                var list = element(by.className('icon-list-view'));
 
-    this.getLegalArchiveMenuOption = function() {
-        element(by.css('[ng-click="toggleMenu()"]')).click();
-        return legalArchiveMenuOption;
-    };
-
-    this.open = function() {
-        return nav('/legal_archive').then(() => {
-            var list = element(by.className('icon-list-view'));
-
-            return list.isDisplayed().then((isVisible) => {
-                if (isVisible) {
-                    list.click();
-                }
+                return list.isDisplayed().then((isVisible) => {
+                    if (isVisible) {
+                        list.click();
+                    }
+                });
             });
-        });
-    };
+        };
+    }
 }
+
+export default new LegalArchive();

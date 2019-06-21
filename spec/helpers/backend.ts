@@ -1,15 +1,10 @@
 
+import request from 'request';
+import bt from 'btoa';
+import {browser} from 'protractor';
+import {constructUrl} from './utils';
 
-var request = require('request');
-var bt = require('btoa');
-
-var constructUrl = require('./utils').constructUrl;
-
-exports.getBackendUrl = getBackendUrl;
-exports.backendRequest = backendRequest;
-exports.backendRequestAuth = backendRequestAuth;
-
-function getBackendUrl(uri) {
+export function getBackendUrl(uri) {
     return constructUrl(browser.params.baseBackendUrl, uri);
 }
 
@@ -20,7 +15,7 @@ function getBackendUrl(uri) {
  * @param {function} callback
  * @param {Integer} retry - how many times it will try to request before throwing error
  */
-function backendRequest(params, callback, retry = 3) {
+export function backendRequest(params, callback, retry = 3) {
     let cb = callback || function() { /* no-op */ };
     let ttl = retry || 0;
 
@@ -98,7 +93,7 @@ function withToken(callback) {
  * @param {Object} params
  * @param {function} callback
  */
-function backendRequestAuth(params, callback) {
+export function backendRequestAuth(params, callback) {
     withToken(() => {
         var token = browser.params.token;
 

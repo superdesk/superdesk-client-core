@@ -1,7 +1,7 @@
 import {element, by} from 'protractor';
 import {monitoring} from './helpers/monitoring';
 import {route} from './helpers/utils';
-import {globalSearch} from './helpers/search';
+import globalSearch from './helpers/search';
 import * as authoring from './helpers/authoring';
 import * as workspace from './helpers/workspace';
 import * as highlights from './helpers/highlights';
