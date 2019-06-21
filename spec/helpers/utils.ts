@@ -1,5 +1,5 @@
 import {login as LoginModal} from './pages';
-import {browser, protractor, element, by} from 'protractor';
+import {browser, protractor, element, by, ElementFinder} from 'protractor';
 
 // construct url from uri and base url
 export function constructUrl(base, uri) {
@@ -206,13 +206,12 @@ export function waitHidden(elem, time) {
         ), time || 1000);
 }
 
-/**
- * Scroll to view given element.
- *
- * @param {Element} elem
- */
-export function scrollToView(elem) {
+export function scrollToView(elem: ElementFinder) {
     browser.executeScript('arguments[0].scrollIntoView();', elem);
+}
+
+export function scrollRelative(elem: ElementFinder, direction: 'up'| 'down', pixelsToScroll: number) {
+    browser.executeScript(`arguments[0].scrollTop ${direction === 'up' ? '-=' : '+='} ${pixelsToScroll};`, elem);
 }
 
 /**

@@ -19,7 +19,12 @@
         <div class="doopen" ng-click="closeFacets()"><i class="icon-close-small"></i></div>
     </div>
 
-    <div class="content" ng-if="sTab==='advancedSearch'" ng-class="{pull: showSaveSearch || innerTab==='parameters', 'pull-heigher': innerTab==='parameters' && showSaveSearch}">
+    <div
+        class="content"
+        ng-if="sTab==='advancedSearch'"
+        ng-class="{pull: showSaveSearch || innerTab==='parameters', 'pull-heigher': innerTab==='parameters' && showSaveSearch}"
+        data-test-id="advanced-search-panel"
+    >
 
         <div id="edit-search-name" class="edit-search" ng-show="editingSearch && !activateSearchPane">
             <div

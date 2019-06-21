@@ -1,7 +1,8 @@
 /* eslint-disable newline-per-chained-call */
 
 import {element, by, browser} from 'protractor';
-import {nav, wait as waitFor, scrollToView} from './utils';
+import {nav, wait as waitFor, scrollToView, scrollRelative} from './utils';
+import {el} from './e2e-helpers';
 
 export const globalSearch = new GlobalSearch();
 export default globalSearch;
@@ -363,10 +364,15 @@ function GlobalSearch() {
      * @param {int} selectId - Index of the desk
      */
     this.selectMarkedDesk = function(index) {
+        const advancedSearchPanel = el(['advanced-search-panel']);
         var markedDesks = element(by.id('marked-desks'));
 
-        scrollToView(markedDesks);
-        markedDesks.element(by.className('dropdown-toggle')).click();
+        const toggleButton = markedDesks.element(by.className('dropdown-toggle'));
+
+        scrollToView(toggleButton);
+        scrollRelative(advancedSearchPanel, 'up', 60); // account for sticky tabs
+
+        toggleButton.click();
         markedDesks.all(by.repeater('term in $vs_collection track by term[uniqueField]')).get(index).click();
     };
 
