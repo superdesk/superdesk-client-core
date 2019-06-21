@@ -66,7 +66,7 @@ export class EmbedInputComponent extends React.Component<any, any> {
      * the action that embeds the response into the editor.
      */
     processSuccess(data) {
-        this.props.embed(data.html || data);
+        this.props.embed(data);
         this.onCancel();
     }
 
