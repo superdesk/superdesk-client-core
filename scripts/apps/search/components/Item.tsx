@@ -26,7 +26,7 @@ const actionsMenuDefaultTemplate = (toggle, stopEvent) => (
         <button
             onClick={toggle}
             onDoubleClick={stopEvent}
-            className="icn-btn dropdown__toggle dropdown-toggle"
+            className="more-activity-toggle-ref icn-btn dropdown__toggle dropdown-toggle"
         >
             <i className="icon-dots-vertical" />
         </button>

@@ -171,7 +171,7 @@ export function renderArea(area, itemProps, props, customRender: any = {}) {
 export function bindMarkItemShortcut(label) {
     const keyboardManager = ng.get('keyboardManager');
 
-    angular.element('.active .more-activity-toggle').click();
+    angular.element('.active .more-activity-toggle-ref').click();
 
     setTimeout(() => {
         let markDropdown = angular.element('.more-activity-menu.open .dropdown--noarrow');
