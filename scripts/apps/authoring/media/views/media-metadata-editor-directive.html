@@ -1,7 +1,7 @@
 <div class="form__row" ng-repeat="field in fields track by field.field">
     <sd-line-input
         class="sd-line-input--no-margin"
-        ng-if="field.type === 'string' || (!field.type && !field.cv)"
+        ng-if="!field.cv && (!field.type || field.type === 'string')"
         ng-model="item[field.field]"
         data-sync="true"
         data-dark="dark"
