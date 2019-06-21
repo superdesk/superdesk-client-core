@@ -3,7 +3,8 @@
 import {element, by, browser} from 'protractor';
 import {nav, wait as waitFor, scrollToView} from './utils';
 
-module.exports = new GlobalSearch();
+export const globalSearch = new GlobalSearch();
+export default globalSearch;
 
 function GlobalSearch() {
     this.ingestRepo = element(by.id('ingest-collection'));

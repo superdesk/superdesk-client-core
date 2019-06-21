@@ -1,11 +1,11 @@
-
-var monitoring = require('./helpers/monitoring'),
-    route = require('./helpers/utils').route,
-    globalSearch = require('./helpers/search'),
-    authoring = require('./helpers/authoring'),
-    workspace = require('./helpers/workspace'),
-    highlights = require('./helpers/highlights'),
-    desks = require('./helpers/desks');
+import {element, by} from 'protractor';
+import {monitoring} from './helpers/monitoring';
+import {route} from './helpers/utils';
+import {globalSearch} from './helpers/search';
+import * as authoring from './helpers/authoring';
+import * as workspace from './helpers/workspace';
+import * as highlights from './helpers/highlights';
+import * as desks from './helpers/desks';
 
 describe('marked desks', () => {
     function setupAttentionDeskAsSavedSearch() {

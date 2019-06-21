@@ -177,7 +177,7 @@ export function assertToastMsg(type, msg) {
  * @param {number} time
  * @return {Promise}
  */
-export function wait(elem, time) {
+export function wait(elem, time?) {
     browser.wait(() => elem.isPresent(), time || 500);
     return browser.wait(() => elem.isDisplayed(), time || 500);
 }
