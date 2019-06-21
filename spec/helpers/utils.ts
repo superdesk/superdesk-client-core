@@ -1,35 +1,13 @@
-
-
-module.exports.route = route;
-module.exports.login = login;
-module.exports.open = openUrl;
-module.exports.changeUrl = changeUrl;
-module.exports.printLogs = printLogs;
-module.exports.waitForSuperdesk = waitForSuperdesk;
-module.exports.nav = nav;
-module.exports.getListOption = getListOption;
-module.exports.ctrlKey = ctrlKey;
-module.exports.commandKey = commandKey;
-module.exports.ctrlShiftKey = ctrlShiftKey;
-module.exports.ctrlAltKey = ctrlAltKey;
-module.exports.altKey = altKey;
-module.exports.assertToastMsg = assertToastMsg;
-module.exports.wait = wait;
-module.exports.hover = hover;
-module.exports.waitHidden = waitHidden;
-module.exports.scrollToView = scrollToView;
-module.exports.screenshot = screenshot;
-module.exports.acceptConfirm = acceptConfirm;
+import {login as LoginModal} from './pages';
+import {browser, protractor, element, by} from 'protractor';
 
 // construct url from uri and base url
-exports.constructUrl = function(base, uri) {
+export function constructUrl(base, uri) {
     return base.replace(/\/$/, '') + uri;
-};
-
-var LoginModal = require('./pages').login;
+}
 
 // authenticate if needed
-function login(username, password) {
+export function login(username?, password?) {
     let usr = username || 'admin';
     let pwd = password || 'admin';
     var modal = new LoginModal();
@@ -43,18 +21,18 @@ function login(username, password) {
 }
 
 // open url
-function changeUrl(url) {
+export function changeUrl(url) {
     return browser.get(url).then(waitForSuperdesk);
 }
 
 // open url and authenticate
-function openUrl(url) {
+export function open(url) {
     return browser.get(url)
         .then(login)
         .then(waitForSuperdesk);
 }
 
-function printLogs(prefix) {
+export function printLogs(prefix) {
     return browser.manage()
         .logs()
         .get('browser')
@@ -63,12 +41,12 @@ function printLogs(prefix) {
 
             console.info(
                 (prefix ? prefix + ' ' : '') +
-                'log: ' + require('util').inspect(logs, {dept: 3})
+                'log: ' + require('util').inspect(logs, {dept: 3}),
             );
         });
 }
 
-function waitForSuperdesk() {
+export function waitForSuperdesk() {
     return browser.driver.wait(() =>
         browser.driver.executeScript('return window.superdeskIsReady || false'),
     5000,
@@ -83,7 +61,7 @@ function waitForSuperdesk() {
  * @param {string} location Location where to navigate without # (eg. users, workspace/content)
  * @return {Promise}
  */
-function nav(location) {
+export function nav(location) {
     return login().then(() => browser.setLocation(location));
 }
 
@@ -93,7 +71,7 @@ function nav(location) {
  * @param {string} location
  * @return {function}
  */
-function route(location) {
+export function route(location) {
     return function() {
         nav(location);
     };
@@ -108,7 +86,7 @@ function route(location) {
  *
  * @return {ElementFinder} the option element itself (NOTE: might not exist)
  */
-function getListOption(dropdown, n) {
+export function getListOption(dropdown, n) {
     var cssSelector = 'option:nth-child(' + n + ')';
 
     return dropdown.$(cssSelector);
@@ -119,7 +97,7 @@ function getListOption(dropdown, n) {
  *
  * @param {char} key
  */
-function ctrlKey(key) {
+export function ctrlKey(key) {
     var Key = protractor.Key;
 
     browser.actions().sendKeys(Key.chord(Key.CONTROL, key))
@@ -131,7 +109,7 @@ function ctrlKey(key) {
  *
  * @param {char} key
  */
-function commandKey(key) {
+export function commandKey(key) {
     var Key = protractor.Key;
 
     browser.actions().sendKeys(Key.chord(Key.COMMAND, key))
@@ -143,7 +121,7 @@ function commandKey(key) {
  *
  * @param {char} key
  */
-function ctrlShiftKey(key) {
+export function ctrlShiftKey(key) {
     var Key = protractor.Key;
 
     browser.actions().sendKeys(Key.chord(Key.CONTROL, Key.SHIFT, key))
@@ -155,7 +133,7 @@ function ctrlShiftKey(key) {
  *
  * @param {char} key
  */
-function ctrlAltKey(key) {
+export function ctrlAltKey(key) {
     var Key = protractor.Key;
 
     browser.actions().sendKeys(Key.chord(Key.CONTROL, Key.ALT, key))
@@ -167,7 +145,7 @@ function ctrlAltKey(key) {
  *
  * @param {char} key
  */
-function altKey(key) {
+export function altKey(key) {
     var Key = protractor.Key;
 
     browser.actions().sendKeys(Key.chord(Key.ALT, key))
@@ -182,12 +160,12 @@ function altKey(key) {
  *   "error")
  * @param {string} msg - a string expected to be present in the toast message
  */
-function assertToastMsg(type, msg) {
+export function assertToastMsg(type, msg) {
     browser.sleep(500);
     expect(
         element.all(by.cssContainingText(`.notification-holder .alert-${type}`, msg))
             .first()
-            .isDisplayed()
+            .isDisplayed(),
     ).toBe(true);
     browser.sleep(500);
 }
@@ -199,7 +177,7 @@ function assertToastMsg(type, msg) {
  * @param {number} time
  * @return {Promise}
  */
-function wait(elem, time) {
+export function wait(elem, time) {
     browser.wait(() => elem.isPresent(), time || 500);
     return browser.wait(() => elem.isDisplayed(), time || 500);
 }
@@ -209,7 +187,7 @@ function wait(elem, time) {
  *
  * @param {Element} elem
  */
-function hover(elem) {
+export function hover(elem) {
     browser.actions().mouseMove(elem, {x: 3, y: 3})
         .perform();
 }
@@ -220,31 +198,29 @@ function hover(elem) {
  * @param {number} time - The ms timeout period, defaults to 1000
  * @return {Promise}
  */
-function waitHidden(elem, time) {
+export function waitHidden(elem, time) {
     return browser.wait(() => elem.isPresent()
         .then((isPresent) =>
             !isPresent ? true : elem.isDisplayed()
-                .then((isDisplayed) => !isDisplayed)
+                .then((isDisplayed) => !isDisplayed),
         ), time || 1000);
 }
-
 
 /**
  * Scroll to view given element.
  *
  * @param {Element} elem
  */
-function scrollToView(elem) {
+export function scrollToView(elem) {
     browser.executeScript('arguments[0].scrollIntoView();', elem);
 }
-
 
 /**
  * Take and save screenshot if SCREENSHOTS_DIR env variable is set
  *
  * @param {string} name
  */
-function screenshot(name) {
+export function screenshot(name) {
     let path = require('path'),
         fs = require('fs'),
         dir = process.env.SCREENSHOTS_DIR;
@@ -264,13 +240,13 @@ function screenshot(name) {
     });
 }
 
-function acceptConfirm() {
+export function acceptConfirm() {
     element(by.className('modal__footer'))
         .element(by.className('btn--primary'))
         .click();
 
     // wait for modal to disappear
     browser.wait(protractor.ExpectedConditions.invisibilityOf(
-        element(by.className('modal__backdrop'))
+        element(by.className('modal__backdrop')),
     ), 2000);
 }
