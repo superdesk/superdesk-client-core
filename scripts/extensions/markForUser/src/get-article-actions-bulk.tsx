@@ -7,7 +7,12 @@ export function getActionsBulkInitialize(superdesk: ISuperdesk) {
     const {isPersonal, isLocked} = superdesk.entities.article;
 
     return function getActionsBulk(articles: Array<IArticle>) {
-        if (articles.some(isPersonal) || articles.some(isLocked)) {
+        // it doesn't make sense to display the action since it wouldn't get updated in the list anyway
+        // when article is locked for editing all changes are temporary
+        // and aren't displayed in the list item until the article is saved
+        const someItemsLocked = articles.some(isLocked);
+
+        if (articles.some(isPersonal) || someItemsLocked) {
             return Promise.resolve([]);
         }
 

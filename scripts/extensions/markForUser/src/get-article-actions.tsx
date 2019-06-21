@@ -6,7 +6,12 @@ export function getActionsInitialize(superdesk: ISuperdesk) {
     const {isPersonal, isLocked} = superdesk.entities.article;
 
     return function getActions(articleNext: IArticle) {
-        if (isPersonal(articleNext) || isLocked(articleNext)) {
+        // it doesn't make sense to display the action since it wouldn't get updated in the list anyway
+        // when article is locked for editing all changes are temporary
+        // and aren't displayed in the list item until the article is saved
+        const locked = isLocked(articleNext);
+
+        if (isPersonal(articleNext) || locked) {
             return Promise.resolve([]);
         }
 
