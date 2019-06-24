@@ -22,6 +22,7 @@ import {ModalFooter} from './ui/components/Modal/ModalFooter';
 import {SelectUser} from './ui/components/SelectUser';
 import {logger} from './services/logger';
 import {showModal} from './services/modalService';
+import {UserAvatarFromUserId} from 'apps/users/components/UserAvatarFromUserId';
 
 function getOnUpdateBeforeMiddlewares(
     extensions: IExtensions,
@@ -58,6 +59,7 @@ export function getSuperdeskApiImplementation(
     extensions: IExtensions,
     modal,
     privileges,
+    lock,
 ): ISuperdesk {
     return {
         dataApi: dataApi,
@@ -67,6 +69,8 @@ export function getSuperdeskApiImplementation(
         entities: {
             article: {
                 isPersonal: (article) => article.task == null || article.task.desk == null,
+                isLocked: (article) => article['lock_session'] != null,
+                isLockedByCurrentUser: (article) => lock.isLocked(article),
                 update: (_articleNext) => {
                     const __articleNext = {..._articleNext};
 
@@ -90,6 +94,10 @@ export function getSuperdeskApiImplementation(
                                     });
                                 });
                             });
+                    }).catch((err) => {
+                        if (err instanceof Error) {
+                            logger.error(err);
+                        }
                     });
                 },
             },
@@ -120,6 +128,7 @@ export function getSuperdeskApiImplementation(
             ModalBody,
             ModalFooter,
             SelectUser,
+            UserAvatar: UserAvatarFromUserId,
         },
         forms: {
             FormFieldType,

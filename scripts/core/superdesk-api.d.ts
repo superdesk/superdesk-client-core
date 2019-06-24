@@ -53,11 +53,13 @@ declare module 'superdesk-api' {
             editor3?: {
                 annotationInputTabs?: Array<IEditor3AnnotationInputTab>;
             }
+            articleListItemWidgets?: Array<React.ComponentType<{article: IArticle}>>;
+            authoringTopbarWidgets?: Array<React.ComponentType<{article: IArticle}>>;
             pages?: Array<IPage>;
             entities?: {
                 article?: {
                     getActions?(article: IArticle): Promise<Array<IArticleAction>>;
-                    getActionsBulk?(mode: 'include' | 'exclude', articles: Array<IArticle>): Promise<Array<IArticleActionBulk>>;
+                    getActionsBulk?(articles: Array<IArticle>): Promise<Array<IArticleActionBulk>>;
                     onUpdateBefore?(article: IArticle): Promise<IArticle>; // can alter item(immutably), can cancel update
                     onUpdateAfter?(article: IArticle): void; // can't alter item, can't cancel
                     onSpike?(item: IArticle): Promise<onSpikeMiddlewareResult>;
@@ -361,6 +363,7 @@ declare module 'superdesk-api' {
     interface IPropsSelectUser {
         onSelect(user: IUser): void;
         selectedUserId?: string;
+        disabled?: boolean;
     }
 
 
@@ -413,6 +416,11 @@ declare module 'superdesk-api' {
         };
         entities: {
             article: {
+                // returns true if locked by anyone, including the current user
+                isLocked(article: IArticle): boolean;
+
+                isLockedByCurrentUser(article: IArticle): boolean;
+
                 isPersonal(article: IArticle): boolean;
                 update(nextArticle: IArticle): void;
             };
@@ -441,6 +449,7 @@ declare module 'superdesk-api' {
             ModalBody: React.ComponentType;
             ModalFooter: React.ComponentType;
             SelectUser: React.ComponentType<IPropsSelectUser>;
+            UserAvatar: React.ComponentType<{userId: string}>;
         };
         forms: {
             FormFieldType: typeof FormFieldType;

@@ -14,19 +14,22 @@ import {ListItemTemplate} from './ItemListTemplate';
 import {ItemMgridTemplate} from './ItemMgridTemplate';
 import {IArticle} from 'superdesk-interfaces/Article';
 import {IDesk} from 'superdesk-api';
+import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
 
 const CLICK_TIMEOUT = 300;
 
 const actionsMenuDefaultTemplate = (toggle, stopEvent) => (
-    <div className="item-right toolbox">
-        <div className="item-actions-menu dropdown--big open">
-            <button
-                className={'more-activity-toggle condensed dropdown__toggle'}
-                onClick={toggle}
-                onDoubleClick={stopEvent}>
-                <i className="icon-dots-vertical" />
-            </button>
-        </div>
+    <div
+        className="item-right toolbox"
+        style={{display: 'flex', justifyContent: 'space-evenly', alignItems: 'center'}}
+    >
+        <button
+            onClick={toggle}
+            onDoubleClick={stopEvent}
+            className="more-activity-toggle-ref icn-btn dropdown__toggle dropdown-toggle"
+        >
+            <i className="icon-dots-vertical" />
+        </button>
     </div>
 );
 
@@ -138,6 +141,13 @@ export class Item extends React.Component<IProps, IState> {
     }
 
     select(event) {
+        // target can be an image or icon inside a button, so parents need to be checked
+        var parentButton = querySelectorParent(event.target, 'button');
+
+        if (parentButton != null) {
+            return;
+        }
+
         if (!this.props.item.gone && !this.clickTimeout) {
             event.persist(); // make event available in timeout callback
             this.clickTimeout = window.setTimeout(() => {
@@ -164,6 +174,13 @@ export class Item extends React.Component<IProps, IState> {
     }
 
     dbClick(event) {
+        // target can be an image or icon inside a button, so parents need to be checked
+        var parentButton = querySelectorParent(event.target, 'button');
+
+        if (parentButton != null) {
+            return;
+        }
+
         if (this.clickTimeout) {
             window.clearTimeout(this.clickTimeout);
             this.clickTimeout = null;

@@ -42,7 +42,7 @@ function getActionsBulkFromExtensions(articles): Promise<Array<IArticleActionBul
     );
 
     return Promise.all(
-        getActionsBulk.map((getPromise) => getPromise('include', articles)),
+        getActionsBulk.map((getPromise) => getPromise(articles)),
     ).then((res) => flatMap(res).map((action) => ({...action, canAutocloseMultiActionBar: true})));
 }
 
@@ -51,6 +51,15 @@ export class MultiActionBarReact extends React.Component<IProps, IState> {
         super(props);
 
         this.state = {};
+
+        this.onTrigger = this.onTrigger.bind(this);
+    }
+    private onTrigger(action: IArticleActionBulkExtended) {
+        if (action.canAutocloseMultiActionBar) {
+            this.props.hideMultiActionBar();
+        }
+
+        action.onTrigger();
     }
     componentDidMount() {
         getActionsBulkFromExtensions(this.props.articles).then((actionsBulkFromExtensions) => {
@@ -78,14 +87,6 @@ export class MultiActionBarReact extends React.Component<IProps, IState> {
             return null;
         }
 
-        const onTrigger = (action: IArticleActionBulkExtended) => {
-            if (action.canAutocloseMultiActionBar) {
-                this.props.hideMultiActionBar();
-            }
-
-            action.onTrigger();
-        };
-
         if (this.props.compact) {
             return (
                 <div className="right-stack" data-test-id="multi-actions-dropdown">
@@ -112,7 +113,7 @@ export class MultiActionBarReact extends React.Component<IProps, IState> {
                             </div>
                         )}
                         getItemLabel={(item) => item.label}
-                        onSelect={onTrigger}
+                        onSelect={this.onTrigger}
                     />
                 </div>
             );
@@ -123,7 +124,7 @@ export class MultiActionBarReact extends React.Component<IProps, IState> {
                         this.state.actions.map((action, i) => (
                             <button
                                 onClick={() => {
-                                    onTrigger(action);
+                                    this.onTrigger(action);
                                 }}
                                 className="navbtn strict"
                                 title={action.label}

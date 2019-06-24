@@ -13,8 +13,9 @@ interface IState {
 
 export function getMarkForUserModal(
     superdesk: ISuperdesk,
-    onUpdate: (markedForUserId: string) => void,
-    markedForUserId?: string,
+    onUpdate: (markedForUserId: string | null) => void,
+    locked?: boolean,
+    markedForUserInitial?: string,
     message?: string,
 ): React.ComponentType<IProps> {
     const {gettext} = superdesk.localization;
@@ -32,7 +33,7 @@ export function getMarkForUserModal(
             super(props);
 
             this.state = {
-                selectedUserId: markedForUserId,
+                selectedUserId: markedForUserInitial,
             };
         }
         render() {
@@ -50,7 +51,18 @@ export function getMarkForUserModal(
                             )
                         }
 
+                        {
+                            locked === true ? (
+                                <div
+                                    className="sd-alert sd-alert--hollow sd-alert--primary sd-alert--small"
+                                >
+                                    {gettext('Item is locked and marked user can not be changed.')}
+                                </div>
+                            ) : null
+                        }
+
                         <SelectUser
+                            disabled={locked}
                             onSelect={(selectedUser) => this.setState({selectedUserId: selectedUser._id})}
                             selectedUserId={this.state.selectedUserId}
                         />
@@ -63,9 +75,28 @@ export function getMarkForUserModal(
                             {gettext('Cancel')}
                         </button>
 
+                        {
+                            markedForUserInitial !== undefined ? (
+                                <button
+                                    className="btn btn--warning"
+                                    disabled={locked}
+                                    onClick={() => {
+                                        this.props.closeModal();
+                                        onUpdate(null);
+                                    }}
+                                >
+                                    {gettext('Unmark')}
+                                </button>
+                            ) : null
+                        }
+
                         <button
                             className="btn btn--primary"
-                            disabled={this.state.selectedUserId === undefined}
+                            disabled={
+                                this.state.selectedUserId === undefined // no user selected
+                                || this.state.selectedUserId === markedForUserInitial // user hasn't changed
+                                || locked
+                            }
                             onClick={() => {
                                 this.props.closeModal();
 
