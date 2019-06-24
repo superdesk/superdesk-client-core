@@ -113,6 +113,11 @@ describe('sdDeskeditPeople directive', () => {
                     name: 'foo',
                     members: [],
                 },
+                orig: {
+                    _id: 'foo',
+                    name: 'foo',
+                    members: [],
+                },
             },
             deskMembers: [],
             users: [],

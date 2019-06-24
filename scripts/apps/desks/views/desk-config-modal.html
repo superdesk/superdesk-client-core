@@ -152,12 +152,12 @@
                 <button id="next-general"
                         class="btn btn--primary"
                         ng-click="save(desk.edit)"
-                        ng-disabled="!generalStep.$valid || _errorLimits || saving || !generalStep.$dirty">
+                        ng-disabled="!generalStep.$valid || _errorLimits || saving || !saveEnabled">
                     {{ 'Save & Continue' | translate }}</button>
                 <button id="done-general"
                         class="btn btn--primary"
                         ng-click="save(desk.edit, true)"
-                        ng-disabled="!generalStep.$valid || _errorLimits || saving || !generalStep.$dirty" translate>Done</button>
+                        ng-disabled="!generalStep.$valid || _errorLimits || saving || !saveEnabled" translate>Done</button>
             </div>
         </div>
         <div sd-wizard-step data-title="{{ :: 'Stages' | translate }}" data-code="stages">
@@ -375,12 +375,12 @@
                 <button id="next-people"
                         class="btn btn--primary"
                         ng-click="save()"
-                        ng-disabled="message != null || saving">{{ 'Save & Continue' | translate }}</button>
+                        ng-disabled="message != null || saving || !saveEnabled">{{ 'Save & Continue' | translate }}</button>
                 <button
                     id="done-people"
                     class="btn btn--primary"
                     ng-click="save(true)"
-                    ng-disabled="message != null || saving" translate>Done</button>
+                    ng-disabled="message != null || saving || !saveEnabled" translate>Done</button>
             </div>
         </div>
 
