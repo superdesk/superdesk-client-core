@@ -306,6 +306,10 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                 toggleMonitoringSingleView('desk');
             });
 
+            if (['highlights', 'spiked', 'personal'].includes(scope.viewType)) {
+                $rootScope.$broadcast('stage:single');
+            }
+
             // forced refresh on refresh button click or on refresh:list
             scope.refreshGroup = function() {
                 monitoring.showRefresh = scope.showRefresh = false;
