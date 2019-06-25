@@ -395,12 +395,14 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
                 scope.schema = this.schema(profile, item.type);
                 scope.editor = this.editor(profile, item.type);
                 scope.fields = this.fields(profile);
+                return profile;
             });
         } else {
-            scope.schema = this.schema(null, get(item, 'type', 'text'));
-            scope.editor = this.editor(null, get(item, 'type', 'text'));
-            scope.fields = null;
-            return $q.when();
+            return this.getCustomFields().then(() => {
+                scope.schema = this.schema(null, get(item, 'type', 'text'));
+                scope.editor = this.editor(null, get(item, 'type', 'text'));
+                scope.fields = this.fields({editor: scope.editor});
+            });
         }
     };
 }
