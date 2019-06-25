@@ -142,6 +142,7 @@
   },
   "scripts": {
     "setup-extensions": "node ./tasks/install-extensions.js && node ./tasks/generate-extension-imports.js",
+    "compile-end-to-end-tests": "tsc -p spec",
     "postinstall": "npm run setup-extensions",
     "test": "grunt ci:travis",
     "debug-unit-tests": "karma start karma.conf.js --browsers=Chrome",

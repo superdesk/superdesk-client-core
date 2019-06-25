@@ -1,5 +1,5 @@
 
-import request from 'request';
+import * as request from 'request';
 import bt from 'btoa';
 import {browser} from 'protractor';
 import {constructUrl} from './utils';
