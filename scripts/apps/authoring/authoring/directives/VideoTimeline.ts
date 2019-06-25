@@ -67,6 +67,9 @@ export function VideoTimeline($rootScope, $interval, api) {
                 });
             });
             observer.observe(controlbar);
+            scope.$watch('listFrames', function (listFrames) {
+                scope.reloadFrames(listFrames)
+            });
             scope.$watch('video', (video) => {
                 if (!video)
                     return;

@@ -32,7 +32,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
     $scope.quality = {};
     $scope.video = null;
     $scope.flag = true;
-    $scope.listFrames;
+    $scope.listFrames=null;
 
     $scope.validator = deployConfig.getSync('validator_media_metadata');
 
@@ -111,16 +111,15 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
                             const item = await api.get(`/video_edit/${mediaID}`);
                             if (await item.processing === false) {
                                 stopInterval(stopIntervalID);
-                                $scope.videoReload = false;
-                                $scope.listFrames = null;
+                                $scope.videoReload = false;;
                                 clearJcrop();
                                 $scope.isAoISelectionModeEnabled = false;
                                 $scope.data.isDirty = true;
                                 $scope.$applyAsync(() => {
                                     $scope.cancelEditVideo();
                                     $scope.data.item = angular.extend($scope.data.item, response._id);
-                                    $scope.videoReload = true;                                    
-                                    videoEditing.classList.remove('video-loading');                                    
+                                    $scope.videoReload = true;
+                                    videoEditing.classList.remove('video-loading');
                                 })
                             }
                         }, 2500);
@@ -179,7 +178,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         $scope.quality = 0;
         $scope.rotate.degree = 0;
         let video = document.getElementById('video-preview');
-        actRotate(video, $scope.rotate.degree, 0.3);
+        actRotate(video, $scope.rotate.degree, 0);
 
         document.getElementById('rotateVideo').disabled = false;
         document.getElementById('toggleRatio').disabled = false;
@@ -318,7 +317,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
             var fr = new FileReader();
             var img = document.createElement("img");
             img.onload = function () {
-                var canvas = drawObjectToCanvas(img, $scope.video.offsetHeight, $scope.video.offsetWidth, 0, 0);
+                var canvas = drawObjectToCanvas(img, $scope.video.offsetWidth, $scope.video.offsetHeight, 0, 0);
                 var output = document.getElementById('output');
                 output.innerHTML = '';
                 canvas.id = "canvas-thumnail";
@@ -351,15 +350,24 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
     $scope.loadTimelineThumbnails = async function () {
         const res = await api.get(`/video_edit/${$scope.data.item.media}?action=thumbnails&amount=40`)
         if (res && res.processing === false) {
+
             $scope.$applyAsync(() => {
-                $scope.listFrames = res.thumbnails
-                $scope.reloadFrames()
+                if ($scope.listFrames === res.thumbnails) {
+                    $scope.reloadFrames();
+                }
+                else {
+                    $scope.listFrames = res.thumbnails;
+                }
             });
         }
         else {
             $scope.$applyAsync(() => {
-                $scope.listFrames = null
-                $scope.reloadFrames()
+                if ($scope.listFrames == null) {
+                    $scope.reloadFrames();
+                }
+                else {
+                    $scope.listFrames = null;
+                }
             });
         }
     }
@@ -372,7 +380,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
             var img = document.createElement("img");
             img.src = $scope.data.item.renditions.thumbnail.href + '?tag=' + $scope.data.item._etag;
             img.onload = function () {
-                var canvas = drawObjectToCanvas(img, img.height, img.width, 0, 0);
+                var canvas = drawObjectToCanvas(img, img.width, img.height, 0, 0);
                 var output = document.getElementById('output');
                 output.innerHTML = '';
                 canvas.id = "canvas-thumnail";
