@@ -1,7 +1,7 @@
 /* eslint-disable newline-per-chained-call */
 
 import {element, by, browser, protractor, ElementFinder} from 'protractor';
-import {nav, wait as waitFor, acceptConfirm} from './utils';
+import {nav, waitFor, acceptConfirm} from './utils';
 import {el} from './e2e-helpers';
 
 class Monitoring {

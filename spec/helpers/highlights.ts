@@ -1,7 +1,7 @@
 /* eslint-disable newline-per-chained-call */
 
 import {element, by, browser} from 'protractor';
-import {wait, nav} from './utils';
+import {waitFor, nav} from './utils';
 import {el} from './e2e-helpers';
 
 class Highlights {
@@ -216,14 +216,14 @@ class Highlights {
         this.exportHighlightsConfirm = function() {
             var btn = element(by.className('modal__footer')).element(by.buttonText('OK'));
 
-            wait(btn, 500);
+            waitFor(btn, 500);
             btn.click();
         };
 
         this.saveTextHighlightsConfirm = function() {
             var btn = element(by.className('modal__footer')).element(by.buttonText('Save'));
 
-            wait(btn, 500);
+            waitFor(btn, 500);
             btn.click();
         };
 

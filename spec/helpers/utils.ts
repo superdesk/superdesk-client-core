@@ -1,4 +1,4 @@
-import {login as LoginModal} from './pages';
+import {LoginModal} from './pages';
 import {browser, protractor, element, by, ElementFinder} from 'protractor';
 
 // construct url from uri and base url
@@ -26,7 +26,7 @@ export function changeUrl(url) {
 }
 
 // open url and authenticate
-export function open(url) {
+export function openUrl(url) {
     return browser.get(url)
         .then(login)
         .then(waitForSuperdesk);
@@ -177,7 +177,7 @@ export function assertToastMsg(type, msg) {
  * @param {number} time
  * @return {Promise}
  */
-export function wait(elem, time?) {
+export function waitFor(elem, time?) {
     browser.wait(() => elem.isPresent(), time || 500);
     return browser.wait(() => elem.isDisplayed(), time || 500);
 }

@@ -1,4 +1,4 @@
-import {nav, wait} from './utils';
+import {nav, waitFor} from './utils';
 import {by, element, $, $$} from 'protractor';
 
 /**
@@ -41,7 +41,7 @@ class UserPrefs {
         };
 
         this.save = () => {
-            wait(this.btnSave, 3000);
+            waitFor(this.btnSave, 3000);
             this.btnSave.click();
 
             const ok = element(by.className('modal__footer')).element(by.className('btn--primary'));

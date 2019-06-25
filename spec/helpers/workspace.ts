@@ -1,6 +1,6 @@
 import content from './content';
 import monitoring from './monitoring';
-import {nav, wait as waitFor} from './utils';
+import {nav, waitFor} from './utils';
 import {element, by, browser} from 'protractor';
 
 class Workspace {

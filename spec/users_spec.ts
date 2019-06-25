@@ -6,7 +6,7 @@ import {monitoring} from './helpers/monitoring';
 import {workspace} from './helpers/workspace';
 import {authoring} from './helpers/authoring';
 import {nav} from './helpers/utils';
-import {userPreferences as userPrefs} from './helpers/user_prefs';
+import {userPreferences} from './helpers/user_prefs';
 import {post} from './helpers/fixtures';
 
 describe('users', () => {
@@ -37,9 +37,9 @@ describe('users', () => {
         });
 
         it('can save and use language preferences', () => {
-            userPrefs.setLang('Deutsch');
-            browser.wait(() => userPrefs.btnSave.isDisplayed(), 3000);
-            userPrefs.btnSave.click();
+            userPreferences.setLang('Deutsch');
+            browser.wait(() => userPreferences.btnSave.isDisplayed(), 3000);
+            userPreferences.btnSave.click();
 
             browser.sleep(500); // wait for modal
             // click modal confirm to reload
@@ -51,7 +51,7 @@ describe('users', () => {
             });
             browser.sleep(500);
             // go back to original lanuages
-            userPrefs.setLang('English');
+            userPreferences.setLang('English');
             var btnSave = $('.action-bar').element(by.buttonText('Speichern'));
 
             browser.wait(() => btnSave.isDisplayed(), 3000);
@@ -220,19 +220,19 @@ describe('users', () => {
 
     describe('editing user preferences:', () => {
         beforeEach((done) => {
-            userPrefs.navigateTo().then(() => userPrefs.prefsTab.click()).then(done);
+            userPreferences.navigateTo().then(() => userPreferences.prefsTab.click()).then(done);
         });
 
         it('should filter categories in the Authoring metadata head menu ' +
            'based on the user\'s preferred categories settings',
         () => {
-            userPrefs.btnCheckNone.click(); // uncheck all categories
+            userPreferences.btnCheckNone.click(); // uncheck all categories
 
             // select the Entertainment and Finance categories
-            userPrefs.categoryCheckboxes.get(3).click(); // Entertainment
-            userPrefs.categoryCheckboxes.get(4).click(); // Finance
+            userPreferences.categoryCheckboxes.get(3).click(); // Entertainment
+            userPreferences.categoryCheckboxes.get(4).click(); // Finance
 
-            userPrefs.btnSave.click(); // save changes
+            userPreferences.btnSave.click(); // save changes
 
             // navigate to Workspace and create a new article
             workspace.openContent();
@@ -254,14 +254,14 @@ describe('users', () => {
         it('should filter and navigate filtered list via keyboard action in the ' +
            'Authoring metadata based on the user\'s preferred categories settings',
         () => {
-            userPrefs.btnCheckNone.click(); // uncheck all categories
+            userPreferences.btnCheckNone.click(); // uncheck all categories
             browser.sleep(100);
 
             // select the Entertainment and Finance categories
-            userPrefs.categoryCheckboxes.get(3).click(); // Entertainment
-            userPrefs.categoryCheckboxes.get(4).click(); // Finance
+            userPreferences.categoryCheckboxes.get(3).click(); // Entertainment
+            userPreferences.categoryCheckboxes.get(4).click(); // Finance
 
-            userPrefs.btnSave.click(); // save changes
+            userPreferences.btnSave.click(); // save changes
 
             // navigate to Workspace and create a new article
             monitoring.openMonitoring();
@@ -290,13 +290,13 @@ describe('users', () => {
 
     describe('editing user privileges:', () => {
         beforeEach((done) => {
-            userPrefs.navigateTo().then(() => userPrefs.privlTab.click()).then(done);
+            userPreferences.navigateTo().then(() => userPreferences.privlTab.click()).then(done);
         });
 
         it('should reset the form to the last saved state when the Cancel ' +
             'button is clicked',
         () => {
-            var checkboxes = userPrefs.privlCheckboxes;
+            var checkboxes = userPreferences.privlCheckboxes;
 
             // Initially all checboxes are unchecked. Now let's select
             // a few of them, click the Cancel button and see if they have
@@ -306,7 +306,7 @@ describe('users', () => {
             expect(checkboxes.get(0).isSelected()).toBeTruthy();
             expect(checkboxes.get(2).isSelected()).toBeTruthy();
 
-            userPrefs.btnCancel.click();
+            userPreferences.btnCancel.click();
 
             expect(checkboxes.get(0).isSelected()).toBeFalsy();
             expect(checkboxes.get(2).isSelected()).toBeFalsy();
@@ -319,14 +319,14 @@ describe('users', () => {
             expect(checkboxes.get(0).isSelected()).toBeTruthy();
             expect(checkboxes.get(2).isSelected()).toBeTruthy();
 
-            userPrefs.btnSave.click();
+            userPreferences.btnSave.click();
 
             checkboxes.get(1).click(); // archived management
             checkboxes.get(4).click(); // desk management
             expect(checkboxes.get(1).isSelected()).toBeTruthy();
             expect(checkboxes.get(4).isSelected()).toBeTruthy();
 
-            userPrefs.btnCancel.click();
+            userPreferences.btnCancel.click();
 
             expect(checkboxes.get(0).isSelected()).toBeTruthy();
             expect(checkboxes.get(2).isSelected()).toBeTruthy();

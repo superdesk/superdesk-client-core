@@ -1,5 +1,5 @@
 import {element, by, browser} from 'protractor';
-import {open as openUrl} from './utils';
+import {openUrl} from './utils';
 
 class ContentFilters {
     addNewContentFilterButton: any;
