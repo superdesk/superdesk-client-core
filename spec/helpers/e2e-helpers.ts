@@ -39,9 +39,14 @@ export function els(
 
 export const s = getTestSelector;
 
+export function hasElementCount(locator, expectedElementCount) {
+    return () => locator.count().then((count) => count === expectedElementCount);
+}
+
 // keep for compatibility with non-typescript tests
 export default {
     el: el,
     els: els,
     s: getTestSelector,
+    hasElementCount: hasElementCount,
 };
