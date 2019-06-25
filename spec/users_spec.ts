@@ -1,11 +1,13 @@
 /* eslint-disable newline-per-chained-call */
 
-var authoring = require('./helpers/authoring'),
-    monitoring = require('./helpers/monitoring'),
-    nav = require('./helpers/utils').nav,
-    post = require('./helpers/fixtures').post,
-    userPrefs = require('./helpers/user_prefs'),
-    workspace = require('./helpers/workspace');
+import {element, browser, protractor, by, $} from 'protractor';
+
+import {monitoring} from './helpers/monitoring';
+import {workspace} from './helpers/workspace';
+import {authoring} from './helpers/authoring';
+import {nav} from './helpers/utils';
+import {userPreferences as userPrefs} from './helpers/user_prefs';
+import {post} from './helpers/fixtures';
 
 describe('users', () => {
     beforeEach((done) => {
@@ -65,7 +67,11 @@ describe('users', () => {
 
         it('can list users', () => {
             expect(element.all(by.repeater('user in users')).count()).toBe(6);
-            expect(element(by.repeater('user in users').row(0).column('username')).getText())
+
+            const row: any = element(by.repeater('user in users')).row(0);
+            const column: any = row.column('username');
+
+            expect(column.getText())
                 .toBe('test_user');
         });
 
@@ -75,9 +81,13 @@ describe('users', () => {
             expect(online.getText()).toBe('Online');
             online.click();
             expect(element.all(by.repeater('user in users')).count()).toBe(3);
-            expect(element(by.repeater('user in users').row(0).column('username')).getText())
+
+            const row1: any = by.repeater('user in users').row(0);
+            const row2: any = by.repeater('user in users').row(1);
+
+            expect(element(row1.column('username')).getText())
                 .toBe('test_user');
-            expect(element(by.repeater('user in users').row(1).column('username')).getText())
+            expect(element(row2.column('username')).getText())
                 .toBe('admin');
         });
 
@@ -150,10 +160,11 @@ describe('users', () => {
     describe('user edit:', () => {
         beforeEach((done) => {
             nav('/users')
-                .then(() =>
-                    element(by.repeater('user in users').row(0)
-                        .column('username'))
-                        .waitReady())
+                .then(() => {
+                    const row: any = by.repeater('user in users').row(0);
+
+                    return element(row.column('username')).waitReady();
+                })
                 .then((elem) => elem.click())
                 .then(() => $('#open-user-profile').waitReady()).then((elem) => elem.click()).then(done);
         });
@@ -237,7 +248,7 @@ describe('users', () => {
             expect(catListItems.count()).toBe(2);
             expect(catListItems.get(0).getText()).toEqual('Entertainment');
             expect(catListItems.get(1).getText()).toEqual('Finance');
-        }
+        },
         );
 
         it('should filter and navigate filtered list via keyboard action in the ' +
@@ -272,7 +283,7 @@ describe('users', () => {
             browser.actions().sendKeys('fin').perform();
             browser.actions().sendKeys(protractor.Key.DOWN).perform();
             expect(element(by.css('.sd-typeahead li.active')).getText()).toBe('Finance');
-        }
+        },
         );
         //
     });
@@ -321,7 +332,7 @@ describe('users', () => {
             expect(checkboxes.get(2).isSelected()).toBeTruthy();
             expect(checkboxes.get(1).isSelected()).toBeFalsy();
             expect(checkboxes.get(4).isSelected()).toBeFalsy();
-        }
+        },
         );
     });
 

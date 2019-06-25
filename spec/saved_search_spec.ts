@@ -1,12 +1,10 @@
 /* eslint-disable newline-per-chained-call */
 
+import {element, browser, by} from 'protractor';
 
-var nav = require('./helpers/utils').nav,
-    waitForSuperdesk = require('./helpers/utils').waitForSuperdesk,
-    login = require('./helpers/utils').login,
-    globalSearch = require('./helpers/search');
-
-var Login = require('./helpers/pages').login;
+import {globalSearch} from './helpers/search';
+import {nav, waitForSuperdesk, login} from './helpers/utils';
+import {LoginModal} from './helpers/pages';
 
 describe('saved_search', () => {
     beforeEach(() => {
@@ -62,7 +60,7 @@ describe('saved_search', () => {
 
         element(by.buttonText('SIGN OUT')).click();
 
-        var modal = new Login();
+        var modal = new LoginModal();
 
         modal.login('admin1', 'admin');
 

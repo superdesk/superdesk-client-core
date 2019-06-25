@@ -1,10 +1,11 @@
 /* eslint-disable newline-per-chained-call */
 
+import {element, browser, by} from 'protractor';
 
-var workspace = require('./helpers/workspace'),
-    authoring = require('./helpers/authoring'),
-    monitoring = require('./helpers/monitoring'),
-    content = require('./helpers/content');
+import {monitoring} from './helpers/monitoring';
+import {workspace} from './helpers/workspace';
+import {content} from './helpers/content';
+import {authoring} from './helpers/authoring';
 
 describe('send', () => {
     function getItemState(index) {

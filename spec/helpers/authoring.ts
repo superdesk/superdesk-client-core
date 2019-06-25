@@ -47,12 +47,12 @@ class Authoring {
     send_correction_button: any;
     send_takedown_button: any;
     findItemTypeIcons: (itemType: any) => any;
-    sendTo: (desk: any, stage: any, skipConfirm?: any) => void;
+    sendTo: (desk: any, stage?: any, skipConfirm?: any) => void;
     sendToAndContinue: (desk: any, stage: any, skipConfirm: any) => void;
     setEmbargo: () => void;
     confirmSendTo: () => void;
-    sendToSidebarOpened: (desk: any, stage: any, _continue: any) => void;
-    duplicateTo: (desk: any, stage: any, open: any) => void;
+    sendToSidebarOpened: (desk: any, stage: any, _continue?: any) => void;
+    duplicateTo: (desk: any, stage: any, open?: any) => void;
     selectDeskforSendTo: (desk: any) => void;
     markAction: () => any;
     createTextItem: () => any;
@@ -69,7 +69,7 @@ class Authoring {
     sendAndpublish: (desk: any, skipConfirm?: any) => void;
     closeSendAndPublish: () => any;
     publishFrom: (desk: any) => void;
-    schedule: (skipConfirm: any) => void;
+    schedule: (skipConfirm?: any) => void;
     correct: () => any;
     save: () => any;
     edit: () => any;
@@ -112,7 +112,7 @@ class Authoring {
     openLiveSuggest: () => void;
     getSuggestedItems: () => any;
     getSubnav: () => any;
-    checkMarkedForHighlight: (highlight: any, item: any) => void;
+    checkMarkedForHighlight: (highlight: any, item?: any) => void;
     writeText: (text: any) => void;
     writeTextToHeadline: (text: any) => void;
     writeTextToAbstract: (text: any) => void;

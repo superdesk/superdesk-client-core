@@ -1,8 +1,8 @@
+import {browser} from 'protractor';
 
-
-var monitoring = require('./helpers/monitoring'),
-    authoring = require('./helpers/authoring'),
-    publishQueue = require('./helpers/publish_queue');
+import {monitoring} from './helpers/monitoring';
+import {authoring} from './helpers/authoring';
+import {publishQueue} from './helpers/publish_queue';
 
 describe('publishing', () => {
     beforeEach(monitoring.openMonitoring);

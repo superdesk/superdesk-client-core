@@ -1,9 +1,10 @@
 /* eslint-disable newline-per-chained-call */
 
+import {element, by} from 'protractor';
 
-var nav = require('./helpers/utils').nav,
-    searchProvider = require('./helpers/pages').searchProvider,
-    globalSearch = require('./helpers/search');
+import {globalSearch} from './helpers/search';
+import {nav} from './helpers/utils';
+import {searchProvider} from './helpers/pages';
 
 describe('search_provider', () => {
     beforeEach((done) => {

@@ -8,10 +8,12 @@
  * at https://www.sourcefabric.org/superdesk/license
  */
 
-var templates = require('./helpers/templates'),
-    monitoring = require('./helpers/monitoring'),
-    workspace = require('./helpers/workspace'),
-    authoring = require('./helpers/authoring');
+import {by} from 'protractor';
+
+import {templates} from './helpers/templates';
+import {monitoring} from './helpers/monitoring';
+import {workspace} from './helpers/workspace';
+import {authoring} from './helpers/authoring';
 
 describe('templates', () => {
     it('can manage templates', () => {
@@ -83,7 +85,6 @@ describe('templates', () => {
             .getAttribute('selected')).toEqual('true');
         expect(templates.getStageScheduleElement('one').getAttribute('selected')).toEqual('true');
         templates.cancel();
-
 
         templates.getListCount().then((count) => {
             templates.remove('Second New Template');

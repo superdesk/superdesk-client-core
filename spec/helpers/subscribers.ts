@@ -9,7 +9,7 @@ class Subscribers {
     saveSubscriberButton: any;
     get: () => void;
     getSubscriber: (name: any) => any;
-    getCount: (index: any) => any;
+    getCount: (index?: any) => any;
     edit: (name: any) => void;
     setType: (ingestType: any) => void;
     setDestinationFormat: (ingestType: any) => void;

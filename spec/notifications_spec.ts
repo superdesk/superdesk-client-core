@@ -1,11 +1,10 @@
 
+import {element, browser, by} from 'protractor';
 
-var authoring = require('./helpers/authoring'),
-    monitoring = require('./helpers/monitoring'),
-    desks = require('./helpers/desks');
-
-var Login = require('./helpers/pages').login;
-var logout = require('./helpers/pages').logout;
+import {monitoring} from './helpers/monitoring';
+import {authoring} from './helpers/authoring';
+import {desks} from './helpers/desks';
+import {LoginModal, logout} from './helpers/pages';
 
 describe('notifications', () => {
     beforeEach(() => {
@@ -26,7 +25,7 @@ describe('notifications', () => {
         expect(element(by.id('unread-count')).getText()).toBe('3');
 
         logout();
-        var modal = new Login();
+        var modal = new LoginModal();
 
         modal.login('admin1', 'admin');
 

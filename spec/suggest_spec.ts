@@ -1,5 +1,6 @@
-var authoring = require('./helpers/authoring'),
-    monitoring = require('./helpers/monitoring');
+
+import {monitoring} from './helpers/monitoring';
+import {authoring} from './helpers/authoring';
 
 // Live Suggest feature spec
 describe('suggest', () => {

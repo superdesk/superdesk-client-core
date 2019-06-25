@@ -1,9 +1,10 @@
 /* eslint-disable newline-per-chained-call */
 
+import {element, browser, by} from 'protractor';
 
-var nav = require('./helpers/utils').nav,
-    masterDesks = require('./helpers/master_desks'),
-    authoring = require('./helpers/authoring');
+import {authoring} from './helpers/authoring';
+import {nav} from './helpers/utils';
+import {masterDesks} from './helpers/master_desks';
 
 describe('master_desk', () => {
     beforeEach((done) => {

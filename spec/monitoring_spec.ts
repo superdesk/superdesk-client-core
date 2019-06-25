@@ -1,11 +1,12 @@
 /* eslint-disable newline-per-chained-call */
 
+import {element, browser, by} from 'protractor';
 
-var authoring = require('./helpers/authoring'),
-    monitoring = require('./helpers/monitoring'),
-    workspace = require('./helpers/workspace'),
-    dashboard = require('./helpers/dashboard'),
-    desks = require('./helpers/desks');
+import {monitoring} from './helpers/monitoring';
+import {workspace} from './helpers/workspace';
+import {authoring} from './helpers/authoring';
+import {dashboard} from './helpers/dashboard';
+import {desks} from './helpers/desks';
 
 describe('monitoring', () => {
     // Opens desk settings and configure monitoring settings for the named desk

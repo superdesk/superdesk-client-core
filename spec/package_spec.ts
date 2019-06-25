@@ -1,9 +1,10 @@
-var search = require('./helpers/search'),
-    authoring = require('./helpers/pages').authoring,
-    monitoring = require('./helpers/monitoring'),
-    workspace = require('./helpers/workspace');
+import {element, browser, by} from 'protractor';
 
-var el = require('./helpers/e2e-helpers').el;
+import {monitoring} from './helpers/monitoring';
+import {globalSearch} from './helpers/search';
+import {workspace} from './helpers/workspace';
+import {authoring} from './helpers/authoring';
+import {el} from './helpers/e2e-helpers';
 
 describe('package', () => {
     beforeEach(() => {
@@ -76,12 +77,12 @@ describe('package', () => {
         authoring.save();
         authoring.publish();
         monitoring.showSearch();
-        search.setListView();
-        search.showCustomSearch();
-        search.toggleSearchTabs('filters');
-        search.toggleByType('text');
-        expect(search.getTextItem(0)).toBe('item5');
-        search.actionOnItem('Create package', 0);
+        globalSearch.setListView();
+        globalSearch.showCustomSearch();
+        globalSearch.toggleSearchTabs('filters');
+        globalSearch.toggleByType('text');
+        expect(globalSearch.getTextItem(0)).toBe('item5');
+        globalSearch.actionOnItem('Create package', 0);
         expect(authoring.getGroupItems('MAIN').count()).toBe(1);
     });
 

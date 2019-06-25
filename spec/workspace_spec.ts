@@ -1,8 +1,7 @@
+import {element, browser, by} from 'protractor';
 
-
-var dashboard = require('./helpers/dashboard'),
-    altKey = require('./helpers/utils').altKey,
-    ctrlAltKey = require('./helpers/utils').ctrlAltKey;
+import {dashboard} from './helpers/dashboard';
+import {altKey, ctrlAltKey} from './helpers/utils';
 
 describe('workspace', () => {
     beforeEach(() => {

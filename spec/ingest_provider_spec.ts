@@ -1,8 +1,9 @@
 /* eslint-disable newline-per-chained-call */
 
+import {element, browser, by} from 'protractor';
 
-var nav = require('./helpers/utils').nav,
-    ingestDashboard = require('./helpers/pages').ingestDashboard;
+import {nav} from './helpers/utils';
+import {ingestDashboard} from './helpers/pages';
 
 describe('ingest_provider', () => {
     beforeEach((done) => {

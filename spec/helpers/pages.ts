@@ -5,7 +5,7 @@ import './waitReady';
 export {default as authoring} from './authoring';
 export {default as content} from './content';
 
-class LoginModal {
+export class LoginModal {
     username: any;
     password: any;
     btn: any;

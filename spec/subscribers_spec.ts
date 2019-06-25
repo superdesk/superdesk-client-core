@@ -1,5 +1,6 @@
-var nav = require('./helpers/utils').nav,
-    subscribers = require('./helpers/subscribers');
+
+import {nav} from './helpers/utils';
+import {subscribers} from './helpers/subscribers';
 
 describe('subscribers', () => {
     describe('list subscriber', () => {

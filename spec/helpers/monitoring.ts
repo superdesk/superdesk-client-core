@@ -112,7 +112,7 @@ class Monitoring {
     turnOffWorkingStage: (deskIndex: any, canCloseSettingsModal: any) => void;
     expectIsChecked: (group: any, item: any) => any;
     expectIsNotChecked: (group: any, item: any) => any;
-    turnOffDeskWorkingStage: (deskIndex: any, canCloseSettingsModal: any) => void;
+    turnOffDeskWorkingStage: (deskIndex: any, canCloseSettingsModal?: any) => void;
     openSearchBox: () => void;
     searchInput: ElementFinder;
     getCorrectionItems: (group: any) => any;

@@ -21,10 +21,10 @@ class Workspace {
     getItemText: (index: any) => any;
     openItemMenu: any;
     actionOnItem: (action: any, item: any) => void;
-    actionOnItemSubmenu: (action: any, submenu: any, item: any, linkTypeBtn: any) => void;
+    actionOnItemSubmenu: (action: any, submenu: any, item: any, linkTypeBtn?: any) => void;
     switchToDesk: any;
     selectStage: any;
-    editItem: (item: any, desk: any) => any;
+    editItem: (item: any, desk?: any) => any;
     duplicateItem: (item: any, desk: any) => any;
 
     constructor() {

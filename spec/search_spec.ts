@@ -1,12 +1,12 @@
 /* eslint-disable newline-per-chained-call */
 
+import {element, browser, protractor, by} from 'protractor';
 
-var nav = require('./helpers/utils').nav,
-    globalSearch = require('./helpers/search'),
-    authoring = require('./helpers/authoring'),
-    content = require('./helpers/pages').content,
-    monitoring = require('./helpers/monitoring'),
-    scrollToView = require('./helpers/utils').scrollToView;
+import {monitoring} from './helpers/monitoring';
+import {globalSearch} from './helpers/search';
+import {content} from './helpers/content';
+import {authoring} from './helpers/authoring';
+import {nav, scrollToView} from './helpers/utils';
 
 describe('search', () => {
     beforeEach(() => {

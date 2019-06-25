@@ -1,10 +1,10 @@
+import {element, browser, protractor, by, $} from 'protractor';
 
-
-var workspace = require('./helpers/pages').workspace;
-var content = require('./helpers/pages').content;
-var authoring = require('./helpers/authoring');
-var desks = require('./helpers/desks');
-var el = require('./helpers/e2e-helpers').el;
+import {workspace} from './helpers/workspace';
+import {content} from './helpers/content';
+import {authoring} from './helpers/authoring';
+import {el} from './helpers/e2e-helpers';
+import {desks} from './helpers/desks';
 
 describe('fetch', () => {
     beforeEach(() => {
@@ -26,7 +26,7 @@ describe('fetch', () => {
             menu = content.openItemMenu('item1');
             expect(menu.element(by.partialLinkText('Copy')).isDisplayed()).toBe(true);
             expect(menu.element(by.partialLinkText('Duplicate')).isPresent()).toBe(false);
-        }
+        },
     );
 
     // @todo(petr): figure out how it should work for authoring+list

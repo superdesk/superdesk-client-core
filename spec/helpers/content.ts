@@ -8,7 +8,7 @@ class Content {
     setGridView: any;
     getItems: any;
     getItem: (item: any) => any;
-    actionOnItem: (action: any, item: any, useFullLinkText: any, confirm: any) => void;
+    actionOnItem: (action: any, item: any, useFullLinkText?: any, confirm?: any) => void;
     editItem: (item: any) => any;
     openItemMenu: any;
     previewItem: (item: any) => void;

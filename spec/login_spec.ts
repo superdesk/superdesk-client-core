@@ -1,12 +1,13 @@
+import {element, browser, by} from 'protractor';
 
-var waitForSuperdesk = require('./helpers/utils').waitForSuperdesk;
-var Login = require('./helpers/pages').login;
+import {waitForSuperdesk} from './helpers/utils';
+import {LoginModal} from './helpers/pages';
 
 describe('login', () => {
     var modal;
 
     beforeEach(() => {
-        modal = new Login();
+        modal = new LoginModal();
     });
 
     it('form renders modal on load', () => {
@@ -22,7 +23,7 @@ describe('login', () => {
         expect(
             element(by.css('.user-info .displayname'))
                 .waitReady()
-                .then((elem) => elem.getText())
+                .then((elem) => elem.getText()),
         ).toBe('admin');
     });
 

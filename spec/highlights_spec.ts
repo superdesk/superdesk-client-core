@@ -1,12 +1,12 @@
+import {element, browser, protractor, by, $} from 'protractor';
 
-var route = require('./helpers/utils').route,
-    monitoring = require('./helpers/monitoring'),
-    search = require('./helpers/search'),
-    authoring = require('./helpers/authoring'),
-    workspace = require('./helpers/workspace'),
-    highlights = require('./helpers/highlights'),
-    desks = require('./helpers/desks'),
-    ctrlShiftKey = require('./helpers/utils').ctrlShiftKey;
+import {monitoring} from './helpers/monitoring';
+import {workspace} from './helpers/workspace';
+import {globalSearch} from './helpers/search';
+import {authoring} from './helpers/authoring';
+import {highlights} from './helpers/highlights';
+import {route, ctrlShiftKey} from './helpers/utils';
+import {desks} from './helpers/desks';
 
 describe('highlights', () => {
     describe('add highlights configuration:', () => {
@@ -168,7 +168,7 @@ describe('highlights', () => {
             expect(highlights.getHighlights(authoring.getSubnav()).count()).toBe(3);
             highlights.selectHighlight(authoring.getSubnav(), 'Highlight two');
             authoring.checkMarkedForHighlight('Highlight two');
-            search.openGlobalSearch();
+            globalSearch.openGlobalSearch();
             monitoring.openMonitoring();
             monitoring.checkMarkedForHighlight('Highlight two', 1, 1);
             element(by.id('closeAuthoringBtn')).click();

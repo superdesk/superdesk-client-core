@@ -1,7 +1,7 @@
+import {browser} from 'protractor';
 
-var nav = require('./helpers/utils').nav,
-    ingestSettings = require('./helpers/pages').ingestSettings,
-    utils = require('./helpers/utils');
+import {assertToastMsg, nav, getListOption} from './helpers/utils';
+import {ingestSettings} from './helpers/pages';
 
 describe('ingest_settings', () => {
     beforeEach((done) => {
@@ -31,18 +31,18 @@ describe('ingest_settings', () => {
         ruleSettings.showFetchBtn.click();
 
         deskList = ruleSettings.fetchDeskList;
-        utils.getListOption(deskList, 2).click();
+        getListOption(deskList, 2).click();
 
         stageList = ruleSettings.fetchStageList;
-        utils.getListOption(stageList, 2).click();
+        getListOption(stageList, 2).click();
 
         macroList = ruleSettings.fetchMacroList;
-        utils.getListOption(macroList, 2).click();
+        getListOption(macroList, 2).click();
 
         // now select first options and then check that they are all blank
-        utils.getListOption(deskList, 1).click();
-        utils.getListOption(stageList, 1).click();
-        utils.getListOption(macroList, 1).click();
+        getListOption(deskList, 1).click();
+        getListOption(stageList, 1).click();
+        getListOption(macroList, 1).click();
 
         expect(deskList.$('option:checked').getAttribute('value')).toEqual('');
         expect(stageList.$('option:checked').getAttribute('value')).toEqual('');
@@ -53,17 +53,17 @@ describe('ingest_settings', () => {
         ruleSettings.showPublishBtn.click();
 
         deskList = ruleSettings.publishDeskList;
-        utils.getListOption(deskList, 2).click();
+        getListOption(deskList, 2).click();
 
         stageList = ruleSettings.publishStageList;
-        utils.getListOption(stageList, 2).click();
+        getListOption(stageList, 2).click();
 
         macroList = ruleSettings.publishMacroList;
-        utils.getListOption(macroList, 2).click();
+        getListOption(macroList, 2).click();
 
-        utils.getListOption(deskList, 1).click();
-        utils.getListOption(stageList, 1).click();
-        utils.getListOption(macroList, 1).click();
+        getListOption(deskList, 1).click();
+        getListOption(stageList, 1).click();
+        getListOption(macroList, 1).click();
 
         expect(deskList.$('option:checked').getAttribute('value')).toEqual('');
         expect(stageList.$('option:checked').getAttribute('value')).toEqual('');
@@ -107,7 +107,7 @@ describe('ingest_settings', () => {
         // save the routing scheme and check that it was successfull
         ingestSettings.saveBtn.click();
 
-        utils.assertToastMsg('success', 'Routing scheme saved');
+        assertToastMsg('success', 'Routing scheme saved');
     });
 
     it('cannot save a routing scheme with blank rule', () => {

@@ -1,10 +1,11 @@
 /* eslint-disable newline-per-chained-call */
 
+import {browser} from 'protractor';
 
-var nav = require('./helpers/utils').nav,
-    workspace = require('./helpers/pages').workspace,
-    content = require('./helpers/pages').content,
-    monitoring = require('./helpers/monitoring');
+import {monitoring} from './helpers/monitoring';
+import {workspace} from './helpers/workspace';
+import {content} from './helpers/content';
+import {nav} from './helpers/utils';
 
 describe('spike', () => {
     beforeEach((done) => {
