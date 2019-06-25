@@ -31,13 +31,10 @@ export function MonitoringView($rootScope, authoringWorkspace, pageTitle, $timeo
              * Issue here is that sd-column-box__main-column element is not visible on initializing sd-monitoring-view.
              * So I added $broadcast and listener for updating onScroll binding and containerElem for it.
             */
-            if (scope.type !== 'monitoring') {
-                addScrollHandle();
-            } else {
-                $rootScope.$on('stage:single', () => {
-                    addScrollHandle();
-                });
-            }
+            $rootScope.$on('stage:single', () => {
+                containerElem = elem.find('.sd-column-box__main-column');
+                containerElem.on('scroll', handleContainerScroll);
+            });
 
             pageTitle.setUrl(_.capitalize(gettext(scope.type)));
 
@@ -93,11 +90,6 @@ export function MonitoringView($rootScope, authoringWorkspace, pageTitle, $timeo
             };
 
             var updateTimeout;
-
-            function addScrollHandle() {
-                containerElem = elem.find('.sd-column-box__main-column');
-                containerElem.on('scroll', handleContainerScroll);
-            }
 
             function handleContainerScroll($event) {
                 if ($rootScope.itemToggle) {
