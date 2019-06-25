@@ -1,9 +1,9 @@
+import {browser} from 'protractor';
 
-
-var dashboard = require('./helpers/dashboard'),
-    workspace = require('./helpers/workspace'),
-    authoring = require('./helpers/authoring'),
-    monitor = require('./helpers/monitoring');
+import {monitoring} from './helpers/monitoring';
+import {workspace} from './helpers/workspace';
+import {authoring} from './helpers/authoring';
+import {dashboard} from './helpers/dashboard';
 
 describe('dashboard', () => {
     beforeEach(() => {
@@ -36,14 +36,14 @@ describe('dashboard', () => {
         expect(dashboard.getTextItem(1, 3, 2)).toBe('item6');
 
         dashboard.showMonitoringSettings(0);
-        monitor.toggleDesk(0);
-        monitor.toggleDesk(1);
-        monitor.toggleStage(1, 2);
-        monitor.toggleStage(1, 4);
-        monitor.nextStages();
-        monitor.nextSearches();
-        monitor.nextReorder();
-        monitor.saveSettings();
+        monitoring.toggleDesk(0);
+        monitoring.toggleDesk(1);
+        monitoring.toggleStage(1, 2);
+        monitoring.toggleStage(1, 4);
+        monitoring.nextStages();
+        monitoring.nextSearches();
+        monitoring.nextReorder();
+        monitoring.saveSettings();
 
         // TODO
         // this second saving is needed for passing tests on CI,
@@ -51,7 +51,7 @@ describe('dashboard', () => {
         // there is can be issue with first saving...
         // Same thing was in line 74, so probably someone got this before too
         dashboard.showMonitoringSettings(0);
-        monitor.saveSettings();
+        monitoring.saveSettings();
 
         expect(dashboard.getTextItem(0, 0, 0)).toBe('item3');
         expect(dashboard.getTextItem(0, 1, 0)).toBe('item4');
@@ -65,14 +65,14 @@ describe('dashboard', () => {
         dashboard.doneAction();
 
         dashboard.showMonitoringSettings(0);
-        monitor.setLabel('test');
-        monitor.nextStages();
-        monitor.nextSearches();
-        monitor.nextReorder();
-        monitor.saveSettings();
+        monitoring.setLabel('test');
+        monitoring.nextStages();
+        monitoring.nextSearches();
+        monitoring.nextReorder();
+        monitoring.saveSettings();
 
         dashboard.showMonitoringSettings(0);
-        monitor.saveSettings();
+        monitoring.saveSettings();
 
         expect(dashboard.getWidgetLabel(0)).toBe('test');
     });
@@ -89,10 +89,10 @@ describe('dashboard', () => {
     });
 
     it('can display desk output in monitor widget when an item gets published', () => {
-        monitor.openMonitoring();
+        monitoring.openMonitoring();
 
-        expect(monitor.getTextItem(3, 2)).toBe('item6');
-        monitor.actionOnItem('Edit', 3, 2);
+        expect(monitoring.getTextItem(3, 2)).toBe('item6');
+        monitoring.actionOnItem('Edit', 3, 2);
         authoring.publish();
         browser.sleep(300);
 
@@ -104,11 +104,11 @@ describe('dashboard', () => {
     });
 
     it('can display \'not for publication\' state in monitor widget for such item', () => {
-        monitor.openMonitoring();
+        monitoring.openMonitoring();
 
-        expect(monitor.getTextItem(3, 2)).toBe('item6');
+        expect(monitoring.getTextItem(3, 2)).toBe('item6');
 
-        monitor.actionOnItem('Edit', 3, 2);
+        monitoring.actionOnItem('Edit', 3, 2);
         authoring.showInfo();
         authoring.toggleNotForPublication();
         authoring.save();

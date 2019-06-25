@@ -1,7 +1,14 @@
-const authoring = require('./helpers/authoring');
-const monitoring = require('./helpers/monitoring');
+import {element, browser, protractor, by} from 'protractor';
+
+import {monitoring} from './helpers/monitoring';
+import {authoring} from './helpers/authoring';
 
 class Editor3Toolbar {
+    controls: any;
+    linkForm: any;
+    linkInput: any;
+    linkSaveButton: any;
+
     constructor(_element) {
         this.controls = _element.element(by.className('Editor3-controls'));
         this.linkForm = element(by.className('link-input'));
@@ -27,9 +34,11 @@ class Editor3Toolbar {
 }
 
 class Editor3 {
-    constructor(element) {
-        this.editable = element.element(by.className('public-DraftEditor-content'));
-        this.toolbar = new Editor3Toolbar(element);
+    editable: any;
+    toolbar: Editor3Toolbar;
+    constructor(_element) {
+        this.editable = _element.element(by.className('public-DraftEditor-content'));
+        this.toolbar = new Editor3Toolbar(_element);
     }
 
     sendKeys(...keys) {

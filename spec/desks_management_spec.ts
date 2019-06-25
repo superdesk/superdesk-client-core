@@ -1,6 +1,5 @@
 
-
-var desks = require('./helpers/desks');
+import {desks} from './helpers/desks';
 
 describe('desks_management', () => {
     beforeEach(() => {

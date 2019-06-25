@@ -1,10 +1,11 @@
 /* eslint-disable newline-per-chained-call */
 
-var el = require('./helpers/e2e-helpers').el;
+import {element, browser, protractor, by} from 'protractor';
 
-var workspace = require('./helpers/pages').workspace,
-    content = require('./helpers/content'),
-    authoring = require('./helpers/authoring');
+import {workspace} from './helpers/workspace';
+import {content} from './helpers/content';
+import {authoring} from './helpers/authoring';
+import {el} from './helpers/e2e-helpers';
 
 describe('content', () => {
     var body = element(by.tagName('body'));

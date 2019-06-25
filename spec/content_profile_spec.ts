@@ -1,10 +1,12 @@
-const templates = require('./helpers/templates');
-const contentProfiles = require('./helpers/content_profiles');
-const monitoring = require('./helpers/monitoring');
-const workspace = require('./helpers/workspace');
-const authoring = require('./helpers/authoring');
-const assertToastMsg = require('./helpers/utils').assertToastMsg;
-const metadata = require('./helpers/metadata');
+import {element, browser, protractor, by} from 'protractor';
+
+import {templates} from './helpers/templates';
+import {contentProfiles} from './helpers/content_profiles';
+import {monitoring} from './helpers/monitoring';
+import {workspace} from './helpers/workspace';
+import {authoring} from './helpers/authoring';
+import {metadata} from './helpers/metadata';
+import {assertToastMsg} from './helpers/utils';
 
 describe('Content profiles', () => {
     it('creates corresponding template', () => {

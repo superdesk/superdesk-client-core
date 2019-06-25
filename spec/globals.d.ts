@@ -6,3 +6,5 @@ declare const afterEach: any;
 declare const expect: any;
 declare const it: any;
 declare const fit: any;
+declare const xit: any;
+

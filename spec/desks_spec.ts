@@ -8,12 +8,13 @@
  * at https://www.sourcefabric.org/superdesk/license
  */
 
-var desks = require('./helpers/desks'),
-    workspace = require('./helpers/workspace'),
-    authoring = require('./helpers/authoring'),
-    monitoring = require('./helpers/monitoring');
+import {browser} from 'protractor';
 
-var assertToastMsg = require('./helpers/utils').assertToastMsg;
+import {monitoring} from './helpers/monitoring';
+import {workspace} from './helpers/workspace';
+import {authoring} from './helpers/authoring';
+import {assertToastMsg} from './helpers/utils';
+import {desks} from './helpers/desks';
 
 describe('desks', () => {
     beforeEach(() => {

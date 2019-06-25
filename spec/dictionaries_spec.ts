@@ -1,6 +1,5 @@
-
-var nav = require('./helpers/utils').nav,
-    dictionaries = require('./helpers/dictionaries');
+import {dictionaries} from './helpers/dictionaries';
+import {nav} from './helpers/utils';
 
 describe('dictionaries', () => {
     describe('add dictionary', () => {
