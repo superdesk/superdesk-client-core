@@ -205,4 +205,5 @@ class Content {
     }
 }
 
-export default new Content();
+export const content = new Content();
+export default content;

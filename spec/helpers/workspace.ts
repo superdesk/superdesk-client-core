@@ -275,4 +275,5 @@ class Workspace {
     }
 }
 
-export default new Workspace();
+export const workspace = new Workspace();
+export default workspace;

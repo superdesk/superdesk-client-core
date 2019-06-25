@@ -1108,4 +1108,5 @@ class Authoring {
     }
 }
 
-export default new Authoring();
+export const authoring = new Authoring();
+export default authoring;

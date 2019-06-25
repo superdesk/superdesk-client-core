@@ -235,4 +235,5 @@ class Highlights {
     }
 }
 
-export default new Highlights();
+export const highlights = new Highlights();
+export default highlights;

@@ -27,4 +27,5 @@ class LegalArchive {
     }
 }
 
-export default new LegalArchive();
+export const legalArchive = new LegalArchive();
+export default legalArchive;

@@ -23,4 +23,5 @@ class MetadataHelper {
     }
 }
 
-export default new MetadataHelper();
+export const metadata = new MetadataHelper();
+export default metadata;

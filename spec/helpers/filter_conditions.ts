@@ -110,4 +110,5 @@ class FilterConditions {
     }
 }
 
-export default new FilterConditions();
+export const filterConditions = new FilterConditions();
+export default filterConditions;

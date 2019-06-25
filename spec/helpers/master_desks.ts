@@ -91,4 +91,5 @@ class MasterDesks {
     }
 }
 
-export default new MasterDesks();
+export const markedDesks = new MasterDesks();
+export default markedDesks;

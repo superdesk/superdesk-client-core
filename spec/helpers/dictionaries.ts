@@ -131,4 +131,5 @@ class Dictionaries {
     }
 }
 
-export default new Dictionaries();
+export const dictionaries = new Dictionaries();
+export default dictionaries;

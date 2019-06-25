@@ -67,4 +67,5 @@ class Subscribers {
     }
 }
 
-export default new Subscribers();
+export const subscribers = new Subscribers();
+export default subscribers;

@@ -557,4 +557,5 @@ class GlobalSearch {
     }
 }
 
-export default new GlobalSearch();
+export const globalSearch = new GlobalSearch();
+export default globalSearch;

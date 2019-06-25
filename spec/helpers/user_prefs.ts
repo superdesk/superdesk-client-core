@@ -59,4 +59,5 @@ class UserPrefs {
     }
 }
 
-export default new UserPrefs();
+export const userPreferences = new UserPrefs();
+export default userPreferences;

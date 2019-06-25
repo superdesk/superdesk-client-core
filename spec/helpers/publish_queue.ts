@@ -94,4 +94,5 @@ class PublishQueue {
     }
 }
 
-export default new PublishQueue();
+export const publishQueue = new PublishQueue();
+export default publishQueue;
