@@ -18,7 +18,7 @@
 
     <sd-line-input
         class="sd-line-input--no-margin"
-        ng-if="field.cv && field.cv.field_type === 'text'"
+        ng-if="isExtra(field)"
         data-sync="true"
         ng-model="item.extra[field.field]"
         data-dark="dark"
