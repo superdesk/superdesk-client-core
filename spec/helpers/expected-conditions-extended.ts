@@ -4,7 +4,7 @@ import {
     browser,
     ElementArrayFinder,
     promise as wdpromise,
-} from "protractor";
+} from 'protractor';
 
 interface IExpectedConditionsExtended extends ProtractorExpectedConditions {
     hasElementCount(finder: ElementArrayFinder, expectedElementCount: number): () => wdpromise.Promise<boolean>;

@@ -1,6 +1,6 @@
 /* eslint-disable newline-per-chained-call */
 
-import {element, by, browser} from "protractor";
+import {element, by, browser} from 'protractor';
 
 class MasterDesks {
     previewTitle: any;

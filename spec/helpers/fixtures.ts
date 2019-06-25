@@ -1,5 +1,5 @@
-import {browser} from "protractor";
-import {backendRequest, backendRequestAuth} from "./backend";
+import {browser} from 'protractor';
+import {backendRequest, backendRequestAuth} from './backend';
 
 export function resetApp(profile, callback) {
     backendRequest({

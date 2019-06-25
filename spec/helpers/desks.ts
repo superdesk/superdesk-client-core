@@ -1,6 +1,6 @@
 /* eslint-disable newline-per-chained-call */
 
-import {element, by, browser, protractor} from "protractor";
+import {element, by, browser, protractor} from 'protractor';
 import {nav} from './utils';
 
 class Desks {

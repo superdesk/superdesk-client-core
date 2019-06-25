@@ -1,6 +1,6 @@
 /* eslint-disable newline-per-chained-call */
 
-import {element, browser, by} from "protractor";
+import {element, browser, by} from 'protractor';
 import {nav} from './utils';
 
 class Subscribers {

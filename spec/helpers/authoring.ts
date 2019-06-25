@@ -1,7 +1,7 @@
 /* eslint-disable newline-per-chained-call */
 
-import {element, by, browser, protractor} from "protractor";
-import {waitHidden, waitFor} from "./utils";
+import {element, by, browser, protractor} from 'protractor';
+import {waitHidden, waitFor} from './utils';
 
 class Authoring {
     lock: any;
