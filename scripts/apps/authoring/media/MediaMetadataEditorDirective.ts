@@ -10,6 +10,10 @@ export default function MediaMetadataEditorDirective(metadata, deployConfig, fea
             return {items: metadata.values.subjectcodes}; // fallback for built in subjectcodes
         }
 
+        if (cv == null && field === 'language' && metadata.values.languages) {
+            return {items: metadata.values.languages}; // keep it consistent with authoring
+        }
+
         return cv;
     }
 
@@ -63,7 +67,7 @@ export default function MediaMetadataEditorDirective(metadata, deployConfig, fea
                             label: getLabelForFieldId(field),
                             cv: getCV(field),
                         }, editor[field], schema[field])),
-                    'order',
+                    (field) => field.section === 'header' ? field.order : field.order + 1000,
                 );
 
                 scope.$applyAsync();
