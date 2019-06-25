@@ -124,6 +124,7 @@
     "enzyme": "3.9.0",
     "enzyme-adapter-react-16": "^1.1.1",
     "grunt-eslint": "^20.1.0",
+    "grunt-exec": "3.0.0",
     "grunt-karma": "^2.0.0",
     "jasmine-core": "^2.99.1",
     "jasmine-reporters": "^2.3.0",
@@ -142,7 +143,7 @@
   },
   "scripts": {
     "setup-extensions": "node ./tasks/install-extensions.js && node ./tasks/generate-extension-imports.js",
-    "compile-end-to-end-tests": "tsc -p spec",
+    "compile-end-to-end-tests": "find spec/ -name '*.js' -type f -delete && tsc -p spec",
     "postinstall": "npm run setup-extensions",
     "test": "grunt ci:travis",
     "debug-unit-tests": "karma start karma.conf.js --browsers=Chrome",
