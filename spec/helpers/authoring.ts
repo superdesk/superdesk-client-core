@@ -47,7 +47,7 @@ class Authoring {
     send_correction_button: any;
     send_takedown_button: any;
     findItemTypeIcons: (itemType: any) => any;
-    sendTo: (desk: any, stage: any, skipConfirm: any) => void;
+    sendTo: (desk: any, stage: any, skipConfirm?: any) => void;
     sendToAndContinue: (desk: any, stage: any, skipConfirm: any) => void;
     setEmbargo: () => void;
     confirmSendTo: () => void;
@@ -59,14 +59,14 @@ class Authoring {
     createTextItemFromTemplate: (name: any) => void;
     close: () => any;
     cancel: () => any;
-    addEmbed: (embedCode: any, context: any) => void;
+    addEmbed: (embedCode: any, context?: any) => void;
     getBlock: (position: any) => any;
     blockContains: (position: any, expectedValue: any) => void;
     cutBlock: (position: any) => any;
     ignore: () => any;
     savePublish: () => any;
-    publish: (skipConfirm: any) => void;
-    sendAndpublish: (desk: any, skipConfirm: any) => void;
+    publish: (skipConfirm?: any) => void;
+    sendAndpublish: (desk: any, skipConfirm?: any) => void;
     closeSendAndPublish: () => any;
     publishFrom: (desk: any) => void;
     schedule: (skipConfirm: any) => void;
@@ -142,7 +142,7 @@ class Authoring {
     openRelatedItem: () => void;
     openMacros: () => void;
     callMacros: (macroName: any) => void;
-    searchRelatedItems: (searchText: any) => void;
+    searchRelatedItems: (searchText?: any) => void;
     getRelatedItems: () => any;
     openRelatedItemConfiguration: () => void;
     setRelatedItemConfigurationSlugline: (matchValue: any) => void;

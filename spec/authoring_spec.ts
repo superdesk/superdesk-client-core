@@ -1,15 +1,11 @@
 /* eslint-disable newline-per-chained-call */
 
-
-var monitoring = require('./helpers/monitoring'),
-    authoring = require('./helpers/authoring'),
-    ctrlKey = require('./helpers/utils').ctrlKey,
-    commandKey = require('./helpers/utils').commandKey,
-    ctrlShiftKey = require('./helpers/utils').ctrlShiftKey,
-    assertToastMsg = require('./helpers/utils').assertToastMsg,
-    nav = require('./helpers/utils').nav,
-    dictionaries = require('./helpers/dictionaries'),
-    workspace = require('./helpers/workspace');
+import {element, by, protractor, browser} from 'protractor';
+import {ctrlKey, commandKey, ctrlShiftKey, assertToastMsg, nav} from './helpers/utils';
+import {monitoring} from './helpers/monitoring';
+import {dictionaries} from './helpers/dictionaries';
+import {workspace} from './helpers/workspace';
+import {authoring} from './helpers/authoring';
 
 describe('authoring', () => {
     beforeEach(() => {
@@ -38,8 +34,8 @@ describe('authoring', () => {
         function generateLines(from, to) {
             var lines = '';
 
-            for (var i = from; i < to; i++) {
-                lines += 'line ' + i + '\n';
+            for (var j = from; j < to; j++) {
+                lines += 'line ' + j + '\n';
             }
             return lines;
         }
@@ -546,7 +542,7 @@ describe('authoring', () => {
         authoring.openItemVersionInBoard(1, 0);
         expect(authoring.getInnerDropdownItemVersions(0).count()).toBe(1);
         expect(authoring.getHtmlArticleHeadlineOfBoard(0)).toContain(
-            '<ins style="background:#e6ffe6;">newly </ins><span>updated item5</span>'
+            '<ins style="background:#e6ffe6;">newly </ins><span>updated item5</span>',
         );
         expect(authoring.getArticleHeadlineOfBoard(1)).toEqual('updated item5');
     });
