@@ -6,6 +6,7 @@ import {ISpellcheckWarning, ISpellchecker} from './interfaces';
 import {getSpellchecker} from './default-spellcheckers';
 import {logger} from 'core/services/logger';
 import {assertNever} from 'core/helpers/typescript-helpers';
+import {IPropsDraftDecorator} from 'core/editor3/draftjs-types';
 
 export type ISpellcheckWarningsByBlock = {[blockKey: string]: Array<ISpellcheckWarning>};
 
@@ -81,7 +82,10 @@ interface IState {
     warning: ISpellcheckWarning;
 }
 
-export const getSpellcheckingDecorator = (language: string, spellcheckWarnings: ISpellcheckWarningsByBlock) => {
+export function getSpellcheckingDecorator(
+    language: string,
+    spellcheckWarnings: ISpellcheckWarningsByBlock,
+) {
     const spellchecker = getSpellchecker(language);
 
     return {
@@ -94,7 +98,7 @@ export const getSpellcheckingDecorator = (language: string, spellcheckWarnings: 
                 });
             }
         },
-        component: class SpellcheckerError extends React.Component<any, IState> {
+        component: class SpellcheckerError extends React.Component<IPropsDraftDecorator, IState> {
             static propTypes: any;
             static defaultProps: any;
 
@@ -138,19 +142,19 @@ export const getSpellcheckingDecorator = (language: string, spellcheckWarnings: 
                 const warningsForBlock = spellcheckWarnings[blockKey];
 
                 if (warningsForBlock == null) {
-                    return;
+                    return <span>{this.props.children}</span>;
                 }
 
-                const startOffset = this.props.contentState
-                    .getBlockForKey(blockKey)
-                    .getText()
-                    .indexOf(this.props.decoratedText);
+                // props.start isn't available in the latest release yet
+                // it's fixed in https://github.com/facebook/draft-js/commit/8000486ed6890d1f69100379d954a62ac8a4eb08
+                const {start} = this.props.children[0].props;
+                const {decoratedText} = this.props;
 
                 const warningForDecoration = warningsForBlock.find((warning) =>
-                    warning.startOffset === startOffset && warning.text === this.props.decoratedText);
+                    warning.startOffset === start && warning.text === decoratedText);
 
                 if (warningForDecoration == null) {
-                    return null;
+                    return <span>{this.props.children}</span>;
                 }
 
                 const getClassname = () => {
@@ -213,4 +217,4 @@ export const getSpellcheckingDecorator = (language: string, spellcheckWarnings: 
             }
         },
     };
-};
+}
