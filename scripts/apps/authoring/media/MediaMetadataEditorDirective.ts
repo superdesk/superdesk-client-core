@@ -7,7 +7,7 @@ export default function MediaMetadataEditorDirective(metadata, deployConfig, fea
         const cv = metadata.cvs.find((_cv) => _cv._id === field || _cv.schema_field === field);
 
         if (cv == null && field === 'subject') {
-            return {items: metadata.values.subjectcodes}; // fallback for built in subjectcodes
+            return {selection_type: 'multi selection', items: metadata.values.subjectcodes}; // fallback for built in subjectcodes
         }
 
         if (cv == null && field === 'language' && metadata.values.languages) {
