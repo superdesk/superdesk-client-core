@@ -1,3 +1,5 @@
+import {startsWith, endsWith, some} from 'lodash';
+
 export function stripHtmlTags(value) {
     const el = document.createElement('div');
 
@@ -95,3 +97,38 @@ export const gettextCatalog = {
 export function escapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
+
+/**
+ * The 'isImage' checks if the rendition is image or not.
+ * @param rendition- Rendition of the item.
+ */
+export const isImage = (rendition) => {
+    return startsWith(rendition.mimetype, 'image');
+};
+
+/**
+ * The 'isAudio' checks if the rendition is audio or not.
+ * @param rendition- Rendition of the item.
+ */
+export const isAudio = (rendition) => {
+    if (startsWith(rendition.mimetype, 'audio')) {
+        return true;
+    }
+
+    return some(
+        ['.mp3', '.3gp', '.wav', '.ogg', 'wma', 'aa', 'aiff'],
+        (ext) => endsWith(rendition.href, ext),
+    );
+};
+
+/**
+ * The 'isVideo' checks if the rendition is video or not.
+ * @param rendition- Rendition of the item.
+ */
+export const isVideo = (rendition) => {
+    if (startsWith(rendition.mimetype, 'video')) {
+        return true;
+    }
+
+    return some(['.mp4', '.webm', '.ogv', '.ogg'], (ext) => endsWith(rendition.href, ext));
+};

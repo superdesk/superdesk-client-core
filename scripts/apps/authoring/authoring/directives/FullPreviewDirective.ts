@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import {isAudio, isImage, isVideo} from 'core/utils';
 
 FullPreviewDirective.$inject = ['api', '$timeout', 'config', 'content', '$sce'];
 export function FullPreviewDirective(api, $timeout, config, content, $sce) {
@@ -9,7 +10,7 @@ export function FullPreviewDirective(api, $timeout, config, content, $sce) {
         },
         templateUrl: 'scripts/apps/authoring/views/full-preview.html',
         link: function(scope, elem, attr, ctrl) {
-            scope.hide_images = false;
+            scope.hide_media = false;
 
             scope.filterKey = config.previewSubjectFilterKey || '';
 
@@ -58,21 +59,21 @@ export function FullPreviewDirective(api, $timeout, config, content, $sce) {
 
             /**
              * @ngdoc method
-             * @name mediaExists
+             * @name associationExists
              * @private
              * @description Check if there is any association for fieldId
              */
-            scope.mediaExists = function(associations, fieldId) {
-                return _.size(scope.getMediaItems(associations, fieldId));
+            scope.associationExists = function(associations, fieldId) {
+                return _.size(scope.getAssociationItems(associations, fieldId));
             };
 
             /**
              * @ngdoc method
-             * @name getMediaItems
+             * @name getAssociationItems
              * @private
              * @description Return all associations for fieldId
              */
-            scope.getMediaItems = function(associations, fieldId) {
+            scope.getAssociationItems = function(associations, fieldId) {
                 var result = _.filter(associations, (association, key) => key.indexOf(fieldId) !== -1);
 
                 return result;
@@ -90,6 +91,14 @@ export function FullPreviewDirective(api, $timeout, config, content, $sce) {
 
                 return term.name;
             };
+            // Check if the rendition is image or not
+            scope.isImage = (rendition) => isImage(rendition);
+
+            // Check if the rendition is video or not.
+            scope.isVideo = (rendition) => isVideo(rendition);
+
+            // Check if the rendition is audio or not.
+            scope.isAudio = (rendition) => isAudio(rendition);
         },
     };
 }

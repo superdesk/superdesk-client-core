@@ -1,5 +1,5 @@
-import {startsWith, endsWith, some, forEach, get} from 'lodash';
-import {getSuperdeskType} from 'core/utils';
+import {forEach, get} from 'lodash';
+import {getSuperdeskType, isImage, isVideo, isAudio} from 'core/utils';
 import {gettext} from 'core/utils';
 import {isMediaEditable} from 'core/config';
 
@@ -28,49 +28,14 @@ export function AssociationController(config, content, superdesk,
         return isMediaEditable(config);
     };
 
-    /**
-     * @ngdoc method
-     * @name AssociationController#isImage
-     * @public
-     * @description Check if the rendition is image or not.
-     * @param {Object} rendition Rendition of the item.
-     */
-    this.isImage = function(rendition) {
-        return startsWith(rendition.mimetype, 'image');
-    };
+    // Check if the rendition is image or not
+    this.isImage = (rendition) => isImage(rendition);
 
-    /**
-     * @ngdoc method
-     * @name AssociationController#isVideo
-     * @public
-     * @description Check if the rendition is video or not.
-     * @param {Object} rendition Rendition of the item.
-     */
-    this.isVideo = function(rendition) {
-        if (startsWith(rendition.mimetype, 'video')) {
-            return true;
-        }
+    // Check if the rendition is video or not.
+    this.isVideo = (rendition) => isVideo(rendition);
 
-        return some(['.mp4', '.webm', '.ogv', '.ogg'], (ext) => endsWith(rendition.href, ext));
-    };
-
-    /**
-     * @ngdoc method
-     * @name AssociationController#isAudio
-     * @public
-     * @description Check if the rendition is audio or not.
-     * @param {Object} rendition Rendition of the item.
-     */
-    this.isAudio = function(rendition) {
-        if (startsWith(rendition.mimetype, 'audio')) {
-            return true;
-        }
-
-        return some(
-            ['.mp3', '.3gp', '.wav', '.ogg', 'wma', 'aa', 'aiff'],
-            (ext) => endsWith(rendition.href, ext),
-        );
-    };
+    // Check if the rendition is audio or not.
+    this.isAudio = (rendition) => isAudio(rendition);
 
     /**
      * @ngdoc method
@@ -188,8 +153,8 @@ export function AssociationController(config, content, superdesk,
             return;
         }
 
-        const isImage = self.isImage(item.renditions.original);
-        const defaultTab = isImage ? 'crop' : 'view';
+        const _isImage = self.isImage(item.renditions.original);
+        const defaultTab = _isImage ? 'crop' : 'view';
 
         const cropOptions = {
             isNew: 'isNew' in options ? options.isNew : false,
