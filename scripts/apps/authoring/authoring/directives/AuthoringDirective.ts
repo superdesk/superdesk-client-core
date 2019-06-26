@@ -1187,7 +1187,6 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                         authoring.schema = $scope.schema;
                         authoring.editor = $scope.editor;
                         initMedia();
-                        console.info('fields', $scope.fields);
                     })
                     .then(updateSchema);
             });
