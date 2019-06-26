@@ -19,7 +19,6 @@ import {IEditor3AnnotationInputTab} from 'superdesk-api';
 
 interface IProps {
     editorState: EditorState;
-    extensionPoints: any;
     data: {
         selection?: SelectionState; // only provided when adding a new annotation
         highlightId?: string; // only provided when editing an existing annotation
@@ -337,7 +336,6 @@ const mapStateToProps = (state) => ({
 const AnnotationInputBodyWithDependenciesLoaded = connectPromiseResults(() => ({
     annotationTypes: ng.get('metadata').initialize()
         .then(() => ng.get('metadata').values.annotation_types),
-    extensionPoints: ng.getService('extensionPoints'),
 }))(AnnotationInputBody);
 
 export const AnnotationInput: any = connect(mapStateToProps, {

@@ -1,9 +1,10 @@
 
 
-var workspace = require('./helpers/pages').workspace,
-    content = require('./helpers/pages').content,
-    authoring = require('./helpers/authoring'),
-    desks = require('./helpers/desks');
+var workspace = require('./helpers/pages').workspace;
+var content = require('./helpers/pages').content;
+var authoring = require('./helpers/authoring');
+var desks = require('./helpers/desks');
+var el = require('./helpers/e2e-helpers').el;
 
 describe('fetch', () => {
     beforeEach(() => {
@@ -140,7 +141,7 @@ describe('fetch', () => {
         workspace.openIngest();
         content.selectItem(0);
         browser.sleep(1000); // Wait for animation
-        element(by.id('fetch-all-btn')).click();
+        el(['multi-actions-inline', 'Fetch']).click();
         workspace.openContent();
         expect(content.count()).toBe(3);
     });
@@ -149,17 +150,20 @@ describe('fetch', () => {
         workspace.openIngest();
         content.selectItem(0);
         browser.sleep(1000); // Wait for animation
-        element(by.id('fetch-all-as-btn')).click();
+        el(['multi-actions-inline', 'Fetch to']).click();
         content.send();
         workspace.openContent();
         expect(content.count()).toBe(3);
     });
 
-    it('can remove multiple ingest item', () => {
+    it('can remove multiple ingest items', () => {
         workspace.openIngest();
         content.selectItem(0);
         browser.sleep(1000); // Wait for animation
-        element(by.id('remove-all-as-btn')).click();
+
+        el(['multi-actions-inline', 'Remove']).click();
+        browser.sleep(100);
+
         expect(content.count()).toBe(0);
     });
 });

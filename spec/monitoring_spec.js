@@ -448,11 +448,14 @@ describe('monitoring', () => {
         authoring.close();
         monitoring.actionOnItem('Spike', 1, 2, null, true);
         expect(monitoring.getGroupItems(1).count()).toBe(3);
+        browser.sleep(100);
 
         monitoring.showSpiked();
+        browser.sleep(100);
         expect(monitoring.getSpikedTextItem(0)).toBe('item7');
 
         monitoring.unspikeItem(0);
+        browser.sleep(100);
         expect(monitoring.getSpikedItems().count()).toBe(0);
     });
 

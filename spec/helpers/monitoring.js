@@ -4,6 +4,8 @@ var nav = require('./utils').nav,
     waitFor = require('./utils').wait,
     acceptConfirm = require('./utils').acceptConfirm;
 
+var el = require('./e2e-helpers').el;
+
 module.exports = new Monitoring();
 
 function Monitoring() {
@@ -195,10 +197,6 @@ function Monitoring() {
         return element(by.className('dropdown--compact-state'));
     };
 
-    this.multiActionDropdown = function() {
-        return element(by.className('dropdown--multi-action-bar'));
-    };
-
     this.previewAction = function(group, item) {
         this.getItem(group, item).click();
         var preview = element(by.id('item-preview'));
@@ -319,12 +317,12 @@ function Monitoring() {
     };
 
     this.spikeMultipleItems = function() {
-        element(by.css('[ng-click="action.spikeItems()"]')).click();
+        el(['multi-actions-inline', 'Spike']).click();
         acceptConfirm();
     };
 
     this.unspikeMultipleItems = function() {
-        element(by.css('[ng-click="action.unspikeItems()"]')).click();
+        el(['multi-actions-inline', 'Unspike']).click();
         return element(by.buttonText('send')).click();
     };
 
@@ -545,7 +543,7 @@ function Monitoring() {
 
     this.openSendMenu = function() {
         browser.sleep(500);
-        element(by.className('big-icon--send-to')).click();
+        el(['multi-actions-inline', 'Send to']).click();
         browser.sleep(100);
     };
 
@@ -592,13 +590,7 @@ function Monitoring() {
      * Create a package and include selected items
      */
     this.createPackageFromItems = function() {
-        element(by.css('[ng-click="action.createPackage()"]')).click();
-    };
-
-    this.addToCurrentMultipleItems = function() {
-        var elem = element(by.className('multi-action-bar'));
-
-        elem.element(by.css('[ng-click="action.addToPackage()"]')).click();
+        el(['multi-actions-inline', 'Create Package']).click();
     };
 
     /**

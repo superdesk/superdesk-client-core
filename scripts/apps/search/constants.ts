@@ -134,7 +134,6 @@ export const CORE_PROJECTED_FIELDS = {
         'queue_state',
         'alt_text',
         'description_text',
-        'assignment_id',
 
         // Added in order not to lose data while drag-and-droping an image to the body | SDESK-1508
         'byline',
@@ -145,6 +144,13 @@ export const CORE_PROJECTED_FIELDS = {
         // added in order to show the list of items on spiked packages
         'groups',
         'deleted_groups',
+
+        // planning plugin
+        'assignment_id',
+
+        // mark for user plugin
+
+        'marked_for_user',
     ],
 };
 

@@ -13,7 +13,8 @@ describe('places service', () => {
                 expect(cities.length).toBe(1);
                 expect(cities[0].city).toBe('Brno');
                 done();
-            });
+            })
+                .catch(done.fail);
         });
     });
 });

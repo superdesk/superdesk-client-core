@@ -22,15 +22,54 @@ declare module 'superdesk-api' {
 
     // EXTENSIONS
 
+    export type onSpikeMiddlewareResult= {warnings?: Array<{text: string}>};
+
+    /**
+     * float number 0 < x < 1. Larger the number, closer the component will be rendered to its side.
+     * for example, if we had a list with 'start' positioned items with the following priorities [0.1, 0.2, 0.3]
+     * we could add an item so it's the first in the list by setting priority to be less than 0.1, for example, 0.05.
+     * to insert an item between 0.2 and 0.3 we could set its priority to 0.25
+     * See [[sortByDisplayPriority]] for debug information.
+     */
+    export type IDisplayPriority = number;
+
+    export interface IArticleAction {
+        labelForGroup?: string;
+        priority?: IDisplayPriority;
+        icon?: string;
+        label: string;
+        onTrigger(): void;
+    }
+    
+    export interface IArticleActionBulk {
+        priority?: IDisplayPriority;
+        label: string;
+        icon: string;
+        onTrigger(): void;
+    }
+
     export interface IExtensionActivationResult {
         contributions?: {
             editor3?: {
                 annotationInputTabs?: Array<IEditor3AnnotationInputTab>;
             }
+            articleListItemWidgets?: Array<React.ComponentType<{article: IArticle}>>;
+            authoringTopbarWidgets?: Array<React.ComponentType<{article: IArticle}>>;
             pages?: Array<IPage>;
             customFieldTypes?: Array<ICustomFieldType>;
+            entities?: {
+                article?: {
+                    getActions?(article: IArticle): Promise<Array<IArticleAction>>;
+                    getActionsBulk?(articles: Array<IArticle>): Promise<Array<IArticleActionBulk>>;
+                    onUpdateBefore?(article: IArticle): Promise<IArticle>; // can alter item(immutably), can cancel update
+                    onUpdateAfter?(article: IArticle): void; // can't alter item, can't cancel
+                    onSpike?(item: IArticle): Promise<onSpikeMiddlewareResult>;
+                    onSpikeMultiple?(items: Array<IArticle>): Promise<onSpikeMiddlewareResult>;
+                };
+            };
         }
     }
+
 
     export type IExtension = DeepReadonly<{
         activate: (superdesk: ISuperdesk) => Promise<IExtensionActivationResult>;
@@ -57,6 +96,103 @@ declare module 'superdesk-api' {
 
 
 
+
+    // ENTITIES
+
+    // this is a subset of the main IArticle interface found in the core
+    // a subset is used in order expose things gradually as needed
+    export interface IArticle extends IBaseRestApiResponse {
+        _id: string;
+        slugline: string;
+
+        task: {
+            desk: IDesk['_id'];
+            stage: IStage['_id'];
+            user: IUser['_id'];
+        };
+
+        // remove when SDESK-4343 is done.
+        selected: boolean;
+
+        // planning extension
+        assignment_id?: string;
+
+        // markForUser extension
+        marked_for_user?: string | null;
+    }
+
+    export interface IUserRole extends IBaseRestApiResponse {
+        _id: string;
+        name: string;
+        privileges: any;
+        author_role: string;
+        editor_role: string;
+    }
+
+    export interface IDesk extends IBaseRestApiResponse {
+        incoming_stage: IStage['_id'];
+        members: Array<IUser['_id']>;
+        name: string;
+        desk_type: 'authoring' | 'production';
+        working_stage: IStage['_id'];
+    }
+
+    export interface IStage extends IBaseRestApiResponse {
+        name: string;
+        description: string;
+        working_stage: boolean;
+        default_incoming: boolean;
+        task_status: 'todo' | 'in_progress' | 'done';
+        desk_order: number;
+        desk: any;
+        content_expiry: number;
+        is_visible: boolean;
+        local_readonly: boolean;
+        incoming_macro: string;
+        outgoing_macro: string;
+        onstage_macro: string;
+    }
+
+    export interface IUser extends IBaseRestApiResponse {
+        _id: string;
+        username: string;
+        password: string;
+        password_changed_on: string;
+        first_name?: string; // not mandatory, empty when user is created programatically
+        last_name?: string; // not mandatory, empty when user is created programatically
+        display_name: string;
+        email: string;
+        phone: string;
+        job_title: string;
+        biography: string;
+        facebook: string;
+        instagram: string;
+        twitter: string;
+        jid: string;
+        language: string;
+        user_info: {};
+        picture_url: string;
+        avatar: string;
+        avatar_renditions: {};
+        role?: IUserRole['_id'];
+        privileges: {};
+        user_type: 'user' | 'administrator';
+        is_support: boolean;
+        is_author: boolean;
+        is_active: boolean;
+        is_enabled: boolean;
+        needs_activation: boolean;
+        desk: IDesk;
+        SIGN_OFF: string;
+        BYLINE: string;
+        invisible_stages: Array<any>;
+        slack_username: string;
+        slack_user_id: string;
+    }
+    
+
+
+
     // PAGE
 
     export type IPage = DeepReadonly<{
@@ -73,6 +209,10 @@ declare module 'superdesk-api' {
         _created: string;
         _updated: string;
         _etag: string;
+        _links: {
+            parent?: any;
+            collection?: any;
+        };
         _id: string;
     }
 
@@ -228,6 +368,10 @@ declare module 'superdesk-api' {
         canDrop: (event: DragEvent) => boolean;
     }
 
+    export interface IPropsModalHeader {
+        onClose?(): void;
+    }
+
     export interface IGenericListPageComponent<T extends IBaseRestApiResponse> {
         openPreview(id: string): void;
         startEditing(id: string): void;
@@ -238,6 +382,12 @@ declare module 'superdesk-api' {
         closeNewItemForm(): void;
         deleteItem(item: T): void;
         removeFilter(fieldName: string): void;
+    }
+
+    interface IPropsSelectUser {
+        onSelect(user: IUser): void;
+        selectedUserId?: string;
+        disabled?: boolean;
     }
 
 
@@ -264,6 +414,7 @@ declare module 'superdesk-api' {
     // DATA API
 
     export interface IDataApi {
+        findOne<T>(endpoint: string, id: string): Promise<T>;
         create<T>(endpoint: string, item: T): Promise<T>;
         query<T extends IBaseRestApiResponse>(
             endpoint: string,
@@ -272,8 +423,8 @@ declare module 'superdesk-api' {
             filterValues: ICrudManagerFilters,
             formatFiltersForServer?: (filters: ICrudManagerFilters) => ICrudManagerFilters,
         ): Promise<IRestApiResponse<T>>;
-        patch<T>(endpoint, item1: T, item2: T): Promise<T>;
-        delete<T>(endpoint, item1: T): Promise<void>;
+        patch<T extends IBaseRestApiResponse>(endpoint, current: T, next: T): Promise<T>;
+        delete<T extends IBaseRestApiResponse>(endpoint, item: T): Promise<void>;
     }
 
 
@@ -285,6 +436,18 @@ declare module 'superdesk-api' {
         ui: {
             alert(message: string): Promise<void>;
             confirm(message: string): Promise<boolean>;
+            showModal(component: React.ComponentType<{closeModal(): void}>): Promise<void>;
+        };
+        entities: {
+            article: {
+                // returns true if locked by anyone, including the current user
+                isLocked(article: IArticle): boolean;
+
+                isLockedByCurrentUser(article: IArticle): boolean;
+
+                isPersonal(article: IArticle): boolean;
+                update(nextArticle: IArticle): void;
+            };
         };
         helpers: {
             assertNever(x: never): never;
@@ -309,6 +472,12 @@ declare module 'superdesk-api' {
             Alert: React.ComponentType<IAlertComponentProps>;
             Figure: React.ComponentType<IFigureComponentProps>;
             DropZone: React.ComponentType<IDropZoneComponentProps>;
+            Modal: React.ComponentType;
+            ModalHeader: React.ComponentType<IPropsModalHeader>;
+            ModalBody: React.ComponentType;
+            ModalFooter: React.ComponentType;
+            SelectUser: React.ComponentType<IPropsSelectUser>;
+            UserAvatar: React.ComponentType<{userId: string}>;
         };
         forms: {
             FormFieldType: typeof FormFieldType;
@@ -329,6 +498,15 @@ declare module 'superdesk-api' {
         extensions: {
             getExtension(id: string): Promise<Omit<IExtension, 'activate'>>;
         };
+        privileges: {
+            getOwnPrivileges(): Promise<any>;
+        };
+        utilities: {
+            logger: {
+                error(error: Error): void;
+                warn(message: string, json: {[key: string]: any}): void;
+            },
+        },
     }>;
 
 
@@ -363,7 +541,7 @@ declare module 'superdesk-api' {
         parent: string;
     }
 
-    export interface IArticle {
+    export interface IArticle extends IBaseRestApiResponse {
         _id: string;
         _current_version: number;
         guid: string;
@@ -405,14 +583,29 @@ declare module 'superdesk-api' {
         lock_user: any;
         lock_session: any;
         rewritten_by?: string;
+
+        highlights?: Array<string>;
+
         extra?: {[key: string]: any};
+
+        task: {
+            desk: IDesk['_id'];
+            stage: IStage['_id'];
+            user: IUser['_id'];
+        };
 
         // might be only used for client-side state
         created: any;
         archived: any;
 
-        // TODO: remove this, it's only used for client-side state
+        // remove when SDESK-4343 is done.
         selected: any;
+
+        // planning extension
+        assignment_id?: string;
+
+        // markForUser extension
+        marked_for_user?: string;
     }
 
 }

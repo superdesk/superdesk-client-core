@@ -78,7 +78,7 @@ export class EmbedInputComponent extends React.Component<any, any> {
      * @description Processes the error XHR response from the iframe.ly request. Sets the state
      * to erroneous, which should be shown in the UI.
      */
-    processError(data: any = {}, status) {
+    processError(data: any = {}) {
         const {responseJSON} = data;
         const hasMessage = responseJSON && responseJSON.error;
         const is404 = !hasMessage && data.status === 404;

@@ -1,6 +1,8 @@
 var nav = require('./utils').nav;
 var acceptConfirm = require('./utils').acceptConfirm;
 
+var el = require('./e2e-helpers').el;
+
 module.exports = new Content();
 
 function Content() {
@@ -145,12 +147,12 @@ function Content() {
     };
 
     this.spikeItems = function() {
-        element(by.css('[ng-click="action.spikeItems()"]')).click();
+        el(['multi-actions-inline', 'Spike']).click();
         acceptConfirm();
     };
 
     this.unspikeItems = function() {
-        element(by.css('[ng-click="action.unspikeItems()"]')).click();
+        el(['multi-actions-inline', 'Unspike']).click();
         element(by.buttonText('send')).click();
     };
 

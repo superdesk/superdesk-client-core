@@ -1,6 +1,7 @@
 import ng from 'core/services/ng';
 import {insertMedia} from './toolbar';
 import {makeIframesResponsive} from 'core/helpers/make-iframes-responsive';
+import {logger} from 'core/services/logger';
 
 /**
  * @ngdoc method
@@ -183,8 +184,18 @@ export function moveBlock(block, dest, insertionMode) {
     };
 }
 
-export function processEmbedCode(html) {
-    return makeIframesResponsive(html);
+export function processEmbedCode(data) {
+    if (typeof data === 'string') {
+        return makeIframesResponsive(data);
+    } else if (typeof data === 'object' && typeof data.html === 'string') {
+        return {
+            ...data,
+            html: makeIframesResponsive(data.html),
+        };
+    } else {
+        logger.error(new Error('embed format not recognized'));
+        return data;
+    }
 }
 
 /**

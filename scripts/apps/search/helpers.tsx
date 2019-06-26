@@ -71,9 +71,19 @@ export function openActionsMenu(elem, target, itemId) {
  * @param {integer} zIndex z-index styling to be applied to the elem
  */
 export function renderToBody(elem, target, zIndex = 1000) {
+    ReactDOM.findDOMNode(ReactDOM.render(elem, menuHolderElem()));
+    positionPopup(target, zIndex);
+}
+
+export function positionPopup(target, zIndex = 1000) {
+    const node: any = menuHolderElem().firstChild;
+
+    if (node == null) { // when loading
+        return;
+    }
+
     // first render it somewhere not visible
     menuHolderElem().style.zIndex = '-1';
-    var node = ReactDOM.findDOMNode(ReactDOM.render(elem, menuHolderElem())) as HTMLElement;
     // make sure it's rendered
 
     node.style.display = 'block';
@@ -161,37 +171,39 @@ export function renderArea(area, itemProps, props, customRender: any = {}) {
 export function bindMarkItemShortcut(label) {
     const keyboardManager = ng.get('keyboardManager');
 
-    angular.element('.active .more-activity-toggle').click();
+    angular.element('.active .more-activity-toggle-ref').click();
 
-    let markDropdown = angular.element('.more-activity-menu.open .dropdown--noarrow');
+    setTimeout(() => {
+        let markDropdown = angular.element('.more-activity-menu.open .dropdown--noarrow');
 
-    if (markDropdown.find('[title="' + label + '"]').length > 0) {
-        markDropdown.find('[title="' + label + '"]')[0].click();
-    }
+        if (markDropdown.find('[title="' + label + '"]').length > 0) {
+            markDropdown.find('[title="' + label + '"]')[0].click();
+        }
 
-    if (markDropdown.find('button').length > 0) {
-        markDropdown.find('button:not([disabled])')
-            .first()
-            .focus();
-
-        keyboardManager.push('up', () => {
-            markDropdown.find('button:focus')
-                .parent('li')
-                .prev()
-                .children('button')
+        if (markDropdown.find('button').length > 0) {
+            markDropdown.find('button:not([disabled])')
+                .first()
                 .focus();
-        });
-        keyboardManager.push('down', () => {
-            markDropdown.find('button:focus')
-                .parent('li')
-                .next()
-                .children('button')
-                .focus();
-        });
-        keyboardManager.push('escape', () => {
-            let actionMenu = angular.element('.more-activity-menu.open');
 
-            actionMenu.find('button.dropdown__menu-close').click();
-        });
-    }
+            keyboardManager.push('up', () => {
+                markDropdown.find('button:focus')
+                    .parent('li')
+                    .prev()
+                    .children('button')
+                    .focus();
+            });
+            keyboardManager.push('down', () => {
+                markDropdown.find('button:focus')
+                    .parent('li')
+                    .next()
+                    .children('button')
+                    .focus();
+            });
+            keyboardManager.push('escape', () => {
+                let actionMenu = angular.element('.more-activity-menu.open');
+
+                actionMenu.find('button.dropdown__menu-close').click();
+            });
+        }
+    });
 }

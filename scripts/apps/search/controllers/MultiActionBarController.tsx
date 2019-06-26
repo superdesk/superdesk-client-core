@@ -1,6 +1,12 @@
-import _ from 'lodash';
+/* eslint-disable indent */
+
+import _, {flatMap} from 'lodash';
 import {IArticle} from 'superdesk-api';
 import {gettext} from 'core/utils';
+
+import {IExtensionActivationResult} from 'superdesk-api';
+import {extensions} from 'core/extension-imports.generated';
+import {showSpikeDialog} from 'apps/archive/show-spike-dialog';
 
 /**
  * @ngdoc controller
@@ -72,7 +78,7 @@ export function MultiActionBarController(
 
         Promise.all(multi.getIds().map((id) => api.find('archive', id)))
             .then((imagesFromDatabase) => {
-                // <TECHNICAL DEBT>
+                // SDESK-4343
                 // UI state(`selected` property of the article) is stored on a database/API entity
                 // because of that, it's not possible to use the latest data from the API
                 // and it has to be patched on top of old data in order for UI state related properties to be preserved
@@ -84,7 +90,6 @@ export function MultiActionBarController(
                         originalImage[prop] = imageFromDb[prop];
                     }
                 });
-                // </TECHNICAL DEBT>
 
                 multiImageEdit.edit(originalImages, (editedImages) => Promise.all(
                     originalImages.map((image: IArticle) => authoring.save(
@@ -115,10 +120,7 @@ export function MultiActionBarController(
     /**
      * Multiple item spike
      */
-    this.spikeItems = function() {
-        let message = gettext('Are you sure you want to spike the items?');
-        const assignedItems = _.get(privileges, 'privileges.planning') ?
-            multi.getItems().filter((item) => item.assignment_id) : [];
+    this.spikeItems = function(): void {
         const spikeMultiple = () => {
             spike.spikeMultiple(multi.getItems());
             $rootScope.$broadcast('item:spike');
@@ -126,16 +128,33 @@ export function MultiActionBarController(
         };
 
         if ($location.path() === '/workspace/personal') {
-            message = gettext('Do you want to delete the items permanently?');
-        } else if (assignedItems.length) {
-            message = gettext('Some item/s are linked to in-progress planning coverage, spike anyway?');
-        } else if (!_.get(config, 'confirm_spike', true)) {
-            spikeMultiple();
+            modal.confirm(gettext('Do you want to delete the items permanently?')).then(spikeMultiple);
             return;
         }
 
-        return modal.confirm(message)
-            .then(spikeMultiple);
+        const onSpikeMultipleMiddlewares
+            : Array<IExtensionActivationResult['contributions']['entities']['article']['onSpikeMultiple']>
+            = flatMap(
+                Object.values(extensions).map(({activationResult}) => activationResult),
+                (activationResult) =>
+                    activationResult.contributions != null
+                    && activationResult.contributions.entities != null
+                    && activationResult.contributions.entities.article != null
+                    && activationResult.contributions.entities.article.onSpikeMultiple != null
+                        ? activationResult.contributions.entities.article.onSpikeMultiple
+                        : [],
+            );
+
+        const items: Array<IArticle> = multi.getItems();
+
+        showSpikeDialog(
+            config,
+            modal,
+            () => spikeMultiple(),
+            gettext('Are you sure you want to spike the items?'),
+            onSpikeMultipleMiddlewares,
+            items,
+        );
     };
 
     /**

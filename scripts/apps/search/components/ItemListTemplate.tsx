@@ -1,6 +1,5 @@
 import React from 'react';
-import {IArticle} from 'superdesk-api';
-import {IDesk} from 'superdesk-interfaces/Desk';
+import {IArticle, IDesk} from 'superdesk-api';
 import {ListTypeIcon} from './ListTypeIcon';
 import {ListPriority} from './ListPriority';
 import {ListItemInfo} from './ListItemInfo';

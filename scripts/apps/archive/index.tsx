@@ -1,8 +1,10 @@
+/* eslint-disable indent */
+
 // styles
 import './styles/related-item.scss';
 import './styles/assignment.scss';
 import './styles/html-preview.scss';
-import {get, includes} from 'lodash';
+import {get, includes, flatMap} from 'lodash';
 
 // scripts
 import './related-item-widget/relatedItem';
@@ -12,6 +14,11 @@ import * as svc from './services';
 import * as ctrl from './controllers';
 
 import {gettext} from 'core/utils';
+
+import {extensions} from 'core/extension-imports.generated';
+
+import {IExtensionActivationResult, IArticle} from 'superdesk-api';
+import {showSpikeDialog} from './show-spike-dialog';
 
 angular.module('superdesk.apps.archive.directives', [
     'superdesk.core.filters',
@@ -406,17 +413,33 @@ function spikeActivity(spike, data, modal, $location, $q, multi, privileges,
     _spike();
 
     function _spike() {
-        let message = gettext('Are you sure you want to spike the item?');
-
         if ($location.path() === '/workspace/personal') {
-            message = gettext('Do you want to delete the item permanently?');
-        } else if (get(privileges, 'privileges.planning') && data.item && data.item.assignment_id) {
-            message = gettext('This item is linked to in-progress planning coverage, spike anyway?');
-        } else if (!get(config, 'confirm_spike', true)) {
-            return spike.spike(data.item);
+            return modal.confirm(gettext('Do you want to delete the item permanently?'), gettext('Confirm'))
+                .then(() => spike.spike(data.item));
         }
 
-        return modal.confirm(message, gettext('Confirm'))
-            .then(() => spike.spike(data.item));
+        const onSpikeMiddlewares
+            : Array<IExtensionActivationResult['contributions']['entities']['article']['onSpike']>
+            = flatMap(
+                Object.values(extensions).map(({activationResult}) => activationResult),
+                (activationResult) =>
+                    activationResult.contributions != null
+                    && activationResult.contributions.entities != null
+                    && activationResult.contributions.entities.article != null
+                    && activationResult.contributions.entities.article.onSpike != null
+                        ? activationResult.contributions.entities.article.onSpike
+                        : [],
+            );
+
+        const item: IArticle = data.item;
+
+        showSpikeDialog(
+            config,
+            modal,
+            () => spike.spike(data.item),
+            gettext('Are you sure you want to spike the item?'),
+            onSpikeMiddlewares,
+            item,
+        );
     }
 }

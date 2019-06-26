@@ -1,6 +1,5 @@
 import React from 'react';
-import {IArticle} from 'superdesk-api';
-import {IDesk} from 'superdesk-interfaces/Desk';
+import {IArticle, IDesk} from 'superdesk-api';
 import {PhotoDeskPreview} from './PhotoDeskPreview';
 import {PhotoDeskInfo} from './PhotoDeskInfo';
 import {PhotoDeskFooter} from './PhotoDeskFooter';

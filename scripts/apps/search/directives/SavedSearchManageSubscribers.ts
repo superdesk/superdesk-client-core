@@ -8,9 +8,8 @@ import {
     isUserSubscribedToSavedSearch,
 } from '../SavedSearch';
 import {IDirectiveScope} from 'types/Angular/DirectiveScope';
-import {IUser} from 'superdesk-interfaces/User';
+import {IUser, IDesk} from 'superdesk-api';
 import {CronTimeInterval} from 'types/DataStructures/TimeInterval';
-import {IDesk} from 'superdesk-interfaces/Desk';
 import {IDesksService} from 'types/Services/Desks';
 import {nameof} from 'core/helpers/typescript-helpers';
 import {gettext} from 'core/utils';

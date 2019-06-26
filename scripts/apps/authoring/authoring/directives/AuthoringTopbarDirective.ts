@@ -19,6 +19,12 @@ export function AuthoringTopbarDirective(TranslationService, privileges, authori
 
             scope.userHasPrivileges = privileges.userHasPrivileges;
 
+            scope.handleArticleChange = (article) => {
+                Object.assign(scope.item, article);
+
+                scope.autosave(scope.item, 0);
+            };
+
             /*
              * Save item
              * @return {promise}
