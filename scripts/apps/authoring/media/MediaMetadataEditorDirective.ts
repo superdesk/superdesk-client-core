@@ -18,6 +18,10 @@ export default function MediaMetadataEditorDirective(metadata, deployConfig, fea
         return cv;
     }
 
+    function isExtra(field): boolean {
+        return field.cv && (field.cv.field_type === 'text' || field.cv.field_type === 'date');
+    }
+
     return {
         scope: {
             item: '=',
@@ -92,7 +96,7 @@ export default function MediaMetadataEditorDirective(metadata, deployConfig, fea
                         .forEach((field) => {
                             const dest = field.cv ? (field.cv.schema_field || field.field) : field.field;
 
-                            if (scope.isExtra(field)) {
+                            if (isExtra(field)) {
                                 if (!item.extra || !item.extra.hasOwnProperty(dest)) {
                                     item.extra = item.extra || {};
                                     item.extra[dest] = field.default;
@@ -120,8 +124,6 @@ export default function MediaMetadataEditorDirective(metadata, deployConfig, fea
              * @return {Boolean}
              */
             scope.isDisabled = (field) => scope.disabled || (scope.associated && field.external);
-
-            scope.isExtra = (field): boolean => field.cv && field.cv.field_type === 'text';
         },
     };
 }
