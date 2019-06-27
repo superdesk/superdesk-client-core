@@ -586,6 +586,7 @@ declare module 'superdesk-api' {
 
         highlights?: Array<string>;
 
+        // storage for custom fields created by users
         extra?: {[key: string]: any};
 
         task: {
