@@ -166,7 +166,7 @@ class GlobalSearch {
 
             const dots = itemElem.element(by.className('icon-dots-vertical'));
 
-            waitFor(dots, 200);
+            waitFor(dots);
             dots.click();
 
             const menu = element(by.css('.dropdown__menu.open'));

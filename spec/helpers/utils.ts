@@ -1,5 +1,5 @@
 import {LoginModal} from './pages';
-import {browser, protractor, element, by, ElementFinder} from 'protractor';
+import {browser, protractor, element, by, ElementFinder, ElementArrayFinder} from 'protractor';
 
 // construct url from uri and base url
 export function constructUrl(base, uri) {
@@ -177,7 +177,7 @@ export function assertToastMsg(type, msg) {
  * @param {number} time
  * @return {Promise}
  */
-export function waitFor(elem, time?) {
+export function waitFor(elem: ElementFinder | ElementArrayFinder, time?: number) {
     browser.wait(() => elem.isPresent(), time || 500);
     return browser.wait(() => elem.isDisplayed(), time || 500);
 }

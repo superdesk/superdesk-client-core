@@ -180,7 +180,7 @@ class Authoring {
     getInnerDropdownItemVersions: (index: any) => any;
     openItemVersionInBoard: (board: any, index: any) => void;
 
-    construtor() {
+    constructor() {
         this.lock = element(by.css('[ng-click="lock()"]'));
         this.publish_button = element(by.buttonText('publish'));
         this.correct_button = element(by.buttonText('correct'));
