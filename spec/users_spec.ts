@@ -8,6 +8,7 @@ import {authoring} from './helpers/authoring';
 import {nav} from './helpers/utils';
 import {userPreferences} from './helpers/user_prefs';
 import {post} from './helpers/fixtures';
+import { els, el } from './helpers/e2e-helpers';
 
 describe('users', () => {
     beforeEach((done) => {
@@ -65,14 +66,13 @@ describe('users', () => {
             nav('/users');
         });
 
-        it('can list users', () => {
-            expect(element.all(by.repeater('user in users')).count()).toBe(6);
-
-            const row: any = element(by.repeater('user in users')).row(0);
-            const column: any = row.column('username');
-
-            expect(column.getText())
-                .toBe('test_user');
+        fit('can list users', () => {
+            expect(
+                element.all(by.css('[data-test-id="users-list-item"]'))
+                    .first()
+                    .element(by.css('[data-test-id="username"]'))
+                    .getText(),
+            ).toBe('test_user');
         });
 
         it('list online users', () => {
