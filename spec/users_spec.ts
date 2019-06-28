@@ -8,7 +8,6 @@ import {authoring} from './helpers/authoring';
 import {nav} from './helpers/utils';
 import {userPreferences} from './helpers/user_prefs';
 import {post} from './helpers/fixtures';
-import { els, el } from './helpers/e2e-helpers';
 
 describe('users', () => {
     beforeEach((done) => {
@@ -66,7 +65,7 @@ describe('users', () => {
             nav('/users');
         });
 
-        fit('can list users', () => {
+        it('can list users', () => {
             expect(
                 element.all(by.css('[data-test-id="users-list-item"]'))
                     .first()
