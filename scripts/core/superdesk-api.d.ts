@@ -50,6 +50,7 @@ declare module 'superdesk-api' {
 
     export interface IExtensionActivationResult {
         contributions?: {
+            globalMenuHorizontal: Array<React.ComponentType>;
             editor3?: {
                 annotationInputTabs?: Array<IEditor3AnnotationInputTab>;
             }

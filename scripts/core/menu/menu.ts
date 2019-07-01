@@ -1,3 +1,6 @@
+import {reactToAngular1} from 'superdesk-ui-framework';
+import {GlobalMenuHorizontal} from './GlobalMenuHorizontal';
+
 SuperdeskFlagsService.$inject = ['config'];
 function SuperdeskFlagsService(config) {
     this.flags = {
@@ -23,6 +26,13 @@ angular.module('superdesk.core.menu', [
 ])
 
     .service('superdeskFlags', SuperdeskFlagsService)
+    .component(
+        'sdGlobalMenuHorizontal',
+        reactToAngular1(
+            GlobalMenuHorizontal,
+            [],
+        ),
+    )
 
     // set flags for other directives
     .directive('sdSuperdeskView', ['asset', function(asset) {
