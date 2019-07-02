@@ -50,7 +50,7 @@ declare module 'superdesk-api' {
 
     export interface IExtensionActivationResult {
         contributions?: {
-            globalMenuHorizontal: Array<React.ComponentType>;
+            globalMenuHorizontal?: Array<React.ComponentType>;
             editor3?: {
                 annotationInputTabs?: Array<IEditor3AnnotationInputTab>;
             }
@@ -451,6 +451,7 @@ declare module 'superdesk-api' {
             ModalFooter: React.ComponentType;
             SelectUser: React.ComponentType<IPropsSelectUser>;
             UserAvatar: React.ComponentType<{userId: string}>;
+            ArticleItemConcise: React.ComponentType<{article: IArticle}>;
         };
         forms: {
             FormFieldType: typeof FormFieldType;

@@ -6,10 +6,12 @@ export function slugline(props) {
     if (props.item.slugline) {
         return React.createElement(
             'span',
-            {className: 'keyword', key: 'slugline',
+            {className: 'field--slugline', key: 'slugline',
                 dangerouslySetInnerHTML: createMarkUp(props.item.slugline)},
 
         );
+    } else {
+        return null;
     }
 }
 

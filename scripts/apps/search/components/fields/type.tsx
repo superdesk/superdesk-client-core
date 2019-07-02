@@ -17,7 +17,6 @@ export const type: React.StatelessComponent<any> = (props) => {
 };
 
 type.propTypes = {
-    svc: PropTypes.any.isRequired,
     item: PropTypes.any,
     className: PropTypes.string,
 };

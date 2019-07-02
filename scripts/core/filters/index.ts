@@ -1,6 +1,12 @@
 import _ from 'lodash';
 import {stripHtmlTags} from '../utils';
 
+export function removeLodash(value) {
+    var cleanedValue = value || '';
+
+    return cleanedValue.replace('_', ' ');
+}
+
 export default angular.module('superdesk.core.filters', [])
     .filter('body', () => function(content) {
         var lines = $(content);
@@ -210,11 +216,7 @@ export default angular.module('superdesk.core.filters', [])
 
         return '(' + filterCondition.field + ' ' + filterCondition.operator + ' ' + conditionValue + ')';
     })
-    .filter('removeLodash', () => function(value) {
-        var cleanedValue = value || '';
-
-        return cleanedValue.replace('_', ' ');
-    })
+    .filter('removeLodash', () => removeLodash)
     .filter('stripHtmlTags', () => function(value) {
         return stripHtmlTags(value);
     })
