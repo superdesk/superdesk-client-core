@@ -4,13 +4,12 @@ import React from 'react';
 import {assertNever} from 'core/helpers/typescript-helpers';
 
 interface IPropsSidePanel {
-    children: Array<React.ReactElement<SidePanelHeader> | React.ReactElement<SidePanelContent>>;
     side: 'left' | 'right';
     width: number; // required because due to a bad implementation of SidePanelTools, they go on top heading text
     'data-test-id'?: string;
 }
 
-export class SidePanel extends React.Component<IPropsSidePanel, any> {
+export class SidePanel extends React.Component<IPropsSidePanel> {
     render() {
         let classes = ['side-panel'];
 
@@ -34,13 +33,7 @@ export class SidePanel extends React.Component<IPropsSidePanel, any> {
     }
 }
 
-type OneOrMany < T > = React.ReactElement<T> | Array<React.ReactElement<T>>;
-
-interface IPropsSidePanelHeader {
-    children: OneOrMany<SidePanelHeading> | OneOrMany<SidePanelTools>;
-}
-
-export class SidePanelHeader extends React.Component<IPropsSidePanelHeader, any> {
+export class SidePanelHeader extends React.Component {
     render() {
         return (
             <div className="side-panel__header">
@@ -50,11 +43,7 @@ export class SidePanelHeader extends React.Component<IPropsSidePanelHeader, any>
     }
 }
 
-interface IPropsSidePanelContent {
-    children: React.ReactElement<SidePanelContentBlock> | Array<React.ReactElement<SidePanelContentBlock>>;
-}
-
-export class SidePanelContent extends React.Component<IPropsSidePanelContent> {
+export class SidePanelContent extends React.Component {
     render() {
         return (
             <div className="side-panel__content">
@@ -64,7 +53,7 @@ export class SidePanelContent extends React.Component<IPropsSidePanelContent> {
     }
 }
 
-export class SidePanelContentBlock extends React.Component<any, any> {
+export class SidePanelContentBlock extends React.Component {
     render() {
         return (
             <div className="side-panel__content-block">
@@ -74,7 +63,7 @@ export class SidePanelContentBlock extends React.Component<any, any> {
     }
 }
 
-export class SidePanelHeading extends React.Component<IPropsSidePanelHeader, any> {
+export class SidePanelHeading extends React.Component {
     render() {
         return (
             <div className="side-panel__heading">
@@ -84,7 +73,7 @@ export class SidePanelHeading extends React.Component<IPropsSidePanelHeader, any
     }
 }
 
-export class SidePanelTools extends React.Component<any, any> {
+export class SidePanelTools extends React.Component {
     render() {
         return (
             <div className="side-panel__tools">

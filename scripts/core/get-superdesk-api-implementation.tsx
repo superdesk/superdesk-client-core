@@ -120,9 +120,13 @@ export function getSuperdeskApiImplementation(
             ListItemColumn,
             ListItemActionsMenu,
             List: {
-                Item,
-                Row,
-                Column,
+                // there's no full React implementation of ListItem component
+                // https://superdesk.github.io/superdesk-ui-framework/dist/#/list-item
+                // as operator is used in order to prevent exposing more props
+                // so it's easier to remove old versions when we have a full implementation
+                Item: Item as React.ComponentType<{onClick: any}>,
+                Row: Row as React.ComponentType,
+                Column: Column as React.ComponentType<{grow: boolean}>,
             },
             Modal,
             ModalHeader,
