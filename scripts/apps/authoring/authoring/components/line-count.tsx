@@ -8,7 +8,7 @@ interface IProps {
         authoring: {
             lineLength?: number;
         }
-    }
+    };
 }
 
 /**

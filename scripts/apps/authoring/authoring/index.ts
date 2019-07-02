@@ -104,7 +104,7 @@ angular.module('superdesk.apps.authoring', [
     .directive('tansaScopeSync', directive.TansaScopeSyncDirective)
     .directive('sdItemActionByIntent', directive.ItemActionsByIntentDirective)
 
-    .component('sdLineCount', 
+    .component('sdLineCount',
         reactToAngular1(
             LineCount,
             ['item', 'html'],
