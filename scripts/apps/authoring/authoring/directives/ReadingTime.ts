@@ -1,4 +1,4 @@
-import {compact, trim, filter} from 'lodash';
+import {get, compact, trim, filter} from 'lodash';
 import {cleanHtml} from '../helpers';
 
 /**
@@ -8,18 +8,23 @@ import {cleanHtml} from '../helpers';
  * @description Display the estimated number of minutes needed to read an item.
  * @param {String} item text to estimate
  */
-export function ReadingTime(deployConfig) {
+export function ReadingTime(deployConfig, config) {
     return {
         scope: {
             item: '=',
             html: '@',
             language: '=',
         },
-        template: '<span ng-if="readingTime==0" class="char-count reading-time" translate>' +
+        template: '<span ng-if="readingTime===0" class="char-count reading-time" translate>' +
             'less than one minute read</span>' +
             '<span ng-if="readingTime>0" class="char-count reading-time" translate>' +
             '{{readingTime}} min read</span>',
         link: function ReadingTimeLink(scope, elem, attrs) {
+            if (!get(config, 'authoring.timeToRead', true)) {
+                scope.readingTime = null;
+                return;
+            }
+
             scope.$watchGroup(['item', 'language'], () => {
                 let {html, item, language} = scope;
                 let input = html ? cleanHtml(item || '') : item || '';
@@ -47,4 +52,4 @@ export function ReadingTime(deployConfig) {
     }
 }
 
-ReadingTime.$inject = ['deployConfig'];
+ReadingTime.$inject = ['deployConfig', 'config'];

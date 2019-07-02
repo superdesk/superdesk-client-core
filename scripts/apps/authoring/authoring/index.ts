@@ -9,6 +9,7 @@ import '../suggest';
 import mediaModule from '../media';
 import {reactToAngular1} from 'superdesk-ui-framework';
 import {ArticleUrlFields} from './article-url-fields';
+import {LineCount} from './components/line-count';
 import {PopulateAuthorsController} from './controllers/PopulateAuthorsController';
 
 import {gettext} from 'core/utils';
@@ -102,6 +103,16 @@ angular.module('superdesk.apps.authoring', [
     .directive('sdRemoveTags', directive.RemoveTagsDirective)
     .directive('tansaScopeSync', directive.TansaScopeSyncDirective)
     .directive('sdItemActionByIntent', directive.ItemActionsByIntentDirective)
+
+    .component('sdLineCount', 
+        reactToAngular1(
+            LineCount,
+            ['item', 'html'],
+            ['config'],
+            'display:contents',
+        ),
+    )
+
     .component('sdArticleUrlFields',
         reactToAngular1(
             ArticleUrlFields,
