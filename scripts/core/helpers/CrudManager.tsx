@@ -12,8 +12,115 @@ import {
     ICrudManagerFilters,
     IRestApiResponse,
     IDataApi,
+    IArticle,
+    IQueryElasticParameters,
 } from 'superdesk-api';
 import {isObject} from 'lodash';
+
+export function queryElastic<T extends IBaseRestApiResponse>(
+    parameters: IQueryElasticParameters,
+): Promise<IRestApiResponse<T>> {
+    const {endpoint, page, sort, filterValues} = parameters;
+
+    return ng.getServices(['config', 'session', 'api'])
+        .then((res: any) => {
+            const [config, session] = res;
+
+            const source = {
+                "query": {
+                    "filtered": {
+                        "filter": {
+                            "and": [
+                                {
+                                    "not": {
+                                        "term": {
+                                            "state": "spiked",
+                                        },
+                                    },
+                                },
+                                {
+                                    "or": [
+                                        {
+                                            "and": [
+                                                {
+                                                    "term": {
+                                                        "state": "draft",
+                                                    },
+                                                },
+                                                {
+                                                    "term": {
+                                                        "original_creator": session.identity._id,
+                                                    },
+                                                },
+                                            ],
+                                        },
+                                        {
+                                            "not": {
+                                                "terms": {
+                                                    "state": [
+                                                        "draft",
+                                                    ],
+                                                },
+                                            },
+                                        },
+                                    ],
+                                },
+                                {
+                                    "not": {
+                                        "term": {
+                                            "package_type": "takes",
+                                        },
+                                    },
+                                },
+                                {
+                                    "terms": Object.keys(filterValues).reduce((acc, key) => {
+                                        acc[key] = filterValues[key];
+
+                                        return acc;
+                                    }, {}),
+                                },
+                            ],
+                        },
+                    },
+                },
+                "sort": sort,
+                "size": page.size,
+                "from": page.from,
+            };
+
+            const query = {
+                aggregations: 0,
+                es_highlight: 0,
+                // projections: [],
+                source,
+            };
+
+            const queryString = '?' + Object.keys(query).map((key) =>
+                `${key}=${isObject(query[key]) ? JSON.stringify(query[key]) : query[key]}`).join('&');
+
+            return new Promise((resolve) => {
+                const xhr = new XMLHttpRequest();
+
+                xhr.open('GET', config.server.url + '/' + endpoint + queryString, true);
+
+                xhr.setRequestHeader('Content-Type', 'application/json');
+                xhr.setRequestHeader('Authorization', session.token);
+
+                xhr.onload = function() {
+                    resolve(JSON.parse(this.responseText));
+                };
+
+                xhr.send();
+            });
+        });
+}
+
+export const dataApiByEntity = {
+    article: {
+        query: (parameters: Omit<IQueryElasticParameters, 'endpoint'>): Promise<IRestApiResponse<IArticle>> =>
+            queryElastic<IArticle>({...parameters, endpoint: 'search'}),
+    },
+};
 
 export const dataApi: IDataApi = {
     findOne: (endpoint, id) => ng.getServices(['config', 'session', 'api']).then((res: any) => {

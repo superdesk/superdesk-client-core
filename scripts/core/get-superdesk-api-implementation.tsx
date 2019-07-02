@@ -11,7 +11,7 @@ import {
 } from './ui/components/generic-form/interfaces/form';
 import {UserHtmlSingleLine} from './helpers/UserHtmlSingleLine';
 import {Row, Item, Column} from './ui/components/List';
-import {connectCrudManager, dataApi} from './helpers/CrudManager';
+import {connectCrudManager, dataApi, dataApiByEntity} from './helpers/CrudManager';
 import {generateFilterForServer} from './ui/components/generic-form/generate-filter-for-server';
 import {assertNever} from './helpers/typescript-helpers';
 import {flatMap} from 'lodash';
@@ -61,9 +61,11 @@ export function getSuperdeskApiImplementation(
     modal,
     privileges,
     lock,
+    session,
 ): ISuperdesk {
     return {
         dataApi: dataApi,
+        dataApiByEntity,
         helpers: {
             assertNever,
         },
@@ -174,6 +176,9 @@ export function getSuperdeskApiImplementation(
         },
         privileges: {
             getOwnPrivileges: () => privileges.loaded.then(() => privileges.privileges),
+        },
+        session: {
+            getCurrentUser: () => session.getIdentity(),
         },
         utilities: {
             logger,

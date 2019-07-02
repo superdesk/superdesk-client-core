@@ -234,8 +234,39 @@ declare module 'superdesk-api' {
             total: number;
         };
     }
-    
 
+    export interface IQueryElasticParameters {
+        endpoint: string;
+        page: {
+            from: number;
+            size: number;
+        };
+        sort: Array<{[field: string]: 'asc' | 'desc'}>;
+    
+        // can use deep references like {'a.b.c': []}
+        filterValues: {[fieldName: string]: Array<string>};
+    }
+
+    interface IElasticSearchAggregationResult {
+        buckets: Array<{key: string; doc_count: number}>;
+        doc_count_error_upper_bound: number;
+        sum_other_doc_count: number;
+    }
+    
+    interface IArticleQueryResult extends IRestApiResponse<IArticle> {
+        _aggregations: {
+            category: IElasticSearchAggregationResult;
+            desk: IElasticSearchAggregationResult;
+            genre: IElasticSearchAggregationResult;
+            legal: IElasticSearchAggregationResult;
+            priority: IElasticSearchAggregationResult;
+            sms: IElasticSearchAggregationResult;
+            source: IElasticSearchAggregationResult;
+            type: IElasticSearchAggregationResult;
+            urgency: IElasticSearchAggregationResult;
+        };
+    }
+    
 
 
     // GENERIC FORM
@@ -410,6 +441,11 @@ declare module 'superdesk-api' {
 
     export type ISuperdesk = DeepReadonly<{
         dataApi: IDataApi,
+        dataApiByEntity: {
+            article: {
+                query(parameters: Omit<IQueryElasticParameters, 'endpoint'>): Promise<IRestApiResponse<IArticle>>;
+            };
+        };
         ui: {
             alert(message: string): Promise<void>;
             confirm(message: string): Promise<boolean>;
@@ -475,6 +511,9 @@ declare module 'superdesk-api' {
         privileges: {
             getOwnPrivileges(): Promise<any>;
         };
+        session: {
+            getCurrentUser(): Promise<IUser>;
+        },
         utilities: {
             logger: {
                 error(error: Error): void;

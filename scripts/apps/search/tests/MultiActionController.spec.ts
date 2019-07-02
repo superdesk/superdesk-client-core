@@ -62,7 +62,7 @@ describe('Multi Action Bar', () => {
         }));
 
     it('onSpikeMultiple middleware is called',
-        (done) => inject((superdesk, $controller, privileges, modal, lock) => {
+        (done) => inject((superdesk, $controller, privileges, modal, lock, session) => {
             const extensionDelay = 1000;
 
             const articleEntities = {
@@ -93,6 +93,7 @@ describe('Multi Action Bar', () => {
                 modal,
                 privileges,
                 lock,
+                session,
             ).then(() => {
                 const ctrl = $controller(MultiActionBarController, {});
 
