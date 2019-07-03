@@ -3,7 +3,7 @@ import {get} from 'lodash';
 import {stripHtmlTags, gettextPlural} from 'core/utils';
 
 interface IProps {
-    item: string;
+    html: string;
     config: {
         authoring: {
             lineLength?: number;
@@ -22,7 +22,7 @@ export class LineCount extends React.PureComponent<IProps> {
             return null;
         }
 
-        const text = stripHtmlTags(this.props.item);
+        const text = stripHtmlTags(this.props.html);
         const lines = text.split('\n').reduce((sum, line) => sum + Math.ceil(line.length / lineLength), 0);
 
         return <span className="char-count lines">{lines + ' ' + gettextPlural(lines, 'line', 'lines')}</span>;
