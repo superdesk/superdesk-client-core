@@ -262,5 +262,5 @@ const isVideo = (rendition) => {
 export const checkRenditions = {
     isImage: isImage,
     isAudio: isAudio,
-    isVideo: isVideo
+    isVideo: isVideo,
 };
