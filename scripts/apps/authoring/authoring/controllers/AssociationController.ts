@@ -20,6 +20,12 @@ export function AssociationController(config, content, superdesk,
 
     this.checkRenditions = checkRenditions;
 
+    /**
+     * @ngdoc method
+     * @name AssociationController#isMediaEditable
+     * @public
+     * @description Check if featured media can be edited or not. i.e. metadata/crops can be changed or not.
+     */
     this.isMediaEditable = function() {
         return isMediaEditable(config);
     };

@@ -50,16 +50,34 @@ export function MediaPreview(api, $rootScope, desks, superdesk, content, storage
 
             setPreviewState(storage.getItem(PREVIEW_HEADER_STATE) || false);
 
+            /**
+             * @ngDoc method
+             * @name sdMediaPreview#previewRewriteStory
+             *
+             * @description Preview the rewrite story.
+             */
             scope.previewRewriteStory = function() {
                 return api.find('archive', scope.item.rewrite_id).then((item) => {
                     $rootScope.$broadcast('broadcast:preview', {item: item});
                 });
             };
 
+            /**
+             * @ngDoc method
+             * @name sdMediaPreview#previewRewriteStory
+             *
+             * @description Preview the item (picture, story).
+             */
             scope.preview = function(item) {
                 superdesk.intent('preview', 'item', item);
             };
 
+            /**
+             * @ngDoc method
+             * @name sdMediaPreview#togglePreviewHeader
+             *
+             * @description Toggle the preview header.
+             */
             scope.togglePreviewHeader = () => {
                 setPreviewState(!scope.previewState.toggleHeader);
             };
