@@ -1,30 +1,20 @@
 
 import React from 'react';
 import classNames from 'classnames';
-
-interface IGroup<T> {
-    render(): JSX.Element;
-    items: Array<T | IGroup<T>>;
-}
-
-interface IProps<T> {
-    groups: Array<IGroup<T>>;
-    getToggleElement(onClick: () => void): JSX.Element;
-    getItemLabel(item: T): string;
-    renderItem(item: T): JSX.Element;
-    onSelect(item: T): void;
-}
+import {IDropdownTreeGroup, IPropsDropdownTree} from 'superdesk-api';
 
 interface IState {
     open: boolean;
 }
 
-function isGroup<T>(x: T | IGroup<T>): x is IGroup<T> {
+function isGroup<T>(x: T | IDropdownTreeGroup<T>): x is IDropdownTreeGroup<T> {
     return typeof x['items'] !== 'undefined';
 }
 
-export class DropdownTree<T> extends React.PureComponent<IProps<T>, IState> {
-    constructor(props: IProps<T>) {
+const defaultWrapper: React.StatelessComponent = (props) => <div>{props.children}</div>;
+
+export class DropdownTree<T> extends React.PureComponent<IPropsDropdownTree<T>, IState> {
+    constructor(props: IPropsDropdownTree<T>) {
         super(props);
 
         this.state = {
@@ -33,7 +23,7 @@ export class DropdownTree<T> extends React.PureComponent<IProps<T>, IState> {
 
         this.renderGroupRecursive = this.renderGroupRecursive.bind(this);
     }
-    private renderGroupRecursive(item: T | IGroup<T>, level: number) {
+    private renderGroupRecursive(item: T | IDropdownTreeGroup<T>, level: number) {
         const {renderItem, onSelect, getItemLabel} = this.props;
 
         if (isGroup(item)) {
@@ -71,16 +61,20 @@ export class DropdownTree<T> extends React.PureComponent<IProps<T>, IState> {
 
         const onClick = () => this.setState({open: !this.state.open});
 
+        const Wrapper = this.props.wrapper || defaultWrapper;
+
         return (
             <div
                 className={classNames('dropdown dropdown--align-right', {open: this.state.open})}
-                style={{lineHeight: 'initial'}}
+                style={{display: 'flex', lineHeight: 'initial'}}
             >
                 {getToggleElement(onClick)}
                 <div className="dropdown__menu dropdown__menu--scrollable">
-                    {
-                        groups.map((group, i) => <div key={i}>{this.renderGroupRecursive(group, 0)}</div>)
-                    }
+                    <Wrapper>
+                        {
+                            groups.map((group, i) => <div key={i}>{this.renderGroupRecursive(group, 0)}</div>)
+                        }
+                    </Wrapper>
                 </div>
             </div>
         );

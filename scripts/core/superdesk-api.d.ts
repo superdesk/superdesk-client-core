@@ -255,15 +255,15 @@ declare module 'superdesk-api' {
     
     interface IArticleQueryResult extends IRestApiResponse<IArticle> {
         _aggregations: {
-            category: IElasticSearchAggregationResult;
-            desk: IElasticSearchAggregationResult;
-            genre: IElasticSearchAggregationResult;
-            legal: IElasticSearchAggregationResult;
-            priority: IElasticSearchAggregationResult;
-            sms: IElasticSearchAggregationResult;
-            source: IElasticSearchAggregationResult;
-            type: IElasticSearchAggregationResult;
-            urgency: IElasticSearchAggregationResult;
+            category?: IElasticSearchAggregationResult;
+            desk?: IElasticSearchAggregationResult;
+            genre?: IElasticSearchAggregationResult;
+            legal?: IElasticSearchAggregationResult;
+            priority?: IElasticSearchAggregationResult;
+            sms?: IElasticSearchAggregationResult;
+            source?: IElasticSearchAggregationResult;
+            type?: IElasticSearchAggregationResult;
+            urgency?: IElasticSearchAggregationResult;
         };
     }
     
@@ -399,6 +399,21 @@ declare module 'superdesk-api' {
     }
 
 
+    interface IDropdownTreeGroup<T> {
+        render(): JSX.Element | null;
+        items: Array<T | IDropdownTreeGroup<T>>;
+    }
+
+    interface IPropsDropdownTree<T> {
+        groups: Array<IDropdownTreeGroup<T>>;
+        getToggleElement(onClick: () => void): JSX.Element;
+        getItemLabel(item: T): string;
+        renderItem(item: T): JSX.Element;
+        onSelect(item: T): void;
+        wrapper?: React.ComponentType;
+    }
+
+
 
     // EDITOR3
 
@@ -443,7 +458,7 @@ declare module 'superdesk-api' {
         dataApi: IDataApi,
         dataApiByEntity: {
             article: {
-                query(parameters: Omit<IQueryElasticParameters, 'endpoint'>): Promise<IRestApiResponse<IArticle>>;
+                query(parameters: Omit<IQueryElasticParameters, 'endpoint'>): Promise<IArticleQueryResult>;
             };
         };
         ui: {
@@ -488,6 +503,7 @@ declare module 'superdesk-api' {
             SelectUser: React.ComponentType<IPropsSelectUser>;
             UserAvatar: React.ComponentType<{userId: string}>;
             ArticleItemConcise: React.ComponentType<{article: IArticle}>;
+            getDropdownTree: <T>() => React.ComponentType<IPropsDropdownTree<T>>;
         };
         forms: {
             FormFieldType: typeof FormFieldType;

@@ -24,6 +24,7 @@ import {logger} from './services/logger';
 import {showModal} from './services/modalService';
 import {UserAvatarFromUserId} from 'apps/users/components/UserAvatarFromUserId';
 import {ArticleItemConcise} from 'core/ui/components/article-item-concise';
+import {DropdownTree} from './ui/components/dropdown-tree';
 
 function getOnUpdateBeforeMiddlewares(
     extensions: IExtensions,
@@ -137,6 +138,7 @@ export function getSuperdeskApiImplementation(
             SelectUser,
             UserAvatar: UserAvatarFromUserId,
             ArticleItemConcise,
+            getDropdownTree: () => DropdownTree,
         },
         forms: {
             FormFieldType,

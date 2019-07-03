@@ -14,7 +14,7 @@ export class GlobalMenuHorizontal extends React.PureComponent {
         );
 
         return (
-            <div>
+            <div style={{display: 'flex', height: 48, alignItems: 'stretch'}}>
                 {globalMenuHorizontalItems.map((Component, i) => (<Component key={i} />))}
             </div>
         );
