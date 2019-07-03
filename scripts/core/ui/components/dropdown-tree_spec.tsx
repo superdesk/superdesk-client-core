@@ -1,7 +1,7 @@
 import React from 'react';
 import {mount} from 'enzyme';
 import {noop} from 'lodash';
-import {DropdownTree} from './dropdownButton';
+import {DropdownTree} from './dropdown-tree';
 
 const groups = [
     {
