@@ -218,7 +218,6 @@ export function AssociationController(config, content, superdesk,
     };
 }
 
-
 const isImage = (rendition) => {
     return startsWith(rendition.mimetype, 'image');
 };

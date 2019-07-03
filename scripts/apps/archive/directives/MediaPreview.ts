@@ -50,23 +50,19 @@ export function MediaPreview(api, $rootScope, desks, superdesk, content, storage
 
             setPreviewState(storage.getItem(PREVIEW_HEADER_STATE) || false);
 
-
             scope.previewRewriteStory = function() {
                 return api.find('archive', scope.item.rewrite_id).then((item) => {
                     $rootScope.$broadcast('broadcast:preview', {item: item});
                 });
             };
 
-
             scope.preview = function(item) {
                 superdesk.intent('preview', 'item', item);
             };
 
-
             scope.togglePreviewHeader = () => {
                 setPreviewState(!scope.previewState.toggleHeader);
             };
-
 
             scope.getCompanyCodes = function() {
                 return _.map(scope.item.company_codes, 'qcode').join(', ');
