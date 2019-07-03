@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import {isAudio, isImage, isVideo} from 'core/utils';
+import {checkRenditions} from '../controllers/AssociationController';
 
 FullPreviewDirective.$inject = ['api', '$timeout', 'config', 'content', '$sce'];
 export function FullPreviewDirective(api, $timeout, config, content, $sce) {
@@ -11,6 +11,7 @@ export function FullPreviewDirective(api, $timeout, config, content, $sce) {
         templateUrl: 'scripts/apps/authoring/views/full-preview.html',
         link: function(scope, elem, attr, ctrl) {
             scope.hide_media = false;
+            scope.renditions = checkRenditions;
 
             scope.filterKey = config.previewSubjectFilterKey || '';
 
@@ -91,14 +92,6 @@ export function FullPreviewDirective(api, $timeout, config, content, $sce) {
 
                 return term.name;
             };
-            // Check if the rendition is image or not
-            scope.isImage = (rendition) => isImage(rendition);
-
-            // Check if the rendition is video or not.
-            scope.isVideo = (rendition) => isVideo(rendition);
-
-            // Check if the rendition is audio or not.
-            scope.isAudio = (rendition) => isAudio(rendition);
         },
     };
 }

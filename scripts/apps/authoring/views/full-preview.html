@@ -134,12 +134,12 @@
                             <video controls="controls" ng-if="media.type === 'video'">
                                 <source vsrc="{{rendition.href}}"
                                         ng-repeat="(key, rendition) in media.renditions"
-                                        ng-if="isVideo(rendition)" html5vfix>
+                                        ng-if="renditions.isVideo(rendition)" html5vfix>
                             </video>
                             <audio controls="controls" ng-if="media.type === 'audio'">
                                 <source vsrc="{{rendition.href}}"
                                         ng-repeat="(key, rendition) in media.renditions"
-                                        ng-if="isAudio(rendition)" html5vfix>
+                                        ng-if="renditions.isAudio(rendition)" html5vfix>
                             </audio>
                             <p><i class="icon-picture" ng-if="hide_media"></i>{{media.description_text}}</p>
                         </div>

@@ -1,5 +1,5 @@
-import {forEach, get} from 'lodash';
-import {getSuperdeskType, isImage, isVideo, isAudio} from 'core/utils';
+import {forEach, get, startsWith, endsWith, some} from 'lodash';
+import {getSuperdeskType} from 'core/utils';
 import {gettext} from 'core/utils';
 import {isMediaEditable} from 'core/config';
 
@@ -18,6 +18,8 @@ export function AssociationController(config, content, superdesk,
     mediaIdGenerator, authoring, renditions, notify) {
     const self = this;
 
+    this.checkRenditions = checkRenditions;
+
     /**
      * @ngdoc method
      * @name AssociationController#isMediaEditable
@@ -27,15 +29,6 @@ export function AssociationController(config, content, superdesk,
     this.isMediaEditable = function() {
         return isMediaEditable(config);
     };
-
-    // Check if the rendition is image or not
-    this.isImage = (rendition) => isImage(rendition);
-
-    // Check if the rendition is video or not.
-    this.isVideo = (rendition) => isVideo(rendition);
-
-    // Check if the rendition is audio or not.
-    this.isAudio = (rendition) => isAudio(rendition);
 
     /**
      * @ngdoc method
@@ -153,7 +146,7 @@ export function AssociationController(config, content, superdesk,
             return;
         }
 
-        const _isImage = self.isImage(item.renditions.original);
+        const _isImage = checkRenditions.isImage(item.renditions.original);
         const defaultTab = _isImage ? 'crop' : 'view';
 
         const cropOptions = {
@@ -230,3 +223,44 @@ export function AssociationController(config, content, superdesk,
             });
     };
 }
+
+/**
+ * The 'isImage' checks if the rendition is image or not.
+ * @param rendition- Rendition of the item.
+ */
+const isImage = (rendition) => {
+    return startsWith(rendition.mimetype, 'image');
+};
+
+/**
+ * The 'isAudio' checks if the rendition is audio or not.
+ * @param rendition- Rendition of the item.
+ */
+const isAudio = (rendition) => {
+    if (startsWith(rendition.mimetype, 'audio')) {
+        return true;
+    }
+
+    return some(
+        ['.mp3', '.3gp', '.wav', '.ogg', 'wma', 'aa', 'aiff'],
+        (ext) => endsWith(rendition.href, ext),
+    );
+};
+
+/**
+ * The 'isVideo' checks if the rendition is video or not.
+ * @param rendition- Rendition of the item.
+ */
+const isVideo = (rendition) => {
+    if (startsWith(rendition.mimetype, 'video')) {
+        return true;
+    }
+
+    return some(['.mp4', '.webm', '.ogv', '.ogg'], (ext) => endsWith(rendition.href, ext));
+};
+
+export const checkRenditions = {
+    isImage: isImage,
+    isAudio: isAudio,
+    isVideo: isVideo
+};

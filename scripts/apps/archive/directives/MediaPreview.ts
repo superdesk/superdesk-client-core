@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import {isImage, isVideo, isAudio} from 'core/utils';
+import {checkRenditions} from 'apps/authoring/authoring/controllers/AssociationController';
 
 /**
  * @ngdoc directive
@@ -25,6 +25,7 @@ export function MediaPreview(api, $rootScope, desks, superdesk, content, storage
         link: function(scope) {
             const PREVIEW_HEADER_STATE = 'item_preview:header_state';
 
+            scope.renditions = checkRenditions;
             scope.previewState = {toggleHeader: false};
             if (scope.selected.preview.profile) {
                 content.getType(scope.selected.preview.profile)
@@ -91,26 +92,27 @@ export function MediaPreview(api, $rootScope, desks, superdesk, content, storage
                 return _.map(scope.item.company_codes, 'qcode').join(', ');
             };
 
-            // Check if there is any association for fieldId
+            /**
+             * @ngdoc method
+             * @name associationExists
+             * @private
+             * @description Check if there is any association for fieldId
+             */
             scope.associationExists = function(associations, fieldId) {
                 return _.size(scope.getAssociatedItems(associations, fieldId));
             };
 
-            // Return all associations for fieldId
+            /**
+             * @ngdoc method
+             * @name getAssociationItems
+             * @private
+             * @description Return all associations for fieldId
+             */
             scope.getAssociatedItems = function(associations, fieldId) {
                 var result = _.filter(associations, (association, key) => key.indexOf(fieldId) !== -1);
 
                 return result;
             };
-
-            // Check if the rendition is image or not
-            scope.isImage = (rendition) => isImage(rendition);
-
-            // Check if the rendition is video or not.
-            scope.isVideo = (rendition) => isVideo(rendition);
-
-            // Check if the rendition is audio or not.
-            scope.isAudio = (rendition) => isAudio(rendition);
 
             desks.initialize().then(() => {
                 scope.userLookup = desks.userLookup;
