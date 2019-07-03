@@ -4,7 +4,7 @@ import {IExtensionActivationResult, IArticleActionBulk} from 'superdesk-api';
 import {flatMap} from 'lodash';
 import {extensions} from 'core/extension-imports.generated';
 import {IArticle} from 'superdesk-interfaces/Article';
-import {DropdownButton} from 'core/ui/components/dropdownButton';
+import {DropdownTree} from 'core/ui/components/dropdownButton';
 import {Icon} from 'core/ui/components/Icon2';
 import {sortByDisplayPriority} from 'core/helpers/sortByDisplayPriority';
 
@@ -90,7 +90,7 @@ export class MultiActionBarReact extends React.Component<IProps, IState> {
         if (this.props.compact) {
             return (
                 <div className="right-stack" data-test-id="multi-actions-dropdown">
-                    <DropdownButton
+                    <DropdownTree
                         getToggleElement={(onClick) => (
                             <button
                                 onClick={onClick}
@@ -100,12 +100,14 @@ export class MultiActionBarReact extends React.Component<IProps, IState> {
                                 <i className="icon-dots-vertical" />
                             </button>
                         )}
-                        items={this.state.actions}
+                        groups={[{render: () => null, items: this.state.actions}]}
                         renderItem={(item) => (
                             <div
                                 style={{
                                     display: 'flex',
                                     justifyContent: 'flex-start',
+                                    alignItems: 'center',
+                                    padding: '10px',
                                 }}
                             >
                                 <i className={item.icon} style={{marginRight: 10}} />
