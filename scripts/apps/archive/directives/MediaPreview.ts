@@ -25,7 +25,7 @@ export function MediaPreview(api, $rootScope, desks, superdesk, content, storage
         link: function(scope) {
             const PREVIEW_HEADER_STATE = 'item_preview:header_state';
 
-            scope.renditions = checkRenditions;
+            scope.checkRenditions = checkRenditions;
             scope.previewState = {toggleHeader: false};
             if (scope.selected.preview.profile) {
                 content.getType(scope.selected.preview.profile)
@@ -50,64 +50,32 @@ export function MediaPreview(api, $rootScope, desks, superdesk, content, storage
 
             setPreviewState(storage.getItem(PREVIEW_HEADER_STATE) || false);
 
-            /**
-             * @ngDoc method
-             * @name sdMediaPreview#previewRewriteStory
-             *
-             * @description Preview the rewrite story.
-             */
+
             scope.previewRewriteStory = function() {
                 return api.find('archive', scope.item.rewrite_id).then((item) => {
                     $rootScope.$broadcast('broadcast:preview', {item: item});
                 });
             };
 
-            /**
-             * @ngDoc method
-             * @name sdMediaPreview#previewRewriteStory
-             *
-             * @description Preview the item (picture, story).
-             */
+
             scope.preview = function(item) {
                 superdesk.intent('preview', 'item', item);
             };
 
-            /**
-             * @ngDoc method
-             * @name sdMediaPreview#togglePreviewHeader
-             *
-             * @description Toggle the preview header.
-             */
+
             scope.togglePreviewHeader = () => {
                 setPreviewState(!scope.previewState.toggleHeader);
             };
 
-            /**
-             * @ngDoc method
-             * @name sdMediaPreview#getCompanyCodes
-             *
-             * @description Get company codes for the item
-             */
+
             scope.getCompanyCodes = function() {
                 return _.map(scope.item.company_codes, 'qcode').join(', ');
             };
 
-            /**
-             * @ngdoc method
-             * @name associationExists
-             * @private
-             * @description Check if there is any association for fieldId
-             */
             scope.associationExists = function(associations, fieldId) {
                 return _.size(scope.getAssociatedItems(associations, fieldId));
             };
 
-            /**
-             * @ngdoc method
-             * @name getAssociationItems
-             * @private
-             * @description Return all associations for fieldId
-             */
             scope.getAssociatedItems = function(associations, fieldId) {
                 var result = _.filter(associations, (association, key) => key.indexOf(fieldId) !== -1);
 

@@ -161,12 +161,12 @@
                         <video controls="controls" ng-if="media.type === 'video'">
                             <source vsrc="{{rendition.href}}"
                                     ng-repeat="(key, rendition) in media.renditions"
-                                    ng-if="renditions.isVideo(rendition)" html5vfix>
+                                    ng-if="checkRenditions.isVideo(rendition)" html5vfix>
                         </video>
                         <audio controls="controls" ng-if="media.type === 'audio'">
                             <source vsrc="{{rendition.href}}"
                                     ng-repeat="(key, rendition) in media.renditions"
-                                    ng-if="renditions.isAudio(rendition)" html5vfix>
+                                    ng-if="checkRenditions.isAudio(rendition)" html5vfix>
                         </audio>
                         <p>{{media.description_text}}</p>
                     </div>

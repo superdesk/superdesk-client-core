@@ -20,12 +20,6 @@ export function AssociationController(config, content, superdesk,
 
     this.checkRenditions = checkRenditions;
 
-    /**
-     * @ngdoc method
-     * @name AssociationController#isMediaEditable
-     * @public
-     * @description Check if featured media can be edited or not. i.e. metadata/crops can be changed or not.
-     */
     this.isMediaEditable = function() {
         return isMediaEditable(config);
     };
@@ -224,18 +218,11 @@ export function AssociationController(config, content, superdesk,
     };
 }
 
-/**
- * The 'isImage' checks if the rendition is image or not.
- * @param rendition- Rendition of the item.
- */
+
 const isImage = (rendition) => {
     return startsWith(rendition.mimetype, 'image');
 };
 
-/**
- * The 'isAudio' checks if the rendition is audio or not.
- * @param rendition- Rendition of the item.
- */
 const isAudio = (rendition) => {
     if (startsWith(rendition.mimetype, 'audio')) {
         return true;
@@ -247,10 +234,6 @@ const isAudio = (rendition) => {
     );
 };
 
-/**
- * The 'isVideo' checks if the rendition is video or not.
- * @param rendition- Rendition of the item.
- */
 const isVideo = (rendition) => {
     if (startsWith(rendition.mimetype, 'video')) {
         return true;

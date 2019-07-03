@@ -1,8 +1,8 @@
 import _ from 'lodash';
 import {checkRenditions} from '../controllers/AssociationController';
 
-FullPreviewDirective.$inject = ['api', '$timeout', 'config', 'content', '$sce'];
-export function FullPreviewDirective(api, $timeout, config, content, $sce) {
+FullPreviewDirective.$inject = ['$timeout', 'config', 'content', '$sce'];
+export function FullPreviewDirective($timeout, config, content, $sce) {
     return {
         scope: {
             item: '=',
@@ -11,7 +11,7 @@ export function FullPreviewDirective(api, $timeout, config, content, $sce) {
         templateUrl: 'scripts/apps/authoring/views/full-preview.html',
         link: function(scope, elem, attr, ctrl) {
             scope.hide_media = false;
-            scope.renditions = checkRenditions;
+            scope.checkRenditions = checkRenditions;
 
             scope.filterKey = config.previewSubjectFilterKey || '';
 
@@ -58,22 +58,10 @@ export function FullPreviewDirective(api, $timeout, config, content, $sce) {
                 return false;
             };
 
-            /**
-             * @ngdoc method
-             * @name associationExists
-             * @private
-             * @description Check if there is any association for fieldId
-             */
             scope.associationExists = function(associations, fieldId) {
                 return _.size(scope.getAssociationItems(associations, fieldId));
             };
 
-            /**
-             * @ngdoc method
-             * @name getAssociationItems
-             * @private
-             * @description Return all associations for fieldId
-             */
             scope.getAssociationItems = function(associations, fieldId) {
                 var result = _.filter(associations, (association, key) => key.indexOf(fieldId) !== -1);
 
