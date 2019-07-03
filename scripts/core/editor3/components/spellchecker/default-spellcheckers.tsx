@@ -54,7 +54,12 @@ function check(str: string): Promise<Array<ISpellcheckWarning>> {
 }
 
 export function getSpellchecker(language: string): ISpellchecker {
-    if (language === 'fr') {
+    const spellcheckerName = ({
+        fr: 'grammalecte',
+        nl: 'leuven_dutch',
+    })[language];
+
+    if (spellcheckerName != null) {
         return {
             check: (str: string) => ng.getServices(['config', 'session']).then((services: Array<any>) => {
                 const [config, session] = services;
@@ -79,7 +84,7 @@ export function getSpellchecker(language: string): ISpellchecker {
                         }
                     };
 
-                    xhr.send(JSON.stringify({spellchecker: 'grammalecte', text: str}));
+                    xhr.send(JSON.stringify({spellchecker: spellcheckerName, text: str}));
                 });
             }),
             getSuggestions: (str) => ng.getServices(['config', 'session']).then((services: Array<any>) => {
@@ -105,7 +110,7 @@ export function getSpellchecker(language: string): ISpellchecker {
                         }
                     };
 
-                    xhr.send(JSON.stringify({spellchecker: 'grammalecte', text: str, suggestions: true}));
+                    xhr.send(JSON.stringify({spellchecker: spellcheckerName, text: str, suggestions: true}));
                 });
             }),
             actions: {},
