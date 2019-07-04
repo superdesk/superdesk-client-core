@@ -1,5 +1,6 @@
 import ng from 'core/services/ng';
 import {ISpellchecker, ISpellcheckerAction, ISpellcheckWarning, ISpellcheckerSuggestion} from './interfaces';
+import {httpRequestJsonLocal} from 'core/helpers/xhr';
 
 const actions: {[key: string]: ISpellcheckerAction} = {
     addToDictionary: {
@@ -61,56 +62,26 @@ export function getSpellchecker(language: string): ISpellchecker {
 
     if (spellcheckerName != null) {
         return {
-            check: (str: string) => ng.getServices(['config', 'session']).then((services: Array<any>) => {
-                const [config, session] = services;
-
-                return new Promise((resolve, reject) => {
-                    const xhr = new XMLHttpRequest();
-
-                    xhr.open('POST', config.server.url + '/spellchecker', true);
-
-                    xhr.setRequestHeader('Content-Type', 'application/json');
-                    xhr.setRequestHeader('Authorization', session.token);
-
-                    xhr.onload = function() {
-                        if (this.status >= 200 && this.status <= 300) {
-                            try {
-                                resolve(JSON.parse(this.responseText).errors);
-                            } catch (e) {
-                                reject('invalid JSON received from server');
-                            }
-                        } else {
-                            reject('server error');
-                        }
-                    };
-
-                    xhr.send(JSON.stringify({spellchecker: spellcheckerName, text: str}));
+            check: (str: string) => new Promise((resolve, reject) => {
+                httpRequestJsonLocal<{errors: Array<ISpellcheckWarning>}>({
+                    method: 'POST',
+                    payload: {spellchecker: spellcheckerName, text: str},
+                    path: '/spellchecker',
+                    onSuccess: (json) => {
+                        resolve(json.errors);
+                    },
+                    onError: () => reject(),
                 });
             }),
-            getSuggestions: (str) => ng.getServices(['config', 'session']).then((services: Array<any>) => {
-                const [config, session] = services;
-
-                return new Promise((resolve, reject) => {
-                    const xhr = new XMLHttpRequest();
-
-                    xhr.open('POST', config.server.url + '/spellchecker', true);
-
-                    xhr.setRequestHeader('Content-Type', 'application/json');
-                    xhr.setRequestHeader('Authorization', session.token);
-
-                    xhr.onload = function() {
-                        if (this.status >= 200 && this.status <= 300) {
-                            try {
-                                resolve(JSON.parse(this.responseText).suggestions);
-                            } catch (e) {
-                                reject('invalid JSON received from server');
-                            }
-                        } else {
-                            reject('server error');
-                        }
-                    };
-
-                    xhr.send(JSON.stringify({spellchecker: spellcheckerName, text: str, suggestions: true}));
+            getSuggestions: (str) => new Promise((resolve, reject) => {
+                httpRequestJsonLocal<ISpellcheckWarning>({
+                    method: 'POST',
+                    payload: {spellchecker: spellcheckerName, text: str, suggestions: true},
+                    path: '/spellchecker',
+                    onSuccess: (spellcheckerWarning) => {
+                        resolve(spellcheckerWarning.suggestions);
+                    },
+                    onError: () => reject(),
                 });
             }),
             actions: {},
