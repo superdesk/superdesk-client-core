@@ -24,7 +24,7 @@
                         <video controls="controls">
                             <source vsrc="{{rendition.href}}"
                                     ng-repeat="(key, rendition) in carouselItem[carouselItem.fieldId].renditions"
-                                    ng-if="associations.isVideo(rendition)" html5vfix>
+                                    ng-if="associations.checkRenditions.isVideo(rendition)" html5vfix>
                         </video>
                         <div class="item-association__metadata item-association__metadata--plain">
                             <span>
@@ -53,7 +53,7 @@
                         <audio controls="controls">
                             <source vsrc="{{rendition.href}}"
                                     ng-repeat="(key, rendition) in carouselItem[carouselItem.fieldId].renditions"
-                                    ng-if="associations.isAudio(rendition)" html5vfix>
+                                    ng-if="associations.checkRenditions.isAudio(rendition)" html5vfix>
                         </audio>
                         <div class="item-association__metadata item-association__metadata--plain">
                             <span>

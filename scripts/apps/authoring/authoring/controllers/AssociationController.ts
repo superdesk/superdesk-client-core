@@ -1,4 +1,4 @@
-import {startsWith, endsWith, some, forEach, get} from 'lodash';
+import {forEach, get, startsWith, endsWith, some} from 'lodash';
 import {getSuperdeskType} from 'core/utils';
 import {gettext} from 'core/utils';
 import {isMediaEditable} from 'core/config';
@@ -18,6 +18,8 @@ export function AssociationController(config, content, superdesk,
     mediaIdGenerator, authoring, renditions, notify) {
     const self = this;
 
+    this.checkRenditions = checkRenditions;
+
     /**
      * @ngdoc method
      * @name AssociationController#isMediaEditable
@@ -26,50 +28,6 @@ export function AssociationController(config, content, superdesk,
      */
     this.isMediaEditable = function() {
         return isMediaEditable(config);
-    };
-
-    /**
-     * @ngdoc method
-     * @name AssociationController#isImage
-     * @public
-     * @description Check if the rendition is image or not.
-     * @param {Object} rendition Rendition of the item.
-     */
-    this.isImage = function(rendition) {
-        return startsWith(rendition.mimetype, 'image');
-    };
-
-    /**
-     * @ngdoc method
-     * @name AssociationController#isVideo
-     * @public
-     * @description Check if the rendition is video or not.
-     * @param {Object} rendition Rendition of the item.
-     */
-    this.isVideo = function(rendition) {
-        if (startsWith(rendition.mimetype, 'video')) {
-            return true;
-        }
-
-        return some(['.mp4', '.webm', '.ogv', '.ogg'], (ext) => endsWith(rendition.href, ext));
-    };
-
-    /**
-     * @ngdoc method
-     * @name AssociationController#isAudio
-     * @public
-     * @description Check if the rendition is audio or not.
-     * @param {Object} rendition Rendition of the item.
-     */
-    this.isAudio = function(rendition) {
-        if (startsWith(rendition.mimetype, 'audio')) {
-            return true;
-        }
-
-        return some(
-            ['.mp3', '.3gp', '.wav', '.ogg', 'wma', 'aa', 'aiff'],
-            (ext) => endsWith(rendition.href, ext),
-        );
     };
 
     /**
@@ -188,8 +146,8 @@ export function AssociationController(config, content, superdesk,
             return;
         }
 
-        const isImage = self.isImage(item.renditions.original);
-        const defaultTab = isImage ? 'crop' : 'view';
+        const _isImage = checkRenditions.isImage(item.renditions.original);
+        const defaultTab = _isImage ? 'crop' : 'view';
 
         const cropOptions = {
             isNew: 'isNew' in options ? options.isNew : false,
@@ -265,3 +223,32 @@ export function AssociationController(config, content, superdesk,
             });
     };
 }
+
+const isImage = (rendition) => {
+    return startsWith(rendition.mimetype, 'image');
+};
+
+const isAudio = (rendition) => {
+    if (startsWith(rendition.mimetype, 'audio')) {
+        return true;
+    }
+
+    return some(
+        ['.mp3', '.3gp', '.wav', '.ogg', 'wma', 'aa', 'aiff'],
+        (ext) => endsWith(rendition.href, ext),
+    );
+};
+
+const isVideo = (rendition) => {
+    if (startsWith(rendition.mimetype, 'video')) {
+        return true;
+    }
+
+    return some(['.mp4', '.webm', '.ogv', '.ogg'], (ext) => endsWith(rendition.href, ext));
+};
+
+export const checkRenditions = {
+    isImage: isImage,
+    isAudio: isAudio,
+    isVideo: isVideo,
+};

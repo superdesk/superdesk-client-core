@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import {checkRenditions} from 'apps/authoring/authoring/controllers/AssociationController';
 
 /**
  * @ngdoc directive
@@ -24,6 +25,7 @@ export function MediaPreview(api, $rootScope, desks, superdesk, content, storage
         link: function(scope) {
             const PREVIEW_HEADER_STATE = 'item_preview:header_state';
 
+            scope.checkRenditions = checkRenditions;
             scope.previewState = {toggleHeader: false};
             if (scope.selected.preview.profile) {
                 content.getType(scope.selected.preview.profile)
@@ -80,14 +82,18 @@ export function MediaPreview(api, $rootScope, desks, superdesk, content, storage
                 setPreviewState(!scope.previewState.toggleHeader);
             };
 
-            /**
-             * @ngDoc method
-             * @name sdMediaPreview#getCompanyCodes
-             *
-             * @description Get company codes for the item
-             */
             scope.getCompanyCodes = function() {
                 return _.map(scope.item.company_codes, 'qcode').join(', ');
+            };
+
+            scope.associationExists = function(associations, fieldId) {
+                return _.size(scope.getAssociatedItems(associations, fieldId));
+            };
+
+            scope.getAssociatedItems = function(associations, fieldId) {
+                var result = _.filter(associations, (association, key) => key.indexOf(fieldId) !== -1);
+
+                return result;
             };
 
             desks.initialize().then(() => {
