@@ -1,4 +1,4 @@
-import {SelectionState, ContentBlock} from "draft-js";
+import {SelectionState, ContentBlock} from 'draft-js';
 
 export interface IPropsDecoratorChild {
     block: ContentBlock;
