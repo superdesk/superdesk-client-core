@@ -1,5 +1,11 @@
 # Superdesk Client Changelog
 
+## [1.29.2] 2019-07-04
+
+### Fixed
+
+- Fix links in body leading to a blank page.
+
 ## [1.29.1] 2019-05-28
 
 ### Fixed
