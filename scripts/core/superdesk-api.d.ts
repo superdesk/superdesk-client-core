@@ -529,12 +529,16 @@ declare module 'superdesk-api' {
         };
         session: {
             getCurrentUser(): Promise<IUser>;
-        },
+        };
         utilities: {
+            CSS: {
+                getClass(originalName: string): string;
+                getId(originalName: string): string;
+            };
             logger: {
                 error(error: Error): void;
                 warn(message: string, json: {[key: string]: any}): void;
-            },
-        },
+            };
+        };
     }>;
 }

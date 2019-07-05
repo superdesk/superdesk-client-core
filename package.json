@@ -138,10 +138,13 @@
     "react-test-renderer": "^16.2.0",
     "request": "^2.83.0",
     "superdesk-code-style": "^1.1.1",
+    "css": "2.2.4",
+    "css-selector-tokenizer": "0.7.1",
     "typescript-eslint-parser": "^18.0.0"
   },
   "scripts": {
-    "setup-extensions": "node ./tasks/install-extensions.js && node ./tasks/generate-extension-imports.js",
+    "setup-extensions": "node tasks/namespace-css-from-extensions.js && node ./tasks/install-extensions.js && node ./tasks/generate-extension-imports.js",
+    "watch-css-from-extensions": "node tasks/namespace-css-from-extensions.js --watch",
     "postinstall": "npm run setup-extensions",
     "test": "grunt ci:travis",
     "debug-unit-tests": "karma start karma.conf.js --browsers=Chrome",

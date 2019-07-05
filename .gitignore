@@ -11,6 +11,7 @@ test-server/__pycache__
 e2e-test-results
 templates-cache.generated.js
 scripts/core/extension-imports.generated.ts
+styles/extension-styles.generated.css
 .env
 npm-debug.log
 index.html
