@@ -1,3 +1,5 @@
+import {ISpacingProps} from "superdesk-api";
+
 export const isEmptyString = (str?: string): boolean => typeof str === 'string' && str.length > 0;
 
 // Unlike `String.prototype.trimStart` this only trims an exact match
@@ -35,4 +37,30 @@ export function isAudio(e: Element): e is HTMLAudioElement {
 
 export function isVideo(e: Element): e is HTMLVideoElement {
     return e.tagName === 'VIDEO';
+}
+
+export function getSpacingProps<T extends ISpacingProps>(item: T): ISpacingProps {
+    const properties = pick(
+        item,
+        'margin',
+        'marginTop',
+        'marginRight',
+        'marginBottom',
+        'marginTop',
+        'padding',
+        'paddingTop',
+        'paddingRight',
+        'paddingBottom',
+        'paddingTop',
+    );
+
+    const propertiesShallowCopy = {...properties};
+
+    for (const key in propertiesShallowCopy) {
+        if (typeof propertiesShallowCopy[key] === 'undefined')  {
+            delete propertiesShallowCopy[key];
+        }
+    }
+
+    return propertiesShallowCopy;
 }

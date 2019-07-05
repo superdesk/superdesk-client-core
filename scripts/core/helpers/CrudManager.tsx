@@ -12,14 +12,14 @@ import {
     ICrudManagerFilters,
     IRestApiResponse,
     IDataApi,
-    IArticle,
     IQueryElasticParameters,
+    IArticleQueryResult,
 } from 'superdesk-api';
 import {isObject} from 'lodash';
 
-export function queryElastic<T extends IBaseRestApiResponse>(
+export function queryElastic(
     parameters: IQueryElasticParameters,
-): Promise<IRestApiResponse<T>> {
+) {
     const {endpoint, page, sort, filterValues} = parameters;
 
     return ng.getServices(['config', 'session', 'api'])
@@ -117,8 +117,8 @@ export function queryElastic<T extends IBaseRestApiResponse>(
 
 export const dataApiByEntity = {
     article: {
-        query: (parameters: Omit<IQueryElasticParameters, 'endpoint'>): Promise<IRestApiResponse<IArticle>> =>
-            queryElastic<IArticle>({...parameters, endpoint: 'search'}),
+        query: (parameters: Omit<IQueryElasticParameters, 'endpoint'>): Promise<IArticleQueryResult> =>
+            queryElastic({...parameters, endpoint: 'search'}) as Promise<IArticleQueryResult>,
     },
 };
 
