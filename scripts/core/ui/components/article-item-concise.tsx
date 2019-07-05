@@ -34,12 +34,16 @@ class ArticleItemConciseComponent extends React.PureComponent<IProps> {
                         />
                     </ListItemColumn>
 
-                    <ListItemColumn noBorder>
-                        <ListItemRow>
-                            <ListItemColumn>
-                                <Slugline item={article} />
-                            </ListItemColumn>
-                        </ListItemRow>
+                    <ListItemColumn noBorder ellipsisAndGrow>
+                        {
+                            article.slugline == null ? null : (
+                                <ListItemRow>
+                                    <ListItemColumn ellipsisAndGrow>
+                                        <Slugline item={article} />
+                                    </ListItemColumn>
+                                </ListItemRow>
+                            )
+                        }
                         <ListItemRow>
                             <ListItemColumn>
                                 <Headline item={article} />
@@ -48,14 +52,14 @@ class ArticleItemConciseComponent extends React.PureComponent<IProps> {
                     </ListItemColumn>
 
                     <ListItemColumn>
-                        <ListItemRow>
+                        <ListItemRow justifyContent="flex-end">
                             <ListItemColumn>
                                 <VersionCreated item={article} svc={{datetime: this.props.datetime}} />
                             </ListItemColumn>
                         </ListItemRow>
-                        <ListItemRow>
+                        <ListItemRow justifyContent="flex-end">
                             <ListItemColumn>
-                                <State item={article} svc={{datetime: this.props.datetime}} />
+                                <State item={article} svc={{datetime: this.props.datetime}} style={{margin: 0}} />
                             </ListItemColumn>
                         </ListItemRow>
                     </ListItemColumn>
