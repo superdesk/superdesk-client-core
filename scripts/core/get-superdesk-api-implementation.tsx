@@ -26,6 +26,7 @@ import {UserAvatarFromUserId} from 'apps/users/components/UserAvatarFromUserId';
 import {ArticleItemConcise} from 'core/ui/components/article-item-concise';
 import {DropdownTree} from './ui/components/dropdown-tree';
 import {getCssNameForExtension} from './get-css-name-for-extension';
+import {Badge} from './ui/components/Badge';
 
 function getOnUpdateBeforeMiddlewares(
     extensions: IExtensions,
@@ -64,6 +65,7 @@ export function getSuperdeskApiImplementation(
     privileges,
     lock,
     session,
+    authoringWorkspace,
 ): ISuperdesk {
     return {
         dataApi: dataApi,
@@ -108,6 +110,11 @@ export function getSuperdeskApiImplementation(
             },
         },
         ui: {
+            article: {
+                view: (id: string) => {
+                    authoringWorkspace.authoringOpen(id, 'view');
+                },
+            },
             alert: (message: string) => modal.alert({bodyText: message}),
             confirm: (message: string) => new Promise((resolve) => {
                 modal.confirm(message, gettext('Cancel'))
@@ -136,6 +143,7 @@ export function getSuperdeskApiImplementation(
             ModalHeader,
             ModalBody,
             ModalFooter,
+            Badge,
             SelectUser,
             UserAvatar: UserAvatarFromUserId,
             ArticleItemConcise,

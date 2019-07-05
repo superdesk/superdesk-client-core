@@ -9,6 +9,7 @@ export function registerTestExtensions(
     privileges,
     lock,
     session,
+    authoringWorkspace,
 ): Promise<void> {
     for (const key in extensions) {
         delete extensions[key];
@@ -24,5 +25,5 @@ export function registerTestExtensions(
         };
     });
 
-    return registerExtensions(superdesk, modal, privileges, lock, session);
+    return registerExtensions(superdesk, modal, privileges, lock, session, authoringWorkspace);
 }

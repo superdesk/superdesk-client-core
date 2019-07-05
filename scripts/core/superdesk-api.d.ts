@@ -374,6 +374,7 @@ declare module 'superdesk-api' {
     export interface IPropsListItemColumn {
         ellipsisAndGrow?: boolean;
         noBorder?: boolean;
+        justifyContent?: string;
     }
 
     export interface IPropsModalHeader {
@@ -406,11 +407,28 @@ declare module 'superdesk-api' {
 
     interface IPropsDropdownTree<T> {
         groups: Array<IDropdownTreeGroup<T>>;
-        getToggleElement(onClick: () => void): JSX.Element;
-        getItemLabel(item: T): string;
-        renderItem(item: T): JSX.Element;
-        onSelect(item: T): void;
+        getToggleElement(isOpen: boolean, onClick: () => void): JSX.Element;
+        renderItem(key: string, item: T, closeDropdown:() => void): JSX.Element;
         wrapper?: React.ComponentType;
+        maxWidth?: number;
+    }
+
+    interface ISpacingProps {
+        margin?: number;
+        marginTop?: number;
+        marginRight?: number;
+        marginBottom?: number;
+        marginTop?: number;
+        padding?: number;
+        paddingTop?: number;
+        paddingRight?: number;
+        paddingBottom?: number;
+        paddingTop?: number;
+    }
+
+    interface IPropsBadge extends ISpacingProps {
+        type: 'primary' | 'success' | 'warning' | 'alert' | 'highlight' | 'light';
+        square?: boolean;
     }
 
 
@@ -462,6 +480,9 @@ declare module 'superdesk-api' {
             };
         };
         ui: {
+            article: {
+                view(id: string): void;
+            };
             alert(message: string): Promise<void>;
             confirm(message: string): Promise<boolean>;
             showModal(component: React.ComponentType<{closeModal(): void}>): Promise<void>;
@@ -500,6 +521,7 @@ declare module 'superdesk-api' {
             ModalHeader: React.ComponentType<IPropsModalHeader>;
             ModalBody: React.ComponentType;
             ModalFooter: React.ComponentType;
+            Badge: React.ComponentType<IPropsBadge>;
             SelectUser: React.ComponentType<IPropsSelectUser>;
             UserAvatar: React.ComponentType<{userId: string}>;
             ArticleItemConcise: React.ComponentType<{article: IArticle}>;

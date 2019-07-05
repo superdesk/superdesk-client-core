@@ -108,8 +108,21 @@ core.run(['$document', ($document) => {
     }
 }]);
 
-core.run(['modal', 'privileges', 'lock', 'session', (modal, privileges, lock, session) => {
-    registerExtensions(_superdesk, modal, privileges, lock, session);
+core.run([
+    'modal',
+    'privileges',
+    'lock',
+    'session',
+    'authoringWorkspace',
+    (modal, privileges, lock, session, authoringWorkspace) => {
+    registerExtensions(
+        _superdesk,
+        modal,
+        privileges,
+        lock,
+        session,
+        authoringWorkspace,
+    );
 }]);
 
 export default core;

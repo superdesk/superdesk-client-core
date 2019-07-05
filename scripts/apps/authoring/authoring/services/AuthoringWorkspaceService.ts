@@ -270,5 +270,7 @@ export function AuthoringWorkspaceService($location, superdeskFlags, authoring, 
             });
     }
 
+    this.authoringOpen = authoringOpen;
+
     init();
 }

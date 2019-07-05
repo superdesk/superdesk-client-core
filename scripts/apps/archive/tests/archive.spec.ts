@@ -45,7 +45,7 @@ describe('content', () => {
     }));
 
     it('onSpike middleware is called',
-        (done) => inject((superdesk, activityService, privileges, modal, lock, session) => {
+        (done) => inject((superdesk, activityService, privileges, modal, lock, session, authoringWorkspace) => {
             const extensionDelay = 200;
 
             const articleEntities = {
@@ -80,6 +80,7 @@ describe('content', () => {
                 privileges,
                 lock,
                 session,
+                authoringWorkspace,
             ).then(() => {
                 activityService.start(superdesk.activities.spike, {data: {item: {_id: '0'}}});
 
