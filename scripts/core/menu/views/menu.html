@@ -1,9 +1,11 @@
 <div>
   <div id="top-menu" ng-class="{'menu-open': flags.menu, 'test-environment': isTestEnvironment}" data-text="{{environmentName}}">
       <div class="pull-left">
-        <button class="collapse-nav pull-left" ng-click="toggleMenu()">
-          <i class="icon-collapse icon--white"></i>
-        </button>
+        <span id="hamburger-menu">
+          <button class="collapse-nav pull-left" ng-click="toggleMenu()">
+            <i class="icon-collapse icon--white"></i>
+          </button>
+        </span>
         <p class="sd-top-menu__header" ng-if="currentRoute.category !== 'superdesk.core.menu.settings'"
           ng-hide="currentRoute.topTemplateUrl">{{ currentRoute.label | translate}}</p>
         <p class="sd-top-menu__header" ng-if="currentRoute.category === 'superdesk.core.menu.settings'"
