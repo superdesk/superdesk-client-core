@@ -9,18 +9,12 @@ interface IProps {
     item: IArticle;
     field: IVocabulary;
     editable: boolean;
-    onChange: (item: Partial<IArticle>, time: number) => any;
+    onChange: (field: IVocabulary, value: any) => any;
 }
 
 export class AuthoringCustomField extends React.PureComponent<IProps> {
     setValue(value) {
-        const extra = Object.assign({}, this.props.item.extra);
-
-        extra[this.props.field._id] = value || null;
-        this.props.item.extra = extra;
-
-        this.props.item.extra[this.props.field._id] = value;
-        this.props.onChange(this.props.item, 0);
+        this.props.onChange(this.props.field, value);
     }
 
     render() {
