@@ -422,7 +422,6 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, deploy
 
         }}).then((result) => {
             $scope.data.item.renditions = result.renditions;
-            $scope.data.item._etag = result._etag;
             const editableMetadata = extractEditableMetadata($scope.data.metadata);
 
             $scope.data.metadata = Object.assign($scope.data.item, editableMetadata);
