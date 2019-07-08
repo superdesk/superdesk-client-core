@@ -137,9 +137,16 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
 
             const customSorts = getCustomSortForGroup(config, scope.group);
 
-            if (customSorts.length > 0) {
-                scope.customSortOptions = translateCustomSorts(customSorts);
-                scope.customSortOptionActive = null; // default
+            if (customSorts != null) {
+                scope.customSortOptions = translateCustomSorts(customSorts.allowed_fields_to_sort);
+                if (customSorts.default) {
+                    scope.customSortOptionActive = {
+                        field: customSorts.default.field,
+                        order: customSorts.default.order,
+                    };
+                } else {
+                    scope.customSortOptionActive = null;
+                }
             }
 
             scope.page = 1;

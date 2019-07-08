@@ -164,13 +164,16 @@ export function MultiImageEditController(
                 .map((item) => JSON.stringify(item[fieldName])),
         );
 
-        const defaultValue = fieldName === 'subject' ? [] : '';
+        const defaultValues = {
+            subject: [],
+            extra: {},
+        };
 
         if (uniqueValues.length < 1) {
-            return defaultValue;
+            return defaultValues[fieldName] || '';
         } else if (uniqueValues.length > 1) {
             $scope.placeholder[fieldName] = '(multiple values)';
-            return defaultValue;
+            return defaultValues[fieldName] || '';
         } else {
             $scope.placeholder[fieldName] = '';
             return JSON.parse(uniqueValues[0]);

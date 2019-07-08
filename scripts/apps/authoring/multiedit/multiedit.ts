@@ -172,8 +172,8 @@ function MultieditDropdownInnerDirective(workqueue, multiEdit) {
     };
 }
 
-MultieditArticleDirective.$inject = ['authoring', 'multiEdit', 'lock', '$timeout'];
-function MultieditArticleDirective(authoring, multiEdit, lock, $timeout) {
+MultieditArticleDirective.$inject = ['authoring', 'content', 'multiEdit', 'lock', '$timeout'];
+function MultieditArticleDirective(authoring, content, multiEdit, lock, $timeout) {
     return {
         templateUrl: 'scripts/apps/authoring/multiedit/views/sd-multiedit-article.html',
         scope: {article: '=', focus: '='},
@@ -190,6 +190,7 @@ function MultieditArticleDirective(authoring, multiEdit, lock, $timeout) {
                     scope.item = _.create(item);
                     scope._editable = authoring.isEditable(item);
                     scope.isMediaType = _.includes(['audio', 'video', 'picture', 'graphic'], scope.item.type);
+
                     if (scope.focus) {
                         $timeout(() => {
                             elem.children().focus();
@@ -213,6 +214,10 @@ function MultieditArticleDirective(authoring, multiEdit, lock, $timeout) {
                     scope.dirty = true;
                 }
             }, true);
+
+            scope.$watch('item.profile', (profile) => {
+                content.setupAuthoring(profile, scope, scope.item);
+            });
 
             scope.save = function(item, form) {
                 return authoring.save(scope.origItem, item).then((res) => {
