@@ -306,4 +306,3 @@ class Templates {
 }
 
 export const templates = new Templates();
-export default templates;

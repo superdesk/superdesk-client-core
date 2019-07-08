@@ -92,4 +92,3 @@ class MasterDesks {
 }
 
 export const masterDesks = new MasterDesks();
-export default masterDesks;

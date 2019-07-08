@@ -948,4 +948,3 @@ class Monitoring {
 }
 
 export const monitoring = new Monitoring();
-export default monitoring;

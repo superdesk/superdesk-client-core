@@ -558,4 +558,3 @@ class GlobalSearch {
 }
 
 export const globalSearch = new GlobalSearch();
-export default globalSearch;

@@ -2,8 +2,8 @@
 
 import {element, by, browser, $, $$, promise as wdpromise} from 'protractor';
 import './waitReady';
-export {default as authoring} from './authoring';
-export {default as content} from './content';
+export {authoring} from './authoring';
+export {content} from './content';
 
 export class LoginModal {
     username: any;

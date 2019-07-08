@@ -95,4 +95,3 @@ class PublishQueue {
 }
 
 export const publishQueue = new PublishQueue();
-export default publishQueue;

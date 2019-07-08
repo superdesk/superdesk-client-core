@@ -236,4 +236,3 @@ class Highlights {
 }
 
 export const highlights = new Highlights();
-export default highlights;

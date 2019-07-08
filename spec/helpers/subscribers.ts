@@ -68,4 +68,3 @@ class Subscribers {
 }
 
 export const subscribers = new Subscribers();
-export default subscribers;

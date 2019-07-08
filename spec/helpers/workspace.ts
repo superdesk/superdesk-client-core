@@ -1,5 +1,5 @@
-import content from './content';
-import monitoring from './monitoring';
+import {content} from './content';
+import {monitoring} from './monitoring';
 import {nav, waitFor} from './utils';
 import {element, by, browser} from 'protractor';
 
@@ -276,4 +276,3 @@ class Workspace {
 }
 
 export const workspace = new Workspace();
-export default workspace;

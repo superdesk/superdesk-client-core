@@ -157,4 +157,3 @@ class ContentProfiles {
 }
 
 export const contentProfiles = new ContentProfiles();
-export default contentProfiles;

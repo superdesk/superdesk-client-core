@@ -28,4 +28,3 @@ class LegalArchive {
 }
 
 export const legalArchive = new LegalArchive();
-export default legalArchive;

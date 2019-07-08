@@ -1,11 +1,11 @@
 import {element, by} from 'protractor';
 import {monitoring} from './helpers/monitoring';
 import {route} from './helpers/utils';
-import globalSearch from './helpers/search';
-import authoring from './helpers/authoring';
-import workspace from './helpers/workspace';
-import highlights from './helpers/highlights';
-import desks from './helpers/desks';
+import {globalSearch} from './helpers/search';
+import {authoring} from './helpers/authoring';
+import {workspace} from './helpers/workspace';
+import {highlights} from './helpers/highlights';
+import {desks} from './helpers/desks';
 
 describe('marked desks', () => {
     function setupAttentionDeskAsSavedSearch() {

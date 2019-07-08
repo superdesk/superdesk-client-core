@@ -213,4 +213,3 @@ class Dashboard {
 }
 
 export const dashboard = new Dashboard();
-export default dashboard;

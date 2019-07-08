@@ -145,4 +145,3 @@ class ContentFilters {
 }
 
 export const contentFilters = new ContentFilters();
-export default contentFilters;

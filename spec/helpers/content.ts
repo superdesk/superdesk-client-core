@@ -206,4 +206,3 @@ class Content {
 }
 
 export const content = new Content();
-export default content;

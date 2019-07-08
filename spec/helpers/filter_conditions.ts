@@ -111,4 +111,3 @@ class FilterConditions {
 }
 
 export const filterConditions = new FilterConditions();
-export default filterConditions;

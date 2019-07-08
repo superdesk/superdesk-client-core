@@ -1,5 +1,5 @@
 import {nav} from './helpers/utils';
-import globalSearch from './helpers/search';
+import {globalSearch} from './helpers/search';
 import {authoring} from './helpers/authoring';
 import {content} from './helpers/content';
 import {monitoring} from './helpers/monitoring';

@@ -21,7 +21,7 @@ function resize(width, height) {
     });
 }
 
-export default function(params) {
+export function setup(params) {
     // runs before every spec
     beforeEach((done) => {
         resize(1280, 800)

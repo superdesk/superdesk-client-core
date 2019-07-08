@@ -493,4 +493,3 @@ class Desks {
 }
 
 export const desks = new Desks();
-export default desks;
