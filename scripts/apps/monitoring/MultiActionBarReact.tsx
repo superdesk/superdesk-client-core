@@ -91,7 +91,7 @@ export class MultiActionBarReact extends React.Component<IProps, IState> {
             return (
                 <div className="right-stack" data-test-id="multi-actions-dropdown">
                     <DropdownTree
-                        getToggleElement={(onClick) => (
+                        getToggleElement={(isOpen, onClick) => (
                             <button
                                 onClick={onClick}
                                 className="navbtn"
@@ -101,21 +101,35 @@ export class MultiActionBarReact extends React.Component<IProps, IState> {
                             </button>
                         )}
                         groups={[{render: () => null, items: this.state.actions}]}
-                        renderItem={(item) => (
-                            <div
+                        renderItem={(key, item, closeDropdown) => (
+                            <button
+                                key={key}
                                 style={{
-                                    display: 'flex',
-                                    justifyContent: 'flex-start',
-                                    alignItems: 'center',
-                                    padding: '10px',
+                                    display: 'block',
+                                    width: '100%',
+                                    padding: 0,
+                                    textAlign: 'left',
+                                    whiteSpace: 'nowrap',
                                 }}
+                                onClick={() => {
+                                    closeDropdown();
+                                    this.onTrigger(item);
+                                }}
+                                data-test-id={item.label}
                             >
-                                <i className={item.icon} style={{marginRight: 10}} />
-                                <span>{item.label}</span>
-                            </div>
+                                <span
+                                    style={{
+                                        display: 'flex',
+                                        justifyContent: 'flex-start',
+                                        alignItems: 'center',
+                                        padding: '10px',
+                                    }}
+                                >
+                                    <i className={item.icon} style={{marginRight: 10}} />
+                                    <span>{item.label}</span>
+                                </span>
+                            </button>
                         )}
-                        getItemLabel={(item) => item.label}
-                        onSelect={this.onTrigger}
                     />
                 </div>
             );

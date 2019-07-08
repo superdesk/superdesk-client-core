@@ -1,6 +1,5 @@
 
 import React from 'react';
-import classNames from 'classnames';
 import {IDropdownTreeGroup, IPropsDropdownTree} from 'superdesk-api';
 
 interface IState {
@@ -10,8 +9,6 @@ interface IState {
 function isGroup<T>(x: T | IDropdownTreeGroup<T>): x is IDropdownTreeGroup<T> {
     return typeof x['items'] !== 'undefined';
 }
-
-const defaultWrapper: React.StatelessComponent = (props) => <div>{props.children}</div>;
 
 export class DropdownTree<T> extends React.PureComponent<IPropsDropdownTree<T>, IState> {
     constructor(props: IPropsDropdownTree<T>) {
@@ -50,7 +47,6 @@ export class DropdownTree<T> extends React.PureComponent<IPropsDropdownTree<T>, 
     render() {
         const {groups, getToggleElement, maxWidth} = this.props;
         const onClick = () => this.setState({open: !this.state.open});
-        const Wrapper = this.props.wrapper || defaultWrapper;
 
         return (
             <div
@@ -62,14 +58,17 @@ export class DropdownTree<T> extends React.PureComponent<IPropsDropdownTree<T>, 
                     position: 'absolute',
                     top: '100%',
                     right: 0,
-                    boxShadow: '0 2px 10px rgba(0, 0, 0, 0.4), 0 3px 1px -2px rgba(0, 0, 0, 0.1)',
                     maxWidth: maxWidth == null ? undefined : maxWidth,
                 }}>
-                    <Wrapper>
+                    <div style={{
+                        background: '#F8F8F8',
+                        boxShadow: '0 2px 10px rgba(0, 0, 0, 0.4), 0 3px 1px -2px rgba(0, 0, 0, 0.1)',
+                        ...(this.props.wrapperStyles || {}),
+                    }}>
                         {
                             groups.map((group, i) => <div key={i}>{this.renderGroupRecursive(group, 0, 0)}</div>)
                         }
-                    </Wrapper>
+                    </div>
                 </div>
             </div>
         );

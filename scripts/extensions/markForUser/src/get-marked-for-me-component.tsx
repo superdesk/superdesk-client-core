@@ -6,9 +6,6 @@ interface IState {
     desks: Array<IDesk> | null;
 }
 
-const dropdownWrapper: React.StatelessComponent = (props) =>
-    <div style={{background: '#F8F8F8', padding: 15, paddingTop: 0}}>{props.children}</div>;
-
 export function getMarkedForMeComponent(superdesk: ISuperdesk) {
     const {Badge} = superdesk.components;
 
@@ -117,8 +114,7 @@ export function getMarkedForMeComponent(superdesk: ISuperdesk) {
                             </button>
                         );
                     }}
-                    wrapper={dropdownWrapper}
-                    maxWidth={430}
+                    wrapperStyles={{maxWidth: 430, padding: 15, paddingTop: 0}}
                 />
             );
         }

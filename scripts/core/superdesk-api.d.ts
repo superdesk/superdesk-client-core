@@ -409,8 +409,7 @@ declare module 'superdesk-api' {
         groups: Array<IDropdownTreeGroup<T>>;
         getToggleElement(isOpen: boolean, onClick: () => void): JSX.Element;
         renderItem(key: string, item: T, closeDropdown:() => void): JSX.Element;
-        wrapper?: React.ComponentType;
-        maxWidth?: number;
+        wrapperStyles?: React.CSSProperties;
     }
 
     interface ISpacingProps {
