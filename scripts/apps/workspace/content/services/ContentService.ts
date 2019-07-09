@@ -2,6 +2,7 @@ import * as constant from '../constants';
 import {get, omit, isEmpty, zipObject} from 'lodash';
 import {gettext} from 'core/utils';
 import {isMediaEditable} from 'core/config';
+import { constants } from 'zlib';
 
 /**
  * @ngdoc service
@@ -324,7 +325,7 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
             self._fieldsPromise = api.getAll('vocabularies', {
                 where: {
                     $or: [
-                        {field_type: {$in: ['text', 'date', 'media', 'embed', 'urls', 'custom']}},
+                        {field_type: {$in: constant.CUSTOM_FIELD_TYPES}},
                         {service: {$exists: true}},
                     ],
                 },
