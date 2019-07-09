@@ -1,10 +1,18 @@
-import {EditorState, Modifier, CharacterMetadata} from 'draft-js';
-import {List} from 'immutable';
+import {EditorState, Modifier, CharacterMetadata, DraftHandleValue} from 'draft-js';
+import {List, OrderedSet} from 'immutable';
 import {uniq} from 'lodash';
 
 import {getDraftCharacterListForSelection} from './getDraftCharacterListForSelection';
 import {resizeDraftSelection} from './resizeDraftSelection';
 import {styleNameBelongsToHighlight} from './highlights';
+
+function isSelectionAtEndOfBlock(editorState: EditorState): boolean {
+    const selection = editorState.getSelection();
+    const endBlockKey = selection.getEndKey();
+    const block = editorState.getCurrentContent().getBlockForKey(endBlockKey);
+
+    return block.getLength() === selection.getEndOffset();
+}
 
 /**
  * @ngdoc method
@@ -40,39 +48,44 @@ function getRelevantCharactersForCollapsedSelection(editorState, collapsedSelect
  * @name handleBeforeInputHighlights
  * @description prevents inheriting of highlight styles
  */
-export function handleBeforeInputHighlights(onChange, chars, editorState) {
+export function handleBeforeInputHighlights(onChange, chars: string, editorState: EditorState): DraftHandleValue {
     // see handleBeforeInputHighlights.spec.gif
+    const pressedSpaceAtEndOfBlock = isSelectionAtEndOfBlock(editorState) && chars.trim() === '';
 
-    const selection = editorState.getSelection();
+    let nextInlineStyles = OrderedSet<string>();
 
-    const characterList = selection.isCollapsed()
-        ? getRelevantCharactersForCollapsedSelection(editorState, selection)
-        : getDraftCharacterListForSelection(editorState, selection);
+    if (!pressedSpaceAtEndOfBlock) {
+        const selection = editorState.getSelection();
 
-    const characterStyles = characterList.map((character) => character.getStyle()).toJS();
+        const characterList = selection.isCollapsed()
+            ? getRelevantCharactersForCollapsedSelection(editorState, selection)
+            : getDraftCharacterListForSelection(editorState, selection);
 
-    const allHighlightStyles = uniq(characterStyles.reduce((a, b) => a.concat(b)))
-        .filter(styleNameBelongsToHighlight);
+        const characterStyles = characterList.map((character) => character.getStyle()).toJS();
 
-    if (allHighlightStyles.length < 1) {
-        return 'not-handled';
+        const allHighlightStyles = uniq(characterStyles.reduce((a, b) => a.concat(b)))
+            .filter(styleNameBelongsToHighlight);
+
+        if (allHighlightStyles.length < 1) {
+            return 'not-handled';
+        }
+
+        const commonHighlightStyles = allHighlightStyles.filter(
+            (styleName) => characterStyles.every((stylesAtPosition) => stylesAtPosition.includes(styleName)),
+        );
+
+        nextInlineStyles = editorState.getCurrentInlineStyle()
+            .filter((styleName: string) => styleNameBelongsToHighlight(styleName) === false)
+            .concat(commonHighlightStyles);
     }
 
-    const commonHighlightStyles = allHighlightStyles.filter(
-        (styleName) => characterStyles.every((stylesAtPosition) => stylesAtPosition.includes(styleName)),
-    );
-
-    const nextInlineStyles = editorState.getCurrentInlineStyle()
-        .filter((styleName) => styleNameBelongsToHighlight(styleName) === false)
-        .concat(commonHighlightStyles);
-
-    const nextContentstate = Modifier.replaceText(
+    const nextContentState = Modifier.replaceText(
         editorState.getCurrentContent(),
         editorState.getSelection(),
         chars,
         nextInlineStyles,
     );
-    const nextEditorState = EditorState.push(editorState, nextContentstate, 'insert-characters');
+    const nextEditorState = EditorState.push(editorState, nextContentState, 'insert-characters');
 
     onChange(nextEditorState);
 
