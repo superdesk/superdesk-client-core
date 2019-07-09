@@ -25,7 +25,7 @@
                 <video controls="controls">
                     <source vsrc="{{ rendition.href}}"
                             ng-repeat="(key, rendition) in related.renditions"
-                            ng-if="associations.isVideo(rendition)" html5vfix>
+                            ng-if="associations.checkRenditions.isVideo(rendition)" html5vfix>
                 </video>
                 <div class="item-association__metadata" sd-media-metadata-view data-item="related"></div>
                 <div class="item-association__action-bar" ng-if="related && editable">
@@ -37,7 +37,7 @@
                 <audio controls="controls">
                     <source vsrc="{{ rendition.href}}"
                             ng-repeat="(key, rendition) in related.renditions"
-                            ng-if="associations.isAudio(rendition)" html5vfix>
+                            ng-if="associations.checkRenditions.isAudio(rendition)" html5vfix>
                 </audio>
                 <div class="item-association__metadata" sd-media-metadata-view data-item="related"></div>
                 <div class="item-association__action-bar" ng-if="related && editable">

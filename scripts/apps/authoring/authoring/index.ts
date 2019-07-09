@@ -9,11 +9,13 @@ import '../suggest';
 import mediaModule from '../media';
 import {reactToAngular1} from 'superdesk-ui-framework';
 import {ArticleUrlFields} from './article-url-fields';
+import {LineCount} from './components/line-count';
 import {PopulateAuthorsController} from './controllers/PopulateAuthorsController';
 
 import {gettext} from 'core/utils';
 import {IArticle} from 'superdesk-interfaces/Article';
 import {IArticleSchema} from 'superdesk-interfaces/ArticleSchema';
+import {AuthoringTopbarReact} from './authoring-topbar-react';
 
 export interface IOnChangeParams {
     item: IArticle;
@@ -90,6 +92,7 @@ angular.module('superdesk.apps.authoring', [
     .directive('sdArticleEdit', directive.ArticleEditDirective)
     .directive('sdAuthoring', directive.AuthoringDirective)
     .directive('sdAuthoringTopbar', directive.AuthoringTopbarDirective)
+    .component('sdAuthoringTopbarReact', reactToAngular1(AuthoringTopbarReact, ['article', 'onChange']))
     .directive('sdPreviewFormatted', directive.PreviewFormattedDirective)
     .directive('sdAuthoringContainer', directive.AuthoringContainerDirective)
     .directive('sdAuthoringEmbedded', directive.AuthoringEmbeddedDirective)
@@ -100,6 +103,16 @@ angular.module('superdesk.apps.authoring', [
     .directive('sdRemoveTags', directive.RemoveTagsDirective)
     .directive('tansaScopeSync', directive.TansaScopeSyncDirective)
     .directive('sdItemActionByIntent', directive.ItemActionsByIntentDirective)
+
+    .component('sdLineCount',
+        reactToAngular1(
+            LineCount,
+            ['item', 'html'],
+            ['config'],
+            'display:contents',
+        ),
+    )
+
     .component('sdArticleUrlFields',
         reactToAngular1(
             ArticleUrlFields,

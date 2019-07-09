@@ -7,6 +7,8 @@ import {SearchController} from './controllers';
 import SearchMenuController from './controllers/SearchMenuController';
 import {MultiImageEditDirective} from './MultiImageEdit';
 import {gettext} from 'core/utils';
+import {MultiActionBarReact} from 'apps/monitoring/MultiActionBarReact';
+import {reactToAngular1} from 'superdesk-ui-framework';
 
 angular.module('superdesk.apps.search.react', [
     'superdesk.apps.highlights',
@@ -63,6 +65,13 @@ angular.module('superdesk.apps.search', [
     .directive('sdSavedSearches', directive.SavedSearches)
     .directive('sdSearchContainer', directive.SearchContainer)
     .directive('sdSearchParameters', directive.SearchParameters)
+    .component(
+        'sdMultiActionBarReact',
+        reactToAngular1(
+            MultiActionBarReact,
+            ['context', 'articles', 'hideMultiActionBar', 'getCoreActions', 'compact'],
+        ),
+    )
     .directive('sdMultiActionBar', directive.MultiActionBar)
     .directive('sdRawSearch', directive.RawSearch)
     .directive('sdRepoDropdown', directive.RepoDropdown)

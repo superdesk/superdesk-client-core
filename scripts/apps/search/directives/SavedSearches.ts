@@ -1,6 +1,4 @@
-import {IUser} from 'superdesk-interfaces/User';
-import {IDesk} from 'superdesk-interfaces/Desk';
-
+import {IDesk, IUser} from 'superdesk-api';
 import {ISuperdeskGlobalConfig} from 'superdesk-interfaces/SuperdeskGlobalConfig';
 import {ISavedSearch, isUserSubscribedToSavedSearch, mapFiltersServerToClient} from '../SavedSearch';
 import {IDesksService} from 'types/Services/Desks';
