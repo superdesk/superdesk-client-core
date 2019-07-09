@@ -11,6 +11,8 @@ function isGroup<T>(x: T | IDropdownTreeGroup<T>): x is IDropdownTreeGroup<T> {
 }
 
 export class DropdownTree<T> extends React.PureComponent<IPropsDropdownTree<T>, IState> {
+    dropdownNode: HTMLDivElement;
+
     constructor(props: IPropsDropdownTree<T>) {
         super(props);
 
@@ -60,10 +62,19 @@ export class DropdownTree<T> extends React.PureComponent<IPropsDropdownTree<T>, 
                                 if (node != null) {
                                     node.focus();
                                 }
+
+                                this.dropdownNode = node;
                             }}
                             tabIndex={0}
-                            onBlur={() => {
-                                this.closeDropdown();
+                            onBlur={(event) => {
+                                // don't close the dropdown on blur
+                                // if blur went to toggle element
+                                // because toggle element will change the state itself
+                                if (this.dropdownNode.previousElementSibling.isSameNode(
+                                    event.relatedTarget as Element,
+                                ) === false) {
+                                    this.closeDropdown();
+                                }
                             }}
                             style={{
                                 position: 'absolute',
