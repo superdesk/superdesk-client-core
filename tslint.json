@@ -52,6 +52,7 @@
     "rulesDirectory": [],
     "linterOptions": {
         "exclude": [
+            "node_modules/**",
             "scripts/extensions/**/node_modules/**"
         ]
     }
