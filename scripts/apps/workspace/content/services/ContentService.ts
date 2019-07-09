@@ -2,7 +2,6 @@ import * as constant from '../constants';
 import {get, omit, isEmpty, zipObject} from 'lodash';
 import {gettext} from 'core/utils';
 import {isMediaEditable} from 'core/config';
-import { constants } from 'zlib';
 
 /**
  * @ngdoc service
