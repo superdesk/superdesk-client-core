@@ -7,7 +7,15 @@ interface IHttpRequestOptions {
     url: string; // absolute url
     payload?: {};
     headers?: {[key: string]: any};
+}
+
+interface IHttpRequestCallbacks {
     onSuccess(responseText: string): void;
+    onError?(xhr: XMLHttpRequest): void;
+}
+
+interface IHttpRequestCallbacksJson<T> {
+    onSuccess(responseJson: T): void;
     onError?(xhr: XMLHttpRequest): void;
 }
 
@@ -15,7 +23,9 @@ interface IHttpRequestReturnValue {
     abort(): void;
 }
 
-export function httpRequest(options: IHttpRequestOptions): IHttpRequestReturnValue {
+//
+
+export function httpRequest(options: IHttpRequestOptions & IHttpRequestCallbacks): IHttpRequestReturnValue {
     const {method, url, payload, headers, onSuccess, onError} = options;
     const xhr = new XMLHttpRequest();
 
@@ -58,11 +68,9 @@ export function httpRequest(options: IHttpRequestOptions): IHttpRequestReturnVal
 
 //
 
-interface IHttpRequestJsonOptions<T> extends Omit<IHttpRequestOptions, 'onSuccess'> {
-    onSuccess(responseJson: T): void;
-}
-
-export function httpRequestJson<T>(options: IHttpRequestJsonOptions<T>): IHttpRequestReturnValue {
+export function httpRequestJson<T>(
+    options: IHttpRequestOptions & IHttpRequestCallbacksJson<T>,
+): IHttpRequestReturnValue {
     const onSuccess = (responseText: string) => {
         try {
             options.onSuccess(JSON.parse(responseText));
@@ -80,7 +88,9 @@ interface IHttpRequestOptionsLocal extends Omit<IHttpRequestOptions, 'url'> {
     path: string; // relative to application server
 }
 
-export function httpRequestLocal(options: IHttpRequestOptionsLocal): Promise<IHttpRequestReturnValue> {
+export function httpRequestLocal(
+    options: IHttpRequestOptionsLocal & IHttpRequestCallbacks,
+): Promise<IHttpRequestReturnValue> {
     return ng.getService('session').then((session) => {
         return httpRequest({
             ...options,
@@ -92,11 +102,9 @@ export function httpRequestLocal(options: IHttpRequestOptionsLocal): Promise<IHt
 
 //
 
-interface IHttpRequestLocalJsonOptions<T> extends Omit<IHttpRequestOptionsLocal, 'onSuccess'> {
-    onSuccess(responseJson: T): void;
-}
-
-export function httpRequestJsonLocal<T>(options: IHttpRequestLocalJsonOptions<T>): Promise<IHttpRequestReturnValue> {
+export function httpRequestJsonLocal<T>(
+    options: IHttpRequestOptionsLocal & IHttpRequestCallbacksJson<T>,
+): Promise<IHttpRequestReturnValue> {
     return ng.getService('session').then((session) => {
         return httpRequestJson<T>({
             ...options,
