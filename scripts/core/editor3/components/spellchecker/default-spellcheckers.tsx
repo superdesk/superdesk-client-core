@@ -62,28 +62,16 @@ export function getSpellchecker(language: string): ISpellchecker {
 
     if (spellcheckerName != null) {
         return {
-            check: (str: string) => new Promise((resolve, reject) => {
-                httpRequestJsonLocal<{errors: Array<ISpellcheckWarning>}>({
-                    method: 'POST',
-                    payload: {spellchecker: spellcheckerName, text: str},
-                    path: '/spellchecker',
-                    onSuccess: (json) => {
-                        resolve(json.errors);
-                    },
-                    onError: () => reject(),
-                });
-            }),
-            getSuggestions: (str) => new Promise((resolve, reject) => {
-                httpRequestJsonLocal<ISpellcheckWarning>({
-                    method: 'POST',
-                    payload: {spellchecker: spellcheckerName, text: str, suggestions: true},
-                    path: '/spellchecker',
-                    onSuccess: (spellcheckerWarning) => {
-                        resolve(spellcheckerWarning.suggestions);
-                    },
-                    onError: () => reject(),
-                });
-            }),
+            check: (str: string) => httpRequestJsonLocal<{errors: Array<ISpellcheckWarning>}>({
+                method: 'POST',
+                payload: {spellchecker: spellcheckerName, text: str},
+                path: '/spellchecker',
+            }).then((json) => json.errors),
+            getSuggestions: (str) => httpRequestJsonLocal<ISpellcheckWarning>({
+                method: 'POST',
+                payload: {spellchecker: spellcheckerName, text: str, suggestions: true},
+                path: '/spellchecker',
+            }).then((spellcheckerWarning) => spellcheckerWarning.suggestions),
             actions: {},
         };
     } else {
