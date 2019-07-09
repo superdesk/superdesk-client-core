@@ -56,6 +56,7 @@ declare module 'superdesk-api' {
             articleListItemWidgets?: Array<React.ComponentType<{article: IArticle}>>;
             authoringTopbarWidgets?: Array<React.ComponentType<{article: IArticle}>>;
             pages?: Array<IPage>;
+            customFieldTypes?: Array<ICustomFieldType>;
             entities?: {
                 article?: {
                     getActions?(article: IArticle): Promise<Array<IArticleAction>>;
@@ -233,7 +234,6 @@ declare module 'superdesk-api' {
             total: number;
         };
     }
-    
 
 
 
@@ -344,6 +344,30 @@ declare module 'superdesk-api' {
         noBorder?: boolean;
     }
 
+    export interface IGridComponentProps {
+        columns: number;
+        boxed?: boolean;
+        children: React.ReactNodeArray;
+    }
+
+    export interface IAlertComponentProps {
+        type: 'info' | 'warning' | 'error';
+        hollow?: boolean;
+        children?: React.ReactNode;
+    }
+
+    export interface IFigureComponentProps {
+        caption: string;
+        onRemove?: () => void;
+        children?: React.ReactNode;
+    }
+
+    export interface IDropZoneComponentProps {
+        label: string;
+        onDrop: (event: DragEvent) => void;
+        canDrop: (event: DragEvent) => boolean;
+    }
+
     export interface IPropsModalHeader {
         onClose?(): void;
     }
@@ -444,6 +468,10 @@ declare module 'superdesk-api' {
                 Row: React.ComponentType;
                 Column: React.ComponentType<{grow: boolean}>;
             },
+            Grid: React.ComponentType<IGridComponentProps>;
+            Alert: React.ComponentType<IAlertComponentProps>;
+            Figure: React.ComponentType<IFigureComponentProps>;
+            DropZone: React.ComponentType<IDropZoneComponentProps>;
             Modal: React.ComponentType;
             ModalHeader: React.ComponentType<IPropsModalHeader>;
             ModalBody: React.ComponentType;
@@ -480,4 +508,105 @@ declare module 'superdesk-api' {
             },
         },
     }>;
+
+
+
+    // CUSTOM FIELD TYPES
+
+    export interface IEditorComponentProps {
+        item: IArticle;
+        value: any;
+        setValue: (value: any) => void;
+        readOnly: boolean;
+    }
+
+    export interface IPreviewComponentProps {
+        item: IArticle;
+        value: any;
+    }
+
+    export interface ICustomFieldType {
+        id: string;
+        label: string;
+        editorComponent: React.ComponentType<IEditorComponentProps>;
+        previewComponent: React.ComponentType<IPreviewComponentProps>;
+    }
+
+
+
+    // SUPERDESK ENTITIES
+
+    export interface IAuthor {
+        role: string;
+        parent: string;
+    }
+
+    export interface IArticle extends IBaseRestApiResponse {
+        _id: string;
+        _current_version: number;
+        guid: string;
+        translated_from: string;
+        translation_id: string;
+        usageterms: any;
+        keywords: any;
+        language: any;
+        slugline: any;
+        genre: any;
+        anpa_take_key: any;
+        place: any;
+        priority: any;
+        urgency: any;
+        anpa_category: any;
+        subject: any;
+        company_codes: Array<any>;
+        ednote: string;
+        authors: Array<IAuthor>;
+        headline: string;
+        sms: string;
+        abstract: string;
+        byline: string;
+        dateline: string;
+        body_html: string;
+        footer: string;
+        firstcreated: any;
+        versioncreated: any;
+        body_footer: string;
+        sign_off: string;
+        feature_media: any;
+        media_description: string;
+        associations: { string: IArticle };
+        type: 'text' | 'picture' | 'video' | 'audio' | 'preformatted' | 'graphic' | 'composite';
+        firstpublished?: string;
+        linked_in_packages: any;
+        gone: any;
+        lock_action: any;
+        lock_user: any;
+        lock_session: any;
+        rewritten_by?: string;
+
+        highlights?: Array<string>;
+
+        // storage for custom fields created by users
+        extra?: {[key: string]: any};
+
+        task: {
+            desk: IDesk['_id'];
+            stage: IStage['_id'];
+            user: IUser['_id'];
+        };
+
+        // might be only used for client-side state
+        created: any;
+        archived: any;
+
+        // remove when SDESK-4343 is done.
+        selected: any;
+
+        // planning extension
+        assignment_id?: string;
+
+        // markForUser extension
+        marked_for_user?: string;
+    }
+
 }

@@ -123,3 +123,15 @@ export const EXTRA_EDITOR_FIELDS = Object.freeze({
     feature_media: {enabled: true},
     media_description: {enabled: true},
 });
+
+/**
+ * Vocabulary types used for custom fields
+ */
+export const CUSTOM_FIELD_TYPES = [
+    'text',
+    'date',
+    'media',
+    'embed',
+    'urls',
+    'custom',
+];

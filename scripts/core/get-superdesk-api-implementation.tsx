@@ -23,6 +23,10 @@ import {SelectUser} from './ui/components/SelectUser';
 import {logger} from './services/logger';
 import {showModal} from './services/modalService';
 import {UserAvatarFromUserId} from 'apps/users/components/UserAvatarFromUserId';
+import {Grid} from './ui/components/grid';
+import {Alert} from './ui/components/alert';
+import {Figure} from './ui/components/figure';
+import {DropZone} from './ui/components/drop-zone';
 
 function getOnUpdateBeforeMiddlewares(
     extensions: IExtensions,
@@ -123,6 +127,10 @@ export function getSuperdeskApiImplementation(
                 Row,
                 Column,
             },
+            Grid,
+            Alert,
+            Figure,
+            DropZone,
             Modal,
             ModalHeader,
             ModalBody,

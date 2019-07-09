@@ -34,7 +34,10 @@ export function MediaPreview(api, $rootScope, desks, superdesk, content, storage
                         scope.fields = content.fields(type);
                     });
             } else {
-                scope.editor = content.editor();
+                content.getCustomFields().then(() => {
+                    scope.editor = content.editor(null, scope.selected.preview.type);
+                    scope.fields = content.fields({editor: scope.editor});
+                });
             }
 
             /**

@@ -285,10 +285,10 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
      * @param {Object} profile
      * @return {Array}
      */
-    this.fields = (contentType) => {
-        const editor = contentType.editor || {};
+    this.fields = (profile) => {
+        const editor = profile.editor || {};
 
-        return this._fields.filter((field) => !!editor[field._id]);
+        return this._fields ? this._fields.filter((field) => !!editor[field._id]) : [];
     };
 
     /**
@@ -324,7 +324,7 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
             self._fieldsPromise = api.getAll('vocabularies', {
                 where: {
                     $or: [
-                        {field_type: {$in: ['text', 'date', 'media', 'embed', 'urls']}},
+                        {field_type: {$in: constant.CUSTOM_FIELD_TYPES}},
                         {service: {$exists: true}},
                     ],
                 },
@@ -399,7 +399,7 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
         } else {
             scope.schema = this.schema(null, get(item, 'type', 'text'));
             scope.editor = this.editor(null, get(item, 'type', 'text'));
-            scope.fields = null;
+            scope.fields = this.fields({editor: scope.editor});
             return $q.when();
         }
     };

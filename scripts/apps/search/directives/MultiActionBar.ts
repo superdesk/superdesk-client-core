@@ -3,7 +3,7 @@ import {gettext} from 'core/utils';
 import {showModal} from 'core/services/modalService';
 import {getModalForMultipleHighlights} from 'apps/highlights/components/SetHighlightsForMultipleArticlesModal';
 import {IArticleActionBulkExtended} from 'apps/monitoring/MultiActionBarReact';
-import {IArticle} from 'superdesk-interfaces/Article';
+import {IArticle} from 'superdesk-api';
 
 MultiActionBar.$inject = ['asset', 'multi', 'authoringWorkspace', 'superdesk', 'keyboardManager', 'desks'];
 export function MultiActionBar(asset, multi, authoringWorkspace, superdesk, keyboardManager, desks) {

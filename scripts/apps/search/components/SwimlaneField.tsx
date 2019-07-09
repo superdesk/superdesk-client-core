@@ -1,6 +1,6 @@
 import React from 'react';
 import * as fields from './fields';
-import {IArticle} from 'superdesk-interfaces/Article';
+import {IArticle} from 'superdesk-api';
 
 interface IProps {
     svc: any;
