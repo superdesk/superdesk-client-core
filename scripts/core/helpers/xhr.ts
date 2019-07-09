@@ -11,18 +11,19 @@ interface IHttpRequestOptions {
 
 interface IHttpRequestCallbacks {
     onSuccess(responseText: string): void;
-    onError?(xhr: XMLHttpRequest): void;
+    onError?(message: string): void;
 }
 
 interface IHttpRequestCallbacksJson<T> {
     onSuccess(responseJson: T): void;
-    onError?(xhr: XMLHttpRequest): void;
+    onError?(message: string): void;
 }
 
 interface IHttpRequestReturnValue {
     abort(): void;
 }
 
+//
 //
 
 export function httpRequest(options: IHttpRequestOptions & IHttpRequestCallbacks): IHttpRequestReturnValue {
@@ -51,7 +52,7 @@ export function httpRequest(options: IHttpRequestOptions & IHttpRequestCallbacks
 
     if (typeof onError === 'function') {
         xhr.onerror = function() {
-            onError(xhr);
+            onError(xhr.responseText);
         };
     }
 
@@ -66,6 +67,18 @@ export function httpRequest(options: IHttpRequestOptions & IHttpRequestCallbacks
     };
 }
 
+// Promise API for httpRequest
+export function httpRequestP(options: IHttpRequestOptions): Promise<{responseText: string}> {
+    return new Promise((resolve, reject) => {
+        httpRequest({
+            ...options,
+            onSuccess: (responseText) => resolve({responseText}),
+            onError: (message) => reject(message),
+        });
+    });
+}
+
+//
 //
 
 export function httpRequestJson<T>(
@@ -82,6 +95,18 @@ export function httpRequestJson<T>(
     return httpRequest({...options, onSuccess, headers: {...options.headers, ...{'Content-Type': 'application/json'}}});
 }
 
+// Promise API for httpRequestJson
+export function httpRequestJsonP<T>(options: IHttpRequestOptions): Promise<T> {
+    return new Promise((resolve, reject) => {
+        httpRequestJson<T>({
+            ...options,
+            onSuccess: (responseJson) => resolve(responseJson),
+            onError: (message) => reject(message),
+        });
+    });
+}
+
+//
 //
 
 interface IHttpRequestOptionsLocal extends Omit<IHttpRequestOptions, 'url'> {
@@ -100,6 +125,18 @@ export function httpRequestLocal(
     });
 }
 
+// Promise API for httpRequestLocal
+export function httpRequestLocalP(options: IHttpRequestOptionsLocal): Promise<{responseText: string}> {
+    return new Promise((resolve, reject) => {
+        httpRequestLocal({
+            ...options,
+            onSuccess: (responseText) => resolve({responseText}),
+            onError: (message) => reject(message),
+        });
+    });
+}
+
+//
 //
 
 export function httpRequestJsonLocal<T>(
@@ -110,6 +147,17 @@ export function httpRequestJsonLocal<T>(
             ...options,
             url: appConfig.server.url + options.path,
             headers: {...(options.headers || {}), ...{'Authorization': session.token}},
+        });
+    });
+}
+
+// Promise API for httpRequestJsonLocal
+export function httpRequestJsonLocalP<T>(options: IHttpRequestOptionsLocal): Promise<T> {
+    return new Promise((resolve, reject) => {
+        httpRequestJsonLocal<T>({
+            ...options,
+            onSuccess: (responseJson) => resolve(responseJson),
+            onError: (message) => reject(message),
         });
     });
 }
