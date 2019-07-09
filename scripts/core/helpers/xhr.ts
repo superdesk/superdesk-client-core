@@ -1,6 +1,6 @@
-import {logger} from "core/services/logger";
+import {logger} from 'core/services/logger';
 import ng from 'core/services/ng';
-import {appConfig} from "appConfig";
+import {appConfig} from 'scripts/appConfig';
 
 interface IHttpRequestOptions {
     method: 'GET' | 'POST' | 'PATCH' | 'PUT';
