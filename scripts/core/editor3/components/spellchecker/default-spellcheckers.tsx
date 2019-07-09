@@ -1,6 +1,6 @@
 import ng from 'core/services/ng';
 import {ISpellchecker, ISpellcheckerAction, ISpellcheckWarning, ISpellcheckerSuggestion} from './interfaces';
-import {httpRequestJsonLocal} from 'core/helpers/xhr';
+import {httpRequestJsonLocal} from 'core/helpers/network';
 
 const actions: {[key: string]: ISpellcheckerAction} = {
     addToDictionary: {
