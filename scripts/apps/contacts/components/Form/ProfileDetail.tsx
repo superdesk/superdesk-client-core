@@ -131,7 +131,7 @@ export class ProfileDetail extends React.Component<any, any> {
 
                 {!readOnly &&
                     <Row>
-                        <LineInput readOnly={readOnly} className="sd-line-input__toggle">
+                        <LineInput readOnly={readOnly}>
                             <Label text={gettext('public')} />
                             <Toggle
                                 value={get(contact, 'public', false)}
