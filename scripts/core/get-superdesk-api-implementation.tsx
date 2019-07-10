@@ -27,6 +27,7 @@ import {ArticleItemConcise} from 'core/ui/components/article-item-concise';
 import {DropdownTree} from './ui/components/dropdown-tree';
 import {getCssNameForExtension} from './get-css-name-for-extension';
 import {Badge} from './ui/components/Badge';
+import {connectLiveArticlesByQuery} from './helpers/connectLiveArticlesByIds';
 
 function getOnUpdateBeforeMiddlewares(
     extensions: IExtensions,
@@ -197,6 +198,9 @@ export function getSuperdeskApiImplementation(
                 getClass: (originalName: string) => getCssNameForExtension(originalName, requestingExtensionId),
                 getId: (originalName: string) => getCssNameForExtension(originalName, requestingExtensionId),
             },
+        },
+        experimental: {
+            connectLiveArticlesByQuery,
         },
     };
 }

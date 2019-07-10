@@ -50,7 +50,7 @@ declare module 'superdesk-api' {
 
     export interface IExtensionActivationResult {
         contributions?: {
-            globalMenuHorizontal?: Array<React.ComponentType>;
+            globalMenuHorizontal?: Array<React.ComponentType<void>>;
             editor3?: {
                 annotationInputTabs?: Array<IEditor3AnnotationInputTab>;
             }
@@ -252,6 +252,8 @@ declare module 'superdesk-api' {
         doc_count_error_upper_bound: number;
         sum_other_doc_count: number;
     }
+
+    export type IArticleQuery = Omit<IQueryElasticParameters, 'endpoint'>;
     
     interface IArticleQueryResult extends IRestApiResponse<IArticle> {
         _aggregations: {
@@ -467,6 +469,11 @@ declare module 'superdesk-api' {
         delete<T extends IBaseRestApiResponse>(endpoint, item: T): Promise<void>;
     }
 
+    interface IPropsConnectLiveArticlesByQuery {
+        articles: IArticleQueryResult;
+        reload(): void;
+    }
+
 
 
     // APPLICATION API
@@ -475,7 +482,7 @@ declare module 'superdesk-api' {
         dataApi: IDataApi,
         dataApiByEntity: {
             article: {
-                query(parameters: Omit<IQueryElasticParameters, 'endpoint'>): Promise<IArticleQueryResult>;
+                query(parameters: IArticleQuery): Promise<IArticleQueryResult>;
             };
         };
         ui: {
@@ -560,6 +567,16 @@ declare module 'superdesk-api' {
                 error(error: Error): void;
                 warn(message: string, json: {[key: string]: any}): void;
             };
+        };
+        experimental: {
+            // articles matching the query are injected as props into a provided component
+            // if any of the articles are later updated on the server,
+            // the component is re-rendered with the latest articles
+            // note: it doesn't watch the query itself(if items are/added removed which would alter the query result)
+            connectLiveArticlesByQuery<T extends IPropsConnectLiveArticlesByQuery>(
+                component: React.ComponentType<T>,
+                query: IArticleQuery,
+            ): React.ComponentType<Omit<T, keyof IPropsConnectLiveArticlesByQuery>>;
         };
     }>;
 }
