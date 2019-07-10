@@ -68,11 +68,14 @@ export class DropdownTree<T> extends React.PureComponent<IPropsDropdownTree<T>, 
                             tabIndex={0}
                             onBlur={(event) => {
                                 // don't close the dropdown on blur
-                                // if blur went to toggle element
-                                // because toggle element will change the state itself
-                                if (this.dropdownNode.previousElementSibling.isSameNode(
-                                    event.relatedTarget as Element,
-                                ) === false) {
+                                // if focus went to toggle element or an element inside the dropdown
+                                if (this.dropdownNode.contains(
+                                        event.relatedTarget as Element,
+                                    ) === false
+                                    && this.dropdownNode.previousElementSibling.isSameNode(
+                                        event.relatedTarget as Element,
+                                    ) === false
+                                ) {
                                     this.closeDropdown();
                                 }
                             }}
