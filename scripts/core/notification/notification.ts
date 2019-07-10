@@ -60,8 +60,6 @@ function WebSocketProxy($rootScope, config, $interval, session, SESSION_EVENTS) 
             var msg = angular.fromJson(event.data);
 
             $rootScope.$broadcast(msg.event, msg.extra);
-            window.dispatchEvent(new CustomEvent('websocket-message', {detail: msg}));
-
             if (_.includes(ReloadEvents, msg.event)) {
                 $rootScope.$broadcast('reload', msg);
             }

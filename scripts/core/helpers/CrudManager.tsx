@@ -14,7 +14,6 @@ import {
     IDataApi,
     IQueryElasticParameters,
     IArticleQueryResult,
-    IArticleQuery,
 } from 'superdesk-api';
 import {isObject} from 'lodash';
 
@@ -118,7 +117,7 @@ export function queryElastic(
 
 export const dataApiByEntity = {
     article: {
-        query: (parameters: IArticleQuery): Promise<IArticleQueryResult> =>
+        query: (parameters: Omit<IQueryElasticParameters, 'endpoint'>): Promise<IArticleQueryResult> =>
             queryElastic({...parameters, endpoint: 'search'}) as Promise<IArticleQueryResult>,
     },
 };
