@@ -239,7 +239,7 @@ declare module 'superdesk-api' {
         endpoint: string;
         page: {
             from: number;
-            size: number;
+            size?: number;
         };
         sort: Array<{[field: string]: 'asc' | 'desc'}>;
     

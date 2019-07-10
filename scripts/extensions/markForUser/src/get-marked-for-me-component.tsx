@@ -23,7 +23,7 @@ export function getMarkedForMeComponent(superdesk: ISuperdesk) {
                 superdesk.dataApi.query<IDesk>('desks', 1, {field: '_id', direction: 'ascending'}, {}),
                 superdesk.session.getCurrentUser().then((user) => {
                     return superdesk.dataApiByEntity.article.query({
-                        page: {from: 0, size: 50},
+                        page: {from: 0},
                         sort: [{'_updated': 'desc'}],
                         filterValues: {marked_for_user: [user._id]},
                     });
