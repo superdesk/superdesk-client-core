@@ -21,24 +21,24 @@ function httpRequestBase(options: IHttpRequestOptions): Promise<Response> {
         mode: 'cors',
         body: typeof payload === 'undefined' ? undefined : JSON.stringify(payload),
     })
-    .then((res) => {
-        if (res.ok) {
-            return res;
-        } else {
-            throw new Error(`Server error occured. Status code: ${res.status}`);
-        }
-    })
-    .catch((err) => {
-        if (err instanceof Error) {
-            logger.error(err);
-        } else {
-            logger.error(new Error(err));
-        }
+        .then((res) => {
+            if (res.ok) {
+                return res;
+            } else {
+                throw new Error(`Server error occured. Status code: ${res.status}`);
+            }
+        })
+        .catch((err) => {
+            if (err instanceof Error) {
+                logger.error(err);
+            } else {
+                logger.error(new Error(err));
+            }
 
-        // unless a rejected Promise is returned or an error is thrown in the catch block
-        // the promise will become resolved and `.then chain` will get executed
-        return Promise.reject(err);
-    });
+            // unless a rejected Promise is returned or an error is thrown in the catch block
+            // the promise will become resolved and `.then chain` will get executed
+            return Promise.reject(err);
+        });
 }
 
 export function httpRequest(options: IHttpRequestOptions): Promise<string> {
