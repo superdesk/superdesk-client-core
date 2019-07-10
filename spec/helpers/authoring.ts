@@ -2,6 +2,7 @@
 
 import {element, by, browser, protractor} from 'protractor';
 import {waitHidden, waitFor} from './utils';
+import { ECE } from './expected-conditions-extended';
 
 class Authoring {
     lock: any;
@@ -292,7 +293,9 @@ class Authoring {
         };
 
         this.sendToSidebarOpened = function(desk, stage, _continue) {
+            browser.wait(ECE.elementToBeClickable(this.send_panel));
             this.send_panel.click();
+
             var sidebar = element.all(by.css('.side-panel')).last(),
                 dropdown = sidebar.element(by.css('.dropdown--dark .dropdown__toggle'));
 
