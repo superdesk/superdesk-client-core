@@ -1,5 +1,11 @@
 # Superdesk Client Changelog
 
+## [1.30.3] 2019-07-10
+
+### Changed
+
+- Update Superdesk UI framework to 1.18.20.
+
 ## [1.30.0] 2019-06-12
 
 ## [1.29.1] 2019-05-28
