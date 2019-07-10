@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import {setFilters} from 'apps/search/services/SearchService';
+import {PUBLISH_STATES, SCHEDULED} from 'apps/archive/constants';
 
 CardsService.$inject = ['api', 'search', 'session', 'desks', 'config'];
 export function CardsService(api, search, session, desks, config) {
@@ -80,11 +81,12 @@ export function CardsService(api, search, session, desks, config) {
     function filterQueryByDeskType(query, card) {
         var deskId = card._id.substring(0, card._id.indexOf(':'));
         var desk = desks.deskLookup ? desks.deskLookup[deskId] : null;
-        var states = ['scheduled', 'published', 'corrected', 'killed', 'recalled'];
+        var states = PUBLISH_STATES;
 
         if (config.monitoring && config.monitoring.scheduled) {
-            states = ['published', 'corrected', 'killed', 'recalled'];
+            states = PUBLISH_STATES.filter((state) => state !== SCHEDULED);
         }
+
         if (desk) {
             if (desk.desk_type === 'authoring') {
                 query.filter({or: [

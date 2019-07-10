@@ -2,6 +2,7 @@ import _ from 'lodash';
 import React from 'react';
 import {PreviewModal} from '../previewModal';
 import {gettext} from 'core/utils';
+import {isPublished} from 'apps/archive/utils';
 
 SendItem.$inject = ['$q', 'api', 'search', 'desks', 'notify', 'authoringWorkspace',
     'superdeskFlags', '$location', 'macros', '$rootScope', 'deployConfig',
@@ -290,7 +291,7 @@ export function SendItem($q, api, search, desks, notify, authoringWorkspace,
             scope.showPublishSchedule = function() {
                 return scope.item && archiveService.getType(scope.item) !== 'ingest' &&
                     scope.item.type !== 'composite' && !scope.item.embargo_date && !scope.item.embargo_time &&
-                    ['published', 'killed', 'corrected', 'recalled'].indexOf(scope.item.state) === -1 &&
+                    !isPublished(scope.item, false) &&
                     canPublishOnDesk();
             };
 

@@ -18,6 +18,7 @@ import {gettext} from 'core/utils';
 import {IArticle} from 'superdesk-api';
 import {IArticleSchema} from 'superdesk-interfaces/ArticleSchema';
 import {AuthoringTopbarReact} from './authoring-topbar-react';
+import {UnpublishConfirmModal} from './components/unpublish-confirm-modal';
 
 export interface IOnChangeParams {
     item: IArticle;
@@ -133,6 +134,13 @@ angular.module('superdesk.apps.authoring', [
         reactToAngular1(
             PreviewCustomField,
             ['item', 'field'],
+        ),
+    )
+
+    .component('sdUnpublishConfirmModal',
+        reactToAngular1(
+            UnpublishConfirmModal,
+            ['item', 'related', 'close', 'unpublish'],
         ),
     )
 
@@ -340,7 +348,38 @@ angular.module('superdesk.apps.authoring', [
                         return api.find('archive', $route.current.params._id);
                     }],
                 },
-            });
+            })
+            .activity('unpulish', {
+                label: gettext('Unpublish'),
+                priority: 50,
+                icon: 'kill',
+                group: 'corrections',
+                controller: ['data', 'authoringWorkspace',
+                    (data, authoringWorkspace) => {
+                        authoringWorkspace.unpublish(data.item);
+                    },
+                ],
+                filters: [{action: 'list', type: 'archive'}],
+                additionalCondition: ['authoring', 'item', (authoring, item) => authoring.itemActions(item).kill],
+                privileges: {unpublish: 1},
+            })
+            .activity('edit.unpublished', {
+                label: gettext('Edit'),
+                priority: 100,
+                icon: 'edit-line',
+                group: 'corrections',
+                controller: ['data', 'authoringWorkspace', 'api',
+                    (data, authoringWorkspace, api) => {
+                        api.update('archive', data.item.archive_item, {state: 'in_progress'})
+                            .then((updated) =>
+                                authoringWorkspace.edit(updated));
+                    },
+                ],
+                filters: [{action: 'list', type: 'archive'}],
+                additionalCondition: ['item', (item) => item.state === 'unpublished'],
+                privileges: {unpublish: 1},
+            })
+        ;
     }])
     .config(['apiProvider', function(apiProvider) {
         apiProvider.api('move', {

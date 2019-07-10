@@ -1,4 +1,5 @@
 import {get, includes} from 'lodash';
+import {PUBLISHED} from 'apps/archive/constants';
 
 /**
  * @ngdoc service
@@ -18,9 +19,9 @@ import {get, includes} from 'lodash';
  * @description Authoring Workspace Service is responsible for the actions done on the authoring workspace container
  */
 AuthoringWorkspaceService.$inject = ['$location', 'superdeskFlags', 'authoring', 'lock', 'send', 'config', 'suggest',
-    '$rootScope', 'search', '$window'];
+    '$rootScope', 'search', '$window', '$modal'];
 export function AuthoringWorkspaceService($location, superdeskFlags, authoring, lock, send, config, suggest,
-    $rootScope, search, $window) {
+    $rootScope, search, $window, $modal) {
     this.item = null;
     this.action = null;
     this.state = null;
@@ -156,6 +157,59 @@ export function AuthoringWorkspaceService($location, superdeskFlags, authoring, 
      */
     this.correct = function(item) {
         self.edit(item, 'correct');
+    };
+
+    this.unpublish = (item) => {
+        $modal.open({
+            template: `<sd-unpublish-confirm-modal
+                data-item="item"
+                data-related="relatedItems"
+                data-close="close"
+                data-unpublish="unpublish">
+            '</sd-unpublish-confirm-modal>`,
+            controller: ['$scope', '$modalInstance', 'familyService',
+                ($scope, $modalInstance, familyService) => {
+                    $scope.item = item;
+                    $scope.relatedItems = [];
+
+                    familyService.fetchItems(item.archive_item.family_id, item)
+                        .then((items) => {
+                            const published = {};
+
+                            $scope.relatedItems = items._items
+                                .filter((relatedItem) => {
+                                    if (!published[relatedItem.guid]) {
+                                        published[relatedItem.guid] = true; // only show each item once
+                                        return true;
+                                    }
+
+                                    return false;
+                                })
+                                .filter((relatedItem) => relatedItem.state === PUBLISHED)
+                                .filter((relatedItem) => relatedItem.guid !== item.guid)
+                            ;
+                        });
+
+                    $scope.close = () => {
+                        $modalInstance.dismiss();
+                    };
+
+                    $scope.unpublish = (related) => {
+                        authoring.publish(item.archive_item, {}, 'unpublish');
+                        $scope.relatedItems.forEach((relatedItem) => {
+                            if (related[relatedItem._id]) {
+                                authoring.publish(relatedItem.archive_item, {}, 'unpublish');
+                            }
+                        });
+                        $scope.close();
+                    };
+                },
+            ],
+        });
+    };
+
+    this.publish = (item) => {
+        authoring.publish(item.archive_item, {}, 'publish');
     };
 
     /**

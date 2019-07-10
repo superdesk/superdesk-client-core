@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import {isPublished} from 'apps/archive/utils';
 
 HistoryController.$inject = [
     '$scope',
@@ -146,7 +147,7 @@ export function HistoryController(
     const processVersion = (version) => ({
         version: version._current_version,
         displayName: version.creator,
-        isPublished: ['published', 'corrected', 'killed', 'recalled'].includes(version.state),
+        isPublished: isPublished(version, false),
         operation: version.operation,
         item_id: version._id,
     });

@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import * as helpers from 'apps/authoring/authoring/helpers';
 import {gettext} from 'core/utils';
+import {isPublished, isKilled} from 'apps/archive/utils';
 
 /**
  * @ngdoc service
@@ -353,9 +354,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
      *
      * @param {Object} item
      */
-    this.isPublished = function isPublished(item) {
-        return _.includes(['published', 'killed', 'scheduled', 'corrected', 'recalled'], item.state);
-    };
+    this.isPublished = isPublished;
 
     /**
      * Unlock an item - callback for item:unlock event
@@ -397,12 +396,11 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         var action = angular.extend({}, helpers.DEFAULT_ACTIONS);
         var itemOnReadOnlyStage = item && item.task && item.task.stage && desks.isReadOnlyStage(item.task.stage);
         var isUndefinedOperation = angular.isUndefined(currentItem) || angular.isUndefined(userPrivileges);
-        const isKilledItem = (_item) => _.get(_item, 'state') === 'killed' || _.get(_item, 'state') === 'recalled';
 
         action = this._updateActionsForContentApi(currentItem, action);
 
         // killed item and item that have last publish action are readonly
-        if (isUndefinedOperation || itemOnReadOnlyStage || isKilledItem(currentItem) || !action.view) {
+        if (isUndefinedOperation || itemOnReadOnlyStage || isKilled(currentItem) || !action.view) {
             return action;
         }
 
@@ -476,7 +474,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         !this.isPublished(item) && !_.isNil(item.rewrite_of) && _.isNil(item.rewritten_by);
 
     this._isReadOnly = function(item) {
-        return _.includes(['spiked', 'scheduled', 'killed', 'recalled'], item.state);
+        return _.includes(['spiked', 'scheduled', 'killed', 'recalled', 'unpublished'], item.state);
     };
 
     this._updatePublished = function(currentItem, action) {
@@ -528,7 +526,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             (!currentItem.rewrite_of || currentItem.rewrite_of && this.isPublished(currentItem));
 
         action.resend = _.includes(['text'], currentItem.type) &&
-            _.includes(['published', 'corrected', 'killed', 'recalled'], currentItem.state);
+            isPublished(currentItem, false);
 
         // mark item for highlights
         action.mark_item_for_highlight = currentItem.task && currentItem.task.desk &&
@@ -560,9 +558,15 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             // in production
 
             action.duplicate = userPrivileges.duplicate &&
-                !_.includes(['spiked', 'killed', 'recalled'], currentItem.state);
+                !_.includes(['spiked', 'killed', 'recalled', 'unpublished'], currentItem.state);
 
-            action.add_to_current = !_.includes(['spiked', 'scheduled', 'killed', 'recalled'], currentItem.state);
+            action.add_to_current = !_.includes([
+                'spiked',
+                'scheduled',
+                'killed',
+                'recalled',
+                'unpublished',
+            ], currentItem.state);
 
             var desk = _.find(userDesks, {_id: currentItem.task.desk});
 

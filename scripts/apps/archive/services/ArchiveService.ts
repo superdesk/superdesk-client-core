@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import moment from 'moment';
+import {isPublished} from '../utils';
 
 ArchiveService.$inject = ['desks', 'session', 'api', '$q', 'search', '$location', 'config'];
 export function ArchiveService(desks, session, api, $q, search, $location, config) {
@@ -125,9 +126,7 @@ export function ArchiveService(desks, session, api, $q, search, $location, confi
      * @param {Object} item
      * @return boolean if the state of the item is in one of the published states, false otherwise.
      */
-    this.isPublished = function(item) {
-        return _.includes(['published', 'killed', 'scheduled', 'corrected', 'recalled'], item.state);
-    };
+    this.isPublished = isPublished;
 
     /** *
      * Returns versions of the item.
