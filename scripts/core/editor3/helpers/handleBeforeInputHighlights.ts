@@ -74,9 +74,9 @@ export function handleBeforeInputHighlights(onChange, chars: string, editorState
             (styleName) => characterStyles.every((stylesAtPosition) => stylesAtPosition.includes(styleName)),
         );
 
-        nextInlineStyles = editorState.getCurrentInlineStyle()
-            .filter((styleName: string) => styleNameBelongsToHighlight(styleName) === false)
-            .concat(commonHighlightStyles);
+        nextInlineStyles = OrderedSet<string>(editorState.getCurrentInlineStyle()
+            .filter((styleName) => styleNameBelongsToHighlight(styleName) === false)
+            .concat(commonHighlightStyles));
     }
 
     const nextContentState = Modifier.replaceText(
