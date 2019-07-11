@@ -85,6 +85,7 @@ export function insertMedia(files?, targetBlockKey = null) {
                         defaultTab: _isImage ? 'crop' : 'view',
                     };
 
+                    // using setTimeout: wait for already opened modal to get closed so that new modal can be opened.
                     setTimeout(() => {
                         renditions.crop(_media, options).then((cropped) => {
                             editedMedia.push(cropped);
