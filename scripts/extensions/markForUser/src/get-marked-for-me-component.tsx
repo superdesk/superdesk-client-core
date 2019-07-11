@@ -61,6 +61,7 @@ export function getMarkedForMeComponent(superdesk: ISuperdesk) {
         }
         render() {
             const {articles, desks} = this.state;
+
             if (articles === null || desks == null) {
                 return null;
             }

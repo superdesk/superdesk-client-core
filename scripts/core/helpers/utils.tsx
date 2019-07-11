@@ -1,4 +1,4 @@
-import {ISpacingProps} from "superdesk-api";
+import {ISpacingProps} from 'superdesk-api';
 
 export const isEmptyString = (str?: string): boolean => typeof str === 'string' && str.length > 0;
 
@@ -57,7 +57,7 @@ export function getSpacingProps<T extends ISpacingProps>(item: T): ISpacingProps
     const propertiesShallowCopy = {...properties};
 
     for (const key in propertiesShallowCopy) {
-        if (typeof propertiesShallowCopy[key] === 'undefined')  {
+        if (typeof propertiesShallowCopy[key] === 'undefined') {
             delete propertiesShallowCopy[key];
         }
     }

@@ -28,38 +28,38 @@ export function queryElastic(
             const [config, session] = res;
 
             const source = {
-                "query": {
-                    "filtered": {
-                        "filter": {
-                            "and": [
+                query: {
+                    filtered: {
+                        filter: {
+                            and: [
                                 {
-                                    "not": {
-                                        "term": {
-                                            "state": "spiked",
+                                    not: {
+                                        term: {
+                                            state: 'spiked',
                                         },
                                     },
                                 },
                                 {
-                                    "or": [
+                                    or: [
                                         {
-                                            "and": [
+                                            and: [
                                                 {
-                                                    "term": {
-                                                        "state": "draft",
+                                                    term: {
+                                                        state: 'draft',
                                                     },
                                                 },
                                                 {
-                                                    "term": {
-                                                        "original_creator": session.identity._id,
+                                                    term: {
+                                                        original_creator: session.identity._id,
                                                     },
                                                 },
                                             ],
                                         },
                                         {
-                                            "not": {
-                                                "terms": {
-                                                    "state": [
-                                                        "draft",
+                                            not: {
+                                                terms: {
+                                                    state: [
+                                                        'draft',
                                                     ],
                                                 },
                                             },
@@ -67,14 +67,14 @@ export function queryElastic(
                                     ],
                                 },
                                 {
-                                    "not": {
-                                        "term": {
-                                            "package_type": "takes",
+                                    not: {
+                                        term: {
+                                            package_type: 'takes',
                                         },
                                     },
                                 },
                                 {
-                                    "terms": Object.keys(filterValues).reduce((acc, key) => {
+                                    terms: Object.keys(filterValues).reduce((acc, key) => {
                                         acc[key] = filterValues[key];
 
                                         return acc;
@@ -84,9 +84,9 @@ export function queryElastic(
                         },
                     },
                 },
-                "sort": sort,
-                "size": page.size,
-                "from": page.from,
+                sort: sort,
+                size: page.size,
+                from: page.from,
             };
 
             const query = {

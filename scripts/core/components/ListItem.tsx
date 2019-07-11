@@ -67,6 +67,7 @@ export class ListItemActionsMenu extends React.Component {
 export class ListItemRow extends React.Component<{justifyContent?: string}> {
     render() {
         const {justifyContent} = this.props;
+
         return (
             <div className="sd-list-item__row" style={{
                 width: '100%',

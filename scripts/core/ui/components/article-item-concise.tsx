@@ -1,17 +1,17 @@
-import React from "react";
-import {noop} from "lodash";
+import React from 'react';
+import {noop} from 'lodash';
 
-import {IArticle} from "superdesk-api";
-import {connectServices} from "core/helpers/ReactRenderAsync";
+import {IArticle} from 'superdesk-api';
+import {connectServices} from 'core/helpers/ReactRenderAsync';
 
 import {
     slugline as Slugline,
     headline as Headline,
     state as State,
     versioncreated as VersionCreated,
-} from "apps/search/components/fields";
-import {ListTypeIcon} from "apps/search/components";
-import {ListItemColumn, ListItemRow, ListItem} from "core/components/ListItem";
+} from 'apps/search/components/fields';
+import {ListTypeIcon} from 'apps/search/components';
+import {ListItemColumn, ListItemRow, ListItem} from 'core/components/ListItem';
 
 interface IProps {
     article: IArticle;

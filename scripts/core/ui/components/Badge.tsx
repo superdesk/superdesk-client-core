@@ -1,25 +1,25 @@
-import React from "react";
+import React from 'react';
 import classNames from 'classnames';
-import {IPropsBadge} from "superdesk-api";
+import {IPropsBadge} from 'superdesk-api';
 import {assertNever} from 'core/helpers/typescript-helpers';
-import {getSpacingProps} from "core/helpers/utils";
+import {getSpacingProps} from 'core/helpers/utils';
 
 function getClassNameForBadgeStyle(type: IPropsBadge['type']) {
     switch (type) {
-        case 'primary':
-            return 'badge--primary';
-        case 'success':
-            return 'badge--success';
-        case 'warning':
-            return 'badge--warning';
-        case 'alert':
-            return 'badge--alert';
-        case 'highlight':
-            return 'badge--highlight';
-        case 'light':
-            return 'badge--light';
-        default:
-            assertNever(type);
+    case 'primary':
+        return 'badge--primary';
+    case 'success':
+        return 'badge--success';
+    case 'warning':
+        return 'badge--warning';
+    case 'alert':
+        return 'badge--alert';
+    case 'highlight':
+        return 'badge--highlight';
+    case 'light':
+        return 'badge--light';
+    default:
+        assertNever(type);
     }
 }
 
