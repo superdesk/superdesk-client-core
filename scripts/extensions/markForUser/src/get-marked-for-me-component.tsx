@@ -11,8 +11,8 @@ export function getMarkedForMeComponent(superdesk: ISuperdesk) {
     const {Badge} = superdesk.components;
     const {addEventListener, removeEventListener} = superdesk;
 
-    return class MarkedForMe extends React.PureComponent<void, IState> {
-        constructor(props: void) {
+    return class MarkedForMe extends React.PureComponent<{}, IState> {
+        constructor(props: {}) {
             super(props);
 
             this.state = {
