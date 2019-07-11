@@ -13,9 +13,6 @@ module.exports = function(grunt) {
         coreDir: __dirname,
         poDir: 'po',
         livereloadPort: 35729,
-        exec: {
-            compile_end_to_end_tests: 'npm run compile-end-to-end-tests',
-        },
     };
 
     grunt.initConfig(config);
@@ -34,8 +31,6 @@ module.exports = function(grunt) {
         config: config,
         configPath: path.join(__dirname, 'tasks', 'options'),
     });
-
-    grunt.loadNpmTasks('grunt-exec');
 
     // Linting tasks and alias
     grunt.registerTask('hint', ['eslint']);
@@ -85,7 +80,6 @@ module.exports = function(grunt) {
             'nggettext_compile',
             'ngtemplates:gen-apps',
             'ngtemplates:core',
-            'exec:compile_end_to_end_tests',
         ]);
 
         // if we have "*.po" files in "superdesk/client"
