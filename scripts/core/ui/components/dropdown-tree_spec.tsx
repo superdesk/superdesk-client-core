@@ -1,6 +1,5 @@
 import React from 'react';
 import {mount} from 'enzyme';
-import {noop} from 'lodash';
 import {DropdownTree} from './dropdown-tree';
 
 const groups = [
@@ -48,18 +47,22 @@ const groups = [
 ];
 
 it('renders correctly', () => {
+    const wrapper = mount(
+        <DropdownTree
+            getToggleElement={
+                (isOpen, onClick) => (<button onClick={onClick} data-test-id="toggle-button">Toggle Button</button>)
+            }
+            groups={groups}
+            renderItem={(key, item, closeDropdown) => (<div key={key}>{item.text}</div>)}
+        />,
+    );
+
+    wrapper.find('[data-test-id="toggle-button"]').simulate('click');
+
     expect(
-        mount(
-            <DropdownTree
-                getToggleElement={(onClick) => (<button onClick={onClick}>Toggle Button</button>)}
-                groups={groups}
-                renderItem={(item) => (<div>{item.text}</div>)}
-                getItemLabel={(item) => item.text}
-                onSelect={noop}
-            />,
-        ).html(),
+        wrapper.html(),
     ).toBe(
         // tslint:disable-next-line:max-line-length
-        `<div class="dropdown dropdown--align-right" style="line-height: initial;"><button>Toggle Button</button><div class="dropdown__menu dropdown__menu--scrollable"><div><div style="padding-left: 0px;"><div style="padding-left: 0px;"><div><button data-test-id="item 1-1" style="display: block; width: 100%; padding: 0px; text-align: left;"><div>item 1-1</div></button></div></div><div style="padding-left: 0px;"><div style="padding-left: 20px;"><div>subgroup 1</div><div style="padding-left: 20px;"><div><button data-test-id="subgroup item 1" style="display: block; width: 100%; padding: 0px; text-align: left;"><div>subgroup item 1</div></button></div></div><div style="padding-left: 20px;"><div><button data-test-id="subgroup item 2" style="display: block; width: 100%; padding: 0px; text-align: left;"><div>subgroup item 2</div></button></div></div><div style="padding-left: 20px;"><div style="padding-left: 40px;"><div>subgroup 2</div><div style="padding-left: 40px;"><div><button data-test-id="subgroup item 2.1" style="display: block; width: 100%; padding: 0px; text-align: left;"><div>subgroup item 2.1</div></button></div></div><div style="padding-left: 40px;"><div><button data-test-id="subgroup item 2.2" style="display: block; width: 100%; padding: 0px; text-align: left;"><div>subgroup item 2.2</div></button></div></div><div style="padding-left: 40px;"><div><button data-test-id="subgroup item 2.3" style="display: block; width: 100%; padding: 0px; text-align: left;"><div>subgroup item 2.3</div></button></div></div></div></div><div style="padding-left: 20px;"><div><button data-test-id="subgroup item 3" style="display: block; width: 100%; padding: 0px; text-align: left;"><div>subgroup item 3</div></button></div></div></div></div><div style="padding-left: 0px;"><div><button data-test-id="item 1-2" style="display: block; width: 100%; padding: 0px; text-align: left;"><div>item 1-2</div></button></div></div><div style="padding-left: 0px;"><div><button data-test-id="item 1-3" style="display: block; width: 100%; padding: 0px; text-align: left;"><div>item 1-3</div></button></div></div><div style="padding-left: 0px;"><div><button data-test-id="item 1-4" style="display: block; width: 100%; padding: 0px; text-align: left;"><div>item 1-4</div></button></div></div></div></div><div><div style="padding-left: 0px;"><div>group 2</div><div style="padding-left: 0px;"><div><button data-test-id="item 2-1" style="display: block; width: 100%; padding: 0px; text-align: left;"><div>item 2-1</div></button></div></div><div style="padding-left: 0px;"><div><button data-test-id="item 2-2" style="display: block; width: 100%; padding: 0px; text-align: left;"><div>item 2-2</div></button></div></div><div style="padding-left: 0px;"><div><button data-test-id="item 2-3" style="display: block; width: 100%; padding: 0px; text-align: left;"><div>item 2-3</div></button></div></div></div></div><div><div style="padding-left: 0px;"><div>group 3</div><div style="padding-left: 0px;"><div><button data-test-id="item 3-1" style="display: block; width: 100%; padding: 0px; text-align: left;"><div>item 3-1</div></button></div></div><div style="padding-left: 0px;"><div><button data-test-id="item 3-2" style="display: block; width: 100%; padding: 0px; text-align: left;"><div>item 3-2</div></button></div></div><div style="padding-left: 0px;"><div><button data-test-id="item 3-3" style="display: block; width: 100%; padding: 0px; text-align: left;"><div>item 3-3</div></button></div></div></div></div></div></div>`,
+        `<div style="display: flex; position: relative; line-height: initial;"><button data-test-id="toggle-button">Toggle Button</button><div tabindex="0" style="position: absolute; top: 100%; right: 0px;"><div style="background: rgb(248, 248, 248); max-height: 400px; overflow: auto; box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 10px, rgba(0, 0, 0, 0.1) 0px 3px 1px -2px;"><div><div style="padding-left: 0px;"><div style="padding-left: 0px;"><div>item 1-1</div><div style="padding-left: 20px;"><div>subgroup 1</div><div style="padding-left: 20px;"><div>subgroup item 1</div><div>subgroup item 2</div><div style="padding-left: 40px;"><div>subgroup 2</div><div style="padding-left: 40px;"><div>subgroup item 2.1</div><div>subgroup item 2.2</div><div>subgroup item 2.3</div></div></div><div>subgroup item 3</div></div></div><div>item 1-2</div><div>item 1-3</div><div>item 1-4</div></div></div></div><div><div style="padding-left: 0px;"><div>group 2</div><div style="padding-left: 0px;"><div>item 2-1</div><div>item 2-2</div><div>item 2-3</div></div></div></div><div><div style="padding-left: 0px;"><div>group 3</div><div style="padding-left: 0px;"><div>item 3-1</div><div>item 3-2</div><div>item 3-3</div></div></div></div></div></div></div>`,
     );
 });
