@@ -23,20 +23,18 @@ function handleToken(token, prefixFn) {
 function addPrefixes(cssString, prefixFn) {
     var ast = css.parse(cssString);
 
-    ast.stylesheet.rules = ast.stylesheet.rules.map((rule) => {
-        return {
-            ...rule,
-            selectors: Array.isArray(rule.selectors) // isn't present for CSS comments
-                ? rule.selectors.map((selector) => {
-                    const tokens = selectorTokenizer.parse(selector);
+    ast.stylesheet.rules = ast.stylesheet.rules.map((rule) => ({
+        ...rule,
+        selectors: Array.isArray(rule.selectors) // isn't present for CSS comments
+            ? rule.selectors.map((selector) => {
+                const tokens = selectorTokenizer.parse(selector);
 
-                    handleToken(tokens, prefixFn);
+                handleToken(tokens, prefixFn);
 
-                    return selectorTokenizer.stringify(tokens);
-                })
-                : rule.selectors,
-        };
-    });
+                return selectorTokenizer.stringify(tokens);
+            })
+            : rule.selectors,
+    }));
 
     return css.stringify(ast);
 }

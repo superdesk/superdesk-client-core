@@ -14,6 +14,8 @@ module.exports = Object.assign({}, sharedConfigs, {
                 'arrow-body-style': 0,
                 'newline-per-chained-call': 0,
                 'quote-props': 0,
+                'arrow-body-style': 0,
+                'max-len': 0, // handled by tslint
             },
         },
     ],

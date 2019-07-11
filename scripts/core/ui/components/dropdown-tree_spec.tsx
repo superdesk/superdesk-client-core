@@ -1,3 +1,5 @@
+/* eslint-disable react/display-name, react/no-multi-comp */
+
 import React from 'react';
 import {mount} from 'enzyme';
 import {DropdownTree} from './dropdown-tree';
