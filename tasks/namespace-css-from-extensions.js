@@ -23,8 +23,7 @@ function handleToken(token, prefixFn) {
 function addPrefixes(cssString, prefixFn) {
     var ast = css.parse(cssString);
 
-    ast.stylesheet.rules = ast.stylesheet.rules.map((rule) => ({
-        ...rule,
+    ast.stylesheet.rules = ast.stylesheet.rules.map((rule) => Object.assign({}, rule, {
         selectors: Array.isArray(rule.selectors) // isn't present for CSS comments
             ? rule.selectors.map((selector) => {
                 const tokens = selectorTokenizer.parse(selector);
