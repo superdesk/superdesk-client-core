@@ -17,11 +17,13 @@ const testSpellchecker: ISpellchecker = {
             startOffset: 5,
             text: 'speling',
             suggestions: [{text: 'spelling'}],
+            type: 'spelling',
         },
         {
             startOffset: 20,
             text: 'correkt',
             suggestions: [{text: 'correct'}, {text: 'incorrect'}],
+            type: 'spelling',
         },
     ]),
     actions: {

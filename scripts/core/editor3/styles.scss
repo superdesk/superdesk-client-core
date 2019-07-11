@@ -303,10 +303,17 @@ $editor-styleButton-size: 3rem;
 		}
 	}
 
-	.word-typo:not(.ignored) {
+	.spelling-error {
 	    border-bottom-width: 1px;
 	    border-bottom-style: dotted;
 	    border-bottom-color: red;
+	    position: relative;
+	}
+
+	.grammar-error {
+	    border-bottom-width: 1px;
+	    border-bottom-style: dotted;
+	    border-bottom-color: blue;
 	    position: relative;
 	}
 
