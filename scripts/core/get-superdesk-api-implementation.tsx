@@ -27,6 +27,7 @@ import {ArticleItemConcise} from 'core/ui/components/article-item-concise';
 import {DropdownTree} from './ui/components/dropdown-tree';
 import {getCssNameForExtension} from './get-css-name-for-extension';
 import {Badge} from './ui/components/Badge';
+import {getCustomEventNamePrefixed} from './notification/notification';
 
 function getOnUpdateBeforeMiddlewares(
     extensions: IExtensions,
@@ -57,6 +58,10 @@ function getOnUpdateAfterFunctions(
                 : [],
     );
 }
+
+// stores a map between custom callback & callback passed to DOM
+// so the original event can be removed later
+const customEventMap = new Map();
 
 export function getSuperdeskApiImplementation(
     requestingExtensionId: string,
@@ -197,6 +202,21 @@ export function getSuperdeskApiImplementation(
                 getClass: (originalName: string) => getCssNameForExtension(originalName, requestingExtensionId),
                 getId: (originalName: string) => getCssNameForExtension(originalName, requestingExtensionId),
             },
+        },
+        addEventListener: (eventName, callback) => {
+            const handlerWrapper = (customEvent: CustomEvent) => callback(customEvent.detail);
+
+            customEventMap.set(callback, handlerWrapper);
+
+            window.addEventListener(getCustomEventNamePrefixed(eventName), handlerWrapper);
+        },
+        removeEventListener: (eventName, callback) => {
+            const handlerWrapper = customEventMap.get(callback);
+
+            if (handlerWrapper != null) {
+                window.removeEventListener(getCustomEventNamePrefixed(eventName), handlerWrapper);
+                customEventMap.delete(callback);
+            }
         },
     };
 }

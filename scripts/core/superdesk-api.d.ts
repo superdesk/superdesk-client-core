@@ -469,6 +469,21 @@ declare module 'superdesk-api' {
         delete<T extends IBaseRestApiResponse>(endpoint, item: T): Promise<void>;
     }
 
+    
+
+    // EVENTS
+
+    export interface IArticleUpdateEvent {
+        user: string;
+        items: {[itemId: string]: 1};
+        desks: {[itemId: string]: 1};
+        stages: {[itemId: string]: 1};
+    }
+
+    export interface IEvents {
+        articleUpdate: IArticleUpdateEvent;
+    }
+
 
 
     // APPLICATION API
@@ -563,5 +578,7 @@ declare module 'superdesk-api' {
                 warn(message: string, json: {[key: string]: any}): void;
             };
         };
+        addEventListener<T extends keyof IEvents>(eventName: T, fn: (arg: IEvents[T]) => void): void;
+        removeEventListener<T extends keyof IEvents>(eventName: T, fn: (arg: IEvents[T]) => void): void;
     }>;
 }

@@ -1,38 +1,63 @@
 import * as React from 'react';
-import {ISuperdesk, IArticle, IArticleQueryResult, IDesk} from 'superdesk-api';
+import {ISuperdesk, IArticle, IArticleQueryResult, IDesk, IArticleUpdateEvent, IUser} from 'superdesk-api';
 
 interface IState {
     articles: IArticleQueryResult | null;
     desks: Array<IDesk> | null;
+    user: IUser | null;
 }
 
 export function getMarkedForMeComponent(superdesk: ISuperdesk) {
     const {Badge} = superdesk.components;
+    const {addEventListener, removeEventListener} = superdesk;
 
-    return class MarkedForMe extends React.PureComponent<any, IState> {
-        constructor(props: any) {
+    return class MarkedForMe extends React.PureComponent<void, IState> {
+        constructor(props: void) {
             super(props);
 
             this.state = {
                 articles: null,
                 desks: null,
+                user: null,
             };
+
+            this.queryAndSetArticles = this.queryAndSetArticles.bind(this);
+            this.handleArticleUpdateEvent = this.handleArticleUpdateEvent.bind(this);
+        }
+        private queryAndSetArticles() {
+            const {user} = this.state;
+
+            if (user != null) {
+                superdesk.dataApiByEntity.article.query({
+                    page: {from: 0},
+                    sort: [{'_updated': 'desc'}],
+                    filterValues: {marked_for_user: [user._id]},
+                }).then((articles) => {
+                    this.setState({articles});
+                });
+            }
+        }
+        private handleArticleUpdateEvent(event: IArticleUpdateEvent) {
+            if (this.state.articles != null && this.state.articles._items.some(({_id}) => event.items[_id] != null)) {
+                this.queryAndSetArticles();
+            }
         }
         componentDidMount() {
             Promise.all([
                 superdesk.dataApi.query<IDesk>('desks', 1, {field: '_id', direction: 'ascending'}, {}),
-                superdesk.session.getCurrentUser().then((user) => {
-                    return superdesk.dataApiByEntity.article.query({
-                        page: {from: 0},
-                        sort: [{'_updated': 'desc'}],
-                        filterValues: {marked_for_user: [user._id]},
-                    });
-                }),
+                superdesk.session.getCurrentUser(),
             ]).then((res) => {
-                const [desksResponse, articlesResponse] = res;
+                const [desksResponse, user] = res;
 
-                this.setState({articles: articlesResponse, desks: desksResponse._items});
+                this.setState({desks: desksResponse._items, user});
+
+                this.queryAndSetArticles();
             });
+
+            addEventListener('articleUpdate', this.handleArticleUpdateEvent);
+        }
+        componentWillUnmount() {
+            removeEventListener('articleUpdate', this.handleArticleUpdateEvent);
         }
         render() {
             const {articles, desks} = this.state;
