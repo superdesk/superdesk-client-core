@@ -1,5 +1,5 @@
 import {isEmpty} from 'lodash';
-import {IArticle} from 'superdesk-interfaces/Article';
+import {IArticle} from 'superdesk-api';
 import {gettext} from 'core/utils';
 
 /**

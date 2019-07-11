@@ -16,10 +16,11 @@ export interface IVocabulary {
     priority: number;
     unique_field: string;
     schema: {};
-    field_type: 'text' | 'media' | 'date' | 'embed' | 'related_content';
+    field_type: 'text' | 'media' | 'date' | 'embed' | 'related_content' | 'custom';
     field_options: {};
     init_version: number;
     preffered_items: boolean;
     tags: Array<IVocabularyTag>;
     date_shortcuts: Array<{value: number; term: string; label: string}>;
+    custom_field_type: string;
 }

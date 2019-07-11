@@ -3,11 +3,13 @@ export interface ISpellcheckerSuggestion {
 }
 
 export interface ISpellcheckWarning {
-    // zero-based, line-break agnostic index
+    // zero-based; line breaks are counted as single characters.
     startOffset: number;
 
     // offending text fragment. Can consist of multiple words. Can NOT span multiple paragraphs.
     text: string;
+
+    type: 'spelling' | 'grammar';
 
     // list of text fragments suggested to replace offending text fragment.
     // Can consist of multiple words. Can NOT span multiple paragraphs.

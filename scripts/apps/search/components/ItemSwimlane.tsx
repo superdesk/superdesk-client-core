@@ -2,7 +2,7 @@ import React, {ReactElement} from 'react';
 import {get} from 'lodash';
 import classNames from 'classnames';
 
-import {IArticle} from 'superdesk-interfaces/Article';
+import {IArticle} from 'superdesk-api';
 
 import {ListTypeIcon} from './ListTypeIcon';
 import {SwimlaneField} from './SwimlaneField';

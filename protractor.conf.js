@@ -43,7 +43,7 @@ var config = {
     directConnect: true,
 
     onPrepare: function() {
-        require('./spec/helpers/setup')({fixture_profile: 'app_prepopulate_data'});
+        require('./spec/helpers/setup').setup({fixture_profile: 'app_prepopulate_data'});
 
         // so it can be used without import in tests
         // useful when debugging on CI server

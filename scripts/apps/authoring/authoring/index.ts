@@ -9,10 +9,13 @@ import '../suggest';
 import mediaModule from '../media';
 import {reactToAngular1} from 'superdesk-ui-framework';
 import {ArticleUrlFields} from './article-url-fields';
+import {AuthoringCustomField} from './authoring-custom-field';
+import {PreviewCustomField} from './preview-custom-field';
+import {LineCount} from './components/line-count';
 import {PopulateAuthorsController} from './controllers/PopulateAuthorsController';
 
 import {gettext} from 'core/utils';
-import {IArticle} from 'superdesk-interfaces/Article';
+import {IArticle} from 'superdesk-api';
 import {IArticleSchema} from 'superdesk-interfaces/ArticleSchema';
 import {AuthoringTopbarReact} from './authoring-topbar-react';
 
@@ -102,10 +105,34 @@ angular.module('superdesk.apps.authoring', [
     .directive('sdRemoveTags', directive.RemoveTagsDirective)
     .directive('tansaScopeSync', directive.TansaScopeSyncDirective)
     .directive('sdItemActionByIntent', directive.ItemActionsByIntentDirective)
+
+    .component('sdLineCount',
+        reactToAngular1(
+            LineCount,
+            ['item', 'html'],
+            ['config'],
+            'display:contents',
+        ),
+    )
+
     .component('sdArticleUrlFields',
         reactToAngular1(
             ArticleUrlFields,
             ['label', 'urls', 'helperText', 'onChange', 'fieldId', 'editable', 'required'],
+        ),
+    )
+
+    .component('sdAuthoringCustomField',
+        reactToAngular1(
+            AuthoringCustomField,
+            ['item', 'field', 'editable', 'onChange'],
+        ),
+    )
+
+    .component('sdPreviewCustomField',
+        reactToAngular1(
+            PreviewCustomField,
+            ['item', 'field'],
         ),
     )
 

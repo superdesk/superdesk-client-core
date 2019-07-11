@@ -1212,6 +1212,15 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                         $scope.schema = _schema;
                     });
             };
+
+            $scope.setCustomValue = (field, value) => {
+                const extra = Object.assign({}, $scope.item.extra);
+
+                extra[field._id] = value || null;
+                $scope.item.extra = extra;
+
+                $scope.autosave($scope.item, 200);
+            };
         },
     };
 }

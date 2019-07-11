@@ -12,6 +12,7 @@ e2e-test-results
 templates-cache.generated.js
 scripts/core/extension-imports.generated.ts
 styles/extension-styles.generated.css
+spec/**/*.js
 .env
 npm-debug.log
 index.html

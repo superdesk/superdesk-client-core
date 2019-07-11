@@ -4,6 +4,9 @@ import {ContentBlock, EditorState} from 'draft-js';
 import {SpellcheckerContextMenu} from './SpellcheckerContextMenu';
 import {ISpellcheckWarning, ISpellchecker} from './interfaces';
 import {getSpellchecker} from './default-spellcheckers';
+import {logger} from 'core/services/logger';
+import {assertNever} from 'core/helpers/typescript-helpers';
+import {IPropsDraftDecorator} from 'core/editor3/draftjs-types';
 
 export type ISpellcheckWarningsByBlock = {[blockKey: string]: Array<ISpellcheckWarning>};
 
@@ -11,6 +14,12 @@ export function getSpellcheckWarningsByBlock(
     spellchecker: ISpellchecker,
     editorState: EditorState,
 ): Promise<ISpellcheckWarningsByBlock> {
+    const text = editorState.getCurrentContent().getPlainText();
+
+    if (text.length < 1) {
+        return Promise.resolve({});
+    }
+
     const rangesByBlock: Array<{blockKey: string, startOffset: number, endOffset: number}> = [];
 
     let lastOffset = 0;
@@ -18,14 +27,13 @@ export function getSpellcheckWarningsByBlock(
 
     blocks.forEach((block) => {
         const blockLength = block.getLength();
+        const lineBreak = 1;
 
         rangesByBlock.push({
             blockKey: block.getKey(), startOffset: lastOffset, endOffset: lastOffset + blockLength,
         });
-        lastOffset += blockLength;
+        lastOffset += blockLength + lineBreak;
     });
-
-    const text = editorState.getCurrentContent().getPlainText();
 
     return spellchecker.check(text).then((warnings) => {
         let spellcheckWarningsByBlock: ISpellcheckWarningsByBlock = {};
@@ -33,6 +41,11 @@ export function getSpellcheckWarningsByBlock(
         warnings.forEach((warning) => {
             const range = rangesByBlock.find(({startOffset, endOffset}) =>
                 warning.startOffset >= startOffset && warning.startOffset < endOffset);
+
+            if (range == null) {
+                logger.warn('Can not find a range for a spellchecker warning', {text, warnings, warning});
+                return;
+            }
 
             const {blockKey} = range;
 
@@ -69,7 +82,10 @@ interface IState {
     warning: ISpellcheckWarning;
 }
 
-export const getSpellcheckingDecorator = (language: string, spellcheckWarnings: ISpellcheckWarningsByBlock) => {
+export function getSpellcheckingDecorator(
+    language: string,
+    spellcheckWarnings: ISpellcheckWarningsByBlock,
+) {
     const spellchecker = getSpellchecker(language);
 
     return {
@@ -82,7 +98,7 @@ export const getSpellcheckingDecorator = (language: string, spellcheckWarnings: 
                 });
             }
         },
-        component: class SpellcheckerError extends React.Component<any, IState> {
+        component: class SpellcheckerError extends React.Component<IPropsDraftDecorator, IState> {
             static propTypes: any;
             static defaultProps: any;
 
@@ -122,33 +138,47 @@ export const getSpellcheckingDecorator = (language: string, spellcheckWarnings: 
             render() {
                 const {menuShowing} = this.state;
 
+                const blockKey = this.props.offsetKey.split('-')[0];
+                const warningsForBlock = spellcheckWarnings[blockKey];
+
+                if (warningsForBlock == null) {
+                    return <span>{this.props.children}</span>;
+                }
+
+                // props.start isn't available in the latest release yet
+                // it's fixed in https://github.com/facebook/draft-js/commit/8000486ed6890d1f69100379d954a62ac8a4eb08
+                const {start} = this.props.children[0].props;
+                const {decoratedText} = this.props;
+
+                const warningForDecoration = warningsForBlock.find((warning) =>
+                    warning.startOffset === start && warning.text === decoratedText);
+
+                if (warningForDecoration == null) {
+                    return <span>{this.props.children}</span>;
+                }
+
+                const getClassname = () => {
+                    if (warningForDecoration.type === 'spelling') {
+                        return 'spelling-error';
+                    } else if (warningForDecoration.type === 'grammar') {
+                        return 'grammar-error';
+                    } else {
+                        assertNever(warningForDecoration.type);
+                    }
+                };
+
                 return (
                     <span
-                        className="word-typo"
+                        className={getClassname()}
                         onContextMenu={(e) => {
                             e.preventDefault();
-
-                            const blockKey = this.props.offsetKey.split('-')[0];
-                            const warningsForBlock = spellcheckWarnings[blockKey];
-
-                            if (warningsForBlock == null) {
-                                return;
-                            }
-
-                            const startOffset = this.props.contentState
-                                .getBlockForKey(blockKey)
-                                .getText()
-                                .indexOf(this.props.decoratedText);
-
-                            const warningForDecoration = warningsForBlock.find((warning) =>
-                                warning.startOffset === startOffset && warning.text === this.props.decoratedText);
 
                             if (Array.isArray(warningForDecoration.suggestions)) {
                                 this.setState({
                                     menuShowing: true,
                                     warning: warningForDecoration,
                                 });
-                            } else {
+                            } else if (typeof spellchecker.getSuggestions === 'function') {
                                 spellchecker.getSuggestions(warningForDecoration.text).then((suggestions) => {
                                     this.setState({
                                         menuShowing: true,
@@ -157,6 +187,14 @@ export const getSpellcheckingDecorator = (language: string, spellcheckWarnings: 
                                             suggestions: suggestions == null ? [] : suggestions,
                                         },
                                     });
+                                });
+                            } else {
+                                this.setState({
+                                    menuShowing: true,
+                                    warning: {
+                                        ...warningForDecoration,
+                                        suggestions: [],
+                                    },
                                 });
                             }
                         }}
@@ -179,4 +217,4 @@ export const getSpellcheckingDecorator = (language: string, spellcheckWarnings: 
             }
         },
     };
-};
+}

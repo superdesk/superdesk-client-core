@@ -1,7 +1,9 @@
 <li ng-repeat="user in users track by user._id"
     ng-click="select(user)"
     ng-show="!authorOnlyFilter || authorOnlyFilter && user.is_author"
-    ng-class="{selected: user._id === selected._id, 'inactive' : !user.is_enabled || !user.is_active}">
+    ng-class="{selected: user._id === selected._id, 'inactive' : !user.is_enabled || !user.is_active}"
+    data-test-id="users-list-item"
+>
     <figure class="avatar avatar-with-info" ng-class="{'user-logged': isLoggedIn(user)}">
         <div class="logged-info"></div>
         <div class="user-image">
@@ -18,7 +20,7 @@
             <span class="disabled-label" ng-if="user.is_enabled && !user.is_active" translate>inactive</span>
             <span class="disabled-label" ng-if="user.is_enabled && user.is_active && user.needs_activation" translate>pending</span>
         </div>
-        <div class="username">{{ user.username }}</div>
+        <div class="username" data-test-id="username">{{ user.username }}</div>
         <div class="role">{{ roles[user.role].name }}</div>
         <div class="email">{{ user.email }}</div>
         <div class="created">{{ user._created | reldate}}</div>

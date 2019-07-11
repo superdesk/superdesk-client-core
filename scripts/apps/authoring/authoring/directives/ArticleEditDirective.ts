@@ -62,6 +62,9 @@ export function ArticleEditDirective(
         link: function(scope, elem) {
             getLabelNameResolver().then((getLabelForFieldId) => {
                 scope.handleUrlsChange = function(fieldId, value) {
+                    if (!scope.item.extra) {
+                        scope.item.extra = {};
+                    }
                     scope.item.extra[fieldId] = value;
                     scope.autosave(scope.item);
                 };

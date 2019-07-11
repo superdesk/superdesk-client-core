@@ -28,6 +28,10 @@ import {DropdownTree} from './ui/components/dropdown-tree';
 import {getCssNameForExtension} from './get-css-name-for-extension';
 import {Badge} from './ui/components/Badge';
 import {getCustomEventNamePrefixed} from './notification/notification';
+import {Grid} from './ui/components/grid';
+import {Alert} from './ui/components/alert';
+import {Figure} from './ui/components/figure';
+import {DropZone} from './ui/components/drop-zone';
 
 function getOnUpdateBeforeMiddlewares(
     extensions: IExtensions,
@@ -144,6 +148,10 @@ export function getSuperdeskApiImplementation(
                 Row: Row as React.ComponentType,
                 Column: Column as React.ComponentType<{grow: boolean}>,
             },
+            Grid,
+            Alert,
+            Figure,
+            DropZone,
             Modal,
             ModalHeader,
             ModalBody,

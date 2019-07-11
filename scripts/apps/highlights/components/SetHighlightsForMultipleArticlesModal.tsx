@@ -5,8 +5,7 @@ import {ModalBody} from 'core/ui/components/Modal/ModalBody';
 import {ModalFooter} from 'core/ui/components/Modal/ModalFooter';
 import {Modal} from 'core/ui/components/Modal/Modal';
 import {connectServices} from 'core/helpers/ReactRenderAsync';
-import {IDesk} from 'superdesk-api';
-import {IArticle} from 'superdesk-interfaces/Article';
+import {IDesk, IArticle} from 'superdesk-api';
 
 interface IProps {
     closeModal(): void;

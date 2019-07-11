@@ -132,17 +132,54 @@
 
             <!-- custom date, text and url fields -->
             <div ng-repeat="field in fields track by field._id" order="{{editor[field._id].order}}"
-              ng-if="selected.preview.extra[field._id] && (field.field_type === 'text' || field.field_type === 'date' || field.field_type === 'urls')">
+              ng-if="selected.preview.extra[field._id] && (field.field_type === 'text' || field.field_type === 'date' || field.field_type === 'urls' || field.field_type === 'custom')">
 
               <div class="text body-text" sd-short-date ng-if="field.field_type === 'date'" data-date="selected.preview.extra[field._id]"></div>
 
               <div class="text body-text" ng-if="field.field_type === 'text'" sd-html-preview="selected.preview.extra[field._id]"></div>
+
+              <sd-preview-custom-field ng-if="field.field_type === 'custom'" item="selected.preview" field="field"></sd-preview-custom-field>
               
               <ul class="text body-text" ng-if="field.field_type === 'urls'">
                 <li ng-repeat="item in selected.preview.extra[field._id] track by $index">{{item.url}}<br>
                   <p class="nav-space description-text">{{item.description}}</p>
                 </li>
               </ul>
+            </div>
+
+            <!-- custom media and related item fields -->
+            <div ng-repeat="field in fields track by field._id"
+                ng-if="(field.field_type === 'media' || field.field_type === 'related_content')
+                && associationExists(item.associations, field._id)"
+                order="{{editor[field._id].order}}"
+                class="body preview-editor">
+                <div class="preview-label">
+                    <label translate>{{field.display_name}}</label>
+                </div>
+
+                <div ng-if="field.field_type === 'media'" class="association">
+                    <div ng-repeat="(mediaId, media) in getAssociatedItems(item.associations, field._id) track by mediaId">
+                        <img src="{{media.renditions.viewImage.href}}" ng-if="media.type === 'picture'">
+                        <video controls="controls" ng-if="media.type === 'video'">
+                            <source vsrc="{{rendition.href}}"
+                                    ng-repeat="(key, rendition) in media.renditions"
+                                    ng-if="checkRenditions.isVideo(rendition)" html5vfix>
+                        </video>
+                        <audio controls="controls" ng-if="media.type === 'audio'">
+                            <source vsrc="{{rendition.href}}"
+                                    ng-repeat="(key, rendition) in media.renditions"
+                                    ng-if="checkRenditions.isAudio(rendition)" html5vfix>
+                        </audio>
+                        <p>{{media.description_text}}</p>
+                    </div>
+                </div>
+
+                <div ng-if="field.field_type === 'related_content'">
+                    <div sd-related-items-preview
+                        data-item="item"
+                        data-field="field">
+                    </div>
+                </div>
             </div>
 
             <div class="composite-preview" ng-if="selected.preview.type === 'composite'">

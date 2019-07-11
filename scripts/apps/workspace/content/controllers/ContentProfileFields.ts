@@ -1,5 +1,5 @@
 import {get, keyBy} from 'lodash';
-import {IArticle} from 'superdesk-interfaces/Article';
+import {IArticle} from 'superdesk-api';
 import {getLabelForFieldId} from '../../helpers/getLabelForFieldId';
 import {getTypeForFieldId} from '../../helpers/getTypeForFieldId';
 

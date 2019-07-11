@@ -1,9 +1,8 @@
 import React from 'react';
 
-import {IExtensionActivationResult, IArticleActionBulk} from 'superdesk-api';
+import {IExtensionActivationResult, IArticleActionBulk, IArticle} from 'superdesk-api';
 import {flatMap} from 'lodash';
 import {extensions} from 'core/extension-imports.generated';
-import {IArticle} from 'superdesk-interfaces/Article';
 import {DropdownTree} from 'core/ui/components/dropdown-tree';
 import {Icon} from 'core/ui/components/Icon2';
 import {sortByDisplayPriority} from 'core/helpers/sortByDisplayPriority';

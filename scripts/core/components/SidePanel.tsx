@@ -1,4 +1,4 @@
-/* eslint-disable react/no-multi-comp */
+/* eslint-disable react/no-multi-comp, react/prop-types */
 
 import React from 'react';
 import {assertNever} from 'core/helpers/typescript-helpers';

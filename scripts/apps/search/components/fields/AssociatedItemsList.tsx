@@ -1,5 +1,5 @@
 import React from 'react';
-import {IArticle} from 'superdesk-interfaces/Article';
+import {IArticle} from 'superdesk-api';
 
 const TYPES_TO_ICONS = {
     picture: 'icon-photo',

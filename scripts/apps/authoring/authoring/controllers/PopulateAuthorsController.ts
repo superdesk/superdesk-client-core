@@ -1,6 +1,5 @@
-import {IArticle} from 'superdesk-interfaces/Article';
+import {IArticle, IAuthor} from 'superdesk-api';
 import {IRolesService} from 'superdesk-interfaces/UserRole';
-import {IAuthor} from 'superdesk-interfaces/Author';
 import {ISession} from 'superdesk-interfaces/Session';
 
 interface IScope extends ng.IScope {
