@@ -8,7 +8,7 @@ interface IState {
 }
 
 export function getMarkedForMeComponent(superdesk: ISuperdesk) {
-    const {Badge} = superdesk.components;
+    const {Badge, GroupLabel, TopMenuDropdownButton} = superdesk.components;
     const {addEventListener, removeEventListener} = superdesk;
 
     return class MarkedForMe extends React.PureComponent<{}, IState> {
@@ -96,34 +96,18 @@ export function getMarkedForMeComponent(superdesk: ISuperdesk) {
                 <DropdownTree
                     groups={desksInOrder.map((deskId) => ({
                         render: () => (
-                            <div style={{
-                                fontSize: 11,
-                                fontWeight: 500,
-                                textTransform: 'uppercase',
-                                letterSpacing: 0.08,
-                                color: '#5D9BC0',
-                                paddingTop: 16,
-                                paddingBottom: 10,
-                            }}>
-                                <span className="badge badge--highlight" style={{marginRight: 6}}>
-                                    {itemsByDesk[deskId].length}
-                                </span>
+                            <GroupLabel>
+                                <Badge type="highlight" marginRight={6}>{itemsByDesk[deskId].length}</Badge>
                                 {desks.find(({_id}) => _id === deskId)!.name}
-                            </div>
+                            </GroupLabel>
                         ),
                         items: itemsByDesk[deskId],
                     }))}
                     getToggleElement={(isOpen, onClick) => (
-                        <button onClick={onClick} style={{
-                            background: isOpen ? '#F8F8F8' : '#3C3C3C',
-                            color: isOpen ? '#000' : '#fff',
-                            paddingLeft: 10,
-                            paddingRight: 10,
-                            zIndex: 2, // so button is on top of dropdown top shadow
-                        }}>
+                        <TopMenuDropdownButton onClick={onClick} active={isOpen}>
                             <Badge type="highlight" marginRight={6}>{articles._items.length}</Badge>
                             {gettext('Marked for me')}
-                        </button>
+                        </TopMenuDropdownButton>
                     )}
                     renderItem={(key, item, closeDropdown) => {
                         return (

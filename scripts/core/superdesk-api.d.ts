@@ -570,6 +570,8 @@ declare module 'superdesk-api' {
             SelectUser: React.ComponentType<IPropsSelectUser>;
             UserAvatar: React.ComponentType<{userId: string}>;
             ArticleItemConcise: React.ComponentType<{article: IArticle}>;
+            GroupLabel: React.ComponentType<ISpacingProps>;
+            TopMenuDropdownButton: React.ComponentType<{onClick: () => void; active: boolean}>;
             getDropdownTree: <T>() => React.ComponentType<IPropsDropdownTree<T>>;
         };
         forms: {

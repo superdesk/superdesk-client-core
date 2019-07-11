@@ -32,6 +32,8 @@ import {Grid} from './ui/components/grid';
 import {Alert} from './ui/components/alert';
 import {Figure} from './ui/components/figure';
 import {DropZone} from './ui/components/drop-zone';
+import {GroupLabel} from './ui/components/GroupLabel';
+import {TopMenuDropdownButton} from './ui/components/TopMenuDropdownButton';
 
 function getOnUpdateBeforeMiddlewares(
     extensions: IExtensions,
@@ -160,6 +162,8 @@ export function getSuperdeskApiImplementation(
             SelectUser,
             UserAvatar: UserAvatarFromUserId,
             ArticleItemConcise,
+            GroupLabel,
+            TopMenuDropdownButton,
             getDropdownTree: () => DropdownTree,
         },
         forms: {
