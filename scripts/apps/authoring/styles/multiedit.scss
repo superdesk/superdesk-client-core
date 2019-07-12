@@ -4,7 +4,8 @@
 @import '~mixins.scss';
 @import '~variables.scss';
 
-$create-board-pane: 110px;
+$create-board-pane: 64px;
+$top-offset: 48px;
 
 .close-multiedit {
     position: absolute;
@@ -19,29 +20,37 @@ $create-board-pane: 110px;
 }
 
 .multiedit-screen {
+    &.main-section {
+        top: $top-offset * 2;
+    }
     .boards-list {
         position: absolute;
-        top: 0; left: 0; bottom: 0;
+        top: 0;
+        left: 0;
+        bottom: 0;
         right: $create-board-pane;
     }
     .boards-create {
         position: absolute;
-        top: 0; bottom: 0; right: 0;
+        top: 0;
+        bottom: 0;
+        right: 0;
         width: $create-board-pane;
-        @include border-box();
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(94, 169, 200, 0);
+        transition: background-color 0.2s ease-in-out;
         i {
-            font-size: 48px;
-            line-height: 100px;
-
-            position: absolute;
-            top: 50%;
-            margin-top: -50px;
-            left: 50%;
-            margin-left: -20px;
+            font-size: 3.2rem;
+            height: 3.2rem;
+            width: 3.2rem;
+            line-height: 100%;
+            color: $sd-blue;
         }
         &:hover {
             cursor: pointer;
-            background: #d8d8d8;
+            background-color: rgba(94, 169, 200, 0.2);
         }
         .multiedit-float {
             .dropdown__menu {
@@ -58,63 +67,87 @@ $create-board-pane: 110px;
         }
     }
     .boards-list {
+        display: flex;
+        align-items: stretch;
+        flex: 1 1 0;
         .board {
             background: $white;
-            float: left;
+            //float: left;
             height: 100%;
-            @include border-box();
             border: 1px solid #cacaca;
             border-width: 0 1px;
-            overflow-y: auto;
             position: relative;
-
-            > .dropdown {
-                left: 10px;
-                top: 5px;
-                border: 0;
-                position: absolute;
-                z-index: 2;
-                display: none;
-                .dropdown__toggle {
-                    padding: 0 15px;
-                    i {
-                        @include opacity(70);
-                    }
-                }
-                &.open .dropdown__toggle {
-                    box-shadow: -3px -2px 1px -2px #999999, 3px -2px 1px -2px #999999;
-                }
-                .dropdown__menu {
-                    margin-top: -4px;
-                }
-            }
-
             > .board-article {
                 width: 100%;
-                height: 100%;
                 > .main-article {
+                    display: grid;
+                    grid-template-rows: 48px 1fr;
                     border: 0;
-                    padding: 20px 20px $bottom-view-padding+20px;
-
+                    padding: 0;
+                    height: calc(100vh - 96px);
                     &.locked {
                         border-left: 4px solid $state-border--locked;
                     }
 
-                    .editbar {
-                        visibility: hidden;
-                        overflow: hidden;
-                        margin: 0 0 20px;
+                    .main-article__editbar {
+                        grid-row: 1/2;
+                        height: 4.8rem;
+                        padding: 1rem 1.6rem;
+                        margin: 0;
+                        background: $white;
+                        z-index: 10;
+                        display: flex;
+                        align-items: center;
+                        justify-content: flex-end;
+                        box-shadow: 0 1px 4px 0 rgba(0,0,0,0.08);
+                        .main-article__editbar-button {
+                            visibility: hidden;
+                            margin-left: 0.8rem;
+                        }
+
+                    }
+                    .main-article__content {
+                        grid-row: 2/3;
+                        overflow-y: auto;
+                        padding: 10px 20px 30px;
+                    }
+                    .main-article__form {
+                        display: contents;
                     }
                 }
             }
             &:hover {
-                > .dropdown {
-                    display: block;
+                .multiedit-screen__selection {
+                    opacity: 1;
                 }
-                .editbar {
-                    visibility: visible !important;
+                .main-article__editbar {
+                    .main-article__editbar-button {
+                        visibility: visible !important;
+                    }
                 }
             }
         }
     }
+}
+.multiedit-screen__selection {
+    position: absolute;
+    top: 0;
+    left: 0;
+    border: none;
+    z-index: 2;
+    opacity: 0.8;
+    .dropdown__toggle {
+        i {
+            opacity: 0.7;
+        }
+    }
+}
+.board {
+    .board-tools {
+        display: contents; 
+    }
+}
+
+.subnav--multiedit-screen {
+    top: $top-offset;
 }

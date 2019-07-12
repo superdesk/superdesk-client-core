@@ -5,24 +5,23 @@
       on-change="handleArticleChange"
     ></sd-authoring-topbar-react>
 
-    <div ng-show="isLocked()" style="display: flex; align-items: center; background: #EA484B; padding: 4px; padding-right: 0; margin-left: 10px; height: 32px; border-radius: 100px; color: #fff;">
-      <figure class="avatar small avatar-with-info">
+    <div ng-show="isLocked()" class="locked-info">
+      <figure class="avatar small">
           <div class="user-image">
               <img sd-user-avatar data-user="item.lock_user">
           </div>
       </figure>
-      <span style="opacity: 0.7" translate>Locked by</span>
-      <span>&nbsp;{{ item.lock_user | username }}</span>
+      <span class="locked-info__label" translate>Locked by</span>
+      <span class="locked-info__name">{{ item.lock_user | username }}</span>
       <button
-        class="btn btn--text-only"
-        style="color: #fff; padding: 8px; margin-left: 4px; border-radius: 100px;"
+        class="locked-info__button"
         ng-show="can_unlock()"
         ng-click="unlock()"
         ng-disabled="unlockClicked"
         sd-hotkey="ctrl+shift+u"
         sd-hotkey-options="{global: true}"
         translate>
-          <strong>Unlock</strong>
+        Unlock
       </button>
     </div>
 

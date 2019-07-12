@@ -1956,3 +1956,45 @@ sd-multi-image-edit {
 .sd-margin-all--0 {
     margin: 0 !important;
 }
+
+
+.locked-info {
+    display: flex;
+    align-items: center;
+    background: #EA484B;
+    color: $white;
+    padding: 0.4rem;
+    padding-right: 0;
+    margin-left: 1rem;
+    height: 3.2rem;
+    border-radius: 1.6rem;
+    font-size: 1.2rem;
+    letter-spacing: 0.04em;
+}
+.locked-info__label {
+    opacity: 0.8;
+    font-weight: 300;
+    margin-right: 0.4rem;
+}
+.locked-info__name {
+    font-weight: 400;
+    margin-right: 1.2rem;
+}
+.locked-info__button {
+    display: flex;
+    align-items: center;
+    height: 2.4rem;
+    border-radius: 1.2rem;
+    padding: 0 1.4rem;
+    background-color: transparent;
+    transition: background-color 0.2s ease-out, color 0.1s ease-out;
+    color: $white;
+    font-size: 1.1rem;
+    line-height: 100%;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin: 0 0.4rem 0 0;
+    &:hover {
+        background-color: rgba(0,0,0,0.16);
+    }
+}
