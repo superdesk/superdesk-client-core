@@ -110,7 +110,7 @@ angular.module('superdesk.apps.authoring', [
         reactToAngular1(
             LineCount,
             ['html'],
-            ['config'],
+            [],
             'display:contents',
         ),
     )
