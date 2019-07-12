@@ -363,12 +363,12 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
      * @param {Object} item
      * @param {string} userId
      */
-    this.unlock = function unlock(item, userId, headline) {
+    this.unlock = function unlock(item, userId) {
         autosave.stop(item);
         item.lock_session = null;
         item.lock_user = null;
         item._locked = false;
-        confirm.unlock(userId, headline);
+        confirm.unlock(userId, item.headline);
     };
 
     /**
