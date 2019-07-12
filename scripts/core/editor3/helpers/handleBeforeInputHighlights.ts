@@ -22,6 +22,8 @@ function isSelectionAtEndOfBlock(editorState: EditorState): boolean {
 
 /**
  * Returns the characters before and after the cursor.
+ *   If it fails resizing the selection to the right, it will push a character with an empty style on the left.
+ *   If it fails resizing the selection to the left, it will also push a character with an empty style on the right.
  */
 function getRelevantCharactersForCollapsedSelection(
     editorState: EditorState,
