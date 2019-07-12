@@ -1,4 +1,5 @@
 import ng from 'core/services/ng';
+import {checkRenditions} from 'apps/authoring/authoring/controllers/AssociationController';
 
 /**
  * @ngdoc method
@@ -66,13 +67,39 @@ export function removeFormat() {
  */
 export function insertMedia(files?, targetBlockKey = null) {
     const superdesk = ng.get('superdesk');
+    const renditions = ng.get('renditions');
+
+    const editedMedia = [];
 
     return (dispatch) => {
-        superdesk.intent('upload', 'media', files).then((media) => {
-            dispatch({
-                type: 'TOOLBAR_INSERT_MEDIA',
-                payload: {files: media, targetBlockKey: targetBlockKey},
-            });
+        superdesk.intent('upload', 'media', files).then((media_list) => {
+            const media_list_copy = [...media_list];
+
+            function editNext() {
+                if (media_list_copy && Array.isArray(media_list_copy) && media_list_copy.length > 0) {
+                    const _media = media_list_copy.shift();
+                    const _isImage = checkRenditions.isImage(_media.renditions.original);
+                    const options = {
+                        isNew: true,
+                        editable: true,
+                        defaultTab: _isImage ? 'crop' : 'view',
+                    };
+
+                    // using setTimeout: wait for already opened modal to get closed so that new modal can be opened.
+                    setTimeout(() => {
+                        renditions.crop(_media, options).then((cropped) => {
+                            editedMedia.push(cropped);
+                            editNext();
+                        });
+                    });
+                } else {
+                    dispatch({
+                        type: 'TOOLBAR_INSERT_MEDIA',
+                        payload: {files: editedMedia, targetBlockKey: targetBlockKey},
+                    });
+                }
+            }
+            editNext();
         });
     };
 }
