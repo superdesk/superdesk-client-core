@@ -204,6 +204,8 @@ export function MultiActionBarController(
                     notify.success(gettext('All items were published successfully.'));
                     multi.reset();
                 }
+            }, (err) => {
+                notify.error(gettext('Some items could not be published.'));
             });
     };
 }
