@@ -24,8 +24,8 @@ function isSelectionAtEndOfBlock(editorState: EditorState): boolean {
 function getRelevantCharactersForCollapsedSelection(editorState, collapsedSelection) {
     let characters: any = List();
     const selectionAtTheStartOfTheLine = editorState.getSelection().getStartOffset() === 0;
+    const selectionAtTheEndOfTheBlock = isSelectionAtEndOfBlock(editorState);
     const resizeLeft = selectionAtTheStartOfTheLine ? 2 : 1; // SDESK-2861
-
     const resizedSelection = resizeDraftSelection(resizeLeft, 1, collapsedSelection, editorState, false);
     const resizeLeftFailed = collapsedSelection.getStartOffset() === resizedSelection.getStartOffset();
     const resizeRightFailed = collapsedSelection.getEndOffset() === resizedSelection.getEndOffset();
@@ -36,7 +36,7 @@ function getRelevantCharactersForCollapsedSelection(editorState, collapsedSelect
 
     characters = characters.concat(getDraftCharacterListForSelection(editorState, resizedSelection));
 
-    if (resizeRightFailed === true) {
+    if (resizeRightFailed === true || selectionAtTheEndOfTheBlock) {
         characters = characters.push(CharacterMetadata.create());
     }
 
@@ -50,35 +50,26 @@ function getRelevantCharactersForCollapsedSelection(editorState, collapsedSelect
  */
 export function handleBeforeInputHighlights(onChange, chars: string, editorState: EditorState): DraftHandleValue {
     // see handleBeforeInputHighlights.spec.gif
-    const pressedSpaceAtEndOfBlock = isSelectionAtEndOfBlock(editorState) && chars.trim() === '';
 
-    let nextInlineStyles = OrderedSet<string>();
+    const selection = editorState.getSelection();
+    const characterList = selection.isCollapsed()
+        ? getRelevantCharactersForCollapsedSelection(editorState, selection)
+        : getDraftCharacterListForSelection(editorState, selection);
+    const characterStyles = characterList.map((character) => character.getStyle()).toJS();
+    const allHighlightStyles = uniq(characterStyles.reduce((a, b) => a.concat(b)))
+        .filter(styleNameBelongsToHighlight);
 
-    if (!pressedSpaceAtEndOfBlock) {
-        const selection = editorState.getSelection();
-
-        const characterList = selection.isCollapsed()
-            ? getRelevantCharactersForCollapsedSelection(editorState, selection)
-            : getDraftCharacterListForSelection(editorState, selection);
-
-        const characterStyles = characterList.map((character) => character.getStyle()).toJS();
-
-        const allHighlightStyles = uniq(characterStyles.reduce((a, b) => a.concat(b)))
-            .filter(styleNameBelongsToHighlight);
-
-        if (allHighlightStyles.length < 1) {
-            return 'not-handled';
-        }
-
-        const commonHighlightStyles = allHighlightStyles.filter(
-            (styleName) => characterStyles.every((stylesAtPosition) => stylesAtPosition.includes(styleName)),
-        );
-
-        nextInlineStyles = OrderedSet<string>(editorState.getCurrentInlineStyle()
-            .filter((styleName) => styleNameBelongsToHighlight(styleName) === false)
-            .concat(commonHighlightStyles));
+    if (allHighlightStyles.length < 1) {
+        return 'not-handled';
     }
 
+    const commonHighlightStyles = allHighlightStyles.filter(
+        (styleName) => characterStyles.every((stylesAtPosition) => stylesAtPosition.includes(styleName)),
+    );
+
+    const nextInlineStyles = OrderedSet<string>(editorState.getCurrentInlineStyle()
+        .filter((styleName) => styleNameBelongsToHighlight(styleName) === false)
+        .concat(commonHighlightStyles));
     const nextContentState = Modifier.replaceText(
         editorState.getCurrentContent(),
         editorState.getSelection(),
