@@ -4,6 +4,9 @@ export function isMediaEditable(config) {
     return _.get(config, 'features.editFeaturedImage', true) === true;
 }
 
+/* globals __SUPERDESK_CONFIG__: true */
+export const appConfig = __SUPERDESK_CONFIG__;
+
 DeployConfigFactory.$inject = ['api', '$q'];
 function DeployConfigFactory(api, $q) {
     /**

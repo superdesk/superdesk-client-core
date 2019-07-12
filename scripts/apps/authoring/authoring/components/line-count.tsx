@@ -1,14 +1,10 @@
 import React from 'react';
 import {get} from 'lodash';
 import {stripHtmlTags, gettextPlural} from 'core/utils';
+import {appConfig} from 'core/config';
 
 interface IProps {
     html: string;
-    config: {
-        authoring: {
-            lineLength?: number;
-        }
-    };
 }
 
 /**
@@ -16,7 +12,7 @@ interface IProps {
  */
 export class LineCount extends React.PureComponent<IProps> {
     render() {
-        const lineLength: number = get(this.props.config, 'authoring.lineLength', 0);
+        const lineLength: number = get(appConfig, 'authoring.lineLength', 0);
 
         if (lineLength <= 0) {
             return null;
