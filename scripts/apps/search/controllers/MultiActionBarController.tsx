@@ -1,5 +1,6 @@
 /* eslint-disable indent */
 
+import React from 'react';
 import _, {flatMap} from 'lodash';
 import {IArticle} from 'superdesk-api';
 import {gettext} from 'core/utils';
@@ -7,6 +8,11 @@ import {gettext} from 'core/utils';
 import {IExtensionActivationResult} from 'superdesk-api';
 import {extensions} from 'core/extension-imports.generated';
 import {showSpikeDialog} from 'apps/archive/show-spike-dialog';
+
+import {Modal} from 'core/ui/components/Modal/Modal';
+import {ModalHeader} from 'core/ui/components/Modal/ModalHeader'
+import {ModalBody} from 'core/ui/components/Modal/ModalBody';
+import {ModalFooter} from 'core/ui/components/Modal/ModalFooter';
 
 /**
  * @ngdoc controller
@@ -194,18 +200,80 @@ export function MultiActionBarController(
      * Publish all items
      */
     this.publish = () => {
-        $q.all(multi.getItems().map((item) => authoring.publish(item, item)))
-            .then((responses) => {
-                const withErrors = responses.some((response) => response.status >= 400);
+        const errors = [];
 
-                if (withErrors) {
-                    notify.error(gettext('Some items could not be published.'));
-                } else {
-                    notify.success(gettext('All items were published successfully.'));
-                    multi.reset();
-                }
-            }, (err) => {
-                notify.error(gettext('Some items could not be published.'));
-            });
+        const addErrorForItem = (item, err) => {
+            const itemName = item.headline || item.slugline || item._id;
+
+            if (
+                typeof err === 'object'
+                && typeof err.data === 'object'
+                && typeof err.data._issues === 'object'
+                && err.data._issues['validator exception'] != null
+            ) {
+                errors.push({
+                    itemName,
+                    message: err.data._issues['validator exception'],
+                });
+            } else {
+                errors.push({
+                    itemName,
+                    message: gettext('Unknown error occured. Try publishing the item from the article edit view.'),
+                });
+            }
+        }
+
+        Promise.all(
+            multi.getItems().map((item) => new Promise((resolve) => {
+                authoring.publish(item, item)
+                    .then((response) => {
+                        if (response.status >= 400) {
+                            addErrorForItem(item, response);
+                        }
+
+                        resolve();
+                    })
+                    .catch((response) => {
+                        addErrorForItem(item, response);
+                        resolve();
+                    });
+            })),
+        ).then(() => {
+            if (errors.length < 1) {
+                notify.success(gettext('All items were published successfully.'));
+                multi.reset();
+            } else {
+                modal.createCustomModal()
+                    .then(({openModal, closeModal}) => {
+                        openModal(
+                            <Modal>
+                                <ModalHeader>{gettext('There were errors publishing the following items')}</ModalHeader>
+                                <ModalBody>
+                                    <dl>
+                                        {
+                                            errors.map((err, i) => (
+                                                <React.Fragment key={i}>
+                                                    <dt>{err.itemName}</dt>
+                                                    <dd>{err.message}</dd>
+                                                </React.Fragment>
+                                            ))
+                                        }
+                                    </dl>
+                                </ModalBody>
+                                <ModalFooter>
+                                    <button
+                                        className="btn btn--primary"
+                                        onClick={() => {
+                                            closeModal();
+                                        }}
+                                    >
+                                        {gettext('Close')}
+                                    </button>
+                                </ModalFooter>
+                            </Modal>,
+                        );
+                    })
+            }
+        });
     };
 }
