@@ -173,13 +173,7 @@
             </div>
 
             <div ng-if="['publish', 'correct', 'kill', 'resend', 'takedown', 'unpublish'].includes(historyItem.operation)">
-                <strong ng-if="historyItem.operation === 'publish' && historyItem.update.state === 'scheduled'">{{ :: 'Scheduled by' | translate }}</strong>
-                <strong ng-if="historyItem.operation === 'publish' && historyItem.update.state !== 'scheduled'">{{ :: 'Published by' | translate }}</strong>
-                <strong ng-if="historyItem.operation === 'correct'">{{ :: 'Corrected by' | translate }}</strong>
-                <strong ng-if="historyItem.operation === 'kill'">{{ :: 'Killed by' | translate }}</strong>
-                <strong ng-if="historyItem.operation === 'takedown'">{{ :: 'Recalled by' | translate }}</strong>
-                <strong ng-if="historyItem.operation === 'resend'">{{ :: 'Resent by' | translate }}</strong> 
-                <strong ng-if="historyItem.operation === 'unpublish'">{{ :: 'Unpublished by' | translate }}</strong> 
+                <strong>{{ getOperationLabel(historyItem.operation, historyItem.update.state) }}</strong>
                 {{ :: historyItem.displayName }}
                 <em><time sd-absdate datetime="historyItem._created"></time></em>
                 <span ng-if="historyItems[$index-1].version !== historyItem.version && historyItem.version !== 0" class="version">
