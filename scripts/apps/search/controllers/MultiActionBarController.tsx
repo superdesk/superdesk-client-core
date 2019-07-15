@@ -10,7 +10,7 @@ import {extensions} from 'core/extension-imports.generated';
 import {showSpikeDialog} from 'apps/archive/show-spike-dialog';
 
 import {Modal} from 'core/ui/components/Modal/Modal';
-import {ModalHeader} from 'core/ui/components/Modal/ModalHeader'
+import {ModalHeader} from 'core/ui/components/Modal/ModalHeader';
 import {ModalBody} from 'core/ui/components/Modal/ModalBody';
 import {ModalFooter} from 'core/ui/components/Modal/ModalFooter';
 
@@ -221,7 +221,7 @@ export function MultiActionBarController(
                     message: gettext('Unknown error occured. Try publishing the item from the article edit view.'),
                 });
             }
-        }
+        };
 
         Promise.all(
             multi.getItems().map((item) => new Promise((resolve) => {
@@ -272,7 +272,7 @@ export function MultiActionBarController(
                                 </ModalFooter>
                             </Modal>,
                         );
-                    })
+                    });
             }
         });
     };
