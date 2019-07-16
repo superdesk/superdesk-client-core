@@ -36,6 +36,12 @@ export function RolesPrivilegesDirective(api, notify, $q, $filter) {
                     notify.error(gettext(handleError(response)));
                 });
             };
+
+            scope.toggleAll = (role, value) => {
+                scope.privileges.forEach((privilege) => {
+                    role.privileges[privilege.name] = value;
+                });
+            };
         },
     };
 }
