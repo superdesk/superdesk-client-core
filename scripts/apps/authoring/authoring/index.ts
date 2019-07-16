@@ -1,4 +1,5 @@
 import 'angular-history/history';
+import {PUBLISHED} from 'apps/archive/constants';
 
 import * as svc from './services';
 import * as directive from './directives';
@@ -18,7 +19,8 @@ import {gettext} from 'core/utils';
 import {IArticle} from 'superdesk-api';
 import {IArticleSchema} from 'superdesk-interfaces/ArticleSchema';
 import {AuthoringTopbarReact} from './authoring-topbar-react';
-import {UnpublishConfirmModal} from './components/unpublish-confirm-modal';
+import {showModal} from 'core/services/modalService';
+import {getUnpublishConfirmModal} from './components/unpublish-confirm-modal';
 
 export interface IOnChangeParams {
     item: IArticle;
@@ -134,13 +136,6 @@ angular.module('superdesk.apps.authoring', [
         reactToAngular1(
             PreviewCustomField,
             ['item', 'field'],
-        ),
-    )
-
-    .component('sdUnpublishConfirmModal',
-        reactToAngular1(
-            UnpublishConfirmModal,
-            ['item', 'related', 'close', 'unpublish'],
         ),
     )
 
@@ -354,9 +349,39 @@ angular.module('superdesk.apps.authoring', [
                 priority: 50,
                 icon: 'kill',
                 group: 'corrections',
-                controller: ['data', 'authoringWorkspace',
-                    (data, authoringWorkspace) => {
-                        authoringWorkspace.unpublish(data.item);
+                controller: ['data', 'authoring', 'familyService',
+                    (data, authoring, familyService) => {
+                        const item = data.item;
+                        let relatedItems = [];
+
+                        familyService.fetchItems(item.archive_item.family_id, item)
+                            .then((items) => {
+                                const published = {};
+
+                                relatedItems = items._items
+                                    .filter((relatedItem) => {
+                                        if (!published[relatedItem.guid]) {
+                                            published[relatedItem.guid] = true; // only show each item once
+                                            return true;
+                                        }
+
+                                        return false;
+                                    })
+                                    .filter((relatedItem) => relatedItem.state === PUBLISHED)
+                                    .filter((relatedItem) => relatedItem.guid !== item.guid)
+                                ;
+
+                                const unpublish = (selected) => {
+                                    authoring.publish(item.archive_item, {}, 'unpublish');
+                                    relatedItems.forEach((relatedItem) => {
+                                        if (selected[relatedItem._id]) {
+                                            authoring.publish(relatedItem.archive_item, {}, 'unpublish');
+                                        }
+                                    });
+                                };
+
+                                showModal(getUnpublishConfirmModal(item, relatedItems, unpublish));
+                            });
                     },
                 ],
                 filters: [{action: 'list', type: 'archive'}],
