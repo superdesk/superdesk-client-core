@@ -2,7 +2,8 @@
 
 import {element, by, browser, protractor, ElementFinder} from 'protractor';
 import {nav, waitFor, acceptConfirm} from './utils';
-import {el} from './e2e-helpers';
+import {el, s} from './e2e-helpers';
+import { ECE } from './expected-conditions-extended';
 
 class Monitoring {
     config: ElementFinder;
@@ -285,7 +286,11 @@ class Monitoring {
         };
 
         this.getTextItemBySlugline = function(group, item) {
-            return this.getItem(group, item).element(by.className('keyword')).getText();
+            const _element = this.getItem(group, item).element(by.css(s(['field--slugline'])));
+
+            browser.wait(ECE.visibilityOf(_element));
+
+            return _element.getText();
         };
 
         this.searchAction = function(search) {
