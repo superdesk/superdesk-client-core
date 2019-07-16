@@ -3,7 +3,7 @@
 import {element, by, browser, protractor, ElementFinder} from 'protractor';
 import {nav, waitFor, acceptConfirm} from './utils';
 import {el, s} from './e2e-helpers';
-import { ECE } from './expected-conditions-extended';
+import {ECE} from './expected-conditions-extended';
 
 class Monitoring {
     config: ElementFinder;
