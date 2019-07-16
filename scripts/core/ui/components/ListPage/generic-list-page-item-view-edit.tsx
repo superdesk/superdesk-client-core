@@ -33,16 +33,18 @@ interface IState {
     issues: {[field: string]: Array<string>};
 }
 
+const getInitialState = (props: IProps) => ({
+    nextItem: props.item,
+    issues: {},
+});
+
 class GenericListPageItemViewEditComponent extends React.Component<IProps, IState> {
     _mounted: boolean;
 
     constructor(props) {
         super(props);
 
-        this.state = {
-            nextItem: this.props.item,
-            issues: {},
-        };
+        this.state = getInitialState(props);
 
         this.enableEditMode = this.enableEditMode.bind(this);
         this.handleCancel = this.handleCancel.bind(this);
@@ -85,9 +87,7 @@ class GenericListPageItemViewEditComponent extends React.Component<IProps, IStat
         const cancelFn = typeof this.props.onCancel === 'function'
             ? this.props.onCancel
             : () => {
-                this.setState({
-                    nextItem: this.props.item,
-                }, () => {
+                this.setState(getInitialState(this.props), () => {
                     this.props.onEditModeChange(false);
                 });
             };
@@ -128,6 +128,10 @@ class GenericListPageItemViewEditComponent extends React.Component<IProps, IStat
                                 if (key === 'required') {
                                     issuesForField.push(
                                         gettext('Field is required'),
+                                    );
+                                } else if (key === 'unique') {
+                                    issuesForField.push(
+                                        gettext('Value must be unique'),
                                     );
                                 } else {
                                     issuesForField.push(

@@ -344,14 +344,18 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
                         onSortOptionChange={this.props.items.sort}
                     />
 
-                    <Button
-                        onClick={this.openNewItemForm}
-                        className="sd-create-btn dropdown-toggle"
-                        icon="icon-plus-large"
-                        data-test-id="list-page--add-item"
-                    >
-                        <span className="circle" />
-                    </Button>
+                    {
+                        this.props.disallowCreatingNewItem === true ? null : (
+                            <Button
+                                onClick={this.openNewItemForm}
+                                className="sd-create-btn dropdown-toggle"
+                                icon="icon-plus-large"
+                                data-test-id="list-page--add-item"
+                            >
+                                <span className="circle" />
+                            </Button>
+                        )
+                    }
                 </div>
                 <PageContainer>
                     {

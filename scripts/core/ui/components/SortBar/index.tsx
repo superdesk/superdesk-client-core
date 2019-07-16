@@ -26,7 +26,7 @@ export class SortBar extends React.Component<IProps, any> {
                 {' '}
                 <span className="label-total">{this.props.itemsCount}</span>
                 {' '}
-                <div className="dropdown dropdown--hover">
+                <div className="dropdown dropdown--hover" style={{verticalAlign: 'middle'}}>
                     <button className="dropdown__toggle" data-test-id="sortbar--selected">
                         {currentSortOption.label}
                         <span className="dropdown__caret" />

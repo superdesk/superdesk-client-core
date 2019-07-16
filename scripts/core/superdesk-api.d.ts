@@ -248,6 +248,8 @@ declare module 'superdesk-api' {
         newItemTemplate?: {[key: string]: any};
     
         modal?: any;
+
+        disallowCreatingNewItem?: true;
     }
 
     export enum FormFieldType {
