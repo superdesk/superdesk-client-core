@@ -12,6 +12,7 @@ import {
 import {connectServices} from 'core/helpers/ReactRenderAsync';
 import {FormViewEdit} from 'core/ui/components/generic-form/from-group';
 import {IFormGroup} from 'superdesk-api';
+import {isHttpApiError} from 'core/helpers/network';
 
 interface IProps {
     operation: 'editing' | 'creation';
@@ -114,33 +115,39 @@ class GenericListPageItemViewEditComponent extends React.Component<IProps, IStat
             });
         })
             .catch((res) => {
-                let issues = {};
+                if (isHttpApiError(res)) {
+                    let issues = {};
 
-                for (let fieldName in res.data._issues) {
-                    let issuesForField = [];
+                    for (let fieldName in res._issues) {
+                        let issuesForField = [];
 
-                    if (typeof res.data._issues[fieldName] === 'string') {
-                        issuesForField.push(res.data._issues[fieldName]);
-                    } else {
-                        for (let key in res.data._issues[fieldName]) {
-                            if (key === 'required') {
-                                issuesForField.push(
-                                    gettext('Field is required'),
-                                );
-                            } else {
-                                issuesForField.push(
-                                    gettext('Uknown validation error'),
-                                );
+                        if (typeof res._issues[fieldName] === 'string') {
+                            issuesForField.push(res._issues[fieldName]);
+                        } else {
+                            for (let key in res._issues[fieldName]) {
+                                if (key === 'required') {
+                                    issuesForField.push(
+                                        gettext('Field is required'),
+                                    );
+                                } else {
+                                    issuesForField.push(
+                                        gettext('Uknown validation error'),
+                                    );
+                                }
                             }
                         }
+
+                        issues[fieldName] = issuesForField;
                     }
 
-                    issues[fieldName] = issuesForField;
+                    this.setState({
+                        issues: issues,
+                    });
+                } else if (res instanceof Error) {
+                    throw res;
+                } else {
+                    throw new Error(res);
                 }
-
-                this.setState({
-                    issues: issues,
-                });
             });
     }
     render() {
