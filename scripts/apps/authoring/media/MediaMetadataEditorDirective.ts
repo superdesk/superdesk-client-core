@@ -102,11 +102,9 @@ export default function MediaMetadataEditorDirective(metadata, deployConfig, fea
                                     item.extra[dest] = field.default;
                                     scope.onChange({key: 'extra'});
                                 }
-                            } else {
-                                if (!item.hasOwnProperty(dest)) {
-                                    item[dest] = field.default;
-                                    scope.onChange({key: dest});
-                                }
+                            } else if (!item.hasOwnProperty(dest)) {
+                                item[dest] = field.default;
+                                scope.onChange({key: dest});
                             }
                         });
 
