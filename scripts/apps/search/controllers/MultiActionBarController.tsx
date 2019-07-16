@@ -9,11 +9,6 @@ import {IExtensionActivationResult} from 'superdesk-api';
 import {extensions} from 'core/extension-imports.generated';
 import {showSpikeDialog} from 'apps/archive/show-spike-dialog';
 
-import {Modal} from 'core/ui/components/Modal/Modal';
-import {ModalHeader} from 'core/ui/components/Modal/ModalHeader';
-import {ModalBody} from 'core/ui/components/Modal/ModalBody';
-import {ModalFooter} from 'core/ui/components/Modal/ModalFooter';
-
 /**
  * @ngdoc controller
  * @module superdesk.apps.search
@@ -243,36 +238,12 @@ export function MultiActionBarController(
                 notify.success(gettext('All items were published successfully.'));
                 multi.reset();
             } else {
-                modal.createCustomModal()
-                    .then(({openModal, closeModal}) => {
-                        openModal(
-                            <Modal>
-                                <ModalHeader>{gettext('There were errors publishing the following items')}</ModalHeader>
-                                <ModalBody>
-                                    <dl>
-                                        {
-                                            errors.map((err, i) => (
-                                                <React.Fragment key={i}>
-                                                    <dt>{err.itemName}</dt>
-                                                    <dd>{err.message}</dd>
-                                                </React.Fragment>
-                                            ))
-                                        }
-                                    </dl>
-                                </ModalBody>
-                                <ModalFooter>
-                                    <button
-                                        className="btn btn--primary"
-                                        onClick={() => {
-                                            closeModal();
-                                        }}
-                                    >
-                                        {gettext('Close')}
-                                    </button>
-                                </ModalFooter>
-                            </Modal>,
-                        );
-                    });
+                errors.forEach((err) => {
+                    let messages = JSON.parse(err.message.replace(/'/gi, '"'));
+
+                    messages[0].forEach((message: string) =>
+                        notify.error(gettext('Error on item:') + ` ${err.itemName} ${message}`));
+                });
             }
         });
     };
