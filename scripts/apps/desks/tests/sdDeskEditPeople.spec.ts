@@ -63,6 +63,9 @@ describe('sdDeskeditPeople directive', () => {
             deskMembers: [],
             users: [],
             message: null,
+            step: {
+                current: 'people',
+            },
         };
 
         $element = compileDirective(scopeValues);
@@ -90,6 +93,9 @@ describe('sdDeskeditPeople directive', () => {
             deskMembers: [],
             users: [],
             message: null,
+            step: {
+                current: 'people',
+            },
         };
 
         $element = compileDirective(scopeValues);
@@ -122,6 +128,9 @@ describe('sdDeskeditPeople directive', () => {
             deskMembers: [],
             users: [],
             message: null,
+            step: {
+                current: 'people',
+            },
         };
 
         $element = compileDirective(scopeValues);

@@ -1,6 +1,7 @@
 import {limits} from 'apps/desks/constants';
 import _ from 'lodash';
 import {gettext} from 'core/utils';
+import {calculateDiff} from '../controllers/DeskConfigController';
 
 DeskeditBasic.$inject = ['desks', 'WizardHandler', 'metadata', 'config',
     '$filter', 'deployConfig'];
@@ -89,8 +90,10 @@ export function DeskeditBasic(desks, WizardHandler, metadata, config,
                 return deskType === 'authoring' && config.features.noPublishOnAuthoringDesk;
             };
 
-            scope.$watch('desk.edit', (newVal, oldVal) => {
-                if ((newVal.content_expiry || oldVal.content_expiry != null) && !_.isEqual(newVal, scope.desk.orig)) {
+            scope.$watch('desk.edit', (newVal) => {
+                const diff = calculateDiff(scope.desk.edit, scope.desk.orig);
+
+                if (scope.step.current === 'general' && Object.keys(diff).length > 0) {
                     scope.saveEnabled = true;
                 } else {
                     scope.saveEnabled = false;

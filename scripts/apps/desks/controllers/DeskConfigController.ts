@@ -1,11 +1,11 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
+import {generate} from 'json-merge-patch';
+import {logger} from 'core/services/logger';
 
-DeskConfigController.$inject = ['$scope', '$controller', 'notify', 'desks', 'modal', '$rootScope'];
-export function DeskConfigController($scope, $controller, notify, desks, modal, $rootScope) {
+DeskConfigController.$inject = ['$scope', '$controller', 'notify', 'desks', 'modal', '$q'];
+export function DeskConfigController($scope, $controller, notify, desks, modal, $q) {
     // expecting $scope.desks to be defined
-
-    const stepsToWatch = ['general', 'people'];
 
     $scope.modalActive = false;
     $scope.numberOfUsers = 3;
@@ -18,14 +18,24 @@ export function DeskConfigController($scope, $controller, notify, desks, modal, 
     };
 
     $scope.openDesk = function(step, desk) {
-        desks.fetchDesks().then((_desks) => {
-            const updatedDesk = _desks._items.find((_desk) => desk != null && _desk._id === desk._id) || {};
-
-            $scope.modalActive = true;
-            $scope.step.current = step;
-            $scope.desk.edit = _.cloneDeep(updatedDesk) || {};
-            $scope.desk.orig = _.cloneDeep(updatedDesk) || {};
+        if (!desk) {
+            initializeDesk({}, step);
+            return;
+        }
+        desks.fetchDeskById(desk._id).then((_desk) => {
+            if (!_desk) {
+                logger.error(new Error('Something went wrong: desk not found'));
+                return;
+            }
+            initializeDesk(_desk, step);
         });
+    };
+
+    const initializeDesk = function(desk, step) {
+        $scope.modalActive = true;
+        $scope.step.current = step;
+        $scope.desk.edit = _.cloneDeep(desk);
+        $scope.desk.orig = _.cloneDeep(desk);
     };
 
     $scope.agg = $controller('AggregateCtrl', {$scope: $scope});
@@ -35,13 +45,15 @@ export function DeskConfigController($scope, $controller, notify, desks, modal, 
     };
 
     $scope.cancel = function() {
-        const diff = calculateDiff();
+        const diff = calculateDiff($scope.desk.edit, $scope.desk.orig);
         const newDesk = !$scope.desk.edit._id;
 
-        if (!newDesk && stepsToWatch.includes($scope.step.current) && Object.keys(diff).length > 0) {
-            $scope.confirmSave(diff, $scope.step.current, true);
+        if (!newDesk && Object.keys(diff).length > 0) {
+            $scope.confirmSave().then(() => true, () => {
+                closeModal();
+            });
         } else {
-            closeModel();
+            closeModal();
         }
     };
 
@@ -74,69 +86,58 @@ export function DeskConfigController($scope, $controller, notify, desks, modal, 
         return desks.deskMembers[desk._id];
     };
 
-    const closeModel = function() {
+    const closeModal = function() {
         $scope.modalActive = false;
         $scope.step.current = null;
         $scope.desk.edit = null;
     };
 
-    const calculateDiff = function() {
-        let diff = _.extend({}, $scope.desk.edit);
-
-        if (angular.isDefined($scope.desk.orig)) {
-            angular.forEach(_.keys(diff), (key) => {
-                if (_.isEqual(diff[key], $scope.desk.orig[key])
-                    || (key === 'content_expiry' && $scope.desk.orig[key] === null && diff[key] === 0)) {
-                    delete diff[key];
-                }
-            });
-        }
-        return diff;
-    };
-
-    $scope.confirmSave = function(diff, step, close?) {
-        modal.confirm(
-            gettext('You have unsaved changes in {{tab}} tab. Do you want to save them now?', {tab: step}),
+    $scope.confirmSave = function() {
+        return modal.confirm(
+            gettext('You have unsaved changes. Do you want to save them now?'),
             gettext('Save changes?'),
-            gettext('Save'),
-            gettext('Ignore'))
-            .then(() => {
-                desks.save($scope.desk.orig, diff).then((res) => {
-                    _.merge($scope.desk.edit, res);
-                    _.merge($scope.desk.orig, res);
-                    if (diff.members) {
-                        const deskMembers = [];
-
-                        angular.forEach(_.values(res.members), (value) => {
-                            deskMembers.push(desks.users._items.find((user) => user._id === value.user));
-                        });
-                        desks.deskMembers[$scope.desk.orig._id] = deskMembers;
-                    }
-                }, (response) => {
-                    if (angular.isDefined(response.data._message)) {
-                        $scope.message = gettext('Error: ' + response.data._message);
-                    } else {
-                        $scope._errorMessage = gettext('There was a problem, members not saved. Refresh Desks.');
-                    }
-                });
-            }, () => {
-                $scope.desk.edit = _.cloneDeep($scope.desk.orig);
-            })
-            .finally(() => {
-                if (close) {
-                    closeModel();
-                }
-            });
+            gettext('Yes'),
+            gettext('No'));
     };
 
-    $scope.$watch('step.current', (currentStep, previousStep) => {
-        if (currentStep && previousStep && stepsToWatch.includes(previousStep)) {
-            const diff = calculateDiff();
-            const newDesk = !$scope.desk.edit._id;
+    $scope.canTabChange = function() {
+        const diff = calculateDiff($scope.desk.edit, $scope.desk.orig);
+        const newDesk = !$scope.desk.edit._id;
 
-            if (!newDesk && Object.keys(diff).length > 0) {
-                $scope.confirmSave(diff, previousStep);
-            }
+        if (!newDesk && Object.keys(diff).length > 0) {
+            return $scope.confirmSave()
+                .then(() => {
+                    return false;
+                }, () => {
+                    $scope.desk.edit = _.cloneDeep($scope.desk.orig);
+                    return true;
+                });
+        } else {
+            return $q.when(true);
         }
-    });
+    };
+}
+
+export function calculateDiff(editObj, origObj) {
+    let diff = generate(origObj, editObj) || {};
+
+    for (const key in diff) {
+        if (diff[key] === null && editObj[key] !== null) {
+            delete diff[key];
+        }
+    }
+
+    if (diff['content_expiry'] === 0 && origObj.content_expiry == null) {
+        delete diff['content_expiry'];
+    }
+
+    // remove RestApiResponse fields if any
+    delete diff['_created'];
+    delete diff['_updated'];
+    delete diff['_id'];
+    delete diff['_etag'];
+    delete diff['_links'];
+    delete diff['_type'];
+
+    return diff;
 }

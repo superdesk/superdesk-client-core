@@ -6,7 +6,7 @@
         <a href="" class="icn-btn close-modal" ng-click="cancel()"><i class="icon-close-small"></i></a>
     </div>
 
-    <div class="modal__body" sd-wizard data-name="desks" data-current-step="step.current" data-finish="cancel()">
+    <div class="modal__body" sd-wizard data-name="desks" data-current-step="step.current" data-finish="cancel()" data-can-tab-change="canTabChange()">
         <div sd-wizard-step data-title="{{ 'General' | translate }}" data-code="general">
             <form sd-deskedit-basic name="generalStep" class="content desk-content">
                 <fieldset>

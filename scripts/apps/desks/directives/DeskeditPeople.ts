@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
-import {saveFile} from 'apps/authoring/attachments/actions';
+import {calculateDiff} from '../controllers/DeskConfigController';
 
 DeskeditPeople.$inject = ['WizardHandler', 'desks'];
 export function DeskeditPeople(WizardHandler, desks) {
@@ -14,16 +14,8 @@ export function DeskeditPeople(WizardHandler, desks) {
 
                     if (scope.desk.edit && scope.desk.edit._id) {
                         desks.fetchUsers().then(() => {
-                            scope.users = desks.users._items;
                             scope.deskMembers = _.cloneDeep(desks.deskMembers[scope.desk.edit._id] || []);
                             scope.message = null;
-                            scope.$watch('deskMembers.length', (newValue, oldValue) => {
-                                if (newValue !== oldValue) {
-                                    scope.saveEnabled = true;
-                                } else {
-                                    scope.saveEnabled = false;
-                                }
-                            });
                         });
                     } else {
                         WizardHandler.wizard('desks').goTo(previous);
@@ -80,6 +72,16 @@ export function DeskeditPeople(WizardHandler, desks) {
                         scope.message = null;
                     });
             };
+
+            scope.$watch('desk.edit', (newVal) => {
+                const diff = calculateDiff(scope.desk.edit, scope.desk.orig);
+
+                if (scope.step.current === 'people' && Object.keys(diff).length > 0) {
+                    scope.saveEnabled = true;
+                } else {
+                    scope.saveEnabled = false;
+                }
+            }, true);
         },
     };
 }
