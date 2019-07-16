@@ -209,5 +209,5 @@ export function HistoryController(
         default:
             assertNever(operation);
         }
-    }
+    };
 }
