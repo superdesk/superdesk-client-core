@@ -39,7 +39,6 @@ interface IState {
     newItem: {[key: string]: any} | null;
     filtersOpen: boolean;
     filterValues: {[key: string]: any};
-    searchValue: string;
     loading: boolean;
 }
 
@@ -50,6 +49,9 @@ interface IPropsConnected<T extends IBaseRestApiResponse> {
 export class GenericListPageComponent<T extends IBaseRestApiResponse>
     extends React.Component<IPropsGenericForm<T> & IPropsConnected<T>, IState>
     implements IGenericListPageComponent<T> {
+
+    searchBarRef: SearchBar | null;
+
     constructor(props) {
         super(props);
 
@@ -64,7 +66,6 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
             newItem: null,
             filtersOpen: false,
             filterValues: {},
-            searchValue: '',
             loading: true,
         };
 
@@ -99,6 +100,10 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
         }
     }
     removeFilter(fieldName: string) {
+        if (this.props.fieldForSearch != null && this.props.fieldForSearch.field === fieldName) {
+            this.searchBarRef.resetSearchValue();
+        }
+
         this.setState((prevState) => ({
             ...prevState,
             filterValues: Object.keys(prevState.filterValues).reduce((acc, key) => {
@@ -341,7 +346,10 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
                             this.props.fieldForSearch == null ? null : (
                                 <div style={{flexGrow: 1}}>
                                     <SearchBar
-                                        value={this.state.searchValue}
+                                        ref={(instance) => {
+                                            this.searchBarRef = instance;
+                                        }}
+                                        value=""
                                         allowCollapsed={false}
                                         onSearch={(value) => {
                                             this.handleFilterFieldChange(
