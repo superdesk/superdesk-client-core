@@ -530,18 +530,34 @@ function SpellcheckMenuController($rootScope, editorResolver, spellcheck, notify
         return $rootScope.config.features && $rootScope.config.features.useTansaProofing;
     }
 
-    spellcheck.getDictionary($scope.item.language).then((dict) => {
-        self.isActiveDictionary = !!dict.length;
-
-        if (!self.isActiveDictionary) {
-            spellcheck.setSpellcheckerStatus(self.isActiveDictionary);
-        } else {
-            spellcheck.getSpellcheckerStatus().then((status) => {
-                self.isAuto = status && !useTansaProofing() && self.isActiveDictionary;
-                render();
-            });
+    $scope.$watch('item.language', (newVal, oldVal) => {
+        if (newVal.length > 0 && newVal !== oldVal) {
+            spellcheck.setLanguage(newVal);
+            initialize();
         }
     });
+
+    function initialize() {
+        spellcheck.getDictionary($scope.item.language).then((dict) => {
+            self.isActiveDictionary = !!dict.length;
+
+            if (!self.isActiveDictionary) {
+                spellcheck.setSpellcheckerStatus(self.isActiveDictionary);
+                self.isAuto = false;
+                render();
+            } else {
+                spellcheck.getSpellcheckerStatus().then((status) => {
+                    self.isAuto = status && !useTansaProofing() && self.isActiveDictionary;
+                    if (self.isAuto) {
+                        runSpellchecker();
+                    } else {
+                        render();
+                    }
+                });
+            }
+        });
+    }
+    initialize();
 }
 
 angular.module('superdesk.apps.spellcheck', ['superdesk.apps.dictionaries'])
