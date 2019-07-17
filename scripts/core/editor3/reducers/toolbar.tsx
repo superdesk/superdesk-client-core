@@ -224,6 +224,9 @@ const toggleInvisibles = (state) => {
  * @description Sets the toolbar popup to the given type.
  */
 const setPopup = (state: IEditorStore, {type, data}) => {
+    const {editorState} = state;
+    let newEditorState = editorState;
+
     // SDESK-3885
     // Whenever we hide a popup, the ContentState is not changed so it will
     // trigger these two DraftJS events:
@@ -235,9 +238,10 @@ const setPopup = (state: IEditorStore, {type, data}) => {
     // the selection in the first character of the first block.
     // Using `forceSelection` won't trigger those events and the selection will be correct.
     if (type === PopupTypes.Hidden) {
-        state.editorState = EditorState.forceSelection(state.editorState, state.editorState.getSelection());
+        newEditorState = EditorState.forceSelection(editorState, editorState.getSelection());
     }
-    return {...state, popup: {type, data}};
+
+    return {...state, editorState: newEditorState, popup: {type, data}};
 };
 
 export default toolbar;
