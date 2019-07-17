@@ -31,56 +31,31 @@ export function queryElastic(
                 query: {
                     filtered: {
                         filter: {
-                            and: [
-                                {
-                                    not: {
-                                        term: {
-                                            state: 'spiked',
-                                        },
-                                    },
-                                },
-                                {
-                                    or: [
-                                        {
-                                            and: [
-                                                {
-                                                    term: {
-                                                        state: 'draft',
-                                                    },
-                                                },
-                                                {
-                                                    term: {
-                                                        original_creator: session.identity._id,
-                                                    },
-                                                },
+                            bool: {
+                                must: Object.keys(filterValues).map((key) => ({term: {[key]: filterValues[key]}})),
+                                must_not: [
+                                    {term: {state: 'spiked'}},
+                                    {term: {package_type: 'takes'}},
+                                ],
+                                should: [
+                                    {
+                                        bool: {
+                                            must: [
+                                                {term: {state: 'draft'}},
+                                                {term: {original_creator: session.identity._id}},
                                             ],
                                         },
-                                        {
-                                            not: {
-                                                terms: {
-                                                    state: [
-                                                        'draft',
-                                                    ],
-                                                },
-                                            },
-                                        },
-                                    ],
-                                },
-                                {
-                                    not: {
-                                        term: {
-                                            package_type: 'takes',
+                                    },
+                                    {
+                                        bool: {
+                                            must_not: [
+                                                {term: {state: 'draft'}},
+                                            ],
                                         },
                                     },
-                                },
-                                {
-                                    terms: Object.keys(filterValues).reduce((acc, key) => {
-                                        acc[key] = filterValues[key];
-
-                                        return acc;
-                                    }, {}),
-                                },
-                            ],
+                                ],
+                                // minimum_should_match : 1,
+                            },
                         },
                     },
                 },
