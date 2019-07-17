@@ -88,7 +88,10 @@ export function getMarkedForMeComponent(superdesk: ISuperdesk) {
 
             if (articles._aggregations.desk != null) {
                 articles._aggregations.desk.buckets.forEach((bucket) => {
-                    desksInOrder.push(bucket.key);
+                    // Skip non-ID aggregations SDESK-4497
+                    if (itemsByDesk[bucket.key] != null) {
+                        desksInOrder.push(bucket.key);
+                    }
                 });
             }
 

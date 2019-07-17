@@ -45,7 +45,7 @@ class ArticleItemConciseComponent extends React.PureComponent<IProps> {
                             )
                         }
                         <ListItemRow>
-                            <ListItemColumn>
+                            <ListItemColumn ellipsisAndGrow>
                                 <Headline item={article} />
                             </ListItemColumn>
                         </ListItemRow>

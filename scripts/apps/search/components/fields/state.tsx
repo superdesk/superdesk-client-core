@@ -28,6 +28,8 @@ export const state: React.StatelessComponent<any> = (props) => {
                 {removeLodash(gettext(props.item.state))}
             </span>
         );
+    } else {
+        return null;
     }
 };
 
