@@ -107,7 +107,11 @@ export function getMarkedForMeComponent(superdesk: ISuperdesk) {
                         items: itemsByDesk[deskId],
                     }))}
                     getToggleElement={(isOpen, onClick) => (
-                        <TopMenuDropdownButton onClick={onClick} active={isOpen}>
+                        <TopMenuDropdownButton onClick={() => {
+                            if (desksInOrder.length > 0) {
+                                onClick();
+                            }
+                        }} active={isOpen}>
                             <Badge type="highlight" marginRight={6}>{articles._items.length}</Badge>
                             {gettext('Marked for me')}
                         </TopMenuDropdownButton>
