@@ -24,6 +24,7 @@ class CommentInputBody extends React.Component<any, any> {
         this.state = {msg: props.data.msg || ''};
         this.onSubmit = this.onSubmit.bind(this);
         this.onChange = this.onChange.bind(this);
+        this.onCancel = this.onCancel.bind(this);
     }
 
     /**
@@ -34,7 +35,6 @@ class CommentInputBody extends React.Component<any, any> {
      */
     onSubmit() {
         const {msg} = this.state;
-        const _hidePopups = this.props.hidePopups;
         const {highlightId} = this.props.data;
 
         if (msg !== '') {
@@ -59,8 +59,12 @@ class CommentInputBody extends React.Component<any, any> {
                     {...highlightData, data: {...highlightData.data, msg, date}},
                 );
             }
-            _hidePopups();
+            this.props.hidePopups();
         }
+    }
+
+    onCancel(_ev) {
+        this.props.hidePopups();
     }
 
     /**
@@ -83,7 +87,7 @@ class CommentInputBody extends React.Component<any, any> {
                         onChange={this.onChange}
                     />
                     <div className="pull-right" style={{paddingTop: 20}}>
-                        <button className="btn btn--cancel" onClick={this.props.hidePopups}>
+                        <button className="btn btn--cancel" onClick={(ev) => this.onCancel(ev)}>
                             {gettext('Cancel')}
                         </button>
                         <button className="btn btn--primary" onClick={this.onSubmit} disabled={!msg}>
