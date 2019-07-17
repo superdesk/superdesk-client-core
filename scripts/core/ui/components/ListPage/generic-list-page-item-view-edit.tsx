@@ -52,14 +52,6 @@ class GenericListPageItemViewEditComponent extends React.Component<IProps, IStat
         this.isFormDirty = this.isFormDirty.bind(this);
         this.handleSave = this.handleSave.bind(this);
     }
-    componentWillReceiveProps(nextProps) {
-        if (this.props.editMode === false) {
-            // enable changing which item is previewed
-            this.setState({
-                nextItem: nextProps.item,
-            });
-        }
-    }
     componentDidMount() {
         this._mounted = true;
     }

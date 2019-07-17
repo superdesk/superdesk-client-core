@@ -34,14 +34,9 @@ import {
 } from 'superdesk-api';
 
 interface IState {
-    preview: {
-        itemId: string;
-        editMode: boolean;
-    };
-    newItem: {
-        item: null | {[key: string]: any},
-        editMode: boolean;
-    };
+    previewItemId: string | null;
+    editItemId: string | null;
+    newItem: {[key: string]: any} | null;
     filtersOpen: boolean;
     filterValues: {[key: string]: any};
     searchValue: string;
@@ -58,15 +53,15 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
     constructor(props) {
         super(props);
 
+        // preview and edit mode can enabled at the same time, but only one pane will be displayed at once
+        // if you start editing from preview mode, you shall return to preview after saving/cancelling the edit
+        // if you start editing when preview mode for that item is closed, you shall not see preview after
+        // saving/cancelling the edit either.
+
         this.state = {
-            preview: {
-                itemId: null,
-                editMode: false,
-            },
-            newItem: {
-                item: null,
-                editMode: true,
-            },
+            previewItemId: null,
+            editItemId: null,
+            newItem: null,
             filtersOpen: false,
             filterValues: {},
             searchValue: '',
@@ -83,19 +78,23 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
         this.removeFilter = this.removeFilter.bind(this);
     }
     openPreview(id) {
-        if (this.state.preview.editMode === true) {
+        if (this.state.editItemId != null) {
             this.props.modal.alert({
                 headerText: gettext('Warning'),
                 bodyText: gettext(
-                    'Can\'t open a preview, because another item is in edit mode.',
+                    'Can\'t open a preview while in edit mode',
+                ),
+            });
+        } else if (this.state.newItem != null) {
+            this.props.modal.alert({
+                headerText: gettext('Warning'),
+                bodyText: gettext(
+                    'Can\'t open a preview while in create mode',
                 ),
             });
         } else {
             this.setState({
-                preview: {
-                    itemId: id,
-                    editMode: false,
-                },
+                previewItemId: id,
             });
         }
     }
@@ -112,16 +111,16 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
 
         this.props.modal.confirm(gettext('Are you sure you want to delete this item?'))
             .then(() => {
-                if (this.state.preview.editMode) {
+                if (this.state.editItemId != null) {
                     this.props.modal.alert({
                         headerText: gettext('Warning'),
                         bodyText: gettext(
-                            'The item in edit mode must be closed before you can delete.',
+                            'Edit mode must closed before you can delete an item.',
                         ),
                     });
-                } else if (this.state.preview.itemId != null) {
+                } else if (this.state.previewItemId != null) {
                     this.setState({
-                        preview: {itemId: null, editMode: false},
+                        previewItemId: null,
                     }, deleteNow);
                 } else {
                     deleteNow();
@@ -129,7 +128,7 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
             });
     }
     startEditing(id: string) {
-        if (this.state.preview.editMode === true) {
+        if (this.state.editItemId != null) {
             this.props.modal.alert({
                 headerText: gettext('Warning'),
                 bodyText: gettext(
@@ -138,19 +137,16 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
             });
         } else {
             this.setState({
-                preview: {
-                    itemId: id,
-                    editMode: true,
-                },
+                // reset preview if item in preview mode is different from that
+                // editing is being initiated for
+                previewItemId: this.state.previewItemId === id ? id : null,
+                editItemId: id,
             });
         }
     }
     closePreview() {
         this.setState({
-            preview: {
-                itemId: null,
-                editMode: false,
-            },
+            previewItemId: null,
         });
     }
     handleFilterFieldChange(field, nextValue, callback = noop) {
@@ -210,29 +206,29 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
             );
         };
 
-        if (this.state.preview.editMode) {
+        if (this.state.editItemId != null) {
             this.props.modal.alert({
                 headerText: gettext('Warning'),
                 bodyText: gettext(
                     'The item in edit mode must be closed before you can filter.',
                 ),
             });
-        } else if (this.state.preview.itemId != null) {
+        } else if (this.state.previewItemId != null) {
             this.setState({
-                preview: {itemId: null, editMode: false},
+                previewItemId: null,
             }, execute);
         } else {
             execute();
         }
     }
     closeNewItemForm() {
-        this.setState({newItem: {item: null, editMode: false}});
+        this.setState({newItem: null});
     }
     setFiltersVisibility(nextValue: boolean) {
         this.setState({filtersOpen: nextValue});
     }
     openNewItemForm() {
-        if (this.state.preview.editMode === true) {
+        if (this.state.editItemId != null) {
             this.props.modal.alert({
                 headerText: gettext('Warning'),
                 bodyText: gettext(
@@ -242,16 +238,10 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
         } else {
             this.setState({
                 newItem: {
-                    item: {
-                        ...getInitialValues(this.props.formConfig),
-                        ...this.props.newItemTemplate == null ? {} : this.props.newItemTemplate,
-                    },
-                    editMode: true,
+                    ...getInitialValues(this.props.formConfig),
+                    ...this.props.newItemTemplate == null ? {} : this.props.newItemTemplate,
                 },
-                preview: {
-                    itemId: null,
-                    editMode: false,
-                },
+                previewItemId: null,
             });
         }
     }
@@ -485,51 +475,66 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
                     </PageContainerItem>
 
                     {
-                        this.state.preview.itemId != null ? (
-                            <PageContainerItem data-test-id="list-page--view-edit">
-                                <GenericListPageItemViewEdit
-                                    editMode={this.state.preview.editMode}
-                                    onEditModeChange={(nextValue) => {
-                                        this.setState((prevState) => ({
-                                            ...prevState,
-                                            preview: {
-                                                ...prevState.preview,
-                                                editMode: nextValue,
-                                            },
-                                        }));
-                                    }}
-                                    operation="editing"
-                                    formConfig={formConfig}
-                                    item={
-                                        this.props.items._items.find(({_id}) => _id === this.state.preview.itemId)
-                                    }
-                                    onSave={(nextItem) => this.props.items.update(nextItem)}
-                                    onClose={this.closePreview}
-                                />
-                            </PageContainerItem>
-                        ) : null
-                    }
-
-                    {
-                        this.state.newItem.item != null ? (
+                        this.state.newItem != null ? (
                             <PageContainerItem data-test-id="list-page--new-item">
                                 <GenericListPageItemViewEdit
+                                    key="new-item"
                                     operation="creation"
                                     formConfig={formConfig}
-                                    editMode={this.state.newItem.editMode}
-                                    onEditModeChange={(nextValue: boolean) => {
+                                    editMode={true}
+                                    onEditModeChange={() => {
                                         this.setState((prevState) => ({
                                             ...prevState,
-                                            item: {...prevState.newItem, editMode: nextValue},
+                                            newItem: null,
                                         }));
                                     }}
-                                    item={this.state.newItem.item}
+                                    item={this.state.newItem}
                                     onSave={(item: T) => this.props.items.create(item).then((res) => {
                                         this.closeNewItemForm();
                                         this.openPreview(res._id);
                                     })}
                                     onClose={this.closeNewItemForm}
                                     onCancel={this.closeNewItemForm}
+                                />
+                            </PageContainerItem>
+                        ) : this.state.editItemId != null ? (
+                            <PageContainerItem data-test-id="list-page--view-edit">
+                                <GenericListPageItemViewEdit
+                                    key={'edit' + this.state.editItemId}
+                                    editMode={true}
+                                    onEditModeChange={() => {
+                                        this.setState((prevState) => ({
+                                            ...prevState,
+                                            editItemId: null,
+                                        }));
+                                    }}
+                                    operation="editing"
+                                    formConfig={formConfig}
+                                    item={
+                                        this.props.items._items.find(({_id}) => _id === this.state.editItemId)
+                                    }
+                                    onSave={(nextItem) => this.props.items.update(nextItem)}
+                                    onClose={this.closePreview}
+                                />
+                            </PageContainerItem>
+                        ) : this.state.previewItemId != null ? (
+                            <PageContainerItem data-test-id="list-page--view-edit">
+                                <GenericListPageItemViewEdit
+                                    key={'preview' + this.state.previewItemId}
+                                    editMode={false}
+                                    onEditModeChange={() => {
+                                        this.setState((prevState) => ({
+                                            ...prevState,
+                                            editItemId: prevState.previewItemId,
+                                        }));
+                                    }}
+                                    operation="editing"
+                                    formConfig={formConfig}
+                                    item={
+                                        this.props.items._items.find(({_id}) => _id === this.state.previewItemId)
+                                    }
+                                    onSave={(nextItem) => this.props.items.update(nextItem)}
+                                    onClose={this.closePreview}
                                 />
                             </PageContainerItem>
                         ) : null
