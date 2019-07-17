@@ -1176,15 +1176,14 @@
 // Sortbar
 // --------------------------------------------------
 .sortbar {
+    display: flex;
+    align-items: center;
     white-space: nowrap;
     margin: 0 5px;
     padding: 0 10px;
-    > * {
-        display: inline-block !important;
-        vertical-align: middle;
-    }
-    >.dropdown {
-        margin-right: 10px;
+
+    > * + * {
+        margin-left: 4px;
     }
     .lab {
         margin-right: 10px;

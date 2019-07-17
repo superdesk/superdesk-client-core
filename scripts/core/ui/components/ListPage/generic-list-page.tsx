@@ -321,41 +321,68 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
         return (
             <div style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
                 <div className="subnav">
-                    <Button
-                        icon="icon-filter-large"
-                        onClick={() => this.setFiltersVisibility(!this.state.filtersOpen)}
-                        active={this.state.filtersOpen}
-                        darker={true}
-                        data-test-id="toggle-filters"
-                    />
+                    <div style={{
+                        display: 'flex',
+                        width: '100%',
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                    }}>
+                        {
+                            this.props.disallowFiltering ? null : (
+                                <div>
+                                    <Button
+                                        icon="icon-filter-large"
+                                        onClick={() => this.setFiltersVisibility(!this.state.filtersOpen)}
+                                        active={this.state.filtersOpen}
+                                        darker={true}
+                                        data-test-id="toggle-filters"
+                                    />
+                                </div>
+                            )
+                        }
 
-                    <SearchBar
-                        value={this.state.searchValue}
-                        allowCollapsed={false}
-                        onSearch={(value) => {
-                            this.handleFilterFieldChange('name', value, this.executeFilters);
-                        }}
-                    />
+                        {
+                            this.props.fieldForSearch == null ? null : (
+                                <div style={{flexGrow: 1}}>
+                                    <SearchBar
+                                        value={this.state.searchValue}
+                                        allowCollapsed={false}
+                                        onSearch={(value) => {
+                                            this.handleFilterFieldChange(
+                                                this.props.fieldForSearch.field,
+                                                value,
+                                                this.executeFilters,
+                                            );
+                                        }}
+                                    />
+                                </div>
+                            )
+                        }
 
-                    <SortBar
-                        sortOptions={sortOptions}
-                        selected={this.props.items.activeSortOption}
-                        itemsCount={this.props.items._meta.total}
-                        onSortOptionChange={this.props.items.sort}
-                    />
+                        <div style={{display: 'flex', marginLeft: 'auto'}}>
+                            <SortBar
+                                sortOptions={sortOptions}
+                                selected={this.props.items.activeSortOption}
+                                itemsCount={this.props.items._meta.total}
+                                onSortOptionChange={this.props.items.sort}
+                            />
 
-                    {
-                        this.props.disallowCreatingNewItem === true ? null : (
-                            <Button
-                                onClick={this.openNewItemForm}
-                                className="sd-create-btn dropdown-toggle"
-                                icon="icon-plus-large"
-                                data-test-id="list-page--add-item"
-                            >
-                                <span className="circle" />
-                            </Button>
-                        )
-                    }
+                            {
+                                this.props.disallowCreatingNewItem === true ? null : (
+                                    <div>
+                                        <Button
+                                            onClick={this.openNewItemForm}
+                                            className="sd-create-btn dropdown-toggle"
+                                            icon="icon-plus-large"
+                                            data-test-id="list-page--add-item"
+                                        >
+                                            <span className="circle" />
+                                        </Button>
+                                    </div>
+                                )
+                            }
+                        </div>
+                    </div>
                 </div>
                 <PageContainer>
                     {
