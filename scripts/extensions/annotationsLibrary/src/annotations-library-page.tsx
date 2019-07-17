@@ -84,6 +84,7 @@ export function getAnnotationsLibraryPage(superdesk: ISuperdesk) {
                     formConfig={formConfig}
                     renderRow={renderRow}
                     newItemTemplate={{cpnat_type: 'cpnat:abstract'}}
+                    fieldForSearch={nameField}
                 />
             );
         }
