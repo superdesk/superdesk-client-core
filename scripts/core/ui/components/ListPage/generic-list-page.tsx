@@ -1,5 +1,5 @@
 import React from 'react';
-import {noop, omit} from 'lodash';
+import {noop} from 'lodash';
 import ReactPaginate from 'react-paginate';
 
 import {ListItem, ListItemColumn} from 'core/components/ListItem';
@@ -101,7 +101,13 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
     removeFilter(fieldName: string) {
         this.setState((prevState) => ({
             ...prevState,
-            filterValues: omit(prevState.filterValues, fieldName),
+            filterValues: Object.keys(prevState.filterValues).reduce((acc, key) => {
+                if (key !== fieldName) {
+                    acc[key] = prevState.filterValues[key];
+                }
+
+                return acc;
+            }, {}),
         }), () => {
             this.props.items.removeFilter(fieldName);
         });
