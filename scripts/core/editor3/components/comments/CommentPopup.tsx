@@ -9,7 +9,7 @@ import {getAuthorInfo} from '../../actions';
 import {
     editor3DataKeys,
     getCustomDataFromEditor,
-    setCustomDataForEditor__deprecated
+    setCustomDataForEditor__deprecated,
 } from '../../helpers/editor3CustomData';
 import * as Highlights from '../../helpers/highlights';
 import {HighlightsPopupPositioner} from '../HighlightsPopupPositioner';

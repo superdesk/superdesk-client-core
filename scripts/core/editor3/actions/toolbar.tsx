@@ -72,12 +72,12 @@ export function insertMedia(files?, targetBlockKey = null) {
     const editedMedia = [];
 
     return (dispatch) => {
-        superdesk.intent('upload', 'media', files).then((media_list) => {
-            const media_list_copy = [...media_list];
+        superdesk.intent('upload', 'media', files).then((mediaList) => {
+            const mediaListCopy = [...mediaList];
 
             function editNext() {
-                if (media_list_copy && Array.isArray(media_list_copy) && media_list_copy.length > 0) {
-                    const _media = media_list_copy.shift();
+                if (mediaListCopy && Array.isArray(mediaListCopy) && mediaListCopy.length > 0) {
+                    const _media = mediaListCopy.shift();
                     const _isImage = checkRenditions.isImage(_media.renditions.original);
                     const options = {
                         isNew: true,

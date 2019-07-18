@@ -33,7 +33,7 @@ export class LinkToolbarComponent extends React.Component<any, any> {
         const {link} = getSelectedEntityData(editorState);
         const isLink = getSelectedEntityType(editorState) === 'LINK';
         const cx = classNames({
-            dropdown: true,
+            'dropdown': true,
             'link-toolbar': true,
             'is-link': isLink,
         });

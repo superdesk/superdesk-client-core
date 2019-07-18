@@ -1,3 +1,5 @@
+/* eslint-disable brace-style */
+
 import React from 'react';
 import {noop} from 'lodash';
 import ReactPaginate from 'react-paginate';
@@ -11,7 +13,7 @@ import {
     SidePanelHeading,
     SidePanelTools,
     SidePanelContent,
-    SidePanelContentBlock
+    SidePanelContentBlock,
 } from 'core/components/SidePanel';
 import {SearchBar} from 'core/ui/components';
 import {Button} from 'core/ui/components/Nav';
@@ -48,8 +50,8 @@ interface IPropsConnected<T extends IBaseRestApiResponse> {
 
 export class GenericListPageComponent<T extends IBaseRestApiResponse>
     extends React.Component<IPropsGenericForm<T> & IPropsConnected<T>, IState>
-    implements IGenericListPageComponent<T> {
-
+    implements IGenericListPageComponent<T>
+{
     searchBarRef: SearchBar | null;
 
     constructor(props) {
