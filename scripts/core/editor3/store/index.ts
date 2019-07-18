@@ -4,7 +4,7 @@ import {
     convertToRaw,
     ContentState,
     RawDraftContentState,
-    CompositeDecorator
+    CompositeDecorator,
 } from 'draft-js';
 import {createStore, applyMiddleware} from 'redux';
 import {createLogger} from 'redux-logger';

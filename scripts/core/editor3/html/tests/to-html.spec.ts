@@ -1,7 +1,7 @@
 /* tslint:disable:trailing-comma */
 /* tslint:disable:max-line-length */
 /* tslint:disable:whitespace */
-/* eslint-disable max-len, quotes, quote-props, key-spacing, comma-spacing, indent */
+/* eslint-disable max-len, quotes, quote-props, key-spacing, comma-spacing, comma-dangle, indent */
 
 import * as testUtils from '../../components/tests/utils';
 import {AtomicBlockParser} from '../to-html';

@@ -1,3 +1,5 @@
+/* eslint-disable comma-dangle */
+
 var webpack = require('webpack');
 
 module.exports = function(grunt) {
