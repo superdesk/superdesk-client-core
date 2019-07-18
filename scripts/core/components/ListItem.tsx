@@ -19,6 +19,7 @@ export class ListItem extends React.Component<IListItemProps> {
                         },
                     )
                 }
+                style={{cursor: typeof this.props.onClick === 'function' ? 'pointer' : 'initial'}}
                 data-test-id={this.props['data-test-id']}
             >
                 {this.props.children}
