@@ -39,8 +39,6 @@ const getInitialState = (props: IProps) => ({
 });
 
 class GenericListPageItemViewEditComponent extends React.Component<IProps, IState> {
-    _mounted: boolean;
-
     constructor(props) {
         super(props);
 
@@ -51,12 +49,6 @@ class GenericListPageItemViewEditComponent extends React.Component<IProps, IStat
         this.handleFieldChange = this.handleFieldChange.bind(this);
         this.isFormDirty = this.isFormDirty.bind(this);
         this.handleSave = this.handleSave.bind(this);
-    }
-    componentDidMount() {
-        this._mounted = true;
-    }
-    componentWillUnmount() {
-        this._mounted = false;
     }
     enableEditMode() {
         this.setState({
@@ -98,12 +90,10 @@ class GenericListPageItemViewEditComponent extends React.Component<IProps, IStat
     }
     handleSave() {
         this.props.onSave(this.state.nextItem).then(() => {
-            if (this._mounted === true) {
-                this.props.onEditModeChange(false);
-            }
-
             this.setState({
                 issues: {},
+            }, () => {
+                this.props.onEditModeChange(false);
             });
         })
             .catch((res) => {

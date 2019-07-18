@@ -58,6 +58,7 @@ function getOnUpdateAfterFunctions(
     );
 }
 
+// imported from planning
 export function getSuperdeskApiImplementation(
     requestingExtensionId: string,
     extensions: IExtensions,
@@ -126,7 +127,7 @@ export function getSuperdeskApiImplementation(
                 // there's no full React implementation of ListItem component
                 // https://superdesk.github.io/superdesk-ui-framework/dist/#/list-item
                 // as operator is used in order to prevent exposing more props
-                // so it's easier to remove old versions when we have a full implementation
+                // so it's easier to remove old usages when we have a full implementation
                 Item: Item as React.ComponentType<{onClick: any}>,
                 Row: Row as React.ComponentType,
                 Column: Column as React.ComponentType<{grow: boolean}>,
