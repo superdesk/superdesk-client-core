@@ -13,7 +13,7 @@ import {
     IDataApi,
 } from 'superdesk-api';
 import {isObject} from 'lodash';
-import {httpRequestJsonLocal} from './network';
+import {httpRequestJsonLocal, httpRequestVoidLocal} from './network';
 
 export const dataApi: IDataApi = {
     findOne: (endpoint, id) => httpRequestJsonLocal({
@@ -83,8 +83,8 @@ export const dataApi: IDataApi = {
             },
         });
     },
-    delete: (endpoint, item) => httpRequestJsonLocal({
-        'method': 'DELETE',
+    delete: (endpoint, item) => httpRequestVoidLocal({
+        method: 'DELETE',
         path: '/' + endpoint + '/' + item._id,
         headers: {
             'If-Match': item._etag,

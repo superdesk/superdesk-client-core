@@ -9,6 +9,15 @@ interface IHttpRequestOptions {
     headers?: {[key: string]: any};
 }
 
+interface IHttpRequestOptionsLocal extends Omit<IHttpRequestOptions, 'url'> {
+    path: string; // relative to application server
+}
+
+interface IHttpRequestJsonOptionsLocal extends IHttpRequestOptionsLocal {
+    // JSON not available with DELETE method
+    method: 'GET' | 'POST' | 'PATCH' | 'PUT';
+}
+
 interface IHttpLocalApiErrorResponse {
     _error: {
         code: number;
@@ -20,10 +29,6 @@ interface IHttpLocalApiErrorResponse {
 
 export function isHttpApiError(x): x is IHttpLocalApiErrorResponse {
     return x['_status'] === 'ERR';
-}
-
-interface IHttpRequestOptionsLocal extends Omit<IHttpRequestOptions, 'url'> {
-    path: string; // relative to application server
 }
 
 function httpRequestBase(options: IHttpRequestOptions): Promise<Response> {
@@ -47,7 +52,27 @@ function httpRequestBase(options: IHttpRequestOptions): Promise<Response> {
     });
 }
 
-export function httpRequestJsonLocal<T>(options: IHttpRequestOptionsLocal): Promise<T> {
+export function httpRequestVoidLocal(options: IHttpRequestOptionsLocal): Promise<void> {
+    return ng.getService('session')
+        .then((session) => {
+            return httpRequestBase({
+                ...options,
+                url: appConfig.server.url + options.path,
+                headers: {
+                    ...(options.headers || {}),
+                    'Authorization': session.token,
+                },
+            }).then((res) => {
+                if (res.ok) {
+                    return Promise.resolve();
+                } else {
+                    return Promise.reject();
+                }
+            });
+        });
+}
+
+export function httpRequestJsonLocal<T>(options: IHttpRequestJsonOptionsLocal): Promise<T> {
     return ng.getService('session')
         .then((session) => {
             return httpRequestBase({
