@@ -1,8 +1,9 @@
+import {IArticle} from 'superdesk-api';
 import React from 'react';
 import PropTypes from 'prop-types';
 import {createMarkUp} from '../../helpers';
 
-export function slugline(props) {
+export function slugline(props: {item: IArticle}) {
     if (props.item.slugline) {
         return (
             <span
@@ -18,6 +19,5 @@ export function slugline(props) {
 }
 
 slugline['propTypes'] = {
-    item: PropTypes.any,
-
+    item: PropTypes.object,
 };
