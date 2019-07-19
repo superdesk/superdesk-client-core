@@ -1,5 +1,6 @@
 /* eslint-disable indent */
 
+import React from 'react';
 import _, {flatMap} from 'lodash';
 import {IArticle} from 'superdesk-api';
 import {gettext} from 'core/utils';
@@ -194,16 +195,56 @@ export function MultiActionBarController(
      * Publish all items
      */
     this.publish = () => {
-        $q.all(multi.getItems().map((item) => authoring.publish(item, item)))
-            .then((responses) => {
-                const withErrors = responses.some((response) => response.status >= 400);
+        const errors = [];
 
-                if (withErrors) {
-                    notify.error(gettext('Some items could not be published.'));
-                } else {
-                    notify.success(gettext('All items were published successfully.'));
-                    multi.reset();
-                }
-            });
+        const addErrorForItem = (item, err) => {
+            const itemName = item.headline || item.slugline || item._id;
+
+            if (
+                typeof err === 'object'
+                && typeof err.data === 'object'
+                && typeof err.data._issues === 'object'
+                && err.data._issues['validator exception'] != null
+            ) {
+                errors.push({
+                    itemName,
+                    message: err.data._issues['validator exception'],
+                });
+            } else {
+                errors.push({
+                    itemName,
+                    message: gettext('Unknown error occured. Try publishing the item from the article edit view.'),
+                });
+            }
+        };
+
+        Promise.all(
+            multi.getItems().map((item) => new Promise((resolve) => {
+                authoring.publish(item, item)
+                    .then((response) => {
+                        if (response.status >= 400) {
+                            addErrorForItem(item, response);
+                        }
+
+                        resolve();
+                    })
+                    .catch((response) => {
+                        addErrorForItem(item, response);
+                        resolve();
+                    });
+            })),
+        ).then(() => {
+            if (errors.length < 1) {
+                notify.success(gettext('All items were published successfully.'));
+                multi.reset();
+            } else {
+                errors.forEach((err) => {
+                    let messages = JSON.parse(err.message.replace(/'/gi, '"'));
+
+                    messages[0].forEach((message: string) =>
+                        notify.error(gettext('Error on item:') + ` ${err.itemName} ${message}`));
+                });
+            }
+        });
     };
 }
