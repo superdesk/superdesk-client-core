@@ -49,7 +49,12 @@ export class ModalPrompt extends React.Component<any, any> {
 
                 <ModalFooter>
                     <button className="btn" onClick={this.props.close}>{gettext('Cancel')}</button>
-                    <button className="btn btn--primary" onClick={this.submitValue}>{gettext('Submit')}</button>
+                    <button
+                        className="btn btn--primary"
+                        onClick={this.submitValue} disabled={this.state.value.length < 1}
+                    >
+                        {gettext('Submit')}
+                    </button>
                 </ModalFooter>
             </Modal>
         );

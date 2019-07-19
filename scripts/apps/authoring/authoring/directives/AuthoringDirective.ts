@@ -989,7 +989,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 if ($scope.item._id === data.item && !_closing &&
                     (session.sessionId !== data.lock_session || lock.previewUnlock)) {
                     if (lock.previewUnlock) {
-                        $scope.unlock();
+                        $scope.edit($scope.item);
                         lock.previewUnlock = false;
                     } else {
                         authoring.unlock($scope.item, data.user);
