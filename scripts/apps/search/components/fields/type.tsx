@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {TypeIcon} from '../index';
+import {IPropsItemListInfo} from '../ListItemInfo';
 
-export const type: React.StatelessComponent<any> = (props) => {
+export const type: React.StatelessComponent<IPropsItemListInfo> = (props) => {
     if (props.item.type == null) {
         return null;
     }
@@ -10,7 +11,7 @@ export const type: React.StatelessComponent<any> = (props) => {
     const {_type, highlight} = props.item;
 
     return (
-        <span className={props.className}>
+        <span>
             <TypeIcon type={_type} highlight={highlight} />
         </span>
     );
@@ -18,5 +19,4 @@ export const type: React.StatelessComponent<any> = (props) => {
 
 type.propTypes = {
     item: PropTypes.any,
-    className: PropTypes.string,
 };

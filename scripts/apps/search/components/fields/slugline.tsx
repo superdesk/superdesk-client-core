@@ -1,9 +1,8 @@
-import {IArticle} from 'superdesk-api';
 import React from 'react';
-import PropTypes from 'prop-types';
 import {createMarkUp} from '../../helpers';
+import {IPropsItemListInfo} from '../ListItemInfo';
 
-export function slugline(props: {item: IArticle}) {
+export const slugline: React.StatelessComponent<Pick<IPropsItemListInfo, 'item'>> = (props) => {
     if (props.item.slugline) {
         return (
             <span
@@ -16,8 +15,4 @@ export function slugline(props: {item: IArticle}) {
     } else {
         return null;
     }
-}
-
-slugline['propTypes'] = {
-    item: PropTypes.object,
 };

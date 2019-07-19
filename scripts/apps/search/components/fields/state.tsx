@@ -1,11 +1,11 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {get} from 'lodash';
 import {gettext} from 'core/utils';
 import {removeLodash} from 'core/filters';
+import {IPropsItemListInfo} from '../ListItemInfo';
 
-export const state: React.StatelessComponent<any> = (props) => {
-    const datetime = props.datetime || props.svc.datetime;
+export const state: React.StatelessComponent<Pick<IPropsItemListInfo, 'item' | 'svc'>> = (props) => {
+    const datetime = props.svc.datetime;
 
     if (props.item.state !== undefined && props.item.state !== null) {
         let title = removeLodash(props.item.state);
@@ -21,9 +21,9 @@ export const state: React.StatelessComponent<any> = (props) => {
         return (
             <span
                 title={title}
-                style={props.style || {}}
                 className={'state-label state-' + props.item.state}
                 key="state"
+                style={{marginRight: 0}}
             >
                 {removeLodash(gettext(props.item.state))}
             </span>
@@ -31,12 +31,4 @@ export const state: React.StatelessComponent<any> = (props) => {
     } else {
         return null;
     }
-};
-
-state.propTypes = {
-    svc: PropTypes.any,
-    item: PropTypes.any,
-    style: PropTypes.any,
-    $filter: PropTypes.any,
-    datetime: PropTypes.any,
 };

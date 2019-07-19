@@ -108,6 +108,7 @@ declare module 'superdesk-api' {
     export interface IArticle extends IBaseRestApiResponse {
         _id: string;
         _current_version: number;
+        _type: 'archive' | string;
         guid: string;
         translated_from: string;
         translation_id: string;
@@ -135,6 +136,10 @@ declare module 'superdesk-api' {
         firstcreated: any;
         versioncreated: any;
         body_footer: string;
+        is_spiked: any;
+        expiry: any;
+        copyrightholder: string;
+        copyrightnotice: string;
         sign_off: string;
         feature_media: any;
         media_description: string;
@@ -147,8 +152,19 @@ declare module 'superdesk-api' {
         lock_user: any;
         lock_session: any;
         rewritten_by?: string;
+        profile: string;
+        word_count: number;
+        version_creator: string;
+        state: 'in_progress' | string;
+        embargo: any;
+        signal: any;
+        broadcast: any;
+        flags: any;
+        source: string;
+        correction_sequence: any;
 
         highlights?: Array<string>;
+        highlight?: any;
 
         // storage for custom fields created by users
         extra?: {[key: string]: any};
@@ -170,7 +186,7 @@ declare module 'superdesk-api' {
         assignment_id?: string;
 
         // markForUser extension
-        marked_for_user?: string;
+        marked_for_user?: string | null;
     }
 
     export interface IUserRole extends IBaseRestApiResponse {

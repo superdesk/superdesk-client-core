@@ -3,7 +3,6 @@ import {TypeIcon, SelectBox} from './index';
 import classNames from 'classnames';
 
 interface IProps {
-    svc: object;
     selectingDisabled?: boolean;
     onMultiSelect: () => void;
     item: any;
@@ -54,7 +53,6 @@ export class ListTypeIcon extends React.Component<IProps, IState> {
                     {
                         type: this.props.item.type,
                         highlight: this.props.item.highlight,
-                        svc: this.props.svc,
                     },
                 ),
         );

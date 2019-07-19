@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {createMarkUp} from '../../helpers';
+import {IPropsItemListInfo} from '../ListItemInfo';
 
-export const headline: React.StatelessComponent<any> = (props) => {
+export const headline: React.StatelessComponent<Pick<IPropsItemListInfo, 'item'>> = (props) => {
     const _headline = typeof props.item.headline === 'string' && props.item.headline.length > 0
         ? props.item.headline
         : props.item.type;

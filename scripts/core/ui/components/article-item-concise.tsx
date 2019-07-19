@@ -4,12 +4,11 @@ import {noop} from 'lodash';
 import {IArticle} from 'superdesk-api';
 import {connectServices} from 'core/helpers/ReactRenderAsync';
 
-import {
-    slugline as Slugline,
-    headline as Headline,
-    state as State,
-    versioncreated as VersionCreated,
-} from 'apps/search/components/fields';
+import {slugline as Slugline} from 'apps/search/components/fields/slugline';
+import {headline as Headline} from 'apps/search/components/fields/headline';
+import {state as State} from 'apps/search/components/fields/state';
+import {versioncreated as VersionCreated} from 'apps/search/components/fields/versioncreated';
+
 import {ListTypeIcon} from 'apps/search/components';
 import {ListItemColumn, ListItemRow, ListItem} from 'core/components/ListItem';
 
@@ -27,7 +26,6 @@ class ArticleItemConciseComponent extends React.PureComponent<IProps> {
                 <ListItem>
                     <ListItemColumn>
                         <ListTypeIcon
-                            svc={{}}
                             item={article}
                             onMultiSelect={noop}
                             selectingDisabled={true}
@@ -54,12 +52,12 @@ class ArticleItemConciseComponent extends React.PureComponent<IProps> {
                     <ListItemColumn>
                         <ListItemRow justifyContent="flex-end">
                             <ListItemColumn>
-                                <VersionCreated item={article} svc={{datetime: this.props.datetime}} />
+                                <VersionCreated item={article} />
                             </ListItemColumn>
                         </ListItemRow>
                         <ListItemRow justifyContent="flex-end">
                             <ListItemColumn>
-                                <State item={article} svc={{datetime: this.props.datetime}} style={{margin: 0}} />
+                                <State item={article} svc={{datetime: this.props.datetime}} />
                             </ListItemColumn>
                         </ListItemRow>
                     </ListItemColumn>

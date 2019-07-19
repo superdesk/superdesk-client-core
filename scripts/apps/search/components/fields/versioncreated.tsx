@@ -2,14 +2,8 @@
 
 import React from 'react';
 import {TimeElem} from '../index';
+import {IPropsItemListInfo} from '../ListItemInfo';
 
-interface IProps {
-    item: any;
-    svc: {
-        datetime: any;
-    };
-}
-
-export const versioncreated: React.StatelessComponent<IProps> = (props) => (
-    <TimeElem key={versioncreated} date={props.item.versioncreated} svc={props.svc} />
+export const versioncreated: React.StatelessComponent<Pick<IPropsItemListInfo, 'item'>> = (props) => (
+    <TimeElem key={'versioncreated'} date={props.item.versioncreated} />
 );

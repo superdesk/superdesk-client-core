@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {DEFAULT_LIST_CONFIG} from './constants';
-import * as fields from './components/fields';
+import {fields} from './components/fields';
 import ng from '../../core/services/ng';
 
 export function getSpecStyle(spec) {
@@ -148,20 +148,27 @@ export function renderArea(area, itemProps, props, customRender: any = {}) {
         specs = listConfig.narrowView;
     }
 
-    var contents = specs.map((field) => {
-        if (customRender.fields && field in customRender.fields) {
-            return customRender.fields[field](itemProps);
-        }
-
-        if (field in fields) {
-            return fields[field](itemProps);
-        }
-
-        return null;
-    }).filter(angular.identity);
     var elemProps = angular.extend({key: area}, props);
 
-    return contents.length ? React.createElement('div', elemProps, contents) : null;
+    return (
+        <div {...elemProps}>
+            {
+                specs.map((field, i) => {
+                    if (customRender.fields && field in customRender.fields) {
+                        return customRender.fields[field](itemProps);
+                    }
+
+                    const Component = fields[field];
+
+                    if (Component != null) {
+                        return <Component key={i} {...itemProps} />;
+                    } else {
+                        return null;
+                    }
+                })
+            }
+        </div>
+    );
 }
 
 /*

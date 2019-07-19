@@ -1,11 +1,11 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import {IPropsItemListInfo} from '../ListItemInfo';
 
 /**
  * Usage Terms field
  * @param {Object} props
  */
-export const usageterms: React.StatelessComponent<any> = ({item}) => {
+export const usageterms: React.StatelessComponent<IPropsItemListInfo> = ({item}) => {
     if (item.usageterms) {
         return (
             <small key="usageterms"
@@ -15,8 +15,4 @@ export const usageterms: React.StatelessComponent<any> = ({item}) => {
     }
 
     return null;
-};
-
-usageterms.propTypes = {
-    item: PropTypes.object.isRequired,
 };

@@ -63,7 +63,6 @@ export class ItemSwimlane extends React.Component<IProps, any> {
                     <ListTypeIcon
                         item={item}
                         onMultiSelect={this.props.onMultiSelect}
-                        svc={svc}
                     />
                 </span>
                 {renderGroup(swimlaneViewFieldsConfig.left, item, svc)}
