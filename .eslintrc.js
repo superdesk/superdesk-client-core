@@ -6,6 +6,7 @@ module.exports = Object.assign({}, sharedConfigs, {
         {
             files: ['*.ts', '*.tsx'],
             rules: {
+                'react/prop-types': 0, // interfaces are used in TypeScript files
                 'no-unused-vars': 0,
                 'no-undef': 0,
                 'comma-dangle': 0,
