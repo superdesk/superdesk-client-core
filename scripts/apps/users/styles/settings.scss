@@ -38,9 +38,12 @@ $roles-border: 1px solid #f0f0f0;
 
 // PRIVILEGES SETTINGS
 .privileges-settings {
+    padding: 0;
     overflow: auto !important;
+    table {
+        padding: 20px;
+    }
     thead tr {
-        background: #f2f2f2;
         .label {
             position: absolute;
             top: -6px;
@@ -54,7 +57,6 @@ $roles-border: 1px solid #f0f0f0;
             box-sizing:border-box;
         }
         th {
-            position: relative;
             font-size: 13px;
             font-weight: normal;
             word-wrap: break-word;
@@ -62,10 +64,17 @@ $roles-border: 1px solid #f0f0f0;
             border: $roles-border !important;
             border-right: 0 !important;
             border-color: #e5e5e5 !important;
+            background: #f2f2f2;
             padding: 10px 16px;
+            white-space: nowrap;
         }
         .name {
             min-width: 270px;
+        }
+        input[type="checkbox"] {
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 5px;
         }
     }
     td {
