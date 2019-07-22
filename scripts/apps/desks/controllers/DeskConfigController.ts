@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
 import {generate} from 'json-merge-patch';
-import {logger} from 'core/services/logger';
 
 DeskConfigController.$inject = ['$scope', '$controller', 'notify', 'desks', 'modal'];
 export function DeskConfigController($scope, $controller, notify, desks, modal) {
@@ -22,13 +21,7 @@ export function DeskConfigController($scope, $controller, notify, desks, modal) 
             initializeDesk({}, step);
             return;
         }
-        desks.fetchDeskById(desk._id).then((_desk) => {
-            if (!_desk) {
-                logger.error(new Error('Something went wrong: desk not found'));
-                return;
-            }
-            initializeDesk(_desk, step);
-        });
+        desks.fetchDeskById(desk._id).then((_desk) => initializeDesk(_desk, step));
     };
 
     const initializeDesk = function(desk, step) {
