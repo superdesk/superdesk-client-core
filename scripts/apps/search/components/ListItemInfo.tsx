@@ -51,7 +51,7 @@ export class ListItemInfo extends React.Component<IPropsItemListInfo> {
                 renderArea('singleLine', angular.extend({
                     svc: props.svc,
                     scope: props.scope,
-                }, props), {className: 'line'}),
+                }, props), {className: 'line article-list-fields'}),
             );
         } else {
             className = classNames('item-info', {'item-info-reduced-rowheight': props.scope.singleLine});
@@ -61,11 +61,11 @@ export class ListItemInfo extends React.Component<IPropsItemListInfo> {
                 renderArea('firstLine', angular.extend({
                     svc: props.svc,
                     scope: props.scope,
-                }, props), {className: 'line'}, props.scope.customRender),
+                }, props), {className: 'line article-list-fields'}, props.scope.customRender),
                 renderArea('secondLine', angular.extend({
                     svc: props.svc,
                     scope: props.scope,
-                }, props), {className: 'line'}, props.scope.customRender),
+                }, props), {className: 'line article-list-fields'}, props.scope.customRender),
             );
         }
 

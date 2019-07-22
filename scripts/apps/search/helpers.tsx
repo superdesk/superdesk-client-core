@@ -128,7 +128,7 @@ export function positionPopup(target, zIndex = 1000) {
     menuHolderElem().style.zIndex = zIndex.toString();
 }
 
-export function renderArea(area, itemProps, props, customRender: any = {}) {
+export function renderArea(area, itemProps, props: {className?: string}, customRender: any = {}) {
     // If singleline preference is set, don't show second line
     if (itemProps.scope.singleLine && area === 'secondLine') {
         return;
