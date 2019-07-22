@@ -2,6 +2,7 @@
 import _ from 'lodash';
 import getCustomSortForGroup, {GroupSortOptions} from '../helpers/CustomSortOfGroups';
 import {GET_LABEL_MAP} from '../../workspace/content/constants';
+import {isPublished} from 'apps/archive/utils';
 
 const translatedFields = GET_LABEL_MAP();
 
@@ -405,7 +406,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                     } else if (item._type === 'externalsource') {
                         intent.type = 'externalsource';
                         fetchAndEdit(intent, item, 'externalsource');
-                    } else if (archiveService.isPublished(item)) {
+                    } else if (isPublished(item)) {
                         authoringWorkspace.view(item);
                     } else {
                         authoringWorkspace.edit(item);

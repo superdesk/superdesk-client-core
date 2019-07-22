@@ -1,9 +1,10 @@
 import {pickBy, zipObject} from 'lodash';
 import {IArticle} from 'superdesk-api';
+import {isPublished} from 'apps/archive/utils';
 
-RelationsService.$inject = ['archiveService', 'mediaIdGenerator', 'api', '$q'];
+RelationsService.$inject = ['mediaIdGenerator', 'api', '$q'];
 
-export function RelationsService(archiveService, mediaIdGenerator, api, $q) {
+export function RelationsService(mediaIdGenerator, api, $q) {
     this.getRelatedItemsWithoutMediaGallery = function(item: IArticle, fields) {
         if (!item.associations) {
             return [];
@@ -23,7 +24,7 @@ export function RelationsService(archiveService, mediaIdGenerator, api, $q) {
 
         return $q.all(relatedItems)
             .then((response) => {
-                const unpublished = response.filter((o) => !archiveService.isPublished(o));
+                const unpublished = response.filter((o) => !isPublished(o));
 
                 return unpublished;
             });

@@ -1,5 +1,4 @@
 import 'angular-history/history';
-import {PUBLISHED} from 'apps/archive/constants';
 
 import * as svc from './services';
 import * as directive from './directives';
@@ -21,6 +20,7 @@ import {IArticleSchema} from 'superdesk-interfaces/ArticleSchema';
 import {AuthoringTopbarReact} from './authoring-topbar-react';
 import {showModal} from 'core/services/modalService';
 import {getUnpublishConfirmModal} from './components/unpublish-confirm-modal';
+import {ITEM_STATE} from 'apps/archive/constants';
 
 export interface IOnChangeParams {
     item: IArticle;
@@ -367,7 +367,7 @@ angular.module('superdesk.apps.authoring', [
 
                                         return false;
                                     })
-                                    .filter((relatedItem) => relatedItem.state === PUBLISHED)
+                                    .filter((relatedItem) => relatedItem.state === ITEM_STATE.PUBLISHED)
                                     .filter((relatedItem) => relatedItem.guid !== item.guid)
                                 ;
 

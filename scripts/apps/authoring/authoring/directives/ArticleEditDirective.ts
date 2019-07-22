@@ -2,6 +2,7 @@ import _ from 'lodash';
 import {FIELD_KEY_SEPARATOR} from 'core/editor3/helpers/fieldsMeta';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 import {MEDIA_TYPES} from 'apps/vocabularies/constants';
+import {isPublished} from 'apps/archive/utils';
 
 /**
  * @ngdoc directive
@@ -29,7 +30,6 @@ import {MEDIA_TYPES} from 'apps/vocabularies/constants';
 
 ArticleEditDirective.$inject = [
     'autosave',
-    'authoring',
     'metadata',
     '$filter',
     'superdesk',
@@ -44,7 +44,6 @@ ArticleEditDirective.$inject = [
 ];
 export function ArticleEditDirective(
     autosave,
-    authoring,
     metadata,
     $filter,
     superdesk,
@@ -315,7 +314,7 @@ export function ArticleEditDirective(
                         .then((picture) => {
                             scope.item._etag = picture._etag;
 
-                            if (authoring.isPublished(scope.item)) {
+                            if (isPublished(scope.item)) {
                                 mainEditScope.dirty = true;
 
                                 // mark dirty in multiedit mode.

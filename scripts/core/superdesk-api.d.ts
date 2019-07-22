@@ -541,6 +541,73 @@ declare module 'superdesk-api' {
         parent: string;
     }
 
+    export enum ITEM_STATE {
+        /**
+         * Item created in user workspace.
+         */
+        DRAFT = 'draft',
+
+        /**
+         * Ingested item in ingest collection, not production.
+         */
+        INGESTED = 'ingested',
+
+        /**
+         * Automatically ingested to desk.
+         */
+        ROUTED = 'routed',
+
+        /**
+         * Item manually fetched from ingest to desk.
+         */
+        FETCHED = 'fetched',
+
+        /**
+         * Item is sent to a desk.
+         */
+        SUBMITTED = 'submitted',
+
+        /**
+         * Work started on a desk.
+         */
+        IN_PROGRESS = 'in_progress',
+
+        /**
+         * Removed from a desk.
+         */
+        SPIKED = 'spiked',
+
+        /**
+         * Published.
+         */
+        PUBLISHED = 'published',
+
+        /**
+         * Scheduled for publishing.
+         */
+        SCHEDULED = 'scheduled',
+
+        /**
+         * Correction is published.
+         */
+        CORRECTED = 'corrected',
+
+        /**
+         * Killed, never publish again.
+         */
+        KILLED = 'killed',
+
+        /**
+         * Sort of killed, never publish again.
+         */
+        RECALLED = 'recalled',
+
+        /**
+         * Unpublished, might be published again.
+         */
+        UNPUBLISHED = 'unpublished',
+    }
+
     export interface IArticle extends IBaseRestApiResponse {
         _id: string;
         _current_version: number;
@@ -583,6 +650,7 @@ declare module 'superdesk-api' {
         lock_user: any;
         lock_session: any;
         rewritten_by?: string;
+        state: ITEM_STATE;
 
         highlights?: Array<string>;
 
