@@ -531,13 +531,13 @@ function SpellcheckMenuController($rootScope, editorResolver, spellcheck, notify
     }
 
     $scope.$watch('item.language', (newVal, oldVal) => {
-        if (newVal.length > 0 && newVal !== oldVal) {
+        if (newVal != null && newVal !== oldVal) {
             spellcheck.setLanguage(newVal);
-            initialize();
+            setupSpellchecker();
         }
     });
 
-    function initialize() {
+    function setupSpellchecker() {
         spellcheck.getDictionary($scope.item.language).then((dict) => {
             self.isActiveDictionary = !!dict.length;
 
@@ -557,7 +557,7 @@ function SpellcheckMenuController($rootScope, editorResolver, spellcheck, notify
             }
         });
     }
-    initialize();
+    setupSpellchecker();
 }
 
 angular.module('superdesk.apps.spellcheck', ['superdesk.apps.dictionaries'])
