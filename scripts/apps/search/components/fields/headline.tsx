@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {createMarkUp} from '../../helpers';
 import {IPropsItemListInfo} from '../ListItemInfo';
 
 export const headline: React.StatelessComponent<Pick<IPropsItemListInfo, 'item'>> = (props) => {
@@ -11,7 +10,7 @@ export const headline: React.StatelessComponent<Pick<IPropsItemListInfo, 'item'>
     return React.createElement(
         'span',
         {className: 'item-heading', key: 'headline',
-            dangerouslySetInnerHTML: createMarkUp(_headline)},
+            dangerouslySetInnerHTML: {__html: _headline}},
     );
 };
 

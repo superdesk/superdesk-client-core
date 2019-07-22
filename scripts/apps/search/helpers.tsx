@@ -33,10 +33,6 @@ export function isCheckAllowed(item) {
         item._type === 'published' && !item.last_published_version);
 }
 
-export function createMarkUp(html) {
-    return {__html: html};
-}
-
 export function menuHolderElem() {
     return document.getElementById('react-placeholder');
 }

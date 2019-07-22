@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {ItemContainer, SelectBox} from './index';
-import {createMarkUp} from '../helpers';
 
 function hasThumbnail(item) {
     return item.renditions && item.renditions.thumbnail;
@@ -38,7 +37,7 @@ export const MediaPreview: React.StatelessComponent<any> = (props) => {
             React.createElement(
                 'small',
                 {title: headlineText,
-                    dangerouslySetInnerHTML: createMarkUp(headline)},
+                    dangerouslySetInnerHTML: {__html: headline}},
             ),
             React.createElement(ItemContainer, {
                 item: item,
