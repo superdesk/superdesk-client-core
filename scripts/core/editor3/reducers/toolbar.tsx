@@ -1,4 +1,4 @@
-import {RichUtils, EditorState} from 'draft-js';
+import {RichUtils, EditorState, Modifier, ContentState, SelectionState, ContentBlock} from 'draft-js';
 import * as entityUtils from '../components/links/entityUtils';
 import {onChange} from './editor3';
 import * as Links from '../helpers/links';
@@ -6,11 +6,16 @@ import * as Blocks from '../helpers/blocks';
 import * as Highlights from '../helpers/highlights';
 import {removeFormatFromState} from '../helpers/removeFormat';
 import {insertEntity} from '../helpers/draftInsertEntity';
+import {IEditorStore} from '../store';
+import { logger } from 'core/services/logger';
+import { getSelectedBlocks } from '../helpers/selection';
+import { assertNever } from 'core/helpers/typescript-helpers';
+import { ITextCase } from '../actions';
 
 /**
  * @description Contains the list of toolbar related reducers.
  */
-const toolbar = (state = {}, action) => {
+const toolbar = (state: IEditorStore, action) => {
     switch (action.type) {
     case 'TOOLBAR_TOGGLE_BLOCK_STYLE':
         return toggleBlockStyle(state, action.payload);
@@ -32,6 +37,8 @@ const toolbar = (state = {}, action) => {
         return setPopup(state, action.payload);
     case 'TOOLBAR_TOGGLE_INVISIBLES':
         return toggleInvisibles(state);
+    case 'CHANGE_CASE':
+        return changeCase(state, action.payload);
     default:
         return state;
     }
@@ -222,5 +229,50 @@ const toggleInvisibles = (state) => {
  * @description Sets the toolbar popup to the given type.
  */
 const setPopup = (state, {type, data}) => ({...state, popup: {type, data}});
+
+function changeCase(state: IEditorStore, payload: {changeTo: ITextCase, selection: SelectionState}) {
+    const {selection, changeTo} = payload;
+    const startOffset = selection.getStartOffset();
+    const endOffset = selection.getEndOffset();
+
+    let contentState = state.editorState.getCurrentContent();
+
+    const getChangedText = (text: string) => {
+        if (changeTo === 'uppercase') {
+            return text.toUpperCase();
+        } else if (changeTo === 'lowercase') {
+            return text.toLowerCase();
+        } else {
+            assertNever(changeTo);
+        }
+    };
+
+    for (let i = startOffset; i < endOffset; i++) {
+        const singleLetterSelection = selection.merge({
+            anchorOffset: i,
+            focusOffset: i + 1,
+        }) as SelectionState;
+
+        const block = contentState.getBlockForKey(selection.getStartKey());
+        const text = block.getText().slice(i, i + 1);
+
+        contentState = Modifier.replaceText(
+            contentState,
+            singleLetterSelection,
+            getChangedText(text),
+            block.getInlineStyleAt(i),
+            block.getEntityAt(i),
+        );
+    }
+
+    const contentStateWithHistoryRestored: ContentState = contentState.merge({
+        selectionBefore: selection,
+        selectionAfter: selection,
+    }) as ContentState;
+
+    const nextEditorState = EditorState.push(state.editorState, contentStateWithHistoryRestored, 'spellcheck-change');
+
+    return {...state, editorState: EditorState.forceSelection(nextEditorState, selection)};
+}
 
 export default toolbar;

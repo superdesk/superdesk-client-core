@@ -2,6 +2,7 @@ import ng from 'core/services/ng';
 import {insertMedia} from './toolbar';
 import {makeIframesResponsive} from 'core/helpers/make-iframes-responsive';
 import {logger} from 'core/services/logger';
+import { SelectionState } from 'draft-js';
 
 /**
  * @ngdoc method
@@ -212,5 +213,13 @@ export function embed(code, targetBlockKey = null) {
             code: processEmbedCode(code),
             targetBlockKey,
         },
+    };
+}
+
+export type ITextCase = 'uppercase' | 'lowercase';
+export function changeCase(changeTo: ITextCase, selection: SelectionState) {
+    return {
+        type: 'CHANGE_CASE',
+        payload: {changeTo, selection},
     };
 }

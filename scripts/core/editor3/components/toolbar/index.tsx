@@ -126,6 +126,7 @@ class ToolbarComponent extends React.Component<any, any> {
             invisibles,
             toggleInvisibles,
             removeFormat,
+            dispatch,
         } = this.props;
 
         const has = (opt) => editorFormat.indexOf(opt) > -1;
@@ -203,6 +204,7 @@ class ToolbarComponent extends React.Component<any, any> {
                         tooltip={gettext('Annotation')}
                     />
                 }
+
                 {has('suggestions') &&
                     <StyleButton
                         active={suggestingMode}
@@ -218,6 +220,26 @@ class ToolbarComponent extends React.Component<any, any> {
                         label={'invisibles'}
                         style={'invisibles'}
                         onToggle={toggleInvisibles}
+                    />
+                }
+
+                {has('uppercase') &&
+                    <SelectionButton
+                        onClick={({selection}) => dispatch(actions.changeCase('uppercase', selection))}
+                        precondition={!suggestingMode}
+                        key="uppercase-button"
+                        iconName="edit-line"
+                        tooltip={gettext('convert text to uppercase')}
+                    />
+                }
+
+                {has('lowercase') &&
+                    <SelectionButton
+                        onClick={({selection}) => dispatch(actions.changeCase('lowercase', selection))}
+                        precondition={!suggestingMode}
+                        key="lowercase-button"
+                        iconName="edit-line"
+                        tooltip={gettext('convert text to lowercase')}
                     />
                 }
 
@@ -277,6 +299,7 @@ const mapDispatchToProps = (dispatch) => ({
     toggleSuggestingMode: () => dispatch(actions.toggleSuggestingMode()),
     toggleInvisibles: () => dispatch(actions.toggleInvisibles()),
     removeFormat: () => dispatch(actions.removeFormat()),
+    dispatch: dispatch,
 });
 
 const Toolbar = connect(mapStateToProps, mapDispatchToProps)(ToolbarComponent);

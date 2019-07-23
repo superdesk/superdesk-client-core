@@ -78,6 +78,8 @@ const FORMATTING_OPTIONS_EDITOR3 = [
     'superscript',
     'subscript',
     'strikethrough',
+    'uppercase',
+    'lowercase',
 ];
 
 /**
