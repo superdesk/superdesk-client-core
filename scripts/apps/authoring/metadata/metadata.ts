@@ -355,6 +355,7 @@ function MetaDropdownDirective($filter) {
             key: '@',
             tabindex: '=',
             containingDirective: '@',
+            dropleft: '@',
         },
         templateUrl: 'scripts/apps/authoring/metadata/views/metadata-dropdown.html',
         link: function(scope, elem) {
