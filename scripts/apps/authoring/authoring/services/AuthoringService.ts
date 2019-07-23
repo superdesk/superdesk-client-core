@@ -475,7 +475,8 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         let userPrivileges = privileges.privileges;
         let lockedByMe = !lock.isLocked(currentItem);
         let isReadOnlyState = this._isReadOnly(currentItem);
-        let isPublishedOrCorrected = currentItem.state === ITEM_STATE.PUBLISHED || currentItem.state === ITEM_STATE.CORRECTED;
+        let isPublishedOrCorrected = currentItem.state === ITEM_STATE.PUBLISHED ||
+            currentItem.state === ITEM_STATE.CORRECTED;
 
         action.view = true;
 

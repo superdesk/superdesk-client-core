@@ -67,7 +67,7 @@ export enum ITEM_STATE {
 
 /**
  * Item was published once (or will be soon for scheduled)
- * 
+ *
  * PUBLISHED | SCHEDULED | CORRECTED | KILLED | RECALLED | UNPUBLISHED
  */
 export const PUBLISHED_STATES = [
@@ -93,14 +93,14 @@ export const KILLED_STATES = [
 
 /**
  * Item is canceled before or after publishing
- * 
+ *
  * KILLED | RECALLED | UNPUBLISHED | SPIKED
  */
 export const CANCELED_STATES = KILLED_STATES.concat([ITEM_STATE.SPIKED]);
 
 /**
  * Such items can't be edited without further action (or ever)
- * 
+ *
  * KILLED | RECALLED | UNPUBLISHED | SPIKED | SCHEDULED
  */
 export const READONLY_STATES = CANCELED_STATES.concat([ITEM_STATE.SCHEDULED]);
