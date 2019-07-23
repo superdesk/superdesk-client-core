@@ -164,7 +164,8 @@ export function MultiImageEditController(
                 .map((item) => JSON.stringify(item[fieldName])),
         );
 
-        const defaultValue = fieldName === 'subject' ? [] : '';
+        const defaultValue = fieldName === 'subject' ? [] :
+            fieldName === 'extra' ? {} : '';
 
         if (uniqueValues.length < 1) {
             return defaultValue;

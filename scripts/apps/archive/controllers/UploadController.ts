@@ -131,6 +131,10 @@ export function UploadController(
 
     var uploadFile = function(item) {
         var handleError = function(reason) {
+            if (reason && reason.data && reason.data.code) {
+                notify.error(gettext('Upload Error:') + ' ' + reason.data.code);
+            }
+
             item.model = false;
             $scope.failed = true;
             return $q.reject(reason);
