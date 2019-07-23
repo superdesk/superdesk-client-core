@@ -8,6 +8,7 @@ import editorReducers from 'core/editor3/reducers';
 import {Editor3} from '..';
 import {noop} from 'lodash';
 import {ISpellchecker} from '../spellchecker/interfaces';
+import ng from 'core/services/ng';
 
 const editorStateInitial = EditorState.createWithContent(ContentState.createFromText('This speling is not correkt.'));
 
@@ -39,6 +40,10 @@ const testSpellchecker: ISpellchecker = {
 };
 
 describe('editor3.spellchecker', () => {
+    beforeEach(() => {
+        spyOn(ng, 'getService').and.returnValue(Promise.resolve({isAutoSpellchecker: true}));
+    });
+
     it('displays spellchecking errors in the editor', (done) => {
         spyOn(defaultSpellcheckers, 'getSpellchecker').and.returnValue(testSpellchecker);
 

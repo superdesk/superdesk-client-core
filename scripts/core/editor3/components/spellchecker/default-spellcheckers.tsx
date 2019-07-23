@@ -37,11 +37,6 @@ function check(str: string): Promise<Array<ISpellcheckWarning>> {
             let matchArr;
             let start;
 
-            // if isAutoSpellchecker is set to false then return
-            if (spellcheck.isAutoSpellchecker === false) {
-                return info;
-            }
-
             // tslint:disable-next-line no-conditional-assignment
             while ((matchArr = regex.exec(str)) !== null) {
                 start = matchArr.index;
