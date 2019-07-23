@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
 import {IDesk} from 'superdesk-api';
+import {logger} from 'core/services/logger';
 
 /**
  * @ngdoc service
@@ -262,7 +263,12 @@ export function DesksFactory($q, api, preferencesService, userList, notify,
             }
         },
         fetchDeskById: function(Id) {
-            return api.desks.getById(Id);
+            return api.desks.getById(Id).then((_desk) => {
+                return _desk;
+            }, () => {
+                logger.error(new Error('Something went wrong: desk not found'));
+                return Promise.reject();
+            });
         },
         getCurrentDesk: function() {
             return this.deskLookup[this.getCurrentDeskId()] || null;
