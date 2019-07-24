@@ -20,51 +20,45 @@ export function getSpellcheckWarningsByBlock(
         return Promise.resolve({});
     }
 
-    return ng.getService('spellcheck').then((spellcheck) => {
-        if (spellcheck.isAutoSpellchecker !== true) {
-            return Promise.resolve({});
-        }
+    const rangesByBlock: Array<{blockKey: string, startOffset: number, endOffset: number}> = [];
 
-        const rangesByBlock: Array<{blockKey: string, startOffset: number, endOffset: number}> = [];
+    let lastOffset = 0;
+    const blocks = editorState.getCurrentContent().getBlocksAsArray();
 
-        let lastOffset = 0;
-        const blocks = editorState.getCurrentContent().getBlocksAsArray();
+    blocks.forEach((block) => {
+        const blockLength = block.getLength();
+        const lineBreak = 1;
 
-        blocks.forEach((block) => {
-            const blockLength = block.getLength();
-            const lineBreak = 1;
+        rangesByBlock.push({
+            blockKey: block.getKey(), startOffset: lastOffset, endOffset: lastOffset + blockLength,
+        });
+        lastOffset += blockLength + lineBreak;
+    });
 
-            rangesByBlock.push({
-                blockKey: block.getKey(), startOffset: lastOffset, endOffset: lastOffset + blockLength,
+    return spellchecker.check(text).then((warnings) => {
+        let spellcheckWarningsByBlock: ISpellcheckWarningsByBlock = {};
+
+        warnings.forEach((warning) => {
+            const range = rangesByBlock.find(({startOffset, endOffset}) =>
+                warning.startOffset >= startOffset && warning.startOffset < endOffset);
+
+            if (range == null) {
+                logger.warn('Can not find a range for a spellchecker warning', {text, warnings, warning});
+                return;
+            }
+
+            const {blockKey} = range;
+
+            if (spellcheckWarningsByBlock[blockKey] == null) {
+                spellcheckWarningsByBlock[blockKey] = [];
+            }
+            spellcheckWarningsByBlock[blockKey].push({
+                ...warning,
+                startOffset: warning.startOffset - range.startOffset,
             });
-            lastOffset += blockLength + lineBreak;
         });
 
-        return spellchecker.check(text).then((warnings) => {
-            let spellcheckWarningsByBlock: ISpellcheckWarningsByBlock = {};
-
-            warnings.forEach((warning) => {
-                const range = rangesByBlock.find(({startOffset, endOffset}) =>
-                    warning.startOffset >= startOffset && warning.startOffset < endOffset);
-
-                if (range == null) {
-                    logger.warn('Can not find a range for a spellchecker warning', {text, warnings, warning});
-                    return;
-                }
-
-                const {blockKey} = range;
-
-                if (spellcheckWarningsByBlock[blockKey] == null) {
-                    spellcheckWarningsByBlock[blockKey] = [];
-                }
-                spellcheckWarningsByBlock[blockKey].push({
-                    ...warning,
-                    startOffset: warning.startOffset - range.startOffset,
-                });
-            });
-
-            return spellcheckWarningsByBlock;
-        });
+        return spellcheckWarningsByBlock;
     });
 }
 
