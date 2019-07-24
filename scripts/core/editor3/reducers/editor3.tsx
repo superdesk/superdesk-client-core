@@ -1,11 +1,13 @@
 import {RichUtils, EditorState} from 'draft-js';
 import {setTansaHtml} from '../helpers/tansa';
 import {addMedia} from './toolbar';
-import {isEditorPlainText, getCustomDecorator, IEditorStore} from '../store';
+import {getCustomDecorator, IEditorStore} from '../store';
 import {replaceWord} from './spellchecker';
 import {DELETE_SUGGESTION} from '../highlightsConfig';
 import {moveBlockWithoutDispatching} from '../helpers/draftMoveBlockWithoutDispatching';
 import {insertEntity} from '../helpers/draftInsertEntity';
+
+const isEditorPlainText = (props) => props.singleLine || (props.editorFormat || []).length === 0;
 
 /**
  * @description Contains the list of editor related reducers.
