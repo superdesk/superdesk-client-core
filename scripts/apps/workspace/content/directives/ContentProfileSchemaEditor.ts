@@ -1,5 +1,4 @@
 import {includes} from 'lodash';
-import {HAS_FORMAT_OPTIONS} from 'apps/workspace/content/constants';
 import {getLabelForFieldId} from '../../helpers/getLabelForFieldId';
 
 interface IScope extends ng.IScope {
@@ -23,6 +22,17 @@ interface IScope extends ng.IScope {
     onDrag(locals: { start: number; end: number; key: string; }): any;
     onToggle(locals: { key: string; dest: string; position: string; }): any;
 }
+
+const HAS_PLAINTEXT_FORMATTING_OPTIONS = Object.freeze({
+    headline: true,
+});
+
+const HAS_RICH_FORMATTING_OPTIONS = Object.freeze({
+    abstract: true,
+    body_html: true,
+    footer: true,
+    body_footer: true,
+});
 
 const FORMATTING_OPTIONS = [
     'h1',
@@ -119,7 +129,7 @@ export function ContentProfileSchemaEditor(vocabularies) {
                     && typeof scope.fields[fieldName].field_options === 'object'
                     && scope.fields[fieldName].field_options.single === true;
 
-                if (Object.keys(HAS_FORMAT_OPTIONS).includes(fieldName) && !isCustomPlainTextField) {
+                if (Object.keys(HAS_RICH_FORMATTING_OPTIONS).includes(fieldName) && !isCustomPlainTextField) {
                     return EDITOR3_RICH_FORMATTING_OPTIONS;
                 } else {
                     return EDITOR3_PLAINTEXT_FORMATTING_OPTIONS;
@@ -157,7 +167,9 @@ export function ContentProfileSchemaEditor(vocabularies) {
              * @return {Boolean}
              */
             scope.hasFormatOptions = (field) =>
-                !!HAS_FORMAT_OPTIONS[field] || hasCustomFieldFormatOptions(field);
+                Object.keys(HAS_RICH_FORMATTING_OPTIONS).includes(field)
+                || Object.keys(HAS_PLAINTEXT_FORMATTING_OPTIONS).includes(field)
+                || hasCustomFieldFormatOptions(field);
 
             /**
              * Test if given field should have format options config

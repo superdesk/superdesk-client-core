@@ -63,7 +63,7 @@
                     </div>
 
                     <!-- IF EDITOR3 -->
-                    <div class="field" ng-if="model.editor.body_html.editor3">
+                    <div class="field" ng-if=":: hasFormatOptions(id) && model.editor.body_html.editor3">
                         <label translate>Format options</label>
                         <div class="controls" ng-if="model.editor.body_html.editor3"
                              sd-multi-select
