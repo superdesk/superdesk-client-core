@@ -11,6 +11,7 @@
                     <tr>
                         <th class="name"></th>
                         <th ng-repeat="role in roles">
+                            <input type="checkbox" ng-click="toggleAll(role, selectAll)" ng-true-value="1" ng-false-value="0" ng-model="selectAll">
                             {{ :: role.name | translate }}
                             <span class="label label--primary" ng-if="role.is_default" translate>default</span>
                         </th>

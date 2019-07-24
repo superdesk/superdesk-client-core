@@ -469,7 +469,7 @@ export class Editor3Component extends React.Component<IProps> {
                         blockRenderMap={blockRenderMap}
                         blockRendererFn={getBlockRenderer({svc: this.props.svc})}
                         customStyleMap={{...customStyleMap, ...this.props.highlightsManager.styleMap}}
-                        onChange={(editorStateNext) => {
+                        onChange={(editorStateNext: EditorState) => {
                             // in order to position the popup component we need to know the position of editor selection
                             // even when it's not focused, or another input is focused
 

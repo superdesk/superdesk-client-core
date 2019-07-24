@@ -6,11 +6,13 @@ import * as Blocks from '../helpers/blocks';
 import * as Highlights from '../helpers/highlights';
 import {removeFormatFromState} from '../helpers/removeFormat';
 import {insertEntity} from '../helpers/draftInsertEntity';
+import {IEditorStore} from '../store';
+import {PopupTypes} from '../actions/popups';
 
 /**
  * @description Contains the list of toolbar related reducers.
  */
-const toolbar = (state = {}, action) => {
+const toolbar = (state: IEditorStore, action) => {
     switch (action.type) {
     case 'TOOLBAR_TOGGLE_BLOCK_STYLE':
         return toggleBlockStyle(state, action.payload);
@@ -221,6 +223,25 @@ const toggleInvisibles = (state) => {
  * @param {Object} data Type of popup and popup data.
  * @description Sets the toolbar popup to the given type.
  */
-const setPopup = (state, {type, data}) => ({...state, popup: {type, data}});
+const setPopup = (state: IEditorStore, {type, data}) => {
+    const {editorState} = state;
+    let newEditorState = editorState;
+
+    // SDESK-3885
+    // Whenever we hide a popup, the ContentState is not changed so it will
+    // trigger these two DraftJS events:
+    //     * editOnFocus
+    //     * editOnSelect
+    // The first one renders the right selection but the second one uses
+    // global `window.getSelection()` (which doesn't exist, as the editor lost focus)
+    // to check if the editorState selection matches that one. As it doesn't, it renders
+    // the selection in the first character of the first block.
+    // Using `forceSelection` won't trigger those events and the selection will be correct.
+    if (type === PopupTypes.Hidden) {
+        newEditorState = EditorState.forceSelection(editorState, editorState.getSelection());
+    }
+
+    return {...state, editorState: newEditorState, popup: {type, data}};
+};
 
 export default toolbar;

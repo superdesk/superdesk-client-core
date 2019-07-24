@@ -1,16 +1,25 @@
-import {max, sortBy, get} from 'lodash';
+import {max, sortBy, get, isEmpty} from 'lodash';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 
-MediaMetadataEditorDirective.$inject = ['metadata', 'deployConfig', 'features', '$q'];
-export default function MediaMetadataEditorDirective(metadata, deployConfig, features, $q) {
+MediaMetadataEditorDirective.$inject = ['metadata', 'deployConfig', 'features', '$q', 'session'];
+export default function MediaMetadataEditorDirective(metadata, deployConfig, features, $q, session) {
     function getCV(field) {
         const cv = metadata.cvs.find((_cv) => _cv._id === field || _cv.schema_field === field);
 
         if (cv == null && field === 'subject') {
-            return {items: metadata.values.subjectcodes}; // fallback for built in subjectcodes
+            // fallback for built in subjectcodes
+            return {selection_type: 'multi selection', items: metadata.values.subjectcodes};
+        }
+
+        if (cv == null && field === 'language' && metadata.values.languages) {
+            return {schema_field: 'language', items: metadata.values.languages}; // keep it consistent with authoring
         }
 
         return cv;
+    }
+
+    function isExtra(field): boolean {
+        return field.cv && (field.cv.field_type === 'text' || field.cv.field_type === 'date');
     }
 
     return {
@@ -32,7 +41,7 @@ export default function MediaMetadataEditorDirective(metadata, deployConfig, fea
 
             $q.all({
                 getLabelForFieldId: getLabelNameResolver(),
-                metdataInit: metadata.initialize(),
+                metadataInit: metadata.initialize(),
             }).then(({getLabelForFieldId}) => {
                 const editor = get(deployConfig.getSync('editor'), 'picture', {});
                 const schema = get(deployConfig.getSync('schema'), 'picture', {});
@@ -63,10 +72,47 @@ export default function MediaMetadataEditorDirective(metadata, deployConfig, fea
                             label: getLabelForFieldId(field),
                             cv: getCV(field),
                         }, editor[field], schema[field])),
-                    'order',
+                    (field) => field.section === 'header' ? field.order : field.order + 1000,
                 );
 
                 scope.$applyAsync();
+
+                // set default values
+                scope.$watch('item', (item) => {
+                    if (!item) {
+                        return;
+                    }
+
+                    if (item._id && (!item._locked || !item._editable)) {
+                        return;
+                    }
+
+                    if (!scope.fields) {
+                        return;
+                    }
+
+                    scope.fields
+                        .filter((field) => !isEmpty(field.default))
+                        .forEach((field) => {
+                            const dest = field.cv ? (field.cv.schema_field || field.field) : field.field;
+
+                            if (isExtra(field)) {
+                                if (!item.extra || !item.extra.hasOwnProperty(dest)) {
+                                    item.extra = item.extra || {};
+                                    item.extra[dest] = field.default;
+                                    scope.onChange({key: 'extra'});
+                                }
+                            } else if (!item.hasOwnProperty(dest)) {
+                                item[dest] = field.default;
+                                scope.onChange({key: dest});
+                            }
+                        });
+
+                    // populate fields for current user
+                    if (get(session, 'identity.sign_off') && !item.hasOwnProperty('sign_off')) {
+                        item.sign_off = session.identity.sign_off;
+                    }
+                });
             });
 
             /**

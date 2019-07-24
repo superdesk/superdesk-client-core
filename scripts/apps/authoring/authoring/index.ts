@@ -112,8 +112,8 @@ angular.module('superdesk.apps.authoring', [
     .component('sdLineCount',
         reactToAngular1(
             LineCount,
-            ['item', 'html'],
-            ['config'],
+            ['html'],
+            [],
             'display:contents',
         ),
     )

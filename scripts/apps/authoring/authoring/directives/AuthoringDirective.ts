@@ -140,20 +140,6 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 }
             }, true);
 
-            $scope.$watch('item.profile', (profile) => {
-                if (profile) {
-                    content.getType(profile)
-                        .then((type) => {
-                            $scope.contentType = type;
-                            $scope.fields = content.fields(type);
-                            initMedia();
-                        });
-                } else {
-                    $scope.contentType = null;
-                    $scope.fields = null;
-                }
-            });
-
             $scope._isInProductionStates = !isPublished($scope.origItem);
 
             $scope.fullPreview = false;
@@ -990,7 +976,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 if ($scope.item._id === data.item && !_closing &&
                     (session.sessionId !== data.lock_session || lock.previewUnlock)) {
                     if (lock.previewUnlock) {
-                        $scope.unlock();
+                        $scope.edit($scope.item);
                         lock.previewUnlock = false;
                     } else {
                         authoring.unlock($scope.item, data.user);
@@ -1198,9 +1184,11 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
             $scope.$watch('item.profile', (profile) => {
                 content.setupAuthoring(profile, $scope, $scope.item)
-                    .then(() => {
+                    .then((contentType) => {
+                        $scope.contentType = contentType;
                         authoring.schema = $scope.schema;
                         authoring.editor = $scope.editor;
+                        initMedia();
                     })
                     .then(updateSchema);
             });

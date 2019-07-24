@@ -138,7 +138,6 @@
         .content-container {
             position: absolute;
             top:0; left: 0; right: 0; bottom: 0;
-            //padding: 0 20px $bottom-view-padding;
             padding: 0 20px 0;
             overflow: auto;
             .core-content {
@@ -340,7 +339,7 @@
     .article-versions {
         position: absolute;
         top:0; left: 0; right: 0; bottom: 0;
-        padding: 20px 20px $bottom-view-padding;
+        padding: 2.4rem 2.4rem $bottom-view-padding;
         overflow: auto;
     }
 
@@ -353,7 +352,7 @@
     .related-item-view, .mediaUsed {
         position: absolute;
         top:0; left: 0; right: 0; bottom: 0;
-        padding: 20px 20px $bottom-view-padding;
+        padding: 2.4rem 2.4rem $bottom-view-padding;
         overflow: auto;
                 .related-item, .mediaUsed--Item {
                     cursor: pointer;

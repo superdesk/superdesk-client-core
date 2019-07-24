@@ -12,7 +12,7 @@
     top: $topspace + $subnav-height;
     overflow-y: auto;
     > .content {
-        padding: 0 20px 20px+$bottom-view-padding 0;
+        padding: 0 2.4rem $bottom-view-padding 0;
     }
     .empty-dashboard {
         position: absolute;

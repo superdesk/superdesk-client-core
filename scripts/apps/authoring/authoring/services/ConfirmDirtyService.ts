@@ -119,13 +119,13 @@ export function ConfirmDirtyService($window, $q, $filter, api, modal, $interpola
             var username = $filter('username')(user);
             var msg = headline ?
                 gettext(
-                    'This item was unlocked by {{username}}.',
-                    {username: `<b>${username}</b>`},
+                    'Item {{headline}} was unlocked by {{username}}.',
+                    {headline: `<b>${headline}</b>`, username: `<b>${username}</b>`},
                 )
                 :
                 gettext(
-                    'Item {{headline}} was unlocked by {{username}}.',
-                    {headline: `<b>${headline}</b>`, username: `<b>${username}</b>`},
+                    'This item was unlocked by {{username}}.',
+                    {username: `<b>${username}</b>`},
                 );
 
             return modal.confirm(msg, gettext('Item Unlocked'), gettext('OK'), false);
