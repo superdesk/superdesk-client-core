@@ -2,7 +2,7 @@ import ng from 'core/services/ng';
 import {insertMedia} from './toolbar';
 import {makeIframesResponsive} from 'core/helpers/make-iframes-responsive';
 import {logger} from 'core/services/logger';
-import { SelectionState } from 'draft-js';
+import {SelectionState} from 'draft-js';
 
 /**
  * @ngdoc method

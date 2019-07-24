@@ -7,10 +7,8 @@ import * as Highlights from '../helpers/highlights';
 import {removeFormatFromState} from '../helpers/removeFormat';
 import {insertEntity} from '../helpers/draftInsertEntity';
 import {IEditorStore} from '../store';
-import { logger } from 'core/services/logger';
-import { getSelectedBlocks } from '../helpers/selection';
-import { assertNever } from 'core/helpers/typescript-helpers';
-import { ITextCase } from '../actions';
+import {assertNever} from 'core/helpers/typescript-helpers';
+import {ITextCase} from '../actions';
 
 /**
  * @description Contains the list of toolbar related reducers.
