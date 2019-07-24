@@ -228,7 +228,7 @@ class ToolbarComponent extends React.Component<any, any> {
                         onClick={({selection}) => dispatch(actions.changeCase('uppercase', selection))}
                         precondition={!suggestingMode}
                         key="uppercase-button"
-                        iconName="edit-line"
+                        iconName="chevron-up-thin"
                         tooltip={gettext('convert text to uppercase')}
                     />
                 }
@@ -238,7 +238,7 @@ class ToolbarComponent extends React.Component<any, any> {
                         onClick={({selection}) => dispatch(actions.changeCase('lowercase', selection))}
                         precondition={!suggestingMode}
                         key="lowercase-button"
-                        iconName="edit-line"
+                        iconName="chevron-down-thin"
                         tooltip={gettext('convert text to lowercase')}
                     />
                 }

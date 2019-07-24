@@ -231,12 +231,6 @@ const toggleInvisibles = (state) => {
 const setPopup = (state, {type, data}) => ({...state, popup: {type, data}});
 
 function changeCase(state: IEditorStore, payload: {changeTo: ITextCase, selection: SelectionState}) {
-    const {selection, changeTo} = payload;
-    const startOffset = selection.getStartOffset();
-    const endOffset = selection.getEndOffset();
-
-    let contentState = state.editorState.getCurrentContent();
-
     const getChangedText = (text: string) => {
         if (changeTo === 'uppercase') {
             return text.toUpperCase();
@@ -247,30 +241,46 @@ function changeCase(state: IEditorStore, payload: {changeTo: ITextCase, selectio
         }
     };
 
-    for (let i = startOffset; i < endOffset; i++) {
-        const singleLetterSelection = selection.merge({
-            anchorOffset: i,
-            focusOffset: i + 1,
-        }) as SelectionState;
+    const {selection, changeTo} = payload;
+    const contentState = state.editorState.getCurrentContent();
 
-        const block = contentState.getBlockForKey(selection.getStartKey());
-        const text = block.getText().slice(i, i + 1);
+    let ended = false;
+    let started = false;
+    const startKey = selection.getStartKey();
+    const endKey = selection.getEndKey();
 
-        contentState = Modifier.replaceText(
-            contentState,
-            singleLetterSelection,
-            getChangedText(text),
-            block.getInlineStyleAt(i),
-            block.getEntityAt(i),
-        );
-    }
+    const nextBlockMap = state.editorState.getCurrentContent().getBlockMap().map((block) => {
+        const key = block.getKey();
+        const from = key === startKey ? selection.getStartOffset() : 0;
+        const to = key === endKey ? selection.getEndOffset() : block.getLength();
 
-    const contentStateWithHistoryRestored: ContentState = contentState.merge({
-        selectionBefore: selection,
-        selectionAfter: selection,
+        if (key === startKey) {
+            started = true;
+        }
+
+        if (ended === true || started === false) {
+            return block;
+        }
+
+        const text = block.getText();
+        const before = text.slice(0, from);
+        const toReplace = text.slice(from, to);
+        const after = text.slice(to, block.getLength());
+
+        if (key === endKey) {
+            ended = true;
+        }
+
+        return block.merge({
+            text: before + getChangedText(toReplace) + after,
+        });
     }) as ContentState;
 
-    const nextEditorState = EditorState.push(state.editorState, contentStateWithHistoryRestored, 'spellcheck-change');
+    const nextContentState = contentState.merge({
+        blockMap: nextBlockMap,
+    }) as ContentState;
+
+    const nextEditorState = EditorState.push(state.editorState, nextContentState, 'spellcheck-change');
 
     return {...state, editorState: EditorState.forceSelection(nextEditorState, selection)};
 }
