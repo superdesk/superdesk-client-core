@@ -7,7 +7,6 @@ import {getSpellchecker} from './default-spellcheckers';
 import {logger} from 'core/services/logger';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {IPropsDraftDecorator} from 'core/editor3/draftjs-types';
-import ng from 'core/services/ng';
 export type ISpellcheckWarningsByBlock = {[blockKey: string]: Array<ISpellcheckWarning>};
 
 export function getSpellcheckWarningsByBlock(
