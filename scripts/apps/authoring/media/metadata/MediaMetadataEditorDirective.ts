@@ -34,7 +34,7 @@ export default function MediaMetadataEditorDirective(metadata, deployConfig, fea
             boxed: '@',
             associated: '=',
         },
-        template: require('./views/media-metadata-editor-directive.html'),
+        template: require('../views/media-metadata-editor-directive.html'),
         link: (scope) => {
             scope.features = features;
             scope.metadata = metadata;

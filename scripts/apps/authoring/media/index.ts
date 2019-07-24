@@ -1,6 +1,6 @@
-import MediaMetadataEditorDirective from './MediaMetadataEditorDirective';
-import MediaMetadataViewDirective from './MediaMetadataViewDirective';
-import MediaCopyMetadataDirective from './MediaCopyMetadataDirective';
+import MediaMetadataEditorDirective from './metadata/MediaMetadataEditorDirective';
+import MediaMetadataViewDirective from './metadata/MediaMetadataViewDirective';
+import MediaCopyMetadataDirective from './metadata/MediaCopyMetadataDirective';
 
 export default angular.module('superdesk.apps.authoring.media', [])
     .directive('sdMediaMetadataEditor', MediaMetadataEditorDirective)

@@ -5,7 +5,7 @@ export default function MediaCopyMetadataDirective() {
             metadata: '=',
             onChange: '&',
         },
-        template: require('./views/media-copy-metadata-directive.html'),
+        template: require('../views/media-copy-metadata-directive.html'),
         link: (scope) => {
             const METADATA_ITEMS = 'metadata:items';
 
