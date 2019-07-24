@@ -3,11 +3,11 @@ import {HAS_FORMAT_OPTIONS} from 'apps/workspace/content/constants';
 import {getLabelForFieldId} from '../../helpers/getLabelForFieldId';
 
 interface IScope extends ng.IScope {
+    getEditor3FormattingOptions: (fieldName: string) => Array<string>;
     model: any;
     fields: any;
     form: any;
     formattingOptions: Array<string>;
-    formattingOptionsEditor3: Array<string>;
     schemaKeysOrdering: any;
     schemaKeysDisabled: any;
     hasFormatOptions(field): boolean;
@@ -52,7 +52,13 @@ const FORMATTING_OPTIONS = [
     'table',
 ];
 
-const FORMATTING_OPTIONS_EDITOR3 = [
+const EDITOR3_PLAINTEXT_FORMATTING_OPTIONS = [
+    'uppercase',
+    'lowercase',
+];
+
+const EDITOR3_RICH_FORMATTING_OPTIONS = [
+    ...EDITOR3_PLAINTEXT_FORMATTING_OPTIONS,
     'h1',
     'h2',
     'h3',
@@ -78,8 +84,6 @@ const FORMATTING_OPTIONS_EDITOR3 = [
     'superscript',
     'subscript',
     'strikethrough',
-    'uppercase',
-    'lowercase',
 ];
 
 /**
@@ -109,7 +113,20 @@ export function ContentProfileSchemaEditor(vocabularies) {
         },
         link: function(scope: IScope, elem, attr, form) {
             scope.formattingOptions = FORMATTING_OPTIONS;
-            scope.formattingOptionsEditor3 = FORMATTING_OPTIONS_EDITOR3;
+
+            scope.getEditor3FormattingOptions = (fieldName) => {
+                console.log(scope.fields);
+
+                const isCustomPlainTextField = typeof scope.fields[fieldName] === 'object'
+                    && typeof scope.fields[fieldName].field_options === 'object'
+                    && scope.fields[fieldName].field_options.single === true;
+
+                if (Object.keys(HAS_FORMAT_OPTIONS).includes(fieldName) && !isCustomPlainTextField) {
+                    return EDITOR3_RICH_FORMATTING_OPTIONS;
+                } else {
+                    return EDITOR3_PLAINTEXT_FORMATTING_OPTIONS;
+                }
+            };
 
             scope.remove = (key) => {
                 scope.onRemove({key});

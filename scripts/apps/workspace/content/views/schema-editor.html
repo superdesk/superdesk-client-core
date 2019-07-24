@@ -62,14 +62,19 @@
                         <div sd-check ng-model="model.editor[id].cleanPastedHTML"></div>
                     </div>
 
-                    <div class="field" ng-if=":: hasFormatOptions(id)">
+                    <!-- IF EDITOR3 -->
+                    <div class="field" ng-if="model.editor.body_html.editor3">
                         <label translate>Format options</label>
                         <div class="controls" ng-if="model.editor.body_html.editor3"
                              sd-multi-select
                              data-item="model.editor[id].formatOptions"
-                             data-list="formattingOptionsEditor3"
+                             data-list="getEditor3FormattingOptions(id)"
                              data-change="setDirty()">
                         </div>
+                    </div>
+                    <!-- ELSE IF EDITOR2 -->
+                    <div class="field" ng-if=":: hasFormatOptions(id) && !model.editor.body_html.editor3">
+                        <label translate>Format options</label>
                         <div class="controls" ng-if="!model.editor.body_html.editor3"
                              sd-multi-select
                              data-item="model.editor[id].formatOptions"
@@ -77,6 +82,7 @@
                              data-change="setDirty()">
                         </div>
                     </div>
+                    <!-- END IF -->
 
                     <div class="field" ng-if="model.schema[id].type === 'media'">
                         <label translate>Show Crops</label>
