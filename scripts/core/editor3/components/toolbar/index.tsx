@@ -11,7 +11,7 @@ import {connect} from 'react-redux';
 import {LinkToolbar} from '../links';
 import classNames from 'classnames';
 import * as actions from '../../actions';
-import {PopupTypes} from '../../actions';
+import {PopupTypes, changeCase} from '../../actions';
 import {highlightsConfig} from '../../highlightsConfig';
 import {gettext} from 'core/utils';
 
@@ -225,21 +225,21 @@ class ToolbarComponent extends React.Component<any, any> {
 
                 {has('uppercase') &&
                     <SelectionButton
-                        onClick={({selection}) => dispatch(actions.changeCase('uppercase', selection))}
+                        onClick={({selection}) => dispatch(changeCase('uppercase', selection))}
                         precondition={!suggestingMode}
                         key="uppercase-button"
-                        iconName="chevron-up-thin"
-                        tooltip={gettext('convert text to uppercase')}
+                        iconName="to-uppercase"
+                        tooltip={gettext('Convert text to uppercase')}
                     />
                 }
 
                 {has('lowercase') &&
                     <SelectionButton
-                        onClick={({selection}) => dispatch(actions.changeCase('lowercase', selection))}
+                        onClick={({selection}) => dispatch(changeCase('lowercase', selection))}
                         precondition={!suggestingMode}
                         key="lowercase-button"
-                        iconName="chevron-down-thin"
-                        tooltip={gettext('convert text to lowercase')}
+                        iconName="to-lowercase"
+                        tooltip={gettext('Convert text to lowercase')}
                     />
                 }
 
