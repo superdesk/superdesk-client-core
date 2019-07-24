@@ -115,8 +115,6 @@ export function ContentProfileSchemaEditor(vocabularies) {
             scope.formattingOptions = FORMATTING_OPTIONS;
 
             scope.getEditor3FormattingOptions = (fieldName) => {
-                console.log(scope.fields);
-
                 const isCustomPlainTextField = typeof scope.fields[fieldName] === 'object'
                     && typeof scope.fields[fieldName].field_options === 'object'
                     && scope.fields[fieldName].field_options.single === true;
