@@ -262,6 +262,8 @@ angular.module('superdesk.core.menu.notifications', ['superdesk.core.services.as
                 templateUrl: asset.templateUrl('core/menu/notifications/views/notifications.html'),
                 link: function(scope, elem, attrs, ctrl) {
                     scope.flags = ctrl.flags;
+                    scope.notificationNames = ['notify', 'user:mention', 'translated:changed',
+                        'item:marked', 'item:unmarked'];
 
                     scope.openArticle = function(notification) {
                         ctrl.flags.notifications = !ctrl.flags.notifications;
