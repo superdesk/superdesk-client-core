@@ -1,19 +1,24 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import {renderArea} from '../helpers';
+import {IArticle} from 'superdesk-api';
 
-export const ListPriority: React.StatelessComponent<any> = (props) => {
-    const css = {
-        className: classNames('list-field urgency', {
-            'urgency-reduced-rowheight': props.scope.singleLine,
-        }),
+interface IProps {
+    item: IArticle;
+    svc: {};
+    scope: {
+        singleLine: boolean;
     };
+}
 
-    return renderArea('priority', props, css) || React.createElement('div', css);
-};
+export class ListPriority extends React.PureComponent<IProps> {
+    render() {
+        const css = {
+            className: classNames('list-field urgency', {
+                'urgency-reduced-rowheight': this.props.scope.singleLine,
+            }),
+        };
 
-ListPriority.propTypes = {
-    svc: PropTypes.object.isRequired,
-    scope: PropTypes.any.isRequired,
-};
+        return renderArea('priority', this.props, css) || React.createElement('div', css);
+    }
+}

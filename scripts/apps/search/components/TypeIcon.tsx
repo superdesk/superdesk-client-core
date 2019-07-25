@@ -1,22 +1,22 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {gettext} from 'core/utils';
+
+interface IProps {
+    type: string;
+    highlight: boolean;
+}
 
 /**
  * Type icon component
  */
-export const TypeIcon: React.StatelessComponent<any> = (props) => {
-    if (props.type === 'composite' && props.highlight) {
-        return React.createElement('i', {className: 'filetype-icon-highlight-pack'});
+export class TypeIcon extends React.PureComponent<IProps> {
+    render() {
+        const {type, highlight} = this.props;
+
+        if (type === 'composite' && highlight) {
+            return <i className={'filetype-icon-highlight-pack'} />;
+        }
+
+        return <i className={'filetype-icon-' + type} title={gettext('Article Type: {{type}}', {type})} />;
     }
-
-    return React.createElement('i', {
-        className: 'filetype-icon-' + props.type,
-        title: gettext('Article Type: {{type}}', {type: props.type}),
-    });
-};
-
-TypeIcon.propTypes = {
-    type: PropTypes.any,
-    highlight: PropTypes.any,
-};
+}
