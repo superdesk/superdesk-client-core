@@ -93,7 +93,8 @@ export const dataApi: IDataApi = {
 };
 
 export function connectCrudManager<Props, PropsToConnect, Entity extends IBaseRestApiResponse>(
-    WrappedComponent: React.ComponentType<Props & PropsToConnect>,
+    // type stoped working after react 16.8 upgrade. See if it's fixed by a future React types or TypeScript update
+    WrappedComponent, // : React.ComponentType<Props & PropsToConnect>
     name: string,
     endpoint: string,
 ): React.ComponentType<Props> {

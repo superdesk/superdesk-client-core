@@ -310,7 +310,10 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
                 }
             } else {
                 return (
-                    <div data-test-id="list-page--items">
+                    <div
+                        data-test-id="list-page--items"
+                        className="sd-list-item-group sd-list-item-group--space-between-items"
+                    >
                         {
                             this.props.items._items.map(
                                 (item) => renderRow(item._id, item, this),

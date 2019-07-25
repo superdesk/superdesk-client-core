@@ -29,24 +29,31 @@
 
 .template-editor-modal {
     //z-index: $zindexModal - 1; /* prevent the modal to overlay new modals */
-    * { box-sizing: border-box; }
-    .modal-body { padding: 0; }
+    .template-container {
+        display: grid;
+        grid-template-columns: 1fr 32%;
+        grid-template-rows: 1fr;
+        height: 100%;
+    }
+    .template-container__content {
+        overflow-x: hidden;
+        overflow-y: auto;
+        grid-column: 1/2;
+    }
+    .template-container__metadata {
+        overflow-x: hidden;
+        overflow-y: auto;
+        grid-column: 2/3;
+        padding: $sd-base-increment * 4;
+    }
 
     .template-content {
-        display: inline-block;
-        vertical-align: top;
-        width: 63%;
 
+        overflow-x: hidden;
         @include box-shadow(3px -3px 8px -3px rgba(0, 0, 0, 0.1));
     }
 
     .template-metadata {
-        display: inline-block;
-        position: absolute;
-        width: calc(37.25% - 2px);
-        height: 100%;
-        top: 0; right: 0;
-        padding: 20px 31px;
 
         .field {
             margin-bottom: 15px;
@@ -60,14 +67,13 @@
         }
 
         .toggle-box__label {
-            color: $black;
+            color: $sd-text;
         }
         .multi-select {
             margin-bottom: 20px;            
             ul {
                 li {
                     display: inline-block;
-                    margin-bottom: 8px;
                 }
             }
         }
@@ -77,7 +83,7 @@
     .template-icon {
         display: inline-block;
         vertical-align: middle;
-        padding: 20px 0px 20px 31px;
+        padding: 16px 0px 20px 24px;
 
         i {
             width: 48px; height: 48px;
@@ -91,7 +97,7 @@
         flex-wrap: wrap;
         vertical-align: top;
         padding: 20px 13px;
-        width: calc(100% - 95px);
+        width: calc(100% - 112px);
 
         input#template-name {
             font-size: 15px;
@@ -111,17 +117,18 @@
     }
 
     .template-editor {
-        border-top: 1px solid rgba(0,0,0,0.2);
+        border-top: 1px solid rgba(0,0,0,0.1);
         background-color: $white;
         .authoring-header__general-info {
             display: none;
         }
         .authoring-header {
             border: 0;
-            padding: 16px 27px;
+            max-width: none;
+            padding: $sd-base-increment * 2 $sd-base-increment * 5 $sd-base-increment * 3;
         }
         .main-article {
-            padding: 20px 38px;
+            padding: $sd-base-increment * 3 $sd-base-increment * 5;
             border-width: 0;
         }
     }
