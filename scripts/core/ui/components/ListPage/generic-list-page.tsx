@@ -46,7 +46,8 @@ interface IState {
 
 interface IPropsConnected<T extends IBaseRestApiResponse> {
     items?: ICrudManager<T>;
-    modal?: any;
+    modal: any;
+    notify: any;
     $rootScope: any;
 }
 
@@ -122,7 +123,9 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
         });
     }
     deleteItem(item: T) {
-        const deleteNow = () => this.props.items.delete(item);
+        const deleteNow = () => this.props.items.delete(item).then(() => {
+            this.props.notify.success(gettext('The item has been deleted.'));
+        });
 
         this.props.modal.confirm(gettext('Are you sure you want to delete this item?'))
             .then(() => {
@@ -519,6 +522,7 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
                                     }}
                                     item={this.state.newItem}
                                     onSave={(item: T) => this.props.items.create(item).then((res) => {
+                                        this.props.notify.success(gettext('The item has been created.'));
                                         this.closeNewItemForm();
                                         this.openPreview(res._id);
                                     })}
@@ -542,7 +546,9 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
                                     item={
                                         this.props.items._items.find(({_id}) => _id === this.state.editItemId)
                                     }
-                                    onSave={(nextItem) => this.props.items.update(nextItem)}
+                                    onSave={(nextItem) => this.props.items.update(nextItem).then(() => {
+                                        this.props.notify.success(gettext('The item has been updated.'));
+                                    })}
                                     onClose={this.closePreview}
                                 />
                             </PageContainerItem>
@@ -581,5 +587,5 @@ export const getGenericListPageComponent = <T extends IBaseRestApiResponse>(reso
             'items',
             resource,
         )
-        , ['modal', '$rootScope'],
+        , ['modal', '$rootScope', 'notify'],
     );
