@@ -1,4 +1,4 @@
-import { keys, pick, merge } from 'lodash';
+import {keys, pick, merge} from 'lodash';
 
 MediaCopyMetadataDirective.$inject = [];
 export default function MediaCopyMetadataDirective() {
@@ -22,6 +22,7 @@ export default function MediaCopyMetadataDirective() {
 
             scope.pasteMetadata = () => {
                 const metadataFromStorage = JSON.parse(localStorage.getItem(METADATA_ITEMS));
+
                 scope.metadata = merge(scope.metadata, metadataFromStorage);
                 scope.onChange();
             };
