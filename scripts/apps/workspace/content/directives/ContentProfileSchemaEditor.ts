@@ -168,7 +168,10 @@ export function ContentProfileSchemaEditor(vocabularies) {
              */
             scope.hasFormatOptions = (field) =>
                 Object.keys(HAS_RICH_FORMATTING_OPTIONS).includes(field)
-                || Object.keys(HAS_PLAINTEXT_FORMATTING_OPTIONS).includes(field)
+                || (
+                    scope.model.editor.body_html.editor3 === true
+                    && Object.keys(HAS_PLAINTEXT_FORMATTING_OPTIONS).includes(field)
+                )
                 || hasCustomFieldFormatOptions(field);
 
             /**
