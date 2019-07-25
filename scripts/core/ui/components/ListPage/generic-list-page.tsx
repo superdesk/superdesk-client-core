@@ -46,6 +46,8 @@ interface IState {
 
 interface IPropsConnected<T extends IBaseRestApiResponse> {
     items?: ICrudManager<T>;
+    modal?: any;
+    $rootScope: any;
 }
 
 export class GenericListPageComponent<T extends IBaseRestApiResponse>
@@ -260,6 +262,14 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
     }
     componentDidMount() {
         this.props.items.read(1, this.props.defaultSortOption);
+
+        if (this.props.refreshOnEvents != null) {
+            this.props.refreshOnEvents.forEach((eventName) => {
+                this.props.$rootScope.$on(eventName, () => {
+                    this.executeFilters(); // will update the list using selected filtering / sort options
+                });
+            });
+        }
     }
     render() {
         if (this.props.items._items == null) {
@@ -571,5 +581,5 @@ export const getGenericListPageComponent = <T extends IBaseRestApiResponse>(reso
             'items',
             resource,
         )
-        , ['modal'],
+        , ['modal', '$rootScope'],
     );
