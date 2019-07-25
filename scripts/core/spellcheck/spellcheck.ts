@@ -532,7 +532,9 @@ function SpellcheckMenuController($rootScope, editorResolver, spellcheck, notify
 
     $scope.$watch('item.language', (newVal, oldVal) => {
         if (newVal != null && newVal !== oldVal) {
+            self.isAuto = true;
             spellcheck.setLanguage(newVal);
+            spellcheck.setSpellcheckerStatus(self.isAuto);
             setupSpellchecker();
         }
     });
