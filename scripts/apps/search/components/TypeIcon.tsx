@@ -3,7 +3,7 @@ import {gettext} from 'core/utils';
 
 interface IProps {
     type: string;
-    highlight: boolean;
+    highlight?: boolean;
 }
 
 /**

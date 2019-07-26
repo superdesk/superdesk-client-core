@@ -9,14 +9,14 @@ export const GridTypeIcon: React.StatelessComponent<any> = (props) => {
             {className: classNames('sd-grid-item__type-icn',
                 {swimlane: props.swimlane},
             )},
-            React.createElement(TypeIcon, {type: props.item.type, svc: props.svc}),
+            React.createElement(TypeIcon, {type: props.item.type}),
         );
     }
 
     return React.createElement(
         'span',
         {},
-        React.createElement(TypeIcon, {type: props.item.type, svc: props.svc}),
+        React.createElement(TypeIcon, {type: props.item.type}),
     );
 };
 
