@@ -899,12 +899,6 @@ $rightfield-width:60px;
                         }
                 }
             }
-            div:not(.state-label) {
-                display: flex;
-                white-space: nowrap;
-                overflow: hidden;
-                flex-shrink: 0;
-            }
             .state-label, .profile-label {
                 margin-top: 2px;
                 margin-right: 4px;
