@@ -131,7 +131,7 @@ export function getMarkedForMeComponent(superdesk: ISuperdesk) {
                             </button>
                         );
                     }}
-                    wrapperStyles={{maxWidth: 430, padding: 15, paddingTop: 0}}
+                    wrapperStyles={{width: 430, padding: 15, paddingTop: 0}}
                 />
             );
         }
