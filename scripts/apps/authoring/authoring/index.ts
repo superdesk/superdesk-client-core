@@ -344,7 +344,7 @@ angular.module('superdesk.apps.authoring', [
                     }],
                 },
             })
-            .activity('unpulish', {
+            .activity('unpublish', {
                 label: gettext('Unpublish'),
                 priority: 50,
                 icon: 'kill',
