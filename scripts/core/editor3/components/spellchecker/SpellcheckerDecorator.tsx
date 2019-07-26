@@ -177,7 +177,7 @@ export function getSpellcheckingDecorator(
                                     menuShowing: true,
                                     warning: warningForDecoration,
                                 });
-                            } else if (typeof spellchecker.getSuggestions === 'function') {
+                            } else if (spellchecker != null && typeof spellchecker.getSuggestions === 'function') {
                                 spellchecker.getSuggestions(warningForDecoration.text).then((suggestions) => {
                                     this.setState({
                                         menuShowing: true,

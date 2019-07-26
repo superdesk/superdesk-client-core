@@ -55,11 +55,15 @@ function check(str: string): Promise<Array<ISpellcheckWarning>> {
 }
 
 export function getSpellchecker(language: string): ISpellchecker {
+    const spellcheck = ng.get('spellcheck');
     const spellcheckerName = ({
         fr: 'grammalecte',
         nl: 'leuven_dutch',
     })[language];
 
+    if (spellcheckerName == null && spellcheck.isActiveDictionary === false) {
+        return null;
+    }
     if (spellcheckerName != null) {
         return {
             check: (str: string) => httpRequestJsonLocal<{errors: Array<ISpellcheckWarning>}>({

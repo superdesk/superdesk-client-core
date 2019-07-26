@@ -15,6 +15,7 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _, pref
     self = this;
     self.abbreviationsDict = null;
     self.isAutoSpellchecker = false;
+    self.isActiveDictionary = false;
 
     /**
      * Set current language
@@ -480,7 +481,6 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _, pref
 SpellcheckMenuController.$inject = ['$rootScope', 'editorResolver', 'spellcheck', 'notify', '$scope'];
 function SpellcheckMenuController($rootScope, editorResolver, spellcheck, notify, $scope) {
     this.isAuto = false;
-    this.isActiveDictionary = false;
     this.runSpellchecker = runSpellchecker;
     this.pushSettings = pushSettings;
     var self = this;
@@ -489,7 +489,7 @@ function SpellcheckMenuController($rootScope, editorResolver, spellcheck, notify
      * Force spell ckecking
      */
     function runSpellchecker() {
-        if (!self.isActiveDictionary) {
+        if (!spellcheck.isActiveDictionary) {
             notify.error(gettext('No dictionary available for spell checking.'));
             return;
         }
@@ -541,15 +541,15 @@ function SpellcheckMenuController($rootScope, editorResolver, spellcheck, notify
 
     function setupSpellchecker() {
         spellcheck.getDictionary($scope.item.language).then((dict) => {
-            self.isActiveDictionary = !!dict.length;
+            spellcheck.isActiveDictionary = !!dict.length;
 
-            if (!self.isActiveDictionary) {
-                spellcheck.setSpellcheckerStatus(self.isActiveDictionary);
+            if (!spellcheck.isActiveDictionary) {
+                spellcheck.setSpellcheckerStatus(spellcheck.isActiveDictionary);
                 self.isAuto = false;
                 render();
             } else {
                 spellcheck.getSpellcheckerStatus().then((status) => {
-                    self.isAuto = status && !useTansaProofing() && self.isActiveDictionary;
+                    self.isAuto = status && !useTansaProofing() && spellcheck.isActiveDictionary;
                     if (self.isAuto) {
                         runSpellchecker();
                     } else {

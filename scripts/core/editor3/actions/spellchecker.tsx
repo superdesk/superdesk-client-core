@@ -26,6 +26,10 @@ export function reloadSpellcheckerWarnings() {
         const state: IEditorStore = getState();
         const spellchecker = getSpellchecker(state.spellchecking.language);
 
+        if (spellchecker == null) {
+            return;
+        }
+
         getSpellcheckWarningsByBlock(spellchecker, getState().editorState).then((spellcheckWarningsByBlock) => {
             dispatch(applySpellcheck(spellcheckWarningsByBlock));
         });
