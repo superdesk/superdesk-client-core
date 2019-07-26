@@ -32,7 +32,7 @@ export function queryElastic(
                     filtered: {
                         filter: {
                             bool: {
-                                must: Object.keys(filterValues).map((key) => ({term: {[key]: filterValues[key]}})),
+                                must: Object.keys(filterValues).map((key) => ({terms: {[key]: filterValues[key]}})),
                                 must_not: [
                                     {term: {state: 'spiked'}},
                                     {term: {package_type: 'takes'}},
@@ -54,7 +54,7 @@ export function queryElastic(
                                         },
                                     },
                                 ],
-                                // minimum_should_match : 1,
+                                minimum_should_match : 1,
                             },
                         },
                     },
