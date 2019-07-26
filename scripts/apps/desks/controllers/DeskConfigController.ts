@@ -42,8 +42,10 @@ export function DeskConfigController($scope, $controller, notify, desks, modal) 
         const newDesk = !$scope.desk.edit._id;
 
         if (!newDesk && Object.keys(diff).length > 0) {
-            $scope.confirmSave().then(() => true, () => {
-                closeModal();
+            $scope.confirmSave(diff).then((res) => {
+                if (res === true) {
+                    closeModal();
+                }
             });
         } else {
             closeModal();
@@ -85,12 +87,38 @@ export function DeskConfigController($scope, $controller, notify, desks, modal) 
         $scope.desk.edit = null;
     };
 
-    $scope.confirmSave = function() {
+    $scope.confirmSave = function(diff) {
         return modal.confirm(
             gettext('You have unsaved changes. Do you want to save them now?'),
             gettext('Save changes?'),
-            gettext('Yes'),
-            gettext('No'));
+            gettext('Save'),
+            gettext('Ignore'))
+            .then(() => {
+                return desks.save($scope.desk.orig, diff).then((res) => {
+                    _.merge($scope.desk.edit, res);
+                    _.merge($scope.desk.orig, res);
+                    if (diff.members) {
+                        // if desk members were changed update them inside desks.deskMembers as well
+                        const deskMembers = [];
+
+                        angular.forEach(_.values(res.members), (value) => {
+                            deskMembers.push(desks.users._items.find((user) => user._id === value.user));
+                        });
+                        desks.deskMembers[$scope.desk.orig._id] = deskMembers;
+                    }
+                    return true;
+                }, (response) => {
+                    if (angular.isDefined(response.data._message)) {
+                        $scope.message = gettext('Error: ' + response.data._message);
+                    } else {
+                        $scope._errorMessage = gettext('There was a problem, members not saved. Refresh Desks.');
+                    }
+                    return false;
+                });
+            }, () => {
+                $scope.desk.edit = _.cloneDeep($scope.desk.orig);
+                return true;
+            });
     };
 
     $scope.canTabChange = function() {
@@ -98,13 +126,7 @@ export function DeskConfigController($scope, $controller, notify, desks, modal) 
         const newDesk = !$scope.desk.edit._id;
 
         if (!newDesk && Object.keys(diff).length > 0) {
-            return $scope.confirmSave()
-                .then(() => {
-                    return false;
-                }, () => {
-                    $scope.desk.edit = _.cloneDeep($scope.desk.orig);
-                    return true;
-                });
+            return $scope.confirmSave(diff);
         } else {
             return Promise.resolve(true);
         }
