@@ -354,28 +354,15 @@ angular.module('superdesk.apps.authoring', [
                         const item = data.item;
                         let relatedItems = [];
 
-                        familyService.fetchItems(item.archive_item.family_id, item)
+                        familyService.fetchRelatedByState(item.archive_item, [ITEM_STATE.PUBLISHED], true)
                             .then((items) => {
-                                const published = {};
-
-                                relatedItems = items._items
-                                    .filter((relatedItem) => {
-                                        if (!published[relatedItem.guid]) {
-                                            published[relatedItem.guid] = true; // only show each item once
-                                            return true;
-                                        }
-
-                                        return false;
-                                    })
-                                    .filter((relatedItem) => relatedItem.state === ITEM_STATE.PUBLISHED)
-                                    .filter((relatedItem) => relatedItem.guid !== item.guid)
-                                ;
+                                relatedItems = items;
 
                                 const unpublish = (selected) => {
                                     authoring.publish(item.archive_item, {}, 'unpublish');
                                     relatedItems.forEach((relatedItem) => {
                                         if (selected[relatedItem._id]) {
-                                            authoring.publish(relatedItem.archive_item, {}, 'unpublish');
+                                            authoring.publish(relatedItem, {}, 'unpublish');
                                         }
                                     });
                                 };
