@@ -2,6 +2,15 @@ import {get, isEqual, cloneDeep} from 'lodash';
 import {ISavedSearch, mapFiltersServerToClient} from '../SavedSearch';
 import {mapPredefinedDateFiltersServerToClient} from '../directives/DateFilters';
 
+const SUPERDESK_REPOS_REGEX = new RegExp('ingest|archive|archived|published');
+
+const isSameRepo = (shortcut, provider) => {
+    const repo = get(shortcut, 'filter.query.repo', '');
+
+    return (repo != null && repo === provider._id) ||
+        (provider._id === '' && (repo == null || SUPERDESK_REPOS_REGEX.test(repo)));
+};
+
 SearchMenuController.$inject = [
     '$rootScope', '$scope', '$filter', '$location', '$route', 'searchProviderService', 'api', 'savedSearch',
 ];
@@ -17,8 +26,6 @@ export default function SearchMenuController(
         _id: '',
         name: 'Superdesk',
     };
-
-    const SUPERDESK_REPOS_REGEX = new RegExp('ingest|archive|archived|published');
 
     const getSearchParams = (provider) => {
         if (provider.filter) {
@@ -80,12 +87,7 @@ export default function SearchMenuController(
             this.providers.forEach((provider) => {
                 providers.push(provider);
                 providers = providers.concat($filter('sortByName')(
-                    shortcuts.filter((shortcut) => {
-                        const repo = get(shortcut, 'filter.query.repo', '');
-
-                        return (provider._id && repo === provider._id) ||
-                            (!provider._id && (!repo || SUPERDESK_REPOS_REGEX.test(repo)));
-                    }),
+                    shortcuts.filter((shortcut) => isSameRepo(shortcut, provider)),
                     'search_provider',
                 ));
             });
