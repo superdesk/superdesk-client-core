@@ -60,12 +60,12 @@ export class SpellcheckerContextMenuComponent extends React.Component<IProps> {
                     <div className='form-label' style={{ margin: '0 16px' }}>
                         {gettext('Suggestions')}
                     </div>
-                    {messageExists && (
-                        <li>
-                            <button onMouseDown={() => this.onSuggestionClick(suggestions[0])}>{message}</button>
-                        </li>
-                    )}
-                    {!messageExists &&
+                    {
+                        messageExists
+                            ? <li>
+                                <button onMouseDown={() => this.onSuggestionClick(suggestions[0])}>{message}</button>
+                            </li>
+                            :
                         (suggestions.length === 0 ? (
                             <li>
                                 <button>
@@ -85,7 +85,8 @@ export class SpellcheckerContextMenuComponent extends React.Component<IProps> {
                                     </button>
                                 </li>
                             ))
-                        ))}
+                        ))
+                    }
                     {
                         Object.keys(spellchecker.actions).length < 1 ? null : (
                             <div>
