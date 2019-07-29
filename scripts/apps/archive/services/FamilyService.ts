@@ -103,13 +103,10 @@ export function FamilyService(api, desks) {
         return query(filter, 'versioncreated', 'asc');
     };
 
-    /**
-     * Fetch related items
-     */
-    this.fetchRelatedByState = (item: IArticle, state: Array<string>, exclude: boolean = false) =>
+    this.fetchRelatedByState = (item: IArticle, state: Array<string>) =>
         api.query('archive_related', {
             source: {query: {bool: {must: {terms: {state: state}}}}},
-            exclude: exclude ? 1 : 0,
+            exclude: 1,
         }, item)
             .then((data) => data._items);
 

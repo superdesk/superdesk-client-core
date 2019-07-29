@@ -354,7 +354,7 @@ angular.module('superdesk.apps.authoring', [
                         const item = data.item;
                         let relatedItems = [];
 
-                        familyService.fetchRelatedByState(item.archive_item, [ITEM_STATE.PUBLISHED], true)
+                        familyService.fetchRelatedByState(item.archive_item, [ITEM_STATE.PUBLISHED])
                             .then((items) => {
                                 relatedItems = items;
 
