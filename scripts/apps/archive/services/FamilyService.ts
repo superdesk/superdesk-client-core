@@ -106,7 +106,6 @@ export function FamilyService(api, desks) {
     this.fetchRelatedByState = (item: IArticle, state: Array<string>) =>
         api.query('archive_related', {
             source: {query: {bool: {must: {terms: {state: state}}}}},
-            exclude: 1,
         }, item)
             .then((data) => data._items);
 
