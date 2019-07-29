@@ -54,23 +54,11 @@ export class SpellcheckerContextMenuComponent extends React.Component<IProps> {
                 data-test-id="spellchecker-menu"
             >
                 <ul className={'dropdown__menu'} style={{ position: 'static' }}>
-                    <div className='form-label' style={{ margin: '0 16px' }}>
-                        {gettext('Suggestions')}
-                    </div>
+                    <div className="form-label" style={{margin: '0 16px'}}>{gettext('Suggestions')}</div>
                     {
-                        messageExists
-                            ? <li>
-                                <button onMouseDown={() => this.onSuggestionClick(suggestions[0])}>{message}</button>
-                            </li>
-                            :
-                        (suggestions.length === 0 ? (
-                            <li>
-                                <button>
-                                    {gettext('SORRY, NO SUGGESTIONS.')}
-                                </button>
-                            </li>
-                        ) : (
-                            suggestions.map((suggestion, index) => (
+                        suggestions.length === 0
+                            ? <li><button>{gettext('SORRY, NO SUGGESTIONS.')}</button></li>
+                            : suggestions.map((suggestion, index) =>
                                 <li key={index}>
                                     <button
                                         onMouseDown={() =>
@@ -78,11 +66,10 @@ export class SpellcheckerContextMenuComponent extends React.Component<IProps> {
                                         }
                                         data-test-id="spellchecker-menu--suggestion"
                                     >
-                                        {suggestion.text}
+                                        {messageExists ? message : suggestion.text}
                                     </button>
-                                </li>
-                            ))
-                        ))
+                                </li>,
+                            )
                     }
                     {
                         Object.keys(spellchecker.actions).length < 1 ? null : (
