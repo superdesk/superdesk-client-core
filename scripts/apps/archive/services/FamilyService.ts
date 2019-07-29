@@ -1,5 +1,5 @@
 import _, {get} from 'lodash';
-import { IArticle } from 'superdesk-api';
+import {IArticle} from 'superdesk-api';
 
 /**
  * @ngdoc service
@@ -106,7 +106,7 @@ export function FamilyService(api, desks) {
     /**
      * Fetch related items
      */
-    this.fetchRelatedByState = (item: IArticle, state: Array<string>, exclude: boolean=false) =>
+    this.fetchRelatedByState = (item: IArticle, state: Array<string>, exclude: boolean = false) =>
         api.query('archive_related', {
             source: {query: {bool: {must: {terms: {state: state}}}}},
             exclude: exclude ? 1 : 0,
