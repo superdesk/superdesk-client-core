@@ -23,7 +23,7 @@ export const ListItemInfo: React.StatelessComponent<any> = (props) => {
         className = 'item-info item-info-reduced-rowheight';
         listItems = React.createElement(
             'div',
-            {style: {flexGrow: 1}},
+            {style: {flexGrow: 1, flexDirection: 'column'}},
             renderArea('singleLine', angular.extend({
                 svc: props.svc,
                 scope: props.scope,
@@ -33,7 +33,7 @@ export const ListItemInfo: React.StatelessComponent<any> = (props) => {
         className = classNames('item-info', {'item-info-reduced-rowheight': props.scope.singleLine});
         listItems = React.createElement(
             'div',
-            {style: {flexGrow: 1}},
+            {style: {flexGrow: 1, flexDirection: 'column'}},
             renderArea('firstLine', angular.extend({
                 svc: props.svc,
                 scope: props.scope,
