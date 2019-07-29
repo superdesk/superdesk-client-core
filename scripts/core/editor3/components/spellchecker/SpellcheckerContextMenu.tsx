@@ -40,8 +40,8 @@ export class SpellcheckerContextMenuComponent extends React.Component<IProps> {
     }
 
     render() {
-        const { suggestions, message } = this.props.warning;
-        const { spellchecker } = this.props;
+        const {suggestions, message} = this.props.warning;
+        const {spellchecker} = this.props;
 
         // If the message exists, use it as the button text
         // instead of the suggestion
@@ -53,7 +53,7 @@ export class SpellcheckerContextMenuComponent extends React.Component<IProps> {
                 style={{zIndex: 999, border: 'solid transparent', borderWidth: '6px 0'}}
                 data-test-id="spellchecker-menu"
             >
-                <ul className={'dropdown__menu'} style={{ position: 'static' }}>
+                <ul className={'dropdown__menu'} style={{position: 'static'}}>
                     <div className="form-label" style={{margin: '0 16px'}}>{gettext('Suggestions')}</div>
                     {
                         suggestions.length === 0
