@@ -121,6 +121,4 @@ export class SpellcheckerContextMenuComponent extends React.Component<IProps> {
     }
 }
 
-export const SpellcheckerContextMenu = connect()(
-    SpellcheckerContextMenuComponent,
-);
+export const SpellcheckerContextMenu = connect()(SpellcheckerContextMenuComponent);
