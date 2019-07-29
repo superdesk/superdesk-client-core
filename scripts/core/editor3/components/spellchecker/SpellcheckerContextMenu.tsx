@@ -1,13 +1,13 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import * as actions from '../../actions';
-import { StickElementsWithTracking } from 'core/helpers/dom/stickElementsWithTracking';
+import {StickElementsWithTracking} from 'core/helpers/dom/stickElementsWithTracking';
 import {
     ISpellcheckWarning,
     ISpellchecker,
     ISpellcheckerSuggestion
 } from './interfaces';
-import { reloadSpellcheckerWarnings } from '../../actions';
+import {reloadSpellcheckerWarnings} from '../../actions';
 
 interface IProps {
     warning: ISpellcheckWarning;
@@ -21,10 +21,7 @@ export class SpellcheckerContextMenuComponent extends React.Component<IProps> {
     dropdownElement: any;
 
     componentDidMount() {
-        this.stickyElementTracker = new StickElementsWithTracking(
-            this.props.targetElement,
-            this.dropdownElement,
-        );
+        this.stickyElementTracker = new StickElementsWithTracking(this.props.targetElement, this.dropdownElement);
     }
     componentWillUnmount() {
         this.stickyElementTracker.destroy();
@@ -79,7 +76,7 @@ export class SpellcheckerContextMenuComponent extends React.Component<IProps> {
                                         onMouseDown={() =>
                                             this.onSuggestionClick(suggestion)
                                         }
-                                        data-test-id='spellchecker-menu--suggestion'
+                                        data-test-id="spellchecker-menu--suggestion"
                                     >
                                         {suggestion.text}
                                     </button>
