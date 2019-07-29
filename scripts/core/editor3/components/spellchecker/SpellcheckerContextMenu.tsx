@@ -51,15 +51,10 @@ export class SpellcheckerContextMenuComponent extends React.Component<IProps> {
         const messageExists = Boolean(message);
 
         return (
-            <div
-                className={'dropdown open suggestions-dropdown'}
-                ref={(el) => (this.dropdownElement = el)}
-                style={{
-                    zIndex: 999,
-                    border: 'solid transparent',
-                    borderWidth: '6px 0',
-                }}
-                data-test-id='spellchecker-menu'
+            <div className={'dropdown open suggestions-dropdown'}
+                ref={(el) => this.dropdownElement = el}
+                style={{zIndex: 999, border: 'solid transparent', borderWidth: '6px 0'}}
+                data-test-id="spellchecker-menu"
             >
                 <ul className={'dropdown__menu'} style={{ position: 'static' }}>
                     <div className='form-label' style={{ margin: '0 16px' }}>
@@ -91,39 +86,34 @@ export class SpellcheckerContextMenuComponent extends React.Component<IProps> {
                                 </li>
                             ))
                         ))}
-                    {Object.keys(spellchecker.actions).length < 1 ? null : (
-                        <div>
-                            <li className='divider' />
-                            <div
-                                className='form-label'
-                                style={{ margin: '0 16px' }}
-                            >
-                                {gettext('Actions')}
-                            </div>
-                            {Object.keys(spellchecker.actions).map((key, i) => {
-                                const action = spellchecker.actions[key];
+                    {
+                        Object.keys(spellchecker.actions).length < 1 ? null : (
+                            <div>
+                                <li className="divider"/>
+                                <div className="form-label" style={{margin: '0 16px'}}>{gettext('Actions')}</div>
+                                {
+                                    Object.keys(spellchecker.actions).map((key, i) => {
+                                        const action = spellchecker.actions[key];
 
-                                return (
-                                    <li key={i}>
-                                        <button
-                                            onMouseDown={() =>
-                                                action
-                                                    .perform(this.props.warning)
-                                                    .then(() => {
-                                                        this.props.dispatch(
-                                                            reloadSpellcheckerWarnings(),
-                                                        );
-                                                    })
-                                            }
-                                            data-test-id='spellchecker-menu--action'
-                                        >
-                                            {action.label}
-                                        </button>
-                                    </li>
-                                );
-                            })}
-                        </div>
-                    )}
+                                        return (
+                                            <li key={i}>
+                                                <button
+                                                    onMouseDown={() => action.perform(this.props.warning).then(
+                                                        () => {
+                                                            this.props.dispatch(reloadSpellcheckerWarnings());
+                                                        },
+                                                    )}
+                                                    data-test-id="spellchecker-menu--action"
+                                                >
+                                                    {action.label}
+                                                </button>
+                                            </li>
+                                        );
+                                    })
+                                }
+                            </div>
+                        )
+                    }
                 </ul>
             </div>
         );
