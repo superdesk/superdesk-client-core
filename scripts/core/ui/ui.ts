@@ -1048,7 +1048,7 @@ function validationDirective() {
             });
 
             scope.$watch(attrs.sdValidationError, (errors) => {
-                if (isEmpty(errors)) { // valid
+                if (errors == null || errors === '' || errors === false || (errors.length != null && errors.length === 0)) {
                     elem.removeClass('sd-invalid').addClass('sd-valid');
                 } else {
                     elem.addClass('sd-invalid').removeClass('sd-valid');
