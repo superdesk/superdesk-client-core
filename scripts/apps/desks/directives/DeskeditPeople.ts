@@ -1,10 +1,11 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
+import {calculateDiff} from '../controllers/DeskConfigController';
 
-DeskeditPeople.$inject = ['WizardHandler', 'desks', '$rootScope'];
-export function DeskeditPeople(WizardHandler, desks, $rootScope) {
+DeskeditPeople.$inject = ['WizardHandler', 'desks'];
+export function DeskeditPeople(WizardHandler, desks) {
     return {
-        link: function(scope, elem, attrs) {
+        link: function(scope) {
             scope.$watch('step.current', (step, previous) => {
                 if (step === 'people') {
                     scope.search = null;
@@ -12,9 +13,8 @@ export function DeskeditPeople(WizardHandler, desks, $rootScope) {
                     scope.message = gettext('loading...');
 
                     if (scope.desk.edit && scope.desk.edit._id) {
-                        desks.fetchUsers().then((result) => {
-                            scope.users = desks.users._items;
-                            scope.deskMembers = desks.deskMembers[scope.desk.edit._id] || [];
+                        desks.fetchUsers().then(() => {
+                            scope.deskMembers = _.cloneDeep(desks.deskMembers[scope.desk.edit._id] || []);
                             scope.message = null;
                         });
                     } else {
@@ -26,11 +26,17 @@ export function DeskeditPeople(WizardHandler, desks, $rootScope) {
             scope.add = function(user) {
                 if (!_.find(scope.deskMembers, {_id: user._id})) {
                     scope.deskMembers.unshift(user);
+                    scope.desk.edit.members = _.map(scope.deskMembers, (obj) => ({user: obj._id}));
                 }
             };
 
             scope.remove = function(user) {
                 _.remove(scope.deskMembers, user);
+                scope.desk.edit.members = _.map(scope.deskMembers, (obj) => ({user: obj._id}));
+            };
+
+            scope.getMembers = function(deskMembers) {
+                return _.map(deskMembers, (obj) => ({user: obj._id}));
             };
 
             /**
@@ -45,7 +51,7 @@ export function DeskeditPeople(WizardHandler, desks, $rootScope) {
                 var members = _.map(scope.deskMembers, (obj) => ({user: obj._id}));
 
                 scope.saving = true;
-                desks.save(scope.desk.edit, {members: members}).then((res) => {
+                desks.save(scope.desk.orig, {members: members}).then((res) => {
                     angular.extend(scope.desk.edit, res);
                     desks.deskMembers[scope.desk.edit._id] = scope.deskMembers;
                     angular.extend(scope.desk.orig, res);
@@ -66,6 +72,16 @@ export function DeskeditPeople(WizardHandler, desks, $rootScope) {
                         scope.message = null;
                     });
             };
+
+            scope.$watch('desk.edit', (newVal) => {
+                const diff = calculateDiff(scope.desk.edit, scope.desk.orig);
+
+                if (scope.step.current === 'people' && Object.keys(diff).length > 0) {
+                    scope.saveEnabled = true;
+                } else {
+                    scope.saveEnabled = false;
+                }
+            }, true);
         },
     };
 }

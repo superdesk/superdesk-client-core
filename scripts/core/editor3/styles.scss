@@ -365,13 +365,16 @@ $editor-styleButton-size: 3rem;
 	}
 
 	ul.public-DraftStyleDefault-ul, ol.public-DraftStyleDefault-ol {
-		margin: 0 0 0 20px;
+		margin: 8px 0 0 20px;
 		padding: 0 0 0 20px;
 
 		.public-DraftStyleDefault-depth1 {margin-left: 40px;}
 		.public-DraftStyleDefault-depth2 {margin-left: 60px;}
 		.public-DraftStyleDefault-depth3 {margin-left: 80px;}
 		.public-DraftStyleDefault-depth4 {margin-left: 100px;}
+		& > li {
+			border-bottom-width: 0.6em !important;
+		}
 	}
 
 	ul.public-DraftStyleDefault-ul > li { list-style-type: disc; }
@@ -394,6 +397,14 @@ $editor-styleButton-size: 3rem;
 .Editor3-editor .public-DraftEditorPlaceholder-root,
 .Editor3-editor .public-DraftEditor-content {
 	padding: 10px 15px 0 15px;
+	span[style*="super"] {
+		display: inline-block;
+		margin-top: -6px;
+	}
+	span[style*="sub"] {
+		display: inline-block;
+		margin-bottom: -6px;
+	}
 }
 
 .Editor3-editor.unstyled__block--invisibles {

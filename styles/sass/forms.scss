@@ -672,7 +672,7 @@ form, ng-form {
         margin-right: -10px;
     }
 
-    label {
+    label:not(.sd-checkbox) {
         font-size: 11px;
         @include text-semibold();
         color: $grayText;
@@ -689,6 +689,14 @@ form, ng-form {
             font-weight: 400;
             letter-spacing: normal;
         }
+    }
+    .sd-checkbox label {
+        font-size: 1.3rem;
+        @include text-normal();
+        color: inherit;
+        text-transform: none;
+        height: auto;
+        letter-spacing: 0;
     }
 }
 

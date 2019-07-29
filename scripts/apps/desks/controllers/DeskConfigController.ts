@@ -1,8 +1,9 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
+import {generate} from 'json-merge-patch';
 
-DeskConfigController.$inject = ['$scope', '$controller', 'notify', 'desks', 'WizardHandler', 'modal'];
-export function DeskConfigController($scope, $controller, notify, desks, WizardHandler, modal) {
+DeskConfigController.$inject = ['$scope', '$controller', 'notify', 'desks', 'modal'];
+export function DeskConfigController($scope, $controller, notify, desks, modal) {
     // expecting $scope.desks to be defined
 
     $scope.modalActive = false;
@@ -12,13 +13,22 @@ export function DeskConfigController($scope, $controller, notify, desks, WizardH
     };
     $scope.desk = {
         edit: null,
+        orig: null,
     };
 
     $scope.openDesk = function(step, desk) {
+        if (!desk) {
+            initializeDesk({}, step);
+            return;
+        }
+        desks.fetchDeskById(desk._id).then((_desk) => initializeDesk(_desk, step));
+    };
+
+    const initializeDesk = function(desk, step) {
         $scope.modalActive = true;
         $scope.step.current = step;
-        $scope.desk.edit = desk || {};
-        $scope.desk.edit.desk_metadata = $scope.desk.edit.desk_metadata || {};
+        $scope.desk.edit = _.cloneDeep(desk);
+        $scope.desk.orig = _.cloneDeep(desk);
     };
 
     $scope.agg = $controller('AggregateCtrl', {$scope: $scope});
@@ -28,9 +38,16 @@ export function DeskConfigController($scope, $controller, notify, desks, WizardH
     };
 
     $scope.cancel = function() {
-        $scope.modalActive = false;
-        $scope.step.current = null;
-        $scope.desk.edit = null;
+        const diff = calculateDiff($scope.desk.edit, $scope.desk.orig);
+        const newDesk = !$scope.desk.edit._id;
+
+        if (!newDesk && Object.keys(diff).length > 0) {
+            $scope.confirmSave().then(() => true, () => {
+                closeModal();
+            });
+        } else {
+            closeModal();
+        }
     };
 
     $scope.remove = function(desk) {
@@ -61,4 +78,59 @@ export function DeskConfigController($scope, $controller, notify, desks, WizardH
     $scope.getDeskUsers = function(desk) {
         return desks.deskMembers[desk._id];
     };
+
+    const closeModal = function() {
+        $scope.modalActive = false;
+        $scope.step.current = null;
+        $scope.desk.edit = null;
+    };
+
+    $scope.confirmSave = function() {
+        return modal.confirm(
+            gettext('You have unsaved changes. Do you want to save them now?'),
+            gettext('Save changes?'),
+            gettext('Yes'),
+            gettext('No'));
+    };
+
+    $scope.canTabChange = function() {
+        const diff = calculateDiff($scope.desk.edit, $scope.desk.orig);
+        const newDesk = !$scope.desk.edit._id;
+
+        if (!newDesk && Object.keys(diff).length > 0) {
+            return $scope.confirmSave()
+                .then(() => {
+                    return false;
+                }, () => {
+                    $scope.desk.edit = _.cloneDeep($scope.desk.orig);
+                    return true;
+                });
+        } else {
+            return Promise.resolve(true);
+        }
+    };
+}
+
+export function calculateDiff(editObj, origObj) {
+    let diff = generate(origObj, editObj) || {};
+
+    for (const key in diff) {
+        if (diff[key] === null && editObj[key] !== null) {
+            delete diff[key];
+        }
+    }
+
+    if (diff['content_expiry'] === 0 && origObj.content_expiry == null) {
+        delete diff['content_expiry'];
+    }
+
+    // remove RestApiResponse fields if any
+    delete diff['_created'];
+    delete diff['_updated'];
+    delete diff['_id'];
+    delete diff['_etag'];
+    delete diff['_links'];
+    delete diff['_type'];
+
+    return diff;
 }

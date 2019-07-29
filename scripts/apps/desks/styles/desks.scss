@@ -23,6 +23,7 @@ $desk-width: 270px;
         background: rgb($r, $g, $b);
         color: $white;
     }
+
 }
 
 .todo-status {
@@ -411,10 +412,15 @@ $desk-width: 270px;
                     margin-top: 5px;
                     margin-right: 5px;
                     text-transform: none;
-                    span:nth-child(2) { margin-left: 0; }
+                    span:nth-child(2) { 
+                        margin-left: 0; 
+                    }
                 }
                 &.active {
-                    .global-label { color: $white; opacity: 0.8; }
+                    .global-label { 
+                        color: $white; 
+                        opacity: 0.8; 
+                    }
                 }
                 &.editable {
                     padding-top: 0;

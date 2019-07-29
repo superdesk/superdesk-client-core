@@ -249,26 +249,26 @@
     z-index: $zindexFixedNavbar;
     ul > li {
         @include border-box();
-        padding: 0 15px 0 15px;
-        max-width: 250px;
+        padding: 0 1.6rem;
+        max-width: 24rem;
         position: relative;
-        line-height: 30px;
+        line-height: 3.2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         .close {
-            color: #fff;
-            border: none;
-            background: none;
-            position: absolute;
-            right: 5px;
-            top: 5px;
             padding: 0;
+            flex-grow: 0;
+            flex-shrink: 0;
         }
         .title {
+            flex-grow: 1;
             display: block;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
             color: #8bcaf7;
-            font-size: 12px;
+            font-size: 1.2rem;
             @include text-light();
             &:hover {
                 color: #fff;
@@ -281,8 +281,6 @@
         }
         &.active {
             background: darken($sd-blue,10%) !important;
-            margin-top: -1px;
-            padding-top: 1px;
             &:hover {
                 cursor: default;
             }
@@ -306,24 +304,23 @@
         float: right;
         > li {
             border-left: 1px solid #333;
-            width: 250px;
+            width: 24rem;
         }
     }
     .quick-actions {
         button {
-            background: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.4);
             border: 0;
-            height: 30px;
-            line-height: 30px;
-            width: 30px;
+            height: 3.2rem;
+            width: 4.8rem;
             text-align: center;
             &:hover {
                 cursor: pointer;
                 background: $sd-blue;
             }
-        }
-        i {
-            margin: -5px 0 0 0;
         }
     }
 }

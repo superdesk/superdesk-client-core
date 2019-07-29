@@ -1,201 +1,204 @@
 <div sd-modal data-model="template" data-close="cancel()" class="modal--fill template-editor-modal">
-    <div class="modal__header"> <a href="" class="close" ng-click="cancel()"><i class="icon-close-small"></i></a>
+    <div class="modal__header modal__header--flex"> 
         <h3 class="modal__heading" ng-show="template._id">{{ :: 'Edit Template'}}: <span>{{ origTemplate.template_name}}</span></h3>
         <h3 class="modal__heading" ng-hide="template._id" translate>Add New Template</h3>
+        <a href="" class="icn-btn close-modal" ng-click="cancel()"><i class="icon-close-small"></i></a>
     </div>
 
-    <div class="modal__body">
-        <form class="template-content" name="templateForm">
-            <div class="template-icon">
-                <i class="icon-text"></i>
-            </div>
-
-            <div class="template-header">
-                <div sd-validation-error="error.template_name" data-required="true"
-                        class="authoring-header__item" sd-width="full">
-                    <input type="text" id="template-name" class="line-input" name="name" ng-model="template.template_name" placeholder="{{ :: 'Template name' | translate }}" required data-field="template_name" ng-disabled="template.template_name && template.template_type === 'kill'" ng-maxlength="40">
+    <div class="modal__body sd-padding--0 ">
+        <div class="template-container">
+            <form class="template-container__content template-content" name="templateForm">
+                <div class="template-icon">
+                    <i class="icon-text"></i>
                 </div>
-                <div class="error" ng-show="templateForm.name.$error.maxlength" translate>Please use less than 40 characters</div>
-
-                <div class="authoring-header__item" sd-width="full" ng-if="template.template_type !== 'kill' && !content_types.length">
-                    <label for="template-profile" class="pull-left" translate>Content Profile</label>
-                    <input type="text" class="line-input" id="template-profile" ng-model="item.profile">
-                </div>
-
-                <div class="authoring-header__item" sd-width="half" ng-if="template.template_type !== 'kill' && content_types.length">
-                    <label for="template-profile" translate>Content Profile</label>
-                    <div class="authoring-header__input-holder">
-                        <select id="template-profile" class="dropdown__toggle line-input" ng-model="item.profile" ng-options="type._id as type.label for type in content_types | orderBy: 'label'">
-                            <option value=""></option>
-                        </select>
-                        <span class="arrow-down"><b class="dropdown__caret"></b></span>
+    
+                <div class="template-header">
+                    <div class="form__row form__row--s-padding">
+                        <div sd-validation-error="error.template_name" 
+                            data-required="true"
+                            class="sd-line-input sd-line-input--no-label sd-line-input--boxed sd-line-input--no-margin"
+                            ng-class="{'sd-line-input--invalid': templateForm.name.$error.maxlength}">
+                           <input type="text" id="template-name" class="sd-line-input__input" name="name" ng-model="template.template_name" placeholder="{{ :: 'Template name' | translate }}" required data-field="template_name" ng-disabled="template.template_name && template.template_type === 'kill'" ng-maxlength="40">
+                           <div class="sd-line-input__message" ng-show="templateForm.name.$error.maxlength" translate>Please use less than 40 characters</div>
+                       </div>
                     </div>
-                </div>
 
-                <div sd-validation-error="error.template_type" data-required="true"
-                        class="authoring-header__item " sd-width="half">
-                    <label for="template-type" translate>Template Type</label>
-                    <div class="authoring-header__input-holder">
-                        <select id="template-type"
-                                class="dropdown__toggle line-input"
-                                ng-model="template.template_type"
-                                ng-change="resetDesks()"
-                                ng-options="type._id as type.label | translate for type in types| filter:templatesFilter"
-                                required>
-                        </select>
-                        <span class="arrow-down"><b class="dropdown__caret"></b></span>
-                    </div>
-                </div>
-
-                <div ng-if="isAdmin()" class="authoring-header__item" sd-width="full">
-                    <span sd-switch ng-model="template.is_public"></span>
-                    <label for="template-is-private" translate>Make Public</label>
-                </div>
-            </div>
-
-            <div class="template-editor">
-                <header sd-authoring-header></header>
-                <div class="main-article">
-                    <div class="fieldset" sd-article-edit></div>
-                </div>
-            </div>
-        </form>
-
-        <form name="metadataForm">
-            <div class="template-metadata">
-                <div ng-if="showDesks()">
-
-                    <div for="template-desk" ng-if="template.template_type !== 'create'">
-                        <div class="sd-line-input sd-line-input--is-select">
-                            <label class="sd-line-input__label">{{:: 'Desk' | translate }}</label>
-                            <select id="template-desk" ng-if="template.template_type !== 'create'"
-                                ng-model="template_desk" ng-change="setTemplateDesks(template_desk)"
-                                class="sd-line-input__select">
-                                <option value="" translate>None</option>
-                                <option ng-repeat="desk in desks._items track by desk._id" value="{{ desk._id }}"
-                                ng-selected="desk.selected">{{ :: desk.name }}</option>
+                    <div class="form__row form__row--flex form__row--s-padding">
+                        <div class="sd-line-input sd-line-input--label-left" ng-if="template.template_type !== 'kill' && !content_types.length">
+                            <label class="sd-line-input__label" for="template-profile" translate>Content Profile</label>
+                            <input type="text" class="sd-line-input__input" id="template-profile" ng-model="item.profile">
+                        </div>
+        
+                        <div class="sd-line-input sd-line-input--label-left sd-line-input--is-select" ng-if="template.template_type !== 'kill' && content_types.length">
+                            <label class="sd-line-input__label" for="template-profile" translate>Content Profile</label>
+                            <select id="template-profile" class="sd-line-input__select" ng-model="item.profile" ng-options="type._id as type.label for type in content_types | orderBy: 'label'">
+                                <option value=""></option>
+                            </select>
+                        </div>
+        
+                        <div sd-validation-error="error.template_type" data-required="true"
+                                class="sd-line-input sd-line-input--label-left sd-line-input--is-select">
+                            <label class="sd-line-input__label" for="template-type" translate>Template Type</label>
+                            <select id="template-type"
+                                    class="sd-line-input__select"
+                                    ng-model="template.template_type"
+                                    ng-change="resetDesks()"
+                                    ng-options="type._id as type.label | translate for type in types| filter:templatesFilter"
+                                    required>
                             </select>
                         </div>
                     </div>
-
-                    <div for="template-desks" ng-if="template.template_type === 'create'" sd-toggle-box data-title="{{:: 'Desks' | translate }}" data-open="true">
-                        <div class="multi-select" ng-if="template.template_type === 'create'">
-                            <ul>
-                                <li ng-repeat="desk in desks._items track by desk._id">
-                                    <sd-check ng-model="desk.selected" ng-click="onDeskToggle(desk)" label-position="inside">{{desk.name}}</sd-check>
-                                </li>
-                            </ul>
-                        </div>
+    
+                    <div ng-if="isAdmin()" class="form__row form__row--no-padding">
+                        <span sd-switch ng-model="template.is_public"></span>
+                        <label for="template-is-private" translate>Make Public</label>
                     </div>
                 </div>
-
-                <div sd-toggle-box data-title="{{:: 'Metadata' | translate }}" data-open="false" id="template-editor-metadata">
-                    <div class="field">
-                        <span sd-switch ng-model="item.flags.marked_for_not_publication"></span><label>Not For Publication</label>
-                    </div>
-
-                    <div class="field field--margin-double">
-                        <span sd-switch ng-model="item.flags.marked_for_legal"></span><label translate>Legal</label>
-                    </div>
-
-                    <div class="field field--margin-double">
-                        <label translate>Usage terms</label>
-                        <div class="data">
-                            <input class="line-input" type="text" ng-model="item.usageterms" ng-disabled="!_editable" ng-change="autosave(item)">
-                        </div>
-                    </div>
-
-                    <div class="field field--margin-double">
-                        <label translate>Language</label>
-                        <div class="data">
-                            <input class="line-input" type="text" ng-model="item.language" ng-disabled="!_editable" ng-change="autosave(item)">
-                        </div>
-                    </div>
-
-                    <div class="field target-field">
-                        <label translate>Target Subscribers</label>
-                        <div class="term-editor" sd-meta-terms
-                            data-item="item"
-                            data-unique="_id"
-                            data-list="metadata.customSubscribers"
-                            data-field="target_subscribers"
-                            data-reload-list="true"
-                            ></div>
-                    </div>
-
-                    <div class="field target-field">
-                        <label translate>Target Regions</label>
-                        <div sd-meta-target
-                            data-list="metadata.regions"
-                            data-targets="item.target_regions"
-                            ></div>
-                    </div>
-
-                    <div class="field target-field">
-                        <label translate>Target Types</label>
-                        <div sd-meta-target
-                            data-list="metadata.subscriberTypes"
-                            data-targets="item.target_types"
-                            ></div>
+    
+                <div class="template-editor">
+                    <header sd-authoring-header></header>
+                    <div class="main-article">
+                        <div class="fieldset" sd-article-edit></div>
                     </div>
                 </div>
-
-                <div class="field" ng-if="showScheduling()">
-                    <div class="toggle-box">
-                        <div class="toggle-box__header">
-                            <span class="toggle-box__chevron" sd-switch ng-model="template.schedule.is_active"></span>
-                            <div class="toggle-box__label">{{ :: 'Automatically create item' | translate }}</div>
-                            <div class="toggle-box__line"></div>
+            </form>
+            <form class="template-container__metadata" name="metadataForm">
+                <div class="template-metadata">
+                    <div ng-if="showDesks()">
+    
+                        <div for="template-desk" ng-if="template.template_type !== 'create'">
+                            <div class="sd-line-input sd-line-input--is-select">
+                                <label class="sd-line-input__label" translate>Desk</label>
+                                <select id="template-desk" ng-if="template.template_type !== 'create'"
+                                    ng-model="template_desk" ng-change="setTemplateDesks(template_desk)"
+                                    class="sd-line-input__select">
+                                    <option value="" translate>None</option>
+                                    <option ng-repeat="desk in desks._items track by desk._id" value="{{ desk._id }}"
+                                    ng-selected="desk.selected">{{ :: desk.name }}</option>
+                                </select>
+                            </div>
+                        </div>
+    
+                        <div for="template-desks" ng-if="template.template_type === 'create'" sd-toggle-box data-title="{{:: 'Desks' | translate }}" data-open="true" data-style="circle">
+                            <div class="multi-select" ng-if="template.template_type === 'create'">
+                                <ul class="sd-check__group sd-check__group--grid">
+                                    <li ng-repeat="desk in desks._items track by desk._id">
+                                        <sd-check ng-model="desk.selected" ng-click="onDeskToggle(desk)" label-position="inside">{{desk.name}}</sd-check>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                    <div>
-                        <div class="sd-line-input sd-line-input--required"
-                                ng-if="template.schedule.is_active && template.template_type !== 'kill'">
-                            <label class="sd-line-input__label" translate>On</label>
-                            <div class="day-filter-box clearfix sd-line-input__select" sd-weekday-picker data-model="template.schedule.day_of_week"></div>
+    
+                    <div sd-toggle-box data-title="{{:: 'Metadata' | translate }}" data-open="false" id="template-editor-metadata" data-style="circle">
+                        <div class="form__row form__row--s-padding">
+                            <span sd-switch ng-model="item.flags.marked_for_not_publication"></span><label translate>Not For Publication</label>
                         </div>
-                        <div ng-if="template.schedule.is_active && template.template_type !== 'kill'">
-                            <div class="form__row">
-                                <label class="sd-line-input__label--required" translate>Scheduled at</label>
-                                <div class="terms-list">
+    
+                        <div class="form__row form__row--l-padding">
+                            <span sd-switch ng-model="item.flags.marked_for_legal"></span><label translate>Legal</label>
+                        </div>
+    
+                        <div class="form__row form__row--s-padding">
+                            <div class="sd-line-input">
+                                <label class="sd-line-input__label" translate>Usage terms</label>
+                                <input class="sd-line-input__input" type="text" ng-model="item.usageterms" ng-disabled="!_editable" ng-change="autosave(item)">
+                            </div>
+                        </div>
+                        <div class="form__row form__row--s-padding">
+                            <div class="sd-line-input">
+                                <label class="sd-line-input__label" translate>Language</label>
+                                <input class="sd-line-input__input" type="text" ng-model="item.language" ng-disabled="!_editable" ng-change="autosave(item)">
+                            </div>
+                        </div>
+
+                        <div class="form__row">
+                            <label class="form-label" translate>Target Subscribers</label>
+                            <div class="term-editor"
+                                sd-meta-terms
+                                data-item="item"
+                                data-unique="_id"
+                                data-list="metadata.customSubscribers"
+                                data-field="target_subscribers"
+                                data-reload-list="true"
+                                data-header="true"
+                                ></div>
+                        </div>
+    
+                        <div class="form__row">
+                            <label class="form-label" translate>Target Regions</label>
+                            <div sd-meta-target
+                                data-list="metadata.regions"
+                                data-targets="item.target_regions"
+                                ></div>
+                        </div>
+    
+                        <div class="form__row">
+                            <label class="form-label" translate>Target Types</label>
+                            <div sd-meta-target
+                                data-list="metadata.subscriberTypes"
+                                data-targets="item.target_types"
+                                ></div>
+                        </div>
+                    </div>
+    
+                    <div class="" ng-if="showScheduling()">
+                        <div class="toggle-box">
+                            <div class="toggle-box__header">
+                                <span class="toggle-box__chevron" sd-switch ng-model="template.schedule.is_active"></span>
+                                <div class="toggle-box__label" translate>Automatically create item</div>
+                                <div class="toggle-box__line"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="sd-line-input sd-line-input--required"
+                                    ng-if="template.schedule.is_active && template.template_type !== 'kill'">
+                                <label class="sd-line-input__label" translate>On</label>
+                                <div class="day-filter-box clearfix sd-line-input__select" sd-weekday-picker data-model="template.schedule.day_of_week"></div>
+                            </div>
+                            <div ng-if="template.schedule.is_active && template.template_type !== 'kill'">
+                                <div class="form__row form__row--flex form__row--padding-s sd-line-input form__row--no-padding sd-margin-b--1-5">
+                                    <label class="sd-line-input__label sd-line-input__label--required" translate>Scheduled at</label>
+                                    <span sd-timepicker ng-model="new_time.picked" data-style="line-input"></span>
+                                    <button id="add_time" class="btn pull-right" ng-click="addCronTime()"
+                                    translate>Add</button>
+
+                                </div>
+                                <div class="terms-list sd-margin-b--3">
                                     <ul>
                                         <li ng-repeat="time in cron_times" class="pull-left" ng-click="removeCronTime(time)">{{time}}<i class="icon-close-small"></i></li>
                                     </ul>
                                 </div>
+                                <div class="form__row">
+                                    <span sd-timezone data-timezone="template.schedule.time_zone"></span>
+                                </div>
                             </div>
-                            <div class="form__row form__row--flex sd-line-input">
-                                <label class="sd-line-input__label" translate>New schedule</label>
-                                <span sd-timepicker ng-model="new_time.picked" data-style="line-input"></span>
-                                <button id="add_time" class="btn pull-right" ng-click="addCronTime()"
-                                translate>Add</button>
+                        </div>
+                        <div class="form__row" ng-if="showScheduling() && template.schedule.is_active">
+                            <div class="sd-line-input sd-line-input--is-select sd-line-input--required">
+                                <label for="schedule-desk" class="sd-line-input__label" translate>Schedule Desk</label>
+                                <select id="schedule-desk" ng-model="template.schedule_desk"
+                                        ng-change="updateStages(template.schedule_desk)" class="sd-line-input__select">
+                                    <option value="" translate>None</option>
+                                    <option ng-repeat="desk in desks._items track by desk._id" value="{{ desk._id }}"
+                                        ng-selected="desk._id === template.schedule_desk">{{ :: desk.name }}</option>
+                                </select>
                             </div>
-                            <div>
-                                <span sd-timezone data-timezone="template.schedule.time_zone" data-style="line-input"></span>
+                        </div>
+                        <div class="form__row" ng-if="showStages() && template.schedule.is_active">
+                            <div class="sd-line-input sd-line-input--is-select sd-line-input--required">
+                                <label for="template-stage" class="sd-line-input__label" translate>Schedule Stage</label>
+                                <select id="template-stage" ng-model="template.schedule_stage" class="sd-line-input__select">
+                                    <option ng-repeat="stage in stages track by stage._id" value="{{ stage._id }}"
+                                        ng-selected="stage._id === template.schedule_stage">{{ :: stage.name }}</option>
+                                </select>
                             </div>
                         </div>
                     </div>
-                    <div ng-if="showScheduling() && template.schedule.is_active"
-                             class="sd-line-input sd-line-input--is-select sd-line-input--required">
-                        <label for="schedule-desk" class="sd-line-input__label" translate>Schedule Desk</label>
-                        <select id="schedule-desk" ng-model="template.schedule_desk"
-                                ng-change="updateStages(template.schedule_desk)" class="sd-line-input__select">
-                            <option value="" translate>None</option>
-                            <option ng-repeat="desk in desks._items track by desk._id" value="{{ desk._id }}"
-                                ng-selected="desk._id === template.schedule_desk">{{ :: desk.name }}</option>
-                        </select>
-                    </div>
-                    <div ng-if="showStages() && template.schedule.is_active"
-                             class="sd-line-input sd-line-input--is-select sd-line-input--required">
-                        <label for="template-stage" class="sd-line-input__label" translate>Schedule Stage</label>
-                        <select id="template-stage" ng-model="template.schedule_stage" class="sd-line-input__select">
-                            <option ng-repeat="stage in stages track by stage._id" value="{{ stage._id }}"
-                                ng-selected="stage._id === template.schedule_stage">{{ :: stage.name }}</option>
-                        </select>
-                    </div>
                 </div>
+            </form>
+        </div>
 
-            </div>
-        </form>
     </div>
 
     <div class="modal__footer">

@@ -21,6 +21,7 @@ export function DeskConfigModal(metadata, content, templates, api, deployConfig)
             step: '=',
             desks: '=',
             cancel: '&',
+            canTabChange: '&',
         },
         require: '^sdDeskConfig',
         templateUrl: 'scripts/apps/desks/views/desk-config-modal.html',

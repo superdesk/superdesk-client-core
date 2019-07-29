@@ -20,7 +20,7 @@ const DEFAULT_REPOS = ['ingest', 'archive', 'published', 'archived'];
  */
 export function setFilters(search) {
     _.forOwn(search, (value, key) => {
-        if (_.includes(['priority', 'urgency'], key)) {
+        if (_.includes(['priority', 'urgency'], key) && typeof value !== 'string') {
             search[key] = JSON.stringify(value);
         }
     });
