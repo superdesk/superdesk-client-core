@@ -15,6 +15,9 @@ export interface ISpellcheckWarning {
     // Can consist of multiple words. Can NOT span multiple paragraphs.
     // Can be omited if `ISpellchecker['getSuggestions']` method is defined.
     suggestions?: Array<ISpellcheckerSuggestion>;
+
+    // Description of the suggestion, to display language style suggestions
+    message?: string;
 }
 
 export interface ISpellcheckerAction {
