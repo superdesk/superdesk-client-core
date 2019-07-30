@@ -139,7 +139,7 @@ export class EditorService {
      * caseSensitive (boolean) and diff (object having one or multiple keys that is the diff).
      * @description Updates the settings for editor3.
      */
-    setSettings({findreplace, spellcheck}) {
+    setSettings({findreplace, spellcheck, language}) {
         if (!ok()) {
             return;
         }
@@ -149,7 +149,7 @@ export class EditorService {
         }
 
         if (typeof spellcheck !== 'undefined') {
-            spellcheckerStores.map((s) => s.dispatch(action.setSpellcheckerLanguage()));
+            spellcheckerStores.map((s) => s.dispatch(action.setSpellcheckerLanguage(language)));
             spellcheckerStores.map((s) => s.dispatch(action.setSpellcheckerStatus(spellcheck)));
         }
     }

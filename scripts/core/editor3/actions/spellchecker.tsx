@@ -26,6 +26,7 @@ export function reloadSpellcheckerWarnings() {
         const state: IEditorStore = getState();
         const spellchecker = getSpellchecker(state.spellchecking.language);
 
+
         if (spellchecker == null) {
             return;
         }
@@ -36,9 +37,10 @@ export function reloadSpellcheckerWarnings() {
     };
 }
 
-export function setSpellcheckerLanguage() {
+export function setSpellcheckerLanguage(language: string) {
     return {
         type: 'SET_SPELLCHEKCER_LANGUAGE',
+        payload: language,
     };
 }
 

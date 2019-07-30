@@ -513,7 +513,7 @@ function SpellcheckMenuController($rootScope, editorResolver, spellcheck, notify
     function render() {
         const editor = editorResolver.get();
 
-        editor.setSettings({spellcheck: self.isAuto});
+        editor.setSettings({spellcheck: self.isAuto, language: $scope.item.language});
         editor.render();
     }
 

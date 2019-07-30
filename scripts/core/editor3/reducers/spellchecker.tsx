@@ -14,7 +14,7 @@ const spellchecker = (state: IEditorStore, action) => {
     case 'DISABLE_SPELLCHECKER':
         return applySpellcheck(state.spellchecking.language, false, state);
     case 'SET_SPELLCHEKCER_LANGUAGE':
-        return {...state, spellchecking: {...state.spellchecking, language: state.item.language}};
+        return {...state, spellchecking: {...state.spellchecking, language: action.payload}};
     case 'APPLY_SPELLCHECK':
         return applySpellcheck(state.spellchecking.language, true, state, action.payload);
     default:
@@ -118,6 +118,7 @@ export const replaceWord = (state, replaceWordData: IReplaceWordData, skipOnChan
 function applySpellcheck(language: string, enabled: boolean, state: IEditorStore, payload?): IEditorStore {
     const {editorState} = state;
     const spellcheckWarningsByBlock: ISpellcheckWarningsByBlock = payload;
+
 
     const nextEditorState = EditorState.set(
         editorState,
