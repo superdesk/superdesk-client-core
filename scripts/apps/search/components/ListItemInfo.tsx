@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import {renderArea} from '../helpers';
@@ -8,31 +7,30 @@ import {extensions} from 'core/extension-imports.generated';
 import {IDesk, IArticle} from 'superdesk-api';
 
 export interface IPropsItemListInfo {
-    desk: IDesk;
-    highlightsById: any;
-    ingestProvider: any;
     item: IArticle;
-    markedDesksById: any;
-    narrow: any;
-    nestedCount: number;
-    openAuthoringView: any;
+    desk: IDesk;
+    ingestProvider: any;
     profilesById: any;
-    scope: any;
-    showNested: boolean;
-    svc: any;
+    highlightsById: any;
+    markedDesksById: any;
+    openAuthoringView: () => any;
+    narrow: any;
     swimlane: any;
-    toggleNested: (event) => void;
+    nestedCount: number;
     versioncreator: any;
+    showNested: boolean;
+    toggleNested: (event) => void;
+    svc: any;
+    scope: {
+        singleLine: boolean;
+        customRender: any;
+    };
 }
 
-export class ListItemInfo extends React.Component<IPropsItemListInfo> {
-    static propTypes: any;
-
+export class ListItemInfo extends React.PureComponent<IPropsItemListInfo> {
     render() {
         var listItems;
         var className;
-
-        const props = this.props;
 
         const articleDisplayWidgets = flatMap(
             Object.values(extensions).map(({activationResult}) => activationResult),
@@ -43,29 +41,29 @@ export class ListItemInfo extends React.Component<IPropsItemListInfo> {
                     : [],
         );
 
-        if (props.scope.singleLine) {
+        if (this.props.scope.singleLine) {
             className = 'item-info item-info-reduced-rowheight';
             listItems = React.createElement(
                 'div',
                 {style: {flexGrow: 1}},
                 renderArea('singleLine', angular.extend({
-                    svc: props.svc,
-                    scope: props.scope,
-                }, props), {className: 'line article-list-fields'}),
+                    svc: this.props.svc,
+                    scope: this.props.scope,
+                }, this.props), {className: 'line article-list-fields'}),
             );
         } else {
-            className = classNames('item-info', {'item-info-reduced-rowheight': props.scope.singleLine});
+            className = classNames('item-info', {'item-info-reduced-rowheight': this.props.scope.singleLine});
             listItems = React.createElement(
                 'div',
                 {style: {flexGrow: 1}},
                 renderArea('firstLine', angular.extend({
-                    svc: props.svc,
-                    scope: props.scope,
-                }, props), {className: 'line article-list-fields'}, props.scope.customRender),
+                    svc: this.props.svc,
+                    scope: this.props.scope,
+                }, this.props), {className: 'line'}, this.props.scope.customRender),
                 renderArea('secondLine', angular.extend({
-                    svc: props.svc,
-                    scope: props.scope,
-                }, props), {className: 'line article-list-fields'}, props.scope.customRender),
+                    svc: this.props.svc,
+                    scope: this.props.scope,
+                }, this.props), {className: 'line'}, this.props.scope.customRender),
             );
         }
 
@@ -79,7 +77,9 @@ export class ListItemInfo extends React.Component<IPropsItemListInfo> {
                     articleDisplayWidgets.length < 1 ? null : (
                         <div style={{marginLeft: 10}}>
                             {
-                                articleDisplayWidgets.map((Component, i) => <Component key={i} article={props.item} />)
+                                articleDisplayWidgets.map((Component, i) =>
+                                    <Component key={i} article={this.props.item} />,
+                                )
                             }
                         </div>
                     )
@@ -88,9 +88,3 @@ export class ListItemInfo extends React.Component<IPropsItemListInfo> {
         );
     }
 }
-
-ListItemInfo.propTypes = {
-    svc: PropTypes.object.isRequired,
-    scope: PropTypes.any.isRequired,
-    item: PropTypes.any.isRequired,
-};
