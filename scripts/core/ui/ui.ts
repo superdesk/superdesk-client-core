@@ -1006,6 +1006,8 @@ function focusElement() {
     };
 }
 
+type ServerErrorsType = string | Array<string>;
+
 /*
  * Required fields directive
  *
@@ -1014,7 +1016,7 @@ function focusElement() {
  */
 validationDirective.$inject = [];
 function validationDirective() {
-    const isValid = (errors) => errors == null || (Array.isArray(errors) && errors.length === 0);
+    const isValid = (errors: ServerErrorsType) => errors == null || (Array.isArray(errors) && errors.length === 0);
 
     return {
         restrict: 'A',
@@ -1049,7 +1051,7 @@ function validationDirective() {
                 }
             });
 
-            scope.$watch(attrs.sdValidationError, (errors) => {
+            scope.$watch(attrs.sdValidationError, (errors: ServerErrorsType) => {
                 if (isValid(errors)) {
                     elem.removeClass('sd-invalid').addClass('sd-valid');
                 } else {
