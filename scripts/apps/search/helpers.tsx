@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import {DEFAULT_LIST_CONFIG} from './constants';
 import * as fields from './components/fields';
 import ng from '../../core/services/ng';
+import {isKilled} from 'apps/archive/utils';
 
 export function getSpecStyle(spec) {
     var style = {};
@@ -29,7 +30,7 @@ export function getSpecValue(spec, value) {
  */
 export function isCheckAllowed(item) {
     return !(item._type === 'items' || item._type === 'externalsource' ||
-            item.state === 'killed' || item.state === 'recalled' ||
+            isKilled(item) ||
         item._type === 'published' && !item.last_published_version);
 }
 

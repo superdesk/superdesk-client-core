@@ -2,6 +2,7 @@ import _ from 'lodash';
 import React from 'react';
 import {PreviewModal} from '../previewModal';
 import {gettext} from 'core/utils';
+import {isPublished} from 'apps/archive/utils';
 
 SendItem.$inject = ['$q', 'api', 'search', 'desks', 'notify', 'authoringWorkspace',
     'superdeskFlags', '$location', 'macros', '$rootScope', 'deployConfig',
@@ -290,7 +291,7 @@ export function SendItem($q, api, search, desks, notify, authoringWorkspace,
             scope.showPublishSchedule = function() {
                 return scope.item && archiveService.getType(scope.item) !== 'ingest' &&
                     scope.item.type !== 'composite' && !scope.item.embargo_date && !scope.item.embargo_time &&
-                    ['published', 'killed', 'corrected', 'recalled'].indexOf(scope.item.state) === -1 &&
+                    !isPublished(scope.item, false) &&
                     canPublishOnDesk();
             };
 
@@ -317,7 +318,7 @@ export function SendItem($q, api, search, desks, notify, authoringWorkspace,
                     scope.item.type !== 'composite' && !scope.item.publish_schedule_date &&
                     !scope.item.publish_schedule_time;
 
-                if (prePublishCondition && authoring.isPublished(scope.item)) {
+                if (prePublishCondition && isPublished(scope.item)) {
                     if (['published', 'corrected'].indexOf(scope.item.state) >= 0) {
                         return scope.origItem.embargo;
                     }
@@ -333,12 +334,12 @@ export function SendItem($q, api, search, desks, notify, authoringWorkspace,
              * Returns true if Embargo needs to be displayed, false otherwise.
              */
             scope.isEmbargoEditable = function() {
-                var publishedCondition = authoring.isPublished(scope.item) && scope.item.schedule_settings &&
+                var publishedCondition = isPublished(scope.item) && scope.item.schedule_settings &&
                     scope.item.schedule_settings.utc_embargo &&
                     datetimeHelper.greaterThanUTC(scope.item.schedule_settings.utc_embargo);
 
                 return scope.item && scope.item._editable &&
-                    (!authoring.isPublished(scope.item) || publishedCondition);
+                    (!isPublished(scope.item) || publishedCondition);
             };
 
             /**
@@ -410,7 +411,7 @@ export function SendItem($q, api, search, desks, notify, authoringWorkspace,
                 // Selected destination desk should be different from item current location desk
                 var isDestinationChanged = scope.selectedDesk && scope.item.task.desk !== scope.selectedDesk._id;
 
-                return scope.showSendAndPublish() && !authoring.isPublished(scope.item) &&
+                return scope.showSendAndPublish() && !isPublished(scope.item) &&
                     isDestinationChanged && scope.mode === 'authoring' && scope.itemActions.publish;
             };
 
@@ -418,7 +419,7 @@ export function SendItem($q, api, search, desks, notify, authoringWorkspace,
              * Returns true if 'send' button should be displayed. Otherwise, returns false.
              * @return {boolean}
              */
-            scope.isSendEnabled = () => scope.item && !authoring.isPublished(scope.item);
+            scope.isSendEnabled = () => scope.item && !isPublished(scope.item);
 
             /*
              * Send the current item to different desk or stage and publish the item from new location.

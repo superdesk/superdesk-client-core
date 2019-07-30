@@ -176,7 +176,7 @@ export function MultiActionBarController(
 
         multi.getItems().forEach((item) => {
             canPackage = canPackage && item._type !== 'archived' && !item.lock_user &&
-                !_.includes(['ingested', 'spiked', 'killed', 'recalled', 'draft'], item.state);
+                !_.includes(['ingested', 'spiked', 'killed', 'recalled', 'unpublished', 'draft'], item.state);
         });
         return canPackage;
     };

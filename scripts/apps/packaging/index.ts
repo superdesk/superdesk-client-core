@@ -13,6 +13,7 @@ import * as ctrl from './controllers';
 import * as directive from './directives';
 import {PackagesService} from './services';
 import {gettext} from 'core/utils';
+import {isKilled} from 'apps/archive/utils';
 
 /**
  * @ngdoc module
@@ -48,7 +49,7 @@ angular.module('superdesk.apps.packaging', [
                 controller: ctrl.CreatePackageCtrl,
                 filters: [{action: 'create', type: 'package'}],
                 condition: function(item) {
-                    return item ? (item.state !== 'killed' && item.state !== 'recalled') : true;
+                    return item ? !isKilled(item) : true;
                 },
             })
 
