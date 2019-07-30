@@ -149,8 +149,10 @@ export class EditorService {
         }
 
         if (typeof spellcheck !== 'undefined') {
-            spellcheckerStores.map((s) => s.dispatch(action.setSpellcheckerLanguage(language)));
-            spellcheckerStores.map((s) => s.dispatch(action.setSpellcheckerStatus(spellcheck)));
+            spellcheckerStores.forEach((_store) => {
+                _store.dispatch(action.setSpellcheckerLanguage(language));
+                _store.dispatch(action.setSpellcheckerStatus(spellcheck));
+            });
         }
     }
 

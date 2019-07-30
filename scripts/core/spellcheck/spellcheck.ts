@@ -536,7 +536,6 @@ function SpellcheckMenuController($rootScope, editorResolver, spellcheck, notify
         if (newVal != null && newVal !== oldVal) {
             self.isAuto = true;
             spellcheck.setLanguage(newVal);
-            spellcheck.setSpellcheckerStatus(self.isAuto);
             setupSpellchecker();
         }
     });
@@ -546,7 +545,6 @@ function SpellcheckMenuController($rootScope, editorResolver, spellcheck, notify
             spellcheck.isActiveDictionary = !!dict.length;
 
             if (!spellcheck.isActiveDictionary && getSpellchecker($scope.item.language) == null) {
-                spellcheck.setSpellcheckerStatus(spellcheck.isActiveDictionary);
                 self.isAuto = false;
                 render();
             } else {
