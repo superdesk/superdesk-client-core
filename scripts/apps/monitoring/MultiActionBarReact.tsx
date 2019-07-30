@@ -3,7 +3,7 @@ import React from 'react';
 import {IExtensionActivationResult, IArticleActionBulk, IArticle} from 'superdesk-api';
 import {flatMap} from 'lodash';
 import {extensions} from 'core/extension-imports.generated';
-import {DropdownButton} from 'core/ui/components/dropdownButton';
+import {DropdownTree} from 'core/ui/components/dropdown-tree';
 import {Icon} from 'core/ui/components/Icon2';
 import {sortByDisplayPriority} from 'core/helpers/sortByDisplayPriority';
 
@@ -89,8 +89,8 @@ export class MultiActionBarReact extends React.Component<IProps, IState> {
         if (this.props.compact) {
             return (
                 <div className="right-stack" data-test-id="multi-actions-dropdown">
-                    <DropdownButton
-                        getToggleElement={(onClick) => (
+                    <DropdownTree
+                        getToggleElement={(isOpen, onClick) => (
                             <button
                                 onClick={onClick}
                                 className="navbtn"
@@ -99,20 +99,36 @@ export class MultiActionBarReact extends React.Component<IProps, IState> {
                                 <i className="icon-dots-vertical" />
                             </button>
                         )}
-                        items={this.state.actions}
-                        renderItem={(item) => (
-                            <div
+                        groups={[{render: () => null, items: this.state.actions}]}
+                        renderItem={(key, item, closeDropdown) => (
+                            <button
+                                key={key}
                                 style={{
-                                    display: 'flex',
-                                    justifyContent: 'flex-start',
+                                    display: 'block',
+                                    width: '100%',
+                                    padding: 0,
+                                    textAlign: 'left',
+                                    whiteSpace: 'nowrap',
                                 }}
+                                onClick={() => {
+                                    closeDropdown();
+                                    this.onTrigger(item);
+                                }}
+                                data-test-id={item.label}
                             >
-                                <i className={item.icon} style={{marginRight: 10}} />
-                                <span>{item.label}</span>
-                            </div>
+                                <span
+                                    style={{
+                                        display: 'flex',
+                                        justifyContent: 'flex-start',
+                                        alignItems: 'center',
+                                        padding: '10px',
+                                    }}
+                                >
+                                    <i className={item.icon} style={{marginRight: 10}} />
+                                    <span>{item.label}</span>
+                                </span>
+                            </button>
                         )}
-                        getItemLabel={(item) => item.label}
-                        onSelect={this.onTrigger}
                     />
                 </div>
             );

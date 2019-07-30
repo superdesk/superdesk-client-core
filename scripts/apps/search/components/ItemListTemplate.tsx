@@ -1,31 +1,15 @@
 import React from 'react';
-import {IArticle, IDesk} from 'superdesk-api';
 import {ListTypeIcon} from './ListTypeIcon';
 import {ListPriority} from './ListPriority';
-import {ListItemInfo} from './ListItemInfo';
+import {ListItemInfo, IPropsItemListInfo} from './ListItemInfo';
 
-interface IProps {
-    item: IArticle;
-    desk: IDesk;
-    svc: any;
-    openAuthoringView: any;
-    ingestProvider: any;
-    highlightsById: any;
-    markedDesksById: any;
-    profilesById: any;
-    swimlane: any;
-    versioncreator: any;
-    narrow: any;
-    onMultiSelect: () => any;
-    getActionsMenu: () => any;
-    scope: any;
+interface IPropsItemsListTemplate extends IPropsItemListInfo {
     selectingDisabled: boolean;
-    showNested: boolean;
-    nestedCount: number;
-    toggleNested: (event) => void;
+    getActionsMenu: () => any;
+    onMultiSelect: () => any;
 }
 
-export class ListItemTemplate extends React.Component<IProps, never> {
+export class ListItemTemplate extends React.Component<IPropsItemsListTemplate> {
     render() {
         const {item} = this.props;
 
@@ -35,7 +19,6 @@ export class ListItemTemplate extends React.Component<IProps, never> {
                 <ListTypeIcon
                     item={item}
                     onMultiSelect={this.props.onMultiSelect}
-                    svc={this.props.svc}
                     selectingDisabled={this.props.selectingDisabled}
                 />
                 {

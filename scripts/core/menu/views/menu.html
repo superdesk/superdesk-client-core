@@ -1,9 +1,11 @@
 <div>
   <div id="top-menu" ng-class="{'menu-open': flags.menu, 'test-environment': isTestEnvironment}" data-text="{{environmentName}}">
       <div class="pull-left">
-        <button class="collapse-nav pull-left" ng-click="toggleMenu()">
-          <i class="icon-collapse icon--white"></i>
-        </button>
+        <span id="hamburger-menu">
+          <button class="collapse-nav pull-left" ng-click="toggleMenu()">
+            <i class="icon-collapse icon--white"></i>
+          </button>
+        </span>
         <p class="sd-top-menu__header" ng-if="currentRoute.category !== 'superdesk.core.menu.settings'"
           ng-hide="currentRoute.topTemplateUrl">{{ currentRoute.label | translate}}</p>
         <p class="sd-top-menu__header" ng-if="currentRoute.category === 'superdesk.core.menu.settings'"
@@ -16,6 +18,9 @@
             <span class="stable" ng-hide="beta" title="{{ :: 'Switch to feature preview' | translate }}">stable</span>
             <span class="beta" ng-show="beta" sd-tooltip="{{ :: 'Turn off feature preview' | translate }}" flow="down">feature preview</span>
         </button>
+        <div style="float: right">
+          <sd-global-menu-horizontal></sd-global-menu-horizontals>
+        </div>
         <button class="current-user" ng-click="toggleNotifications()">
             <span id="unread-count" class="badge badge--primary" ng-show="notifications.unread">{{ notifications.unread }}</span>
             <figure class="avatar">

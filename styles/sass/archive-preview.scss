@@ -73,6 +73,17 @@
     white-space: pre-wrap;
 }
 
+.article-list-fields {
+    > * {
+        margin-left: 0!important;
+        margin-right: 0!important;
+    }
+
+    > * + * {
+        margin-left: 10px!important;
+    }
+}
+
 .content-item-preview {
     .item-locked {
         @include border-box();

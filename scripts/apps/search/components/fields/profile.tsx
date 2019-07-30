@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {IPropsItemListInfo} from '../ListItemInfo';
 
-export const profile: React.StatelessComponent<any> = (props) => {
+export const profile: React.StatelessComponent<IPropsItemListInfo> = (props) => {
     if (props.item.profile) {
         return React.createElement(
             'div',
@@ -10,6 +11,8 @@ export const profile: React.StatelessComponent<any> = (props) => {
                 props.profilesById[props.item.profile].label :
                 props.item.profile,
         );
+    } else {
+        return null;
     }
 };
 

@@ -4,7 +4,7 @@ import React from 'react';
 import classNames from 'classnames';
 import {get} from 'lodash';
 
-import {broadcast} from './fields';
+import {broadcast} from './fields/broadcast';
 
 import {ActionsMenu} from './index';
 import {closeActionsMenu} from '../helpers';
