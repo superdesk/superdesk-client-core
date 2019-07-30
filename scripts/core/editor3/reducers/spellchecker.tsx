@@ -13,6 +13,8 @@ const spellchecker = (state: IEditorStore, action) => {
         return {...state, spellchecking: {...state.spellchecking, inProgress: action.payload}};
     case 'DISABLE_SPELLCHECKER':
         return applySpellcheck(state.spellchecking.language, false, state);
+    case 'SET_SPELLCHEKCER_LANGUAGE':
+        return {...state, spellchecking: {...state.spellchecking, language: state.item.language}};
     case 'APPLY_SPELLCHECK':
         return applySpellcheck(state.spellchecking.language, true, state, action.payload);
     default:

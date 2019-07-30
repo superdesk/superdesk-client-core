@@ -36,6 +36,12 @@ export function reloadSpellcheckerWarnings() {
     };
 }
 
+export function setSpellcheckerLanguage() {
+    return {
+        type: 'SET_SPELLCHEKCER_LANGUAGE',
+    };
+}
+
 export function disableSpellchecker() {
     return {
         type: 'DISABLE_SPELLCHECKER',

@@ -1,3 +1,5 @@
+import {getSpellchecker} from 'core/editor3/components/spellchecker/default-spellcheckers';
+
 /**
  * Spellcheck module
  */
@@ -489,7 +491,7 @@ function SpellcheckMenuController($rootScope, editorResolver, spellcheck, notify
      * Force spell ckecking
      */
     function runSpellchecker() {
-        if (!spellcheck.isActiveDictionary) {
+        if (!spellcheck.isActiveDictionary && getSpellchecker($scope.item.language) == null) {
             notify.error(gettext('No dictionary available for spell checking.'));
             return;
         }
@@ -543,13 +545,14 @@ function SpellcheckMenuController($rootScope, editorResolver, spellcheck, notify
         spellcheck.getDictionary($scope.item.language).then((dict) => {
             spellcheck.isActiveDictionary = !!dict.length;
 
-            if (!spellcheck.isActiveDictionary) {
+            if (!spellcheck.isActiveDictionary && getSpellchecker($scope.item.language) == null) {
                 spellcheck.setSpellcheckerStatus(spellcheck.isActiveDictionary);
                 self.isAuto = false;
                 render();
             } else {
                 spellcheck.getSpellcheckerStatus().then((status) => {
-                    self.isAuto = status && !useTansaProofing() && spellcheck.isActiveDictionary;
+                    self.isAuto = status && !useTansaProofing()
+                        && (spellcheck.isActiveDictionary || getSpellchecker($scope.item.language) != null);
                     if (self.isAuto) {
                         runSpellchecker();
                     } else {
