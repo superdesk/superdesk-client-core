@@ -119,7 +119,6 @@ function applySpellcheck(language: string, enabled: boolean, state: IEditorStore
     const {editorState} = state;
     const spellcheckWarningsByBlock: ISpellcheckWarningsByBlock = payload;
 
-
     const nextEditorState = EditorState.set(
         editorState,
         {decorator: enabled ? getCustomDecorator(language, spellcheckWarningsByBlock) : getCustomDecorator()},
