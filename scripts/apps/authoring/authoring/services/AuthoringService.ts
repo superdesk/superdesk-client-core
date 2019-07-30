@@ -1,6 +1,8 @@
 import _ from 'lodash';
 import * as helpers from 'apps/authoring/authoring/helpers';
 import {gettext} from 'core/utils';
+import {isPublished, isKilled} from 'apps/archive/utils';
+import {ITEM_STATE, CANCELED_STATES, READONLY_STATES} from 'apps/archive/constants';
 
 /**
  * @ngdoc service
@@ -349,15 +351,6 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
     };
 
     /**
-     * Test if an item is published
-     *
-     * @param {Object} item
-     */
-    this.isPublished = function isPublished(item) {
-        return _.includes(['published', 'killed', 'scheduled', 'corrected', 'recalled'], item.state);
-    };
-
-    /**
      * Unlock an item - callback for item:unlock event
      *
      * @param {Object} item
@@ -397,12 +390,11 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         var action = angular.extend({}, helpers.DEFAULT_ACTIONS);
         var itemOnReadOnlyStage = item && item.task && item.task.stage && desks.isReadOnlyStage(item.task.stage);
         var isUndefinedOperation = angular.isUndefined(currentItem) || angular.isUndefined(userPrivileges);
-        const isKilledItem = (_item) => _.get(_item, 'state') === 'killed' || _.get(_item, 'state') === 'recalled';
 
         action = this._updateActionsForContentApi(currentItem, action);
 
         // killed item and item that have last publish action are readonly
-        if (isUndefinedOperation || itemOnReadOnlyStage || isKilledItem(currentItem) || !action.view) {
+        if (isUndefinedOperation || itemOnReadOnlyStage || isKilled(currentItem) || !action.view) {
             return action;
         }
 
@@ -419,7 +411,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         action.export = currentItem && currentItem.type && currentItem.type === 'text';
 
         // item is published state - corrected, published, scheduled, killed
-        if (self.isPublished(currentItem)) {
+        if (isPublished(currentItem)) {
             // if not the last published version
             if (item.last_published_version === false) {
                 return angular.extend({}, helpers.DEFAULT_ACTIONS);
@@ -427,7 +419,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
 
             this._updatePublished(currentItem, action);
         } else {
-            if (currentItem.state === 'spiked') {
+            if (currentItem.state === ITEM_STATE.SPIKED) {
                 action = angular.extend({}, helpers.DEFAULT_ACTIONS);
                 action.unspike = true;
                 action.mark_item_for_desks = true;
@@ -473,21 +465,22 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
      * @returns {boolean}
      */
     this._canUnlinkUpdate = (item) => !this._isReadOnly(item) && item.type === 'text' &&
-        !this.isPublished(item) && !_.isNil(item.rewrite_of) && _.isNil(item.rewritten_by);
+        !isPublished(item) && !_.isNil(item.rewrite_of) && _.isNil(item.rewritten_by);
 
     this._isReadOnly = function(item) {
-        return _.includes(['spiked', 'scheduled', 'killed', 'recalled'], item.state);
+        return READONLY_STATES.includes(item.state);
     };
 
     this._updatePublished = function(currentItem, action) {
         let userPrivileges = privileges.privileges;
         let lockedByMe = !lock.isLocked(currentItem);
         let isReadOnlyState = this._isReadOnly(currentItem);
-        let isPublishedOrCorrected = currentItem.state === 'published' || currentItem.state === 'corrected';
+        let isPublishedOrCorrected = currentItem.state === ITEM_STATE.PUBLISHED ||
+            currentItem.state === ITEM_STATE.CORRECTED;
 
         action.view = true;
 
-        if (currentItem.state === 'scheduled') {
+        if (currentItem.state === ITEM_STATE.SCHEDULED) {
             action.deschedule = true;
         } else if (isPublishedOrCorrected) {
             action.kill = userPrivileges.kill && lockedByMe && !isReadOnlyState;
@@ -500,16 +493,16 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         let userPrivileges = privileges.privileges;
         var lockedByMe = !lock.isLocked(currentItem);
 
-        action.save = currentItem.state !== 'spiked';
+        action.save = currentItem.state !== ITEM_STATE.SPIKED;
 
         action.publish = (!currentItem.flags || !currentItem.flags.marked_for_not_publication) &&
                 currentItem.task && currentItem.task.desk &&
                 (!currentItem.highlight || currentItem.type !== 'composite') &&
                 userPrivileges.publish && currentItem.state !== 'draft';
 
-        action.edit = currentItem.state !== 'spiked' && lockedByMe;
+        action.edit = currentItem.state !== ITEM_STATE.SPIKED && lockedByMe;
 
-        action.spike = currentItem.state !== 'spiked' && userPrivileges.spike;
+        action.spike = currentItem.state !== ITEM_STATE.SPIKED && userPrivileges.spike;
 
         action.send = currentItem._current_version > 0 && userPrivileges.move && lockedByMe;
     };
@@ -525,10 +518,10 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         action.re_write = !isReadOnlyState && _.includes(['text'], currentItem.type) &&
             !currentItem.embargo && !currentItem.rewritten_by &&
             (!currentItem.broadcast || !currentItem.broadcast.master_id) &&
-            (!currentItem.rewrite_of || currentItem.rewrite_of && this.isPublished(currentItem));
+            (!currentItem.rewrite_of || currentItem.rewrite_of && isPublished(currentItem));
 
         action.resend = _.includes(['text'], currentItem.type) &&
-            _.includes(['published', 'corrected', 'killed', 'recalled'], currentItem.state);
+            isPublished(currentItem, false);
 
         // mark item for highlights
         action.mark_item_for_highlight = currentItem.task && currentItem.task.desk &&
@@ -539,10 +532,10 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             !isReadOnlyState && userPrivileges.mark_for_desks && currentItem.type === 'text';
 
         // allow all stories to be packaged if it doesn't have Embargo
-        action.package_item = !_.includes(['spiked', 'scheduled', 'killed', 'recalled'], currentItem.state) &&
-            !currentItem.embargo && (this.isPublished(currentItem) || !currentItem.publish_schedule);
+        action.package_item = !READONLY_STATES.includes(currentItem.state) &&
+            !currentItem.embargo && (isPublished(currentItem) || !currentItem.publish_schedule);
 
-        action.create_broadcast = _.includes(['published', 'corrected'], currentItem.state) &&
+        action.create_broadcast = _.includes([ITEM_STATE.PUBLISHED, ITEM_STATE.CORRECTED], currentItem.state) &&
             _.includes(['text', 'preformatted'], currentItem.type) &&
             !this._isBroadcastItem(currentItem) && userPrivileges.archive_broadcast;
 
@@ -560,9 +553,9 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             // in production
 
             action.duplicate = userPrivileges.duplicate &&
-                !_.includes(['spiked', 'killed', 'recalled'], currentItem.state);
+                !CANCELED_STATES.includes(currentItem.state);
 
-            action.add_to_current = !_.includes(['spiked', 'scheduled', 'killed', 'recalled'], currentItem.state);
+            action.add_to_current = !READONLY_STATES.includes(currentItem.state);
 
             var desk = _.find(userDesks, {_id: currentItem.task.desk});
 

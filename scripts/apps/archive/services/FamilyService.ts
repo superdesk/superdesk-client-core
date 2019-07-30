@@ -1,4 +1,5 @@
 import _, {get} from 'lodash';
+import {IArticle} from 'superdesk-api';
 
 /**
  * @ngdoc service
@@ -101,6 +102,12 @@ export function FamilyService(api, desks) {
 
         return query(filter, 'versioncreated', 'asc');
     };
+
+    this.fetchRelatedByState = (item: IArticle, state: Array<string>) =>
+        api.query('archive_related', {
+            source: {query: {bool: {must: {terms: {state: state}}}}},
+        }, item)
+            .then((data) => data._items);
 
     /**
      * @ngdoc method

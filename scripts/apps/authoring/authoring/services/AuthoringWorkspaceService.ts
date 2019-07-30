@@ -159,6 +159,13 @@ export function AuthoringWorkspaceService($location, superdeskFlags, authoring, 
     };
 
     /**
+     * Publish again unpublished item
+     */
+    this.publish = (item) => {
+        authoring.publish(item.archive_item, {}, 'publish');
+    };
+
+    /**
      * Get edited item
      *
      * return {Object}

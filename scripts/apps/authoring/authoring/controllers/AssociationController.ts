@@ -2,6 +2,7 @@ import {forEach, get, startsWith, endsWith, some} from 'lodash';
 import {getSuperdeskType} from 'core/utils';
 import {gettext} from 'core/utils';
 import {isMediaEditable} from 'core/config';
+import {isPublished} from 'apps/archive/utils';
 
 /**
  * @ngdoc controller
@@ -114,7 +115,7 @@ export function AssociationController(config, content, superdesk,
 
         let promise;
 
-        if (!authoring.isPublished(scope.item) && updated && !autosave) {
+        if (!isPublished(scope.item) && updated && !autosave) {
             promise = scope.save();
         } else {
             promise = scope.onchange({item: scope.item, data: data});
