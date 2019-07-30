@@ -13,7 +13,7 @@ export interface IPropsItemListInfo {
     profilesById: any;
     highlightsById: any;
     markedDesksById: any;
-    openAuthoringView: () => any;
+    openAuthoringView: (rewrittenBy?: string) => void;
     narrow: any;
     swimlane: any;
     nestedCount: number;
