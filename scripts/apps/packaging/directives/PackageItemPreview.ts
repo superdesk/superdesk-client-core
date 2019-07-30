@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import {isPublished, isKilled} from 'apps/archive/utils';
 
 PackageItemPreview.$inject = ['api', 'lock', 'superdesk', 'authoringWorkspace', '$location', '$sce',
     'desks', 'vocabularies'];
@@ -51,8 +52,8 @@ export function PackageItemPreview(api, lock, superdesk, authoringWorkspace, $lo
                             scope.data.abstract = $sce.trustAsHtml(scope.data.abstract);
                         }
                         scope.isLocked = lock.isLocked(scope.data);
-                        scope.isPublished = _.includes(['published', 'corrected'], scope.data.state);
-                        scope.isKilled = (scope.data.state === 'killed' || scope.data.state === 'recalled');
+                        scope.isPublished = isPublished(scope.data, false);
+                        scope.isKilled = isKilled(scope.data);
                     }, (response) => {
                         scope.error = true;
                     });

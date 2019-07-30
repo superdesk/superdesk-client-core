@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
-import {includes} from 'lodash';
+import {isPublished} from 'apps/archive/utils';
 
 angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
 /**
@@ -127,9 +127,7 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
                      * @param {object} item
                      * @description Checks if an item is in published state
                      */
-                    scope.isPublished = (item) => includes(
-                        ['published', 'killed', 'scheduled', 'corrected', 'recalled'],
-                        item.state);
+                    scope.isPublished = isPublished;
 
                     scope.$watchGroup(['options.item.slugline', 'options.existingRelations'], setProcessedItems);
 

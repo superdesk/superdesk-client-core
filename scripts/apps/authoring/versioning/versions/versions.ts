@@ -1,3 +1,5 @@
+import {isPublished} from 'apps/archive/utils';
+
 VersioningController.$inject = ['$scope', 'authoring', 'desks', 'archiveService'];
 function VersioningController($scope, authoring, desks, archiveService) {
     $scope.last = null;
@@ -23,7 +25,7 @@ function VersioningController($scope, authoring, desks, archiveService) {
                         $scope.canRevert = false;
                         $scope.openVersion($scope.last);
                     } else {
-                        $scope.canRevert = authoring.isEditable($scope.item) && !authoring.isPublished($scope.item);
+                        $scope.canRevert = authoring.isEditable($scope.item) && !isPublished($scope.item);
 
                         if ($scope.item._autosave) {
                             $scope.selected = $scope.item._autosave;
