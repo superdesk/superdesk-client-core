@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {DEFAULT_LIST_CONFIG} from './constants';
-import * as fields from './components/fields';
+import {fields} from './components/fields';
 import ng from '../../core/services/ng';
 import {isKilled} from 'apps/archive/utils';
 
@@ -32,10 +32,6 @@ export function isCheckAllowed(item) {
     return !(item._type === 'items' || item._type === 'externalsource' ||
             isKilled(item) ||
         item._type === 'published' && !item.last_published_version);
-}
-
-export function createMarkUp(html) {
-    return {__html: html};
 }
 
 export function menuHolderElem() {
@@ -133,7 +129,7 @@ export function positionPopup(target, zIndex = 1000) {
     menuHolderElem().style.zIndex = zIndex.toString();
 }
 
-export function renderArea(area, itemProps, props, customRender: any = {}) {
+export function renderArea(area, itemProps, props: {className?: string}, customRender: any = {}) {
     // If singleline preference is set, don't show second line
     if (itemProps.scope.singleLine && area === 'secondLine') {
         return;
@@ -149,20 +145,27 @@ export function renderArea(area, itemProps, props, customRender: any = {}) {
         specs = listConfig.narrowView;
     }
 
-    var contents = specs.map((field) => {
-        if (customRender.fields && field in customRender.fields) {
-            return customRender.fields[field](itemProps);
-        }
-
-        if (field in fields) {
-            return fields[field](itemProps);
-        }
-
-        return null;
-    }).filter(angular.identity);
     var elemProps = angular.extend({key: area}, props);
 
-    return contents.length ? React.createElement('div', elemProps, contents) : null;
+    return (
+        <div {...elemProps}>
+            {
+                specs.map((field, i) => {
+                    if (customRender.fields && field in customRender.fields) {
+                        return customRender.fields[field](itemProps);
+                    }
+
+                    const Component = fields[field];
+
+                    if (Component != null) {
+                        return <Component key={i} {...itemProps} />;
+                    } else {
+                        return null;
+                    }
+                })
+            }
+        </div>
+    );
 }
 
 /*

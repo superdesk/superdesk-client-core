@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {IPropsItemListInfo} from '../ListItemInfo';
 
-export const versioncreator: React.StatelessComponent<any> = (props) => React.createElement(
+export const versioncreator: React.StatelessComponent<IPropsItemListInfo> = (props) => React.createElement(
     'span',
     {className: 'version-creator', key: 'versioncreator'},
     props.versioncreator,

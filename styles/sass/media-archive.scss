@@ -682,7 +682,8 @@ $sfbox_mediaMaxWidth : 172px;
 
 $rightfield-width:60px;
 
-.media-box .keyword {
+.media-box .keyword,
+.field--slugline {
     @include text-semibold();
     color: $sd-keyword;
     text-transform: uppercase;

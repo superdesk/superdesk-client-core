@@ -10,6 +10,9 @@
 
 import _ from 'lodash';
 import {gettext} from 'core/utils';
+import {IEvents} from 'superdesk-api';
+
+export const getCustomEventNamePrefixed = (name: keyof IEvents) => 'internal-websocket-event--' + name;
 
 WebSocketProxy.$inject = ['$rootScope', 'config', '$interval', 'session', 'SESSION_EVENTS'];
 function WebSocketProxy($rootScope, config, $interval, session, SESSION_EVENTS) {
@@ -58,6 +61,10 @@ function WebSocketProxy($rootScope, config, $interval, session, SESSION_EVENTS) 
     var bindEvents = function() {
         ws.onmessage = function(event) {
             var msg = angular.fromJson(event.data);
+
+            if (msg.event === 'content:update') {
+                window.dispatchEvent(new CustomEvent(getCustomEventNamePrefixed('articleUpdate'), {detail: msg.extra}));
+            }
 
             $rootScope.$broadcast(msg.event, msg.extra);
             if (_.includes(ReloadEvents, msg.event)) {

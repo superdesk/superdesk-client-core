@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {createMarkUp} from '../helpers';
 import {FetchedDesksInfo} from './index';
 import {gettext} from 'core/utils';
 
@@ -40,7 +39,7 @@ export const MediaInfo: React.StatelessComponent<any> = (props) => {
     info.push(React.createElement(
         'h5',
         {key: 1,
-            dangerouslySetInnerHTML: createMarkUp(item.headline || item.slugline || item.type)},
+            dangerouslySetInnerHTML: {__html: item.headline || item.slugline || item.type}},
 
     ));
 

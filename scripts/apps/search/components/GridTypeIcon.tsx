@@ -21,7 +21,6 @@ export const GridTypeIcon: React.StatelessComponent<any> = (props) => {
 };
 
 GridTypeIcon.propTypes = {
-    svc: PropTypes.object.isRequired,
     swimlane: PropTypes.any,
     item: PropTypes.any,
     photoGrid: PropTypes.bool,

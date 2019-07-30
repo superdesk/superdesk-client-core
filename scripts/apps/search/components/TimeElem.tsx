@@ -1,17 +1,20 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import {connectServices} from 'core/helpers/ReactRenderAsync';
 
-export const TimeElem: React.StatelessComponent<any> = (props) => {
-    const {datetime} = props.svc;
+interface IProps {
+    date: any;
+    key?: string;
+    datetime?: any;
+}
 
-    return React.createElement(
-        'time',
-        {title: datetime.longFormat(props.date)},
-        datetime.shortFormat(props.date),
-    );
-};
+class TimeElementComponent extends React.Component<IProps> {
+    render() {
+        const {datetime, date, key} = this.props;
 
-TimeElem.propTypes = {
-    svc: PropTypes.object.isRequired,
-    date: PropTypes.any,
-};
+        return (
+            <time key={key} title={datetime.longFormat(date)}>{datetime.shortFormat(date)}</time>
+        );
+    }
+}
+
+export const TimeElem = connectServices<IProps>(TimeElementComponent, ['datetime']);

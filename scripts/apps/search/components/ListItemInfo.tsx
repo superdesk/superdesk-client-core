@@ -4,30 +4,30 @@ import classNames from 'classnames';
 import {renderArea} from '../helpers';
 import {flatMap} from 'lodash';
 import {extensions} from 'core/extension-imports.generated';
-import {IArticle, IDesk} from 'superdesk-api';
+import {IDesk, IArticle} from 'superdesk-api';
 
-interface IProps {
+export interface IPropsItemListInfo {
     item: IArticle;
     desk: IDesk;
     ingestProvider: any;
     profilesById: any;
     highlightsById: any;
     markedDesksById: any;
-    openAuthoringView: () => any;
+    openAuthoringView: (rewrittenBy?: string) => void;
     narrow: any;
     swimlane: any;
     nestedCount: number;
     versioncreator: any;
     showNested: boolean;
     toggleNested: (event) => void;
-    svc: {};
+    svc: any;
     scope: {
         singleLine: boolean;
         customRender: any;
     };
 }
 
-export class ListItemInfo extends React.PureComponent<IProps> {
+export class ListItemInfo extends React.PureComponent<IPropsItemListInfo> {
     render() {
         var listItems;
         var className;
@@ -49,7 +49,7 @@ export class ListItemInfo extends React.PureComponent<IProps> {
                 renderArea('singleLine', angular.extend({
                     svc: this.props.svc,
                     scope: this.props.scope,
-                }, this.props), {className: 'line'}),
+                }, this.props), {className: 'line article-list-fields'}),
             );
         } else {
             className = classNames('item-info', {'item-info-reduced-rowheight': this.props.scope.singleLine});

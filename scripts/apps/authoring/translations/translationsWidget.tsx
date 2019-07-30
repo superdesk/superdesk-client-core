@@ -7,7 +7,6 @@ import {gettext} from 'core/utils';
 
 interface IProps {
     item: IArticle;
-    $filter: any;
     datetime: any;
     authoringWorkspace: any;
     TranslationService: any;
@@ -48,7 +47,7 @@ class TranslationsWidgetComponent extends React.Component<IProps, IState> {
     }
 
     render() {
-        const {$filter, authoringWorkspace, datetime} = this.props;
+        const {authoringWorkspace, datetime} = this.props;
         const {translations, translationsLookup} = this.state;
 
         if (translations == null) {
@@ -101,10 +100,8 @@ class TranslationsWidgetComponent extends React.Component<IProps, IState> {
                                     </div>
                                     <div>
                                         <State
-                                            $filter={$filter}
-                                            datetime={datetime}
+                                            svc={{datetime}}
                                             item={translation}
-                                            style={{marginRight: 0}}
                                         />
                                     </div>
                                 </div>
@@ -119,5 +116,5 @@ class TranslationsWidgetComponent extends React.Component<IProps, IState> {
 
 export const TranslationsWidget = connectServices<IProps>(
     TranslationsWidgetComponent,
-    ['TranslationService', 'authoringWorkspace', '$filter', 'datetime'],
+    ['TranslationService', 'authoringWorkspace', 'datetime'],
 );

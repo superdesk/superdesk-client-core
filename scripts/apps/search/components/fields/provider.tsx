@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {IPropsItemListInfo} from '../ListItemInfo';
 
-export const provider: React.StatelessComponent<any> = (props) => {
+export const provider: React.StatelessComponent<IPropsItemListInfo> = (props) => {
     let _provider = props.ingestProvider ? props.ingestProvider.source : '';
 
     if (props.item.source) {
@@ -9,6 +10,8 @@ export const provider: React.StatelessComponent<any> = (props) => {
     }
     if (_provider) {
         return React.createElement('span', {className: 'provider', key: 'provider'}, _provider);
+    } else {
+        return null;
     }
 };
 

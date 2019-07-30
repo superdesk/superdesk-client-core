@@ -1,16 +1,7 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {TimeElem} from '../index';
+import {IPropsItemListInfo} from '../ListItemInfo';
 
-export const versioncreated: React.StatelessComponent<any> = (props) => React.createElement(
-    TimeElem, {
-        date: props.item.versioncreated,
-        key: 'versioncreated',
-        svc: props.svc,
-    },
+export const versioncreated: React.StatelessComponent<Pick<IPropsItemListInfo, 'item'>> = (props) => (
+    <TimeElem key={'versioncreated'} date={props.item.versioncreated} />
 );
-
-versioncreated.propTypes = {
-    svc: PropTypes.object.isRequired,
-    item: PropTypes.any,
-};

@@ -17,3 +17,10 @@ Extension may export other functions to enable other extensions to call them. In
 * `setup-extensions` npm script reads `package.json` of every extension, installs its dependencies and runs a `compile` script for every extension.
 * It then generates a file which imports all extensions.
 * The generated file is imported, extensions iterated and `activate` method is executed for every extension.
+
+
+# Styling
+
+Extension specific styles can be added by creating a file in `extension-folder/src/index.css`. The classnames and ids are prefixed on build so extension styles don't conflict with main application styles. Due to prefixing, a `superdesk.utilities.CSS.getClass` has to be used to get the correct classname at runtime.
+
+There's an npm task - "watch-css-from-extensions" for rebuilding extension styles on file change.
