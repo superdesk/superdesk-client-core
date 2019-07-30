@@ -1999,3 +1999,18 @@ sd-multi-image-edit {
         background-color: rgba(0,0,0,0.16);
     }
 }
+
+.sd-dropdown-item {
+    display: block;
+    width: 100%;
+    white-space: nowrap;
+    color: #333;
+    padding: .6rem 1.6rem;
+    margin-bottom: .2rem;
+    font-size: 1.3rem;
+    text-align: left;
+
+    &:hover {
+        background: #eff7fa;
+    }
+}

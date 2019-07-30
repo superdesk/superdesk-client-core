@@ -1,6 +1,6 @@
 import React from 'react';
 import {ISortOption} from 'superdesk-api';
-import {DropdownButton} from '../dropdownButton';
+import {DropdownTree} from '../dropdown-tree';
 
 export interface ISortFields {
     label: string;
@@ -27,8 +27,8 @@ export class SortBar extends React.Component<IProps, any> {
                 {' '}
                 <span><span className="badge">{this.props.itemsCount}</span></span>
                 {' '}
-                <DropdownButton
-                    getToggleElement={(onClick) => (
+                <DropdownTree
+                    getToggleElement={(isOpen, onClick) => (
                         <button
                             onClick={onClick}
                             className="dropdown__toggle"
@@ -38,17 +38,24 @@ export class SortBar extends React.Component<IProps, any> {
                             <span className="dropdown__caret" />
                         </button>
                     )}
-                    items={this.props.sortOptions}
-                    getItemLabel={(item) => item.label}
-                    renderItem={(item) => (
-                        <span data-test-id="sortbar--option">{item.label}</span>
+                    groups={[{render: () => null, items: this.props.sortOptions}]}
+                    renderItem={(key, item, closeDropdown) => (
+                        <button
+                            key={key}
+                            className="sd-dropdown-item"
+                            onClick={() => {
+                                closeDropdown();
+                                this.props.onSortOptionChange({
+                                    field: item.field,
+                                    direction: 'ascending',
+                                });
+                            }}
+                            data-test-id="sortbar--option"
+                        >
+                            {item.label}
+                        </button>
                     )}
-                    onSelect={(item) => {
-                        this.props.onSortOptionChange({
-                            field: item.field,
-                            direction: 'ascending',
-                        });
-                    }}
+                    wrapperStyles={{paddingTop: 10, paddingBottom: 10}}
                 />
                 {
                     this.props.selected.direction === 'ascending'
