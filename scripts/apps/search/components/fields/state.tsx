@@ -19,14 +19,14 @@ export const state: React.StatelessComponent<any> = (props) => {
             }
         }
 
-        return React.createElement(
-            'span', {
-                title: title,
-                style: props.style || {},
-                className: 'state-label state-' + props.item.state,
-                key: 'state',
-            },
-            $filter('removeLodash')(gettext(props.item.state)),
+        return (
+            <ItemState
+                key={'state'}
+                title={title}
+                style={props.style}
+                state={props.item.state}
+                label={$filter('removeLodash')(gettext(props.item.state))}
+            />
         );
     }
 };
@@ -38,3 +38,23 @@ state.propTypes = {
     $filter: PropTypes.any,
     datetime: PropTypes.any,
 };
+
+interface IProps {
+    state: string;
+    title: string;
+    label: string;
+    style: {};
+}
+
+class ItemState extends React.PureComponent<IProps> {
+    render() {
+        return (
+            <span
+                title={this.props.title}
+                style={this.props.style || {}}
+                className={'state-label state-' + this.props.state}>
+                {this.props.label}
+            </span>
+        );
+    }
+}
