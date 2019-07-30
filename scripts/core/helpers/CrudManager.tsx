@@ -16,6 +16,7 @@ import {
     IArticleQuery,
 } from 'superdesk-api';
 import {isObject} from 'lodash';
+import ng from 'core/services/ng';
 import {httpRequestJsonLocal, httpRequestVoidLocal} from './network';
 
 export function queryElastic(
