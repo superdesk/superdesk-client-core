@@ -81,9 +81,10 @@ export class MarkedDesksList extends React.Component<any, any> {
                 {
                     markedDesks.map((d) => <li key={'item-marked-' + markedDesksById[d]._id}>
                         {markedDesksById[d].name}
-                        {desks.hasMarkItemPrivilege() ? <button className="btn btn--mini"
-                            onClick={this.removeMarkedDesk(markedDesksById[d])}>
-                            {gettext('REMOVE')}</button> : null}
+                        {desks.hasMarkItemPrivilege() ?
+                            <button className="btn btn--small btn--hollow btn--primary btn--ui-dark"
+                                onClick={this.removeMarkedDesk(markedDesksById[d])}>
+                                {gettext('REMOVE')}</button> : null}
                     </li>)
                 }
             </ul>

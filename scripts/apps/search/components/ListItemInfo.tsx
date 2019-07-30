@@ -45,7 +45,7 @@ export class ListItemInfo extends React.PureComponent<IProps> {
             className = 'item-info item-info-reduced-rowheight';
             listItems = React.createElement(
                 'div',
-                {style: {flexGrow: 1}},
+                {style: {flexGrow: 1, overflow: 'hidden'}},
                 renderArea('singleLine', angular.extend({
                     svc: this.props.svc,
                     scope: this.props.scope,
@@ -55,7 +55,7 @@ export class ListItemInfo extends React.PureComponent<IProps> {
             className = classNames('item-info', {'item-info-reduced-rowheight': this.props.scope.singleLine});
             listItems = React.createElement(
                 'div',
-                {style: {flexGrow: 1}},
+                {style: {flexGrow: 1, overflow: 'hidden'}},
                 renderArea('firstLine', angular.extend({
                     svc: this.props.svc,
                     scope: this.props.scope,

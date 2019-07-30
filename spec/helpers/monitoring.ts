@@ -790,7 +790,7 @@ class Monitoring {
             var highlightList = element(by.className('highlights-list-menu'));
 
             waitFor(highlightList);
-            highlightList.all(by.className('btn--mini')).first().click();
+            highlightList.all(by.className('btn--small')).first().click();
         };
 
         /**
@@ -805,7 +805,7 @@ class Monitoring {
             var deskList = element(by.className('highlights-list-menu'));
 
             waitFor(deskList);
-            deskList.all(by.className('btn--mini')).first().click();
+            deskList.all(by.className('btn--small')).first().click();
         };
 
         /**
