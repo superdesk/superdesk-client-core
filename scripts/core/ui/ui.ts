@@ -1014,6 +1014,8 @@ function focusElement() {
  */
 validationDirective.$inject = [];
 function validationDirective() {
+    const isValid = (errors) => errors == null || (Array.isArray(errors) && errors.length === 0);
+
     return {
         restrict: 'A',
         link: function(scope, elem, attrs, ctrl) {
@@ -1048,7 +1050,7 @@ function validationDirective() {
             });
 
             scope.$watch(attrs.sdValidationError, (errors) => {
-                if (errors == null || errors === '' || errors === false || (errors.length != null && errors.length === 0)) {
+                if (isValid(errors)) {
                     elem.removeClass('sd-invalid').addClass('sd-valid');
                 } else {
                     elem.addClass('sd-invalid').removeClass('sd-valid');
