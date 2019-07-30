@@ -302,9 +302,20 @@ export function DesksFactory($q, api, preferencesService, userList, notify,
         initActive: function() {
             setActive(this);
         },
-        save: function(dest, diff) {
-            return api.save('desks', dest, diff)
-                .then(reset, handleSaveError);
+        save: function(desk, diff) {
+            return api.save('desks', desk, diff)
+                .then((res) => {
+                    if (diff.members) {
+                        // if desk members were changed update them inside deskMembers as well
+                        const _deskMembers = [];
+
+                        _.values(res.members).forEach((value) => {
+                            _deskMembers.push(this.users._items.find((user) => user._id === value.user));
+                        });
+                        this.deskMembers[res._id] = _deskMembers;
+                    }
+                    return reset(res);
+                }, handleSaveError);
         },
         remove: function(desk) {
             return api.remove(desk)

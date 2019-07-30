@@ -97,21 +97,12 @@ export function DeskConfigController($scope, $controller, notify, desks, modal) 
                 return desks.save($scope.desk.orig, diff).then((res) => {
                     _.merge($scope.desk.edit, res);
                     _.merge($scope.desk.orig, res);
-                    if (diff.members) {
-                        // if desk members were changed update them inside desks.deskMembers as well
-                        const deskMembers = [];
-
-                        angular.forEach(_.values(res.members), (value) => {
-                            deskMembers.push(desks.users._items.find((user) => user._id === value.user));
-                        });
-                        desks.deskMembers[$scope.desk.orig._id] = deskMembers;
-                    }
                     return true;
                 }, (response) => {
                     if (angular.isDefined(response.data._message)) {
-                        $scope.message = gettext('Error: ' + response.data._message);
+                        notify.error(gettext('Error: ' + response.data._message));
                     } else {
-                        $scope._errorMessage = gettext('There was a problem, members not saved. Refresh Desks.');
+                        notify.error(gettext('There was a problem, desk not saved. Refresh Desks.'));
                     }
                     return false;
                 });
