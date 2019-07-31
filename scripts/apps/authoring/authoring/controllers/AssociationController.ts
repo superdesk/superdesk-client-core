@@ -3,6 +3,7 @@ import {getSuperdeskType} from 'core/utils';
 import {gettext} from 'core/utils';
 import {isMediaEditable} from 'core/config';
 import {isPublished} from 'apps/archive/utils';
+import {IArticle} from 'superdesk-api';
 
 /**
  * @ngdoc controller
@@ -43,7 +44,9 @@ export function AssociationController(config, content, superdesk,
      * @return {Object}
      */
     this.getItem = function(event, dataType) {
-        return content.dropItem(event.originalEvent.dataTransfer.getData(dataType));
+        const item: IArticle = JSON.parse(event.originalEvent.dataTransfer.getData(dataType));
+
+        return content.dropItem(item);
     };
 
     /**

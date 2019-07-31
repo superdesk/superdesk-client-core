@@ -3,6 +3,7 @@ import {insertMedia} from './toolbar';
 import {makeIframesResponsive} from 'core/helpers/make-iframes-responsive';
 import {logger} from 'core/services/logger';
 import {SelectionState} from 'draft-js';
+import {IArticle} from 'superdesk-api';
 
 /**
  * @ngdoc method
@@ -75,7 +76,10 @@ export function dragDrop(transfer, mediaType, blockKey = null) {
         const content = ng.get('content');
 
         dispatch({type: 'EDITOR_LOADING', payload: true});
-        return content.dropItem(transfer.getData(mediaType), {fetchExternal: true})
+
+        const item: IArticle = JSON.parse(transfer.getData(mediaType));
+
+        return content.dropItem(item, {fetchExternal: true})
             .then((data) => {
                 dispatch({
                     type: 'EDITOR_DRAG_DROP',

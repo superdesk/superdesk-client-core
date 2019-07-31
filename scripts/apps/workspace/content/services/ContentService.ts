@@ -367,9 +367,7 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
     /**
      * Handle drop event transfer data and convert it to an item
      */
-    this.dropItem = (transferData, {fetchExternal} = {fetchExternal: true}) => {
-        const item: IArticle = JSON.parse(transferData);
-
+    this.dropItem = (item: IArticle, {fetchExternal} = {fetchExternal: true}) => {
         if (item._type !== 'externalsource') {
             if (item._type === 'ingest') {
                 return send.one(item);
