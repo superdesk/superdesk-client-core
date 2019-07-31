@@ -507,7 +507,7 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, deploy
     };
 
     // init poi if not set
-    if (!$scope.data.poi) {
+    if (!$scope.data.poi || !Object.keys($scope.data.poi).length) {
         $scope.data.poi = {x: 0.5, y: 0.5};
         if (!config.features.validatePointOfInterestForImages) {
             $scope.saveCrops(); // save it as defaults
