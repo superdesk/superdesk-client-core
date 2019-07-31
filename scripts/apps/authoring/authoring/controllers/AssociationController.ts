@@ -34,23 +34,6 @@ export function AssociationController(config, content, superdesk,
 
     /**
      * @ngdoc method
-     * @name AssociationController#getItem
-     * @private
-     * @description Get superdesk item from event.
-     *              If not externalsource then fetch for archive collection not all fields
-     *              are available due to projections.
-     * @param {Event} event
-     * @param {string} dataType
-     * @return {Object}
-     */
-    this.getItem = function(event, dataType) {
-        const item: IArticle = JSON.parse(event.originalEvent.dataTransfer.getData(dataType));
-
-        return content.dropItem(item);
-    };
-
-    /**
-     * @ngdoc method
      * @name AssociationController#uploadAndCropImages
      * @private
      * @description Opens the file upload dialog. If files contains an array of files populates
@@ -202,8 +185,11 @@ export function AssociationController(config, content, superdesk,
             return;
         }
 
+        const __item: IArticle = JSON.parse(event.originalEvent.dataTransfer.getData(superdeskType));
+
         scope.loading = true;
-        return self.getItem(event, superdeskType, {fetchExternal: false})
+
+        return content.dropItem(__item)
             .then((item) => {
                 if (item.lock_user) {
                     notify.error(gettext('Item is locked. Cannot associate media item.'));
