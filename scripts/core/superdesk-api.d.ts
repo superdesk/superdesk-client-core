@@ -229,6 +229,10 @@ declare module 'superdesk-api' {
         flags: any;
         source: string;
         correction_sequence: any;
+        fetch_endpoint?: any;
+        task_id?: any;
+        ingest_provider?: any;
+        archive_item?: any;
 
         highlights?: Array<string>;
         highlight?: any;
@@ -246,14 +250,21 @@ declare module 'superdesk-api' {
         created: any;
         archived: any;
 
-        // remove when SDESK-4343 is done.
-        selected: any;
-
         // planning extension
         assignment_id?: string;
 
         // markForUser extension
         marked_for_user?: string | null;
+
+        // remove when SDESK-4343 is done.
+        selected: any;
+
+        // other fields which don't exist in the database, don't belong to this entity and should be removed
+        error?: any;
+        actioning?: {
+            archive?: boolean;
+            externalsource: boolean;
+        };
     }
 
     export interface IUserRole extends IBaseRestApiResponse {

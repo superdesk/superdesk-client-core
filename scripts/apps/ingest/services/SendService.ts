@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
+import {IArticle} from 'superdesk-api';
 
 SendService.$inject = ['desks', 'api', '$q', 'notify', '$injector', 'multi', '$rootScope'];
 export function SendService(desks, api, $q, notify, $injector, multi, $rootScope) {
@@ -22,7 +23,7 @@ export function SendService(desks, api, $q, notify, $injector, multi, $rootScope
      * @param {Object} item
      * @returns {Promise}
      */
-    function sendOne(item) {
+    function sendOne(item: IArticle) {
         if (item._type === 'ingest') {
             return api
                 .save('fetch', {}, {desk: desks.getCurrentDeskId()}, item)
