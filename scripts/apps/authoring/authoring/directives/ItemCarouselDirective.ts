@@ -9,6 +9,28 @@ import {gettext} from 'core/utils';
 
 const carouselContainerSelector = '.sd-media-carousel__content';
 
+interface IScope extends ng.IScope {
+    allowAudio: any;
+    allowPicture: any;
+    allowVideo: any;
+    carouselItems: any;
+    crtIndex: any;
+    editable: any;
+    field: any;
+    item: any;
+    items: any;
+    maxUploads: any;
+    navCounter: number;
+    rel: any;
+    goTo(index: any): void;
+    navNext(): void;
+    navPrev(): void;
+    onchange(): void;
+    remove(item: any): void;
+    upload(): void;
+}
+
+
 /**
  * @ngdoc directive
  * @module superdesk.apps.authoring
@@ -20,23 +42,23 @@ ItemCarouselDirective.$inject = ['$timeout', 'notify'];
 export function ItemCarouselDirective($timeout, notify) {
     return {
         scope: {
-            items: '=',
-            item: '=',
-            tabindex: '<',
-            editable: '<',
+            allowAudio: '<',
             allowPicture: '<',
             allowVideo: '<',
-            allowAudio: '<',
-            save: '&',
-            onchange: '&',
-            maxUploads: '=',
+            editable: '<',
             field: '=',
+            item: '=',
+            items: '=',
+            maxUploads: '=',
+            onchange: '&',
+            save: '&',
+            tabindex: '<',
         },
         transclude: true,
         templateUrl: 'scripts/apps/authoring/views/item-carousel.html',
         controller: ctrl.AssociationController,
         controllerAs: 'associations',
-        link: function(scope, elem, attr, controller) {
+        link: function(scope: IScope, elem, attr, controller) {
             let carousel;
             let previousItemsString;
             const allowed = {picture: scope.allowPicture, video: scope.allowVideo, audio: scope.allowAudio};
@@ -48,7 +70,7 @@ export function ItemCarouselDirective($timeout, notify) {
              * Initialize carousel after all content is loaded
              * otherwise carousel height is messed up
              */
-            scope.$watch('items', (items) => {
+            scope.$watch('items', (items: any) => {
                 const itemsString = angular.toJson(items);
 
                 // Don't execute if there are no items or they are the same as before
