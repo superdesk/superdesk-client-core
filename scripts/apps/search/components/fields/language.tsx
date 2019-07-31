@@ -1,9 +1,9 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {get} from 'lodash';
+import {IPropsItemListInfo} from '../ListItemInfo';
 
-export const language: React.StatelessComponent<any> = ({item}) => {
-    if (!get(item, 'language')) {
+export const language: React.StatelessComponent<IPropsItemListInfo> = ({item}) => {
+    if (item.language == null) {
         return null;
     }
 
@@ -13,5 +13,3 @@ export const language: React.StatelessComponent<any> = ({item}) => {
         </span>
     );
 };
-
-language.propTypes = {item: PropTypes.object.isRequired};

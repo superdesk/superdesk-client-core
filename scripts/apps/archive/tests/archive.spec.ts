@@ -1,6 +1,6 @@
-
 import {DuplicateController} from '../controllers';
 import {registerTestExtensions} from 'core/tests/helpers/register-test-extensions';
+import {isPublished} from '../utils';
 
 describe('content', () => {
     var item: any = {_id: 1};
@@ -45,7 +45,7 @@ describe('content', () => {
     }));
 
     it('onSpike middleware is called',
-        (done) => inject((superdesk, activityService, privileges, modal, lock) => {
+        (done) => inject((superdesk, activityService, privileges, modal, lock, session, authoringWorkspace) => {
             const extensionDelay = 200;
 
             const articleEntities = {
@@ -79,6 +79,8 @@ describe('content', () => {
                 modal,
                 privileges,
                 lock,
+                session,
+                authoringWorkspace,
             ).then(() => {
                 activityService.start(superdesk.activities.spike, {data: {item: {_id: '0'}}});
 
@@ -154,12 +156,12 @@ describe('content', () => {
             expect(criteria.source.query.filtered.query.query_string.query).toBe('slugline.phrase:"test"');
         }));
 
-        it('can verify if the item is published or not', inject((archiveService) => {
+        it('can verify if the item is published or not', inject(() => {
             item.state = 'submitted';
-            expect(archiveService.isPublished(item)).toBe(false);
+            expect(isPublished(item)).toBe(false);
 
             item.state = 'corrected';
-            expect(archiveService.isPublished(item)).toBe(true);
+            expect(isPublished(item)).toBe(true);
         }));
 
         it('return type based on state and repository', inject((archiveService) => {

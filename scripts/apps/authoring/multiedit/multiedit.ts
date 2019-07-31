@@ -9,6 +9,7 @@
  */
 
 import {gettext} from 'core/utils';
+import {isPublished} from 'apps/archive/utils';
 import _ from 'lodash';
 
 MultieditService.$inject = ['storage', 'superdesk', 'authoringWorkspace', 'referrer', '$location'];
@@ -235,7 +236,7 @@ function MultieditArticleDirective(authoring, content, multiEdit, lock, $timeout
 
             scope.isPublished = function(item) {
                 if (!_.isNil(item)) {
-                    return authoring.isPublished(item);
+                    return isPublished(item);
                 }
             };
         },

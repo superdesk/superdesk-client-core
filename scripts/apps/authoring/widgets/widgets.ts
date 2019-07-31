@@ -2,6 +2,7 @@ import {debounce} from 'lodash';
 import {IContentProfile} from 'superdesk-interfaces/ContentProfile';
 import {isWidgetVisibleForContentProfile} from 'apps/workspace/content/components/WidgetsConfig';
 import {gettext} from 'core/utils';
+import {isKilled} from 'apps/archive/utils';
 
 function AuthoringWidgetsProvider() {
     var widgets = [];
@@ -62,7 +63,7 @@ function WidgetsManagerCtrl($scope, $routeParams, authoringWidgets, archiveServi
         } else if (archiveService.isPersonal(item)) {
             display = 'personal';
         } else {
-            display = (item.state === 'killed' || item.state === 'recalled') ? 'killedItem' : 'authoring';
+            display = isKilled(item) ? 'killedItem' : 'authoring';
             if (item.type === 'composite') {
                 display = 'packages';
             }

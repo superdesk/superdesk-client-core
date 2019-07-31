@@ -9,6 +9,7 @@ import {attachments, initAttachments} from '../../attachments';
 import {applyMiddleware as coreApplyMiddleware} from 'core/middleware';
 import {onChangeMiddleware, getArticleSchemaMiddleware} from '..';
 import {IFunctionPointsService} from 'apps/extension-points/services/FunctionPoints';
+import {isPublished} from 'apps/archive/utils';
 
 /**
  * @ngdoc directive
@@ -139,21 +140,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 }
             }, true);
 
-            $scope.$watch('item.profile', (profile) => {
-                if (profile) {
-                    content.getType(profile)
-                        .then((type) => {
-                            $scope.contentType = type;
-                            $scope.fields = content.fields(type);
-                            initMedia();
-                        });
-                } else {
-                    $scope.contentType = null;
-                    $scope.fields = null;
-                }
-            });
-
-            $scope._isInProductionStates = !authoring.isPublished($scope.origItem);
+            $scope._isInProductionStates = !isPublished($scope.origItem);
 
             $scope.fullPreview = false;
             $scope.fullPreviewUrl = '/#/preview/' + $scope.origItem._id;
@@ -205,7 +192,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
              * Start editing current item
              */
             $scope.edit = function edit() {
-                if (archiveService.isPublished($scope.origItem)) {
+                if (isPublished($scope.origItem)) {
                     authoringWorkspace.view($scope.origItem);
                 } else {
                     authoringWorkspace.edit($scope.origItem);
@@ -371,7 +358,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 }
 
                 if (item.publish_schedule_date || item.publish_schedule_time) {
-                    if (_.includes(['published', 'killed', 'corrected', 'recalled'], item.state)) {
+                    if (isPublished(item, false)) {
                         return true;
                     }
 
@@ -1197,9 +1184,11 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
             $scope.$watch('item.profile', (profile) => {
                 content.setupAuthoring(profile, $scope, $scope.item)
-                    .then(() => {
+                    .then((contentType) => {
+                        $scope.contentType = contentType;
                         authoring.schema = $scope.schema;
                         authoring.editor = $scope.editor;
+                        initMedia();
                     })
                     .then(updateSchema);
             });

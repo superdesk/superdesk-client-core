@@ -5,7 +5,7 @@ import MenuItems from './MenuItems';
 
 import {closeActionsMenu, openActionsMenu} from '../../helpers';
 
-export class ActionsMenu extends React.Component<any, any> {
+export class ActionsMenu extends React.PureComponent<any, any> {
     static propTypes: any;
     static defaultProps: any;
 

@@ -1,32 +1,75 @@
-export {type} from './type';
-export {headline} from './headline';
-export {slugline} from './slugline';
-export {wordcount} from './wordcount';
-export {highlights} from './highlights';
-export {markedDesks} from './markedDesks';
-export {versioncreated} from './versioncreated';
-export {versioncreator} from './versioncreator';
-export {profile} from './profile';
-export {state} from './state';
-export {embargo} from './embargo';
-export {update} from './update';
-export {updated} from './updated';
-export {takekey} from './takekey';
-export {signal} from './signal';
-export {broadcast} from './broadcast';
-export {flags} from './flags';
-export {category} from './category';
-export {provider} from './provider';
-export {expiry} from './expiry';
-export {desk} from './desk';
-export {fetchedDesk} from './fetchedDesk';
-export {priority} from './priority';
-export {urgency} from './urgency';
-export {associations} from './associations';
-export {queueError} from './queueError';
-export {assignment} from './assignment';
-export {language} from './language';
-export {copyright} from './copyright';
-export {usageterms} from './usageterms';
-export {nestedlink} from './nested-link';
-export {associatedItems} from './associatedItems';
+import React from 'react';
+import {IPropsItemListInfo} from '../ListItemInfo';
+
+import {type} from './type';
+import {headline} from './headline';
+import {slugline} from './slugline';
+import {wordcount} from './wordcount';
+import {highlights} from './highlights';
+import {markedDesks} from './markedDesks';
+import {versioncreated} from './versioncreated';
+import {versioncreator} from './versioncreator';
+import {profile} from './profile';
+import {state} from './state';
+import {embargo} from './embargo';
+import {update} from './update';
+import {updated} from './updated';
+import {takekey} from './takekey';
+import {signal} from './signal';
+import {broadcast} from './broadcast';
+import {flags} from './flags';
+import {category} from './category';
+import {provider} from './provider';
+import {expiry} from './expiry';
+import {desk} from './desk';
+import {fetchedDesk} from './fetchedDesk';
+import {priority} from './priority';
+import {urgency} from './urgency';
+import {associations} from './associations';
+import {queueError} from './queueError';
+import {assignment} from './assignment';
+import {language} from './language';
+import {copyright} from './copyright';
+import {usageterms} from './usageterms';
+import {nestedlink} from './nested-link';
+import {associatedItems} from './associatedItems';
+
+interface IFieldProps extends Partial<IPropsItemListInfo> {
+    item: IPropsItemListInfo['item']; // this one not nullable
+    svc: IPropsItemListInfo['svc']; // this one not nullable
+}
+
+export const fields: {[key: string]: React.ComponentType<IFieldProps>} = {
+    type,
+    headline,
+    slugline,
+    wordcount,
+    highlights,
+    markedDesks,
+    versioncreated,
+    versioncreator,
+    profile,
+    state,
+    embargo,
+    update,
+    updated,
+    takekey,
+    signal,
+    broadcast,
+    flags,
+    category,
+    provider,
+    expiry,
+    desk,
+    fetchedDesk,
+    priority,
+    urgency,
+    associations,
+    queueError,
+    assignment,
+    language,
+    copyright,
+    usageterms,
+    nestedlink,
+    associatedItems,
+};

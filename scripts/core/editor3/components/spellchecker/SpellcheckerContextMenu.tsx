@@ -2,7 +2,11 @@ import React from 'react';
 import {connect} from 'react-redux';
 import * as actions from '../../actions';
 import {StickElementsWithTracking} from 'core/helpers/dom/stickElementsWithTracking';
-import {ISpellcheckWarning, ISpellchecker} from './interfaces';
+import {
+    ISpellcheckWarning,
+    ISpellchecker,
+    ISpellcheckerSuggestion
+} from './interfaces';
 import {reloadSpellcheckerWarnings} from '../../actions';
 
 interface IProps {
@@ -23,9 +27,25 @@ export class SpellcheckerContextMenuComponent extends React.Component<IProps> {
         this.stickyElementTracker.destroy();
     }
 
+    onSuggestionClick(suggestion: ISpellcheckerSuggestion) {
+        this.props.dispatch(
+            actions.replaceWord({
+                word: {
+                    text: this.props.warning.text,
+                    offset: this.props.warning.startOffset,
+                },
+                newWord: suggestion.text,
+            }),
+        );
+    }
+
     render() {
-        const {suggestions} = this.props.warning;
+        const {suggestions, message} = this.props.warning;
         const {spellchecker} = this.props;
+
+        // If the message exists, use it as the button text
+        // instead of the suggestion
+        const messageExists = Boolean(message);
 
         return (
             <div className={'dropdown open suggestions-dropdown'}
@@ -41,18 +61,12 @@ export class SpellcheckerContextMenuComponent extends React.Component<IProps> {
                             : suggestions.map((suggestion, index) =>
                                 <li key={index}>
                                     <button
-                                        onMouseDown={() => {
-                                            this.props.dispatch(actions.replaceWord({
-                                                word: {
-                                                    text: this.props.warning.text,
-                                                    offset: this.props.warning.startOffset,
-                                                },
-                                                newWord: suggestion.text,
-                                            }));
-                                        }}
+                                        onMouseDown={() =>
+                                            this.onSuggestionClick(suggestion)
+                                        }
                                         data-test-id="spellchecker-menu--suggestion"
                                     >
-                                        {suggestion.text}
+                                        {messageExists ? message : suggestion.text}
                                     </button>
                                 </li>,
                             )

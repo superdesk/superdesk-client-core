@@ -1,3 +1,6 @@
+import {reactToAngular1} from 'superdesk-ui-framework';
+import {GlobalMenuHorizontal} from './GlobalMenuHorizontal';
+
 SuperdeskFlagsService.$inject = ['config'];
 function SuperdeskFlagsService(config) {
     this.flags = {
@@ -23,11 +26,20 @@ angular.module('superdesk.core.menu', [
 ])
 
     .service('superdeskFlags', SuperdeskFlagsService)
+    .component(
+        'sdGlobalMenuHorizontal',
+        reactToAngular1(
+            GlobalMenuHorizontal,
+            [],
+        ),
+    )
 
     // set flags for other directives
     .directive('sdSuperdeskView', ['asset', function(asset) {
-        SuperdeskViewController.$inject = ['superdeskFlags', 'superdesk'];
-        function SuperdeskViewController(superdeskFlags, superdesk) {
+        SuperdeskViewController.$inject = ['superdeskFlags', 'superdesk', '$scope', '$route', 'session'];
+        function SuperdeskViewController(superdeskFlags, superdesk, $scope, $route, session) {
+            $scope.session = session;
+
             this.flags = superdeskFlags.flags;
             this.openUpload = function openUpload(files) {
                 let uploadData = {
@@ -37,6 +49,18 @@ angular.module('superdesk.core.menu', [
 
                 superdesk.intent('upload', 'media', uploadData);
             };
+
+            $scope.$watch(function currentRoute() {
+                return $route.current;
+            }, (route) => {
+                if (!route) {
+                    return;
+                }
+
+                this.currentRoute = route;
+                this.flags.workspace = !!route.sideTemplateUrl;
+                this.flags.workqueue = this.flags.workqueue || true;
+            });
         }
 
         return {
@@ -112,16 +136,10 @@ angular.module('superdesk.core.menu', [
                     });
 
                     scope.$watch(function currentRoute() {
-                        return $route.current;
-                    }, (route) => {
-                        if (!route) {
-                            return;
-                        }
-
-                        scope.currentRoute = route;
-                        setActiveMenuItem(scope.currentRoute);
-                        ctrl.flags.workspace = !!route.sideTemplateUrl;
-                        ctrl.flags.workqueue = ctrl.flags.workqueue || true;
+                        return ctrl.currentRoute;
+                    }, () => {
+                        scope.currentRoute = ctrl.currentRoute;
+                        setActiveMenuItem(ctrl.currentRoute);
                     });
 
                     scope.notifications = userNotifications;

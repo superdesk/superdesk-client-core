@@ -118,7 +118,8 @@
                 <video controls="controls" sd-sources data-renditions="selected.preview.renditions"></video>
             </div>
 
-            <div class="text abstract" ng-show="selected.preview.abstract" sd-html-preview="selected.preview.abstract"></div>
+            <div class="text abstract" ng-show="selected.preview.abstract && (selected.preview.type !== 'picture' || !selected.preview.description_text)"
+              sd-html-preview="selected.preview.abstract"></div>
 
             <div class="text byline" ng-show="selected.preview.byline" sd-html-preview="selected.preview.byline"></div>
 

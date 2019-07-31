@@ -12,8 +12,91 @@ import {
     ICrudManagerFilters,
     IRestApiResponse,
     IDataApi,
+    IQueryElasticParameters,
+    IArticleQueryResult,
+    IArticleQuery,
 } from 'superdesk-api';
 import {isObject} from 'lodash';
+
+export function queryElastic(
+    parameters: IQueryElasticParameters,
+) {
+    const {endpoint, page, sort, filterValues} = parameters;
+
+    return ng.getServices(['config', 'session', 'api'])
+        .then((res: any) => {
+            const [config, session] = res;
+
+            const source = {
+                query: {
+                    filtered: {
+                        filter: {
+                            bool: {
+                                must: Object.keys(filterValues).map((key) => ({terms: {[key]: filterValues[key]}})),
+                                must_not: [
+                                    {term: {state: 'spiked'}},
+                                    {term: {package_type: 'takes'}},
+                                ],
+                                should: [
+                                    {
+                                        bool: {
+                                            must: [
+                                                {term: {state: 'draft'}},
+                                                {term: {original_creator: session.identity._id}},
+                                            ],
+                                        },
+                                    },
+                                    {
+                                        bool: {
+                                            must_not: [
+                                                {term: {state: 'draft'}},
+                                            ],
+                                        },
+                                    },
+                                ],
+                                minimum_should_match: 1,
+                            },
+                        },
+                    },
+                },
+                sort: sort,
+                size: page.size,
+                from: page.from,
+            };
+
+            const query = {
+                aggregations: 0,
+                es_highlight: 0,
+                // projections: [],
+                source,
+            };
+
+            const queryString = '?' + Object.keys(query).map((key) =>
+                `${key}=${isObject(query[key]) ? JSON.stringify(query[key]) : query[key]}`).join('&');
+
+            return new Promise((resolve) => {
+                const xhr = new XMLHttpRequest();
+
+                xhr.open('GET', config.server.url + '/' + endpoint + queryString, true);
+
+                xhr.setRequestHeader('Content-Type', 'application/json');
+                xhr.setRequestHeader('Authorization', session.token);
+
+                xhr.onload = function() {
+                    resolve(JSON.parse(this.responseText));
+                };
+
+                xhr.send();
+            });
+        });
+}
+
+export const dataApiByEntity = {
+    article: {
+        query: (parameters: IArticleQuery): Promise<IArticleQueryResult> =>
+            queryElastic({...parameters, endpoint: 'search'}) as Promise<IArticleQueryResult>,
+    },
+};
 
 export const dataApi: IDataApi = {
     findOne: (endpoint, id) => ng.getServices(['config', 'session', 'api']).then((res: any) => {
@@ -153,7 +236,8 @@ export const dataApi: IDataApi = {
 };
 
 export function connectCrudManager<Props, PropsToConnect, Entity extends IBaseRestApiResponse>(
-    WrappedComponent: React.ComponentType<Props & PropsToConnect>,
+    // type stoped working after react 16.8 upgrade. See if it's fixed by a future React types or TypeScript update
+    WrappedComponent, // : React.ComponentType<Props & PropsToConnect>
     name: string,
     endpoint: string,
 ): React.ComponentType<Props> {

@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {gettext} from 'core/utils';
+import {IPropsItemListInfo} from '../ListItemInfo';
 
-export const expiry: React.StatelessComponent<any> = (props) => {
+export const expiry: React.StatelessComponent<IPropsItemListInfo> = (props) => {
     const {datetime} = props.svc;
 
     if (props.item.is_spiked) {
@@ -11,6 +12,8 @@ export const expiry: React.StatelessComponent<any> = (props) => {
             {className: 'expires', key: 'expiry'},
             gettext('expires') + ' ' + datetime.shortFormat(props.item.expiry),
         );
+    } else {
+        return null;
     }
 };
 

@@ -1003,7 +1003,13 @@ class Authoring {
 
         this.isPublishedState = function() {
             return this.getItemState().getText()
-                .then((state) => ['published', 'corrected', 'killed', 'recalled'].indexOf(state.toLowerCase()) !== -1);
+                .then((state) => [
+                    'published',
+                    'corrected',
+                    'killed',
+                    'recalled',
+                    'unpublished',
+                ].indexOf(state.toLowerCase()) !== -1);
         };
 
         this.getSubjectMetadataDropdownOpened = function() {

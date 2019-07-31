@@ -1,5 +1,5 @@
 import React from 'react';
-import * as fields from '../components/fields';
+import {fields} from '../components/fields';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 import {connectPromiseResults} from 'core/helpers/ReactRenderAsync';
 
@@ -19,9 +19,9 @@ export const PhotoDeskFieldsComponent: React.StatelessComponent<IProps> = (props
 
     return props.fieldsConfig
         .map((fieldId, i) => {
-            const customRenderedAvailable = typeof fields[fieldId] === 'function';
-            const value = customRenderedAvailable
-                ? fields[fieldId]({item: item, svc: props.svc, className: itemClassName})
+            const Component = fields[fieldId];
+            const value = Component != null
+                ? <Component item={item} svc={props.svc} />
                 : item[fieldId];
 
             if (value == null) {
@@ -30,7 +30,7 @@ export const PhotoDeskFieldsComponent: React.StatelessComponent<IProps> = (props
 
             const showLabel =
                 props.labelMode === 'always'
-                || !(props.labelMode === 'never-with-custom-renderer' && customRenderedAvailable);
+                || !(props.labelMode === 'never-with-custom-renderer' && Component != null);
 
             return showLabel === true
                 ? (

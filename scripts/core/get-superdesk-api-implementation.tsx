@@ -11,7 +11,7 @@ import {
 } from './ui/components/generic-form/interfaces/form';
 import {UserHtmlSingleLine} from './helpers/UserHtmlSingleLine';
 import {Row, Item, Column} from './ui/components/List';
-import {connectCrudManager, dataApi} from './helpers/CrudManager';
+import {connectCrudManager, dataApi, dataApiByEntity} from './helpers/CrudManager';
 import {generateFilterForServer} from './ui/components/generic-form/generate-filter-for-server';
 import {assertNever} from './helpers/typescript-helpers';
 import {flatMap} from 'lodash';
@@ -23,10 +23,17 @@ import {SelectUser} from './ui/components/SelectUser';
 import {logger} from './services/logger';
 import {showModal} from './services/modalService';
 import {UserAvatarFromUserId} from 'apps/users/components/UserAvatarFromUserId';
+import {ArticleItemConcise} from 'core/ui/components/article-item-concise';
+import {DropdownTree} from './ui/components/dropdown-tree';
+import {getCssNameForExtension} from './get-css-name-for-extension';
+import {Badge} from './ui/components/Badge';
+import {getCustomEventNamePrefixed} from './notification/notification';
 import {Grid} from './ui/components/grid';
 import {Alert} from './ui/components/alert';
 import {Figure} from './ui/components/figure';
 import {DropZone} from './ui/components/drop-zone';
+import {GroupLabel} from './ui/components/GroupLabel';
+import {TopMenuDropdownButton} from './ui/components/TopMenuDropdownButton';
 
 function getOnUpdateBeforeMiddlewares(
     extensions: IExtensions,
@@ -58,15 +65,22 @@ function getOnUpdateAfterFunctions(
     );
 }
 
+// stores a map between custom callback & callback passed to DOM
+// so the original event can be removed later
+const customEventMap = new Map();
+
 export function getSuperdeskApiImplementation(
     requestingExtensionId: string,
     extensions: IExtensions,
     modal,
     privileges,
     lock,
+    session,
+    authoringWorkspace,
 ): ISuperdesk {
     return {
         dataApi: dataApi,
+        dataApiByEntity,
         helpers: {
             assertNever,
         },
@@ -107,6 +121,11 @@ export function getSuperdeskApiImplementation(
             },
         },
         ui: {
+            article: {
+                view: (id: string) => {
+                    authoringWorkspace.authoringOpen(id, 'view');
+                },
+            },
             alert: (message: string) => modal.alert({bodyText: message}),
             confirm: (message: string) => new Promise((resolve) => {
                 modal.confirm(message, gettext('Cancel'))
@@ -139,8 +158,13 @@ export function getSuperdeskApiImplementation(
             ModalHeader,
             ModalBody,
             ModalFooter,
+            Badge,
             SelectUser,
             UserAvatar: UserAvatarFromUserId,
+            ArticleItemConcise,
+            GroupLabel,
+            TopMenuDropdownButton,
+            getDropdownTree: () => DropdownTree,
         },
         forms: {
             FormFieldType,
@@ -181,8 +205,30 @@ export function getSuperdeskApiImplementation(
         privileges: {
             getOwnPrivileges: () => privileges.loaded.then(() => privileges.privileges),
         },
+        session: {
+            getCurrentUser: () => session.getIdentity(),
+        },
         utilities: {
             logger,
+            CSS: {
+                getClass: (originalName: string) => getCssNameForExtension(originalName, requestingExtensionId),
+                getId: (originalName: string) => getCssNameForExtension(originalName, requestingExtensionId),
+            },
+        },
+        addEventListener: (eventName, callback) => {
+            const handlerWrapper = (customEvent: CustomEvent) => callback(customEvent.detail);
+
+            customEventMap.set(callback, handlerWrapper);
+
+            window.addEventListener(getCustomEventNamePrefixed(eventName), handlerWrapper);
+        },
+        removeEventListener: (eventName, callback) => {
+            const handlerWrapper = customEventMap.get(callback);
+
+            if (handlerWrapper != null) {
+                window.removeEventListener(getCustomEventNamePrefixed(eventName), handlerWrapper);
+                customEventMap.delete(callback);
+            }
         },
     };
 }

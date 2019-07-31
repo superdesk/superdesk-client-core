@@ -52,9 +52,8 @@ export function DeskeditPeople(WizardHandler, desks) {
 
                 scope.saving = true;
                 desks.save(scope.desk.orig, {members: members}).then((res) => {
-                    angular.extend(scope.desk.edit, res);
-                    desks.deskMembers[scope.desk.edit._id] = scope.deskMembers;
-                    angular.extend(scope.desk.orig, res);
+                    _.merge(scope.desk.edit, res);
+                    _.merge(scope.desk.orig, res);
                     if (!done) {
                         WizardHandler.wizard('desks').next();
                     } else {

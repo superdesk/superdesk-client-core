@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {gettext} from 'core/utils';
+import {IPropsItemListInfo} from '../ListItemInfo';
 
-export const flags: React.StatelessComponent<any> = (props) => {
+export const flags: React.StatelessComponent<IPropsItemListInfo> = (props) => {
     const _flags = props.item.flags || {};
     const elems = [
         _flags.marked_for_not_publication ?

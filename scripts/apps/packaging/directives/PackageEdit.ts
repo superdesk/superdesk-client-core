@@ -1,3 +1,5 @@
+import {isPublished} from 'apps/archive/utils';
+
 PackageEdit.$inject = ['authoring'];
 export function PackageEdit(authoring) {
     return {
@@ -5,7 +7,7 @@ export function PackageEdit(authoring) {
         link: function(scope) {
             scope.limits = authoring.limits;
             scope._editable = scope.origItem._editable;
-            scope._isInPublishedStates = authoring.isPublished(scope.origItem);
+            scope._isInPublishedStates = isPublished(scope.origItem);
         },
     };
 }

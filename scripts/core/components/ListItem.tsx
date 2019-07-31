@@ -1,4 +1,4 @@
-/* eslint-disable react/no-multi-comp, react/prop-types */
+/* eslint-disable react/no-multi-comp */
 
 import React from 'react';
 import classNames from 'classnames';
@@ -29,24 +29,25 @@ export class ListItem extends React.Component<IListItemProps> {
 
 export class ListItemColumn extends React.Component<IPropsListItemColumn> {
     render() {
+        const {noBorder, justifyContent, ellipsisAndGrow, children} = this.props;
         const cssClasses = [];
 
-        if (this.props.noBorder) {
+        if (noBorder) {
             cssClasses.push('sd-list-item__column--no-border');
         }
 
-        if (this.props.ellipsisAndGrow) {
+        if (ellipsisAndGrow) {
             return (
                 <div className={cssClasses.concat(['sd-list-item__column', 'sd-list-item__column--grow']).join(' ')}>
-                    <div className="sd-list-item__row">
-                        <span className="sd-overflow-ellipsis">{this.props.children}</span>
-                    </div>
+                    <ListItemRow justifyContent={justifyContent}>
+                        <span className="sd-overflow-ellipsis">{children}</span>
+                    </ListItemRow>
                 </div>
             );
         } else {
             return (
                 <div className={cssClasses.concat(['sd-list-item__column']).join(' ')}>
-                    {this.props.children}
+                    {children}
                 </div>
             );
         }
@@ -63,10 +64,15 @@ export class ListItemActionsMenu extends React.Component {
     }
 }
 
-export class ListItemRow extends React.Component {
+export class ListItemRow extends React.Component<{justifyContent?: string}> {
     render() {
+        const {justifyContent} = this.props;
+
         return (
-            <div className="sd-list-item__row">
+            <div className="sd-list-item__row" style={{
+                width: '100%',
+                justifyContent: justifyContent == null ? undefined : justifyContent,
+            }}>
                 {this.props.children}
             </div>
         );
