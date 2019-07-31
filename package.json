@@ -51,7 +51,9 @@
     "angular-vs-repeat": "1.1.7",
     "bootstrap": "3.3.7",
     "classnames": "2.2.5",
+    "css": "2.2.4",
     "css-loader": "0.28.10",
+    "css-selector-tokenizer": "0.7.1",
     "d3": "3.5.17",
     "diff-match-patch": "1.0.0",
     "docs-soap": "tomaskikutis/docs-soap#convert-tables",
@@ -138,8 +140,6 @@
     "react-test-renderer": "^16.2.0",
     "request": "^2.83.0",
     "superdesk-code-style": "^1.1.1",
-    "css": "2.2.4",
-    "css-selector-tokenizer": "0.7.1",
     "typescript-eslint-parser": "^18.0.0"
   },
   "scripts": {
