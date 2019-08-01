@@ -2,6 +2,8 @@ import {pickBy, zipObject} from 'lodash';
 import {IArticle} from 'superdesk-api';
 import {isPublished} from 'apps/archive/utils';
 
+const RELATED_LINK_KEYS = 2;
+
 RelationsService.$inject = ['mediaIdGenerator', 'api', '$q'];
 
 export function RelationsService(mediaIdGenerator, api, $q) {
@@ -18,8 +20,7 @@ export function RelationsService(mediaIdGenerator, api, $q) {
         });
 
         const related = Object.values(relatedWithoutMedia);
-        const relatedWithoutNull = related.filter((o) => o != null && Object.keys(o).length < 2);
-
+        const relatedWithoutNull = related.filter((o) => o != null && Object.keys(o).length <= RELATED_LINK_KEYS);
         const relatedItems = relatedWithoutNull.map((o) => api.find('archive', o._id));
 
         return $q.all(relatedItems)
@@ -41,7 +42,7 @@ export function RelationsService(mediaIdGenerator, api, $q) {
         const associations = item.associations || {};
 
         return $q.all(relatedItemsKeys.map((key) => {
-            if (associations[key] && Object.keys(associations[key]).length < 2) {
+            if (associations[key] && Object.keys(associations[key]).length <= RELATED_LINK_KEYS) {
                 return api.find('archive', associations[key]._id);
             }
 
