@@ -199,7 +199,7 @@ export function RelatedItemsDirective(authoringWorkspace, relationsService, noti
                         type: item.type, // used to display associated item types
                     };
                 } else {
-                    data[key] = item; // use full item for external items
+                    data[key] = item; // use full item for external items, like images from external search provider
                 }
 
                 scope.item.associations = angular.extend({}, scope.item.associations, data);

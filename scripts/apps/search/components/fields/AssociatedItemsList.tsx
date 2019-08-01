@@ -17,9 +17,9 @@ interface IState {
     types: Array<string>;
 }
 
-interface IRelated {
-    _id: string;
-    type: string;
+interface IRelatedArticle {
+    _id: IArticle['_id'];
+    type: IArticle['type'];
 }
 
 /**
@@ -38,7 +38,7 @@ export class AssociatedItemsList extends React.Component<IProps, IState> {
         const related = Object.values(associations)
             .filter((_related) => _related != null);
         const relatedTypes = related
-            .map((_related: IRelated) => _related.type)
+            .map((_related: IRelatedArticle) => _related.type)
             .filter((type) => type != null);
 
         if (relatedTypes.length === related.length) { // types for all
