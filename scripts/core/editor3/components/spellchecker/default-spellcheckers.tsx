@@ -70,12 +70,12 @@ export function getSpellchecker(language: string): ISpellchecker {
                 method: 'POST',
                 payload: {spellchecker: spellcheckerName, text: str},
                 path: '/spellchecker',
-            }).then((json) => json.errors),
+            }).then((json) => json.errors, (err) => []),
             getSuggestions: (str) => httpRequestJsonLocal<ISpellcheckWarning>({
                 method: 'POST',
                 payload: {spellchecker: spellcheckerName, text: str, suggestions: true},
                 path: '/spellchecker',
-            }).then((spellcheckerWarning) => spellcheckerWarning.suggestions),
+            }).then((spellcheckerWarning) => spellcheckerWarning.suggestions, (err) => []),
             actions: {},
         };
     } else {
