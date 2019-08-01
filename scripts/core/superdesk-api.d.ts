@@ -668,6 +668,7 @@ declare module 'superdesk-api' {
         ui: {
             article: {
                 view(id: string): void;
+                addImage(field: string, image: IArticle): void;
             };
             alert(message: string): Promise<void>;
             confirm(message: string): Promise<boolean>;

@@ -34,6 +34,7 @@ import {Figure} from './ui/components/figure';
 import {DropZone} from './ui/components/drop-zone';
 import {GroupLabel} from './ui/components/GroupLabel';
 import {TopMenuDropdownButton} from './ui/components/TopMenuDropdownButton';
+import {dispatchInternalEvent} from './internal-events';
 
 function getOnUpdateBeforeMiddlewares(
     extensions: IExtensions,
@@ -124,6 +125,9 @@ export function getSuperdeskApiImplementation(
             article: {
                 view: (id: string) => {
                     authoringWorkspace.authoringOpen(id, 'view');
+                },
+                addImage: (field: string, image: IArticle) => {
+                    dispatchInternalEvent('addImage', {field, image});
                 },
             },
             alert: (message: string) => modal.alert({bodyText: message}),

@@ -160,9 +160,33 @@ export function AssociationController(config, content, superdesk,
         self.updateItemAssociation(scope, item, options.customRel, callback);
     };
 
+    this.addAssociation = function(scope, __item: IArticle) {
+        return content.dropItem(__item)
+            .then((item) => {
+                if (item.lock_user) {
+                    notify.error(gettext('Item is locked. Cannot associate media item.'));
+                    return;
+                }
+
+                // save generated association id in order to be able to update the same item after editing.
+                const originalRel = scope.rel;
+
+                if (self.isMediaEditable() && get(item, '_type') === 'externalsource') {
+                    // if media is editable then association will be updated by self.edit method
+                    return renditions.ingest(item)
+                        .then((_item) => self.edit(scope, _item, {customRel: originalRel}));
+                } else {
+                    // Update the association is media is not editable.
+                    self.updateItemAssociation(scope, item, null, null, true);
+                }
+            })
+            .finally(() => {
+                scope.loading = false;
+            });
+    };
+
     /**
      * @ngdoc method
-     * @name AssociationController#initializeUploadOnDrop
      * @public
      * @description Initialize upload on drop in field
      * @param {Object} scope Directive scope
@@ -189,28 +213,7 @@ export function AssociationController(config, content, superdesk,
 
         scope.loading = true;
 
-        return content.dropItem(__item)
-            .then((item) => {
-                if (item.lock_user) {
-                    notify.error(gettext('Item is locked. Cannot associate media item.'));
-                    return;
-                }
-
-                // save generated association id in order to be able to update the same item after editing.
-                const originalRel = scope.rel;
-
-                if (self.isMediaEditable() && get(item, '_type') === 'externalsource') {
-                    // if media is editable then association will be updated by self.edit method
-                    return renditions.ingest(item)
-                        .then((_item) => self.edit(scope, _item, {customRel: originalRel}));
-                } else {
-                    // Update the association is media is not editable.
-                    self.updateItemAssociation(scope, item, null, null, true);
-                }
-            })
-            .finally(() => {
-                scope.loading = false;
-            });
+        return this.addAssociation(scope, __item);
     };
 }
 
