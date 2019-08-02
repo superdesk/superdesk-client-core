@@ -140,10 +140,16 @@ export class Item extends React.Component<IProps, IState> {
     }
 
     select(event) {
-        // target can be an image or icon inside a button, so parents need to be checked
-        var parentButton = querySelectorParent(event.target, 'button');
+        const selector = 'button';
 
-        if (parentButton != null) {
+        // don't trigger the action if a button inside a list view is clicked
+        // if an extension registers a button, it should be able to totally control it.
+        if (
+            event.target.matches(selector)
+
+            // target can be an image or an icon inside a button, so parents need to be checked too
+            || querySelectorParent(event.target, selector) != null
+        ) {
             return;
         }
 
@@ -173,10 +179,16 @@ export class Item extends React.Component<IProps, IState> {
     }
 
     dbClick(event) {
-        // target can be an image or icon inside a button, so parents need to be checked
-        var parentButton = querySelectorParent(event.target, 'button');
+        const selector = 'button';
 
-        if (parentButton != null) {
+        // don't trigger the action if a button inside a list view is clicked
+        // if an extension registers a button, it should be able to totally control it.
+        if (
+            event.target.matches(selector)
+
+            // target can be an image or an icon inside a button, so parents need to be checked too
+            || querySelectorParent(event.target, selector) != null
+        ) {
             return;
         }
 
