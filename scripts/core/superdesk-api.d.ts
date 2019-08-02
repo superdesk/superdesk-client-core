@@ -55,6 +55,7 @@ declare module 'superdesk-api' {
                 annotationInputTabs?: Array<IEditor3AnnotationInputTab>;
             }
             articleListItemWidgets?: Array<React.ComponentType<{article: IArticle}>>;
+            articleGridItemWidgets?: Array<React.ComponentType<{article: IArticle}>>;
             authoringTopbarWidgets?: Array<React.ComponentType<{article: IArticle}>>;
             pages?: Array<IPage>;
             customFieldTypes?: Array<ICustomFieldType>;
