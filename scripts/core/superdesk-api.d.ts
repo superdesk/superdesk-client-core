@@ -602,6 +602,11 @@ declare module 'superdesk-api' {
         square?: boolean;
     }
 
+    export interface IPropsIcon {
+        className: string;
+        size?: number;
+    }
+
 
 
     // EDITOR3
@@ -719,6 +724,7 @@ declare module 'superdesk-api' {
             UserAvatar: React.ComponentType<{userId: string}>;
             ArticleItemConcise: React.ComponentType<{article: IArticle}>;
             GroupLabel: React.ComponentType<ISpacingProps>;
+            Icon: React.ComponentType<IPropsIcon>;
             TopMenuDropdownButton: React.ComponentType<{onClick: () => void; active: boolean}>;
             getDropdownTree: <T>() => React.ComponentType<IPropsDropdownTree<T>>;
         };
