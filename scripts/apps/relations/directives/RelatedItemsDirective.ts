@@ -1,6 +1,10 @@
 import {get} from 'lodash';
 import {getSuperdeskType} from 'core/utils';
 import {gettext} from 'core/utils';
+import {IArticle} from 'superdesk-api';
+
+const ARCHIVE_TYPES = ['archive', 'published'];
+const isInArchive = (item: IArticle) => item._type != null && ARCHIVE_TYPES.includes(item._type);
 
 /**
  * @ngdoc directive
@@ -189,10 +193,13 @@ export function RelatedItemsDirective(authoringWorkspace, relationsService, noti
                 const key = getNextKey(scope.item.associations || {}, scope.field._id);
                 let data = {};
 
-                if ('_type' in item && item._type !== 'archive') {
-                    data[key] = item;
+                if (isInArchive(item)) {
+                    data[key] = {
+                        _id: item._id,
+                        type: item.type, // used to display associated item types
+                    };
                 } else {
-                    data[key] = {_id: item._id};
+                    data[key] = item; // use full item for external items, like images from external search provider
                 }
 
                 scope.item.associations = angular.extend({}, scope.item.associations, data);
