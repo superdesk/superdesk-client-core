@@ -64,7 +64,7 @@ export function CardsService(api, search, session, desks, config) {
         case DESK_OUTPUT:
             filterQueryByDeskType(query, card);
             break;
-        
+
         case SENT_OUTPUT:
             deskId = card._id.substring(0, card._id.indexOf(':'));
             query.filter({bool: {should: [
