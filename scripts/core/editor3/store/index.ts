@@ -134,7 +134,7 @@ export default function createEditorStore(props: IProps, spellcheck, isReact = f
         item: props.item,
         spellchecking: {
             language: props.language,
-            enabled: !spellcheckerDisabledInConfig,
+            enabled: !spellcheckerDisabledInConfig && spellcheck && spellcheck.isAutoSpellchecker,
             inProgress: false,
             warningsByBlock: {},
         },

@@ -276,7 +276,7 @@
                           sd-switch
                           ng-model="spellcheckMenu.isAuto"
                           ng-change="spellcheckMenu.pushSettings()"
-                          ng-hide="!spellcheckMenu.isActiveDictionary"
+                          ng-hide="getSpellchecker(item.language) == null"
                           tooltip="{{ spellcheckMenu.isAuto ? 'Spell checking ON' : 'Spell checking OFF'  | translate }}"
                           tooltip-placement="left"></span>
                       <span translate>Run automatically</span>

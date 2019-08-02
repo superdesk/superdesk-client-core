@@ -42,7 +42,15 @@
             </li>
 
             <li sd-metadata-list-item data-label="'Language' | translate" ng-if="!isRemovedField('language')">
-                <input class="basic-input" type="text" ng-model="item.language" ng-disabled="!_editable" ng-change="autosave(item)">
+                <div sd-meta-dropdown
+                    class="data"
+                    data-item="item"
+                    data-field="language"
+                    data-key="qcode"
+                    data-list="metadata.languages"
+                    ng-disabled="!_editable"
+                    data-change="autosave(item)">
+                </div>
             </li>
 
             <li sd-metadata-list-item data-label="'Pubstatus' | translate" ng-if="item.pubstatus">
