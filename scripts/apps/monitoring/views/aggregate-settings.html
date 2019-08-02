@@ -26,11 +26,8 @@
                         <li ng-repeat="stage in deskStages[desk._id]">
                             <span sd-check ng-model="editGroups[stage._id].selected" ng-click="setStageInfo(stage._id)" label-position="inside">{{stage.name}}</span> 
                         </li>
-                        <li>
-                            <span sd-check ng-model="editGroups[desk._id + ':scheduled'].selected" ng-click="setScheduledDeskOutputInfo(desk._id + ':scheduled')" label-position="inside">{{'Output/Scheduled' | translate}}</span>
-                        </li>
-                        <li>
-                            <span sd-check ng-model="editGroups[desk._id + ':output'].selected" ng-click="setDeskOutputInfo(desk._id + ':output')" label-position="inside">{{'Output/Published' | translate}}</span>
+                        <li ng-repeat="output in deskOutputs track by output.id">
+                            <span sd-check ng-model="editGroups[desk._id + output.id].selected" ng-click="setDeskOutputInfo(desk._id + output.id, output.type)" label-position="inside">{{ output.label }}</span>
                         </li>
                     </ul>
                 </div>
@@ -87,11 +84,8 @@
                     <div class="group-title" ng-if="item.type === 'stage'">
                         {{deskLookup[stageLookup[item._id].desk].name}} : <span>{{stageLookup[item._id].name}}</span>
                     </div>
-                    <div class="group-title" ng-if="item.type === 'scheduledDeskOutput'">
-                        {{item.name}} : <span translate>Desk Scheduled Output</span>
-                    </div>
-                    <div class="group-title" ng-if="item.type === 'deskOutput'">
-                        {{item.name}} : <span translate>Desk Output</span>
+                    <div class="group-title" ng-repeat="output in deskOutputs" ng-if="item.type === output.type">
+                        {{item.name}} : <span translate>{{ output.listLabel }}</span>
                     </div>
                     <div class="group-title" ng-if="item.type === 'search'">
                         {{searchLookup[item._id].name}}
@@ -111,11 +105,8 @@
                     <div class="desk-title" ng-if="max.type === 'stage'">
                         {{deskLookup[stageLookup[max._id].desk].name}} : <span>{{stageLookup[max._id].name}}</span>
                     </div>
-                    <div class="desk-title" ng-if="max.type === 'scheduledDeskOutput'">
-                        {{max.name}} : <span translate>Desk Scheduled Output</span>
-                    </div>
-                    <div class="desk-title" ng-if="max.type === 'deskOutput'">
-                        {{max.name}} : <span translate>Desk Output</span>
+                    <div class="desk-title" ng-repeat="output in deskOutputs" ng-if="max.type === output.type">
+                        {{max.name}} : <span translate>{{ output.listLabel }}</span>
                     </div>
                     <div class="desk-title" ng-if="max.type === 'search'">
                         {{searchLookup[max._id].name}}
