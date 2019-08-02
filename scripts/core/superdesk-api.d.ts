@@ -668,6 +668,8 @@ declare module 'superdesk-api' {
         ui: {
             article: {
                 view(id: string): void;
+
+                // This isn't implemented for all fields accepting images.
                 addImage(field: string, image: IArticle): void;
             };
             alert(message: string): Promise<void>;

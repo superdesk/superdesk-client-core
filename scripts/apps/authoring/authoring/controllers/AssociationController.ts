@@ -160,8 +160,12 @@ export function AssociationController(config, content, superdesk,
         self.updateItemAssociation(scope, item, options.customRel, callback);
     };
 
-    this.addAssociation = function(scope, __item: IArticle) {
-        return content.dropItem(__item)
+    this.addAssociation = function(scope, __item: IArticle): void {
+        if (!scope.editable) {
+            return;
+        }
+
+        content.dropItem(__item)
             .then((item) => {
                 if (item.lock_user) {
                     notify.error(gettext('Item is locked. Cannot associate media item.'));
@@ -192,14 +196,14 @@ export function AssociationController(config, content, superdesk,
      * @param {Object} scope Directive scope
      * @param {Object} event Drop event
      */
-    this.initializeUploadOnDrop = function(scope, event) {
+    this.initializeUploadOnDrop = function(scope, event): void {
         const superdeskType = getSuperdeskType(event);
 
-        if (!scope.editable) {
-            return;
-        }
-
         if (superdeskType === 'Files') {
+            if (!scope.editable) {
+                return;
+            }
+
             if (self.isMediaEditable()) {
                 const files = event.originalEvent.dataTransfer.files;
 
@@ -213,7 +217,7 @@ export function AssociationController(config, content, superdesk,
 
         scope.loading = true;
 
-        return this.addAssociation(scope, __item);
+        this.addAssociation(scope, __item);
     };
 }
 
