@@ -67,10 +67,10 @@ export function CardsService(api, search, session, desks, config) {
 
         case SENT_OUTPUT:
             deskId = card._id.substring(0, card._id.indexOf(':'));
-            query.filter({bool: {should: [
-                {term: {'task.last_authoring_desk': deskId}},
-                {term: {'task.last_production_desk': deskId}},
-            ]}});
+            query.filter({bool: {
+                filter: {term: {'task.last_desk': deskId}},
+                must_not: {term: {'task.desk': deskId}},
+            }});
             break;
 
         case SCHEDULED_OUTPUT:

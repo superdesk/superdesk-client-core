@@ -18,6 +18,7 @@ const OUTPUT_TYPES = [
 
 const PUBLISH_TYPES = [
     DESK_OUTPUT,
+    SENT_OUTPUT,
     SCHEDULED_OUTPUT,
     HIGHLIGHTS,
 ];
