@@ -288,7 +288,7 @@ export class AuthoringWorkspaceService {
     /**
      * Fetch item by id and start editing it
      */
-    authoringOpen(itemId, action, repo?) {
+    private authoringOpen(itemId, action, repo?) {
         return this.authoring.open(itemId, action === 'view', repo, action)
             .then((item) => {
                 this.item = item;

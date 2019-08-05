@@ -126,7 +126,7 @@ export function getSuperdeskApiImplementation(
         ui: {
             article: {
                 view: (id: string) => {
-                    authoringWorkspace.authoringOpen(id, 'view');
+                    authoringWorkspace.edit({_id: id}, 'view');
                 },
                 addImage: (field: string, image: IArticle) => {
                     dispatchInternalEvent('addImage', {field, image});
