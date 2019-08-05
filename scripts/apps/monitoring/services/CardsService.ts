@@ -68,7 +68,7 @@ export function CardsService(api, search, session, desks, config) {
         case SENT_OUTPUT:
             deskId = card._id.substring(0, card._id.indexOf(':'));
             query.filter({bool: {
-                filter: {term: {'task.last_desk': deskId}},
+                filter: {term: {'task.desk_history': deskId}},
                 must_not: {term: {'task.desk': deskId}},
             }});
             break;
