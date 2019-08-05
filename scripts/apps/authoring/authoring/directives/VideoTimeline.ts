@@ -11,7 +11,7 @@ import ResizeObserver from 'resize-observer-polyfill';
 /**
  * @ngdoc directive
  * @module superdesk.apps.authoring
- * @name sdItemCarousel
+ * @name sdVideoTimeline
  *
  * @requires $timeout
  */
@@ -45,7 +45,6 @@ export function VideoTimeline($rootScope, $interval, api) {
             let change_width = 0;
             let IntervalID;
 
-
             scope.reloadFrames = function () {
                 stopInterval(IntervalID);
                 inner_frames.innerHTML = ''; 
@@ -70,6 +69,7 @@ export function VideoTimeline($rootScope, $interval, api) {
             scope.$watch('listFrames', function (listFrames) {
                 scope.reloadFrames(listFrames)
             });
+
             scope.$watch('video', (video) => {
                 if (!video)
                     return;
@@ -206,9 +206,7 @@ export function VideoTimeline($rootScope, $interval, api) {
 
             function onDragEndCb() {
                 setTimeline();
-                //$scope.editVideo.isDirty = true;
                 scope.onChange();
-                //scope.video.click();
             };
 
             function onDragStart() {
@@ -245,6 +243,7 @@ export function VideoTimeline($rootScope, $interval, api) {
             };
 
             $rootScope.$on('$destroy', () => stopInterval(IntervalID))
+
             function loadTimeLine(list_thumbnails) {
                 if (controlbar.offsetWidth <= 0) {
                     return;
@@ -276,7 +275,7 @@ export function VideoTimeline($rootScope, $interval, api) {
                     if (count <= total_thumbnail) {
                         if (list_thumbnails && list_thumbnails.length > 0) {
                             let index = Math.round(count * per_delta_image);
-                            thumnails[count].poster = list_thumbnails[index].url + '&tag=' + number;
+                            thumnails[count].poster = list_thumbnails[index].url + '?tag=' + number;
                             thumnails[count].className = 'loaded';
                         }
                         else {

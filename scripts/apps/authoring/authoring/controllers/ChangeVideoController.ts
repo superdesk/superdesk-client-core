@@ -6,12 +6,12 @@ import { validateMediaFieldsThrows } from './ChangeImageController';
 /**
  * @ngdoc controller
  * @module superdesk.apps.authoring
- * @name ChangeImageController
+ * @name ChangeVideoController
  *
  * @requires $scope
+ * @requires interval
  * @requires gettext
  * @requires notify
- * @requires modal
  * @requires lodash
  * @requires api
  * @requires $rootScope
@@ -28,7 +28,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
     $scope.thumbnail = {};
     $scope.cut = {};
     $scope.crop = {};
-    $scope.rotate = { degree: 0 };
+    $scope.rotate = 0;
     $scope.quality = {};
     $scope.video = null;
     $scope.flag = true;
@@ -76,32 +76,31 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
     ].concat(Object.keys(get(deployConfig.getSync('schema'), 'picture', {})));
     // initialize metadata from `item`
     $scope.data.metadata = angular.copy($scope.data.item);
+    $scope.videoReload = true;
+    let stopIntervalID;
 
     /**
      * @ngdoc method
-     * @name ChangeImageController#saveCrops
+     * @name ChangeVideoController#saveEditVideo
      * @public
-     * @description Validate new crop-coordinates and resolve the promise and return
-     * modified crop information, point of interest and metadata changes.
+     * @description Validate cut, crop, rotate and call edit video.
+     * Checking the status of edit video and release loading after video finish.
      */
-    let stopIntervalID;
-    $scope.videoReload = true;
     $scope.saveEditVideo = function () {
         const videoEditing = document.querySelector('.video-editing');
         videoEditing.classList.add('video-loading');
         $scope.video.pause();
         $scope.isAoISelectionModeEnabled = true;
         const cut = ($scope.cut.end - $scope.cut.start) === ($scope.video.duration || 0) ? {} : $scope.cut;
-        const rotate = $scope.rotate.degree % 360 === 0 ? {} : $scope.rotate;
+        $scope.rotate = $scope.rotate % 360
         api.save("video_edit", {
             item: $scope.data.item,
             edit: {
-                cut: cut,
+                trim: cut,
                 crop: $scope.crop,
-                rotate: rotate,
+                rotate: $scope.rotate,
                 quality: $scope.quality,
             },
-            thumbnail: $scope.thumbnail,
         })
             .then(
                 response => {
@@ -154,9 +153,9 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
 
     /**
      * @ngdoc method
-     * @name ChangeImageController#cancelMetadataChanges
+     * @name ChangeVideoController#cancelEditVideo
      * @public
-     * @description
+     * @description Cancel and reset all status edit video.
      */
     $scope.cancelEditVideo = function () {
         var file = document.getElementById("file-upload")
@@ -176,9 +175,9 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         $scope.thumbnail = {};
         $scope.crop = {};
         $scope.quality = 0;
-        $scope.rotate.degree = 0;
+        $scope.rotate = 0;
         let video = document.getElementById('video-preview');
-        actRotate(video, $scope.rotate.degree, 0);
+        actRotate(video, $scope.rotate, 0);
 
         document.getElementById('rotateVideo').disabled = false;
         document.getElementById('toggleRatio').disabled = false;
@@ -188,11 +187,11 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
      * @ngdoc method
      * @name ChangeVideoController#captureThumbnail
      * @public
-     * @description Capture the thumbnail video at play time in time line.
+     * @description Capturing a frame of video via playing time, drop, rotate.
      */
     $scope.captureThumbnail = function () {
         try {
-            let time = $scope.video.currentTime;
+            let position = $scope.video.currentTime;
             let output = document.getElementById('output');
             let width = $scope.video.clientWidth;
             let height = $scope.video.clientHeight;
@@ -210,15 +209,15 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
             canvas.id = "canvas-thumnail";
             file.value = "";
             output.append(canvas);
-            actRotate(canvas, $scope.rotate.degree, 0);
+            actRotate(canvas, $scope.rotate, 0);
             var nothumbnail = document.getElementById('no-thumbnail');
             nothumbnail.style = "visibility: collapse";
             $scope.thumbnail = {
                 type: "capture",
                 minetype: "image/png",
-                time: time,
+                position: position,
                 crop: angular.copy($scope.crop),
-                rotate: angular.copy($scope.rotate),
+                rotate: $scope.rotate,
             };
 
             $scope.editVideo.isDirty = true;
@@ -249,9 +248,9 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
 
     /**
      * @ngdoc method
-     * @name ChangeVideoController#captureThumbnail
+     * @name ChangeVideoController#playVideo
      * @public
-     * @description Capture the thumbnail video at play time in time line.
+     * @description Play and pause video.
      */
     $scope.playVideo = () => {
         if ($scope.video.paused) {
@@ -276,7 +275,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
      * @ngdoc method
      * @name ChangeVideoController#videoInit
      * @public
-     * @description Capture the thumbnail video at play time in time line.     *
+     * @description Init data and loading timeline and preview thumbnail for UI edit.
      */
     $scope.videoInit = function () {
 
@@ -309,6 +308,12 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         };
     };
 
+    /**
+     * @ngdoc method
+     * @name ChangeVideoController#uploadChange
+     * @public
+     * @description Loading image when upload a file.
+     */
     $scope.uploadChange = function (event) {
         var tgt = event.target || window.event.srcElement,
             files = tgt.files;
@@ -341,22 +346,34 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         });
     };
 
-
+    /**
+     * @ngdoc method
+     * @name ChangeVideoController#uploadChange
+     * @public
+     * @description Trigger 'save bar' when use cutting video.
+     */
     $scope.onCutChange = function () {
         $scope.$applyAsync(() => {
             $scope.editVideo.isDirty = true;
         });
     };
+
+    /**
+     * @ngdoc method
+     * @name ChangeVideoController#loadTimelineThumbnails
+     * @public
+     * @description Use for loading list thumbnails in timeline bar.
+     */
     $scope.loadTimelineThumbnails = async function () {
-        const res = await api.get(`/video_edit/${$scope.data.item.media}?action=thumbnails&amount=40`)
-        if (res && res.processing === false) {
+        const res = await api.get(`/video_edit/${$scope.data.item._id}`)
+        if (res && res.processing.thumbnails_timeline === false) {
 
             $scope.$applyAsync(() => {
-                if ($scope.listFrames === res.thumbnails) {
+                if ($scope.listFrames === res.thumbnails.timeline) {
                     $scope.reloadFrames();
                 }
                 else {
-                    $scope.listFrames = res.thumbnails;
+                    $scope.listFrames = res.thumbnails.timeline;
                 }
             });
         }
@@ -371,10 +388,24 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
             });
         }
     }
+
+    /**
+     * @ngdoc method
+     * @name ChangeVideoController#reloadTimelineThumbnails
+     * @public
+     * @description Trigger event reload data of list thumbnails in timeline.
+     */
     $scope.reloadTimelineThumbnails = function (reloadFrames) {
         $scope.reloadFrames = reloadFrames;
 
     }
+
+    /**
+     * @ngdoc method
+     * @name ChangeVideoController#reloadTimelineThumbnails
+     * @private
+     * @description loading Image for preview thumbnail.
+     */
     function loadImage() {
         if ('thumbnail' in $scope.data.item.renditions) {
             var img = document.createElement("img");
@@ -398,8 +429,8 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
     }
 
     /**
-     * @ngdoc metho d
-     * @name ChangeImageController#isDoneEnabled
+     * @ngdoc method
+     * @name ChangeVideoController#isDoneEnabled
      * @public
      * @description if dirty or is new picture item.
      * @returns {Boolean}
@@ -412,7 +443,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
 
     /**
      * @ngdoc method
-     * @name ChangeImageController#done
+     * @name ChangeVideoController#done
      * @public
      * @description Validate new crop-coordinates and resolve the promise and return
      * modified crop information, point of interest and metadata changes.
@@ -439,7 +470,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
 
     /**
      * @ngdoc method
-     * @name ChangeImageController#toggleMenuQuality
+     * @name ChangeVideoController#toggleMenuQuality
      * @public
      * @description The menu select to change quality of video
      *
@@ -461,7 +492,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
 
     /**
      * @ngdoc method
-     * @name ChangeImageController#toggleMenuRatio
+     * @name ChangeVideoController#toggleMenuRatio
      * @public
      * @description The menu select to crop video
      *
@@ -479,7 +510,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
 
     /**
      * @ngdoc method
-     * @name ChangeImageController#cropVideo
+     * @name ChangeVideoController#cropVideo
      * @public
      * @description crop video
      *
@@ -559,9 +590,10 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
 
 
     }
+
     /**
      * @ngdoc method
-     * @name ChangeImageController#rotateVideo
+     * @name ChangeVideoController#rotateVideo
      * @public
      * @description rotate video to the left
      *
@@ -570,7 +602,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         let video = document.getElementById('video-preview');
         switch (direction) {
             case 'left':
-                let degree = $scope.rotate.degree = $scope.rotate.degree - 90;
+                let degree = $scope.rotate = $scope.rotate - 90;
                 actRotate(video, degree, 0.3);
                 break;
 
@@ -583,6 +615,13 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         $scope.editVideo.isDirty = true;
     }
 
+    /**
+     * @ngdoc method
+     * @name ChangeVideoController#rotateVideo
+     * @private
+     * @description animation rotate video to the left
+     *
+     */
     function actRotate(elementVideo, degree, time) {
         let scale = (degree / 90) % 2 ? (elementVideo.clientHeight / elementVideo.clientWidth) : 1;
         elementVideo.style.transform = `rotate(${degree}deg) scale(${scale})`;
@@ -597,7 +636,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
 
     /**
      * @ngdoc method
-     * @name ChangeImageController#qualityVideo
+     * @name ChangeVideoController#changeQualityVideo
      * @public
      * @description change quality the video
      *
