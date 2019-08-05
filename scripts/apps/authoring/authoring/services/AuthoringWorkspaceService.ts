@@ -1,4 +1,5 @@
 import {get, includes} from 'lodash';
+import {IArticle} from 'superdesk-api';
 
 /**
  * @ngdoc service
@@ -96,7 +97,10 @@ export class AuthoringWorkspaceService {
     /**
      * Open item for editing
      */
-    edit(item, action?: 'view' | 'edit' | 'kill' | 'takedown' | 'correct') {
+    edit(
+        item: {_id: IArticle['_id'], _type?: IArticle['_type']},
+        action?: 'view' | 'edit' | 'kill' | 'takedown' | 'correct',
+    ) {
         if (item) {
             // disable edit of external ingest sources that are not editable (editFeaturedImage false or not available)
             if (item._type === 'externalsource' && !!get(this.config.features, 'editFeaturedImage') === false) {

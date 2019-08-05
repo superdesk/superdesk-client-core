@@ -214,7 +214,10 @@ declare module 'superdesk-api' {
         associations: { string: IArticle };
         type: 'text' | 'picture' | 'video' | 'audio' | 'preformatted' | 'graphic' | 'composite';
         firstpublished?: string;
-        linked_in_packages: any;
+        linked_in_packages: Array<{
+            package: string;
+            package_type: string; // deprecated
+        }>;
         gone: any;
         lock_action: any;
         lock_user: any;
