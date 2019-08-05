@@ -12,15 +12,26 @@ import {AuthoringWorkspaceService} from '../authoring/services/AuthoringWorkspac
  * AUTHORS and LICENSE files distributed with this source code, or
  * at https://www.sourcefabric.org/superdesk/license
  */
-WorkqueueService.$inject = ['session', 'api'];
-function WorkqueueService(session, api) {
-    this.items = [];
+
+class WorkqueueService {
+    items: Array<IArticle>;
+
+    // injected
+    session: any;
+    api: any;
+
+    constructor(session, api) {
+        this.items = [];
+
+        this.session = session;
+        this.api = api;
+    }
 
     /**
      * Get all items locked by current user
      */
-    this.fetch = function() {
-        return session.getIdentity()
+    fetch() {
+        return this.session.getIdentity()
             .then(angular.bind(this, function(identity) {
                 const query = {
                     source: {
@@ -36,26 +47,28 @@ function WorkqueueService(session, api) {
                     auto: 1,
                 };
 
-                return api.query('workqueue', query)
+                return this.api.query('workqueue', query)
                     .then(angular.bind(this, function(res) {
                         this.items = null;
                         this.items = res._items || [];
                         return this.items;
                     }));
             }));
-    };
+    }
 
     /**
      * Update given item
      */
-    this.updateItem = function(itemId) {
+    updateItem(itemId) {
         var old = find(this.items, {_id: itemId});
 
         if (old) {
-            return api.find('archive', itemId).then((item) => angular.extend(old, item));
+            return this.api.find('archive', itemId).then((item) => angular.extend(old, item));
         }
-    };
+    }
 }
+
+WorkqueueService.$inject = ['session', 'api'];
 
 WorkqueueCtrl.$inject = [
     '$scope',
