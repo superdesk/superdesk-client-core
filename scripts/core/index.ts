@@ -37,6 +37,7 @@ import {reactToAngular1} from 'superdesk-ui-framework';
 
 import {ExtensionPage} from './extension-page';
 import {registerExtensions} from './register-extensions';
+import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 
 /* globals __SUPERDESK_CONFIG__: true */
 const appConfig = __SUPERDESK_CONFIG__;
@@ -114,7 +115,7 @@ core.run([
     'lock',
     'session',
     'authoringWorkspace',
-    (modal, privileges, lock, session, authoringWorkspace) => {
+    (modal, privileges, lock, session, authoringWorkspace: AuthoringWorkspaceService) => {
         registerExtensions(
             _superdesk,
             modal,

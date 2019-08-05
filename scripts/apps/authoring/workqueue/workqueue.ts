@@ -1,6 +1,7 @@
 import {IArticle} from 'superdesk-api';
 import {find, each, without, keys, includes, get} from 'lodash';
 import {getGenericErrorMessage} from 'core/ui/constants';
+import {AuthoringWorkspaceService} from '../authoring/services/AuthoringWorkspaceService';
 
 /**
  * This file is part of Superdesk.
@@ -72,7 +73,7 @@ WorkqueueCtrl.$inject = [
     'referrer',
     'notify',
 ];
-function WorkqueueCtrl($scope, $rootScope, $route, workqueue, authoringWorkspace, multiEdit,
+function WorkqueueCtrl($scope, $rootScope, $route, workqueue, authoringWorkspace: AuthoringWorkspaceService, multiEdit,
     lock, $location, session, authoring, autosave, confirm, referrer, notify) {
     $scope.active = null;
     $scope.workqueue = workqueue;

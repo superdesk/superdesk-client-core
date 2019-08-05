@@ -1,10 +1,11 @@
 import _ from 'lodash';
+import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 
 /**
  * Displays the notifications of the desk of a given stage
  */
 DeskNotifications.$inject = ['desks', 'deskNotifications', 'authoringWorkspace', '$timeout'];
-export function DeskNotifications(desks, deskNotifications, authoringWorkspace, $timeout) {
+export function DeskNotifications(desks, deskNotifications, authoringWorkspace: AuthoringWorkspaceService, $timeout) {
     return {
         scope: {stage: '=stage'},
         templateUrl: 'scripts/apps/monitoring/views/desk-notifications.html',

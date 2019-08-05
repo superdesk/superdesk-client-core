@@ -1,6 +1,7 @@
 import {get} from 'lodash';
 import {getSuperdeskType} from 'core/utils';
 import {gettext} from 'core/utils';
+import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 
 /**
  * @ngdoc directive
@@ -13,7 +14,7 @@ import {gettext} from 'core/utils';
  */
 
 RelatedItemsDirective.$inject = ['authoringWorkspace', 'relationsService', 'notify'];
-export function RelatedItemsDirective(authoringWorkspace, relationsService, notify) {
+export function RelatedItemsDirective(authoringWorkspace: AuthoringWorkspaceService, relationsService, notify) {
     return {
         scope: {
             item: '=',

@@ -1,5 +1,6 @@
 import {gettext} from 'core/utils';
 import {isPublished} from 'apps/archive/utils';
+import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 
 angular.module('superdesk.apps.dashboard.widgets.relatedItem', [
     'superdesk.apps.dashboard.widgets.base',
@@ -68,7 +69,7 @@ function RelatedItemController(
     notify,
     superdesk,
     $q,
-    authoringWorkspace,
+    authoringWorkspace: AuthoringWorkspaceService,
     authoring,
     privileges,
     config,

@@ -21,6 +21,7 @@ import {AuthoringTopbarReact} from './authoring-topbar-react';
 import {showModal} from 'core/services/modalService';
 import {getUnpublishConfirmModal} from './components/unpublish-confirm-modal';
 import {ITEM_STATE} from 'apps/archive/constants';
+import {AuthoringWorkspaceService} from './services';
 
 export interface IOnChangeParams {
     item: IArticle;
@@ -170,7 +171,10 @@ angular.module('superdesk.apps.authoring', [
                 priority: 10,
                 icon: 'pencil',
                 keyboardShortcut: 'ctrl+alt+e',
-                controller: ['data', 'authoringWorkspace', function(data, authoringWorkspace) {
+                controller: ['data', 'authoringWorkspace', function(
+                    data,
+                    authoringWorkspace: AuthoringWorkspaceService,
+                ) {
                     authoringWorkspace.edit(data.item ? data.item : data);
                 }],
                 filters: [
@@ -186,7 +190,7 @@ angular.module('superdesk.apps.authoring', [
                 priority: 5,
                 icon: 'pencil',
                 keyboardShortcut: 'ctrl+alt+n',
-                controller: ['data', 'authoringWorkspace', (data, authoringWorkspace) => {
+                controller: ['data', 'authoringWorkspace', (data, authoringWorkspace: AuthoringWorkspaceService) => {
                     authoringWorkspace.popup(data.item, 'edit');
                 }],
                 filters: [{action: 'list', type: 'archive'}],
@@ -231,8 +235,8 @@ angular.module('superdesk.apps.authoring', [
                 priority: 100,
                 icon: 'kill',
                 group: 'corrections',
-                controller: ['data', 'authoringWorkspace', 'api', '$rootScope',
-                    function(data, authoringWorkspace, api, $rootScope) {
+                controller: ['data', 'authoringWorkspace', '$rootScope',
+                    function(data, authoringWorkspace: AuthoringWorkspaceService, $rootScope) {
                         if (data.item._type === 'archived') {
                             $rootScope.$broadcast('open:archived_kill', data.item, 'kill');
                         } else {
@@ -255,8 +259,8 @@ angular.module('superdesk.apps.authoring', [
                 priority: 100,
                 icon: 'kill',
                 group: 'corrections',
-                controller: ['data', 'authoringWorkspace', 'api', '$rootScope',
-                    function(data, authoringWorkspace, api, $rootScope) {
+                controller: ['data', 'authoringWorkspace', '$rootScope',
+                    function(data, authoringWorkspace: AuthoringWorkspaceService, $rootScope) {
                         if (data.item._type === 'archived') {
                             $rootScope.$broadcast('open:archived_kill', data.item, 'takedown');
                         } else {
@@ -279,7 +283,10 @@ angular.module('superdesk.apps.authoring', [
                 priority: 100,
                 icon: 'edit-line',
                 group: 'corrections',
-                controller: ['data', 'authoringWorkspace', function(data, authoringWorkspace) {
+                controller: ['data', 'authoringWorkspace', function(
+                    data,
+                    authoringWorkspace: AuthoringWorkspaceService,
+                ) {
                     authoringWorkspace.correct(data.item);
                 }],
                 filters: [{action: 'list', type: 'archive'}],
@@ -293,7 +300,10 @@ angular.module('superdesk.apps.authoring', [
                 priority: 2000,
                 icon: 'external',
                 keyboardShortcut: 'alt+o',
-                controller: ['data', 'authoringWorkspace', function(data, authoringWorkspace) {
+                controller: ['data', 'authoringWorkspace', function(
+                    data,
+                    authoringWorkspace: AuthoringWorkspaceService,
+                ) {
                     authoringWorkspace.view(data.item || data);
                 }],
                 filters: [
@@ -311,7 +321,7 @@ angular.module('superdesk.apps.authoring', [
                 priority: 1990,
                 icon: 'external',
                 keyboardShortcut: 'ctrl+alt+n',
-                controller: ['data', 'authoringWorkspace', (data, authoringWorkspace) => {
+                controller: ['data', 'authoringWorkspace', (data, authoringWorkspace: AuthoringWorkspaceService) => {
                     authoringWorkspace.popup(data.item, 'view');
                 }],
                 filters: [
@@ -381,7 +391,7 @@ angular.module('superdesk.apps.authoring', [
                 icon: 'edit-line',
                 group: 'corrections',
                 controller: ['data', 'authoringWorkspace', 'api',
-                    (data, authoringWorkspace, api) => {
+                    (data, authoringWorkspace: AuthoringWorkspaceService, api) => {
                         api.update('archive', data.item.archive_item, {state: 'in_progress'})
                             .then((updated) =>
                                 authoringWorkspace.edit(updated));

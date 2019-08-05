@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
+import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 
 /**
  * Main monitoring view - list + preview
@@ -7,7 +8,14 @@ import {gettext} from 'core/utils';
  * it's a directive so that it can be put together with authoring into some container directive
  */
 MonitoringView.$inject = ['$rootScope', 'authoringWorkspace', 'pageTitle', '$timeout', 'workspaces', 'desks'];
-export function MonitoringView($rootScope, authoringWorkspace, pageTitle, $timeout, workspaces, desks) {
+export function MonitoringView(
+    $rootScope,
+    authoringWorkspace: AuthoringWorkspaceService,
+    pageTitle,
+    $timeout,
+    workspaces,
+    desks,
+) {
     return {
         templateUrl: 'scripts/apps/monitoring/views/monitoring-view.html',
         controller: 'Monitoring',

@@ -1,6 +1,7 @@
 import {DuplicateController} from '../controllers';
 import {registerTestExtensions} from 'core/tests/helpers/register-test-extensions';
 import {isPublished} from '../utils';
+import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 
 describe('content', () => {
     var item: any = {_id: 1};
@@ -45,7 +46,15 @@ describe('content', () => {
     }));
 
     it('onSpike middleware is called',
-        (done) => inject((superdesk, activityService, privileges, modal, lock, session, authoringWorkspace) => {
+        (done) => inject((
+            superdesk,
+            activityService,
+            privileges,
+            modal,
+            lock,
+            session,
+            authoringWorkspace: AuthoringWorkspaceService,
+        ) => {
             const extensionDelay = 200;
 
             const articleEntities = {

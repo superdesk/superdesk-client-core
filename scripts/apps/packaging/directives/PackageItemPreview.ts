@@ -1,9 +1,10 @@
 import _ from 'lodash';
 import {isPublished, isKilled} from 'apps/archive/utils';
+import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 
-PackageItemPreview.$inject = ['api', 'lock', 'superdesk', 'authoringWorkspace', '$location', '$sce',
+PackageItemPreview.$inject = ['api', 'lock', 'superdesk', 'authoringWorkspace', '$sce',
     'desks', 'vocabularies'];
-export function PackageItemPreview(api, lock, superdesk, authoringWorkspace, $location, $sce,
+export function PackageItemPreview(api, lock, superdesk, authoringWorkspace: AuthoringWorkspaceService, $sce,
     desks, vocabularies) {
     return {
         scope: {

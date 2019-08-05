@@ -1,4 +1,5 @@
 import {gettext} from 'core/utils';
+import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 
 /**
  * @ngdoc service
@@ -17,9 +18,8 @@ import {gettext} from 'core/utils';
  * @description Spike Service is responsible for proving item (single and multiple) spike/un-spike functionality
  */
 
-SpikeService.$inject = ['$location', 'api', 'notify', 'send', '$q', 'authoring', 'authoringWorkspace',
-    'lock'];
-export function SpikeService($location, api, notify, send, $q, authoring, authoringWorkspace, lock) {
+SpikeService.$inject = ['$location', 'api', 'notify', 'send', '$q', 'authoringWorkspace', 'lock'];
+export function SpikeService($location, api, notify, send, $q, authoringWorkspace: AuthoringWorkspaceService, lock) {
     var SPIKE_RESOURCE = 'archive_spike',
         UNSPIKE_RESOURCE = 'archive_unspike';
 

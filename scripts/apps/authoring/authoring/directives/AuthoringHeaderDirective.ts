@@ -1,5 +1,6 @@
 import {isNull, isUndefined, find, filter, keys, findIndex, defer, sortBy, map, forEach, startsWith} from 'lodash';
 import {FIELD_KEY_SEPARATOR} from 'core/editor3/helpers/fieldsMeta';
+import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
 
 AuthoringHeaderDirective.$inject = [
     'api',
@@ -7,8 +8,6 @@ AuthoringHeaderDirective.$inject = [
     '$rootScope',
     'archiveService',
     'metadata',
-    'content',
-    'authoring',
     'vocabularies',
     '$timeout',
     'config',
@@ -23,15 +22,13 @@ export function AuthoringHeaderDirective(
     $rootScope,
     archiveService,
     metadata,
-    content,
-    authoring,
     vocabularies,
     $timeout,
     config,
     moment,
     features,
     TranslationService,
-    authoringWorkspace,
+    authoringWorkspace: AuthoringWorkspaceService,
 ) {
     return {
         templateUrl: 'scripts/apps/authoring/views/authoring-header.html',

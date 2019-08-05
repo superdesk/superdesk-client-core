@@ -1,5 +1,7 @@
+import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
+
 ActivityStream.$inject = ['asset', 'authoringWorkspace'];
-export function ActivityStream(asset, authoringWorkspace) {
+export function ActivityStream(asset, authoringWorkspace: AuthoringWorkspaceService) {
     return {
         scope: {
             activities: '=',

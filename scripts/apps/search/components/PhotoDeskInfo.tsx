@@ -32,16 +32,16 @@ export const PhotoDeskInfo: React.StatelessComponent<any> = (props) => {
                 itemClassName="sd-grid-item__content-block"
             />
             {
-                    articleDisplayWidgets.length < 1 ? null : (
-                        <div style={{marginTop: 12, display: 'flex'}} className="sibling-spacer-10">
-                            {
-                                articleDisplayWidgets.map((Component, i) =>
-                                    <Component key={i} article={item} />,
-                                )
-                            }
-                        </div>
-                    )
-                }
+                articleDisplayWidgets.length < 1 ? null : (
+                    <div style={{marginTop: 12, display: 'flex'}} className="sibling-spacer-10">
+                        {
+                            articleDisplayWidgets.map((Component, i) =>
+                                <Component key={i} article={item} />,
+                            )
+                        }
+                    </div>
+                )
+            }
         </div>
     );
 };

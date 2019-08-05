@@ -1,4 +1,4 @@
-import {IArticle} from "superdesk-api";
+import {IArticle} from 'superdesk-api';
 
 interface IInternalEvents {
     addImage: {

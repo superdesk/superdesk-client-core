@@ -4,11 +4,12 @@ import {state as State} from 'apps/search/components/fields/state';
 import {connectServices} from 'core/helpers/ReactRenderAsync';
 import {IArticle} from 'superdesk-api';
 import {gettext} from 'core/utils';
+import {AuthoringWorkspaceService} from '../authoring/services/AuthoringWorkspaceService';
 
 interface IProps {
     item: IArticle;
     datetime: any;
-    authoringWorkspace: any;
+    authoringWorkspace: AuthoringWorkspaceService;
     TranslationService: any;
 }
 

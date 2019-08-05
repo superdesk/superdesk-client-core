@@ -36,6 +36,7 @@ import {GroupLabel} from './ui/components/GroupLabel';
 import {TopMenuDropdownButton} from './ui/components/TopMenuDropdownButton';
 import {dispatchInternalEvent} from './internal-events';
 import {Icon} from './ui/components/Icon2';
+import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 
 function getOnUpdateBeforeMiddlewares(
     extensions: IExtensions,
@@ -78,7 +79,7 @@ export function getSuperdeskApiImplementation(
     privileges,
     lock,
     session,
-    authoringWorkspace,
+    authoringWorkspace: AuthoringWorkspaceService,
 ): ISuperdesk {
     return {
         dataApi: dataApi,

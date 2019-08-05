@@ -1,3 +1,5 @@
+import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
+
 /**
  * @ngdoc directive
  * @module superdesk.apps.authoring
@@ -8,7 +10,11 @@
  * @description Generates authoring subnav bar
  */
 AuthoringTopbarDirective.$inject = ['TranslationService', 'privileges', 'authoringWorkspace'];
-export function AuthoringTopbarDirective(TranslationService, privileges, authoringWorkspace) {
+export function AuthoringTopbarDirective(
+    TranslationService,
+    privileges,
+    authoringWorkspace: AuthoringWorkspaceService,
+) {
     return {
         templateUrl: 'scripts/apps/authoring/views/authoring-topbar.html',
         link: function(scope) {

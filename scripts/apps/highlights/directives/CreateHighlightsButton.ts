@@ -1,5 +1,7 @@
+import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
+
 CreateHighlightsButton.$inject = ['highlightsService', 'authoringWorkspace', 'privileges'];
-export function CreateHighlightsButton(highlightsService, authoringWorkspace, privileges) {
+export function CreateHighlightsButton(highlightsService, authoringWorkspace: AuthoringWorkspaceService, privileges) {
     return {
         scope: {highlight_id: '=highlight'},
         templateUrl: 'scripts/apps/highlights/views/create_highlights_button_directive.html',

@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
+import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 
 UserNotificationsService.$inject = [
     '$rootScope',
@@ -256,7 +257,11 @@ angular.module('superdesk.core.menu.notifications', ['superdesk.core.services.as
     .directive('sdMarkAsRead', MarkAsReadDirective)
 
     .directive('sdNotifications',
-        ['asset', 'authoringWorkspace', '$rootScope', function(asset, authoringWorkspace, $rootScope) {
+        ['asset', 'authoringWorkspace', '$rootScope', function(
+            asset,
+            authoringWorkspace: AuthoringWorkspaceService,
+            $rootScope,
+        ) {
             return {
                 require: '^sdSuperdeskView',
                 templateUrl: asset.templateUrl('core/menu/notifications/views/notifications.html'),

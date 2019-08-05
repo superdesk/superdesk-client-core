@@ -14,6 +14,7 @@ import {ListItemTemplate} from './ItemListTemplate';
 import {ItemMgridTemplate} from './ItemMgridTemplate';
 import {IArticle, IDesk} from 'superdesk-api';
 import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
+import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 
 const CLICK_TIMEOUT = 300;
 
@@ -167,7 +168,7 @@ export class Item extends React.Component<IProps, IState> {
      * @param {string} itemId Id of the document
      */
     openAuthoringView(itemId) {
-        const {authoringWorkspace} = this.props.svc;
+        const authoringWorkspace: AuthoringWorkspaceService = this.props.svc.authoringWorkspace;
 
         authoringWorkspace.edit({_id: itemId}, 'view');
     }

@@ -4,6 +4,7 @@
 import _, {mapValues, isEmpty} from 'lodash';
 import moment from 'moment-timezone';
 import {gettext} from 'core/utils';
+import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 
 /**
  * Gives top shadow for scroll elements
@@ -927,7 +928,7 @@ function splitterWidget(superdesk, $timeout) {
  *
  */
 mediaQuery.$inject = ['$window', 'authoringWorkspace'];
-function mediaQuery($window, authoringWorkspace) {
+function mediaQuery($window, authoringWorkspace: AuthoringWorkspaceService) {
     return {
         scope: {
             minWidth: '=',
