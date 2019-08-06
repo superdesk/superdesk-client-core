@@ -1,5 +1,8 @@
 import {get, includes} from 'lodash';
 import {IArticle} from 'superdesk-api';
+import {getCustomEventNamePrefixed} from 'core/notification/notification';
+
+type IAuthoringAction = 'view' | 'edit' | 'kill' | 'takedown' | 'correct';
 
 /**
  * @ngdoc service
@@ -20,7 +23,7 @@ export class AuthoringWorkspaceService {
     private $window: any;
 
     item: any;
-    action: any;
+    action: IAuthoringAction;
     state: any;
 
     widgetVisibilityCheckerFuntions: Array<(arg) => Promise<boolean>>;
@@ -99,7 +102,7 @@ export class AuthoringWorkspaceService {
      */
     edit(
         item: {_id: IArticle['_id'], _type?: IArticle['_type']},
-        action?: 'view' | 'edit' | 'kill' | 'takedown' | 'correct',
+        action?: IAuthoringAction,
     ) {
         if (item) {
             // disable edit of external ingest sources that are not editable (editFeaturedImage false or not available)
@@ -157,6 +160,12 @@ export class AuthoringWorkspaceService {
     close(showMonitoring?) {
         if (this.$rootScope.popup) {
             window.close();
+        }
+
+        if (this.action === 'edit') {
+            window.dispatchEvent(
+                new CustomEvent(getCustomEventNamePrefixed('articleEditEnd'), {detail: this.item}),
+            );
         }
 
         this.suggest.setActive(false);
@@ -288,13 +297,18 @@ export class AuthoringWorkspaceService {
     /**
      * Fetch item by id and start editing it
      */
-    private authoringOpen(itemId, action, repo?) {
+    private authoringOpen(itemId, action: IAuthoringAction, repo?) {
         return this.authoring.open(itemId, action === 'view', repo, action)
-            .then((item) => {
+            .then((item: IArticle) => {
                 this.item = item;
                 this.action = action !== 'view' && item._editable ? action : 'view';
-            })
-            .then(() => {
+
+                if (action === 'edit') {
+                    window.dispatchEvent(
+                        new CustomEvent(getCustomEventNamePrefixed('articleEditStart'), {detail: item}),
+                    );
+                }
+
                 this.saveState();
                 // closes preview if already opened
                 this.$rootScope.$broadcast('broadcast:preview', {item: null});

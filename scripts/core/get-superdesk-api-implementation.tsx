@@ -122,6 +122,9 @@ export function getSuperdeskApiImplementation(
                     });
                 },
             },
+            contentProfile: {
+                get: (id) => dataApi.findOne('content_types', id),
+            },
         },
         ui: {
             article: {

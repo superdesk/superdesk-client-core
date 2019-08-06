@@ -265,6 +265,7 @@ declare module 'superdesk-api' {
 
         // other fields which don't exist in the database, don't belong to this entity and should be removed
         error?: any;
+        _editable: any;
         actioning?: {
             archive?: boolean;
             externalsource: boolean;
@@ -339,9 +340,22 @@ declare module 'superdesk-api' {
         slack_username: string;
         slack_user_id: string;
     }
+
+    export interface IContentProfile {
+        _id: string;
+        label: string;
+        description: string;
+        schema: object;
+        editor: object;
+        widgets_config: Array<{widget_id: string; is_displayed: boolean}>;
+        priority: number;
+        enabled: boolean;
+        is_used: boolean;
+        created_by: string;
+        updated_by: string;
+    }
     
-
-
+    
 
     // PAGE
 
@@ -661,6 +675,8 @@ declare module 'superdesk-api' {
 
     export interface IEvents {
         articleUpdate: IArticleUpdateEvent;
+        articleEditStart: IArticle;
+        articleEditEnd: IArticle;
     }
 
 
@@ -694,6 +710,9 @@ declare module 'superdesk-api' {
 
                 isPersonal(article: IArticle): boolean;
                 update(nextArticle: IArticle): void;
+            };
+            contentProfile: {
+                get(id: string): Promise<IContentProfile>;
             };
         };
         helpers: {
