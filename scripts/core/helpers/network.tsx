@@ -79,7 +79,7 @@ function httpRequestBase(options: IHttpRequestOptions): Promise<Response> {
         method,
         headers: headers || {},
         mode: 'cors',
-        body: typeof payload === 'undefined' ? undefined : JSON.stringify(payload),
+        body: JSON.stringify(payload), // works when `payload` is `undefined`
     }).catch((res) => {
         if (res instanceof Error) {
             logger.error(res);

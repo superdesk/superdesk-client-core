@@ -73,7 +73,8 @@ export function queryElastic(
             };
 
             const queryString = '?' + Object.keys(query).map((key) =>
-                `${key}=${isObject(query[key]) ? JSON.stringify(query[key]) : query[key]}`).join('&');
+                `${key}=${isObject(query[key]) ? JSON.stringify(query[key]) : encodeURIComponent(query[key])}`,
+            ).join('&');
 
             return new Promise((resolve) => {
                 const xhr = new XMLHttpRequest();
@@ -131,7 +132,7 @@ export const dataApi: IDataApi = {
         }
 
         const queryString = '?' + Object.keys(query).map((key) =>
-            `${key}=${isObject(query[key]) ? JSON.stringify(query[key]) : query[key]}`).join('&');
+            `${key}=${isObject(query[key]) ? JSON.stringify(query[key]) : encodeURIComponent(query[key])}`).join('&');
 
         return httpRequestJsonLocal({
             'method': 'GET',
