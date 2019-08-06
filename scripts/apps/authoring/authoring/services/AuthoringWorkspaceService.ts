@@ -300,6 +300,12 @@ export class AuthoringWorkspaceService {
     private authoringOpen(itemId, action: IAuthoringAction, repo?) {
         return this.authoring.open(itemId, action === 'view', repo, action)
             .then((item: IArticle) => {
+                if (this.item != null) { // action isn't relevant
+                    window.dispatchEvent(
+                        new CustomEvent(getCustomEventNamePrefixed('articleEditEnd'), {detail: this.item}),
+                    );
+                }
+
                 this.item = item;
                 this.action = action !== 'view' && item._editable ? action : 'view';
 
