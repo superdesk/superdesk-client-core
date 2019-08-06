@@ -25,6 +25,7 @@ export function ItemAssociationDirective(renditions) {
     return {
         scope: {
             rel: '=',
+            fieldName: '=',
             item: '=',
             editable: '<',
             tabindex: '<',
@@ -137,7 +138,7 @@ export function ItemAssociationDirective(renditions) {
             const addImageEventListener = addInternalEventListener('addImage', (event) => {
                 const {field, image} = event.detail;
 
-                if (scope.rel === field) {
+                if (scope.fieldName === field) {
                     _ctrl.addAssociation(scope, image);
                 }
             });
