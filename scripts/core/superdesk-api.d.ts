@@ -345,8 +345,8 @@ declare module 'superdesk-api' {
         _id: string;
         label: string;
         description: string;
-        schema: object;
-        editor: object;
+        schema: Object;
+        editor: Object;
         widgets_config: Array<{widget_id: string; is_displayed: boolean}>;
         priority: number;
         enabled: boolean;
