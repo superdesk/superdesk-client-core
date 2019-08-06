@@ -4,6 +4,7 @@ import getCustomSortForGroup, {GroupSortOptions} from '../helpers/CustomSortOfGr
 import {GET_LABEL_MAP} from '../../workspace/content/constants';
 import {isPublished} from 'apps/archive/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
+import {DESK_OUTPUT} from 'apps/desks/constants';
 
 const translatedFields = GET_LABEL_MAP();
 
@@ -247,7 +248,7 @@ export function MonitoringGroup(
                         _etag: data.from_stage, // this must change to make it re-render
                     });
                     scheduleQuery(event, data);
-                } else if (scope.group.type === 'deskOutput' && data &&
+                } else if (scope.group.type === DESK_OUTPUT && data &&
                      scope.group._id === _.get(data, 'from_desk') + ':output') {
                     // item was moved to production desk, therefore it should comes in from_desk's output stage too
                     scheduleQuery(event, data);
@@ -326,7 +327,7 @@ export function MonitoringGroup(
                     'spiked',
                     'single_monitoring',
                     'monitoring',
-                    'deskOutput',
+                    DESK_OUTPUT,
                     'personal',
                 ].includes(_viewType);
 

@@ -584,11 +584,11 @@ class Monitoring {
         };
 
         this.toggleDeskOutput = function(desk) {
-            this.getDesk(desk).element(by.model('editGroups[desk._id + \':output\'].selected')).click();
+            this.getDesk(desk).all(by.model('editGroups[desk._id + output.id].selected')).get(1).click();
         };
 
         this.toggleScheduledDeskOutput = function(desk) {
-            this.getDesk(desk).element(by.model('editGroups[desk._id + \':scheduled\'].selected')).click();
+            this.getDesk(desk).all(by.model('editGroups[desk._id + output.id].selected')).get(0).click();
         };
 
         this.togglePersonal = function() {

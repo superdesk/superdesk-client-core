@@ -55,23 +55,27 @@ function check(str: string): Promise<Array<ISpellcheckWarning>> {
 }
 
 export function getSpellchecker(language: string): ISpellchecker {
+    const spellcheck = ng.get('spellcheck');
     const spellcheckerName = ({
         fr: 'grammalecte',
         nl: 'leuven_dutch',
     })[language];
 
+    if (spellcheckerName == null && spellcheck.isActiveDictionary === false) {
+        return null;
+    }
     if (spellcheckerName != null) {
         return {
             check: (str: string) => httpRequestJsonLocal<{errors: Array<ISpellcheckWarning>}>({
                 method: 'POST',
                 payload: {spellchecker: spellcheckerName, text: str},
                 path: '/spellchecker',
-            }).then((json) => json.errors),
+            }).then((json) => json.errors, (err) => []),
             getSuggestions: (str) => httpRequestJsonLocal<ISpellcheckWarning>({
                 method: 'POST',
                 payload: {spellchecker: spellcheckerName, text: str, suggestions: true},
                 path: '/spellchecker',
-            }).then((spellcheckerWarning) => spellcheckerWarning.suggestions),
+            }).then((spellcheckerWarning) => spellcheckerWarning.suggestions, (err) => []),
             actions: {},
         };
     } else {

@@ -176,7 +176,7 @@ declare module 'superdesk-api' {
     export interface IArticle extends IBaseRestApiResponse {
         _id: string;
         _current_version: number;
-        _type: 'archive' | string;
+        _type: 'ingest' | 'archive' | 'published' | 'archived' | string;
         guid: string;
         translated_from: string;
         translation_id: string;

@@ -1,4 +1,5 @@
 import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
+import {getSpellchecker} from 'core/editor3/components/spellchecker/default-spellcheckers';
 
 /**
  * @ngdoc directive
@@ -22,7 +23,7 @@ export function AuthoringTopbarDirective(
             scope.buttonsToHide = authoringWorkspace.authoringTopBarButtonsToHide;
 
             scope.saveDisabled = false;
-
+            scope.getSpellchecker = getSpellchecker;
             scope.userHasPrivileges = privileges.userHasPrivileges;
 
             scope.handleArticleChange = (article) => {

@@ -3,6 +3,26 @@ import {gettext} from 'core/utils';
 import {IDesk} from 'superdesk-api';
 import {logger} from 'core/services/logger';
 
+import {
+    DESK_OUTPUT,
+    SENT_OUTPUT,
+    SCHEDULED_OUTPUT,
+    HIGHLIGHTS,
+} from '../constants';
+
+const OUTPUT_TYPES = [
+    DESK_OUTPUT,
+    SENT_OUTPUT,
+    SCHEDULED_OUTPUT,
+];
+
+const PUBLISH_TYPES = [
+    DESK_OUTPUT,
+    SENT_OUTPUT,
+    SCHEDULED_OUTPUT,
+    HIGHLIGHTS,
+];
+
 /**
  * @ngdoc service
  * @module superdesk.apps.desks
@@ -337,15 +357,14 @@ export function DesksFactory($q, api, preferencesService, userList, notify,
                 return this.deskLookup[item.task.desk] || null;
             }
         },
-        isOutputType: function(type) {
-            return type === 'deskOutput' || type === 'scheduledDeskOutput';
-        },
-        isPublishType: function(type) {
-            return type === 'deskOutput' || type === 'scheduledDeskOutput' || type === 'highlights';
-        },
+
+        isOutputType: (type) => OUTPUT_TYPES.includes(type),
+        isPublishType: (type) => PUBLISH_TYPES.includes(type),
+
         isReadOnlyStage: function(stageId) {
             return this.stageLookup[stageId] ? this.stageLookup[stageId].local_readonly : false;
         },
+
         /**
          * @ngdoc method
          * @name desks#markItem
