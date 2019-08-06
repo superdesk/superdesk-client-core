@@ -38,7 +38,7 @@ export function ItemCarouselDirective($timeout, notify) {
         controllerAs: 'associations',
         link: function(scope, elem, attr, controller) {
             let carousel;
-            let previousItemsString;
+            let previousItemsLength;
             const allowed = {picture: scope.allowPicture, video: scope.allowVideo, audio: scope.allowAudio};
             const ALLOWED_TYPES = Object.keys(allowed)
                 .filter((key) => allowed[key] === true)
@@ -49,15 +49,13 @@ export function ItemCarouselDirective($timeout, notify) {
              * otherwise carousel height is messed up
              */
             scope.$watch('items', (items) => {
-                const itemsString = angular.toJson(items);
-
-                // Don't execute if there are no items or they are the same as before
-                if (!items || previousItemsString === itemsString) {
+                // Don't execute if there are no items or their length is same as before
+                if (items == null || items.length === previousItemsLength) {
                     return false;
                 }
 
                 scope.navCounter = 1;
-                previousItemsString = itemsString;
+                previousItemsLength = items.length;
 
                 let field = _.find(items, (item) => !item[item.fieldId]);
 
