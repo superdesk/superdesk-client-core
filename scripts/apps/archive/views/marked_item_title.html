@@ -17,7 +17,7 @@
         </li>
         <li ng-repeat="mark in markObjects | orderBy: 'name' track by mark._id" title="{{ :: mark.name }}">
             {{ :: mark.name }}
-            <button class="btn btn--mini uppercase" ng-if="hasMarkItemPrivilege" ng-click="unmark(mark._id)" translate>Remove</button>
+            <button class="btn btn--small btn--hollow btn--primary btn--ui-dark" ng-if="hasMarkItemPrivilege" ng-click="unmark(mark._id)" translate>Remove</button>
         </li>
         <li class="none" ng-show="marks.length === 0" translate>None</li>
     </ul>

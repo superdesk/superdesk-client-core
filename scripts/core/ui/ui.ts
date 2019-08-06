@@ -1006,6 +1006,8 @@ function focusElement() {
     };
 }
 
+type ServerErrorsType = string | Array<string>;
+
 /*
  * Required fields directive
  *
@@ -1014,6 +1016,8 @@ function focusElement() {
  */
 validationDirective.$inject = [];
 function validationDirective() {
+    const isValid = (errors: ServerErrorsType) => errors == null || (Array.isArray(errors) && errors.length === 0);
+
     return {
         restrict: 'A',
         link: function(scope, elem, attrs, ctrl) {
@@ -1047,8 +1051,8 @@ function validationDirective() {
                 }
             });
 
-            scope.$watch(attrs.sdValidationError, (errors) => {
-                if (isEmpty(errors)) { // valid
+            scope.$watch(attrs.sdValidationError, (errors: ServerErrorsType) => {
+                if (isValid(errors)) {
                     elem.removeClass('sd-invalid').addClass('sd-valid');
                 } else {
                     elem.addClass('sd-invalid').removeClass('sd-valid');
@@ -1114,11 +1118,15 @@ function multiSelectDirective() {
         templateUrl: 'scripts/core/ui/views/sd-multi-select.html',
         link: function(scope) {
             scope.selectedItems = [];
-            scope.list = _.sortBy(scope.list);
+
+            // use listCopy in order not to mutate the original list
+            // mutating the original list prevents passing expression as a list argument
+            // which means you can't pass a function result like so `list="getList()"`
+            scope.listCopy = _.sortBy(scope.list);
             scope.activeList = false;
 
             scope.selectItem = function(item) {
-                scope.list = _.without(scope.list, item);
+                scope.listCopy = _.without(scope.listCopy, item);
                 scope.activeList = false;
                 scope.selectedTerm = '';
                 scope.selectedItems.push(item);
@@ -1127,8 +1135,8 @@ function multiSelectDirective() {
             };
 
             scope.removeItem = function(item) {
-                scope.list.push(item);
-                scope.list = _.sortBy(scope.list);
+                scope.listCopy.push(item);
+                scope.listCopy = _.sortBy(scope.listCopy);
                 scope.selectedItems = _.without(scope.selectedItems, item);
 
                 updateItem();
@@ -1140,7 +1148,7 @@ function multiSelectDirective() {
                 }
 
                 scope.selectedItems = _.union(scope.item, scope.selectedItems);
-                scope.list = _.sortBy(_.difference(scope.list, scope.item));
+                scope.listCopy = _.sortBy(_.difference(scope.listCopy, scope.item));
             });
 
             function updateItem() {
@@ -1164,7 +1172,7 @@ function multiSelectDirective() {
                     });
                 }
 
-                scope.terms = _.filter(scope.list, (t) => t.toLowerCase().indexOf(term.toLowerCase()) !== -1);
+                scope.terms = _.filter(scope.listCopy, (t) => t.toLowerCase().indexOf(term.toLowerCase()) !== -1);
 
                 scope.activeList = true;
             };

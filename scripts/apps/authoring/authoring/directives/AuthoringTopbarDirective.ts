@@ -1,3 +1,5 @@
+import {getSpellchecker} from 'core/editor3/components/spellchecker/default-spellcheckers';
+
 /**
  * @ngdoc directive
  * @module superdesk.apps.authoring
@@ -16,7 +18,7 @@ export function AuthoringTopbarDirective(TranslationService, privileges, authori
             scope.buttonsToHide = authoringWorkspace.authoringTopBarButtonsToHide;
 
             scope.saveDisabled = false;
-
+            scope.getSpellchecker = getSpellchecker;
             scope.userHasPrivileges = privileges.userHasPrivileges;
 
             scope.handleArticleChange = (article) => {

@@ -622,9 +622,10 @@ describe('authoring', () => {
             let iscope = elem.isolateScope();
 
             scope.item = {guid: 'item1', associations: {'media1--1': {guid: 'foo', type: 'picture'}}};
-            scope.items = [{fieldId: 'media1--1', 'media1--1': {guid: 'foo', type: 'picture'}}];
+            scope.items = [{fieldId: 'media1--1', 'media1--1': {guid: 'foo', type: 'picture'}},
+                {fieldId: 'media1--2', 'media1--2': null}];
             scope.$digest();
-            expect(iscope.rel).toBe(null);
+            expect(iscope.rel).toBe('media1--2');
 
             scope.item = {guid: 'item1', associations: {'media1--1': null}};
             scope.items = [{fieldId: 'media1--1', 'media1--1': null}];

@@ -162,6 +162,10 @@ export class Editor3Component extends React.Component<IProps> {
 
                     const spellchecker = getSpellchecker(this.props.spellchecking.language);
 
+                    if (spellchecker == null) {
+                        return;
+                    }
+
                     getSpellcheckWarningsByBlock(spellchecker, this.props.editorState)
                         .then((spellcheckWarningsByBlock) => {
                             if (!canceled) {

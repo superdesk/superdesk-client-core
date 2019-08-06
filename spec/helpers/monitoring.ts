@@ -584,11 +584,11 @@ class Monitoring {
         };
 
         this.toggleDeskOutput = function(desk) {
-            this.getDesk(desk).element(by.model('editGroups[desk._id + \':output\'].selected')).click();
+            this.getDesk(desk).all(by.model('editGroups[desk._id + output.id].selected')).get(1).click();
         };
 
         this.toggleScheduledDeskOutput = function(desk) {
-            this.getDesk(desk).element(by.model('editGroups[desk._id + \':scheduled\'].selected')).click();
+            this.getDesk(desk).all(by.model('editGroups[desk._id + output.id].selected')).get(0).click();
         };
 
         this.togglePersonal = function() {
@@ -795,7 +795,7 @@ class Monitoring {
             var highlightList = element(by.className('highlights-list-menu'));
 
             waitFor(highlightList);
-            highlightList.all(by.className('btn--mini')).first().click();
+            highlightList.all(by.className('btn--small')).first().click();
         };
 
         /**
@@ -810,7 +810,7 @@ class Monitoring {
             var deskList = element(by.className('highlights-list-menu'));
 
             waitFor(deskList);
-            deskList.all(by.className('btn--mini')).first().click();
+            deskList.all(by.className('btn--small')).first().click();
         };
 
         /**

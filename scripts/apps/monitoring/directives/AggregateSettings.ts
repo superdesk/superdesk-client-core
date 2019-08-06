@@ -1,4 +1,11 @@
 import _ from 'lodash';
+import {gettext} from 'core/utils';
+
+import {
+    DESK_OUTPUT,
+    SENT_OUTPUT,
+    SCHEDULED_OUTPUT,
+} from 'apps/desks/constants';
 
 AggregateSettings.$inject = ['desks', 'workspaces', 'session', 'preferencesService', 'WizardHandler', '$filter'];
 export function AggregateSettings(desks, workspaces, session, preferencesService, WizardHandler, $filter) {
@@ -29,6 +36,31 @@ export function AggregateSettings(desks, workspaces, session, preferencesService
             scope.showPrivateSavedSearches = true;
             scope.privateSavedSearches = [];
             scope.globalSavedSearches = [];
+
+            scope.DESK_OUTPUT = DESK_OUTPUT;
+            scope.SENT_OUTPUT = SENT_OUTPUT;
+            scope.SCHEDULED_OUTPUT = SCHEDULED_OUTPUT;
+
+            scope.deskOutputs = [
+                {
+                    id: ':scheduled',
+                    type: SCHEDULED_OUTPUT,
+                    label: gettext('Output/Scheduled'),
+                    listLabel: gettext('Desk Schedule Output'),
+                },
+                {
+                    id: ':output',
+                    type: DESK_OUTPUT,
+                    label: gettext('Output/Published'),
+                    listLabel: gettext('Desk Output'),
+                },
+                {
+                    id: ':sent',
+                    type: SENT_OUTPUT,
+                    label: gettext('Output/Sent'),
+                    listLabel: gettext('Desk Sent Output'),
+                },
+            ];
 
             desks.initialize()
                 .then(() => {
@@ -122,22 +154,11 @@ export function AggregateSettings(desks, workspaces, session, preferencesService
                 }
             };
 
-            scope.setDeskOutputInfo = function(_id) {
+            scope.setDeskOutputInfo = function(_id, type) {
                 var item = scope.editGroups[_id];
 
                 item._id = _id;
-                item.type = 'deskOutput';
-                item.max_items = defaultMaxItems;
-                item.order = _.size(scope.editGroups);
-
-                scope.editGroups[_id] = item;
-            };
-
-            scope.setScheduledDeskOutputInfo = function(_id) {
-                var item = scope.editGroups[_id];
-
-                item._id = _id;
-                item.type = 'scheduledDeskOutput';
+                item.type = type;
                 item.max_items = defaultMaxItems;
                 item.order = _.size(scope.editGroups);
 

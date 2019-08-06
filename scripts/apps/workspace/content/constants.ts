@@ -102,13 +102,6 @@ export const GET_LABEL_MAP = () => ({
     publish_schedule: gettext('Scheduled Time'),
 });
 
-export const HAS_FORMAT_OPTIONS = Object.freeze({
-    abstract: true,
-    body_html: true,
-    footer: true,
-    body_footer: true,
-});
-
 export const CV_ALIAS = Object.freeze({
     locators: 'place',
     categories: 'anpa_category',
