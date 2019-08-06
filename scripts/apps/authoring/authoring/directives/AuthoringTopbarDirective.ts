@@ -1,5 +1,9 @@
 import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
 import {getSpellchecker} from 'core/editor3/components/spellchecker/default-spellcheckers';
+import {getMarkForUserModal} from '../../../../extensions/markForUser/src/get-mark-for-user-modal';
+import {extensions} from 'core/extension-imports.generated';
+import {showModal} from 'core/services/modalService';
+import {IArticleAction} from 'superdesk-api';
 
 /**
  * @ngdoc directive
@@ -61,6 +65,32 @@ export function AuthoringTopbarDirective(
             scope.isTranslationAvailable = function() {
                 return TranslationService.checkAvailability(scope.item);
             };
+
+            scope.extraActionsFromExtensions = [];
+
+            scope.triggerActionFromExtension = (actionToTrigger: IArticleAction) => {
+                actionToTrigger.onTrigger();
+            };
+
+            Object.keys(extensions).forEach((extension) => {
+                const {activationResult} = extensions[extension];
+
+                if (
+                    activationResult &&
+                    activationResult.contributions &&
+                    activationResult.contributions.entities &&
+                    activationResult.contributions.entities.article &&
+                    activationResult.contributions.entities.article.getExtraActions
+                ) {
+                    activationResult.contributions.entities.article.getExtraActions(scope.item)
+                        .then((actions) => {
+                            scope.extraActionsFromExtensions = [
+                                ...scope.extraActionsFromExtensions,
+                                ...actions,
+                            ];
+                        });
+                }
+            });
         },
     };
 }

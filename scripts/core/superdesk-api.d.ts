@@ -35,12 +35,13 @@ declare module 'superdesk-api' {
 
     export interface IArticleAction {
         labelForGroup?: string;
+        groupId?: string; // action lists can specify which groups they wanna render via an id
         priority?: IDisplayPriority;
         icon?: string;
         label: string;
         onTrigger(): void;
     }
-    
+
     export interface IArticleActionBulk {
         priority?: IDisplayPriority;
         label: string;
@@ -63,6 +64,7 @@ declare module 'superdesk-api' {
                 article?: {
                     getActions?(article: IArticle): Promise<Array<IArticleAction>>;
                     getActionsBulk?(articles: Array<IArticle>): Promise<Array<IArticleActionBulk>>;
+                    getExtraActions?(article: IArticle): Promise<Array<IArticleAction>>;
                     onUpdateBefore?(article: IArticle): Promise<IArticle>; // can alter item(immutably), can cancel update
                     onUpdateAfter?(article: IArticle): void; // can't alter item, can't cancel
                     onSpike?(item: IArticle): Promise<onSpikeMiddlewareResult>;
@@ -341,6 +343,7 @@ declare module 'superdesk-api' {
         slack_user_id: string;
     }
 
+
     export interface IContentProfile {
         _id: string;
         label: string;
@@ -384,7 +387,7 @@ declare module 'superdesk-api' {
         title: string;
         href: string;
     }
-    
+
     // Eve properties
     export interface IRestApiResponse<T extends IBaseRestApiResponse> {
         _items: Array<T>;
@@ -441,7 +444,7 @@ declare module 'superdesk-api' {
         formConfig: IFormGroup;
         defaultSortOption: ISortOption;
         renderRow(key: string, item: T, page: IGenericListPageComponent<T>): JSX.Element;
-    
+
         // Allows creating an item with required fields which aren't editable from the GUI
         newItemTemplate?: {[key: string]: any};
 
@@ -466,24 +469,24 @@ declare module 'superdesk-api' {
 
     export interface IFormField { // don't forget to update runtime type checks
         type: FormFieldType;
-    
+
         required?: boolean;
-    
+
         // custom components for some fields might not require a label or want include a custom one
         label?: string;
-    
+
         field: string;
-    
+
         // can be used to pass read-only fields or display specific flags
         // component theme, variant or initial state could be set using this
         component_parameters?: {[key: string]: any};
     }
-    
+
     export interface IFormGroupCollapsible { // don't forget to update runtime type checks
         label: string;
         openByDefault: boolean;
     }
-    
+
     export interface IFormGroup { // don't forget to update runtime type checks
         direction: 'vertical' | 'horizontal';
         type: 'inline' | IFormGroupCollapsible;
@@ -501,13 +504,13 @@ declare module 'superdesk-api' {
         field: string;
         direction: 'ascending' | 'descending';
     }
-    
+
 
     export interface ICrudManagerState<Entity extends IBaseRestApiResponse> extends IRestApiResponse<Entity> {
         activeFilters: ICrudManagerFilters;
         activeSortOption?: ISortOption;
     }
-    
+
     export interface ICrudManagerMethods<Entity extends IBaseRestApiResponse> {
         read(
             page: number,
@@ -523,13 +526,13 @@ declare module 'superdesk-api' {
         removeFilter(fieldName: string): Promise<IRestApiResponse<Entity>>;
         goToPage(nextPage: number): Promise<IRestApiResponse<Entity>>;
     }
-    
+
 
     export interface ICrudManager<Entity extends IBaseRestApiResponse> extends ICrudManagerState<Entity>, ICrudManagerMethods<Entity> {
         // allow exposing it as one interface for consumer components
     }
 
-    
+
 
     // REACT COMPONENTS
 
@@ -737,7 +740,7 @@ declare module 'superdesk-api' {
         },
         components: {
             UserHtmlSingleLine: React.ComponentType<{html: string}>;
-            getGenericListPageComponent<T extends IBaseRestApiResponse>(resource: string): React.ComponentType<IPropsGenericForm<T>>;                        
+            getGenericListPageComponent<T extends IBaseRestApiResponse>(resource: string): React.ComponentType<IPropsGenericForm<T>>;
             connectCrudManager<Props, PropsToConnect, Entity extends IBaseRestApiResponse>(
                 WrappedComponent: React.ComponentType<Props & PropsToConnect>,
                 name: string,

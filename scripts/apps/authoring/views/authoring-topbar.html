@@ -167,7 +167,7 @@
                 ng-if="action === 'correct' || action === 'kill'"
                 ng-click="close()"
                 translate>Cancel</button>
-        
+
         <button ng-repeat="(_, btn) in additionalButtons" ng-class="btn.class" ng-click="btn.onClick(item)">{{btn.label}}</button>
     </div>
 
@@ -249,7 +249,11 @@
                         {{ :: 'Desks' | translate }}
                       </button>
                       <ul class="dropdown__menu dropdown__menu--submenu-left" sd-mark-desks-dropdown></ul>
+
                     </div>
+                  </li>
+                  <li ng-repeat="action in extraActionsFromExtensions">
+                      <button ng-if="action.groupId === 'mark-item'" ng-click="triggerActionFromExtension(action)">{{action.label}}</button>
                   </li>
                 </ul>
 

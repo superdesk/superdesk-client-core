@@ -1,7 +1,7 @@
 import {ISuperdesk, IArticle} from 'superdesk-api';
 import {getMarkForUserModal} from './get-mark-for-user-modal';
 
-export function manageMarkedUserForSingleArticle(superdesk: ISuperdesk, article: IArticle) {
+export function manageMarkedUserForSingleArticle(superdesk: ISuperdesk, article: IArticle, ignoreLock? = false) {
     superdesk.ui.showModal(getMarkForUserModal(
         superdesk,
         (selectedUserId) => {
