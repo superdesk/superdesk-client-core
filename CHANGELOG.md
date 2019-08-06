@@ -1,5 +1,14 @@
 # Superdesk Client Changelog
 
+## [1.30.4] 2019-08-06
+
+### Fixed
+
+- Fix default POI in picture editor.
+- Fix related item references including full item for published items.
+- Fix search using search shortcuts not working.
+- Fix UI issues in photo upload form.
+
 ## [1.30.3] 2019-07-10
 
 ### Changed
