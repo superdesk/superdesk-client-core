@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
+import {SCHEDULED_OUTPUT, DESK_OUTPUT} from 'apps/desks/constants';
 
 AggregateCtrl.$inject = ['$scope', 'api', 'desks', 'workspaces', 'preferencesService', 'storage',
     'multi', 'config', '$timeout', 'savedSearch', 'deployConfig'];
@@ -233,11 +234,11 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
             var currentDesk = desks.getCurrentDesk();
 
             if (currentDesk) {
-                self.groups.push({_id: currentDesk._id + ':output', type: 'deskOutput', header: currentDesk.name});
+                self.groups.push({_id: currentDesk._id + ':output', type: DESK_OUTPUT, header: currentDesk.name});
                 if (config.monitoring && config.monitoring.scheduled) {
                     self.groups.push({
                         _id: currentDesk._id + ':scheduled',
-                        type: 'scheduledDeskOutput',
+                        type: SCHEDULED_OUTPUT,
                         header: currentDesk.name,
                     });
                 }
@@ -252,7 +253,7 @@ export function AggregateCtrl($scope, api, desks, workspaces, preferencesService
             var editingDesk = settings.desk;
 
             if (editingDesk) {
-                self.groups.push({_id: editingDesk._id + ':output', type: 'deskOutput', header: editingDesk.name});
+                self.groups.push({_id: editingDesk._id + ':output', type: DESK_OUTPUT, header: editingDesk.name});
             }
         }
         initSpikeGroups(settings.type === 'desk');
