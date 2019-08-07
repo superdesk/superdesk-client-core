@@ -360,8 +360,8 @@ export class Item extends React.Component<IProps, IState> {
                     'list-item-view',
                     {
                         'actions-visible': this.props.hideActions !== true,
-                        active: this.props.flags.selected,
-                        selected: this.props.item.selected && !this.props.flags.selected,
+                        'active': this.props.flags.selected,
+                        'selected': this.props.item.selected && !this.props.flags.selected,
                         'sd-list-item-nested': this.props.nested.length,
                         'sd-list-item-nested--expanded': this.props.nested.length && this.state.showNested,
                         'sd-list-item-nested--collapsed': this.props.nested.length && this.state.showNested === false,

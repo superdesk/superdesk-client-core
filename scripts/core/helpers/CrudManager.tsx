@@ -3,7 +3,6 @@
 import React from 'react';
 import {generate} from 'json-merge-patch';
 import {connectServices} from './ReactRenderAsync';
-import ng from 'core/services/ng';
 import {
     IBaseRestApiResponse,
     ICrudManagerState,
@@ -17,6 +16,8 @@ import {
     IArticleQuery,
 } from 'superdesk-api';
 import {isObject} from 'lodash';
+import ng from 'core/services/ng';
+import {httpRequestJsonLocal, httpRequestVoidLocal} from './network';
 
 export function queryElastic(
     parameters: IQueryElasticParameters,
@@ -72,7 +73,8 @@ export function queryElastic(
             };
 
             const queryString = '?' + Object.keys(query).map((key) =>
-                `${key}=${isObject(query[key]) ? JSON.stringify(query[key]) : query[key]}`).join('&');
+                `${key}=${isObject(query[key]) ? JSON.stringify(query[key]) : encodeURIComponent(query[key])}`,
+            ).join('&');
 
             return new Promise((resolve) => {
                 const xhr = new XMLHttpRequest();
@@ -99,41 +101,14 @@ export const dataApiByEntity = {
 };
 
 export const dataApi: IDataApi = {
-    findOne: (endpoint, id) => ng.getServices(['config', 'session', 'api']).then((res: any) => {
-        const [config, session] = res;
-
-        return new Promise((resolve) => {
-            const xhr = new XMLHttpRequest();
-
-            xhr.open('GET', config.server.url + '/' + endpoint + '/' + id, true);
-
-            xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.setRequestHeader('Authorization', session.token);
-
-            xhr.onload = function() {
-                resolve(JSON.parse(this.responseText));
-            };
-
-            xhr.send();
-        });
+    findOne: (endpoint, id) => httpRequestJsonLocal({
+        method: 'GET',
+        path: '/' + endpoint + '/' + id,
     }),
-    create: (endpoint, item) => ng.getServices(['config', 'session', 'api']).then((res: any) => {
-        const [config, session] = res;
-
-        return new Promise((resolve) => {
-            const xhr = new XMLHttpRequest();
-
-            xhr.open('POST', config.server.url + '/' + endpoint, true);
-
-            xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.setRequestHeader('Authorization', session.token);
-
-            xhr.onload = function() {
-                resolve(JSON.parse(this.responseText));
-            };
-
-            xhr.send(JSON.stringify(item));
-        });
+    create: (endpoint, item) => httpRequestJsonLocal({
+        'method': 'POST',
+        path: '/' + endpoint,
+        payload: item,
     }),
     query: (
         endpoint: string,
@@ -141,9 +116,7 @@ export const dataApi: IDataApi = {
         sortOption: ISortOption,
         filterValues: ICrudManagerFilters = {},
         formatFiltersForServer?: (filters: ICrudManagerFilters) => ICrudManagerFilters,
-    ) => ng.getServices(['config', 'session', 'api']).then((res: any) => {
-        const [config, session] = res;
-
+    ) => {
         let query = {
             page: page,
         };
@@ -159,26 +132,14 @@ export const dataApi: IDataApi = {
         }
 
         const queryString = '?' + Object.keys(query).map((key) =>
-            `${key}=${isObject(query[key]) ? JSON.stringify(query[key]) : query[key]}`).join('&');
+            `${key}=${isObject(query[key]) ? JSON.stringify(query[key]) : encodeURIComponent(query[key])}`).join('&');
 
-        return new Promise((resolve) => {
-            const xhr = new XMLHttpRequest();
-
-            xhr.open('GET', config.server.url + '/' + endpoint + queryString, true);
-
-            xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.setRequestHeader('Authorization', session.token);
-
-            xhr.onload = function() {
-                resolve(JSON.parse(this.responseText));
-            };
-
-            xhr.send();
+        return httpRequestJsonLocal({
+            'method': 'GET',
+            path: '/' + endpoint + queryString,
         });
-    }),
-    patch: (endpoint, item1, item2) => ng.getServices(['config', 'session']).then((res: any) => {
-        const [config, session] = res;
-
+    },
+    patch: (endpoint, item1, item2) => {
         const patch = generate(item1, item2);
 
         // due to the use of "projections"(partial entities) item2 is sometimes missing fields which item1 has
@@ -198,40 +159,21 @@ export const dataApi: IDataApi = {
         delete patch['_etag'];
         delete patch['_links'];
 
-        return new Promise((resolve) => {
-            const xhr = new XMLHttpRequest();
-
-            xhr.open('PATCH', config.server.url + '/' + endpoint + '/' + item1._id, true);
-
-            xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.setRequestHeader('Authorization', session.token);
-            xhr.setRequestHeader('If-Match', item1._etag);
-
-            xhr.onload = function() {
-                resolve(JSON.parse(this.responseText));
-            };
-
-            xhr.send(JSON.stringify(patch));
+        return httpRequestJsonLocal({
+            'method': 'PATCH',
+            path: '/' + endpoint + '/' + item1._id,
+            payload: patch,
+            headers: {
+                'If-Match': item1._etag,
+            },
         });
-    }),
-    delete: (endpoint, item) => ng.getServices(['config', 'session']).then((res: any) => {
-        const [config, session] = res;
-
-        return new Promise((resolve) => {
-            const xhr = new XMLHttpRequest();
-
-            xhr.open('DELETE', config.server.url + '/' + endpoint + '/' + item._id, true);
-
-            xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.setRequestHeader('Authorization', session.token);
-            xhr.setRequestHeader('If-Match', item._etag);
-
-            xhr.onload = function() {
-                resolve();
-            };
-
-            xhr.send(JSON.stringify(item));
-        });
+    },
+    delete: (endpoint, item) => httpRequestVoidLocal({
+        method: 'DELETE',
+        path: '/' + endpoint + '/' + item._id,
+        headers: {
+            'If-Match': item._etag,
+        },
     }),
 };
 

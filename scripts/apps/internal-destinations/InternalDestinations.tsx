@@ -131,6 +131,7 @@ export class InternalDestinations extends React.Component {
                 renderRow={renderRow}
                 formConfig={formConfig}
                 defaultSortOption={{field: 'name', direction: 'ascending'}}
+                fieldForSearch={nameField}
             />
         );
     }

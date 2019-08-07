@@ -14,11 +14,12 @@ export class ListItem extends React.Component<IListItemProps> {
                         this.props.className,
                         'sd-list-item sd-shadow--z1',
                         {
-                            inactive: this.props.inactive,
+                            'inactive': this.props.inactive,
                             'sd-list-item--no-hover': this.props.noHover,
                         },
                     )
                 }
+                style={{cursor: typeof this.props.onClick === 'function' ? 'pointer' : 'initial'}}
                 data-test-id={this.props['data-test-id']}
             >
                 {this.props.children}

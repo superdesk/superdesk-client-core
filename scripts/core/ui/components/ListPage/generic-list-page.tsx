@@ -1,5 +1,7 @@
+/* eslint-disable brace-style */
+
 import React from 'react';
-import {noop, omit} from 'lodash';
+import {noop} from 'lodash';
 import ReactPaginate from 'react-paginate';
 
 import {ListItem, ListItemColumn} from 'core/components/ListItem';
@@ -11,7 +13,7 @@ import {
     SidePanelHeading,
     SidePanelTools,
     SidePanelContent,
-    SidePanelContentBlock
+    SidePanelContentBlock,
 } from 'core/components/SidePanel';
 import {SearchBar} from 'core/ui/components';
 import {Button} from 'core/ui/components/Nav';
@@ -34,42 +36,41 @@ import {
 } from 'superdesk-api';
 
 interface IState {
-    preview: {
-        itemId: string;
-        editMode: boolean;
-    };
-    newItem: {
-        item: null | {[key: string]: any},
-        editMode: boolean;
-    };
+    previewItemId: string | null;
+    editItemId: string | null;
+    newItem: {[key: string]: any} | null;
     filtersOpen: boolean;
     filterValues: {[key: string]: any};
-    searchValue: string;
     loading: boolean;
 }
 
 interface IPropsConnected<T extends IBaseRestApiResponse> {
     items?: ICrudManager<T>;
+    modal: any;
+    notify: any;
+    $rootScope: any;
 }
 
 export class GenericListPageComponent<T extends IBaseRestApiResponse>
     extends React.Component<IPropsGenericForm<T> & IPropsConnected<T>, IState>
-    implements IGenericListPageComponent<T> {
+    implements IGenericListPageComponent<T>
+{
+    searchBarRef: SearchBar | null;
+
     constructor(props) {
         super(props);
 
+        // preview and edit mode can enabled at the same time, but only one pane will be displayed at once
+        // if you start editing from preview mode, you shall return to preview after saving/cancelling the edit
+        // if you start editing when preview mode for that item is closed, you shall not see preview after
+        // saving/cancelling the edit either.
+
         this.state = {
-            preview: {
-                itemId: null,
-                editMode: false,
-            },
-            newItem: {
-                item: null,
-                editMode: true,
-            },
+            previewItemId: null,
+            editItemId: null,
+            newItem: null,
             filtersOpen: false,
             filterValues: {},
-            searchValue: '',
             loading: true,
         };
 
@@ -83,45 +84,61 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
         this.removeFilter = this.removeFilter.bind(this);
     }
     openPreview(id) {
-        if (this.state.preview.editMode === true) {
+        if (this.state.editItemId != null) {
             this.props.modal.alert({
                 headerText: gettext('Warning'),
                 bodyText: gettext(
-                    'Can\'t open a preview, because another item is in edit mode.',
+                    'Can\'t open a preview while in edit mode',
+                ),
+            });
+        } else if (this.state.newItem != null) {
+            this.props.modal.alert({
+                headerText: gettext('Warning'),
+                bodyText: gettext(
+                    'Can\'t open a preview while in create mode',
                 ),
             });
         } else {
             this.setState({
-                preview: {
-                    itemId: id,
-                    editMode: false,
-                },
+                previewItemId: id,
             });
         }
     }
     removeFilter(fieldName: string) {
+        if (this.props.fieldForSearch != null && this.props.fieldForSearch.field === fieldName) {
+            this.searchBarRef.resetSearchValue();
+        }
+
         this.setState((prevState) => ({
             ...prevState,
-            filterValues: omit(prevState.filterValues, fieldName),
+            filterValues: Object.keys(prevState.filterValues).reduce((acc, key) => {
+                if (key !== fieldName) {
+                    acc[key] = prevState.filterValues[key];
+                }
+
+                return acc;
+            }, {}),
         }), () => {
             this.props.items.removeFilter(fieldName);
         });
     }
     deleteItem(item: T) {
-        const deleteNow = () => this.props.items.delete(item);
+        const deleteNow = () => this.props.items.delete(item).then(() => {
+            this.props.notify.success(gettext('The item has been deleted.'));
+        });
 
         this.props.modal.confirm(gettext('Are you sure you want to delete this item?'))
             .then(() => {
-                if (this.state.preview.editMode) {
+                if (this.state.editItemId != null) {
                     this.props.modal.alert({
                         headerText: gettext('Warning'),
                         bodyText: gettext(
-                            'The item in edit mode must be closed before you can delete.',
+                            'Edit mode must closed before you can delete an item.',
                         ),
                     });
-                } else if (this.state.preview.itemId != null) {
+                } else if (this.state.previewItemId != null) {
                     this.setState({
-                        preview: {itemId: null, editMode: false},
+                        previewItemId: null,
                     }, deleteNow);
                 } else {
                     deleteNow();
@@ -129,7 +146,7 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
             });
     }
     startEditing(id: string) {
-        if (this.state.preview.editMode === true) {
+        if (this.state.editItemId != null) {
             this.props.modal.alert({
                 headerText: gettext('Warning'),
                 bodyText: gettext(
@@ -138,19 +155,16 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
             });
         } else {
             this.setState({
-                preview: {
-                    itemId: id,
-                    editMode: true,
-                },
+                // reset preview if item in preview mode is different from that
+                // editing is being initiated for
+                previewItemId: this.state.previewItemId === id ? id : null,
+                editItemId: id,
             });
         }
     }
     closePreview() {
         this.setState({
-            preview: {
-                itemId: null,
-                editMode: false,
-            },
+            previewItemId: null,
         });
     }
     handleFilterFieldChange(field, nextValue, callback = noop) {
@@ -210,29 +224,29 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
             );
         };
 
-        if (this.state.preview.editMode) {
+        if (this.state.editItemId != null) {
             this.props.modal.alert({
                 headerText: gettext('Warning'),
                 bodyText: gettext(
                     'The item in edit mode must be closed before you can filter.',
                 ),
             });
-        } else if (this.state.preview.itemId != null) {
+        } else if (this.state.previewItemId != null) {
             this.setState({
-                preview: {itemId: null, editMode: false},
+                previewItemId: null,
             }, execute);
         } else {
             execute();
         }
     }
     closeNewItemForm() {
-        this.setState({newItem: {item: null, editMode: false}});
+        this.setState({newItem: null});
     }
     setFiltersVisibility(nextValue: boolean) {
         this.setState({filtersOpen: nextValue});
     }
     openNewItemForm() {
-        if (this.state.preview.editMode === true) {
+        if (this.state.editItemId != null) {
             this.props.modal.alert({
                 headerText: gettext('Warning'),
                 bodyText: gettext(
@@ -242,21 +256,23 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
         } else {
             this.setState({
                 newItem: {
-                    item: {
-                        ...getInitialValues(this.props.formConfig),
-                        ...this.props.newItemTemplate == null ? {} : this.props.newItemTemplate,
-                    },
-                    editMode: true,
+                    ...getInitialValues(this.props.formConfig),
+                    ...this.props.newItemTemplate == null ? {} : this.props.newItemTemplate,
                 },
-                preview: {
-                    itemId: null,
-                    editMode: false,
-                },
+                previewItemId: null,
             });
         }
     }
     componentDidMount() {
         this.props.items.read(1, this.props.defaultSortOption);
+
+        if (this.props.refreshOnEvents != null) {
+            this.props.refreshOnEvents.forEach((eventName) => {
+                this.props.$rootScope.$on(eventName, () => {
+                    this.executeFilters(); // will update the list using selected filtering / sort options
+                });
+            });
+        }
     }
     render() {
         if (this.props.items._items == null) {
@@ -324,37 +340,71 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
         return (
             <div style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
                 <div className="subnav">
-                    <Button
-                        icon="icon-filter-large"
-                        onClick={() => this.setFiltersVisibility(!this.state.filtersOpen)}
-                        active={this.state.filtersOpen}
-                        darker={true}
-                        data-test-id="toggle-filters"
-                    />
+                    <div style={{
+                        display: 'flex',
+                        width: '100%',
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                    }}>
+                        {
+                            this.props.disallowFiltering ? null : (
+                                <div>
+                                    <Button
+                                        icon="icon-filter-large"
+                                        onClick={() => this.setFiltersVisibility(!this.state.filtersOpen)}
+                                        active={this.state.filtersOpen}
+                                        darker={true}
+                                        data-test-id="toggle-filters"
+                                    />
+                                </div>
+                            )
+                        }
 
-                    <SearchBar
-                        value={this.state.searchValue}
-                        allowCollapsed={false}
-                        onSearch={(value) => {
-                            this.handleFilterFieldChange('name', value, this.executeFilters);
-                        }}
-                    />
+                        {
+                            this.props.fieldForSearch == null ? null : (
+                                <div style={{flexGrow: 1}}>
+                                    <SearchBar
+                                        ref={(instance) => {
+                                            this.searchBarRef = instance;
+                                        }}
+                                        value=""
+                                        allowCollapsed={false}
+                                        onSearch={(value) => {
+                                            this.handleFilterFieldChange(
+                                                this.props.fieldForSearch.field,
+                                                value,
+                                                this.executeFilters,
+                                            );
+                                        }}
+                                    />
+                                </div>
+                            )
+                        }
 
-                    <SortBar
-                        sortOptions={sortOptions}
-                        selected={this.props.items.activeSortOption}
-                        itemsCount={this.props.items._meta.total}
-                        onSortOptionChange={this.props.items.sort}
-                    />
+                        <div style={{display: 'flex', marginLeft: 'auto'}}>
+                            <SortBar
+                                sortOptions={sortOptions}
+                                selected={this.props.items.activeSortOption}
+                                itemsCount={this.props.items._meta.total}
+                                onSortOptionChange={this.props.items.sort}
+                            />
 
-                    <Button
-                        onClick={this.openNewItemForm}
-                        className="sd-create-btn dropdown-toggle"
-                        icon="icon-plus-large"
-                        data-test-id="list-page--add-item"
-                    >
-                        <span className="circle" />
-                    </Button>
+                            {
+                                this.props.disallowCreatingNewItem === true ? null : (
+                                    <div>
+                                        <Button
+                                            onClick={this.openNewItemForm}
+                                            className="sd-create-btn dropdown-toggle"
+                                            icon="icon-plus-large"
+                                            data-test-id="list-page--add-item"
+                                        >
+                                            <span className="circle" />
+                                        </Button>
+                                    </div>
+                                )
+                            }
+                        </div>
+                    </div>
                 </div>
                 <PageContainer>
                     {
@@ -457,51 +507,69 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
                     </PageContainerItem>
 
                     {
-                        this.state.preview.itemId != null ? (
-                            <PageContainerItem data-test-id="list-page--view-edit">
-                                <GenericListPageItemViewEdit
-                                    editMode={this.state.preview.editMode}
-                                    onEditModeChange={(nextValue) => {
-                                        this.setState((prevState) => ({
-                                            ...prevState,
-                                            preview: {
-                                                ...prevState.preview,
-                                                editMode: nextValue,
-                                            },
-                                        }));
-                                    }}
-                                    operation="editing"
-                                    formConfig={formConfig}
-                                    item={
-                                        this.props.items._items.find(({_id}) => _id === this.state.preview.itemId)
-                                    }
-                                    onSave={(nextItem) => this.props.items.update(nextItem)}
-                                    onClose={this.closePreview}
-                                />
-                            </PageContainerItem>
-                        ) : null
-                    }
-
-                    {
-                        this.state.newItem.item != null ? (
+                        this.state.newItem != null ? (
                             <PageContainerItem data-test-id="list-page--new-item">
                                 <GenericListPageItemViewEdit
+                                    key="new-item"
                                     operation="creation"
                                     formConfig={formConfig}
-                                    editMode={this.state.newItem.editMode}
-                                    onEditModeChange={(nextValue: boolean) => {
+                                    editMode={true}
+                                    onEditModeChange={() => {
                                         this.setState((prevState) => ({
                                             ...prevState,
-                                            item: {...prevState.newItem, editMode: nextValue},
+                                            newItem: null,
                                         }));
                                     }}
-                                    item={this.state.newItem.item}
+                                    item={this.state.newItem}
                                     onSave={(item: T) => this.props.items.create(item).then((res) => {
+                                        this.props.notify.success(gettext('The item has been created.'));
                                         this.closeNewItemForm();
                                         this.openPreview(res._id);
                                     })}
                                     onClose={this.closeNewItemForm}
                                     onCancel={this.closeNewItemForm}
+                                />
+                            </PageContainerItem>
+                        ) : this.state.editItemId != null ? (
+                            <PageContainerItem data-test-id="list-page--view-edit">
+                                <GenericListPageItemViewEdit
+                                    key={'edit' + this.state.editItemId}
+                                    editMode={true}
+                                    onEditModeChange={() => {
+                                        this.setState((prevState) => ({
+                                            ...prevState,
+                                            editItemId: null,
+                                        }));
+                                    }}
+                                    operation="editing"
+                                    formConfig={formConfig}
+                                    item={
+                                        this.props.items._items.find(({_id}) => _id === this.state.editItemId)
+                                    }
+                                    onSave={(nextItem) => this.props.items.update(nextItem).then(() => {
+                                        this.props.notify.success(gettext('The item has been updated.'));
+                                    })}
+                                    onClose={this.closePreview}
+                                />
+                            </PageContainerItem>
+                        ) : this.state.previewItemId != null ? (
+                            <PageContainerItem data-test-id="list-page--view-edit">
+                                <GenericListPageItemViewEdit
+                                    key={'preview' + this.state.previewItemId}
+                                    editMode={false}
+                                    onEditModeChange={() => {
+                                        this.setState((prevState) => ({
+                                            ...prevState,
+                                            editItemId: prevState.previewItemId,
+                                        }));
+                                    }}
+                                    operation="editing"
+                                    formConfig={formConfig}
+                                    item={
+                                        this.props.items._items.find(({_id}) => _id === this.state.previewItemId)
+                                    }
+                                    onSave={(nextItem) => this.props.items.update(nextItem)}
+                                    onClose={this.closePreview}
                                 />
                             </PageContainerItem>
                         ) : null
@@ -519,5 +587,5 @@ export const getGenericListPageComponent = <T extends IBaseRestApiResponse>(reso
             'items',
             resource,
         )
-        , ['modal'],
+        , ['modal', '$rootScope', 'notify'],
     );

@@ -415,8 +415,12 @@ declare module 'superdesk-api' {
     
         // Allows creating an item with required fields which aren't editable from the GUI
         newItemTemplate?: {[key: string]: any};
-    
-        modal?: any;
+
+        refreshOnEvents?: Array<string>;
+
+        fieldForSearch?: IFormField; // must be present in formConfig
+        disallowCreatingNewItem?: true;
+        disallowFiltering?: true;
     }
 
     export enum FormFieldType {

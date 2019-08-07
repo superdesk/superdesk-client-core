@@ -1,3 +1,5 @@
+/* eslint-disable comma-dangle */
+
 var fs = require('fs');
 var path = require('path');
 var lstatSync = fs.lstatSync;

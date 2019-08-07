@@ -2,7 +2,7 @@ import * as React from 'react';
 import {
     IFormGroup,
     IGenericListPageComponent,
-    ISuperdesk
+    ISuperdesk,
 } from 'superdesk-api';
 import {IKnowledgeBaseItem} from './interfaces';
 import {getFields} from './GetFields';
@@ -84,6 +84,7 @@ export function getAnnotationsLibraryPage(superdesk: ISuperdesk) {
                     formConfig={formConfig}
                     renderRow={renderRow}
                     newItemTemplate={{cpnat_type: 'cpnat:abstract'}}
+                    fieldForSearch={nameField}
                 />
             );
         }

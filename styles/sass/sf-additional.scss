@@ -1175,15 +1175,14 @@
 // Sortbar
 // --------------------------------------------------
 .sortbar {
+    display: flex;
+    align-items: center;
     white-space: nowrap;
     margin: 0 5px;
     padding: 0 10px;
-    > * {
-        display: inline-block !important;
-        vertical-align: middle;
-    }
-    >.dropdown {
-        margin-right: 10px;
+
+    > * + * {
+        margin-left: 4px;
     }
     .lab {
         margin-right: 10px;
@@ -1998,5 +1997,20 @@ sd-multi-image-edit {
     margin: 0 0.4rem 0 0;
     &:hover {
         background-color: rgba(0,0,0,0.16);
+    }
+}
+
+.sd-dropdown-item {
+    display: block;
+    width: 100%;
+    white-space: nowrap;
+    color: #333;
+    padding: .6rem 1.6rem;
+    margin-bottom: .2rem;
+    font-size: 1.3rem;
+    text-align: left;
+
+    &:hover {
+        background: #eff7fa;
     }
 }

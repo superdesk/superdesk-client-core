@@ -1,7 +1,7 @@
 import {IReplaceWordData} from '../reducers/spellchecker';
 import {
     getSpellcheckWarningsByBlock,
-    ISpellcheckWarningsByBlock
+    ISpellcheckWarningsByBlock,
 } from '../components/spellchecker/SpellcheckerDecorator';
 import {IEditorStore} from '../store';
 import {getSpellchecker} from '../components/spellchecker/default-spellcheckers';
