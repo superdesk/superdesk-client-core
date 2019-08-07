@@ -135,7 +135,7 @@ export function ItemAssociationDirective(renditions) {
                 scope.onchange();
             };
 
-            const addImageEventListener = addInternalEventListener('addImage', (event) => {
+            const removeAddImageEventListener = addInternalEventListener('addImage', (event) => {
                 const {field, image} = event.detail;
 
                 if (scope.fieldName === field) {
@@ -144,7 +144,7 @@ export function ItemAssociationDirective(renditions) {
             });
 
             scope.$on('$destroy', () => {
-                addImageEventListener.remove();
+                removeAddImageEventListener();
             });
         },
     };

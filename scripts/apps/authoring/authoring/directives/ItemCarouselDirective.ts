@@ -273,7 +273,7 @@ export function ItemCarouselDirective(notify) {
                 }
             }
 
-            const addImageEventListener = addInternalEventListener('addImage', (event) => {
+            const removeAddImageEventListener = addInternalEventListener('addImage', (event) => {
                 const {field, image} = event.detail;
 
                 if (scope.field._id === field && canAddImage(image)) {
@@ -283,7 +283,7 @@ export function ItemCarouselDirective(notify) {
 
             scope.$on('$destroy', () => {
                 elem.off('drop dragdrop dragover');
-                addImageEventListener.remove();
+                removeAddImageEventListener();
             });
         },
     };

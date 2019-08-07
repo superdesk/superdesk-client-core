@@ -13,10 +13,8 @@ export function addInternalEventListener<T extends keyof IInternalEvents>(
 ) {
     window.addEventListener(eventName, handler);
 
-    return {
-        remove: function() {
-            window.removeEventListener(eventName, handler);
-        },
+    return () => {
+        window.removeEventListener(eventName, handler);
     };
 }
 
