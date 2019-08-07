@@ -1,6 +1,9 @@
 import * as React from 'react';
 import {ISuperdesk, IArticle, IArticleQueryResult, IDesk, IUser} from 'superdesk-api';
 
+// tslint:disable-next-line:no-empty
+function noop() {}
+
 interface IState {
     articles: IArticleQueryResult | null;
     desks: Array<IDesk> | null;
@@ -24,6 +27,9 @@ export function getMarkedForMeComponent(superdesk: ISuperdesk) {
             };
 
             this.queryAndSetArticles = this.queryAndSetArticles.bind(this);
+
+            this.removeMarkedListener = noop;
+            this.removeUnmarkedListener = noop;
         }
         private queryAndSetArticles() {
             const {user} = this.state;
