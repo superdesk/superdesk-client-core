@@ -16,6 +16,23 @@ import {IArticle, IDesk} from 'superdesk-api';
 import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 
+function isButtonClicked(event): boolean {
+    const selector = 'button';
+
+    // don't trigger the action if a button inside a list view is clicked
+    // if an extension registers a button, it should be able to totally control it.
+    if (
+        event.target.matches(selector)
+
+        // target can be an image or an icon inside a button, so parents need to be checked too
+        || querySelectorParent(event.target, selector) != null
+    ) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 const CLICK_TIMEOUT = 300;
 
 const actionsMenuDefaultTemplate = (toggle, stopEvent) => (
@@ -141,16 +158,7 @@ export class Item extends React.Component<IProps, IState> {
     }
 
     select(event) {
-        const selector = 'button';
-
-        // don't trigger the action if a button inside a list view is clicked
-        // if an extension registers a button, it should be able to totally control it.
-        if (
-            event.target.matches(selector)
-
-            // target can be an image or an icon inside a button, so parents need to be checked too
-            || querySelectorParent(event.target, selector) != null
-        ) {
+        if (isButtonClicked(event)) {
             return;
         }
 
@@ -180,16 +188,7 @@ export class Item extends React.Component<IProps, IState> {
     }
 
     dbClick(event) {
-        const selector = 'button';
-
-        // don't trigger the action if a button inside a list view is clicked
-        // if an extension registers a button, it should be able to totally control it.
-        if (
-            event.target.matches(selector)
-
-            // target can be an image or an icon inside a button, so parents need to be checked too
-            || querySelectorParent(event.target, selector) != null
-        ) {
+        if (isButtonClicked(event)) {
             return;
         }
 
