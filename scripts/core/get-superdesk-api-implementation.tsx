@@ -27,7 +27,11 @@ import {ArticleItemConcise} from 'core/ui/components/article-item-concise';
 import {DropdownTree} from './ui/components/dropdown-tree';
 import {getCssNameForExtension} from './get-css-name-for-extension';
 import {Badge} from './ui/components/Badge';
-import {getCustomEventNamePrefixed} from './notification/notification';
+import {
+    getCustomEventNamePrefixed,
+    getWebsocketMessageEventName,
+    isWebsocketEventPublic,
+} from './notification/notification';
 import {Grid} from './ui/components/grid';
 import {Alert} from './ui/components/alert';
 import {Figure} from './ui/components/figure';
@@ -214,6 +218,18 @@ export function getSuperdeskApiImplementation(
                 getClass: (originalName: string) => getCssNameForExtension(originalName, requestingExtensionId),
                 getId: (originalName: string) => getCssNameForExtension(originalName, requestingExtensionId),
             },
+        },
+        addWebsocketMessageListener: (eventName, handler) => {
+            const eventNameFinal = getWebsocketMessageEventName(
+                eventName,
+                isWebsocketEventPublic(eventName) ? undefined : requestingExtensionId,
+            );
+
+            window.addEventListener(eventNameFinal, handler);
+
+            return () => {
+                window.removeEventListener(eventNameFinal, handler);
+            };
         },
         addEventListener: (eventName, callback) => {
             const handlerWrapper = (customEvent: CustomEvent) => callback(customEvent.detail);

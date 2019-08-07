@@ -640,7 +640,18 @@ declare module 'superdesk-api' {
     }
 
     export interface IEvents {
-        articleUpdate: IArticleUpdateEvent;
+        // open PR uses this interface
+    }
+
+    export interface IWebsocketMessage<T> {
+        event: string;
+        extra: T;
+        _created: string;
+        _process: string;
+    }
+
+    export interface IPublicWebsocketMessages {
+        'content:update': IWebsocketMessage<IArticleUpdateEvent>;
     }
 
 
@@ -743,6 +754,13 @@ declare module 'superdesk-api' {
                 warn(message: string, json: {[key: string]: any}): void;
             };
         };
+        addWebsocketMessageListener<T extends string>(
+            eventName: T,
+            handler:(event: T extends keyof IPublicWebsocketMessages
+                ? CustomEvent<IPublicWebsocketMessages[T]>
+                : CustomEvent<IWebsocketMessage<any>>
+            ) => void
+        ): () => void; // returns a function to remove event listener
         addEventListener<T extends keyof IEvents>(eventName: T, fn: (arg: IEvents[T]) => void): void;
         removeEventListener<T extends keyof IEvents>(eventName: T, fn: (arg: IEvents[T]) => void): void;
     }>;

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {ISuperdesk, IArticle, IArticleQueryResult, IDesk, IArticleUpdateEvent, IUser} from 'superdesk-api';
+import {ISuperdesk, IArticle, IArticleQueryResult, IDesk, IUser} from 'superdesk-api';
 
 interface IState {
     articles: IArticleQueryResult | null;
@@ -9,9 +9,11 @@ interface IState {
 
 export function getMarkedForMeComponent(superdesk: ISuperdesk) {
     const {Badge, GroupLabel, TopMenuDropdownButton} = superdesk.components;
-    const {addEventListener, removeEventListener} = superdesk;
 
     return class MarkedForMe extends React.PureComponent<{}, IState> {
+        private removeMarkedListener: () => void;
+        private removeUnmarkedListener: () => void;
+
         constructor(props: {}) {
             super(props);
 
@@ -22,7 +24,6 @@ export function getMarkedForMeComponent(superdesk: ISuperdesk) {
             };
 
             this.queryAndSetArticles = this.queryAndSetArticles.bind(this);
-            this.handleArticleUpdateEvent = this.handleArticleUpdateEvent.bind(this);
         }
         private queryAndSetArticles() {
             const {user} = this.state;
@@ -37,11 +38,6 @@ export function getMarkedForMeComponent(superdesk: ISuperdesk) {
                 });
             }
         }
-        private handleArticleUpdateEvent(event: IArticleUpdateEvent) {
-            if (this.state.articles != null && this.state.articles._items.some(({_id}) => event.items[_id] != null)) {
-                this.queryAndSetArticles();
-            }
-        }
         componentDidMount() {
             Promise.all([
                 superdesk.dataApi.query<IDesk>('desks', 1, {field: '_id', direction: 'ascending'}, {}),
@@ -54,10 +50,15 @@ export function getMarkedForMeComponent(superdesk: ISuperdesk) {
                 this.queryAndSetArticles();
             });
 
-            addEventListener('articleUpdate', this.handleArticleUpdateEvent);
+            this.removeMarkedListener = superdesk.addWebsocketMessageListener('item:marked', this.queryAndSetArticles);
+            this.removeUnmarkedListener = superdesk.addWebsocketMessageListener(
+                'item:unmarked',
+                this.queryAndSetArticles,
+            );
         }
         componentWillUnmount() {
-            removeEventListener('articleUpdate', this.handleArticleUpdateEvent);
+            this.removeMarkedListener();
+            this.removeUnmarkedListener();
         }
         render() {
             const {articles, desks} = this.state;
