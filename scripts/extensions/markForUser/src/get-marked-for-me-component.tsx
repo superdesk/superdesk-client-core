@@ -1,8 +1,9 @@
 import * as React from 'react';
 import {ISuperdesk, IArticle, IArticleQueryResult, IDesk, IUser} from 'superdesk-api';
 
-// tslint:disable-next-line:no-empty
-function noop() {}
+function noop() {
+    //
+}
 
 interface IState {
     articles: IArticleQueryResult | null;
