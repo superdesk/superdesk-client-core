@@ -16,13 +16,12 @@ interface IScope extends ng.IScope {
     allowPicture: any;
     allowVideo: any;
     carouselItems: any;
-    crtIndex: any;
+    currentIndex: number;
     editable: any;
     field: any;
     item: any;
     items: any;
     maxUploads: any;
-    navCounter: number;
     rel: any;
     goTo(index: any): void;
     navNext(): void;
@@ -59,25 +58,29 @@ export function ItemCarouselDirective(notify) {
         controllerAs: 'associations',
         link: function(scope: IScope, elem, attr, controller) {
             let carousel;
-            let previousItemsLength;
             const allowed = {picture: scope.allowPicture, video: scope.allowVideo, audio: scope.allowAudio};
             const ALLOWED_TYPES = Object.keys(allowed)
                 .filter((key) => allowed[key] === true)
                 .map((key) => 'application/superdesk.item.' + key);
 
+            scope.currentIndex = 0;
+
+            scope.$watch('items', (items: Array<any>, previousItems: Array<any>) => {
+                // Don't reload carousel if there are no items or their length is same as before
+                if (items == null || getItemsCount(items) !== getItemsCount(previousItems)) {
+                    reloadCarousel(items);
+                }
+            });
+            reloadCarousel(scope.items);
+
             /*
              * Initialize carousel after all content is loaded
              * otherwise carousel height is messed up
              */
-            scope.$watch('items', (items: Array<any>) => {
-                // Don't execute if there are no items or their length is same as before
-                if (items == null || items.length === previousItemsLength) {
-                    return false;
+            function reloadCarousel(items: Array<any>) {
+                if (!items) {
+                    return;
                 }
-
-                scope.navCounter = 1;
-                previousItemsLength = items.length;
-
                 let field = _.find(items, (item) => !item[item.fieldId]);
 
                 scope.rel = field ? field.fieldId : null;
@@ -110,21 +113,28 @@ export function ItemCarouselDirective(notify) {
 
                     waitForMediaToLoad(mediaItems).then(initCarousel);
                 });
-            });
+            }
+
+            function getItemsCount(items: Array<any>): number {
+                return Object.values(items)
+                    .filter((_item) => _item[_item.fieldId] != null)
+                    .length;
+            }
+
             /*
              * Initialize carousel navigation
              */
             scope.navNext = () => {
-                if (scope.navCounter < scope.carouselItems.length) {
+                if (scope.currentIndex < scope.carouselItems.length - 1) {
                     carousel.trigger('next.owl.carousel');
-                    scope.navCounter++;
+                    scope.currentIndex++;
                 }
             };
 
             scope.navPrev = () => {
-                if (scope.navCounter > 1) {
+                if (scope.currentIndex > 0) {
                     carousel.trigger('prev.owl.carousel');
-                    scope.navCounter--;
+                    scope.currentIndex--;
                 }
             };
 
@@ -132,8 +142,7 @@ export function ItemCarouselDirective(notify) {
              * Function for triggering thumbnail navigation
              */
             scope.goTo = (index) => {
-                scope.crtIndex = index;
-                scope.navCounter = index + 1;
+                scope.currentIndex = index;
                 carousel.trigger('to.owl.carousel', [index]);
             };
 
@@ -180,6 +189,7 @@ export function ItemCarouselDirective(notify) {
                     const item = angular.fromJson(event.originalEvent.dataTransfer.getData(type));
 
                     if (canAddImage(item)) {
+                        scope.currentIndex = 0;
                         controller.initializeUploadOnDrop(scope, event);
                     }
                 } else {
@@ -215,6 +225,11 @@ export function ItemCarouselDirective(notify) {
              */
             scope.remove = function(item) {
                 controller.updateItemAssociation(scope, null, item.fieldId);
+                // if we deleted the last item from the carousel then reduce the currentIndex by one so that
+                // gallery does not disappear
+                if (scope.currentIndex && scope.currentIndex === scope.carouselItems.length - 1) {
+                    scope.currentIndex -= 1;
+                }
             };
 
             /**
@@ -268,8 +283,8 @@ export function ItemCarouselDirective(notify) {
                     },
                 });
 
-                if (scope.crtIndex) {
-                    carousel.trigger('to.owl.carousel', [scope.crtIndex]);
+                if (scope.currentIndex) {
+                    carousel.trigger('to.owl.carousel', [scope.currentIndex]);
                 }
             }
 
