@@ -704,6 +704,9 @@ declare module 'superdesk-api' {
                 query(parameters: IArticleQuery): Promise<IArticleQueryResult>;
             };
         };
+        state: {
+            articleInEditMode?: IArticle['_id'];
+        };
         ui: {
             article: {
                 view(id: string): void;

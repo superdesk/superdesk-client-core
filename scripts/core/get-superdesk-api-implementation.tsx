@@ -1,4 +1,11 @@
-import {ISuperdesk, IExtensions, IExtensionActivationResult, IArticle, IContentProfile} from 'superdesk-api';
+import {
+    ISuperdesk,
+    IExtensions,
+    IExtensionActivationResult,
+    IArticle,
+    IContentProfile,
+    IEvents,
+} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {getGenericListPageComponent} from './ui/components/ListPage/generic-list-page';
 import {ListItem, ListItemColumn, ListItemActionsMenu} from './components/ListItem';
@@ -13,7 +20,7 @@ import {UserHtmlSingleLine} from './helpers/UserHtmlSingleLine';
 import {Row, Item, Column} from './ui/components/List';
 import {connectCrudManager, dataApi, dataApiByEntity} from './helpers/CrudManager';
 import {generateFilterForServer} from './ui/components/generic-form/generate-filter-for-server';
-import {assertNever} from './helpers/typescript-helpers';
+import {assertNever, Writeable} from './helpers/typescript-helpers';
 import {flatMap, memoize} from 'lodash';
 import {Modal} from './ui/components/Modal/Modal';
 import {ModalHeader} from './ui/components/Modal/ModalHeader';
@@ -82,6 +89,35 @@ function getOnUpdateAfterFunctions(
 // stores a map between custom callback & callback passed to DOM
 // so the original event listener can be removed later
 const customEventMap = new Map();
+
+const addEventListener = <T extends keyof IEvents>(eventName: T, callback: (arg: IEvents[T]) => void) => {
+    const handlerWrapper = (customEvent: CustomEvent) => callback(customEvent.detail);
+
+    customEventMap.set(callback, handlerWrapper);
+
+    window.addEventListener(getCustomEventNamePrefixed(eventName), handlerWrapper);
+};
+
+const removeEventListener = <T extends keyof IEvents>(eventName: T, callback: (arg: IEvents[T]) => void) => {
+    const handlerWrapper = customEventMap.get(callback);
+
+    if (handlerWrapper != null) {
+        window.removeEventListener(getCustomEventNamePrefixed(eventName), handlerWrapper);
+        customEventMap.delete(callback);
+    }
+};
+
+let applicationState: Writeable<ISuperdesk['state']> = {
+    articleInEditMode: undefined,
+};
+
+addEventListener('articleEditStart', (article) => {
+    applicationState.articleInEditMode = article._id;
+});
+
+addEventListener('articleEditEnd', () => {
+    delete applicationState['articleInEditMode'];
+});
 
 // imported from planning
 export function getSuperdeskApiImplementation(
@@ -154,6 +190,7 @@ export function getSuperdeskApiImplementation(
                 },
             },
         },
+        state: applicationState,
         ui: {
             article: {
                 view: (id: string) => {
@@ -265,20 +302,7 @@ export function getSuperdeskApiImplementation(
                 window.removeEventListener(eventNameFinal, handler);
             };
         },
-        addEventListener: (eventName, callback) => {
-            const handlerWrapper = (customEvent: CustomEvent) => callback(customEvent.detail);
-
-            customEventMap.set(callback, handlerWrapper);
-
-            window.addEventListener(getCustomEventNamePrefixed(eventName), handlerWrapper);
-        },
-        removeEventListener: (eventName, callback) => {
-            const handlerWrapper = customEventMap.get(callback);
-
-            if (handlerWrapper != null) {
-                window.removeEventListener(getCustomEventNamePrefixed(eventName), handlerWrapper);
-                customEventMap.delete(callback);
-            }
-        },
+        addEventListener,
+        removeEventListener,
     };
 }
