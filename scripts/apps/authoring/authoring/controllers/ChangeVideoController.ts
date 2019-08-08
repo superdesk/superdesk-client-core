@@ -33,9 +33,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
     $scope.video = null;
     $scope.flag = true;
     $scope.listFrames=null;
-
     $scope.validator = deployConfig.getSync('validator_media_metadata');
-
     $scope.showMetadata = $scope.data.showMetadata;
     $scope.nav = $scope.data.defaultTab || 'view';
     $scope.hideTabs = $scope.data.hideTabs || [];
@@ -104,25 +102,25 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         })
             .then(
                 response => {
-                    const mediaID = response._id.media;
-                    (function checkVideoProcessing(mediaID) {
+                    $scope.videoReload = false;
+                    (function checkVideoProcessing() {
                         stopIntervalID = $interval(async function () {
-                            const item = await api.get(`/video_edit/${mediaID}`);
-                            if (await item.processing === false) {
+                            const item = await api.get(`/video_edit/${response._id}?etag=${response._etag}`);
+                            if (await item.processing.video === false) {
                                 stopInterval(stopIntervalID);
-                                $scope.videoReload = false;;
                                 clearJcrop();
                                 $scope.isAoISelectionModeEnabled = false;
                                 $scope.data.isDirty = true;
+                                api.get(`/video_edit/${response._id}?action=timeline&amount=40`);
                                 $scope.$applyAsync(() => {
                                     $scope.cancelEditVideo();
-                                    $scope.data.item = angular.extend($scope.data.item, response._id);
+                                    $scope.data.item = angular.extend($scope.data.item, response.item);
                                     $scope.videoReload = true;
                                     videoEditing.classList.remove('video-loading');
                                 })
                             }
                         }, 2500);
-                    })(mediaID);
+                    })();
                 }
             ).catch(err => {
                 notify.error(err.data._message);
@@ -133,7 +131,6 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         $scope.editVideo.isDirty = false;
         $scope.data.isDirty = true;
         $scope.editVideo.isChange = true;
-
     };
 
     function clearJcrop() {
@@ -149,7 +146,6 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
     };
 
     $scope.$on('$destroy', () => stopInterval(stopIntervalID))
-
 
     /**
      * @ngdoc method
@@ -178,7 +174,6 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         $scope.rotate = 0;
         let video = document.getElementById('video-preview');
         actRotate(video, $scope.rotate, 0);
-
         document.getElementById('rotateVideo').disabled = false;
         document.getElementById('toggleRatio').disabled = false;
     };
@@ -219,13 +214,11 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
                 crop: angular.copy($scope.crop),
                 rotate: $scope.rotate,
             };
-
             $scope.editVideo.isDirty = true;
         } catch (e) {
             throw gettext(e.message);
         }
     };
-
 
     function drawObjectToCanvas(object, width, height, x, y) {
         var canvas_height = 230
@@ -270,7 +263,6 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
 
     var jcrop_api;
 
-
     /**
      * @ngdoc method
      * @name ChangeVideoController#videoInit
@@ -278,7 +270,6 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
      * @description Init data and loading timeline and preview thumbnail for UI edit.
      */
     $scope.videoInit = function () {
-
         $scope.cut = {};
         $scope.video = document.getElementById('video');
         loadImage();
@@ -365,7 +356,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
      * @description Use for loading list thumbnails in timeline bar.
      */
     $scope.loadTimelineThumbnails = async function () {
-        const res = await api.get(`/video_edit/${$scope.data.item._id}`)
+        const res = await api.get(`/video_edit/${$scope.data.item._id}?etag=${$scope.data.item._etag}`)
         if (res && res.processing.thumbnails_timeline === false) {
 
             $scope.$applyAsync(() => {
@@ -397,7 +388,6 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
      */
     $scope.reloadTimelineThumbnails = function (reloadFrames) {
         $scope.reloadFrames = reloadFrames;
-
     }
 
     /**
@@ -580,15 +570,11 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
             default:
                 break;
         }
-
         if (jcrop_api) {
             jcrop_api.enable();
         }
-
         document.getElementById('rotateVideo').disabled = true;
         $scope.editVideo.isDirty = true;
-
-
     }
 
     /**
