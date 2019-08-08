@@ -58,6 +58,7 @@ export function ItemCarouselDirective(notify) {
         controllerAs: 'associations',
         link: function(scope: IScope, elem, attr, controller) {
             let carousel;
+            let previousItems: Array<any>;
             const allowed = {picture: scope.allowPicture, video: scope.allowVideo, audio: scope.allowAudio};
             const ALLOWED_TYPES = Object.keys(allowed)
                 .filter((key) => allowed[key] === true)
@@ -65,22 +66,17 @@ export function ItemCarouselDirective(notify) {
 
             scope.currentIndex = 0;
 
-            scope.$watch('items', (items: Array<any>, previousItems: Array<any>) => {
-                // Don't reload carousel if there are no items or their length is same as before
-                if (items == null || getItemsCount(items) !== getItemsCount(previousItems)) {
-                    reloadCarousel(items);
-                }
-            });
-            reloadCarousel(scope.items);
-
             /*
              * Initialize carousel after all content is loaded
              * otherwise carousel height is messed up
              */
-            function reloadCarousel(items: Array<any>) {
-                if (!items) {
-                    return;
+            scope.$watch('items', (items: Array<any>) => {
+                // Don't execute if there are no items or their length is same as before
+                if (items == null || previousItems && getItemsCount(items) === getItemsCount(previousItems)) {
+                    return false;
                 }
+
+                previousItems = items;
                 let field = _.find(items, (item) => !item[item.fieldId]);
 
                 scope.rel = field ? field.fieldId : null;
@@ -113,7 +109,7 @@ export function ItemCarouselDirective(notify) {
 
                     waitForMediaToLoad(mediaItems).then(initCarousel);
                 });
-            }
+            });
 
             function getItemsCount(items: Array<any>): number {
                 return Object.values(items)
