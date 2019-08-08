@@ -357,8 +357,8 @@ declare module 'superdesk-api' {
         created_by: string;
         updated_by: string;
     }
-    
-    
+
+
 
     // PAGE
 
@@ -409,7 +409,7 @@ declare module 'superdesk-api' {
             size?: number;
         };
         sort: Array<{[field: string]: 'asc' | 'desc'}>;
-    
+
         // can use deep references like {'a.b.c': []}
         filterValues: {[fieldName: string]: Array<string>};
     }
@@ -421,7 +421,7 @@ declare module 'superdesk-api' {
     }
 
     export type IArticleQuery = Omit<IQueryElasticParameters, 'endpoint'>;
-    
+
     interface IArticleQueryResult extends IRestApiResponse<IArticle> {
         _aggregations: {
             category?: IElasticSearchAggregationResult;
@@ -435,7 +435,7 @@ declare module 'superdesk-api' {
             urgency?: IElasticSearchAggregationResult;
         };
     }
-    
+
 
 
     // GENERIC FORM
@@ -669,7 +669,7 @@ declare module 'superdesk-api' {
         delete<T extends IBaseRestApiResponse>(endpoint, item: T): Promise<void>;
     }
 
-    
+
 
     // EVENTS
 
