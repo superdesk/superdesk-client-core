@@ -300,13 +300,13 @@ export function ArticleEditDirective(
                     } else {
                         showTabs = ['view'];
                     }
-                    if (scope.item.type === 'video' && scope.metadata.crop_sizes) {
+                    if (scope.item.type === 'video') {
                         let showMetadata = true;
                         if (defaultTab === "video-edit")
                         {
                             showMetadata = false;
                         }
-                        
+
                         return renditions.videoEdit(
                             scope.item,
                             {
@@ -314,7 +314,7 @@ export function ArticleEditDirective(
                                 editable: true,
                                 isAssociated: false,
                                 defaultTab: defaultTab,
-                                showMetadata: false,
+                                showMetadata: showMetadata,
                             }
                         )
                             .then((res) => {

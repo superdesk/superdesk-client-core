@@ -7,8 +7,7 @@
     </div>
     <h3 class="modal__heading modal__heading--no-grow" ng-if="nav === 'view'" translate>Video details</h3>
     <h3 class="modal__heading modal__heading--no-grow" ng-if="nav === 'video-edit'" translate>Edit video</h3>
-    <div class="modal__header-buttons  modal__header-buttons--center modal__header-element-grow button-nav"
-        ng-init="nav = 'view'">
+    <div class="modal__header-buttons  modal__header-buttons--center modal__header-element-grow button-nav">
         <button class="button-nav__btn" ng-click="nav = 'view'; showMetadata = true"
             ng-class="{'button-nav__btn--active' : nav === 'view'}">Details / Metadata</button>
         <button class="button-nav__btn" ng-click="nav = 'video-edit'; showMetadata = false"
@@ -122,17 +121,17 @@
                         </div>
                     </div>
                     <div class="sd-photo-preview__video-frames">
-                        <div sd-video-timeline 
+                        <div sd-video-timeline
                             ng-if="nav === 'video-edit'"
-                            class="timeline-controls" 
-                            data-video="video" 
+                            class="timeline-controls"
+                            data-video="video"
                             data-cut="cut"
-                            data-list-frames="listFrames" 
-                            data-on-change="onCutChange()" 
+                            data-list-frames="listFrames"
+                            data-on-change="onCutChange()"
                             data-on-size-change="loadTimelineThumbnails()"
                             reload-thumbnails="reloadTimelineThumbnails(reload)"
                             />
-                            
+
                     </div>
                 </div>
                 <!-- END VIDEO Frames timeline  -->

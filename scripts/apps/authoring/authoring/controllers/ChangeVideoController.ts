@@ -32,12 +32,12 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
     $scope.quality = {};
     $scope.video = null;
     $scope.flag = true;
-    $scope.listFrames=null;
+    $scope.listFrames = null;
 
     $scope.validator = deployConfig.getSync('validator_media_metadata');
 
-    $scope.showMetadata = $scope.data.showMetadata;
-    $scope.nav = $scope.data.defaultTab || 'view';
+    $scope.showMetadata = $scope.data.options.showMetadata;
+    $scope.nav = $scope.data.options.defaultTab || 'view';
     $scope.hideTabs = $scope.data.hideTabs || [];
 
     $scope.metadata = {
