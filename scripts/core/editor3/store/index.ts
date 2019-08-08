@@ -118,7 +118,7 @@ export default function createEditorStore(props: IProps, spellcheck, isReact = f
         middlewares.push(createLogger());
     }
 
-    const store = createStore<IEditorStore>(reducers, {
+    const store = createStore<IEditorStore, any, any, any>(reducers, {
         editorState: EditorState.createWithContent(content),
         searchTerm: {pattern: '', index: -1, caseSensitive: false},
         popup: {type: PopupTypes.Hidden},
