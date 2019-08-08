@@ -55,14 +55,15 @@ export function getValidMediaType(event) {
 }
 
 /**
- * Check if the files dragged from external folder are of allowed type or not
+ * Check if the media files dragged are of allowed type or not
  * @param mediaType holds type of data being dragged
  * @param dataTransfer holds data being dragged
  */
 export function isAllowedMediaType(mediaType: string, dataTransfer: DataTransfer): boolean {
-    if (mediaType === 'Files') {
+    if (mediaType === 'Files' && dataTransfer.files) {
         return Object.values(dataTransfer.files).every(
-            (file: File) => /^image/.test(file.type) || /^audio/.test(file.type) || /^video/.test(file.type));
+            (file: File) => file.type.includes('audio')
+            || file.type.includes('image') || file.type.includes('video'));
     }
     return mediaType.includes('application/superdesk');
 }
