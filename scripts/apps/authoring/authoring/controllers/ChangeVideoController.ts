@@ -29,7 +29,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
     $scope.cut = {};
     $scope.crop = {};
     $scope.rotate = 0;
-    $scope.quality = {};
+    $scope.scale = '';
     $scope.video = null;
     $scope.flag = true;
     $scope.listFrames = null;
@@ -48,10 +48,11 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         isChange: false,
     };
     $scope.qualityVideo = {
-        is720: false,
-        is480: false,
-        is240: false,
-        is120: false,
+        1080: false,
+        720: false,
+        480: false,
+        360: false,
+        240: false,
     };
 
     $scope.isNew = $scope.data.isNew === true;
@@ -99,15 +100,15 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
                 trim: cut,
                 crop: $scope.crop,
                 rotate: $scope.rotate,
-                quality: $scope.quality,
+                scale: $scope.scale,
             },
         })
             .then(
                 response => {
-                    const mediaID = response._id.media;
-                    (function checkVideoProcessing(mediaID) {
+                    const id = response._id;
+                    (function checkVideoProcessing(id) {
                         stopIntervalID = $interval(async function () {
-                            const item = await api.get(`/video_edit/${mediaID}`);
+                            const item = await api.get(`/video_edit/${id}`);
                             if (await item.processing === false) {
                                 stopInterval(stopIntervalID);
                                 $scope.videoReload = false;;
@@ -122,7 +123,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
                                 })
                             }
                         }, 2500);
-                    })(mediaID);
+                    })(id);
                 }
             ).catch(err => {
                 notify.error(err.data._message);
@@ -174,7 +175,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         }
         $scope.thumbnail = {};
         $scope.crop = {};
-        $scope.quality = 0;
+        $scope.scale = '';
         $scope.rotate = 0;
         let video = document.getElementById('video-preview');
         actRotate(video, $scope.rotate, 0);
@@ -289,18 +290,12 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
                     end: $scope.video.duration || 0,
                 };
             });
+            // set video resolutions
             if ($scope.video) {
-                if ($scope.video.videoWidth > 720) {
-                    $scope.qualityVideo.is720 = true;
-                }
-                if ($scope.video.videoWidth > 480) {
-                    $scope.qualityVideo.is480 = true;
-                }
-                if ($scope.video.videoWidth > 240) {
-                    $scope.qualityVideo.is240 = true;
-                }
-                if ($scope.video.videoWidth > 120) {
-                    $scope.qualityVideo.is120 = true;
+                for (let i of Object.keys($scope.qualityVideo)) {
+                    if ($scope.video.videoHeight > i) {
+                        $scope.qualityVideo[i] = true
+                    }
                 }
             }
             $scope.loadTimelineThumbnails();
@@ -367,7 +362,6 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
     $scope.loadTimelineThumbnails = async function () {
         const res = await api.get(`/video_edit/${$scope.data.item._id}`)
         if (res && res.processing.thumbnails_timeline === false) {
-
             $scope.$applyAsync(() => {
                 if ($scope.listFrames === res.thumbnails.timeline) {
                     $scope.reloadFrames();
@@ -641,19 +635,8 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
      * @description change quality the video
      *
      */
-    $scope.changeQualityVideo = (currentTarget) => {
-        document.getElementById('txtQuality').innerText = currentTarget.value === 0 ? 'Same' : currentTarget.value + "p";
-        let self = currentTarget;
-        let elementQuality = document.getElementsByClassName('quality');
-        [].forEach.call(elementQuality, function (el) {
-            el.classList.remove('active');
-        });
-        self.classList.add("active");
-
-        let theToggle = document.getElementById('toggleQuality');
-        showHideToggleMenu(theToggle, 'on');
-
-        $scope.quality = currentTarget.value;
+    $scope.changeQualityVideo = quality => {
+        $scope.scale = quality
         $scope.editVideo.isDirty = true;
     }
 

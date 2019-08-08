@@ -35,7 +35,7 @@
                                 ng-src="{{data.item.renditions.original.href}}?tag={{data.item._etag}}"></video>
                         </div>
                         <div class="sd-photo-preview__video-tools sd-photo-preview__video-tools--blank">
-                            <span class="sd-photo-preview__label mlr-auto">DJI_0270.mp4</span>
+                            <span class="sd-photo-preview__label mlr-auto">{{data.item.headline}}</span>
                         </div>
                     </div>
                 </div>
@@ -46,7 +46,7 @@
                 <div class="sd-photo-preview__video">
                     <div class="sd-photo-preview__video-inner" id="video-overall">
                         <div class="sd-photo-preview__video-container" id="video-preview">
-                            <video autoplay="autoplay" id="video" ng-if="nav === 'video-edit'&&videoReload === true" class="ng-isolate-scope" ng-init="videoInit()"
+                            <video autoplay="autoplay" id="video" ng-if="nav === 'video-edit' && videoReload === true" class="ng-isolate-scope" ng-init="videoInit()"
                                 ng-src="{{data.item.renditions.original.href}}?tag={{data.item._etag}}">
                             </video>
                         </div>
@@ -75,17 +75,20 @@
                                 ng-disabled="isAoISelectionModeEnabled" ng-click="rotateVideo('left')" id="rotateVideo">
                                 <i class="icon-rotate-left icon-rotate-custom"></i>
                             </button>
-                            <span class="sd-photo-preview__label mlr-auto"> {{data.item.headline}} </span>
+                            <span class="sd-photo-preview__label mlr-auto">{{data.item.headline}}</span>
                             <div>
                                 <span class="sd-text__strong-s">Quality:</span>
                                 <div class="dropdown dropdown--align-right" dropdown>
                                     <button class="dropdown__toggle dark-ui" dropdown__toggle>
-                                        Same<span class="dropdown__caret dropdown__caret--white"></span>
+                                        <span>{{ scale ? scale + 'p' : 'Same'}}</span>
                                     </button>
                                     <ul class="dropdown__menu">
-                                        <li><button>Same</button></li>
-                                        <li><button>High</button></li>
-                                        <li><button>Low</button></li>
+                                        <li class="ratio" ng-click="changeQualityVideo($event.target.value)">
+                                            <button value="" ng-class="{'active': !scale}">Same</button>
+                                        </li>
+                                        <li class="quality" ng-repeat="(resolution, value) in qualityVideo" ng-show="value" ng-click="changeQualityVideo($event.target.value)">
+                                            <button value="{{resolution}}" ng-class="{'active': scale === resolution}">{{resolution}}p</button>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
