@@ -85,10 +85,10 @@ export function AuthoringTopbarDirective(
                         if (getExtraActions) {
                             return getExtraActions(scope.item);
                         }
+                        return null;
                     })
                     .filter(Boolean),
             ).then((actions) => {
-                console.log(flatMap(actions));
                 scope.extraActionsFromExtensions = flatMap(actions);
             });
         },
