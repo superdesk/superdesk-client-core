@@ -1,8 +1,17 @@
-ContentCreateDirective.$inject = ['api', 'desks', 'templates', 'content', 'authoringWorkspace',
+import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
+
+ContentCreateDirective.$inject = ['desks', 'templates', 'content', 'authoringWorkspace',
     'superdesk', 'keyboardManager', '$location'];
 
-export function ContentCreateDirective(api, desks, templates, content, authoringWorkspace, superdesk, keyboardManager,
-    $location) {
+export function ContentCreateDirective(
+    desks,
+    templates,
+    content,
+    authoringWorkspace: AuthoringWorkspaceService,
+    superdesk,
+    keyboardManager,
+    $location,
+) {
     return {
         scope: true,
         templateUrl: 'scripts/apps/workspace/content/views/sd-content-create.html',

@@ -1,5 +1,6 @@
 import * as ctrl from '../controllers';
 import {stripHtmlTags, getSuperdeskType} from 'core/utils';
+import {addInternalEventListener} from 'core/internal-events';
 
 /**
  * @ngdoc directive
@@ -24,6 +25,7 @@ export function ItemAssociationDirective(renditions) {
     return {
         scope: {
             rel: '=',
+            fieldName: '=',
             item: '=',
             editable: '<',
             tabindex: '<',
@@ -132,6 +134,18 @@ export function ItemAssociationDirective(renditions) {
                 scope.related[field] = stripHtmlTags(scope.related[field]);
                 scope.onchange();
             };
+
+            const removeAddImageEventListener = addInternalEventListener('addImage', (event) => {
+                const {field, image} = event.detail;
+
+                if (scope.fieldName === field) {
+                    _ctrl.addAssociation(scope, image);
+                }
+            });
+
+            scope.$on('$destroy', () => {
+                removeAddImageEventListener();
+            });
         },
     };
 }

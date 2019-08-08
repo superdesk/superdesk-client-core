@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import {isPublished} from 'apps/archive/utils';
 import {assertNever} from 'core/helpers/typescript-helpers';
+import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 
 HistoryController.$inject = [
     '$scope',
@@ -36,7 +37,7 @@ export function HistoryController(
     highlightsService,
     $q,
     archiveService,
-    authoringWorkspace,
+    authoringWorkspace: AuthoringWorkspaceService,
     gettext,
 ) {
     $scope.highlightsById = {};

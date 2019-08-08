@@ -1,8 +1,18 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
+import {IArticle} from 'superdesk-api';
+import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 
-SendService.$inject = ['desks', 'api', '$q', 'notify', '$injector', 'multi', '$rootScope'];
-export function SendService(desks, api, $q, notify, $injector, multi, $rootScope) {
+SendService.$inject = ['desks', 'api', '$q', 'notify', 'multi', '$rootScope', '$injector'];
+export function SendService(
+    desks,
+    api,
+    $q,
+    notify,
+    multi,
+    $rootScope,
+    $injector,
+) {
     this.one = sendOne;
     this.all = sendAll;
 
@@ -16,13 +26,18 @@ export function SendService(desks, api, $q, notify, $injector, multi, $rootScope
 
     var self = this;
 
+    // workaround for circular dependencies
+    function getAuthoringWorkspace(): AuthoringWorkspaceService {
+        return $injector.get('authoringWorkspace');
+    }
+
     /**
      * Send given item to a current user desk
      *
      * @param {Object} item
      * @returns {Promise}
      */
-    function sendOne(item) {
+    function sendOne(item: IArticle) {
         if (item._type === 'ingest') {
             return api
                 .save('fetch', {}, {desk: desks.getCurrentDeskId()}, item)
@@ -98,7 +113,9 @@ export function SendService(desks, api, $q, notify, $injector, multi, $rootScope
             return api.save('fetch', {}, data, item).then((archived) => {
                 item.archived = archived._created;
                 if (config.open) {
-                    $injector.get('authoringWorkspace').edit(archived);
+                    const authoringWorkspace: AuthoringWorkspaceService = $injector.get('authoringWorkspace');
+
+                    authoringWorkspace.edit(archived);
                 }
                 return archived;
             });
@@ -109,7 +126,7 @@ export function SendService(desks, api, $q, notify, $injector, multi, $rootScope
                     $rootScope.$broadcast('item:duplicate');
                     notify.success(gettext('Item Duplicated'));
                     if (config.open) {
-                        $injector.get('authoringWorkspace').edit({_id: duplicate._id}, 'edit');
+                        getAuthoringWorkspace().edit({_id: duplicate._id}, 'edit');
                     }
                     return duplicate;
                 }, (response) => {
@@ -130,7 +147,7 @@ export function SendService(desks, api, $q, notify, $injector, multi, $rootScope
                 .then((fetched) => {
                     notify.success(gettext('Item Fetched.'));
                     if (config.open) {
-                        $injector.get('authoringWorkspace').edit({_id: fetched._id}, 'edit');
+                        getAuthoringWorkspace().edit({_id: fetched._id}, 'edit');
                     }
                     return fetched;
                 }, (error) => {
@@ -143,7 +160,7 @@ export function SendService(desks, api, $q, notify, $injector, multi, $rootScope
                 .then((_item) => {
                     $rootScope.$broadcast('item:update', {item: _item});
                     if (config.open) {
-                        $injector.get('authoringWorkspace').edit(_item);
+                        getAuthoringWorkspace().edit(_item);
                     }
                     return _item;
                 });

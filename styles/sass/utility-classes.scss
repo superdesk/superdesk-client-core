@@ -121,6 +121,12 @@ ul.list-view.list-without-items {
     }
 }
 
+.sibling-spacer-10 {
+    > * + * {
+        margin-left: 10px;
+    }
+}
+
 // preview HTML generated via WYSIWYG editor in a single line
 .user-html-in-single-line {
     p {

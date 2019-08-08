@@ -2,6 +2,7 @@ import * as constant from '../constants';
 import {get, omit, isEmpty, zipObject} from 'lodash';
 import {gettext} from 'core/utils';
 import {isMediaEditable} from 'core/config';
+import {IArticle} from 'superdesk-api';
 
 /**
  * @ngdoc service
@@ -366,9 +367,7 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
     /**
      * Handle drop event transfer data and convert it to an item
      */
-    this.dropItem = (transferData, {fetchExternal} = {fetchExternal: true}) => {
-        const item = JSON.parse(transferData);
-
+    this.dropItem = (item: IArticle, {fetchExternal} = {fetchExternal: true}) => {
         if (item._type !== 'externalsource') {
             if (item._type === 'ingest') {
                 return send.one(item);

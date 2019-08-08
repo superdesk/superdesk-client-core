@@ -19,6 +19,7 @@ import {extensions} from 'core/extension-imports.generated';
 
 import {IExtensionActivationResult, IArticle} from 'superdesk-api';
 import {showSpikeDialog} from './show-spike-dialog';
+import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services';
 
 angular.module('superdesk.apps.archive.directives', [
     'superdesk.core.filters',
@@ -210,7 +211,13 @@ angular.module('superdesk.apps.archive', [
                 dropdown: true,
                 templateUrl: 'scripts/apps/archive/views/package_item_labels_dropdown.html',
                 additionalCondition: ['authoring', 'item', 'vocabularies', 'authoringWorkspace', 'packages',
-                    function(authoring, item, vocabularies, authoringWorkspace, packages) {
+                    function(
+                        authoring,
+                        item,
+                        vocabularies,
+                        authoringWorkspace: AuthoringWorkspaceService,
+                        packages,
+                    ) {
                         var openedItem = authoringWorkspace.getItem();
 
                         return (item.state !== 'killed' || item.state !== 'recalled') &&
@@ -223,8 +230,8 @@ angular.module('superdesk.apps.archive', [
                 label: gettext('Create Broadcast'),
                 icon: 'broadcast',
                 monitor: true,
-                controller: ['api', 'notify', '$rootScope', 'data', 'desks', 'authoringWorkspace',
-                    function(api, notify, $rootScope, data, desks, authoringWorkspace) {
+                controller: ['api', '$rootScope', 'data', 'desks', 'authoringWorkspace',
+                    function(api, $rootScope, data, desks, authoringWorkspace: AuthoringWorkspaceService) {
                         api.save('archive_broadcast', {}, {desk: desks.getCurrentDeskId()}, data.item)
                             .then((broadcastItem) => {
                                 authoringWorkspace.edit(broadcastItem);
@@ -397,7 +404,7 @@ spikeActivity.$inject = [
 ];
 
 function spikeActivity(spike, data, modal, $location, $q, multi, privileges,
-    authoringWorkspace, confirm, autosave, config) {
+    authoringWorkspace: AuthoringWorkspaceService, confirm, autosave, config) {
     // For the sake of keyboard shortcut to work consistently,
     // if the item is multi-selected, let multibar controller handle its spike
     if (!data.item || multi.count > 0 && includes(multi.getIds(), data.item._id)) {

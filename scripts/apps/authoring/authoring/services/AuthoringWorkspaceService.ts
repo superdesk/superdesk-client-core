@@ -1,212 +1,245 @@
 import {get, includes} from 'lodash';
+import {IArticle} from 'superdesk-api';
+import {getCustomEventNamePrefixed} from 'core/notification/notification';
+
+type IAuthoringAction = 'view' | 'edit' | 'kill' | 'takedown' | 'correct';
 
 /**
  * @ngdoc service
  * @module superdesk.apps.authoring
  * @name authoringWorkspace
  *
- * @requires $location
- * @requires superdeskFlags
- * @requires authoring
- * @requires lock
- * @requires send
- * @requires config
- * @requires suggest
- * @requires search
- * @requires $rootscope
- *
  * @description Authoring Workspace Service is responsible for the actions done on the authoring workspace container
  */
-AuthoringWorkspaceService.$inject = ['$location', 'superdeskFlags', 'authoring', 'lock', 'send', 'config', 'suggest',
-    '$rootScope', 'search', '$window'];
-export function AuthoringWorkspaceService($location, superdeskFlags, authoring, lock, send, config, suggest,
-    $rootScope, search, $window) {
-    this.item = null;
-    this.action = null;
-    this.state = null;
+export class AuthoringWorkspaceService {
+    private $location: any;
+    private superdeskFlags: any;
+    private authoring: any;
+    private send: any;
+    private config: any;
+    private suggest: any;
+    private $rootScope: any;
+    private search: any;
+    private $window: any;
 
-    // Array<() => Promise<boolean>>
-    let widgetVisibilityCheckerFuntions = [];
+    item: any;
+    action: IAuthoringAction;
+    state: any;
 
-    this.addWidgetVisibilityCheckerFunction = (fn) => {
-        widgetVisibilityCheckerFuntions.push(fn);
-    };
+    widgetVisibilityCheckerFuntions: Array<(arg) => Promise<boolean>>;
 
-    this.removeWidgetVisibilityCheckerFunction = (fn) => {
-        widgetVisibilityCheckerFuntions = widgetVisibilityCheckerFuntions.filter((f) => f !== fn);
-    };
+    authoringTopBarAdditionalButtons: {};
+    authoringTopBarButtonsToHide: {};
+    displayAuthoringHeaderCollapedByDefault: any;
 
-    this.isWidgetVisible = (widget) => new Promise((resolve) => {
-        Promise.all(widgetVisibilityCheckerFuntions.map((fn) => fn(widget)))
-            .then((res) => {
-                resolve(res.every((i) => i === true));
-            });
-    });
+    constructor($location, superdeskFlags, authoring, send, config, suggest, $rootScope, search, $window) {
+        this.$location = $location;
+        this.superdeskFlags = superdeskFlags;
+        this.authoring = authoring;
+        this.send = send;
+        this.config = config;
+        this.suggest = suggest;
+        this.$rootScope = $rootScope;
+        this.search = search;
+        this.$window = $window;
 
-    var self = this;
+        this.item = null;
+        this.action = null;
+        this.state = null;
 
-    /**
-     * Initiate authoring workspace
-     */
-    this.init = init;
+        this.widgetVisibilityCheckerFuntions = [];
+
+        // plugin support
+        this.authoringTopBarAdditionalButtons = {},
+        this.authoringTopBarButtonsToHide = {};
+        this.displayAuthoringHeaderCollapedByDefault = null;
+
+        // binding methods
+        this.addWidgetVisibilityCheckerFunction = this.addWidgetVisibilityCheckerFunction.bind(this);
+        this.removeWidgetVisibilityCheckerFunction = this.removeWidgetVisibilityCheckerFunction.bind(this);
+        this.isWidgetVisible = this.isWidgetVisible.bind(this);
+        this.init = this.init.bind(this);
+        this.authoringOpen = this.authoringOpen.bind(this);
+        this.saveState = this.saveState.bind(this);
+        this.edit = this.edit.bind(this);
+        this.view = this.view.bind(this);
+        this.open = this.open.bind(this);
+        this.close = this.close.bind(this);
+        this.kill = this.kill.bind(this);
+        this.takedown = this.takedown.bind(this);
+        this.correct = this.correct.bind(this);
+        this.publish = this.publish.bind(this);
+        this.getItem = this.getItem.bind(this);
+        this.getAction = this.getAction.bind(this);
+        this.getState = this.getState.bind(this);
+        this.addAutosave = this.addAutosave.bind(this);
+        this.update = this.update.bind(this);
+        this.popup = this.popup.bind(this);
+        this.sendRowViewEvents = this.sendRowViewEvents.bind(this);
+
+        this.init();
+    }
+
+    addWidgetVisibilityCheckerFunction(fn) {
+        this.widgetVisibilityCheckerFuntions.push(fn);
+    }
+
+    removeWidgetVisibilityCheckerFunction(fn) {
+        this.widgetVisibilityCheckerFuntions = this.widgetVisibilityCheckerFuntions.filter((f) => f !== fn);
+    }
+
+    isWidgetVisible(widget) {
+        return new Promise((resolve) => {
+            Promise.all(this.widgetVisibilityCheckerFuntions.map((fn) => fn(widget)))
+                .then((res) => {
+                    resolve(res.every((i) => i === true));
+                });
+        });
+    }
 
     /**
      * Open item for editing
-     *
-     * @param {Object} item
-     * @param {string} action
      */
-    this.edit = function(item, action) {
+    edit(
+        item: {_id: IArticle['_id'], _type?: IArticle['_type']},
+        action?: IAuthoringAction,
+    ) {
         if (item) {
             // disable edit of external ingest sources that are not editable (editFeaturedImage false or not available)
-            if (item._type === 'externalsource' && !!get(config.features, 'editFeaturedImage') === false) {
+            if (item._type === 'externalsource' && !!get(this.config.features, 'editFeaturedImage') === false) {
                 return;
             }
-            authoringOpen(item._id, action || 'edit', item._type || null);
+            this.authoringOpen(item._id, action || 'edit', item._type || null);
         } else {
-            self.close();
+            this.close();
         }
-    };
-
-    // plugin support
-    this.authoringTopBarAdditionalButtons = {},
-    this.authoringTopBarButtonsToHide = {};
-    this.displayAuthoringHeaderCollapedByDefault = null;
+    }
 
     /**
      * Open an item in readonly mode without locking it
      *
      * @param {Object} item
      */
-    this.view = function(item) {
-        self.edit(item, 'view');
-    };
+    view(item) {
+        this.edit(item, 'view');
+    }
 
     /**
      * Open an item - if possible for edit, otherwise read only
      *
      * @param {Object} item
      */
-    this.open = function(item) {
-        var _open = function(_item) {
-            var actions = authoring.itemActions(_item);
+    open(item) {
+        var _open = (_item) => {
+            var actions = this.authoring.itemActions(_item);
 
             if (actions.edit) {
                 this.edit(_item);
             } else {
                 this.view(_item);
             }
-        }.bind(this);
+        };
 
         // disable open for external ingest sources that are not editable (editFeaturedImage false or not available)
-        if (item._type === 'externalsource' && !!get(config.features, 'editFeaturedImage') === false) {
+        if (item._type === 'externalsource' && !!get(this.config.features, 'editFeaturedImage') === false) {
             return;
         }
 
         if (includes(['ingest', 'externalsource'], item._type) || item.state === 'ingested') {
-            send.one(item).then(_open);
+            this.send.one(item).then(_open);
         } else {
             _open(item);
         }
-    };
+    }
 
     /**
      * Stop editing.
      *
      * @param {boolean} showMonitoring when true shows the monitoring if monitoring is hidden.
      */
-    this.close = function(showMonitoring) {
-        if ($rootScope.popup) {
+    close(showMonitoring?) {
+        if (this.$rootScope.popup) {
             window.close();
         }
 
-        suggest.setActive(false);
-        self.item = null;
-        self.action = null;
-        if (showMonitoring && superdeskFlags.flags.hideMonitoring) {
-            superdeskFlags.flags.hideMonitoring = false;
+        if (this.action === 'edit') {
+            window.dispatchEvent(
+                new CustomEvent(getCustomEventNamePrefixed('articleEditEnd'), {detail: this.item}),
+            );
         }
 
-        saveState();
-        sendRowViewEvents();
-    };
+        this.suggest.setActive(false);
+        this.item = null;
+        this.action = null;
+        if (showMonitoring && this.superdeskFlags.flags.hideMonitoring) {
+            this.superdeskFlags.flags.hideMonitoring = false;
+        }
 
-    /**
-     * Kill an item
-     *
-     * @param {Object} item
-     */
-    this.kill = function(item) {
-        self.edit(item, 'kill');
-    };
+        this.saveState();
+        this.sendRowViewEvents();
+    }
 
-    /**
-     * Takedown an item
-     *
-     * @param {Object} item
-     */
-    this.takedown = function(item) {
-        self.edit(item, 'takedown');
-    };
+    kill(item) {
+        this.edit(item, 'kill');
+    }
 
-    /**
-     * Correct an item
-     *
-     * @param {Object} item
-     */
-    this.correct = function(item) {
-        self.edit(item, 'correct');
-    };
+    takedown(item) {
+        this.edit(item, 'takedown');
+    }
+
+    correct(item) {
+        this.edit(item, 'correct');
+    }
 
     /**
      * Publish again unpublished item
      */
-    this.publish = (item) => {
-        authoring.publish(item.archive_item, {}, 'publish');
-    };
+    publish(item) {
+        return this.authoring.publish(item.archive_item, {}, 'publish');
+    }
 
     /**
      * Get edited item
      *
      * return {Object}
      */
-    this.getItem = function() {
-        return self.item;
-    };
+    getItem() {
+        return this.item;
+    }
 
     /**
      * Get current action
      *
      * @return {string}
      */
-    this.getAction = function() {
-        return self.action;
-    };
+    getAction() {
+        return this.action;
+    }
 
     /**
      * Get current state
      *
      * @return {Object}
      */
-    this.getState = function() {
-        return self.state;
-    };
+    getState() {
+        return this.state;
+    }
 
     /**
      * Should be invoked when an item is saved by system without user interaction
      */
-    this.addAutosave = function() {
-        if (self.item) {
-            self.item._autosaved = true;
+    addAutosave() {
+        if (this.item) {
+            this.item._autosaved = true;
         }
-    };
+    }
 
     /*
      * Updates current item
      */
-    this.update = function(item) {
-        self.item = item;
-    };
+    update(item) {
+        this.item = item;
+    }
 
     /**
      * Edit/view item in a new window
@@ -214,27 +247,27 @@ export function AuthoringWorkspaceService($location, superdeskFlags, authoring, 
      * @param {Object} item
      * @param {string} action
      */
-    this.popup = (item, action) => {
-        const host = $location.host();
-        const port = $location.port();
-        const proto = $location.protocol();
+    popup(item, action) {
+        const host = this.$location.host();
+        const port = this.$location.port();
+        const proto = this.$location.protocol();
         const baseURL = `${proto}://${host}${port !== 80 ? ':' + port : ''}`;
 
-        $window.open(
+        this.$window.open(
             `${baseURL}/#/workspace/monitoring?item=${item._id}&action=${action}&popup`,
             item._id,
         );
-    };
+    }
 
     /**
      * Save current item/action state into $location so that it can be
      * used on page reload
      */
-    function saveState() {
-        $location.search('item', self.item ? self.item._id : null);
-        $location.search('action', self.action);
-        superdeskFlags.flags.authoring = !!self.item;
-        self.state = {item: self.item, action: self.action};
+    private saveState() {
+        this.$location.search('item', this.item ? this.item._id : null);
+        this.$location.search('action', this.action);
+        this.superdeskFlags.flags.authoring = !!this.item;
+        this.state = {item: this.item, action: this.action};
     }
 
     /**
@@ -244,40 +277,59 @@ export function AuthoringWorkspaceService($location, superdeskFlags, authoring, 
      * @description If singLine:view preference is set, an item is being previewed, config has narrowView list
      * then, sends rowview event
      */
-    function sendRowViewEvents() {
-        let evnt = superdeskFlags.flags.authoring ? 'rowview:narrow' : 'rowview:default';
+    sendRowViewEvents() {
+        let evnt = this.superdeskFlags.flags.authoring ? 'rowview:narrow' : 'rowview:default';
 
-        if (superdeskFlags.flags.previewing && search.singleLine && get(config, 'list.narrowView')) {
-            $rootScope.$broadcast(evnt);
+        if (this.superdeskFlags.flags.previewing && this.search.singleLine && get(this.config, 'list.narrowView')) {
+            this.$rootScope.$broadcast(evnt);
         }
     }
 
     /**
-     * On load try to fetch item set in url
+     * Initiate authoring workspace; On load try to fetch item set in url
      */
-    function init() {
-        if ($location.search().item && $location.search().action in self) {
-            authoringOpen($location.search().item, $location.search().action);
+    init() {
+        if (this.$location.search().item && this.$location.search().action in this) {
+            this.authoringOpen(this.$location.search().item, this.$location.search().action);
         }
     }
 
     /**
      * Fetch item by id and start editing it
      */
-    function authoringOpen(itemId, action, repo?) {
-        return authoring.open(itemId, action === 'view', repo, action)
-            .then((item) => {
-                self.item = item;
-                self.action = action !== 'view' && item._editable ? action : 'view';
-            })
-            .then(() => {
-                saveState();
+    private authoringOpen(itemId, action: IAuthoringAction, repo?) {
+        return this.authoring.open(itemId, action === 'view', repo, action)
+            .then((item: IArticle) => {
+                if (this.item != null) { // action isn't relevant
+                    window.dispatchEvent(
+                        new CustomEvent(getCustomEventNamePrefixed('articleEditEnd'), {detail: this.item}),
+                    );
+                }
+
+                this.item = item;
+                this.action = action !== 'view' && item._editable ? action : 'view';
+
+                if (action === 'edit') {
+                    window.dispatchEvent(
+                        new CustomEvent(getCustomEventNamePrefixed('articleEditStart'), {detail: item}),
+                    );
+                }
+
+                this.saveState();
                 // closes preview if already opened
-                $rootScope.$broadcast('broadcast:preview', {item: null});
+                this.$rootScope.$broadcast('broadcast:preview', {item: null});
             });
     }
-
-    this.authoringOpen = authoringOpen;
-
-    init();
 }
+
+AuthoringWorkspaceService.$inject = [
+    '$location',
+    'superdeskFlags',
+    'authoring',
+    'send',
+    'config',
+    'suggest',
+    '$rootScope',
+    'search',
+    '$window',
+];

@@ -1,9 +1,10 @@
 import _ from 'lodash';
+import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 
 PackagesService.$inject = ['api', '$q', 'archiveService', 'lock', 'autosave', 'authoring',
     'authoringWorkspace', 'desks', '$rootScope'];
 export function PackagesService(api, $q, archiveService, lock, autosave, authoring,
-    authoringWorkspace, desks, $rootScope) {
+    authoringWorkspace: AuthoringWorkspaceService, desks, $rootScope) {
     var self = this;
 
     this.groupList = ['main', 'story', 'sidebars', 'fact box'];

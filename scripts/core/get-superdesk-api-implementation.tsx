@@ -1,4 +1,4 @@
-import {ISuperdesk, IExtensions, IExtensionActivationResult, IArticle} from 'superdesk-api';
+import {ISuperdesk, IExtensions, IExtensionActivationResult, IArticle, IContentProfile} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {getGenericListPageComponent} from './ui/components/ListPage/generic-list-page';
 import {ListItem, ListItemColumn, ListItemActionsMenu} from './components/ListItem';
@@ -14,7 +14,7 @@ import {Row, Item, Column} from './ui/components/List';
 import {connectCrudManager, dataApi, dataApiByEntity} from './helpers/CrudManager';
 import {generateFilterForServer} from './ui/components/generic-form/generate-filter-for-server';
 import {assertNever} from './helpers/typescript-helpers';
-import {flatMap} from 'lodash';
+import {flatMap, memoize} from 'lodash';
 import {Modal} from './ui/components/Modal/Modal';
 import {ModalHeader} from './ui/components/Modal/ModalHeader';
 import {ModalBody} from './ui/components/Modal/ModalBody';
@@ -34,6 +34,16 @@ import {Figure} from './ui/components/figure';
 import {DropZone} from './ui/components/drop-zone';
 import {GroupLabel} from './ui/components/GroupLabel';
 import {TopMenuDropdownButton} from './ui/components/TopMenuDropdownButton';
+import {dispatchInternalEvent} from './internal-events';
+import {Icon} from './ui/components/Icon2';
+import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
+
+function getContentType(id): Promise<IContentProfile> {
+    return dataApi.findOne('content_types', id);
+}
+
+const getContentTypeMemoized = memoize(getContentType);
+let getContentTypeMemoizedLastCall: number = 0; // unix time
 
 function getOnUpdateBeforeMiddlewares(
     extensions: IExtensions,
@@ -77,7 +87,7 @@ export function getSuperdeskApiImplementation(
     privileges,
     lock,
     session,
-    authoringWorkspace,
+    authoringWorkspace: AuthoringWorkspaceService,
 ): ISuperdesk {
     return {
         dataApi: dataApi,
@@ -120,11 +130,33 @@ export function getSuperdeskApiImplementation(
                     });
                 },
             },
+            contentProfile: {
+                get: (id) => {
+                    // Adding simple caching since the function will be called multiple times per second.
+
+                    // TODO: implement synchronous API(and a cache) for accessing
+                    // most user settings including content profiles.
+
+                    const timestamp = Date.now();
+
+                    // cache for 5 seconds
+                    if (timestamp - getContentTypeMemoizedLastCall > 5000) {
+                        getContentTypeMemoized.cache.clear();
+                    }
+
+                    getContentTypeMemoizedLastCall = timestamp;
+
+                    return getContentTypeMemoized(id);
+                },
+            },
         },
         ui: {
             article: {
                 view: (id: string) => {
-                    authoringWorkspace.authoringOpen(id, 'view');
+                    authoringWorkspace.edit({_id: id}, 'view');
+                },
+                addImage: (field: string, image: IArticle) => {
+                    dispatchInternalEvent('addImage', {field, image});
                 },
             },
             alert: (message: string) => modal.alert({bodyText: message}),
@@ -165,6 +197,7 @@ export function getSuperdeskApiImplementation(
             ArticleItemConcise,
             GroupLabel,
             TopMenuDropdownButton,
+            Icon,
             getDropdownTree: () => DropdownTree,
         },
         forms: {

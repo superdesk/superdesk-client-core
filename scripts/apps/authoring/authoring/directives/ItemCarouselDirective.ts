@@ -6,37 +6,58 @@ import * as ctrl from '../controllers';
 import {waitForMediaToLoad} from 'core/helpers/waitForMediaToBeReady';
 import {getSuperdeskType} from 'core/utils';
 import {gettext} from 'core/utils';
+import {IArticle} from 'superdesk-api';
+import {addInternalEventListener} from 'core/internal-events';
 
 const carouselContainerSelector = '.sd-media-carousel__content';
+
+interface IScope extends ng.IScope {
+    allowAudio: any;
+    allowPicture: any;
+    allowVideo: any;
+    carouselItems: any;
+    crtIndex: any;
+    editable: any;
+    field: any;
+    item: any;
+    items: any;
+    maxUploads: any;
+    navCounter: number;
+    rel: any;
+    goTo(index: any): void;
+    navNext(): void;
+    navPrev(): void;
+    onchange(): void;
+    remove(item: any): void;
+    upload(): void;
+}
 
 /**
  * @ngdoc directive
  * @module superdesk.apps.authoring
  * @name sdItemCarousel
- *
- * @requires $timeout
  */
-ItemCarouselDirective.$inject = ['$timeout', 'notify'];
-export function ItemCarouselDirective($timeout, notify) {
+ItemCarouselDirective.$inject = ['notify'];
+export function ItemCarouselDirective(notify) {
     return {
         scope: {
-            items: '=',
-            item: '=',
-            tabindex: '<',
-            editable: '<',
+            allowAudio: '<',
             allowPicture: '<',
             allowVideo: '<',
-            allowAudio: '<',
-            save: '&',
-            onchange: '&',
-            maxUploads: '=',
+            editable: '<',
             field: '=',
+            item: '=',
+            items: '=',
+            maxUploads: '=',
+            onchange: '&',
+            save: '&',
+            tabindex: '<',
         },
         transclude: true,
         templateUrl: 'scripts/apps/authoring/views/item-carousel.html',
         controller: ctrl.AssociationController,
         controllerAs: 'associations',
-        link: function(scope, elem, attr, controller) {
+        link: function(scope: IScope, elem, attr, controller) {
             let carousel;
             let previousItemsLength;
             const allowed = {picture: scope.allowPicture, video: scope.allowVideo, audio: scope.allowAudio};
@@ -48,7 +69,7 @@ export function ItemCarouselDirective($timeout, notify) {
              * Initialize carousel after all content is loaded
              * otherwise carousel height is messed up
              */
-            scope.$watch('items', (items) => {
+            scope.$watch('items', (items: Array<any>) => {
                 // Don't execute if there are no items or their length is same as before
                 if (items == null || items.length === previousItemsLength) {
                     return false;
@@ -121,6 +142,34 @@ export function ItemCarouselDirective($timeout, notify) {
                 event.stopPropagation();
             });
 
+            function canAddImage(image: IArticle): boolean {
+                const mediaItemsForCurrentField = Object.keys(scope.item.associations || {})
+                    .filter((key) => key.startsWith(scope.field._id) && scope.item.associations[key] != null)
+                    .map((key) => scope.item.associations[key]);
+
+                const currentUploads = mediaItemsForCurrentField.length;
+
+                const itemAlreadyAddedAsMediaGallery = mediaItemsForCurrentField.some(
+                    (mediaItem) => mediaItem._id === image._id,
+                );
+
+                if (currentUploads >= scope.maxUploads) {
+                    notify.error(
+                        gettext(
+                            'Media item was not added, because the field reached the limit of allowed media items.',
+                        ),
+                    );
+                    return false;
+                }
+
+                if (itemAlreadyAddedAsMediaGallery) {
+                    notify.error('This item is already added as media gallery.');
+                    return false;
+                }
+
+                return true;
+            }
+
             elem.on('drop dragdrop', (event) => {
                 const type = getSuperdeskType(event);
 
@@ -128,33 +177,11 @@ export function ItemCarouselDirective($timeout, notify) {
                 event.stopPropagation();
 
                 if (ALLOWED_TYPES.includes(type) || type === 'Files') {
-                    const mediaItemsForCurrentField = Object.keys(scope.item.associations || {})
-                        .filter((key) => key.startsWith(scope.field._id) && scope.item.associations[key] != null)
-                        .map((key) => scope.item.associations[key]);
-
-                    const currentUploads = mediaItemsForCurrentField.length;
-
                     const item = angular.fromJson(event.originalEvent.dataTransfer.getData(type));
 
-                    const itemAlreadyAddedAsMediaGallery = mediaItemsForCurrentField.some(
-                        (mediaItem) => mediaItem._id === item._id,
-                    );
-
-                    if (currentUploads >= scope.maxUploads) {
-                        notify.error(
-                            gettext(
-                                'Media item was not added, because the field reached the limit of allowed media items.',
-                            ),
-                        );
-                        return;
+                    if (canAddImage(item)) {
+                        controller.initializeUploadOnDrop(scope, event);
                     }
-
-                    if (itemAlreadyAddedAsMediaGallery) {
-                        notify.error('This item is already added as media gallery.');
-                        return;
-                    }
-
-                    controller.initializeUploadOnDrop(scope, event);
                 } else {
                     const allowedTypeNames = [
                         (scope.allowPicture === true ? gettext('image') : ''),
@@ -246,8 +273,17 @@ export function ItemCarouselDirective($timeout, notify) {
                 }
             }
 
+            const removeAddImageEventListener = addInternalEventListener('addImage', (event) => {
+                const {field, image} = event.detail;
+
+                if (scope.field._id === field && canAddImage(image)) {
+                    controller.addAssociation(scope, image);
+                }
+            });
+
             scope.$on('$destroy', () => {
                 elem.off('drop dragdrop dragover');
+                removeAddImageEventListener();
             });
         },
     };

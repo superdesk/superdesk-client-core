@@ -1,7 +1,8 @@
 import {gettext} from 'core/utils';
+import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 
 CombinePackageCtrl.$inject = ['data', 'packages', 'authoringWorkspace', 'notify'];
-export function CombinePackageCtrl(data, packages, authoringWorkspace, notify) {
+export function CombinePackageCtrl(data, packages, authoringWorkspace: AuthoringWorkspaceService, notify) {
     var openItem = authoringWorkspace.getItem();
 
     packages.createPackageFromItems([openItem, data.item])

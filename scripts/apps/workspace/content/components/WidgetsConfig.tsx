@@ -2,7 +2,7 @@ import React from 'react';
 import {connectServices} from 'core/helpers/ReactRenderAsync';
 
 import {IWidget} from 'superdesk-interfaces/Widget';
-import {IContentProfile} from 'superdesk-interfaces/ContentProfile';
+import {IContentProfile} from 'superdesk-api';
 
 interface IProps {
     authoringWidgets: Array<IWidget>;

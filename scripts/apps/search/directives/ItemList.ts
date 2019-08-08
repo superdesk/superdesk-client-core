@@ -6,6 +6,7 @@ import ReactDOM from 'react-dom';
 import _ from 'lodash';
 
 import {ItemList as ItemListComponent} from 'apps/search/components';
+import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 
 ItemList.$inject = [
     '$location',
@@ -92,7 +93,7 @@ export function ItemList(
     highlightsService,
     TranslationService,
     monitoringState,
-    authoringWorkspace,
+    authoringWorkspace: AuthoringWorkspaceService,
     $rootScope,
     config,
     $interpolate,

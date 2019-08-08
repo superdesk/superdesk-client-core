@@ -55,6 +55,7 @@ declare module 'superdesk-api' {
                 annotationInputTabs?: Array<IEditor3AnnotationInputTab>;
             }
             articleListItemWidgets?: Array<React.ComponentType<{article: IArticle}>>;
+            articleGridItemWidgets?: Array<React.ComponentType<{article: IArticle}>>;
             authoringTopbarWidgets?: Array<React.ComponentType<{article: IArticle}>>;
             pages?: Array<IPage>;
             customFieldTypes?: Array<ICustomFieldType>;
@@ -213,7 +214,10 @@ declare module 'superdesk-api' {
         associations: { string: IArticle };
         type: 'text' | 'picture' | 'video' | 'audio' | 'preformatted' | 'graphic' | 'composite';
         firstpublished?: string;
-        linked_in_packages: any;
+        linked_in_packages: Array<{
+            package: string;
+            package_type: string; // deprecated
+        }>;
         gone: any;
         lock_action: any;
         lock_user: any;
@@ -229,6 +233,10 @@ declare module 'superdesk-api' {
         flags: any;
         source: string;
         correction_sequence: any;
+        fetch_endpoint?: any;
+        task_id?: any;
+        ingest_provider?: any;
+        archive_item?: any;
 
         highlights?: Array<string>;
         highlight?: any;
@@ -246,14 +254,22 @@ declare module 'superdesk-api' {
         created: any;
         archived: any;
 
-        // remove when SDESK-4343 is done.
-        selected: any;
-
         // planning extension
         assignment_id?: string;
 
         // markForUser extension
         marked_for_user?: string | null;
+
+        // remove when SDESK-4343 is done.
+        selected: any;
+
+        // other fields which don't exist in the database, don't belong to this entity and should be removed
+        error?: any;
+        _editable: any;
+        actioning?: {
+            archive?: boolean;
+            externalsource: boolean;
+        };
     }
 
     export interface IUserRole extends IBaseRestApiResponse {
@@ -324,9 +340,22 @@ declare module 'superdesk-api' {
         slack_username: string;
         slack_user_id: string;
     }
+
+    export interface IContentProfile {
+        _id: string;
+        label: string;
+        description: string;
+        schema: Object;
+        editor: Object;
+        widgets_config: Array<{widget_id: string; is_displayed: boolean}>;
+        priority: number;
+        enabled: boolean;
+        is_used: boolean;
+        created_by: string;
+        updated_by: string;
+    }
     
-
-
+    
 
     // PAGE
 
@@ -595,6 +624,11 @@ declare module 'superdesk-api' {
         square?: boolean;
     }
 
+    export interface IPropsIcon {
+        className: string;
+        size?: number;
+    }
+
 
 
     // EDITOR3
@@ -645,6 +679,8 @@ declare module 'superdesk-api' {
 
     export interface IEvents {
         articleUpdate: IArticleUpdateEvent;
+        articleEditStart: IArticle;
+        articleEditEnd: IArticle;
     }
 
 
@@ -661,6 +697,9 @@ declare module 'superdesk-api' {
         ui: {
             article: {
                 view(id: string): void;
+
+                // This isn't implemented for all fields accepting images.
+                addImage(field: string, image: IArticle): void;
             };
             alert(message: string): Promise<void>;
             confirm(message: string): Promise<boolean>;
@@ -675,6 +714,9 @@ declare module 'superdesk-api' {
 
                 isPersonal(article: IArticle): boolean;
                 update(nextArticle: IArticle): void;
+            };
+            contentProfile: {
+                get(id: string): Promise<IContentProfile>;
             };
         };
         helpers: {
@@ -709,6 +751,7 @@ declare module 'superdesk-api' {
             UserAvatar: React.ComponentType<{userId: string}>;
             ArticleItemConcise: React.ComponentType<{article: IArticle}>;
             GroupLabel: React.ComponentType<ISpacingProps>;
+            Icon: React.ComponentType<IPropsIcon>;
             TopMenuDropdownButton: React.ComponentType<{onClick: () => void; active: boolean}>;
             getDropdownTree: <T>() => React.ComponentType<IPropsDropdownTree<T>>;
         };

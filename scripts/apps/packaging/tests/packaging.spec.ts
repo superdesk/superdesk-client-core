@@ -1,3 +1,4 @@
+import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 
 describe('packaging', () => {
     beforeEach(window.module('superdesk.apps.packaging'));
@@ -66,7 +67,7 @@ describe('packaging', () => {
             expect(superdesk.intent).toHaveBeenCalledWith('preview', 'item', item);
         }));
 
-        it('can open item', inject(($rootScope, $q, authoringWorkspace) => {
+        it('can open item', inject(($rootScope, $q, authoringWorkspace: AuthoringWorkspaceService) => {
             spyOn(authoringWorkspace, 'open').and.returnValue($q.when());
             scope.open(item);
             $rootScope.$apply();

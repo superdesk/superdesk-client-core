@@ -3,6 +3,7 @@ import _ from 'lodash';
 import getCustomSortForGroup, {GroupSortOptions} from '../helpers/CustomSortOfGroups';
 import {GET_LABEL_MAP} from '../../workspace/content/constants';
 import {isPublished} from 'apps/archive/utils';
+import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {DESK_OUTPUT} from 'apps/desks/constants';
 
 const translatedFields = GET_LABEL_MAP();
@@ -69,30 +70,38 @@ interface IScope extends ng.IScope {
  * @ngdoc directive
  * @module superdesk.apps.monitoring
  * @name sdMonitoringGroup
- *
- * @requires cards
- * @requires api
- * @requires authoringWorkspace
- * @requires $timeout
- * @requires superdesk
- * @requires session
- * @requires activityService
- * @requires workflowService
- * @requires keyboardManager
- * @requires desks
- * @requires search
- * @requires multi
- * @requires archiveService
- * @requires $rootScope
- * @requires preferencesService
- *
+
  * @description
  *   A directive that generates group/section on stages of a desk or saved search.
  */
-MonitoringGroup.$inject = ['cards', 'api', 'authoringWorkspace', '$timeout', 'superdesk', 'session',
-    'activityService', 'desks', 'search', 'multi', 'archiveService', 'config', '$rootScope'];
-export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superdesk, session, activityService,
-    desks, search, multi, archiveService, config, $rootScope) {
+MonitoringGroup.$inject = [
+    'cards',
+    'api',
+    'authoringWorkspace',
+    '$timeout',
+    'superdesk',
+    'session',
+    'activityService',
+    'desks',
+    'search',
+    'multi',
+    'config',
+    '$rootScope',
+];
+export function MonitoringGroup(
+    cards,
+    api,
+    authoringWorkspace: AuthoringWorkspaceService,
+    $timeout,
+    superdesk,
+    session,
+    activityService,
+    desks,
+    search,
+    multi,
+    config,
+    $rootScope,
+) {
     let ITEM_HEIGHT = 57;
     let PAGE_SIZE = 25;
     let DEFAULT_GROUP_ITEMS = 10;

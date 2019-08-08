@@ -3,6 +3,7 @@ import {getSuperdeskType} from 'core/utils';
 import {gettext} from 'core/utils';
 import {isMediaEditable} from 'core/config';
 import {isPublished} from 'apps/archive/utils';
+import {IArticle} from 'superdesk-api';
 
 /**
  * @ngdoc controller
@@ -29,21 +30,6 @@ export function AssociationController(config, content, superdesk,
      */
     this.isMediaEditable = function() {
         return isMediaEditable(config);
-    };
-
-    /**
-     * @ngdoc method
-     * @name AssociationController#getItem
-     * @private
-     * @description Get superdesk item from event.
-     *              If not externalsource then fetch for archive collection not all fields
-     *              are available due to projections.
-     * @param {Event} event
-     * @param {string} dataType
-     * @return {Object}
-     */
-    this.getItem = function(event, dataType) {
-        return content.dropItem(event.originalEvent.dataTransfer.getData(dataType));
     };
 
     /**
@@ -174,33 +160,12 @@ export function AssociationController(config, content, superdesk,
         self.updateItemAssociation(scope, item, options.customRel, callback);
     };
 
-    /**
-     * @ngdoc method
-     * @name AssociationController#initializeUploadOnDrop
-     * @public
-     * @description Initialize upload on drop in field
-     * @param {Object} scope Directive scope
-     * @param {Object} event Drop event
-     */
-    this.initializeUploadOnDrop = function(scope, event) {
-        const superdeskType = getSuperdeskType(event);
-
+    this.addAssociation = function(scope, __item: IArticle): void {
         if (!scope.editable) {
             return;
         }
 
-        if (superdeskType === 'Files') {
-            if (self.isMediaEditable()) {
-                const files = event.originalEvent.dataTransfer.files;
-
-                return self.uploadAndCropImages(scope, files);
-            }
-
-            return;
-        }
-
-        scope.loading = true;
-        return self.getItem(event, superdeskType, {fetchExternal: false})
+        content.dropItem(__item)
             .then((item) => {
                 if (item.lock_user) {
                     notify.error(gettext('Item is locked. Cannot associate media item.'));
@@ -222,6 +187,37 @@ export function AssociationController(config, content, superdesk,
             .finally(() => {
                 scope.loading = false;
             });
+    };
+
+    /**
+     * @ngdoc method
+     * @public
+     * @description Initialize upload on drop in field
+     * @param {Object} scope Directive scope
+     * @param {Object} event Drop event
+     */
+    this.initializeUploadOnDrop = function(scope, event): void {
+        const superdeskType = getSuperdeskType(event);
+
+        if (superdeskType === 'Files') {
+            if (!scope.editable) {
+                return;
+            }
+
+            if (self.isMediaEditable()) {
+                const files = event.originalEvent.dataTransfer.files;
+
+                return self.uploadAndCropImages(scope, files);
+            }
+
+            return;
+        }
+
+        const __item: IArticle = JSON.parse(event.originalEvent.dataTransfer.getData(superdeskType));
+
+        scope.loading = true;
+
+        this.addAssociation(scope, __item);
     };
 }
 

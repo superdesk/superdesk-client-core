@@ -1,4 +1,5 @@
 import {gettext} from 'core/utils';
+import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 
 /**
  * Expire session on 401 server response
@@ -180,8 +181,17 @@ export default angular.module('superdesk.core.auth', [
     // watch session token, identity
     .run(['$rootScope', '$http', '$window', 'session', 'api', 'superdeskFlags', 'authoringWorkspace',
         'modal', 'SESSION_EVENTS',
-        function($rootScope, $http, $window, session, api, superdeskFlags, authoringWorkspace,
-            modal, SESSION_EVENTS) {
+        function(
+            $rootScope,
+            $http,
+            $window,
+            session,
+            api,
+            superdeskFlags,
+            authoringWorkspace: AuthoringWorkspaceService,
+            modal,
+            SESSION_EVENTS,
+        ) {
             $rootScope.logout = function() {
                 function replace() {
                     session.clear();
