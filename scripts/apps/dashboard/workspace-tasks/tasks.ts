@@ -2,6 +2,7 @@ import _ from 'lodash';
 import moment from 'moment';
 import './styles/tasks.scss';
 import {gettext} from 'core/utils';
+import {copyJson} from 'core/helpers/utils';
 
 TasksService.$inject = ['desks', '$rootScope', 'api', 'datetimeHelper'];
 function TasksService(desks, $rootScope, api, datetimeHelper) {
@@ -265,7 +266,7 @@ function TaskPreviewDirective(tasks, desks, notify, $filter) {
 
             scope.reset = function() {
                 scope.editmode = false;
-                scope.task = _.create(scope.item);
+                scope.task = copyJson(scope.item);
                 scope.task_details = _.extend({}, scope.item.task);
                 scope.task_details.due_date = scope.task_details.due_date ?
                     $filter('formatDateTimeString')(scope.task_details.due_date) : null;

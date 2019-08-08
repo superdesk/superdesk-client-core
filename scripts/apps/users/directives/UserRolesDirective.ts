@@ -1,4 +1,5 @@
 import {gettext} from 'core/utils';
+import {copyJson} from 'core/helpers/utils';
 
 UserRolesDirective.$inject = ['api', 'notify', 'modal', '$filter', 'lodash', 'metadata'];
 export function UserRolesDirective(api, notify, modal, $filter, _, metadata) {
@@ -20,7 +21,7 @@ export function UserRolesDirective(api, notify, modal, $filter, _, metadata) {
             });
 
             scope.edit = function(role) {
-                scope.editRole = _.create(role);
+                scope.editRole = copyJson(role);
                 _orig = role;
                 scope.defaultRole = role.is_default;
             };

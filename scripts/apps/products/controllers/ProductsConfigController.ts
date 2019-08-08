@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
+import {copyJson} from 'core/helpers/utils';
 
 /**
  * @ngdoc controller
@@ -109,8 +110,8 @@ export function ProductsConfigController($scope, notify, api, products, modal,
      */
     $scope.edit = function(product) {
         $scope.product = product;
-        $scope.product.edit = _.create(product);
-        $scope.product.edit.content_filter = _.create(product.content_filter || {});
+        $scope.product.edit = copyJson(product);
+        $scope.product.edit.content_filter = copyJson(product.content_filter || {});
         $scope.modalActive = true;
     };
 

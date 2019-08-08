@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 import {gettext} from 'core/utils';
+import {copyJson} from 'core/helpers/utils';
 
 /**
  * @ngdoc controller
@@ -27,7 +28,7 @@ export function ManageContentFiltersController($scope, contentFilters, notify, m
 
         $scope.editFilter = function(pf) {
             $scope.origContentFilter = pf || {};
-            $scope.contentFilter = _.create($scope.origContentFilter);
+            $scope.contentFilter = copyJson($scope.origContentFilter);
             $scope.contentFilter.name = $scope.origContentFilter.name;
             $scope.contentFilter.content_filter = _.cloneDeep($scope.origContentFilter.content_filter);
             initContentFilter();

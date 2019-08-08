@@ -11,6 +11,7 @@ import {onChangeMiddleware, getArticleSchemaMiddleware} from '..';
 import {IFunctionPointsService} from 'apps/extension-points/services/FunctionPoints';
 import {isPublished} from 'apps/archive/utils';
 import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
+import {copyJson} from 'core/helpers/utils';
 
 /**
  * @ngdoc directive
@@ -456,7 +457,7 @@ export function AuthoringDirective(
                                     authoring.open(item._id, true).then((res) => {
                                         $scope.origItem = res;
                                         $scope.dirty = false;
-                                        $scope.item = _.create($scope.origItem);
+                                        $scope.item = copyJson($scope.origItem);
                                     });
                                 }
 
@@ -752,7 +753,7 @@ export function AuthoringDirective(
              * Close preview and start working again
              */
             $scope.closePreview = function() {
-                $scope.item = _.create($scope.origItem);
+                $scope.item = copyJson($scope.origItem);
                 $scope._editable = $scope.action !== 'view' && authoring.isEditable($scope.origItem);
 
                 if ($scope.isPreview) {

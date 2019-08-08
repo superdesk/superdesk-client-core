@@ -1,6 +1,7 @@
 /* eslint-disable max-len */
 /* tslint:disable:max-line-length */
 import {gettext} from 'core/utils';
+import {copyJson} from 'core/helpers/utils';
 
 /**
  * @ngdoc directive
@@ -212,7 +213,7 @@ export function UserPreferencesDirective(
                 scope.preferences = {};
                 _.each(data, (val, key) => {
                     if (val.label && val.category) {
-                        scope.preferences[key] = _.create(val);
+                        scope.preferences[key] = copyJson(val);
                     }
                 });
 
@@ -281,7 +282,7 @@ export function UserPreferencesDirective(
                 // from modifications on ng-model changes.
                 scope.categories = [];
                 helperData.categories.forEach((cat) => {
-                    var newObj = _.create(cat),
+                    var newObj = copyJson(cat),
                         selectedCats = userPrefs['categories:preferred'].selected;
 
                     newObj.selected = !!selectedCats[cat.qcode];
@@ -300,7 +301,7 @@ export function UserPreferencesDirective(
                  */
                 scope.desks = [];
                 _.each(desks.deskLookup, (desk) => {
-                    var newObj = _.create(desk),
+                    var newObj = copyJson(desk),
                         selectedDesks = userPrefs['desks:preferred'].selected;
 
                     newObj.selected = !!selectedDesks[desk._id];

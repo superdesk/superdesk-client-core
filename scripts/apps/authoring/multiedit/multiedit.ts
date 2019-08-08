@@ -12,6 +12,8 @@ import {gettext} from 'core/utils';
 import {isPublished} from 'apps/archive/utils';
 import _ from 'lodash';
 import {AuthoringWorkspaceService} from '../authoring/services/AuthoringWorkspaceService';
+import {IArticle} from 'superdesk-api';
+import {copyJson} from 'core/helpers/utils';
 
 MultieditService.$inject = ['storage', 'superdesk', 'authoringWorkspace', 'referrer', '$location'];
 function MultieditService(storage, superdesk, authoringWorkspace: AuthoringWorkspaceService, referrer, $location) {
@@ -187,9 +189,9 @@ function MultieditArticleDirective(authoring, content, multiEdit, lock, $timeout
             });
 
             function openItem() {
-                authoring.open(scope.article).then((item) => {
+                authoring.open(scope.article).then((item: IArticle) => {
                     scope.origItem = item;
-                    scope.item = _.create(item);
+                    scope.item = copyJson(item);
                     scope._editable = authoring.isEditable(item);
                     scope.isMediaType = _.includes(['audio', 'video', 'picture', 'graphic'], scope.item.type);
 

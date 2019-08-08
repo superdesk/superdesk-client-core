@@ -1,4 +1,5 @@
 import {gettext} from 'core/utils';
+import {copyJson} from 'core/helpers/utils';
 
 UserEditDirective.$inject = ['api', 'notify', 'usersService', 'userList', 'session', 'lodash',
     'langmap', '$location', '$route', 'superdesk', 'features', 'asset', 'privileges',
@@ -32,7 +33,7 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
             scope.xmppEnabled = deployConfig.getSync('xmpp_auth');
 
             scope.$watch('origUser', () => {
-                scope.user = _.create(scope.origUser);
+                scope.user = copyJson(scope.origUser);
                 if (scope.user.is_author === undefined) {
                     scope.user.is_author = true;
                 }
@@ -200,7 +201,7 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
                     return userList.getUser(user._id, true).then((u) => {
                         scope.error = null;
                         scope.origUser = u;
-                        scope.user = _.create(u);
+                        scope.user = copyJson(u);
                         scope.confirm = {password: null};
                         scope.show = {password: false};
                         scope._active = usersService.isActive(u);

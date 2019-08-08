@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
+import {copyJson} from 'core/helpers/utils';
 
 /**
  * @ngdoc directive
@@ -212,7 +213,7 @@ export function SubscribersDirective(
 
                 $q.all(promises).then(() => {
                     $scope.origSubscriber = subscriber || {};
-                    $scope.subscriber = _.create($scope.origSubscriber);
+                    $scope.subscriber = copyJson($scope.origSubscriber);
                     $scope.subscriber.critical_errors = $scope.origSubscriber.critical_errors;
                     $scope.subscriber.sequence_num_settings = $scope.origSubscriber.sequence_num_settings;
 

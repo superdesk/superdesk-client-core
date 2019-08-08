@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
+import {copyJson} from 'core/helpers/utils';
 
 /**
  * @ngdoc controller
@@ -63,7 +64,7 @@ export function FilterSearchController($scope, contentFilters, notify, $filter) 
             });
 
             $scope.origFilterCondition = {};
-            $scope.filterCondition = _.create($scope.origFilterCondition);
+            $scope.filterCondition = copyJson($scope.origFilterCondition);
             $scope.filterCondition.values = [];
             setFilterValues();
         });

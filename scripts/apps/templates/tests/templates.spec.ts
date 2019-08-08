@@ -14,7 +14,7 @@ describe('templates', () => {
         }));
 
         it('can create template', inject(($controller, api, $q, $rootScope) => {
-            var item = _.create({slugline: 'FOO', headline: 'foo'});
+            var item = {slugline: 'FOO', headline: 'foo'};
             var ctrl = $controller('CreateTemplateController', {item: item});
 
             expect(ctrl.name).toBe('FOO');
@@ -36,7 +36,7 @@ describe('templates', () => {
         }));
 
         it('can update template', inject(($controller, api, $rootScope) => {
-            var item = _.create({slugline: 'FOO', template: '123'});
+            var item = {slugline: 'FOO', template: '123'};
             var ctrl = $controller('CreateTemplateController', {item: item});
 
             $rootScope.$digest();
@@ -49,7 +49,7 @@ describe('templates', () => {
         }));
 
         it('can create new using old template data', inject(($controller, api, $rootScope) => {
-            var item = _.create({slugline: 'foo', template: '123'});
+            var item = {slugline: 'foo', template: '123'};
             var ctrl = $controller('CreateTemplateController', {item: item});
 
             $rootScope.$digest();

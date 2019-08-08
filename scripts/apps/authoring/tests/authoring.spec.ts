@@ -1,5 +1,6 @@
 import {AuthoringWorkspaceService} from '../authoring/services/AuthoringWorkspaceService';
 import _ from 'lodash';
+import {copyJson} from 'core/helpers/utils';
 
 describe('authoring', () => {
     var GUID = 'urn:tag:superdesk-1';
@@ -745,10 +746,10 @@ describe('autosave', () => {
 
         spyOn(api, 'save').and.returnValue($q.when({}));
 
-        autosave.save(_.create(item1), item1);
+        autosave.save(copyJson(item1), item1);
         $timeout.flush(1500);
 
-        autosave.save(_.create(item2), item2);
+        autosave.save(copyJson(item2), item2);
         $timeout.flush(2500);
 
         expect(api.save).toHaveBeenCalled();
