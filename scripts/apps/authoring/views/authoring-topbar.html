@@ -232,6 +232,13 @@
                   </li>
                 </ul>
 
+                <ul ng-if="extraActionsFromExtensions">
+                    <!-- Extra actions from extensions without a group id -->
+                    <li ng-repeat="action in extraActionsFromExtensions">
+                        <button ng-if="!action.groupId" ng-click="triggerActionFromExtension(action)">{{action.label}}</button>
+                    </li>
+                </ul>
+
                 <ul ng-if="item.task.desk && (itemActions.mark_item_for_desks || itemActions.mark_item_for_highlight)">
                   <li class="dropdown__menu-divider"></li>
                   <li><span class="dropdown__menu-label" translate>Mark item for</span></li>
