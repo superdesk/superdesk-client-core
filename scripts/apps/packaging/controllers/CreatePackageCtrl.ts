@@ -1,5 +1,7 @@
+import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
+
 CreatePackageCtrl.$inject = ['data', 'packages', 'authoringWorkspace'];
-export function CreatePackageCtrl(data, packages, authoringWorkspace) {
+export function CreatePackageCtrl(data, packages, authoringWorkspace: AuthoringWorkspaceService) {
     function edit(item) {
         authoringWorkspace.edit(item);
     }

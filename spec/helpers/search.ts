@@ -3,6 +3,7 @@
 import {element, by, browser} from 'protractor';
 import {nav, waitFor, scrollToView, scrollRelative} from './utils';
 import {el} from './e2e-helpers';
+import {ECE} from './expected-conditions-extended';
 
 class GlobalSearch {
     ingestRepo: any;
@@ -166,7 +167,7 @@ class GlobalSearch {
 
             const dots = itemElem.element(by.className('icon-dots-vertical'));
 
-            waitFor(dots);
+            browser.wait(ECE.elementToBeClickable(dots));
             dots.click();
 
             const menu = element(by.css('.dropdown__menu.open'));

@@ -14,6 +14,7 @@ import * as directive from './directives';
 import {PackagesService} from './services';
 import {gettext} from 'core/utils';
 import {isKilled} from 'apps/archive/utils';
+import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 
 /**
  * @ngdoc module
@@ -76,7 +77,7 @@ angular.module('superdesk.apps.packaging', [
                 templateUrl: 'scripts/apps/packaging/views/add-to-package.html',
                 filters: [{action: 'list', type: 'archive'}],
                 additionalCondition: ['authoringWorkspace', 'item', 'authoring', 'packages',
-                    function(authoringWorkspace, item, authoring, packages) {
+                    function(authoringWorkspace: AuthoringWorkspaceService, item, authoring, packages) {
                         var pkg = authoringWorkspace.getItem();
                         var actions = authoring.itemActions(item);
                         var added = pkg ? packages.isAdded(pkg, item) : false;
@@ -94,7 +95,7 @@ angular.module('superdesk.apps.packaging', [
                 controller: ctrl.CombinePackageCtrl,
                 filters: [{action: 'list', type: 'archive'}],
                 additionalCondition: ['authoringWorkspace', 'item', 'authoring',
-                    function(authoringWorkspace, item, authoring) {
+                    function(authoringWorkspace: AuthoringWorkspaceService, item, authoring) {
                         var openItem = authoringWorkspace.getItem();
                         var actions = authoring.itemActions(item);
 

@@ -1,11 +1,7 @@
 import React from 'react';
+import {IPropsIcon} from 'superdesk-api';
 
-interface IProps {
-    className: string;
-    size?: number;
-}
-
-export class Icon extends React.PureComponent<IProps> {
+export class Icon extends React.PureComponent<IPropsIcon> {
     render() {
         return (
             <span style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>

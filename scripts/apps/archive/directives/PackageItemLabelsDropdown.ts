@@ -1,5 +1,5 @@
-PackageItemLabelsDropdown.$inject = ['vocabularies', 'packages', 'authoringWorkspace'];
-export function PackageItemLabelsDropdown(vocabularies, packages, authoringWorkspace) {
+PackageItemLabelsDropdown.$inject = ['vocabularies', 'packages'];
+export function PackageItemLabelsDropdown(vocabularies, packages) {
     return {
         templateUrl: 'scripts/apps/archive/views/package_item_labels_dropdown_directive.html',
         link: function(scope) {

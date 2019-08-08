@@ -128,10 +128,8 @@ describe('internal destinations & generic-page-list', () => {
 
         browser.wait(ECE.hasElementCount(items, 3));
 
-        // hover in order for options dropdown to show up
-        browser.actions()
-            .mouseMove(el(['sortbar--selected']))
-            .perform();
+        // open dropdown
+        el(['sortbar--selected']).click();
 
         element(by.cssContainingText(s(['sortbar--option']), 'Destination name')).click();
 

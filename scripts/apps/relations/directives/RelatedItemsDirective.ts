@@ -1,6 +1,7 @@
 import {get} from 'lodash';
 import {getSuperdeskType} from 'core/utils';
 import {gettext} from 'core/utils';
+import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {IArticle} from 'superdesk-api';
 
 const ARCHIVE_TYPES = ['archive', 'published'];
@@ -17,7 +18,7 @@ const isInArchive = (item: IArticle) => item._type != null && ARCHIVE_TYPES.incl
  */
 
 RelatedItemsDirective.$inject = ['authoringWorkspace', 'relationsService', 'notify'];
-export function RelatedItemsDirective(authoringWorkspace, relationsService, notify) {
+export function RelatedItemsDirective(authoringWorkspace: AuthoringWorkspaceService, relationsService, notify) {
     return {
         scope: {
             item: '=',

@@ -14,7 +14,7 @@ export const Row: React.StatelessComponent<any> = (
         <div
             className={classNames(
                 {
-                    form__row: !rowItem,
+                    'form__row': !rowItem,
                     'form__row-item': rowItem,
                     'no-padding': noPadding,
                     'form__row--flex': flex,

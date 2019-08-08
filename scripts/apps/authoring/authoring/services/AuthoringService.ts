@@ -3,6 +3,7 @@ import * as helpers from 'apps/authoring/authoring/helpers';
 import {gettext} from 'core/utils';
 import {isPublished, isKilled} from 'apps/archive/utils';
 import {ITEM_STATE, CANCELED_STATES, READONLY_STATES} from 'apps/archive/constants';
+import {AuthoringWorkspaceService} from './AuthoringWorkspaceService';
 
 /**
  * @ngdoc service
@@ -90,7 +91,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
     };
 
     this.rewrite = function(item) {
-        var authoringWorkspace = $injector.get('authoringWorkspace');
+        var authoringWorkspace: AuthoringWorkspaceService = $injector.get('authoringWorkspace');
 
         session.getIdentity()
             .then((user) => {
@@ -310,7 +311,10 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
                 origItem._autosave = null;
                 origItem._autosaved = false;
                 origItem._locked = lock.isLockedInCurrentSession(item);
-                $injector.get('authoringWorkspace').update(origItem);
+
+                const authoringWorkspace: AuthoringWorkspaceService = $injector.get('authoringWorkspace');
+
+                authoringWorkspace.update(origItem);
                 return origItem;
             });
         }

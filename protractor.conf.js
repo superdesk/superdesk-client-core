@@ -1,4 +1,4 @@
-
+/* eslint-disable comma-dangle */
 
 var path = require('path');
 

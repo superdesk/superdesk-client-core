@@ -1,6 +1,6 @@
-
 import {MultiActionBarController} from '../controllers';
 import {registerTestExtensions} from 'core/tests/helpers/register-test-extensions';
+import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 
 describe('Multi Action Bar', () => {
     beforeEach(window.module('superdesk.templates-cache'));
@@ -62,7 +62,15 @@ describe('Multi Action Bar', () => {
         }));
 
     it('onSpikeMultiple middleware is called',
-        (done) => inject((superdesk, $controller, privileges, modal, lock, session, authoringWorkspace) => {
+        (done) => inject((
+            superdesk,
+            $controller,
+            privileges,
+            modal,
+            lock,
+            session,
+            authoringWorkspace: AuthoringWorkspaceService,
+        ) => {
             const extensionDelay = 1000;
 
             const articleEntities = {

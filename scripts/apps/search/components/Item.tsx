@@ -14,6 +14,24 @@ import {ListItemTemplate} from './ItemListTemplate';
 import {ItemMgridTemplate} from './ItemMgridTemplate';
 import {IArticle, IDesk} from 'superdesk-api';
 import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
+import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
+
+function isButtonClicked(event): boolean {
+    const selector = 'button';
+
+    // don't trigger the action if a button inside a list view is clicked
+    // if an extension registers a button, it should be able to totally control it.
+    if (
+        event.target.matches(selector)
+
+        // target can be an image or an icon inside a button, so parents need to be checked too
+        || querySelectorParent(event.target, selector) != null
+    ) {
+        return true;
+    } else {
+        return false;
+    }
+}
 
 const CLICK_TIMEOUT = 300;
 
@@ -140,10 +158,7 @@ export class Item extends React.Component<IProps, IState> {
     }
 
     select(event) {
-        // target can be an image or icon inside a button, so parents need to be checked
-        var parentButton = querySelectorParent(event.target, 'button');
-
-        if (parentButton != null) {
+        if (isButtonClicked(event)) {
             return;
         }
 
@@ -161,7 +176,7 @@ export class Item extends React.Component<IProps, IState> {
      * @param {string} itemId Id of the document
      */
     openAuthoringView(itemId) {
-        const {authoringWorkspace} = this.props.svc;
+        const authoringWorkspace: AuthoringWorkspaceService = this.props.svc.authoringWorkspace;
 
         authoringWorkspace.edit({_id: itemId}, 'view');
     }
@@ -173,10 +188,7 @@ export class Item extends React.Component<IProps, IState> {
     }
 
     dbClick(event) {
-        // target can be an image or icon inside a button, so parents need to be checked
-        var parentButton = querySelectorParent(event.target, 'button');
-
-        if (parentButton != null) {
+        if (isButtonClicked(event)) {
             return;
         }
 
@@ -360,8 +372,8 @@ export class Item extends React.Component<IProps, IState> {
                     'list-item-view',
                     {
                         'actions-visible': this.props.hideActions !== true,
-                        active: this.props.flags.selected,
-                        selected: this.props.item.selected && !this.props.flags.selected,
+                        'active': this.props.flags.selected,
+                        'selected': this.props.item.selected && !this.props.flags.selected,
                         'sd-list-item-nested': this.props.nested.length,
                         'sd-list-item-nested--expanded': this.props.nested.length && this.state.showNested,
                         'sd-list-item-nested--collapsed': this.props.nested.length && this.state.showNested === false,

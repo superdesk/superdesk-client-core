@@ -10,42 +10,12 @@ import {applyMiddleware as coreApplyMiddleware} from 'core/middleware';
 import {onChangeMiddleware, getArticleSchemaMiddleware} from '..';
 import {IFunctionPointsService} from 'apps/extension-points/services/FunctionPoints';
 import {isPublished} from 'apps/archive/utils';
+import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
 
 /**
  * @ngdoc directive
  * @module superdesk.apps.authoring
  * @name sdAuthoring
- *
- * @requires superdesk
- * @requires superdeskFlags
- * @requires authoringWorkspace
- * @requires notify
- * @requires desks
- * @requires authoring
- * @requires api
- * @requires session
- * @requires lock
- * @requires privileges
- * @requires content
- * @requires $location
- * @requires referrer
- * @requires macros
- * @requires $timeout
- * @requires $q
- * @requires modal
- * @requires archiveService
- * @requires confirm
- * @requires reloadService
- * @requires $rootScope
- * @requires $interpolate
- * @requires metadata
- * @requires suggest
- * @requires config
- * @requires deployConfig
- * @requires editorResolver
- * @requires $sce
- * @requires mediaIdGenerator
- * @requires functionPoints
  *
  * @description
  *   This directive is responsible for generating superdesk content authoring form.
@@ -53,7 +23,6 @@ import {isPublished} from 'apps/archive/utils';
 
 AuthoringDirective.$inject = [
     'superdesk',
-    'superdeskFlags',
     'authoringWorkspace',
     'notify',
     'desks',
@@ -66,33 +35,55 @@ AuthoringDirective.$inject = [
     '$location',
     'referrer',
     'macros',
-    '$timeout',
     '$q',
     'modal',
     'archiveService',
     'confirm',
     'reloadService',
     '$rootScope',
-    '$interpolate',
-    'metadata',
     'suggest',
     'config',
     'deployConfig',
     'editorResolver',
     'compareVersions',
     'embedService',
-    '$sce',
     'mediaIdGenerator',
     'relationsService',
     '$injector',
     'functionPoints',
 ];
-export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace, notify,
-    desks, authoring, api, session, lock, privileges, content, $location,
-    referrer, macros, $timeout, $q, modal, archiveService, confirm, reloadService,
-    $rootScope, $interpolate, metadata, suggest, config, deployConfig, editorResolver,
-    compareVersions, embedService, $sce, mediaIdGenerator, relationsService, $injector,
-    functionPoints: IFunctionPointsService) {
+export function AuthoringDirective(
+    superdesk,
+    authoringWorkspace: AuthoringWorkspaceService,
+    notify,
+    desks,
+    authoring,
+    api,
+    session,
+    lock,
+    privileges,
+    content,
+    $location,
+    referrer,
+    macros,
+    $q,
+    modal,
+    archiveService,
+    confirm,
+    reloadService,
+    $rootScope,
+    suggest,
+    config,
+    deployConfig,
+    editorResolver,
+    compareVersions,
+    embedService,
+    mediaIdGenerator,
+    relationsService,
+    $injector,
+
+    functionPoints: IFunctionPointsService,
+) {
     return {
         link: function($scope, elem, attrs) {
             var _closing;

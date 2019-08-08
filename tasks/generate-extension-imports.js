@@ -1,4 +1,4 @@
-/* eslint-disable max-len */
+/* eslint-disable max-len, comma-dangle */
 
 var fs = require('fs');
 var path = require('path');

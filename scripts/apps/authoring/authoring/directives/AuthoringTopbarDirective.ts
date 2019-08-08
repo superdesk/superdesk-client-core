@@ -1,3 +1,4 @@
+import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
 import {getSpellchecker} from 'core/editor3/components/spellchecker/default-spellcheckers';
 
 /**
@@ -10,7 +11,11 @@ import {getSpellchecker} from 'core/editor3/components/spellchecker/default-spel
  * @description Generates authoring subnav bar
  */
 AuthoringTopbarDirective.$inject = ['TranslationService', 'privileges', 'authoringWorkspace'];
-export function AuthoringTopbarDirective(TranslationService, privileges, authoringWorkspace) {
+export function AuthoringTopbarDirective(
+    TranslationService,
+    privileges,
+    authoringWorkspace: AuthoringWorkspaceService,
+) {
     return {
         templateUrl: 'scripts/apps/authoring/views/authoring-topbar.html',
         link: function(scope) {

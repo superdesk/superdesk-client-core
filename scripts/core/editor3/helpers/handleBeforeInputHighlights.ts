@@ -3,7 +3,7 @@ import {
     Modifier,
     CharacterMetadata,
     SelectionState,
-    DraftHandleValue
+    DraftHandleValue,
 } from 'draft-js';
 import {List, OrderedSet} from 'immutable';
 import {uniq} from 'lodash';

@@ -1,5 +1,6 @@
 import React from 'react';
 import {ISortOption} from 'superdesk-api';
+import {DropdownTree} from '../dropdown-tree';
 
 export interface ISortFields {
     label: string;
@@ -24,32 +25,38 @@ export class SortBar extends React.Component<IProps, any> {
             <div className="sortbar" data-test-id="sortbar">
                 <span>{gettext('Total:')}</span>
                 {' '}
-                <span className="label-total">{this.props.itemsCount}</span>
+                <span><span className="badge">{this.props.itemsCount}</span></span>
                 {' '}
-                <div className="dropdown dropdown--hover">
-                    <button className="dropdown__toggle" data-test-id="sortbar--selected">
-                        {currentSortOption.label}
-                        <span className="dropdown__caret" />
-                    </button>
-                    <ul className="dropdown__menu dropdown--align-right" >
-                        {
-                            this.props.sortOptions.map((option, i) => (
-                                <li key={i}>
-                                    <button
-                                        onClick={() => this.props.onSortOptionChange({
-                                            field: option.field,
-                                            direction: 'ascending',
-                                        })}
-                                        data-test-id="sortbar--option"
-                                    >
-                                        {option.label}
-                                    </button>
-                                </li>
-                            ))
-                        }
-                    </ul>
-                </div>
-
+                <DropdownTree
+                    getToggleElement={(isOpen, onClick) => (
+                        <button
+                            onClick={onClick}
+                            className="dropdown__toggle"
+                            data-test-id="sortbar--selected"
+                        >
+                            {currentSortOption.label}
+                            <span className="dropdown__caret" />
+                        </button>
+                    )}
+                    groups={[{render: () => null, items: this.props.sortOptions}]}
+                    renderItem={(key, item, closeDropdown) => (
+                        <button
+                            key={key}
+                            className="sd-dropdown-item"
+                            onClick={() => {
+                                closeDropdown();
+                                this.props.onSortOptionChange({
+                                    field: item.field,
+                                    direction: 'ascending',
+                                });
+                            }}
+                            data-test-id="sortbar--option"
+                        >
+                            {item.label}
+                        </button>
+                    )}
+                    wrapperStyles={{paddingTop: 10, paddingBottom: 10}}
+                />
                 {
                     this.props.selected.direction === 'ascending'
                         ? (

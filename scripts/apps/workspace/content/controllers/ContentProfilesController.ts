@@ -1,6 +1,6 @@
 import {cloneDeep, get, isEqual} from 'lodash';
-import {IContentProfile} from 'superdesk-interfaces/ContentProfile';
 import {gettext} from 'core/utils';
+import {IContentProfile} from 'superdesk-api';
 
 ContentProfilesController.$inject = ['$scope', '$location', 'notify', 'content', 'modal', '$q', 'config'];
 export function ContentProfilesController($scope, $location, notify, content, modal, $q, config) {

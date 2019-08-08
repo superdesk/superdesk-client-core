@@ -45,7 +45,7 @@ export class ListItemInfo extends React.PureComponent<IPropsItemListInfo> {
             className = 'item-info item-info-reduced-rowheight';
             listItems = React.createElement(
                 'div',
-                {style: {flexGrow: 1, overflow: 'hidden'}},
+                {style: {flexGrow: 1, flexDirection: 'column', overflow: 'hidden'}},
                 renderArea('singleLine', angular.extend({
                     svc: this.props.svc,
                     scope: this.props.scope,
@@ -55,7 +55,7 @@ export class ListItemInfo extends React.PureComponent<IPropsItemListInfo> {
             className = classNames('item-info', {'item-info-reduced-rowheight': this.props.scope.singleLine});
             listItems = React.createElement(
                 'div',
-                {style: {flexGrow: 1, overflow: 'hidden'}},
+                {style: {flexGrow: 1, flexDirection: 'column', overflow: 'hidden'}},
                 renderArea('firstLine', angular.extend({
                     svc: this.props.svc,
                     scope: this.props.scope,
@@ -75,7 +75,7 @@ export class ListItemInfo extends React.PureComponent<IPropsItemListInfo> {
                 {listItems}
                 {
                     articleDisplayWidgets.length < 1 ? null : (
-                        <div style={{marginLeft: 10}}>
+                        <div style={{marginLeft: 10, display: 'flex'}} className="sibling-spacer-10">
                             {
                                 articleDisplayWidgets.map((Component, i) =>
                                     <Component key={i} article={this.props.item} />,

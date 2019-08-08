@@ -1,3 +1,5 @@
+import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
+
 describe('monitoring', () => {
     beforeEach(window.module('superdesk.apps.monitoring'));
     beforeEach(window.module('superdesk.mocks'));
@@ -296,7 +298,12 @@ describe('monitoring', () => {
             }),
         );
 
-        it('can edit non spiked item', inject(($controller, $rootScope, $compile, authoringWorkspace, session) => {
+        it('can edit non spiked item', inject((
+            $rootScope,
+            $compile,
+            authoringWorkspace: AuthoringWorkspaceService,
+            session,
+        ) => {
             session.identity = {_id: 'foo'};
             var scope = $rootScope.$new(),
                 $elm = $compile('<div sd-monitoring-view></div>')(scope);

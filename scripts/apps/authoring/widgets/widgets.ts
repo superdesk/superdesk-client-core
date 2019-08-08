@@ -1,8 +1,9 @@
 import {debounce} from 'lodash';
-import {IContentProfile} from 'superdesk-interfaces/ContentProfile';
 import {isWidgetVisibleForContentProfile} from 'apps/workspace/content/components/WidgetsConfig';
 import {gettext} from 'core/utils';
 import {isKilled} from 'apps/archive/utils';
+import {AuthoringWorkspaceService} from '../authoring/services/AuthoringWorkspaceService';
+import {IContentProfile} from 'superdesk-api';
 
 function AuthoringWidgetsProvider() {
     var widgets = [];
@@ -43,8 +44,21 @@ function AuthoringWidgetsProvider() {
 
 WidgetsManagerCtrl.$inject = ['$scope', '$routeParams', 'authoringWidgets', 'archiveService', 'authoringWorkspace',
     'keyboardManager', '$location', 'desks', 'lock', 'content', 'config', 'lodash', 'privileges', '$injector'];
-function WidgetsManagerCtrl($scope, $routeParams, authoringWidgets, archiveService, authoringWorkspace,
-    keyboardManager, $location, desks, lock, content, config, _, privileges, $injector) {
+function WidgetsManagerCtrl($scope,
+    $routeParams,
+    authoringWidgets,
+    archiveService,
+    authoringWorkspace: AuthoringWorkspaceService,
+    keyboardManager,
+    $location,
+    desks,
+    lock,
+    content,
+    config,
+    _,
+    privileges,
+    $injector,
+) {
     $scope.active = null;
 
     $scope.$watch('item', (item) => {

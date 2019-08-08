@@ -3,17 +3,57 @@ import React from 'react';
 import {PreviewModal} from '../previewModal';
 import {gettext} from 'core/utils';
 import {isPublished} from 'apps/archive/utils';
+import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
 
-SendItem.$inject = ['$q', 'api', 'search', 'desks', 'notify', 'authoringWorkspace',
-    'superdeskFlags', '$location', 'macros', '$rootScope', 'deployConfig',
-    'authoring', 'send', 'editorResolver', 'confirm', 'archiveService',
-    'preferencesService', 'multi', 'datetimeHelper', 'config', 'privileges',
-    'storage', 'modal', 'urls', 'extensionPoints', 'metadata'];
-export function SendItem($q, api, search, desks, notify, authoringWorkspace,
-    superdeskFlags, $location, macros, $rootScope, deployConfig,
-    authoring, send, editorResolver, confirm, archiveService,
-    preferencesService, multi, datetimeHelper, config, privileges,
-    storage, modal, urls, extensionPoints, metadata) {
+SendItem.$inject = [
+    '$q',
+    'api',
+    'search',
+    'desks',
+    'notify',
+    'authoringWorkspace',
+    'superdeskFlags',
+    '$location',
+    'macros',
+    '$rootScope',
+    'authoring',
+    'send',
+    'archiveService',
+    'preferencesService',
+    'multi',
+    'datetimeHelper',
+    'config',
+    'privileges',
+    'storage',
+    'modal',
+    'urls',
+    'extensionPoints',
+    'metadata',
+];
+export function SendItem($q,
+    api,
+    search,
+    desks,
+    notify,
+    authoringWorkspace: AuthoringWorkspaceService,
+    superdeskFlags,
+    $location,
+    macros,
+    $rootScope,
+    authoring,
+    send,
+    archiveService,
+    preferencesService,
+    multi,
+    datetimeHelper,
+    config,
+    privileges,
+    storage,
+    modal,
+    urls,
+    extensionPoints,
+    metadata,
+) {
     return {
         scope: {
             item: '=',

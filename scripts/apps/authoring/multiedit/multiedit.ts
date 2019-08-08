@@ -11,9 +11,10 @@
 import {gettext} from 'core/utils';
 import {isPublished} from 'apps/archive/utils';
 import _ from 'lodash';
+import {AuthoringWorkspaceService} from '../authoring/services/AuthoringWorkspaceService';
 
 MultieditService.$inject = ['storage', 'superdesk', 'authoringWorkspace', 'referrer', '$location'];
-function MultieditService(storage, superdesk, authoringWorkspace, referrer, $location) {
+function MultieditService(storage, superdesk, authoringWorkspace: AuthoringWorkspaceService, referrer, $location) {
     // 1. Service manages multiedit screen
     // 2. Screen has it's boards, at least 2 of them
     // 3. Every board can be popuplated with one content item

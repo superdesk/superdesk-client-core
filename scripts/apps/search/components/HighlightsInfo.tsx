@@ -104,7 +104,7 @@ export class HighlightsInfo extends React.PureComponent<any, any> {
                         className: classNames({
                             'icon-star': highlights.length === 1,
                             'icon-multi-star': highlights.length > 1,
-                            red: hasActiveHighlight,
+                            'red': hasActiveHighlight,
                         }),
                     }),
                 ),
