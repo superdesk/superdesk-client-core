@@ -4,6 +4,7 @@ import {getMarkForUserModal} from '../../../../extensions/markForUser/src/get-ma
 import {extensions} from 'core/extension-imports.generated';
 import {showModal} from 'core/services/modalService';
 import {IArticleAction} from 'superdesk-api';
+import {get, flatMap} from 'lodash';
 
 /**
  * @ngdoc directive
@@ -72,24 +73,23 @@ export function AuthoringTopbarDirective(
                 actionToTrigger.onTrigger();
             };
 
-            Object.keys(extensions).forEach((extension) => {
-                const {activationResult} = extensions[extension];
+            Promise.all(
+                Object.values(extensions)
+                    .map(({activationResult}) => {
+                        const getExtraActions = get(
+                            activationResult,
+                            'contributions.entities.article.getExtraActions',
+                            null,
+                        );
 
-                if (
-                    activationResult &&
-                    activationResult.contributions &&
-                    activationResult.contributions.entities &&
-                    activationResult.contributions.entities.article &&
-                    activationResult.contributions.entities.article.getExtraActions
-                ) {
-                    activationResult.contributions.entities.article.getExtraActions(scope.item)
-                        .then((actions) => {
-                            scope.extraActionsFromExtensions = [
-                                ...scope.extraActionsFromExtensions,
-                                ...actions,
-                            ];
-                        });
-                }
+                        if (getExtraActions) {
+                            return getExtraActions(scope.item);
+                        }
+                    })
+                    .filter(Boolean),
+            ).then((actions) => {
+                console.log(flatMap(actions));
+                scope.extraActionsFromExtensions = flatMap(actions);
             });
         },
     };
