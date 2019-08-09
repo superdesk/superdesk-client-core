@@ -55,20 +55,6 @@ export function getValidMediaType(event) {
 }
 
 /**
- * Check if the media files dragged are of allowed type or not
- * @param mediaType holds type of data being dragged
- * @param dataTransfer holds data being dragged
- */
-export function isAllowedMediaType(mediaType: string, dataTransfer: DataTransfer): boolean {
-    if (mediaType === 'Files' && dataTransfer.files) {
-        return Object.values(dataTransfer.files).every(
-            (file: File) => file.type.includes('audio')
-            || file.type.includes('image') || file.type.includes('video'));
-    }
-    return mediaType.includes('application/superdesk');
-}
-
-/**
     * @ngdoc method
     * @name Editor3#canDropMedia
     * @param {Object} e Event
@@ -78,8 +64,17 @@ export function isAllowedMediaType(mediaType: string, dataTransfer: DataTransfer
 */
 export function canDropMedia(e, editorConfig) {
     const {editorFormat, readOnly, singleLine} = editorConfig;
-    const isValidMedia = !!getValidMediaType(e.originalEvent);
     const supportsMedia = !readOnly && !singleLine && editorFormat.indexOf('media') !== -1;
+    const mediaType = getValidMediaType(e.originalEvent);
+    const dataTransfer = e.originalEvent.dataTransfer;
+    let isValidMedia = !!mediaType;
+
+    if (mediaType === 'Files' && dataTransfer.files) {
+        // checks if files dropped from external folder are valid or not
+        isValidMedia = Object.values(dataTransfer.files).every(
+            (file: File) => file.type.includes('audio')
+            || file.type.includes('image') || file.type.includes('video'));
+    }
 
     return supportsMedia && isValidMedia;
 }

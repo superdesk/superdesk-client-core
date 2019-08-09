@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {getValidMediaType, canDropMedia, isAllowedMediaType} from './Editor3Component';
+import {getValidMediaType, canDropMedia} from './Editor3Component';
 import {moveBlock, dragDrop, embed} from '../actions/editor3';
 import {getEmbedObject} from './embeds/EmbedInput';
 
@@ -51,7 +51,8 @@ class BaseUnstyledComponent extends React.Component<any, any> {
         const blockKey = this.getDropBlockKey();
         const link = event.originalEvent.dataTransfer.getData('URL');
 
-        if (canDropMedia(event, this.props.editorProps) && isAllowedMediaType(mediaType, dataTransfer)) {
+        if (canDropMedia(event, this.props.editorProps)
+            && (mediaType === 'Files' || mediaType.includes('application/superdesk'))) {
             this.props.dispatch(dragDrop(dataTransfer, mediaType, blockKey));
         } else if (
             typeof link === 'string'
