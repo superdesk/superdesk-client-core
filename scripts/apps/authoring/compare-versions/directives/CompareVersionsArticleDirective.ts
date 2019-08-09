@@ -1,7 +1,6 @@
 import DiffMatchPatch from 'diff-match-patch';
 import shortid from 'shortid';
 import _ from 'lodash';
-import {copyJson} from 'core/helpers/utils';
 
 class LinkFunction {
     compareVersions: any;
@@ -72,7 +71,7 @@ class LinkFunction {
             let compareWithItem = _.find(this.compareVersions.versions,
                 {_current_version: this.scope.compareWith.version});
 
-            this.scope.compareWithItem = copyJson(compareWithItem);
+            this.scope.compareWithItem = _.create(compareWithItem);
             this.setVersionsDifference(this.scope.item, this.scope.compareWithItem);
         }
 

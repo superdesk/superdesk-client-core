@@ -1,6 +1,5 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
-import {copyJson} from 'core/helpers/utils';
 
 ArchivedItemKill.$inject = ['authoring', 'api', 'notify'];
 
@@ -23,7 +22,7 @@ export function ArchivedItemKill(authoring, api, notify) {
 
                     api.save('content_templates_apply', {}, itemForTemplate, {}).then((result) => {
                         itemForTemplate = _.pick(result, _.keys(authoring.getContentFieldDefaults()));
-                        scope.item = copyJson(scope.item);
+                        scope.item = _.create(scope.item);
                         _.each(itemForTemplate, (value, key) => {
                             if (!_.isUndefined(value) && !_.isEmpty(value)) {
                                 scope.item[key] = value;

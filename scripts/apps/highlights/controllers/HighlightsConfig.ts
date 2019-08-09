@@ -1,6 +1,5 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
-import {copyJson} from 'core/helpers/utils';
 
 HighlightsConfig.$inject = ['$scope', 'highlightsService', 'desks', 'api', 'notify', 'modal'];
 export function HighlightsConfig($scope, highlightsService, desks, api, notify, modal) {
@@ -24,7 +23,7 @@ export function HighlightsConfig($scope, highlightsService, desks, api, notify, 
     $scope.edit = function(config) {
         clearErrorMessages();
         $scope.modalActive = true;
-        $scope.configEdit = copyJson(config);
+        $scope.configEdit = _.create(config);
         $scope.assignedDesks = deskList(config.desks);
         _config = config;
         if (!$scope.configEdit.auto_insert) {

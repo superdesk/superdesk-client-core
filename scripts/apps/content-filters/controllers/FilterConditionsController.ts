@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 import {gettext} from 'core/utils';
-import {copyJson} from 'core/helpers/utils';
 
 /**
  * @ngdoc controller
@@ -28,7 +27,7 @@ export function FilterConditionsController($scope, contentFilters, notify, modal
 
         $scope.edit = function(fc) {
             $scope.origFilterCondition = fc || {};
-            $scope.filterCondition = copyJson($scope.origFilterCondition);
+            $scope.filterCondition = _.create($scope.origFilterCondition);
             $scope.filterCondition.values = [];
 
             if ($scope.isListValue()) {

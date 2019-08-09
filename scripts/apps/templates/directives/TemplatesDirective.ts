@@ -1,6 +1,5 @@
 import notifySaveError from '../helpers';
 import {gettext} from 'core/utils';
-import {copyJson} from 'core/helpers/utils';
 
 TemplatesDirective.$inject = ['notify', 'api', 'templates', 'modal', 'desks', 'weekdays',
     'content', '$filter', 'lodash'];
@@ -251,7 +250,7 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
 
             $scope.edit = function(template) {
                 $scope.origTemplate = template || {template_type: 'create', is_public: true};
-                $scope.template = copyJson($scope.origTemplate);
+                $scope.template = _.create($scope.origTemplate);
                 $scope.template.schedule = $scope.origTemplate.schedule || {};
                 $scope.template.data = $scope.origTemplate.data || {
                     headline: '',

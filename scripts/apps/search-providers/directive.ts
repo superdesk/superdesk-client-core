@@ -1,6 +1,5 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
-import {copyJson} from 'core/helpers/utils';
 
 export default function SearchProviderConfigDirective(searchProviderService, notify, api, modal) {
     return {
@@ -62,8 +61,8 @@ export default function SearchProviderConfigDirective(searchProviderService, not
              */
             $scope.edit = function(provider) {
                 $scope.origProvider = provider || {};
-                $scope.provider = copyJson($scope.origProvider);
-                $scope.provider.config = copyJson($scope.origProvider.config || {});
+                $scope.provider = _.create($scope.origProvider);
+                $scope.provider.config = _.create($scope.origProvider.config || {});
             };
 
             /**

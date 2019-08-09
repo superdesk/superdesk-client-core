@@ -1,6 +1,5 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
-import {copyJson} from 'core/helpers/utils';
 
 IngestRulesContent.$inject = ['api', 'notify', 'modal', '$filter'];
 export function IngestRulesContent(api, notify, modal, $filter) {
@@ -17,7 +16,7 @@ export function IngestRulesContent(api, notify, modal, $filter) {
                 });
 
             scope.edit = function(ruleset) {
-                scope.editRuleset = copyJson(ruleset);
+                scope.editRuleset = _.create(ruleset);
                 scope.editRuleset.rules = ruleset.rules || [];
                 _orig = ruleset;
             };

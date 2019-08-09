@@ -1,7 +1,6 @@
 import {limits} from 'apps/desks/constants';
 import _ from 'lodash';
 import {gettext} from 'core/utils';
-import {copyJson} from 'core/helpers/utils';
 
 DeskeditStages.$inject = ['api', 'WizardHandler', 'tasks', 'desks', 'notify',
     'macros', 'deployConfig'];
@@ -72,7 +71,7 @@ export function DeskeditStages(api, WizardHandler, tasks, desks, notify, macros,
                 stage.local_readonly = !!stage.local_readonly;
 
                 orig = stage;
-                scope.editStage = copyJson(stage);
+                scope.editStage = _.create(stage);
                 if (!scope.editStage._id) {
                     var lastStage: any = _.last(scope.stages);
 
