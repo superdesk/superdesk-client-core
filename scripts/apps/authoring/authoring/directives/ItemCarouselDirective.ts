@@ -31,6 +31,12 @@ interface IScope extends ng.IScope {
     upload(): void;
 }
 
+function getItemsCount(items: Array<any>): number {
+    return items
+        .filter((_item) => _item[_item.fieldId] != null)
+        .length;
+}
+
 /**
  * @ngdoc directive
  * @module superdesk.apps.authoring
@@ -110,12 +116,6 @@ export function ItemCarouselDirective(notify) {
                     waitForMediaToLoad(mediaItems).then(initCarousel);
                 });
             });
-
-            function getItemsCount(items: Array<any>): number {
-                return Object.values(items)
-                    .filter((_item) => _item[_item.fieldId] != null)
-                    .length;
-            }
 
             /*
              * Initialize carousel navigation
