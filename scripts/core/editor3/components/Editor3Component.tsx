@@ -64,8 +64,21 @@ export function getValidMediaType(event) {
 */
 export function canDropMedia(e, editorConfig) {
     const {editorFormat, readOnly, singleLine} = editorConfig;
-    const isValidMedia = !!getValidMediaType(e.originalEvent);
     const supportsMedia = !readOnly && !singleLine && editorFormat.indexOf('media') !== -1;
+    const mediaType = getValidMediaType(e.originalEvent);
+    const dataTransfer = e.originalEvent.dataTransfer;
+    let isValidMedia = !!mediaType;
+
+    if (mediaType === 'Files' && dataTransfer.files) {
+        // checks if files dropped from external folder are valid or not
+        const isValidFileType = Object.values(dataTransfer.files).every(
+            (file: File) => file.type.startsWith('audio/')
+            || file.type.startsWith('image/') || file.type.startsWith('video/'));
+
+        if (!isValidFileType) {
+            return false;
+        }
+    }
 
     return supportsMedia && isValidMedia;
 }
