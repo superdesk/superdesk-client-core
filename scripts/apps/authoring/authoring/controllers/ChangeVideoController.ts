@@ -29,7 +29,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
     $scope.cut = {};
     $scope.crop = {};
     $scope.rotate = 0;
-    $scope.quality = 0;
+    $scope.scale = '';
     $scope.video = null;
     $scope.flag = true;
     $scope.listFrames=null;
@@ -43,12 +43,14 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
     };
     $scope.editVideo = {
         isDirty: false,
-        isChange: false,
+        isProcessing: false,
     };
     $scope.qualityVideo = {
-        is720: false,
-        is480: false,
-        is240: false,
+        1080: false,
+        720: false,
+        480: false,
+        360: false,
+        240: false,
     };
 
     $scope.isNew = $scope.data.isNew === true;
@@ -84,8 +86,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
      * Checking the status of edit video and release loading after video finish.
      */
     $scope.saveEditVideo = function () {
-        const videoEditing = document.querySelector('.video-editing');
-        videoEditing.classList.add('video-loading');
+        $scope.editVideo.isProcessing = true;
         $scope.video.pause();
         $scope.isAoISelectionModeEnabled = true;
         const cut = ($scope.cut.end - $scope.cut.start) === ($scope.video.duration || 0) ? {} : $scope.cut;
@@ -124,13 +125,14 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
                                     stopInterval(stopIntervalID);
                                     clearJcrop();
                                     $scope.isAoISelectionModeEnabled = false;
+                                    $scope.editVideo.isDirty = false;
                                     $scope.data.isDirty = true;
                                     api.get(`/video_edit/${response._id}?action=timeline&amount=40`);
                                     $scope.$applyAsync(() => {
                                         $scope.cancelEditVideo();
                                         $scope.data.item = angular.extend($scope.data.item, response.item);
                                         $scope.videoReload = true;
-                                        videoEditing.classList.remove('video-loading');
+                                        $scope.editVideo.isProcessing = false;
                                     })
                                 }
                             }, 2500);
@@ -138,14 +140,10 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
                     }
                 ).catch(err => {
                     notify.error(err.data._message);
-                    clearJcrop();
                     $scope.isAoISelectionModeEnabled = false;
-                    videoEditing.classList.remove('video-loading');
+                    $scope.editVideo.isProcessing = false;
                 });
         }
-        $scope.editVideo.isDirty = false;
-        $scope.data.isDirty = true;
-        $scope.editVideo.isChange = true;
     };
 
     function clearJcrop() {
@@ -171,7 +169,6 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
     $scope.cancelEditVideo = function () {
         var file = document.getElementById("file-upload")
         file.value = "";
-        $scope.editVideo.isChange = false;
         $scope.editVideo.isDirty = false;
         $scope.cut = {
             start: 0,
@@ -186,7 +183,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         //reset edit video data
         $scope.thumbnail = {};
         $scope.crop = {};
-        $scope.quality = 0;
+        $scope.scale = '';
         $scope.rotate = 0;
         let video = document.getElementById('video-preview');
         actRotate(video, $scope.rotate, 0);
@@ -296,18 +293,12 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
                     end: $scope.video.duration || 0,
                 };
             });
+            // set video resolutions
             if ($scope.video) {
-                if ($scope.video.videoWidth > 720) {
-                    $scope.qualityVideo.is720 = true;
-                }
-                if ($scope.video.videoWidth > 480) {
-                    $scope.qualityVideo.is480 = true;
-                }
-                if ($scope.video.videoWidth > 240) {
-                    $scope.qualityVideo.is240 = true;
-                }
-                if ($scope.video.videoWidth > 120) {
-                    $scope.qualityVideo.is120 = true;
+                for (let i of Object.keys($scope.qualityVideo)) {
+                    if ($scope.video.videoHeight > i) {
+                        $scope.qualityVideo[i] = true
+                    }
                 }
             }
             $scope.loadTimelineThumbnails();
@@ -379,7 +370,6 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
     $scope.loadTimelineThumbnails = async function () {
         const res = await api.get(`/video_edit/${$scope.data.item._id}?tag=${getRandomSpan()}`)
         if (res && res.processing.thumbnails_timeline === false) {
-
             $scope.$applyAsync(() => {
                 if (_.isEmpty(res.thumbnails.timeline))
                 {
@@ -652,19 +642,8 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
      * @description change quality the video
      *
      */
-    $scope.changeQualityVideo = (currentTarget) => {
-        document.getElementById('txtQuality').innerText = currentTarget.value === 0 ? 'Same' : currentTarget.value + "p";
-        let self = currentTarget;
-        let elementQuality = document.getElementsByClassName('quality');
-        [].forEach.call(elementQuality, function (el) {
-            el.classList.remove('active');
-        });
-        self.classList.add("active");
-
-        let theToggle = document.getElementById('toggleQuality');
-        showHideToggleMenu(theToggle, 'on');
-
-        $scope.quality = currentTarget.value;
+    $scope.changeQualityVideo = quality => {
+        $scope.scale = quality
         $scope.editVideo.isDirty = true;
     }
 
