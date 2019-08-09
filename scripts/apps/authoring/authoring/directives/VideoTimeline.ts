@@ -230,7 +230,7 @@ export function VideoTimeline($rootScope, $interval, api) {
             };
 
             function getRandomSpan() {
-                var random = Math.floor(1000 + Math.random() * 9000);
+                let random = Math.floor(1000 + Math.random() * 9000);
                 return random
             }
 
