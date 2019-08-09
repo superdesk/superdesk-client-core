@@ -45,7 +45,8 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
     };
     $scope.editVideo = {
         isDirty: false,
-        isChange: false,
+        isChanged: false,
+        isProcessing: false,
     };
     $scope.qualityVideo = {
         1080: false,
@@ -88,8 +89,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
      * Checking the status of edit video and release loading after video finish.
      */
     $scope.saveEditVideo = function () {
-        const videoEditing = document.querySelector('.video-editing');
-        videoEditing.classList.add('video-loading');
+        $scope.editVideo.isProcessing = true;
         $scope.video.pause();
         $scope.isAoISelectionModeEnabled = true;
         const cut = ($scope.cut.end - $scope.cut.start) === ($scope.video.duration || 0) ? {} : $scope.cut;
@@ -105,13 +105,13 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         })
             .then(
                 response => {
-                    const id = response._id;
+                    const id = response.item._id;
                     (function checkVideoProcessing(id) {
                         stopIntervalID = $interval(async function () {
-                            const item = await api.get(`/video_edit/${id}`);
-                            if (await item.processing === false) {
+                            const item = await api.get(`video_edit/${id}`);
+                            if (await item.processing.video === false) {
                                 stopInterval(stopIntervalID);
-                                $scope.videoReload = false;;
+                                $scope.videoReload = false;
                                 clearJcrop();
                                 $scope.isAoISelectionModeEnabled = false;
                                 $scope.data.isDirty = true;
@@ -119,21 +119,21 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
                                     $scope.cancelEditVideo();
                                     $scope.data.item = angular.extend($scope.data.item, response._id);
                                     $scope.videoReload = true;
-                                    videoEditing.classList.remove('video-loading');
+                                    $scope.editVideo.isProcessing = false;
                                 })
                             }
-                        }, 2500);
+                        }, 3500);
                     })(id);
                 }
             ).catch(err => {
                 notify.error(err.data._message);
                 clearJcrop();
                 $scope.isAoISelectionModeEnabled = false;
-                videoEditing.classList.remove('video-loading');
+                $scope.editVideo.isProcessing = false;
             });
         $scope.editVideo.isDirty = false;
         $scope.data.isDirty = true;
-        $scope.editVideo.isChange = true;
+        $scope.editVideo.isChanged = true;
 
     };
 
@@ -161,7 +161,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
     $scope.cancelEditVideo = function () {
         var file = document.getElementById("file-upload")
         file.value = "";
-        $scope.editVideo.isChange = false;
+        $scope.editVideo.isChanged = false;
         $scope.editVideo.isDirty = false;
         $scope.cut = {
             start: 0,
