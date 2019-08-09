@@ -71,9 +71,13 @@ export function canDropMedia(e, editorConfig) {
 
     if (mediaType === 'Files' && dataTransfer.files) {
         // checks if files dropped from external folder are valid or not
-        isValidMedia = Object.values(dataTransfer.files).every(
-            (file: File) => file.type.includes('audio')
-            || file.type.includes('image') || file.type.includes('video'));
+        const isValidFileType = Object.values(dataTransfer.files).every(
+            (file: File) => file.type.startsWith('audio/')
+            || file.type.startsWith('image/') || file.type.startsWith('video/'));
+
+        if (!isValidFileType) {
+            return false;
+        }
     }
 
     return supportsMedia && isValidMedia;
