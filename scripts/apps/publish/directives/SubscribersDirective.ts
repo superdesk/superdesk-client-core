@@ -22,7 +22,7 @@ import {gettext} from 'core/utils';
 SubscribersDirective.$inject = [
     'notify', 'api', 'subscribersService', 'adminPublishSettingsService', 'modal',
     'metadata', 'contentFilters', '$q', '$filter', 'products', '$rootScope',
-    'deployConfig'
+    'deployConfig',
 ];
 
 export function SubscribersDirective(
