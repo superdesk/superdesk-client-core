@@ -270,7 +270,6 @@ export function VideoTimeline($rootScope, $interval, api) {
                     thumnails.push(video)
                     inner_frames.append(video);
                 }
-
                 IntervalID = $interval(async function () {
                     if (count <= total_thumbnail) {
                         if (list_thumbnails && list_thumbnails.length > 0) {
@@ -288,7 +287,6 @@ export function VideoTimeline($rootScope, $interval, api) {
                         count += 1;
                     }
                     else {
-
                         stopInterval(IntervalID);
                     }
                 }, time)
