@@ -102,20 +102,27 @@
                         <div class="sd-photo-preview__thumbnail-edit-label">Video thumbnail</div>
                         <div class="image-overlay">
                             <div class="image-overlay__button-block">
-                                <a class="image-overlay__button" sd-tooltip="Use current frame"
+                                <span class="image-overlay__button" sd-tooltip="Use current frame"
                                     ng-click="captureThumbnail()">
                                     <i class="icon-photo"></i>
-                                </a>
-                                <a class="image-overlay__button" sd-tooltip="Upload image" ng-click="uploadThumbnail()">
-                                    <i class="icon-upload"></i>
-                                </a>
-                                <input type="file" id="file-upload"
-                                    onchange="angular.element(this).scope().uploadChange(this)" style="display:none"
-                                    accept="image/*">
+                                </span>
+                                <form id="file-upload" ng-init="initForm()">
+                                    <label for="media-thumbnail">
+                                        <span class="image-overlay__button" sd-tooltip="Upload image">
+                                            <i class="icon-upload"></i>
+                                        </span>
+                                    </label>
+                                    <input
+                                        type="file"
+                                        id="media-thumbnail"
+                                        name="file"
+                                        onchange="angular.element(this).scope().uploadChange(this)" style="display:none"
+                                        accept="image/*">
+                                </form>
                             </div>
                         </div>
                         <div>
-                            <div id="preview-thumbnail" class="thumbnail-preview sd-photo-preview__video-container"></div>
+                            <div id="preview-thumbnail" class="thumbnail-preview sd-photo-preview__video-container" ng-model='canvas'></div>
                             <div class="no-thumnail" id="no-thumbnail">
                                 <div class="upload__info-icon"></div>
                                 <h2 class="upload__info-heading" translate="">Capture or upload video thumbnail</h2>
