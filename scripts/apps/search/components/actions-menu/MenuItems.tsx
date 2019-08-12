@@ -133,40 +133,26 @@ export default class MenuItems extends React.Component<IProps, IState> {
             }>;
         } = {};
 
-        // convert IDs to labels so extensions can use meaningful names
-        const getGroupLabelFromId = (id: string) => {
-            switch (id) {
-                case 'corrections':
-                    return gettext('Corrections');
-                case 'highlights':
-                    return gettext('Relations');
-                case 'packaging':
-                    return gettext('Packages');
-                default:
-                    return 'default';
-            }
-        };
+        const moveActionsToDefaultGroup = ['Planning', 'duplicate'];
 
         AUTHORING_MENU_GROUPS.forEach((group) => {
-            const groupIdForLabel = group._id === 'duplicate' ? 'default' : group._id;
-            const groupLabel = getGroupLabelFromId(groupIdForLabel);
-
-            if (actions[group._id]) {
-                if (groupedItems[groupLabel] == null) {
-                    groupedItems[groupLabel] = [];
+            const groupId = moveActionsToDefaultGroup.includes(group._id) ? 'default' : group._id;
+            if (actions[groupId]) {
+                if (groupedItems[groupId] == null) {
+                    groupedItems[groupId] = [];
                 }
 
                 if (group.concate) {
-                    const submenu = actions[group._id].map((action) => createAction(action).element);
+                    const submenu = actions[groupId].map((action) => createAction(action).element);
 
-                    groupedItems[groupLabel].push({
+                    groupedItems[groupId].push({
                         label: group.label,
                         element: (
-                            <li key={`group-label-${groupLabel}`}>
+                            <li key={`group-id-${groupId}`}>
                                 <SubmenuDropdown
                                     label={gettext(group.label)}
                                     submenu={submenu}
-                                    icon={actions[group._id][0].icon}
+                                    icon={actions[groupId][0].icon}
                                 />
                             </li>
                         ),
@@ -174,8 +160,8 @@ export default class MenuItems extends React.Component<IProps, IState> {
                     return;
                 }
 
-                actions[group._id].map(createAction).forEach(({label, element}) => {
-                    groupedItems[groupLabel].push({
+                actions[groupId].map(createAction).forEach(({label, element}) => {
+                    groupedItems[groupId].push({
                         label,
                         element,
                     });
@@ -185,16 +171,17 @@ export default class MenuItems extends React.Component<IProps, IState> {
 
         // adding menu items for the groups that are not defined above
         Object.keys(actions).forEach((groupId) => {
-            const groupLabel = getGroupLabelFromId(groupId);
             const existingGroup = AUTHORING_MENU_GROUPS.find((g) => g._id === groupId);
 
             if (!existingGroup) {
-                if (groupedItems[groupLabel] == null) {
-                    groupedItems[groupLabel] = [];
+                const finalGroupId = moveActionsToDefaultGroup.includes(groupId) ? 'default' : groupId;
+
+                if (groupedItems[finalGroupId] == null) {
+                    groupedItems[finalGroupId] = [];
                 }
 
                 actions[groupId].map(createAction).forEach(({label, element}) => {
-                    groupedItems[groupLabel].push({label, element});
+                    groupedItems[finalGroupId].push({label, element});
                 });
             }
         });
@@ -213,17 +200,17 @@ export default class MenuItems extends React.Component<IProps, IState> {
             );
             const {priority} = action;
 
-            if (action.labelForGroup == null) {
+            if (action.groupId == null) {
                 if (groupedItems['default'] == null) {
                     groupedItems['default'] = [];
                 }
                 groupedItems['default'].push({label: action.label, element, priority});
             } else {
-                if (groupedItems[action.labelForGroup] == null) {
-                    groupedItems[action.labelForGroup] = [];
+                if (groupedItems[action.groupId] == null) {
+                    groupedItems[action.groupId] = [];
                 }
 
-                groupedItems[action.labelForGroup].push({label: action.label, element, priority});
+                groupedItems[action.groupId].push({label: action.label, element, priority});
             }
         });
 

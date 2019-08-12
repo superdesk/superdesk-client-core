@@ -34,7 +34,6 @@ declare module 'superdesk-api' {
     export type IDisplayPriority = number;
 
     export interface IArticleAction {
-        labelForGroup?: string;
         groupId?: string; // action lists can specify which groups they wanna render via an id
         priority?: IDisplayPriority;
         icon?: string;

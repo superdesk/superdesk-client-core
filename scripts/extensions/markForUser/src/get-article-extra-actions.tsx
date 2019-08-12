@@ -8,7 +8,7 @@ export function getExtraActionsInitialize(superdesk: ISuperdesk) {
         const markForUser: IArticleAction = {
             label: gettext('User'),
             onTrigger: () => manageMarkedUserForSingleArticle(superdesk, article, true),
-            groupId: 'mark-item',
+            groupId: 'highlights',
         };
 
         return Promise.resolve([markForUser]);

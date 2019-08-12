@@ -17,8 +17,8 @@ export function getActionsInitialize(superdesk: ISuperdesk) {
 
         const markForUser: IArticleAction = {
             label: gettext('Mark for user'),
-            labelForGroup: gettext('Relations'),
             icon: 'icon-assign',
+            groupId: 'highlights',
             onTrigger: () => {
                 manageMarkedUserForSingleArticle(superdesk, articleNext);
             },
@@ -26,8 +26,8 @@ export function getActionsInitialize(superdesk: ISuperdesk) {
 
         const unmark: IArticleAction = {
             label: gettext('Unmark user'),
-            labelForGroup: gettext('Relations'),
             icon: 'icon-assign',
+            groupId: 'highlights',
             onTrigger: () => {
                 superdesk.entities.article.update({
                     ...articleNext,
@@ -38,7 +38,7 @@ export function getActionsInitialize(superdesk: ISuperdesk) {
 
         const markForOtherUser: IArticleAction = {
             label: gettext('Mark for other user'),
-            labelForGroup: gettext('Relations'),
+            groupId: 'highlights',
             icon: 'icon-assign',
             onTrigger: () => {
                 manageMarkedUserForSingleArticle(superdesk, articleNext);
