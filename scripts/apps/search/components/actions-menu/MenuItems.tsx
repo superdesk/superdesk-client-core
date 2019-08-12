@@ -137,6 +137,7 @@ export default class MenuItems extends React.Component<IProps, IState> {
 
         AUTHORING_MENU_GROUPS.forEach((group) => {
             const groupId = moveActionsToDefaultGroup.includes(group._id) ? 'default' : group._id;
+
             if (actions[groupId]) {
                 if (groupedItems[groupId] == null) {
                     groupedItems[groupId] = [];
