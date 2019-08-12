@@ -8,9 +8,9 @@
     <h3 class="modal__heading modal__heading--no-grow" ng-if="nav === 'view'" translate>Video details</h3>
     <h3 class="modal__heading modal__heading--no-grow" ng-if="nav === 'video-edit'" translate>Edit video</h3>
     <div class="modal__header-buttons  modal__header-buttons--center modal__header-element-grow button-nav">
-        <button class="button-nav__btn" ng-click="nav = 'view'; showMetadata = true"
-            ng-class="{'button-nav__btn--active' : nav === 'view'}">Details / Metadata</button>
-        <button class="button-nav__btn" ng-click="nav = 'video-edit'; showMetadata = false"
+        <button class="button-nav__btn" ng-click="nav = ''; metadata.show = true"
+            ng-class="{'button-nav__btn--active' : nav !== 'video-edit'}">Details / Metadata</button>
+        <button class="button-nav__btn" ng-click="nav = 'video-edit'; metadata.show = false"
             ng-class="{'button-nav__btn--active': nav === 'video-edit'}">Edit video</button>
     </div>
     <div class="modal__header-buttons modal__header-buttons--right">
@@ -21,8 +21,8 @@
 <div class="modal__body modal__body--no-padding">
     <div class="sd-column-box--2">
         <div class="sd-column-box__main-column sd-column-box__main-column--photo-preview">
-            <a class="sd-photo-preview__slide-in-button" ng-show="!showMetadata && nav === 'view'"
-                ng-click="showMetadata = !showMetadata" data-sd-tooltip="Open metadata" data-flow="left">
+            <a class="sd-photo-preview__slide-in-button" ng-show="!metadata.show && nav === 'view'"
+                ng-click="metadata.show = !metadata.show" data-sd-tooltip="Open metadata" data-flow="left">
                 <i class="icon-backward-thin"></i>
             </a>
 
@@ -83,7 +83,7 @@
                                         <span>{{ scale ? scale + 'p' : 'Same'}}</span>
                                     </button>
                                     <ul class="dropdown__menu">
-                                        <li class="ratio" ng-click="changeQualityVideo($event.target.value)">
+                                        <li class="quality" ng-click="changeQualityVideo($event.target.value)">
                                             <button value="" ng-class="{'active': !scale}">Same</button>
                                         </li>
                                         <li class="quality" ng-repeat="(resolution, value) in qualityVideo" ng-show="value" ng-click="changeQualityVideo($event.target.value)">
@@ -115,8 +115,7 @@
                             </div>
                         </div>
                         <div>
-                            <div id="output" class="thumbnail-preview sd-photo-preview__video-container">
-                            </div>
+                            <div id="preview-thumbnail" class="thumbnail-preview sd-photo-preview__video-container"></div>
                             <div class="no-thumnail" id="no-thumbnail">
                                 <div class="upload__info-icon"></div>
                                 <h2 class="upload__info-heading" translate="">Capture or upload video thumbnail</h2>
@@ -143,14 +142,14 @@
 
 
         <div class="sd-column-box__slide-in-column sd-column-box__slide-in-column--large sd-column-box__slide-in-column--dark-ui"
-            ng-class="{'sd-column-box__slide-in-column--closed' : !showMetadata}" ng-show="nav !== 'video-edit'">
+            ng-class="{'sd-column-box__slide-in-column--closed' : !metadata.show}" ng-show="nav !== 'video-edit'">
             <div class="sd-column-box__slide-in-column-inner sd-slide-in-panel">
                 <div class="sd-slide-in-panel__header">
-                    <h3 class="sd-slide-in-panel__heading" ng-if="nav !== 'image-edit'" translate>Metadata</h3>
+                    <h3 class="sd-slide-in-panel__heading" ng-if="nav !== 'video-edit'" translate>Metadata</h3>
                     <a class="icn-btn sd-slide-in-panel__close" sd-tooltip="Close details" flow="top"
-                        ng-click="showMetadata = !showMetadata"><i class="icon-close-small"></i></a>
+                        ng-click="metadata.show = !metadata.show"><i class="icon-close-small"></i></a>
                 </div>
-                <div class="sd-slide-in-panel__content" ng-if="nav !== 'image-edit'">
+                <div class="sd-slide-in-panel__content" ng-if="nav !== 'video-edit'">
                     <div class="sd-slide-in-panel__content-block sd-slide-in-panel__content-block--first">
 
                         <div class="modal__sliding-toolbar" ng-if="metadata.isDirty">
@@ -161,7 +160,7 @@
 
                         <div sd-media-metadata-editor data-item="data.metadata" data-validator="validator"
                             data-dark="true" data-boxed="true" data-on-change="metadata.isDirty = true"
-                            data-disabled="!data.editable" data-associated="data.isAssociated">
+                            data-disabled="!metadata.isEditable" data-associated="data.isAssociated">
                         </div>
                     </div>
                 </div>

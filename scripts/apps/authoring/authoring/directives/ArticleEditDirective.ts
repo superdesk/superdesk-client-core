@@ -310,9 +310,7 @@ export function ArticleEditDirective(
                         return renditions.videoEdit(
                             scope.item,
                             {
-                                isNew: false,
                                 editable: true,
-                                isAssociated: false,
                                 defaultTab: defaultTab,
                                 showMetadata: showMetadata,
                             }
