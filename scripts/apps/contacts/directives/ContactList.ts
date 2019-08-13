@@ -51,6 +51,7 @@ export function ContactList(
     return {
         link: function(scope, elem) {
             elem.attr('tabindex', 0);
+            let scrollElem = elem.parent();
 
             var itemList = React.createElement(ItemListComponent,
                 angular.extend({
@@ -107,7 +108,7 @@ export function ContactList(
              */
             function handleScroll($event) {
                 // force refresh the list, if scroll bar hits the top of list.
-                if (elem[0].scrollTop === 0) {
+                if (scrollElem[0].scrollTop === 0) {
                     $rootScope.$broadcast('refresh:list');
                 }
 
@@ -132,7 +133,7 @@ export function ContactList(
                     return; // automatic scroll after removing items
                 }
 
-                if (isListEnd(elem[0]) && !scope.rendering) {
+                if (isListEnd(scrollElem[0]) && !scope.rendering) {
                     scope.rendering = scope.loading = true;
                     scope.fetchNext(listComponent.state.itemsList.length);
                 }
@@ -148,13 +149,13 @@ export function ContactList(
                 return element.scrollTop + element.offsetHeight + 200 >= element.scrollHeight;
             }
 
-            elem.on('keydown', listComponent.handleKey);
+            scrollElem.on('keydown', listComponent.handleKey);
 
-            elem.on('scroll', handleScroll);
+            scrollElem.on('scroll', handleScroll);
 
             // remove react elem on destroy
             scope.$on('$destroy', () => {
-                elem.off();
+                scrollElem.off();
                 ReactDOM.unmountComponentAtNode(elem[0]);
             });
         },
