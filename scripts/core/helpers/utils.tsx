@@ -64,3 +64,8 @@ export function getSpacingProps<T extends ISpacingProps>(item: T): ISpacingProps
 
     return propertiesShallowCopy;
 }
+
+// will throw an exception if non-JSON object is passed
+export function copyJson(obj) {
+    return JSON.parse(JSON.stringify(obj));
+}
