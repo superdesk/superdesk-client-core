@@ -79,8 +79,8 @@ export function AuthoringTopbarDirective(
                     activationResult.contributions &&
                     activationResult.contributions.entities &&
                     activationResult.contributions.entities.article &&
-                    activationResult.contributions.entities.article.getActions
-                        ? activationResult.contributions.entities.article.getActions
+                    activationResult.contributions.entities.article.getActionsExtra
+                        ? activationResult.contributions.entities.article.getActionsExtra
                         : [],
             );
 
