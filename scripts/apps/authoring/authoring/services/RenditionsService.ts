@@ -122,6 +122,7 @@ export function RenditionsService(metadata, $q, api, superdesk, _, notify) {
                                 width: rendition.width,
                                 height: rendition.height,
                             };
+
                             savingImagePromises.push(
                                 api.save('picture_crop', {item: clonedItem, crop: crop}),
                             );
