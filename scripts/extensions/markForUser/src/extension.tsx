@@ -16,7 +16,7 @@ const extension: IExtension = {
                     article: {
                         getActions: getActionsInitialize(superdesk),
                         getActionsBulk: getActionsBulkInitialize(superdesk),
-                        getActions: getActionsExtraInitialize(superdesk),
+                        getActionsExtra: getActionsExtraInitialize(superdesk),
                     },
                 },
             },
