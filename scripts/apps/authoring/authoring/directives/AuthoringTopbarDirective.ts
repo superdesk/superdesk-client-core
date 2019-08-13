@@ -86,7 +86,6 @@ export function AuthoringTopbarDirective(
 
             Promise.all(getActionsExtraFromExtensions.map((getPromise) => getPromise(scope.item)))
                 .then((actions) => {
-                    console.log(actions);
                     scope.extraActionsFromExtensions = flatMap(actions);
                 });
         },
