@@ -73,19 +73,20 @@ export function AuthoringTopbarDirective(
                 actionToTrigger.onTrigger();
             };
 
-            const getExtraActionsFromExtensions = flatMap(
+            const getActionsExtraFromExtensions = flatMap(
                 Object.values(extensions).map((ext) => ext.activationResult),
                 (activationResult) =>
                     activationResult.contributions &&
                     activationResult.contributions.entities &&
                     activationResult.contributions.entities.article &&
-                    activationResult.contributions.entities.article.getExtraActions
-                        ? activationResult.contributions.entities.article.getExtraActions
+                    activationResult.contributions.entities.article.getActionsExtra
+                        ? activationResult.contributions.entities.article.getActionsExtra
                         : [],
             );
 
-            Promise.all(getExtraActionsFromExtensions.map((getPromise) => getPromise(scope.item)))
+            Promise.all(getActionsExtraFromExtensions.map((getPromise) => getPromise(scope.item)))
                 .then((actions) => {
+                    console.log(actions);
                     scope.extraActionsFromExtensions = flatMap(actions);
                 });
         },
