@@ -46,15 +46,15 @@ export default class MenuItems extends React.Component<IProps, IState> {
         document.addEventListener('click', this.handleClickOutside, true);
 
         const getActionsFromExtensions
-            : Array<IExtensionActivationResult['contributions']['entities']['article']['getActionsExtra']>
+            : Array<IExtensionActivationResult['contributions']['entities']['article']['getActions']>
             = flatMap(
                 Object.values(extensions).map(({activationResult}) => activationResult),
                 (activationResult) =>
                     activationResult.contributions != null
                     && activationResult.contributions.entities != null
                     && activationResult.contributions.entities.article != null
-                    && activationResult.contributions.entities.article.getActionsExtra != null
-                        ? activationResult.contributions.entities.article.getActionsExtra
+                    && activationResult.contributions.entities.article.getActions != null
+                        ? activationResult.contributions.entities.article.getActions
                         : [],
             );
 
