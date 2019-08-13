@@ -11,6 +11,7 @@ import {versioncreated} from './versioncreated';
 import {versioncreator} from './versioncreator';
 import {profile} from './profile';
 import {state} from './state';
+import {scheduledDateTime} from './scheduledDateTime';
 import {embargo} from './embargo';
 import {update} from './update';
 import {updated} from './updated';
@@ -50,6 +51,7 @@ export const fields: {[key: string]: React.ComponentType<IFieldProps>} = {
     versioncreator,
     profile,
     state,
+    scheduledDateTime,
     embargo,
     update,
     updated,

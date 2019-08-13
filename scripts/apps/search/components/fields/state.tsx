@@ -23,7 +23,6 @@ export const state: React.StatelessComponent<Pick<IPropsItemListInfo, 'item' | '
                 title={title}
                 className={'state-label state-' + props.item.state}
                 key="state"
-                style={{marginRight: 0}}
             >
                 {removeLodash(gettext(props.item.state))}
             </span>
