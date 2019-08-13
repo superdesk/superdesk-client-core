@@ -7,7 +7,7 @@ export function getExtraActionsInitialize(superdesk: ISuperdesk) {
     return function getExtraActions(article: IArticle) {
         const markForUser: IArticleAction = {
             label: gettext('User'),
-            onTrigger: () => manageMarkedUserForSingleArticle(superdesk, article, true),
+            onTrigger: () => manageMarkedUserForSingleArticle(superdesk, article),
             groupId: 'highlights',
         };
 
