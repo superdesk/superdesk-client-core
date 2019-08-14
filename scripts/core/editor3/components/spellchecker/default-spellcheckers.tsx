@@ -6,13 +6,13 @@ const actions: {[key: string]: ISpellcheckerAction} = {
     addToDictionary: {
         label: gettext('Add to dictionary'),
         perform: (warning: ISpellcheckWarning) => ng.getService('spellcheck').then((spellcheck) => {
-            spellcheck.addWord(warning.text, false);
+            return spellcheck.addWord(warning.text, false);
         }),
     },
     ignoreWord: {
         label: gettext('Ignore word'),
         perform: (warning: ISpellcheckWarning) => ng.getService('spellcheck').then((spellcheck) => {
-            spellcheck.addWord(warning.text, false);
+            return spellcheck.addWord(warning.text, false);
         }),
     },
 };
@@ -76,7 +76,9 @@ export function getSpellchecker(language: string): ISpellchecker {
                 payload: {spellchecker: spellcheckerName, text: str, suggestions: true},
                 path: '/spellchecker',
             }).then((spellcheckerWarning) => spellcheckerWarning.suggestions, (err) => []),
-            actions: {},
+            actions: {
+                addToDictionary: actions.addToDictionary,
+            },
         };
     } else {
         return {check, getSuggestions, actions};

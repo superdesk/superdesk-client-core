@@ -375,8 +375,8 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _, pref
      */
     this.addWordToUserDictionary = addWordToUserDictionary;
     function addWordToUserDictionary(word) {
-        dictionaries.addWordToUserDictionary(word, lang);
         dict.content[word] = dict.content[word] ? dict.content[word] + 1 : 1;
+        return dictionaries.addWordToUserDictionary(word, lang);
     }
 
     /**
@@ -419,9 +419,9 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _, pref
      */
     this.addWord = function addWord(word, isBeingIgnored) {
         if (isBeingIgnored) {
-            ignoreWord(word);
+            return ignoreWord(word);
         } else {
-            addWordToUserDictionary(word);
+            return addWordToUserDictionary(word);
         }
     };
 
