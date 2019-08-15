@@ -1,4 +1,4 @@
-<div ng-class="{'dropdown--dropleft': dropleft !== 'false'}" class="dropdown dropdown--noarrow" dropdown sd-metadropdown-focus>
+<div class="dropdown dropdown--noarrow" dropdown sd-metadropdown-focus>
     <!-- if field is single input field-->
     <button ng-disabled="disabled" class="dropdown__toggle line-input" tabindex="{{tabindex}}" dropdown__toggle ng-if="multiInputFields.indexOf(field) === -1 && !icon">
         {{ key && values[item[field]]  && values[item[field]].name ? values[item[field]].name: (item[field].name || item[field] ? item[field].name || item[field] : "none") | translate }}
