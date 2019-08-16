@@ -2,8 +2,9 @@
 
 import {element, by, browser, protractor, ElementFinder} from 'protractor';
 import {nav, waitFor, acceptConfirm} from './utils';
-import {el, s} from './e2e-helpers';
+import {s} from './e2e-helpers';
 import {ECE} from './expected-conditions-extended';
+import {multiAction} from './actions';
 
 class Monitoring {
     config: ElementFinder;
@@ -286,7 +287,7 @@ class Monitoring {
         };
 
         this.getTextItemBySlugline = function(group, item) {
-            const _element = this.getItem(group, item).element(by.css(s(['field--slugline'])));
+            const _element = this.getItem(group, item).element(s(['field--slugline']));
 
             browser.wait(ECE.visibilityOf(_element));
 
@@ -439,12 +440,12 @@ class Monitoring {
         };
 
         this.spikeMultipleItems = function() {
-            el(['multi-actions-inline', 'Spike']).click();
+            multiAction('Spike');
             acceptConfirm();
         };
 
         this.unspikeMultipleItems = function() {
-            el(['multi-actions-inline', 'Unspike']).click();
+            multiAction('Unspike');
             return element(by.buttonText('send')).click();
         };
 
@@ -665,7 +666,7 @@ class Monitoring {
 
         this.openSendMenu = function() {
             browser.sleep(500);
-            el(['multi-actions-inline', 'Send to']).click();
+            multiAction('Send to');
             browser.sleep(100);
         };
 
@@ -712,7 +713,7 @@ class Monitoring {
          * Create a package and include selected items
          */
         this.createPackageFromItems = function() {
-            el(['multi-actions-inline', 'Create Package']).click();
+            multiAction('Create Package');
         };
 
         /**
