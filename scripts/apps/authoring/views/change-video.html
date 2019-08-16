@@ -1,4 +1,3 @@
-<div ng-class="{'video-loading': isProcessing}"></div>
 <div class="modal__header modal__header--flex">
     <div class="modal__sliding-toolbar" ng-show="editVideo.isDirty">
         <div class="sliding-toolbar__inner"></div>
@@ -8,31 +7,30 @@
     <h3 class="modal__heading modal__heading--no-grow" ng-if="nav === 'view'" translate>Video details</h3>
     <h3 class="modal__heading modal__heading--no-grow" ng-if="nav === 'video-edit'" translate>Edit video</h3>
     <div class="modal__header-buttons  modal__header-buttons--center modal__header-element-grow button-nav">
-        <button class="button-nav__btn" ng-click="nav = ''; metadata.show = true"
+        <button class="button-nav__btn" ng-click="nav = 'view'; metadata.show = true"
             ng-class="{'button-nav__btn--active' : nav !== 'video-edit'}">Details / Metadata</button>
         <button class="button-nav__btn" ng-click="nav = 'video-edit'; metadata.show = false"
             ng-class="{'button-nav__btn--active': nav === 'video-edit'}">Edit video</button>
     </div>
     <div class="modal__header-buttons modal__header-buttons--right">
-        <button class="btn btn--primary btn--ui-dark btn--hollow" ng-click="done()"
-            ng-disabled="!isDoneEnabled() || isAoISelectionModeEnabled">Done</button>
+        <button class="btn btn--primary btn--ui-dark btn--hollow" ng-click="done()">Done</button>
     </div>
 </div>
 <div class="modal__body modal__body--no-padding">
+    <div ng-class="{'video-loading': isProcessing}" ng-if="nav === 'video-edit'"></div>
     <div class="sd-column-box--2">
         <div class="sd-column-box__main-column sd-column-box__main-column--photo-preview">
             <a class="sd-photo-preview__slide-in-button" ng-show="!metadata.show && nav === 'view'"
                 ng-click="metadata.show = !metadata.show" data-sd-tooltip="Open metadata" data-flow="left">
                 <i class="icon-backward-thin"></i>
             </a>
-
             <div class="sd-photo-preview" ng-class="{'sd-photo-preview--view-video' : nav === 'view'}"
                 ng-show="nav === 'view'">
                 <div class="sd-photo-preview__video">
                     <div class="sd-photo-preview__video-inner">
                         <div class="sd-photo-preview__video-container">
                             <video autoplay="autoplay" ng-if="nav === 'view'"
-                                ng-src="{{data.item.renditions.original.href}}?tag={{data.item._etag}"></video>
+                            ng-src="{{data.item.renditions.original.href}}?tag={{data.item._etag}}"></video>
                         </div>
                         <div class="sd-photo-preview__video-tools sd-photo-preview__video-tools--blank">
                             <span class="sd-photo-preview__label mlr-auto">{{data.item.headline}}</span>
@@ -46,7 +44,7 @@
                 <div class="sd-photo-preview__video">
                     <div class="sd-photo-preview__video-inner" id="video-overall">
                         <div class="sd-photo-preview__video-container" id="video-preview">
-                            <video autoplay="autoplay" id="video" ng-if="nav === 'video-edit'" class="ng-isolate-scope" ng-init="videoInit()"
+                            <video autoplay="autoplay" id="video" ng-if="nav === 'video-edit' && videoReload === true" class="ng-isolate-scope" ng-init="videoInit()"
                                 ng-src="{{data.item.renditions.original.href}}?tag={{data.item._etag}}">
                             </video>
                         </div>
@@ -98,7 +96,7 @@
                 <!-- VIDEO Frames timeline  -->
                 <div class="sd-photo-preview__thumb-strip sd-photo-preview__thumb-strip--video bottom-panel">
                     <div class="sd-photo-preview__thumbnail-edit bottom-panel bottom-panel-thumbnail">
-                        <div class="modal__sliding-toolbar" ng-show="previewThumbnail.isDirty">
+                        <div class="modal__sliding-toolbar preview-thumbnail-save" ng-show="previewThumbnail.isDirty">
                             <div class="sliding-toolbar__inner"></div>
                             <a class="btn" ng-click="cancelPreviewThumbnail()" translate>Cancel</a>
                             <a class="btn btn--primary" ng-click="savePreviewThumbnail()" translate>Save</a>
@@ -106,20 +104,27 @@
                         <div class="sd-photo-preview__thumbnail-edit-label">Video thumbnail</div>
                         <div class="image-overlay">
                             <div class="image-overlay__button-block">
-                                <a class="image-overlay__button" sd-tooltip="Use current frame"
+                                <span class="image-overlay__button" sd-tooltip="Use current frame"
                                     ng-click="captureThumbnail()">
                                     <i class="icon-photo"></i>
-                                </a>
-                                <a class="image-overlay__button" sd-tooltip="Upload image" ng-click="uploadThumbnail()">
-                                    <i class="icon-upload"></i>
-                                </a>
-                                <input type="file" id="file-upload"
-                                    onchange="angular.element(this).scope().uploadChange(this)" style="display:none"
-                                    accept="image/*">
+                                </span>
+                                <form id="file-upload" ng-init="initUploadFileForm()">
+                                    <label for="media-thumbnail">
+                                        <span class="image-overlay__button" sd-tooltip="Upload image">
+                                            <i class="icon-upload"></i>
+                                        </span>
+                                    </label>
+                                    <input
+                                        type="file"
+                                        id="media-thumbnail"
+                                        name="file"
+                                        onchange="angular.element(this).scope().uploadChange(this)" style="display:none"
+                                        accept="image/*">
+                                </form>
                             </div>
                         </div>
                         <div>
-                            <div id="preview-thumbnail" class="thumbnail-preview sd-photo-preview__video-container"></div>
+                            <div id="preview-thumbnail" class="thumbnail-preview sd-photo-preview__video-container" ng-model='canvas'></div>
                             <div class="no-thumnail" id="no-thumbnail">
                                 <div class="upload__info-icon"></div>
                                 <h2 class="upload__info-heading" translate="">Capture or upload video thumbnail</h2>

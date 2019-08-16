@@ -2186,3 +2186,7 @@ li.ratio:hover {
   // top: -100%;
   z-index: 9999;
 }
+
+.preview-thumbnail-save {
+  animation: appearFromRight 0.5s cubic-bezier(0.695, 0.105, 0.285, 1.275) 1 !important;
+}
