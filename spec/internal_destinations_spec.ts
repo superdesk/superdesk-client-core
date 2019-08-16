@@ -131,7 +131,7 @@ describe('internal destinations & generic-page-list', () => {
         // open dropdown
         el(['sortbar--selected']).click();
 
-        element(by.cssContainingText(s(['sortbar--option']), 'Destination name')).click();
+        element(s(['sortbar--option'], 'Destination name')).click();
 
         browser.wait(ECE.visibilityOf(el(['sortbar--sort-ascending'])));
         expect(el(['gform-output--name'], null, items.get(0)).getText()).toBe('alpha');
