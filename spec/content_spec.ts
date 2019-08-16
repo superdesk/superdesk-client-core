@@ -5,7 +5,7 @@ import {element, browser, protractor, by} from 'protractor';
 import {workspace} from './helpers/workspace';
 import {content} from './helpers/content';
 import {authoring} from './helpers/authoring';
-import {el} from './helpers/e2e-helpers';
+import {multiAction} from './helpers/actions';
 
 describe('content', () => {
     var body = element(by.tagName('body'));
@@ -100,7 +100,7 @@ describe('content', () => {
         toggle(boxes.last());
         expect(count.getText()).toBe('2 Items selected');
 
-        el(['multi-actions-inline', 'Multiedit']).click();
+        multiAction('Multiedit');
         expect(browser.getCurrentUrl()).toMatch(/multiedit$/);
         expect(element.all(by.repeater('board in boards')).count()).toBe(2);
     });

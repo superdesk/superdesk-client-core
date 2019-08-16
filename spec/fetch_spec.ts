@@ -3,8 +3,8 @@ import {element, browser, protractor, by, $} from 'protractor';
 import {workspace} from './helpers/workspace';
 import {content} from './helpers/content';
 import {authoring} from './helpers/authoring';
-import {el} from './helpers/e2e-helpers';
 import {desks} from './helpers/desks';
+import {multiAction} from './helpers/actions';
 
 describe('fetch', () => {
     beforeEach(() => {
@@ -141,7 +141,7 @@ describe('fetch', () => {
         workspace.openIngest();
         content.selectItem(0);
         browser.sleep(1000); // Wait for animation
-        el(['multi-actions-inline', 'Fetch']).click();
+        multiAction('Fetch');
         workspace.openContent();
         expect(content.count()).toBe(3);
     });
@@ -150,7 +150,7 @@ describe('fetch', () => {
         workspace.openIngest();
         content.selectItem(0);
         browser.sleep(1000); // Wait for animation
-        el(['multi-actions-inline', 'Fetch to']).click();
+        multiAction('Fetch to');
         content.send();
         workspace.openContent();
         expect(content.count()).toBe(3);
@@ -161,7 +161,7 @@ describe('fetch', () => {
         content.selectItem(0);
         browser.sleep(1000); // Wait for animation
 
-        el(['multi-actions-inline', 'Remove']).click();
+        multiAction('Remove');
         browser.sleep(100);
 
         expect(content.count()).toBe(0);

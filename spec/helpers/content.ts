@@ -1,6 +1,7 @@
 import {element, by, browser} from 'protractor';
 import {el} from './e2e-helpers';
 import {acceptConfirm, nav} from './utils';
+import {multiAction} from './actions';
 
 class Content {
     send: any;
@@ -167,12 +168,12 @@ class Content {
         };
 
         this.spikeItems = function() {
-            el(['multi-actions-inline', 'Spike']).click();
+            multiAction('Spike');
             acceptConfirm();
         };
 
         this.unspikeItems = function() {
-            el(['multi-actions-inline', 'Unspike']).click();
+            multiAction('Unspike');
             element(by.buttonText('send')).click();
         };
 
