@@ -12,7 +12,8 @@ export default function MediaMetadataEditorDirective(metadata, deployConfig, fea
         }
 
         if (cv == null && field === 'language' && metadata.values.languages) {
-            return {schema_field: 'language', items: metadata.values.languages, key: 'qcode'}; // keep it consistent with authoring
+            // keep it consistent with authoring
+            return {schema_field: 'language', items: metadata.values.languages, key: 'qcode'};
         }
 
         return cv;
