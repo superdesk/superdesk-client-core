@@ -317,7 +317,7 @@ export function ArticleEditDirective(
                         )
                             .then((res) => {
                                 scope.item._etag = res._etag;
-                                if (authoring.isPublished(scope.item)) {
+                                if (isPublished(scope.item)) {
                                     mainEditScope.dirty = true;
 
                                     // mark dirty in multiedit mode.
