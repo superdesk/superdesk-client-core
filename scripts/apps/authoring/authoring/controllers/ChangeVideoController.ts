@@ -41,7 +41,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         isEditable: $scope.data.options.editable, // enable edit metadata field
         show: $scope.data.options.showMetadata,
     };
-    $scope.isProcessing = false // Show loading screen
+    $scope.isProcessing = true // Show loading screen
     $scope.videoReload = true;
 
     $scope.editVideo = {
@@ -389,13 +389,13 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
                 }
             }
             $scope.loadTimelineThumbnails();
-        };
-       
+        };       
     };
 
     this.$onInit = function() {
         checkVideoInit()
     };
+
     function checkVideoInit()
     {
         stopIntervalIDInit = $interval(async function () {

@@ -17,7 +17,8 @@
     </div>
 </div>
 <div class="modal__body modal__body--no-padding">
-    <div ng-class="{'video-loading': isProcessing}" ng-if="nav === 'video-edit'"></div>
+    <div ng-class="{'video-loading': isProcessing}" ng-if="nav === 'video-edit'">
+    </div>
     <div class="sd-column-box--2">
         <div class="sd-column-box__main-column sd-column-box__main-column--photo-preview">
             <a class="sd-photo-preview__slide-in-button" ng-show="!metadata.show && nav === 'view'"
@@ -44,7 +45,7 @@
                 <div class="sd-photo-preview__video">
                     <div class="sd-photo-preview__video-inner" id="video-overall">
                         <div class="sd-photo-preview__video-container" id="video-preview">
-                            <video autoplay="autoplay" id="video" ng-if="nav === 'video-edit' && videoReload === true" class="ng-isolate-scope" ng-init="videoInit()"
+                            <video autoplay="autoplay" id="video" ng-if="nav === 'video-edit' && videoReload === true" class="ng-isolate-scope video-max-height" ng-init="videoInit()"
                                 ng-src="{{data.item.renditions.original.href}}?tag={{data.item._etag}}">
                             </video>
                         </div>

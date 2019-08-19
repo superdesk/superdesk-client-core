@@ -2166,6 +2166,15 @@ li.ratio:hover {
   z-index: 9999;
 }
 
-.preview-thumbnail-save {
-  animation: appearFromRight 0.5s cubic-bezier(0.695, 0.105, 0.285, 1.275) 1 !important;
+.sd-photo-preview__thumbnail-edit.bottom-panel.bottom-panel-thumbnail {
+    .preview-thumbnail-save{
+        animation: appearFromRight 0.5s cubic-bezier(0.695, 0.105, 0.285, 1.275) 1 !important;
+    }
+}
+
+.sd-photo-preview__video-container{
+    .video-max-height
+    {
+        max-height: calc(100vh - 53px - 160px - 100px - 21rem) !important;
+    }
 }
