@@ -18,6 +18,8 @@ class ReactRenderAsync extends React.Component<IPropsReactRenderAsync, IStateRea
     static propTypes: any;
     static defaultProps: any;
 
+    private _mounted: boolean;
+
     constructor(props) {
         super(props);
 
@@ -26,13 +28,20 @@ class ReactRenderAsync extends React.Component<IPropsReactRenderAsync, IStateRea
             mappedProps: {},
         };
     }
+    componentWillUnmount() {
+        this._mounted = false;
+    }
     componentDidMount() {
+        this._mounted = true;
+
         promiseAllObject(this.props.promises)
             .then((result) => {
-                this.setState({
-                    loading: false,
-                    mappedProps: result,
-                });
+                if (this._mounted === true) {
+                    this.setState({
+                        loading: false,
+                        mappedProps: result,
+                    });
+                }
             })
             .catch((err) => {
                 console.error(err);

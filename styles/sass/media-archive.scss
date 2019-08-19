@@ -682,7 +682,8 @@ $sfbox_mediaMaxWidth : 172px;
 
 $rightfield-width:60px;
 
-.media-box .keyword {
+.media-box .keyword,
+.field--slugline {
     @include text-semibold();
     color: $sd-keyword;
     text-transform: uppercase;
@@ -898,12 +899,6 @@ $rightfield-width:60px;
                             margin: 0 0 0 5px;
                         }
                 }
-            }
-            div:not(.state-label) {
-                display: flex;
-                white-space: nowrap;
-                overflow: hidden;
-                flex-shrink: 0;
             }
             .state-label, .profile-label {
                 margin-top: 2px;
@@ -1355,7 +1350,7 @@ $modalMaxImageHeight : 250px;
 // Styling for action menu
 // -------------------------------------------------------------
 .item-right {
-    width: 48px;
+    width: 30px;
     position: absolute;
     right: 0;
     top: 0;

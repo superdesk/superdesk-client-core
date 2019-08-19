@@ -2,7 +2,7 @@ import React, {ReactElement} from 'react';
 import {get} from 'lodash';
 import classNames from 'classnames';
 
-import {IArticle} from 'superdesk-interfaces/Article';
+import {IArticle} from 'superdesk-api';
 
 import {ListTypeIcon} from './ListTypeIcon';
 import {SwimlaneField} from './SwimlaneField';
@@ -63,7 +63,6 @@ export class ItemSwimlane extends React.Component<IProps, any> {
                     <ListTypeIcon
                         item={item}
                         onMultiSelect={this.props.onMultiSelect}
-                        svc={svc}
                     />
                 </span>
                 {renderGroup(swimlaneViewFieldsConfig.left, item, svc)}

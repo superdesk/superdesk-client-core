@@ -7,20 +7,23 @@ import {EditorState, ContentState} from 'draft-js';
 import editorReducers from 'core/editor3/reducers';
 import {Editor3} from '..';
 import {noop} from 'lodash';
+import {ISpellchecker} from '../spellchecker/interfaces';
 
 const editorStateInitial = EditorState.createWithContent(ContentState.createFromText('This speling is not correkt.'));
 
-const testSpellchecker = {
+const testSpellchecker: ISpellchecker = {
     check: () => Promise.resolve([
         {
             startOffset: 5,
             text: 'speling',
-            suggestions: ['spelling'],
+            suggestions: [{text: 'spelling'}],
+            type: 'spelling',
         },
         {
             startOffset: 20,
             text: 'correkt',
-            suggestions: ['correct', 'incorrect'],
+            suggestions: [{text: 'correct'}, {text: 'incorrect'}],
+            type: 'spelling',
         },
     ]),
     actions: {

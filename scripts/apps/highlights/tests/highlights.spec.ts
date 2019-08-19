@@ -34,7 +34,7 @@ describe('highlights', () => {
 
     describe('create highlights button directive', () => {
         it('can create highlights package',
-            inject(($compile, $rootScope, $q, api, authoringWorkspace, authoring) => {
+            inject(($compile, $rootScope, $q, api, authoring) => {
                 var scope = $rootScope.$new();
                 var elem = $compile('<div sd-create-highlights-button highlight="\'foo\'"></div>')(scope);
 

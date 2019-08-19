@@ -35,6 +35,15 @@
                     </div>
                 </div>
 
+                <div class="form__row" ng-if="matchFieldTypeToTab('custom-fields', vocabulary.field_type)">
+                    <div class="sd-line-input sd-line-input--is-select sd-line-input--required">
+                        <label for="custom_field_specs" class="sd-line-input__label" translate>Field type</label>
+                        <select id="custom_field_specs" class="sd-line-input__select" ng-model="vocabulary.custom_field_type" required>
+                            <option value="{{type.id}}" ng-repeat="type in customFieldTypes" translate>{{type.label}}</option>
+                        </select>
+                    </div>
+                </div>
+
                 <div class="form__row">
                     <div class="sd-line-input sd-line-input--no-margin">
                         <label for="cv_description" class="sd-line-input__label" translate>Description</label>
@@ -156,13 +165,19 @@
                             <span id="multiple_items" sd-switch ng-model="vocabulary.field_options.multiple_items.enabled"></span>
                             <label for="multiple_items" translate>Allow Multiple Items</label>
                         </div>
-                        <div class="form__row form__row--inner form__row--flex" ng-show="vocabulary.field_options.multiple_items.enabled">
+                        <div class="form__row form__row--inner form__row--flex" ng-if="vocabulary.field_options.multiple_items.enabled">
                             <div class="form__row-item form__row-item--no-grow">
                                 <span translate>Max. number of items</span>
                             </div>
                             <div class="form__row-item form__row-item--no-grow">
-                                <input id="max_items" type="number" min="0" max="99" class="input-small line-input"
-                                                                                     ng-model="vocabulary.field_options.multiple_items.max_items" style="width: 60px; text-align: center;">
+                                <input id="max_items" name="max_items" type="number"
+                                        min="2" max="99" class="input-small line-input"
+                                        ng-model="vocabulary.field_options.multiple_items.max_items"
+                                        style="width: 60px; text-align: center;">
+                            </div>
+                            <div ng-if="vocabularyForm.max_items.$invalid" class="sd-line-input sd-line-input--invalid">
+                                <p ng-if="vocabularyForm.max_items.$error.min" class="sd-line-input__message" translate>Value must be greater than or equal to 2.</p>
+                                <p ng-if="vocabularyForm.max_items.$error.max" class="sd-line-input__message" translate>Value must be less than or equal to 99.</p>
                             </div>
                         </div>
                     </div>

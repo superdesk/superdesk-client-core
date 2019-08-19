@@ -4,6 +4,35 @@ import ReactDOM from 'react-dom';
 import {ModalPrompt} from 'core/ui/components/Modal/ModalPrompt';
 import {gettext} from 'core/utils';
 
+export const showModal = (Component: React.ComponentType<{closeModal(): void}>): Promise<void> => {
+    const el = document.createElement('div');
+
+    document.body.appendChild(el);
+
+    const closeModal = () => {
+        ReactDOM.unmountComponentAtNode(el);
+        el.remove();
+    };
+
+    ReactDOM.render(
+        (
+            <div>
+                <div className="modal__backdrop fade in ng-scope" />
+                <div className="modal" style={{display: 'block'}}>
+                    <div className="modal__dialog">
+                        <div className="modal__content">
+                            <Component closeModal={closeModal} />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        ),
+        el,
+    );
+
+    return Promise.resolve();
+};
+
 export default angular.module('superdesk.core.services.modal', [
     'superdesk-ui',
     'superdesk.core.services.asset',

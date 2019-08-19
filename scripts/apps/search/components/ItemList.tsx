@@ -6,7 +6,8 @@ import {Item} from './index';
 import {isCheckAllowed, closeActionsMenu, bindMarkItemShortcut} from '../helpers';
 import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
 import {gettext} from 'core/utils';
-import {IArticle} from 'superdesk-interfaces/Article';
+import {IArticle} from 'superdesk-api';
+import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 
 interface IState {
     narrow: boolean;
@@ -224,7 +225,8 @@ export class ItemList extends React.Component<any, IState> {
             return;
         }
 
-        const {superdesk, $timeout, authoringWorkspace} = this.props.svc;
+        const {superdesk, $timeout} = this.props.svc;
+        const authoringWorkspace: AuthoringWorkspaceService = this.props.svc.authoringWorkspace;
         const {scope} = this.props;
 
         const activities = superdesk.findActivities({action: 'list', type: item._type}, item);
@@ -261,7 +263,8 @@ export class ItemList extends React.Component<any, IState> {
     }
 
     edit(item) {
-        const {$timeout, authoringWorkspace} = this.props.svc;
+        const authoringWorkspace: AuthoringWorkspaceService = this.props.svc.authoringWorkspace;
+        const {$timeout} = this.props.svc;
         const {scope} = this.props;
 
         this.setSelectedItem(item);

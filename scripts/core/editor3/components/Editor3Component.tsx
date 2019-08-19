@@ -64,8 +64,21 @@ export function getValidMediaType(event) {
 */
 export function canDropMedia(e, editorConfig) {
     const {editorFormat, readOnly, singleLine} = editorConfig;
-    const isValidMedia = !!getValidMediaType(e.originalEvent);
     const supportsMedia = !readOnly && !singleLine && editorFormat.indexOf('media') !== -1;
+    const mediaType = getValidMediaType(e.originalEvent);
+    const dataTransfer = e.originalEvent.dataTransfer;
+    let isValidMedia = !!mediaType;
+
+    if (mediaType === 'Files' && dataTransfer.files) {
+        // checks if files dropped from external folder are valid or not
+        const isValidFileType = Object.values(dataTransfer.files).every(
+            (file: File) => file.type.startsWith('audio/')
+            || file.type.startsWith('image/') || file.type.startsWith('video/'));
+
+        if (!isValidFileType) {
+            return false;
+        }
+    }
 
     return supportsMedia && isValidMedia;
 }
@@ -161,6 +174,10 @@ export class Editor3Component extends React.Component<IProps> {
                     }
 
                     const spellchecker = getSpellchecker(this.props.spellchecking.language);
+
+                    if (spellchecker == null) {
+                        return;
+                    }
 
                     getSpellcheckWarningsByBlock(spellchecker, this.props.editorState)
                         .then((spellcheckWarningsByBlock) => {
@@ -469,7 +486,7 @@ export class Editor3Component extends React.Component<IProps> {
                         blockRenderMap={blockRenderMap}
                         blockRendererFn={getBlockRenderer({svc: this.props.svc})}
                         customStyleMap={{...customStyleMap, ...this.props.highlightsManager.styleMap}}
-                        onChange={(editorStateNext) => {
+                        onChange={(editorStateNext: EditorState) => {
                             // in order to position the popup component we need to know the position of editor selection
                             // even when it's not focused, or another input is focused
 

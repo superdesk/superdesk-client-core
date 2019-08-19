@@ -60,53 +60,55 @@
         }
     }
 
-    a, button {
-        height: $nav-height;
-        display: inline-block;
-        line-height: $nav-height;
-        padding: 0 25px;
-        background: #202020;
-        border:0;
-        //.box-shadow(inset -1px 0 0 #111);
-        @include text-normal();
-
-        &:hover {
-            text-decoration: none;
-            background: #000;
-        }
-
-        &.main-link {
-            font-size: 15px;
-            color: #aaa;
-        }
-
-        //main nav toggle button
-        &.collapse-nav {
-            width: $nav-height !important;
-            text-align: center;
-            padding: 0;
-            line-height: 0;
+    #hamburger-menu {
+        a, button {
+            height: $nav-height;
+            display: inline-block;
+            line-height: $nav-height;
+            padding: 0 25px;
+            background: #202020;
+            border:0;
+            //.box-shadow(inset -1px 0 0 #111);
+            @include text-normal();
+    
             &:hover {
-                background: #101010;
-                cursor: pointer;
+                text-decoration: none;
+                background: #000;
             }
-        }
-
-        &.current-user {
-            width: $nav-height;
-            position: relative;
-            padding: 0 10px;
-            box-sizing: border-box;
-            width: 48px;
-            @include box-shadow(none);
-            .avatar {
-                @include border-radius(50%);
+    
+            &.main-link {
+                font-size: 15px;
+                color: #aaa;
             }
-            .badge {
-                position: absolute;
-                top: 3px;
-                left: 3px;
-                text-shadow: none;
+    
+            //main nav toggle button
+            &.collapse-nav {
+                width: $nav-height !important;
+                text-align: center;
+                padding: 0;
+                line-height: 0;
+                &:hover {
+                    background: #101010;
+                    cursor: pointer;
+                }
+            }
+    
+            &.current-user {
+                width: $nav-height;
+                position: relative;
+                padding: 0 10px;
+                box-sizing: border-box;
+                width: 48px;
+                @include box-shadow(none);
+                .avatar {
+                    @include border-radius(50%);
+                }
+                .badge {
+                    position: absolute;
+                    top: 3px;
+                    left: 3px;
+                    text-shadow: none;
+                }
             }
         }
     }

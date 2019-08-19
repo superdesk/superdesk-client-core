@@ -2,16 +2,9 @@
 
 import React from 'react';
 import classNames from 'classnames';
+import {IListItemProps, IPropsListItemColumn} from 'superdesk-api';
 
-interface IListItemProps {
-    onClick?(): void;
-    className?: string;
-    inactive?: boolean;
-    noHover?: boolean;
-    'data-test-id'?: string;
-}
-
-export class ListItem extends React.Component<IListItemProps, any> {
+export class ListItem extends React.Component<IListItemProps> {
     render() {
         return (
             <div
@@ -21,11 +14,12 @@ export class ListItem extends React.Component<IListItemProps, any> {
                         this.props.className,
                         'sd-list-item sd-shadow--z1',
                         {
-                            inactive: this.props.inactive,
+                            'inactive': this.props.inactive,
                             'sd-list-item--no-hover': this.props.noHover,
                         },
                     )
                 }
+                style={{cursor: typeof this.props.onClick === 'function' ? 'pointer' : 'initial'}}
                 data-test-id={this.props['data-test-id']}
             >
                 {this.props.children}
@@ -34,38 +28,34 @@ export class ListItem extends React.Component<IListItemProps, any> {
     }
 }
 
-interface IPropsListItemColumn {
-    ellipsisAndGrow?: boolean;
-    noBorder?: boolean;
-}
-
-export class ListItemColumn extends React.Component<IPropsListItemColumn, any> {
+export class ListItemColumn extends React.Component<IPropsListItemColumn> {
     render() {
+        const {noBorder, justifyContent, ellipsisAndGrow, children} = this.props;
         const cssClasses = [];
 
-        if (this.props.noBorder) {
+        if (noBorder) {
             cssClasses.push('sd-list-item__column--no-border');
         }
 
-        if (this.props.ellipsisAndGrow) {
+        if (ellipsisAndGrow) {
             return (
                 <div className={cssClasses.concat(['sd-list-item__column', 'sd-list-item__column--grow']).join(' ')}>
-                    <div className="sd-list-item__row">
-                        <span className="sd-overflow-ellipsis">{this.props.children}</span>
-                    </div>
+                    <ListItemRow justifyContent={justifyContent}>
+                        <span className="sd-overflow-ellipsis">{children}</span>
+                    </ListItemRow>
                 </div>
             );
         } else {
             return (
                 <div className={cssClasses.concat(['sd-list-item__column']).join(' ')}>
-                    {this.props.children}
+                    {children}
                 </div>
             );
         }
     }
 }
 
-export class ListItemActionsMenu extends React.Component<any> {
+export class ListItemActionsMenu extends React.Component {
     render() {
         return (
             <div className="sd-list-item__action-menu">
@@ -75,10 +65,15 @@ export class ListItemActionsMenu extends React.Component<any> {
     }
 }
 
-export class ListItemRow extends React.Component<any, any> {
+export class ListItemRow extends React.Component<{justifyContent?: string}> {
     render() {
+        const {justifyContent} = this.props;
+
         return (
-            <div className="sd-list-item__row">
+            <div className="sd-list-item__row" style={{
+                width: '100%',
+                justifyContent: justifyContent == null ? undefined : justifyContent,
+            }}>
                 {this.props.children}
             </div>
         );

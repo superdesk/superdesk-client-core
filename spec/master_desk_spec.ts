@@ -1,0 +1,128 @@
+/* eslint-disable newline-per-chained-call */
+
+import {element, browser, by} from 'protractor';
+
+import {authoring} from './helpers/authoring';
+import {nav} from './helpers/utils';
+import {masterDesks} from './helpers/master_desks';
+
+describe('master_desk', () => {
+    beforeEach((done) => {
+        nav('/desks/').then(done);
+    });
+
+    function itemHeadline(x, y, z) {
+        return masterDesks.getItem(x, y, z).element(by.css('.headline')).getText();
+    }
+
+    it('show content view', () => {
+        masterDesks.switchToTab('content');
+        expect(itemHeadline(1, 2, 0)).toBe('item3');
+        expect(itemHeadline(1, 4, 0)).toBe('item4');
+        expect(itemHeadline(0, 2, 0)).toBe('item5');
+        expect(itemHeadline(0, 3, 2)).toBe('item6');
+    });
+
+    it('show content view - preview item', () => {
+        masterDesks.switchToTab('content');
+        masterDesks.previewItem(0, 2, 0);
+        expect(masterDesks.previewTitle.getText()).toBe('item5');
+    });
+
+    it('show content view - edit item', () => {
+        masterDesks.switchToTab('content');
+        masterDesks.editItem(0, 2, 0);
+        authoring.writeText('some text');
+        browser.sleep(200);
+        authoring.save();
+        authoring.sendToButton.click();
+        authoring.publish_panel.click();
+        expect(authoring.publish_button.isDisplayed()).toBe(true);
+    });
+
+    it('content view - show desk', () => {
+        masterDesks.switchToTab('content');
+        masterDesks.goToDesk(0);
+        expect(browser.getCurrentUrl()).toContain('#/workspace');
+    });
+
+    it('content view - edit desk', () => {
+        masterDesks.switchToTab('content');
+        masterDesks.editDesk(0);
+        browser.sleep(200);
+        expect(element(by.className('modal__content')).isDisplayed()).toBe(true);
+    });
+
+    xit('show tasks view', () => {
+        masterDesks.switchToTab('tasks');
+        expect(masterDesks.getTask(1, 0, 0).element(by.className('content-item__text')).getText())
+            .toContain('item3 slugline');
+        expect(masterDesks.getTask(1, 2, 0).element(by.className('content-item__text')).getText())
+            .toContain('item4 slugline');
+        expect(masterDesks.getTask(0, 0, 0).element(by.className('content-item__text')).getText())
+            .toContain('item5 slugline');
+        expect(masterDesks.getTask(0, 1, 2).element(by.className('content-item__text')).getText())
+            .toContain('item6 slugline');
+    });
+
+    xit('tasks view - show desk', () => {
+        masterDesks.switchToTab('tasks');
+        masterDesks.goToDesk(0);
+        expect(browser.getCurrentUrl()).toContain('#/workspace');
+    });
+
+    xit('tasks view - edit desk', () => {
+        masterDesks.switchToTab('tasks');
+        masterDesks.editDesk(0);
+        browser.sleep(200);
+        expect(element(by.className('modal__content')).isDisplayed()).toBe(true);
+    });
+
+    it('show user role view all users', () => {
+        masterDesks.switchToTab('users');
+        expect(masterDesks.getUser(1, 1, 0).element(by.className('content-item__text')).getText())
+            .toContain('first name last name');
+        expect(masterDesks.getUser(1, 2, 0).element(by.className('content-item__text')).getText())
+            .toContain('first name1 last name1');
+        expect(masterDesks.getUser(1, 3, 0).element(by.className('content-item__text')).getText())
+            .toContain('first name2 last name2');
+        expect(masterDesks.getUser(1, 3, 1).element(by.className('content-item__text')).getText())
+            .toContain('first name3 last name3');
+        expect(masterDesks.getUser(0, 2, 0).element(by.className('content-item__text')).getText())
+            .toContain('first name1 last name1');
+    });
+
+    it('show user role view online users', () => {
+        masterDesks.switchToTab('users');
+        masterDesks.toggleOnlineUsers();
+        expect(masterDesks.getUser(0, 1, 0).element(by.className('content-item__text')).getText())
+            .toContain('first name last name');
+        expect(masterDesks.getUser(1, 1, 0).element(by.className('content-item__text')).getText())
+            .toContain('first name last name');
+        expect(masterDesks.getUsersCount(0, 0)).toBe(0);
+        expect(masterDesks.getUsersCount(0, 1)).toBe(1);
+        expect(masterDesks.getUsersCount(0, 2)).toBe(1);
+        expect(masterDesks.getUsersCount(1, 0)).toBe(0);
+        expect(masterDesks.getUsersCount(1, 1)).toBe(1);
+    });
+
+    it('user role view - show desk', () => {
+        masterDesks.switchToTab('users');
+        masterDesks.goToDesk(0);
+        expect(browser.getCurrentUrl()).toContain('#/workspace');
+    });
+
+    it('user role view - edit desk', () => {
+        masterDesks.switchToTab('users');
+        masterDesks.editDesk(0);
+        browser.sleep(200);
+        expect(element(by.className('modal__content')).isDisplayed()).toBe(true);
+    });
+
+    it('user role view - edit user', () => {
+        masterDesks.switchToTab('users');
+        masterDesks.editUser(0, 1, 0);
+        browser.sleep(200);
+        expect(element(by.className('modal__content')).isDisplayed()).toBe(true);
+    });
+});

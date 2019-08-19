@@ -1,10 +1,9 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import {get} from 'lodash';
 import {gettext} from 'core/utils';
+import {IPropsItemListInfo} from '../ListItemInfo';
 
-export const assignment: React.StatelessComponent<any> = ({item}) => {
-    if (!get(item, 'assignment_id')) {
+export const assignment: React.StatelessComponent<IPropsItemListInfo> = ({item}) => {
+    if (item.assignment_id == null) {
         return null;
     }
 
@@ -15,8 +14,4 @@ export const assignment: React.StatelessComponent<any> = ({item}) => {
             <i className="icon-calendar" />
         </span>
     );
-};
-
-assignment.propTypes = {
-    item: PropTypes.object.isRequired,
 };

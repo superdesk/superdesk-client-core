@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {DebounceInput} from 'react-debounce-input';
 import {isNil, uniqueId} from 'lodash';
 import './style.scss';
+import {gettext} from 'core/utils';
 
 /**
  * @ngdoc react
@@ -28,6 +29,7 @@ export default class SearchBar extends React.Component<any, any> {
         this.toggleSearchBar = this.toggleSearchBar.bind(this);
         this.onSearchChange = this.onSearchChange.bind(this);
         this.resetSearch = this.resetSearch.bind(this);
+        this.resetSearchValue = this.resetSearchValue.bind(this);
     }
 
     componentDidMount() {
@@ -54,6 +56,12 @@ export default class SearchBar extends React.Component<any, any> {
             searchInputValue: '',
         });
         this.props.onSearch();
+    }
+
+    resetSearchValue() {
+        this.setState({
+            searchInputValue: this.props.value,
+        });
     }
 
     /** Search events by keywords */
@@ -90,7 +98,7 @@ export default class SearchBar extends React.Component<any, any> {
                         value={this.state.searchInputValue}
                         onChange={this.onSearchChange}
                         id={_uniqueId}
-                        placeholder="Search"
+                        placeholder={gettext('Search')}
                         type="text"
                     />
                     {allowCollapsed && (

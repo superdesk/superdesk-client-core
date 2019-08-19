@@ -1,5 +1,5 @@
 import {isEmpty} from 'lodash';
-import {IArticle} from 'superdesk-interfaces/Article';
+import {IArticle} from 'superdesk-api';
 import {gettext} from 'core/utils';
 
 /**
@@ -156,8 +156,16 @@ export function RenditionsService(metadata, $q, api, superdesk, _, notify) {
                     renditionNames.forEach((renditionName) => {
                         if (!isEmpty(result.cropData[renditionName]) &&
                             item.renditions[renditionName] !== result.cropData[renditionName]) {
+                            const rendition = renditions.find((_rendition) => renditionName === _rendition.name);
+                            const crop = {
+                                ...result.cropData[renditionName],
+                                // it should send the size we need, not the one we have
+                                width: rendition.width,
+                                height: rendition.height,
+                            };
+
                             savingImagePromises.push(
-                                api.save('picture_crop', {item: clonedItem, crop: result.cropData[renditionName]}),
+                                api.save('picture_crop', {item: clonedItem, crop: crop}),
                             );
                         }
                     });

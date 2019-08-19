@@ -10,6 +10,24 @@
 
 import _ from 'lodash';
 import {gettext} from 'core/utils';
+import {IEvents, IPublicWebsocketMessages} from 'superdesk-api';
+
+export const getCustomEventNamePrefixed = (name: keyof IEvents) => 'internal-websocket-event--' + name;
+
+// implementing interface to be able to get keys at runtime
+const publicWebsocketMessageNames: IPublicWebsocketMessages = {
+    'content:update': undefined,
+};
+
+export const getWebsocketMessageEventName = (
+    eventName: string,
+    extensionName?: string,
+) => 'websocket-event--' + eventName + (extensionName == null ? '' : '--' + extensionName);
+
+// can also be private, meaning it could only be accessed in extension the event is addressed to.
+export function isWebsocketEventPublic(eventName: string) {
+    return Object.keys(publicWebsocketMessageNames).includes(eventName);
+}
 
 WebSocketProxy.$inject = ['$rootScope', 'config', '$interval', 'session', 'SESSION_EVENTS'];
 function WebSocketProxy($rootScope, config, $interval, session, SESSION_EVENTS) {
@@ -58,6 +76,20 @@ function WebSocketProxy($rootScope, config, $interval, session, SESSION_EVENTS) 
     var bindEvents = function() {
         ws.onmessage = function(event) {
             var msg = angular.fromJson(event.data);
+
+            const addressedForExtension = typeof msg.extra === 'object' && typeof msg.extra.extension === 'string';
+
+            if (addressedForExtension || isWebsocketEventPublic(msg.event)) {
+                window.dispatchEvent(
+                    new CustomEvent(
+                        getWebsocketMessageEventName(
+                            msg.event,
+                            isWebsocketEventPublic(msg.event) ? undefined : msg.extra.extension,
+                        ),
+                        {detail: msg},
+                    ),
+                );
+            }
 
             $rootScope.$broadcast(msg.event, msg.extra);
             if (_.includes(ReloadEvents, msg.event)) {

@@ -1,8 +1,9 @@
 import React from 'react';
 import PackageGroupList from '../components/PackageGroupList';
+import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 
-AddToPackageDropdown.$inject = ['item', 'className', 'authoringWorkspace', 'packages', 'api', '$rootScope'];
-export function AddToPackageDropdown(item, className, authoringWorkspace, packages, api, $rootScope) {
+AddToPackageDropdown.$inject = ['item', 'className', 'authoringWorkspace', 'packages', 'api'];
+export function AddToPackageDropdown(item, className, authoringWorkspace: AuthoringWorkspaceService, packages, api) {
     return React.createElement(PackageGroupList, {
         item: item,
         package: authoringWorkspace.getItem(),

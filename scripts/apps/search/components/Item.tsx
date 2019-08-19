@@ -4,7 +4,7 @@ import React from 'react';
 import classNames from 'classnames';
 import {get} from 'lodash';
 
-import {broadcast} from './fields';
+import {broadcast} from './fields/broadcast';
 
 import {ActionsMenu} from './index';
 import {closeActionsMenu} from '../helpers';
@@ -12,21 +12,41 @@ import {ItemSwimlane} from './ItemSwimlane';
 import {ItemPhotoGrid} from './ItemPhotoGrid';
 import {ListItemTemplate} from './ItemListTemplate';
 import {ItemMgridTemplate} from './ItemMgridTemplate';
-import {IArticle} from 'superdesk-interfaces/Article';
-import {IDesk} from 'superdesk-interfaces/Desk';
+import {IArticle, IDesk} from 'superdesk-api';
+import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
+import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
+
+function isButtonClicked(event): boolean {
+    const selector = 'button';
+
+    // don't trigger the action if a button inside a list view is clicked
+    // if an extension registers a button, it should be able to totally control it.
+    if (
+        event.target.matches(selector)
+
+        // target can be an image or an icon inside a button, so parents need to be checked too
+        || querySelectorParent(event.target, selector) != null
+    ) {
+        return true;
+    } else {
+        return false;
+    }
+}
 
 const CLICK_TIMEOUT = 300;
 
 const actionsMenuDefaultTemplate = (toggle, stopEvent) => (
-    <div className="item-right toolbox">
-        <div className="item-actions-menu dropdown--big open">
-            <button
-                className={'more-activity-toggle condensed dropdown__toggle'}
-                onClick={toggle}
-                onDoubleClick={stopEvent}>
-                <i className="icon-dots-vertical" />
-            </button>
-        </div>
+    <div
+        className="item-right toolbox"
+        style={{display: 'flex', justifyContent: 'space-evenly', alignItems: 'center'}}
+    >
+        <button
+            onClick={toggle}
+            onDoubleClick={stopEvent}
+            className="more-activity-toggle-ref icn-btn dropdown__toggle dropdown-toggle"
+        >
+            <i className="icon-dots-vertical" />
+        </button>
     </div>
 );
 
@@ -138,6 +158,10 @@ export class Item extends React.Component<IProps, IState> {
     }
 
     select(event) {
+        if (isButtonClicked(event)) {
+            return;
+        }
+
         if (!this.props.item.gone && !this.clickTimeout) {
             event.persist(); // make event available in timeout callback
             this.clickTimeout = window.setTimeout(() => {
@@ -152,7 +176,7 @@ export class Item extends React.Component<IProps, IState> {
      * @param {string} itemId Id of the document
      */
     openAuthoringView(itemId) {
-        const {authoringWorkspace} = this.props.svc;
+        const authoringWorkspace: AuthoringWorkspaceService = this.props.svc.authoringWorkspace;
 
         authoringWorkspace.edit({_id: itemId}, 'view');
     }
@@ -164,6 +188,10 @@ export class Item extends React.Component<IProps, IState> {
     }
 
     dbClick(event) {
+        if (isButtonClicked(event)) {
+            return;
+        }
+
         if (this.clickTimeout) {
             window.clearTimeout(this.clickTimeout);
             this.clickTimeout = null;
@@ -344,8 +372,8 @@ export class Item extends React.Component<IProps, IState> {
                     'list-item-view',
                     {
                         'actions-visible': this.props.hideActions !== true,
-                        active: this.props.flags.selected,
-                        selected: this.props.item.selected && !this.props.flags.selected,
+                        'active': this.props.flags.selected,
+                        'selected': this.props.item.selected && !this.props.flags.selected,
                         'sd-list-item-nested': this.props.nested.length,
                         'sd-list-item-nested--expanded': this.props.nested.length && this.state.showNested,
                         'sd-list-item-nested--collapsed': this.props.nested.length && this.state.showNested === false,

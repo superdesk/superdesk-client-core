@@ -10,8 +10,9 @@ import {
     SidePanelContentBlock,
 } from 'core/components/SidePanel';
 import {connectServices} from 'core/helpers/ReactRenderAsync';
-import {IFormGroup} from 'core/ui/components/generic-form/interfaces/form';
 import {FormViewEdit} from 'core/ui/components/generic-form/from-group';
+import {IFormGroup} from 'superdesk-api';
+import {isHttpApiError} from 'core/helpers/network';
 
 interface IProps {
     operation: 'editing' | 'creation';
@@ -32,36 +33,22 @@ interface IState {
     issues: {[field: string]: Array<string>};
 }
 
-class GenericListPageItemViewEditComponent extends React.Component<IProps, IState> {
-    _mounted: boolean;
+const getInitialState = (props: IProps) => ({
+    nextItem: props.item,
+    issues: {},
+});
 
+class GenericListPageItemViewEditComponent extends React.Component<IProps, IState> {
     constructor(props) {
         super(props);
 
-        this.state = {
-            nextItem: this.props.item,
-            issues: {},
-        };
+        this.state = getInitialState(props);
 
         this.enableEditMode = this.enableEditMode.bind(this);
         this.handleCancel = this.handleCancel.bind(this);
         this.handleFieldChange = this.handleFieldChange.bind(this);
         this.isFormDirty = this.isFormDirty.bind(this);
         this.handleSave = this.handleSave.bind(this);
-    }
-    componentWillReceiveProps(nextProps) {
-        if (this.props.editMode === false) {
-            // enable changing which item is previewed
-            this.setState({
-                nextItem: nextProps.item,
-            });
-        }
-    }
-    componentDidMount() {
-        this._mounted = true;
-    }
-    componentWillUnmount() {
-        this._mounted = false;
     }
     enableEditMode() {
         this.setState({
@@ -84,9 +71,7 @@ class GenericListPageItemViewEditComponent extends React.Component<IProps, IStat
         const cancelFn = typeof this.props.onCancel === 'function'
             ? this.props.onCancel
             : () => {
-                this.setState({
-                    nextItem: this.props.item,
-                }, () => {
+                this.setState(getInitialState(this.props), () => {
                     this.props.onEditModeChange(false);
                 });
             };
@@ -105,42 +90,50 @@ class GenericListPageItemViewEditComponent extends React.Component<IProps, IStat
     }
     handleSave() {
         this.props.onSave(this.state.nextItem).then(() => {
-            if (this._mounted === true) {
-                this.props.onEditModeChange(false);
-            }
-
             this.setState({
                 issues: {},
+            }, () => {
+                this.props.onEditModeChange(false);
             });
         })
             .catch((res) => {
-                let issues = {};
+                if (isHttpApiError(res)) {
+                    let issues = {};
 
-                for (let fieldName in res.data._issues) {
-                    let issuesForField = [];
+                    for (let fieldName in res._issues) {
+                        let issuesForField = [];
 
-                    if (typeof res.data._issues[fieldName] === 'string') {
-                        issuesForField.push(res.data._issues[fieldName]);
-                    } else {
-                        for (let key in res.data._issues[fieldName]) {
-                            if (key === 'required') {
-                                issuesForField.push(
-                                    gettext('Field is required'),
-                                );
-                            } else {
-                                issuesForField.push(
-                                    gettext('Uknown validation error'),
-                                );
+                        if (typeof res._issues[fieldName] === 'string') {
+                            issuesForField.push(res._issues[fieldName]);
+                        } else {
+                            for (let key in res._issues[fieldName]) {
+                                if (key === 'required') {
+                                    issuesForField.push(
+                                        gettext('Field is required'),
+                                    );
+                                } else if (key === 'unique') {
+                                    issuesForField.push(
+                                        gettext('Value must be unique'),
+                                    );
+                                } else {
+                                    issuesForField.push(
+                                        gettext('Uknown validation error'),
+                                    );
+                                }
                             }
                         }
+
+                        issues[fieldName] = issuesForField;
                     }
 
-                    issues[fieldName] = issuesForField;
+                    this.setState({
+                        issues: issues,
+                    });
+                } else if (res instanceof Error) {
+                    throw res;
+                } else {
+                    throw new Error(res);
                 }
-
-                this.setState({
-                    issues: issues,
-                });
             });
     }
     render() {

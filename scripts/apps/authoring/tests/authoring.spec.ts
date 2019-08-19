@@ -1,3 +1,6 @@
+import {AuthoringWorkspaceService} from '../authoring/services/AuthoringWorkspaceService';
+import _ from 'lodash';
+
 describe('authoring', () => {
     var GUID = 'urn:tag:superdesk-1';
     var USER = 'user:1';
@@ -622,9 +625,10 @@ describe('authoring', () => {
             let iscope = elem.isolateScope();
 
             scope.item = {guid: 'item1', associations: {'media1--1': {guid: 'foo', type: 'picture'}}};
-            scope.items = [{fieldId: 'media1--1', 'media1--1': {guid: 'foo', type: 'picture'}}];
+            scope.items = [{fieldId: 'media1--1', 'media1--1': {guid: 'foo', type: 'picture'}},
+                {fieldId: 'media1--2', 'media1--2': null}];
             scope.$digest();
-            expect(iscope.rel).toBe(null);
+            expect(iscope.rel).toBe('media1--2');
 
             scope.item = {guid: 'item1', associations: {'media1--1': null}};
             scope.items = [{fieldId: 'media1--1', 'media1--1': null}];
@@ -1916,7 +1920,7 @@ describe('authoring workspace', () => {
         spyOn(authoring, 'open').and.returnValue($q.when(lockedItem));
     }));
 
-    it('can edit item', inject((superdeskFlags, authoringWorkspace, $rootScope) => {
+    it('can edit item', inject((superdeskFlags, authoringWorkspace: AuthoringWorkspaceService, $rootScope) => {
         expect(superdeskFlags.flags.authoring).toBeFalsy();
 
         authoringWorkspace.edit(item);
@@ -1934,8 +1938,11 @@ describe('authoring workspace', () => {
         expect(superdeskFlags.flags.authoring).toBeFalsy();
     }));
 
-    it('can open item in readonly mode', inject((superdeskFlags, authoringWorkspace, $rootScope,
-        authoring, $q) => {
+    it('can open item in readonly mode', inject((
+        superdeskFlags,
+        authoringWorkspace: AuthoringWorkspaceService,
+        $rootScope,
+    ) => {
         lockedItem._editable = false;
         authoringWorkspace.view(item);
         $rootScope.$apply();
@@ -1945,21 +1952,31 @@ describe('authoring workspace', () => {
         lockedItem._editable = true;
     }));
 
-    it('can kill an item', inject((authoringWorkspace, $rootScope) => {
+    it('can kill an item', inject((authoringWorkspace: AuthoringWorkspaceService, $rootScope) => {
         authoringWorkspace.kill(item);
         $rootScope.$apply();
         expect(authoringWorkspace.item).toBe(lockedItem);
         expect(authoringWorkspace.action).toBe('kill');
     }));
 
-    it('can handle edit.item activity', inject((superdesk, authoringWorkspace, $rootScope) => {
+    it('can handle edit.item activity', inject((
+        superdesk,
+        authoringWorkspace: AuthoringWorkspaceService,
+        $rootScope,
+    ) => {
         superdesk.intent('edit', 'item', item);
         $rootScope.$digest();
         expect(authoringWorkspace.item).toBe(lockedItem);
         expect(authoringWorkspace.action).toBe('edit');
     }));
 
-    it('can open an item for edit or readonly', inject((authoringWorkspace, authoring, send, $q, $rootScope) => {
+    it('can open an item for edit or readonly', inject((
+        authoringWorkspace: AuthoringWorkspaceService,
+        authoring,
+        send,
+        $q,
+        $rootScope,
+    ) => {
         item.state = 'draft';
         authoringWorkspace.open(item);
         expect(authoring.open).toHaveBeenCalledWith(item._id, false, null, 'edit');
@@ -1984,7 +2001,7 @@ describe('authoring workspace', () => {
             $location.search('action', 'edit');
             $rootScope.$digest();
 
-            var authoringWorkspace = $injector.get('authoringWorkspace');
+            var authoringWorkspace: AuthoringWorkspaceService = $injector.get('authoringWorkspace');
 
             $rootScope.$digest();
 
@@ -1996,7 +2013,7 @@ describe('authoring workspace', () => {
             $location.search('item', 'bar');
             $location.search('action', 'view');
             $rootScope.$digest();
-            var authoringWorkspace = $injector.get('authoringWorkspace');
+            var authoringWorkspace: AuthoringWorkspaceService = $injector.get('authoringWorkspace');
 
             $rootScope.$digest();
             expect(authoringWorkspace.item).toBe(lockedItem);
@@ -2028,7 +2045,7 @@ describe('authoring container directive', () => {
         iscope = elem.isolateScope();
     }));
 
-    it('handles edit', inject((authoringWorkspace, $rootScope) => {
+    it('handles edit', inject((authoringWorkspace: AuthoringWorkspaceService, $rootScope) => {
         authoringWorkspace.edit(item);
         $rootScope.$digest();
 
@@ -2047,7 +2064,7 @@ describe('authoring container directive', () => {
         expect(iscope.authoring.state.opened).toBe(false);
     }));
 
-    it('handles view', inject((authoringWorkspace, $rootScope) => {
+    it('handles view', inject((authoringWorkspace: AuthoringWorkspaceService, $rootScope) => {
         lockedItem._editable = false;
         authoringWorkspace.view(item);
         $rootScope.$digest();
@@ -2058,7 +2075,7 @@ describe('authoring container directive', () => {
         lockedItem._editable = true;
     }));
 
-    it('handles kill', inject((authoringWorkspace, $rootScope) => {
+    it('handles kill', inject((authoringWorkspace: AuthoringWorkspaceService, $rootScope) => {
         authoringWorkspace.kill(item);
         $rootScope.$digest();
         $rootScope.$digest();
@@ -2066,7 +2083,7 @@ describe('authoring container directive', () => {
         expect(iscope.authoring.action).toBe('kill');
     }));
 
-    it('handles correct', inject((authoringWorkspace, $rootScope) => {
+    it('handles correct', inject((authoringWorkspace: AuthoringWorkspaceService, $rootScope) => {
         authoringWorkspace.correct(item);
         $rootScope.$digest();
         $rootScope.$digest();
@@ -2080,7 +2097,7 @@ describe('authoring container directive', () => {
         }));
 
         it('applies kill template',
-            inject((authoringWorkspace, $rootScope, api, $compile, $q) => {
+            inject((authoringWorkspace: AuthoringWorkspaceService, $rootScope, api, $compile, $q) => {
                 authoringWorkspace.kill(item);
                 $rootScope.$digest();
                 $rootScope.$digest();
@@ -2401,7 +2418,11 @@ describe('send item directive', () => {
             };
         }));
 
-        it('can send and publish item to different desk', inject((authoring, $q, authoringWorkspace) => {
+        it('can send and publish item to different desk', inject((
+            authoring,
+            $q,
+            authoringWorkspace: AuthoringWorkspaceService,
+        ) => {
             publish = true; // publish succeeds
             iScope.selectedDesk = selectedDesk;
             iScope.selectedStage = selectedStage;
@@ -2421,7 +2442,7 @@ describe('send item directive', () => {
         }));
 
         it('can send and publish item to different desk publish fails',
-            inject((authoring, $q, authoringWorkspace, notify) => {
+            inject((authoring, $q, authoringWorkspace: AuthoringWorkspaceService, notify) => {
                 publish = false; // publish succeeds
                 iScope.selectedDesk = selectedDesk;
                 iScope.selectedStage = selectedStage;
@@ -2441,7 +2462,7 @@ describe('send item directive', () => {
             }));
 
         it('can send and publish item to different desk but locking failed',
-            inject((authoring, $q, authoringWorkspace, notify) => {
+            inject((authoring, $q, authoringWorkspace: AuthoringWorkspaceService, notify) => {
                 publish = true; // publish succeeds
                 movedItem._locked = false; // locked failed.
                 iScope.selectedDesk = selectedDesk;

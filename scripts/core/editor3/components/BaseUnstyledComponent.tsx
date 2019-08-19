@@ -51,7 +51,8 @@ class BaseUnstyledComponent extends React.Component<any, any> {
         const blockKey = this.getDropBlockKey();
         const link = event.originalEvent.dataTransfer.getData('URL');
 
-        if (canDropMedia(event, this.props.editorProps) && mediaType.includes('application/superdesk')) {
+        if (canDropMedia(event, this.props.editorProps)
+            && (mediaType === 'Files' || mediaType.includes('application/superdesk'))) {
             this.props.dispatch(dragDrop(dataTransfer, mediaType, blockKey));
         } else if (
             typeof link === 'string'

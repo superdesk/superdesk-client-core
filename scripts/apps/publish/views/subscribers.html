@@ -162,10 +162,16 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form__row form__row--flex form__row--no-padding">
+                            <div class="form__row form__row--flex">
                                 <div class="form__row-item form__row-item--no-grow">
-                                    <span sd-switch ng-model="subscriber.async"></span><label>{{:: 'Parallel publishing' | translate }}</label>
+                                    <span sd-switch ng-model="subscriber.async"></span><label translate>Parallel publishing</label>
                                     <span class="sd-line-input__hint" translate>When enabled it can send multiple items at the same time.</span>
+                                </div>
+                            </div>
+                            <div class="form__row form__row--flex" ng-if="highPriorityQueueEnabled">
+                                <div class="form__row-item form__row-item--no-grow">
+                                    <span sd-switch ng-model="subscriber.priority"></span><label translate>High priority</label>
+                                    <span class="sd-line-input__hint" translate>Use priority queue for transmission.</span>
                                 </div>
                             </div>
                         </div>
@@ -257,7 +263,9 @@
                                     </div>
                                     <div class="form__row-item">
                                         <div class="sd-line-input sd-line-input--is-select">
-                                            <select class="sd-line-input__select" ng-model="tokens.ttl" title="{{ :: 'Token expiry' | translate }}">
+                                            <select class="sd-line-input__select"
+                                                ng-model="tokens.ttl"
+                                                title="{{ :: 'Token expiry' | translate }}">
                                                 <option value="7" translate>1 week</option>
                                                 <option value="14" translate>2 weeks</option>
                                                 <option value="30" translate>1 month</option>

@@ -33,8 +33,11 @@ import 'core/form';
 
 import ng from 'core/services/ng';
 
-import {extensions} from 'core/extension-imports.generated';
-import {getSuperdeskApiImplementation} from './get-superdesk-api-implementation';
+import {reactToAngular1} from 'superdesk-ui-framework';
+
+import {ExtensionPage} from './extension-page';
+import {registerExtensions} from './register-extensions';
+import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 
 /* globals __SUPERDESK_CONFIG__: true */
 const appConfig = __SUPERDESK_CONFIG__;
@@ -77,10 +80,18 @@ let core = angular.module('superdesk.core', [
 
 core.constant('lodash', _);
 
-core.config(['$routeProvider', ($routeProvider) => {
+const styles = 'display: flex; height: 100%;';
+
+let _superdesk;
+
+core.component('sdExtensionPage', reactToAngular1(ExtensionPage, [], [], styles));
+core.config(['$routeProvider', 'superdeskProvider', ($routeProvider, superdesk) => {
     $routeProvider.when('/', {
         redirectTo: appConfig.defaultRoute,
     });
+
+    // added to be able to register activities which didn't work using superdesk reference injected in `core.run`.
+    _superdesk = superdesk;
 }]);
 
 // due to angular 1.6
@@ -98,10 +109,22 @@ core.run(['$document', ($document) => {
     }
 }]);
 
-core.run(['modal', (modal) => {
-    for (const extensionId in extensions) {
-        extensions[extensionId].extension.activate(getSuperdeskApiImplementation(extensionId, extensions, modal));
-    }
-}]);
+core.run([
+    'modal',
+    'privileges',
+    'lock',
+    'session',
+    'authoringWorkspace',
+    (modal, privileges, lock, session, authoringWorkspace: AuthoringWorkspaceService) => {
+        registerExtensions(
+            _superdesk,
+            modal,
+            privileges,
+            lock,
+            session,
+            authoringWorkspace,
+        );
+    },
+]);
 
 export default core;

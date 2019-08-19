@@ -1,4 +1,7 @@
 import _ from 'lodash';
+import {isPublished} from 'apps/archive/utils';
+import {assertNever} from 'core/helpers/typescript-helpers';
+import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 
 HistoryController.$inject = [
     '$scope',
@@ -7,7 +10,11 @@ HistoryController.$inject = [
     'highlightsService',
     '$q',
     'archiveService',
-    'authoringWorkspace'];
+    'authoringWorkspace',
+    'gettext',
+];
+
+type PublishType = 'publish' | 'kill' | 'correct' | 'takedown' | 'resend' | 'unpublish';
 
 /**
  * @ngdoc controller
@@ -30,7 +37,9 @@ export function HistoryController(
     highlightsService,
     $q,
     archiveService,
-    authoringWorkspace) {
+    authoringWorkspace: AuthoringWorkspaceService,
+    gettext,
+) {
     $scope.highlightsById = {};
     $scope.historyItems = null;
 
@@ -146,7 +155,7 @@ export function HistoryController(
     const processVersion = (version) => ({
         version: version._current_version,
         displayName: version.creator,
-        isPublished: ['published', 'corrected', 'killed', 'recalled'].includes(version.state),
+        isPublished: isPublished(version, false),
         operation: version.operation,
         item_id: version._id,
     });
@@ -183,4 +192,23 @@ export function HistoryController(
     };
 
     $scope.$watchGroup(['item._id', 'item._latest_version'], fetchHistory);
+
+    $scope.getOperationLabel = (operation: PublishType, state: string) => {
+        switch (operation) {
+        case 'publish':
+            return state === 'scheduled' ? gettext('Scheduled by') : gettext('Published by');
+        case 'correct':
+            return gettext('Corrected by');
+        case 'kill':
+            return gettext('Killed by');
+        case 'takedown':
+            return gettext('Recalled by');
+        case 'resend':
+            return gettext('Resent by');
+        case 'unpublish':
+            return gettext('Unpublished by');
+        default:
+            assertNever(operation);
+        }
+    };
 }

@@ -1,9 +1,13 @@
 import {pickBy, zipObject} from 'lodash';
-import {IArticle} from 'superdesk-interfaces/Article';
+import {IArticle} from 'superdesk-api';
+import {isPublished} from 'apps/archive/utils';
 
-RelationsService.$inject = ['archiveService', 'mediaIdGenerator', 'api', '$q'];
+const RELATED_LINK_KEYS = 2; // links only have _id and type keys (and some old ones only _id)
+const isLink = (association) => association != null && Object.keys(association).length <= RELATED_LINK_KEYS;
 
-export function RelationsService(archiveService, mediaIdGenerator, api, $q) {
+RelationsService.$inject = ['mediaIdGenerator', 'api', '$q'];
+
+export function RelationsService(mediaIdGenerator, api, $q) {
     this.getRelatedItemsWithoutMediaGallery = function(item: IArticle, fields) {
         if (!item.associations) {
             return [];
@@ -17,13 +21,12 @@ export function RelationsService(archiveService, mediaIdGenerator, api, $q) {
         });
 
         const related = Object.values(relatedWithoutMedia);
-        const relatedWithoutNull = related.filter((o) => o != null && Object.keys(o).length < 2);
-
+        const relatedWithoutNull = related.filter(isLink);
         const relatedItems = relatedWithoutNull.map((o) => api.find('archive', o._id));
 
         return $q.all(relatedItems)
             .then((response) => {
-                const unpublished = response.filter((o) => !archiveService.isPublished(o));
+                const unpublished = response.filter((o) => !isPublished(o));
 
                 return unpublished;
             });
@@ -40,7 +43,7 @@ export function RelationsService(archiveService, mediaIdGenerator, api, $q) {
         const associations = item.associations || {};
 
         return $q.all(relatedItemsKeys.map((key) => {
-            if (associations[key] && Object.keys(associations[key]).length < 2) {
+            if (isLink(associations[key])) {
                 return api.find('archive', associations[key]._id);
             }
 

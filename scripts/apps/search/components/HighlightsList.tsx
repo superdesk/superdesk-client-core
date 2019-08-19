@@ -72,7 +72,8 @@ export class HighlightsList extends React.Component<any, any> {
                     highlight.name,
                     highlightsService.hasMarkItemPrivilege() ? React.createElement(
                         'button',
-                        {className: 'btn btn--mini', onClick: this.removeHighlight(highlight)},
+                        {className: 'btn btn--small btn--hollow btn--primary btn--ui-dark',
+                            onClick: this.removeHighlight(highlight)},
                         gettext('REMOVE'),
                     ) : null,
                 );

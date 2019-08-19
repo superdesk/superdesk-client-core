@@ -2,6 +2,7 @@ import * as constant from '../constants';
 import {get, omit, isEmpty, zipObject} from 'lodash';
 import {gettext} from 'core/utils';
 import {isMediaEditable} from 'core/config';
+import {IArticle} from 'superdesk-api';
 
 /**
  * @ngdoc service
@@ -285,10 +286,10 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
      * @param {Object} profile
      * @return {Array}
      */
-    this.fields = (contentType) => {
-        const editor = contentType.editor || {};
+    this.fields = (profile) => {
+        const editor = profile.editor || {};
 
-        return this._fields.filter((field) => !!editor[field._id]);
+        return this._fields ? this._fields.filter((field) => !!editor[field._id]) : [];
     };
 
     /**
@@ -324,7 +325,7 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
             self._fieldsPromise = api.getAll('vocabularies', {
                 where: {
                     $or: [
-                        {field_type: {$in: ['text', 'date', 'media', 'embed', 'urls']}},
+                        {field_type: {$in: constant.CUSTOM_FIELD_TYPES}},
                         {service: {$exists: true}},
                     ],
                 },
@@ -366,9 +367,7 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
     /**
      * Handle drop event transfer data and convert it to an item
      */
-    this.dropItem = (transferData, {fetchExternal} = {fetchExternal: true}) => {
-        const item = JSON.parse(transferData);
-
+    this.dropItem = (item: IArticle, {fetchExternal} = {fetchExternal: true}) => {
         if (item._type !== 'externalsource') {
             if (item._type === 'ingest') {
                 return send.one(item);
@@ -395,12 +394,14 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
                 scope.schema = this.schema(profile, item.type);
                 scope.editor = this.editor(profile, item.type);
                 scope.fields = this.fields(profile);
+                return profile;
             });
         } else {
-            scope.schema = this.schema(null, get(item, 'type', 'text'));
-            scope.editor = this.editor(null, get(item, 'type', 'text'));
-            scope.fields = null;
-            return $q.when();
+            return this.getCustomFields().then(() => {
+                scope.schema = this.schema(null, get(item, 'type', 'text'));
+                scope.editor = this.editor(null, get(item, 'type', 'text'));
+                scope.fields = this.fields({editor: scope.editor});
+            });
         }
     };
 }

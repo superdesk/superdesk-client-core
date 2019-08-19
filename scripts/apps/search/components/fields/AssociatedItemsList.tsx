@@ -1,5 +1,5 @@
 import React from 'react';
-import {IArticle} from 'superdesk-interfaces/Article';
+import {IArticle} from 'superdesk-api';
 
 const TYPES_TO_ICONS = {
     picture: 'icon-photo',
@@ -14,14 +14,19 @@ interface IProps {
 }
 
 interface IState {
-    associations: Array<IArticle>;
+    types: Array<string>;
+}
+
+interface IRelatedArticle {
+    _id: IArticle['_id'];
+    type: IArticle['type'];
 }
 
 /**
  * Render icon with count for each item type present in associations.
  */
 export class AssociatedItemsList extends React.Component<IProps, IState> {
-    readonly state = {associations: []};
+    readonly state = {types: []};
 
     componentDidMount() {
         this.getAssociations();
@@ -29,9 +34,22 @@ export class AssociatedItemsList extends React.Component<IProps, IState> {
 
     getAssociations() {
         const {content} = this.props.svc;
+        const associations = this.props.item.associations || {};
+        const related = Object.values(associations)
+            .filter((_related) => _related != null);
+        const relatedTypes = related
+            .map((_related: IRelatedArticle) => _related.type)
+            .filter((type) => type != null);
 
-        content.fetchAssociations(this.props.item).then((associations) => {
-            this.setState({associations: Object.values(associations)});
+        if (relatedTypes.length === related.length) { // types for all
+            this.setState({types: relatedTypes});
+            return;
+        }
+
+        content.fetchAssociations(this.props.item).then((_associations: Array<IArticle>) => {
+            this.setState({
+                types: Object.values(_associations).filter((assoc) => assoc != null).map((assoc) => assoc.type),
+            });
         });
     }
 
@@ -39,7 +57,7 @@ export class AssociatedItemsList extends React.Component<IProps, IState> {
         const icons = Object.keys(TYPES_TO_ICONS).map((type) => ({
             type: type,
             icon: TYPES_TO_ICONS[type],
-            count: this.state.associations.filter((assoc) => assoc != null && assoc.type === type).length,
+            count: this.state.types.filter((_type) => _type === type).length,
         }))
             .filter((data) => data.count > 0)
             .map((associatedType) => (

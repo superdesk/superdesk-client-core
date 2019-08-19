@@ -1,5 +1,7 @@
-AuthoringContainerDirective.$inject = ['authoring', 'authoringWorkspace'];
-export function AuthoringContainerDirective(authoring, authoringWorkspace) {
+import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
+
+AuthoringContainerDirective.$inject = ['authoringWorkspace'];
+export function AuthoringContainerDirective(authoringWorkspace: AuthoringWorkspaceService) {
     function AuthoringContainerController() {
         var self = this;
 

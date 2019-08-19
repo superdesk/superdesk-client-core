@@ -9,11 +9,19 @@ import '../suggest';
 import mediaModule from '../media';
 import {reactToAngular1} from 'superdesk-ui-framework';
 import {ArticleUrlFields} from './article-url-fields';
+import {AuthoringCustomField} from './authoring-custom-field';
+import {PreviewCustomField} from './preview-custom-field';
+import {LineCount} from './components/line-count';
 import {PopulateAuthorsController} from './controllers/PopulateAuthorsController';
 
 import {gettext} from 'core/utils';
-import {IArticle} from 'superdesk-interfaces/Article';
+import {IArticle} from 'superdesk-api';
 import {IArticleSchema} from 'superdesk-interfaces/ArticleSchema';
+import {AuthoringTopbarReact} from './authoring-topbar-react';
+import {showModal} from 'core/services/modalService';
+import {getUnpublishConfirmModal} from './components/unpublish-confirm-modal';
+import {ITEM_STATE} from 'apps/archive/constants';
+import {AuthoringWorkspaceService} from './services';
 
 export interface IOnChangeParams {
     item: IArticle;
@@ -91,6 +99,7 @@ angular.module('superdesk.apps.authoring', [
     .directive('sdArticleEdit', directive.ArticleEditDirective)
     .directive('sdAuthoring', directive.AuthoringDirective)
     .directive('sdAuthoringTopbar', directive.AuthoringTopbarDirective)
+    .component('sdAuthoringTopbarReact', reactToAngular1(AuthoringTopbarReact, ['article', 'onChange']))
     .directive('sdPreviewFormatted', directive.PreviewFormattedDirective)
     .directive('sdAuthoringContainer', directive.AuthoringContainerDirective)
     .directive('sdAuthoringEmbedded', directive.AuthoringEmbeddedDirective)
@@ -101,10 +110,34 @@ angular.module('superdesk.apps.authoring', [
     .directive('sdRemoveTags', directive.RemoveTagsDirective)
     .directive('tansaScopeSync', directive.TansaScopeSyncDirective)
     .directive('sdItemActionByIntent', directive.ItemActionsByIntentDirective)
+
+    .component('sdLineCount',
+        reactToAngular1(
+            LineCount,
+            ['html'],
+            [],
+            'display:contents',
+        ),
+    )
+
     .component('sdArticleUrlFields',
         reactToAngular1(
             ArticleUrlFields,
             ['label', 'urls', 'helperText', 'onChange', 'fieldId', 'editable', 'required'],
+        ),
+    )
+
+    .component('sdAuthoringCustomField',
+        reactToAngular1(
+            AuthoringCustomField,
+            ['item', 'field', 'editable', 'onChange'],
+        ),
+    )
+
+    .component('sdPreviewCustomField',
+        reactToAngular1(
+            PreviewCustomField,
+            ['item', 'field'],
         ),
     )
 
@@ -139,7 +172,10 @@ angular.module('superdesk.apps.authoring', [
                 priority: 10,
                 icon: 'pencil',
                 keyboardShortcut: 'ctrl+alt+e',
-                controller: ['data', 'authoringWorkspace', function(data, authoringWorkspace) {
+                controller: ['data', 'authoringWorkspace', function(
+                    data,
+                    authoringWorkspace: AuthoringWorkspaceService,
+                ) {
                     authoringWorkspace.edit(data.item ? data.item : data);
                 }],
                 filters: [
@@ -155,7 +191,7 @@ angular.module('superdesk.apps.authoring', [
                 priority: 5,
                 icon: 'pencil',
                 keyboardShortcut: 'ctrl+alt+n',
-                controller: ['data', 'authoringWorkspace', (data, authoringWorkspace) => {
+                controller: ['data', 'authoringWorkspace', (data, authoringWorkspace: AuthoringWorkspaceService) => {
                     authoringWorkspace.popup(data.item, 'edit');
                 }],
                 filters: [{action: 'list', type: 'archive'}],
@@ -200,8 +236,8 @@ angular.module('superdesk.apps.authoring', [
                 priority: 100,
                 icon: 'kill',
                 group: 'corrections',
-                controller: ['data', 'authoringWorkspace', 'api', '$rootScope',
-                    function(data, authoringWorkspace, api, $rootScope) {
+                controller: ['data', 'authoringWorkspace', '$rootScope',
+                    function(data, authoringWorkspace: AuthoringWorkspaceService, $rootScope) {
                         if (data.item._type === 'archived') {
                             $rootScope.$broadcast('open:archived_kill', data.item, 'kill');
                         } else {
@@ -224,8 +260,8 @@ angular.module('superdesk.apps.authoring', [
                 priority: 100,
                 icon: 'kill',
                 group: 'corrections',
-                controller: ['data', 'authoringWorkspace', 'api', '$rootScope',
-                    function(data, authoringWorkspace, api, $rootScope) {
+                controller: ['data', 'authoringWorkspace', '$rootScope',
+                    function(data, authoringWorkspace: AuthoringWorkspaceService, $rootScope) {
                         if (data.item._type === 'archived') {
                             $rootScope.$broadcast('open:archived_kill', data.item, 'takedown');
                         } else {
@@ -248,7 +284,10 @@ angular.module('superdesk.apps.authoring', [
                 priority: 100,
                 icon: 'edit-line',
                 group: 'corrections',
-                controller: ['data', 'authoringWorkspace', function(data, authoringWorkspace) {
+                controller: ['data', 'authoringWorkspace', function(
+                    data,
+                    authoringWorkspace: AuthoringWorkspaceService,
+                ) {
                     authoringWorkspace.correct(data.item);
                 }],
                 filters: [{action: 'list', type: 'archive'}],
@@ -262,7 +301,10 @@ angular.module('superdesk.apps.authoring', [
                 priority: 2000,
                 icon: 'external',
                 keyboardShortcut: 'alt+o',
-                controller: ['data', 'authoringWorkspace', function(data, authoringWorkspace) {
+                controller: ['data', 'authoringWorkspace', function(
+                    data,
+                    authoringWorkspace: AuthoringWorkspaceService,
+                ) {
                     authoringWorkspace.view(data.item || data);
                 }],
                 filters: [
@@ -280,7 +322,7 @@ angular.module('superdesk.apps.authoring', [
                 priority: 1990,
                 icon: 'external',
                 keyboardShortcut: 'ctrl+alt+n',
-                controller: ['data', 'authoringWorkspace', (data, authoringWorkspace) => {
+                controller: ['data', 'authoringWorkspace', (data, authoringWorkspace: AuthoringWorkspaceService) => {
                     authoringWorkspace.popup(data.item, 'view');
                 }],
                 filters: [
@@ -320,7 +362,55 @@ angular.module('superdesk.apps.authoring', [
                         return api.find('archive', $route.current.params._id);
                     }],
                 },
-            });
+            })
+            .activity('unpublish', {
+                label: gettext('Unpublish'),
+                priority: 50,
+                icon: 'kill',
+                group: 'corrections',
+                controller: ['data', 'authoring', 'familyService',
+                    (data, authoring, familyService) => {
+                        const item = data.item;
+                        let relatedItems = [];
+
+                        familyService.fetchRelatedByState(item.archive_item, [ITEM_STATE.PUBLISHED])
+                            .then((items) => {
+                                relatedItems = items;
+
+                                const unpublish = (selected) => {
+                                    authoring.publish(item.archive_item, {}, 'unpublish');
+                                    relatedItems.forEach((relatedItem) => {
+                                        if (selected[relatedItem._id]) {
+                                            authoring.publish(relatedItem, {}, 'unpublish');
+                                        }
+                                    });
+                                };
+
+                                showModal(getUnpublishConfirmModal(item, relatedItems, unpublish));
+                            });
+                    },
+                ],
+                filters: [{action: 'list', type: 'archive'}],
+                additionalCondition: ['authoring', 'item', (authoring, item) => authoring.itemActions(item).kill],
+                privileges: {unpublish: 1},
+            })
+            .activity('edit.unpublished', {
+                label: gettext('Edit'),
+                priority: 100,
+                icon: 'edit-line',
+                group: 'corrections',
+                controller: ['data', 'authoringWorkspace', 'api',
+                    (data, authoringWorkspace: AuthoringWorkspaceService, api) => {
+                        api.update('archive', data.item.archive_item, {state: 'in_progress'})
+                            .then((updated) =>
+                                authoringWorkspace.edit(updated));
+                    },
+                ],
+                filters: [{action: 'list', type: 'archive'}],
+                additionalCondition: ['item', (item) => item.state === 'unpublished'],
+                privileges: {unpublish: 1},
+            })
+        ;
     }])
     .config(['apiProvider', function(apiProvider) {
         apiProvider.api('move', {

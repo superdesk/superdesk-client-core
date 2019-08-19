@@ -5,7 +5,7 @@ import MenuItems from './MenuItems';
 
 import {closeActionsMenu, openActionsMenu} from '../../helpers';
 
-export class ActionsMenu extends React.Component<any, any> {
+export class ActionsMenu extends React.PureComponent<any, any> {
     static propTypes: any;
     static defaultProps: any;
 
@@ -22,11 +22,17 @@ export class ActionsMenu extends React.Component<any, any> {
         const icon = (ReactDOM.findDOMNode(this) as HTMLElement)
             .getElementsByClassName('icon-dots-vertical')[0];
 
-        openActionsMenu(<MenuItems
-            svc={this.props.svc}
-            scope={this.props.scope}
-            item={this.props.item}
-            onActioning={this.props.onActioning}/>, icon, this.props.item._id);
+        openActionsMenu(
+            <MenuItems
+                svc={this.props.svc}
+                scope={this.props.scope}
+                item={this.props.item}
+                onActioning={this.props.onActioning}
+                target={icon}
+            />,
+            icon,
+            this.props.item._id,
+        );
     }
 
     stopEvent(event) {

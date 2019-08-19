@@ -1,8 +1,8 @@
 <div sd-modal data-model="item" data-full="true" class="modal--fullscreen modal--preview-article modal--white">
     <div class="modal__header modal__header--no-border">
         <div class="btn-group pull-left">
-            <span sd-check ng-model="hide_images" name="hide_images"></span>
-            <label translate>Hide images</label>
+            <span sd-check ng-model="hide_media" name="hide_media"></span>
+            <label translate>Hide media</label>
         </div>
         <div class="btn-group pull-right">
             <button ng-click="printPreview()" title="{{'Print'|translate}}"><i class="icon-print"></i></button>
@@ -10,7 +10,7 @@
         </div>
     </div>
     <div class="modal__body modal-body--white" sd-shadow>
-        <div class="preview-content" ng-class="{'hide-images': hide_images}">
+        <div class="preview-content" ng-class="{'hide-images': hide_media}">
             <div class="metadata">
                 <div ng-if="item.versioncreated">
                     <div class="preview-label">
@@ -119,24 +119,41 @@
                 <div class="headline" order="{{editor.headline.order}}" ng-if="!editor.headline.hideOnPrint">{{item.headline}}</div>
                 <!-- custom media and embed fields -->
                 <div ng-repeat="field in fields track by field._id"
-                    ng-if="(field.field_type === 'media' && mediaExists(item.associations, field._id) || field.field_type === 'embed' && item.extra[field._id]) && !editor[field._id].hideOnPrint"
+                    ng-if="(field.field_type === 'media' || field.field_type === 'related_content' && associationExists(item.associations, field._id)
+                    || field.field_type === 'embed' && item.extra[field._id]) && !editor[field._id].hideOnPrint"
                     order="{{editor[field._id].order}}"
                     class="body preview-editor">
                     <div class="preview-label">
                         <label translate>{{field.display_name}}</label>
                     </div>
-                    <div ng-if="field.field_type === 'embed' && !hide_images" ng-bind-html="getHtml(item.extra[field._id].embed)">
+                    <div ng-if="field.field_type === 'embed' && !hide_media" ng-bind-html="getHtml(item.extra[field._id].embed)">
                     </div>
-                    <div ng-if="field.field_type === 'media' && !hide_images" class="association">
-                        <div ng-repeat="(mediaId, media) in getMediaItems(item.associations, field._id) track by mediaId">
-                            <img src="{{media.renditions.viewImage.href}}" ng-if="!hide_images">
-                            <p><i class="icon-picture" ng-if="hide_images"></i>{{media.description_text}}</p>
+                    <div ng-if="field.field_type === 'media' && !hide_media" class="association">
+                        <div ng-repeat="(mediaId, media) in getAssociationItems(item.associations, field._id) track by mediaId">
+                            <img src="{{media.renditions.viewImage.href}}" ng-if="!hide_media && media.type === 'picture'">
+                            <video controls="controls" ng-if="media.type === 'video'">
+                                <source vsrc="{{rendition.href}}"
+                                        ng-repeat="(key, rendition) in media.renditions"
+                                        ng-if="checkRenditions.isVideo(rendition)" html5vfix>
+                            </video>
+                            <audio controls="controls" ng-if="media.type === 'audio'">
+                                <source vsrc="{{rendition.href}}"
+                                        ng-repeat="(key, rendition) in media.renditions"
+                                        ng-if="checkRenditions.isAudio(rendition)" html5vfix>
+                            </audio>
+                            <p><i class="icon-picture" ng-if="hide_media"></i>{{media.description_text}}</p>
+                        </div>
+                    </div>
+                    <div ng-if="field.field_type === 'related_content'">
+                        <div sd-related-items-preview
+                            data-item="item"
+                            data-field="field">
                         </div>
                     </div>
                 </div>
                 <div order="{{editor.feature_media.order}}" ng-if="!editor.feature_media.hideOnPrint" class="association">
-                    <img src="{{item.associations.featuremedia.renditions.viewImage.href}}" ng-if="!hide_images">
-                    <p><i class="icon-picture" ng-if="hide_images"></i>{{item.associations.featuremedia.description_text}}</p>
+                    <img src="{{item.associations.featuremedia.renditions.viewImage.href}}" ng-if="!hide_media">
+                    <p><i class="icon-picture" ng-if="hide_media"></i>{{item.associations.featuremedia.description_text}}</p>
                 </div>
                 <div class="abstract" order="{{editor.abstract.order}}" ng-if="!editor.abstract.hideOnPrint" sd-html-preview="item.abstract"></div>
                 <div class="byline" order="{{editor.byline.order}}" ng-if="!editor.byline.hideOnPrint">{{item.byline}}</div>

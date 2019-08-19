@@ -1,5 +1,29 @@
 /* eslint-disable complexity */
 import _ from 'lodash';
+import getCustomSortForGroup, {GroupSortOptions} from '../helpers/CustomSortOfGroups';
+import {GET_LABEL_MAP} from '../../workspace/content/constants';
+import {isPublished} from 'apps/archive/utils';
+import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
+import {DESK_OUTPUT} from 'apps/desks/constants';
+
+const translatedFields = GET_LABEL_MAP();
+
+function translateCustomSorts(customSorts: GroupSortOptions) {
+    const translated = {};
+
+    for (let field of customSorts) {
+        translated[field] = {label: translatedFields[field]};
+    }
+
+    return translated;
+}
+
+export type StageGroup = {
+    _id?: any;
+    type?: string;
+    search?: 'ingest';
+    max_items?: any;
+};
 
 interface IScope extends ng.IScope {
     customDataSource: {
@@ -25,51 +49,59 @@ interface IScope extends ng.IScope {
     selected: any;
     numItems: any;
     view: any;
+    group?: StageGroup;
     viewType?: any;
-    group?: {
-        _id?: any;
-        type?: string;
-        search?: 'ingest';
-        max_items?: any;
-    };
     currentGroup: any;
     fetchNext(i: number): any;
     refreshGroup(): void;
+    customSortOptions: { [field: string]: { label: string } };
+    customSortOptionActive?: { field: string, order: 'asc' | 'desc' };
 
     hideActionsForMonitoringItems: boolean;
     disableMonitoringMultiSelect: boolean;
     onMonitoringItemSelect(): void;
     onMonitoringItemDoubleClick(): void;
+    selectDefaultSortOption(): void;
+    selectCustomSortOption(field: string): void;
+    toggleCustomSortOrder(): void;
 }
 
 /**
  * @ngdoc directive
  * @module superdesk.apps.monitoring
  * @name sdMonitoringGroup
- *
- * @requires cards
- * @requires api
- * @requires authoringWorkspace
- * @requires $timeout
- * @requires superdesk
- * @requires session
- * @requires activityService
- * @requires workflowService
- * @requires keyboardManager
- * @requires desks
- * @requires search
- * @requires multi
- * @requires archiveService
- * @requires $rootScope
- * @requires preferencesService
- *
+
  * @description
  *   A directive that generates group/section on stages of a desk or saved search.
  */
-MonitoringGroup.$inject = ['cards', 'api', 'authoringWorkspace', '$timeout', 'superdesk', 'session',
-    'activityService', 'desks', 'search', 'multi', 'archiveService', 'config', '$rootScope'];
-export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superdesk, session, activityService,
-    desks, search, multi, archiveService, config, $rootScope) {
+MonitoringGroup.$inject = [
+    'cards',
+    'api',
+    'authoringWorkspace',
+    '$timeout',
+    'superdesk',
+    'session',
+    'activityService',
+    'desks',
+    'search',
+    'multi',
+    'config',
+    '$rootScope',
+];
+export function MonitoringGroup(
+    cards,
+    api,
+    authoringWorkspace: AuthoringWorkspaceService,
+    $timeout,
+    superdesk,
+    session,
+    activityService,
+    desks,
+    search,
+    multi,
+    config,
+    $rootScope,
+) {
     let ITEM_HEIGHT = 57;
     let PAGE_SIZE = 25;
     let DEFAULT_GROUP_ITEMS = 10;
@@ -114,6 +146,20 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
 
             ITEM_HEIGHT = search.singleLine ? 29 : 57;
 
+            const customSorts = getCustomSortForGroup(config, scope.group);
+
+            if (customSorts != null) {
+                scope.customSortOptions = translateCustomSorts(customSorts.allowed_fields_to_sort);
+                if (customSorts.default) {
+                    scope.customSortOptionActive = {
+                        field: customSorts.default.field,
+                        order: customSorts.default.order,
+                    };
+                } else {
+                    scope.customSortOptionActive = null;
+                }
+            }
+
             scope.page = 1;
             scope.fetching = false;
             scope.previewingBroadcast = false;
@@ -122,7 +168,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             scope.cachePreviousItems = [];
             scope.viewColumn = monitoring.viewColumn;
 
-            scope.$on('view:column', (event, data) => {
+            scope.$on('view:column', (_event, data) => {
                 scope.$applyAsync(() => {
                     scope.viewColumn = data.viewColumn;
                 });
@@ -202,7 +248,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                         _etag: data.from_stage, // this must change to make it re-render
                     });
                     scheduleQuery(event, data);
-                } else if (scope.group.type === 'deskOutput' && data &&
+                } else if (scope.group.type === DESK_OUTPUT && data &&
                      scope.group._id === _.get(data, 'from_desk') + ':output') {
                     // item was moved to production desk, therefore it should comes in from_desk's output stage too
                     scheduleQuery(event, data);
@@ -281,7 +327,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                     'spiked',
                     'single_monitoring',
                     'monitoring',
-                    'deskOutput',
+                    DESK_OUTPUT,
                     'personal',
                 ].includes(_viewType);
 
@@ -305,6 +351,10 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
             scope.$on('key:ctrl:alt:g', () => {
                 toggleMonitoringSingleView('desk');
             });
+
+            if (['highlights', 'spiked', 'personal'].includes(scope.viewType)) {
+                $rootScope.$broadcast('stage:single');
+            }
 
             // forced refresh on refresh button click or on refresh:list
             scope.refreshGroup = function() {
@@ -366,7 +416,7 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                     } else if (item._type === 'externalsource') {
                         intent.type = 'externalsource';
                         fetchAndEdit(intent, item, 'externalsource');
-                    } else if (archiveService.isPublished(item)) {
+                    } else if (isPublished(item)) {
                         authoringWorkspace.view(item);
                     } else {
                         authoringWorkspace.edit(item);
@@ -502,6 +552,12 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                             angular.extend(criteria, params);
                         }
 
+                        // custom sort for group (if it exists)
+                        if (scope.customSortOptionActive) {
+                            criteria.source.sort =
+                                [{[scope.customSortOptionActive.field]: scope.customSortOptionActive.order}];
+                        }
+
                         return apiquery(criteria, true)
                             .then((res) => {
                                 if (originalQuery) {
@@ -544,6 +600,31 @@ export function MonitoringGroup(cards, api, authoringWorkspace, $timeout, superd
                         }
                     });
             }
+
+            scope.selectDefaultSortOption = function() {
+                scope.selectCustomSortOption(null);
+            };
+
+            scope.selectCustomSortOption = function(field: string | null) {
+                if (field === null) {
+                    scope.customSortOptionActive = null;
+                } else {
+                    scope.customSortOptionActive = {
+                        field,
+                        order: 'desc',
+                    };
+                }
+                queryItems();
+            };
+
+            scope.toggleCustomSortOrder = function() {
+                if (scope.customSortOptionActive.order === 'asc') {
+                    scope.customSortOptionActive.order = 'desc';
+                } else {
+                    scope.customSortOptionActive.order = 'asc';
+                }
+                queryItems();
+            };
 
             scope.fetchNext = function(from) {
                 if (typeof criteria === 'object' && typeof criteria.source === 'object') {

@@ -4,7 +4,7 @@ import {
     convertToRaw,
     ContentState,
     RawDraftContentState,
-    CompositeDecorator
+    CompositeDecorator,
 } from 'draft-js';
 import {createStore, applyMiddleware} from 'redux';
 import {createLogger} from 'redux-logger';
@@ -29,8 +29,6 @@ export const ignoreInternalAnnotationFields = (annotations) =>
     annotations.map(
         (annotation) => pick(annotation, ['id', 'type', 'body']),
     );
-
-export const isEditorPlainText = (props) => props.singleLine || (props.editorFormat || []).length === 0;
 
 interface IProps {
     editorState?: RawDraftContentState;
@@ -108,8 +106,6 @@ export default function createEditorStore(props: IProps, spellcheck, isReact = f
 
     const content = getInitialContent(props);
 
-    const showToolbar = !isEditorPlainText(props);
-
     const onChangeValue = isReact ? props.onChange : debounce(onChange.bind(props), props.debounce);
 
     const middlewares = [thunk];
@@ -122,13 +118,13 @@ export default function createEditorStore(props: IProps, spellcheck, isReact = f
         middlewares.push(createLogger());
     }
 
-    const store = createStore<IEditorStore>(reducers, {
+    const store = createStore<IEditorStore, any, any, any>(reducers, {
         editorState: EditorState.createWithContent(content),
         searchTerm: {pattern: '', index: -1, caseSensitive: false},
         popup: {type: PopupTypes.Hidden},
         readOnly: props.readOnly,
         locked: false, // when true, main editor is disabled (ie. when editing sub-components like tables or images)
-        showToolbar: showToolbar,
+        showToolbar: (props.editorFormat || []).length > 0,
         singleLine: props.singleLine,
         tabindex: props.tabindex,
         showTitle: props.showTitle,
@@ -138,7 +134,7 @@ export default function createEditorStore(props: IProps, spellcheck, isReact = f
         item: props.item,
         spellchecking: {
             language: props.language,
-            enabled: !spellcheckerDisabledInConfig,
+            enabled: !spellcheckerDisabledInConfig && spellcheck && spellcheck.isAutoSpellchecker,
             inProgress: false,
             warningsByBlock: {},
         },

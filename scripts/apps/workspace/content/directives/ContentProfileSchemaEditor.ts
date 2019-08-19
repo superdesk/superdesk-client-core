@@ -1,13 +1,12 @@
 import {includes} from 'lodash';
-import {HAS_FORMAT_OPTIONS} from 'apps/workspace/content/constants';
 import {getLabelForFieldId} from '../../helpers/getLabelForFieldId';
 
 interface IScope extends ng.IScope {
+    getEditor3FormattingOptions: (fieldName: string) => Array<string>;
     model: any;
     fields: any;
     form: any;
     formattingOptions: Array<string>;
-    formattingOptionsEditor3: Array<string>;
     schemaKeysOrdering: any;
     schemaKeysDisabled: any;
     hasFormatOptions(field): boolean;
@@ -23,6 +22,17 @@ interface IScope extends ng.IScope {
     onDrag(locals: { start: number; end: number; key: string; }): any;
     onToggle(locals: { key: string; dest: string; position: string; }): any;
 }
+
+const HAS_PLAINTEXT_FORMATTING_OPTIONS = Object.freeze({
+    headline: true,
+});
+
+const HAS_RICH_FORMATTING_OPTIONS = Object.freeze({
+    abstract: true,
+    body_html: true,
+    footer: true,
+    body_footer: true,
+});
 
 const FORMATTING_OPTIONS = [
     'h1',
@@ -52,7 +62,13 @@ const FORMATTING_OPTIONS = [
     'table',
 ];
 
-const FORMATTING_OPTIONS_EDITOR3 = [
+const EDITOR3_PLAINTEXT_FORMATTING_OPTIONS = [
+    'uppercase',
+    'lowercase',
+];
+
+const EDITOR3_RICH_FORMATTING_OPTIONS = [
+    ...EDITOR3_PLAINTEXT_FORMATTING_OPTIONS,
     'h1',
     'h2',
     'h3',
@@ -107,7 +123,18 @@ export function ContentProfileSchemaEditor(vocabularies) {
         },
         link: function(scope: IScope, elem, attr, form) {
             scope.formattingOptions = FORMATTING_OPTIONS;
-            scope.formattingOptionsEditor3 = FORMATTING_OPTIONS_EDITOR3;
+
+            scope.getEditor3FormattingOptions = (fieldName) => {
+                const isCustomPlainTextField = typeof scope.fields[fieldName] === 'object'
+                    && typeof scope.fields[fieldName].field_options === 'object'
+                    && scope.fields[fieldName].field_options.single === true;
+
+                if (Object.keys(HAS_RICH_FORMATTING_OPTIONS).includes(fieldName) && !isCustomPlainTextField) {
+                    return EDITOR3_RICH_FORMATTING_OPTIONS;
+                } else {
+                    return EDITOR3_PLAINTEXT_FORMATTING_OPTIONS;
+                }
+            };
 
             scope.remove = (key) => {
                 scope.onRemove({key});
@@ -140,7 +167,12 @@ export function ContentProfileSchemaEditor(vocabularies) {
              * @return {Boolean}
              */
             scope.hasFormatOptions = (field) =>
-                !!HAS_FORMAT_OPTIONS[field] || hasCustomFieldFormatOptions(field);
+                Object.keys(HAS_RICH_FORMATTING_OPTIONS).includes(field)
+                || (
+                    scope.model.editor.body_html.editor3 === true
+                    && Object.keys(HAS_PLAINTEXT_FORMATTING_OPTIONS).includes(field)
+                )
+                || hasCustomFieldFormatOptions(field);
 
             /**
              * Test if given field should have format options config

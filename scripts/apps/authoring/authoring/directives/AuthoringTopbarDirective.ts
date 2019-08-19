@@ -1,3 +1,6 @@
+import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
+import {getSpellchecker} from 'core/editor3/components/spellchecker/default-spellcheckers';
+
 /**
  * @ngdoc directive
  * @module superdesk.apps.authoring
@@ -8,7 +11,11 @@
  * @description Generates authoring subnav bar
  */
 AuthoringTopbarDirective.$inject = ['TranslationService', 'privileges', 'authoringWorkspace'];
-export function AuthoringTopbarDirective(TranslationService, privileges, authoringWorkspace) {
+export function AuthoringTopbarDirective(
+    TranslationService,
+    privileges,
+    authoringWorkspace: AuthoringWorkspaceService,
+) {
     return {
         templateUrl: 'scripts/apps/authoring/views/authoring-topbar.html',
         link: function(scope) {
@@ -16,8 +23,14 @@ export function AuthoringTopbarDirective(TranslationService, privileges, authori
             scope.buttonsToHide = authoringWorkspace.authoringTopBarButtonsToHide;
 
             scope.saveDisabled = false;
-
+            scope.getSpellchecker = getSpellchecker;
             scope.userHasPrivileges = privileges.userHasPrivileges;
+
+            scope.handleArticleChange = (article) => {
+                Object.assign(scope.item, article);
+
+                scope.autosave(scope.item, 0);
+            };
 
             /*
              * Save item

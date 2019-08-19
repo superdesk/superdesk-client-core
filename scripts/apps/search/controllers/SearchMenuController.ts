@@ -1,5 +1,15 @@
-import {get, isEqual} from 'lodash';
-import {ISavedSearch} from '../SavedSearch';
+import {get, isEqual, cloneDeep} from 'lodash';
+import {ISavedSearch, mapFiltersServerToClient} from '../SavedSearch';
+import {mapPredefinedDateFiltersServerToClient} from '../directives/DateFilters';
+
+const SUPERDESK_REPOS_REGEX = new RegExp('ingest|archive|archived|published');
+
+const isSameRepo = (shortcut, provider) => {
+    const repo = get(shortcut, 'filter.query.repo', '');
+
+    return (repo != null && repo === provider._id) ||
+        (provider._id === '' && (repo == null || SUPERDESK_REPOS_REGEX.test(repo)));
+};
 
 SearchMenuController.$inject = [
     '$rootScope', '$scope', '$filter', '$location', '$route', 'searchProviderService', 'api', 'savedSearch',
@@ -37,7 +47,7 @@ export default function SearchMenuController(
         this.activeProvider = provider;
 
         $location.path('/search');
-        $location.search(getSearchParams(provider));
+        $location.search(mapPredefinedDateFiltersServerToClient(getSearchParams(provider)));
         $route.reload();
     };
 
@@ -71,17 +81,13 @@ export default function SearchMenuController(
             let providers = [];
             const shortcuts = savedSearches
                 .filter((search) => search.shortcut && search.is_global)
-                .map((search) => ({
-                    _id: search._id,
-                    name: search.name,
-                    filter: search.filter,
-                }));
+                .map(mapFiltersServerToClient);
 
             // bundle repo and its shortcuts
             this.providers.forEach((provider) => {
                 providers.push(provider);
                 providers = providers.concat($filter('sortByName')(
-                    shortcuts.filter((shortcut) => get(shortcut, 'filter.query.repo', '') === provider._id),
+                    shortcuts.filter((shortcut) => isSameRepo(shortcut, provider)),
                     'search_provider',
                 ));
             });

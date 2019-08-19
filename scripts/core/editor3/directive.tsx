@@ -43,6 +43,7 @@ class Editor3Directive {
     pathToValue: any;
     scrollContainer: any;
     refreshTrigger: any;
+    editorFormat?: Array<string>;
 
     constructor() {
         this.scope = {};

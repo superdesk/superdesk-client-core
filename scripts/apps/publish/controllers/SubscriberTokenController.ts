@@ -8,7 +8,7 @@ import moment from 'moment';
  * @requires api
  * @description SubscriberTokenController manages subsriber tokens for Content API.
  */
-export function SubscriberTokenController($scope, api) {
+export function SubscriberTokenController($scope, api, $rootScope) {
     const subscriber = $scope.subscriber;
 
     this.tokens = [];
@@ -18,6 +18,11 @@ export function SubscriberTokenController($scope, api) {
             api.query('subscriber_token', {where: {subscriber: subscriber._id}})
                 .then((response) => {
                     this.tokens = response._items;
+                    $scope.$watchGroup([() => this.tokens.length, () => this.ttl], (newVal, oldVal) => {
+                        if (newVal !== oldVal) {
+                            $rootScope.$broadcast('subcriber: saveEnabled');
+                        }
+                    });
                 });
         }
     };
@@ -57,4 +62,4 @@ export function SubscriberTokenController($scope, api) {
     fetchTokens();
 }
 
-SubscriberTokenController.$inject = ['$scope', 'api'];
+SubscriberTokenController.$inject = ['$scope', 'api', '$rootScope'];

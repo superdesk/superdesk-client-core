@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
-import {includes} from 'lodash';
+import {isPublished} from 'apps/archive/utils';
 
 angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
 /**
@@ -32,10 +32,10 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
                     var optionsListener = null;
 
                     /**
-                 * @ngdoc method
-                 * @name sdRelatedItemListWidget#refresh
-                 * @description Fetches and assigns relatable items
-                 */
+                     * @ngdoc method
+                     * @name sdRelatedItemListWidget#refresh
+                     * @description Fetches and assigns relatable items
+                     */
                     scope.refresh = () => {
                         if (scope.options.related && scope.hasKeywords()) {
                             scope.loading = true;
@@ -52,44 +52,44 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
                     };
 
                     /**
-                 * @ngdoc method
-                 * @name sdRelatedItemListWidget#canDisplayItem
-                 * @returns {Boolean}
-                 * @param {object} item
-                 * @description Checks if an item should be displayed in the list
-                 */
+                     * @ngdoc method
+                     * @name sdRelatedItemListWidget#canDisplayItem
+                     * @returns {Boolean}
+                     * @param {object} item
+                     * @description Checks if an item should be displayed in the list
+                     */
                     scope.canDisplayItem = (item) => {
                         if (!scope.options.searchEnabled) {
                             return true;
                         }
 
                         return scope.actions.update && scope.actions.update.condition(item) ||
-                    scope.actions.addTake && scope.actions.addTake.condition(item);
+                            scope.actions.addTake && scope.actions.addTake.condition(item);
                     };
 
                     /**
-                 * @ngdoc method
-                 * @name sdRelatedItemListWidget#deskName
-                 * @returns {String}
-                 * @param {object} item
-                 * @description Extracts the id of the desk the item is on and returns it's name
-                 */
+                     * @ngdoc method
+                     * @name sdRelatedItemListWidget#deskName
+                     * @returns {String}
+                     * @param {object} item
+                     * @description Extracts the id of the desk the item is on and returns it's name
+                     */
                     scope.deskName = (item) => desks.deskLookup[item.task.desk].name;
 
                     /**
-                 * @ngdoc method
-                 * @name sdRelatedItemListWidget#deskStage
-                 * @returns {String}
-                 * @param {object} item
-                 * @description Extracts the id of the stage the item is on and returns it's name
-                 */
+                     * @ngdoc method
+                     * @name sdRelatedItemListWidget#deskStage
+                     * @returns {String}
+                     * @param {object} item
+                     * @description Extracts the id of the stage the item is on and returns it's name
+                     */
                     scope.deskStage = (item) => desks.stageLookup[item.task.stage].name;
 
                     /**
-                 * @ngdoc method
-                 * @name sdRelatedItemListWidget#setProcessedItems
-                 * @description Creates or removes listeners
-                 */
+                     * @ngdoc method
+                     * @name sdRelatedItemListWidget#setProcessedItems
+                     * @description Creates or removes listeners
+                     */
                     var setProcessedItems = () => {
                         if (scope.loading) {
                             return;
@@ -121,20 +121,18 @@ angular.module('superdesk.core.itemList', ['superdesk.apps.search'])
                     };
 
                     /**
-                 * @ngdoc method
-                 * @name sdRelatedItemListWidget#isPublished
-                 * @returns {Boolean}
-                 * @param {object} item
-                 * @description Checks if an item is in published state
-                 */
-                    scope.isPublished = (item) => includes(
-                        ['published', 'killed', 'scheduled', 'corrected', 'recalled'],
-                        item.state);
+                     * @ngdoc method
+                     * @name sdRelatedItemListWidget#isPublished
+                     * @returns {Boolean}
+                     * @param {object} item
+                     * @description Checks if an item is in published state
+                     */
+                    scope.isPublished = isPublished;
 
                     scope.$watchGroup(['options.item.slugline', 'options.existingRelations'], setProcessedItems);
 
                     scope.hasKeywords = () => scope.itemListOptions.keyword &&
-                    scope.itemListOptions.keyword.trim().length >= 2;
+                        scope.itemListOptions.keyword.trim().length >= 2;
 
                     scope.view = (item) => {
                         scope.selected = item;

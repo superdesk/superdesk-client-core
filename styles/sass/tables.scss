@@ -154,8 +154,9 @@ table {
 // ---------------
 .table {
     &--fixed-header {
-        thead, tbody {
-            display: block;
+        thead th {
+          position: sticky;
+          top: 0;
         }
         tbody {
             max-height: calc(100vh - 250px);

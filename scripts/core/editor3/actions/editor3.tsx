@@ -1,5 +1,9 @@
 import ng from 'core/services/ng';
 import {insertMedia} from './toolbar';
+import {makeIframesResponsive} from 'core/helpers/make-iframes-responsive';
+import {logger} from 'core/services/logger';
+import {SelectionState} from 'draft-js';
+import {IArticle} from 'superdesk-api';
 
 /**
  * @ngdoc method
@@ -72,7 +76,10 @@ export function dragDrop(transfer, mediaType, blockKey = null) {
         const content = ng.get('content');
 
         dispatch({type: 'EDITOR_LOADING', payload: true});
-        return content.dropItem(transfer.getData(mediaType), {fetchExternal: true})
+
+        const item: IArticle = JSON.parse(transfer.getData(mediaType));
+
+        return content.dropItem(item, {fetchExternal: true})
             .then((data) => {
                 dispatch({
                     type: 'EDITOR_DRAG_DROP',
@@ -182,6 +189,20 @@ export function moveBlock(block, dest, insertionMode) {
     };
 }
 
+export function processEmbedCode(data) {
+    if (typeof data === 'string') {
+        return makeIframesResponsive(data);
+    } else if (typeof data === 'object' && typeof data.html === 'string') {
+        return {
+            ...data,
+            html: makeIframesResponsive(data.html),
+        };
+    } else {
+        logger.error(new Error('embed format not recognized'));
+        return data;
+    }
+}
+
 /**
  * @ngdoc method
  * @name embed
@@ -193,8 +214,16 @@ export function embed(code, targetBlockKey = null) {
     return {
         type: 'EDITOR_APPLY_EMBED',
         payload: {
-            code,
+            code: processEmbedCode(code),
             targetBlockKey,
         },
+    };
+}
+
+export type ITextCase = 'uppercase' | 'lowercase';
+export function changeCase(changeTo: ITextCase, selection: SelectionState) {
+    return {
+        type: 'CHANGE_CASE',
+        payload: {changeTo, selection},
     };
 }

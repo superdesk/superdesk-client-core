@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import {AuthoringWorkspaceService} from '../authoring/services/AuthoringWorkspaceService';
 
 /**
  * @ngdoc service
@@ -17,7 +18,7 @@ const MIN_BOARDS = 2; // at least two boards to display for versions comparision
 
 export default class CompareVersionsService {
     superdesk: any;
-    authoringWorkspace: any;
+    authoringWorkspace: AuthoringWorkspaceService;
     referrer: any;
     desks: any;
     archiveService: any;
@@ -25,7 +26,7 @@ export default class CompareVersionsService {
     items: any;
     versions: any;
 
-    constructor(superdesk, authoringWorkspace, referrer, desks, archiveService, $location) {
+    constructor(superdesk, authoringWorkspace: AuthoringWorkspaceService, referrer, desks, archiveService, $location) {
         this.superdesk = superdesk;
         this.authoringWorkspace = authoringWorkspace;
         this.referrer = referrer;

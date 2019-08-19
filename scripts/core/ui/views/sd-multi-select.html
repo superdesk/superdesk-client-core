@@ -6,7 +6,7 @@
 
     <ul class="dropdown__menu nested-menu pull-right">
         <li>
-            <div sd-typeahead items="list" term="selectedTerm" search="searchTerms(term)" select="selectItem(item)" data-disabled="disabled">
+            <div sd-typeahead items="listCopy" term="selectedTerm" search="searchTerms(term)" select="selectItem(item)" data-disabled="disabled">
                 <ul class="item-list" vs-repeat vs-scroll-parent=".item-list" ng-if="activeList">
                     <li typeahead-item="t" ng-repeat="t in terms"><button>{{ :: t}}</button></li>
                 </ul>
@@ -15,7 +15,7 @@
 
         <li class="main-list" ng-if="!activeList">
             <ul vs-repeat vs-scroll-parent=".main-list">
-                <li ng-repeat="item in list">
+                <li ng-repeat="item in listCopy">
                     <button ng-click="selectItem(item)">{{ :: item}}</button>
                 </li>
             </ul>

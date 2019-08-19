@@ -9,10 +9,12 @@
  */
 
 import {gettext} from 'core/utils';
+import {isPublished} from 'apps/archive/utils';
 import _ from 'lodash';
+import {AuthoringWorkspaceService} from '../authoring/services/AuthoringWorkspaceService';
 
 MultieditService.$inject = ['storage', 'superdesk', 'authoringWorkspace', 'referrer', '$location'];
-function MultieditService(storage, superdesk, authoringWorkspace, referrer, $location) {
+function MultieditService(storage, superdesk, authoringWorkspace: AuthoringWorkspaceService, referrer, $location) {
     // 1. Service manages multiedit screen
     // 2. Screen has it's boards, at least 2 of them
     // 3. Every board can be popuplated with one content item
@@ -172,8 +174,8 @@ function MultieditDropdownInnerDirective(workqueue, multiEdit) {
     };
 }
 
-MultieditArticleDirective.$inject = ['authoring', 'multiEdit', 'lock', '$timeout'];
-function MultieditArticleDirective(authoring, multiEdit, lock, $timeout) {
+MultieditArticleDirective.$inject = ['authoring', 'content', 'multiEdit', 'lock', '$timeout'];
+function MultieditArticleDirective(authoring, content, multiEdit, lock, $timeout) {
     return {
         templateUrl: 'scripts/apps/authoring/multiedit/views/sd-multiedit-article.html',
         scope: {article: '=', focus: '='},
@@ -190,6 +192,7 @@ function MultieditArticleDirective(authoring, multiEdit, lock, $timeout) {
                     scope.item = _.create(item);
                     scope._editable = authoring.isEditable(item);
                     scope.isMediaType = _.includes(['audio', 'video', 'picture', 'graphic'], scope.item.type);
+
                     if (scope.focus) {
                         $timeout(() => {
                             elem.children().focus();
@@ -214,6 +217,10 @@ function MultieditArticleDirective(authoring, multiEdit, lock, $timeout) {
                 }
             }, true);
 
+            scope.$watch('item.profile', (profile) => {
+                content.setupAuthoring(profile, scope, scope.item);
+            });
+
             scope.save = function(item, form) {
                 return authoring.save(scope.origItem, item).then((res) => {
                     if (form) {
@@ -230,7 +237,7 @@ function MultieditArticleDirective(authoring, multiEdit, lock, $timeout) {
 
             scope.isPublished = function(item) {
                 if (!_.isNil(item)) {
-                    return authoring.isPublished(item);
+                    return isPublished(item);
                 }
             };
         },

@@ -1,13 +1,14 @@
 import {limits} from 'apps/desks/constants';
 import _ from 'lodash';
 import {gettext} from 'core/utils';
+import {calculateDiff} from '../controllers/DeskConfigController';
 
 DeskeditBasic.$inject = ['desks', 'WizardHandler', 'metadata', 'config',
     '$filter', 'deployConfig'];
 export function DeskeditBasic(desks, WizardHandler, metadata, config,
     $filter, deployConfig) {
     return {
-        link: function(scope, elem, attrs) {
+        link: function(scope) {
             scope.limits = limits;
             scope.deskTypes = [];
             scope.saving = false;
@@ -17,22 +18,6 @@ export function DeskeditBasic(desks, WizardHandler, metadata, config,
              * Is Published Content Expiry is set
              */
             scope.isPublishedContentExpired = () => deployConfig.getSync('publish_content_expiry_minutes', 0) > 0;
-
-            scope.$watch('step.current', (step) => {
-                if (step === 'general') {
-                    if (scope.desk.edit && scope.desk.edit._id) {
-                        scope.edit(scope.desk.edit);
-                    }
-                    scope.message = null;
-                }
-            });
-
-            scope.edit = function(desk) {
-                scope.desk.edit = _.create(desk);
-                scope.desk.orig = desk;
-                scope.desk.edit.desk_metadata = desk.desk_metadata || {};
-                scope.desk.edit.content_profiles = desk.content_profiles || {};
-            };
 
             /**
              * Save desk for adding or editing
@@ -47,13 +32,13 @@ export function DeskeditBasic(desks, WizardHandler, metadata, config,
                 scope.message = gettext('Saving...');
                 var _new = !desk._id;
 
-                desks.save(scope.desk.edit, desk).then((res) => {
+                desks.save(scope.desk.orig, desk).then((res) => {
+                    _.merge(scope.desk.edit, res);
                     if (_new) {
-                        scope.edit(scope.desk.edit);
                         scope.desks._items.unshift(scope.desk.edit);
                         desks.refreshStages();
                     } else {
-                        angular.extend(scope.desk.orig, res);
+                        _.merge(scope.desk.orig, res);
                     }
 
                     scope.desks._items = $filter('sortByName')(scope.desks._items);
@@ -104,6 +89,16 @@ export function DeskeditBasic(desks, WizardHandler, metadata, config,
             scope.showNoPublishOnAuthoringDesk = function(deskType) {
                 return deskType === 'authoring' && config.features.noPublishOnAuthoringDesk;
             };
+
+            scope.$watch('desk.edit', (newVal) => {
+                const diff = calculateDiff(scope.desk.edit, scope.desk.orig);
+
+                if (scope.step.current === 'general' && Object.keys(diff).length > 0) {
+                    scope.saveEnabled = true;
+                } else {
+                    scope.saveEnabled = false;
+                }
+            }, true);
 
             if (metadata.values.desk_types) {
                 scope.deskTypes = metadata.values.desk_types;

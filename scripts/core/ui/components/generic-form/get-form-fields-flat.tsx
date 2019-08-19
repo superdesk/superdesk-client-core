@@ -1,5 +1,6 @@
 import {assertNever} from 'core/helpers/typescript-helpers';
-import {IFormField, IFormGroup, isIFormGroup, isIFormField} from './interfaces/form';
+import {isIFormGroup, isIFormField} from './interfaces/form';
+import {IFormField, IFormGroup} from 'superdesk-api';
 
 function getFormFieldsFromGroup(form: Array<IFormField | IFormGroup>): Array<IFormField> {
     let fields: Array<IFormField> = [];

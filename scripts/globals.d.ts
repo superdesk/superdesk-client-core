@@ -56,6 +56,5 @@ declare module "*.html";
 // TYPES
 // ------------------------------------------------------------------------------------------------
 
-type Dictionary<K, V> = {};
-type Omit<K, V> = Pick<K, Exclude<keyof K, V>>;
+type Dictionary<K, V> = {[key: string]: V};
 type valueof<T> = T[keyof T];

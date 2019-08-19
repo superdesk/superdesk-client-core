@@ -33,13 +33,16 @@ $sidepreview-width: 400px;
 $notification-pane-width: 300px;
 
 // Article edit screen
-$authoring-opened-articles: 30px;
+$authoring-opened-articles: 3.2rem;
 
 //Layout
-$bottom-view-padding: $authoring-opened-articles + 20px;
+$bottom-view-padding: $authoring-opened-articles + 2rem;
 
 //Archive
 $archive-sidebar-width: 300px;
 
 //Search
 $generic-searchbar: 320px;
+
+
+$sd-base-increment: 0.8rem;

@@ -1,5 +1,16 @@
-<div sd-menu-wrapper></div>
-<div sd-notifications></div>
+<div ng-if="session.identity != null">
+    <!--
+        Render top menu only after a user is logged in.
+        Otherwise, the extensions will initialize too soon and will be unable to access HTTP API.
+
+        Ideally, the entire application except login page should only be rendered when a user is logged in.
+        It can't be done yet because password reset page stops working when moving .main-container divs here.
+        There may be other issues too.
+    -->
+
+    <div sd-menu-wrapper></div>
+    <div sd-notifications></div>
+</div>
 
 <div class="loading" ng-if="loading"></div>
 

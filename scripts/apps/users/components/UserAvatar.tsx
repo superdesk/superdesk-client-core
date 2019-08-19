@@ -11,10 +11,10 @@ import classNames from 'classnames';
  * @description Displays the user avatar. If `pictureUrl` is provided it shows the picture
  * at that URL, otherwise it shows the initial of `displayName`.
  */
-export const UserAvatar: React.StatelessComponent<any> = ({displayName, pictureUrl, ...rest}) =>
-    <div className="user-avatar" {...rest}>
+export const UserAvatar: React.StatelessComponent<any> = ({displayName, pictureUrl, title, ...rest}) =>
+    <div className="user-avatar" {...rest} title={title || displayName}>
         <figure className={classNames(
-            'avatar',
+            'avatar avatar--no-margin',
             {'no-bg': pictureUrl},
             {initials: !pictureUrl},
         )}>
@@ -25,5 +25,6 @@ export const UserAvatar: React.StatelessComponent<any> = ({displayName, pictureU
 
 UserAvatar.propTypes = {
     displayName: PropTypes.string.isRequired,
+    title: PropTypes.string,
     pictureUrl: PropTypes.string,
 };

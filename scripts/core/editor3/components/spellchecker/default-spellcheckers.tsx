@@ -1,5 +1,6 @@
 import ng from 'core/services/ng';
-import {ISpellchecker, ISpellcheckerAction, ISpellcheckWarning} from './interfaces';
+import {ISpellchecker, ISpellcheckerAction, ISpellcheckWarning, ISpellcheckerSuggestion} from './interfaces';
+import {httpRequestJsonLocal} from 'core/helpers/network';
 
 const actions: {[key: string]: ISpellcheckerAction} = {
     addToDictionary: {
@@ -16,10 +17,10 @@ const actions: {[key: string]: ISpellcheckerAction} = {
     },
 };
 
-function getSuggestions(text: string): Promise<Array<string>> {
+function getSuggestions(text: string): Promise<Array<ISpellcheckerSuggestion>> {
     return ng.getService('spellcheck')
         .then((spellcheck) => spellcheck.suggest(text))
-        .then((result) => result.map(({value}) => value));
+        .then((result: Array<{value: string}>) => result.map(({value}) => ({text: value})));
 }
 
 function check(str: string): Promise<Array<ISpellcheckWarning>> {
@@ -33,29 +34,51 @@ function check(str: string): Promise<Array<ISpellcheckWarning>> {
 
             let lastOffset = 0;
 
-            str.split('\n').forEach((paragraph) => {
-                let matchArr;
-                let start;
+            let matchArr;
+            let start;
 
-                // tslint:disable-next-line no-conditional-assignment
-                while ((matchArr = regex.exec(paragraph)) !== null) {
-                    start = matchArr.index;
-                    if (!spellcheck.isCorrectWord(matchArr[0])) {
-                        info.push({
-                            startOffset: lastOffset + start,
-                            text: matchArr[0],
-                            suggestions: null,
-                        });
-                    }
+            // tslint:disable-next-line no-conditional-assignment
+            while ((matchArr = regex.exec(str)) !== null) {
+                start = matchArr.index;
+                if (!spellcheck.isCorrectWord(matchArr[0])) {
+                    info.push({
+                        startOffset: lastOffset + start,
+                        text: matchArr[0],
+                        suggestions: null,
+                        type: 'spelling',
+                    });
                 }
-
-                lastOffset += paragraph.length;
-            });
+            }
 
             return info;
         });
 }
 
 export function getSpellchecker(language: string): ISpellchecker {
-    return {check, getSuggestions, actions};
+    const spellcheck = ng.get('spellcheck');
+    const spellcheckerName = ({
+        fr: 'grammalecte',
+        nl: 'leuven_dutch',
+    })[language];
+
+    if (spellcheckerName == null && spellcheck.isActiveDictionary === false) {
+        return null;
+    }
+    if (spellcheckerName != null) {
+        return {
+            check: (str: string) => httpRequestJsonLocal<{errors: Array<ISpellcheckWarning>}>({
+                method: 'POST',
+                payload: {spellchecker: spellcheckerName, text: str},
+                path: '/spellchecker',
+            }).then((json) => json.errors, (err) => []),
+            getSuggestions: (str) => httpRequestJsonLocal<ISpellcheckWarning>({
+                method: 'POST',
+                payload: {spellchecker: spellcheckerName, text: str, suggestions: true},
+                path: '/spellchecker',
+            }).then((spellcheckerWarning) => spellcheckerWarning.suggestions, (err) => []),
+            actions: {},
+        };
+    } else {
+        return {check, getSuggestions, actions};
+    }
 }

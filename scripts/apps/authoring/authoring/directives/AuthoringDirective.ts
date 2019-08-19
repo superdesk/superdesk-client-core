@@ -9,42 +9,14 @@ import {attachments, initAttachments} from '../../attachments';
 import {applyMiddleware as coreApplyMiddleware} from 'core/middleware';
 import {onChangeMiddleware, getArticleSchemaMiddleware} from '..';
 import {IFunctionPointsService} from 'apps/extension-points/services/FunctionPoints';
+import {isPublished} from 'apps/archive/utils';
+import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
+import {copyJson} from 'core/helpers/utils';
 
 /**
  * @ngdoc directive
  * @module superdesk.apps.authoring
  * @name sdAuthoring
- *
- * @requires superdesk
- * @requires superdeskFlags
- * @requires authoringWorkspace
- * @requires notify
- * @requires desks
- * @requires authoring
- * @requires api
- * @requires session
- * @requires lock
- * @requires privileges
- * @requires content
- * @requires $location
- * @requires referrer
- * @requires macros
- * @requires $timeout
- * @requires $q
- * @requires modal
- * @requires archiveService
- * @requires confirm
- * @requires reloadService
- * @requires $rootScope
- * @requires $interpolate
- * @requires metadata
- * @requires suggest
- * @requires config
- * @requires deployConfig
- * @requires editorResolver
- * @requires $sce
- * @requires mediaIdGenerator
- * @requires functionPoints
  *
  * @description
  *   This directive is responsible for generating superdesk content authoring form.
@@ -52,7 +24,6 @@ import {IFunctionPointsService} from 'apps/extension-points/services/FunctionPoi
 
 AuthoringDirective.$inject = [
     'superdesk',
-    'superdeskFlags',
     'authoringWorkspace',
     'notify',
     'desks',
@@ -65,33 +36,55 @@ AuthoringDirective.$inject = [
     '$location',
     'referrer',
     'macros',
-    '$timeout',
     '$q',
     'modal',
     'archiveService',
     'confirm',
     'reloadService',
     '$rootScope',
-    '$interpolate',
-    'metadata',
     'suggest',
     'config',
     'deployConfig',
     'editorResolver',
     'compareVersions',
     'embedService',
-    '$sce',
     'mediaIdGenerator',
     'relationsService',
     '$injector',
     'functionPoints',
 ];
-export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace, notify,
-    desks, authoring, api, session, lock, privileges, content, $location,
-    referrer, macros, $timeout, $q, modal, archiveService, confirm, reloadService,
-    $rootScope, $interpolate, metadata, suggest, config, deployConfig, editorResolver,
-    compareVersions, embedService, $sce, mediaIdGenerator, relationsService, $injector,
-    functionPoints: IFunctionPointsService) {
+export function AuthoringDirective(
+    superdesk,
+    authoringWorkspace: AuthoringWorkspaceService,
+    notify,
+    desks,
+    authoring,
+    api,
+    session,
+    lock,
+    privileges,
+    content,
+    $location,
+    referrer,
+    macros,
+    $q,
+    modal,
+    archiveService,
+    confirm,
+    reloadService,
+    $rootScope,
+    suggest,
+    config,
+    deployConfig,
+    editorResolver,
+    compareVersions,
+    embedService,
+    mediaIdGenerator,
+    relationsService,
+    $injector,
+
+    functionPoints: IFunctionPointsService,
+) {
     return {
         link: function($scope, elem, attrs) {
             var _closing;
@@ -139,21 +132,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 }
             }, true);
 
-            $scope.$watch('item.profile', (profile) => {
-                if (profile) {
-                    content.getType(profile)
-                        .then((type) => {
-                            $scope.contentType = type;
-                            $scope.fields = content.fields(type);
-                            initMedia();
-                        });
-                } else {
-                    $scope.contentType = null;
-                    $scope.fields = null;
-                }
-            });
-
-            $scope._isInProductionStates = !authoring.isPublished($scope.origItem);
+            $scope._isInProductionStates = !isPublished($scope.origItem);
 
             $scope.fullPreview = false;
             $scope.fullPreviewUrl = '/#/preview/' + $scope.origItem._id;
@@ -205,7 +184,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
              * Start editing current item
              */
             $scope.edit = function edit() {
-                if (archiveService.isPublished($scope.origItem)) {
+                if (isPublished($scope.origItem)) {
                     authoringWorkspace.view($scope.origItem);
                 } else {
                     authoringWorkspace.edit($scope.origItem);
@@ -371,7 +350,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 }
 
                 if (item.publish_schedule_date || item.publish_schedule_time) {
-                    if (_.includes(['published', 'killed', 'corrected', 'recalled'], item.state)) {
+                    if (isPublished(item, false)) {
                         return true;
                     }
 
@@ -459,20 +438,26 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                                     .replace(/\]/g, '')
                                     .split(',');
 
-                                for (var i = 0; i < modifiedErrors.length; i++) {
-                                    var message = _.trim(modifiedErrors[i]);
+                                modifiedErrors.forEach((error) => {
+                                    const message = _.trim(error, '\' ');
                                     // the message format is 'Field error text' (contains ')
-                                    var field = message.split(' ')[0].substr(1);
+                                    const field = message.split(' ')[0];
 
-                                    $scope.error[field.toLowerCase()] = true;
+                                    $scope.error[field.toLocaleLowerCase()] = true;
                                     notify.error(message);
+                                });
+
+                                if (issues.fields) {
+                                    Object.assign($scope.error, issues.fields);
                                 }
+
+                                $scope.$applyAsync(); // make $scope.error changes visible
 
                                 if (errors.indexOf('9007') >= 0 || errors.indexOf('9009') >= 0) {
                                     authoring.open(item._id, true).then((res) => {
                                         $scope.origItem = res;
                                         $scope.dirty = false;
-                                        $scope.item = _.create($scope.origItem);
+                                        $scope.item = copyJson($scope.origItem);
                                     });
                                 }
 
@@ -768,7 +753,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
              * Close preview and start working again
              */
             $scope.closePreview = function() {
-                $scope.item = _.create($scope.origItem);
+                $scope.item = copyJson($scope.origItem);
                 $scope._editable = $scope.action !== 'view' && authoring.isEditable($scope.origItem);
 
                 if ($scope.isPreview) {
@@ -983,7 +968,7 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                 if ($scope.item._id === data.item && !_closing &&
                     (session.sessionId !== data.lock_session || lock.previewUnlock)) {
                     if (lock.previewUnlock) {
-                        $scope.unlock();
+                        $scope.edit($scope.item);
                         lock.previewUnlock = false;
                     } else {
                         authoring.unlock($scope.item, data.user);
@@ -1191,9 +1176,11 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
 
             $scope.$watch('item.profile', (profile) => {
                 content.setupAuthoring(profile, $scope, $scope.item)
-                    .then(() => {
+                    .then((contentType) => {
+                        $scope.contentType = contentType;
                         authoring.schema = $scope.schema;
                         authoring.editor = $scope.editor;
+                        initMedia();
                     })
                     .then(updateSchema);
             });
@@ -1205,6 +1192,15 @@ export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace
                     .then((_schema) => {
                         $scope.schema = _schema;
                     });
+            };
+
+            $scope.setCustomValue = (field, value) => {
+                const extra = Object.assign({}, $scope.item.extra);
+
+                extra[field._id] = value || null;
+                $scope.item.extra = extra;
+
+                $scope.autosave($scope.item, 200);
             };
         },
     };

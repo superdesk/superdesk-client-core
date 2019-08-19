@@ -1,7 +1,7 @@
 import {IReplaceWordData} from '../reducers/spellchecker';
 import {
     getSpellcheckWarningsByBlock,
-    ISpellcheckWarningsByBlock
+    ISpellcheckWarningsByBlock,
 } from '../components/spellchecker/SpellcheckerDecorator';
 import {IEditorStore} from '../store';
 import {getSpellchecker} from '../components/spellchecker/default-spellcheckers';
@@ -26,9 +26,25 @@ export function reloadSpellcheckerWarnings() {
         const state: IEditorStore = getState();
         const spellchecker = getSpellchecker(state.spellchecking.language);
 
+        if (spellchecker == null) {
+            return;
+        }
+
         getSpellcheckWarningsByBlock(spellchecker, getState().editorState).then((spellcheckWarningsByBlock) => {
             dispatch(applySpellcheck(spellcheckWarningsByBlock));
         });
+    };
+}
+
+/** *
+ * passing language as parameter so that spellchecker runs with currently updated language
+ * When we perform undo operation and language gets chnaged state is not updated
+ * at time when spellchecker actions are dispatched
+ */
+export function setSpellcheckerLanguage(language: string) {
+    return {
+        type: 'SET_SPELLCHEKCER_LANGUAGE',
+        payload: language,
     };
 }
 

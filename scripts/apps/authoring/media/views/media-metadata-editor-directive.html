@@ -1,7 +1,7 @@
-<div class="form__row" ng-repeat="field in fields track by field.field">
+<div class="form__row" ng-repeat="field in fields track by field.field" ng-if="item">
     <sd-line-input
         class="sd-line-input--no-margin"
-        ng-if="field.type === 'string' || (!field.type && !field.cv)"
+        ng-if="!field.type && !field.cv"
         ng-model="item[field.field]"
         data-sync="true"
         data-dark="dark"
@@ -18,7 +18,7 @@
 
     <sd-line-input
         class="sd-line-input--no-margin"
-        ng-if="field.type === 'text'"
+        ng-if="field.cv && field.cv.field_type === 'text'"
         data-sync="true"
         ng-model="item.extra[field.field]"
         data-dark="dark"
@@ -32,7 +32,7 @@
         data-placeholder="{{ placeholder[field.field] }}"
     />
 
-    <div ng-if="field.type === 'list' || field.cv">
+    <div ng-if="field.cv && !field.cv.field_type">
         <label class="form-label">{{ field.label }}</label>
 
         <div sd-meta-place ng-if="field.field === 'place' && features.places_autocomplete"
@@ -54,7 +54,8 @@
             data-header="true"
         ></div>
 
-        <div sd-meta-terms ng-if="!(field.field === 'place' && features.places_autocomplete) && field.field !== 'keywords'"
+        <div sd-meta-terms
+            ng-if="!(field.field === 'place' && features.places_autocomplete) && field.field !== 'keywords' && field.cv.selection_type === 'multi selection'"
             class="data sd-terms--boxed"
             data-item="item"
             data-field="{{ field.cv.schema_field || 'subject'}}"
@@ -65,10 +66,24 @@
             data-header="true"
             data-change="onChange({key: field})"
             data-include-parent="{{ field.includeparent }}"
+            data-reload-list="true"
+        ></div>
+
+        <div sd-meta-dropdown
+            ng-if="!(field.field === 'place' && features.places_autocomplete) && field.field !== 'keywords' && field.cv.selection_type !== 'multi selection'"
+            class="data sd-terms--boxed"
+            data-item="item"
+            data-field="{{ field.cv.schema_field || 'subject'}}"
+            data-unique="qcode"
+            data-list="field.cv.items"
+            data-cv="field.cv"
+            ng-disabled="isDisabled(field)"
+            data-header="true"
+            data-change="onChange({key: field})"
         ></div>
     </div>
 
-    <div ng-if="field.type === 'date'">
+    <div ng-if="field.cv && field.cv.field_type === 'date'">
         <label class="form-label">{{ field.label }}</label>
         <div sd-datepicker
             ng-disabled="isDisabled(field)"

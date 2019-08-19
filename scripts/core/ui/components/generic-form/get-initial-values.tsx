@@ -1,8 +1,11 @@
 import {assertNever} from 'core/helpers/typescript-helpers';
-import {IFormField, IFormGroup, isIFormGroup, isIFormField, FormFieldType} from './interfaces/form';
+import {isIFormGroup, isIFormField, FormFieldType} from './interfaces/form';
+import {IFormField, IFormGroup} from 'superdesk-api';
 
 function getInitialValueForFieldType(fieldConfig: IFormField): {readonly [field: string]: any} {
-    const {type, field} = fieldConfig;
+    const {field} = fieldConfig;
+
+    const type: FormFieldType = fieldConfig.type;
 
     switch (type) {
     case FormFieldType.textSingleLine:

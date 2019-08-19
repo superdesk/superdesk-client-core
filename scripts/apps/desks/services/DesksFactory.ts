@@ -1,5 +1,27 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
+import {IDesk} from 'superdesk-api';
+import {logger} from 'core/services/logger';
+
+import {
+    DESK_OUTPUT,
+    SENT_OUTPUT,
+    SCHEDULED_OUTPUT,
+    HIGHLIGHTS,
+} from '../constants';
+
+const OUTPUT_TYPES = [
+    DESK_OUTPUT,
+    SENT_OUTPUT,
+    SCHEDULED_OUTPUT,
+];
+
+const PUBLISH_TYPES = [
+    DESK_OUTPUT,
+    SENT_OUTPUT,
+    SCHEDULED_OUTPUT,
+    HIGHLIGHTS,
+];
 
 /**
  * @ngdoc service
@@ -222,7 +244,7 @@ export function DesksFactory($q, api, preferencesService, userList, notify,
                 }
             });
         },
-        getCurrentDeskId: function() {
+        getCurrentDeskId: function(): IDesk['_id'] | null {
             if (!this.userDesks || this.userDesks.length === 0) {
                 return null;
             }
@@ -261,7 +283,12 @@ export function DesksFactory($q, api, preferencesService, userList, notify,
             }
         },
         fetchDeskById: function(Id) {
-            return api.desks.getById(Id);
+            return api.desks.getById(Id).then((_desk) => {
+                return _desk;
+            }, () => {
+                logger.error(new Error('Something went wrong: desk not found'));
+                return Promise.reject();
+            });
         },
         getCurrentDesk: function() {
             return this.deskLookup[this.getCurrentDeskId()] || null;
@@ -295,9 +322,20 @@ export function DesksFactory($q, api, preferencesService, userList, notify,
         initActive: function() {
             setActive(this);
         },
-        save: function(dest, diff) {
-            return api.save('desks', dest, diff)
-                .then(reset, handleSaveError);
+        save: function(desk, diff) {
+            return api.save('desks', desk, diff)
+                .then((res) => {
+                    if (diff.members) {
+                        // if desk members were changed update them inside deskMembers as well
+                        const _deskMembers = [];
+
+                        _.values(res.members).forEach((value) => {
+                            _deskMembers.push(this.users._items.find((user) => user._id === value.user));
+                        });
+                        this.deskMembers[res._id] = _deskMembers;
+                    }
+                    return reset(res);
+                }, handleSaveError);
         },
         remove: function(desk) {
             return api.remove(desk)
@@ -319,15 +357,14 @@ export function DesksFactory($q, api, preferencesService, userList, notify,
                 return this.deskLookup[item.task.desk] || null;
             }
         },
-        isOutputType: function(type) {
-            return type === 'deskOutput' || type === 'scheduledDeskOutput';
-        },
-        isPublishType: function(type) {
-            return type === 'deskOutput' || type === 'scheduledDeskOutput' || type === 'highlights';
-        },
+
+        isOutputType: (type) => OUTPUT_TYPES.includes(type),
+        isPublishType: (type) => PUBLISH_TYPES.includes(type),
+
         isReadOnlyStage: function(stageId) {
             return this.stageLookup[stageId] ? this.stageLookup[stageId].local_readonly : false;
         },
+
         /**
          * @ngdoc method
          * @name desks#markItem

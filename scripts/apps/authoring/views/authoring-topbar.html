@@ -1,31 +1,28 @@
-<div id="subnav" class="subnav subnav--authoring" ng-class="{'auth-sendto': views.send}" sd-media-query min-width="900">
+<div id="subnav" class="subnav subnav--authoring" ng-class="{'auth-sendto': views.send, 'subnav--locked': isLocked()}" sd-media-query min-width="900">
 
-    <div class="dropdown dropdown--dropright lock-avatar pull-left" ng-show="isLocked()" dropdown>
-        <figure class="avatar small avatar-with-info" dropdown__toggle>
-            <div class="logged-info"></div>
-            <div class="user-image">
-                <img sd-user-avatar data-user="item.lock_user">
-            </div>
-        </figure>
+    <sd-authoring-topbar-react
+      article="item"
+      on-change="handleArticleChange"
+    ></sd-authoring-topbar-react>
 
-        <div class="dropdown__menu">
-            <div class="dropdown__menu-label" translate>Locked by</div>
-            <figure class="avatar large">
-                <div class="user-image">
-                    <img sd-user-avatar data-user="item.lock_user">
-                </div>
-            </figure>
-            <div class="lock-text">{{ item.lock_user | username }}</div>
-            <button class="btn btn--medium"
-                    ng-show="can_unlock()"
-                    ng-click="unlock()"
-                    ng-disabled="unlockClicked"
-                    sd-hotkey="ctrl+shift+u"
-                    sd-hotkey-options="{global: true}"
-                    translate>
-                Unlock
-            </button>
-        </div>
+    <div ng-show="isLocked()" class="locked-info">
+      <figure class="avatar small">
+          <div class="user-image">
+              <img sd-user-avatar data-user="item.lock_user">
+          </div>
+      </figure>
+      <span class="locked-info__label" translate>Locked by</span>
+      <span class="locked-info__name">{{ item.lock_user | username }}</span>
+      <button
+        class="locked-info__button"
+        ng-show="can_unlock()"
+        ng-click="unlock()"
+        ng-disabled="unlockClicked"
+        sd-hotkey="ctrl+shift+u"
+        sd-hotkey-options="{global: true}"
+        translate>
+        Unlock
+      </button>
     </div>
 
     <div class="subnav__authoring-topbar" ng-class="{'enable-overflow': item.highlights || item._type === 'archived'}">
@@ -40,14 +37,22 @@
     </div>
 
     <div class="subnav__stretch-bar" ng-if="showCustomButtons(item)">
-      <div class="subnav__button-stack subnav__button-stack--custom-buttons" ng-if="$root.config.features.customAuthoringTopbar" ng-show="_editable && itemActions.save && action === 'edit'">
-        <button class="btn btn--custom"
+      <div
+        class="subnav__button-stack subnav__button-stack--custom-buttons"
+        ng-if="$root.config.features.customAuthoringTopbar != null && ($root.config.features.customAuthoringTopbar.toDesk === true || $root.config.features.customAuthoringTopbar.publish === true || $root.config.features.customAuthoringTopbar.publishAndContinue == true)"
+        ng-show="_editable && itemActions.save && action === 'edit'"
+      >
+        <button
+                ng-if="$root.config.features.customAuthoringTopbar.toDesk === true"
+                class="btn btn--custom"
                 ng-click="saveAndContinue(sendToNextStage, false)"
                 title="{{ :: 'To Desk' | translate }}">
                 <span class="btn__text" translate>To Desk</span>
                 <span class="btn__text--short" translate>T D</span>
         </button>
-        <button class="btn btn--custom btn--publish"
+        <button
+                ng-if="$root.config.features.customAuthoringTopbar.publish === true"
+                class="btn btn--custom btn--publish"
                 type="submit"
                 ng-if="canPublishOnDesk()"
                 ng-click="saveAndContinue(publish, true)"
@@ -55,7 +60,9 @@
                 <span class="btn__text" translate>Publish</span>
                 <span class="btn__text--short" translate>P</span>
         </button>
-        <button class="btn btn--custom btn--publish-plus"
+        <button
+                ng-if="$root.config.features.customAuthoringTopbar.publishAndContinue === true"
+                class="btn btn--custom btn--publish-plus"
                 ng-if="canPublishOnDesk()"
                 ng-click="saveAndContinue(publishAndContinue, true)"
                 title="{{ :: 'Publish and Continue' | translate }}">
@@ -95,14 +102,14 @@
         ng-click="openAction('kill')"
         translate>Kill</button>
 
-        <button class="btn btn--close"
+        <button class="btn btn--hollow"
                 id="closeAuthoringBtn"
                 ng-click="close()"
                 ng-if="action !== 'correct' && action !== 'kill'"
                 title="{{ :: 'Close' | translate }}"
                 sd-hotkey="ctrl+shift+e"
                 sd-hotkey-options="{global: true}">
-            <span class="btn__text" translate>Close</span><i class="icon-close-small btn__text--alt-icon"></i>
+            <span translate>Close</span>
         </button>
 
       <button class="btn btn--primary" type="submit"
@@ -155,7 +162,7 @@
                 ng-click="publish()"
                 translate>Send Takedown</button>
 
-        <button class="btn btn--close"
+        <button class="btn"
                 id="cancelAuthoringBtn"
                 ng-if="action === 'correct' || action === 'kill'"
                 ng-click="close()"
@@ -269,7 +276,7 @@
                           sd-switch
                           ng-model="spellcheckMenu.isAuto"
                           ng-change="spellcheckMenu.pushSettings()"
-                          ng-hide="!spellcheckMenu.isActiveDictionary"
+                          ng-hide="getSpellchecker(item.language) == null"
                           tooltip="{{ spellcheckMenu.isAuto ? 'Spell checking ON' : 'Spell checking OFF'  | translate }}"
                           tooltip-placement="left"></span>
                       <span translate>Run automatically</span>

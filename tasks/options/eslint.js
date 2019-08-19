@@ -18,8 +18,7 @@ module.exports = {
 
     specs: {
         src: [
-            path.join(root, 'spec/**/*.js'),
-            path.join(root, 'spec/**/*.jsx'),
+            path.join(root, 'spec/**/*.ts'),
             path.join(root, 'spec/**/*.tsx'),
         ],
         envs: ['node', 'jasmine'],

@@ -99,13 +99,7 @@ export const GET_LABEL_MAP = () => ({
     copyrightholder: gettext('Copyright holder'),
     copyrightnotice: gettext('Copyright notice'),
     attachments: gettext('Attachments'),
-});
-
-export const HAS_FORMAT_OPTIONS = Object.freeze({
-    abstract: true,
-    body_html: true,
-    footer: true,
-    body_footer: true,
+    publish_schedule: gettext('Scheduled Time'),
 });
 
 export const CV_ALIAS = Object.freeze({
@@ -122,3 +116,15 @@ export const EXTRA_EDITOR_FIELDS = Object.freeze({
     feature_media: {enabled: true},
     media_description: {enabled: true},
 });
+
+/**
+ * Vocabulary types used for custom fields
+ */
+export const CUSTOM_FIELD_TYPES = [
+    'text',
+    'date',
+    'media',
+    'embed',
+    'urls',
+    'custom',
+];

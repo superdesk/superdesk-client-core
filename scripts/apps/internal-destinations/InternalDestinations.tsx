@@ -2,10 +2,11 @@
 
 import React from 'react';
 import {getGenericListPageComponent, GenericListPageComponent} from 'core/ui/components/ListPage/generic-list-page';
-import {IFormField, IFormGroup, FormFieldType} from 'core/ui/components/generic-form/interfaces/form';
 import {ListItemColumn, ListItemActionsMenu, ListItem} from 'core/components/ListItem';
 import {getFormFieldPreviewComponent} from 'core/ui/components/generic-form/form-field';
 import {IInternalDestination} from 'superdesk-interfaces/InternalDestination';
+import {IFormField, IFormGroup} from 'superdesk-api';
+import {FormFieldType} from 'core/ui/components/generic-form/interfaces/form';
 
 const InternalDestinationsPageComponent = getGenericListPageComponent<IInternalDestination>('internal_destinations');
 
@@ -53,11 +54,18 @@ const macroField: IFormField = {
     },
 };
 
+const sendAfterSchedule: IFormField = {
+    label: gettext('Send only after publish schedule'),
+    type: FormFieldType.checkbox,
+    field: 'send_after_schedule',
+};
+
 const formConfig: IFormGroup = {
     direction: 'vertical',
     type: 'inline',
     form: [
         isActiveField,
+        sendAfterSchedule,
         nameField,
         contentFilterField,
         deskField,
@@ -122,6 +130,8 @@ export class InternalDestinations extends React.Component {
             <InternalDestinationsPageComponent
                 renderRow={renderRow}
                 formConfig={formConfig}
+                defaultSortOption={{field: 'name', direction: 'ascending'}}
+                fieldForSearch={nameField}
             />
         );
     }

@@ -9,6 +9,7 @@ import {
 import _ from 'lodash';
 import {getDateFilters, dateRangesByKey} from '../directives/DateFilters';
 import {gettext} from 'core/utils';
+import {KILLED_STATES} from 'apps/archive/constants';
 
 const DEFAULT_REPOS = ['ingest', 'archive', 'published', 'archived'];
 
@@ -20,7 +21,7 @@ const DEFAULT_REPOS = ['ingest', 'archive', 'published', 'archived'];
  */
 export function setFilters(search) {
     _.forOwn(search, (value, key) => {
-        if (_.includes(['priority', 'urgency'], key)) {
+        if (_.includes(['priority', 'urgency'], key) && typeof value !== 'string') {
             search[key] = JSON.stringify(value);
         }
     });
@@ -491,7 +492,7 @@ export function SearchService($location, config, session, multi,
         }
 
         if (params.ignoreKilled) {
-            this.filter({not: {terms: {state: ['killed', 'recalled']}}});
+            this.filter({not: {terms: {state: KILLED_STATES}}});
         }
 
         if (params.onlyLastPublished) {

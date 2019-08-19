@@ -25,7 +25,7 @@
                 <video controls="controls">
                     <source vsrc="{{ rendition.href}}"
                             ng-repeat="(key, rendition) in related.renditions"
-                            ng-if="associations.isVideo(rendition)" html5vfix>
+                            ng-if="associations.checkRenditions.isVideo(rendition)" html5vfix>
                 </video>
                 <div class="item-association__metadata" sd-media-metadata-view data-item="related"></div>
                 <div class="item-association__action-bar" ng-if="related && editable">
@@ -37,7 +37,7 @@
                 <audio controls="controls">
                     <source vsrc="{{ rendition.href}}"
                             ng-repeat="(key, rendition) in related.renditions"
-                            ng-if="associations.isAudio(rendition)" html5vfix>
+                            ng-if="associations.checkRenditions.isAudio(rendition)" html5vfix>
                 </audio>
                 <div class="item-association__metadata" sd-media-metadata-view data-item="related"></div>
                 <div class="item-association__action-bar" ng-if="related && editable">
@@ -69,24 +69,24 @@
     </figure>
     <!-- if/else end -->
 
-    <div contenteditable="{{editable}}"
+    <textarea
         sd-auto-height
         tansa-scope-sync
         ng-model="related.headline"
         ng-model-options="{debounce: 1000}"
         ng-change="onMetadataChange('headline')"
-        sd-placeholder="{{:: 'Add title' | translate}}"
+        placeholder="{{:: 'Add title' | translate}}"
         ng-if="related && showTitle"
         class="sd-media-carousel__media-title">
-    </div>
-    <div contenteditable="{{editable}}"
+    </textarea>
+    <textarea
         sd-auto-height
         tansa-scope-sync
         ng-model="related.description_text"
         ng-model-options="{debounce: 1000}"
         ng-change="onMetadataChange('description_text')"
-        sd-placeholder="{{:: 'Add caption' | translate}}"
+        placeholder="{{:: 'Add caption' | translate}}"
         ng-if="related"
         class="sd-media-carousel__media-caption">
-    </div>
+    </textarea>
 </div>

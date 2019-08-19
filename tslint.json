@@ -47,11 +47,17 @@
         "no-eval": false, // already handled in eslint
         "no-conditional-assignment": false, // already handled in eslint
         "no-reference": false,
+
+        // when a class declaration has `extends` and `implements` on separate lines and class body doesn't start with a blank line
+        // the first line of the class body looks visually belonging to `extends`/`implements` parts of class declaration
+        "one-line": false,
+
         "only-arrow-functions": false
     },
     "rulesDirectory": [],
     "linterOptions": {
         "exclude": [
+            "node_modules/**",
             "scripts/extensions/**/node_modules/**"
         ]
     }

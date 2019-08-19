@@ -21,12 +21,14 @@ import {gettext} from 'core/utils';
  */
 SubscribersDirective.$inject = [
     'notify', 'api', 'subscribersService', 'adminPublishSettingsService', 'modal',
-    'metadata', 'contentFilters', '$q', '$filter', 'products',
+    'metadata', 'contentFilters', '$q', '$filter', 'products', '$rootScope',
+    'deployConfig',
 ];
 
 export function SubscribersDirective(
     notify, api, subscribersService, adminPublishSettingsService,
-    modal, metadata, contentFilters, $q, $filter, products) {
+    modal, metadata, contentFilters, $q, $filter, products, $rootScope,
+    deployConfig) {
     return {
         scope: {
             subscribersList: '=',
@@ -43,6 +45,7 @@ export function SubscribersDirective(
             $scope.directProducts = null;
             $scope.subTypes = null;
             $scope.search = {};
+            $scope.highPriorityQueueEnabled = deployConfig.getSync('high_priority_queue_enabled');
 
             if (angular.isDefined(metadata.values.subscriber_types)) {
                 $scope.subTypes = metadata.values.subscriber_types;
@@ -146,6 +149,7 @@ export function SubscribersDirective(
             $scope.saveNewDestination = function() {
                 $scope.destinations.push($scope.newDestination);
                 $scope.newDestination = null;
+                $scope.saveEnabled = true;
             };
 
             /**
@@ -153,6 +157,7 @@ export function SubscribersDirective(
              */
             $scope.deleteDestination = function(destination) {
                 _.remove($scope.destinations, destination);
+                $scope.saveEnabled = true;
             };
 
             /**
@@ -262,13 +267,15 @@ export function SubscribersDirective(
                 $scope.newDestination = null;
             };
 
-            $scope.$watchCollection('subscriber', (newValue, oldValue) => {
-                if (newValue && oldValue && newValue !== oldValue) {
+            $scope.$watch('subscriber', (newValue, oldValue) => {
+                if (newValue && oldValue) {
                     $scope.saveEnabled = true;
                 } else {
                     $scope.saveEnabled = false;
                 }
-            });
+            }, true);
+
+            $rootScope.$on('subcriber: saveEnabled', () => $scope.saveEnabled = true);
 
             /**
              * Invoked when Subscriber Type is changed. Responsible for populating $scope.formats variable.

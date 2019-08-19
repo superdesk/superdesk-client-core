@@ -672,7 +672,7 @@ form, ng-form {
         margin-right: -10px;
     }
 
-    label {
+    label:not(.sd-checkbox) {
         font-size: 11px;
         @include text-semibold();
         color: $grayText;
@@ -689,6 +689,14 @@ form, ng-form {
             font-weight: 400;
             letter-spacing: normal;
         }
+    }
+    .sd-checkbox label {
+        font-size: 1.3rem;
+        @include text-normal();
+        color: inherit;
+        text-transform: none;
+        height: auto;
+        letter-spacing: 0;
     }
 }
 
@@ -1249,4 +1257,14 @@ input {
     > * + * {
         margin-left: 1.2rem!important;  // line_input has margin-left: 0
     }
+}
+
+.sd-line-input__select-custom {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    background: transparent!important;
+    border: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
 }

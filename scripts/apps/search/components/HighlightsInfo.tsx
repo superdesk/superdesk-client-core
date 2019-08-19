@@ -12,7 +12,7 @@ import {
     isCheckAllowed,
 } from '../helpers';
 
-export class HighlightsInfo extends React.Component<any, any> {
+export class HighlightsInfo extends React.PureComponent<any, any> {
     static propTypes: any;
     static defaultProps: any;
 
@@ -104,7 +104,7 @@ export class HighlightsInfo extends React.Component<any, any> {
                         className: classNames({
                             'icon-star': highlights.length === 1,
                             'icon-multi-star': highlights.length > 1,
-                            red: hasActiveHighlight,
+                            'red': hasActiveHighlight,
                         }),
                     }),
                 ),

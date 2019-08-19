@@ -4,9 +4,7 @@
 @import '~mixins.scss';
 @import '~variables.scss';
 
-
 // SIDE PREVIEW
-
 
 //package preview
 .composite-preview {
@@ -28,44 +26,6 @@
             }
         }
     }
-    // .text, .composite, .video, .picture {
-    //     .border-radius(2px);
-    //     background: $white;
-    //     box-shadow: $block-shadow-depth-2;
-    //     padding: 10px;
-    //     .clearfix();
-    //     .icons-holder {
-    //         float: left;
-    //         margin-right: 20px;
-    //         .clearfix();
-    //         i {
-    //             //zoom: 0.5;
-    //             .opacity(50);
-    //         }
-    //     }
-    // }
-    // .holder {
-    //     width: 120px;
-    //     .border-radius(2px);
-    //     overflow: hidden;
-    //     height: 80px;
-    //     background: #f0f0f0;
-    //     float: left;
-    //     margin-right: 20px;
-    //     .loading {
-    //         margin: 20px 0 0 40px;
-    //     }
-    //     .error-icon {
-    //         .opacity(50);
-    //         height: 80px;
-    //         line-height: 80px;
-    //         text-align: center;
-    //         i {
-    //             vertical-align: middle;
-    //             zoom: 0.7;
-    //         }
-    //     }
-    // }
     .picture, .graphic {
         figure {
             width: 100%;
@@ -103,8 +63,25 @@
     }
 }
 
+@mixin caption-text-style {
+    font-size: 1.4rem;
+    font-weight: 300;
+    opacity: 0.75;
+}
+
 .wrap {
     white-space: pre-wrap;
+}
+
+.article-list-fields {
+    > * {
+        margin-left: 0!important;
+        margin-right: 0!important;
+    }
+
+    > * + * {
+        margin-left: 10px!important;
+    }
 }
 
 .content-item-preview {
@@ -172,7 +149,6 @@
         .content-container {
             position: absolute;
             top:0; left: 0; right: 0; bottom: 0;
-            //padding: 0 20px $bottom-view-padding;
             padding: 0 20px 0;
             overflow: auto;
             .core-content {
@@ -275,6 +251,7 @@
             }
             figcaption {
                 margin: 6px 0 10px 0;
+                @include caption-text-style;
             }
             video, audio {
                 width: 100%;
@@ -283,8 +260,11 @@
             .abstract {
                 margin-bottom: 14px;
                 font-size: 15px;
-                //font-weight: 300;
+                font-weight: 400;
                 line-height: 140%;
+                p {
+                    font-weight: 400;
+                }
             }
             .byline {
                 font-size: 14px;
@@ -306,9 +286,8 @@
                 font-weight: 300;
                 word-wrap: break-word;
                 &.description-text {
-                    font-size: 14px;
-                    font-weight: 400;
                     display: inline-block;
+                    @include caption-text-style;
                 }
             }
             .body-text {
@@ -341,6 +320,11 @@
                     font-weight: 500;
                     text-align: left;
                     background-color:rgba(195, 195, 195, 0.2);
+                    font-weight: 400;
+                    p {
+                        font-weight: 400;
+                        margin-bottom: 0; 
+                    }
                 }
             }
             blockquote {
@@ -353,8 +337,11 @@
             }
             .embed-block {
                 iframe {
-                    width: 97%;
+                    width: 100%;
                 }
+            }
+            .embed-block__description {
+                @include caption-text-style;
             }
         }
     }
@@ -363,7 +350,7 @@
     .article-versions {
         position: absolute;
         top:0; left: 0; right: 0; bottom: 0;
-        padding: 20px 20px $bottom-view-padding;
+        padding: 2.4rem 2.4rem $bottom-view-padding;
         overflow: auto;
     }
 
@@ -376,7 +363,7 @@
     .related-item-view, .mediaUsed {
         position: absolute;
         top:0; left: 0; right: 0; bottom: 0;
-        padding: 20px 20px $bottom-view-padding;
+        padding: 2.4rem 2.4rem $bottom-view-padding;
         overflow: auto;
                 .related-item, .mediaUsed--Item {
                     cursor: pointer;
@@ -388,11 +375,15 @@
     .core-content {
         display: flex;
         flex-direction: column;
-        flex-wrap: wrap;
-        align-content: flex-start;
-
         .media-block, .embed-block {
             margin: 2rem 0;
+        }
+        .embed-block {
+            width: 100%;
+            max-width: 100%;
+            > * {
+                width: 100%;
+            }
         }
         .media-block__description {
             display: block;
@@ -1334,38 +1325,3 @@ figure.preview-overlay-on {
         }
     }
 }
-
-
-// .metadata-details-new {
-//     color:#777;
-//     position:relative;
-//     height:auto;
-//     margin:0;
-//     font-size: 12px;
-//     dt {
-//         width:100px;
-//         float: left;
-//         clear: left;
-//         font-weight:normal;
-//         color:#474747;
-//         margin-bottom:5px;
-//         line-height:16px;
-//         vertical-align:middle;
-
-//     }
-//     dt:after {
-//         content : ":";
-//     }
-//     dd {
-//         width:245px;
-//         max-width: 245px;
-//         float:left;
-//         margin-left:0px;
-//         line-height:16px;
-//         margin-bottom:7px;
-//         vertical-align:middle;
-//         word-break: break-word;
-//     }
-// }
-
-/* END OF LIGHTBOX PREVIEW */

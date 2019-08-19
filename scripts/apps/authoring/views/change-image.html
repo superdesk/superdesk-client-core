@@ -16,7 +16,7 @@
 
 <div class="modal__body modal__body--no-padding">
     <div class="sd-column-box--2">
-        <div class="sd-column-box__main-column sd-column-box__main-column--photo-preview" ng-class="{'toolbar-offset': crops.isDirty}">
+        <div class="sd-column-box__main-column sd-column-box__main-column--photo-preview" ng-class="{'toolbar-offset': crops.isDirty, 'sd-column-box__main-column--expanded' : !showMetadata}">
             <a class="sd-photo-preview__slide-in-button" ng-show="!showMetadata && nav !== 'crop'" ng-click="showMetadata = !showMetadata" data-sd-tooltip="Open metadata" data-flow="left">
                 <i class="icon-backward-thin"></i>
             </a>
@@ -157,6 +157,7 @@
                 <div sd-media-copy-metadata
                      class="sd-slide-in-panel__footer"
                      data-metadata="data.metadata"
+                     data-validator="validator"
                      ng-if="nav === 'view'"
                      data-on-change="metadata.isDirty = true">
                 </div>

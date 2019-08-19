@@ -1,5 +1,12 @@
 import _ from 'lodash';
 import {setFilters} from 'apps/search/services/SearchService';
+import {PUBLISHED_STATES} from 'apps/archive/constants';
+import {ITEM_STATE} from 'apps/archive/constants';
+import {
+    DESK_OUTPUT,
+    SENT_OUTPUT,
+    SCHEDULED_OUTPUT,
+} from 'apps/desks/constants';
 
 CardsService.$inject = ['api', 'search', 'session', 'desks', 'config'];
 export function CardsService(api, search, session, desks, config) {
@@ -54,13 +61,20 @@ export function CardsService(api, search, session, desks, config) {
             ]});
             break;
 
-        case 'deskOutput':
+        case DESK_OUTPUT:
             filterQueryByDeskType(query, card);
             break;
 
-        case 'scheduledDeskOutput':
+        case SENT_OUTPUT:
             deskId = card._id.substring(0, card._id.indexOf(':'));
+            query.filter({bool: {
+                filter: {term: {'task.desk_history': deskId}},
+                must_not: {term: {'task.desk': deskId}},
+            }});
+            break;
 
+        case SCHEDULED_OUTPUT:
+            deskId = card._id.substring(0, card._id.indexOf(':'));
             query.filter({and: [
                 {term: {'task.desk': deskId}},
                 {term: {state: 'scheduled'}},
@@ -80,11 +94,12 @@ export function CardsService(api, search, session, desks, config) {
     function filterQueryByDeskType(query, card) {
         var deskId = card._id.substring(0, card._id.indexOf(':'));
         var desk = desks.deskLookup ? desks.deskLookup[deskId] : null;
-        var states = ['scheduled', 'published', 'corrected', 'killed', 'recalled'];
+        var states = PUBLISHED_STATES;
 
         if (config.monitoring && config.monitoring.scheduled) {
-            states = ['published', 'corrected', 'killed', 'recalled'];
+            states = PUBLISHED_STATES.filter((state) => state !== ITEM_STATE.SCHEDULED);
         }
+
         if (desk) {
             if (desk.desk_type === 'authoring') {
                 query.filter({or: [
@@ -171,8 +186,9 @@ export function CardsService(api, search, session, desks, config) {
             return data.stages && !!data.stages[card._id];
         case 'personal':
             return data.user === session.identity._id;
-        case 'deskOutput':
-        case 'scheduledDeskOutput':
+        case DESK_OUTPUT:
+        case SENT_OUTPUT:
+        case SCHEDULED_OUTPUT:
             var deskId = card._id.substring(0, card._id.indexOf(':'));
 
             if (deskId) {

@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
+import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 
 /**
  * @ngdoc service
@@ -15,7 +16,14 @@ import {gettext} from 'core/utils';
  */
 
 TranslationService.$inject = ['api', '$rootScope', 'notify', 'authoringWorkspace', 'desks', 'search'];
-export function TranslationService(api, $rootScope, notify, authoringWorkspace, desks, search) {
+export function TranslationService(
+    api,
+    $rootScope,
+    notify,
+    authoringWorkspace: AuthoringWorkspaceService,
+    desks,
+    search,
+) {
     var service: any = {};
 
     /**

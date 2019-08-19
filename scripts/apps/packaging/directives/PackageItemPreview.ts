@@ -1,8 +1,10 @@
 import _ from 'lodash';
+import {isPublished, isKilled} from 'apps/archive/utils';
+import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 
-PackageItemPreview.$inject = ['api', 'lock', 'superdesk', 'authoringWorkspace', '$location', '$sce',
+PackageItemPreview.$inject = ['api', 'lock', 'superdesk', 'authoringWorkspace', '$sce',
     'desks', 'vocabularies'];
-export function PackageItemPreview(api, lock, superdesk, authoringWorkspace, $location, $sce,
+export function PackageItemPreview(api, lock, superdesk, authoringWorkspace: AuthoringWorkspaceService, $sce,
     desks, vocabularies) {
     return {
         scope: {
@@ -51,8 +53,8 @@ export function PackageItemPreview(api, lock, superdesk, authoringWorkspace, $lo
                             scope.data.abstract = $sce.trustAsHtml(scope.data.abstract);
                         }
                         scope.isLocked = lock.isLocked(scope.data);
-                        scope.isPublished = _.includes(['published', 'corrected'], scope.data.state);
-                        scope.isKilled = (scope.data.state === 'killed' || scope.data.state === 'recalled');
+                        scope.isPublished = isPublished(scope.data, false);
+                        scope.isKilled = isKilled(scope.data);
                     }, (response) => {
                         scope.error = true;
                     });

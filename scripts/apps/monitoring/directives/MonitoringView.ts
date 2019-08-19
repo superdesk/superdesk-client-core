@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
+import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 
 /**
  * Main monitoring view - list + preview
@@ -7,7 +8,14 @@ import {gettext} from 'core/utils';
  * it's a directive so that it can be put together with authoring into some container directive
  */
 MonitoringView.$inject = ['$rootScope', 'authoringWorkspace', 'pageTitle', '$timeout', 'workspaces', 'desks'];
-export function MonitoringView($rootScope, authoringWorkspace, pageTitle, $timeout, workspaces, desks) {
+export function MonitoringView(
+    $rootScope,
+    authoringWorkspace: AuthoringWorkspaceService,
+    pageTitle,
+    $timeout,
+    workspaces,
+    desks,
+) {
     return {
         templateUrl: 'scripts/apps/monitoring/views/monitoring-view.html',
         controller: 'Monitoring',
@@ -25,7 +33,16 @@ export function MonitoringView($rootScope, authoringWorkspace, pageTitle, $timeo
             hideMonitoringToolbar2: '=?',
         },
         link: function(scope, elem) {
-            const containerElem = elem.find('.content-list');
+            let containerElem = elem.find('.sd-column-box__main-column');
+
+            /**
+             * Issue here is that sd-column-box__main-column element is not visible on initializing sd-monitoring-view.
+             * So I added $broadcast and listener for updating onScroll binding and containerElem for it.
+            */
+            $rootScope.$on('stage:single', () => {
+                containerElem = elem.find('.sd-column-box__main-column');
+                containerElem.on('scroll', handleContainerScroll);
+            });
 
             pageTitle.setUrl(_.capitalize(gettext(scope.type)));
 
@@ -108,7 +125,7 @@ export function MonitoringView($rootScope, authoringWorkspace, pageTitle, $timeo
              * Trigger render in case user scrolls to the very end of list
              */
             function renderIfNeeded() {
-                if (scope.monitoring.viewColumn && isListEnd(containerElem[0])) {
+                if (isListEnd(containerElem[0])) {
                     scheduleFetchNext();
                 }
             }

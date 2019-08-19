@@ -1,5 +1,7 @@
+import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
+
 AddPackageDropdown.$inject = ['$rootScope', 'api', 'packages', 'authoringWorkspace'];
-export function AddPackageDropdown($rootScope, api, packages, authoringWorkspace) {
+export function AddPackageDropdown($rootScope, api, packages, authoringWorkspace: AuthoringWorkspaceService) {
     return {
         templateUrl: 'scripts/apps/packaging/views/sd-add-package-dropdown.html',
         link: function(scope) {

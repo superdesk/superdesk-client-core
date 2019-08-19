@@ -57,8 +57,8 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, deploy
         'usageterms',
         'copyrightnotice',
         'place',
-        'subject',
         'keywords',
+        'extra',
     ].concat(Object.keys(get(deployConfig.getSync('schema'), 'picture', {})));
 
     $scope.controls = angular.copy(DEFAULT_CONTROLS);
@@ -421,7 +421,6 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, deploy
 
         }}).then((result) => {
             $scope.data.item.renditions = result.renditions;
-            $scope.data.item._etag = result._etag;
             const editableMetadata = extractEditableMetadata($scope.data.metadata);
 
             $scope.data.metadata = Object.assign($scope.data.item, editableMetadata);
@@ -506,7 +505,7 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, deploy
     };
 
     // init poi if not set
-    if (!$scope.data.poi) {
+    if (!$scope.data.poi || !Object.keys($scope.data.poi).length) {
         $scope.data.poi = {x: 0.5, y: 0.5};
         if (!config.features.validatePointOfInterestForImages) {
             $scope.saveCrops(); // save it as defaults

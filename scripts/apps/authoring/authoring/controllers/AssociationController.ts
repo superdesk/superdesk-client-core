@@ -1,7 +1,9 @@
-import {startsWith, endsWith, some, forEach, get} from 'lodash';
+import {forEach, get, startsWith, endsWith, some} from 'lodash';
 import {getSuperdeskType} from 'core/utils';
 import {gettext} from 'core/utils';
 import {isMediaEditable} from 'core/config';
+import {isPublished} from 'apps/archive/utils';
+import {IArticle} from 'superdesk-api';
 
 /**
  * @ngdoc controller
@@ -18,6 +20,8 @@ export function AssociationController(config, content, superdesk,
     mediaIdGenerator, authoring, renditions, notify) {
     const self = this;
 
+    this.checkRenditions = checkRenditions;
+
     /**
      * @ngdoc method
      * @name AssociationController#isMediaEditable
@@ -26,65 +30,6 @@ export function AssociationController(config, content, superdesk,
      */
     this.isMediaEditable = function() {
         return isMediaEditable(config);
-    };
-
-    /**
-     * @ngdoc method
-     * @name AssociationController#isImage
-     * @public
-     * @description Check if the rendition is image or not.
-     * @param {Object} rendition Rendition of the item.
-     */
-    this.isImage = function(rendition) {
-        return startsWith(rendition.mimetype, 'image');
-    };
-
-    /**
-     * @ngdoc method
-     * @name AssociationController#isVideo
-     * @public
-     * @description Check if the rendition is video or not.
-     * @param {Object} rendition Rendition of the item.
-     */
-    this.isVideo = function(rendition) {
-        if (startsWith(rendition.mimetype, 'video')) {
-            return true;
-        }
-
-        return some(['.mp4', '.webm', '.ogv', '.ogg'], (ext) => endsWith(rendition.href, ext));
-    };
-
-    /**
-     * @ngdoc method
-     * @name AssociationController#isAudio
-     * @public
-     * @description Check if the rendition is audio or not.
-     * @param {Object} rendition Rendition of the item.
-     */
-    this.isAudio = function(rendition) {
-        if (startsWith(rendition.mimetype, 'audio')) {
-            return true;
-        }
-
-        return some(
-            ['.mp3', '.3gp', '.wav', '.ogg', 'wma', 'aa', 'aiff'],
-            (ext) => endsWith(rendition.href, ext),
-        );
-    };
-
-    /**
-     * @ngdoc method
-     * @name AssociationController#getItem
-     * @private
-     * @description Get superdesk item from event.
-     *              If not externalsource then fetch for archive collection not all fields
-     *              are available due to projections.
-     * @param {Event} event
-     * @param {string} dataType
-     * @return {Object}
-     */
-    this.getItem = function(event, dataType) {
-        return content.dropItem(event.originalEvent.dataTransfer.getData(dataType));
     };
 
     /**
@@ -145,15 +90,18 @@ export function AssociationController(config, content, superdesk,
      * @param {Function} callback to call after save
      */
     this.updateItemAssociation = function(scope, updated, customRel, callback = null, autosave = false) {
-        let data = {}, rel = customRel || scope.rel;
+        let data = {};
+        // if the media is of type media-gallery, update same association-key not the next one
+        // as the scope.rel contains the next association-key of the new item
+        let associationKey = scope.carouselItem ? scope.carouselItem.fieldId : customRel || scope.rel;
 
-        data[rel] = updated;
+        data[associationKey] = updated;
         scope.item.associations = angular.extend({}, scope.item.associations, data);
-        scope.rel = rel;
+        scope.rel = associationKey;
 
         let promise;
 
-        if (!authoring.isPublished(scope.item) && updated && !autosave) {
+        if (!isPublished(scope.item) && updated && !autosave) {
             promise = scope.save();
         } else {
             promise = scope.onchange({item: scope.item, data: data});
@@ -185,8 +133,8 @@ export function AssociationController(config, content, superdesk,
             return;
         }
 
-        const isImage = self.isImage(item.renditions.original);
-        const defaultTab = isImage ? 'crop' : 'view';
+        const _isImage = checkRenditions.isImage(item.renditions.original);
+        const defaultTab = _isImage ? 'crop' : 'view';
 
         const cropOptions = {
             isNew: 'isNew' in options ? options.isNew : false,
@@ -212,33 +160,12 @@ export function AssociationController(config, content, superdesk,
         self.updateItemAssociation(scope, item, options.customRel, callback);
     };
 
-    /**
-     * @ngdoc method
-     * @name AssociationController#initializeUploadOnDrop
-     * @public
-     * @description Initialize upload on drop in field
-     * @param {Object} scope Directive scope
-     * @param {Object} event Drop event
-     */
-    this.initializeUploadOnDrop = function(scope, event) {
-        const superdeskType = getSuperdeskType(event);
-
+    this.addAssociation = function(scope, __item: IArticle): void {
         if (!scope.editable) {
             return;
         }
 
-        if (superdeskType === 'Files') {
-            if (self.isMediaEditable()) {
-                const files = event.originalEvent.dataTransfer.files;
-
-                return self.uploadAndCropImages(scope, files);
-            }
-
-            return;
-        }
-
-        scope.loading = true;
-        return self.getItem(event, superdeskType, {fetchExternal: false})
+        content.dropItem(__item)
             .then((item) => {
                 if (item.lock_user) {
                     notify.error(gettext('Item is locked. Cannot associate media item.'));
@@ -261,4 +188,64 @@ export function AssociationController(config, content, superdesk,
                 scope.loading = false;
             });
     };
+
+    /**
+     * @ngdoc method
+     * @public
+     * @description Initialize upload on drop in field
+     * @param {Object} scope Directive scope
+     * @param {Object} event Drop event
+     */
+    this.initializeUploadOnDrop = function(scope, event): void {
+        const superdeskType = getSuperdeskType(event);
+
+        if (superdeskType === 'Files') {
+            if (!scope.editable) {
+                return;
+            }
+
+            if (self.isMediaEditable()) {
+                const files = event.originalEvent.dataTransfer.files;
+
+                return self.uploadAndCropImages(scope, files);
+            }
+
+            return;
+        }
+
+        const __item: IArticle = JSON.parse(event.originalEvent.dataTransfer.getData(superdeskType));
+
+        scope.loading = true;
+
+        this.addAssociation(scope, __item);
+    };
 }
+
+const isImage = (rendition) => {
+    return startsWith(rendition.mimetype, 'image');
+};
+
+const isAudio = (rendition) => {
+    if (startsWith(rendition.mimetype, 'audio')) {
+        return true;
+    }
+
+    return some(
+        ['.mp3', '.3gp', '.wav', '.ogg', 'wma', 'aa', 'aiff'],
+        (ext) => endsWith(rendition.href, ext),
+    );
+};
+
+const isVideo = (rendition) => {
+    if (startsWith(rendition.mimetype, 'video')) {
+        return true;
+    }
+
+    return some(['.mp4', '.webm', '.ogv', '.ogg'], (ext) => endsWith(rendition.href, ext));
+};
+
+export const checkRenditions = {
+    isImage: isImage,
+    isAudio: isAudio,
+    isVideo: isVideo,
+};

@@ -2,6 +2,7 @@
 /* tslint:disable:max-line-length */
 import {onChange} from 'core/editor3/store/index';
 import {convertFromRaw, RawDraftContentState} from 'draft-js';
+import {AuthoringWorkspaceService} from './services/AuthoringWorkspaceService';
 
 describe('authoring', () => {
     beforeEach(window.module('superdesk.apps.vocabularies'));
@@ -160,7 +161,7 @@ describe('authoring', () => {
     }));
 
     describe('authoring workspace', () => {
-        it('can open an item in new window', inject(($window, authoringWorkspace) => {
+        it('can open an item in new window', inject(($window, authoringWorkspace: AuthoringWorkspaceService) => {
             spyOn($window, 'open');
             authoringWorkspace.popup({_id: 'foo'}, 'edit');
             expect($window.open)

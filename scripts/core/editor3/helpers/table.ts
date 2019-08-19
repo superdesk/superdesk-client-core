@@ -6,7 +6,7 @@ import {
     EditorState,
     CompositeDecorator,
     convertToRaw,
-    convertFromRaw
+    convertFromRaw,
 } from 'draft-js';
 import {OrderedSet, Map} from 'immutable';
 import {LinkDecorator} from '../components/links/LinkDecorator';
