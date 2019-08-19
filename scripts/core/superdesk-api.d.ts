@@ -69,6 +69,7 @@ declare module 'superdesk-api' {
                     onSpikeMultiple?(items: Array<IArticle>): Promise<onSpikeMiddlewareResult>;
                 };
             };
+            iptcMapping?(data: IPTCMetadata, item: Partial<IArticle>): Promise<Partial<IArticle>>;
         }
     }
 
@@ -335,7 +336,7 @@ declare module 'superdesk-api' {
         needs_activation: boolean;
         desk: IDesk;
         SIGN_OFF: string;
-        BYLINE: string;
+        byline: string;
         invisible_stages: Array<any>;
         slack_username: string;
         slack_user_id: string;
@@ -731,6 +732,10 @@ declare module 'superdesk-api' {
             contentProfile: {
                 get(id: string): Promise<IContentProfile>;
             };
+            vocabulary: {
+                getIptcSubjects(): Promise<Array<ISubject>>;
+                getVocabulary(id: string): Promise<Array<ISubject>>;
+            };
         };
         helpers: {
             assertNever(x: never): never;
@@ -835,5 +840,56 @@ declare module 'superdesk-api' {
         label: string;
         editorComponent: React.ComponentType<IEditorComponentProps>;
         previewComponent: React.ComponentType<IPreviewComponentProps>;
+    }
+
+
+    // IPTC picture metadata
+
+    interface IPTCMetadata {
+        // envelope
+        Destination: string;
+        ServiceIdentifier: string;
+        ProductID: string;
+        DateSent: string;
+        TimeSent: string;
+    
+        // application
+        ObjectName: string;
+        EditStatus: string;
+        Urgency: string;
+        SubjectReference: string;
+        Category: string;
+        SupplementalCategories: string;
+        Keywords: string;
+        ContentLocationCode: string;
+        ContentLocationName: string;
+        ReleaseDate: string;
+        ReleaseTime: string;
+        ExpirationDate: string;
+        ExpirationTime: string;
+        SpecialInstructions: string;
+        DateCreated: string;
+        TimeCreated: string;
+        'By-line': string;
+        'By-lineTitle': string;
+        City: string;
+        'Sub-location': string;
+        'Province-State': string;
+        'Country-PrimaryLocationCode': string;
+        'Country-PrimaryLocationName': string;
+        OriginalTransmissionReference: string;
+        Headline: string;
+        Credit: string;
+        Source: string;
+        CopyrightNotice: string;
+        Contact: string;
+        'Caption-Abstract': string;
+        'Writer-Editor': string;
+        LanguageIdentifier: string;
+    }
+
+    interface ISubject {
+        name: string;
+        qcode: string;
     }
 }
