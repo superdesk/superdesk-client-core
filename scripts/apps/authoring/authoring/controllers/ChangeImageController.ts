@@ -499,7 +499,6 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, deploy
         $scope.$applyAsync(() => {
             if (angular.isDefined(renditionName)) {
                 $scope.data.cropData[renditionName] = angular.extend({}, cropData, sizes[renditionName]);
-                $scope.data.isDirty = true;
                 $scope.crops.isDirty = true;
             }
         });
