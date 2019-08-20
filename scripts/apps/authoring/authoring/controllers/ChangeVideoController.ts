@@ -491,14 +491,17 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
             });
         }
         else {
-            $scope.$applyAsync(() => {
-                if ($scope.listFrames == null) {
-                    $scope.reloadFrames();
-                }
-                else {
-                    $scope.listFrames = null;
-                }
-            });
+            if (res.project.processing.video === false)
+            {
+                $scope.$applyAsync(() => {
+                    if ($scope.listFrames == null) {
+                        $scope.reloadFrames();
+                    }
+                    else {
+                        $scope.listFrames = null;
+                    }
+                });
+            }
         }
     }
 
