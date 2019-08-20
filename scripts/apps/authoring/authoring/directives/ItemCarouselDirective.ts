@@ -37,6 +37,15 @@ function getItemsCount(items: Array<any>): number {
         .length;
 }
 
+function isOrderChanged(items: Array<any>, prevItems: Array<any>): boolean {
+    return !!items.filter((_item, index) => {
+        const fieldId = _item.fieldId;
+
+        return items[index][fieldId] != null && prevItems[index][fieldId] != null
+        && items[index][fieldId].order !== prevItems[index][fieldId].order;
+    }).length;
+}
+
 /**
  * @ngdoc directive
  * @module superdesk.apps.authoring
@@ -77,12 +86,13 @@ export function ItemCarouselDirective(notify) {
              * otherwise carousel height is messed up
              */
             scope.$watch('items', (items: Array<any>) => {
-                // Don't execute if there are no items or their length is same as before
-                if (items == null || previousItems && getItemsCount(items) === getItemsCount(previousItems)) {
+                // Don't execute if there are no items or their length is same as before and their order is unchanged
+                if (items == null || previousItems && getItemsCount(items) === getItemsCount(previousItems)
+                    && !isOrderChanged(items, previousItems)) {
                     return false;
                 }
 
-                previousItems = items;
+                previousItems = _.cloneDeep(items);
                 let field = _.find(items, (item) => !item[item.fieldId]);
 
                 scope.rel = field ? field.fieldId : null;
