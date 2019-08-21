@@ -176,7 +176,7 @@ class HTMLParser {
 
                     if (entity['type'] === 'LINK') {
                         contentState = contentState.replaceEntityData(key, {
-                            link: {href: entity.getData().url},
+                            link: {href: entity.getData().href, target: entity.getData().target},
                         });
                     }
                 }
