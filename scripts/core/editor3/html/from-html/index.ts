@@ -175,8 +175,10 @@ class HTMLParser {
                     const entity = contentState.getEntity(key);
 
                     if (entity['type'] === 'LINK') {
+                        const _data = entity.getData();
+
                         contentState = contentState.replaceEntityData(key, {
-                            link: {href: entity.getData().href, target: entity.getData().target},
+                            link: {href: _data.href || _data.url, target: _data.target},
                         });
                     }
                 }
