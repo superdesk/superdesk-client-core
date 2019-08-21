@@ -85,7 +85,7 @@ export function ItemCarouselDirective(notify) {
              * Initialize carousel after all content is loaded
              * otherwise carousel height is messed up
              */
-            scope.$watch('items', (items: Array<any>) => {
+            scope.$watchCollection('items', (items: Array<any>) => {
                 // Don't execute if there are no items or their length is same as before and their order is unchanged
                 if (items == null || previousItems && getItemsCount(items) === getItemsCount(previousItems)
                     && !isOrderChanged(items, previousItems)) {
