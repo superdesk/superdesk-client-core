@@ -187,6 +187,7 @@
                 height: 100%;
                 opacity: 1;
                 &.sd-preview--overlay {
+                    height: auto;
                     position: absolute;
                     overflow: visible;
                     top: 9.6rem;

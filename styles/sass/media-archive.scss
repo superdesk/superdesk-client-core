@@ -883,6 +883,7 @@ $rightfield-width:60px;
                 display: flex;
                 box-sizing: border-box;
                 white-space: nowrap;
+                align-items: center;
                 dl {
                     margin: 0;
                     white-space:nowrap;
@@ -899,9 +900,11 @@ $rightfield-width:60px;
                             margin: 0 0 0 5px;
                         }
                 }
+                & + .line {
+                    margin-top: 2px;
+                }
             }
             .state-label, .profile-label {
-                margin-top: 2px;
                 margin-right: 4px;
                 white-space: nowrap;
                 overflow: hidden;
