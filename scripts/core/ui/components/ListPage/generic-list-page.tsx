@@ -176,26 +176,26 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
         }), callback);
     }
     validateFilters(filterValues) {
-         return Object.keys(filterValues).reduce((accumulator, key) => {
-                const value = filterValues[key];
+        return Object.keys(filterValues).reduce((accumulator, key) => {
+            const value = filterValues[key];
 
-                if (typeof value === 'string') {
-                    let trimmedValue = value.trim();
+            if (typeof value === 'string') {
+                let trimmedValue = value.trim();
 
-                    if (trimmedValue.length > 0) {
-                        accumulator[key] = trimmedValue;
-                        return accumulator;
-                    } else {
-                        return accumulator;
-                    }
+                if (trimmedValue.length > 0) {
+                    accumulator[key] = trimmedValue;
+                    return accumulator;
                 } else {
-                    if (value !== undefined) {
-                        accumulator[key] = value;
-                    }
-
                     return accumulator;
                 }
-            }, {});
+            } else {
+                if (value !== undefined) {
+                    accumulator[key] = value;
+                }
+
+                return accumulator;
+            }
+        }, {});
     }
     executeFilters() {
         const execute = () => {
@@ -265,6 +265,7 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
     }
     componentDidMount() {
         const filters = this.props.defaultFilters ? this.validateFilters(this.props.defaultFilters) : {};
+
         this.props.items.read(1, this.props.defaultSortOption, filters);
 
         if (this.props.refreshOnEvents != null) {

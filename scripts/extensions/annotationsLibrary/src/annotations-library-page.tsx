@@ -47,7 +47,7 @@ export function getAnnotationsLibraryPage(superdesk: ISuperdesk) {
                         {getFormFieldPreviewComponent(item, nameField)}
                     </ListItemColumn>
                     <ListItemColumn ellipsisAndGrow noBorder>
-                        {getFormFieldPreviewComponent(item, definitionField, { showAsPlainText: true })}
+                        {getFormFieldPreviewComponent(item, definitionField, {showAsPlainText: true})}
                     </ListItemColumn>
                     <ListItemActionsMenu>
                         <div style={{display: 'flex'}}>
@@ -82,7 +82,7 @@ export function getAnnotationsLibraryPage(superdesk: ISuperdesk) {
                     renderRow={renderRow}
                     newItemTemplate={{cpnat_type: 'cpnat:abstract'}}
                     fieldForSearch={nameField}
-                    defaultFilters={{language: superdesk.instance.config.language || 'en'}}
+                    defaultFilters={{language: superdesk.instance.config.language || 'en'}}
                 />
             );
         }
