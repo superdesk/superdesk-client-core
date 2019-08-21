@@ -440,7 +440,7 @@ declare module 'superdesk-api' {
     export interface IPropsGenericForm<T extends IBaseRestApiResponse> {
         formConfig: IFormGroup;
         defaultSortOption: ISortOption;
-        defaultFilters: ICrudManagerFilters;
+        defaultFilters?: ICrudManagerFilters;
         renderRow(key: string, item: T, page: IGenericListPageComponent<T>): JSX.Element;
 
         // Allows creating an item with required fields which aren't editable from the GUI
