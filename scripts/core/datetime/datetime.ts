@@ -108,14 +108,11 @@ function DateTimeService(moment, config) {
     this.scheduledFormat = function(d) {
         var m = moment(d);
         var now = moment();
-        const _date = m.format(DATE_FORMAT),
-            _day = m.format('dddd'),
-            _time = m.format(TIME_FORMAT);
+        const _date = m.format(config.view.dateformat || 'MM/DD'),
+            _time = m.format(config.view.timeformat || 'hh:mm');
 
         if (isSameDay(m, now)) {
             return '@ '.concat(_time);
-        } else if (isSameWeek(m, now)) {
-            return _day.concat(' @ ', _time);
         }
 
         return _date.concat(' @ ', _time);
