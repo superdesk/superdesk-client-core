@@ -600,7 +600,7 @@ describe('monitoring', () => {
         // view all items in desk single view
         monitoring.actionOnDeskSingleView();
         expect(monitoring.getSingleViewItemCount()).toBe(8);
-        expect(monitoring.getDeskSingleViewTitle()).toBe('Politic Desk desk 8');
+        expect(monitoring.getDeskSingleViewTitle()).toBe('Politic Desk desk8');
 
         // Monitoring Home
         monitoring.actionMonitoringHome();

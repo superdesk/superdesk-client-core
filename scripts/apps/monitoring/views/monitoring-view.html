@@ -9,21 +9,8 @@
                                 <i class="icon-arrow-left"></i>
                             </button>
                         </div>
-                
-                        <!-- search not implemented for usage with custom data source -->
-                        <div ng-if="customDataSource == null" class="flat-searchbar monitoring-flat-searchbar" ng-class="{extended: aggregate.monitoringSearch}">
-                            <div class="search-handler">
-                                <label for="search-input" class="trigger-icon" ng-click="aggregate.monitoringSearch = !aggregate.monitoringSearch"><i class="icon-search"></i></label>
-                                <input id="search-input" type="text" placeholder="{{ :: 'Search' | translate }}" ng-model="query"
-                                       ng-keyup="aggregate.searchOnEnter($event, query)">
-                                <button class="search-close" ng-click="aggregate.search(query = null)" ng-class="{visible: query}"><i class="icon-remove-sign"></i></button>
-                                <button class="search-close" ng-click="aggregate.search(query);" ng-class="{visible: query}">
-                                    <i class="svg-icon-right"></i>
-                                </button>
-                            </div>
-                        </div>
-                
-                        <div class="dropdown" dropdown ng-if="!monitoring.singleGroup && type === 'monitoring'">
+                                        
+                        <div class="dropdown sd-flex-no-shrink" dropdown ng-if="!monitoring.singleGroup && type === 'monitoring'">
                             <button class="dropdown__toggle navbtn navbtn--text-only" dropdown-toggle>{{ :: 'Monitoring' | translate }} {{workspace.name}} <span class="dropdown__caret"></span></button>
                             <ul class="dropdown__menu scrollable">
                                 <li><div class="dropdown__menu-label">{{ :: 'Stages' | translate }}</div></li>
@@ -34,8 +21,23 @@
                                 </li>
                             </ul>
                         </div>
+                                        
+                        <h3 class="subnav__page-title sd-flex-no-grow sd-empty"><span ng-if="type === 'spike'"><span translate>Spiked Items</span> <span ng-if="aggregate.spikeGroups.length === 1" class="label-total">{{ monitoring.totalItems}}</span></span><span ng-if="type === 'personal'" translate>Personal Items</span><span ng-if="type === 'highlights'" sd-highlight-label data-highlight="monitoring.queryParam.highlight" data-total="monitoring.totalItems"></span><span ng-if="monitoring.singleGroup.subheader && monitoring.singleGroup.singleViewType == null">{{ monitoring.singleGroup.header}} / {{ monitoring.singleGroup.subheader}} {{ monitoring.singleGroup.type}}<span class="label-total">{{ monitoring.totalItems}}</span></span><span ng-if="monitoring.singleGroup.singleViewType === 'desk'">{{ monitoring.singleGroup.header }} {{ monitoring.singleGroup.singleViewType}}<span class="label-total">{{ monitoring.totalItems}}</span></span></h3>
+
+                        <!-- search not implemented for usage with custom data source -->
+                        <div ng-if="customDataSource == null" class="flat-searchbar monitoring-flat-searchbar" ng-class="{extended: aggregate.monitoringSearch}">
+                            <div class="search-handler" ng-class="{'search-handler--left-border': !monitoring.singleGroup}">
+                                <label for="search-input" class="trigger-icon" ng-click="aggregate.monitoringSearch = !aggregate.monitoringSearch"><i class="icon-search"></i></label>
+                                <input id="search-input" type="text" placeholder="{{ :: 'Search' | translate }}" ng-model="query"
+                                       ng-keyup="aggregate.searchOnEnter($event, query)">
+                                <button class="search-close" ng-click="aggregate.search(query = null)" ng-class="{visible: query}"><i class="icon-remove-sign"></i></button>
+                                <button class="search-close" ng-click="aggregate.search(query);" ng-class="{visible: query}">
+                                    <i class="svg-icon-right"></i>
+                                </button>
+                            </div>
+                        </div>
                 
-                        <div class="subnav__stage-group" ng-if="monitoring.singleGroup.singleViewType === 'stage' || monitoring.singleGroup && !monitoring.singleGroup.subheader">
+                        <div class="subnav__stage-group" ng-if="monitoring.singleGroup.singleViewType === 'stage' || monitoring.singleGroup && !monitoring.singleGroup.subheader" ng-class="{'subnav__stage-group--ui-responsive': aggregate.monitoringSearch}">
                             <span class="stage-group__desk">{{ monitoring.singleGroup.header }}</span>
                             <span class="stage-group__split">/</span>
                             <div class="dropdown" dropdown>
@@ -52,23 +54,9 @@
                             </div>
                             <span class="stage-group__badge label label--large">{{ monitoring.totalItems}}</span>
                         </div>
-                
-                        <h3 class="subnav__page-title">
-                            <span ng-if="type === 'spike'"><span translate>Spiked Items</span> <span ng-if="aggregate.spikeGroups.length === 1" class="label-total">{{ monitoring.totalItems}}</span></span>
-                            <span ng-if="type === 'personal'" translate>Personal Items</span>
-                            <span ng-if="type === 'highlights'" sd-highlight-label data-highlight="monitoring.queryParam.highlight" data-total="monitoring.totalItems"></span>
-                
-                            <span ng-if="monitoring.singleGroup.subheader && monitoring.singleGroup.singleViewType == null">
-                                {{ monitoring.singleGroup.header}} / {{ monitoring.singleGroup.subheader}} {{ monitoring.singleGroup.type}}
-                                <span class="label-total">{{ monitoring.totalItems}}</span>
-                            </span>
-                            <span ng-if="monitoring.singleGroup.singleViewType === 'desk'">
-                                {{ monitoring.singleGroup.header }} {{ monitoring.singleGroup.singleViewType}}
-                                <span class="label-total">{{ monitoring.totalItems}}</span>
-                            </span>
-                        </h3>
+
                         <div sd-multi-action-bar></div>
-                        <div class="subnav__button-stack--square-buttons">
+                        <div class="subnav__button-stack--square-buttons sd-margin-l--auto">
                             <div class="refresh-box pull-right">
                                 <button ng-if="monitoring.showRefresh &&
                                                         (monitoring.singleGroup || type === 'spike' || type === 'highlights' || monitoring.viewColumn)"
