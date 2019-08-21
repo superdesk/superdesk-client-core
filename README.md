@@ -86,6 +86,7 @@ You can configure what will be displayed in list views, there are 3 areas in lis
 - `secondLine` - optional second line - defaults are:
     - `profile`
     - `state` - workflow state
+    - `scheduledDateTime` - scheduled date and time where date and time format are taken from view.dateformat and view.timeformat respectively
     - `embargo` - flag if item is embargoed
     - `update` - flag if item is an update
     - `takekey`
