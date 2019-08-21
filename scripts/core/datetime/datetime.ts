@@ -99,8 +99,7 @@ function DateTimeService(moment, config) {
 
     /**
      * Get date and time format for scheduled datetime
-     * Returns time for current day, day and time for current weeek
-     * and date and time otherwise
+     * Returns time for current day, date and time otherwise
      *
      * @param {String} d iso format datetime
      * @return {String}
