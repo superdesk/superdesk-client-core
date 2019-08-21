@@ -54,6 +54,7 @@ describe('content', () => {
             lock,
             session,
             authoringWorkspace: AuthoringWorkspaceService,
+            config,
         ) => {
             const extensionDelay = 200;
 
@@ -90,6 +91,7 @@ describe('content', () => {
                 lock,
                 session,
                 authoringWorkspace,
+                config,
             ).then(() => {
                 activityService.start(superdesk.activities.spike, {data: {item: {_id: '0'}}});
 
@@ -105,7 +107,7 @@ describe('content', () => {
                     expect(modal.createCustomModal).toHaveBeenCalled();
                     done();
                 }, extensionDelay + 50);
-            });
+            }).catch(done.fail);
         }));
 
     describe('archive service', () => {

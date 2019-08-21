@@ -57,7 +57,7 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
 {
     searchBarRef: SearchBar | null;
 
-    constructor(props) {
+    constructor(props: IPropsGenericForm<T> & IPropsConnected<T>) {
         super(props);
 
         // preview and edit mode can enabled at the same time, but only one pane will be displayed at once
@@ -70,7 +70,7 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
             editItemId: null,
             newItem: null,
             filtersOpen: false,
-            filterValues: {},
+            filterValues: props.defaultFilters ? props.defaultFilters : {},
             loading: true,
         };
 
@@ -175,16 +175,8 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
             },
         }), callback);
     }
-    executeFilters() {
-        const execute = () => {
-            const {filterValues} = this.state;
-
-            const formConfigForFilters = getFormGroupForFiltering(this.props.formConfig);
-
-            const fieldTypesLookup = getFormFieldsFlat(formConfigForFilters)
-                .reduce((accumulator, item) => ({...accumulator, ...{[item.field]: item.type}}), {});
-
-            const filtersValidated = Object.keys(filterValues).reduce((accumulator, key) => {
+    validateFilters(filterValues) {
+         return Object.keys(filterValues).reduce((accumulator, key) => {
                 const value = filterValues[key];
 
                 if (typeof value === 'string') {
@@ -204,6 +196,14 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
                     return accumulator;
                 }
             }, {});
+    }
+    executeFilters() {
+        const execute = () => {
+            const {filterValues} = this.state;
+            const formConfigForFilters = getFormGroupForFiltering(this.props.formConfig);
+            const fieldTypesLookup = getFormFieldsFlat(formConfigForFilters)
+                .reduce((accumulator, item) => ({...accumulator, ...{[item.field]: item.type}}), {});
+            const filtersValidated = this.validateFilters(filterValues);
 
             this.props.items.read(
                 1,
@@ -264,7 +264,8 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
         }
     }
     componentDidMount() {
-        this.props.items.read(1, this.props.defaultSortOption);
+        const filters = this.props.defaultFilters ? this.validateFilters(this.props.defaultFilters) : {};
+        this.props.items.read(1, this.props.defaultSortOption, filters);
 
         if (this.props.refreshOnEvents != null) {
             this.props.refreshOnEvents.forEach((eventName) => {

@@ -10,6 +10,7 @@ export function registerExtensions(
     lock,
     session,
     authoringWorkspace: AuthoringWorkspaceService,
+    config,
 ): Promise<void> {
     return Promise.all(
         Object.keys(extensions).map((extensionId) => {
@@ -23,6 +24,7 @@ export function registerExtensions(
                 lock,
                 session,
                 authoringWorkspace,
+                config
             );
 
             return extensionObject.extension.activate(superdeskApi).then((activationResult) => {
