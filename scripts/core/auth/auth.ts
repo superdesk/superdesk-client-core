@@ -145,6 +145,7 @@ export default angular.module('superdesk.core.auth', [
     'superdesk.core.auth.auth',
     'superdesk.core.auth.basic',
     'superdesk.core.auth.login',
+    'superdesk.core.auth.keycloak',
     'superdesk.core.auth.interceptor',
 ])
     .config(['$httpProvider', 'superdeskProvider', 'assetProvider', function($httpProvider, superdesk, asset) {
