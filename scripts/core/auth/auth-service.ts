@@ -25,6 +25,16 @@ angular.module('superdesk.core.auth.auth', []).service('auth', ['api', 'session'
                     }),
                 );
         };
+        this.loginOIDC = function(authorization_code) {
+            authAdapter.setOIDCtoken(authorization_code);
+            return authAdapter.authenticateOIDC(authorization_code)
+                .then((sessionData) => api.users.getById(sessionData.user)
+                    .then((userData) => {
+                        session.start(sessionData, userData);
+                        return session.identity;
+                    }),
+                );
+        };
 
         /**
          * @ngdoc method

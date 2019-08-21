@@ -20,6 +20,12 @@ angular.module('superdesk.core.auth.basic', [])
             return response.data;
         };
 
+        this.setOIDCtoken = (token) => {
+            token = formatTokenBearer(token);
+            $http.defaults.headers.common.Authorization = token;
+            return token;
+        };
+
         /**
          * @ngdoc method
          * @name authAdapter#authenticate
@@ -30,6 +36,18 @@ angular.module('superdesk.core.auth.basic', [])
          */
         this.authenticate = (username, password) => urls.resource('auth_db')
             .then((url) => $http.post(url, {username: username, password: password}))
+            .then(this.setToken);
+
+                /**
+         * @ngdoc method
+         * @name authAdapter#authenticate
+         * @param {string} username User's login
+         * @param {string} password Users's password
+         * @returns {Promise} If successful, session data is returned, including session token
+         * @description authenticate user using database auth
+         */
+        this.authenticateOIDC = (authorization_code) => urls.resource('oidcauth')
+            .then((url) => $http.post(url, {}))
             .then(this.setToken);
 
         /**
@@ -52,5 +70,9 @@ angular.module('superdesk.core.auth.basic', [])
          */
         function formatToken(token) {
             return token.startsWith('Basic') ? token : 'Basic ' + btoa(token + ':');
+        }
+
+        function formatTokenBearer(token) {
+            return token.startsWith('Bearer') ? token : 'Bearer ' + token;
         }
     }]);
