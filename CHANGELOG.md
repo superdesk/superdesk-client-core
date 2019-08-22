@@ -1,5 +1,140 @@
 # Superdesk Client Changelog
 
+## [1.31.0] TBD
+
+### Added
+
+- Add extension point for picture IPTC mapping.
+- Show scheduled time for items in scheduled output stage.
+- Add `Add to dictionary` action for external spellcheckers.
+- Add priority switch to subscribers.
+- Add desk sent output group type.
+- List content marked for me.
+- Add unpublish action for published content.
+- Add select all functionality for user privileges.
+- Add edit crop screen after image upload to body field.
+
+### Fixed
+
+- Media carousel breaks once the order of the items is changed.
+- Annotations library stopped loading after a link was added.
+- Search bar UI improvements.
+- Save button is inactive after uppercase/lowercase operation.
+- Item not being removed from workqueue on publish.
+- When crop modal is opened it should not ask for save.
+- Fix setting language in media metadata modal.
+- Fix cropping not respecting crop size for ingested pictures.
+- Fix dropdown position in authoring header.
+- Fix scroll in Media contacts management.
+- Fix cursor gets lost when typing caption for media gallery items.
+- Fix errors not highlighted in authoring for custom fields.
+- Spellchecker should respond to language change immediately.
+- Save changes made to desk if user clicks save on confirmation box.
+- Improve search list performance.
+- Fix issues with copy and pasting media metadata.
+- Fix issue with missing error messages on multi publishing.
+- Avoid extending inline styles when pressing space at the end of block.
+- Unlocking items from preview does not work if the item is opened in authoring.
+- Edit image action on article should not modify original image.
+
+### Changed
+
+- Upgrade react to 16.8.
+
+## [1.30.0] 2019-06-12
+
+### Added
+
+- Make delay of item creation via internal destination configurable.
+- Add initial middleware support to authoring.
+- Allow assignment notification to open the assignment on clicking.
+- Display selected saved searches as shortcuts.
+- Settings dashboard.
+
+### Fixed
+
+- Removing a filter statement from content filter does not enable save button.
+- Changes in subscribers content API tab do not enable save button.
+- Fix issue with infinite scroll on single stage view.
+- Fix embeds in preview.
+- Max characters counter not working for `body_html`.
+- Can not create content API only subscriber.
+- Fetch images from external source when dropped to editor3.
+- Hide copy/paste metadata from `edit image` section.
+- Fix issues saving changes on search after updating subscriptions.
+- Prevent drag and drop of saved authoring item or ingested composite items to featured media field.
+- Pasted metadata is lost if image is deselected and then selected again.
+- Hide `edit in new window` action if the item is locked by current user.
+- Image dropped next to table crashes editor3.
+- Add missing error indicator for custom required fields.
+- Remove publish button when an item in personal space is selected.
+- Can't save changes in saved search.
+- Text added before or after an annotation does not activate the save button.
+
+## [1.29.0] 2019-04-30
+
+### Added
+
+- Add user preferences for default event and planning filters.
+- Implement status filter for Subscribers settings.
+- Add knowledge base feature.
+- Support `readonly` and `default` attributes in ingest provider config.
+- Allow async badge in authoring widgets.
+- Add edit and crop button for media items in editor3.
+- Extend search service support for custom queries.
+- Allow slugline field in both header and content authoring sections.
+- Add associated item type icons to list views.
+- Add attachments in editor content section.
+- Add desk routing config widget.
+- Make it possible to override login template.
+- Add abitlity to copy&paste media metadata.
+- Allow configuring article metadata header to open/collapsed.
+- Allow quickly fetching content without opening it.
+- Show field type in field dropdown when editing content profile. 
+- Add support for custom text/date fields in authoring header.
+- Allow nesting of items in output stage.
+- Add widgets config to content profile settings.
+- Populate item authors with current user when author role is configured.
+- Implement new swimlane view.
+- Add author/editor role config to user roles.
+- Add async publishing config to subscriber settings.
+- As a user I want to add urls to a story.
+
+### Changed
+
+- Use geonames for dateline place search when available.
+- Make HTML generated for media blocks in editor3 consistent with editor2.
+
+### Fixed
+
+- Ingest source Critical errors tab is not loaded properly.
+- Fix publishing error although suggestions were resolved.
+- Fix issues in authoring when user presses Save button twice.
+- Fix related items handling media from external source.
+- Fix find & replace feature in editor3.
+- Hide field from both sections when used in content profile config.
+- Fix shortcuts behaviour for widgets in authoring.
+- Canceling changes in media metadata does not reset the usage terms field.
+- Fix infinite scrolling in swimlane view.
+- Templates which are not associated to any desk show up in all desks.
+- Fix editing raw query in saved search.
+- Fix editing of custom fields in templates.
+- Fix empty confirm modals when using translated UI.
+- Support search & replace in tables in editor3.
+- Use `ingest_provider` instead of source for `go to items` link in ingest settings.
+- Save button is enabled even when item is not added to media gallery due to limit.
+- Hide Send To dropdown when uploading media to article.
+- Opening an item by pasting the URL does not show all actions.
+- Disable spell-checker if there is no dictionary for item language.
+- Display latest properties for related items.
+- Allow upload of multiple images on corrected items.
+- Fix versions display on about screen.
+- When moving preview from right to let the top part is partly visible.
+- Fix error message when creating cv with existing ID.
+- Fix gettext string extraction for ts files.
+- Changes in ingest modal not enabling save button.
+- Send params to search proxy in search.
+
 ## [1.28.0] 2019-01-18
 
 ### Added
