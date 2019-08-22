@@ -1,5 +1,5 @@
-import {get} from 'lodash';
-import {gettext} from 'core/utils';
+import { get } from 'lodash';
+import { gettext } from 'core/utils';
 
 /**
  * @ngdoc controller
@@ -82,7 +82,7 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, deploy
             // otherwise we will get an error savingzz
 
             if (original && original.height >= rendition.height && original.width >= rendition.width) {
-                sizes[rendition.name] = {width: rendition.width, height: rendition.height};
+                sizes[rendition.name] = { width: rendition.width, height: rendition.height };
                 $scope.data.cropData[rendition.name] = angular.extend({}, $scope.data.item.renditions[rendition.name]);
             }
         });
@@ -95,7 +95,7 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, deploy
     // initialize metadata from `item`
     $scope.data.metadata = angular.copy($scope.data.item);
     $scope.selectedRendition = null;
-    $scope.selectRendition = function(rendition) {
+    $scope.selectRendition = function (rendition) {
         if (!rendition) {
             $scope.selectedRendition = null;
         } else if ($scope.selectedRendition === null || $scope.selectedRendition.name !== rendition.name) {
@@ -116,7 +116,7 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, deploy
      * @description if dirty or is new picture item.
      * @returns {Boolean}
      */
-    $scope.isDoneEnabled = function() {
+    $scope.isDoneEnabled = function () {
         return !$scope.metadata.isDirty &&
             !$scope.controls.isDirty &&
             !$scope.crops.isDirty &&
@@ -130,7 +130,7 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, deploy
     * @description Validate new crop-coordinates and resolve the promise and return
     * modified crop information, point of interest and metadata changes.
     */
-    $scope.saveCrops = function() {
+    $scope.saveCrops = function () {
         /* Throw an exception if PoI is outside of a crop */
         function poiIsInsideEachCrop() {
             const originalImage = $scope.data.metadata.renditions.original;
@@ -146,14 +146,14 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, deploy
 
             _.forEach($scope.data.cropData, (cropData, cropName) => {
                 if (!cropData || _.isEmpty(cropData)) {
-                    throw gettext('Crop coordinates are not defined for {{cropName}} picture crop.', {cropName});
+                    throw gettext('Crop coordinates are not defined for {{cropName}} picture crop.', { cropName });
                 }
 
                 if (originalPoi.y < cropData.CropTop ||
                     originalPoi.y > cropData.CropBottom ||
                     originalPoi.x < cropData.CropLeft ||
                     originalPoi.x > cropData.CropRight) {
-                    throw gettext('Point of interest outside the crop {{cropName}} limits', {cropName});
+                    throw gettext('Point of interest outside the crop {{cropName}} limits', { cropName });
                 }
             });
         }
@@ -259,7 +259,7 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, deploy
     * @public
     * @description Open the area for interest view.
     */
-    $scope.showAreaOfInterestView = function(show) {
+    $scope.showAreaOfInterestView = function (show) {
         angular.extend($scope, {
             isAoISelectionModeEnabled: show === undefined || show,
             areaOfInterestData: {},
@@ -275,7 +275,7 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, deploy
     * @description Enable/Disable the Save button for Area of Interest
     * @returns {Boolean}
     */
-    $scope.enableSaveAreaOfInterest = function() {
+    $scope.enableSaveAreaOfInterest = function () {
         $scope.$applyAsync(() => {
             $scope.isAoIDirty = isAreaOfInterestChanged();
         });
@@ -283,10 +283,10 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, deploy
 
     function isAreaOfInterestChanged() {
         if ($scope.areaOfInterestData && angular.isDefined($scope.areaOfInterestData.CropLeft)) {
-            const {width, height} = $scope.data.item.renditions.original;
+            const { width, height } = $scope.data.item.renditions.original;
 
             return width !== $scope.areaOfInterestData.CropRight - $scope.areaOfInterestData.CropLeft ||
-                    height !== $scope.areaOfInterestData.CropBottom - $scope.areaOfInterestData.CropTop;
+                height !== $scope.areaOfInterestData.CropBottom - $scope.areaOfInterestData.CropTop;
         }
         return false;
     }
@@ -301,7 +301,7 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, deploy
     * @public
     * @description Based on the new Area of Interest save the original image and crops.
     */
-    $scope.saveAreaOfInterest = function(croppingData) {
+    $scope.saveAreaOfInterest = function (croppingData) {
         const [width, height] = [
             croppingData.CropRight - croppingData.CropLeft,
             croppingData.CropBottom - croppingData.CropTop,
@@ -319,7 +319,7 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, deploy
         }
 
         $scope.showLoader = true;
-        api.save('picture_crop', {item: $scope.data.item, crop: croppingData})
+        api.save('picture_crop', { item: $scope.data.item, crop: croppingData })
             .then((result) => {
                 angular.extend(result.item.renditions.original, {
                     href: result.href,
@@ -328,16 +328,16 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, deploy
                     media: result._id,
                 });
                 $scope.data.isDirty = true;
-                return api.save('picture_renditions', {item: result.item, no_custom_crops: true}).then((item) => {
+                return api.save('picture_renditions', { item: result.item, no_custom_crops: true }).then((item) => {
                     $scope.data.item.renditions = item.renditions;
                     const editableMetadata = extractEditableMetadata($scope.data.metadata);
 
                     $scope.data.metadata = Object.assign($scope.data.item, editableMetadata);
-                    $scope.data.poi = {x: 0.5, y: 0.5};
+                    $scope.data.poi = { x: 0.5, y: 0.5 };
                     $rootScope.$broadcast('poiUpdate', $scope.data.poi);
                 });
             }, (response) =>
-                $q.reject(response),
+                    $q.reject(response),
             )
             .then(() => {
                 $scope.showAreaOfInterestView(false);
@@ -360,13 +360,13 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, deploy
     */
     $scope.rotateImage = (direction) => {
         switch (direction) {
-        case 'left':
-            $scope.controls.rotate = $scope.controls.rotate - 90;
-            break;
+            case 'left':
+                $scope.controls.rotate = $scope.controls.rotate - 90;
+                break;
 
-        case 'right':
-            $scope.controls.rotate = $scope.controls.rotate + 90;
-            break;
+            case 'right':
+                $scope.controls.rotate = $scope.controls.rotate + 90;
+                break;
         }
 
         return $scope.controls.isDirty = true;
@@ -380,13 +380,13 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, deploy
     */
     $scope.flipImage = (direction) => {
         switch (direction) {
-        case 'horizontal':
-            $scope.controls.fliph = $scope.controls.fliph + 180;
-            break;
+            case 'horizontal':
+                $scope.controls.fliph = $scope.controls.fliph + 180;
+                break;
 
-        case 'vertical':
-            $scope.controls.flipv = $scope.controls.flipv + 180;
-            break;
+            case 'vertical':
+                $scope.controls.flipv = $scope.controls.flipv + 180;
+                break;
         }
 
         return $scope.controls.isDirty = true;
@@ -412,14 +412,16 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, deploy
         }
 
         $scope.loaderForMediaEdit = true;
-        return api.save('media_editor', {item: $scope.data.item, edit: {
-            brightness: $scope.controls.brightness,
-            contrast: $scope.controls.contrast,
-            saturation: $scope.controls.saturation,
-            rotate: -$scope.controls.rotate,
-            flip: flip,
+        return api.save('media_editor', {
+            item: $scope.data.item, edit: {
+                brightness: $scope.controls.brightness,
+                contrast: $scope.controls.contrast,
+                saturation: $scope.controls.saturation,
+                rotate: -$scope.controls.rotate,
+                flip: flip,
 
-        }}).then((result) => {
+            }
+        }).then((result) => {
             $scope.data.item.renditions = result.renditions;
             const editableMetadata = extractEditableMetadata($scope.data.metadata);
 
@@ -442,23 +444,23 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, deploy
         let sizeW, sizeH;
 
         switch (ratio) {
-        case '16:9':
-            sizeW = originalImage.width - (originalImage.height * 16 / 9);
-            sizeH = originalImage.height - (originalImage.width * 9 / 16);
-            break;
+            case '16:9':
+                sizeW = originalImage.width - (originalImage.height * 16 / 9);
+                sizeH = originalImage.height - (originalImage.width * 9 / 16);
+                break;
 
-        case '4:3':
-            sizeW = originalImage.width - (originalImage.height * 4 / 3);
-            sizeH = originalImage.height - (originalImage.width * 3 / 4);
-            break;
+            case '4:3':
+                sizeW = originalImage.width - (originalImage.height * 4 / 3);
+                sizeH = originalImage.height - (originalImage.width * 3 / 4);
+                break;
 
-        case '3:2':
-            sizeW = originalImage.width - (originalImage.height * 3 / 2);
-            sizeH = originalImage.height - (originalImage.width * 2 / 3);
-            break;
+            case '3:2':
+                sizeW = originalImage.width - (originalImage.height * 3 / 2);
+                sizeH = originalImage.height - (originalImage.width * 2 / 3);
+                break;
 
-        default:
-            sizeW = 0; sizeH = 0;
+            default:
+                sizeW = 0; sizeH = 0;
         }
 
         $scope.areaOfInterestData.CropTop = sizeH > 0 ? Math.round(sizeH / 2) : 0;
@@ -494,7 +496,7 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, deploy
     * @public
     * @description Based on the new Area of Interest save the original image and crops.
     */
-    $scope.onChange = function(renditionName, cropData) {
+    $scope.onChange = function (renditionName, cropData) {
         $scope.$applyAsync(() => {
             if (angular.isDefined(renditionName)) {
                 $scope.data.cropData[renditionName] = angular.extend({}, cropData, sizes[renditionName]);
@@ -506,7 +508,7 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, deploy
 
     // init poi if not set
     if (!$scope.data.poi || !Object.keys($scope.data.poi).length) {
-        $scope.data.poi = {x: 0.5, y: 0.5};
+        $scope.data.poi = { x: 0.5, y: 0.5 };
         if (!config.features.validatePointOfInterestForImages) {
             $scope.saveCrops(); // save it as defaults
         }

@@ -29,6 +29,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
     $scope.thumbnail = {};
     $scope.cut = {};
     $scope.crop = {};
+    $scope.enableDropMenu = false;
     $scope.rotate = 0;
     $scope.scale = '';
     $scope.video = null;
@@ -45,7 +46,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
     $scope.videoReload = true;
 
     $scope.editVideo = {
-        isDirty: false,        
+        isDirty: false,
     };
     $scope.previewThumbnail = {
         isDirty: false,
@@ -75,7 +76,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
     ].concat(Object.keys(get(deployConfig.getSync('schema'), 'picture', {})));
     // initialize metadata from `item`
     $scope.data.metadata = angular.copy($scope.data.item);
-    let stopIntervalID, stopIntervalIDInit;
+    let intervalIDVideoEdit, intervalIDVideoInit;
 
     /**
      * @ngdoc method
@@ -89,20 +90,26 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         $scope.isProcessing = true;
         $scope.video.pause();
         $scope.isAoISelectionModeEnabled = true;
+        // validate value
         const cut = ($scope.cut.end - $scope.cut.start) === ($scope.video.duration || 0) ? {} : $scope.cut;
-        $scope.rotate = $scope.rotate % 360;
-        if ($scope.rotate || !_.isEmpty(cut) || !_.isEmpty($scope.crop) || !_.isEmpty($scope.quality)) {
+        const rotate = $scope.rotate % 360;
+        const scale = $scope.scale ? parseInt($scope.scale) : 0;
+
+        if (rotate || !_.isEmpty(cut) || !_.isEmpty($scope.crop) || scale) {
             let payload = {
                 edit: {
                     trim: cut,
                     crop: $scope.crop,
-                    rotate: $scope.rotate,
-                    scale: $scope.quality
+                    rotate: rotate,
+                    scale: scale
                 }
             }
             saveEditVideoProcess(payload);
         }
-
+        else {
+            $scope.isAoISelectionModeEnabled = false;
+            $scope.isProcessing = false;
+        }
     };
 
     /**
@@ -115,24 +122,22 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
     $scope.savePreviewThumbnail = function () {
         $scope.isProcessing = true;
         $scope.video.pause();
-        $scope.isAoISelectionModeEnabled = true;        
+        $scope.isAoISelectionModeEnabled = true;
         if (!_.isEmpty($scope.thumbnail)) {
 
             let payload = {
-                    capture: $scope.thumbnail
+                capture: $scope.thumbnail
             }
             savePreviewThumbnailProcess(payload)
             return
         }
         let FormUpload = new FormData($scope.uploadFileForm);
-        if (FormUpload.get("file"))
-        {
+        if (FormUpload.get("file")) {
             uploadPreviewThumbnailProcess(FormUpload)
         }
     }
 
-    function saveEditVideoProcess(payload)
-    {
+    function saveEditVideoProcess(payload) {
         api.save("video_edit", {
             ...payload,
             item: $scope.data.item
@@ -146,90 +151,89 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
             });
     }
 
-        // load form element
-    $scope.initUploadFileForm = function() {
+    // load form element
+    $scope.initUploadFileForm = function () {
         $scope.uploadFileForm = $element.find('#file-upload')[0]
     }
 
-    function checkVideoProcessing(response)
-    {
+    function checkVideoProcessing(response) {
         $scope.data.item = angular.extend($scope.data.item, response.item);
         $scope.videoReload = false;
-        stopIntervalID = $interval(async function () {
-            const item = await api.get(`/video_edit/${response._id}?tag=${getRandomSpan()}`);            
-            if (await item.project.processing.video === false) {
-                stopInterval(stopIntervalID);
+        intervalIDVideoEdit = $interval(async function () {
+            const item = await api.get(`/video_edit/${response._id}?tag=${getRandomSpan()}`);
+            $scope.project = item.project
+            if ($scope.project.processing.video === false) {
+                stopInterval(intervalIDVideoEdit);
                 if (jcrop_api) {
                     jcrop_api.destroy();
                     jcrop_api = null;
                 }
-                $scope.isAoISelectionModeEnabled = false;                
+                $scope.isAoISelectionModeEnabled = false;
                 $scope.data.isDirty = true;
                 api.get(`/video_edit/${response._id}?action=timeline&amount=40`);
                 $scope.$applyAsync(() => {
+                    delete item.project
                     $scope.cancelEditVideo();
                     $scope.data.item = angular.extend($scope.data.item, response.item);
                     $scope.isProcessing = false;
                     $scope.videoReload = true;
                 })
-            }            
+            }
         }, 3000);
     }
 
-    function uploadPreviewThumbnailProcess(FormData)
-    {
+    function uploadPreviewThumbnailProcess(FormData) {
         urls.resource('video_edit').then(url =>
             upload.start({
                 method: 'PUT',
                 url: `${url}/${$scope.data.item._id}`,
-                data: {file: FormData.get('file')},
+                data: { file: FormData.get('file') },
                 headers: {
                     'If-Match': $scope.data.item._etag
-                    },
-                })
+                },
+            })
                 .then(response => configThumbnailData(response.data))
                 .catch(err => {
                     notify.error(err.data._message);
                     $scope.isAoISelectionModeEnabled = false;
                     $scope.isProcessing = false;
-            })
+                })
         )
     }
 
-    function savePreviewThumbnailProcess(payload)
-    {
+    function savePreviewThumbnailProcess(payload) {
         api.save("video_edit", {
             ...payload,
             item: $scope.data.item
         }).then(response => checkThumbnailProcessing(response))
-        .catch(err => {
-            notify.error(err.data._message);
-            $scope.isAoISelectionModeEnabled = false;
-            $scope.isProcessing = false;
-        });
+            .catch(err => {
+                notify.error(err.data._message);
+                $scope.isAoISelectionModeEnabled = false;
+                $scope.isProcessing = false;
+            });
     }
-    
+
     function checkThumbnailProcessing(response) {
-        stopIntervalID = $interval(async function () {
+        intervalIDVideoEdit = $interval(async function () {
             const item = await api.get(`/video_edit/${response._id}?tag=${getRandomSpan()}`);
-            if (await item.project.processing.thumbnail_preview === false) {
-                stopInterval(stopIntervalID);
+            $scope.project = item.project
+            if ($scope.project.processing.thumbnail_preview === false) {
+                stopInterval(intervalIDVideoEdit);
                 configThumbnailData(response.item)
             }
         }, 3000);
     }
 
-    function configThumbnailData(item)
-    {
+    function configThumbnailData(item) {
         $scope.isAoISelectionModeEnabled = false;
-                $scope.previewThumbnail.isDirty = false;
-                $scope.data.isDirty = true;
-                $scope.data.item = angular.extend($scope.data.item, item);
-                $scope.$applyAsync(() => {
-                    // reset status preview thumbnail
-                    $scope.cancelPreviewThumbnail()
-                    $scope.isProcessing = false;
-                })
+        $scope.previewThumbnail.isDirty = false;
+        $scope.data.isDirty = true;
+        $scope.data.item = angular.extend($scope.data.item, item);
+        $scope.$applyAsync(() => {
+            // reset status preview thumbnail
+            $scope.cancelPreviewThumbnail()
+            $scope.isProcessing = false;
+        })
     }
 
     const stopInterval = (id) => {
@@ -237,7 +241,10 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         id = undefined;
     };
 
-    $scope.$on('$destroy', () => stopInterval(stopIntervalID))
+    $scope.$on('$destroy', () => {
+        stopInterval(intervalIDVideoInit)
+        stopInterval(intervalIDVideoEdit)
+    })
 
     /**
      * @ngdoc method
@@ -262,10 +269,11 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         $scope.crop = {};
         $scope.scale = '';
         $scope.rotate = 0;
-        let video = document.getElementById('video-preview');
+        let video = $element.find('#video-preview')[0];
         actRotate(video, $scope.rotate, 0);
-        document.getElementById('rotateVideo').disabled = false;
-        document.getElementById('toggleRatio').disabled = false;
+        $element.find('#rotateVideo')[0].disabled = false;
+        $element.find('#toggleRatio')[0].disabled = false;
+        $scope.enableDropMenu = false;
     };
 
     /**
@@ -276,7 +284,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
      */
     $scope.cancelPreviewThumbnail = function () {
         $scope.previewThumbnail.isDirty = false;
-        $scope.uploadFileForm.reset()        
+        $scope.uploadFileForm.reset()
         loadImage();
         //reset preview thumbnail data
         $scope.thumbnail = {};
@@ -304,8 +312,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
             var canvas = drawObjectToCanvas($scope.video, width, height, x, y);
             $scope.uploadFileForm.reset()
             actRotate(canvas, $scope.rotate, 0);
-            var nothumbnail = document.getElementById('no-thumbnail');
-            nothumbnail.style = "visibility: collapse";
+            $scope.showNoThumbnail = false;
             $scope.thumbnail = {
                 type: "capture",
                 minetype: "image/png",
@@ -360,7 +367,6 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
             $scope.video.pause();
         }
     };
-
     var jcrop_api;
 
     /**
@@ -371,7 +377,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
      */
     $scope.videoInit = function () {
         $scope.cut = {};
-        $scope.video = document.getElementById('video');
+        $scope.video = $element.find('#video')[0];
         loadImage();
         $scope.video.onloadeddata = function () {
             $scope.$applyAsync(() => {
@@ -389,21 +395,20 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
                 }
             }
             $scope.loadTimelineThumbnails();
-        };       
+        };
     };
 
-    this.$onInit = function() {
+    this.$onInit = function () {
         checkVideoInit()
     };
 
-    function checkVideoInit()
-    {
-        stopIntervalIDInit = $interval(async function () {
+    function checkVideoInit() {
+        intervalIDVideoInit = $interval(async function () {
             const item = await api.get(`/video_edit/${$scope.data.item._id}?tag=${getRandomSpan()}`);
-            if (await item.project.processing.video === false) {                
-                stopInterval(stopIntervalIDInit);
+            $scope.project = item.project
+            if (await $scope.project.processing.video === false) {
+                stopInterval(intervalIDVideoInit);
                 $scope.isAoISelectionModeEnabled = false;
-                $scope.editVideo.isDirty = false;
                 $scope.data.isDirty = true;
                 api.get(`/video_edit/${$scope.data.item._id}?action=timeline&amount=40`);
                 $scope.$applyAsync(() => {
@@ -413,16 +418,15 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
                     $scope.videoReload = true;
                 })
             }
-            else
-            {
+            else {
                 $scope.videoReload = false;
                 $scope.isProcessing = true;
                 $scope.video.pause();
-                $scope.isAoISelectionModeEnabled = true; 
-            }         
+                $scope.isAoISelectionModeEnabled = true;
+            }
         }, 3000);
     }
-    
+
     /**
      * @ngdoc method
      * @name ChangeVideoController#uploadChange
@@ -437,9 +441,8 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
             var fr = new FileReader();
             var img = document.createElement("img");
             img.onload = function () {
-                drawObjectToCanvas(img, $scope.video.offsetWidth, $scope.video.offsetHeight, 0, 0);
-                var nothumbnail = document.getElementById('no-thumbnail');
-                nothumbnail.style = "visibility: collapse";
+                drawObjectToCanvas(img, img.width, img.height, 0, 0);
+                $scope.showNoThumbnail = false;
                 $scope.previewThumbnail.isDirty = true;
             }
             fr.onload = function () {
@@ -477,7 +480,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
      */
     $scope.loadTimelineThumbnails = async function () {
         const res = await api.get(`/video_edit/${$scope.data.item._id}?tag=${getRandomSpan()}`)
-        if (res && res.project.processing.thumbnails_timeline === false) {
+        if (res && res.project.processing.thumbnails_timeline === false && res.project.processing.video === false) {
             $scope.$applyAsync(() => {
                 if (_.isEmpty(res.project.thumbnails.timeline)) {
                     api.get(`/video_edit/${$scope.data.item._id}?action=timeline&amount=40`);
@@ -491,8 +494,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
             });
         }
         else {
-            if (res.project.processing.video === false)
-            {
+            if (res.project.processing.video === false) {
                 $scope.$applyAsync(() => {
                     if ($scope.listFrames == null) {
                         $scope.reloadFrames();
@@ -517,6 +519,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         $scope.reloadFrames = reloadFrames;
     }
 
+    $scope.showNoThumbnail = true;
     /**
      * @ngdoc method
      * @name ChangeVideoController#reloadTimelineThumbnails
@@ -529,15 +532,12 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
             img.src = $scope.data.item.renditions.thumbnail.href + '?tag=' + getRandomSpan();
             img.onload = function () {
                 drawObjectToCanvas(img, img.width, img.height, 0, 0);
-                var nothumbnail = document.getElementById('no-thumbnail');
-                nothumbnail.style = "visibility: collapse";
+                $scope.showNoThumbnail = false;
             };
         } else {
-            var output = document.getElementById('preview-thumbnail');
+            var output = $element.find('#preview-thumbnail')[0];
             output.innerHTML = '';
-            var nothumbnail = document.getElementById('no-thumbnail');
-            nothumbnail.style = "visibility: visible";
-
+            $scope.showNoThumbnail = true;
         }
     }
 
@@ -562,6 +562,8 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
      * modified crop information, point of interest and metadata changes.
      */
     $scope.done = () => {
+        stopInterval(intervalIDVideoEdit)
+        stopInterval(intervalIDVideoInit)
         if ($scope.data.isDirty) {
             $scope.resolve({
                 item: $scope.data.item,
@@ -589,18 +591,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
      *
      */
     $scope.toggleMenuQuality = () => {
-        let elementIcon = document.getElementById('icon-change-quality');
-
-        if (elementIcon.classList.contains('icon-chevron-down-thin') === false) {
-            elementIcon.classList.remove('icon-chevron-up-thin');
-            elementIcon.classList.add('icon-chevron-down-thin');
-        } else {
-            elementIcon.classList.remove('icon-chevron-down-thin');
-            elementIcon.classList.add('icon-chevron-up-thin');
-        }
-        let theToggle = document.getElementById('toggleQuality');
-        showHideToggleMenu(theToggle, 'on');
-        return false;
+        $scope.enableQualityMenu = true;
     };
 
     /**
@@ -611,13 +602,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
      *
      */
     $scope.toggleMenuRatio = () => {
-        if ($scope.video.play) {
-            $scope.video.pause();
-        }
-        let theToggle = document.getElementById('toggleRatio');
-
-        showHideToggleMenu(theToggle, 'on');
-        return false;
+        $scope.enableDropMenu = !$scope.enableDropMenu;
     };
 
 
@@ -633,9 +618,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
             $('#video').Jcrop({
                 onSelect: showCoords,
                 onchange: showCoords,
-                //aspectRatio: null,
                 minSize: [30, 30],
-                //trueSize: [video.clientWidth, video.clientHeight],
                 addClass: 'jcrop-dark',
                 bgOpacity: .4
 
@@ -645,16 +628,14 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         }
         jcrop_api.release();
         jcrop_api.disable();
-
-        let theToggle = document.getElementById('toggleRatio');
-        showHideToggleMenu(theToggle, 'on');
+        $scope.enableDropMenu = false;
         let self = currentTarget;
-        let elementRatio = document.getElementsByClassName('ratio');
+        let elementRatio = $element.find('.ratio')[0];
         [].forEach.call(elementRatio, function (el) {
             el.classList.remove('active');
         });
         self.classList.add("active");
-        let elementVideo = document.getElementById('video');
+        let elementVideo = $scope.video;
         let ratio2;
         if (ratio === "1:1")
             ratio2 = 1 / 1;
@@ -696,7 +677,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         if (jcrop_api) {
             jcrop_api.enable();
         }
-        document.getElementById('rotateVideo').disabled = true;
+        $element.find('#rotateVideo')[0].disabled = true;
         $scope.editVideo.isDirty = true;
     }
 
@@ -708,7 +689,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
      *
      */
     $scope.rotateVideo = (direction) => {
-        let video = document.getElementById('video-preview');
+        let video = $element.find('#video-preview')[0];
         switch (direction) {
             case 'left':
                 let degree = $scope.rotate = $scope.rotate - 90;
@@ -720,7 +701,8 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
             default:
                 break;
         }
-        document.getElementById('toggleRatio').disabled = true;
+        $element.find('#toggleRatio')[0].disabled = true;
+        $scope.enableDropMenu = false;
         $scope.editVideo.isDirty = true;
     }
 
@@ -736,7 +718,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         elementVideo.style.transform = `rotate(${degree}deg) scale(${scale})`;
         elementVideo.style.transition = `transform ` + time + `s`;
 
-        let iconRotate = document.getElementsByClassName('icon-rotate-custom')[0];
+        let iconRotate = $element.find('.icon-rotate-custom')[0];
         if ((degree / 180) % 2 === 0)
             iconRotate.setAttribute("style", "color:#ffffff !important;");
         else
@@ -753,23 +735,6 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
     $scope.changeQualityVideo = quality => {
         $scope.scale = quality
         $scope.editVideo.isDirty = true;
-    }
-
-    function showHideToggleMenu(elem, className) {
-        // hasClass
-        function hasClass(elem, className) {
-            return new RegExp(' ' + className + ' ').test(' ' + elem.className + ' ');
-        }
-
-        let newClass = ' ' + elem.className.replace(/[\t\r\n]/g, " ") + ' ';
-        if (hasClass(elem, className)) {
-            while (newClass.indexOf(" " + className + " ") >= 0) {
-                newClass = newClass.replace(" " + className + " ", " ");
-            }
-            elem.className = newClass.replace(/^\s+|\s+$/g, '');
-        } else {
-            elem.className += ' ' + className;
-        }
     }
 
     function showCoords(c) {

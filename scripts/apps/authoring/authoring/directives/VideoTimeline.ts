@@ -45,15 +45,19 @@ export function VideoTimeline($rootScope, $interval, api) {
             let change_width = 0;
             let IntervalID;
 
-            scope.reloadFrames = function () {
+            scope.reloadFrames = function () {   
+                            
                 stopInterval(IntervalID);
-                inner_frames.innerHTML = ''; 
-                loadTimeLine(scope.listFrames);
-            }
+                inner_frames.innerHTML = '';
+                if (!isNaN(scope.video.duration))
+                {
+                    loadTimeLine(scope.listFrames);
+                }
+            }            
             scope.reloadThumbnails({ reload: scope.reloadFrames });
             var observer = new ResizeObserver(function (entries) {
                 entries.forEach(function (entry) {
-                    if (Math.abs(change_width - entry.contentRect.width) > 10 && scope.video.duration) {                     
+                    if (Math.abs(change_width - entry.contentRect.width) > 10 && !isNaN(scope.video.duration)) {
                         if (scope.listFrames == null) {
                             scope.onSizeChange();
                         }

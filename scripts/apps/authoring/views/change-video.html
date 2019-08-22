@@ -18,6 +18,7 @@
 </div>
 <div class="modal__body modal__body--no-padding">
     <div ng-class="{'video-loading': isProcessing}" ng-if="nav === 'video-edit'">
+        <h2 class="upload__info-heading" ng-if="project.processing.video" translate="">Video is editing, please wait ...</h2>
     </div>
     <div class="sd-column-box--2">
         <div class="sd-column-box__main-column sd-column-box__main-column--photo-preview">
@@ -27,6 +28,9 @@
             </a>
             <div class="sd-photo-preview" ng-class="{'sd-photo-preview--view-video' : nav === 'view'}"
                 ng-show="nav === 'view'">
+                <div ng-class="{'video-loading': isProcessing}" ng-if="nav === 'view'">
+                    <h2 class="upload__info-heading" ng-if="project.processing.video" translate="">Video is editing, please wait ...</h2>
+                </div>
                 <div class="sd-photo-preview__video">
                     <div class="sd-photo-preview__video-inner">
                         <div class="sd-photo-preview__video-container">
@@ -58,7 +62,7 @@
                                 ng-click="toggleMenuRatio()" ng-disabled="isAoISelectionModeEnabled" id="toggleRatio">
                                 <i class="icon-crop"></i>
                             </button>
-                            <div id="menuRatio">
+                            <div id="menuRatio" ng-if="enableDropMenu">
                                 <ul>
                                     <li>Crop</li>
                                     <hr />
@@ -81,14 +85,16 @@
                                     <button class="dropdown__toggle dark-ui" dropdown__toggle>
                                         <span>{{ scale ? scale + 'p' : 'Same'}}</span>
                                     </button>
-                                    <ul class="dropdown__menu">
-                                        <li class="quality" ng-click="changeQualityVideo($event.target.value)">
-                                            <button value="" ng-class="{'active': !scale}">Same</button>
-                                        </li>
-                                        <li class="quality" ng-repeat="(resolution, value) in qualityVideo" ng-show="value" ng-click="changeQualityVideo($event.target.value)">
-                                            <button value="{{resolution}}" ng-class="{'active': scale === resolution}">{{resolution}}p</button>
-                                        </li>
-                                    </ul>
+                                    <div id="menuQuality">
+                                        <ul>
+                                            <li class="quality" ng-click="changeQualityVideo($event.target.value)">
+                                                <span value="">Same</span>
+                                            </li>
+                                            <li class="quality" ng-repeat="(resolution, value) in qualityVideo" ng-show="value" ng-click="changeQualityVideo($event.target.value)">
+                                                <span value="{{resolution}}">{{resolution}}p</span>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -126,7 +132,7 @@
                         </div>
                         <div>
                             <div id="preview-thumbnail" class="thumbnail-preview sd-photo-preview__video-container" ng-model='canvas'></div>
-                            <div class="no-thumnail" id="no-thumbnail">
+                            <div class="no-thumnail" ng-if="showNoThumbnail">
                                 <div class="upload__info-icon"></div>
                                 <h2 class="upload__info-heading" translate="">Capture or upload video thumbnail</h2>
                             </div>
