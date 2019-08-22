@@ -1084,7 +1084,7 @@ function MetaLocatorsDirective(places) {
 }
 
 MetadataService.$inject = ['api', 'subscribersService', 'config', 'vocabularies', '$rootScope', 'session', '$filter'];
-function MetadataService(api, subscribersService, config, vocabularies, $rootScope, session, $filter) {
+export function MetadataService(api, subscribersService, config, vocabularies, $rootScope, session, $filter) {
     var service = {
         values: {},
         helper_text: {},
