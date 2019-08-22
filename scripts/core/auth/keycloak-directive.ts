@@ -1,5 +1,9 @@
 import Keycloak from 'keycloak-js'
 
+/*
+ * Keycloak modal is watching session identity, redirect to login screen
+ * and call logout when session is cleared
+ */
 angular.module('superdesk.core.auth.keycloak', []).directive('sdKeycloakModal', [
     'session',
     'auth',
@@ -24,7 +28,6 @@ angular.module('superdesk.core.auth.keycloak', []).directive('sdKeycloakModal', 
                             onLoad: 'login-required',
                         }).success(() => {
                             auth.loginOIDC(scope.keycloak.token);
-                            session.keycloak = scope.keycloak;
                         })
                     })
                 }

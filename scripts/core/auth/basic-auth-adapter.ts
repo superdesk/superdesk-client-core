@@ -20,12 +20,6 @@ angular.module('superdesk.core.auth.basic', [])
             return response.data;
         };
 
-        this.setOIDCtoken = (token) => {
-            token = formatTokenBearer(token);
-            $http.defaults.headers.common.Authorization = token;
-            return token;
-        };
-
         /**
          * @ngdoc method
          * @name authAdapter#authenticate
@@ -41,13 +35,12 @@ angular.module('superdesk.core.auth.basic', [])
                 /**
          * @ngdoc method
          * @name authAdapter#authenticate
-         * @param {string} username User's login
-         * @param {string} password Users's password
+         * @param {string} authorization_code Authorization code return from keycloak
          * @returns {Promise} If successful, session data is returned, including session token
-         * @description authenticate user using database auth
+         * @description authenticate user using oidc auth
          */
         this.authenticateOIDC = (authorization_code) => urls.resource('oidcauth')
-            .then((url) => $http.post(url, {}))
+            .then((url) => $http.post(url, {}, {headers: {Authorization: formatTokenBearer(authorization_code)}}))
             .then(this.setToken);
 
         /**
