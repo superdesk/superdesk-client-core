@@ -152,11 +152,6 @@ export function ItemCarouselDirective(notify) {
                 carousel.trigger('to.owl.carousel', [index]);
             };
 
-            elem.on('dragover', (event) => {
-                event.preventDefault();
-                event.stopPropagation();
-            });
-
             function canAddImage(image: IArticle): boolean {
                 const mediaItemsForCurrentField = Object.keys(scope.item.associations || {})
                     .filter((key) => key.startsWith(scope.field._id) && scope.item.associations[key] != null)
@@ -185,30 +180,40 @@ export function ItemCarouselDirective(notify) {
                 return true;
             }
 
-            elem.on('drop dragdrop', (event) => {
-                const type = getSuperdeskType(event);
+            if (!elem.hasClass('no-drop-zone') && scope.editable) {
+                elem.on('dragover', (event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                });
 
-                event.preventDefault();
-                event.stopPropagation();
-
-                if (ALLOWED_TYPES.includes(type) || type === 'Files') {
-                    const item = angular.fromJson(event.originalEvent.dataTransfer.getData(type));
-
-                    if (canAddImage(item)) {
-                        scope.currentIndex = 0;
-                        controller.initializeUploadOnDrop(scope, event);
+                elem.on('drop dragdrop', (event) => {
+                    if (!scope.editable) {
+                        return;
                     }
-                } else {
-                    const allowedTypeNames = [
-                        (scope.allowPicture === true ? gettext('image') : ''),
-                        (scope.allowVideo === true ? gettext('video') : ''),
-                        (scope.allowAudio === true ? gettext('audio') : ''),
-                    ].filter(Boolean).join(', ');
-                    const message = gettext('Only the following content item types are allowed: ');
+                    const type = getSuperdeskType(event);
 
-                    notify.error(message + allowedTypeNames);
-                }
-            });
+                    event.preventDefault();
+                    event.stopPropagation();
+
+                    if (ALLOWED_TYPES.includes(type) || type === 'Files') {
+                        const item = angular.fromJson(event.originalEvent.dataTransfer.getData(type));
+
+                        if (canAddImage(item)) {
+                            scope.currentIndex = 0;
+                            controller.initializeUploadOnDrop(scope, event);
+                        }
+                    } else {
+                        const allowedTypeNames = [
+                            (scope.allowPicture === true ? gettext('image') : ''),
+                            (scope.allowVideo === true ? gettext('video') : ''),
+                            (scope.allowAudio === true ? gettext('audio') : ''),
+                        ].filter(Boolean).join(', ');
+                        const message = gettext('Only the following content item types are allowed: ');
+
+                        notify.error(message + allowedTypeNames);
+                    }
+                });
+            }
 
             /**
              * @ngdoc method
