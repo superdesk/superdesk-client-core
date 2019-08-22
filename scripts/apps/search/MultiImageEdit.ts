@@ -151,6 +151,8 @@ export function MultiImageEditController(
             usageterms: compare('usageterms'),
             copyrightnotice: compare('copyrightnotice'),
             extra: compare('extra'),
+            language: compare('language'),
+            creditline: compare('creditline'),
         };
     }
 

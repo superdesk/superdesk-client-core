@@ -28,6 +28,7 @@
   ],
   "main": "scripts/index.js",
   "dependencies": {
+    "@metadata/exif": "superdesk/exif#431066d",
     "@types/angular": "1.6.50",
     "@types/draft-js": "0.10.29",
     "@types/enzyme": "3.9.1",
@@ -59,7 +60,6 @@
     "docs-soap": "tomaskikutis/docs-soap#convert-tables",
     "draft-js": "tomaskikutis/draft-js#add-subscript-superscript",
     "draft-js-export-html": "1.3.3",
-    "exif-js": "2.3.0",
     "file-loader": "1.1.11",
     "git-rev-sync": "1.10.0",
     "gridster": "0.5.6",
