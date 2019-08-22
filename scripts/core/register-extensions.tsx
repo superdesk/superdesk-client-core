@@ -24,7 +24,7 @@ export function registerExtensions(
                 lock,
                 session,
                 authoringWorkspace,
-                config
+                config,
             );
 
             return extensionObject.extension.activate(superdeskApi).then((activationResult) => {
