@@ -31,7 +31,6 @@ module.exports = function(grunt) {
         },
         enabledExtensions: {
             planning: 1,
-            annotationsLibrary: 1,
             // extensionFolderName: 1,
         },
     };
