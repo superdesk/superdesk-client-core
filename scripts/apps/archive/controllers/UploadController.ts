@@ -25,6 +25,12 @@ function getExifData(file: File): Promise<IPTCMetadata> {
 }
 
 function mapIPTCExtensions(metadata: IPTCMetadata, user: IUser): Promise<Partial<IArticle>> {
+    if (metadata == null) {
+        return Promise.resolve({
+            byline: user.byline,
+        });
+    }
+
     const item = {
         byline: metadata['By-line'] || user.byline,
         headline: metadata.Headline,
