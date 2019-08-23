@@ -28,8 +28,8 @@ export class ContactsService {
         this.$location = $location;
         this.sort = sort;
         this.sortOptions = [
-            {field: 'last_name', label: gettext('Person (Last Name)'), defaultDir: 'asc'},
-            {field: 'organisation', label: gettext('Organisation'), defaultDir: 'asc'},
+            {field: 'last_name.keyword', label: gettext('Person (Last Name)'), defaultDir: 'asc'},
+            {field: 'organisation.keyword', label: gettext('Organisation'), defaultDir: 'asc'},
             {field: '_created', label: gettext('Created')},
             {field: '_updated', label: gettext('Updated')},
         ];

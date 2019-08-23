@@ -8,7 +8,7 @@ class LinkFunction extends BaseSortBar {
         this.contacts = contacts;
         this.scope.canSort = super.canSort.bind(this);
         this.scope.sortOptions = contacts.sortOptions;
-        sort.setSort('last_name', contacts.sortOptions);
+        sort.setSort(this.scope.sortOptions[0].field, contacts.sortOptions);
         super.getActive();
     }
 }
