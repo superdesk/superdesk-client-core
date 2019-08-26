@@ -40,7 +40,7 @@ declare module 'superdesk-api' {
         label: string;
         onTrigger(): void;
     }
-    
+
     export interface IArticleActionBulk {
         priority?: IDisplayPriority;
         label: string;
@@ -355,8 +355,8 @@ declare module 'superdesk-api' {
         created_by: string;
         updated_by: string;
     }
-    
-    
+
+
 
     // PAGE
 
@@ -385,7 +385,7 @@ declare module 'superdesk-api' {
         title: string;
         href: string;
     }
-    
+
     // Eve properties
     export interface IRestApiResponse<T extends IBaseRestApiResponse> {
         _items: Array<T>;
@@ -407,7 +407,7 @@ declare module 'superdesk-api' {
             size?: number;
         };
         sort: Array<{[field: string]: 'asc' | 'desc'}>;
-    
+
         // can use deep references like {'a.b.c': []}
         filterValues: {[fieldName: string]: Array<string>};
     }
@@ -419,7 +419,7 @@ declare module 'superdesk-api' {
     }
 
     export type IArticleQuery = Omit<IQueryElasticParameters, 'endpoint'>;
-    
+
     interface IArticleQueryResult extends IRestApiResponse<IArticle> {
         _aggregations: {
             category?: IElasticSearchAggregationResult;
@@ -433,7 +433,7 @@ declare module 'superdesk-api' {
             urgency?: IElasticSearchAggregationResult;
         };
     }
-    
+
 
 
     // GENERIC FORM
@@ -441,8 +441,9 @@ declare module 'superdesk-api' {
     export interface IPropsGenericForm<T extends IBaseRestApiResponse> {
         formConfig: IFormGroup;
         defaultSortOption: ISortOption;
+        defaultFilters?: ICrudManagerFilters;
         renderRow(key: string, item: T, page: IGenericListPageComponent<T>): JSX.Element;
-    
+
         // Allows creating an item with required fields which aren't editable from the GUI
         newItemTemplate?: {[key: string]: any};
 
@@ -467,24 +468,24 @@ declare module 'superdesk-api' {
 
     export interface IFormField { // don't forget to update runtime type checks
         type: FormFieldType;
-    
+
         required?: boolean;
-    
+
         // custom components for some fields might not require a label or want include a custom one
         label?: string;
-    
+
         field: string;
-    
+
         // can be used to pass read-only fields or display specific flags
         // component theme, variant or initial state could be set using this
         component_parameters?: {[key: string]: any};
     }
-    
+
     export interface IFormGroupCollapsible { // don't forget to update runtime type checks
         label: string;
         openByDefault: boolean;
     }
-    
+
     export interface IFormGroup { // don't forget to update runtime type checks
         direction: 'vertical' | 'horizontal';
         type: 'inline' | IFormGroupCollapsible;
@@ -502,13 +503,13 @@ declare module 'superdesk-api' {
         field: string;
         direction: 'ascending' | 'descending';
     }
-    
+
 
     export interface ICrudManagerState<Entity extends IBaseRestApiResponse> extends IRestApiResponse<Entity> {
         activeFilters: ICrudManagerFilters;
         activeSortOption?: ISortOption;
     }
-    
+
     export interface ICrudManagerMethods<Entity extends IBaseRestApiResponse> {
         read(
             page: number,
@@ -524,13 +525,13 @@ declare module 'superdesk-api' {
         removeFilter(fieldName: string): Promise<IRestApiResponse<Entity>>;
         goToPage(nextPage: number): Promise<IRestApiResponse<Entity>>;
     }
-    
+
 
     export interface ICrudManager<Entity extends IBaseRestApiResponse> extends ICrudManagerState<Entity>, ICrudManagerMethods<Entity> {
         // allow exposing it as one interface for consumer components
     }
 
-    
+
 
     // REACT COMPONENTS
 
@@ -546,6 +547,7 @@ declare module 'superdesk-api' {
         ellipsisAndGrow?: boolean;
         noBorder?: boolean;
         justifyContent?: string;
+        bold?: boolean;
     }
 
     export interface IGridComponentProps {
@@ -667,7 +669,7 @@ declare module 'superdesk-api' {
         delete<T extends IBaseRestApiResponse>(endpoint, item: T): Promise<void>;
     }
 
-    
+
 
     // EVENTS
 
@@ -708,6 +710,9 @@ declare module 'superdesk-api' {
         state: {
             articleInEditMode?: IArticle['_id'];
         };
+        instance: {
+            config: ISuperdeskGlobalConfig
+        };
         ui: {
             article: {
                 view(id: string): void;
@@ -742,7 +747,7 @@ declare module 'superdesk-api' {
         },
         components: {
             UserHtmlSingleLine: React.ComponentType<{html: string}>;
-            getGenericListPageComponent<T extends IBaseRestApiResponse>(resource: string): React.ComponentType<IPropsGenericForm<T>>;                        
+            getGenericListPageComponent<T extends IBaseRestApiResponse>(resource: string): React.ComponentType<IPropsGenericForm<T>>;
             connectCrudManager<Props, PropsToConnect, Entity extends IBaseRestApiResponse>(
                 WrappedComponent: React.ComponentType<Props & PropsToConnect>,
                 name: string,
@@ -784,6 +789,7 @@ declare module 'superdesk-api' {
                     readonly [key: string]: any;
                 },
                 formFieldConfig: any,
+                options: { showAsPlainText?: boolean } = {}
             ): JSX.Element;
         };
         localization: {

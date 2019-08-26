@@ -129,6 +129,7 @@ export function getSuperdeskApiImplementation(
     lock,
     session,
     authoringWorkspace: AuthoringWorkspaceService,
+    config,
     metadata: MetadataService,
 ): ISuperdesk {
     return {
@@ -197,6 +198,9 @@ export function getSuperdeskApiImplementation(
             },
         },
         state: applicationState,
+        instance: {
+            config,
+        },
         ui: {
             article: {
                 view: (id: string) => {
