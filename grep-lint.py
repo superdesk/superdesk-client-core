@@ -6,7 +6,7 @@ def get_command(branch=None):
 
     if branch is not None:
         arguments_list.append(branch)
-    
+
     arguments_list.append("--")
     arguments_list.append("scripts")
 
@@ -56,20 +56,20 @@ for rule in rules_to_check:
     rule_regex = rule['perl_regex']
     rule_name = rule['name']
 
-    # will not error if the amount of violations is less than on master
+    # will not error if the amount of violations is less than on develop
     rule_tolerance = rule['tolerance']
 
     try:
-        violations_count_master = len(
-            subprocess.check_output(get_command("master")).decode('utf-8').splitlines()
+        violations_count_develop = len(
+            subprocess.check_output(get_command("develop")).decode('utf-8').splitlines()
         )
     except subprocess.CalledProcessError as e:
         # ignore exception if grep simply didn't find matches
         if len(e.output) != 0:
             raise e
         else:
-            violations_count_master = 0
-    
+            violations_count_develop = 0
+
 
     try:
         violations = subprocess.check_output(get_command(), stderr=subprocess.STDOUT).decode('utf-8')
@@ -82,13 +82,13 @@ for rule in rules_to_check:
 
     violations_count = len(violations.splitlines())
 
-    if (violations_count > 0 and rule_tolerance is False) or violations_count > violations_count_master:
+    if (violations_count > 0 and rule_tolerance is False) or violations_count > violations_count_develop:
         any_rule_violated = True
         print('\n\n' + violations + '\n\n')
         print("GREP-LINT RULE VIOLATED! '" + rule_name + "'")
         print("Rule regex: `" + rule_regex + "`")
 
         if rule_tolerance is True:
-            print('Tolerance is enabled, but ' + str(violations_count) + ' violations were found in the working while there only are ' + str(violations_count_master) + ' violations on master. See grep-lint.py for details.')
+            print('Tolerance is enabled, but ' + str(violations_count) + ' violations were found in the working while there only are ' + str(violations_count_develop) + ' violations on develop. See grep-lint.py for details.')
 
 sys.exit(1 if any_rule_violated else 0)
