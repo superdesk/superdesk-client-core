@@ -199,7 +199,7 @@ export function getSuperdeskApiImplementation(
         },
         state: applicationState,
         instance: {
-            config: JSON.parse(JSON.stringify(config || {})), // deep clone of config object
+            config,
         },
         ui: {
             article: {

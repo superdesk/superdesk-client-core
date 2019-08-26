@@ -1,15 +1,9 @@
 import React from 'react';
+import {stripHtmlTags} from 'core/utils';
 
 interface IProps {
     html: string;
     showAsPlainText?: boolean; // if true, html is shown as plain text (no format)
-}
-
-function stripHtmlTags(html) {
-    const el = document.createElement('div');
-
-    el.innerHTML = html;
-    return el.innerText;
 }
 
 // is imported from fidelity repo

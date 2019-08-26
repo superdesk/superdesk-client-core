@@ -184,10 +184,9 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
 
                 if (trimmedValue.length > 0) {
                     accumulator[key] = trimmedValue;
-                    return accumulator;
-                } else {
-                    return accumulator;
                 }
+
+                return accumulator;
             } else {
                 if (value !== undefined) {
                     accumulator[key] = value;
