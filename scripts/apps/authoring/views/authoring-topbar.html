@@ -234,8 +234,8 @@
 
                 <ul ng-if="extraActionsFromExtensions">
                     <!-- Extra actions from extensions without a group id -->
-                    <li ng-repeat="action in extraActionsFromExtensions">
-                        <button ng-if="!action.groupId" ng-click="triggerActionFromExtension(action)">{{action.label}}</button>
+                    <li ng-repeat="action in extraActionsFromExtensions" ng-if="!action.groupId">
+                        <button  ng-click="triggerActionFromExtension(action)">{{action.label}}</button>
                     </li>
                 </ul>
 

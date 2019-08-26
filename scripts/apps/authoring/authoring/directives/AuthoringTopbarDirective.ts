@@ -1,6 +1,5 @@
 import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
 import {getSpellchecker} from 'core/editor3/components/spellchecker/default-spellcheckers';
-import {getMarkForUserModal} from '../../../../extensions/markForUser/src/get-mark-for-user-modal';
 import {extensions} from 'core/extension-imports.generated';
 import {showModal} from 'core/services/modalService';
 import {IArticleAction} from 'superdesk-api';
