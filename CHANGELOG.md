@@ -1,6 +1,6 @@
 # Superdesk Client Changelog
 
-## [1.31.0] TBD
+## [1.31.0] 2019-08-26
 
 ### Added
 
