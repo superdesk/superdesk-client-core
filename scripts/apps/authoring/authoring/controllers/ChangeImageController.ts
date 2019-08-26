@@ -138,7 +138,6 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, deploy
             if (!$scope.data.poi || !_.isFinite($scope.data.poi.x) || !_.isFinite($scope.data.poi.y)) {
                 throw gettext('Point of interest is not defined.');
             }
-
             const originalPoi = {
                 x: originalImage.width * $scope.data.poi.x,
                 y: originalImage.height * $scope.data.poi.y,

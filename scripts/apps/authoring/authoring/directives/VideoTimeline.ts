@@ -92,7 +92,6 @@ export function VideoTimeline($rootScope, $interval, api) {
                 if (isEmpty(cut)) {
                     return;
                 }
-
                 var position = cut.start / scope.video.duration;
                 TweenMax.set(cbwrapper, {
                     left: (position * 100) + '%'

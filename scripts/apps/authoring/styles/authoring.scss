@@ -2066,7 +2066,7 @@ md-controlbars .control-bar {
   opacity: 1 !important;
   visibility: visible !important;
   z-index: 999;
-  top: 336px;
+  margin-top: 0;
   position: fixed;
   // margin-left: 23px;
   width: 6%;
@@ -2082,10 +2082,6 @@ md-controlbars .control-bar {
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.4s;
-}
-
-#menuQuality:{
-
 }
 
 #menuRatio ul,

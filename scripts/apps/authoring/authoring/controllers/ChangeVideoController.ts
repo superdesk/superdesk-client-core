@@ -58,7 +58,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         360: false,
         240: false,
     };
-
+    $scope.enableQualityMenu = false;
     $scope.data.isDirty = false;
     const EDITABLE_METADATA = [
         'subject', // required for "usage terms" and other fields based on vocabularies
@@ -264,7 +264,6 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
             jcrop_api.release();
             jcrop_api.disable();
         }
-
         //reset edit video data
         $scope.crop = {};
         $scope.scale = '';
@@ -273,7 +272,6 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         actRotate(video, $scope.rotate, 0);
         $element.find('#rotateVideo')[0].disabled = false;
         $element.find('#toggleRatio')[0].disabled = false;
-        $scope.enableDropMenu = false;
     };
 
     /**
@@ -402,6 +400,14 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         checkVideoInit()
     };
 
+    document.onmouseup = function()
+    {
+        $scope.$applyAsync(() => {
+            $scope.enableDropMenu = false;
+            $scope.enableQualityMenu = false;        
+        })
+    }
+
     function checkVideoInit() {
         intervalIDVideoInit = $interval(async function () {
             const item = await api.get(`/video_edit/${$scope.data.item._id}?tag=${getRandomSpan()}`);
@@ -471,7 +477,6 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         var random = Math.floor(1000 + Math.random() * 9000);
         return random
     }
-
     /**
      * @ngdoc method
      * @name ChangeVideoController#loadTimelineThumbnails
@@ -507,7 +512,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         }
     }
 
-    $scope
+    
 
     /**
      * @ngdoc method
@@ -590,8 +595,10 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
      * @description The menu select to change quality of video
      *
      */
-    $scope.toggleMenuQuality = () => {
-        $scope.enableQualityMenu = true;
+    $scope.toggleMenuQuality = () => { 
+        $scope.$applyAsync(() => {       
+            $scope.enableQualityMenu = true;
+        })
     };
 
     /**
@@ -602,7 +609,9 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
      *
      */
     $scope.toggleMenuRatio = () => {
-        $scope.enableDropMenu = !$scope.enableDropMenu;
+        $scope.$applyAsync(() => {
+            $scope.enableDropMenu = true;
+        })
     };
 
 
@@ -627,8 +636,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
             });
         }
         jcrop_api.release();
-        jcrop_api.disable();
-        $scope.enableDropMenu = false;
+        jcrop_api.disable();        
         let self = currentTarget;
         let elementRatio = $element.find('.ratio')[0];
         [].forEach.call(elementRatio, function (el) {
@@ -659,7 +667,6 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
                     jcrop_api.setOptions({ setSelect: [0, 0, xClassic, y] });
                 else
                     jcrop_api.setOptions({ setSelect: [0, 0, x, yClassic] });
-
                 break;
             case "16:9":
                 jcrop_api.release();
@@ -702,7 +709,6 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
                 break;
         }
         $element.find('#toggleRatio')[0].disabled = true;
-        $scope.enableDropMenu = false;
         $scope.editVideo.isDirty = true;
     }
 
@@ -732,8 +738,8 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
      * @description change quality the video
      *
      */
-    $scope.changeQualityVideo = quality => {
-        $scope.scale = quality
+    $scope.changeQualityVideo = elememt => {
+        $scope.scale =  elememt.getAttribute("value");
         $scope.editVideo.isDirty = true;
     }
 
@@ -768,7 +774,6 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
             notify.error(e);
             return false;
         }
-
         return true;
     };
 

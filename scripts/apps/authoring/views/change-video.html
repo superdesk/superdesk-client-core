@@ -82,19 +82,21 @@
                             <div>
                                 <span class="sd-text__strong-s">Quality:</span>
                                 <div class="dropdown dropdown--align-right" dropdown>
-                                    <button class="dropdown__toggle dark-ui" dropdown__toggle>
+                                    <button class="dropdown__toggle dark-ui" dropdown__toggle ng-click>
                                         <span>{{ scale ? scale + 'p' : 'Same'}}</span>
                                     </button>
-                                    <div id="menuQuality">
+                                    <div id="menuQuality" ng-if="enableQualityMenu === true">
                                         <ul>
-                                            <li class="quality" ng-click="changeQualityVideo($event.target.value)">
-                                                <span value="">Same</span>
+                                            <li>Quality</li>
+                                            <hr/>
+                                            <li class="quality" ng-repeat="(resolution, value) in qualityVideo" ng-if="value">
+                                                <span value="{{resolution}}" ng-click="changeQualityVideo($event.target)">{{resolution}}p</span>
                                             </li>
-                                            <li class="quality" ng-repeat="(resolution, value) in qualityVideo" ng-show="value" ng-click="changeQualityVideo($event.target.value)">
-                                                <span value="{{resolution}}">{{resolution}}p</span>
+                                            <li class="quality">
+                                                <span value="" ng-click="changeQualityVideo($event.target)">Same</span>
                                             </li>
                                         </ul>
-                                    </div>
+                                    </div>                                    
                                 </div>
                             </div>
                         </div>
