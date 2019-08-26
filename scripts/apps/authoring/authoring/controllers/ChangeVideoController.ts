@@ -599,6 +599,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         $scope.$applyAsync(() => {       
             $scope.enableQualityMenu = true;
         })
+        
     };
 
     /**
