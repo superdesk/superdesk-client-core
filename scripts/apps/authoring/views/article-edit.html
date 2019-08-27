@@ -663,11 +663,18 @@
      data-required="schema[field._id].required">
     <label class="field__label" translate>{{field.display_name}}</label>
 
-    <div sd-related_items
+    <div ng-if="_editable"
+        sd-related_items
         data-item="item"
         data-field="field"
         data-editable="_editable"
         data-onchange="autosave(item, 0)">
+    </div>
+
+    <div ng-if="!_editable"
+        sd-related-items-preview
+        data-item="item"
+        data-field="field">
     </div>
 
     <div class="sd-editor__info-text" ng-if="helper_text[field._id]">{{field.helper_text}}</div>
