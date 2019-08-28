@@ -449,7 +449,7 @@ export class Editor3Component extends React.Component<IProps> {
             'unstyled__block--invisibles': this.props.invisibles,
         });
 
-        const mediaEnabled = this.props.editorFormat.indexOf('media') !== -1;
+        const mediaEnabled = this.props.editorFormat.includes('media');
 
         const blockRenderMap = DefaultDraftBlockRenderMap.merge(Map(
             mediaEnabled ? {
