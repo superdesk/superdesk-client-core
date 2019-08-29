@@ -390,6 +390,15 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _, pref
     }
 
     /**
+     * Return list of ignored words
+     *
+     * @return {Array} list of words
+     */
+    this.getIgnoredWords = function getIgnoredWords(): Array<string> {
+        return Object.keys(getItemIgnored());
+    };
+
+    /**
      * Test if given word is in ingored
      *
      * @param {String} word
