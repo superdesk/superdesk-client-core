@@ -3,7 +3,7 @@
     ng-href="#{{ :: item.href }}"
     ng-click="hideMonitoring(currentRoute.href === item.href, $event)"
     sd-hotkey="{{ item.shortcut }}" sd-hotkey-options="{global: true}"
-    ng-class="{'sd-sidebar-menu__btn--active': currentRoute.href === item.href}">
+    ng-class="{'sd-sidebar-menu__btn--active': currentRoute.href === item.href || (item.href === '/publisher/dashboard' && currentRoute.href === '/publisher/output-control')}">
     <i class="sd-sidebar-menu__main-icon big-icon--{{ item.icon }}"></i>
     <i class="sd-sidebar-menu__helper-icon big-icon--chevron-left"></i>
 </a>
