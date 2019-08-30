@@ -77,7 +77,7 @@
         ng-change="onMetadataChange('headline')"
         placeholder="{{:: 'Add title' | translate}}"
         ng-if="related && showTitle"
-        class="sd-media-carousel__media-title">
+        class="contenteditable-input sd-media-carousel__media-title">
     </textarea>
     <textarea
         sd-auto-height
@@ -87,6 +87,6 @@
         ng-change="onMetadataChange('description_text')"
         placeholder="{{:: 'Add caption' | translate}}"
         ng-if="related"
-        class="sd-media-carousel__media-caption">
+        class="contenteditable-input sd-media-carousel__media-caption">
     </textarea>
 </div>
