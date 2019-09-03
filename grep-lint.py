@@ -10,6 +10,8 @@ def get_command(branch=None):
     arguments_list.append("--")
     arguments_list.append("scripts")
 
+    print(arguments_list)
+
     return arguments_list
 
 rules_to_check = [
