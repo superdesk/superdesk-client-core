@@ -61,7 +61,7 @@ for rule in rules_to_check:
 
     try:
         violations_count_develop = len(
-            subprocess.check_output(get_command("develop")).decode('utf-8').splitlines()
+            subprocess.check_output(get_command("origin/develop")).decode('utf-8').splitlines()
         )
     except subprocess.CalledProcessError as e:
         # ignore exception if grep simply didn't find matches
