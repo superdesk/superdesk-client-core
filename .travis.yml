@@ -15,6 +15,7 @@ cache:
 
 script:
     - git fetch origin
+    - git branch
     - git branch develop origin/develop
     - npm run test
     - npm run lint
