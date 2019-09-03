@@ -4,7 +4,7 @@ export function ItemRendition() {
         scope: {
             item: '=',
             rendition: '@',
-            draggable: '=?',
+            draggable: '<?',
         },
         link: function(scope, elem, attrs) {
             scope.$watch('item.renditions[rendition].href', (href) => {

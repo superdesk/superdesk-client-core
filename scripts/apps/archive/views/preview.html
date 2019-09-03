@@ -99,14 +99,21 @@
             <div ng-if="selected.preview.type === 'picture' || selected.preview.type === 'graphic'" class="picture-preview">
                 <div>
                     <span translate>Original</span>
-                    <div sd-item-rendition data-item="selected.preview" data-rendition="viewImage" data-draggable="false" ng-click="preview(item);"></div>
+                    <div sd-item-rendition
+                        data-item="selected.preview"
+                        data-rendition="viewImage"
+                        data-draggable="false"
+                        ng-click="preview(item)"></div>
                     <p class="nav-space description-text" ng-if="selected.preview.headline !== selected.preview.description_text &&
                       selected.preview.description_text">{{selected.preview.description_text}}</p>
                 </div>
             </div>
 
             <div ng-if="selected.preview.associations.featuremedia">
-                <div sd-item-rendition data-item="selected.preview.associations.featuremedia" data-rendition="viewImage"></div>
+                <div sd-item-rendition
+                    data-item="selected.preview.associations.featuremedia"
+                    data-draggable="false"
+                    data-rendition="viewImage"></div>
                 <p class="nav-space description-text">{{selected.preview.associations.featuremedia.description_text}}</p>
             </div>
 
