@@ -14,9 +14,7 @@ cache:
         - $HOME/.cache/yarn
 
 script:
-    - git fetch origin
-    - git branch
-    - git branch develop origin/develop
+    - git pull origin develop:develop
     - npm run test
     - npm run lint
     - npm run build
