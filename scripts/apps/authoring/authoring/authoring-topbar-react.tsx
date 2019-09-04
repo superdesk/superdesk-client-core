@@ -23,16 +23,28 @@ export class AuthoringTopbarReact extends React.PureComponent<IProps, IState> {
         super(props);
 
         this.state = {};
+
+        this.fetchArticleFromServer = this.fetchArticleFromServer.bind(this);
+    }
+    fetchArticleFromServer() {
+        // fetching original item from the server since `IProps['article']` contains changes
+        // which it shouldn't contain since it is in read-only mode.
+        // I've tried passing `origItem` from authoring-topbar, but it contains changes as well,
+        // namely `_editable` and `_locked` fields which doesn't allow for computing correct diff.
+        dataApi.findOne<IArticle>('archive', this.props.article._id).then((articleOriginal) => {
+            this.setState({articleOriginal});
+        });
+    }
+    componentDidUpdate(prevProps: IProps) {
+        if (this.props.action === 'view' && JSON.stringify(prevProps.article) !== JSON.stringify(this.props.article)) {
+            this.setState({articleOriginal: undefined}, () => {
+                this.fetchArticleFromServer();
+            });
+        }
     }
     componentDidMount() {
         if (this.props.action === 'view') {
-            // fetching original item from the server since `IProps['article']` contains changes
-            // which it shouldn't contain since it is in read-only mode.
-            // I've tried passing `origItem` from authoring-topbar, but it contains changes as well,
-            // namely `_editable` and `_locked` fields which doesn't allow for computing correct diff.
-            dataApi.findOne<IArticle>('archive', this.props.article._id).then((articleOriginal) => {
-                this.setState({articleOriginal});
-            });
+            this.fetchArticleFromServer();
         } else {
             registerInternalExtension(authoringTopBarExtensionName, {
                 contributions: {
