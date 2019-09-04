@@ -212,7 +212,7 @@ export class Editor3Component extends React.Component<IProps> {
         return !canDropMedia(e, this.props);
     }
 
-    handleDropOnEditor(selection: SelectionState, dataTransfer: Object, isInternal: DraftDragType): DraftHandleValue {
+    handleDropOnEditor(selection: SelectionState, dataTransfer: any, isInternal: DraftDragType): DraftHandleValue {
         if (isInternal) {
             const {editorState} = this.props;
             const targetBlockKey = selection.getStartKey();
