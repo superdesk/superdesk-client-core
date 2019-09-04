@@ -6,6 +6,44 @@ import {monitoring} from './helpers/monitoring';
 import {dictionaries} from './helpers/dictionaries';
 import {workspace} from './helpers/workspace';
 import {authoring} from './helpers/authoring';
+import {el, els} from './helpers/e2e-helpers';
+import {ECE} from './helpers/expected-conditions-extended';
+
+describe('mark for user extension', () => {
+    beforeEach(() => {
+        monitoring.openMonitoring();
+    });
+
+    it('persists changing marked user from authoring topbar in read-only mode', () => {
+        monitoring.openItemMenu(2, 1).element(by.buttonText('Mark for user')).click();
+
+        // mark item for current user
+        el(['mark-for-user-modal', 'modal-body', 'select-user-dropdown', 'dropdown-button']).click();
+        els(['mark-for-user-modal', 'modal-body', 'select-user-dropdown', 'option']).get(1).click();
+        el(['mark-for-user-modal', 'modal-footer', 'confirm']).click();
+
+        // open marked item in read-only mode from "marked for me" dropdown
+        browser.wait(ECE.textToBePresentInElement(el(['marked-for-me-dropdown', 'toggle-button', 'badge']), '1'));
+        el(['marked-for-me-dropdown', 'toggle-button']).click();
+        els(['marked-for-me-dropdown', 'item']).get(0).click();
+        expect(
+            el(['authoring-topbar', 'marked-for-user', 'user-avatar']).getAttribute('title'),
+        ).toBe('first name last name');
+
+        // change marked user
+        el(['authoring-topbar', 'marked-for-user', 'user-avatar']).click();
+        el(['mark-for-user-modal', 'modal-body', 'select-user-dropdown', 'dropdown-button']).click();
+        els(['mark-for-user-modal', 'modal-body', 'select-user-dropdown', 'option']).get(3).click();
+        el(['mark-for-user-modal', 'modal-footer', 'confirm']).click();
+
+        // check if marked user change is persisted after reload
+        browser.refresh();
+        browser.wait(ECE.presenceOf(el(['authoring-topbar', 'marked-for-user', 'user-avatar'])));
+        expect(
+            el(['authoring-topbar', 'marked-for-user', 'user-avatar']).getAttribute('title'),
+        ).toBe('first name2 last name2');
+    });
+});
 
 describe('authoring', () => {
     beforeEach(() => {

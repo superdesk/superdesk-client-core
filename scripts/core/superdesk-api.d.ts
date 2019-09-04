@@ -609,6 +609,7 @@ declare module 'superdesk-api' {
         getToggleElement(isOpen: boolean, onClick: () => void): JSX.Element;
         renderItem(key: string, item: T, closeDropdown:() => void): JSX.Element;
         wrapperStyles?: React.CSSProperties;
+        'data-test-id'?: string;
     }
 
     interface ISpacingProps {
@@ -767,7 +768,7 @@ declare module 'superdesk-api' {
             Alert: React.ComponentType<IAlertComponentProps>;
             Figure: React.ComponentType<IFigureComponentProps>;
             DropZone: React.ComponentType<IDropZoneComponentProps>;
-            Modal: React.ComponentType;
+            Modal: React.ComponentType<{'data-test-id'?: string}>;
             ModalHeader: React.ComponentType<IPropsModalHeader>;
             ModalBody: React.ComponentType;
             ModalFooter: React.ComponentType;
@@ -777,7 +778,7 @@ declare module 'superdesk-api' {
             ArticleItemConcise: React.ComponentType<{article: IArticle}>;
             GroupLabel: React.ComponentType<ISpacingProps>;
             Icon: React.ComponentType<IPropsIcon>;
-            TopMenuDropdownButton: React.ComponentType<{onClick: () => void; active: boolean}>;
+            TopMenuDropdownButton: React.ComponentType<{onClick: () => void; active: boolean; 'data-test-id'?: string;}>;
             getDropdownTree: <T>() => React.ComponentType<IPropsDropdownTree<T>>;
         };
         forms: {
