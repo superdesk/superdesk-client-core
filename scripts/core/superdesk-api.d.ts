@@ -59,11 +59,11 @@ declare module 'superdesk-api' {
             authoringTopbarWidgets?: Array<React.ComponentType<{article: IArticle}>>;
             pages?: Array<IPage>;
             customFieldTypes?: Array<ICustomFieldType>;
+            authoringActions?(article: IArticle): Promise<Array<IArticleAction>>;
             entities?: {
                 article?: {
                     getActions?(article: IArticle): Promise<Array<IArticleAction>>;
                     getActionsBulk?(articles: Array<IArticle>): Promise<Array<IArticleActionBulk>>;
-                    getActionsExtra?(article: IArticle): Promise<Array<IArticleAction>>;
                     onUpdateBefore?(article: IArticle): Promise<IArticle>; // can alter item(immutably), can cancel update
                     onUpdateAfter?(article: IArticle): void; // can't alter item, can't cancel
                     onSpike?(item: IArticle): Promise<onSpikeMiddlewareResult>;
@@ -828,6 +828,42 @@ declare module 'superdesk-api' {
     }>;
 
 
+    export interface ISuperdeskGlobalConfig {
+        defaultRoute: string;
+        features: {
+            swimlane: {
+                defaultNumberOfColumns: number;
+            };
+            editor3: boolean;
+            qumu: boolean;
+            editorAttachments: boolean;
+            editorInlineComments: boolean;
+            editorSuggestions: boolean;
+        };
+        auth: {
+            google: boolean
+        };
+        ingest: {
+            PROVIDER_DASHBOARD_DEFAULTS: {
+                show_log_messages: boolean;
+                show_ingest_count: boolean;
+                show_time: boolean;
+                log_messages: 'error';
+                show_status: boolean;
+            }
+            DEFAULT_SCHEDULE: {
+                minutes: number;
+                seconds: number;
+            }
+            DEFAULT_IDLE_TIME: {
+                hours: number;
+                minutes: number;
+            };
+        };
+        confirm_spike: boolean;
+        language: string; // default client language
+    }
+
 
     // CUSTOM FIELD TYPES
 
@@ -860,7 +896,7 @@ declare module 'superdesk-api' {
         ProductID: string;
         DateSent: string;
         TimeSent: string;
-    
+
         // application
         ObjectName: string;
         EditStatus: string;

@@ -232,9 +232,9 @@
                   </li>
                 </ul>
 
-                <ul ng-if="extraActionsFromExtensions">
+                <ul ng-if="authoringActionsFromExtensions">
                     <!-- Extra actions from extensions without a group id -->
-                    <li ng-repeat="action in extraActionsFromExtensions" ng-if="!action.groupId">
+                    <li ng-repeat="action in authoringActionsFromExtensions" ng-if="!action.groupId">
                         <button  ng-click="triggerActionFromExtension(action)">{{action.label}}</button>
                     </li>
                 </ul>
@@ -259,7 +259,7 @@
 
                     </div>
                   </li>
-                  <li ng-repeat="action in extraActionsFromExtensions">
+                  <li ng-repeat="action in authoringActionsFromExtensions">
                       <button ng-if="action.groupId === 'highlights'" ng-click="triggerActionFromExtension(action)">{{action.label}}</button>
                   </li>
                 </ul>
