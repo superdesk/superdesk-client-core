@@ -2,7 +2,7 @@ import {ISuperdesk, IExtension, IExtensionActivationResult} from 'superdesk-api'
 import {getDisplayMarkedUserComponent} from './show-marked-user';
 import {getActionsInitialize} from './get-article-actions';
 import {getActionsBulkInitialize} from './get-article-actions-bulk';
-import {getActionsExtraInitialize} from './get-article-actions-extra';
+import {authoringActionsInitialize} from './get-authoring-actions';
 import {getMarkedForMeComponent} from './get-marked-for-me-component';
 
 const extension: IExtension = {
@@ -12,11 +12,11 @@ const extension: IExtension = {
                 globalMenuHorizontal: [getMarkedForMeComponent(superdesk)],
                 articleListItemWidgets: [getDisplayMarkedUserComponent(superdesk)],
                 authoringTopbarWidgets: [getDisplayMarkedUserComponent(superdesk)],
+                authoringActions: authoringActionsInitialize(superdesk),
                 entities: {
                     article: {
                         getActions: getActionsInitialize(superdesk),
                         getActionsBulk: getActionsBulkInitialize(superdesk),
-                        getActionsExtra: getActionsExtraInitialize(superdesk),
                     },
                 },
             },
