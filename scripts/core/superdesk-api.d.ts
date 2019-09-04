@@ -861,6 +861,7 @@ declare module 'superdesk-api' {
             };
         };
         confirm_spike: boolean;
+        language: string;
     }
 
 
