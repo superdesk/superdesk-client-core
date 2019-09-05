@@ -243,7 +243,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         return api.update(endpoint, orig, extDiff)
             .then((result) => lock.unlock(result).catch(() => result)) // ignore unlock err
             .catch((reason) => {
-                if (reason != null && reason.status === 400 && get(reason, 'data._issues')) {
+                if (reason != null && get(reason, 'data._issues')) {
                     Object.values(reason.data._issues).forEach((message) => {
                         if (message != null) {
                             notify.error(message);
@@ -251,7 +251,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
                     });
                 }
 
-                return Promise.reject(reason);
+                return $q.reject(reason);
             });
     };
 
