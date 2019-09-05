@@ -115,7 +115,7 @@ describe('monitoring', () => {
 
             criteria = cards.criteria(card, 'foo');
             expect(criteria.source.query.filtered.filter.and).toContain({
-                query: {query_string: {query: 'foo', lenient: false}},
+                query: {query_string: {query: 'foo', lenient: true}},
             });
         }));
 

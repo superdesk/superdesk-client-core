@@ -168,7 +168,7 @@ export function FamilyService(api, desks) {
                 queryString = {
                     query_string: {
                         query: queryRelatedItem.join(' '),
-                        lenient: false,
+                        lenient: true,
                         default_operator: 'OR',
                     },
                 };
@@ -187,7 +187,7 @@ export function FamilyService(api, desks) {
             queryString = {
                 query_string: {
                     query: 'slugline.phrase:("' + sanitizedKeyword + '")',
-                    lenient: false,
+                    lenient: true,
                 },
             };
         }

@@ -163,7 +163,7 @@ export function CardsService(api, search, session, desks, config) {
         filterQueryByCardFileType(query, card);
 
         if (queryString) {
-            query.filter({query: {query_string: {query: queryString, lenient: false}}});
+            query.filter({query: {query_string: {query: queryString, lenient: true}}});
             criteria.es_highlight = search.getElasticHighlight();
         }
 

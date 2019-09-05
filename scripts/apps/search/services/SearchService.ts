@@ -424,7 +424,7 @@ export function SearchService($location, config, session, multi,
             if (queryString) {
                 criteria.query.filtered.query = {query_string: {
                     query: queryString,
-                    lenient: false,
+                    lenient: true,
                     default_operator: 'AND',
                 }};
             }
