@@ -1,5 +1,4 @@
 import 'angular-history/history';
-import {get} from 'lodash';
 
 import * as svc from './services';
 import * as directive from './directives';
@@ -365,13 +364,6 @@ angular.module('superdesk.apps.authoring', [
                         const item = data.item;
                         let relatedItems = [];
 
-                        const handleError = (reason) => {
-                            if (reason != null && reason.status === 400 && get(reason, 'data._issues')) {
-                                notify.error(gettext(`This item is in a package.
-                                It must be removed before it can be unpublished.`));
-                            }
-                        };
-
                         const handleSuccess = () => {
                             notify.success(gettext('Item was unpublished successfully.'));
                         };
@@ -382,13 +374,11 @@ angular.module('superdesk.apps.authoring', [
 
                                 const unpublish = (selected) => {
                                     authoring.publish(item.archive_item, {}, 'unpublish')
-                                        .then(handleSuccess)
-                                        .catch(handleError);
+                                        .then(handleSuccess);
                                     relatedItems.forEach((relatedItem) => {
                                         if (selected[relatedItem._id]) {
                                             authoring.publish(relatedItem, {}, 'unpublish')
-                                                .then(handleSuccess)
-                                                .catch(handleError);
+                                                .then(handleSuccess);
                                         }
                                     });
                                 };
