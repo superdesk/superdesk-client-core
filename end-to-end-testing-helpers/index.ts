@@ -1,4 +1,5 @@
 import {element, by, ElementFinder, ElementArrayFinder, browser, Locator, promise} from 'protractor';
+import {ECE} from './expected-conditions-extended';
 
 const WAIT_TIMEOUT = 200;
 
@@ -55,3 +56,16 @@ export function hasElementCount(
 }
 
 export {ECE} from './expected-conditions-extended';
+
+export function login(username?: string, password?: string) {
+    browser.wait(ECE.visibilityOf(el(['login-page'])));
+    el(['login-page', 'username']).sendKeys(username || browser.params.username);
+    el(['login-page', 'password']).sendKeys(password || browser.params.password);
+    el(['login-page', 'submit']).click();
+
+    browser.wait(ECE.invisibilityOf(el(['login-page'])));
+}
+
+export function hover(elem: ElementFinder) {
+    browser.actions().mouseMove(elem).perform();
+}

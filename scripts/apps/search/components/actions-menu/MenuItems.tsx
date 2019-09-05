@@ -239,6 +239,7 @@ export default class MenuItems extends React.Component<IProps, IState> {
             <ul
                 className="dropdown dropdown__menu more-activity-menu open"
                 style={{display: 'block', minWidth: 200}}
+                data-test-id="context-menu"
             >
                 <Label
                     label={gettext('Actions')}

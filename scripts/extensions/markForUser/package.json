@@ -2,13 +2,13 @@
   "private": true,
   "main": "dist/extension.js",
   "scripts": {
-    "compile": "tsc && compile-end-to-end-tests",
+    "compile": "tsc && npm run compile-end-to-end-tests",
     "compile-end-to-end-tests": "tsc -p spec",
     "watch": "tsc -watch"
   },
   "devDependencies": {
     "@types/jasmine": "2.8.9",
     "end-to-end-testing-helpers": "../../../end-to-end-testing-helpers",
-    "typescript": "3.4.4"
+    "typescript": "3.5.2"
   }
 }
