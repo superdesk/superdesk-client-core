@@ -2,7 +2,7 @@
 
 import {element, by, browser, protractor} from 'protractor';
 import {waitHidden, waitFor} from './utils';
-import {ECE} from './expected-conditions-extended';
+import {ECE} from 'end-to-end-testing-helpers';
 
 class Authoring {
     lock: any;

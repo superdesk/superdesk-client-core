@@ -6,8 +6,6 @@ import {monitoring} from './helpers/monitoring';
 import {dictionaries} from './helpers/dictionaries';
 import {workspace} from './helpers/workspace';
 import {authoring} from './helpers/authoring';
-import {el, els} from './helpers/e2e-helpers';
-import {ECE} from './helpers/expected-conditions-extended';
 
 describe('authoring', () => {
     beforeEach(() => {
