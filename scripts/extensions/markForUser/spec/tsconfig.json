@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "outDir": "dist",
+        "sourceMap": false,
+        "module": "commonjs",
+        "target": "es2015",
+        "skipLibCheck": true,
+        "lib": [
+            "dom",
+            "es2017",
+            "es2018.promise"
+        ],
+        "jsx": "react"
+    }
+}
