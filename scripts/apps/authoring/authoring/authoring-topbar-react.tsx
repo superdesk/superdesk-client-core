@@ -37,6 +37,7 @@ export class AuthoringTopbarReact extends React.PureComponent<IProps, IState> {
     }
     componentDidUpdate(prevProps: IProps) {
         if (this.props.action === 'view' && JSON.stringify(prevProps.article) !== JSON.stringify(this.props.article)) {
+            // eslint-disable-next-line react/no-did-update-set-state
             this.setState({articleOriginal: undefined}, () => {
                 this.fetchArticleFromServer();
             });

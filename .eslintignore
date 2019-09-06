@@ -3,5 +3,5 @@ missing-translations-strings.js
 language-mapping-list.js
 *.d.ts
 scripts/extensions/*/node_modules
-scripts/extensions/*/dist
+scripts/extensions/**/dist
 scripts/core/extension-imports.generated.ts
