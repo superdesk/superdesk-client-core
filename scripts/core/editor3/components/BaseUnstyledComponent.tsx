@@ -16,6 +16,17 @@ export function getEditorBlock(event) {
     return event.originalEvent.dataTransfer.getData(EDITOR_BLOCK_TYPE);
 }
 
+// Dragging a single line in chrome removes DraftJS's data
+// and only sends a <span> containing the dragged text next
+// to a <meta> tag
+function htmlIsPlainTextDragged(html: string): boolean {
+    const parser = new DOMParser().parseFromString(html, 'text/html');
+
+    return parser.querySelectorAll('span').length === 1 &&
+        parser.querySelectorAll('meta').length === 1 &&
+        parser.querySelectorAll(':not(span):not(meta):not(html):not(head):not(body)').length === 0;
+}
+
 class BaseUnstyledComponent extends React.Component<any, any> {
     static propTypes: any;
     static defaultProps: any;
@@ -68,8 +79,9 @@ class BaseUnstyledComponent extends React.Component<any, any> {
         } else if (mediaType === 'text/html' && this.props.editorProps.editorFormat.includes('embed')) {
             const html = event.originalEvent.dataTransfer.getData(mediaType);
             const comingFromDraftJS = htmlComesFromDraftjsEditor(html);
+            const shouldEmbedBeCreated = comingFromDraftJS ? false : !htmlIsPlainTextDragged(html);
 
-            if (!comingFromDraftJS) {
+            if (shouldEmbedBeCreated) {
                 this.props.dispatch(embed(event.originalEvent.dataTransfer.getData(mediaType), blockKey));
                 handled = true;
             }
