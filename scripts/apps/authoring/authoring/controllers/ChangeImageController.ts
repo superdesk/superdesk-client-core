@@ -90,6 +90,7 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, deploy
 
     $scope.data.isDirty = false;
     $scope.isNew = $scope.data.isNew === true;
+
     // should show the metadata form in the view
     $scope.data.showMetadataEditor = $scope.data.showMetadataEditor === true;
     // initialize metadata from `item`
@@ -246,7 +247,7 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, deploy
                 ]),
             });
         } else {
-            $scope.reject();
+            $scope.reject({done: true});
         }
     };
 
