@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import {connect} from 'react-redux';
 import * as actions from '../../actions';
 import {StickElementsWithTracking} from 'core/helpers/dom/stickElementsWithTracking';
@@ -54,6 +54,12 @@ export class SpellcheckerContextMenuComponent extends React.Component<IProps> {
                 data-test-id="spellchecker-menu"
             >
                 <ul className={'dropdown__menu'} style={{position: 'static'}}>
+                    {messageExists &&
+                        <Fragment>
+                            <div style={{margin: '0 16px'}}>{message}</div>
+                            <li className="dropdown__menu-divider"/>
+                        </Fragment>
+                    }
                     <div className="form-label" style={{margin: '0 16px'}}>{gettext('Suggestions')}</div>
                     {
                         suggestions.length === 0
@@ -66,7 +72,7 @@ export class SpellcheckerContextMenuComponent extends React.Component<IProps> {
                                         }
                                         data-test-id="spellchecker-menu--suggestion"
                                     >
-                                        {messageExists ? message : suggestion.text}
+                                        {suggestion.text}
                                     </button>
                                 </li>,
                             )
