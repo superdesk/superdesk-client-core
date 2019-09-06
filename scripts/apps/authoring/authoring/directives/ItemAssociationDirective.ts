@@ -58,7 +58,7 @@ export function ItemAssociationDirective(renditions) {
                 MEDIA_TYPES.push('application/superdesk.item.audio');
             }
 
-            if (!elem.hasClass('no-drop-zone')) {
+            if (!elem.hasClass('no-drop-zone') && scope.editable) {
                 // it should prevent default as long as this is valid image
                 elem.on('dragover', (event) => {
                     if (MEDIA_TYPES.includes(getSuperdeskType(event))) {

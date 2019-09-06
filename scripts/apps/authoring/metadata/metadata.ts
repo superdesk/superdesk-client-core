@@ -707,7 +707,7 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                 } else {
                     scope.selectedItems = selected.filter((term) => !term.scheme || term.scheme === scope.field);
                 }
-            });
+            }, true);
 
             scope.$on('$destroy', () => {
                 metadata.subjectScope = null;
