@@ -136,24 +136,25 @@ export default class MenuItems extends React.Component<IProps, IState> {
         const moveActionsToDefaultGroup = ['Planning', 'duplicate'];
 
         AUTHORING_MENU_GROUPS.forEach((group) => {
-            const groupId = moveActionsToDefaultGroup.includes(group._id) ? 'default' : group._id;
+            const realGroupId = group._id;
+            const stackGroupId = moveActionsToDefaultGroup.includes(group._id) ? 'default' : group._id;
 
-            if (actions[groupId]) {
-                if (groupedItems[groupId] == null) {
-                    groupedItems[groupId] = [];
+            if (actions[realGroupId]) {
+                if (groupedItems[stackGroupId] == null) {
+                    groupedItems[stackGroupId] = [];
                 }
 
                 if (group.concate) {
-                    const submenu = actions[groupId].map((action) => createAction(action).element);
+                    const submenu = actions[realGroupId].map((action) => createAction(action).element);
 
-                    groupedItems[groupId].push({
+                    groupedItems[stackGroupId].push({
                         label: group.label,
                         element: (
-                            <li key={`group-id-${groupId}`}>
+                            <li key={`group-id-${stackGroupId}`}>
                                 <SubmenuDropdown
                                     label={gettext(group.label)}
                                     submenu={submenu}
-                                    icon={actions[groupId][0].icon}
+                                    icon={actions[realGroupId][0].icon}
                                 />
                             </li>
                         ),
@@ -161,8 +162,8 @@ export default class MenuItems extends React.Component<IProps, IState> {
                     return;
                 }
 
-                actions[groupId].map(createAction).forEach(({label, element}) => {
-                    groupedItems[groupId].push({
+                actions[stackGroupId].map(createAction).forEach(({label, element}) => {
+                    groupedItems[stackGroupId].push({
                         label,
                         element,
                     });
