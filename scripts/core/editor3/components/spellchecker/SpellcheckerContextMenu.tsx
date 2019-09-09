@@ -46,8 +46,8 @@ export class SpellcheckerContextMenuComponent extends React.Component<IProps> {
         // If the message exists, and suggestion is whitespace suggestion
         // use message as the button text instead of the suggestion
         const messageExists = Boolean(message);
-        const isWhitespaceSuggestion = suggestions.length === 1
-            && (suggestions[0].text === ' ' || suggestions[0].text === '');
+        const whitespaceSuggestionExists = suggestions.filter(
+            (suggestion) => suggestion.text.trim().length === 0).length > 0;
 
         return (
             <div className={'dropdown open suggestions-dropdown'}
@@ -56,7 +56,7 @@ export class SpellcheckerContextMenuComponent extends React.Component<IProps> {
                 data-test-id="spellchecker-menu"
             >
                 <ul className={'dropdown__menu'} style={{position: 'static'}}>
-                    {messageExists && !isWhitespaceSuggestion &&
+                    {messageExists && !whitespaceSuggestionExists &&
                         <Fragment>
                             <li style={{margin: '0 16px'}}>{message}</li>
                             <li className="dropdown__menu-divider"/>
@@ -74,7 +74,7 @@ export class SpellcheckerContextMenuComponent extends React.Component<IProps> {
                                         }
                                         data-test-id="spellchecker-menu--suggestion"
                                     >
-                                        {isWhitespaceSuggestion && messageExists
+                                        {suggestion.text.trim().length === 0 && messageExists
                                             ? message : suggestion.text}
                                     </button>
                                 </li>,
