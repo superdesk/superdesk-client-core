@@ -143,7 +143,7 @@ angular.module('superdesk.core.menu', [
                         const currentUrlSplit = trimStartExact(currentPath, '/').split('/');
 
                         // Try matching all `x` parts of the current route path.
-                        // If no match is found, try matching for n-1 path parts, then for n-2 parts and so on
+                        // If no match is found, try matching for x-1 path parts, then for x-2 parts and so on
                         // Example:  ['a', 'b', 'c'] ['a', 'b'] it will first try to see if all 3 array elements match,
                         // then first 2 and lastly it will only check if the first one matches.
                         for (let x = currentUrlSplit.length; x > 0; x--) {
