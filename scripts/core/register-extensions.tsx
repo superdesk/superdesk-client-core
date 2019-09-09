@@ -2,6 +2,7 @@ import {flatMap, noop} from 'lodash';
 import {getSuperdeskApiImplementation} from './get-superdesk-api-implementation';
 import {extensions} from 'core/extension-imports.generated';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
+import {MetadataService} from 'apps/authoring/metadata/metadata';
 
 export function registerExtensions(
     superdesk,
@@ -10,6 +11,8 @@ export function registerExtensions(
     lock,
     session,
     authoringWorkspace: AuthoringWorkspaceService,
+    config,
+    metadata: MetadataService,
 ): Promise<void> {
     return Promise.all(
         Object.keys(extensions).map((extensionId) => {
@@ -23,6 +26,8 @@ export function registerExtensions(
                 lock,
                 session,
                 authoringWorkspace,
+                config,
+                metadata,
             );
 
             return extensionObject.extension.activate(superdeskApi).then((activationResult) => {

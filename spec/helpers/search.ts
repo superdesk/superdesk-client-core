@@ -159,16 +159,16 @@ class GlobalSearch {
         this.openItemMenu = function(index) {
             var itemElem = this.getItem(index);
 
-            itemElem.click();
             browser.actions()
                 .mouseMove(itemElem, {x: -50, y: -50}) // first move out
                 .mouseMove(itemElem) // now it can mouseover for sure
                 .perform();
 
-            const dots = itemElem.element(by.className('icon-dots-vertical'));
+            browser.sleep(100);
+            const btn = itemElem.element(by.className('icn-btn'));
 
-            browser.wait(ECE.elementToBeClickable(dots));
-            dots.click();
+            browser.wait(ECE.elementToBeClickable(btn), 1000);
+            btn.click();
 
             const menu = element(by.css('.dropdown__menu.open'));
 

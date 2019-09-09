@@ -4,7 +4,7 @@ import {monitoring} from './helpers/monitoring';
 import {globalSearch} from './helpers/search';
 import {workspace} from './helpers/workspace';
 import {authoring} from './helpers/authoring';
-import {el} from './helpers/e2e-helpers';
+import {multiAction} from './helpers/actions';
 
 describe('package', () => {
     beforeEach(() => {
@@ -64,8 +64,7 @@ describe('package', () => {
         monitoring.selectItem(2, 0);
         monitoring.selectItem(3, 1);
         browser.sleep(200);
-
-        el(['multi-actions-inline', 'Add to Current Package']).click();
+        multiAction('Add to Current Package');
         browser.sleep(200);
         expect(authoring.getGroupItems('MAIN').count()).toBe(2);
     });

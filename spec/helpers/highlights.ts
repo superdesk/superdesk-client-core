@@ -3,6 +3,7 @@
 import {element, by, browser} from 'protractor';
 import {waitFor, nav} from './utils';
 import {el} from './e2e-helpers';
+import {multiAction} from './actions';
 
 class Highlights {
     list: any;
@@ -228,7 +229,7 @@ class Highlights {
         };
 
         this.multiMarkHighlight = function(name) {
-            el(['multi-actions-inline', 'Add to highlight']).click();
+            multiAction('Add to highlight');
             el(['multiple-highlights-select', 'input-select-multiple'], by.cssContainingText('option', name)).click();
             el(['multiple-highlights-select', 'confirm']).click();
         };

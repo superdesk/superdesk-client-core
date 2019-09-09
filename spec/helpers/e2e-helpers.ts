@@ -1,9 +1,14 @@
-import {element, by, ElementFinder, ElementArrayFinder} from 'protractor';
+import {element, by, ElementFinder, ElementArrayFinder, browser, Locator} from 'protractor';
 
-const getTestSelector = (testIds: Array<string> = null): string =>
-    (testIds == null ? [] : testIds)
+const WAIT_TIMEOUT = 200;
+
+const getTestSelector = (testIds: Array<string> = null, text: string = null): Locator => {
+    const selector = (testIds == null ? [] : testIds)
         .map((testId) => `[data-test-id="${testId}"]`)
         .join(' ');
+
+    return text != null ? by.cssContainingText(selector, text) : by.css(selector);
+};
 
 export function el(
     testIds: Array<string> = null,
@@ -13,12 +18,15 @@ export function el(
     var locator;
 
     if (parent != null) {
-        locator = parent.element(by.css(getTestSelector(testIds)));
+        locator = parent.element(getTestSelector(testIds));
     } else {
-        locator = element(by.css(getTestSelector(testIds)));
+        locator = element(getTestSelector(testIds));
     }
 
-    return byLocator == null ? locator : locator.element(byLocator);
+    const elem = byLocator == null ? locator : locator.element(byLocator);
+
+    browser.wait(() => elem.isPresent(), WAIT_TIMEOUT);
+    return elem;
 }
 
 export function els(
@@ -29,9 +37,9 @@ export function els(
     var locator;
 
     if (parent != null) {
-        locator = parent.all(by.css(getTestSelector(testIds)));
+        locator = parent.all(getTestSelector(testIds));
     } else {
-        locator = element.all(by.css(getTestSelector(testIds)));
+        locator = element.all(getTestSelector(testIds));
     }
 
     return byLocator == null ? locator : locator.all(byLocator);

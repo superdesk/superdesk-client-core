@@ -1,16 +1,52 @@
-import EXIF from 'exif-js';
 import _ from 'lodash';
 import {getDataUrl} from 'core/upload/image-preview-directive';
 import {gettext} from 'core/utils';
-import {isEmpty} from 'lodash';
+import {isEmpty, pickBy} from 'lodash';
+import {handleBinaryFile} from '@metadata/exif';
+import {extensions} from 'core/extension-imports.generated';
+import {IPTCMetadata, IUser, IArticle} from 'superdesk-api';
 
 /* eslint-disable complexity */
 
-const getExifData = (file) => new Promise((resolve) => {
-    EXIF.getData(file, function() {
-        resolve(this);
+function getExifData(file: File): Promise<IPTCMetadata> {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+
+        reader.onloadend = () => {
+            const exif: {iptcdata: IPTCMetadata} = handleBinaryFile(reader.result);
+
+            resolve(exif.iptcdata);
+        };
+
+        reader.onerror = reject;
+
+        reader.readAsArrayBuffer(file);
     });
-});
+}
+
+function mapIPTCExtensions(metadata: IPTCMetadata, user: IUser): Promise<Partial<IArticle>> {
+    if (metadata == null) {
+        return Promise.resolve({
+            byline: user.byline,
+        });
+    }
+
+    const item = {
+        byline: metadata['By-line'] || user.byline,
+        headline: metadata.Headline,
+        description_text: metadata['Caption-Abstract'],
+        copyrightnotice: metadata.CopyrightNotice,
+        language: metadata.LanguageIdentifier,
+        creditline: metadata.Credit,
+    };
+
+    return Object.values(extensions).filter(({activationResult}) =>
+        activationResult.contributions && activationResult.contributions.iptcMapping,
+    ).reduce((accumulator, {activationResult}) =>
+        accumulator.then((_item) => activationResult.contributions.iptcMapping(metadata, _item))
+        , Promise.resolve(item))
+        .then((_item: Partial<IArticle>) => pickBy(_item));
+}
 
 function serializePromises(promiseCreators: Array<() => Promise<any>>): Promise<Array<any>> {
     let promise = Promise.resolve();
@@ -252,15 +288,10 @@ export function UploadController(
         return acceptedFiles.length < 1
             ? Promise.resolve()
             : Promise.all(acceptedFiles.map(({file, getThumbnail}) => getExifData(file)
-                .then((fileWithExif) => {
-                    var fileMeta = fileWithExif['iptcdata'];
-
-                    const item = initFile(fileWithExif, {
-                        byline: fileMeta.byline || $scope.currentUser.byline,
-                        headline: fileMeta.headline,
-                        description_text: fileMeta.caption,
-                        copyrightnotice: fileMeta.copyright,
-                    }, getPseudoId());
+                .then((fileMeta) =>
+                    mapIPTCExtensions(fileMeta, $scope.currentUser),
+                ).then((meta) => {
+                    const item = initFile(file, meta, getPseudoId());
 
                     return getThumbnail(file).then((htmlString) => item.thumbnailHtml = htmlString);
                 }),

@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import {getValidMediaType, canDropMedia} from './Editor3Component';
 import {moveBlock, dragDrop, embed} from '../actions/editor3';
 import {getEmbedObject} from './embeds/EmbedInput';
+import {htmlComesFromDraftjsEditor} from 'core/editor3/helpers/htmlComesFromDraftjsEditor';
 
 const EDITOR_BLOCK_TYPE = 'superdesk/editor3-block';
 
@@ -35,14 +36,13 @@ class BaseUnstyledComponent extends React.Component<any, any> {
     onDrop(event) {
         this.setState({over: false});
 
-        event.preventDefault();
-        event.stopPropagation();
-
+        let handled = false;
         const block = getEditorBlock(event);
 
         if (typeof block === 'string' && block.length > 0) {
             // existing media item dropped to another place
             this.props.dispatch(moveBlock(block, this.getDropBlockKey(), this.dropInsertionMode));
+            handled = true;
             return;
         }
 
@@ -54,6 +54,7 @@ class BaseUnstyledComponent extends React.Component<any, any> {
         if (canDropMedia(event, this.props.editorProps)
             && (mediaType === 'Files' || mediaType.includes('application/superdesk'))) {
             this.props.dispatch(dragDrop(dataTransfer, mediaType, blockKey));
+            handled = true;
         } else if (
             typeof link === 'string'
             && link.startsWith('http')
@@ -63,10 +64,22 @@ class BaseUnstyledComponent extends React.Component<any, any> {
                 .then((oEmbed) => {
                     this.props.dispatch(embed(oEmbed, blockKey));
                 });
+            handled = true;
         } else if (mediaType === 'text/html' && this.props.editorProps.editorFormat.includes('embed')) {
-            this.props.dispatch(embed(event.originalEvent.dataTransfer.getData(mediaType), blockKey));
+            const html = event.originalEvent.dataTransfer.getData(mediaType);
+            const comingFromDraftJS = htmlComesFromDraftjsEditor(html);
+
+            if (!comingFromDraftJS) {
+                this.props.dispatch(embed(event.originalEvent.dataTransfer.getData(mediaType), blockKey));
+                handled = true;
+            }
         } else {
             console.warn('unsupported media type on drop', mediaType);
+        }
+
+        if (handled) {
+            event.preventDefault();
+            event.stopPropagation();
         }
     }
 

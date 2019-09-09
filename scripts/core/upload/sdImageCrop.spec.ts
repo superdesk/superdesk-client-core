@@ -133,7 +133,7 @@ describe('Image Crop', () => {
                 var callbackHandler = retObj[1]; // handle Jcrop callback from $.fn.Jcrop
 
                 callbackHandler.apply(jcropApi);
-                expect(jcropApi.tellSelect).toHaveBeenCalled();
+                expect(jcropApi.tellSelect).not.toHaveBeenCalled();
 
                 var callbackResult = callbackSpy.calls.mostRecent().args;
 

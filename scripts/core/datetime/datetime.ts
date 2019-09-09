@@ -97,6 +97,26 @@ function DateTimeService(moment, config) {
         return moment(d).format(LONG_FORMAT);
     };
 
+    /**
+     * Get date and time format for scheduled datetime
+     * Returns time for current day, date and time otherwise
+     *
+     * @param {String} d iso format datetime
+     * @return {String}
+     */
+    this.scheduledFormat = function(d) {
+        var m = moment(d);
+        var now = moment();
+        const _date = m.format(config.view.dateformat || 'MM/DD'),
+            _time = m.format(config.view.timeformat || 'hh:mm');
+
+        if (isSameDay(m, now)) {
+            return '@ '.concat(_time);
+        }
+
+        return _date.concat(' @ ', _time);
+    };
+
     function isSameDay(a, b) {
         return a.format(ISO_DATE_FORMAT) === b.format(ISO_DATE_FORMAT);
     }

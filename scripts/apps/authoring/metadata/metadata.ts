@@ -364,7 +364,7 @@ function MetaDropdownDirective($filter) {
                 var fieldObject: {[fieldId: string]: any} = {};
 
                 if (item) {
-                    if (scope.cv) {
+                    if (scope.cv && scope.cv._id != null) {
                         // if there is cv as well as field, store cv._id as scheme
                         // so that it can be differentiated from another cv inside same parent field(subject).
                         // ex: subject:[{name: "a", qcode: "a", scheme: "new-cv"}]
@@ -707,7 +707,7 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                 } else {
                     scope.selectedItems = selected.filter((term) => !term.scheme || term.scheme === scope.field);
                 }
-            });
+            }, true);
 
             scope.$on('$destroy', () => {
                 metadata.subjectScope = null;
@@ -1084,7 +1084,7 @@ function MetaLocatorsDirective(places) {
 }
 
 MetadataService.$inject = ['api', 'subscribersService', 'config', 'vocabularies', '$rootScope', 'session', '$filter'];
-function MetadataService(api, subscribersService, config, vocabularies, $rootScope, session, $filter) {
+export function MetadataService(api, subscribersService, config, vocabularies, $rootScope, session, $filter) {
     var service = {
         values: {},
         helper_text: {},

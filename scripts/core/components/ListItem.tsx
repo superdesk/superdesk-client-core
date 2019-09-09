@@ -30,11 +30,15 @@ export class ListItem extends React.Component<IListItemProps> {
 
 export class ListItemColumn extends React.Component<IPropsListItemColumn> {
     render() {
-        const {noBorder, justifyContent, ellipsisAndGrow, children} = this.props;
+        const {noBorder, justifyContent, ellipsisAndGrow, children, bold = false} = this.props;
         const cssClasses = [];
 
         if (noBorder) {
             cssClasses.push('sd-list-item__column--no-border');
+        }
+
+        if (bold) {
+            cssClasses.push('sd-text__strong');
         }
 
         if (ellipsisAndGrow) {

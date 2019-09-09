@@ -4,6 +4,7 @@ export function ItemRendition() {
         scope: {
             item: '=',
             rendition: '@',
+            draggable: '<?',
         },
         link: function(scope, elem, attrs) {
             scope.$watch('item.renditions[rendition].href', (href) => {
@@ -26,6 +27,10 @@ export function ItemRendition() {
                             elem.removeClass('portrait');
                         }
                     };
+
+                    if (scope.draggable != null) {
+                        img.setAttribute('draggable', scope.draggable);
+                    }
 
                     img.onerror = function() {
                         figure.html('');

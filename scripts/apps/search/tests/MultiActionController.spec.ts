@@ -70,6 +70,8 @@ describe('Multi Action Bar', () => {
             lock,
             session,
             authoringWorkspace: AuthoringWorkspaceService,
+            config,
+            metadata,
         ) => {
             const extensionDelay = 1000;
 
@@ -103,6 +105,8 @@ describe('Multi Action Bar', () => {
                 lock,
                 session,
                 authoringWorkspace,
+                config,
+                metadata,
             ).then(() => {
                 const ctrl = $controller(MultiActionBarController, {});
 
@@ -118,6 +122,6 @@ describe('Multi Action Bar', () => {
                     expect(modal.createCustomModal).toHaveBeenCalled();
                     done();
                 }, extensionDelay + 50);
-            });
+            }).catch(done.fail);
         }));
 });

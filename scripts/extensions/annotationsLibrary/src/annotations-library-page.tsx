@@ -43,14 +43,11 @@ export function getAnnotationsLibraryPage(superdesk: ISuperdesk) {
                 page: IGenericListPageComponent<IKnowledgeBaseItem>,
             ) => (
                 <ListItem key={key} onClick={() => page.openPreview(item._id)}>
-                    <ListItemColumn>
+                    <ListItemColumn bold noBorder>
                         {getFormFieldPreviewComponent(item, nameField)}
                     </ListItemColumn>
-                    <ListItemColumn>
-                        {getFormFieldPreviewComponent(item, languageField)}
-                    </ListItemColumn>
                     <ListItemColumn ellipsisAndGrow noBorder>
-                        {getFormFieldPreviewComponent(item, definitionField)}
+                        {getFormFieldPreviewComponent(item, definitionField, {showAsPlainText: true})}
                     </ListItemColumn>
                     <ListItemActionsMenu>
                         <div style={{display: 'flex'}}>
@@ -85,6 +82,7 @@ export function getAnnotationsLibraryPage(superdesk: ISuperdesk) {
                     renderRow={renderRow}
                     newItemTemplate={{cpnat_type: 'cpnat:abstract'}}
                     fieldForSearch={nameField}
+                    defaultFilters={{language: superdesk.instance.config.language || 'en'}}
                 />
             );
         }
