@@ -1,6 +1,5 @@
 import {reactToAngular1} from 'superdesk-ui-framework';
 import {GlobalMenuHorizontal} from './GlobalMenuHorizontal';
-import {trimStartExact} from 'core/helpers/utils';
 
 SuperdeskFlagsService.$inject = ['config'];
 function SuperdeskFlagsService(config) {
@@ -137,15 +136,15 @@ angular.module('superdesk.core.menu', [
                             )
                             .map((item) => item.href);
 
-                            if (matchingUrls.length < 1) {
-                                return null;
-                            }
+                        if (matchingUrls.length < 1) {
+                            return null;
+                        }
 
-                            return matchingUrls.reduce((currentDeepest, current) => {
-                                return currentDeepest.split('/').length < current.split('/').length
-                                    ? current
-                                    : currentDeepest;
-                            });
+                        return matchingUrls.reduce((currentDeepest, current) => {
+                            return currentDeepest.split('/').length < current.split('/').length
+                                ? current
+                                : currentDeepest;
+                        });
                     }
 
                     deployConfig.get('feedback_url').then((url) => {
