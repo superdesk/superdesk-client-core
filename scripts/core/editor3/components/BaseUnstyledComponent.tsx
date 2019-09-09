@@ -5,6 +5,7 @@ import {getValidMediaType, canDropMedia} from './Editor3Component';
 import {moveBlock, dragDrop, embed} from '../actions/editor3';
 import {getEmbedObject} from './embeds/EmbedInput';
 import {htmlComesFromDraftjsEditor} from 'core/editor3/helpers/htmlComesFromDraftjsEditor';
+import {htmlIsPlainTextDragged} from 'core/editor3/helpers/htmlIsPlainTextDragged';
 
 const EDITOR_BLOCK_TYPE = 'superdesk/editor3-block';
 
@@ -14,17 +15,6 @@ export function isEditorBlockEvent(event) {
 
 export function getEditorBlock(event) {
     return event.originalEvent.dataTransfer.getData(EDITOR_BLOCK_TYPE);
-}
-
-// Dragging a single line in chrome removes DraftJS's data
-// and only sends a <span> containing the dragged text next
-// to a <meta> tag
-function htmlIsPlainTextDragged(html: string): boolean {
-    const parser = new DOMParser().parseFromString(html, 'text/html');
-
-    return parser.querySelectorAll('span').length === 1 &&
-        parser.querySelectorAll('meta').length === 1 &&
-        parser.querySelectorAll(':not(span):not(meta):not(html):not(head):not(body)').length === 0;
 }
 
 class BaseUnstyledComponent extends React.Component<any, any> {
