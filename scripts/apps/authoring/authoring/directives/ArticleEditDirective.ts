@@ -301,6 +301,7 @@ export function ArticleEditDirective(
                         showTabs = ['view'];
                     }
                     if (scope.item.type === 'video') {
+                        elem.find('#video-editor')[0].pause();
                         let showMetadata = true;
                         if (defaultTab === "video-edit")
                         {

@@ -56,7 +56,6 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         720: false,
         480: false,
         360: false,
-        240: false,
     };
     $scope.enableQualityMenu = false;
     $scope.data.isDirty = false;
@@ -272,6 +271,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         actRotate(video, $scope.rotate, 0);
         $element.find('#rotateVideo')[0].disabled = false;
         $element.find('#toggleRatio')[0].disabled = false;
+        $scope.cancelPreviewThumbnail();
     };
 
     /**
