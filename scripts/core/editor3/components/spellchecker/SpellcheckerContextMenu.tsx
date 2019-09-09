@@ -43,9 +43,11 @@ export class SpellcheckerContextMenuComponent extends React.Component<IProps> {
         const {suggestions, message} = this.props.warning;
         const {spellchecker} = this.props;
 
-        // If the message exists, use it as the button text
-        // instead of the suggestion
+        // If the message exists, and suggestion is whitespace suggestion
+        // use message as the button text instead of the suggestion
         const messageExists = Boolean(message);
+        const isWhitespaceSuggestion = suggestions.length === 1
+            && (suggestions[0].text === ' ' || suggestions[0].text === '');
 
         return (
             <div className={'dropdown open suggestions-dropdown'}
@@ -54,9 +56,9 @@ export class SpellcheckerContextMenuComponent extends React.Component<IProps> {
                 data-test-id="spellchecker-menu"
             >
                 <ul className={'dropdown__menu'} style={{position: 'static'}}>
-                    {messageExists &&
+                    {messageExists && !isWhitespaceSuggestion &&
                         <Fragment>
-                            <div style={{margin: '0 16px'}}>{message}</div>
+                            <li style={{margin: '0 16px'}}>{message}</li>
                             <li className="dropdown__menu-divider"/>
                         </Fragment>
                     }
@@ -72,7 +74,8 @@ export class SpellcheckerContextMenuComponent extends React.Component<IProps> {
                                         }
                                         data-test-id="spellchecker-menu--suggestion"
                                     >
-                                        {suggestion.text}
+                                        {isWhitespaceSuggestion && messageExists
+                                            ? message : suggestion.text}
                                     </button>
                                 </li>,
                             )
