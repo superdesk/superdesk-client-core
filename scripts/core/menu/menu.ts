@@ -129,44 +129,23 @@ angular.module('superdesk.core.menu', [
                         /a/b should be set active.
                     */
                     function getActiveMenuItemPath(currentPath: string) {
-                        // get a map between full urls and their parts
-                        // {'/a/b/c': ['a', 'b', 'c']}
-                        const hrefs: {[fullPath: string]: Array<string>} = {};
+                        const matchingUrls = scope.items
+                            .filter((item) =>
+                                typeof item.href === 'string'
+                                && item.href.length > 0
+                                && currentPath.startsWith(item.href),
+                            )
+                            .map((item) => item.href);
 
-                        for (const item of scope.items) {
-                            if (typeof item.href === 'string' && item.href.length > 0) {
-                                hrefs[item.href] = trimStartExact(item.href, '/').split('/');
+                            if (matchingUrls.length < 1) {
+                                return null;
                             }
-                        }
 
-                        // get all parts of current route path
-                        const currentUrlSplit = trimStartExact(currentPath, '/').split('/');
-
-                        // Try matching all `x` parts of the current route path.
-                        // If no match is found, try matching for x-1 path parts, then for x-2 parts and so on
-                        // Example:  ['a', 'b', 'c'] ['a', 'b'] it will first try to see if all 3 array elements match,
-                        // then first 2 and lastly it will only check if the first one matches.
-                        for (let x = currentUrlSplit.length; x > 0; x--) {
-                            // iterate hrefs and try matching `x` parts for every href
-                            for (const key of Object.keys(hrefs)) {
-                                let matches = true;
-
-                                // test if all parts match for current href
-                                for (var i = x; i > 0; i--) {
-                                    // eslint-disable-next-line max-depth
-                                    if (currentUrlSplit[i - 1] !== hrefs[key][i - 1]) {
-                                        matches = false;
-                                        break;
-                                    }
-                                }
-
-                                if (matches) {
-                                    return key;
-                                }
-                            }
-                        }
-
-                        return null;
+                            matchingUrls.reduce((currentDeepest, current) => {
+                                return currentDeepest.split('/').length < current.split('/').length
+                                    ? current
+                                    : currentDeepest;
+                            });
                     }
 
                     deployConfig.get('feedback_url').then((url) => {
