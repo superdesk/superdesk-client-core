@@ -141,7 +141,7 @@ angular.module('superdesk.core.menu', [
                         }
 
                         return matchingUrls.reduce((currentDeepest, current) => {
-                            return currentDeepest.split('/').length < current.split('/').length
+                            return currentDeepest.length < current.length
                                 ? current
                                 : currentDeepest;
                         });
