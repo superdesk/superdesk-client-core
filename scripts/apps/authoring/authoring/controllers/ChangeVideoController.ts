@@ -173,6 +173,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
                 $scope.$applyAsync(() => {
                     delete item.project
                     $scope.cancelEditVideo();
+                    $scope.cancelPreviewThumbnail();
                     $scope.data.item = angular.extend($scope.data.item, response.item);
                     $scope.isProcessing = false;
                     $scope.videoReload = true;
@@ -270,8 +271,7 @@ export function ChangeVideoController($scope, $interval, gettext, notify, _, api
         let video = $element.find('#video-preview')[0];
         actRotate(video, $scope.rotate, 0);
         $element.find('#rotateVideo')[0].disabled = false;
-        $element.find('#toggleRatio')[0].disabled = false;
-        $scope.cancelPreviewThumbnail();
+        $element.find('#toggleRatio')[0].disabled = false;        
     };
 
     /**

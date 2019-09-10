@@ -45,6 +45,9 @@ export function VideoTimeline($rootScope, $interval, api) {
             let change_width = 0;
             let IntervalID;
 
+            /*
+             * the function reload list thumbnails
+             */ 
             scope.reloadFrames = function () {   
                             
                 stopInterval(IntervalID);
@@ -53,8 +56,13 @@ export function VideoTimeline($rootScope, $interval, api) {
                 {
                     loadTimeLine(scope.listFrames);
                 }
-            }            
+            }
+
+            /*
+             * trigger the event reload list thumbnails
+             */       
             scope.reloadThumbnails({ reload: scope.reloadFrames });
+
             var observer = new ResizeObserver(function (entries) {
                 entries.forEach(function (entry) {
                     if (Math.abs(change_width - entry.contentRect.width) > 10 && !isNaN(scope.video.duration)) {
@@ -69,10 +77,16 @@ export function VideoTimeline($rootScope, $interval, api) {
                     }
                 });
             });
+
             observer.observe(controlbar);
+
+            /*
+             * trigger the event reload list thumbnails when listFrames is changed
+             */ 
             scope.$watch('listFrames', function (listFrames) {
                 scope.reloadFrames(listFrames)
             });
+
 
             scope.$watch('video', (video) => {
                 if (!video)
@@ -88,6 +102,9 @@ export function VideoTimeline($rootScope, $interval, api) {
                 };
             });
 
+            /*
+             * Change the timeline croll bar when cutting video is change
+             */ 
             scope.$watch('cut', (cut) => {
                 if (isEmpty(cut)) {
                     return;
@@ -141,7 +158,7 @@ export function VideoTimeline($rootScope, $interval, api) {
             ondragover = function () {
                 PositionX = event.clientX;
             }
-
+            
             scope.controlBarClick = function () {
                 var position = setTimeline();
                 if (position * scope.video.duration < scope.cut.start) {
