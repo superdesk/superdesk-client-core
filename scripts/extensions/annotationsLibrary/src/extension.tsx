@@ -4,6 +4,8 @@ import {getAnnotationsLibraryPage} from './annotations-library-page';
 import {getFields} from './GetFields';
 import {IKnowledgeBaseItem} from './interfaces';
 
+const RESOURCE = 'concept_items';
+
 function annotationFromLibraryTabSelectedByDefault(
     superdesk: ISuperdesk,
     annotationText: string,
@@ -18,7 +20,7 @@ function annotationFromLibraryTabSelectedByDefault(
         return Promise.resolve(false);
     } else if (mode === 'create') {
         return dataApi.query<IKnowledgeBaseItem>(
-            'concept_items',
+            RESOURCE,
             1,
             {field: 'name', direction: 'ascending'},
             {name: generateFilterForServer(nameField.type, annotationText)},
@@ -41,6 +43,14 @@ var extension: IExtension = {
                             component: getAnnotationInputWithKnowledgeBase(superdesk),
                             selectedByDefault: (annotationText: string, mode: 'create' | 'edit') =>
                                 annotationFromLibraryTabSelectedByDefault(superdesk, annotationText, mode),
+                            onCreate: (language: string, annotationText: string, definitionHtml: string) => {
+                                superdesk.dataApi.create(RESOURCE, {
+                                    language: language,
+                                    name: annotationText,
+                                    definition_html: definitionHtml,
+                                    cpnat_type: 'cpnat:abstract',
+                                });
+                            },
                         },
                     ],
                 },
