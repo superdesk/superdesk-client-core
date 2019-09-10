@@ -2,29 +2,14 @@
 const HR_TEMPLATE = 'scripts/apps/workspace/views/workspace-sidenav-items-hr.html';
 const DEFAULT_TEMPLATE = 'scripts/apps/workspace/views/workspace-sidenav-items-default.html';
 
-WorkspaceSidenavDirective.$inject = ['superdeskFlags', 'workspaceMenu', 'Keys', 'config',
+WorkspaceSidenavDirective.$inject = ['superdeskFlags', 'Keys', 'config',
     '$rootScope', 'workspaces', 'privileges'];
-export function WorkspaceSidenavDirective(superdeskFlags, workspaceMenu, Keys, config,
+export function WorkspaceSidenavDirective(superdeskFlags, Keys, config,
     $rootScope, workspaces, privileges) {
     return {
         template: require('../views/workspace-sidenav-items.html'),
         link: function(scope, elem) {
-            let group = null;
-
             scope.workspaceConfig = config.workspace || {}; // it's used in workspaceMenu.filter
-            scope.items = [];
-            workspaceMenu
-                .filter((item) => !item.if || scope.$eval(item.if))
-                .forEach((item) => {
-                    const itemGroup = item.group || group;
-
-                    if (itemGroup !== group) {
-                        scope.items.push({hr: 1});
-                        group = itemGroup;
-                    }
-
-                    scope.items.push(item);
-                });
 
             scope.getTemplateUrl = (item) => item.hr ? HR_TEMPLATE : (item.templateUrl || DEFAULT_TEMPLATE);
 

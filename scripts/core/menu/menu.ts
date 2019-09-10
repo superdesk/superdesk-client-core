@@ -80,7 +80,19 @@ angular.module('superdesk.core.menu', [
         'config',
         'deployConfig',
         'lodash',
-        function($route, superdesk, betaService, userNotifications, asset, privileges, config, deployConfig, _) {
+        'workspaceMenu',
+        function(
+            $route,
+            superdesk,
+            betaService,
+            userNotifications,
+            asset,
+            privileges,
+            config,
+            deployConfig,
+            _,
+            workspaceMenu,
+        ) {
             return {
                 require: '^sdSuperdeskView',
                 templateUrl: asset.templateUrl('core/menu/views/menu.html'),
@@ -90,6 +102,50 @@ angular.module('superdesk.core.menu', [
                     scope.menu = [];
                     scope.isTestEnvironment = config.isTestEnvironment;
                     scope.environmentName = config.environmentName;
+
+                    // menu items and groups - start
+                    let group = null;
+
+                    scope.items = [];
+
+                    workspaceMenu
+                        .filter((item) => !item.if || scope.$eval(item.if))
+                        .forEach((item) => {
+                            const itemGroup = item.group || group;
+
+                            if (itemGroup !== group) {
+                                scope.items.push({hr: 1});
+                                group = itemGroup;
+                            }
+
+                            scope.items.push(item);
+                        });
+                    // menu items and groups - end
+
+                    /*
+                        Marking item as active even if current path doesn't match exactly to item href path
+                        For example, if current path is /a/b/c and there is only menu item for /a/b,
+                        /a/b should be set active.
+                    */
+                    function getActiveMenuItemPath(currentPath: string) {
+                        const matchingUrls = scope.items
+                            .filter((item) =>
+                                typeof item.href === 'string'
+                                && item.href.length > 0
+                                && currentPath.startsWith(item.href),
+                            )
+                            .map((item) => item.href);
+
+                        if (matchingUrls.length < 1) {
+                            return null;
+                        }
+
+                        return matchingUrls.reduce((currentDeepest, current) => {
+                            return currentDeepest.length < current.length
+                                ? current
+                                : currentDeepest;
+                        });
+                    }
 
                     deployConfig.get('feedback_url').then((url) => {
                         scope.feedback_url = url;
@@ -129,6 +185,8 @@ angular.module('superdesk.core.menu', [
                             activity.isActive = route && route.href &&
                                     route.href.substr(0, activity.href.length) === activity.href;
                         });
+
+                        scope.activeMenuItemPath = getActiveMenuItemPath(route.href);
                     }
 
                     scope.$on('$locationChangeStart', () => {
