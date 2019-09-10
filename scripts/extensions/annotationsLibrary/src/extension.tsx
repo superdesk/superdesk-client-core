@@ -43,7 +43,7 @@ var extension: IExtension = {
                             component: getAnnotationInputWithKnowledgeBase(superdesk),
                             selectedByDefault: (annotationText: string, mode: 'create' | 'edit') =>
                                 annotationFromLibraryTabSelectedByDefault(superdesk, annotationText, mode),
-                            onCreate: (language: string, annotationText: string, definitionHtml: string) => {
+                            onAnnotationCreate: (language: string, annotationText: string, definitionHtml: string) => {
                                 superdesk.dataApi.create(RESOURCE, {
                                     language: language,
                                     name: annotationText,

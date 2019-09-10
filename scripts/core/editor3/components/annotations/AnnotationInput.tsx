@@ -130,7 +130,7 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
 
             if (highlightId === undefined) {
                 this.annotationInputTabsFromExtensions.forEach((tab) => {
-                    tab.onCreate(this.props.language, this.getAnnotatedText(), stateToHTML(convertFromRaw(body)));
+                    tab.onAnnotationCreate(this.props.language, this.getAnnotatedText(), stateToHTML(convertFromRaw(body)));
                 });
 
                 this.props.highlightsManager.addHighlight(
