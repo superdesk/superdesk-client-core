@@ -1,11 +1,11 @@
 <li ng-repeat="item in items track by $index"
-    ng-class="{active: currentRoute.href === item.href}"
+    ng-class="{active: item.href === activeMenuItemPath}"
     ng-include="getTemplateUrl(item)">
 </li>
 
 <!-- this should be avoided, not sure where it's used -->
 <li ng-if="extraItems.length > 0"><hr></li>
-<li ng-repeat="item in extraItems" ng-class="{active: currentRoute.href === '/' + item.route}">
+<li ng-repeat="item in extraItems" ng-class="{active: '/' + item.route === activeMenuItemPath}">
     <a href="#/{{ item.route }}" title="{{ item.title }}" ng-click="item.onClick && item.onClick($event)" class="sd-sidebar-menu__btn">
       <i class="sd-sidebar-menu__main-icon {{ item.iconClass }}"></i>
       <i class="sd-sidebar-menu__helper-icon big-icon--chevron-left"></i>
