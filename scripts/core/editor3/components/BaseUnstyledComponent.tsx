@@ -5,6 +5,7 @@ import {getValidMediaType, canDropMedia} from './Editor3Component';
 import {moveBlock, dragDrop, embed} from '../actions/editor3';
 import {getEmbedObject} from './embeds/EmbedInput';
 import {htmlComesFromDraftjsEditor} from 'core/editor3/helpers/htmlComesFromDraftjsEditor';
+import {htmlIsPlainTextDragged} from 'core/editor3/helpers/htmlIsPlainTextDragged';
 
 const EDITOR_BLOCK_TYPE = 'superdesk/editor3-block';
 
@@ -68,8 +69,9 @@ class BaseUnstyledComponent extends React.Component<any, any> {
         } else if (mediaType === 'text/html' && this.props.editorProps.editorFormat.includes('embed')) {
             const html = event.originalEvent.dataTransfer.getData(mediaType);
             const comingFromDraftJS = htmlComesFromDraftjsEditor(html);
+            const shouldEmbedBeCreated = comingFromDraftJS ? false : !htmlIsPlainTextDragged(html);
 
-            if (!comingFromDraftJS) {
+            if (shouldEmbedBeCreated) {
                 this.props.dispatch(embed(event.originalEvent.dataTransfer.getData(mediaType), blockKey));
                 handled = true;
             }

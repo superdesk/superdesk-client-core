@@ -1,36 +1,35 @@
 <div sd-modal data-model="item" data-full="true" class="modal--fullscreen modal--preview-article modal--white">
-    <div class="modal__header modal__header--no-border">
-        <div class="btn-group pull-left">
-            <span sd-check ng-model="hide_media" name="hide_media"></span>
-            <label translate>Hide media</label>
+    <div class="modal__header modal__header--flex modal__header--no-border">
+        <div class="btn-group sd-flex-grow">
+            <sd-check ng-model="hide_media"><span translate>Hide media</span></sd-check>
         </div>
-        <div class="btn-group pull-right">
+        <div class="btn-group">
             <button ng-click="printPreview()" title="{{'Print'|translate}}"><i class="icon-print"></i></button>
             <button ng-if="closeAction" ng-click="closeAction()" title="{{'Close'|translate}}"><i class="icon-close-small"></i></button>
         </div>
     </div>
     <div class="modal__body modal-body--white" sd-shadow>
         <div class="preview-content" ng-class="{'hide-images': hide_media}">
-            <div class="metadata">
+            <div class="metadata metadata--top">
                 <div ng-if="item.versioncreated">
-                    <div class="preview-label">
-                        <label translate>Last Modified</label>
+                    <div>
+                        <label class="preview-label" translate>Last Modified</label>
                     </div>
                     <div class="preview-data">
                         <div sd-reldate-complex datetime="item.versioncreated"></div>
                     </div>
                 </div>
                 <div ng-if="item.slugline && !editor.slugline.hideOnPrint" order="{{editor.slugline.order}}">
-                    <div class="preview-label">
-                        <label translate>Slugline</label>
+                    <div>
+                        <label class="preview-label" translate>Slugline</label>
                     </div>
                     <div class="preview-data">
                         <span>{{item.slugline}}</span>
                     </div>
                 </div>
                 <div ng-if="item.anpa_category.length && !editor.anpa_category.hideOnPrint" order="{{editor.anpa_category.order}}">
-                    <div class="preview-label">
-                        <label translate>Service</label>
+                    <div>
+                        <label class="preview-label" translate>Service</label>
                     </div>
                     <div class="preview-data">
                         <span ng-repeat="service in item.anpa_category">
@@ -51,8 +50,8 @@
                 </div>
                 <div ng-if="(item.subject | filter:{'scheme': field._id}).length && editor.subject && !editor.subject.hideOnPrint"
                     order="{{editor.subject.order}}">
-                    <div class="preview-label">
-                        <label translate>Subject</label>
+                    <div>
+                        <label class="preview-label" translate>Subject</label>
                     </div>
                     <div class="preview-data">
                         <span ng-repeat="subject in item.subject | filter:{'scheme': field._id}">
@@ -61,8 +60,8 @@
                     </div>
                 </div>
                 <div ng-if="item.place.length && editor.place && !editor.place.hideOnPrint" order="{{editor.place.order}}">
-                    <div class="preview-label">
-                        <label translate>Place</label>
+                    <div>
+                        <label class="preview-label" translate>Place</label>
                     </div>
                     <div class="preview-data">
                         <span ng-repeat="place in item.place">
@@ -71,8 +70,8 @@
                     </div>
                 </div>
                 <div ng-if="item.ednote && !editor.ednote.hideOnPrint" order="{{editor.ednote.order}}">
-                    <div class="preview-label">
-                        <label translate>Ed. Note</label>
+                    <div>
+                        <label class="preview-label" translate>Ed. Note</label>
                     </div>
                     <div class="preview-data">
                         <span>{{item.ednote}}</span>
@@ -82,8 +81,8 @@
                 <div ng-repeat="field in fields track by field._id"
                     ng-if="(item[field.schema_field] | filter:{'scheme': field._id}).length && isCustomList(field) && field.schema_field && !editor[field._id].hideOnPrint"
                     order="{{editor[field._id].order}}">
-                    <div class="preview-label">
-                        <label translate>{{field.display_name}}</label>
+                    <div>
+                        <label class="preview-label" translate>{{field.display_name}}</label>
                     </div>
                     <div class="preview-data">
                         <span ng-repeat="value in item[field.schema_field] | filter:{'scheme': field._id}">
@@ -95,8 +94,8 @@
                 <div ng-repeat="field in fields track by field._id"
                     ng-if="(item.subject | filter:{'scheme': field._id}).length && isCustomList(field) && !field.schema_field &&  !editor[field._id].hideOnPrint"
                     order="{{editor[field._id].order}}">
-                    <div class="preview-label">
-                        <label translate>{{field.display_name}}</label>
+                    <div>
+                        <label class="preview-label" translate>{{field.display_name}}</label>
                     </div>
                     <div class="preview-data">
                         <span ng-repeat="value in item.subject | filter:{'scheme': field._id}">
@@ -110,8 +109,8 @@
                 <div ng-repeat="field in fields track by field._id"
                     ng-if="item.extra[field._id] && (field.field_type === 'text' || field.field_type === 'date') && !editor[field._id].hideOnPrint"
                     order="{{editor[field._id].order}}">
-                    <div class="preview-label">
-                        <label translate>{{field.display_name}}</label>
+                    <div>
+                        <label class="preview-label" translate>{{field.display_name}}</label>
                     </div>
                     <div class="preview-data" sd-short-date ng-if="field.field_type === 'date'" data-date="item.extra[field._id]"></div>
                     <div class="preview-data preview-editor" ng-if="field.field_type === 'text'" ng-bind-html="getHtml(item.extra[field._id])"></div>
@@ -123,8 +122,8 @@
                     || field.field_type === 'embed' && item.extra[field._id]) && !editor[field._id].hideOnPrint"
                     order="{{editor[field._id].order}}"
                     class="body preview-editor">
-                    <div class="preview-label">
-                        <label translate>{{field.display_name}}</label>
+                    <div>
+                        <label class="preview-label" translate>{{field.display_name}}</label>
                     </div>
                     <div ng-if="field.field_type === 'embed' && !hide_media" ng-bind-html="getHtml(item.extra[field._id].embed)">
                     </div>
@@ -147,6 +146,7 @@
                     <div ng-if="field.field_type === 'related_content'">
                         <div sd-related-items-preview
                             data-item="item"
+                            
                             data-field="field">
                         </div>
                     </div>
@@ -157,7 +157,7 @@
                 </div>
                 <div class="abstract" order="{{editor.abstract.order}}" ng-if="!editor.abstract.hideOnPrint" sd-html-preview="item.abstract"></div>
                 <div class="byline" order="{{editor.byline.order}}" ng-if="!editor.byline.hideOnPrint">{{item.byline}}</div>
-                <div class="body preview-editor" order="{{editor.dateline.order}}" ng-if="!editor.dateline.hideOnPrint">{{item.dateline.located.city}}</div>
+                <div class="dateline preview-editor" order="{{editor.dateline.order}}" ng-if="!editor.dateline.hideOnPrint">{{item.dateline.located.city}}</div>
                 <div class="body preview-editor" order="{{editor.body_html.order}}" ng-if="!editor.body_html.hideOnPrint" sd-html-preview="item.body_html" item="item"></div>
                 <div class="body preview-editor" order="{{editor.body_footer.order}}" ng-if="!editor.body_footer.hideOnPrint" sd-html-preview="item.body_footer"></div>
                 <div class="body preview-editor" order="{{editor.sign_off.order}}" ng-if="!editor.sign_off.hideOnPrint">{{item.sign_off}}</div>
