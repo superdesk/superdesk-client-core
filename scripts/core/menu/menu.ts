@@ -128,6 +128,10 @@ angular.module('superdesk.core.menu', [
                         /a/b should be set active.
                     */
                     function getActiveMenuItemPath(currentPath: string) {
+                        if (typeof currentPath !== 'string') {
+                            return null;
+                        }
+
                         const matchingUrls = scope.items
                             .filter((item) =>
                                 typeof item.href === 'string'
