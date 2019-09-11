@@ -156,7 +156,6 @@ export function getSuperdeskApiImplementation(
                         (current, next) => current.then((result) => next(result)),
                         Promise.resolve(__articleNext),
                     ).then((articleNext: IArticle) => {
-
                         const isPublished = articleNext.item_id != null;
 
                         (function(): Promise<any> {
