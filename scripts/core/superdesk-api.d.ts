@@ -181,7 +181,7 @@ declare module 'superdesk-api' {
         _type: 'ingest' | 'archive' | 'published' | 'archived' | string;
         guid: string;
         translated_from: string;
-        translation_id: string;
+        translation_id: string; // if C is translated from B which is translated from A, all will have the same translation_id
         usageterms: any;
         keywords: any;
         language: any;
@@ -239,6 +239,7 @@ declare module 'superdesk-api' {
         task_id?: any;
         ingest_provider?: any;
         archive_item?: any;
+        item_id?: string; // id of corresponding item in 'published' collection
 
         highlights?: Array<string>;
         highlight?: any;
