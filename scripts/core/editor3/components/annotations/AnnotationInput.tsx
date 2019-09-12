@@ -16,6 +16,7 @@ import {getRangeAndTextForStyle} from 'core/editor3/helpers/highlights';
 import {extensions} from 'core/extension-imports.generated';
 import {flatMap} from 'lodash';
 import {IEditor3AnnotationInputTab} from 'superdesk-api';
+import {stateToHTML} from 'draft-js-export-html';
 
 interface IProps {
     editorState: EditorState;
@@ -93,6 +94,25 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
         );
     }
 
+    getAnnotatedText(): string {
+        const {data} = this.props;
+
+        let text = '';
+
+        if (data.selection != null) { // annotation is being added
+            const selection: SelectionState = data.selection;
+            const blockKey = data.selection.getStartKey();
+            const contentState = this.props.editorState.getCurrentContent();
+            const block = contentState.getBlockForKey(blockKey);
+
+            text = block.getText().slice(selection.getStartOffset(), selection.getEndOffset());
+        } else { // annotation already exists
+            text = getRangeAndTextForStyle(this.props.editorState, data.highlightId).highlightedText;
+        }
+
+        return text;
+    }
+
     /**
      * @ngdoc method
      * @name AnnotationInput#onSubmit
@@ -109,6 +129,14 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
             const annotationType = type;
 
             if (highlightId === undefined) {
+                this.annotationInputTabsFromExtensions.forEach((tab) => {
+                    tab.onAnnotationCreate(
+                        this.props.language,
+                        this.getAnnotatedText(),
+                        stateToHTML(convertFromRaw(body)),
+                    );
+                });
+
                 this.props.highlightsManager.addHighlight(
                     highlightsConfig.ANNOTATION.type,
                     {
@@ -187,25 +215,6 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
             });
 
         _hidePopups();
-    }
-
-    getAnnotatedText(): string {
-        const {data} = this.props;
-
-        let text = '';
-
-        if (data.selection != null) { // annotation is being added
-            const selection: SelectionState = data.selection;
-            const blockKey = data.selection.getStartKey();
-            const contentState = this.props.editorState.getCurrentContent();
-            const block = contentState.getBlockForKey(blockKey);
-
-            text = block.getText().slice(selection.getStartOffset(), selection.getEndOffset());
-        } else { // annotation already exists
-            text = getRangeAndTextForStyle(this.props.editorState, data.highlightId).highlightedText;
-        }
-
-        return text;
     }
 
     getAnnotationInputMode(): 'edit' | 'create' {

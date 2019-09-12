@@ -642,6 +642,7 @@ declare module 'superdesk-api' {
         label: string;
         selectedByDefault(annotationText: string, mode: 'create' | 'edit'): Promise<boolean>;
         component: React.ComponentType<IPropsAnnotationInputComponent>;
+        onAnnotationCreate(language: string, annotationText: string, definitionHtml: string): void;
     }
 
     export interface IPropsAnnotationInputComponent {
