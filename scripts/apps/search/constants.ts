@@ -152,6 +152,11 @@ export const CORE_PROJECTED_FIELDS = {
         // mark for user plugin
 
         'marked_for_user',
+
+        // translations
+
+        'translated_from',
+        'translations',
     ],
 };
 

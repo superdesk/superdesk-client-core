@@ -356,6 +356,10 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
         })).then((values) => zipObject(keys, values));
     };
 
+    this.fetchIds = (ids: Array<IArticle['_id']>) => {
+        return Promise.all(ids.map((id) => api.find('archive', id)));
+    };
+
     /**
      * Reset custom fields info
      */
