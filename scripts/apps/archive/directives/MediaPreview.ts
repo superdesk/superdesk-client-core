@@ -22,7 +22,7 @@ MediaPreview.$inject = ['api', '$rootScope', 'desks', 'superdesk', 'content', 's
 export function MediaPreview(api, $rootScope, desks, superdesk, content, storage) {
     return {
         template: require('../views/preview.html'),
-        link: function(scope) {
+        link: function(scope, elem) {
             const PREVIEW_HEADER_STATE = 'item_preview:header_state';
 
             scope.checkRenditions = checkRenditions;
@@ -39,6 +39,8 @@ export function MediaPreview(api, $rootScope, desks, superdesk, content, storage
                     scope.fields = content.fields({editor: scope.editor});
                 });
             }
+            // prevent dragging from preview
+            elem.on('dragstart', () => false);
 
             /**
              * @ngDoc method
