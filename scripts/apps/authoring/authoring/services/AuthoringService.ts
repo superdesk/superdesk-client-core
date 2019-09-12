@@ -6,6 +6,10 @@ import {isPublished, isKilled} from 'apps/archive/utils';
 import {ITEM_STATE, CANCELED_STATES, READONLY_STATES} from 'apps/archive/constants';
 import {AuthoringWorkspaceService} from './AuthoringWorkspaceService';
 
+interface IPublishOptions {
+    notifyErrors: boolean;
+}
+
 /**
  * @ngdoc service
  * @module superdesk.apps.authoring
@@ -228,7 +232,9 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         }
     };
 
-    this.publish = function publish(orig, diff, action = 'publish') {
+    this.publish = function publish(orig, diff, action = 'publish',
+        {notifyErrors}: IPublishOptions = {notifyErrors: false},
+    ) {
         let extDiff = helpers.extendItem({}, diff);
 
         // if there were some changes on image, we should update etag
@@ -241,18 +247,20 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         var endpoint = 'archive_' + action;
 
         return api.update(endpoint, orig, extDiff)
-            .then((result) => lock.unlock(result).catch(() => result)) // ignore unlock err
-            .catch((reason) => {
-                if (reason != null && get(reason, 'data._issues')) {
-                    Object.values(reason.data._issues).forEach((message) => {
-                        if (message != null) {
-                            notify.error(message);
-                        }
-                    });
-                }
+            .then(
+                (result) => lock.unlock(result).catch(() => result), // ignore unlock err
+                (reason) => {
+                    if (notifyErrors && reason != null && get(reason, 'data._issues')) {
+                        Object.values(reason.data._issues).forEach((message) => {
+                            if (message != null) {
+                                notify.error(message);
+                            }
+                        });
+                    }
 
-                return $q.reject(reason);
-            });
+                    return $q.reject(reason);
+                },
+            );
     };
 
     this.saveWorkConfirmation = function saveWorkAuthoring(orig, diff, isDirty, message) {

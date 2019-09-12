@@ -373,11 +373,11 @@ angular.module('superdesk.apps.authoring', [
                                 relatedItems = items;
 
                                 const unpublish = (selected) => {
-                                    authoring.publish(item.archive_item, {}, 'unpublish')
+                                    authoring.publish(item.archive_item, {}, 'unpublish', {notifyErrors: true})
                                         .then(handleSuccess);
                                     relatedItems.forEach((relatedItem) => {
                                         if (selected[relatedItem._id]) {
-                                            authoring.publish(relatedItem, {}, 'unpublish')
+                                            authoring.publish(relatedItem, {}, 'unpublish', {notifyErrors: true})
                                                 .then(handleSuccess);
                                         }
                                     });
