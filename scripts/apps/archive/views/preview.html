@@ -161,10 +161,9 @@
                 && associationExists(item.associations, field._id)"
                 order="{{editor[field._id].order}}"
                 class="body preview-editor">
-                <div class="preview-label">
-                    <label translate>{{field.display_name}}</label>
+                <div>
+                    <label class="preview-label" translate>{{field.display_name}}</label>
                 </div>
-
                 <div ng-if="field.field_type === 'media'" class="association">
                     <div ng-repeat="(mediaId, media) in getAssociatedItems(item.associations, field._id) track by mediaId">
                         <img draggable="false" src="{{media.renditions.viewImage.href}}" ng-if="media.type === 'picture'">

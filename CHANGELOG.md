@@ -1,5 +1,11 @@
 # Superdesk Client Changelog
 
+## [1.31.1] 2019-09-11
+
+### Fixed
+
+- Display string fields with no related cv in media metadata editor.
+
 ## [1.31.0] 2019-08-26
 
 ### Added
