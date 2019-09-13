@@ -102,6 +102,7 @@ angular.module('superdesk.core.menu', [
                     scope.menu = [];
                     scope.isTestEnvironment = config.isTestEnvironment;
                     scope.environmentName = config.environmentName;
+                    scope.workspaceConfig = config.workspace || {}; // it's used in workspaceMenu.filter
 
                     // menu items and groups - start
                     let group = null;
