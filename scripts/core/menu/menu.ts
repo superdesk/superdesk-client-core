@@ -187,7 +187,9 @@ angular.module('superdesk.core.menu', [
                                     route.href.substr(0, activity.href.length) === activity.href;
                         });
 
-                        scope.activeMenuItemPath = getActiveMenuItemPath(route.href);
+                        if (route && route.href) {
+                            scope.activeMenuItemPath = getActiveMenuItemPath(route.href);
+                        }
                     }
 
                     scope.$on('$locationChangeStart', () => {
