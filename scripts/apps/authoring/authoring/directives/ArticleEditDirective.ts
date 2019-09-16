@@ -397,6 +397,10 @@ export function ArticleEditDirective(
 
                 scope.extra = {}; // placeholder for fields not part of item
             });
+
+            scope.$on('$destroy', () => {
+                elem.off('drop dragdrop');
+            });
         },
     };
 }
