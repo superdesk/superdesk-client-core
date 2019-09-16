@@ -72,7 +72,6 @@ export function MultiImageEditController(
     });
 
     $scope.onChange = (field) => {
-        console.log('scope.onChange');
         try {
             if (field == null) {
                 throw new Error('field required');
