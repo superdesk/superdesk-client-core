@@ -72,6 +72,7 @@ export function MultiImageEditController(
     });
 
     $scope.onChange = (field) => {
+        console.log('scope.onChange');
         try {
             if (field == null) {
                 throw new Error('field required');
@@ -218,13 +219,12 @@ export function MultiImageEditDirective(asset, $sce) {
                 }
             };
 
-            scope.$watch('metadataDirty', (newValue: boolean, oldValue: boolean) => {
-                if (newValue !== oldValue) {
-                    forEach(scope.metadata, (metadata, key) => {
-                        scope.onChange(key);
-                    });
-                }
-            });
+            scope.setMetadataDirty = (value) => {
+                scope.metadataDirty = value;
+                forEach(scope.metadata, (metadata, key) => {
+                    scope.onChange(key);
+                });
+            };
         },
     };
 }
