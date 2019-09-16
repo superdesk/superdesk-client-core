@@ -99,6 +99,12 @@ export function ArticleEditDirective(
                     superdesk.intent('preview', 'item', item);
                 };
 
+                elem.on('drop dragdrop', (event) => {
+                    if (!scope._editable) {
+                        return false;
+                    }
+                });
+
                 /* End: Dateline related properties */
 
                 // watch item and save every change in history in order to perform undo/redo later
