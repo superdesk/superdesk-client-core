@@ -104,6 +104,10 @@ export function MediaPreview(api, $rootScope, desks, superdesk, content, storage
             desks.initialize().then(() => {
                 scope.userLookup = desks.userLookup;
             });
+
+            scope.$on('$destroy', () => {
+                elem.off('dragstart');
+            });
         },
     };
 }
