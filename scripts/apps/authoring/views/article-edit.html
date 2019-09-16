@@ -366,7 +366,10 @@
                  class="media-container__metadata"
                  data-item="item"></div>
             <div class="media-container__action-bar" ng-if="_editable">
-                <a class="btn btn--hollow btn--small" ng-click="editMedia()"><span translate>Edit metadata</span></a>
+                <div style="display: flex; justify-content: flex-end;">
+                    <a class="btn btn--hollow btn--small" ng-click="editMedia()"><span translate>Edit metadata</span></a>
+                    <sd-authoring-media-actions article="item"></sd-authoring-media-actions>
+                </div>
             </div>
         </div>
     </div>

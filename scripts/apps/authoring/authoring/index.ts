@@ -22,6 +22,7 @@ import {showModal} from 'core/services/modalService';
 import {getUnpublishConfirmModal} from './components/unpublish-confirm-modal';
 import {ITEM_STATE} from 'apps/archive/constants';
 import {AuthoringWorkspaceService} from './services';
+import {AuthoringMediaActions} from './authoring-media-actions';
 
 export interface IOnChangeParams {
     item: IArticle;
@@ -95,6 +96,7 @@ angular.module('superdesk.apps.authoring', [
     .directive('sdWordCount', directive.WordCount)
     .directive('sdReadingTime', directive.ReadingTime)
     .directive('sdThemeSelect', directive.ThemeSelectDirective)
+    .component('sdAuthoringMediaActions', reactToAngular1(AuthoringMediaActions, ['article']))
     .directive('sdArticleEdit', directive.ArticleEditDirective)
     .directive('sdAuthoring', directive.AuthoringDirective)
     .directive('sdAuthoringTopbar', directive.AuthoringTopbarDirective)

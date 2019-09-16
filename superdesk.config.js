@@ -31,6 +31,7 @@ module.exports = function(grunt) {
         },
         enabledExtensions: {
             planning: 1,
+            videoEditor: 1,
             // extensionFolderName: 1,
         },
     };
