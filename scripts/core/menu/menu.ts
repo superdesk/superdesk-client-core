@@ -109,23 +109,19 @@ angular.module('superdesk.core.menu', [
 
                     scope.items = [];
 
-                    function setMenuItems() {
-                        scope.items = [];
+                    workspaceMenu
+                        .filter((item) => !item.if || scope.$eval(item.if))
+                        .forEach((item) => {
+                            const itemGroup = item.group || group;
 
-                        workspaceMenu
-                            .filter((item) => !item.if || scope.$eval(item.if))
-                            .forEach((item) => {
-                                const itemGroup = item.group || group;
+                            if (itemGroup !== group) {
+                                scope.items.push({hr: 1});
+                                group = itemGroup;
+                            }
 
-                                if (itemGroup !== group) {
-                                    scope.items.push({hr: 1});
-                                    group = itemGroup;
-                                }
-
-                                scope.items.push(item);
-                            });
-                        // menu items and groups - end
-                    }
+                            scope.items.push(item);
+                        });
+                    // menu items and groups - end
 
                     /*
                         Marking item as active even if current path doesn't match exactly to item href path
@@ -211,8 +207,6 @@ angular.module('superdesk.core.menu', [
 
                     privileges.loaded.then(() => {
                         scope.privileges = privileges.privileges;
-                        setMenuItems();
-                        setActiveMenuItem(ctrl.currentRoute);
                     });
 
                     scope.openAbout = function() {
