@@ -152,7 +152,7 @@ export function ItemCarouselDirective(notify) {
                 carousel.trigger('to.owl.carousel', [index]);
             };
 
-            function canAddImage(image: IArticle): boolean {
+            function canAddImage(image: IArticle, files?: FileList): boolean {
                 const mediaItemsForCurrentField = Object.keys(scope.item.associations || {})
                     .filter((key) => key.startsWith(scope.field._id) && scope.item.associations[key] != null)
                     .map((key) => scope.item.associations[key]);
@@ -167,6 +167,17 @@ export function ItemCarouselDirective(notify) {
                     notify.error(
                         gettext(
                             'Media item was not added, because the field reached the limit of allowed media items.',
+                        ),
+                    );
+                    return false;
+                }
+
+                // check if files from external folder does not exceed the maxUploads limit
+                if (files != null && currentUploads + files.length > scope.maxUploads) {
+                    notify.error(
+                        gettext(
+                            'Select at most {{maxUploads}} files to upload.',
+                            {maxUploads: scope.maxUploads - currentUploads},
                         ),
                     );
                     return false;
@@ -196,9 +207,11 @@ export function ItemCarouselDirective(notify) {
                     event.stopPropagation();
 
                     if (ALLOWED_TYPES.includes(type) || type === 'Files') {
-                        const item = angular.fromJson(event.originalEvent.dataTransfer.getData(type));
+                        const itemStr = event.originalEvent.dataTransfer.getData(type);
+                        const item = typeof itemStr === 'string' && itemStr.length > 0 ? angular.fromJson(itemStr) : {};
+                        const files = event.originalEvent.dataTransfer.files;
 
-                        if (canAddImage(item)) {
+                        if (canAddImage(item, files)) {
                             scope.currentIndex = 0;
                             controller.initializeUploadOnDrop(scope, event);
                         }
