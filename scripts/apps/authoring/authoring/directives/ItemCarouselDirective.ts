@@ -79,6 +79,8 @@ export function ItemCarouselDirective(notify) {
                 .filter((key) => allowed[key] === true)
                 .map((key) => 'application/superdesk.item.' + key);
 
+            ALLOWED_TYPES.push('Files');
+
             scope.currentIndex = 0;
 
             /*
@@ -172,7 +174,7 @@ export function ItemCarouselDirective(notify) {
                     return false;
                 }
 
-                // check if files from external folder does not exceed the maxUploads limit
+                // check files from external folder does not exceed the maxUploads limit
                 if (files != null && currentUploads + files.length > scope.maxUploads) {
                     notify.error(
                         gettext(
@@ -206,7 +208,7 @@ export function ItemCarouselDirective(notify) {
                     event.preventDefault();
                     event.stopPropagation();
 
-                    if (ALLOWED_TYPES.includes(type) || type === 'Files') {
+                    if (ALLOWED_TYPES.includes(type)) {
                         const itemStr = event.originalEvent.dataTransfer.getData(type);
                         const item = typeof itemStr === 'string' && itemStr.length > 0 ? angular.fromJson(itemStr) : {};
                         const files = event.originalEvent.dataTransfer.files;

@@ -149,12 +149,14 @@ export function AssociationController(config, content, superdesk,
             return renditions.crop(item, cropOptions)
                 .then((rendition) => {
                     self.updateItemAssociation(scope, rendition, options.customRel, callback);
-                }, (response) => {
+                })
+                .catch((response) => {
                     // if crop renditions are not set continue with default one
                     if (response != null && response.done === true) {
                         self.updateItemAssociation(scope, item, options.customRel, callback);
                     }
-                }).finally(() => {
+                })
+                .finally(() => {
                     scope.loading = false;
                 });
         } else {

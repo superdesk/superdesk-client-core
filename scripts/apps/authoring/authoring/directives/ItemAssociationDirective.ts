@@ -43,7 +43,7 @@ export function ItemAssociationDirective(renditions) {
         link: function(scope, elem, attr, _ctrl) {
             const dragOverClass = 'dragover';
 
-            const MEDIA_TYPES = [];
+            const MEDIA_TYPES = ['Files'];
 
             if (scope.allowPicture) {
                 MEDIA_TYPES.push('application/superdesk.item.picture');
@@ -83,7 +83,7 @@ export function ItemAssociationDirective(renditions) {
                     // which it shouldn't do, since the element is not controlled by the library.
                     // Because of this, drop is triggered when it shouldn't have been on firefox, but not on chrome.
                     // The same media types check is added from `dragover` method to work around the situation.
-                    if (MEDIA_TYPES.includes(type) || type === 'Files') {
+                    if (MEDIA_TYPES.includes(type)) {
                         removeDragOverClass();
                         event.preventDefault();
                         event.stopPropagation();
