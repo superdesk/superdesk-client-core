@@ -1,8 +1,8 @@
 import React from 'react';
 import {IArticle} from 'superdesk-api';
+import {dataApi} from 'core/helpers/CrudManager';
 
 interface IProps {
-    svc: any;
     ids: Array<IArticle['_id']>;
     label: string;
     onClose: () => void;
@@ -20,12 +20,11 @@ export class TranslationsList extends React.PureComponent<IProps, IState> {
     }
 
     componentDidMount() {
-        const {api} = this.props.svc;
-
-        Promise.all(this.props.ids.map((id) => api.find('archive', id)))
-            .then((items) => {
-                this.setState({items});
-            });
+        Promise.all(this.props.ids.map((id) =>
+            dataApi.findOne<IArticle>('archive', id),
+        )).then((items) => {
+            this.setState({items});
+        });
     }
 
     render() {

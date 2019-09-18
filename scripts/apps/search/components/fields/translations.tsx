@@ -16,8 +16,8 @@ export class Translations extends React.PureComponent<IProps> {
         if (this.props.item.translated_from != null) {
             output.push(
                 <button key="translated" className="label label--hollow"
-                    onClick={($event) => {
-                        this.renderOriginalArticle($event.target);
+                    onClick={(event) => {
+                        this.renderOriginalArticle(event.target);
                     }}>
                     {gettext('translation')}
                 </button>,
@@ -27,8 +27,8 @@ export class Translations extends React.PureComponent<IProps> {
         if (this.props.item.translations != null && this.props.item.translations.length > 0) {
             output.push(
                 <button key="translations" className="text-link"
-                    onClick={($event) => {
-                        this.renderTranslations($event.target);
+                    onClick={(event) => {
+                        this.renderTranslations(event.target);
                     }}>
                     {'('}<b>{this.props.item.translations.length}</b>{')'}
                     {' '}
@@ -60,7 +60,6 @@ export class Translations extends React.PureComponent<IProps> {
         const popup = (
             <TranslationsList
                 ids={ids}
-                svc={this.props.svc}
                 label={label}
                 onClose={() => this.closeDropdown()}
                 onClick={(item) => {
