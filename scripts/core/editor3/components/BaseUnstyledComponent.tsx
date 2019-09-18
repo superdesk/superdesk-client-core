@@ -41,6 +41,7 @@ function isHtmlTextAndShouldCreateEmbed(event, mediaType, editorProps): boolean 
 interface IProps {
     dispatch(action: any);
     editorProps: any;
+    className?: string;
 }
 
 interface IState {
