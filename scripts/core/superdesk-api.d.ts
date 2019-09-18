@@ -182,6 +182,7 @@ declare module 'superdesk-api' {
         guid: string;
         translated_from: string;
         translation_id: string;
+        /** direct translations only, not all items with same translation_id */
         translations: Array<IArticle['_id']>;
         usageterms: any;
         keywords: any;

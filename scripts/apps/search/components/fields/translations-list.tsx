@@ -16,16 +16,16 @@ interface IState {
 export class TranslationsList extends React.PureComponent<IProps, IState> {
     constructor(props) {
         super(props);
-
         this.state = {items: []};
     }
 
     componentDidMount() {
-        const {content} = this.props.svc;
+        const {api} = this.props.svc;
 
-        content.fetchIds(this.props.ids).then((items) => {
-            this.setState({items});
-        });
+        Promise.all(this.props.ids.map((id) => api.find('archive', id)))
+            .then((items) => {
+                this.setState({items});
+            });
     }
 
     render() {
@@ -37,6 +37,11 @@ export class TranslationsList extends React.PureComponent<IProps, IState> {
                         <i className="icon-close-small icon--white" />
                     </button>
                 </li>
+                {this.state.items.length === 0 && (
+                    <li style={{minHeight: this.props.ids.length * 1.5 + 'em'}}>
+                        <div className="sd-loader sd-loader--dark-ui" />
+                    </li>
+                )}
                 {this.state.items.map((item) => (
                     <li key={item._id}>
                         <b className="label label--hollow">{item.language}</b>

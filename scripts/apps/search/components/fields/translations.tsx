@@ -10,53 +10,49 @@ interface IProps {
 }
 
 export class Translations extends React.PureComponent<IProps> {
-    originalRef: React.ReactNode;
-    translationsRef: React.ReactNode;
-
     render() {
         const output = [];
 
         if (this.props.item.translated_from != null) {
             output.push(
-                <span key="translated" className="label label--hollow"
+                <button key="translated" className="label label--hollow"
                     onClick={($event) => {
-                        $event.stopPropagation();
-                        this.renderOriginalArticle();
-                    }} ref={(ref) => this.originalRef = ref}>
+                        this.renderOriginalArticle($event.target);
+                    }}>
                     {gettext('translation')}
-                </span>,
+                </button>,
             );
         }
 
         if (this.props.item.translations != null && this.props.item.translations.length > 0) {
             output.push(
-                <a key="translations" className="text-link" onClick={($event) => {
-                    $event.stopPropagation();
-                    this.renderTranslations();
-                }} ref={(ref) => this.translationsRef = ref}>
+                <button key="translations" className="text-link"
+                    onClick={($event) => {
+                        this.renderTranslations($event.target);
+                    }}>
                     {'('}<b>{this.props.item.translations.length}</b>{')'}
                     {' '}
                     {gettextPlural(this.props.item.translations.length, 'translation', 'translations')}
-                </a>,
+                </button>,
             );
         }
 
         return output.length > 0 ? output : null;
     }
 
-    renderOriginalArticle() {
+    renderOriginalArticle(elem: EventTarget) {
         this.renderPopup(
             gettext('Original Article'),
             [this.props.item.translated_from],
-            this.originalRef,
+            elem,
         );
     }
 
-    renderTranslations() {
+    renderTranslations(elem: EventTarget) {
         this.renderPopup(
             gettext('Translations'),
             this.props.item.translations,
-            this.translationsRef,
+            elem,
         );
     }
 
@@ -67,7 +63,9 @@ export class Translations extends React.PureComponent<IProps> {
                 svc={this.props.svc}
                 label={label}
                 onClose={() => this.closeDropdown()}
-                onClick={(item) => this.preview(item)}
+                onClick={(item) => {
+                    this.props.svc.$rootScope.$broadcast('broadcast:preview', {item});
+                }}
             />
         );
 
@@ -76,9 +74,5 @@ export class Translations extends React.PureComponent<IProps> {
 
     closeDropdown() {
         closeActionsMenu(this.props.item._id);
-    }
-
-    preview(item: IArticle) {
-        this.props.svc.$rootScope.$broadcast('broadcast:preview', {item});
     }
 }
