@@ -35,15 +35,7 @@ function getInsertionTarget(contentState, selectionState) {
     };
 }
 
-/*
-    insertAtomicBlockWithoutEmptyLines: function(
-        editorState: EditorState,
-        entityKey: string,
-        character: string
-    ): { editorState: EditorState, blockKey: String }
-*/
-
-function insertAtomicBlockWithoutEmptyLines(editorState, entityKey, character) {
+function insertAtomicBlockWithoutEmptyLines(editorState: EditorState, entityKey: string, character: string): { editorState: EditorState, blockKey: string } {
     var selectionState = editorState.getSelection();
     var target = getInsertionTarget(editorState.getCurrentContent(), selectionState);
     var asAtomicBlock = Modifier.setBlockType(target.contentState, target.selectionState, 'atomic');

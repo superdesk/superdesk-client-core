@@ -33,11 +33,16 @@ import {getSpellcheckWarningsByBlock} from './spellchecker/SpellcheckerDecorator
 import {getSpellchecker} from './spellchecker/default-spellcheckers';
 import {IEditorStore} from '../store';
 
-const VALID_MEDIA_TYPES = [
+const MEDIA_TYPES_DROP_ZONE = [
     'application/superdesk.item.picture',
     'application/superdesk.item.graphic',
     'application/superdesk.item.video',
     'application/superdesk.item.audio',
+    'superdesk/editor3-block',
+];
+
+const VALID_MEDIA_TYPES = [
+    ...MEDIA_TYPES_DROP_ZONE,
     'text/uri-list',
     'text/html',
     'Files',
@@ -54,7 +59,13 @@ export const EDITOR_GLOBAL_REFS = 'editor3-refs';
  * @return {String}
  */
 export function getValidMediaType(event) {
-    return VALID_MEDIA_TYPES.find((mediaType) => event.dataTransfer.types.indexOf(mediaType) !== -1);
+    return VALID_MEDIA_TYPES.find((mediaType) => event.dataTransfer.types.includes(mediaType));
+}
+
+export function dragEventShouldShowDropZone(event) {
+    const intersection = MEDIA_TYPES_DROP_ZONE.filter((type) => event.dataTransfer.types.includes(type));
+
+    return intersection.length > 0;
 }
 
 /**
