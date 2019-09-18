@@ -1,4 +1,5 @@
 import React from 'react';
+import ng from 'core/services/ng';
 import {gettext, gettextPlural} from 'core/utils';
 import {IArticle} from 'superdesk-api';
 import {openActionsMenu, closeActionsMenu} from 'apps/search/helpers';
@@ -63,7 +64,7 @@ export class Translations extends React.PureComponent<IProps> {
                 label={label}
                 onClose={() => this.closeDropdown()}
                 onClick={(item) => {
-                    this.props.svc.$rootScope.$broadcast('broadcast:preview', {item});
+                    ng.get('$rootScope').$broadcast('broadcast:preview', {item});
                 }}
             />
         );
