@@ -102,28 +102,33 @@ angular.module('superdesk.core.menu', [
                     scope.menu = [];
                     scope.isTestEnvironment = config.isTestEnvironment;
                     scope.environmentName = config.environmentName;
+                    scope.workspaceConfig = config.workspace || {}; // it's used in workspaceMenu.filter
 
                     // menu items and groups - start
                     let group = null;
 
                     scope.items = [];
 
-                    workspaceMenu
-                        .filter((item) => !item.if || scope.$eval(item.if))
-                        .forEach((item) => {
-                            const itemGroup = item.group || group;
+                    function setMenuItems() {
+                        scope.items = [];
 
-                            if (itemGroup !== group) {
-                                if (scope.items.length > 0) {
-                                    // only put a separator if there's at least one item already in the list
-                                    scope.items.push({hr: 1});
+                        workspaceMenu
+                            .filter((item) => !item.if || scope.$eval(item.if))
+                            .forEach((item) => {
+                                const itemGroup = item.group || group;
+
+                                if (itemGroup !== group) {
+                                    if (scope.items.length > 0) {
+                                        // only put a separator if there's at least one item already in the list
+                                        scope.items.push({hr: 1});
+                                    }
+                                    group = itemGroup;
                                 }
-                                group = itemGroup;
-                            }
 
-                            scope.items.push(item);
-                        });
-                    // menu items and groups - end
+                                scope.items.push(item);
+                            });
+                        // menu items and groups - end
+                    }
 
                     /*
                         Marking item as active even if current path doesn't match exactly to item href path
@@ -197,7 +202,9 @@ angular.module('superdesk.core.menu', [
                                     route.href.substr(0, activity.href.length) === activity.href;
                         });
 
-                        scope.activeMenuItemPath = getActiveMenuItemPath(route.href);
+                        if (route && route.href) {
+                            scope.activeMenuItemPath = getActiveMenuItemPath(route.href);
+                        }
                     }
 
                     scope.$on('$locationChangeStart', () => {
@@ -215,6 +222,8 @@ angular.module('superdesk.core.menu', [
 
                     privileges.loaded.then(() => {
                         scope.privileges = privileges.privileges;
+                        setMenuItems();
+                        setActiveMenuItem(ctrl.currentRoute);
                     });
 
                     scope.openAbout = function() {
