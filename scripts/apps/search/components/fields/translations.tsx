@@ -14,7 +14,7 @@ interface IState {
     popup?: {
         ids: Array<IArticle['_id']>;
         label: string;
-        target: EventTarget;
+        target: HTMLElement;
     };
 }
 
@@ -77,7 +77,7 @@ export class Translations extends React.PureComponent<IProps, IState> {
             popup: {
                 label: gettext('Original Article'),
                 ids: [this.props.item.translated_from],
-                target: elem,
+                target: elem as HTMLElement,
             },
         });
     }
@@ -87,7 +87,7 @@ export class Translations extends React.PureComponent<IProps, IState> {
             popup: {
                 label: gettext('Translations'),
                 ids: this.props.item.translations,
-                target: elem,
+                target: elem as HTMLElement,
             },
         });
     }

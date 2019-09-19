@@ -1,11 +1,11 @@
-import React, {ElementType, CSSProperties, SyntheticEvent} from 'react';
+import React, {CSSProperties, SyntheticEvent} from 'react';
 import {createPortal} from 'react-dom';
 import {positionPopup} from '../helpers';
 
 interface IProps {
     label: string;
     close: () => void;
-    target: ElementType | EventTarget;
+    target: HTMLElement;
 }
 
 const BACKDROP_STYLE: CSSProperties = {
@@ -29,6 +29,8 @@ export class ItemListPopup extends React.PureComponent<IProps> {
     }
 
     close(event: SyntheticEvent) {
+        // avoid click propagating to list item
+        // https://reactjs.org/docs/portals.html#event-bubbling-through-portals
         event.stopPropagation();
         this.props.close();
     }
