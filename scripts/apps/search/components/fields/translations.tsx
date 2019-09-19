@@ -2,15 +2,29 @@ import React from 'react';
 import ng from 'core/services/ng';
 import {gettext, gettextPlural} from 'core/utils';
 import {IArticle} from 'superdesk-api';
-import {openActionsMenu, closeActionsMenu} from 'apps/search/helpers';
 import {TranslationsList} from './translations-list';
+import {ItemListPopup} from '../item-list-popup';
 
 interface IProps {
     svc: any;
     item: IArticle;
 }
 
-export class Translations extends React.PureComponent<IProps> {
+interface IState {
+    popup?: {
+        ids: Array<IArticle['_id']>;
+        label: string;
+        target: EventTarget;
+    };
+}
+
+export class Translations extends React.PureComponent<IProps, IState> {
+    constructor(props) {
+        super(props);
+        this.state = {popup: null};
+        this.closePopup = this.closePopup.bind(this);
+    }
+
     render() {
         const output = [];
 
@@ -38,41 +52,47 @@ export class Translations extends React.PureComponent<IProps> {
             );
         }
 
+        if (this.state.popup != null) {
+            output.push(
+                <ItemListPopup
+                    key="popup"
+                    target={this.state.popup.target}
+                    label={this.state.popup.label}
+                    close={this.closePopup}>
+                    <TranslationsList
+                        ids={this.state.popup.ids}
+                        onClick={(item) => {
+                            ng.get('$rootScope').$broadcast('broadcast:preview', {item});
+                        }}
+                    />
+                </ItemListPopup>,
+            );
+        }
+
         return output.length > 0 ? output : null;
     }
 
     renderOriginalArticle(elem: EventTarget) {
-        this.renderPopup(
-            gettext('Original Article'),
-            [this.props.item.translated_from],
-            elem,
-        );
+        this.setState({
+            popup: {
+                label: gettext('Original Article'),
+                ids: [this.props.item.translated_from],
+                target: elem,
+            },
+        });
     }
 
     renderTranslations(elem: EventTarget) {
-        this.renderPopup(
-            gettext('Translations'),
-            this.props.item.translations,
-            elem,
-        );
+        this.setState({
+            popup: {
+                label: gettext('Translations'),
+                ids: this.props.item.translations,
+                target: elem,
+            },
+        });
     }
 
-    renderPopup(label: string, ids: Array<IArticle['_id']>, ref: React.ReactNode) {
-        const popup = (
-            <TranslationsList
-                ids={ids}
-                label={label}
-                onClose={() => this.closeDropdown()}
-                onClick={(item) => {
-                    ng.get('$rootScope').$broadcast('broadcast:preview', {item});
-                }}
-            />
-        );
-
-        openActionsMenu(popup, ref, this.props.item._id);
-    }
-
-    closeDropdown() {
-        closeActionsMenu(this.props.item._id);
+    closePopup() {
+        this.setState({popup: null});
     }
 }

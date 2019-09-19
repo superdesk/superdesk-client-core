@@ -4,8 +4,6 @@ import {dataApi} from 'core/helpers/CrudManager';
 
 interface IProps {
     ids: Array<IArticle['_id']>;
-    label: string;
-    onClose: () => void;
     onClick: (item: IArticle) => void;
 }
 
@@ -29,20 +27,14 @@ export class TranslationsList extends React.PureComponent<IProps, IState> {
 
     render() {
         return (
-            <ul className="highlights-list-menu open">
-                <li>
-                    <div className="dropdown__menu-label">{this.props.label}</div>
-                    <button className="dropdown__menu-close" onClick={() => this.props.onClose()}>
-                        <i className="icon-close-small icon--white" />
-                    </button>
-                </li>
+            <ul className="simple-list" style={{padding: 0, flexGrow: 1}}>
                 {this.state.items.length === 0 && (
                     <li style={{minHeight: this.props.ids.length * 1.5 + 'em'}}>
                         <div className="sd-loader sd-loader--dark-ui" />
                     </li>
                 )}
                 {this.state.items.map((item) => (
-                    <li key={item._id}>
+                    <li key={item._id} className="simple-list__item">
                         <b className="label label--hollow">{item.language}</b>
                         &nbsp;
                         <a className="sd-overflow-ellipsis"
