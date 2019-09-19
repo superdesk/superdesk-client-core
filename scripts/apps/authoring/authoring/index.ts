@@ -359,20 +359,26 @@ angular.module('superdesk.apps.authoring', [
                 priority: 50,
                 icon: 'kill',
                 group: 'corrections',
-                controller: ['data', 'authoring', 'familyService',
-                    (data, authoring, familyService) => {
+                controller: ['data', 'authoring', 'familyService', 'notify',
+                    (data, authoring, familyService, notify) => {
                         const item = data.item;
                         let relatedItems = [];
+
+                        const handleSuccess = () => {
+                            notify.success(gettext('Item was unpublished successfully.'));
+                        };
 
                         familyService.fetchRelatedByState(item.archive_item, [ITEM_STATE.PUBLISHED])
                             .then((items) => {
                                 relatedItems = items;
 
                                 const unpublish = (selected) => {
-                                    authoring.publish(item.archive_item, {}, 'unpublish');
+                                    authoring.publish(item.archive_item, {}, 'unpublish', {notifyErrors: true})
+                                        .then(handleSuccess);
                                     relatedItems.forEach((relatedItem) => {
                                         if (selected[relatedItem._id]) {
-                                            authoring.publish(relatedItem, {}, 'unpublish');
+                                            authoring.publish(relatedItem, {}, 'unpublish', {notifyErrors: true})
+                                                .then(handleSuccess);
                                         }
                                     });
                                 };
