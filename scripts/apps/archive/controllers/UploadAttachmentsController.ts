@@ -13,7 +13,7 @@ export function UploadAttachmentsController($scope, $q, urls, upload) {
             .then((uploadURL) => upload.start({
                 method: 'POST',
                 url: uploadURL,
-                data: {media: item.file, title: item.meta.title, description: item.meta.description},
+                data: {media: item.file, title: item.meta.title, description: item.meta.description, internal: item.meta.internal},
             }))
             .then((response) => {
                 item.attachment = response.data;

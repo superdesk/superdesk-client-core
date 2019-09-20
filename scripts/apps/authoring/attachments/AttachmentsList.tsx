@@ -48,6 +48,12 @@ class AttachmentsListComponent extends React.PureComponent<IProps> {
                     <Row>
                         <div className="description">{file.description}</div>
                     </Row>
+                    {
+                        file.internal === true &&
+                        <Row>
+                            <span className="label label--orange2">internal</span>
+                        </Row>
+                    }
                 </Column>
                 <ActionMenu row={true}>
                     <button className="dropdown__toggle"
