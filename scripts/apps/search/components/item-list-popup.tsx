@@ -18,6 +18,8 @@ const BACKDROP_STYLE: CSSProperties = {
     overflow: 'auto', // to allow scroll
 };
 
+const stopEvent = (event: SyntheticEvent) => event.stopPropagation();
+
 export class ItemListPopup extends React.PureComponent<IProps> {
     constructor(props) {
         super(props);
@@ -37,7 +39,9 @@ export class ItemListPopup extends React.PureComponent<IProps> {
 
     render() {
         return createPortal(
-            <ul className="highlights-list-menu">
+            <ul className="highlights-list-menu"
+                onClick={stopEvent}
+                onDoubleClick={stopEvent}>
                 <li>
                     <div className="dropdown__menu-label">{this.props.label}</div>
                     <button className="dropdown__menu-close" onClick={this.close}>
