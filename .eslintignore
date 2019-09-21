@@ -5,3 +5,5 @@ language-mapping-list.js
 scripts/extensions/*/node_modules
 scripts/extensions/**/dist
 scripts/core/extension-imports.generated.ts
+end-to-end-testing-helpers/dist
+end-to-end-testing-helpers/node_modules
