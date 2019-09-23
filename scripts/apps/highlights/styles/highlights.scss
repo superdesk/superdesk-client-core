@@ -83,6 +83,7 @@
     background-color: $black !important;
     border-radius: 4px;
     max-width: 250px;
+    min-width: 180px;
     &:before {
         display: none;
     }

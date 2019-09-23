@@ -182,6 +182,7 @@ declare module 'superdesk-api' {
         guid: string;
         translated_from: string;
         translation_id: string; // if C is translated from B which is translated from A, all will have the same translation_id
+        translations: Array<IArticle['_id']>; // direct translations only, not all items with same translation_id
         usageterms: any;
         keywords: any;
         language: any;
