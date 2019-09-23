@@ -156,6 +156,11 @@ export function RenditionsService(metadata, $q, api, superdesk, _, notify) {
                         .catch(() => {
                             notify.error(gettext('Failed to generate picture crops.'));
                         });
+                }).catch((response) => {
+                    // if new crops not generated continue with default one
+                    if (response != null && response.done === true) {
+                        return item;
+                    }
                 });
         });
     };

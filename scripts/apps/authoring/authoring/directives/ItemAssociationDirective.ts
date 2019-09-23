@@ -20,8 +20,8 @@ import {addInternalEventListener} from 'core/internal-events';
  *   This directive is responsible for rendering media associated with the item.
  */
 
-ItemAssociationDirective.$inject = ['renditions'];
-export function ItemAssociationDirective(renditions) {
+ItemAssociationDirective.$inject = ['renditions', 'notify'];
+export function ItemAssociationDirective(renditions, notify) {
     return {
         scope: {
             rel: '=',
@@ -43,25 +43,10 @@ export function ItemAssociationDirective(renditions) {
         link: function(scope, elem, attr, _ctrl) {
             const dragOverClass = 'dragover';
 
-            const MEDIA_TYPES = ['Files'];
-
-            if (scope.allowPicture) {
-                MEDIA_TYPES.push('application/superdesk.item.picture');
-                MEDIA_TYPES.push('application/superdesk.item.graphic');
-            }
-
-            if (scope.allowVideo) {
-                MEDIA_TYPES.push('application/superdesk.item.video');
-            }
-
-            if (scope.allowAudio) {
-                MEDIA_TYPES.push('application/superdesk.item.audio');
-            }
-
             if (!elem.hasClass('no-drop-zone') && scope.editable) {
                 // it should prevent default as long as this is valid image
                 elem.on('dragover', (event) => {
-                    if (MEDIA_TYPES.includes(getSuperdeskType(event))) {
+                    if (isAllowedMediaType(scope, event)) {
                         event.preventDefault();
                         event.stopPropagation();
                         addDragOverClass();
@@ -76,19 +61,24 @@ export function ItemAssociationDirective(renditions) {
 
                 // update item associations on drop
                 elem.on('drop dragdrop', (event) => {
-                    const type = getSuperdeskType(event);
-
                     // drop event should only fire if dragover event is prevented
                     // however, `ng-file-upload` library calls preventDefault on this event
                     // which it shouldn't do, since the element is not controlled by the library.
                     // Because of this, drop is triggered when it shouldn't have been on firefox, but not on chrome.
                     // The same media types check is added from `dragover` method to work around the situation.
-                    if (MEDIA_TYPES.includes(type)) {
+                    if (isAllowedMediaType(scope, event)) {
                         removeDragOverClass();
                         event.preventDefault();
                         event.stopPropagation();
                         _ctrl.initializeUploadOnDrop(scope, event);
                         scope.$apply();
+                    } else {
+                        const allowedTypeNames = getAllowedTypeNames(scope);
+                        const message = gettext('Only the following media item types are allowed: ');
+
+                        notify.error(message + allowedTypeNames);
+                        removeDragOverClass();
+                        return false;
                     }
                 });
             }
@@ -150,4 +140,45 @@ export function ItemAssociationDirective(renditions) {
             });
         },
     };
+}
+
+export function isAllowedMediaType(scope, event) {
+    const {allowAudio, allowPicture, allowVideo} = scope;
+    const VALID_MEDIA_TYPES = ['Files'];
+
+    if (allowAudio) {
+        VALID_MEDIA_TYPES.push('application/superdesk.item.audio');
+    }
+    if (allowPicture) {
+        VALID_MEDIA_TYPES.push('application/superdesk.item.picture');
+        VALID_MEDIA_TYPES.push('application/superdesk.item.graphic');
+    }
+    if (allowVideo) {
+        VALID_MEDIA_TYPES.push('application/superdesk.item.video');
+    }
+
+    const mediaType = getSuperdeskType(event);
+    let isValidMedia = VALID_MEDIA_TYPES.includes(mediaType);
+    const dataTransfer = event.originalEvent.dataTransfer;
+
+    if (isValidMedia && mediaType === 'Files' && dataTransfer.files) {
+        // checks if files dropped from external folder are valid or not
+        const isValidFileType = Object.values(dataTransfer.files).every(
+            (file: File) => file.type.startsWith('audio/') && allowAudio === true
+                || file.type.startsWith('image/') && allowPicture === true
+                || file.type.startsWith('video/') && allowVideo === true);
+
+        if (!isValidFileType) {
+            return false;
+        }
+    }
+    return isValidMedia;
+}
+
+export function getAllowedTypeNames(scope) {
+    return [
+        (scope.allowPicture === true ? gettext('image') : ''),
+        (scope.allowVideo === true ? gettext('video') : ''),
+        (scope.allowAudio === true ? gettext('audio') : ''),
+    ].filter(Boolean).join(', ');
 }
