@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {IArticle, ISuperdesk} from 'superdesk-api';
+import {VideoEditor} from './VideoEditor';
 
 export function getVideoEditModal(superdesk: ISuperdesk, article: IArticle) {
     const {gettext} = superdesk.localization;
@@ -18,7 +19,7 @@ export function getVideoEditModal(superdesk: ISuperdesk, article: IArticle) {
                             </div>
 
                             <div className="modal__body">
-                                <p>{gettext('This is sample message inside modal!')}</p>
+                                <VideoEditor article={article} />
                             </div>
 
                             <div className="modal__footer">
