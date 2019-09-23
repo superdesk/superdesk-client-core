@@ -2,7 +2,7 @@ import {browser, by} from 'protractor'; // by
 import {el, els, ECE, login, hover} from 'end-to-end-testing-helpers';
 
 describe('mark for user extension', () => {
-    it('persists changing marked user from authoring topbar in read-only mode', () => {
+    xit('persists changing marked user from authoring topbar in read-only mode', () => {
         login();
 
         el(['workspace-navigation', 'Monitoring']).click();
