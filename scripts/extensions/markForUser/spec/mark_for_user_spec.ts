@@ -32,6 +32,8 @@ describe('mark for user extension', () => {
         els(['mark-for-user-modal', 'modal-body', 'select-user-dropdown', 'option']).get(3).click();
         el(['mark-for-user-modal', 'modal-footer', 'confirm']).click();
 
+        browser.sleep(3000); // wait for a network request to finish before reloading the page
+
         // check if marked user change is persisted after reload
         browser.refresh();
         browser.wait(ECE.presenceOf(el(['authoring-topbar', 'marked-for-user', 'user-avatar'])));
