@@ -1,5 +1,5 @@
 {
-    "extends": "../../../tsconfig-strict",
+    "extends": "superdesk-code-style/tsconfig-strict",
     "compilerOptions": {
         "outDir": "./dist"
     }
