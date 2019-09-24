@@ -8,7 +8,7 @@
     "postinstall": "npm run compile"
   },
   "private": true,
-  "devDependencies": {
+  "dependencies": {
     "protractor": "5.4.2",
     "superdesk-code-style": "1.3.0",
     "typescript": "3.6.2"
