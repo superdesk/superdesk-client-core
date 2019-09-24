@@ -7,9 +7,9 @@
   },
   "devDependencies": {
     "typescript": "3.6.2",
-    "@types/react": "16.4.9"
+    "@types/react": "16.8.23"
   },
   "peerDependencies": {
-    "react": "16.2.0"
+    "react": "16.8.6"
   }
 }
