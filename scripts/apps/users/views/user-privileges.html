@@ -23,12 +23,15 @@
                     <td class="name">
                         <div style="display: flex">
                             <span>{{ :: p.label | translate }}</span>
+
                             <span
                                 ng-if="p.description"
-                                title="{{ :: p.description | translate }}"
-                                class="icon-info-sign"
+                                sd-tooltip="{{ :: p.description | translate }}"
+                                flow="right"
                                 style="margin-left: 6px"
-                            ></span>
+                            >
+                                <span class="icon-info-sign"></span>
+                            </span>
                         </div>
                     </td>
                     <td>
