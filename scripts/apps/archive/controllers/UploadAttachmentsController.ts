@@ -19,9 +19,9 @@ export function UploadAttachmentsController($scope, $q, urls, upload) {
                         media: item.file,
                         title: item.meta.title,
                         description: item.meta.description,
-                        internal: item.meta.internal
-                    }
-                })
+                        internal: item.meta.internal,
+                    },
+                }),
             )
             .then(
                 (response) => {
