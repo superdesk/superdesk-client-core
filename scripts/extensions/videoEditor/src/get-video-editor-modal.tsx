@@ -19,7 +19,7 @@ export function getVideoEditModal(superdesk: ISuperdesk, article: IArticle) {
                                 </button>
                             </div>
 
-                            <div className="modal__body">
+                            <div className="modal__body modal__body--no-padding">
                                 <VideoEditor article={article} />
                                 <ListThumbnails
                                     thumbnails={[]}
