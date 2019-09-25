@@ -55,19 +55,23 @@ export function MultiImageEditController(
 
     $scope.isDirty = () => unsavedChangesExist;
 
-    $scope.selectImage = (image) => {
+    $scope.selectImage = (image, update: boolean = true) => {
         if ($scope.images.length === 1) {
             $scope.images[0].selected = true;
         } else {
             image.selected = !image.selected;
         }
-        updateMetadata();
+
+        if (update) {
+            updateMetadata();
+        }
     };
 
     // wait for images for initial load
     $scope.$watch('images', (images: Array<any>) => {
         if (images != null && images.length) {
-            images.forEach($scope.selectImage);
+            images.forEach((image) => $scope.selectImage(image, false));
+            updateMetadata();
         }
     });
 
@@ -150,10 +154,45 @@ export function MultiImageEditController(
             copyrightholder: compare('copyrightholder'),
             usageterms: compare('usageterms'),
             copyrightnotice: compare('copyrightnotice'),
-            extra: compare('extra'),
+            extra: compareExtra(),
             language: compare('language'),
             creditline: compare('creditline'),
         };
+
+    }
+
+    function compareExtra() {
+        const values = {};
+        $scope.getSelectedImages().forEach((item) => {
+            if (item.extra != null) {
+                for (const field in item.extra) {
+                    if (!values.hasOwnProperty(field)) {
+                        const uniqueValues = {};
+                        $scope.getSelectedImages()
+                            .filter((item) => item.extra != null && item.extra[field] != null && item.extra[field] !== '')
+                            .map((item) => item.extra[field])
+                            .forEach((value) => uniqueValues[value] = 1);
+                        values[field] = Object.keys(uniqueValues);
+                    }
+                }
+            }
+        });
+
+        const extra = {};
+        for (const field in values) {
+            if (values[field].length > 1) {
+                $scope.placeholder[field] = gettext('(multiple values)');
+                extra[field] = null;
+            } else if (values[field].length === 1) {
+                $scope.placeholder[field] = '';
+                extra[field] = values[field][0];
+            } else {
+                $scope.placeholder[field] = '';
+                extra[field] = null;
+            }
+        }
+
+        return extra;
     }
 
     function compare(fieldName) {
@@ -168,13 +207,12 @@ export function MultiImageEditController(
 
         const defaultValues = {
             subject: [],
-            extra: {},
         };
 
         if (uniqueValues.length < 1) {
             return defaultValues[fieldName] || '';
         } else if (uniqueValues.length > 1) {
-            $scope.placeholder[fieldName] = '(multiple values)';
+            $scope.placeholder[fieldName] = gettext('(multiple values)');
             return defaultValues[fieldName] || '';
         } else {
             $scope.placeholder[fieldName] = '';
