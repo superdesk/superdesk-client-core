@@ -2,6 +2,7 @@ import * as React from 'react';
 import { IArticle, ISuperdesk } from 'superdesk-api';
 import { VideoEditor } from './VideoEditor';
 import { ListThumbnails } from './VideoTimeline/ListThumbnails';
+import '../src/index.css';
 
 export function getVideoEditModal(superdesk: ISuperdesk, article: IArticle) {
     const { gettext } = superdesk.localization;
@@ -18,7 +19,6 @@ export function getVideoEditModal(superdesk: ISuperdesk, article: IArticle) {
                                     <i className="icon-close-small" />
                                 </button>
                             </div>
-
                             <div className="modal__body">
                                 <VideoEditor article={article} />
                                 <ListThumbnails
@@ -29,7 +29,6 @@ export function getVideoEditModal(superdesk: ISuperdesk, article: IArticle) {
                                     videoUrl="http://192.168.100.36:5050/projects/5d89d6f8881aec8c5a77a4e4/raw/video?tag=6da964ad2728ca9c0356aa22b6bc6bd3b3ec2a41"
                                 />
                             </div>
-
                             <div className="modal__footer">
                                 <button className="btn">{gettext('Cancel')}</button>
                                 <button
