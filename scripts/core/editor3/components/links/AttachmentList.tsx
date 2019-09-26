@@ -71,7 +71,7 @@ export class AttachmentList extends React.Component<IProps, IState> {
 
     render() {
         if (!this.state.attachments) {
-            return <div />; // wait for attachments
+            return null; // wait for attachments
         }
 
         const publicAttachments = this.state.attachments.filter(({internal}) => !internal);
