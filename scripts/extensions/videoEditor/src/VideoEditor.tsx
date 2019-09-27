@@ -20,6 +20,7 @@ interface IArticleVideo extends IArticle {
 export interface IVideoEditor {
     crop: object;
     cropEnabled: boolean;
+    quality: number;
     degree: number;
     playing: boolean;
 }
@@ -52,6 +53,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                 start: 0,
                 end: 0,
             },
+            quality: 0,
         };
     }
     componentDidMount() {
@@ -102,6 +104,10 @@ export class VideoEditor extends React.Component<IProps, IState> {
         });
     };
 
+    handleQualityChange = (quality: number) => {
+        this.setState({ quality: quality });
+    };
+
     render() {
         const videoSrc = get(this.props.article.renditions, 'original.href');
         const degree = this.state.degree + 'deg';
@@ -147,8 +153,10 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                 onToggleVideo={this.handleToggleVideo}
                                 onRotate={this.handleRotate}
                                 onCrop={this.handleCrop}
+                                onQualityChange={this.handleQualityChange}
                                 video={this.state}
                                 videoHeadline={this.props.article.headline}
+                                videoHeight={get(this.ref.current, 'videoHeight')}
                             />
                             <VideoTimeline
                                 video={videoSrc}
