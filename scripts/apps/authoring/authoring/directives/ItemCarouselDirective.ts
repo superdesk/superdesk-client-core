@@ -157,7 +157,7 @@ export function ItemCarouselDirective(notify) {
                 const currentUploads = mediaItemsForCurrentField.length;
 
                 const itemAlreadyAddedAsMediaGallery = mediaItemsForCurrentField.some(
-                    (mediaItem) => internalIds.find((_id) => _id === mediaItem._id),
+                    (mediaItem) => internalIds.includes(mediaItem._id),
                 );
 
                 if (currentUploads >= scope.maxUploads) {
@@ -206,7 +206,7 @@ export function ItemCarouselDirective(notify) {
                     if (isAllowedMediaType(scope, event)) {
                         const itemStr = event.originalEvent.dataTransfer.getData(type);
                         const internalIds = typeof itemStr === 'string' && itemStr.length > 0
-                            ? [angular.fromJson(itemStr)._id]
+                            ? [JSON.parse(itemStr)._id]
                             : [];
                         const externalItemsCount = Object.values(event.originalEvent.dataTransfer.files || []).length;
 

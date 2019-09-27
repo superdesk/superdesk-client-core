@@ -61,20 +61,22 @@ export function ItemAssociationDirective(renditions, notify) {
 
                 // update item associations on drop
                 elem.on('drop dragdrop', (event) => {
-                    // drop event should only fire if dragover event is prevented
-                    // however, `ng-file-upload` library calls preventDefault on this event
-                    // which it shouldn't do, since the element is not controlled by the library.
-                    // Because of this, drop is triggered when it shouldn't have been on firefox, but not on chrome.
-                    // The same media types check is added from `dragover` method to work around the situation.
                     const externalItemsCount = Object.values(event.originalEvent.dataTransfer.files || []).length;
 
                     if (externalItemsCount > 1) {
+                        // Check files dropped does not exceed the maxUpload limit
                         notify.error(
                             gettext('Select at most 1 file to upload.'),
                         );
                         removeDragOverClass();
                         return false;
                     }
+
+                    // drop event should only fire if dragover event is prevented
+                    // however, `ng-file-upload` library calls preventDefault on this event
+                    // which it shouldn't do, since the element is not controlled by the library.
+                    // Because of this, drop is triggered when it shouldn't have been on firefox, but not on chrome.
+                    // The same media types check is added from `dragover` method to work around the situation.
                     if (isAllowedMediaType(scope, event)) {
                         removeDragOverClass();
                         event.preventDefault();
