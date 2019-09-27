@@ -1,6 +1,9 @@
 import * as React from 'react';
 import { IArticle } from 'superdesk-api';
 import { get } from 'lodash';
+import ReactCrop from 'react-image-crop';
+import { VideoEditorTools } from './VideoEditorTools';
+import 'react-image-crop/dist/ReactCrop.css';
 
 interface IArticleVideo extends IArticle {
     renditions?: {
@@ -13,26 +16,48 @@ interface IArticleVideo extends IArticle {
     };
 }
 
-type IVideoEditorProps = {
-    article: IArticleVideo;
-};
-type IVideoEditorState = {
+export interface IVideoEditor {
+    crop: object;
+    cropEnabled: boolean;
     degree: number;
     playing: boolean;
-};
+}
 
-export class VideoEditor extends React.Component<IVideoEditorProps, IVideoEditorState> {
+interface IProps {
+    article: IArticleVideo;
+    getClass: Function;
+}
+
+interface IState extends IVideoEditor {
+    cropImg: string;
+}
+
+export class VideoEditor extends React.Component<IProps, IState> {
     private ref: React.RefObject<HTMLVideoElement>;
-    constructor(props: IVideoEditorProps) {
+    constructor(props: IProps) {
         super(props);
         this.ref = React.createRef();
         this.state = {
+            crop: { aspect: 16 / 9 },
+            cropEnabled: false,
+            cropImg: '',
             degree: 0,
             playing: false,
         };
     }
+    componentDidMount() {
+        const canvas = document.createElement('canvas');
+        canvas.width = 1000;
+        canvas.height = 1000;
+        const ctx = canvas.getContext('2d');
+        ctx!.globalAlpha = 0;
+        ctx!.fillStyle = 'rgba(0, 0, 200, 0.5)';
+        this.setState({
+            cropImg: canvas.toDataURL(),
+        });
+    }
 
-    rotate = () => {
+    handleRotate = () => {
         this.setState(
             prevState => ({ degree: prevState.degree - 90 }),
             () => {
@@ -43,7 +68,7 @@ export class VideoEditor extends React.Component<IVideoEditorProps, IVideoEditor
         );
     };
 
-    toggleVideo = () => {
+    handleToggleVideo = () => {
         if (this.state.playing) {
             this.ref.current!.pause();
         } else {
@@ -51,41 +76,63 @@ export class VideoEditor extends React.Component<IVideoEditorProps, IVideoEditor
         }
     };
 
+    handleCrop = (aspect: number) => {
+        // when select crop, user must chose aspect, pass empty to turn off crop mode
+        this.setState({ cropEnabled: !this.state.cropEnabled }, () => {
+            if (aspect) {
+                this.setState({ crop: { ...this.state.crop, aspect: aspect } });
+            }
+        });
+    };
+
     render() {
         const videoSrc = get(this.props.article.renditions, 'original.href');
         const degree = this.state.degree + 'deg';
+        const { width, height } = (this.ref.current && this.ref.current.getBoundingClientRect()) || {
+            width: 0,
+            height: 0,
+        };
+
         return (
             <div>
                 <div className="sd-photo-preview sd-photo-preview--edit-video">
                     <div className="sd-photo-preview__video">
                         <div className="sd-photo-preview__video-inner">
                             <div className="sd-photo-preview__video-container">
-                                <video
-                                    ref={this.ref}
-                                    src={videoSrc}
-                                    style={{ transform: `rotate(${degree})` }}
-                                    onPlay={() => this.setState({ playing: true })}
-                                    onPause={() => this.setState({ playing: false })}
-                                    autoPlay
-                                ></video>
+                                <div style={{ transform: `rotate(${degree})` }}>
+                                    <video
+                                        ref={this.ref}
+                                        src={videoSrc}
+                                        onPlay={() => this.setState({ playing: true })}
+                                        onPause={() => this.setState({ playing: false })}
+                                        autoPlay
+                                    ></video>
+                                </div>
+
+                                {this.state.cropEnabled && (
+                                    <ReactCrop
+                                        src={this.state.cropImg}
+                                        crop={this.state.crop}
+                                        onChange={(newCrop: object) => {
+                                            this.setState({ crop: newCrop });
+                                        }}
+                                        style={{
+                                            maxWidth: width,
+                                            maxHeight: height,
+                                            background: 'unset',
+                                            position: 'absolute',
+                                        }}
+                                        className={this.props.getClass('sd-photo-preview__video-cropper')}
+                                    />
+                                )}
                             </div>
-                            <div className="sd-photo-preview__video-tools">
-                                <a
-                                    className="btn btn--ui-dark btn--icon-only btn-hollow"
-                                    onClick={() => {
-                                        this.toggleVideo();
-                                    }}
-                                >
-                                    <i className={this.state.playing ? 'icon-pause' : 'icon-play'}></i>
-                                </a>
-                                <a className="btn btn--ui-dark btn--icon-only btn-hollow" onClick={() => this.rotate()}>
-                                    <i className="icon-rotate-left"></i>
-                                </a>
-                                <a className="btn btn--ui-dark btn--icon-only btn-hollow">
-                                    <i className="icon-crop"></i>
-                                </a>
-                                <span className="sd-photo-preview__label mlr-auto">{this.props.article.headline}</span>
-                            </div>
+                            <VideoEditorTools
+                                onToggleVideo={this.handleToggleVideo}
+                                onRotate={this.handleRotate}
+                                onCrop={this.handleCrop}
+                                video={this.state}
+                                videoHeadline={this.props.article.headline}
+                            />
                         </div>
                     </div>
                 </div>

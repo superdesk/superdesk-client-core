@@ -5,6 +5,7 @@ import { ListThumbnails } from './VideoTimeline/ListThumbnails';
 
 export function getVideoEditModal(superdesk: ISuperdesk, article: IArticle) {
     const { gettext } = superdesk.localization;
+    const { getClass } = superdesk.utilities.CSS;
 
     return class VideoEditModal extends React.PureComponent<{ closeModal(): void }> {
         render() {
@@ -20,7 +21,7 @@ export function getVideoEditModal(superdesk: ISuperdesk, article: IArticle) {
                             </div>
 
                             <div className="modal__body modal__body--no-padding">
-                                <VideoEditor article={article} />
+                                <VideoEditor article={article} getClass={getClass} />
                                 <ListThumbnails
                                     thumbnails={[]}
                                     widthPic={90}
