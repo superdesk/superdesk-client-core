@@ -170,7 +170,7 @@ $priority-label-color-6 : #c0c9a1;
     text-transform: uppercase;
     @include border-radius(8px);
     padding: 0 0.8rem;
-    margin-right: 1rem;
+    margin-right: 0.8rem;
     border: 1px solid;
     vertical-align: middle;
     @include state-color();
@@ -239,6 +239,10 @@ $priority-label-color-6 : #c0c9a1;
     &.updated:hover {
         background-color: $state-color-navy;
         color: $white;
+    }
+    &--right {
+        margin-right: 0;
+        margin-left: 0.8rem;
     }
 }
 
