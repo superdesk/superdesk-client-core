@@ -1,61 +1,46 @@
 import * as React from 'react';
 
-type ListThumbnailsProps = {
+interface IProps {
     thumbnails: Array<ThumbnailObject>;
     widthPic: number;
     numberThumbnails: number;
-    videoDuration: number;
-    videoUrl: string;
-};
+    video: React.RefObject<HTMLVideoElement>;
+    getClass: Function;
+}
 
-type ListThumbnailsState = {
+interface IState {
     thumbnailsRender: Array<ThumbnailObject>;
-};
+}
 
 type ThumbnailObject = {
     url: string;
-    isExist: boolean;
-    isLoaded: boolean;
 };
 
-export class ListThumbnails extends React.Component<ListThumbnailsProps, ListThumbnailsState> {
-    constructor(props: ListThumbnailsProps) {
+export class ListThumbnails extends React.Component<IProps, IState> {
+    constructor(props: IProps) {
         super(props);
         this.state = {
             thumbnailsRender: [],
         };
     }
     componentDidMount() {
+        const duration = this.props.video.current! ? this.props.video.current!.duration : 0;
         let thumbnailsRender: Array<ThumbnailObject> = [];
         const per_delta_image =
             this.props.thumbnails.length > 1
                 ? (this.props.thumbnails.length - 1) / this.props.numberThumbnails
-                : this.props.videoDuration / this.props.numberThumbnails;
+                : duration / this.props.numberThumbnails;
         for (let i = 0; i <= this.props.numberThumbnails; i++) {
             let thumnail: ThumbnailObject;
             if (this.props.thumbnails && this.props.thumbnails.length > 0) {
                 thumnail = this.props.thumbnails[Math.round(i * per_delta_image)];
-                thumnail.isExist = true;
-                thumnail.isLoaded = true;
                 thumbnailsRender.push(thumnail);
             } else {
                 thumnail = {
-                    url: this.props.videoUrl + '#t=' + i * per_delta_image,
-                    isExist: false,
-                    isLoaded: false,
+                    url: '',
                 };
                 thumbnailsRender.push(thumnail);
                 //Loading thumbnail one by one, if we call all api at same time, browser will lag.
-                setTimeout(
-                    function(this: any) {
-                        //Start the timer
-                        thumnail.isLoaded = true;
-                        this.setState({
-                            thumbnailsRender: thumbnailsRender,
-                        });
-                    }.bind(this),
-                    500 * i
-                );
             }
         }
         this.setState({
@@ -63,16 +48,19 @@ export class ListThumbnails extends React.Component<ListThumbnailsProps, ListThu
         });
     }
     render() {
+        const { getClass } = this.props;
         return (
-            <div className="md-frames md-frames-thumbs">
-                <div className="md-frames inner">
-                    {this.state.thumbnailsRender.map((item: ThumbnailObject) =>
-                        item.isExist
-                            ? item.isLoaded && <video poster={item.url} width={this.props.widthPic} height="50" />
-                            : item.isLoaded && (
-                                  <video src={item.url} width={this.props.widthPic} height="50" preload="metadata" />
-                              )
-                    )}
+            <div className={`${getClass('frames')} ${getClass('frames--thumbs')}`}>
+                <div className={getClass('frames__inner')}>
+                    {this.state.thumbnailsRender.map((item: ThumbnailObject, index: number) => (
+                        <video
+                            className={`${getClass('frames__video')} ${item.url && getClass('frames__video--loaded')}`}
+                            poster={item.url}
+                            width={this.props.widthPic}
+                            height="50"
+                            key={index.toString()}
+                        />
+                    ))}
                 </div>
             </div>
         );

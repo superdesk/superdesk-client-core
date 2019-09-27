@@ -1,11 +1,171 @@
-.md-frames--thumbs {
-  overflow: hidden;
-}
-.md-frames {
+.timeline-controls {
+  position: relative;
+  box-sizing: border-box;
+  top: 40%;
+  left: 2%;
   display: block;
   width: 100%;
 }
-.md-frames__inner {
+
+.controlbars {
+  --progress: 0;
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  right: 0;
+  bottom: 4px;
+}
+
+.controlbars--out {
+  width: 10px;
+  position: absolute;
+  top: 20%;
+  bottom: 20%;
+  background-color: #00e0ff;
+  cursor: ew-resize;
+  pointer-events: all;
+  border-radius: 10px;
+}
+
+
+.controlbars__mask {
+  position: absolute;
+  top: -1px;
+  bottom: -1px;
+  background-color: rgba(25, 30, 64, 0.8);
+}
+
+.controlbars__mask.left {
+  left: 0;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
+.controlbars__mask.left.active:after {
+  position: absolute;
+  width: 6px;
+  height: 100%;
+  right: -3px;
+  background-position: right;
+  background-repeat: no-repeat;
+  content: " ";
+}
+
+.controlbars__mask.right {
+  right: 0;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.controlbars__mask.left {
+  left: 0;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
+.controlbars__progress-output {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  transform: translate(-50%, 0);
+  pointer-events: none;
+  --offset:3.92699px; 
+  --contentTop:-20.073px;
+}
+
+.controlbars__progress-output__content {
+  position: relative;
+  transform: translate(0, var(--contentTop));
+  text-align: center;
+}
+
+.controlbars__progress-output__content__inner {
+  background-color: #fff;
+  color: #000;
+  font-size: 11px;
+  padding: 0 9px;
+  box-sizing: border-box;
+  transform: translate(0, -24px);
+  height: 16px;
+  line-height: 18px;
+  border-radius: 30px;
+}
+
+.controlbars__progress-output__progress-line {
+  width: 1px;
+  background-color: #fff;
+  position: absolute;
+  top: inherit;
+  bottom: inherit;
+  left: 50%;
+}
+
+.controlbars__wrapper-out,
+.controlbars .progress-line-wrapper {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  border: solid 1px #00e0ff;
+  border-radius: 5px;
+}
+
+.controlbars__wrapper.cb-left {
+  transform: translateX(-50%);
+}
+
+.controlbars__wrapper {
+  width: 10px;
+  position: absolute;
+  top: 20%;
+  bottom: 20%;
+  background-color: #00e0ff;
+  cursor: ew-resize;
+  pointer-events: all;
+  border-radius: 10px;
+}
+
+.controlbars__wrapper:before {
+  content: "•\A•\A•";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 12px;
+  margin-top: 0;
+  white-space: pre;
+  line-height: 6px;
+}
+
+.controlbars__wrapper:after {
+  transition: left 100ms linear, transform 100ms linear;
+  position: absolute;
+  font-size: 12px;
+  color: #00e0ff;
+  left: 50%;
+  transform: translate(-50%, 0);
+  content: attr(data-content);
+  font-weight: 400;
+  bottom: -35px;
+}
+
+.controlbars__wrapper.cb-right {
+  right: 0;
+  transform: translateX(50%);
+}
+
+.frames--thumbs {
+  overflow: hidden;
+}
+
+.frames {
+  display: block;
+  width: 100%;
+}
+
+.frames__inner {
   width: 100%;
   white-space: nowrap;
   border-radius: 5px;
@@ -13,18 +173,30 @@
   position: relative;
   left: 0px;
 }
-.md-frames video {
+
+.frames__video {
   display: inline-block;
   background-color: rgba(0, 0, 0, 0.8);
   background-size: 25%;
   background-position: center;
   background-repeat: no-repeat;
   object-fit: contain;
-  background-image: url('./assets/SmallLoadingThumnails.svg');
+  background-image: url('data:image/svg+xml;utf8,<svg width="200px" height="200px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="lds-eclipse" style="animation-play-state: running; animation-delay: 0s; background: none;"><path stroke="none" d="M10 50A40 40 0 0 0 90 50A40 42 0 0 1 10 50" fill="%2300E0FF" style="animation-play-state: running; animation-delay: 0s;"><animateTransform attributeName="transform" type="rotate" calcMode="linear" values="0 50 51;360 50 51" keyTimes="0;1" dur="1s" begin="0s" repeatCount="indefinite" style="animation-play-state: running; animation-delay: 0s;"></animateTransform></path></svg>');
   margin: 0;
   font-size: 0;
   padding: 0;
 }
-.md-frames .video.loaded {
+
+.frames__video--loaded {
   background-image: none;
+}
+
+.sd-photo-preview__video-cropper {
+  position: absolute;
+  margin-top: 2rem;
+  background-color: unset;
+}
+.dropdown__toggle.btn.btn--ui-dark.btn--icon-only.btn-hollow {
+  margin-left: 0.2rem;
+  margin-right: 0.2rem;
 }
