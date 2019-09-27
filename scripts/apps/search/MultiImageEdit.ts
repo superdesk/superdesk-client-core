@@ -20,18 +20,23 @@ interface IScope extends ng.IScope {
     saveHandler(images): Promise<void>;
     successHandler?(): void;
     cancelHandler?(): void;
+    isSelectedAndLockedInCurrentSession(): boolean;
 }
 
 MultiImageEditController.$inject = [
     '$scope',
     'modal',
     'notify',
+    'lock',
+    'api',
 ];
 
 export function MultiImageEditController(
     $scope: IScope,
     modal,
     notify,
+    lock,
+    api,
 ) {
     const saveHandler = $scope.saveHandler;
 
@@ -98,7 +103,7 @@ export function MultiImageEditController(
     };
 
     $scope.save = (close) => {
-        const imagesForSaving = angular.copy($scope.images);
+        const imagesForSaving = $scope.images.filter((image) => lock.isLockedInCurrentSession(image));
 
         imagesForSaving.forEach((image) => {
             delete image.selected;
@@ -121,7 +126,7 @@ export function MultiImageEditController(
                 unsavedChangesExist = false;
 
                 if (close && typeof $scope.successHandler === 'function') {
-                    $scope.successHandler();
+                    unlockAndCloseModal($scope.successHandler);
                 }
             });
     };
@@ -134,15 +139,43 @@ export function MultiImageEditController(
             )
                 .then(() => {
                     if (typeof $scope.cancelHandler === 'function') {
-                        $scope.cancelHandler();
+                        unlockAndCloseModal($scope.cancelHandler);
                     }
                 });
         } else if (typeof $scope.cancelHandler === 'function') {
-            $scope.cancelHandler();
+            unlockAndCloseModal($scope.cancelHandler);
         }
     };
 
+    $scope.$on('item:lock', (_e, data) => {
+        const {images} = $scope;
+
+        // while editing metadata if any selected item is unlocked by another user update that item here too
+        if (Array.isArray(images) && data != null && data.item != null) {
+            const unlockedItem = images.find((image) => image._id === data.item);
+
+            api.find('archive', unlockedItem._id).then((res) => {
+                const index = images.findIndex((i) => i._id === res._id);
+
+                images[index] = _.extend(images[index], res);
+            });
+        }
+    });
+
+    $scope.isSelectedAndLockedInCurrentSession = () => {
+        return $scope.getSelectedImages().every((image) => lock.isLockedInCurrentSession(image));
+    };
+
     $scope.getSelectedImages = () => ($scope.images || []).filter((item) => item.selected);
+
+    function unlockAndCloseModal(callback) {
+        // Before closing the modal unlock all the selected items
+        const unlockItems = $scope.images.map((item) => {
+            return lock.isLockedInCurrentSession(item) ? lock.unlock(item) : item;
+        });
+
+        Promise.all(unlockItems).then(() => callback());
+    }
 
     function updateMetadata() {
         $scope.metadata = {

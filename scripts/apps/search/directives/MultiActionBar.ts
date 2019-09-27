@@ -6,7 +6,7 @@ import {IArticleActionBulkExtended} from 'apps/monitoring/MultiActionBarReact';
 import {IArticle} from 'superdesk-api';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 
-MultiActionBar.$inject = ['asset', 'multi', 'authoringWorkspace', 'superdesk', 'keyboardManager', 'desks'];
+MultiActionBar.$inject = ['asset', 'multi', 'authoringWorkspace', 'superdesk', 'keyboardManager', 'desks', 'lock'];
 export function MultiActionBar(
     asset,
     multi,
@@ -14,6 +14,7 @@ export function MultiActionBar(
     superdesk,
     keyboardManager,
     desks,
+    lock,
 ) {
     return {
         controller: 'MultiActionBar',
@@ -198,6 +199,23 @@ export function MultiActionBar(
                     var selectedItems = multi.getItems();
 
                     _.find(selectedItems, (_item) => _item._id === data.item).lock_user = data.user;
+                    detectType(selectedItems);
+                }
+            });
+
+            scope.$on('item:unlock', (_e, data) => {
+                if (multi.getIds().includes(data.item)) {
+                    var selectedItems = multi.getItems();
+
+                    // When selected items are unlocked update their lock info and allowed actions
+                    selectedItems.forEach((item) => {
+                        if (item._id === data.item && lock.isLockedInCurrentSession(item)) {
+                            item._locked = false;
+                            item.lock_user = null;
+                            item.lock_session = null;
+                            item.lock_action = null;
+                        }
+                    });
                     detectType(selectedItems);
                 }
             });

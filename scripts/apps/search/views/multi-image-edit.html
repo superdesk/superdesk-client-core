@@ -74,10 +74,15 @@
                         <div class="sd-alert sd-alert--hollow sd-alert--primary sd-alert--small" style="margin: -1rem 0 3rem;">
                             <span translate>Currently editing: {{getSelectedImages().length}} items</span>
                         </div>
+                        <div class="sd-alert sd-alert--hollow sd-alert--alert sd-alert--small" \
+                            style="margin: -1rem 0 3rem;"
+                            ng-if="getSelectedImages().length > 0 && !isSelectedAndLockedInCurrentSession()">
+                            <span translate>Editing disabled as item locked by another user.</span>
+                        </div>
                         <div sd-media-metadata-editor
                             data-item="metadata"
                             data-validator="validator"
-                            data-disabled="!getSelectedImages().length"
+                            data-disabled="!getSelectedImages().length || !isSelectedAndLockedInCurrentSession()"
                             data-dark="true"
                             data-boxed="true"
                             data-on-change="onChange(key)"

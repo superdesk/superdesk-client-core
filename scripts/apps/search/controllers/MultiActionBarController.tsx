@@ -32,12 +32,12 @@ import {showSpikeDialog} from 'apps/archive/show-spike-dialog';
  */
 
 MultiActionBarController.$inject = [
-    '$rootScope', 'multi', 'multiEdit', 'multiImageEdit', 'send', 'remove', 'modal', '$q',
+    '$rootScope', 'multi', 'multiEdit', 'multiImageEdit', 'send', 'remove', 'modal', '$q', 'lock',
     'packages', 'superdesk', 'notify', 'spike', 'authoring', 'privileges', '$location', 'config', 'api',
 ];
 
 export function MultiActionBarController(
-    $rootScope, multi, multiEdit, multiImageEdit, send, remove, modal, $q,
+    $rootScope, multi, multiEdit, multiImageEdit, send, remove, modal, $q, lock,
     packages, superdesk, notify, spike, authoring, privileges, $location, config, api,
 ) {
     this.send = function() {
@@ -73,29 +73,13 @@ export function MultiActionBarController(
     };
 
     this.multiImageEdit = function() {
-        const originalImages = multi.getItems();
-        // load images fully. Using multi.getItems() doesn't work
-        // since it doesn't contain "subject" required for "usage terms"
-
-        Promise.all(multi.getIds().map((id) => api.find('archive', id)))
-            .then((imagesFromDatabase) => {
-                // SDESK-4343
-                // UI state(`selected` property of the article) is stored on a database/API entity
-                // because of that, it's not possible to use the latest data from the API
-                // and it has to be patched on top of old data in order for UI state related properties to be preserved
-                imagesFromDatabase.forEach((imageFromDb: IArticle) => {
-                    const originalImage = originalImages.find((i) => i._id === imageFromDb._id);
-
-                    // attaching missing properties to originalImages
-                    for (const prop in imageFromDb) {
-                        originalImage[prop] = imageFromDb[prop];
-                    }
-                });
-
-                multiImageEdit.edit(originalImages, (editedImages) => Promise.all(
-                    originalImages.map((image: IArticle) => authoring.save(
+        // before opening the edit modal make sure all the items are locked
+        Promise.all(multi.getItems().map((item) => lock.lock(item, true, 'edit')))
+            .then((selectedImages) => {
+                multiImageEdit.edit(selectedImages, (editedImages: Array<IArticle>) => Promise.all(
+                        editedImages.map((image: IArticle) => authoring.save(
+                        _.find(selectedImages, (_item: IArticle) => _item._id === image._id),
                         image,
-                        _.find(editedImages, (item) => item._id === image._id),
                     )),
                 ));
             });

@@ -203,9 +203,9 @@ angular.module('superdesk.apps.authoring', [
                 priority: 3,
                 icon: 'edit-line',
                 keyboardShortcut: 'ctrl+alt+m',
-                controller: ['data', 'multiImageEdit', 'authoring', 'api',
-                    function(data, multiImageEdit, authoring, api) {
-                        api.find('archive', data.item._id).then((item) => {
+                controller: ['data', 'multiImageEdit', 'authoring', 'lock',
+                    function(data, multiImageEdit, authoring, lock) {
+                        lock.lock(data.item, true, 'edit').then((item) => {
                             multiImageEdit.edit([item], (response) => authoring.save(item, response[0]));
                         });
                     }],
