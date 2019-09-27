@@ -4,6 +4,7 @@ interface IProps {
     label: React.ReactElement<HTMLAnchorElement>;
     items: Array<string>;
     onSelect: (item: string) => void;
+    isButton?: boolean;
 }
 interface IState {
     open: boolean;
@@ -20,7 +21,9 @@ export class Dropdown extends React.Component<IProps, IState> {
     }
 
     handleToggle = () => {
-        if (!this.state.open && this.state.select) {
+        // use for custom action when select is not null
+        // e.g: toggle crop mode
+        if (!this.state.open && this.state.select && this.props.isButton) {
             this.props.onSelect('');
             this.setState({ select: null });
             return;

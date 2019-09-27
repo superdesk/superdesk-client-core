@@ -2,13 +2,16 @@ import * as React from 'react';
 import { IVideoEditor } from './VideoEditor';
 import { Dropdown } from './Dropdown/Dropdown';
 import { CropIcon } from './Dropdown/CropIcon';
+import { QualityLabel } from './Dropdown/QualityLabel';
 
 interface IProps {
     onToggleVideo: () => void;
     onRotate: () => void;
     onCrop: (aspect: number) => void;
+    onQualityChange: (quality: number) => void;
     video: IVideoEditor;
     videoHeadline: string;
+    videoHeight: number | undefined;
 }
 
 export class VideoEditorTools extends React.Component<IProps> {
@@ -24,7 +27,17 @@ export class VideoEditorTools extends React.Component<IProps> {
         this.props.onCrop(aspectValue);
     };
 
+    handleQuality = (quality: string) => {
+        let q = quality.replace('p', '');
+        if (q === 'Same') {
+            q = '0';
+        }
+        this.props.onQualityChange(parseInt(q));
+    };
+
     render() {
+        const videoHeight = this.props.videoHeight || 0;
+        const resolutions = ['Same'].concat([360, 480, 720, 1080].filter(i => i < videoHeight).map(i => i + 'p'));
         return (
             <div className="sd-photo-preview__video-tools">
                 <div>
@@ -35,6 +48,7 @@ export class VideoEditorTools extends React.Component<IProps> {
                         label={<CropIcon disabled={!!this.props.video.degree} />}
                         items={['1:1', '4:3', '16:9']}
                         onSelect={this.handleCrop}
+                        isButton={true}
                     />
                     <button
                         className={`
@@ -49,6 +63,7 @@ export class VideoEditorTools extends React.Component<IProps> {
                     </button>
                 </div>
                 <span className="sd-photo-preview__label mlr-auto">{this.props.videoHeadline}</span>
+                <Dropdown label={<QualityLabel />} items={resolutions} onSelect={this.handleQuality} />
             </div>
         );
     }
