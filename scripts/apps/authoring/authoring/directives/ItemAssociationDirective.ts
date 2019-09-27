@@ -66,6 +66,15 @@ export function ItemAssociationDirective(renditions, notify) {
                     // which it shouldn't do, since the element is not controlled by the library.
                     // Because of this, drop is triggered when it shouldn't have been on firefox, but not on chrome.
                     // The same media types check is added from `dragover` method to work around the situation.
+                    const externalItemsCount = Object.values(event.originalEvent.dataTransfer.files || []).length;
+
+                    if (externalItemsCount > 1) {
+                        notify.error(
+                            gettext('Select at most 1 file to upload.'),
+                        );
+                        removeDragOverClass();
+                        return false;
+                    }
                     if (isAllowedMediaType(scope, event)) {
                         removeDragOverClass();
                         event.preventDefault();
