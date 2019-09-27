@@ -291,7 +291,6 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
             this.props.refreshOnEvents.forEach((eventName) => {
                 this.props.$rootScope.$on(eventName, () => {
                     // will update the list using selected filtering / sort options
-                    console.log('event occured ', eventName);
                     this.refetchDataUsingCurrentFilters();
                 });
             });
