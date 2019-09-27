@@ -17,20 +17,37 @@ type IState = {};
 export class VideoTimeline extends React.Component<IProps, IState> {
     private cbwrapper: React.RefObject<HTMLDivElement>;
     private innerPlay: React.RefObject<HTMLDivElement>;
+    private controlbar: React.RefObject<HTMLDivElement>;
 
     constructor(props: IProps) {
         super(props);
-        this.state = {
-            trim: {
-                start: 0,
-                end: 0,
-            },
-        };
+        this.state = {};
         this.cbwrapper = React.createRef();
         this.innerPlay = React.createRef();
+        this.controlbar = React.createRef();
     }
+
     onDragCbStart() {}
-    onDragCb() {}
+
+    getPositionBar = (pX: number) => {
+        const controlbar = this.controlbar.current!;
+        var position = (pX - controlbar.getBoundingClientRect().left) / controlbar.offsetWidth;
+        if (position > 1) {
+            position = 1;
+        }
+        if (position < 0) {
+            position = 0;
+        }
+        position = Math.floor(position * 100) / 100;
+        return position;
+    };
+
+    onDragCb = (e: React.DragEvent<HTMLDivElement>, type: string) => {
+        if (type == 'left') {
+            let start = this.getPositionBar(e.clientX) * this.props.video.current!.duration;
+            this.props.onTrim(start, this.props.trim.end);
+        }
+    };
     onDragCbEnd() {}
 
     render() {
@@ -45,7 +62,7 @@ export class VideoTimeline extends React.Component<IProps, IState> {
                     video={this.props.video}
                     getClass={getClass}
                 />
-                <div className={`${getClass('controlbars')}`}>
+                <div className={`${getClass('controlbars')}`} ref={this.controlbar}>
                     <div className={`${getClass('controlbars__mask')} ${getClass('left')}`}></div>
                     <div className={`${getClass('controlbars__mask')} ${getClass('right')}`}></div>
                     <div className={getClass('controlbars__progress-output')}>
@@ -64,22 +81,22 @@ export class VideoTimeline extends React.Component<IProps, IState> {
                         ref={this.cbwrapper}
                         className={`${getClass('controlbars__wrapper-out')}`}
                         style={{
-                            left: video ? `${(this.props.trim.start / video.duration) * 100} %` : '0%',
-                            right: video ? `${(1 - this.props.trim.end / video.duration) * 100} %` : '0%',
+                            left: video ? `${(this.props.trim.start / video.duration) * 100} %` : '3%',
+                            right: video ? `${(1 - this.props.trim.end / video.duration) * 100} %` : '6%',
                         }}
                     >
                         <div
                             className={`${getClass('controlbars__wrapper')} ${getClass('cb-left')}`}
                             draggable={true}
                             onDragStart={this.onDragCbStart}
-                            onDrag={this.onDragCb}
+                            onDrag={(e: React.DragEvent<HTMLDivElement>) => this.onDragCb(e, 'left')}
                             onDragEnd={this.onDragCbEnd}
                         ></div>
                         <div
                             className={`${getClass('controlbars__wrapper')} ${getClass('cb-right')}`}
                             draggable={true}
                             onDragStart={this.onDragCbStart}
-                            onDrag={this.onDragCb}
+                            onDrag={e => this.onDragCb(e, 'right')}
                             onDragEnd={this.onDragCbEnd}
                         ></div>
                     </div>

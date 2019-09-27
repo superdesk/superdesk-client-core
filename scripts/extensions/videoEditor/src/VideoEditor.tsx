@@ -38,7 +38,8 @@ interface IState extends IVideoEditor {
 }
 
 export class VideoEditor extends React.Component<IProps, IState> {
-    private ref: React.RefObject<HTMLVideoElement>;
+    ref: React.RefObject<HTMLVideoElement>;
+
     constructor(props: IProps) {
         super(props);
         this.ref = React.createRef();
@@ -151,7 +152,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                 videoHeadline={this.props.article.headline}
                             />
                             <VideoTimeline
-                                video={videoSrc}
+                                video={this.ref}
                                 trim={this.state.trim}
                                 onTrim={this.handleTrim}
                                 getClass={this.props.getClass}
