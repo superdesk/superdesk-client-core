@@ -1,6 +1,7 @@
 import {forEach} from 'lodash';
 import langmap from 'core/lang';
 import {gettext} from 'core/utils';
+import {dashboardRoute} from 'appConfig';
 
 interface IActivityData {
     priority: number; // priority used for ordering.
@@ -161,7 +162,7 @@ function SuperdeskProvider($routeProvider, _) {
             betaService.isBeta().then((beta) => {
                 forEach(activities, (activity, id) => {
                     if (activity.beta === true && !beta || !isAllowed(activity)) {
-                        $routeProvider.when(activity.when, {redirectTo: '/workspace'});
+                        $routeProvider.when(activity.when, {redirectTo: dashboardRoute});
                     }
                 });
             });
@@ -571,8 +572,8 @@ angular.module('superdesk.core.activity', [
             if (currentRoute && previousRoute) {
                 if (currentRoute.$$route !== undefined && previousRoute.$$route !== undefined) {
                     if (currentRoute.$$route.originalPath === '/') {
-                        this.setReferrerUrl('/workspace');
-                        localStorage.setItem('referrerUrl', '/workspace');
+                        this.setReferrerUrl(dashboardRoute);
+                        localStorage.setItem('referrerUrl', dashboardRoute);
                         sessionStorage.removeItem('previewUrl');
                     } else if (currentRoute.$$route.authoring && (!previousRoute.$$route.authoring ||
                         previousRoute.$$route._id === 'packaging')) {
@@ -594,7 +595,7 @@ angular.module('superdesk.core.activity', [
             if (typeof referrerURL === 'undefined' || referrerURL === null) {
                 if (typeof localStorage.getItem('referrerUrl') === 'undefined'
                 || localStorage.getItem('referrerUrl') === null) {
-                    this.setReferrerUrl('/workspace');
+                    this.setReferrerUrl(dashboardRoute);
                 } else {
                     referrerURL = localStorage.getItem('referrerUrl');
                 }

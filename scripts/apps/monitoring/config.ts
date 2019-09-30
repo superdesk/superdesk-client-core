@@ -11,15 +11,14 @@ export function Monitoring(superdesk, workspaceMenuProvider) {
             sideTemplateUrl: 'scripts/apps/workspace/views/workspace-sidenav.html',
         });
 
-    workspaceMenuProvider.item(
-        {
-            icon: 'view',
-            href: '/workspace/monitoring',
-            label: gettext('Monitoring'),
-            shortcut: 'alt+m',
-            order: 200,
-        },
-    );
+    workspaceMenuProvider.item({
+        if: 'privileges.monitoring_view',
+        icon: 'view',
+        href: '/workspace/monitoring',
+        label: gettext('Monitoring'),
+        shortcut: 'alt+m',
+        order: 200,
+    });
 }
 
 SpikeMonitoring.$inject = ['superdeskProvider', 'workspaceMenuProvider'];
@@ -34,6 +33,7 @@ export function SpikeMonitoring(superdesk, workspaceMenuProvider) {
         });
 
     workspaceMenuProvider.item({
+        if: 'privileges.spike_read',
         href: '/workspace/spike-monitoring',
         label: gettext('Spike'),
         shortcut: 'ctrl+alt+k',
