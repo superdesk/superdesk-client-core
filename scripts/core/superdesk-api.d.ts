@@ -60,6 +60,12 @@ declare module 'superdesk-api' {
             pages?: Array<IPage>;
             customFieldTypes?: Array<ICustomFieldType>;
             authoringActions?(article: IArticle): Promise<Array<IArticleAction>>;
+            notifications?: {
+                [id: string]: (notification) => {
+                    body: string;
+                    actions: Array<{label: string; onClick(): void;}>;
+                };
+            };
             entities?: {
                 article?: {
                     getActions?(article: IArticle): Promise<Array<IArticleAction>>;

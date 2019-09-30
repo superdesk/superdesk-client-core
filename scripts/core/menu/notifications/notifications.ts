@@ -1,6 +1,9 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
+import {extensions} from 'core/extension-imports.generated';
+import {IExtensionActivationResult} from 'superdesk-api';
+import {logger} from 'core/services/logger';
 
 UserNotificationsService.$inject = [
     '$rootScope',
@@ -256,6 +259,27 @@ angular.module('superdesk.core.menu.notifications', ['superdesk.core.services.as
     .service('deskNotifications', DeskNotificationsService)
     .directive('sdMarkAsRead', MarkAsReadDirective)
 
+    .directive('sdNotificationFromExtension', ['asset', function(asset) {
+        return {
+            require: '^sdSuperdeskView',
+            scope: {
+                notification: '=',
+                handlers: '=',
+            },
+            templateUrl: asset.templateUrl('core/menu/notifications/views/notification-from-extension.html'),
+            link: function(scope, elem, attrs, ctrl) {
+                const result = scope.handlers[scope.notification.name](scope.notification);
+
+                scope.label = result.body;
+                scope.actions = result.actions;
+
+                scope.executeAction = (action) => {
+                    ctrl.flags.notifications = !ctrl.flags.notifications;
+                    action.onClick();
+                };
+            },
+        };
+    }])
     .directive('sdNotifications',
         ['asset', 'authoringWorkspace', '$rootScope', function(
             asset,
@@ -266,6 +290,30 @@ angular.module('superdesk.core.menu.notifications', ['superdesk.core.services.as
                 require: '^sdSuperdeskView',
                 templateUrl: asset.templateUrl('core/menu/notifications/views/notifications.html'),
                 link: function(scope, elem, attrs, ctrl) {
+                    // merged from all extensions
+                    const notificationsKeyed: IExtensionActivationResult['contributions']['notifications'] = {};
+
+                    for (const extension of Object.values(extensions)) {
+                        if (
+                            extension.activationResult.contributions != null
+                            && extension.activationResult.contributions.notifications != null
+                        ) {
+                            for (const key in extension.activationResult.contributions.notifications) {
+                                if (notificationsKeyed[key] == null) {
+                                    notificationsKeyed[key] =
+                                        extension.activationResult.contributions.notifications[key];
+                                } else {
+                                    logger.error(new Error(`Notification key ${key} already registered.`));
+                                }
+                            }
+                        }
+                    }
+
+                    scope.notificationsKeyed = notificationsKeyed;
+
+                    scope.getNotificationFromExtension = (notification) =>
+                        notificationsKeyed[notification.name](notification);
+
                     scope.flags = ctrl.flags;
 
                     scope.openArticle = function(notification) {

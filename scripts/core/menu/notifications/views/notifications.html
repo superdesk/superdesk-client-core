@@ -38,8 +38,19 @@
                                 <a title="{{ notification.item_slugline }}" ng-click="openArticle(notification)">{{ :: notification.item_slugline }}</a></i>
                             </p>
                         </div>
-                        <div class="content" ng-if="notification.name !== 'notify' && notification.name !== 'user:mention' && notification.name !== 'translated:changed' "
-                            ng-click="onNotificationClick(notification)">
+                        <div
+                            ng-if="notificationsKeyed.hasOwnProperty(notification.name) === true"
+                            class="content"
+                        >
+                            <time sd-datetime data-date="notification._created"></time>
+                            <p class="text">
+                                <sd-notification-from-extension data-notification="notification" handlers="notificationsKeyed"></sd-notification-from-extension>
+                            </p>
+                        </div>
+                        <div
+                            class="content" ng-if="notification.name !== 'notify' && notification.name !== 'user:mention' && notification.name !== 'translated:changed' && notificationsKeyed.hasOwnProperty(notification.name) !== true"
+                            ng-click="onNotificationClick(notification)"
+                        >
                             <time sd-datetime data-date="notification._created"></time>
                             <a class="text" ng-if="notification.data.is_link"><b>{{:: notification.user_name || "System" }}</b>: <span sd-activity-message data-activity="notification"></span></a>
                             <p class="text" ng-if="!notification.data.is_link"><b>{{:: notification.user_name || "System" }}</b>: <span sd-activity-message data-activity="notification"></span></p>
