@@ -6,8 +6,9 @@ import * as ctrl from '../controllers';
 import {waitForMediaToLoad} from 'core/helpers/waitForMediaToBeReady';
 import {getSuperdeskType} from 'core/utils';
 import {gettext} from 'core/utils';
-import {IArticle} from 'superdesk-api';
 import {addInternalEventListener} from 'core/internal-events';
+import {isAllowedMediaType, getAllowedTypeNames} from './ItemAssociationDirective';
+import {IArticle} from 'superdesk-api';
 
 const carouselContainerSelector = '.sd-media-carousel__content';
 
@@ -74,10 +75,6 @@ export function ItemCarouselDirective(notify) {
         link: function(scope: IScope, elem, attr, controller) {
             let carousel;
             let previousItems: Array<any>;
-            const allowed = {picture: scope.allowPicture, video: scope.allowVideo, audio: scope.allowAudio};
-            const ALLOWED_TYPES = Object.keys(allowed)
-                .filter((key) => allowed[key] === true)
-                .map((key) => 'application/superdesk.item.' + key);
 
             scope.currentIndex = 0;
 
@@ -152,7 +149,7 @@ export function ItemCarouselDirective(notify) {
                 carousel.trigger('to.owl.carousel', [index]);
             };
 
-            function canAddImage(image: IArticle): boolean {
+            function canAddMediaItems(internalIds: Array<IArticle['_id']>, externalItemsCount: number = 0): boolean {
                 const mediaItemsForCurrentField = Object.keys(scope.item.associations || {})
                     .filter((key) => key.startsWith(scope.field._id) && scope.item.associations[key] != null)
                     .map((key) => scope.item.associations[key]);
@@ -160,13 +157,24 @@ export function ItemCarouselDirective(notify) {
                 const currentUploads = mediaItemsForCurrentField.length;
 
                 const itemAlreadyAddedAsMediaGallery = mediaItemsForCurrentField.some(
-                    (mediaItem) => mediaItem._id === image._id,
+                    (mediaItem) => internalIds.includes(mediaItem._id),
                 );
 
                 if (currentUploads >= scope.maxUploads) {
                     notify.error(
                         gettext(
                             'Media item was not added, because the field reached the limit of allowed media items.',
+                        ),
+                    );
+                    return false;
+                }
+
+                // check files from external folder does not exceed the maxUploads limit
+                if (currentUploads + externalItemsCount > scope.maxUploads) {
+                    notify.error(
+                        gettext(
+                            'Select at most {{maxUploads}} files to upload.',
+                            {maxUploads: scope.maxUploads - currentUploads},
                         ),
                     );
                     return false;
@@ -195,19 +203,19 @@ export function ItemCarouselDirective(notify) {
                     event.preventDefault();
                     event.stopPropagation();
 
-                    if (ALLOWED_TYPES.includes(type) || type === 'Files') {
-                        const item = angular.fromJson(event.originalEvent.dataTransfer.getData(type));
+                    if (isAllowedMediaType(scope, event)) {
+                        const itemStr = event.originalEvent.dataTransfer.getData(type);
+                        const internalIds = typeof itemStr === 'string' && itemStr.length > 0
+                            ? [JSON.parse(itemStr)._id]
+                            : [];
+                        const externalItemsCount = Object.values(event.originalEvent.dataTransfer.files || []).length;
 
-                        if (canAddImage(item)) {
+                        if (canAddMediaItems(internalIds, externalItemsCount)) {
                             scope.currentIndex = 0;
                             controller.initializeUploadOnDrop(scope, event);
                         }
                     } else {
-                        const allowedTypeNames = [
-                            (scope.allowPicture === true ? gettext('image') : ''),
-                            (scope.allowVideo === true ? gettext('video') : ''),
-                            (scope.allowAudio === true ? gettext('audio') : ''),
-                        ].filter(Boolean).join(', ');
+                        const allowedTypeNames = getAllowedTypeNames(scope);
                         const message = gettext('Only the following content item types are allowed: ');
 
                         notify.error(message + allowedTypeNames);
@@ -302,7 +310,7 @@ export function ItemCarouselDirective(notify) {
             const removeAddImageEventListener = addInternalEventListener('addImage', (event) => {
                 const {field, image} = event.detail;
 
-                if (scope.field._id === field && canAddImage(image)) {
+                if (scope.field._id === field && canAddMediaItems([image._id])) {
                     controller.addAssociation(scope, image);
                 }
             });
