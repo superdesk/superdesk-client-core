@@ -6,6 +6,8 @@ import { VideoEditorTools } from './VideoEditorTools';
 import 'react-image-crop/dist/ReactCrop.css';
 import { VideoTimeline } from './VideoTimeline/VideoTimeline';
 import { VideoEditorProvider } from './VideoEditorContext';
+import { VideoPreviewThumbnail } from './VideoPreviewThumbnail/VideoPreviewThumbnail';
+
 interface IArticleVideo extends IArticle {
     renditions?: {
         original: {
@@ -159,12 +161,11 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                 videoHeadline={this.props.article.headline}
                                 videoHeight={get(this.ref.current, 'videoHeight')}
                             />
-                            <VideoTimeline
-                                video={this.ref}
-                                trim={this.state.trim}
-                                onTrim={this.handleTrim}
-                            ></VideoTimeline>
                         </div>
+                    </div>
+                    <div className="sd-photo-preview__thumb-strip sd-photo-preview__thumb-strip--video">
+                        <VideoPreviewThumbnail videoRef={this.ref} />
+                        <VideoTimeline video={this.ref} trim={this.state.trim} onTrim={this.handleTrim} />
                     </div>
                 </div>
             </VideoEditorProvider>

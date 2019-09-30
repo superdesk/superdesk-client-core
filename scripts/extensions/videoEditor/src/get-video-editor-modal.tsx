@@ -22,22 +22,6 @@ export function getVideoEditModal(superdesk: ISuperdesk, article: IArticle) {
                             <div className="modal__body modal__body--no-padding">
                                 <VideoEditor article={article} getClass={getClass} />
                             </div>
-
-                            <div className="modal__footer">
-                                <button className="btn">{gettext('Cancel')}</button>
-                                <button
-                                    className="btn btn--primary"
-                                    onClick={() => {
-                                        superdesk.dataApi
-                                            .findOne<IArticle>('archive', article._id)
-                                            .then(fetchedArticled => {
-                                                alert(fetchedArticled._id);
-                                            });
-                                    }}
-                                >
-                                    {gettext('Ok')}
-                                </button>
-                            </div>
                         </div>
                     </div>
                 </div>

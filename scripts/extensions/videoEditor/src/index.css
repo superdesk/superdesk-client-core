@@ -188,3 +188,11 @@
   margin-left: 0.2rem;
   margin-right: 0.2rem;
 }
+
+.thumbnail-edit__container {
+  width: 16rem;
+  height: 16rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
