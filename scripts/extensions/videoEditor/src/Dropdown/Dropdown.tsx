@@ -1,10 +1,11 @@
 import * as React from 'react';
 
 interface IProps {
-    label: React.ReactElement<HTMLAnchorElement>;
+    label: React.ReactElement<any>;
     items: Array<string>;
     onSelect: (item: string) => void;
     isButton?: boolean;
+    className?: string;
 }
 interface IState {
     open: boolean;
@@ -40,7 +41,7 @@ export class Dropdown extends React.Component<IProps, IState> {
 
     render() {
         return (
-            <div className={`dropdown ${this.state.open ? 'open' : ''}`}>
+            <div className={`dropdown ${this.state.open ? 'open' : ''} ${this.props.className || ''}`}>
                 {React.cloneElement(this.props.label as React.ReactElement<any>, {
                     onClick: this.handleToggle,
                     select: this.state.select,

@@ -191,12 +191,7 @@
   background-image: none;
 }
 
-.sd-photo-preview__video-cropper {
-  position: absolute;
-  margin-top: 2rem;
-  background-color: unset;
-}
-.dropdown__toggle.btn.btn--ui-dark.btn--icon-only.btn-hollow {
-  margin-left: 0.2rem;
-  margin-right: 0.2rem;
+.video__dropdown {
+  margin-left: .2rem;
+  margin-right: .2rem;
 }

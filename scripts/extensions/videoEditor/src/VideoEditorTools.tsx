@@ -3,6 +3,7 @@ import { IVideoEditor } from './VideoEditor';
 import { Dropdown } from './Dropdown/Dropdown';
 import { CropIcon } from './Dropdown/CropIcon';
 import { QualityLabel } from './Dropdown/QualityLabel';
+import VideoEditorContext from './VideoEditorContext';
 
 interface IProps {
     onToggleVideo: () => void;
@@ -15,6 +16,7 @@ interface IProps {
 }
 
 export class VideoEditorTools extends React.Component<IProps> {
+    static contextType = VideoEditorContext;
     constructor(props: IProps) {
         super(props);
     }
@@ -38,6 +40,7 @@ export class VideoEditorTools extends React.Component<IProps> {
     render() {
         const videoHeight = this.props.videoHeight || 0;
         const resolutions = ['Same'].concat([360, 480, 720, 1080].filter(i => i < videoHeight).map(i => i + 'p'));
+        const { getClass } = this.context;
         return (
             <div className="sd-photo-preview__video-tools">
                 <div>
@@ -49,6 +52,7 @@ export class VideoEditorTools extends React.Component<IProps> {
                         items={['1:1', '4:3', '16:9']}
                         onSelect={this.handleCrop}
                         isButton={true}
+                        className={getClass('video__dropdown')}
                     />
                     <button
                         className={`

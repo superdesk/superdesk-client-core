@@ -147,7 +147,6 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                             background: 'unset',
                                             position: 'absolute',
                                         }}
-                                        className={this.props.getClass('sd-photo-preview__video-cropper')}
                                     />
                                 )}
                             </div>
