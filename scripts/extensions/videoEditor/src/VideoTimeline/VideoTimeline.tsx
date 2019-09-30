@@ -1,7 +1,7 @@
 import * as React from 'react';
-// import { Bar } from '../assets/bar.svg';
 import { BarIcon } from './BarIcon';
 import { ListThumbnails } from './ListThumbnails';
+import VideoEditorContext from '../VideoEditorContext';
 
 type IProps = {
     video: React.RefObject<HTMLVideoElement>;
@@ -10,11 +10,11 @@ type IProps = {
         end: number;
     };
     onTrim: (start: number, end: number) => void;
-    getClass: Function;
 };
 type IState = {};
 
 export class VideoTimeline extends React.Component<IProps, IState> {
+    static contextType = VideoEditorContext;
     private cbwrapper: React.RefObject<HTMLDivElement>;
     private innerPlay: React.RefObject<HTMLDivElement>;
     private controlbar: React.RefObject<HTMLDivElement>;
@@ -51,17 +51,11 @@ export class VideoTimeline extends React.Component<IProps, IState> {
     onDragCbEnd() {}
 
     render() {
-        const { getClass } = this.props;
+        const { getClass } = this.context;
         const video = this.props.video.current!;
         return (
             <div className={getClass('timeline-controls')}>
-                <ListThumbnails
-                    thumbnails={[]}
-                    widthPic={90}
-                    numberThumbnails={7}
-                    video={this.props.video}
-                    getClass={getClass}
-                />
+                <ListThumbnails thumbnails={[]} widthPic={90} numberThumbnails={7} video={this.props.video} />
                 <div className={`${getClass('controlbars')}`} ref={this.controlbar}>
                     <div className={`${getClass('controlbars__mask')} ${getClass('left')}`}></div>
                     <div className={`${getClass('controlbars__mask')} ${getClass('right')}`}></div>

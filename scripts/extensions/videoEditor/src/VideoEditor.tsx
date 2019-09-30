@@ -5,7 +5,7 @@ import ReactCrop from 'react-image-crop';
 import { VideoEditorTools } from './VideoEditorTools';
 import 'react-image-crop/dist/ReactCrop.css';
 import { VideoTimeline } from './VideoTimeline/VideoTimeline';
-
+import { VideoEditorProvider } from './VideoEditorContext';
 interface IArticleVideo extends IArticle {
     renditions?: {
         original: {
@@ -57,6 +57,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
             quality: 0,
         };
     }
+
     componentDidMount() {
         const canvas = document.createElement('canvas');
         canvas.width = 1000;
@@ -118,7 +119,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
         };
 
         return (
-            <div>
+            <VideoEditorProvider value={{ getClass: this.props.getClass }}>
                 <div className="sd-photo-preview sd-photo-preview--edit-video">
                     <div className="sd-photo-preview__video">
                         <div className="sd-photo-preview__video-inner">
@@ -163,12 +164,11 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                 video={this.ref}
                                 trim={this.state.trim}
                                 onTrim={this.handleTrim}
-                                getClass={this.props.getClass}
                             ></VideoTimeline>
                         </div>
                     </div>
                 </div>
-            </div>
+            </VideoEditorProvider>
         );
     }
 }

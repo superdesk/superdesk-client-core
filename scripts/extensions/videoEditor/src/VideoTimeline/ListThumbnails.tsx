@@ -1,11 +1,10 @@
 import * as React from 'react';
-
+import VideoEditorContext from '../VideoEditorContext';
 interface IProps {
     thumbnails: Array<ThumbnailObject>;
     widthPic: number;
     numberThumbnails: number;
     video: React.RefObject<HTMLVideoElement>;
-    getClass: Function;
 }
 
 interface IState {
@@ -17,6 +16,8 @@ type ThumbnailObject = {
 };
 
 export class ListThumbnails extends React.Component<IProps, IState> {
+    static contextType = VideoEditorContext;
+
     constructor(props: IProps) {
         super(props);
         this.state = {
@@ -48,7 +49,7 @@ export class ListThumbnails extends React.Component<IProps, IState> {
         });
     }
     render() {
-        const { getClass } = this.props;
+        const { getClass } = this.context;
         return (
             <div className={`${getClass('frames')} ${getClass('frames--thumbs')}`}>
                 <div className={getClass('frames__inner')}>
