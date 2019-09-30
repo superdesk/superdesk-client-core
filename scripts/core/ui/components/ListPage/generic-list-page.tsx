@@ -548,11 +548,24 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
                                         }));
                                     }}
                                     item={this.state.newItem}
-                                    onSave={(item: T) => this.props.items.create(item).then((res) => {
-                                        this.props.notify.success(gettext('The item has been created.'));
-                                        this.closeNewItemForm();
-                                        this.openPreview(res._id);
-                                    })}
+                                    onSave={(item: T) => this.props.items.create(item)
+                                        .then((res: IState['newItem']) => {
+                                            this.props.notify.success(gettext('The item has been created.'));
+                                            this.closeNewItemForm();
+                                            // if there are any active filters and new item get filtered out
+                                            // the annotations library breaks as we don't have item to show preview, so
+                                            // remove all the active filters and apply language filter as item language
+                                            // so that new item does not get filtered out as we show preview of item
+                                            this.setState((prevState) => ({
+                                                ...prevState,
+                                                filterValues: {
+                                                    language: res.language,
+                                                },
+                                            }), () => {
+                                                this.filter();
+                                                setTimeout(() => this.openPreview(res._id), 100);
+                                            });
+                                        })}
                                     onClose={this.closeNewItemForm}
                                     onCancel={this.closeNewItemForm}
                                 />
