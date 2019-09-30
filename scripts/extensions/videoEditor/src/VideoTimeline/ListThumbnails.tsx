@@ -1,5 +1,6 @@
 import * as React from 'react';
 import VideoEditorContext from '../VideoEditorContext';
+
 interface IProps {
     thumbnails: Array<ThumbnailObject>;
     widthPic: number;
@@ -48,6 +49,7 @@ export class ListThumbnails extends React.Component<IProps, IState> {
             thumbnailsRender: thumbnailsRender,
         });
     }
+
     render() {
         const { getClass } = this.context;
         return (
@@ -59,7 +61,7 @@ export class ListThumbnails extends React.Component<IProps, IState> {
                             poster={item.url}
                             width={this.props.widthPic}
                             height="50"
-                            key={index.toString()}
+                            key={index}
                         />
                     ))}
                 </div>
