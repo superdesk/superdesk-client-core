@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import {get} from 'lodash';
 import {uniq, pickBy, isEmpty, forEach} from 'lodash';
 import {validateMediaFieldsThrows} from 'apps/authoring/authoring/controllers/ChangeImageController';
 import {logger} from 'core/services/logger';
@@ -162,11 +163,12 @@ export function MultiImageEditController(
 
     }
 
-    function getUniqueValuesExtra(field: string) {
+    function getUniqueValues(field: string) {
         const uniqueValues = {};
         $scope.getSelectedImages()
-            .filter((item) => item.extra != null && item.extra[field] != null && item.extra[field] !== '')
-            .map((item) => item.extra[field])
+            .map((item) => get(item, field))
+            .filter((value) => value != null && value !== '')
+            .map((value) => JSON.stringify(value))
             .forEach((value) => uniqueValues[value] = 1);
         return Object.keys(uniqueValues);
     }
@@ -178,58 +180,39 @@ export function MultiImageEditController(
      */
     function compareExtra() {
         // get unique values for each extra field
+        const extra = {};
         const values = {};
         $scope.getSelectedImages().forEach((item) => {
             if (item.extra != null) {
                 for (const field in item.extra) {
                     if (!values.hasOwnProperty(field)) {
-                        values[field] = getUniqueValuesExtra(field);
+                        values[field] = getUniqueValues('extra.' + field);
+                        extra[field] = getMetaValue(field, values[field]);
                     }
                 }
             }
         });
 
-        // populate metadata editor based on unique values count
-        const extra = {};
-        for (const field in values) {
-            if (values[field].length > 1) {
-                $scope.placeholder[field] = gettext('(multiple values)');
-                extra[field] = null;
-            } else if (values[field].length === 1) {
-                $scope.placeholder[field] = '';
-                extra[field] = values[field][0];
-            } else {
-                $scope.placeholder[field] = '';
-                extra[field] = null;
-            }
-        }
-
         return extra;
     }
 
-    function compare(fieldName) {
-        const uniqueValues = uniq(
-            $scope.getSelectedImages()
-                .filter((item) => item[fieldName] != null)
+    function getMetaValue(field: string, uniqueValues: Array<string>, defaultValue = null) {
+        $scope.placeholder[field] = '';
 
-                // IArticle['subject'] is a collection of custom vocabulary items
-                // stringifying is required to compare arrays
-                .map((item) => JSON.stringify(item[fieldName])),
-        );
-
-        const defaultValues = {
-            subject: [],
-        };
-
-        if (uniqueValues.length < 1) {
-            return defaultValues[fieldName] || '';
-        } else if (uniqueValues.length > 1) {
-            $scope.placeholder[fieldName] = gettext('(multiple values)');
-            return defaultValues[fieldName] || '';
-        } else {
-            $scope.placeholder[fieldName] = '';
+        if (uniqueValues.length === 1) {
             return JSON.parse(uniqueValues[0]);
+        } else if (uniqueValues.length > 1) {
+            $scope.placeholder[field] = gettext('(multiple values)');
         }
+
+        return defaultValue || '';
+    }
+
+    function compare(fieldName) {
+        const uniqueValues = getUniqueValues(fieldName);
+        const defaultValues = {subject: []};
+
+        return getMetaValue(fieldName, uniqueValues, defaultValues[fieldName]);
     }
 }
 
