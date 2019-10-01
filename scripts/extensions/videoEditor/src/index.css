@@ -2,13 +2,13 @@
   position: relative;
   box-sizing: border-box;
   top: 40%;
+  height:56px;
   left: 2%;
   display: block;
-  width: 100%;
+  width: 80%;
 }
 
 .controlbars {
-  --progress: 0;
   position: absolute;
   top: -1px;
   left: -1px;
@@ -62,14 +62,12 @@
   top: 0;
   bottom: 0;
   transform: translate(-50%, 0);
-  pointer-events: none;
-  --offset: 3.92699px;
-  --contentTop: -20.073px;
+  pointer-events: none;  
 }
 
 .controlbars__progress-output__content {
   position: relative;
-  transform: translate(0, var(--contentTop));
+  transform: translate(0, -20.073px);
   text-align: center;
 }
 

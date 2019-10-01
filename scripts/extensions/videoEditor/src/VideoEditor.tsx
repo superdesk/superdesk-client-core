@@ -40,6 +40,12 @@ interface IState extends IVideoEditor {
     };
 }
 
+export type ThumbnailObject = {
+    url: string;
+    width: number;
+    height: number;
+};
+
 export class VideoEditor extends React.Component<IProps, IState> {
     ref: React.RefObject<HTMLVideoElement>;
 
@@ -132,6 +138,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                         src={videoSrc}
                                         onPlay={() => this.setState({ playing: true })}
                                         onPause={() => this.setState({ playing: false })}
+                                        onLoadedData={() => this.handleTrim(0, this.ref.current!.duration)}
                                         autoPlay
                                     ></video>
                                 </div>
@@ -165,7 +172,12 @@ export class VideoEditor extends React.Component<IProps, IState> {
                     </div>
                     <div className="sd-photo-preview__thumb-strip sd-photo-preview__thumb-strip--video">
                         <VideoPreviewThumbnail videoRef={this.ref} />
-                        <VideoTimeline video={this.ref} trim={this.state.trim} onTrim={this.handleTrim} />
+                        <VideoTimeline
+                            video={this.ref}
+                            trim={this.state.trim}
+                            onTrim={this.handleTrim}
+                            thumbnails={[]}
+                        />
                     </div>
                 </div>
             </VideoEditorProvider>

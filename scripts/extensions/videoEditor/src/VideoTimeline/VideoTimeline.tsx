@@ -2,45 +2,82 @@ import * as React from 'react';
 import { BarIcon } from './BarIcon';
 import { ListThumbnails } from './ListThumbnails';
 import VideoEditorContext from '../VideoEditorContext';
+import { ThumbnailObject } from '../VideoEditor';
 
-type IProps = {
+interface IProps {
     video: React.RefObject<HTMLVideoElement>;
+    thumbnails: Array<ThumbnailObject>;
     trim: {
         start: number;
         end: number;
     };
     onTrim: (start: number, end: number) => void;
-};
-type IState = {};
+}
+interface IState {
+    currentTime: number;
+    intervalTimer: any;
+}
 
 export class VideoTimeline extends React.Component<IProps, IState> {
     static contextType = VideoEditorContext;
     private cbwrapper: React.RefObject<HTMLDivElement>;
-    private innerPlay: React.RefObject<HTMLDivElement>;
     private controlbar: React.RefObject<HTMLDivElement>;
 
     constructor(props: IProps) {
         super(props);
-        this.state = {};
+        this.state = {
+            currentTime: 0,
+            intervalTimer: null,
+        };
         this.cbwrapper = React.createRef();
-        this.innerPlay = React.createRef();
         this.controlbar = React.createRef();
     }
     componentDidMount() {
-        this.props.video.current!.addEventListener('loadeddata', this.videoOnloaded);
+        // call tick every 100ms to update current time state
+        this.setState({
+            intervalTimer: setInterval(this.tick, 100),
+        });
     }
-    videoOnloaded = () => {
+    getRenderThumbnails = (thumbnails: Array<ThumbnailObject>, numberThumbnails: number, widthPic: number) => {
+        const duration = this.props.video.current! ? this.props.video.current!.duration : 0;
+        let thumbnailsRender: Array<ThumbnailObject> = [];
+        const per_delta_image =
+            thumbnails.length > 1 ? (thumbnails.length - 1) / numberThumbnails : duration / numberThumbnails;
+        for (let i = 0; i <= numberThumbnails; i++) {
+            let thumnail: ThumbnailObject;
+            if (this.props.thumbnails && this.props.thumbnails.length > 0) {
+                thumnail = this.props.thumbnails[Math.round(i * per_delta_image)];
+                thumbnailsRender.push(thumnail);
+            } else {
+                thumnail = {
+                    url: '',
+                    width: widthPic,
+                    height: 50,
+                };
+                thumbnailsRender.push(thumnail);
+                //Loading thumbnail one by one, if we call all api at same time, browser will lag.
+            }
+        }
+        return thumbnailsRender;
+    };
+    tick = () => {
+        // updates the current time state
+        let currentTime = this.props.video.current!.currentTime;
+        currentTime < this.props.trim.end && this.props.video.current!
+            ? this.setState({ currentTime: currentTime })
+            : this.props.video.current!;
+    };
+    videoLoadedData = () => {
         this.props.onTrim(0, this.props.video.current!.duration);
     };
 
     componentWillUnmount() {
-        this.props.video.current!.removeEventListener('loadeddata', this.videoOnloaded);
+        clearInterval(this.state.intervalTimer);
     }
 
     onDragCbStart(e: React.DragEvent<HTMLDivElement>) {
-        var img = document.createElement('img');
-        e.dataTransfer.setDragImage(img, 0, 0);
-        e.dataTransfer.setData('text/plain', '');
+        //set shadow drag image is empty
+        e.dataTransfer.setDragImage(document.createElement('img'), 0, 0);
     }
 
     getPositionBar = (pX: number) => {
@@ -52,7 +89,7 @@ export class VideoTimeline extends React.Component<IProps, IState> {
         if (position < 0) {
             position = 0;
         }
-        position = Math.floor(position * 100) / 100;
+        position = Math.floor(position * 1000) / 1000;
         return position;
     };
 
@@ -67,7 +104,27 @@ export class VideoTimeline extends React.Component<IProps, IState> {
             }
         }
     };
-    onDragCbEnd() {}
+
+    onDragCbEnd = (e: React.DragEvent<HTMLDivElement>) => {
+        this.setVideoCurrentTime(e.clientX);
+    };
+
+    controlbarsClick = (e: React.MouseEvent) => {
+        let time = this.setVideoCurrentTime(e.clientX);
+        if (time < this.props.trim.start) {
+            this.props.onTrim(time, this.props.trim.end);
+        }
+        if (time > this.props.trim.end) {
+            this.props.onTrim(this.props.trim.start, time);
+        }
+    };
+
+    setVideoCurrentTime = (pX: number) => {
+        let time = this.getPositionBar(pX) * this.props.video.current!.duration;
+        this.props.video.current!.currentTime = time;
+        this.setState({ currentTime: time });
+        return time;
+    };
 
     getStrTime(s: number) {
         let mins: number = Math.floor(s / 60);
@@ -82,12 +139,14 @@ export class VideoTimeline extends React.Component<IProps, IState> {
         //set state for control left, right bar
         const left = video ? `${(this.props.trim.start / video.duration) * 100}%` : '0%';
         const right = video ? `${(1 - this.props.trim.end / video.duration) * 100}%` : '0%';
-        const leftStrTime = this.getStrTime(this.props.trim.start);
-        const rightStrTime = this.getStrTime(this.props.trim.end);
+        const widthPic = video && (50 * video.clientWidth) / video.clientHeight;
+        const numberThumbnails =
+            this.controlbar.current! && Math.floor(this.controlbar.current!.offsetWidth / widthPic);
+        const thumnails = this.getRenderThumbnails(this.props.thumbnails, numberThumbnails, widthPic);
         return (
             <div className={getClass('timeline-controls')}>
-                <ListThumbnails thumbnails={[]} widthPic={90} numberThumbnails={7} video={this.props.video} />
-                <div className={`${getClass('controlbars')}`} ref={this.controlbar}>
+                <ListThumbnails thumbnails={thumnails} video={this.props.video} />
+                <div className={`${getClass('controlbars')}`} ref={this.controlbar} onClick={this.controlbarsClick}>
                     <div
                         className={`${getClass('controlbars__mask')} ${getClass('controlbars__mask--left')}`}
                         style={{
@@ -100,14 +159,16 @@ export class VideoTimeline extends React.Component<IProps, IState> {
                             width: right,
                         }}
                     ></div>
-                    <div className={getClass('controlbars__progress-output')}>
+                    <div
+                        className={getClass('controlbars__progress-output')}
+                        style={{
+                            left: video ? `${(this.state.currentTime / video.duration) * 100}%` : '0%',
+                        }}
+                    >
                         <div className={getClass('controlbars__progress-output__content')}>
                             <BarIcon />
-                            <div
-                                ref={this.innerPlay}
-                                className={getClass('controlbars__progress-output__content__inner')}
-                            >
-                                00:00.0
+                            <div className={getClass('controlbars__progress-output__content__inner')}>
+                                {this.getStrTime(this.state.currentTime)}
                             </div>
                         </div>
                         <div className={getClass('controlbars__progress-output__progress-line')}></div>
@@ -126,7 +187,7 @@ export class VideoTimeline extends React.Component<IProps, IState> {
                             onDragStart={this.onDragCbStart}
                             onDrag={(e: React.DragEvent<HTMLDivElement>) => this.onDragCb(e, 'left')}
                             onDragEnd={this.onDragCbEnd}
-                            data-content={leftStrTime}
+                            data-content={this.getStrTime(this.props.trim.start)}
                         ></div>
                         <div
                             className={`${getClass('controlbars__wrapper')} ${getClass('controlbars__wrapper--right')}`}
@@ -134,7 +195,7 @@ export class VideoTimeline extends React.Component<IProps, IState> {
                             onDragStart={this.onDragCbStart}
                             onDrag={(e: React.DragEvent<HTMLDivElement>) => this.onDragCb(e, 'right')}
                             onDragEnd={this.onDragCbEnd}
-                            data-content={rightStrTime}
+                            data-content={this.getStrTime(this.props.trim.end)}
                         ></div>
                     </div>
                 </div>
