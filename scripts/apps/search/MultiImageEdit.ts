@@ -63,6 +63,7 @@ export function MultiImageEditController(
         }
 
         if (update) {
+            // refresh metadata visible in the editor according to selected images
             updateMetadata();
         }
     };
@@ -161,23 +162,34 @@ export function MultiImageEditController(
 
     }
 
+    function getUniqueValuesExtra(field: string) {
+        const uniqueValues = {};
+        $scope.getSelectedImages()
+            .filter((item) => item.extra != null && item.extra[field] != null && item.extra[field] !== '')
+            .map((item) => item.extra[field])
+            .forEach((value) => uniqueValues[value] = 1);
+        return Object.keys(uniqueValues);
+    }
+
+    /**
+     * Populate .extra metadata for editing.
+     *
+     * Works like compare() but for custom fields stored in .extra.
+     */
     function compareExtra() {
+        // get unique values for each extra field
         const values = {};
         $scope.getSelectedImages().forEach((item) => {
             if (item.extra != null) {
                 for (const field in item.extra) {
                     if (!values.hasOwnProperty(field)) {
-                        const uniqueValues = {};
-                        $scope.getSelectedImages()
-                            .filter((item) => item.extra != null && item.extra[field] != null && item.extra[field] !== '')
-                            .map((item) => item.extra[field])
-                            .forEach((value) => uniqueValues[value] = 1);
-                        values[field] = Object.keys(uniqueValues);
+                        values[field] = getUniqueValuesExtra(field);
                     }
                 }
             }
         });
 
+        // populate metadata editor based on unique values count
         const extra = {};
         for (const field in values) {
             if (values[field].length > 1) {
