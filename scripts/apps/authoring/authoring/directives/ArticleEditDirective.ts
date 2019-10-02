@@ -318,6 +318,7 @@ export function ArticleEditDirective(
                             // draftjs editor state will be
                             // outdated after editing in modal
                             resetFieldMetadata(scope.item);
+                            scope.refresh();
 
                             if (isPublished(scope.item)) {
                                 mainEditScope.dirty = true;
@@ -327,8 +328,7 @@ export function ArticleEditDirective(
                                     scope.articleEdit.$setDirty();
                                 }
                             } else {
-                                // force refresh of editor3 fields
-                                scope.save().then(() => scope.refresh());
+                                scope.save();
                             }
                         })
                         .finally(() => {
