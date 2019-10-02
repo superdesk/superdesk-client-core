@@ -1202,6 +1202,8 @@ export function AuthoringDirective(
 
                 $scope.autosave($scope.item, 200);
             };
+
+            $scope.refresh = () => $scope.refreshTrigger++;
         },
     };
 }

@@ -204,7 +204,9 @@ class Editor3Directive {
             const props = {
                 item: this.item,
                 pathToValue: this.pathToValue,
+                value: $scope.vm.value,
             };
+
             const content = getInitialContent(props);
             const state = store.getState();
             const editorState = EditorState.push(state.editorState, content, 'change-block-data');
