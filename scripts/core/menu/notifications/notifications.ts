@@ -1,3 +1,5 @@
+/* eslint-disable max-depth */
+
 import _ from 'lodash';
 import {gettext} from 'core/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
