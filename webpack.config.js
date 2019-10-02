@@ -92,7 +92,7 @@ module.exports = function makeConfig(grunt) {
                         // For example, `superdesk-planning/node_modules/**/*` will be excluded.
                         return !validModules.some(
                             (app) =>
-                                absolutePath.includes(app) && countOccurences(absolutePath, '/node_modules/') === 1,
+                                absolutePath.includes(app) && countOccurences(absolutePath, '/node_modules/') === 1
                         );
                     },
                     loader: 'ts-loader',
