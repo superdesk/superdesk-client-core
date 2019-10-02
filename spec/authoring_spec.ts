@@ -646,7 +646,7 @@ describe('authoring', () => {
         expect(authoring.getBodyText()).toBe('one\ntwo\nthree');
     });
 
-    it('can send and publish', () => {
+    fit('can send and publish', () => {
         workspace.selectDesk('Sports Desk');
         expect(monitoring.getGroupItems(0).count()).toBe(0);
         expect(monitoring.getGroupItems(1).count()).toBe(0);
