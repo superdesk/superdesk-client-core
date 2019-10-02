@@ -41,14 +41,21 @@ export class SelectUser extends React.Component<IPropsSelectUser, IState> {
                 value={this.props.selectedUserId == null ? undefined : this.props.selectedUserId}
                 items={keyedUsers}
                 getItemValue={(user) => user._id}
-                getItemLabel={(user) => user.display_name}
+                getItemLabel={(user) => user.display_name + ' ' + user.username}
                 onSelect={(value) => {
                     this.props.onSelect(keyedUsers[value]);
                 }}
                 renderItem={(user) => (
                     <div style={{display: 'flex', alignItems: 'center'}}>
                         <UserAvatar displayName={user.display_name} pictureUrl={user.picture_url} />
-                        <div style={{paddingLeft: '0.5em'}}>{user.display_name}</div>
+                        <div style={{paddingLeft: '0.5em', textAlign: 'left'}}>
+                            <div><strong>{user.display_name}</strong></div>
+                            <div
+                                style={{fontSize: '11px', lineHeight: '11px', opacity: 0.5, marginTop: '-2px'}}
+                            >
+                                @{user.username}
+                            </div>
+                        </div>
                     </div>
                 )}
             />
