@@ -5,7 +5,7 @@ import {StickElementsWithTracking} from 'core/helpers/dom/stickElementsWithTrack
 import {
     ISpellcheckWarning,
     ISpellchecker,
-    ISpellcheckerSuggestion
+    ISpellcheckerSuggestion,
 } from './interfaces';
 import {reloadSpellcheckerWarnings} from '../../actions';
 
