@@ -81,17 +81,18 @@ module.exports = function makeConfig(grunt) {
                         if (absolutePath.includes('WEBPACK_IGNORE')) {
                             return true;
                         }
-                
+
                         // don't exclude anything outside node_modules
                         if (absolutePath.indexOf('node_modules') === -1) {
                             return false;
                         }
-                
+
                         // exclude everything else, unless it's a part of a superdesk app like superdesk-planning
                         // but is not its dependency.
                         // For example, `superdesk-planning/node_modules/**/*` will be excluded.
                         return !validModules.some(
-                            (app) => absolutePath.indexOf(app) !== -1 && countOccurences(absolutePath, '/node_modules/') === 1,
+                            (app) =>
+                                absolutePath.includes(app) && countOccurences(absolutePath, '/node_modules/') === 1,
                         );
                     },
                     loader: 'ts-loader',
