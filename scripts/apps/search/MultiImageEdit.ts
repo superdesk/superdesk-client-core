@@ -160,11 +160,11 @@ export function MultiImageEditController(
             language: compare('language'),
             creditline: compare('creditline'),
         };
-
     }
 
     function getUniqueValues(field: string) {
         const uniqueValues = {};
+
         $scope.getSelectedImages()
             .map((item) => get(item, field))
             .filter((value) => value != null && value !== '')
@@ -182,6 +182,7 @@ export function MultiImageEditController(
         // get unique values for each extra field
         const extra = {};
         const values = {};
+
         $scope.getSelectedImages().forEach((item) => {
             if (item.extra != null) {
                 for (const field in item.extra) {
