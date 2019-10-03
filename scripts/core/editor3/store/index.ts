@@ -259,9 +259,11 @@ export function getInitialContent(props) {
         return initializeHighlights(EditorState.createWithContent(initialContent)).getCurrentContent();
     }
 
-    if (props.value) {
+    const value = props.value || get(props.item, props.pathToValue.replace(FIELD_KEY_SEPARATOR, '.'));
+
+    if (value != null) {
         // we have only HTML (possibly legacy editor2 or ingested item)
-        return getContentStateFromHtml(props.value, props.item.associations);
+        return getContentStateFromHtml(value, props.item.associations);
     }
 
     return ContentState.createFromText('');
