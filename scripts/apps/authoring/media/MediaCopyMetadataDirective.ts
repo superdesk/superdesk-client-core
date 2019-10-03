@@ -13,11 +13,15 @@ export default function MediaCopyMetadataDirective() {
             const METADATA_ITEMS = 'metadata:items';
             const FIELD_KEYS = keys(scope.validator);
 
+            const METADATA_FIELDS = [
+                'subject',
+            ].concat(FIELD_KEYS);
+
             scope.metadataFromStorage = !!localStorage.getItem(METADATA_ITEMS);
 
             scope.copyMetadata = (metadata) => {
                 scope.metadataFromStorage = true;
-                localStorage.setItem(METADATA_ITEMS, JSON.stringify(pick(metadata, FIELD_KEYS)));
+                localStorage.setItem(METADATA_ITEMS, JSON.stringify(pick(metadata, METADATA_FIELDS)));
             };
 
             scope.pasteMetadata = () => {

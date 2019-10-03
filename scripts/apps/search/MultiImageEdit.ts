@@ -251,13 +251,12 @@ export function MultiImageEditDirective(asset, $sce) {
                 }
             };
 
-            scope.$watch('metadataDirty', (newValue: boolean, oldValue: boolean) => {
-                if (newValue !== oldValue) {
-                    forEach(scope.metadata, (metadata, key) => {
-                        scope.onChange(key);
-                    });
-                }
-            });
+            scope.setMetadataDirty = (value) => {
+                scope.metadataDirty = value;
+                forEach(scope.metadata, (metadata, key) => {
+                    scope.onChange(key);
+                });
+            };
         },
     };
 }

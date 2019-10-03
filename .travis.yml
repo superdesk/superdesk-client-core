@@ -1,8 +1,5 @@
 language: node_js
-node_js: "6"
-
-sudo: required
-dist: trusty
+node_js: "10"
 
 addons:
   apt:
@@ -14,6 +11,8 @@ cache:
         - $HOME/.cache/yarn
 
 script:
+    - git checkout -b travis-save-branch
+    - git fetch origin develop:develop
     - npm run test
     - npm run lint
     - npm run build

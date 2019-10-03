@@ -8,6 +8,9 @@ import {
     getDefaultKeyBinding,
     DefaultDraftBlockRenderMap,
     KeyBindingUtil,
+    SelectionState,
+    DraftDragType,
+    DraftHandleValue,
 } from 'draft-js';
 import {getVisibleSelectionRect} from 'draft-js';
 
@@ -30,11 +33,21 @@ import {getSpellcheckWarningsByBlock} from './spellchecker/SpellcheckerDecorator
 import {getSpellchecker} from './spellchecker/default-spellcheckers';
 import {IEditorStore} from '../store';
 
-const VALID_MEDIA_TYPES = [
+const MEDIA_TYPES_TRIGGER_DROP_ZONE = [
     'application/superdesk.item.picture',
     'application/superdesk.item.graphic',
     'application/superdesk.item.video',
     'application/superdesk.item.audio',
+];
+
+const EVENT_TYPES_TRIGGER_DROP_ZONE = [
+    ...MEDIA_TYPES_TRIGGER_DROP_ZONE,
+    'superdesk/editor3-block',
+    'Files',
+];
+
+const VALID_MEDIA_TYPES = [
+    ...MEDIA_TYPES_TRIGGER_DROP_ZONE,
     'text/uri-list',
     'text/html',
     'Files',
@@ -51,7 +64,13 @@ export const EDITOR_GLOBAL_REFS = 'editor3-refs';
  * @return {String}
  */
 export function getValidMediaType(event) {
-    return VALID_MEDIA_TYPES.find((mediaType) => event.dataTransfer.types.indexOf(mediaType) !== -1);
+    return VALID_MEDIA_TYPES.find((mediaType) => event.dataTransfer.types.includes(mediaType));
+}
+
+export function dragEventShouldShowDropZone(event) {
+    const intersection = EVENT_TYPES_TRIGGER_DROP_ZONE.filter((type) => event.dataTransfer.types.includes(type));
+
+    return intersection.length > 0;
 }
 
 /**
@@ -64,12 +83,17 @@ export function getValidMediaType(event) {
 */
 export function canDropMedia(e, editorConfig) {
     const {editorFormat, readOnly, singleLine} = editorConfig;
-    const supportsMedia = !readOnly && !singleLine && editorFormat.indexOf('media') !== -1;
+    const supportsMedia = !readOnly && !singleLine && editorFormat.includes('media');
+
+    if (!supportsMedia) {
+        return false;
+    }
+
     const mediaType = getValidMediaType(e.originalEvent);
     const dataTransfer = e.originalEvent.dataTransfer;
     let isValidMedia = !!mediaType;
 
-    if (mediaType === 'Files' && dataTransfer.files) {
+    if (mediaType === 'Files' && dataTransfer.files.length > 0) {
         // checks if files dropped from external folder are valid or not
         const isValidFileType = Object.values(dataTransfer.files).every(
             (file: File) => file.type.startsWith('audio/')
@@ -80,7 +104,7 @@ export function canDropMedia(e, editorConfig) {
         }
     }
 
-    return supportsMedia && isValidMedia;
+    return isValidMedia;
 }
 
 interface IProps {
@@ -144,6 +168,7 @@ export class Editor3Component extends React.Component<IProps> {
         this.handleKeyCommand = this.handleKeyCommand.bind(this);
         this.handleBeforeInput = this.handleBeforeInput.bind(this);
         this.keyBindingFn = this.keyBindingFn.bind(this);
+        this.handleDropOnEditor = this.handleDropOnEditor.bind(this);
         this.spellcheck = this.spellcheck.bind(this);
         this.spellcheckCancelFn = noop;
     }
@@ -201,6 +226,21 @@ export class Editor3Component extends React.Component<IProps> {
      */
     onDragOver(e) {
         return !canDropMedia(e, this.props);
+    }
+
+    handleDropOnEditor(selection: SelectionState, dataTransfer: any, isInternal: DraftDragType): DraftHandleValue {
+        if (isInternal) {
+            const {editorState} = this.props;
+            const targetBlockKey = selection.getStartKey();
+            const block = editorState.getCurrentContent().getBlockForKey(targetBlockKey);
+
+            if (block && block.getType() === 'atomic') {
+                // Avoid dragging internal text inside an atomic block.
+                // Draft will replace the block data with the text, which
+                // will break the block until page refresh
+                return 'handled';
+            }
+        }
     }
 
     keyBindingFn(e) {
@@ -449,7 +489,7 @@ export class Editor3Component extends React.Component<IProps> {
             'unstyled__block--invisibles': this.props.invisibles,
         });
 
-        const mediaEnabled = this.props.editorFormat.indexOf('media') !== -1;
+        const mediaEnabled = this.props.editorFormat.includes('media');
 
         const blockRenderMap = DefaultDraftBlockRenderMap.merge(Map(
             mediaEnabled ? {
@@ -480,6 +520,7 @@ export class Editor3Component extends React.Component<IProps> {
                 />
                 <div className="focus-screen" onMouseDown={this.focus}>
                     <Editor editorState={editorState}
+                        handleDrop={this.handleDropOnEditor}
                         handleKeyCommand={this.handleKeyCommand}
                         keyBindingFn={this.keyBindingFn}
                         handleBeforeInput={this.handleBeforeInput}

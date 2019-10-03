@@ -2,6 +2,10 @@ var path = require('path');
 var webpack = require('webpack');
 var lodash = require('lodash');
 
+function countOccurences(_string, substring) {
+    return _string.split(substring).length - 1;
+}
+
 // makeConfig creates a new configuration file based on the passed options.
 module.exports = function makeConfig(grunt) {
     var appConfigPath = path.join(process.cwd(), 'superdesk.config.js');
@@ -15,26 +19,10 @@ module.exports = function makeConfig(grunt) {
 
     const sdConfig = lodash.defaultsDeep(require(appConfigPath)(grunt), getDefaults(grunt));
 
-    // shouldExclude returns true if the path p should be excluded from loaders
-    // such as 'babel' or 'eslint'. This is to avoid including node_modules into
-    // these loaders, but not node modules that are superdesk apps.
-    const shouldExclude = function(p) {
-        if (p.includes('WEBPACK_IGNORE')) {
-            return true;
-        }
+    const apps = sdConfig.importApps || [];
 
-        // don't exclude anything outside node_modules
-        if (p.indexOf('node_modules') === -1) {
-            return false;
-        }
-
-        const apps = sdConfig.importApps || sdConfig.apps || [];
-
-        // include only 'superdesk-core' and valid modules inside node_modules
-        let validModules = ['superdesk-core'].concat(apps);
-
-        return !validModules.some((app) => p.indexOf(app) > -1);
-    };
+    // include only 'superdesk-core' and valid modules inside node_modules
+    let validModules = ['superdesk-core'].concat(apps);
 
     return {
         entry: {
@@ -86,7 +74,27 @@ module.exports = function makeConfig(grunt) {
             rules: [
                 {
                     test: /\.(ts|tsx|js|jsx)$/,
-                    exclude: shouldExclude,
+                    exclude: function(absolutePath) {
+                        // Exclude files inside `WEBPACK_IGNORE` folder.
+                        // This is only relevant in development.
+                        // It was added to enable linking ui-framework.
+                        if (absolutePath.includes('WEBPACK_IGNORE')) {
+                            return true;
+                        }
+
+                        // don't exclude anything outside node_modules
+                        if (absolutePath.indexOf('node_modules') === -1) {
+                            return false;
+                        }
+
+                        // exclude everything else, unless it's a part of a superdesk app like superdesk-planning
+                        // but is not its dependency.
+                        // For example, `superdesk-planning/node_modules/**/*` will be excluded.
+                        return !validModules.some(
+                            (app) =>
+                                absolutePath.includes(app) && countOccurences(absolutePath, '/node_modules/') === 1
+                        );
+                    },
                     loader: 'ts-loader',
                     options: {
                         transpileOnly: true,

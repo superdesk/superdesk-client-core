@@ -87,10 +87,11 @@
                     </div>
                 </div>
                 <div sd-media-copy-metadata
+                    ng-if="getSelectedImages().length"
                     class="sd-slide-in-panel__footer"
                     data-metadata="metadata"
                     data-validator="validator"
-                    data-on-change="metadataDirty = !metadataDirty">
+                    data-on-change="setMetadataDirty(!metadataDirty)">
                 </div>
             </div>
         </div>

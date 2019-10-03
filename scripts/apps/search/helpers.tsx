@@ -137,35 +137,35 @@ export function renderArea(area, itemProps, props: {className?: string}, customR
 
     /* globals __SUPERDESK_CONFIG__: true */
     const listConfig = __SUPERDESK_CONFIG__.list || DEFAULT_LIST_CONFIG;
-
-    var specs = listConfig[area] || [];
+    let specs = listConfig[area] || [];
 
     // If narrowView configuration is available and also singleline are active
     if (itemProps.scope.singleLine && itemProps.narrow && listConfig.narrowView) {
         specs = listConfig.narrowView;
     }
 
-    var elemProps = angular.extend({key: area}, props);
+    const elemProps = angular.extend({key: area}, props);
+    const components = specs.map((field, i) => {
+        if (customRender.fields && field in customRender.fields) {
+            return customRender.fields[field](itemProps);
+        }
 
-    return (
-        <div {...elemProps}>
-            {
-                specs.map((field, i) => {
-                    if (customRender.fields && field in customRender.fields) {
-                        return customRender.fields[field](itemProps);
-                    }
+        const Component = fields[field];
 
-                    const Component = fields[field];
+        if (Component != null) {
+            return <Component key={i} {...itemProps} />;
+        }
 
-                    if (Component != null) {
-                        return <Component key={i} {...itemProps} />;
-                    } else {
-                        return null;
-                    }
-                })
-            }
-        </div>
-    );
+        return null;
+    }).filter(Boolean);
+
+    if (components.length > 0) {
+        return <div {...elemProps}>
+            { components }
+        </div>;
+    }
+
+    return null;
 }
 
 /*

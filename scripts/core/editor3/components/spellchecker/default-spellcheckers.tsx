@@ -12,7 +12,7 @@ const actions: {[key: string]: ISpellcheckerAction} = {
     ignoreWord: {
         label: gettext('Ignore word'),
         perform: (warning: ISpellcheckWarning) => ng.getService('spellcheck').then((spellcheck) => {
-            return spellcheck.addWord(warning.text, false);
+            return spellcheck.addWord(warning.text, true);
         }),
     },
 };
@@ -60,6 +60,7 @@ export function getSpellchecker(language: string): ISpellchecker {
         fr: 'grammalecte',
         nl: 'leuven_dutch',
     })[language];
+    const ignore = spellcheck.getIgnoredWords();
 
     if (spellcheckerName == null && spellcheck.isActiveDictionary === false) {
         return null;
@@ -68,7 +69,10 @@ export function getSpellchecker(language: string): ISpellchecker {
         return {
             check: (str: string) => httpRequestJsonLocal<{errors: Array<ISpellcheckWarning>}>({
                 method: 'POST',
-                payload: {spellchecker: spellcheckerName, text: str},
+                payload: {
+                    spellchecker: spellcheckerName,
+                    text: str,
+                    ignore: ignore},
                 path: '/spellchecker',
             }).then((json) => json.errors, (err) => []),
             getSuggestions: (str) => httpRequestJsonLocal<ISpellcheckWarning>({
@@ -78,6 +82,7 @@ export function getSpellchecker(language: string): ISpellchecker {
             }).then((spellcheckerWarning) => spellcheckerWarning.suggestions, (err) => []),
             actions: {
                 addToDictionary: actions.addToDictionary,
+                ignoreWord: actions.ignoreWord,
             },
         };
     } else {
