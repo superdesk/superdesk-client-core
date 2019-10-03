@@ -1,5 +1,9 @@
 import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
 import {getSpellchecker} from 'core/editor3/components/spellchecker/default-spellcheckers';
+import {extensions} from 'core/extension-imports.generated';
+import {showModal} from 'core/services/modalService';
+import {IArticleAction} from 'superdesk-api';
+import {get, flatMap} from 'lodash';
 
 /**
  * @ngdoc directive
@@ -61,6 +65,26 @@ export function AuthoringTopbarDirective(
             scope.isTranslationAvailable = function() {
                 return TranslationService.checkAvailability(scope.item);
             };
+
+            scope.authoringActionsFromExtensions = [];
+
+            scope.triggerActionFromExtension = (actionToTrigger: IArticleAction) => {
+                actionToTrigger.onTrigger();
+            };
+
+            const authoringActionsFromExtensions = flatMap(
+                Object.values(extensions).map((ext) => ext.activationResult),
+                (activationResult) =>
+                    activationResult.contributions &&
+                    activationResult.contributions.authoringActions
+                        ? activationResult.contributions.authoringActions
+                        : [],
+            );
+
+            Promise.all(authoringActionsFromExtensions.map((getPromise) => getPromise(scope.item)))
+                .then((actions) => {
+                    scope.authoringActionsFromExtensions = flatMap(actions);
+                });
         },
     };
 }

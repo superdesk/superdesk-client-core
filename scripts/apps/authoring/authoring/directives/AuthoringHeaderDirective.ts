@@ -52,7 +52,7 @@ export function AuthoringHeaderDirective(
                 TranslationService.getTranslations(scope.item)
                     .then((translations) => {
                         scope.translationsInfo = {
-                            count: translations._meta.total,
+                            count: translations._items.filter((item) => item.translated_from != null).length,
                             translatedFromReference: translations._items.find(
                                 (item) => item._id === scope.item.translated_from,
                             ),

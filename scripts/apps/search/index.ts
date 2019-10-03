@@ -90,6 +90,7 @@ angular.module('superdesk.apps.search', [
             });
 
             workspaceMenuProvider.item({
+                if: 'privileges.use_global_saved_searches',
                 href: '/search',
                 label: gettext('Search'),
                 templateUrl: asset.templateUrl('apps/search/views/menu.html'),

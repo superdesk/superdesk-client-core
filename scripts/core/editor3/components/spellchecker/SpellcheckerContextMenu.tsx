@@ -1,11 +1,11 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import {connect} from 'react-redux';
 import * as actions from '../../actions';
 import {StickElementsWithTracking} from 'core/helpers/dom/stickElementsWithTracking';
 import {
     ISpellcheckWarning,
     ISpellchecker,
-    ISpellcheckerSuggestion
+    ISpellcheckerSuggestion,
 } from './interfaces';
 import {reloadSpellcheckerWarnings} from '../../actions';
 
@@ -43,9 +43,11 @@ export class SpellcheckerContextMenuComponent extends React.Component<IProps> {
         const {suggestions, message} = this.props.warning;
         const {spellchecker} = this.props;
 
-        // If the message exists, use it as the button text
-        // instead of the suggestion
+        // If the message exists, and suggestion is whitespace suggestion
+        // use message as the button text instead of the suggestion
         const messageExists = Boolean(message);
+        const whitespaceSuggestionExists = suggestions.filter(
+            (suggestion) => suggestion.text.trim().length === 0).length > 0;
 
         return (
             <div className={'dropdown open suggestions-dropdown'}
@@ -54,6 +56,12 @@ export class SpellcheckerContextMenuComponent extends React.Component<IProps> {
                 data-test-id="spellchecker-menu"
             >
                 <ul className={'dropdown__menu'} style={{position: 'static'}}>
+                    {messageExists && !whitespaceSuggestionExists &&
+                        <Fragment>
+                            <li style={{margin: '0 16px'}}>{message}</li>
+                            <li className="dropdown__menu-divider"/>
+                        </Fragment>
+                    }
                     <div className="form-label" style={{margin: '0 16px'}}>{gettext('Suggestions')}</div>
                     {
                         suggestions.length === 0
@@ -66,7 +74,8 @@ export class SpellcheckerContextMenuComponent extends React.Component<IProps> {
                                         }
                                         data-test-id="spellchecker-menu--suggestion"
                                     >
-                                        {messageExists ? message : suggestion.text}
+                                        {suggestion.text.trim().length === 0 && messageExists
+                                            ? message : suggestion.text}
                                     </button>
                                 </li>,
                             )

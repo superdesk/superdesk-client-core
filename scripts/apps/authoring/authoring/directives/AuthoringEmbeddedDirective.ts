@@ -22,10 +22,10 @@ export function AuthoringEmbeddedDirective(api, notify, $filter, config, deployC
                 if (template == null) {
                     const lineBreak = '\r\n\r\n';
                     // no template specified in backend, we use default one
-                    let slugline = scope.item.slugline ? '"' + scope.item.slugline + '" ' : '';
+                    let slugline = scope.item.slugline ? '"' + scope.item.slugline + '"' : '';
 
                     scope.item.ednote = gettext(
-                        'In the story {{slugline}} sent at: {{date}} {{lineBreak}}. This is corrected repeat.',
+                        'In the story {{slugline}} sent at: {{date}}.{{lineBreak}}This is a corrected repeat.',
                         {slugline, date, lineBreak});
                 } else {
                     // we use template from backend

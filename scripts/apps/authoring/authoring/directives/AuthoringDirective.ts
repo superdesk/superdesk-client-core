@@ -818,17 +818,17 @@ export function AuthoringDirective(
             };
 
             /**
-             * On change content profile the default values from new content profile
-             * will overwrite the current values from item
+             * On changing the content profile add the new (key, default-value) to the item
+             * if new content profile has some additional keys than item
              *
              * @function changeProfile
-             * @param {Object} item - ucurrent edited content items
+             * @param {Object} item - item being edited currently
              */
             $scope.changeProfile = function(item) {
                 angular.forEach($scope.content_types, (profile) => {
                     if (item.profile === profile._id && profile.schema) {
                         angular.forEach(profile.schema, (schema, key) => {
-                            if (schema && schema.default) {
+                            if (schema && schema.default && !(key in item)) {
                                 item[key] = _.cloneDeep(schema.default);
                             }
                         });

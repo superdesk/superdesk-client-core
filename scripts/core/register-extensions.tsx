@@ -11,6 +11,7 @@ export function registerExtensions(
     lock,
     session,
     authoringWorkspace: AuthoringWorkspaceService,
+    config,
     metadata: MetadataService,
 ): Promise<void> {
     return Promise.all(
@@ -25,6 +26,7 @@ export function registerExtensions(
                 lock,
                 session,
                 authoringWorkspace,
+                config,
                 metadata,
             );
 

@@ -100,6 +100,12 @@ export function ArticleEditDirective(
                     superdesk.intent('preview', 'item', item);
                 };
 
+                elem.on('drop dragdrop', (event) => {
+                    if (!scope._editable) {
+                        return false;
+                    }
+                });
+
                 /* End: Dateline related properties */
 
                 // watch item and save every change in history in order to perform undo/redo later
@@ -396,6 +402,10 @@ export function ArticleEditDirective(
                 scope.$watch('item.body_html', () => suggest.trigger(scope.item, scope.origItem));
 
                 scope.extra = {}; // placeholder for fields not part of item
+            });
+
+            scope.$on('$destroy', () => {
+                elem.off('drop dragdrop');
             });
         },
     };

@@ -90,6 +90,12 @@ export function insertMedia(files?, targetBlockKey = null) {
                         renditions.crop(_media, options).then((cropped) => {
                             editedMedia.push(cropped);
                             editNext();
+                        }, (reason) => {
+                            if (reason != null && reason.done != null && reason.done === true) {
+                                // no crops were set, continue with defaults
+                                editedMedia.push(_media);
+                                editNext();
+                            }
                         });
                     });
                 } else {
