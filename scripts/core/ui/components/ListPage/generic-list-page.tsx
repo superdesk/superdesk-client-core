@@ -102,7 +102,7 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
                     'Can\'t open a preview while in create mode',
                 ),
             });
-        } else if(this.props.items._items.find(({_id}) => _id === id) != null){
+        } else if (this.props.items._items.find(({_id}) => _id === id) != null) {
             // set previewItemId only if item with id is available in the props.items._items
             this.setState({
                 previewItemId: id,
