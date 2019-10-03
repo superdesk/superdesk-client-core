@@ -20,8 +20,9 @@ interface IState {
 
 export class VideoTimeline extends React.Component<IProps, IState> {
     static contextType = VideoEditorContext;
-    private cbwrapper: React.RefObject<HTMLDivElement>;
+    private wrapper: React.RefObject<HTMLDivElement>;
     private controlbar: React.RefObject<HTMLDivElement>;
+    intervalTimer: any;
 
     constructor(props: IProps) {
         super(props);
@@ -29,15 +30,13 @@ export class VideoTimeline extends React.Component<IProps, IState> {
             currentTime: 0,
             intervalTimer: null,
         };
-        this.cbwrapper = React.createRef();
+        this.wrapper = React.createRef();
         this.controlbar = React.createRef();
     }
 
     componentDidMount() {
         // call tick every 100ms to update current time state
-        this.setState({
-            intervalTimer: setInterval(this.tick, 100),
-        });
+        this.intervalTimer = setInterval(this.tick, 100);
     }
 
     componentWillUnmount() {
@@ -74,9 +73,9 @@ export class VideoTimeline extends React.Component<IProps, IState> {
     tick = () => {
         // updates the current time state
         let currentTime = this.props.video.current!.currentTime;
-        this.props.trim.end || currentTime < this.props.trim.end
+        currentTime < this.props.trim.end
             ? this.setState({ currentTime: currentTime })
-            : this.props.video.current!.pause();
+            : this.props.trim.end > 0 && this.props.video.current!.pause();
     };
     videoLoadedData = () => {
         //Set trim data when video loaded
@@ -179,7 +178,7 @@ export class VideoTimeline extends React.Component<IProps, IState> {
                         <div className={getClass('controlbars__progress-output__progress-line')}></div>
                     </div>
                     <div
-                        ref={this.cbwrapper}
+                        ref={this.wrapper}
                         className={`${getClass('controlbars__wrapper-out')}`}
                         style={{
                             left: left,

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { IArticle, ISuperdesk } from 'superdesk-api';
-import { get } from 'lodash';
+import { get, isEmpty } from 'lodash';
 import ReactCrop from 'react-image-crop';
 import { VideoEditorTools } from './VideoEditorTools';
 import 'react-image-crop/dist/ReactCrop.css';
@@ -17,6 +17,7 @@ interface IArticleVideo extends IArticle {
             version: number;
         };
     };
+    project?: {};
 }
 
 export interface IVideoEditor {
@@ -38,6 +39,7 @@ interface IState extends IVideoEditor {
         start: number;
         end: number;
     };
+    thumbnails: Array<ThumbnailObject>;
 }
 
 export type ThumbnailObject = {
@@ -48,6 +50,7 @@ export type ThumbnailObject = {
 
 export class VideoEditor extends React.Component<IProps, IState> {
     ref: React.RefObject<HTMLVideoElement>;
+    intervalThumbnails: any;
 
     constructor(props: IProps) {
         super(props);
@@ -63,6 +66,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                 end: 0,
             },
             quality: 0,
+            thumbnails: [],
         };
     }
 
@@ -76,6 +80,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
         this.setState({
             cropImg: canvas.toDataURL(),
         });
+        this.LoadTimelineThumbnails();
     }
     handleTrim = (start: number, end: number) => {
         this.setState({
@@ -116,6 +121,17 @@ export class VideoEditor extends React.Component<IProps, IState> {
 
     handleQualityChange = (quality: number) => {
         this.setState({ quality: quality });
+    };
+
+    LoadTimelineThumbnails = () => {
+        this.intervalThumbnails = setInterval(() => {
+            this.props.superdesk.dataApi.findOne('video_edit', this.props.article._id).then((result: any) => {
+                if (!isEmpty(result.project.thumbnails)) {
+                    clearInterval(this.intervalThumbnails);
+                    this.setState({ thumbnails: result.project.thumbnails.timeline });
+                }
+            });
+        }, 3000);
     };
 
     render() {
@@ -176,7 +192,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                             video={this.ref}
                             trim={this.state.trim}
                             onTrim={this.handleTrim}
-                            thumbnails={[]}
+                            thumbnails={this.state.thumbnails}
                         />
                     </div>
                 </div>
