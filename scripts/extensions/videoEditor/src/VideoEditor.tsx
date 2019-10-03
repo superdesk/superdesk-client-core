@@ -8,7 +8,7 @@ import { VideoTimeline } from './VideoTimeline/VideoTimeline';
 import { VideoEditorProvider } from './VideoEditorContext';
 import { VideoPreviewThumbnail } from './VideoPreviewThumbnail/VideoPreviewThumbnail';
 
-interface IArticleVideo extends IArticle {
+export interface IArticleVideo extends IArticle {
     renditions?: {
         original: {
             hef: string;
