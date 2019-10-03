@@ -646,7 +646,7 @@ describe('authoring', () => {
         expect(authoring.getBodyText()).toBe('one\ntwo\nthree');
     });
 
-    fit('can send and publish', () => {
+    it('can send and publish', () => {
         workspace.selectDesk('Sports Desk');
         expect(monitoring.getGroupItems(0).count()).toBe(0);
         expect(monitoring.getGroupItems(1).count()).toBe(0);
@@ -660,7 +660,7 @@ describe('authoring', () => {
         monitoring.actionOnItem('Edit', 3, 2);
         authoring.writeTextToHeadline('testing send and publish');
         authoring.save();
-        authoring.writeText('');
+        authoring.writeText(protractor.Key.HOME);
         ctrlShiftKey(protractor.Key.END);
         ctrlKey('x');
         authoring.sendAndpublish('Sports Desk');
@@ -669,17 +669,19 @@ describe('authoring', () => {
         browser.sleep(3000); // wait for alert message to go away
 
         authoring.publishFrom('Sports Desk');
+
         assertToastMsg('error', 'BODY_HTML empty values not allowed'); // validation takes place
         authoring.closeSendAndPublish();
         authoring.writeText('Testing');
         authoring.save();
+
         authoring.sendToButton.click();
         authoring.publishFrom('Sports Desk');
         // desk output count zero as content publish from sport desk
         expect(monitoring.getGroupItems(5).count()).toBe(0);
         workspace.selectDesk('Sports Desk');
         expect(monitoring.getGroupItems(5).count()).toBe(1);
-    }, 600000);
+    });
 
     it('can minimize story while a correction and kill is being written', () => {
         workspace.selectDesk('Politic Desk');
