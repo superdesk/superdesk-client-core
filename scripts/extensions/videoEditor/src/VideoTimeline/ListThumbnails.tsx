@@ -14,7 +14,7 @@ export class ListThumbnails extends React.Component<IProps> {
         super(props);
     }
     render() {
-        const { getClass } = this.context;
+        const { getClass } = this.context.superdesk.utilities.CSS;
         return (
             <div className={`${getClass('frames')} ${getClass('frames--thumbs')}`}>
                 <div className={getClass('frames__inner')}>

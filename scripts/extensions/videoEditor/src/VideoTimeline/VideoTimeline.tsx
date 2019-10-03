@@ -32,13 +32,24 @@ export class VideoTimeline extends React.Component<IProps, IState> {
         this.cbwrapper = React.createRef();
         this.controlbar = React.createRef();
     }
+
     componentDidMount() {
         // call tick every 100ms to update current time state
         this.setState({
             intervalTimer: setInterval(this.tick, 100),
         });
     }
-    getRenderThumbnails = (thumbnails: Array<ThumbnailObject>, numberThumbnails: number, widthPic: number) => {
+
+    componentWillUnmount() {
+        clearInterval(this.state.intervalTimer);
+    }
+
+    getRenderThumbnails = (thumbnails: Array<ThumbnailObject>) => {
+        //get list thumbnail render in list thumbnails get from server
+        const video = this.props.video.current!;
+        const widthPic = video && (50 * video.clientWidth) / video.clientHeight;
+        const numberThumbnails =
+            this.controlbar.current! && Math.floor(this.controlbar.current!.offsetWidth / widthPic);
         const duration = this.props.video.current! ? this.props.video.current!.duration : 0;
         let thumbnailsRender: Array<ThumbnailObject> = [];
         const per_delta_image =
@@ -63,17 +74,14 @@ export class VideoTimeline extends React.Component<IProps, IState> {
     tick = () => {
         // updates the current time state
         let currentTime = this.props.video.current!.currentTime;
-        currentTime < this.props.trim.end && this.props.video.current!
+        this.props.trim.end || currentTime < this.props.trim.end
             ? this.setState({ currentTime: currentTime })
-            : this.props.video.current!;
+            : this.props.video.current!.pause();
     };
     videoLoadedData = () => {
+        //Set trim data when video loaded
         this.props.onTrim(0, this.props.video.current!.duration);
     };
-
-    componentWillUnmount() {
-        clearInterval(this.state.intervalTimer);
-    }
 
     onDragCbStart(e: React.DragEvent<HTMLDivElement>) {
         //set shadow drag image is empty
@@ -134,15 +142,12 @@ export class VideoTimeline extends React.Component<IProps, IState> {
     }
 
     render() {
-        const { getClass } = this.context;
+        const { getClass } = this.context.superdesk.utilities.CSS;
         const video = this.props.video.current!;
         //set state for control left, right bar
         const left = video ? `${(this.props.trim.start / video.duration) * 100}%` : '0%';
         const right = video ? `${(1 - this.props.trim.end / video.duration) * 100}%` : '0%';
-        const widthPic = video && (50 * video.clientWidth) / video.clientHeight;
-        const numberThumbnails =
-            this.controlbar.current! && Math.floor(this.controlbar.current!.offsetWidth / widthPic);
-        const thumnails = this.getRenderThumbnails(this.props.thumbnails, numberThumbnails, widthPic);
+        const thumnails = this.getRenderThumbnails(this.props.thumbnails);
         return (
             <div className={getClass('timeline-controls')}>
                 <ListThumbnails thumbnails={thumnails} video={this.props.video} />

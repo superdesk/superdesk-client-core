@@ -13,7 +13,7 @@ export class VideoPreviewThumbnail extends React.Component<IProps> {
     handleClick = () => {};
 
     render() {
-        const { getClass } = this.context;
+        const { getClass } = this.context.superdesk.utilities.CSS;
         return (
             <div className={`sd-photo-preview__thumbnail-edit`}>
                 <div className={getClass('thumbnail-edit__container')}>

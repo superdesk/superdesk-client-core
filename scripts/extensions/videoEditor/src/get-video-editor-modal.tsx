@@ -4,7 +4,6 @@ import { VideoEditor } from './VideoEditor';
 
 export function getVideoEditModal(superdesk: ISuperdesk, article: IArticle) {
     const { gettext } = superdesk.localization;
-    const { getClass } = superdesk.utilities.CSS;
 
     return class VideoEditModal extends React.PureComponent<{ closeModal(): void }> {
         render() {
@@ -20,7 +19,7 @@ export function getVideoEditModal(superdesk: ISuperdesk, article: IArticle) {
                             </div>
 
                             <div className="modal__body modal__body--no-padding">
-                                <VideoEditor article={article} getClass={getClass} />
+                                <VideoEditor article={article} superdesk={superdesk} />
                             </div>
                         </div>
                     </div>

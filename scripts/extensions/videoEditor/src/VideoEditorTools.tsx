@@ -40,7 +40,7 @@ export class VideoEditorTools extends React.Component<IProps> {
     render() {
         const videoHeight = this.props.videoHeight || 0;
         const resolutions = ['Same'].concat([360, 480, 720, 1080].filter(i => i < videoHeight).map(i => i + 'p'));
-        const { getClass } = this.context;
+        const { getClass } = this.context.superdesk.utilities.CSS;
         return (
             <div className="sd-photo-preview__video-tools">
                 <div>

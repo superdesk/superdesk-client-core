@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { IArticle } from 'superdesk-api';
+import { IArticle, ISuperdesk } from 'superdesk-api';
 import { get } from 'lodash';
 import ReactCrop from 'react-image-crop';
 import { VideoEditorTools } from './VideoEditorTools';
@@ -29,7 +29,7 @@ export interface IVideoEditor {
 
 interface IProps {
     article: IArticleVideo;
-    getClass: Function;
+    superdesk: ISuperdesk;
 }
 
 interface IState extends IVideoEditor {
@@ -127,7 +127,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
         };
 
         return (
-            <VideoEditorProvider value={{ getClass: this.props.getClass }}>
+            <VideoEditorProvider value={{ superdesk: this.props.superdesk }}>
                 <div className="sd-photo-preview sd-photo-preview--edit-video">
                     <div className="sd-photo-preview__video">
                         <div className="sd-photo-preview__video-inner">
