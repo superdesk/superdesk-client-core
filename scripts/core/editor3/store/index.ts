@@ -261,7 +261,7 @@ export function getInitialContent(props) {
 
     const value = props.value || get(props.item, props.pathToValue.replace(FIELD_KEY_SEPARATOR, '.'));
 
-    if (value != null) {
+    if (value != null && value !== '') {
         // we have only HTML (possibly legacy editor2 or ingested item)
         return getContentStateFromHtml(value, props.item.associations);
     }
