@@ -94,21 +94,22 @@ core.config(['$routeProvider', 'superdeskProvider', ($routeProvider, superdesk) 
         redirectTo: '/workspace/personal',
     });
 
-    if (appConfig.defaultRoute === dashboardRoute) {
-        ng.getService('privileges')
-            .then((privileges) => privileges.loaded.then(() => privileges))
-            .then((privileges) => {
-                if (privileges.userHasPrivileges({dashboard: 1})) {
+    ng.getServices(['superdesk', 'privileges']).then((res: Array<any>) => {
+        const __superdesk = res[0];
+        const privileges = res[1];
+
+        const activity = __superdesk.activities[appConfig.defaultRoute];
+
+        if (activity != null) {
+            privileges.loaded.then(() => {
+                if (privileges.userHasPrivileges(activity.privileges || {})) {
                     $routeProvider.when('/', {
-                        redirectTo: dashboardRoute,
+                        redirectTo: appConfig.defaultRoute,
                     });
                 }
             });
-    } else {
-        $routeProvider.when('/', {
-            redirectTo: appConfig.defaultRoute,
-        });
-    }
+        }
+    });
 
     // added to be able to register activities which didn't work using superdesk reference injected in `core.run`.
     _superdesk = superdesk;

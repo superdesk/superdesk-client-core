@@ -9,6 +9,7 @@ export function Monitoring(superdesk, workspaceMenuProvider) {
             templateUrl: 'scripts/apps/monitoring/views/monitoring.html',
             topTemplateUrl: 'scripts/apps/dashboard/views/workspace-topnav.html',
             sideTemplateUrl: 'scripts/apps/workspace/views/workspace-sidenav.html',
+            privileges: {monitoring_view: 1},
         });
 
     workspaceMenuProvider.item({
@@ -30,6 +31,7 @@ export function SpikeMonitoring(superdesk, workspaceMenuProvider) {
             templateUrl: 'scripts/apps/monitoring/views/spike-monitoring.html',
             topTemplateUrl: 'scripts/apps/dashboard/views/workspace-topnav.html',
             sideTemplateUrl: 'scripts/apps/workspace/views/workspace-sidenav.html',
+            privileges: {spike_read: 1},
         });
 
     workspaceMenuProvider.item({
