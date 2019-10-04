@@ -9,6 +9,7 @@ export function Monitoring(superdesk, workspaceMenuProvider) {
             templateUrl: 'scripts/apps/monitoring/views/monitoring.html',
             topTemplateUrl: 'scripts/apps/dashboard/views/workspace-topnav.html',
             sideTemplateUrl: 'scripts/apps/workspace/views/workspace-sidenav.html',
+            privileges: {monitoring_view: 1},
         });
 
     workspaceMenuProvider.item({
@@ -30,6 +31,7 @@ export function SpikeMonitoring(superdesk, workspaceMenuProvider) {
             templateUrl: 'scripts/apps/monitoring/views/spike-monitoring.html',
             topTemplateUrl: 'scripts/apps/dashboard/views/workspace-topnav.html',
             sideTemplateUrl: 'scripts/apps/workspace/views/workspace-sidenav.html',
+            privileges: {spike_read: 1},
         });
 
     workspaceMenuProvider.item({
@@ -49,15 +51,17 @@ Personal.$inject = ['superdeskProvider', 'workspaceMenuProvider'];
 export function Personal(superdesk, workspaceMenuProvider) {
     superdesk
         .activity('/workspace/personal', {
-            label: gettext('Personal'),
+            label: gettext('Personal space'),
             priority: 100,
+            adminTools: false,
+            category: superdesk.MENU_MAIN,
             templateUrl: 'scripts/apps/monitoring/views/personal.html',
             sideTemplateUrl: 'scripts/apps/workspace/views/workspace-sidenav.html',
         });
 
     workspaceMenuProvider.item({
         href: '/workspace/personal',
-        label: gettext('Personal'),
+        label: gettext('Personal space'),
         shortcut: 'alt+p',
         icon: 'personal',
         order: 900,
