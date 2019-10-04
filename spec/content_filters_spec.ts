@@ -189,7 +189,7 @@ describe('content filters', () => {
         contentFilters.close();
     });
 
-    fit('can serve as global block', () => {
+    it('can serve as global block', () => {
         // set up filter conditions
         filterConditions.openFilterConditionSettings();
         filterConditions.addNew();
