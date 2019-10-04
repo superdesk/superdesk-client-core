@@ -48,16 +48,20 @@ describe('authoring', () => {
         var body3 = generateLines(15, 20);
 
         authoring.writeText(body1 + body2 + body3);
-        for (var i = 0; i < 5; i++) {
-            authoring.writeText(protractor.Key.UP);
-        }
-        authoring.writeText(protractor.Key.ENTER);
-        authoring.writeText(protractor.Key.UP);
+        authoring.writeText(
+            protractor.Key.HOME +
+            protractor.Key.UP.repeat(5) +
+            protractor.Key.ENTER +
+            protractor.Key.UP,
+        );
+
         authoring.addEmbed('Embed at position 15');
         authoring.blockContains(0, (body1 + body2).replace(/\n$/, ''));
         authoring.blockContains(2, body3.replace(/\n$/, ''));
-        element(by.model('item.body_html')).all(by.css('.editor-type-html')).first().click();
-        authoring.writeText(protractor.Key.ENTER);
+        authoring.writeText(
+            protractor.Key.UP.repeat(7) +
+            protractor.Key.ENTER,
+        );
         authoring.addEmbed('Embed at position 8');
         authoring.blockContains(0, body1.replace(/\n$/, ''));
         authoring.blockContains(2, body2.replace(/\n$/, ''));
@@ -76,8 +80,7 @@ describe('authoring', () => {
         expect(authoring.getBodyText()).toBe('');
         ctrlKey('y');
         expect(authoring.getBodyText()).toBe('to be undone');
-        authoring.writeText(protractor.Key.ENTER);
-        authoring.writeText(protractor.Key.UP);
+        authoring.writeText(protractor.Key.HOME + protractor.Key.ENTER + protractor.Key.UP);
         authoring.addEmbed('Embed');
         authoring.blockContains(1, 'Embed');
         authoring.blockContains(2, 'to be undone');
@@ -86,6 +89,7 @@ describe('authoring', () => {
         commandKey('y');
         authoring.blockContains(1, 'Embed');
         authoring.blockContains(2, 'to be undone');
+
         authoring.cutBlock(1);
         authoring.blockContains(0, 'to be undone');
         ctrlKey('z');
@@ -97,14 +101,14 @@ describe('authoring', () => {
         expect(monitoring.getTextItem(2, 0)).toBe('item5');
         monitoring.actionOnItem('Edit', 2, 0);
         expect(authoring.getBodyText()).toBe('item5 text');
-        authoring.writeText('Two');
-        expect(authoring.getBodyText()).toBe('Twoitem5 text');
-        authoring.writeText('Words');
-        expect(authoring.getBodyText()).toBe('TwoWordsitem5 text');
+        authoring.writeText(' Two');
+        expect(authoring.getBodyText()).toBe('item5 text Two');
+        authoring.writeText(' Words');
+        expect(authoring.getBodyText()).toBe('item5 text Two Words');
         ctrlKey('z');
-        expect(authoring.getBodyText()).toBe('Twoitem5 text');
+        expect(authoring.getBodyText()).toBe('item5 text Two');
         ctrlKey('y');
-        expect(authoring.getBodyText()).toBe('TwoWordsitem5 text');
+        expect(authoring.getBodyText()).toBe('item5 text Two Words');
         authoring.save();
         authoring.close();
 
@@ -301,7 +305,7 @@ describe('authoring', () => {
         monitoring.actionOnItem('Edit', 2, 0);
         browser.sleep(300);
 
-        expect(authoring.getBodyText()).toBe('zitem5 text');
+        expect(authoring.getBodyText()).toBe('item5 textz');
 
         element(by.cssContainingText('label', 'Headline')).click();
         ctrlShiftKey('e');
@@ -464,6 +468,7 @@ describe('authoring', () => {
         expect(monitoring.getTextItem(2, 0)).toBe('item5');
         monitoring.actionOnItem('Edit', 2, 0);
         authoring.writeText('');
+        authoring.writeText(protractor.Key.HOME);
         ctrlShiftKey(protractor.Key.END);
         ctrlKey('x');
         authoring.save();
@@ -519,35 +524,35 @@ describe('authoring', () => {
         monitoring.actionOnItem('Edit', 2, 0);
 
         // Provide another version on save
-        authoring.writeTextToHeadline('updated ');
+        authoring.writeTextToHeadline(' updated');
         authoring.save();
-        expect(authoring.getHeadlineText()).toBe('updated item5');
+        expect(authoring.getHeadlineText()).toBe('item5 updated');
 
         // Open selected versions in compare-versions screen boards
         authoring.openCompareVersionsScreen();
         expect(authoring.getCompareVersionsBoards().count()).toBe(2);
-        expect(authoring.getArticleHeadlineOfBoard(0)).toEqual('updated item5');
+        expect(authoring.getArticleHeadlineOfBoard(0)).toEqual('item5 updated');
         expect(authoring.getInnerDropdownItemVersions(1).count()).toBe(1);
         authoring.closeCompareVersionsScreen();
 
         // expect the article should be open on closing compare-versions screen
         expect(authoring.headline.isDisplayed()).toBe(true);
-        expect(authoring.getHeadlineText()).toBe('updated item5');
+        expect(authoring.getHeadlineText()).toBe('item5 updated');
 
         // Update article headline again to get third version
-        authoring.writeTextToHeadline('newly ');
+        authoring.writeTextToHeadline(' newly');
         authoring.save();
-        expect(authoring.getHeadlineText()).toBe('newly updated item5');
+        expect(authoring.getHeadlineText()).toBe('item5 updated newly');
 
         authoring.openCompareVersionsScreen();
-        expect(authoring.getArticleHeadlineOfBoard(0)).toEqual('newly updated item5');
+        expect(authoring.getArticleHeadlineOfBoard(0)).toEqual('item5 updated newly');
         expect(authoring.getInnerDropdownItemVersions(1).count()).toBe(2);
         authoring.openItemVersionInBoard(1, 0);
         expect(authoring.getInnerDropdownItemVersions(0).count()).toBe(1);
         expect(authoring.getHtmlArticleHeadlineOfBoard(0)).toContain(
-            '<ins style="background:#e6ffe6;">newly </ins><span>updated item5</span>'
+            '<span>item5 updated</span><ins style="background:#e6ffe6;"> newly</ins>',
         );
-        expect(authoring.getArticleHeadlineOfBoard(1)).toEqual('updated item5');
+        expect(authoring.getArticleHeadlineOfBoard(1)).toEqual('item5 updated');
     });
 
     it('open publish item with footer text without <br> tag', () => {
@@ -594,7 +599,7 @@ describe('authoring', () => {
         expect(authoring.getBodyText()).toBe('This is kill template. Slugged item5 slugline one/two.');
 
         // now edit body text
-        authoring.writeText('Edit kill notice body text:');
+        authoring.writeText(protractor.Key.HOME + 'Edit kill notice body text:');
         expect(authoring.getBodyText())
             .toBe('Edit kill notice body text:This is kill template. Slugged item5 slugline one/two.');
 
@@ -613,7 +618,7 @@ describe('authoring', () => {
         expect(authoring.getHeadlineText()).toBe('KILL NOTICE');
 
         // now edit headline text
-        authoring.writeTextToHeadline('Edit kill headline:');
+        authoring.writeTextToHeadline(protractor.Key.HOME + 'Edit kill headline:');
         expect(authoring.getHeadlineText()).toBe('Edit kill headline:KILL NOTICE');
 
         // undo edited headline text
@@ -658,7 +663,7 @@ describe('authoring', () => {
         monitoring.actionOnItem('Edit', 3, 2);
         authoring.writeTextToHeadline('testing send and publish');
         authoring.save();
-        authoring.writeText('');
+        authoring.writeText(protractor.Key.HOME);
         ctrlShiftKey(protractor.Key.END);
         ctrlKey('x');
         authoring.sendAndpublish('Sports Desk');
@@ -667,17 +672,19 @@ describe('authoring', () => {
         browser.sleep(3000); // wait for alert message to go away
 
         authoring.publishFrom('Sports Desk');
+
         assertToastMsg('error', 'BODY_HTML empty values not allowed'); // validation takes place
         authoring.closeSendAndPublish();
         authoring.writeText('Testing');
         authoring.save();
+
         authoring.sendToButton.click();
         authoring.publishFrom('Sports Desk');
         // desk output count zero as content publish from sport desk
         expect(monitoring.getGroupItems(5).count()).toBe(0);
         workspace.selectDesk('Sports Desk');
         expect(monitoring.getGroupItems(5).count()).toBe(1);
-    }, 600000);
+    });
 
     it('can minimize story while a correction and kill is being written', () => {
         workspace.selectDesk('Politic Desk');
