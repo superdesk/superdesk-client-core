@@ -19,7 +19,7 @@ module.exports = function makeConfig(grunt) {
 
     const sdConfig = lodash.defaultsDeep(require(appConfigPath)(grunt), getDefaults(grunt));
 
-    const apps = sdConfig.importApps || [];
+    const apps = sdConfig.importApps || sdConfig.apps || [];
 
     // include only 'superdesk-core' and valid modules inside node_modules
     let validModules = ['superdesk-core'].concat(apps);
