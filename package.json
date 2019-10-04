@@ -156,6 +156,7 @@
     "lint-fix": "tsc -p scripts --noEmit && tslint --fix -c tslint.json 'scripts/**/*.{ts,tsx}' && eslint --fix --parser=typescript-eslint-parser --ext .js --ext .jsx --ext .ts --ext .tsx scripts spec tasks *.js",
     "start-test-server": "cd test-server && python3 -m venv env && . env/bin/activate && pip install -Ur requirements.txt && honcho start",
     "protractor": "protractor protractor.conf.js",
-    "webdriver-manager": "webdriver-manager update --gecko false --standalone false"
+    "webdriver-manager": "webdriver-manager update --gecko false --standalone false",
+    "server": "grunt server"
   }
 }
