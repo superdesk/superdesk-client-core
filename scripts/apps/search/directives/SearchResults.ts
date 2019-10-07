@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
+import {ISearchOptions} from '../services/SearchService';
 
 SearchResults.$inject = [
     '$location',
@@ -87,7 +88,11 @@ export function SearchResults(
                 ? scope.search.getSearch
                 : () => $location.search();
 
-            var criteria = search.query(getSearch()).getCriteria(true),
+            const queryOptions: ISearchOptions = {
+                hidePreviousVersions: scope.search.hideNested === true,
+            };
+
+            var criteria = search.query(getSearch(), queryOptions).getCriteria(true),
                 oldQuery = _.omit(getSearch(), '_id');
 
             scope.flags = controller.flags;
@@ -187,7 +192,7 @@ export function SearchResults(
              * Function for fetching total items and filling scope for the first time.
              */
             function _queryItems(event?, data?) {
-                criteria = search.query(getSearch()).getCriteria(true);
+                criteria = search.query(getSearch(), queryOptions).getCriteria(true);
                 criteria.source.size = 50;
                 var originalQuery;
 
@@ -362,7 +367,7 @@ export function SearchResults(
                         $location.search('page', null);
                     }
 
-                    criteria = search.query(getSearch()).getCriteria(true);
+                    criteria = search.query(getSearch(), queryOptions).getCriteria(true);
                     criteria.source.from = 0;
                     criteria.source.size = 50;
                     criteria.aggregations = $rootScope.aggregations;

@@ -12,7 +12,7 @@ import {ItemSwimlane} from './ItemSwimlane';
 import {ItemPhotoGrid} from './ItemPhotoGrid';
 import {ListItemTemplate} from './ItemListTemplate';
 import {ItemMgridTemplate} from './ItemMgridTemplate';
-import {IArticle, IDesk} from 'superdesk-api';
+import {IArticle, IDesk, IPublishedArticle} from 'superdesk-api';
 import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 
@@ -70,7 +70,6 @@ interface IProps {
     narrow: any;
     hideActions: boolean;
     multiSelectDisabled: boolean;
-    nested: Array<IArticle>;
     isNested: boolean;
     actioning: boolean;
 }
@@ -80,18 +79,27 @@ interface IState {
     actioning: boolean;
     isActionMenuOpen: boolean;
     showNested: boolean;
+    loading: boolean;
+    nested: Array<IArticle>;
 }
 
 export class Item extends React.Component<IProps, IState> {
     static propTypes: any;
     static defaultProps: any;
 
-    readonly state = {hover: false, actioning: false, isActionMenuOpen: false, showNested: false};
-
     clickTimeout: number;
 
     constructor(props) {
         super(props);
+
+        this.state = {
+            hover: false,
+            actioning: false,
+            isActionMenuOpen: false,
+            showNested: false,
+            loading: false,
+            nested: [],
+        };
 
         this.select = this.select.bind(this);
         this.edit = this.edit.bind(this);
@@ -226,7 +234,33 @@ export class Item extends React.Component<IProps, IState> {
 
     toggleNested(event) {
         event.stopPropagation();
+
+        const showNested = !this.state.showNested;
+
+        if (showNested && !this.state.loading && !this.state.nested.length) {
+            this.setState({loading: true});
+            this.fetchNested(this.props.item as IPublishedArticle);
+        }
+
         this.setState({showNested: !this.state.showNested});
+    }
+
+    fetchNested(item: IPublishedArticle) {
+        const {api} = this.props.svc;
+
+        api.query('published', {source: {
+            query: {
+                bool: {
+                    must: {term: {family_id: item.archive_item.family_id}},
+                    must_not: {term: {_id: item.item_id}},
+                },
+            },
+            sort: [{'versioncreated': 'desc'}],
+        }}).then((data) => {
+            this.setState({loading: false, nested: data._items});
+        }).catch(() => {
+            this.setState({loading: false});
+        });
     }
 
     render() {
@@ -307,8 +341,8 @@ export class Item extends React.Component<IProps, IState> {
                         getActionsMenu={getActionsMenu}
                         scope={this.props.scope}
                         selectingDisabled={this.props.multiSelectDisabled}
+                        isNested={this.props.isNested}
                         showNested={this.state.showNested}
-                        nestedCount={this.props.nested.length}
                         toggleNested={this.toggleNested}
                     />
                 );
@@ -322,20 +356,19 @@ export class Item extends React.Component<IProps, IState> {
             case 'photogrid':
                 return null;
             default:
-                if (!this.props.nested.length || !this.state.showNested) {
+                if (!this.state.nested.length) {
                     return null;
                 }
 
                 return (
                     <div className="sd-list-item-nested__childs sd-shadow--z1">
-                        {this.props.nested.map((childItem) => (
+                        {this.state.nested.map((childItem) => (
                             <Item
                                 item={childItem}
                                 key={childItem._id + childItem._current_version}
                                 svc={this.props.svc}
                                 scope={this.props.scope}
                                 flags={{}}
-                                nested={[]}
                                 profilesById={this.props.profilesById}
                                 isNested={true}
                                 narrow={true}
@@ -374,9 +407,9 @@ export class Item extends React.Component<IProps, IState> {
                         'actions-visible': this.props.hideActions !== true,
                         'active': this.props.flags.selected,
                         'selected': this.props.item.selected && !this.props.flags.selected,
-                        'sd-list-item-nested': this.props.nested.length,
-                        'sd-list-item-nested--expanded': this.props.nested.length && this.state.showNested,
-                        'sd-list-item-nested--collapsed': this.props.nested.length && this.state.showNested === false,
+                        'sd-list-item-nested': this.state.nested.length,
+                        'sd-list-item-nested--expanded': this.state.nested.length && this.state.showNested,
+                        'sd-list-item-nested--collapsed': this.state.nested.length && this.state.showNested === false,
                     },
                 ),
                 onMouseEnter: getCallback(this.setHoverState),
