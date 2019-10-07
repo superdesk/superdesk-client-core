@@ -65,7 +65,7 @@
         </div>
 
         <div class="sd-column-box__slide-in-column sd-column-box__slide-in-column--large sd-column-box__slide-in-column--dark-ui">
-            <div class="sd-column-box__slide-in-column-inner sd-slide-in-panel">
+            <div class="sd-column-box__slide-in-column-inner sd-slide-in-panel" ng-controller="MediaFieldsController as fields">
                 <div class="sd-slide-in-panel__header">
                     <h3 class="sd-slide-in-panel__heading" translate>Metadata</h3>
                 </div>
@@ -83,6 +83,7 @@
                             data-on-change="onChange(key)"
                             data-placeholder="placeholder"
                             data-multi="getSelectedImages().length > 1"
+                            data-fields="fields.fields"
                         ></div>
                     </div>
                 </div>
@@ -91,7 +92,9 @@
                     class="sd-slide-in-panel__footer"
                     data-metadata="metadata"
                     data-validator="validator"
-                    data-on-change="setMetadataDirty(!metadataDirty)">
+                    data-on-change="setMetadataDirty(!metadataDirty)"
+                    data-fields="fields.fields"
+                    >
                 </div>
             </div>
         </div>
