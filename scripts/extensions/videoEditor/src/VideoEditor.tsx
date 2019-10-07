@@ -82,6 +82,11 @@ export class VideoEditor extends React.Component<IProps, IState> {
         });
         this.LoadTimelineThumbnails();
     }
+
+    componentWillUnmount() {
+        clearInterval(this.intervalThumbnails);
+    }
+
     handleTrim = (start: number, end: number) => {
         this.setState({
             trim: {
@@ -125,12 +130,17 @@ export class VideoEditor extends React.Component<IProps, IState> {
 
     LoadTimelineThumbnails = () => {
         this.intervalThumbnails = setInterval(() => {
-            this.props.superdesk.dataApi.findOne('video_edit', this.props.article._id).then((result: any) => {
-                if (!isEmpty(result.project.thumbnails)) {
+            this.props.superdesk.dataApi
+                .findOne('video_edit', this.props.article._id)
+                .then((result: any) => {
+                    if (!isEmpty(result.project.thumbnails)) {
+                        clearInterval(this.intervalThumbnails);
+                        this.setState({ thumbnails: result.project.thumbnails.timeline });
+                    }
+                })
+                .catch(() => {
                     clearInterval(this.intervalThumbnails);
-                    this.setState({ thumbnails: result.project.thumbnails.timeline });
-                }
-            });
+                });
         }, 3000);
     };
 
