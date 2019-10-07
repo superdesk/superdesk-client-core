@@ -770,13 +770,16 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
 
                         searchObj[scope.uniqueField] = t[scope.uniqueField];
                         if (searchUnique) {
-                            return (t.name.toLowerCase().indexOf(term.toLowerCase()) !== -1 ||
-                                    t[scope.uniqueField].toLowerCase().indexOf(term.toLowerCase()) !== -1) &&
-                                !_.find(scope.item[scope.field], searchObj);
+                            return (t.name.toLowerCase().indexOf(term.toLowerCase()) !== -1
+                                    || (t.user != null &&
+                                            t.user.username.toLowerCase().indexOf(term.toLowerCase()) !== -1)
+                                    || t[scope.uniqueField].toLowerCase().indexOf(term.toLowerCase()) !== -1)
+                                    && !_.find(scope.item[scope.field], searchObj);
                         }
 
-                        return t.name.toLowerCase().indexOf(term.toLowerCase()) !== -1 &&
-                            !_.find(scope.item[scope.field], searchObj);
+                        return t.name.toLowerCase().indexOf(term.toLowerCase()) !== -1
+                            || (t.user != null && t.user.username.toLowerCase().indexOf(term.toLowerCase()) !== -1)
+                            && !_.find(scope.item[scope.field], searchObj);
                     }));
                     scope.activeList = true;
                 }
