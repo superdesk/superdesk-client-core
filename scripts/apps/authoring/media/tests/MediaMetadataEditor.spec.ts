@@ -11,11 +11,12 @@ describe('media metadata editor', () => {
     beforeEach(window.module('superdesk.config'));
     beforeEach(window.module('superdesk.apps.authoring.media'));
 
-    beforeEach(inject(($q) => {
+    beforeEach(inject(($q, metadata) => {
         spyOn(helper, 'getLabelNameResolver').and.returnValue($q.when(() => { /* no-op */ }));
+        spyOn(metadata, 'initialize').and.returnValue($q.when({}));
     }));
 
-    it('dislays all fields', inject(($rootScope, $compile, deployConfig) => {
+    it('displays all fields', inject(($rootScope, $controller, deployConfig) => {
         deployConfig.config = {
             schema: {
                 picture: {
@@ -46,21 +47,17 @@ describe('media metadata editor', () => {
                 },
             },
         };
-        let scope = $rootScope.$new(true);
 
-        scope.item = {_id: 'foo'};
+        const ctrl = $controller('MediaFieldsController');
 
-        let elm = $compile('<div sd-media-metadata-editor data-item="item"></div>')(scope);
+        $rootScope.$digest();
 
-        scope.$digest();
-
-        let iScope = elm.isolateScope();
-
-        expect(iScope.fields.length).toBe(4);
-        expect(iScope.fields.map((f) => f.field)).toEqual(['slugline', 'headline', 'category', 'genre']);
+        expect(ctrl.fields).not.toBeUndefined();
+        expect(ctrl.fields.length).toBe(4);
+        expect(ctrl.fields.map((f) => f.field)).toEqual(['slugline', 'headline', 'category', 'genre']);
     }));
 
-    it('dislays fields with dislayOnMediaEditor set', inject(($rootScope, $compile, deployConfig) => {
+    it('displays fields with displayOnMediaEditor set', inject(($rootScope, $controller, deployConfig) => {
         deployConfig.config = {
             schema: {
                 picture: {
@@ -95,17 +92,12 @@ describe('media metadata editor', () => {
                 },
             },
         };
-        let scope = $rootScope.$new(true);
 
-        scope.item = {_id: 'foo'};
+        const ctrl = $controller('MediaFieldsController');
 
-        let elm = $compile('<div sd-media-metadata-editor data-item="item"></div>')(scope);
+        $rootScope.$digest();
 
-        scope.$digest();
-
-        let iScope = elm.isolateScope();
-
-        expect(iScope.fields.length).toBe(2);
-        expect(iScope.fields.map((f) => f.field)).toEqual(['slugline', 'headline']);
+        expect(ctrl.fields.length).toBe(2);
+        expect(ctrl.fields.map((f) => f.field)).toEqual(['slugline', 'headline']);
     }));
 });
