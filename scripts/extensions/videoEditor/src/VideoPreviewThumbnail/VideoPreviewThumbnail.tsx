@@ -4,29 +4,81 @@ import VideoEditorContext from '../VideoEditorContext';
 interface IProps {
     videoRef: React.RefObject<HTMLVideoElement>;
 }
-export class VideoPreviewThumbnail extends React.Component<IProps> {
+
+interface IState {
+    dirty: boolean;
+    show: boolean;
+}
+
+export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
     static contextType = VideoEditorContext;
+    private ref: React.RefObject<HTMLCanvasElement>;
+
     constructor(props: IProps) {
         super(props);
+        this.state = {
+            dirty: false,
+            show: false,
+        };
+        this.ref = React.createRef();
     }
 
-    handleClick = () => {};
+    handleClick = () => {
+        this.setState({ dirty: true });
+        const ctx = this.ref.current!.getContext('2d');
+        console.log(this.props);
+        ctx!.drawImage(this.props.videoRef.current!, 0, 0, this.ref.current!.width, this.ref.current!.height);
+    };
+
+    handleSave = () => {};
+
+    handleCancel = () => {
+        this.setState({ dirty: false });
+        const ctx = this.ref.current!.getContext('2d');
+        ctx!.clearRect(0, 0, this.ref.current!.width, this.ref.current!.height);
+    };
 
     render() {
         const { getClass } = this.context.superdesk.utilities.CSS;
         return (
-            <div className={`sd-photo-preview__thumbnail-edit`}>
+            <div className="sd-photo-preview__thumbnail-edit">
+                <canvas ref={this.ref} className={getClass('thumbnail-edit__preview')}></canvas>
                 <div className={getClass('thumbnail-edit__container')}>
-                    {/* <canvas></canvas> */}
-                    <button className="btn btn--icon-only-circle btn--large btn--hollow" onClick={this.handleClick}>
-                        <i className="icon-photo icon--white"></i>
-                    </button>
-                    <form>
-                        <label className="btn btn--icon-only-circle btn--large btn--hollow">
-                            <input type="file" style={{ display: 'none' }} />
-                            <i className="icon-upload icon--white"></i>
-                        </label>
-                    </form>
+                    {!this.state.dirty ? (
+                        <>
+                            <button
+                                className="btn btn--icon-only-circle btn--large btn--hollow sd-margin-r--1"
+                                onClick={this.handleClick}
+                            >
+                                <i className="icon-photo icon--white"></i>
+                            </button>
+                            <form>
+                                <label className="btn btn--icon-only-circle btn--large btn--hollow">
+                                    <input
+                                        type="file"
+                                        style={{ display: 'none' }}
+                                        accept=".png,.jpg,.jpeg,.webp"
+                                    />
+                                    <i className="icon-upload icon--white"></i>
+                                </label>
+                            </form>
+                        </>
+                    ) : (
+                        <>
+                            <button
+                                className="btn btn--icon-only-circle btn--large btn--primary sd-margin-r--1"
+                                onClick={this.handleSave}
+                            >
+                                <i className="icon-ok icon--white"></i>
+                            </button>
+                            <button
+                                className="btn btn--icon-only-circle btn--large btn--hollow"
+                                onClick={this.handleCancel}
+                            >
+                                <i className="icon-close-thick icon--white"></i>
+                            </button>
+                        </>
+                    )}
                 </div>
             </div>
         );
