@@ -1,5 +1,7 @@
 import {element, by, ElementFinder, ElementArrayFinder, browser, Locator, promise} from 'protractor';
 import {ECE} from './expected-conditions-extended';
+import {executeContextMenuAction} from './articlesList';
+import {navigateTo} from './workspace';
 
 const WAIT_TIMEOUT = 200;
 
@@ -69,3 +71,11 @@ export function login(username?: string, password?: string) {
 export function hover(elem: ElementFinder) {
     browser.actions().mouseMove(elem).perform();
 }
+
+export const articleList = {
+    executeContextMenuAction,
+};
+
+export const workspace = {
+    navigateTo,
+};
