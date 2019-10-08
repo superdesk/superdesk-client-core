@@ -770,21 +770,26 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
 
                         searchObj[scope.uniqueField] = t[scope.uniqueField];
                         if (searchUnique) {
-                            return (t.name.toLowerCase().indexOf(term.toLowerCase()) !== -1
-                                    || (t.user != null &&
-                                            t.user.username.toLowerCase().indexOf(term.toLowerCase()) !== -1)
-                                    || t[scope.uniqueField].toLowerCase().indexOf(term.toLowerCase()) !== -1)
-                                    && !_.find(scope.item[scope.field], searchObj);
+                            // In case we want to search by some unique field like qcode as well as name
+                            // see SD-4829
+                            return toLower(t.name).includes(toLower(term))
+                                || toLower(t[scope.uniqueField]).includes(toLower(term))
+                                && !_.find(scope.item[scope.field], searchObj);
                         }
 
-                        return t.name.toLowerCase().indexOf(term.toLowerCase()) !== -1
-                            || (t.user != null && t.user.username.toLowerCase().indexOf(term.toLowerCase()) !== -1)
+                        return toLower(t.name).includes(toLower(term))
+                            || (t.user != null && toLower(t.user.username).includes(toLower(term)))
+                            // make sure to skip the terms which are already added for ex:
+                            // {qcode: "1", name: "Arbeidsliv", scheme: "subject_custom"}  is already added
+                            // and if user search for "Arbeidsliv" again he shouln't get any search results
                             && !_.find(scope.item[scope.field], searchObj);
                     }));
                     scope.activeList = true;
                 }
                 return scope.terms;
             };
+
+            const toLower = (term) => term.toLowerCase();
 
             function filterSelected(terms) {
                 var selected = {};
