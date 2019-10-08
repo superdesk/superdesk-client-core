@@ -478,8 +478,6 @@ class Authoring {
         this.publishFrom = function(desk) {
             this.publish_panel.click();
 
-            browser.sleep(1000);
-
             browser.wait(() => this.publish_panel.isPresent(), 2000);
             this.selectDeskforSendTo(desk);
             this.sendAndPublishBtn.click();

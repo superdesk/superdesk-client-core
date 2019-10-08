@@ -42,6 +42,7 @@ interface IState {
     filtersOpen: boolean;
     filterValues: {[key: string]: any};
     loading: boolean;
+    refetchDataScheduled: boolean;
 }
 
 interface IPropsConnected<T extends IBaseRestApiResponse> {
@@ -72,6 +73,7 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
             filtersOpen: false,
             filterValues: props.defaultFilters ? props.defaultFilters : {},
             loading: true,
+            refetchDataScheduled: false,
         };
 
         this.openPreview = this.openPreview.bind(this);
@@ -82,6 +84,8 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
         this.closeNewItemForm = this.closeNewItemForm.bind(this);
         this.deleteItem = this.deleteItem.bind(this);
         this.removeFilter = this.removeFilter.bind(this);
+        this.refetchDataUsingCurrentFilters = this.refetchDataUsingCurrentFilters.bind(this);
+        this.filter = this.filter.bind(this);
     }
     openPreview(id) {
         if (this.state.editItemId != null) {
@@ -98,7 +102,8 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
                     'Can\'t open a preview while in create mode',
                 ),
             });
-        } else {
+        } else if (this.props.items._items.find(({_id}) => _id === id) != null) {
+            // set previewItemId only if item with id is available in the props.items._items
             this.setState({
                 previewItemId: id,
             });
@@ -196,7 +201,19 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
             }
         }, {});
     }
-    executeFilters() {
+    filter() {
+        if (this.state.editItemId != null) {
+            this.props.modal.alert({
+                headerText: gettext('Warning'),
+                bodyText: gettext(
+                    'The item in edit mode must be closed before you can filter.',
+                ),
+            });
+        } else {
+            this.refetchDataUsingCurrentFilters();
+        }
+    }
+    refetchDataUsingCurrentFilters() {
         const execute = () => {
             const {filterValues} = this.state;
             const formConfigForFilters = getFormGroupForFiltering(this.props.formConfig);
@@ -224,12 +241,16 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
         };
 
         if (this.state.editItemId != null) {
-            this.props.modal.alert({
-                headerText: gettext('Warning'),
-                bodyText: gettext(
-                    'The item in edit mode must be closed before you can filter.',
-                ),
-            });
+            /*  If refetch is requested while an item is being edited,
+                schedule that update until after the editing view is closed.
+
+                A warning used to be shown at this point but produced incorrect results
+                because after a user presses "save", editing view can't be closed immediately.
+                It needs to wait for a success response from the server. This code executes sooner
+                than the editing view checks the response code and closes itself.
+            */
+
+            this.setState({refetchDataScheduled: true});
         } else if (this.state.previewItemId != null) {
             this.setState({
                 previewItemId: null,
@@ -270,9 +291,15 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
         if (this.props.refreshOnEvents != null) {
             this.props.refreshOnEvents.forEach((eventName) => {
                 this.props.$rootScope.$on(eventName, () => {
-                    this.executeFilters(); // will update the list using selected filtering / sort options
+                    // will update the list using selected filtering / sort options
+                    this.refetchDataUsingCurrentFilters();
                 });
             });
+        }
+    }
+    componentDidUpdate() {
+        if (this.state.refetchDataScheduled && this.state.editItemId == null) {
+            this.refetchDataUsingCurrentFilters();
         }
     }
     render() {
@@ -374,7 +401,7 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
                                             this.handleFilterFieldChange(
                                                 this.props.fieldForSearch.field,
                                                 value,
-                                                this.executeFilters,
+                                                this.filter,
                                             );
                                         }}
                                     />
@@ -427,7 +454,7 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
                                         <SidePanelContentBlock>
                                             <form onSubmit={(event) => {
                                                 event.preventDefault();
-                                                this.executeFilters();
+                                                this.filter();
                                             }}>
                                                 <FormViewEdit
                                                     item={this.state.filterValues}

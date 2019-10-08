@@ -118,7 +118,10 @@ angular.module('superdesk.core.menu', [
                                 const itemGroup = item.group || group;
 
                                 if (itemGroup !== group) {
-                                    scope.items.push({hr: 1});
+                                    if (scope.items.length > 0) {
+                                        // only put a separator if there's at least one item already in the list
+                                        scope.items.push({hr: 1});
+                                    }
                                     group = itemGroup;
                                 }
 
@@ -133,6 +136,10 @@ angular.module('superdesk.core.menu', [
                         /a/b should be set active.
                     */
                     function getActiveMenuItemPath(currentPath: string) {
+                        if (typeof currentPath !== 'string') {
+                            return null;
+                        }
+
                         const matchingUrls = scope.items
                             .filter((item) =>
                                 typeof item.href === 'string'
@@ -186,6 +193,10 @@ angular.module('superdesk.core.menu', [
                     };
 
                     function setActiveMenuItem(route) {
+                        if (typeof route !== 'object' || typeof route.href !== 'string') {
+                            return;
+                        }
+
                         _.each(scope.menu, (activity) => {
                             activity.isActive = route && route.href &&
                                     route.href.substr(0, activity.href.length) === activity.href;
