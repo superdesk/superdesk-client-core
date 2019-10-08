@@ -213,7 +213,7 @@ function SdTextEditorController(_, EMBED_PROVIDERS, $timeout, editor, config, $q
                     }
                 });
             } else {
-                newBody = blocks.length > 0 ? blocks[0].body : '';
+                newBody = blocks.length > 0 && typeof blocks[0].body === 'string' ? blocks[0].body : '';
             }
             // strip <br> and <p>
             newBody = newBody.trim().replace(/<p><br><\/p>$/, '');
