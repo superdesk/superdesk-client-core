@@ -66,8 +66,8 @@ function RoutingWidgetController(desks, privileges, api, notify, $scope) {
     });
 }
 
-TopMenuInfoDirective.$inject = ['desks', '$timeout'];
-function TopMenuInfoDirective(desks, $timeout) {
+TopMenuInfoDirective.$inject = ['desks', '$timeout', 'config'];
+function TopMenuInfoDirective(desks, $timeout, config) {
     return {
         template: require('./views/top-menu-info.html'),
         link: (scope) => {
@@ -79,6 +79,7 @@ function TopMenuInfoDirective(desks, $timeout) {
                     selected.classList.remove('desk--closed');
                 }
                 scope.routingFrom = scope.routingTo = null;
+                scope.hideRoutedDesks = config.features.hideRoutedDesks;
 
                 if (!desk) {
                     return;
