@@ -3,6 +3,7 @@ import {connectServices} from 'core/helpers/ReactRenderAsync';
 
 import {IWidget} from 'superdesk-interfaces/Widget';
 import {IContentProfile} from 'superdesk-api';
+import {gettext} from 'core/utils';
 
 interface IProps {
     authoringWidgets: Array<IWidget>;

@@ -6,6 +6,7 @@ import {ModalHeader} from 'core/ui/components/Modal/ModalHeader';
 import {ModalBody} from 'core/ui/components/Modal/ModalBody';
 import {ModalFooter} from 'core/ui/components/Modal/ModalFooter';
 import {onSpikeMiddlewareResult} from 'superdesk-api';
+import {gettext} from 'core/utils';
 import {get} from 'lodash';
 
 export function showSpikeDialog<T>(
