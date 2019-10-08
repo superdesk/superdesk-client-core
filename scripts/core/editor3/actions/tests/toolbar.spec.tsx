@@ -3,7 +3,7 @@ import {cropImage, insertMedia} from '..';
 describe('editor3.actions.toolbar', () => {
     beforeEach(window.module(($provide) => {
         $provide.service('superdesk', ($q) => ({
-            intent: jasmine.createSpy().and.returnValue($q.when('media_list')),
+            intent: jasmine.createSpy().and.returnValue($q.when([])),
         }));
 
         $provide.service('renditions', ($q) => ({

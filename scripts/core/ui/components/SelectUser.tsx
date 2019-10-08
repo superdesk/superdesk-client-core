@@ -51,6 +51,7 @@ export class SelectUser extends React.Component<IPropsSelectUser, IState> {
                         <div style={{paddingLeft: '0.5em'}}>{user.display_name}</div>
                     </div>
                 )}
+                data-test-id="select-user-dropdown"
             />
         );
     }

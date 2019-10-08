@@ -5,7 +5,6 @@
 declare const __SUPERDESK_CONFIG__: any;
 
 declare const $: any; // jquery
-declare const gettext: any;
 declare const KV: any; // qumu widgets
 
 // angular

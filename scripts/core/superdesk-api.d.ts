@@ -181,9 +181,8 @@ declare module 'superdesk-api' {
         _type: 'ingest' | 'archive' | 'published' | 'archived' | string;
         guid: string;
         translated_from: string;
-        translation_id: string;
-        /** direct translations only, not all items with same translation_id */
-        translations: Array<IArticle['_id']>;
+        translation_id: string; // if C is translated from B which is translated from A, all will have the same translation_id
+        translations: Array<IArticle['_id']>; // direct translations only, not all items with same translation_id
         usageterms: any;
         keywords: any;
         language: any;
@@ -241,6 +240,7 @@ declare module 'superdesk-api' {
         task_id?: any;
         ingest_provider?: any;
         archive_item?: any;
+        item_id?: string; // id of corresponding item in 'published' collection
 
         highlights?: Array<string>;
         highlight?: any;
@@ -611,6 +611,7 @@ declare module 'superdesk-api' {
         getToggleElement(isOpen: boolean, onClick: () => void): JSX.Element;
         renderItem(key: string, item: T, closeDropdown:() => void): JSX.Element;
         wrapperStyles?: React.CSSProperties;
+        'data-test-id'?: string;
     }
 
     interface ISpacingProps {
@@ -770,7 +771,7 @@ declare module 'superdesk-api' {
             Alert: React.ComponentType<IAlertComponentProps>;
             Figure: React.ComponentType<IFigureComponentProps>;
             DropZone: React.ComponentType<IDropZoneComponentProps>;
-            Modal: React.ComponentType;
+            Modal: React.ComponentType<{'data-test-id'?: string}>;
             ModalHeader: React.ComponentType<IPropsModalHeader>;
             ModalBody: React.ComponentType;
             ModalFooter: React.ComponentType;
@@ -780,7 +781,7 @@ declare module 'superdesk-api' {
             ArticleItemConcise: React.ComponentType<{article: IArticle}>;
             GroupLabel: React.ComponentType<ISpacingProps>;
             Icon: React.ComponentType<IPropsIcon>;
-            TopMenuDropdownButton: React.ComponentType<{onClick: () => void; active: boolean}>;
+            TopMenuDropdownButton: React.ComponentType<{onClick: () => void; active: boolean; 'data-test-id'?: string;}>;
             getDropdownTree: <T>() => React.ComponentType<IPropsDropdownTree<T>>;
         };
         forms: {

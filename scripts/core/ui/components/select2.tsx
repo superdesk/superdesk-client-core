@@ -11,6 +11,7 @@ interface IProps<T> {
     getItemLabel(item: T): string;
     getItemValue(item: T): string;
     onSelect(value: string): void;
+    'data-test-id'?: string;
 }
 
 interface IState {
@@ -85,6 +86,7 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                 items={filteredItems}
                 wrapperStyle={{}}
                 menuStyle={menuStyle}
+                wrapperProps={{'data-test-id': this.props['data-test-id']} as any}
                 renderInput={(propsAutocomplete: any) => {
                     const selectedItem = this.props.items[this.props.value];
 
@@ -97,6 +99,7 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                                 style={{height: this.lastButtonHeight + 'px'}}
                                 placeholder={'Search'}
                                 autoFocus
+                                data-test-id="filter-input"
                             />
                         );
                     }
@@ -124,6 +127,7 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                                 ref(element);
                             }}
                             style={this.props.disabled ? {...baseButtonStyle, opacity: 0.6} : baseButtonStyle}
+                            data-test-id="dropdown-button"
                         >
                             {
                                 this.props.value === undefined
@@ -149,7 +153,11 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                         : commonStyles;
 
                     return (
-                        <button key={this.props.getItemValue(item)} style={style}>
+                        <button
+                            key={this.props.getItemValue(item)}
+                            style={style}
+                            data-test-id="option"
+                        >
                             {this.props.renderItem(item)}
                         </button>
                     );

@@ -38,7 +38,7 @@ export function getMarkForUserModal(
         }
         render() {
             return (
-                <Modal>
+                <Modal data-test-id="mark-for-user-modal">
                     <ModalHeader onClose={this.props.closeModal}>{gettext('Mark for user')}</ModalHeader>
                     <ModalBody>
                         {
@@ -71,6 +71,7 @@ export function getMarkForUserModal(
                         <button
                             className="btn"
                             onClick={() => this.props.closeModal()}
+                            data-test-id="cancel"
                         >
                             {gettext('Cancel')}
                         </button>
@@ -84,6 +85,7 @@ export function getMarkForUserModal(
                                         this.props.closeModal();
                                         onUpdate(null);
                                     }}
+                                    data-test-id="unmark"
                                 >
                                     {gettext('Unmark')}
                                 </button>
@@ -106,6 +108,7 @@ export function getMarkForUserModal(
                                     logger.error(new Error('selectedUserId can not be undefined'));
                                 }
                             }}
+                            data-test-id="confirm"
                         >
                             {gettext('Confirm')}
                         </button>
