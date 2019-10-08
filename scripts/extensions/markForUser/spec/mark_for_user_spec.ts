@@ -1,19 +1,13 @@
-import {browser, by} from 'protractor'; // by
-import {el, els, ECE, login, hover} from 'end-to-end-testing-helpers';
+import {browser} from 'protractor';
+import {el, els, ECE, login, articleList, workspace} from 'end-to-end-testing-helpers';
 
 describe('mark for user extension', () => {
     it('persists changing marked user from authoring topbar in read-only mode', () => {
         login();
 
-        el(['workspace-navigation', 'Monitoring']).click();
+        workspace.navigateTo('Monitoring');
+        articleList.executeContextMenuAction(els(['article-item']).get(0), 'Mark for user');
 
-        // mark item for current user
-        const articleItem = els(['article-item']).get(0);
-
-        hover(articleItem);
-
-        el(['context-menu-button'], null, articleItem).click();
-        el(['context-menu']).element(by.buttonText('Mark for user')).click();
         el(['mark-for-user-modal', 'modal-body', 'select-user-dropdown', 'dropdown-button']).click();
         els(['mark-for-user-modal', 'modal-body', 'select-user-dropdown', 'option']).get(1).click();
         el(['mark-for-user-modal', 'modal-footer', 'confirm']).click();

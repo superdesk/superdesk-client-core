@@ -156,6 +156,12 @@ export function RenditionsService(metadata, $q, api, superdesk, _, notify) {
                         .catch(() => {
                             notify.error(gettext('Failed to generate picture crops.'));
                         });
+                }).catch((response) => {
+                    // if new crops not generated continue with default one
+                    // see https://github.com/superdesk/superdesk-client-core/pull/3117#discussion_r328440897
+                    if (response != null && response.done === true) {
+                        return item;
+                    }
                 });
         });
     };

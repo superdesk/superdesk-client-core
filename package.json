@@ -141,8 +141,7 @@
     "react-test-renderer": "^16.2.0",
     "request": "^2.83.0",
     "superdesk-code-style": "^1.1.1",
-    "typescript-eslint-parser": "^18.0.0",
-    "webdriver-manager": "12.1.6"
+    "typescript-eslint-parser": "^18.0.0"
   },
   "scripts": {
     "setup-extensions": "node ./tasks/namespace-css-from-extensions.js && node ./tasks/install-extensions.js && node ./tasks/generate-extension-imports.js",
@@ -158,6 +157,7 @@
     "lint-fix": "tsc -p scripts --noEmit && tslint --fix -c tslint.json 'scripts/**/*.{ts,tsx}' && eslint --fix --parser=typescript-eslint-parser --ext .js --ext .jsx --ext .ts --ext .tsx scripts spec tasks *.js",
     "start-test-server": "cd test-server && python3 -m venv env && . env/bin/activate && pip install -Ur requirements.txt && honcho start",
     "protractor": "protractor protractor.conf.js",
-    "webdriver-manager": "webdriver-manager update --gecko false --standalone false"
+    "webdriver-manager": "webdriver-manager update --gecko false --standalone false",
+    "server": "grunt server"
   }
 }

@@ -34,6 +34,7 @@ export default function MediaMetadataEditorDirective(metadata, deployConfig, fea
             dark: '@',
             boxed: '@',
             associated: '=',
+            multi: '=',
         },
         template: require('./views/media-metadata-editor-directive.html'),
         link: (scope) => {
@@ -101,7 +102,11 @@ export default function MediaMetadataEditorDirective(metadata, deployConfig, fea
                                 if (!item.extra || !item.extra.hasOwnProperty(dest)) {
                                     item.extra = item.extra || {};
                                     item.extra[dest] = field.default;
-                                    scope.onChange({key: 'extra'});
+                                    // only call on change for single image editing, not multi upload
+                                    // it would override other extra values
+                                    if (!scope.multi) {
+                                        scope.onChange({key: 'extra'});
+                                    }
                                 }
                             } else if (!item.hasOwnProperty(dest)) {
                                 item[dest] = field.default;
