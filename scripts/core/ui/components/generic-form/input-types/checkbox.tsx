@@ -2,6 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import {IInputType} from '../interfaces/input-types';
 import {Checkbox} from '../../Form';
+import {gettext} from 'core/utils';
 
 export class CheckboxInput extends React.Component<IInputType<boolean>> {
     render() {

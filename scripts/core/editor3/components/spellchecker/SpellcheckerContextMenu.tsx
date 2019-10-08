@@ -8,6 +8,7 @@ import {
     ISpellcheckerSuggestion,
 } from './interfaces';
 import {reloadSpellcheckerWarnings} from '../../actions';
+import {gettext} from 'core/utils';
 
 interface IProps {
     warning: ISpellcheckWarning;

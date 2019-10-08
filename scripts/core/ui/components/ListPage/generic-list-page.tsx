@@ -34,6 +34,7 @@ import {
     ICrudManagerFilters,
     ICrudManager,
 } from 'superdesk-api';
+import {gettext} from 'core/utils';
 
 interface IState {
     previewItemId: string | null;

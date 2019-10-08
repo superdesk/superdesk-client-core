@@ -1,5 +1,6 @@
 import * as ctrl from '../controllers';
 import {stripHtmlTags, getSuperdeskType} from 'core/utils';
+import {gettext} from 'core/utils';
 import {addInternalEventListener} from 'core/internal-events';
 
 /**
