@@ -156,7 +156,7 @@ export function MultiImageEditController(
                 gettext(
                     'Item {{headline}} unlocked by another user.',
                     {headline: unlockedItem.headline || unlockedItem.slugline},
-                )
+                ),
             );
             $scope.imagesOriginal = angular.copy(imagesOriginal.filter((image) => image._id !== data.item));
             $scope.metadata = {};

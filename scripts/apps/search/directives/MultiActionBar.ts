@@ -6,7 +6,9 @@ import {IArticleActionBulkExtended} from 'apps/monitoring/MultiActionBarReact';
 import {IArticle} from 'superdesk-api';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 
-MultiActionBar.$inject = ['asset', 'multi', 'authoringWorkspace', 'superdesk', 'keyboardManager', 'desks', 'lock', 'api'];
+MultiActionBar.$inject = [
+    'asset', 'multi', 'authoringWorkspace', 'superdesk', 'keyboardManager', 'desks', 'lock', 'api',
+];
 export function MultiActionBar(
     asset,
     multi,
