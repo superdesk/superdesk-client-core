@@ -6,7 +6,7 @@ import {IArticleActionBulkExtended} from 'apps/monitoring/MultiActionBarReact';
 import {IArticle} from 'superdesk-api';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 
-MultiActionBar.$inject = ['asset', 'multi', 'authoringWorkspace', 'superdesk', 'keyboardManager', 'desks', 'lock'];
+MultiActionBar.$inject = ['asset', 'multi', 'authoringWorkspace', 'superdesk', 'keyboardManager', 'desks', 'lock', 'api'];
 export function MultiActionBar(
     asset,
     multi,
@@ -15,6 +15,7 @@ export function MultiActionBar(
     keyboardManager,
     desks,
     lock,
+    api,
 ) {
     return {
         controller: 'MultiActionBar',
@@ -205,18 +206,15 @@ export function MultiActionBar(
 
             scope.$on('item:unlock', (_e, data) => {
                 if (multi.getIds().includes(data.item)) {
-                    var selectedItems = multi.getItems();
+                    const selectedItems = multi.getItems();
 
                     // When selected items are unlocked update their lock info and allowed actions
-                    selectedItems.forEach((item) => {
-                        if (item._id === data.item && lock.isLockedInCurrentSession(item)) {
-                            item._locked = false;
-                            item.lock_user = null;
-                            item.lock_session = null;
-                            item.lock_action = null;
-                        }
+                    api.find('archive', data.item).then((_item) => {
+                        const index = selectedItems.findIndex((item) => item._id === _item._id);
+
+                        selectedItems[index] = _.extend(selectedItems[index], _item);
+                        detectType(selectedItems);
                     });
-                    detectType(selectedItems);
                 }
             });
 

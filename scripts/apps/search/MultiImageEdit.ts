@@ -20,7 +20,7 @@ interface IScope extends ng.IScope {
     saveHandler(images): Promise<void>;
     successHandler?(): void;
     cancelHandler?(): void;
-    isSelectedAndLockedInCurrentSession(): boolean;
+    getSelectedItemsLength(): number;
 }
 
 MultiImageEditController.$inject = [
@@ -28,7 +28,6 @@ MultiImageEditController.$inject = [
     'modal',
     'notify',
     'lock',
-    'api',
 ];
 
 export function MultiImageEditController(
@@ -36,7 +35,6 @@ export function MultiImageEditController(
     modal,
     notify,
     lock,
-    api,
 ) {
     const saveHandler = $scope.saveHandler;
 
@@ -103,7 +101,7 @@ export function MultiImageEditController(
     };
 
     $scope.save = (close) => {
-        const imagesForSaving = $scope.images.filter((image) => lock.isLockedInCurrentSession(image));
+        const imagesForSaving = angular.copy($scope.images);
 
         imagesForSaving.forEach((image) => {
             delete image.selected;
@@ -148,33 +146,39 @@ export function MultiImageEditController(
     };
 
     $scope.$on('item:lock', (_e, data) => {
-        const {images} = $scope;
+        const {imagesOriginal} = $scope;
 
-        // while editing metadata if any selected item is unlocked by another user update that item here too
-        if (Array.isArray(images) && data != null && data.item != null) {
-            const unlockedItem = images.find((image) => image._id === data.item);
+        // while editing metadata if any selected item is unlocked by another user remove that item from selected items
+        if (Array.isArray(imagesOriginal) && data != null && data.item != null) {
+            const unlockedItem = imagesOriginal.find((image) => image._id === data.item);
 
-            api.find('archive', unlockedItem._id).then((res) => {
-                const index = images.findIndex((i) => i._id === res._id);
-
-                images[index] = _.extend(images[index], res);
-            });
+            notify.error(
+                gettext(
+                    'Item {{headline}} unlocked by another user.',
+                    {headline: unlockedItem.headline || unlockedItem.slugline},
+                )
+            );
+            $scope.imagesOriginal = angular.copy(imagesOriginal.filter((image) => image._id !== data.item));
+            $scope.metadata = {};
         }
     });
 
-    $scope.isSelectedAndLockedInCurrentSession = () => {
-        return $scope.getSelectedImages().every((image) => lock.isLockedInCurrentSession(image));
-    };
-
     $scope.getSelectedImages = () => ($scope.images || []).filter((item) => item.selected);
+
+    $scope.getSelectedItemsLength = () => $scope.getSelectedImages().length || 0;
 
     function unlockAndCloseModal(callback) {
         // Before closing the modal unlock all the selected items
         const unlockItems = $scope.images.map((item) => {
-            return lock.isLockedInCurrentSession(item) ? lock.unlock(item) : item;
+            // In case of new upload there will be no lock on item
+            // so make sure to unlock only those items which are locked
+            if (item._locked === true) {
+                return lock.unlock(item);
+            }
+            return item;
         });
 
-        Promise.all(unlockItems).then(() => callback());
+        Promise.all(unlockItems).then(callback);
     }
 
     function updateMetadata() {
