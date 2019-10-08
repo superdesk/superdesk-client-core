@@ -49,6 +49,7 @@ import {dispatchInternalEvent} from './internal-events';
 import {Icon} from './ui/components/Icon2';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {httpRequestJsonLocal} from './helpers/network';
+import ng from 'core/services/ng';
 
 function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
@@ -226,7 +227,10 @@ export function getSuperdeskApiImplementation(
         ui: {
             article: {
                 view: (id: string) => {
-                    authoringWorkspace.edit({_id: id}, 'view');
+                    ng.getService('$location').then(($location) => {
+                        $location.url('/workspace/monitoring');
+                        authoringWorkspace.edit({_id: id}, 'view');
+                    });
                 },
                 addImage: (field: string, image: IArticle) => {
                     dispatchInternalEvent('addImage', {field, image});
