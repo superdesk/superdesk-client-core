@@ -44,6 +44,7 @@ const actionsMenuDefaultTemplate = (toggle, stopEvent) => (
             onClick={toggle}
             onDoubleClick={stopEvent}
             className="more-activity-toggle-ref icn-btn dropdown__toggle dropdown-toggle"
+            data-test-id="context-menu-button"
         >
             <i className="icon-dots-vertical" />
         </button>
@@ -387,14 +388,17 @@ export class Item extends React.Component<IProps, IState> {
                 draggable: !this.props.isNested,
             },
             (
-                <div className={classNames(classes, {
-                    active: this.props.flags.selected,
-                    locked: isLocked,
-                    selected: this.props.item.selected || this.props.flags.selected,
-                    archived: item.archived || item.created,
-                    gone: item.gone,
-                    actioning: this.state.actioning || this.props.actioning,
-                })}>
+                <div
+                    className={classNames(classes, {
+                        active: this.props.flags.selected,
+                        locked: isLocked,
+                        selected: this.props.item.selected || this.props.flags.selected,
+                        archived: item.archived || item.created,
+                        gone: item.gone,
+                        actioning: this.state.actioning || this.props.actioning,
+                    })}
+                    data-test-id="article-item"
+                >
                     {getTemplate()}
                 </div>
             ),

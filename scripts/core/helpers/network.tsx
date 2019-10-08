@@ -1,13 +1,6 @@
-import React from 'react';
 import ng from 'core/services/ng';
-import {gettext} from 'core/utils';
 import {logger} from 'core/services/logger';
 import {appConfig} from '../../appConfig';
-import {showModal} from 'core/services/modalService';
-import {ModalHeader} from 'core/ui/components/Modal/ModalHeader';
-import {ModalBody} from 'core/ui/components/Modal/ModalBody';
-import {ModalFooter} from 'core/ui/components/Modal/ModalFooter';
-import {Modal} from 'core/ui/components/Modal/Modal';
 
 interface IHttpRequestOptions {
     method: 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE';
@@ -38,40 +31,6 @@ export function isHttpApiError(x): x is IHttpLocalApiErrorResponse {
     return typeof x === 'object' && x['_status'] === 'ERR';
 }
 
-function getNetworkErrorModal(message: string) {
-    return class NetworkErrorModal extends React.PureComponent<{closeModal(): void}> {
-        render() {
-            return (
-                <Modal>
-                    <ModalHeader onClose={this.props.closeModal}>
-                        {gettext('Network error occured')}
-                    </ModalHeader>
-                    <ModalBody>
-                        {message}
-                    </ModalBody>
-                    <ModalFooter>
-                        <button
-                            onClick={this.props.closeModal}
-                            className="btn btn-default"
-                            type="button"
-                        >
-                            {gettext('Close')}
-                        </button>
-                    </ModalFooter>
-                </Modal>
-            );
-        }
-    };
-}
-
-function displayErrorMessage(res?: any) {
-    showModal(getNetworkErrorModal(
-        typeof res === 'object' && typeof res._error === 'object' && typeof res._error.message === 'string'
-            ? res._error.message
-            : gettext('An error occured. Retry the action or reload the page.'),
-    ));
-}
-
 function httpRequestBase(options: IHttpRequestOptions): Promise<Response> {
     const {method, url, payload, headers} = options;
 
@@ -86,8 +45,6 @@ function httpRequestBase(options: IHttpRequestOptions): Promise<Response> {
         } else {
             logger.error(new Error(res));
         }
-
-        displayErrorMessage();
 
         // unless a rejected Promise is returned or an error is thrown in the catch block
         // the promise will become resolved and `.then chain` will get executed
@@ -109,7 +66,6 @@ export function httpRequestVoidLocal(options: IHttpRequestOptionsLocal): Promise
                 if (res.ok) {
                     return Promise.resolve();
                 } else {
-                    displayErrorMessage();
                     return Promise.reject();
                 }
             });
@@ -131,7 +87,6 @@ export function httpRequestJsonLocal<T>(options: IHttpRequestJsonOptionsLocal): 
                 if (res.ok) {
                     return json;
                 } else {
-                    displayErrorMessage(json);
                     return Promise.reject(json);
                 }
             }));
