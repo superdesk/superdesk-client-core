@@ -2,8 +2,9 @@
   "private": true,
   "main": "dist/extension.js",
   "scripts": {
-    "compile": "tsc",
-    "watch": "tsc -watch"
+    "compile": "tsc -p src",
+    "compile-e2e": "echo 'No end-to-end tests defined'",
+    "watch": "tsc -watch -p src"
   },
   "devDependencies": {
     "superdesk-code-style": "1.3.0",

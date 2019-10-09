@@ -2,8 +2,9 @@
   "private": true,
   "main": "dist/extension.js",
   "scripts": {
-    "compile": "tsc",
-    "watch": "tsc -watch"
+    "compile": "tsc -p src",
+    "compile-e2e": "echo 'No end-to-end tests defined'",
+    "watch": "tsc -watch -p src"
   },
   "devDependencies": {
     "@types/react": "16.8.23",
