@@ -7,6 +7,7 @@ import {getFormFieldPreviewComponent} from 'core/ui/components/generic-form/form
 import {IInternalDestination} from 'superdesk-interfaces/InternalDestination';
 import {IFormField, IFormGroup} from 'superdesk-api';
 import {FormFieldType} from 'core/ui/components/generic-form/interfaces/form';
+import {gettext} from 'core/utils';
 
 const InternalDestinationsPageComponent = getGenericListPageComponent<IInternalDestination>('internal_destinations');
 

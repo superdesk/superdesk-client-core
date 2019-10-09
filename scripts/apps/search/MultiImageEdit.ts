@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import {get} from 'lodash';
 import {uniq, pickBy, isEmpty, forEach} from 'lodash';
 import {validateMediaFieldsThrows} from 'apps/authoring/authoring/controllers/ChangeImageController';
 import {logger} from 'core/services/logger';
@@ -55,19 +56,24 @@ export function MultiImageEditController(
 
     $scope.isDirty = () => unsavedChangesExist;
 
-    $scope.selectImage = (image) => {
+    $scope.selectImage = (image, update: boolean = true) => {
         if ($scope.images.length === 1) {
             $scope.images[0].selected = true;
         } else {
             image.selected = !image.selected;
         }
-        updateMetadata();
+
+        if (update) {
+            // refresh metadata visible in the editor according to selected images
+            updateMetadata();
+        }
     };
 
     // wait for images for initial load
     $scope.$watch('images', (images: Array<any>) => {
         if (images != null && images.length) {
-            images.forEach($scope.selectImage);
+            images.forEach((image) => $scope.selectImage(image, false));
+            updateMetadata();
         }
     });
 
@@ -150,36 +156,64 @@ export function MultiImageEditController(
             copyrightholder: compare('copyrightholder'),
             usageterms: compare('usageterms'),
             copyrightnotice: compare('copyrightnotice'),
-            extra: compare('extra'),
+            extra: compareExtra(),
             language: compare('language'),
             creditline: compare('creditline'),
         };
     }
 
-    function compare(fieldName) {
-        const uniqueValues = uniq(
-            $scope.getSelectedImages()
-                .filter((item) => item[fieldName] != null)
+    function getUniqueValues(field: string) {
+        const uniqueValues = {};
 
-                // IArticle['subject'] is a collection of custom vocabulary items
-                // stringifying is required to compare arrays
-                .map((item) => JSON.stringify(item[fieldName])),
-        );
+        $scope.getSelectedImages()
+            .map((item) => get(item, field))
+            .filter((value) => value != null && value !== '')
+            .map((value) => JSON.stringify(value))
+            .forEach((value) => uniqueValues[value] = 1);
+        return Object.keys(uniqueValues);
+    }
 
-        const defaultValues = {
-            subject: [],
-            extra: {},
-        };
+    /**
+     * Populate .extra metadata for editing.
+     *
+     * Works like compare() but for custom fields stored in .extra.
+     */
+    function compareExtra() {
+        // get unique values for each extra field
+        const extra = {};
+        const values = {};
 
-        if (uniqueValues.length < 1) {
-            return defaultValues[fieldName] || '';
-        } else if (uniqueValues.length > 1) {
-            $scope.placeholder[fieldName] = '(multiple values)';
-            return defaultValues[fieldName] || '';
-        } else {
-            $scope.placeholder[fieldName] = '';
+        $scope.getSelectedImages().forEach((item) => {
+            if (item.extra != null) {
+                for (const field in item.extra) {
+                    if (!values.hasOwnProperty(field)) {
+                        values[field] = getUniqueValues('extra.' + field);
+                        extra[field] = getMetaValue(field, values[field]);
+                    }
+                }
+            }
+        });
+
+        return extra;
+    }
+
+    function getMetaValue(field: string, uniqueValues: Array<string>, defaultValue = null) {
+        $scope.placeholder[field] = '';
+
+        if (uniqueValues.length === 1) {
             return JSON.parse(uniqueValues[0]);
+        } else if (uniqueValues.length > 1) {
+            $scope.placeholder[field] = gettext('(multiple values)');
         }
+
+        return defaultValue || '';
+    }
+
+    function compare(fieldName) {
+        const uniqueValues = getUniqueValues(fieldName);
+        const defaultValues = {subject: []};
+
+        return getMetaValue(fieldName, uniqueValues, defaultValues[fieldName]);
     }
 }
 

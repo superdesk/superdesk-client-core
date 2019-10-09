@@ -1,28 +1,6 @@
 {
+    "extends": "superdesk-code-style/tsconfig-strict",
     "compilerOptions": {
-        "outDir": "dist",
-        "module": "commonjs",
-        "target": "es6",
-        "lib": [
-            "dom",
-            "es2017"
-        ],
-        "skipLibCheck": true,
-        "jsx": "react",
-
-        "strict": true,
-        "alwaysStrict": true,
-        "strictBindCallApply": true,
-        "strictFunctionTypes": true,
-        "strictPropertyInitialization": true,
-        "strictNullChecks": true,
-        "noImplicitAny": true,
-        "noImplicitReturns": true,
-        "noImplicitThis": true,
-        
-        "forceConsistentCasingInFileNames": true,
-        "noFallthroughCasesInSwitch": true,
-        "noUnusedLocals": true,
-        "noUnusedParameters": true,  
-    },
+        "outDir": "./dist"
+    }
 }

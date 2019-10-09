@@ -3,6 +3,7 @@ import {FIELD_KEY_SEPARATOR} from 'core/editor3/helpers/fieldsMeta';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 import {MEDIA_TYPES} from 'apps/vocabularies/constants';
 import {isPublished} from 'apps/archive/utils';
+import {resetFieldMetadata} from 'core/editor3/helpers/fieldsMeta';
 
 /**
  * @ngdoc directive
@@ -319,6 +320,11 @@ export function ArticleEditDirective(
                     )
                         .then((picture) => {
                             scope.item._etag = picture._etag;
+
+                            // draftjs editor state will be
+                            // outdated after editing in modal
+                            resetFieldMetadata(scope.item);
+                            scope.refresh();
 
                             if (isPublished(scope.item)) {
                                 mainEditScope.dirty = true;

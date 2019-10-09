@@ -2,7 +2,7 @@
 
 import {element, by, browser, protractor} from 'protractor';
 import {waitHidden, waitFor} from './utils';
-import {ECE} from './expected-conditions-extended';
+import {ECE} from 'end-to-end-testing-helpers';
 
 class Authoring {
     lock: any;
@@ -477,8 +477,6 @@ class Authoring {
 
         this.publishFrom = function(desk) {
             this.publish_panel.click();
-
-            browser.sleep(1000);
 
             browser.wait(() => this.publish_panel.isPresent(), 2000);
             this.selectDeskforSendTo(desk);

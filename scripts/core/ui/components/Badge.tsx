@@ -33,6 +33,7 @@ export class Badge extends React.PureComponent<IPropsBadge> {
                     {'badge--square': this.props.square === true},
                 )}
                 style={getSpacingProps(this.props)}
+                data-test-id="badge"
             >
                 {this.props.children}
             </span>

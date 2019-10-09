@@ -58,6 +58,7 @@ export class SelectUser extends React.Component<IPropsSelectUser, IState> {
                         </ListItemColumn>
                     </ListItem>
                 )}
+                data-test-id="select-user-dropdown"
             />
         );
     }

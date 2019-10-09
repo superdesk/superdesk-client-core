@@ -100,6 +100,29 @@ export const dataApiByEntity = {
     },
 };
 
+export function generatePatch<T extends IBaseRestApiResponse>(item1: T, item2: T): Partial<T> {
+    const patch: Partial<T> = generate(item1, item2);
+
+    // due to the use of "projections"(partial entities) item2 is sometimes missing fields which item1 has
+    // which is triggering patching algorithm to think we want to set those missing fields to null
+    // the below code enforces that in order to patch to contain null,
+    // item2 must explicitly send nulls instead of missing fields
+    for (const key in patch) {
+        if (patch[key] === null && item2[key] !== null) {
+            delete patch[key];
+        }
+    }
+
+    // remove IBaseRestApiResponse fields
+    delete patch['_created'];
+    delete patch['_updated'];
+    delete patch['_id'];
+    delete patch['_etag'];
+    delete patch['_links'];
+
+    return patch;
+}
+
 export const dataApi: IDataApi = {
     findOne: (endpoint, id) => httpRequestJsonLocal({
         method: 'GET',
@@ -140,24 +163,7 @@ export const dataApi: IDataApi = {
         });
     },
     patch: (endpoint, item1, item2) => {
-        const patch = generate(item1, item2);
-
-        // due to the use of "projections"(partial entities) item2 is sometimes missing fields which item1 has
-        // which is triggering patching algorithm to think we want to set those missing fields to null
-        // the below code enforces that in order to patch to contain null,
-        // item2 must explicitly send nulls instead of missing fields
-        for (const key in patch) {
-            if (patch[key] === null && item2[key] !== null) {
-                delete patch[key];
-            }
-        }
-
-        // remove IBaseRestApiResponse fields
-        delete patch['_created'];
-        delete patch['_updated'];
-        delete patch['_id'];
-        delete patch['_etag'];
-        delete patch['_links'];
+        const patch = generatePatch(item1, item2);
 
         return httpRequestJsonLocal({
             'method': 'PATCH',
