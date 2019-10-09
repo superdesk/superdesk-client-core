@@ -128,6 +128,7 @@ describe('publish queue', () => {
     beforeEach(window.module('superdesk.apps.searchProviders'));
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.apps.vocabularies'));
+    beforeEach(window.module('superdesk.apps.extension-points'));
 
     beforeEach(inject(($rootScope, $controller, subscribersService, $q, api, ingestSources, vocabularies) => {
         spyOn(subscribersService, 'fetchSubscribers').and.returnValue($q.when(subscribers));

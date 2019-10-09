@@ -28,6 +28,7 @@ describe('spellcheck', () => {
     beforeEach(window.module('superdesk.core.preferences'));
     beforeEach(window.module('superdesk.apps.vocabularies'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
+    beforeEach(window.module('superdesk.apps.extension-points'));
 
     beforeEach(inject((dictionaries, spellcheck, $q, preferencesService) => {
         spyOn(dictionaries, 'getActive').and.returnValue($q.when([

@@ -5,6 +5,7 @@ describe('archive-history', () => {
     beforeEach(window.module('superdesk.apps.authoring'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
     beforeEach(window.module('superdesk.apps.authoring.versioning.history'));
+    beforeEach(window.module('superdesk.apps.extension-points'));
 
     beforeEach(inject((highlightsService, desks, $q, api, archiveService) => {
         const deskList = {

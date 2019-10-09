@@ -8,6 +8,7 @@ describe('authoring', () => {
     beforeEach(window.module('superdesk.apps.archive'));
     beforeEach(window.module('superdesk.apps.authoring'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
+    beforeEach(window.module('superdesk.apps.extension-points'));
 
     it('set anpa category value for required subservice',
         inject(($httpBackend, $q, $rootScope, $compile, vocabularies, archiveService, content, $templateCache) => {

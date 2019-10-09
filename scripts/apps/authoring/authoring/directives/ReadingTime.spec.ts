@@ -2,6 +2,7 @@ import {repeat} from 'lodash';
 
 describe('sd-reading-time', () => {
     beforeEach(window.module('superdesk.apps.authoring'));
+    beforeEach(window.module('superdesk.apps.extension-points'));
 
     it('can estimate reading time in japanese', inject(($compile, $rootScope) => {
         const scope = $rootScope.$new();

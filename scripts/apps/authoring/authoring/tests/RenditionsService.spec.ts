@@ -1,6 +1,7 @@
 describe('renditions service', () => {
     beforeEach(window.module('superdesk.apps.authoring'));
     beforeEach(window.module('superdesk.apps.ingest'));
+    beforeEach(window.module('superdesk.apps.extension-points'));
 
     beforeEach(window.module(($provide) => {
         $provide.constant('config', {

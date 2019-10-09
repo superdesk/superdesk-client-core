@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import * as helpers from 'apps/authoring/authoring/helpers';
 import {gettext} from 'core/utils';
+import {IFunctionPointsService} from 'apps/extension-points/services/FunctionPoints';
 
 /**
  * @ngdoc service
@@ -21,13 +22,14 @@ import {gettext} from 'core/utils';
  * @requires $injector
  * @requires moment
  * @requires config
+ * @requires functionPoints
  *
  * @description Authoring Service is responsible for management of the actions on a story
  */
 AuthoringService.$inject = ['$q', '$location', 'api', 'lock', 'autosave', 'confirm', 'privileges',
-    'desks', 'superdeskFlags', 'notify', 'session', '$injector', 'moment', 'config'];
+    'desks', 'superdeskFlags', 'notify', 'session', '$injector', 'moment', 'config', 'functionPoints'];
 export function AuthoringService($q, $location, api, lock, autosave, confirm, privileges, desks, superdeskFlags,
-    notify, session, $injector, moment, config) {
+    notify, session, $injector, moment, config, functionPoints: IFunctionPointsService) {
     var self = this;
 
     // TODO: have to trap desk update event for refereshing users desks.
@@ -96,11 +98,17 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
                     desk_id: desks.getCurrentDeskId() || item.task.desk,
                 };
 
-                return api.save('archive_rewrite', {}, updates, item);
+                return api.save('archive_rewrite', {}, updates, Object.freeze(item))
+                    .then((newItem) => (
+                        functionPoints.run('archive:rewrite_after', Object.assign({
+                            _id: _.get(newItem, '_id'),
+                            type: _.get(newItem, 'type'),
+                        }, newItem))
+                ));
             })
-            .then((newItem) => {
+            .then((itemNext) => {
                 notify.success(gettext('Update Created.'));
-                authoringWorkspace.edit(newItem);
+                authoringWorkspace.edit(itemNext);
             }, (response) => {
                 if (angular.isDefined(response.data._message)) {
                     notify.error(gettext('Failed to generate update: {{message}}', {message: response.data._message}));

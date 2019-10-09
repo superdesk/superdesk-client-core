@@ -14,6 +14,7 @@ describe('workqueue', () => {
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.apps.authoring'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
+    beforeEach(window.module('superdesk.apps.extension-points'));
 
     beforeEach(inject((session, $q) => {
         spyOn(session, 'getIdentity').and.returnValue($q.when({_id: USER_ID}));

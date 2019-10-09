@@ -12,6 +12,7 @@ describe('MetadataWidgetCtrl controller', () => {
     beforeEach(window.module('superdesk.apps.authoring.metadata'));
     beforeEach(window.module('superdesk.apps.vocabularies'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
+    beforeEach(window.module('superdesk.apps.extension-points'));
 
     beforeEach(window.module(($provide) => {
         $provide.constant('config', {
@@ -134,6 +135,7 @@ describe('metadata terms directive', () => {
     beforeEach(window.module('superdesk.apps.authoring.metadata'));
     beforeEach(window.module('superdesk.apps.vocabularies'));
     beforeEach(window.module('superdesk.apps.desks'));
+    beforeEach(window.module('superdesk.apps.extension-points'));
 
     beforeEach(inject((_$rootScope_, _$compile_) => {
         $rootScope = _$rootScope_;
@@ -454,6 +456,7 @@ describe('dateline dropdown', () => {
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.apps.publish'));
     beforeEach(window.module('superdesk.apps.authoring.metadata'));
+    beforeEach(window.module('superdesk.apps.extension-points'));
 
     beforeEach(inject((_$rootScope_, _$compile_, $q, metadata) => {
         $rootScope = _$rootScope_;

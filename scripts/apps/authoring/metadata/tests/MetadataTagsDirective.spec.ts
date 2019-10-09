@@ -6,6 +6,7 @@ describe('MetadataTags directive', () => {
 
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.apps.authoring.metadata'));
+    beforeEach(window.module('superdesk.apps.extension-points'));
     beforeEach(window.module(($provide) => {
         $provide.service('api', ($q) => ({
             save: function(endpoint, data) {
