@@ -14,6 +14,7 @@ describe('item comments', () => {
     }));
 
     beforeEach(window.module('superdesk.apps.authoring.comments'));
+    beforeEach(window.module('superdesk.apps.extension-points'));
 
     it('can fetch comments for an item', inject((commentsService, api, $rootScope, $q) => {
         spyOn(api.item_comments, 'query').and.returnValue($q.when({_items: [{_id: 1}]}));

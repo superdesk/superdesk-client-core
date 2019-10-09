@@ -4,6 +4,7 @@ import * as helpers from 'apps/authoring/authoring/helpers';
 import {gettext} from 'core/utils';
 import {isPublished, isKilled} from 'apps/archive/utils';
 import {ITEM_STATE, CANCELED_STATES, READONLY_STATES} from 'apps/archive/constants';
+import {IFunctionPointsService} from 'apps/extension-points/services/FunctionPoints';
 import {AuthoringWorkspaceService} from './AuthoringWorkspaceService';
 
 interface IPublishOptions {
@@ -29,13 +30,14 @@ interface IPublishOptions {
  * @requires $injector
  * @requires moment
  * @requires config
+ * @requires functionPoints
  *
  * @description Authoring Service is responsible for management of the actions on a story
  */
 AuthoringService.$inject = ['$q', '$location', 'api', 'lock', 'autosave', 'confirm', 'privileges',
-    'desks', 'superdeskFlags', 'notify', 'session', '$injector', 'moment', 'config'];
+    'desks', 'superdeskFlags', 'notify', 'session', '$injector', 'moment', 'config', 'functionPoints'];
 export function AuthoringService($q, $location, api, lock, autosave, confirm, privileges, desks, superdeskFlags,
-    notify, session, $injector, moment, config) {
+    notify, session, $injector, moment, config, functionPoints: IFunctionPointsService) {
     var self = this;
 
     // TODO: have to trap desk update event for refereshing users desks.
@@ -97,6 +99,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
 
     this.rewrite = function(item) {
         var authoringWorkspace: AuthoringWorkspaceService = $injector.get('authoringWorkspace');
+        var rewriteItem; // an external functionPoint may update this rewrite item.
 
         session.getIdentity()
             .then((user) => {
@@ -104,11 +107,18 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
                     desk_id: desks.getCurrentDeskId() || item.task.desk,
                 };
 
-                return api.save('archive_rewrite', {}, updates, item);
+                return api.save('archive_rewrite', {}, updates, item)
+                    .then((newItem) => {
+                        rewriteItem = newItem;
+                        return functionPoints.run('archive:rewrite', Object.assign({
+                            _id: _.get(newItem, '_id'),
+                            type: _.get(newItem, 'type'),
+                        }, rewriteItem));
+                    });
             })
-            .then((newItem) => {
+            .then(() => {
                 notify.success(gettext('Update Created.'));
-                authoringWorkspace.edit(newItem);
+                authoringWorkspace.edit(rewriteItem);
             }, (response) => {
                 if (angular.isDefined(response.data._message)) {
                     notify.error(gettext('Failed to generate update: {{message}}', {message: response.data._message}));

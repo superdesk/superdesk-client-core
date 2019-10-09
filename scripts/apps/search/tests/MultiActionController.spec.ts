@@ -8,6 +8,7 @@ describe('Multi Action Bar', () => {
     beforeEach(window.module('superdesk.apps.archive'));
     beforeEach(window.module('superdesk.apps.search'));
     beforeEach(window.module('superdesk.apps.authoring'));
+    beforeEach(window.module('superdesk.apps.extension-points'));
 
     beforeEach(window.module(($provide) => {
         $provide.constant('config', {

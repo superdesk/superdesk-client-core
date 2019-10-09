@@ -241,6 +241,7 @@ describe('search service', () => {
         beforeEach(window.module('superdesk.apps.archive'));
         beforeEach(window.module('superdesk.apps.packaging'));
         beforeEach(window.module('superdesk.apps.authoring.multiedit'));
+        beforeEach(window.module('superdesk.apps.extension-points'));
 
         beforeEach(inject(($rootScope, $compile) => {
             var elem = $compile('<div sd-multi-action-bar></div>')($rootScope.$new());

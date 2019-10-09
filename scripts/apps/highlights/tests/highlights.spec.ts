@@ -5,6 +5,7 @@ describe('highlights', () => {
     beforeEach(window.module('superdesk.apps.archive'));
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
+    beforeEach(window.module('superdesk.apps.extension-points'));
 
     xdescribe('sdPackageHighlightsDropdown directive', () => {
         var scope, desk;

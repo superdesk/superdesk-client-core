@@ -1,5 +1,6 @@
 describe('superdesk.apps.authoring.metadata', () => {
     beforeEach(window.module('superdesk.apps.authoring.metadata'));
+    beforeEach(window.module('superdesk.apps.extension-points'));
 
     describe('sdMetaWordsList directive', () => {
         let scope, iscope;

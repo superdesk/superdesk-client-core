@@ -13,6 +13,7 @@ describe('content', () => {
     beforeEach(window.module('superdesk.apps.vocabularies'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
     beforeEach(window.module('superdesk.apps.authoring'));
+    beforeEach(window.module('superdesk.apps.extension-points'));
 
     beforeEach(window.module(($provide) => {
         $provide.constant('config', {

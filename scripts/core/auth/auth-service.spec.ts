@@ -8,6 +8,7 @@ describe('auth service', () => {
         window.module('superdesk.core.menu');
         window.module('superdesk.apps.authoring');
         window.module('superdesk.apps.searchProviders');
+        window.module('superdesk.apps.extension-points');
     });
 
     beforeEach(inject((session, preferencesService, authAdapter, urls, api, $q) => {
