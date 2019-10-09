@@ -1,5 +1,11 @@
 # Superdesk Client Changelog
 
+## [1.31.2] 2019-10-03
+
+### Fixed
+
+- Display notification on unpublish error/success.
+
 ## [1.31.1] 2019-09-11
 
 ### Fixed
