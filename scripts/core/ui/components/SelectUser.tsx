@@ -5,6 +5,7 @@ import {keyBy} from 'lodash';
 import {gettext} from 'core/utils';
 import {dataApi} from 'core/helpers/CrudManager';
 import {UserAvatar} from 'apps/users/components/UserAvatar';
+import {ListItem, ListItemColumn, ListItemRow} from 'core/components/ListItem';
 
 interface IState {
     fetchedUsers?: Array<IUser>;
@@ -46,17 +47,16 @@ export class SelectUser extends React.Component<IPropsSelectUser, IState> {
                     this.props.onSelect(keyedUsers[value]);
                 }}
                 renderItem={(user) => (
-                    <div style={{display: 'flex', alignItems: 'center'}}>
-                        <UserAvatar displayName={user.display_name} pictureUrl={user.picture_url} />
-                        <div style={{paddingLeft: '0.5em', textAlign: 'left'}}>
-                            <div><strong>{user.display_name}</strong></div>
-                            <div
-                                style={{fontSize: '11px', lineHeight: '11px', opacity: 0.5, marginTop: '-2px'}}
-                            >
-                                @{user.username}
-                            </div>
-                        </div>
-                    </div>
+                    <ListItem fullWidth noBackground noShadow>
+                        <ListItemColumn noBorder>
+                            <UserAvatar displayName={user.display_name} pictureUrl={user.picture_url} />
+                        </ListItemColumn>
+
+                        <ListItemColumn ellipsisAndGrow>
+                            <ListItemRow>{user.display_name}</ListItemRow>
+                            <ListItemRow>@{user.username}</ListItemRow>
+                        </ListItemColumn>
+                    </ListItem>
                 )}
             />
         );
