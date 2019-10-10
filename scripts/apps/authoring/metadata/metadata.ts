@@ -767,16 +767,23 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
 
                     scope.terms = $filter('sortByName')(_.filter(filterSelected(searchList), (t) => {
                         var searchObj = {};
+                        const termLower = term.toLowerCase();
 
                         searchObj[scope.uniqueField] = t[scope.uniqueField];
                         if (searchUnique) {
-                            return (t.name.toLowerCase().indexOf(term.toLowerCase()) !== -1 ||
-                                    t[scope.uniqueField].toLowerCase().indexOf(term.toLowerCase()) !== -1) &&
-                                !_.find(scope.item[scope.field], searchObj);
+                            // In case we want to search by some unique field like qcode as well as name
+                            // see SD-4829
+                            return t.name.toLowerCase().includes(termLower)
+                                || t[scope.uniqueField].toLowerCase().includes(termLower)
+                                && !_.find(scope.item[scope.field], searchObj);
                         }
 
-                        return t.name.toLowerCase().indexOf(term.toLowerCase()) !== -1 &&
-                            !_.find(scope.item[scope.field], searchObj);
+                        return t.name.toLowerCase().includes(termLower)
+                            || (t.user != null && t.user.username.toLowerCase().includes(termLower))
+                            // make sure to skip the terms which are already added for ex:
+                            // {qcode: "1", name: "Arbeidsliv", scheme: "subject_custom"}  is already added
+                            // and if user search for "Arbeidsliv" again he shouln't get any search results
+                            && !_.find(scope.item[scope.field], searchObj);
                     }));
                     scope.activeList = true;
                 }
