@@ -6,6 +6,9 @@ var rootDir = path.dirname(path.dirname(__dirname));
 var src = [
     'scripts/**/*.html',
     'scripts/**/*.svg',
+
+    // prevent looking in extensions so it doesn't pick up HTML files from node_modules
+    '!scripts/extensions/**/*',
 ];
 
 var options = {
