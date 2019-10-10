@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { IVideoEditor } from './VideoEditor';
 import { Dropdown } from './Dropdown/Dropdown';
 import { CropIcon } from './Dropdown/CropIcon';
 import { QualityLabel } from './Dropdown/QualityLabel';
 import VideoEditorContext from './VideoEditorContext';
+import { IVideoEditor } from './interfaces';
 
 interface IProps {
     onToggleVideo: () => void;

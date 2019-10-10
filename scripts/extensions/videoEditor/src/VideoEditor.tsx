@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { IArticle, ISuperdesk } from 'superdesk-api';
+import { ISuperdesk } from 'superdesk-api';
 import { get, isEmpty } from 'lodash';
 import ReactCrop from 'react-image-crop';
 import { VideoEditorTools } from './VideoEditorTools';
@@ -7,26 +7,7 @@ import 'react-image-crop/dist/ReactCrop.css';
 import { VideoTimeline } from './VideoTimeline/VideoTimeline';
 import { VideoEditorProvider } from './VideoEditorContext';
 import { VideoPreviewThumbnail } from './VideoPreviewThumbnail/VideoPreviewThumbnail';
-
-export interface IArticleVideo extends IArticle {
-    renditions?: {
-        original: {
-            hef: string;
-            media: string;
-            mimetype: string;
-            version: number;
-        };
-    };
-    project?: {};
-}
-
-export interface IVideoEditor {
-    crop: object;
-    cropEnabled: boolean;
-    quality: number;
-    degree: number;
-    playing: boolean;
-}
+import { IArticleVideo, IVideoEditor, IThumbnail } from './interfaces';
 
 interface IProps {
     article: IArticleVideo;
@@ -40,14 +21,8 @@ interface IState extends IVideoEditor {
         start: number;
         end: number;
     };
-    thumbnails: Array<ThumbnailObject>;
+    thumbnails: Array<IThumbnail>;
 }
-
-export type ThumbnailObject = {
-    url: string;
-    width: number;
-    height: number;
-};
 
 export class VideoEditor extends React.Component<IProps, IState> {
     ref: React.RefObject<HTMLVideoElement>;

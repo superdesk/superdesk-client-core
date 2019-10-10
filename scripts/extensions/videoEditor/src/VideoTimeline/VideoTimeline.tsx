@@ -2,11 +2,11 @@ import * as React from 'react';
 import { BarIcon } from './BarIcon';
 import { ListThumbnails } from './ListThumbnails';
 import VideoEditorContext from '../VideoEditorContext';
-import { ThumbnailObject } from '../VideoEditor';
+import { IThumbnail } from '../interfaces';
 
 interface IProps {
     video: React.RefObject<HTMLVideoElement>;
-    thumbnails: Array<ThumbnailObject>;
+    thumbnails: Array<IThumbnail>;
     trim: {
         start: number;
         end: number;
@@ -41,18 +41,18 @@ export class VideoTimeline extends React.Component<IProps, IState> {
         clearInterval(this.intervalTimer);
     }
 
-    getRenderThumbnails = (thumbnails: Array<ThumbnailObject>) => {
+    getRenderThumbnails = (thumbnails: Array<IThumbnail>) => {
         //get list thumbnail render in list thumbnails get from server
         const video = this.props.video.current!;
         const widthPic = video && (50 * video.clientWidth) / video.clientHeight;
         const numberThumbnails =
             this.controlbar.current! && Math.floor(this.controlbar.current!.offsetWidth / widthPic);
         const duration = this.props.video.current! ? this.props.video.current!.duration : 0;
-        let thumbnailsRender: Array<ThumbnailObject> = [];
+        let thumbnailsRender: Array<IThumbnail> = [];
         const per_delta_image =
             thumbnails.length > 1 ? (thumbnails.length - 1) / numberThumbnails : duration / numberThumbnails;
         for (let i = 0; i <= numberThumbnails; i++) {
-            let thumnail: ThumbnailObject;
+            let thumnail: IThumbnail;
             if (this.props.thumbnails && this.props.thumbnails.length > 0) {
                 thumnail = this.props.thumbnails[Math.round(i * per_delta_image)];
                 thumbnailsRender.push(thumnail);
