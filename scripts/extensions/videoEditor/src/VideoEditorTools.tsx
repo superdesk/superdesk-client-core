@@ -51,6 +51,7 @@ export class VideoEditorTools extends React.Component<IProps> {
                         label={<CropIcon disabled={!!this.props.video.degree} />}
                         items={['1:1', '4:3', '16:9']}
                         onSelect={this.handleCrop}
+                        resetState={this.props.video.cropEnabled === false}
                         isButton={true}
                         className={getClass('video__dropdown')}
                     />

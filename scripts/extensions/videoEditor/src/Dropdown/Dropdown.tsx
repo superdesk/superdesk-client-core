@@ -6,6 +6,7 @@ interface IProps {
     onSelect: (item: string) => void;
     isButton?: boolean;
     className?: string;
+    resetState?: boolean;
 }
 interface IState {
     open: boolean;
@@ -19,6 +20,17 @@ export class Dropdown extends React.Component<IProps, IState> {
             open: false,
             select: null,
         };
+    }
+
+    componentDidUpdate(prevProps: IProps) {
+        if (this.props.resetState !== prevProps.resetState) {
+            if (this.props.resetState === true) {
+                this.setState({
+                    open: false,
+                    select: null,
+                });
+            }
+        }
     }
 
     handleToggle = () => {
