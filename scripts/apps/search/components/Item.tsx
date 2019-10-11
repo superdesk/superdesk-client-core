@@ -250,7 +250,7 @@ export class Item extends React.Component<IProps, IState> {
         httpRequestJsonLocal<{_items: Array<IArticle>}>({
             method: 'GET',
             path: '/published',
-            params: {source: JSON.stringify({
+            urlParams: {source: JSON.stringify({
                 query: {
                     bool: {
                         must: {term: {family_id: item.archive_item.family_id}},
