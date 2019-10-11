@@ -119,27 +119,29 @@
                     </div>
                 </figure>
 
-                <div contenteditable="{{editable}}"
-                     sd-auto-height
-                     tansa-scope-sync
-                     ng-model="carouselItem[carouselItem.fieldId].headline"
-                     ng-model-options="{debounce: 1000}"
-                     ng-change="onchange()"
-                     sd-placeholder="Add title"
-                     ng-if="carouselItem[carouselItem.fieldId] && showTitle"
-                     class="sd-media-carousel__media-title">
-                </div>
-                <div contenteditable="{{editable}}"
-                     sd-auto-height
-                     tansa-scope-sync
-                     ng-model="carouselItem[carouselItem.fieldId].description_text"
-                     ng-model-options="{debounce: 1000}"
-                     ng-change="onchange()"
-                     sd-placeholder="Add caption"
-                     ng-if="carouselItem[carouselItem.fieldId]"
-                     class="sd-media-carousel__media-caption">
-                </div>
+                <sd-line-input
+                    ng-if="carouselItem[carouselItem.fieldId] && showTitle"
+                    ng-model="carouselItem[carouselItem.fieldId].headline"
+                    class="sd-media-carousel__media-title"
+                    data-onchange="onchange()"
+                    data-placeholder="Add title"
+                    data-disabled="!editable"
+                    data-textarea="false"
+                    data-sync="true"
+                    tansa-scope-sync
+                />
 
+                <sd-line-input
+                    ng-if="carouselItem[carouselItem.fieldId]"
+                    ng-model="carouselItem[carouselItem.fieldId].description_text"
+                    class="sd-media-carousel__media-caption"
+                    data-onchange="onchange()"
+                    data-placeholder="Add caption"
+                    data-disabled="!editable"
+                    data-textarea="true"
+                    data-sync="true"
+                    tansa-scope-sync
+                />
                 <div sd-item-crops
                      data-item="item.associations[fieldVersion.fieldId]"
                      ng-if="editor[field._id].showCrops && features.editFeaturedImage &&
