@@ -52,7 +52,7 @@ describe('authoring', () => {
             protractor.Key.HOME +
             protractor.Key.UP.repeat(5) +
             protractor.Key.ENTER +
-            protractor.Key.UP,
+            protractor.Key.UP
         );
 
         authoring.addEmbed('Embed at position 15');
@@ -60,7 +60,7 @@ describe('authoring', () => {
         authoring.blockContains(2, body3.replace(/\n$/, ''));
         authoring.writeText(
             protractor.Key.UP.repeat(7) +
-            protractor.Key.ENTER,
+            protractor.Key.ENTER
         );
         authoring.addEmbed('Embed at position 8');
         authoring.blockContains(0, body1.replace(/\n$/, ''));
@@ -550,7 +550,7 @@ describe('authoring', () => {
         authoring.openItemVersionInBoard(1, 0);
         expect(authoring.getInnerDropdownItemVersions(0).count()).toBe(1);
         expect(authoring.getHtmlArticleHeadlineOfBoard(0)).toContain(
-            '<span>item5 updated</span><ins style="background:#e6ffe6;"> newly</ins>',
+            '<span>item5 updated</span><ins style="background:#e6ffe6;"> newly</ins>'
         );
         expect(authoring.getArticleHeadlineOfBoard(1)).toEqual('item5 updated');
     });
