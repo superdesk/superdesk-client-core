@@ -1,9 +1,9 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
 
-ArchivedItemKill.$inject = ['authoring', 'api', 'notify'];
+ArchivedItemKill.$inject = ['authoring', 'api', 'notify', 'content'];
 
-export function ArchivedItemKill(authoring, api, notify) {
+export function ArchivedItemKill(authoring, api, notify, content) {
     return {
         templateUrl: 'scripts/apps/archive/views/archived-kill.html',
         scope: {
@@ -52,6 +52,14 @@ export function ArchivedItemKill(authoring, api, notify) {
             scope.cancel = function() {
                 scope.item = null;
             };
+
+            scope.$watch('item.profile', (profile) => {
+                content.setupAuthoring(profile, scope, scope.item)
+                    .then(() => {
+                        authoring.schema = scope.schema;
+                        authoring.editor = scope.editor;
+                    });
+            });
         },
     };
 }
