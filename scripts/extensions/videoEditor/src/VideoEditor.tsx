@@ -110,9 +110,10 @@ export class VideoEditor extends React.Component<IProps, IState> {
 
         this.setState({ cropEnabled: !this.state.cropEnabled }, () => {
             if (this.state.cropEnabled === false) {
-                this.setState({ crop: this.initState.crop });
+                this.setState({ crop: this.initState.crop }, this.checkIsDirty);
+            } else {
+                this.checkIsDirty();
             }
-            this.checkIsDirty();
         });
     };
 
