@@ -68,7 +68,12 @@ export class VideoEditorTools extends React.Component<IProps> {
                     </button>
                 </div>
                 <span className="sd-photo-preview__label mlr-auto">{this.props.videoHeadline}</span>
-                <Dropdown label={<QualityLabel />} items={resolutions} onSelect={this.handleQuality} />
+                <Dropdown
+                    label={<QualityLabel />}
+                    items={resolutions}
+                    onSelect={this.handleQuality}
+                    resetState={this.props.video.quality === 0}
+                />
             </div>
         );
     }

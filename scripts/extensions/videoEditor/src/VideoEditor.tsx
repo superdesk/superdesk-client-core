@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { ISuperdesk } from 'superdesk-api';
-import { get, isEmpty } from 'lodash';
+import { get, isEmpty, omit, pick, isEqual } from 'lodash';
 import ReactCrop from 'react-image-crop';
 import { VideoEditorTools } from './VideoEditorTools';
 import 'react-image-crop/dist/ReactCrop.css';
 import { VideoTimeline } from './VideoTimeline/VideoTimeline';
+import { VideoEditorHeader } from './VideoEditorHeader';
 import { VideoEditorProvider } from './VideoEditorContext';
 import { VideoPreviewThumbnail } from './VideoPreviewThumbnail/VideoPreviewThumbnail';
 import { IArticleVideo, IVideoEditor, IThumbnail } from './interfaces';
@@ -16,32 +17,38 @@ interface IProps {
 }
 
 interface IState extends IVideoEditor {
-    cropImg: string;
+    isDirty: boolean;
     trim: {
         start: number;
         end: number;
     };
+    cropImg: string;
     thumbnails: Array<IThumbnail>;
 }
 
 export class VideoEditor extends React.Component<IProps, IState> {
-    ref: React.RefObject<HTMLVideoElement>;
-    intervalThumbnails: any;
+    private ref: React.RefObject<HTMLVideoElement>;
+    private intervalThumbnails: any;
+    private initState: Pick<IState, 'crop' | 'degree' | 'trim' | 'quality'>;
 
     constructor(props: IProps) {
         super(props);
         this.ref = React.createRef();
-        this.state = {
-            crop: { aspect: 16 / 9 },
-            cropEnabled: false,
-            cropImg: '',
+        this.initState = {
+            crop: { aspect: 16 / 9, unit: 'px', width: 0, height: 0, x: 0, y: 0 },
             degree: 0,
-            playing: false,
             trim: {
                 start: 0,
                 end: 0,
             },
             quality: 0,
+        };
+        this.state = {
+            ...this.initState,
+            isDirty: false,
+            cropEnabled: false,
+            playing: false,
+            cropImg: '',
             thumbnails: [],
         };
     }
@@ -64,12 +71,15 @@ export class VideoEditor extends React.Component<IProps, IState> {
     }
 
     handleTrim = (start: number, end: number) => {
-        this.setState({
-            trim: {
-                start: start,
-                end: end,
+        this.setState(
+            {
+                trim: {
+                    start: start,
+                    end: end,
+                },
             },
-        });
+            this.checkIsDirty
+        );
     };
 
     handleRotate = () => {
@@ -77,7 +87,9 @@ export class VideoEditor extends React.Component<IProps, IState> {
             prevState => ({ degree: prevState.degree - 90 }),
             () => {
                 if (this.state.degree % 360 === 0) {
-                    this.setState({ degree: 0 });
+                    this.setState({ degree: 0 }, this.checkIsDirty);
+                } else {
+                    this.checkIsDirty();
                 }
             }
         );
@@ -91,17 +103,47 @@ export class VideoEditor extends React.Component<IProps, IState> {
         }
     };
 
-    handleCrop = (aspect: number) => {
-        // when select crop, user must chose aspect, pass empty to turn off crop mode
+    handleToggleCrop = (aspect: number) => {
+        if (aspect) {
+            this.setState({ crop: { ...this.state.crop, aspect: aspect } });
+        }
+
         this.setState({ cropEnabled: !this.state.cropEnabled }, () => {
-            if (aspect) {
-                this.setState({ crop: { ...this.state.crop, aspect: aspect } });
+            if (this.state.cropEnabled === false) {
+                this.setState({ crop: this.initState.crop });
             }
+            this.checkIsDirty();
         });
     };
 
     handleQualityChange = (quality: number) => {
-        this.setState({ quality: quality });
+        this.setState({ quality: quality }, this.checkIsDirty);
+    };
+
+    handleReset = () => {
+        this.setState({
+            ...this.initState,
+            trim: {
+                start: 0,
+                end: this.ref.current!.duration,
+            },
+            isDirty: false,
+            cropEnabled: false,
+        });
+    };
+
+    checkIsDirty = () => {
+        const state = pick(this.state, ['crop', 'trim', 'degree', 'quality']);
+        // ignore trim.end as initState don't load video duration due to ref can be null when component did mount
+        // confirm bar should not be toggled when user change crop aspect
+        if (
+            state.trim.end !== this.ref.current!.duration ||
+            !isEqual(omit(state, ['trim.end', 'crop.aspect']), omit(this.initState, ['trim.end', 'crop.aspect']))
+        ) {
+            this.setState({ isDirty: true });
+        } else {
+            this.setState({ isDirty: false });
+        }
     };
 
     loadTimelineThumbnails = () => {
@@ -134,10 +176,12 @@ export class VideoEditor extends React.Component<IProps, IState> {
                 <div className="modal__dialog">
                     <div className="modal__content">
                         <div className="modal__header modal__header--flex">
-                            <h3 className="modal__heading">{gettext('Modal Fullscreen')}</h3>
-                            <button className="icn-btn" onClick={this.props.onClose}>
-                                <i className="icon-close-small" />
-                            </button>
+                            <h3 className="modal__heading">{gettext('Edit Video')}</h3>
+                            <VideoEditorHeader
+                                onClose={this.props.onClose}
+                                onReset={this.handleReset}
+                                isDirty={this.state.isDirty}
+                            />
                         </div>
                         <div className="modal__body modal__body--no-padding">
                             <VideoEditorProvider value={{ superdesk: this.props.superdesk }}>
@@ -163,7 +207,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                                         src={this.state.cropImg}
                                                         crop={this.state.crop}
                                                         onChange={(newCrop: object) => {
-                                                            this.setState({ crop: newCrop });
+                                                            this.setState({ crop: newCrop }, this.checkIsDirty);
                                                         }}
                                                         style={{
                                                             maxWidth: width,
@@ -177,7 +221,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                             <VideoEditorTools
                                                 onToggleVideo={this.handleToggleVideo}
                                                 onRotate={this.handleRotate}
-                                                onCrop={this.handleCrop}
+                                                onCrop={this.handleToggleCrop}
                                                 onQualityChange={this.handleQualityChange}
                                                 video={this.state}
                                                 videoHeadline={this.props.article.headline}
