@@ -21,7 +21,8 @@ export class VideoTimeline extends React.Component<IProps, IState> {
     static contextType = VideoEditorContext;
     private wrapper: React.RefObject<HTMLDivElement>;
     private controlbar: React.RefObject<HTMLDivElement>;
-    intervalTimer: any;
+    private intervalTimer: any;
+    private PositionX: any;
 
     constructor(props: IProps) {
         super(props);
@@ -35,11 +36,18 @@ export class VideoTimeline extends React.Component<IProps, IState> {
     componentDidMount() {
         // call tick every 100ms to update current time state
         this.intervalTimer = setInterval(this.tick, 100);
+        document.addEventListener('dragover', this.handledragover);
     }
 
     componentWillUnmount() {
         clearInterval(this.intervalTimer);
     }
+
+    handledragover = (e: any) => {
+        if (e.clientX) {
+            this.PositionX = e.clientX;
+        }
+    };
 
     getRenderThumbnails = (thumbnails: Array<IThumbnail>) => {
         //get list thumbnail render in list thumbnails get from server
@@ -82,23 +90,25 @@ export class VideoTimeline extends React.Component<IProps, IState> {
     // drag and drop left and right bar.
     handleDragStart(e: React.DragEvent<HTMLDivElement>) {
         //set shadow drag image is empty
-        e.dataTransfer.setDragImage(document.createElement('img'), 0, 0);
+        //e.dataTransfer.setDragImage(document.createElement('img'), 0, 0);
+
+        var img = document.createElement('img');
+        e.dataTransfer.setDragImage(img, 100000, 100000);
+        e.dataTransfer.setData('text/plain', '');
     }
 
-    handleDrag = (e: React.DragEvent<HTMLDivElement>, type: string) => {
-        if (e.clientX) {
-            let time = this.getPositionInBar(e.clientX) * this.props.video.current!.duration;
-            if (type == 'left') {
-                this.props.onTrim(time, this.props.trim.end);
-            }
-            if (type == 'right') {
-                this.props.onTrim(this.props.trim.start, time);
-            }
+    handleDrag = (type: string) => {
+        let time = this.getPositionInBar(this.PositionX) * this.props.video.current!.duration;
+        if (type == 'left') {
+            this.props.onTrim(time, this.props.trim.end);
+        }
+        if (type == 'right') {
+            this.props.onTrim(this.props.trim.start, time);
         }
     };
 
-    handleDragEnd = (e: React.DragEvent<HTMLDivElement>) => {
-        this.setVideoCurrentTime(e.clientX);
+    handleDragEnd = () => {
+        this.setVideoCurrentTime(this.PositionX);
     };
 
     getPositionInBar = (pX: number) => {
@@ -126,6 +136,12 @@ export class VideoTimeline extends React.Component<IProps, IState> {
 
     setVideoCurrentTime = (pX: number) => {
         let time = this.getPositionInBar(pX) * this.props.video.current!.duration;
+        if (time < this.props.trim.start) {
+            time = this.props.trim.start;
+        }
+        if (time > this.props.trim.end) {
+            time = this.props.trim.end;
+        }
         this.props.video.current!.currentTime = time;
         this.setState({ currentTime: time });
         return time;
@@ -187,7 +203,7 @@ export class VideoTimeline extends React.Component<IProps, IState> {
                             className={`${getClass('controlbars__wrapper')} ${getClass('controlbars__wrapper--left')}`}
                             draggable={true}
                             onDragStart={this.handleDragStart}
-                            onDrag={(e: React.DragEvent<HTMLDivElement>) => this.handleDrag(e, 'left')}
+                            onDrag={() => this.handleDrag('left')}
                             onDragEnd={this.handleDragEnd}
                             data-content={this.getStrTime(this.props.trim.start)}
                         ></div>
@@ -195,7 +211,7 @@ export class VideoTimeline extends React.Component<IProps, IState> {
                             className={`${getClass('controlbars__wrapper')} ${getClass('controlbars__wrapper--right')}`}
                             draggable={true}
                             onDragStart={this.handleDragStart}
-                            onDrag={(e: React.DragEvent<HTMLDivElement>) => this.handleDrag(e, 'right')}
+                            onDrag={() => this.handleDrag('right')}
                             onDragEnd={this.handleDragEnd}
                             data-content={this.getStrTime(this.props.trim.end)}
                         ></div>
