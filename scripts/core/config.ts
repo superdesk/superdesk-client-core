@@ -1,17 +1,12 @@
 import _ from 'lodash';
+import {ISuperdeskGlobalConfig} from 'superdesk-api';
 
 export function isMediaEditable(config) {
     return _.get(config, 'features.editFeaturedImage', true) === true;
 }
 
-interface ISuperdeskConfig {
-    features: {
-        nestedItemsInOutputStage: boolean;
-    };
-}
-
 /* globals __SUPERDESK_CONFIG__: true */
-export const appConfig: ISuperdeskConfig = __SUPERDESK_CONFIG__;
+export const appConfig: ISuperdeskGlobalConfig = __SUPERDESK_CONFIG__;
 
 DeployConfigFactory.$inject = ['api', '$q'];
 function DeployConfigFactory(api, $q) {

@@ -855,6 +855,7 @@ declare module 'superdesk-api' {
             editorAttachments: boolean;
             editorInlineComments: boolean;
             editorSuggestions: boolean;
+            nestedItemsInOutputStage: boolean;
         };
         auth: {
             google: boolean
