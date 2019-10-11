@@ -15,6 +15,7 @@ import {ItemMgridTemplate} from './ItemMgridTemplate';
 import {IArticle, IDesk, IPublishedArticle} from 'superdesk-api';
 import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
+import {httpRequestJsonLocal} from 'core/helpers/network';
 
 function isButtonClicked(event): boolean {
     const selector = 'button';
@@ -246,17 +247,19 @@ export class Item extends React.Component<IProps, IState> {
     }
 
     fetchNested(item: IPublishedArticle) {
-        const {api} = this.props.svc;
-
-        api.query('published', {source: {
-            query: {
-                bool: {
-                    must: {term: {family_id: item.archive_item.family_id}},
-                    must_not: {term: {_id: item.item_id}},
+        httpRequestJsonLocal<{_items: Array<IArticle>}>({
+            method: 'GET',
+            path: '/published',
+            params: {source: JSON.stringify({
+                query: {
+                    bool: {
+                        must: {term: {family_id: item.archive_item.family_id}},
+                        must_not: {term: {_id: item.item_id}},
+                    },
                 },
-            },
-            sort: [{'versioncreated': 'desc'}],
-        }}).then((data) => {
+                sort: [{'versioncreated': 'desc'}],
+            })},
+        }).then((data) => {
             this.setState({loading: false, nested: data._items});
         }).catch(() => {
             this.setState({loading: false});

@@ -237,7 +237,9 @@ declare module 'superdesk-api' {
         broadcast: any;
         flags: any;
         source: string;
+        /** correction counter, is reset on rewrite */
         correction_sequence: number;
+        /** rewrite counter */
         rewrite_sequence: number;
         fetch_endpoint?: any;
         task_id?: any;

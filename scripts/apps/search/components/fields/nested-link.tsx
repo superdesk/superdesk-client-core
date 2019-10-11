@@ -2,8 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {gettext} from 'core/utils';
 import {IPropsItemListInfo} from '../ListItemInfo';
-import {appConfig} from 'appConfig';
-import {hideNestedItems} from '../../config';
+import {appConfig} from 'core/config';
 
 class NestedLink extends React.PureComponent<IPropsItemListInfo> {
     static propTypes: any;
@@ -12,7 +11,8 @@ class NestedLink extends React.PureComponent<IPropsItemListInfo> {
         const {isNested, item, toggleNested, showNested} = this.props;
         const sequence = item.correction_sequence || item.rewrite_sequence;
 
-        if (isNested === true || hideNestedItems(appConfig) === false || sequence == null || sequence <= 1) {
+        if (isNested === true || appConfig.features.nestedItemsInOutputStage !== true
+            || sequence == null || sequence <= 1) {
             return null;
         }
 

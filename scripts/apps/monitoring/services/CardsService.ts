@@ -7,7 +7,7 @@ import {
     SENT_OUTPUT,
     SCHEDULED_OUTPUT,
 } from 'apps/desks/constants';
-import {hideNestedItems} from 'apps/search/config';
+import {appConfig} from 'core/config';
 
 CardsService.$inject = ['api', 'search', 'session', 'desks', 'config'];
 export function CardsService(api, search, session, desks, config) {
@@ -117,7 +117,7 @@ export function CardsService(api, search, session, desks, config) {
             }
         }
 
-        if (hideNestedItems(config)) {
+        if (appConfig.features.nestedItemsInOutputStage) {
             query.setOption('hidePreviousVersions', true);
         }
     }
