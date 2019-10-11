@@ -4,7 +4,7 @@ import {Select2} from './select2';
 import {keyBy} from 'lodash';
 import {gettext} from 'core/utils';
 import {dataApi} from 'core/helpers/CrudManager';
-import {UserAvatar} from 'apps/users/components/UserAvatar';
+import {CC} from '../configurable-ui-components';
 
 interface IState {
     fetchedUsers?: Array<IUser>;
@@ -47,7 +47,7 @@ export class SelectUser extends React.Component<IPropsSelectUser, IState> {
                 }}
                 renderItem={(user) => (
                     <div style={{display: 'flex', alignItems: 'center'}}>
-                        <UserAvatar displayName={user.display_name} pictureUrl={user.picture_url} />
+                        <CC.UserAvatar user={user} />
                         <div style={{paddingLeft: '0.5em'}}>{user.display_name}</div>
                     </div>
                 )}

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import {IUser} from 'superdesk-api';
-import {UserAvatar} from '.';
+import {CC} from 'core/ui/configurable-ui-components';
 import {dataApi} from 'core/helpers/CrudManager';
 
 interface IProps {
@@ -34,10 +34,7 @@ class UserAvatarFromUserIdComponent extends React.PureComponent<IProps, IState> 
         }
 
         return (
-            <UserAvatar
-                displayName={user.display_name}
-                pictureUrl={user.picture_url}
-            />
+            <CC.UserAvatar user={user}/>
         );
     }
 }
