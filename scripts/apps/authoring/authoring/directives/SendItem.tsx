@@ -824,8 +824,16 @@ export function SendItem($q,
                     return;
                 }
                 // set the desks for desk filter
-                if (scope.currentUserAction === ctrl.userActions.publish) {
+                if (scope.currentUserAction === ctrl.userActions.publish || !privileges.privileges.move) {
                     scope.desks = scope.userDesks;
+
+                    if (!_.isEmpty(scope.desks)) {
+                        scope.selectDesk(scope.desks[0]);
+                    } else {
+                        scope.selectedDesk = null;
+                    }
+
+                    return;
                 } else {
                     scope.desks = scope.allDesks;
                 }
