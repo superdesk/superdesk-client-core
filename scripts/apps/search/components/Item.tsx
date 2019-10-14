@@ -55,7 +55,7 @@ interface IProps {
     svc: any;
     scope: any;
     swimlane: any;
-    item: IArticle;
+    item: IArticle | IPublishedArticle;
     profilesById: any;
     highlightsById: any;
     markedDesksById: any;
