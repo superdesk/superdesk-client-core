@@ -5,6 +5,7 @@ describe('multiedit', () => {
 
     beforeEach(window.module('superdesk.apps.authoring.multiedit'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
+    beforeEach(window.module('superdesk.apps.extension-points'));
 
     it('can open an item', inject((multiEdit) => {
         var items = multiEdit.items;

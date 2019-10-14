@@ -1,6 +1,7 @@
 describe('compare versions', () => {
     beforeEach(window.module('superdesk.apps.authoring.compare_versions'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
+    beforeEach(window.module('superdesk.apps.extension-points'));
 
     it('can open an item', inject((compareVersions) => {
         const items = compareVersions.items;

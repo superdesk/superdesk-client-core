@@ -9,6 +9,7 @@ describe('superdesk.apps.workspace.content', () => {
     beforeEach(window.module('superdesk.apps.vocabularies'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
     beforeEach(window.module('superdesk.apps.authoring.metadata'));
+    beforeEach(window.module('superdesk.apps.extension-points'));
 
     describe('content service', () => {
         var done;

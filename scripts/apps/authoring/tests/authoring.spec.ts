@@ -641,6 +641,7 @@ describe('Item Crops directive', () => {
     beforeEach(window.module('superdesk.apps.searchProviders'));
     beforeEach(window.module('superdesk.core.editor3'));
     beforeEach(window.module('superdesk.apps.editor2'));
+    beforeEach(window.module('superdesk.apps.extension-points'));
 
     it('showCrops return true if image renditions are present',
         inject(($rootScope, $compile, $q, metadata, vocabularies) => {
@@ -692,6 +693,7 @@ describe('autosave', () => {
     beforeEach(window.module('superdesk.mocks'));
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
+    beforeEach(window.module('superdesk.apps.extension-points'));
 
     it('can fetch an autosave for item locked by user and is editable',
         inject((autosave, api, $q, $rootScope) => {
@@ -758,6 +760,7 @@ describe('lock service', () => {
     beforeEach(window.module('superdesk.mocks'));
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
+    beforeEach(window.module('superdesk.apps.extension-points'));
 
     var user = {_id: 'user'};
     var sess = {_id: 'sess'};
@@ -836,6 +839,7 @@ describe('authoring actions', () => {
     beforeEach(window.module('superdesk.apps.desks'));
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
+    beforeEach(window.module('superdesk.apps.extension-points'));
 
     beforeEach(inject((desks, $q) => {
         spyOn(desks, 'fetchCurrentUserDesks').and.returnValue($q.when(userDesks));
@@ -1909,6 +1913,7 @@ describe('authoring workspace', () => {
 
     beforeEach(window.module('superdesk.apps.authoring'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
+    beforeEach(window.module('superdesk.apps.extension-points'));
 
     beforeEach(inject(($q, authoring) => {
         spyOn(authoring, 'open').and.returnValue($q.when(lockedItem));
@@ -2007,6 +2012,7 @@ describe('authoring container directive', () => {
     beforeEach(window.module('superdesk.apps.authoring'));
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
+    beforeEach(window.module('superdesk.apps.extension-points'));
 
     beforeEach(inject(($templateCache) => {
         // avoid loading of authoring
@@ -2107,6 +2113,7 @@ describe('authoring themes', () => {
     beforeEach(window.module('superdesk.core.preferences'));
     beforeEach(window.module('superdesk.apps.authoring'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
+    beforeEach(window.module('superdesk.apps.extension-points'));
 
     beforeEach(inject(($q, preferencesService) => {
         spyOn(preferencesService, 'get').and.returnValue($q.when({'editor:theme': ['theme:proofreadTheme']}));

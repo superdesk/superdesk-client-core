@@ -93,9 +93,9 @@ export class FunctionPointsService implements IFunctionPointsService {
         }
 
         let index: number = 0;
-        const runNextCallback = (): void => {
+        const runNextCallback = (res?: any): void => {
             if (index >= callbacks.length) {
-                deferred.resolve();
+                deferred.resolve(res);
                 return;
             }
 
@@ -103,7 +103,7 @@ export class FunctionPointsService implements IFunctionPointsService {
 
             index += 1;
             cb(args).then(
-                () => runNextCallback(),
+                (result) => runNextCallback(result),
                 (error) => deferred.reject(error),
             );
         };

@@ -4,6 +4,7 @@ describe('multi image edit controller', () => {
     beforeEach(window.module('superdesk.core.translate'));
     beforeEach(window.module('superdesk.core.services.modal'));
     beforeEach(window.module('superdesk.apps.authoring'));
+    beforeEach(window.module('superdesk.apps.extension-points'));
 
     it('asks for confirmatino when closing with some changes', inject((modal, $q, $rootScope, $controller) => {
         const data = [];

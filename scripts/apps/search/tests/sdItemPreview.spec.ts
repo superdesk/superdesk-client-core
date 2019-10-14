@@ -11,6 +11,7 @@ describe('sdItemPreview directive', () => {
     beforeEach(window.module('superdesk.core.privileges'));
     beforeEach(window.module('superdesk.apps.archive'));
     beforeEach(window.module('superdesk.apps.vocabularies'));
+    beforeEach(window.module('superdesk.apps.extension-points'));
 
     beforeEach(inject(($rootScope, $compile) => {
         const html = '<div sd-item-preview data-item="item" data-close="" data-show-history-tab="true"></div>';
