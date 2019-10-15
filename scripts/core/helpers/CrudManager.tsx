@@ -237,6 +237,7 @@ export function connectCrudManager<Props, PropsToConnect, Entity extends IBaseRe
                 page,
                 sortOption,
                 filterValues,
+                undefined,
                 formatFiltersForServer,
             )
                 .then((res: IRestApiResponse<Entity>) => new Promise((resolve) => {
