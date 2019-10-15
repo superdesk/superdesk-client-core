@@ -271,9 +271,11 @@ export function UserPreferencesDirective(
                 // preferred by default, unless of course the user
                 // changes this preference setting.
                 scope.defaultCategories = {};
-                helperData.default_categories.forEach((cat) => {
-                    scope.defaultCategories[cat.qcode] = true;
-                });
+                if (Array.isArray(helperData.default_categories)) {
+                    helperData.default_categories.forEach((cat) => {
+                        scope.defaultCategories[cat.qcode] = true;
+                    });
+                }
 
                 // Create a list of categories for the UI widgets to
                 // work on. New category objects are created so that
