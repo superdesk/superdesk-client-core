@@ -88,7 +88,7 @@ export class FunctionPointsService implements IFunctionPointsService {
         const deferred = this.$q.defer();
 
         if (callbacks.length === 0) {
-            deferred.resolve();
+            deferred.resolve(args);
             return deferred.promise;
         }
 
