@@ -1,3 +1,5 @@
+/* eslint-disable indent */
+
 import * as React from 'react';
 import * as Autocomplete from 'react-autocomplete';
 import {noop, throttle} from 'lodash';
@@ -83,7 +85,6 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
     }
 
     render() {
-
         return (
             <Autocomplete.default
                 inputProps={{placeholder: this.props.placeholder}}
@@ -93,7 +94,7 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                 wrapperProps={{'data-test-id': this.props['data-test-id']} as any}
                 renderMenu={(items, value, style) => {
                     return (
-                        <div style={{ ...style, ...menuStyle }}>
+                        <div style={{...style, ...menuStyle}}>
                             {
                                 this.props.loading === true
                                     ? <div style={{padding: 10}}>{gettext('Loading...')}</div>
