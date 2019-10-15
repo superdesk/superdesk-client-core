@@ -4,6 +4,7 @@ import {DEFAULT_LIST_CONFIG} from './constants';
 import {fields} from './components/fields';
 import ng from '../../core/services/ng';
 import {isKilled} from 'apps/archive/utils';
+import {IArticle, IPublishedArticle} from 'superdesk-api';
 
 export function getSpecStyle(spec) {
     var style = {};
@@ -210,4 +211,8 @@ export function bindMarkItemShortcut(label) {
             });
         }
     });
+}
+
+export function isIPublishedArticle(item: IArticle | IPublishedArticle): item is IPublishedArticle {
+    return item._type === 'published';
 }

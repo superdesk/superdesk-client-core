@@ -7,7 +7,7 @@ import {get} from 'lodash';
 import {broadcast} from './fields/broadcast';
 
 import {ActionsMenu} from './index';
-import {closeActionsMenu} from '../helpers';
+import {closeActionsMenu, isIPublishedArticle} from '../helpers';
 import {ItemSwimlane} from './ItemSwimlane';
 import {ItemPhotoGrid} from './ItemPhotoGrid';
 import {ListItemTemplate} from './ItemListTemplate';
@@ -238,9 +238,9 @@ export class Item extends React.Component<IProps, IState> {
 
         const showNested = !this.state.showNested;
 
-        if (showNested && !this.state.loading && !this.state.nested.length) {
+        if (showNested && isIPublishedArticle(this.props.item) && !this.state.loading && !this.state.nested.length) {
             this.setState({loading: true});
-            this.fetchNested(this.props.item as IPublishedArticle);
+            this.fetchNested(this.props.item);
         }
 
         this.setState({showNested: !this.state.showNested});
