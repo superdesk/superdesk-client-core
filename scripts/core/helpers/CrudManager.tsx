@@ -138,6 +138,7 @@ export const dataApi: IDataApi = {
         page: number,
         sortOption: ISortOption,
         filterValues: ICrudManagerFilters = {},
+        max_results?: number,
         formatFiltersForServer?: (filters: ICrudManagerFilters) => ICrudManagerFilters,
     ) => {
         let query = {
@@ -152,6 +153,10 @@ export const dataApi: IDataApi = {
             query['where'] = typeof formatFiltersForServer === 'function'
                 ? formatFiltersForServer(filterValues)
                 : filterValues;
+        }
+
+        if (typeof max_results === 'number') {
+            query['max_results'] = max_results;
         }
 
         const queryString = '?' + Object.keys(query).map((key) =>
