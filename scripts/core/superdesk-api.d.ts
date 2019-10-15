@@ -180,6 +180,7 @@ declare module 'superdesk-api' {
         _current_version: number;
         _type: 'ingest' | 'archive' | 'published' | 'archived' | string;
         guid: string;
+        family_id: string;
         translated_from: string;
         translation_id: string;
         /** direct translations only, not all items with same translation_id */
@@ -236,7 +237,10 @@ declare module 'superdesk-api' {
         broadcast: any;
         flags: any;
         source: string;
-        correction_sequence: any;
+        /** correction counter, is reset on rewrite */
+        correction_sequence: number;
+        /** rewrite counter */
+        rewrite_sequence: number;
         fetch_endpoint?: any;
         task_id?: any;
         ingest_provider?: any;
@@ -274,6 +278,15 @@ declare module 'superdesk-api' {
             archive?: boolean;
             externalsource: boolean;
         };
+    }
+
+    export interface IPublishedArticle extends IArticle {
+
+        /** id in published collection, different for each correction */
+        item_id: string; 
+
+        /** item copy in archive collection, always the latest version of the item */
+        archive_item: IArticle;
     }
 
     export interface IUserRole extends IBaseRestApiResponse {
@@ -842,6 +855,7 @@ declare module 'superdesk-api' {
             editorAttachments: boolean;
             editorInlineComments: boolean;
             editorSuggestions: boolean;
+            nestedItemsInOutputStage: boolean;
         };
         auth: {
             google: boolean

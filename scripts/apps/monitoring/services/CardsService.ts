@@ -7,6 +7,7 @@ import {
     SENT_OUTPUT,
     SCHEDULED_OUTPUT,
 } from 'apps/desks/constants';
+import {appConfig} from 'core/config';
 
 CardsService.$inject = ['api', 'search', 'session', 'desks', 'config'];
 export function CardsService(api, search, session, desks, config) {
@@ -101,19 +102,23 @@ export function CardsService(api, search, session, desks, config) {
         }
 
         if (desk) {
+            const must: Array<{}> = [
+                {term: {'task.desk': deskId}},
+                {terms: {state: states}},
+            ];
+
             if (desk.desk_type === 'authoring') {
-                query.filter({or: [
+                query.filter({bool: {should: [
                     {term: {'task.last_authoring_desk': deskId}},
-                    {and: [
-                        {term: {'task.desk': deskId}},
-                        {terms: {state: states}},
-                    ]},
-                ]});
+                    {bool: {must}},
+                ]}});
             } else if (desk.desk_type === 'production') {
-                query.filter({and: [
-                    {term: {'task.desk': deskId}},
-                    {terms: {state: states}}]});
+                query.filter({bool: {must}});
             }
+        }
+
+        if (appConfig.features.nestedItemsInOutputStage) {
+            query.setOption('hidePreviousVersions', true);
         }
     }
 

@@ -476,65 +476,13 @@ export class ItemList extends React.Component<any, IState> {
             this.props.usersById[versionCreator].display_name : null;
     }
 
-    /**
-     * Get nested item parent
-     *
-     * This could be item with same guid for corrections or with guid == rewritten_by for updates
-     */
-    getParent(item: IArticle, itemId: string): string | null {
-        const parentId = item.rewritten_by &&
-            this.state.itemsList.find((_itemId) => _itemId.startsWith(item.rewritten_by));
-
-        if (parentId) {
-            const parent = this.state.itemsById[parentId];
-
-            if (parent) {
-                return this.getParent(parent, parentId) || parentId; // return parent's parent or parent
-            }
-        }
-
-        // check for previous version of same item
-        return this.state.itemsList.find((_itemId) =>
-            _itemId.startsWith(item.guid) // same guid
-            && _itemId !== itemId // but different version
-            && this.state.itemsById[_itemId]._current_version > item._current_version); // and more recent one
-    }
-
     render() {
-        const {storage, config} = this.props.svc;
+        const {storage} = this.props.svc;
         const {scope} = this.props;
-        const hideNested = get(config, 'features.nestedItemsInOutputStage', false) === true;
-        const nested = {};
-        const children = {};
-
-        if (hideNested) {
-            this.state.itemsList.forEach((itemId) => {
-                const item = this.state.itemsById[itemId];
-
-                if (item._type === 'published' && (item.rewritten_by || !item.last_published_version)) {
-                    const parentId = this.getParent(item, itemId);
-
-                    if (parentId && parentId !== itemId) {
-                        nested[itemId] = true;
-                        const parentChildren = children[parentId] || [];
-
-                        parentChildren.push(itemId);
-                        children[parentId] = parentChildren;
-                    }
-                }
-            });
-        }
 
         const createItem = (itemId) => {
             const item = this.state.itemsById[itemId];
             const task = item.task || {desk: null};
-            let itemChildren = [];
-
-            if (nested[itemId]) {
-                return null; // hide nested items from list
-            } else if (hideNested && children[itemId]) {
-                itemChildren = children[itemId].map((childrenId) => this.state.itemsById[childrenId]);
-            }
 
             return React.createElement(Item, {
                 key: itemId,
@@ -558,7 +506,6 @@ export class ItemList extends React.Component<any, IState> {
                 hideActions: scope.hideActionsForMonitoringItems || get(scope, 'flags.hideActions'),
                 multiSelectDisabled: scope.disableMonitoringMultiSelect,
                 scope: scope,
-                nested: itemChildren,
                 actioning: !!this.state.actioning[itemId],
             });
         };

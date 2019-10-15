@@ -13,6 +13,28 @@ import {KILLED_STATES} from 'apps/archive/constants';
 
 const DEFAULT_REPOS = ['ingest', 'archive', 'published', 'archived'];
 
+export interface ISearchOptions {
+    hidePreviousVersions: boolean;
+}
+
+type SearchOptionsKeys = keyof ISearchOptions;
+
+interface IElasticQuery {
+    query: any;
+    sort: any;
+    post_filter: any;
+}
+
+interface IQuery {
+    size: (_size: number) => void;
+    filter: (filter: any) => void;
+    post_filter: (filter: any) => void;
+    clear_filters: () => void;
+    getCriteria: (withSource: boolean) => IElasticQuery | {source: IElasticQuery};
+    options: ISearchOptions;
+    setOption: (key: SearchOptionsKeys, val: any) => void;
+}
+
 /**
  * Converts the integer fields to string
  * within a given search
@@ -266,7 +288,12 @@ export function SearchService($location, config, session, multi,
     /**
      * Single query instance
      */
-    function Query(_params) {
+    function Query(this: IQuery, _params, cvs, options: ISearchOptions) {
+        this.options = {
+            hidePreviousVersions: false,
+            ...options,
+        };
+
         var size,
             filters = [],
             postFilters = [],
@@ -279,7 +306,7 @@ export function SearchService($location, config, session, multi,
         });
 
         if (params.q) {
-            angular.forEach(this.cvs, (cv) => {
+            angular.forEach(cvs, (cv) => {
                 if (cv.field !== cv.id) {
                     params.q = params.q.replace(cv.id + '.qcode:(', cv.field + '.qcode:(');
                 }
@@ -389,6 +416,10 @@ export function SearchService($location, config, session, multi,
             buildGeneralFilters(paramsObject, query);
         }
 
+        this.setOption = (key: SearchOptionsKeys, val: any) => {
+            this.options[key] = val;
+        };
+
         /**
          * Get criteria for given query
          */
@@ -397,6 +428,17 @@ export function SearchService($location, config, session, multi,
             let sort = sortService.getSort(sortOptions);
 
             setParameters(filters, params);
+
+            if (this.options.hidePreviousVersions) {
+                filters.push({bool: {
+                    must_not: [
+                        {term: {last_published_version: false}},
+                        {exists: {field: 'rewritten_by'}},
+                        {term: {rewritten_by: ''}},
+                    ],
+                }});
+            }
+
             let criteria: any = {
                 query: {filtered: {filter: {and: filters}}},
                 sort: [_.zipObject([sort.field], [sort.dir])],
@@ -526,8 +568,8 @@ export function SearchService($location, config, session, multi,
      *
      * @param {Object} params
      */
-    this.query = function createQuery(params) {
-        return new Query(params);
+    this.query = function createQuery(params, options: ISearchOptions) {
+        return new Query(params, this.cvs, options);
     };
 
     /**

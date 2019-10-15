@@ -1,4 +1,5 @@
 import {intersection} from 'lodash';
+import {appConfig} from 'core/config';
 
 SearchController.$inject = ['$location', 'searchProviderService', 'config'];
 export function SearchController($location, searchProviderService, config) {
@@ -11,6 +12,8 @@ export function SearchController($location, searchProviderService, config) {
         archived: true,
         search: SUPERDESK,
     }, config.defaultSearch);
+
+    this.hideNested = appConfig.features.nestedItemsInOutputStage;
 
     const getActiveRepos = () => INTERNAL.filter((name) => this.repo[name]);
     const resetInternalRepo = () => this.repo = Object.assign({}, DEFAULT_CONFIG);
