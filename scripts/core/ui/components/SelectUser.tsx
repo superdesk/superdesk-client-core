@@ -35,10 +35,20 @@ export class SelectUser extends React.Component<IPropsSelectUser, IState> {
             (
                 searchString.length > 0
                     ? {
-                        display_name: {
-                            $regex: searchString,
-                            $options: '-i',
-                        },
+                        $or: [
+                            {
+                                display_name: {
+                                    $regex: searchString,
+                                    $options: '-i',
+                                },
+                            },
+                            {
+                                username: {
+                                    $regex: searchString,
+                                    $options: '-i',
+                                },
+                            },
+                        ],
                     }
                     : {}
             ),
