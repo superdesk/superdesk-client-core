@@ -211,7 +211,8 @@ export function ItemCarouselDirective(notify) {
                         const externalItemsCount = Object.values(event.originalEvent.dataTransfer.files || []).length;
 
                         if (canAddMediaItems(internalIds, externalItemsCount)) {
-                            scope.currentIndex = 0;
+                            // add a new item at the last position in the carousel
+                            scope.currentIndex = scope.carouselItems != null ? scope.carouselItems.length : 0;
                             controller.initializeUploadOnDrop(scope, event);
                         }
                     } else {
@@ -243,13 +244,25 @@ export function ItemCarouselDirective(notify) {
              * @param {Object} item Item object
              */
             scope.remove = function(item) {
-                controller.updateItemAssociation(scope, null, item.fieldId);
+                controller.updateItemAssociation(scope, null, item.fieldId).then(reorderMediaItems);
                 // if we deleted the last item from the carousel then reduce the currentIndex by one so that
                 // gallery does not disappear
                 if (scope.currentIndex && scope.currentIndex === scope.carouselItems.length - 1) {
                     scope.currentIndex -= 1;
                 }
             };
+
+            function reorderMediaItems() {
+                scope.carouselItems.forEach((item, index) => {
+                    let data = {};
+
+                    // assign index as new order since carouselItems are sorted by order
+                    item[item.fieldId].order = index;
+                    data[item.fieldId] = item[item.fieldId];
+                    scope.item.associations = angular.extend({}, scope.item.associations, data);
+                });
+                scope.onchange();
+            }
 
             /**
              * @ngdoc method
@@ -285,16 +298,7 @@ export function ItemCarouselDirective(notify) {
                                     .index(ui.item);
 
                             scope.carouselItems.splice(end, 0, scope.carouselItems.splice(start, 1)[0]);
-
-                            angular.forEach(scope.carouselItems, (item) => {
-                                let data = {};
-
-                                item[item.fieldId].order = scope.carouselItems.indexOf(item);
-                                data[item.fieldId] = item[item.fieldId];
-                                scope.item.associations = angular.extend({}, scope.item.associations, data);
-                            });
-
-                            scope.onchange();
+                            reorderMediaItems();
                         }
                     },
                     update: function(event, ui) {
