@@ -11,4 +11,5 @@ export interface IAttachment {
     filename: string;
     description: string;
     media: IMedia;
+    internal: boolean;
 }

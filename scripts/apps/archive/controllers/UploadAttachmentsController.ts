@@ -9,20 +9,32 @@ export function UploadAttachmentsController($scope, $q, urls, upload) {
      * Upload file
      */
     function uploadFile(item) {
-        item.promise = urls.resource('attachments')
-            .then((uploadURL) => upload.start({
-                method: 'POST',
-                url: uploadURL,
-                data: {media: item.file, title: item.meta.title, description: item.meta.description},
-            }))
-            .then((response) => {
-                item.attachment = response.data;
-                return item.attachment;
-            }, (error) => {
-                item.error = error;
-            }, (progress) => {
-                item.progress = progress.loaded / progress.total * 100.0;
-            });
+        item.promise = urls
+            .resource('attachments')
+            .then((uploadURL) =>
+                upload.start({
+                    method: 'POST',
+                    url: uploadURL,
+                    data: {
+                        media: item.file,
+                        title: item.meta.title,
+                        description: item.meta.description,
+                        internal: item.meta.internal,
+                    },
+                }),
+            )
+            .then(
+                (response) => {
+                    item.attachment = response.data;
+                    return item.attachment;
+                },
+                (error) => {
+                    item.error = error;
+                },
+                (progress) => {
+                    item.progress = (progress.loaded / progress.total) * 100.0;
+                },
+            );
 
         return item.promise;
     }
