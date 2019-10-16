@@ -56,7 +56,7 @@ export function FilterConditionsController($scope, contentFilters, notify, modal
          * @returns {Boolean}
          */
         $scope.isComparisonValue = function() {
-            return _.includes(['eq', 'ne', 'lt', 'lte', 'gt', 'gte'], $scope.filterCondition.operator)
+            return _.includes(['eq', 'ne', 'lt', 'lte', 'gt', 'gte', 'exists'], $scope.filterCondition.operator)
                 && $scope.valueLookup[$scope.filterCondition.field];
         };
 
