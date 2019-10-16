@@ -19,10 +19,6 @@ function getTranslationForAssignRights(value) {
     }
 }
 
-const DRAG_SCROLL_BUFFER = 150; // px
-const DRAG_SCROLL_BY = 50; // px
-const DRAG_SCROLL_TIMEOUT = 200; // ms
-
 /**
  * @ngdoc React
  * @module superdesk.core.editor3
@@ -46,7 +42,6 @@ export class MediaBlockComponent extends React.Component<any, any> {
         this.data = this.data.bind(this);
         this.onChange = this.onChange.bind(this);
         this.onDragStart = this.onDragStart.bind(this);
-        this.onDrag = this.onDrag.bind(this);
     }
 
     /**
@@ -110,37 +105,6 @@ export class MediaBlockComponent extends React.Component<any, any> {
         event.dataTransfer.setData('superdesk/editor3-block', this.props.block.getKey());
     }
 
-    componentDidMount() {
-        this.container = document.getElementsByClassName('page-content-container')[0];
-    }
-
-    componentWillUnmount() {
-        this.container = null;
-    }
-
-    onDrag(event) {
-        let y = event.pageY;
-
-        if (!this.scrollTimeout) {
-            this.scrollTimeout = setTimeout(() => {
-                // firefox does not provide pageY on drag event
-                // so there is a window listener which populates the value
-                // but it runs only after drag event so it must read it here
-                if (!y && window['dragPageY']) {
-                    y = window['dragPageY'];
-                }
-
-                if (y < DRAG_SCROLL_BUFFER) {
-                    this.container.scrollTop -= DRAG_SCROLL_BY;
-                } else if (y + DRAG_SCROLL_BUFFER > $(window).height()) {
-                    this.container.scrollTop += DRAG_SCROLL_BY;
-                }
-
-                this.scrollTimeout = null;
-            }, DRAG_SCROLL_TIMEOUT);
-        }
-    }
-
     render() {
         const {setLocked, showTitle, readOnly} = this.props;
         const data = this.data();
@@ -161,7 +125,7 @@ export class MediaBlockComponent extends React.Component<any, any> {
 
             <div className="image-block"
                 onClick={(e) => e.stopPropagation()}
-                draggable={draggable} onDragStart={this.onDragStart} onDrag={this.onDrag}>
+                draggable={draggable} onDragStart={this.onDragStart}>
                 {
                     removable && (
                         <a className="icn-btn image-block__remove" onClick={this.onClickDelete}>
