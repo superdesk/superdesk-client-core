@@ -135,6 +135,10 @@ interface IProps {
     dispatch?(action: any): void;
 }
 
+interface IState {
+    draggingInProgress: boolean;
+}
+
 /**
  * @ngdoc React
  * @module superdesk.core.editor3
@@ -147,7 +151,7 @@ interface IProps {
  * @description Editor3 is a draft.js based editor that support customizable
  *  formatting, spellchecker and media files.
  */
-export class Editor3Component extends React.Component<IProps> {
+export class Editor3Component extends React.Component<IProps, IState> {
     static propTypes: any;
     static defaultProps: any;
 
@@ -156,6 +160,7 @@ export class Editor3Component extends React.Component<IProps> {
     div: any;
     editor: any;
     spellcheckCancelFn: () => void;
+    onDragEnd: () => void;
 
     constructor(props) {
         super(props);
@@ -171,6 +176,16 @@ export class Editor3Component extends React.Component<IProps> {
         this.handleDropOnEditor = this.handleDropOnEditor.bind(this);
         this.spellcheck = this.spellcheck.bind(this);
         this.spellcheckCancelFn = noop;
+
+        this.onDragEnd = () => {
+            if (this.state.draggingInProgress !== false) {
+                this.setState({draggingInProgress: false});
+            }
+        };
+
+        this.state = {
+            draggingInProgress: false,
+        };
     }
 
     /**
@@ -229,6 +244,8 @@ export class Editor3Component extends React.Component<IProps> {
     }
 
     handleDropOnEditor(selection: SelectionState, dataTransfer: any, isInternal: DraftDragType): DraftHandleValue {
+        this.onDragEnd();
+
         if (isInternal) {
             const {editorState} = this.props;
             const targetBlockKey = selection.getStartKey();
@@ -502,15 +519,31 @@ export class Editor3Component extends React.Component<IProps> {
         ));
 
         return (
-            <div className={cx} ref={(div) => this.div = div}>
-                {showToolbar &&
-                    <Toolbar
-                        disabled={locked || readOnly}
-                        scrollContainer={scrollContainer}
-                        editorNode={this.editorNode}
-                        highlightsManager={this.props.highlightsManager}
-                        editorWrapperElement={this.div}
-                    />
+            <div
+                className={cx}
+                ref={(div) => this.div = div}
+                onDragStart={() => {
+                    if (this.state.draggingInProgress !== true) {
+                        this.setState({draggingInProgress: true});
+                    }
+                }}
+
+                // "dragend" event won't fire if an item is dropped inside draft-js field
+                // it's handled there separately
+                onDragEnd={this.onDragEnd}
+            >
+                {
+                    showToolbar && this.state.draggingInProgress !== true
+                        ? (
+                            <Toolbar
+                                disabled={locked || readOnly}
+                                scrollContainer={scrollContainer}
+                                editorNode={this.editorNode}
+                                highlightsManager={this.props.highlightsManager}
+                                editorWrapperElement={this.div}
+                            />
+                        )
+                        : null
                 }
                 <HighlightsPopup
                     editorNode={this.editorNode}
