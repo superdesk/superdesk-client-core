@@ -91,7 +91,7 @@ export function AssociationController(config, content, superdesk,
      */
     this.updateItemAssociation = function(scope, updated, customRel, callback = null, autosave = false) {
         let data = {};
-        // when sending correction if the media is of type media-gallery, update same association-key not the next one
+        // if the media is of type media-gallery, update same association-key not the next one
         // as the scope.rel contains the next association-key of the new item
         let associationKey = scope.carouselItem ? scope.carouselItem.fieldId : customRel || scope.rel;
 
