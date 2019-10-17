@@ -60,18 +60,20 @@
     <div ng-if="item.flags.marked_for_sms" style="margin-top: 27px;">
         <span sd-character-count data-item="item.sms_message" data-html="true" data-limit="160"></span>
         <label class="field__label">{{label('sms_message')}}</label>
-        <input type="text" sd-remove-tags
-               class="byline"
-               id="sms_message"
-               ng-model="item.sms_message"
-               ng-model-options="{debounce: 100}"
-               ng-change="autosave(item)"
-               ng-if="_editable"
-               placeholder="Add sms message here"
-               sd-focus-element
-               data-append-element=".field"
-               data-append-class="active"
-               tabindex="{{editor.sms.order}}">
+        <textarea sd-remove-tags
+            class="byline text-editor"
+            id="sms_message"
+            ng-model="item.sms_message"
+            ng-model-options="{debounce: 100}"
+            ng-change="autosave(item)"
+            ng-if="_editable"
+            placeholder="Add sms message here"
+            sd-focus-element
+            sd-auto-height
+            data-append-element=".field"
+            data-append-class="active"
+            tabindex="{{editor.sms.order}}"
+            ></textarea>
         <div ng-if="!_editable">{{item.sms_message}}</div>
     </div>
 </div>
