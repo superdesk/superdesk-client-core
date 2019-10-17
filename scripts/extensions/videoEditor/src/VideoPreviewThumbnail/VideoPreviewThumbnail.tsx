@@ -1,13 +1,17 @@
 import * as React from 'react';
 import VideoEditorContext from '../VideoEditorContext';
+import { IArticleVideo } from '../interfaces';
+import { get } from 'lodash';
 
 interface IProps {
     videoRef: React.RefObject<HTMLVideoElement>;
+    article: IArticleVideo;
 }
 
 interface IState {
     dirty: boolean;
-    show: boolean;
+    type: 'capture' | 'upload' | '';
+    value: File | number;
 }
 
 export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
@@ -19,36 +23,60 @@ export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
         super(props);
         this.state = {
             dirty: false,
-            show: false,
+            type: '',
+            value: 0,
         };
         this.ref = React.createRef();
         this.size = 160; // max size of element canvas
     }
 
+    componentDidMount() {
+        if (get(this.props.article.renditions, 'thumbnail.href')) {
+            this.setPreviewThumbnail(this.props.article.renditions!.thumbnail.href + `?nocache=${Math.random()}`);
+        }
+    }
+
     handleClick = () => {
-        this.setState({ dirty: true });
+        this.setState({ dirty: true, type: 'capture', value: this.props.videoRef.current!.currentTime });
         const video = this.props.videoRef.current;
         if (!video) return;
         this.drawCanvas(video, video.videoWidth, video.videoHeight);
+        this.setState({ dirty: true });
     };
 
     handleChange = (files: FileList | null) => {
         const reader = new FileReader();
-        reader.onload = () => {
-            const image = new Image();
-            image.onload = () => {
-                this.drawCanvas(image, image.width, image.height);
-            };
-            image.src = reader.result as string;
-        };
-
+        reader.onload = () => this.setPreviewThumbnail(reader.result as string);
         reader.readAsDataURL(files![0]);
+        this.setState({ dirty: true });
     };
 
-    handleSave = () => {};
+    handleSave = () => {
+        const { dataApi } = this.context.superdesk;
+        if (this.state.type === 'capture') {
+            dataApi
+                .create('video_edit', {
+                    capture: { type: 'capture', position: this.state.value },
+                    item: this.props.article,
+                })
+                .then(response => {
+                    this.handleCancel();
+                    this.setPreviewThumbnail(response.item.renditions.thumbnail.href + `?nocache=${Math.random()}`);
+                });
+        } else if (this.state.type === 'upload') {
+        }
+    };
+
+    setPreviewThumbnail = (src: string) => {
+        const image = new Image();
+        image.onload = () => {
+            this.drawCanvas(image, image.width, image.height);
+        };
+        image.src = src;
+    };
 
     handleCancel = () => {
-        this.setState({ dirty: false });
+        this.setState({ dirty: false, type: '', value: 0 });
         const ctx = this.ref.current!.getContext('2d');
         ctx!.clearRect(0, 0, this.ref.current!.width, this.ref.current!.height);
     };
@@ -65,7 +93,6 @@ export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
         this.ref.current!.width = drawWidth;
         this.ref.current!.height = drawHeight;
         ctx!.drawImage(element, 0, 0, drawWidth, drawHeight);
-        this.setState({ dirty: true });
     };
 
     render() {

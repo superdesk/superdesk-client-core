@@ -110,9 +110,10 @@ export class VideoEditor extends React.Component<IProps, IState> {
 
         this.setState({ cropEnabled: !this.state.cropEnabled }, () => {
             if (this.state.cropEnabled === false) {
-                this.setState({ crop: this.initState.crop });
+                this.setState({ crop: this.initState.crop }, this.checkIsDirty);
+            } else {
+                this.checkIsDirty();
             }
-            this.checkIsDirty();
         });
     };
 
@@ -214,6 +215,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                                             maxHeight: height,
                                                             background: 'unset',
                                                             position: 'absolute',
+                                                            marginTop: '2rem',
                                                         }}
                                                     />
                                                 )}
@@ -230,7 +232,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                         </div>
                                     </div>
                                     <div className="sd-photo-preview__thumb-strip sd-photo-preview__thumb-strip--video">
-                                        <VideoPreviewThumbnail videoRef={this.ref} />
+                                        <VideoPreviewThumbnail videoRef={this.ref} article={this.props.article} />
                                         <VideoTimeline
                                             video={this.ref}
                                             trim={this.state.trim}
