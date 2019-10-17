@@ -675,6 +675,7 @@ declare module 'superdesk-api' {
             page: number,
             sortOption: ISortOption,
             filterValues: ICrudManagerFilters,
+            max_results?: number,
             formatFiltersForServer?: (filters: ICrudManagerFilters) => ICrudManagerFilters,
         ): Promise<IRestApiResponse<T>>;
         patch<T extends IBaseRestApiResponse>(endpoint, current: T, next: T): Promise<T>;

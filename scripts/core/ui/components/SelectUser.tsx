@@ -9,29 +9,64 @@ import {UserAvatar} from 'apps/users/components/UserAvatar';
 interface IState {
     fetchedUsers?: Array<IUser>;
     selectedUser?: IUser;
+    loading: boolean;
 }
 
 export class SelectUser extends React.Component<IPropsSelectUser, IState> {
     constructor(props: IPropsSelectUser) {
         super(props);
 
-        this.state = {};
+        this.state = {
+            loading: false,
+        };
+
+        this.queryUsers = this.queryUsers.bind(this);
     }
 
-    componentDidMount() {
-        dataApi.query<IUser>('users', 1, {field: 'display_name', direction: 'ascending'}, {})
+    queryUsers(_searchString: string = '') {
+        const searchString = _searchString.trim();
+
+        this.setState({loading: true, fetchedUsers: null});
+
+        dataApi.query<IUser>(
+            'users',
+            1,
+            {field: 'display_name', direction: 'ascending'},
+            (
+                searchString.length > 0
+                    ? {
+                        $or: [
+                            {
+                                display_name: {
+                                    $regex: searchString,
+                                    $options: '-i',
+                                },
+                            },
+                            {
+                                username: {
+                                    $regex: searchString,
+                                    $options: '-i',
+                                },
+                            },
+                        ],
+                    }
+                    : {}
+            ),
+            50,
+        )
             .then((res) => {
                 this.setState({
                     fetchedUsers: res._items,
+                    loading: false,
                 });
             });
     }
 
-    render() {
-        if (this.state.fetchedUsers == null) {
-            return null;
-        }
+    componentDidMount() {
+        this.queryUsers();
+    }
 
+    render() {
         const keyedUsers = keyBy(this.state.fetchedUsers, (user) => user._id);
 
         return (
@@ -52,6 +87,10 @@ export class SelectUser extends React.Component<IPropsSelectUser, IState> {
                     </div>
                 )}
                 data-test-id="select-user-dropdown"
+                onSearch={(search) => {
+                    this.queryUsers(search);
+                }}
+                loading={this.state.loading}
             />
         );
     }

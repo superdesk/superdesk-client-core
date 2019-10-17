@@ -1,16 +1,21 @@
+/* eslint-disable indent */
+
 import * as React from 'react';
 import * as Autocomplete from 'react-autocomplete';
-import {noop} from 'lodash';
+import {noop, throttle} from 'lodash';
+import {gettext} from 'core/utils';
 
 interface IProps<T> {
     items: {[key: string]: T};
     value?: string;
     placeholder?: string;
     disabled?: boolean;
+    loading?: boolean;
     renderItem(item: T): JSX.Element;
     getItemLabel(item: T): string;
     getItemValue(item: T): string;
     onSelect(value: string): void;
+    onSearch?(search: string): void;
     'data-test-id'?: string;
 }
 
@@ -63,6 +68,7 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
         dropdown menu on render, onMouseEnter will fire and all will work as expected.
     */
     private lastButtonHeight: number;
+    private search: (search: string) => void;
 
     constructor(props: IProps<T>) {
         super(props);
@@ -70,23 +76,35 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
         this.state = {
             search: '',
         };
+
+        const searchFn = (search: string) => {
+            this.props.onSearch(search);
+        };
+
+        this.search = throttle(searchFn, 300, {leading: false});
     }
 
     render() {
-        const filteredItems = Object.values(this.props.items).filter(
-            (item) => this.props.getItemLabel(item)
-                .toLocaleLowerCase()
-                .includes(this.state.search.toLocaleLowerCase()),
-        );
-
         return (
             <Autocomplete.default
                 inputProps={{placeholder: this.props.placeholder}}
                 value={this.props.value}
-                items={filteredItems}
+                items={Object.values(this.props.items)}
                 wrapperStyle={{}}
-                menuStyle={menuStyle}
                 wrapperProps={{'data-test-id': this.props['data-test-id']} as any}
+                renderMenu={(items, value, style) => {
+                    return (
+                        <div style={{...style, ...menuStyle}}>
+                            {
+                                this.props.loading === true
+                                    ? <div style={{padding: 10}}>{gettext('Loading...')}</div>
+                                    : items.length < 1
+                                    ? <div style={{padding: 10}}>{gettext('No items found.')}</div>
+                                    : items
+                            }
+                        </div>
+                    );
+                }}
                 renderInput={(propsAutocomplete: any) => {
                     const selectedItem = this.props.items[this.props.value];
 
@@ -94,7 +112,12 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                         return (
                             <input
                                 {...propsAutocomplete}
-                                onChange={(event) => this.setState({search: event.target.value})}
+                                onChange={(event) => {
+                                    const value = event.target.value;
+
+                                    this.setState({search: value});
+                                    this.search(value);
+                                }}
                                 value={this.state.search}
                                 style={{height: this.lastButtonHeight + 'px'}}
                                 placeholder={'Search'}
@@ -130,7 +153,7 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                             data-test-id="dropdown-button"
                         >
                             {
-                                this.props.value === undefined
+                                this.props.value === undefined || selectedItem == null
                                     ? this.props.placeholder
                                     : this.props.renderItem(selectedItem)
                             }
