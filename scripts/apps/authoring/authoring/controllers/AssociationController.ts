@@ -95,6 +95,10 @@ export function AssociationController(config, content, superdesk,
         // as the scope.rel contains the next association-key of the new item
         let associationKey = scope.carouselItem ? scope.carouselItem.fieldId : customRel || scope.rel;
 
+        if (scope.field != null && scope.field.field_type === 'media' && updated != null && updated.order == null) {
+            // if the field is of type media-gallery, assign order to the item being added
+            updated['order'] = scope.currentIndex;
+        }
         data[associationKey] = updated;
         scope.item.associations = angular.extend({}, scope.item.associations, data);
         scope.rel = associationKey;
@@ -180,7 +184,7 @@ export function AssociationController(config, content, superdesk,
                     return renditions.ingest(item)
                         .then((_item) => self.edit(scope, _item, {customRel: originalRel}));
                 } else {
-                    // Update the association is media is not editable.
+                    // Update the association if media is not editable.
                     self.updateItemAssociation(scope, item, null, null, true);
                 }
             })
