@@ -7,7 +7,11 @@ export interface IArticleVideo extends IArticle {
             media: string;
             mimetype: string;
             version: number;
-        };
+        },
+        thumbnail: {
+            href: string,
+            mimetype: string,
+        }
     };
     project?: object;
 }
