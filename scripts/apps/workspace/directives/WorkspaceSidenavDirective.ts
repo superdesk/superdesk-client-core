@@ -3,9 +3,9 @@ const HR_TEMPLATE = 'scripts/apps/workspace/views/workspace-sidenav-items-hr.htm
 const DEFAULT_TEMPLATE = 'scripts/apps/workspace/views/workspace-sidenav-items-default.html';
 
 WorkspaceSidenavDirective.$inject = ['superdeskFlags', 'Keys', 'config',
-    '$rootScope', 'workspaces', 'privileges'];
+    '$rootScope', 'workspaces', 'privileges', '$timeout'];
 export function WorkspaceSidenavDirective(superdeskFlags, Keys, config,
-    $rootScope, workspaces, privileges) {
+    $rootScope, workspaces, privileges, $timeout) {
     return {
         template: require('../views/workspace-sidenav-items.html'),
         link: function(scope, elem) {
@@ -34,6 +34,9 @@ export function WorkspaceSidenavDirective(superdeskFlags, Keys, config,
                 } else {
                     superdeskFlags.flags.hideMonitoring = false;
                 }
+
+                // Trigger resize event to update elements
+                $timeout(() => window.dispatchEvent(new Event('resize')), 500, false);
             };
 
             /*
