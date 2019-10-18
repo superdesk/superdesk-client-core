@@ -31,10 +31,9 @@ module.exports = function(grunt) {
             DEFAULT_IDLE_TIME: {hours: 0, minutes: 0},
         },
 
-        // enabling all extensions on master to run e2e tests from extensions
+        
         enabledExtensions: {
-            annotationsLibrary: 1,
-            markForUser: 1,
+            // helloWorld: 1,
             planning: 1,
         },
     };
