@@ -231,7 +231,7 @@ export function MonitoringGroup(
                 }
 
                 let limited = !(monitoring.singleGroup || scope.group.type === 'highlights'
-                || scope.group.type === 'spike');
+                || scope.group.type === 'spike' || scope.group.type === 'personal');
 
                 if (!_.isNil(scope.forceLimited)) {
                     limited = JSON.parse(scope.forceLimited);
@@ -668,6 +668,8 @@ export function MonitoringGroup(
                             searchCriteria.source.size = PAGE_SIZE;
                         }
                     }
+                } else if (scope.group != null && scope.group.type === 'personal') {
+                    provider = 'production';
                 } else {
                     provider = 'archive';
                 }

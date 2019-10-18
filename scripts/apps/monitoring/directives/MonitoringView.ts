@@ -49,6 +49,9 @@ export function MonitoringView(
             scope.shouldRefresh = true;
             scope.view = 'compact'; // default view
 
+            scope.personalShowSent = false;
+            scope.togglePersonalShowSent = () => scope.personalShowSent = !scope.personalShowSent;
+
             scope.workspaces = workspaces;
             scope.$watch('workspaces.active', (workspace) => {
                 scope.workspace = workspace;
