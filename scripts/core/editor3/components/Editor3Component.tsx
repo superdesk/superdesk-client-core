@@ -523,6 +523,9 @@ export class Editor3Component extends React.Component<IProps, IState> {
                 className={cx}
                 ref={(div) => this.div = div}
                 onDragStart={() => {
+                    // known issue: dragging text doesn't work when the top of the editor is in the viewport
+                    // https://github.com/facebook/draft-js/issues/2218
+
                     if (this.state.draggingInProgress !== true) {
                         this.setState({draggingInProgress: true});
                     }
