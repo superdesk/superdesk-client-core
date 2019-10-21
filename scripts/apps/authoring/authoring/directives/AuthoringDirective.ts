@@ -138,6 +138,7 @@ export function AuthoringDirective(
             $scope.fullPreviewUrl = '/#/preview/' + $scope.origItem._id;
             $scope.proofread = false;
             $scope.referrerUrl = referrer.getReferrerUrl();
+            $scope.gettext = gettext;
 
             content.getTypes().then(() => {
                 $scope.content_types = content.types;
