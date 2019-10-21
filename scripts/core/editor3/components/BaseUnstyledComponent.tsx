@@ -75,33 +75,32 @@ class BaseUnstyledComponent extends React.Component<IProps, IState> {
             // existing media item dropped to another place
             this.props.dispatch(moveBlock(block, this.getDropBlockKey(), this.dropInsertionMode));
             handled = true;
-            return;
-        }
-
-        const {dataTransfer} = event.originalEvent;
-        const mediaType = getValidMediaType(event.originalEvent);
-        const blockKey = this.getDropBlockKey();
-        const link = event.originalEvent.dataTransfer.getData('URL');
-
-        if (canDropMedia(event, this.props.editorProps)
-            && (mediaType === 'Files' || mediaType.includes('application/superdesk'))) {
-            this.props.dispatch(dragDrop(dataTransfer, mediaType, blockKey));
-            handled = true;
-        } else if (
-            typeof link === 'string'
-            && link.startsWith('http')
-            && this.props.editorProps.editorFormat.includes('embed')
-        ) {
-            getEmbedObject(link)
-                .then((oEmbed) => {
-                    this.props.dispatch(embed(oEmbed, blockKey));
-                });
-            handled = true;
-        } else if (isHtmlTextAndShouldCreateEmbed(event, mediaType, this.props.editorProps)) {
-            this.props.dispatch(embed(event.originalEvent.dataTransfer.getData(mediaType), blockKey));
-            handled = true;
         } else {
-            console.warn('unsupported media type on drop', mediaType);
+            const {dataTransfer} = event.originalEvent;
+            const mediaType = getValidMediaType(event.originalEvent);
+            const blockKey = this.getDropBlockKey();
+            const link = event.originalEvent.dataTransfer.getData('URL');
+
+            if (canDropMedia(event, this.props.editorProps)
+                && (mediaType === 'Files' || mediaType.includes('application/superdesk'))) {
+                this.props.dispatch(dragDrop(dataTransfer, mediaType, blockKey));
+                handled = true;
+            } else if (
+                typeof link === 'string'
+                && link.startsWith('http')
+                && this.props.editorProps.editorFormat.includes('embed')
+            ) {
+                getEmbedObject(link)
+                    .then((oEmbed) => {
+                        this.props.dispatch(embed(oEmbed, blockKey));
+                    });
+                handled = true;
+            } else if (isHtmlTextAndShouldCreateEmbed(event, mediaType, this.props.editorProps)) {
+                this.props.dispatch(embed(event.originalEvent.dataTransfer.getData(mediaType), blockKey));
+                handled = true;
+            } else {
+                console.warn('unsupported media type on drop', mediaType);
+            }
         }
 
         if (handled) {
