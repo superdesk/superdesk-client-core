@@ -841,7 +841,26 @@ declare module 'superdesk-api' {
 
 
     export interface ISuperdeskGlobalConfig {
+        // FROM SERVER
+        default_language: string;
+        schema: any;
+        editor: any;
+        feedback_url: any;
+        override_ednote_for_corrections: any;
+        override_ednote_template: any;
+        default_genre: any;
+        japanese_characters_per_minute: any;
+        validator_media_metadata: any;
+        publish_content_expiry_minutes: any;
+        high_priority_queue_enabled: any;
+
+        // FROM CLIENT
+        server: {
+            url: string;
+        };
+        apps: any;
         defaultRoute: string;
+        startingDay: any;
         features: {
             swimlane: {
                 defaultNumberOfColumns: number;
@@ -851,6 +870,7 @@ declare module 'superdesk-api' {
             editorAttachments: boolean;
             editorInlineComments: boolean;
             editorSuggestions: boolean;
+            useTansaProofing: boolean;
         };
         auth: {
             google: boolean
@@ -873,7 +893,6 @@ declare module 'superdesk-api' {
             };
         };
         confirm_spike: boolean;
-        language: string; // default client language
     }
 
 

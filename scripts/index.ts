@@ -13,36 +13,42 @@ if (appConfig.features.useTansaProofing) {
 
 let body = angular.element('body');
 
-function initializeConfigDefaults(config) {
-    const sunday = '0';
+function loadConfigs(callback) {
+    // can't use network helpers since they depend on angular being loaded
+    var oReq = new XMLHttpRequest();
+    oReq.addEventListener('load', function() {
+        const serverConfig = JSON.parse(this.responseText).config;
 
-    return {
-        ...config,
-        startingDay: config.startingDay != null ? config.startingDay : sunday,
-    };
+        Object.assign(appConfig, serverConfig);
+        callback();
+    });
+    oReq.open('GET', appConfig.server.url + '/client_config');
+    oReq.send();
 }
 
 body.ready(() => {
-    // update config via config.js
-    if (window.superdeskConfig) {
-        angular.merge(appConfig, window.superdeskConfig);
-    }
+    loadConfigs(() => {
+        // update config via config.js
+        if (window.superdeskConfig) {
+            angular.merge(appConfig, window.superdeskConfig);
+        }
 
-    // non-mock app configuration must live here to allow tests to override
-    // since tests do not import this file.
-    angular.module('superdesk.config').constant('config', initializeConfigDefaults(appConfig));
+        // non-mock app configuration must live here to allow tests to override
+        // since tests do not import this file.
+        angular.module('superdesk.config').constant('config', appConfig);
 
-    /**
-     * @ngdoc module
-     * @name superdesk-client
-     * @packageName superdesk-client
-     * @description The root superdesk module.
-     */
-    angular.bootstrap(body, [
-        'superdesk.config',
-        'superdesk.core',
-        'superdesk.apps',
-    ].concat(appConfig.apps || []), {strictDi: true});
+        /**
+         * @ngdoc module
+         * @name superdesk-client
+         * @packageName superdesk-client
+         * @description The root superdesk module.
+         */
+        angular.bootstrap(body, [
+            'superdesk.config',
+            'superdesk.core',
+            'superdesk.apps',
+        ].concat(appConfig.apps || []), {strictDi: true});
 
-    window['superdeskIsReady'] = true;
+        window['superdeskIsReady'] = true;
+    });
 });

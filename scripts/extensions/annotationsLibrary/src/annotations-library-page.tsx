@@ -91,17 +91,21 @@ export function getAnnotationsLibraryPage(superdesk: ISuperdesk) {
                                 ...baseTemplate,
                                 language: filteredLanguage,
                             };
-                        } else if (superdesk.instance.config.language != null) {
+                        } else if (superdesk.instance.config.default_language != null) {
                             return {
                                 ...baseTemplate,
-                                language: superdesk.instance.config.language,
+                                language: superdesk.instance.config.default_language,
                             };
                         } else {
                             return baseTemplate;
                         }
                     }}
                     fieldForSearch={nameField}
-                    defaultFilters={{language: superdesk.instance.config.language || 'en'}}
+                    defaultFilters={
+                        superdesk.instance.config.default_language == null
+                            ? {}
+                            : {language: superdesk.instance.config.default_language}
+                    }
                 />
             );
         }
