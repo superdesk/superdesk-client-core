@@ -12,7 +12,9 @@ export function getActionsBulkInitialize(superdesk: ISuperdesk) {
         // and aren't displayed in the list item until the article is saved
         const someItemsLocked = articles.some(isLocked);
 
-        if (articles.some(isPersonal) || someItemsLocked) {
+        const someItemsSpiked = articles.some(({state}) => state === 'spiked');
+
+        if (articles.some(isPersonal) || someItemsLocked || someItemsSpiked) {
             return Promise.resolve([]);
         }
 
