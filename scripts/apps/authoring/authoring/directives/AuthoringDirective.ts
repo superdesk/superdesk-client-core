@@ -667,6 +667,13 @@ export function AuthoringDirective(
                 initMedia();
             };
 
+            // Close the current article, create an update of the article and open it in the edit mode.
+            $scope.closeAndContinue = function() {
+                $scope.close().then(authoring.rewrite($scope.item));
+            };
+
+            $scope.canRewriteArticle = () => authoring.itemActions($scope.item).re_write;
+
             $scope.deschedule = function() {
                 $scope.item.publish_schedule = null;
                 return $scope.save();

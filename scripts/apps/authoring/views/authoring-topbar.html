@@ -58,6 +58,15 @@
                 <span class="btn__text--short" translate>T D</span>
         </button>
         <button
+                ng-if="$root.config.features.customAuthoringTopbar.closeAndContinue === true"
+                class="btn btn--custom"
+                ng-disabled="!canRewriteArticle()"
+                ng-click="saveAndContinue(closeAndContinue, false)"
+                title="{{ :: 'Close and Continue' | translate }}">
+                <span class="btn__text">{{ :: 'Close and Continue' | translate }}</span>
+                <span class="btn__text--short">{{ :: 'C & C' | translate }}</span>
+        </button>
+        <button
                 ng-if="$root.config.features.customAuthoringTopbar.publish === true"
                 class="btn btn--custom btn--publish"
                 type="submit"
