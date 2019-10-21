@@ -4,7 +4,7 @@ import {
     IGenericListPageComponent,
     ISuperdesk,
 } from 'superdesk-api';
-import {IKnowledgeBaseItem} from './interfaces';
+import {IKnowledgeBaseItem, IKnowledgeBaseItemBase} from './interfaces';
 import {getFields} from './GetFields';
 
 export function getAnnotationsLibraryPage(superdesk: ISuperdesk) {
@@ -80,7 +80,26 @@ export function getAnnotationsLibraryPage(superdesk: ISuperdesk) {
                     defaultSortOption={{field: 'name', direction: 'ascending'}}
                     formConfig={formConfig}
                     renderRow={renderRow}
-                    newItemTemplate={{cpnat_type: 'cpnat:abstract'}}
+                    getNewItemTemplate={(page) => {
+                        const baseTemplate: Partial<IKnowledgeBaseItemBase> = {
+                            cpnat_type: 'cpnat:abstract',
+                        };
+                        const filteredLanguage = page.getActiveFilters().language;
+
+                        if (filteredLanguage != null) {
+                            return {
+                                ...baseTemplate,
+                                language: filteredLanguage,
+                            };
+                        } else if (superdesk.instance.config.language != null) {
+                            return {
+                                ...baseTemplate,
+                                language: superdesk.instance.config.language,
+                            };
+                        } else {
+                            return baseTemplate;
+                        }
+                    }}
                     fieldForSearch={nameField}
                     defaultFilters={{language: superdesk.instance.config.language || 'en'}}
                 />
