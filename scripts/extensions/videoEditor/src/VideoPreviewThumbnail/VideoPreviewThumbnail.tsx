@@ -6,18 +6,22 @@ import { get } from 'lodash';
 interface IProps {
     videoRef: React.RefObject<HTMLVideoElement>;
     article: IArticleVideo;
+    onToggleLoading: (isLoading: boolean) => void;
 }
 
 interface IState {
     dirty: boolean;
     type: 'capture' | 'upload' | '';
-    value: File | number;
+    value: number | File; // capture positon or uploaded File
+    // most recent changed preview thumbnail, for re-drawing thumbnail when reset changes
+    thumbnail: string;
 }
 
 export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
     static contextType = VideoEditorContext;
     private ref: React.RefObject<HTMLCanvasElement>;
     private size: number;
+    private interval: any;
 
     constructor(props: IProps) {
         super(props);
@@ -25,14 +29,21 @@ export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
             dirty: false,
             type: '',
             value: 0,
+            thumbnail: get(this.props.article.renditions, 'thumbnail.href'),
         };
         this.ref = React.createRef();
-        this.size = 160; // max size of element canvas
+        this.size = 160; // max size of element
     }
 
     componentDidMount() {
-        if (get(this.props.article.renditions, 'thumbnail.href')) {
-            this.setPreviewThumbnail(this.props.article.renditions!.thumbnail.href + `?nocache=${Math.random()}`);
+        if (this.state.thumbnail) {
+            this.setPreviewThumbnail(this.state.thumbnail + `?t=${Math.random()}`);
+        }
+    }
+
+    componentWillUnmount() {
+        if (this.interval) {
+            clearInterval(this.interval);
         }
     }
 
@@ -40,6 +51,7 @@ export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
         this.setState({ dirty: true, type: 'capture', value: this.props.videoRef.current!.currentTime });
         const video = this.props.videoRef.current;
         if (!video) return;
+
         this.drawCanvas(video, video.videoWidth, video.videoHeight);
         this.setState({ dirty: true });
     };
@@ -47,8 +59,9 @@ export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
     handleChange = (files: FileList | null) => {
         const reader = new FileReader();
         reader.onload = () => this.setPreviewThumbnail(reader.result as string);
-        reader.readAsDataURL(files![0]);
-        this.setState({ dirty: true });
+        const file = files ? files[0] : null;
+        reader.readAsDataURL(file!);
+        this.setState({ dirty: true, value: file!, type: 'upload' });
     };
 
     handleSave = () => {
@@ -56,13 +69,19 @@ export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
         if (this.state.type === 'capture') {
             dataApi
                 .create('video_edit', {
-                    capture: { type: 'capture', position: this.state.value },
+                    // Captured thumbnail from server and from canvas have small difference
+                    // in time (position)
+                    capture: { type: 'capture', position: (this.state.value as number) - 0.04 },
                     item: this.props.article,
                 })
-                .then(response => {
-                    this.handleCancel();
-                    this.setPreviewThumbnail(response.item.renditions.thumbnail.href + `?nocache=${Math.random()}`);
-                });
+                .then((_: any) => {
+                    // reuse thumbnail from canvas so we don't have to display old one,
+                    // new thumbnail will be loaded when user reset changes
+                    this.handleReset(false);
+                    this.props.onToggleLoading(true);
+                    this.getPreviewThumbnail();
+                })
+                .catch((err: any) => console.log(err));
         } else if (this.state.type === 'upload') {
         }
     };
@@ -75,10 +94,34 @@ export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
         image.src = src;
     };
 
-    handleCancel = () => {
-        this.setState({ dirty: false, type: '', value: 0 });
+    getPreviewThumbnail = () => {
+        const { dataApi } = this.context.superdesk;
+        this.interval = setInterval(() => {
+            dataApi
+                .findOne('video_edit', this.props.article._id + `?t=${Math.random()}`) // avoid caching response
+                .then((response: any) => {
+                    if (response.project.processing.thumbnail_preview === false) {
+                        clearInterval(this.interval);
+                        this.setState({ thumbnail: response.renditions.thumbnail.href });
+                        this.props.onToggleLoading(false);
+                    }
+                })
+                .catch((_: any) => {
+                    clearInterval(this.interval);
+                });
+        }, 1500);
+    };
+
+    handleReset = (clearCanvas: boolean = true) => {
         const ctx = this.ref.current!.getContext('2d');
-        ctx!.clearRect(0, 0, this.ref.current!.width, this.ref.current!.height);
+        if (clearCanvas === true) {
+            ctx!.clearRect(0, 0, this.ref.current!.width, this.ref.current!.height);
+
+            if (this.state.thumbnail) {
+                this.setPreviewThumbnail(this.state.thumbnail + `?t=${Math.random()}`);
+            }
+        }
+        this.setState({ dirty: false, type: '', value: 0 });
     };
 
     drawCanvas = (element: any, width: number, height: number) => {
@@ -133,7 +176,7 @@ export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
                             </button>
                             <button
                                 className="btn btn--icon-only-circle btn--large btn--hollow"
-                                onClick={this.handleCancel}
+                                onClick={() => this.handleReset()}
                             >
                                 <i className="icon-close-thick icon--white"></i>
                             </button>

@@ -1,9 +1,10 @@
 import * as React from 'react';
+// @ts-ignore
+import ReactCrop from 'react-image-crop';
+import 'react-image-crop/dist/ReactCrop.css';
 import { ISuperdesk } from 'superdesk-api';
 import { get, isEmpty, omit, pick, isEqual } from 'lodash';
-import ReactCrop from 'react-image-crop';
 import { VideoEditorTools } from './VideoEditorTools';
-import 'react-image-crop/dist/ReactCrop.css';
 import { VideoTimeline } from './VideoTimeline/VideoTimeline';
 import { VideoEditorHeader } from './VideoEditorHeader';
 import { VideoEditorProvider } from './VideoEditorContext';
@@ -24,6 +25,7 @@ interface IState extends IVideoEditor {
     };
     cropImg: string;
     thumbnails: Array<IThumbnail>;
+    loading: boolean;
 }
 
 export class VideoEditor extends React.Component<IProps, IState> {
@@ -47,8 +49,9 @@ export class VideoEditor extends React.Component<IProps, IState> {
             ...this.initState,
             isDirty: false,
             cropEnabled: false,
-            playing: false,
             cropImg: '',
+            playing: false,
+            loading: false,
             thumbnails: [],
         };
     }
@@ -117,6 +120,13 @@ export class VideoEditor extends React.Component<IProps, IState> {
         });
     };
 
+    handleToggleLoading = (isToggle: boolean) => {
+        if (this.state.playing) {
+            this.handleToggleVideo();
+        }
+        this.setState({ loading: isToggle });
+    };
+
     handleQualityChange = (quality: number) => {
         this.setState({ quality: quality }, this.checkIsDirty);
     };
@@ -165,6 +175,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
 
     render() {
         const { gettext } = this.props.superdesk.localization;
+        const { getClass } = this.props.superdesk.utilities.CSS;
         const videoSrc = get(this.props.article.renditions, 'original.href');
         const degree = this.state.degree + 'deg';
         const { width, height } = (this.ref.current && this.ref.current.getBoundingClientRect()) || {
@@ -185,6 +196,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                             />
                         </div>
                         <div className="modal__body modal__body--no-padding">
+                            {this.state.loading && <div className={getClass('video__loading')}></div>}
                             <VideoEditorProvider value={{ superdesk: this.props.superdesk }}>
                                 <div className="sd-photo-preview sd-photo-preview--edit-video">
                                     <div className="sd-photo-preview__video">
@@ -232,7 +244,11 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                         </div>
                                     </div>
                                     <div className="sd-photo-preview__thumb-strip sd-photo-preview__thumb-strip--video">
-                                        <VideoPreviewThumbnail videoRef={this.ref} article={this.props.article} />
+                                        <VideoPreviewThumbnail
+                                            videoRef={this.ref}
+                                            article={this.props.article}
+                                            onToggleLoading={this.handleToggleLoading}
+                                        />
                                         <VideoTimeline
                                             video={this.ref}
                                             trim={this.state.trim}
