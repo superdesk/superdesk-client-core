@@ -45,7 +45,6 @@ AuthoringDirective.$inject = [
     '$rootScope',
     'suggest',
     'config',
-    'deployConfig',
     'editorResolver',
     'compareVersions',
     'embedService',
@@ -76,7 +75,6 @@ export function AuthoringDirective(
     $rootScope,
     suggest,
     config,
-    deployConfig,
     editorResolver,
     compareVersions,
     embedService,
@@ -1169,7 +1167,6 @@ export function AuthoringDirective(
                 urls: $injector.get('urls'),
                 notify: notify,
                 superdesk: superdesk,
-                deployConfig: deployConfig,
                 attachments: $injector.get('attachments'),
             })));
 

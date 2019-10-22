@@ -75,15 +75,6 @@ export function getAnnotationsLibraryPage(superdesk: ISuperdesk) {
                 </ListItem>
             );
 
-            // const d = window.DeployConfig.all({
-            //     override: 'override_ednote_for_corrections',
-            //     template: 'override_ednote_template',
-            // });
-
-            // d.then((res) => {
-            //     console.log(res);
-            // });
-
             return (
                 <AnnotationsLibraryPageComponent
                     defaultSortOption={{field: 'name', direction: 'ascending'}}

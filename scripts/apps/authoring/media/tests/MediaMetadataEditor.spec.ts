@@ -1,4 +1,5 @@
 import * as helper from 'apps/workspace/helpers/getLabelForFieldId';
+import {appConfig} from 'appConfig';
 
 describe('media metadata editor', () => {
     beforeEach(window.module(($provide) => {
@@ -15,37 +16,37 @@ describe('media metadata editor', () => {
         spyOn(helper, 'getLabelNameResolver').and.returnValue($q.when(() => { /* no-op */ }));
     }));
 
-    it('dislays all fields', inject(($rootScope, $compile, deployConfig) => {
-        deployConfig.config = {
-            schema: {
-                picture: {
-                    slugline: {type: 'string'},
-                    headline: {type: 'string'},
-                    genre: {type: 'list'},
-                    category: {type: 'list'},
-                },
+    it('dislays all fields', inject(($rootScope, $compile) => {
+        appConfig.schema = {
+            picture: {
+                slugline: {type: 'string'},
+                headline: {type: 'string'},
+                genre: {type: 'list'},
+                category: {type: 'list'},
             },
-            editor: {
-                picture: {
-                    slugline: {
-                        order: 1,
-                        required: true,
-                    },
-                    headline: {
-                        order: 2,
-                        required: true,
-                    },
-                    category: {
-                        order: 3,
-                        required: true,
-                    },
-                    genre: {
-                        order: 4,
-                        required: true,
-                    },
+        };
+
+        appConfig.editor = {
+            picture: {
+                slugline: {
+                    order: 1,
+                    required: true,
+                },
+                headline: {
+                    order: 2,
+                    required: true,
+                },
+                category: {
+                    order: 3,
+                    required: true,
+                },
+                genre: {
+                    order: 4,
+                    required: true,
                 },
             },
         };
+
         let scope = $rootScope.$new(true);
 
         scope.item = {_id: 'foo'};
@@ -60,41 +61,41 @@ describe('media metadata editor', () => {
         expect(iScope.fields.map((f) => f.field)).toEqual(['slugline', 'headline', 'category', 'genre']);
     }));
 
-    it('dislays fields with dislayOnMediaEditor set', inject(($rootScope, $compile, deployConfig) => {
-        deployConfig.config = {
-            schema: {
-                picture: {
-                    slugline: {type: 'string'},
-                    headline: {type: 'string'},
-                    genre: {type: 'list'},
-                    category: {type: 'list'},
-                },
+    it('dislays fields with dislayOnMediaEditor set', inject(($rootScope, $compile) => {
+        appConfig.schema = {
+            picture: {
+                slugline: {type: 'string'},
+                headline: {type: 'string'},
+                genre: {type: 'list'},
+                category: {type: 'list'},
             },
-            editor: {
-                picture: {
-                    slugline: {
-                        order: 1,
-                        required: true,
-                        displayOnMediaEditor: true,
-                    },
-                    headline: {
-                        order: 2,
-                        required: true,
-                        displayOnMediaEditor: true,
-                    },
-                    category: {
-                        order: 3,
-                        required: true,
-                        displayOnMediaEditor: false,
-                    },
-                    genre: {
-                        order: 4,
-                        required: true,
-                        displayOnMediaEditor: false,
-                    },
+        };
+
+        appConfig.editor = {
+            picture: {
+                slugline: {
+                    order: 1,
+                    required: true,
+                    displayOnMediaEditor: true,
+                },
+                headline: {
+                    order: 2,
+                    required: true,
+                    displayOnMediaEditor: true,
+                },
+                category: {
+                    order: 3,
+                    required: true,
+                    displayOnMediaEditor: false,
+                },
+                genre: {
+                    order: 4,
+                    required: true,
+                    displayOnMediaEditor: false,
                 },
             },
         };
+
         let scope = $rootScope.$new(true);
 
         scope.item = {_id: 'foo'};

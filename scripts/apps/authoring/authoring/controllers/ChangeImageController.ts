@@ -28,8 +28,7 @@ export function validateMediaFieldsThrows(validator, metadata) {
     }
 }
 
-ChangeImageController.$inject = ['$scope', 'notify', 'lodash', 'api', '$rootScope',
-    '$q', 'config'];
+ChangeImageController.$inject = ['$scope', 'notify', 'lodash', 'api', '$rootScope', '$q', 'config'];
 export function ChangeImageController($scope, notify, _, api, $rootScope, $q, config) {
     $scope.data = $scope.locals.data;
     $scope.data.cropData = {};
