@@ -12,6 +12,7 @@ import {IFunctionPointsService} from 'apps/extension-points/services/FunctionPoi
 import {isPublished} from 'apps/archive/utils';
 import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
 import {copyJson} from 'core/helpers/utils';
+import {appConfig} from 'appConfig';
 
 /**
  * @ngdoc directive
@@ -487,7 +488,7 @@ export function AuthoringDirective(
             }
 
             function validateForPublish(item) {
-                var validator = deployConfig.getSync('validator_media_metadata');
+                var validator = appConfig.validator_media_metadata;
 
                 if (item.type === 'picture' || item.type === 'graphic') {
                     // required media metadata fields are defined in superdesk.config.js

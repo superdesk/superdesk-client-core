@@ -1,5 +1,6 @@
 import {get, compact, trim, filter} from 'lodash';
 import {cleanHtml} from '../helpers';
+import {appConfig} from 'appConfig';
 
 /**
  * @ngdoc directive
@@ -8,7 +9,7 @@ import {cleanHtml} from '../helpers';
  * @description Display the estimated number of minutes needed to read an item.
  * @param {String} item text to estimate
  */
-export function ReadingTime(deployConfig, config) {
+export function ReadingTime(config) {
     return {
         scope: {
             item: '=',
@@ -43,7 +44,7 @@ export function ReadingTime(deployConfig, config) {
 
     function getReadingTime(input, language) {
         if (language && language.startsWith('ja')) {
-            return filter(input, (x) => !!trim(x)).length / deployConfig.getSync('japanese_characters_per_minute', 600);
+            return filter(input, (x) => !!trim(x)).length / (appConfig.japanese_characters_per_minute || 600);
         }
 
         const numWords = compact(input.split(/\s+/)).length || 0;
@@ -52,4 +53,4 @@ export function ReadingTime(deployConfig, config) {
     }
 }
 
-ReadingTime.$inject = ['deployConfig', 'config'];
+ReadingTime.$inject = ['config'];

@@ -2,11 +2,12 @@ import {limits} from 'apps/desks/constants';
 import _ from 'lodash';
 import {gettext} from 'core/utils';
 import {calculateDiff} from '../controllers/DeskConfigController';
+import {appConfig} from 'appConfig';
 
 DeskeditBasic.$inject = ['desks', 'WizardHandler', 'metadata', 'config',
-    '$filter', 'deployConfig'];
+    '$filter'];
 export function DeskeditBasic(desks, WizardHandler, metadata, config,
-    $filter, deployConfig) {
+    $filter) {
     return {
         link: function(scope) {
             scope.limits = limits;
@@ -17,7 +18,7 @@ export function DeskeditBasic(desks, WizardHandler, metadata, config,
             /**
              * Is Published Content Expiry is set
              */
-            scope.isPublishedContentExpired = () => deployConfig.getSync('publish_content_expiry_minutes', 0) > 0;
+            scope.isPublishedContentExpired = () => (appConfig.publish_content_expiry_minutes || 0) > 0;
 
             /**
              * Save desk for adding or editing

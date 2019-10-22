@@ -48,7 +48,7 @@ describe('attachments', () => {
             $rootScope.$digest();
         }));
 
-        it('can init attachments', inject(() => {
+        fit('can init attachments', inject(() => {
             expect(store.getState().maxSize).toBe(100);
             expect(store.getState().maxFiles).toBe(100);
             expect(store.getState().files).toBe(files);

@@ -1,11 +1,13 @@
-MultiImageEditModalController.$inject = ['$scope', 'imagesOriginal', 'saveHandler', 'deployConfig'];
-function MultiImageEditModalController($scope, imagesOriginal, saveHandler, deployConfig) {
+import {appConfig} from "appConfig";
+
+MultiImageEditModalController.$inject = ['$scope', 'imagesOriginal', 'saveHandler'];
+function MultiImageEditModalController($scope, imagesOriginal, saveHandler) {
     $scope.imagesOriginal = imagesOriginal;
     $scope.saveHandler = saveHandler;
     $scope.cancelHandler = () => $scope.$close();
     $scope.successHandler = () => $scope.$close();
     $scope.getThumbnailHtml = (image) => `<img src="${image.renditions.thumbnail.href}" />`;
-    $scope.validator = deployConfig.getSync('validator_media_metadata');
+    $scope.validator = appConfig.validator_media_metadata;
 }
 
 MultiImageEditService.$inject = ['$modal'];

@@ -1,9 +1,10 @@
 import _ from 'lodash';
 import * as helpers from 'apps/authoring/authoring/helpers';
 import {gettext} from 'core/utils';
+import {appConfig} from 'appConfig';
 
-AuthoringEmbeddedDirective.$inject = ['api', 'notify', '$filter', 'config', 'deployConfig'];
-export function AuthoringEmbeddedDirective(api, notify, $filter, config, deployConfig) {
+AuthoringEmbeddedDirective.$inject = ['api', 'notify', '$filter', 'config'];
+export function AuthoringEmbeddedDirective(api, notify, $filter, config) {
     return {
         templateUrl: 'scripts/apps/authoring/views/authoring.html',
         scope: {
@@ -52,15 +53,13 @@ export function AuthoringEmbeddedDirective(api, notify, $filter, config, deployC
                     notify.error(gettext('Failed to apply kill template to the item.'));
                 });
             } else if (scope.action === 'correct') {
-                deployConfig.all({
-                    override: 'override_ednote_for_corrections',
-                    template: 'override_ednote_template',
-                }).then((_config) => {
-                    if (_config.override) {
-                        overrideEdnote(_config.template);
-                    }
-                    scope.origItem = scope.item;
-                });
+                const {override_ednote_for_corrections, override_ednote_template} = appConfig;
+
+                if (override_ednote_for_corrections) {
+                    overrideEdnote(override_ednote_template);
+                }
+
+                scope.origItem = scope.item;
                 scope.item.flags.marked_for_sms = false;
                 scope.item.sms_message = '';
             } else {

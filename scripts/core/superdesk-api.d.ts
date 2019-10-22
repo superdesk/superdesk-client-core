@@ -853,6 +853,15 @@ declare module 'superdesk-api' {
         validator_media_metadata: any;
         publish_content_expiry_minutes: any;
         high_priority_queue_enabled: any;
+        attachments_max_size: any;
+        attachments_max_files: any;
+        ingest_expiry_minutes: any;
+        content_expiry_minutes: any;
+        xmpp_auth: any;
+        saml_auth: any;
+        google_auth: any;
+        saml_label: any;
+        
 
         // FROM CLIENT
         server: {

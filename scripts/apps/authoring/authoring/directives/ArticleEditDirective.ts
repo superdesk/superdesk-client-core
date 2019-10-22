@@ -4,6 +4,7 @@ import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 import {MEDIA_TYPES} from 'apps/vocabularies/constants';
 import {isPublished} from 'apps/archive/utils';
 import {resetFieldMetadata} from 'core/editor3/helpers/fieldsMeta';
+import {appConfig} from 'appConfig';
 
 /**
  * @ngdoc directive
@@ -17,7 +18,6 @@ import {resetFieldMetadata} from 'core/editor3/helpers/fieldsMeta';
  * @requires superdesk
  * @requires content
  * @requires config
- * @requires deployConfig
  * @requires session
  * @requires history
  * @requires $interpolate
@@ -34,9 +34,7 @@ ArticleEditDirective.$inject = [
     'metadata',
     '$filter',
     'superdesk',
-    'content',
     'config',
-    'deployConfig',
     'session',
     'history',
     '$interpolate',
@@ -48,9 +46,7 @@ export function ArticleEditDirective(
     metadata,
     $filter,
     superdesk,
-    content,
     config,
-    deployConfig,
     session,
     history,
     $interpolate,
@@ -75,7 +71,7 @@ export function ArticleEditDirective(
                 scope.canListEditSignOff = config.user && config.user.sign_off_mapping;
                 scope.editSignOff = false;
                 scope.mediaLoading = false;
-                scope.validator = deployConfig.getSync('validator_media_metadata');
+                scope.validator = appConfig.validator_media_metadata;
                 scope.features = config.features;
 
                 var mainEditScope = scope.$parent.$parent;

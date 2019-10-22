@@ -13,8 +13,8 @@ import {appConfig} from '../../../appConfig';
  * @description Generates modal for editing desks
  */
 
-DeskConfigModal.$inject = ['metadata', 'content', 'templates', 'api', 'deployConfig'];
-export function DeskConfigModal(metadata, content, templates, api, deployConfig) {
+DeskConfigModal.$inject = ['metadata', 'content', 'templates', 'api'];
+export function DeskConfigModal(metadata, content, templates, api) {
     return {
         scope: {
             modalActive: '=active',
@@ -48,7 +48,7 @@ export function DeskConfigModal(metadata, content, templates, api, deployConfig)
                 scope.metadata = metadata.values;
             });
 
-            scope.systemExpiry = deployConfig.getSync('content_expiry_minutes');
+            scope.systemExpiry = appConfig.content_expiry_minutes;
             /*
              * Initialize content types
              * @return {Object} profiles

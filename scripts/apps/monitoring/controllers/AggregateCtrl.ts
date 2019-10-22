@@ -2,11 +2,11 @@ import _ from 'lodash';
 import {gettext} from 'core/utils';
 import {SCHEDULED_OUTPUT, DESK_OUTPUT} from 'apps/desks/constants';
 
-AggregateCtrl.$inject = ['$scope', 'api', 'desks', 'workspaces', 'preferencesService', 'storage',
-    'multi', 'config', '$timeout', 'savedSearch', 'deployConfig'];
+AggregateCtrl.$inject = ['$scope', 'desks', 'workspaces', 'preferencesService', 'storage',
+    'config', 'savedSearch'];
 
-export function AggregateCtrl($scope, api, desks, workspaces, preferencesService, storage,
-    multi, config, $timeout, savedSearch, deployConfig) {
+export function AggregateCtrl($scope, desks, workspaces, preferencesService, storage,
+    config, savedSearch) {
     var PREFERENCES_KEY = 'agg:view';
     var defaultMaxItems = 10;
     var self = this;

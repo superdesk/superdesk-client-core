@@ -1,5 +1,6 @@
 import {reactToAngular1} from 'superdesk-ui-framework';
 import {GlobalMenuHorizontal} from './GlobalMenuHorizontal';
+import {appConfig} from 'appConfig';
 
 SuperdeskFlagsService.$inject = ['config'];
 function SuperdeskFlagsService(config) {
@@ -78,7 +79,6 @@ angular.module('superdesk.core.menu', [
         'asset',
         'privileges',
         'config',
-        'deployConfig',
         'lodash',
         'workspaceMenu',
         function(
@@ -89,7 +89,6 @@ angular.module('superdesk.core.menu', [
             asset,
             privileges,
             config,
-            deployConfig,
             _,
             workspaceMenu,
         ) {
@@ -159,9 +158,7 @@ angular.module('superdesk.core.menu', [
                         });
                     }
 
-                    deployConfig.get('feedback_url').then((url) => {
-                        scope.feedback_url = url;
-                    });
+                    scope.feedback_url = appConfig.feedback_url;
 
                     superdesk.getMenu(superdesk.MENU_MAIN)
                         .then(filterSettingsIfEmpty)

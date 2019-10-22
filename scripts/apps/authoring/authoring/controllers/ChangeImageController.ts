@@ -1,5 +1,6 @@
 import {get} from 'lodash';
 import {gettext} from 'core/utils';
+import {appConfig} from 'appConfig';
 
 /**
  * @ngdoc controller
@@ -12,7 +13,6 @@ import {gettext} from 'core/utils';
  * @requires lodash
  * @requires api
  * @requires $rootScope
- * @requires deployConfig
  *
  * @description Controller is responsible for cropping pictures and setting Point of Interest for an image.
  */
@@ -29,11 +29,11 @@ export function validateMediaFieldsThrows(validator, metadata) {
 }
 
 ChangeImageController.$inject = ['$scope', 'notify', 'lodash', 'api', '$rootScope',
-    'deployConfig', '$q', 'config'];
-export function ChangeImageController($scope, notify, _, api, $rootScope, deployConfig, $q, config) {
+    '$q', 'config'];
+export function ChangeImageController($scope, notify, _, api, $rootScope, $q, config) {
     $scope.data = $scope.locals.data;
     $scope.data.cropData = {};
-    $scope.validator = deployConfig.getSync('validator_media_metadata');
+    $scope.validator = appConfig.validator_media_metadata;
     const sizes = {};
 
     const DEFAULT_CONTROLS = {
@@ -59,7 +59,7 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, deploy
         'place',
         'keywords',
         'extra',
-    ].concat(Object.keys(get(deployConfig.getSync('schema'), 'picture', {})));
+    ].concat(Object.keys(get(appConfig.schema, 'picture', {})));
 
     $scope.controls = angular.copy(DEFAULT_CONTROLS);
 

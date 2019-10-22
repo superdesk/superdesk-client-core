@@ -4,9 +4,11 @@ export function isMediaEditable(config) {
     return _.get(config, 'features.editFeaturedImage', true) === true;
 }
 
-/* globals __SUPERDESK_CONFIG__: true */
-export const appConfig = __SUPERDESK_CONFIG__;
-
+/**
+ * DEPRECATED
+ *
+ * Use appConfig instead. This is only left for compatibility with other apps.
+ */
 DeployConfigFactory.$inject = ['api', '$q'];
 function DeployConfigFactory(api, $q) {
     /**
@@ -80,7 +82,11 @@ function DeployConfigFactory(api, $q) {
         }
     }
 
-    return new DeployConfig();
+    const a = new DeployConfig();
+
+    window.DeployConfig = a;
+
+    return a;
 }
 
 angular.module('superdesk.config', ['superdesk.core.api'])
