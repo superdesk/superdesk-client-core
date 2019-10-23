@@ -1,5 +1,6 @@
 import {reactToAngular1} from 'superdesk-ui-framework';
 import {GlobalMenuHorizontal} from './GlobalMenuHorizontal';
+import { flags } from 'apps/search/components/fields/flags';
 
 SuperdeskFlagsService.$inject = ['config'];
 function SuperdeskFlagsService(config) {
@@ -36,8 +37,8 @@ angular.module('superdesk.core.menu', [
 
     // set flags for other directives
     .directive('sdSuperdeskView', ['asset', function(asset) {
-        SuperdeskViewController.$inject = ['superdeskFlags', 'superdesk', '$scope', '$route', 'session'];
-        function SuperdeskViewController(superdeskFlags, superdesk, $scope, $route, session) {
+        SuperdeskViewController.$inject = ['superdeskFlags', 'superdesk', '$scope', '$route', 'session', '$timeout'];
+        function SuperdeskViewController(superdeskFlags, superdesk, $scope, $route, session, $timeout) {
             $scope.session = session;
 
             this.flags = superdeskFlags.flags;
@@ -60,6 +61,13 @@ angular.module('superdesk.core.menu', [
                 this.currentRoute = route;
                 this.flags.workspace = !!route.sideTemplateUrl;
                 this.flags.workqueue = this.flags.workqueue || true;
+            });
+
+            $scope.$watch(() => {
+                return superdeskFlags.flags.hideMonitoring;
+            }, () => {
+                // Trigger resize event to update elements, 500ms delay is for animation
+                $timeout(() => window.dispatchEvent(new Event('resize')), 500, false);
             });
         }
 
