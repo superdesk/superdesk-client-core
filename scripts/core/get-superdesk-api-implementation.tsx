@@ -317,6 +317,7 @@ export function getSuperdeskApiImplementation(
             getOwnPrivileges: () => privileges.loaded.then(() => privileges.privileges),
         },
         session: {
+            getToken: () => session.token,
             getCurrentUser: () => session.getIdentity(),
         },
         utilities: {
