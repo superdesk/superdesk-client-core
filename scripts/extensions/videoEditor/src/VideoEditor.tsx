@@ -247,8 +247,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                                             height: height,
                                                             background: 'unset',
                                                             position: 'absolute',
-                                                            marginTop: '2rem',
-                                                            top: 0,
+                                                            marginTop: '1.5rem',
                                                         }}
                                                     />
                                                 )}
