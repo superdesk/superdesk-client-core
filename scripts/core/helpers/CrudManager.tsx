@@ -18,15 +18,16 @@ import {
 import {isObject} from 'lodash';
 import ng from 'core/services/ng';
 import {httpRequestJsonLocal, httpRequestVoidLocal} from './network';
+import {appConfig} from 'appConfig';
 
 export function queryElastic(
     parameters: IQueryElasticParameters,
 ) {
     const {endpoint, page, sort, filterValues} = parameters;
 
-    return ng.getServices(['config', 'session', 'api'])
+    return ng.getServices(['session', 'api'])
         .then((res: any) => {
-            const [config, session] = res;
+            const [session] = res;
 
             const source = {
                 query: {
@@ -79,7 +80,7 @@ export function queryElastic(
             return new Promise((resolve) => {
                 const xhr = new XMLHttpRequest();
 
-                xhr.open('GET', config.server.url + '/' + endpoint + queryString, true);
+                xhr.open('GET', appConfig.server.url + '/' + endpoint + queryString, true);
 
                 xhr.setRequestHeader('Content-Type', 'application/json');
                 xhr.setRequestHeader('Authorization', session.token);

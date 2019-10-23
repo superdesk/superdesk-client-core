@@ -1,4 +1,6 @@
 import {gettext} from 'core/utils';
+import {ISuperdeskGlobalConfig} from 'superdesk-api';
+import {appConfig} from 'appConfig';
 
 describe('search service', () => {
     beforeEach(window.module('superdesk.templates-cache'));
@@ -294,7 +296,7 @@ describe('sdSearchPanel directive', () => {
      * Mock some of the dependencies of the parent directives.
      */
     beforeEach(window.module(($provide) => {
-        $provide.constant('config', {
+        const testConfig: Partial<ISuperdeskGlobalConfig> = {
             model: {
                 timeformat: 'HH:mm:ss',
                 dateformat: 'DD/MM/YYYY',
@@ -304,8 +306,10 @@ describe('sdSearchPanel directive', () => {
                 dateformat: 'MM/DD/YYYY',
             },
             defaultTimezone: 'Europe/London',
-            server: {url: undefined},
-        });
+            server: {url: undefined, ws: undefined},
+        };
+
+        Object.assign(appConfig, testConfig);
 
         fakeApi = {
             ingestProviders: {

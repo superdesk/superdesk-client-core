@@ -1,12 +1,13 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
 import {SCHEDULED_OUTPUT, DESK_OUTPUT} from 'apps/desks/constants';
+import {appConfig} from 'appConfig';
 
 AggregateCtrl.$inject = ['$scope', 'desks', 'workspaces', 'preferencesService', 'storage',
-    'config', 'savedSearch'];
+    'savedSearch'];
 
 export function AggregateCtrl($scope, desks, workspaces, preferencesService, storage,
-    config, savedSearch) {
+    savedSearch) {
     var PREFERENCES_KEY = 'agg:view';
     var defaultMaxItems = 10;
     var self = this;
@@ -235,7 +236,7 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
 
             if (currentDesk) {
                 self.groups.push({_id: currentDesk._id + ':output', type: DESK_OUTPUT, header: currentDesk.name});
-                if (config.monitoring && config.monitoring.scheduled) {
+                if (appConfig.monitoring?.scheduled) {
                     self.groups.push({
                         _id: currentDesk._id + ':scheduled',
                         type: SCHEDULED_OUTPUT,

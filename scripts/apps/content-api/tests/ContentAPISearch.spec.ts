@@ -1,3 +1,5 @@
+import {ISuperdeskGlobalConfig} from "superdesk-api";
+import {appConfig} from "appConfig";
 
 describe('Content API Search', () => {
     beforeEach(window.module('superdesk.core.api'));
@@ -7,8 +9,8 @@ describe('Content API Search', () => {
     /**
      * Mock some of the dependencies of the parent directives.
      */
-    beforeEach(window.module(($provide) => {
-        $provide.constant('config', {
+    beforeEach(() => {
+        const testConfig: Partial<ISuperdeskGlobalConfig> = {
             model: {
                 timeformat: 'HH:mm:ss',
                 dateformat: 'DD/MM/YYYY',
@@ -21,9 +23,11 @@ describe('Content API Search', () => {
                 useDefaultTimezone: true,
             },
             defaultTimezone: 'UTC',
-            server: {url: undefined},
-        });
-    }));
+            server: {url: undefined, ws: undefined},
+        };
+
+        Object.assign(appConfig, testConfig);
+    });
 
     it('can create base query', inject((contentApiSearch) => {
         const criteria = contentApiSearch.getCriteria();

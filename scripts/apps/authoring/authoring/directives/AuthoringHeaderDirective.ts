@@ -1,6 +1,7 @@
 import {isNull, isUndefined, find, filter, keys, findIndex, defer, sortBy, map, forEach, startsWith} from 'lodash';
 import {FIELD_KEY_SEPARATOR} from 'core/editor3/helpers/fieldsMeta';
 import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
+import {appConfig} from 'appConfig';
 
 AuthoringHeaderDirective.$inject = [
     'api',
@@ -10,7 +11,6 @@ AuthoringHeaderDirective.$inject = [
     'metadata',
     'vocabularies',
     '$timeout',
-    'config',
     'moment',
     'features',
     'TranslationService',
@@ -24,7 +24,6 @@ export function AuthoringHeaderDirective(
     metadata,
     vocabularies,
     $timeout,
-    config,
     moment,
     features,
     TranslationService,
@@ -139,8 +138,7 @@ export function AuthoringHeaderDirective(
             });
 
             function getNoMissingLink() {
-                return config.features && 'noMissingLink' in config.features
-                    && config.features.noMissingLink;
+                return appConfig.features?.noMissingLink;
             }
 
             function getRelatedItems() {
@@ -148,8 +146,8 @@ export function AuthoringHeaderDirective(
                 scope.missing_link = false;
                 if (scope.item.slugline && scope.item.type === 'text') {
                     // get the midnight based on the defaultTimezone not the user timezone.
-                    var fromDateTime = moment().tz(config.defaultTimezone)
-                        .format(config.view.dateformat);
+                    var fromDateTime = moment().tz(appConfig.defaultTimezone)
+                        .format(appConfig.view.dateformat);
 
                     archiveService.getRelatedItems(scope.item, fromDateTime)
                         .then((items) => {

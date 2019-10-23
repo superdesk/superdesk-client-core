@@ -1,10 +1,15 @@
+import {ISuperdeskGlobalConfig} from "superdesk-api";
+import {appConfig} from "appConfig";
+
 describe('analytics', () => {
     beforeEach(window.module('superdesk.core.analytics'));
-    beforeEach(window.module(($provide) => {
-        $provide.constant('config', {
-            analytics: {piwik: {}, ga: {}},
-        });
-    }));
+    beforeEach(() => {
+        const testConfig: Partial<ISuperdeskGlobalConfig> = {
+            analytics: {piwik: {url: undefined}, ga: {id: undefined}},
+        };
+
+        Object.assign(appConfig, testConfig);
+    });
 
     it('can track activity', inject((analytics, $rootScope) => {
         spyOn(analytics, 'track');

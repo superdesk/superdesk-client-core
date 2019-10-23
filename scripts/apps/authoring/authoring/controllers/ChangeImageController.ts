@@ -28,8 +28,8 @@ export function validateMediaFieldsThrows(validator, metadata) {
     }
 }
 
-ChangeImageController.$inject = ['$scope', 'notify', 'lodash', 'api', '$rootScope', '$q', 'config'];
-export function ChangeImageController($scope, notify, _, api, $rootScope, $q, config) {
+ChangeImageController.$inject = ['$scope', 'notify', 'lodash', 'api', '$rootScope', '$q'];
+export function ChangeImageController($scope, notify, _, api, $rootScope, $q) {
     $scope.data = $scope.locals.data;
     $scope.data.cropData = {};
     $scope.validator = appConfig.validator_media_metadata;
@@ -160,7 +160,7 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, $q, co
 
         // check if data are valid
         try {
-            if (config.features.validatePointOfInterestForImages === true) {
+            if (appConfig.features?.validatePointOfInterestForImages === true) {
                 poiIsInsideEachCrop();
             }
         } catch (e) {
@@ -231,7 +231,7 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, $q, co
     */
     $scope.done = () => {
         if ($scope.data.isDirty) {
-            if ($scope.data.item.type === 'picture' && config.features.validatePointOfInterestForImages === true) {
+            if ($scope.data.item.type === 'picture' && appConfig.features?.validatePointOfInterestForImages === true) {
                 if (!$scope.saveCrops() || !$scope.applyMetadataChanges()) {
                     return;
                 }
@@ -507,7 +507,7 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, $q, co
     // init poi if not set
     if (!$scope.data.poi || !Object.keys($scope.data.poi).length) {
         $scope.data.poi = {x: 0.5, y: 0.5};
-        if (!config.features.validatePointOfInterestForImages) {
+        if (!appConfig.features?.validatePointOfInterestForImages) {
             $scope.saveCrops(); // save it as defaults
         }
     }

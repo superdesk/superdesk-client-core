@@ -3,8 +3,8 @@ import * as helpers from 'apps/authoring/authoring/helpers';
 import {gettext} from 'core/utils';
 import {appConfig} from 'appConfig';
 
-AuthoringEmbeddedDirective.$inject = ['api', 'notify', '$filter', 'config'];
-export function AuthoringEmbeddedDirective(api, notify, $filter, config) {
+AuthoringEmbeddedDirective.$inject = ['api', 'notify', '$filter'];
+export function AuthoringEmbeddedDirective(api, notify, $filter) {
     return {
         templateUrl: 'scripts/apps/authoring/views/authoring.html',
         scope: {
@@ -17,8 +17,8 @@ export function AuthoringEmbeddedDirective(api, notify, $filter, config) {
                  *
                  * @param {string} template - template to use (set in backend)
                  */
-                let date = $filter('formatLocalDateTimeString')(scope.item.versioncreated, config.view.dateformat +
-                    ' ' + config.view.timeformat);
+                let date = $filter('formatLocalDateTimeString')(scope.item.versioncreated, appConfig.view.dateformat +
+                    ' ' + appConfig.view.timeformat);
 
                 if (template == null) {
                     const lineBreak = '\r\n\r\n';

@@ -3,10 +3,10 @@ import {appConfig} from 'appConfig';
 
 UserEditDirective.$inject = ['api', 'notify', 'usersService', 'userList', 'session', 'lodash',
     'langmap', '$location', '$route', 'superdesk', 'features', 'asset', 'privileges',
-    'desks', 'keyboardManager', 'gettextCatalog', 'config', 'metadata', 'modal'];
+    'desks', 'keyboardManager', 'gettextCatalog', 'metadata', 'modal'];
 export function UserEditDirective(api, notify, usersService, userList, session, _,
     langmap, $location, $route, superdesk, features, asset, privileges, desks, keyboardManager,
-    gettextCatalog, config, metadata, modal) {
+    gettextCatalog, metadata, modal) {
     return {
         templateUrl: asset.templateUrl('apps/users/views/edit-form.html'),
         scope: {
@@ -25,7 +25,7 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
             scope.twitterPattern = usersService.twitterPattern;
             scope.phonePattern = usersService.phonePattern;
             scope.signOffPattern = usersService.signOffPattern;
-            scope.hideSignOff = config.user && config.user.sign_off_mapping;
+            scope.hideSignOff = appConfig.user?.sign_off_mapping;
 
             scope.dirty = false;
             scope.errorMessage = null;
@@ -42,7 +42,7 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
             resetUser(scope.origUser);
 
             scope.isNetworkSubscription = () =>
-                ['solo', 'team'].indexOf(config.subscriptionLevel) === -1;
+                ['solo', 'team'].indexOf(appConfig.subscriptionLevel) === -1;
 
             scope.$watchCollection('user', (user) => {
                 _.each(user, (value, key) => {
@@ -64,7 +64,7 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
             // get available translation languages
             var noBaseLanguage = true;
 
-            scope.languages = config.profileLanguages.map((lang) => {
+            scope.languages = appConfig.profileLanguages.map((lang) => {
                 if (lang === gettextCatalog.baseLanguage) {
                     noBaseLanguage = false;
                 }
@@ -221,7 +221,7 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
                 resetUser(user);
             });
 
-            scope.profileConfig = _.get(config, 'profile', {});
+            scope.profileConfig = appConfig.profile ?? {};
         },
     };
 }

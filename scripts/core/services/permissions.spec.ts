@@ -1,12 +1,16 @@
+import {ISuperdeskGlobalConfig} from "superdesk-api";
+import {appConfig} from "appConfig";
 
 describe('PermissionsService', () => {
     beforeEach(window.module('superdesk.core.services.entity'));
     beforeEach(window.module('superdesk.core.services.server'));
     beforeEach(window.module('superdesk.core.services.permissions'));
 
-    beforeEach(window.module(($provide) => {
-        $provide.constant('config', {server: {url: 'http://localhost'}});
-    }));
+    beforeEach(() => {
+        const testConfig: Partial<ISuperdeskGlobalConfig> = {server: {url: 'http://localhost', ws: undefined}};
+
+        Object.assign(appConfig, testConfig);
+    });
 
     var rootScope, httpBackend, permissionsService;
 

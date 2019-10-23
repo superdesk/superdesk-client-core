@@ -1,5 +1,6 @@
 import {get} from 'lodash';
 import {StageGroup} from '../directives/MonitoringGroup';
+import {appConfig} from 'appConfig';
 
 export type GroupSortOptions = Array<string>;
 
@@ -24,13 +25,13 @@ export function matchGroupToOrderConfig(group: StageGroup) {
     return 'monitoring.stage.sort';
 }
 
-export default function getCustomSortForGroup(config: any, group: StageGroup): GroupSortConfig | null {
+export default function getCustomSortForGroup(group: StageGroup): GroupSortConfig | null {
     if (!group || !group._id || !group.type) {
         return null;
     }
 
     const configForGroup = matchGroupToOrderConfig(group);
-    const customConfig: GroupSortConfig = get(config, configForGroup, null);
+    const customConfig: GroupSortConfig = get(appConfig, configForGroup, null);
 
     if (customConfig && customConfig.default && !isOrderType(customConfig.default.order)) {
         console.warn(`Default sort order is not a valid string '${customConfig.default.order}'. Use 'asc' or 'desc'`);

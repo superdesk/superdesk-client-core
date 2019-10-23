@@ -46,7 +46,7 @@ describe('authoring ChangeImageController', () => {
                 CropBottom: 10,
             };
 
-            ChangeImageController(scope, notify, _, api, $rootScope, $q, config);
+            ChangeImageController(scope, notify, _, api, $rootScope, $q);
             scope.saveAreaOfInterest(croppingData);
             expect(notify.error).toHaveBeenCalledWith(
                 gettext('Original size cannot be less than the required crop sizes.'),
@@ -64,7 +64,7 @@ describe('authoring ChangeImageController', () => {
 
             spyOn(api, 'save').and.returnValue($q.when({}));
 
-            ChangeImageController(scope, notify, _, api, $rootScope, $q, config);
+            ChangeImageController(scope, notify, _, api, $rootScope, $q);
             scope.saveAreaOfInterest(croppingData);
 
             expect(api.save).toHaveBeenCalledWith('picture_crop', {item: scope.data.item, crop: croppingData});
@@ -81,7 +81,7 @@ describe('authoring ChangeImageController', () => {
 
             spyOn(api, 'save').and.returnValue($q.reject({data: {_message: 'Failed to call picture_crop.'}}));
 
-            ChangeImageController(scope, notify, _, api, $rootScope, $q, config);
+            ChangeImageController(scope, notify, _, api, $rootScope, $q);
             scope.saveAreaOfInterest(croppingData);
 
             $rootScope.$digest();
@@ -115,7 +115,7 @@ describe('authoring ChangeImageController', () => {
                 return $q.reject({data: {_message: 'Failed to call picture_renditions.'}});
             });
 
-            ChangeImageController(scope, notify, _, api, $rootScope, $q, config);
+            ChangeImageController(scope, notify, _, api, $rootScope, $q);
             scope.saveAreaOfInterest(croppingData);
 
             $rootScope.$digest();
@@ -153,7 +153,7 @@ describe('authoring ChangeImageController', () => {
                 });
             });
 
-            ChangeImageController(scope, notify, _, api, $rootScope, $q, config);
+            ChangeImageController(scope, notify, _, api, $rootScope, $q);
             scope.saveAreaOfInterest(croppingData);
 
             $rootScope.$digest();
@@ -178,7 +178,7 @@ describe('authoring ChangeImageController', () => {
 
             let scope = angular.copy(scopeData);
 
-            ChangeImageController(scope, notify, _, api, $rootScope, $q, config);
+            ChangeImageController(scope, notify, _, api, $rootScope, $q);
             $rootScope.$digest();
 
             expect(scope.data.poi).toEqual({x: 0.5, y: 0.5});
@@ -194,7 +194,7 @@ describe('authoring ChangeImageController', () => {
 
                 let scope = angular.copy(scopeData);
 
-                ChangeImageController(scope, notify, _, api, $rootScope, $q, config);
+                ChangeImageController(scope, notify, _, api, $rootScope, $q);
                 $rootScope.$digest();
 
                 expect(scope.data.poi).toEqual({x: 0.5, y: 0.5});
@@ -209,7 +209,7 @@ describe('authoring ChangeImageController', () => {
             spyOn(scope, 'resolve').and.returnValue(null);
             scope.locals.data.poi = {x: 0.5, y: 0.5};
 
-            ChangeImageController(scope, notify, _, api, $rootScope, $q, config);
+            ChangeImageController(scope, notify, _, api, $rootScope, $q);
             scope.saveCrops();
             scope.done();
             $rootScope.$digest();

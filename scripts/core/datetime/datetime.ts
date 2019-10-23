@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
 import momentTimezone from 'moment-timezone';
+import {appConfig} from 'appConfig';
 
 DateTimeDirective.$inject = ['datetime', 'moment'];
 function DateTimeDirective(datetime, moment) {
@@ -25,9 +26,9 @@ function DateTimeDirective(datetime, moment) {
     };
 }
 
-ShortDateDirective.$inject = ['config', 'moment'];
-function ShortDateDirective(config, moment) {
-    var DATE_FORMAT = config.view.dateformat || config.model.dateformat;
+ShortDateDirective.$inject = ['moment'];
+function ShortDateDirective(moment) {
+    var DATE_FORMAT = appConfig.view.dateformat || appConfig.model.dateformat;
 
     return {
         scope: {date: '='},
@@ -52,17 +53,17 @@ function ShortDateDirective(config, moment) {
     };
 }
 
-DateTimeService.$inject = ['moment', 'config'];
-function DateTimeService(moment, config) {
+DateTimeService.$inject = ['moment'];
+function DateTimeService(moment) {
     var ISO_DATE_FORMAT = 'YYYY-MM-DD';
     var ISO_WEEK_FORMAT = 'YYYY-W';
     var ISO_YEAR_FORMAT = 'YYYY';
 
-    var LONG_FORMAT = config.longDateFormat || 'LLL';
-    var TIME_FORMAT = config.shortTimeFormat || 'hh:mm';
-    var DATE_FORMAT = config.shortDateFormat || 'MM/DD';
-    var WEEK_FORMAT = config.shortWeekFormat || 'dddd, ' + TIME_FORMAT;
-    var ARCHIVE_FORMAT = config.ArchivedDateFormat || DATE_FORMAT;
+    var LONG_FORMAT = appConfig.longDateFormat || 'LLL';
+    var TIME_FORMAT = appConfig.shortTimeFormat || 'hh:mm';
+    var DATE_FORMAT = appConfig.shortDateFormat || 'MM/DD';
+    var WEEK_FORMAT = appConfig.shortWeekFormat || 'dddd, ' + TIME_FORMAT;
+    var ARCHIVE_FORMAT = appConfig.ArchivedDateFormat || DATE_FORMAT;
 
     /**
      * Get short representation of given datetime
@@ -107,8 +108,8 @@ function DateTimeService(moment, config) {
     this.scheduledFormat = function(d) {
         var m = moment(d);
         var now = moment();
-        const _date = m.format(config.view.dateformat || 'MM/DD'),
-            _time = m.format(config.view.timeformat || 'hh:mm');
+        const _date = m.format(appConfig.view.dateformat || 'MM/DD'),
+            _time = m.format(appConfig.view.timeformat || 'hh:mm');
 
         if (isSameDay(m, now)) {
             return '@ '.concat(_time);
@@ -126,13 +127,13 @@ function DateTimeService(moment, config) {
     }
 
     function isArchiveYear(a, b) {
-        return (config.ArchivedDateOnCalendarYear === 1) ?
+        return (appConfig.ArchivedDateOnCalendarYear === 1) ?
             a.format(ISO_YEAR_FORMAT) !== b.format(ISO_YEAR_FORMAT) : b.diff(a, 'years') >= 1;
     }
 }
 
-DateTimeHelperService.$inject = ['moment', 'config'];
-function DateTimeHelperService(moment, config) {
+DateTimeHelperService.$inject = ['moment'];
+function DateTimeHelperService(moment) {
     /*
     * @param timestring 2016-03-01T04:45:00+0000
     * @param timezone Europe/London
@@ -141,27 +142,27 @@ function DateTimeHelperService(moment, config) {
         var momentTS = moment.tz(timestring, timezone);
 
         return {
-            date: momentTS.format(config.model.dateformat),
-            time: momentTS.format(config.model.timeformat),
+            date: momentTS.format(appConfig.model.dateformat),
+            time: momentTS.format(appConfig.model.timeformat),
         };
     };
 
     this.isValidTime = function(value, format) {
-        var timeFormat = format || config.model.timeformat;
+        var timeFormat = format || appConfig.model.timeformat;
 
         return moment(value, timeFormat, true).isValid();
     };
 
     this.isValidDate = function(value, format) {
-        var dateFormat = format || config.model.dateformat;
+        var dateFormat = format || appConfig.model.dateformat;
 
         return moment(value, dateFormat, true).isValid();
     };
 
     this.mergeDateTime = function(dateStr, timeStr, timezone) {
-        var tz = timezone || config.defaultTimezone;
+        var tz = timezone || appConfig.defaultTimezone;
         var mergeStr = dateStr + ' ' + timeStr;
-        var formatter = config.model.dateformat + ' ' + config.model.timeformat;
+        var formatter = appConfig.model.dateformat + ' ' + appConfig.model.timeformat;
 
         // return without timezone information, which is stored separately
         return moment.tz(mergeStr, formatter, tz).format('YYYY-MM-DD[T]HH:mm:ss');
@@ -237,8 +238,8 @@ export default angular.module('superdesk.core.datetime', [
     }])
 
     // format datetime obj to time string
-    .filter('time', ['config', 'moment', function timeFilterFactory(config, moment) {
-        var TIME_FORMAT = config.view ? config.view.timeformat : 'h:mm';
+    .filter('time', ['moment', function timeFilterFactory(moment) {
+        var TIME_FORMAT = appConfig.view?.timeformat ?? 'h:mm';
 
         return function timeFilter(time) {
             var m = moment(time, 'HH:mm:ss');

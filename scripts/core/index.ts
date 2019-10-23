@@ -135,9 +135,8 @@ core.run([
     'lock',
     'session',
     'authoringWorkspace',
-    'config',
     'metadata',
-    (modal, privileges, lock, session, authoringWorkspace: AuthoringWorkspaceService, config, metadata) => {
+    (modal, privileges, lock, session, authoringWorkspace: AuthoringWorkspaceService, metadata) => {
         registerExtensions(
             _superdesk,
             modal,
@@ -145,7 +144,7 @@ core.run([
             lock,
             session,
             authoringWorkspace,
-            config,
+            appConfig,
             metadata,
         );
     },

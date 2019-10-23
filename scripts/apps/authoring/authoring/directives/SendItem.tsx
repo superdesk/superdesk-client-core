@@ -4,6 +4,7 @@ import {PreviewModal} from '../previewModal';
 import {gettext} from 'core/utils';
 import {isPublished} from 'apps/archive/utils';
 import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
+import {appConfig} from 'appConfig';
 
 SendItem.$inject = [
     '$q',
@@ -22,7 +23,6 @@ SendItem.$inject = [
     'preferencesService',
     'multi',
     'datetimeHelper',
-    'config',
     'privileges',
     'storage',
     'modal',
@@ -46,7 +46,6 @@ export function SendItem($q,
     preferencesService,
     multi,
     datetimeHelper,
-    config,
     privileges,
     storage,
     modal,
@@ -351,7 +350,7 @@ export function SendItem($q,
                 if (!privileges.privileges.embargo) {
                     return false;
                 }
-                if (config.ui && config.ui.publishEmbargo === false) {
+                if (appConfig.ui?.publishEmbargo === false) {
                     return false;
                 }
                 var prePublishCondition = scope.item && archiveService.getType(scope.item) !== 'ingest' &&
@@ -427,12 +426,7 @@ export function SendItem($q,
                 }
             }
 
-            /**
-             * Enable Disable the Send and Publish button.
-             * Send And Publish is enabled using `superdesk.config.js`.
-             */
-            scope.showSendAndPublish = () => !config.ui || angular.isUndefined(config.ui.sendAndPublish) ||
-                                                config.ui.sendAndPublish;
+            scope.showSendAndPublish = () => appConfig.ui?.sendAndPublish ?? true;
 
             /**
              * Check if the Send and Publish is allowed or not.
@@ -492,7 +486,7 @@ export function SendItem($q,
              * @returns {Boolean}
              */
             function canPublishOnDesk() {
-                return !(isAuthoringDesk() && config.features.noPublishOnAuthoringDesk);
+                return !(isAuthoringDesk() && appConfig.features?.noPublishOnAuthoringDesk);
             }
 
             /**
@@ -969,7 +963,7 @@ export function SendItem($q,
              * @return {Boolean}
              */
             function noPublishOnAuthoringDesk() {
-                return config.features.noPublishOnAuthoringDesk;
+                return appConfig.features?.noPublishOnAuthoringDesk;
             }
 
             // update actions on item save

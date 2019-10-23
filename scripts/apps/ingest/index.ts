@@ -10,6 +10,7 @@ import {InsertFilter, ScheduleFilter} from './filters';
 import _ from 'lodash';
 import {coreMenuGroups} from 'core/activity/activity';
 import {gettext} from 'core/utils';
+import {appConfig} from 'appConfig';
 
 angular.module('superdesk.apps.ingest.send', ['superdesk.core.api', 'superdesk.apps.desks'])
     .service('send', svc.SendService);
@@ -134,9 +135,9 @@ angular.module('superdesk.apps.ingest', [
                 }],
                 filters: [{action: 'list', type: 'externalsource'}],
                 privileges: {fetch: 1},
-                additionalCondition: ['config', 'desks', function(config, desks) {
+                additionalCondition: ['desks', function(desks) {
                     // Fetching to 'personal' desk is not allowed
-                    return config.features.editFeaturedImage && !_.isNil(desks.getCurrentDeskId());
+                    return appConfig.features?.editFeaturedImage && !_.isNil(desks.getCurrentDeskId());
                 }],
             })
 
@@ -147,9 +148,9 @@ angular.module('superdesk.apps.ingest', [
                 controller: ctrl.ExternalSourceController,
                 filters: [{action: 'list', type: 'externalsource', id: 'fetch-externalsource'}],
                 privileges: {fetch: 1},
-                additionalCondition: ['config', 'desks', function(config, desks) {
+                additionalCondition: ['desks', function(desks) {
                     // Fetching to 'personal' desk is not allowed
-                    return config.features.editFeaturedImage && !_.isNil(desks.getCurrentDeskId());
+                    return appConfig.features?.editFeaturedImage && !_.isNil(desks.getCurrentDeskId());
                 }],
             });
 

@@ -9,11 +9,10 @@ angular.module('superdesk.core.auth.login', []).directive('sdLoginModal', [
     'session',
     'auth',
     'features',
-    'config',
     'usersService',
     'notify',
     '$route',
-    function(session, auth, features, config, usersService, notify, $route) {
+    function(session, auth, features, usersService, notify, $route) {
         return {
             replace: true,
             // login template can be overriden (like on superdesk-fi)
@@ -79,7 +78,7 @@ angular.module('superdesk.core.auth.login', []).directive('sdLoginModal', [
                     window.open(apiUrl + '/login/' + service);
                 };
 
-                const apiUrl = _.get(config, 'server.url', '')
+                const apiUrl = appConfig.server.url
                     .replace('api/', 'api'); // make sure there is no trailing /
                 const handleAuthMessage = (event) => {
                     if (event.origin === apiUrl.replace('/api', '') && event.data.type === 'oauth') {

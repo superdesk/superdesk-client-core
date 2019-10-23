@@ -9,7 +9,7 @@ import {appConfig} from 'appConfig';
  * @description Display the estimated number of minutes needed to read an item.
  * @param {String} item text to estimate
  */
-export function ReadingTime(config) {
+export function ReadingTime() {
     return {
         scope: {
             item: '=',
@@ -21,7 +21,9 @@ export function ReadingTime(config) {
             '<span ng-if="readingTime>0" class="char-count reading-time" translate>' +
             '{{readingTime}} min read</span>',
         link: function ReadingTimeLink(scope, elem, attrs) {
-            if (!get(config, 'authoring.timeToRead', true)) {
+            const timeToRead = appConfig.authoring?.timeToRead ?? true;
+
+            if (!timeToRead) {
                 scope.readingTime = null;
                 return;
             }
@@ -53,4 +55,4 @@ export function ReadingTime(config) {
     }
 }
 
-ReadingTime.$inject = ['config'];
+ReadingTime.$inject = [];

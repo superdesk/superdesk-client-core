@@ -1,10 +1,18 @@
+import {ISuperdeskGlobalConfig} from "superdesk-api";
+import {appConfig} from "appConfig";
 
 describe('Embed Code Handlers', () => {
     var ctrl, scope;
 
-    beforeEach(window.module(($provide) => {
-        $provide.constant('config', {server: {url: undefined}, iframely: {key: '123'}, editor: {}});
-    }));
+    beforeEach(() => {
+        const testConfig: Partial<ISuperdeskGlobalConfig> = {
+            server: {url: undefined, ws: undefined},
+            iframely: {key: '123'},
+            editor: {},
+        };
+
+        Object.assign(appConfig, testConfig);
+    });
 
     beforeEach(window.module('superdesk.apps.editor2'));
     beforeEach(window.module('superdesk.apps.vocabularies'));

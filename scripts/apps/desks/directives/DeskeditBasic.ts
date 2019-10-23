@@ -4,10 +4,8 @@ import {gettext} from 'core/utils';
 import {calculateDiff} from '../controllers/DeskConfigController';
 import {appConfig} from 'appConfig';
 
-DeskeditBasic.$inject = ['desks', 'WizardHandler', 'metadata', 'config',
-    '$filter'];
-export function DeskeditBasic(desks, WizardHandler, metadata, config,
-    $filter) {
+DeskeditBasic.$inject = ['desks', 'WizardHandler', 'metadata', '$filter'];
+export function DeskeditBasic(desks, WizardHandler, metadata, $filter) {
     return {
         link: function(scope) {
             scope.limits = limits;
@@ -88,7 +86,7 @@ export function DeskeditBasic(desks, WizardHandler, metadata, config,
             };
 
             scope.showNoPublishOnAuthoringDesk = function(deskType) {
-                return deskType === 'authoring' && config.features.noPublishOnAuthoringDesk;
+                return deskType === 'authoring' && appConfig.features?.noPublishOnAuthoringDesk;
             };
 
             scope.$watch('desk.edit', (newVal) => {

@@ -1,3 +1,5 @@
+import {appConfig} from "appConfig";
+
 function NoopTracking() {
     this.track = angular.noop;
 }
@@ -58,11 +60,11 @@ function GoogleTracking(config) {
  */
 angular.module('superdesk.core.analytics', [])
 
-    .service('analytics', ['config', function(config) {
-        if (config.analytics.piwik.url) {
-            PiwikTracking.call(this, config.analytics.piwik);
-        } else if (config.analytics.ga.id) {
-            GoogleTracking.call(this, config.analytics.ga);
+    .service('analytics', [function() {
+        if (appConfig.analytics.piwik.url) {
+            PiwikTracking.call(this, appConfig.analytics.piwik);
+        } else if (appConfig.analytics.ga.id) {
+            GoogleTracking.call(this, appConfig.analytics.ga);
         } else {
             NoopTracking.call(this);
         }

@@ -44,7 +44,6 @@ AuthoringDirective.$inject = [
     'reloadService',
     '$rootScope',
     'suggest',
-    'config',
     'editorResolver',
     'compareVersions',
     'embedService',
@@ -74,7 +73,6 @@ export function AuthoringDirective(
     reloadService,
     $rootScope,
     suggest,
-    config,
     editorResolver,
     compareVersions,
     embedService,
@@ -169,7 +167,7 @@ export function AuthoringDirective(
              * @returns {Boolean}
              */
             $scope.canPublishOnDesk = function() {
-                return !($scope.deskType === 'authoring' && config.features.noPublishOnAuthoringDesk);
+                return !($scope.deskType === 'authoring' && appConfig.features?.noPublishOnAuthoringDesk);
             };
 
             getDeskStage();
@@ -379,8 +377,8 @@ export function AuthoringDirective(
             function checkMediaAssociatedToUpdate() {
                 let rewriteOf = $scope.item.rewrite_of;
 
-                if (!_.get(config, 'features.confirmMediaOnUpdate') ||
-                    !_.get(config, 'features.editFeaturedImage') ||
+                if (!appConfig.features?.confirmMediaOnUpdate ||
+                    !appConfig.features?.editFeaturedImage ||
                     !rewriteOf || _.includes(['kill', 'correct', 'takedown'], $scope.action) ||
                     $scope.item.associations && $scope.item.associations.featuremedia) {
                     return $q.when(true);
@@ -548,7 +546,7 @@ export function AuthoringDirective(
             };
 
             $scope.isRemovedField = function(fieldName) {
-                return _.has(config.infoRemovedFields, fieldName);
+                return appConfig.infoRemovedFields?.hasOwnProperty(fieldName);
             };
 
             function afterTansa(e, isCancelled) {

@@ -1,7 +1,8 @@
 import _ from 'lodash';
+import {appConfig} from 'appConfig';
 
-export function isMediaEditable(config) {
-    return _.get(config, 'features.editFeaturedImage', true) === true;
+export function isMediaEditable() {
+    return appConfig.features?.editFeaturedImage ?? true === true;
 }
 
 /**
@@ -82,15 +83,11 @@ function DeployConfigFactory(api, $q) {
         }
     }
 
-    const a = new DeployConfig();
-
-    window.DeployConfig = a;
-
-    return a;
+    return new DeployConfig();
 }
 
 angular.module('superdesk.config', ['superdesk.core.api'])
-    .provider('defaultConfig', ['config', function(config) {
+    .provider('defaultConfig', [function() {
         /**
          * Set default config value for given key
          *
@@ -100,7 +97,7 @@ angular.module('superdesk.config', ['superdesk.core.api'])
          * @param {String} val
          */
         this.set = function(key, val) {
-            var dest = config;
+            var dest = appConfig;
             var keyPieces = key.split('.');
 
             for (var i = 0; i + 1 < keyPieces.length; i++) {
@@ -126,7 +123,7 @@ angular.module('superdesk.config', ['superdesk.core.api'])
 
     .factory('deployConfig', DeployConfigFactory)
 
-    .run(['$rootScope', 'config', 'deployConfig', function($rootScope, config, deployConfig) {
-        $rootScope.config = config || {};
+    .run(['$rootScope', 'deployConfig', function($rootScope, deployConfig) {
+        $rootScope.config = appConfig || {};
         deployConfig.fetch();
     }]);

@@ -10,6 +10,7 @@ import _ from 'lodash';
 import {getDateFilters, dateRangesByKey} from '../directives/DateFilters';
 import {gettext} from 'core/utils';
 import {KILLED_STATES} from 'apps/archive/constants';
+import {appConfig} from 'appConfig';
 
 const DEFAULT_REPOS = ['ingest', 'archive', 'published', 'archived'];
 
@@ -46,14 +47,13 @@ export function setFilters(search) {
  */
 SearchService.$inject = [
     '$location',
-    'config',
     'session',
     'multi',
     'preferencesService',
     'moment',
     'sort',
 ];
-export function SearchService($location, config, session, multi,
+export function SearchService($location, session, multi,
     preferencesService, moment, sortService) {
     var sortOptions = [
         {field: 'versioncreated', label: gettext('Updated')},
@@ -67,20 +67,20 @@ export function SearchService($location, config, session, multi,
 
     var self = this;
 
-    this.cvs = config.search_cvs ||
+    this.cvs = appConfig.search_cvs ||
         [{id: 'subject', name: 'Subject', field: 'subject', list: 'subjectcodes'},
             {id: 'companycodes', name: 'Company Codes', field: 'company_codes', list: 'company_codes'}];
 
     preferencesService.get('singleline:view').then((result) => {
         if (result) {
             // No preference, but global config set
-            if (result.enabled === null && _.get(config, 'list.singleLineView') && _.get(config, 'list.singleLine')) {
+            if (result.enabled === null && appConfig.list?.singleLineView && appConfig.list?.singleLine) {
                 this.singleLine = true;
                 return;
             }
 
             // Preference set, but singleLine not in config
-            if (result.enabled && !_.get(config, 'list.singleLine')) {
+            if (result.enabled && !appConfig.list?.singleLine) {
                 this.singleLine = false;
                 return;
             }
@@ -249,11 +249,11 @@ export function SearchService($location, config, session, multi,
      * @return {String} date
      */
     function formatDate(date, timeSuffix) {
-        var local = moment(date, config.view.dateformat).format('YYYY-MM-DD') + timeSuffix;
+        var local = moment(date, appConfig.view.dateformat).format('YYYY-MM-DD') + timeSuffix;
 
-        if (config.search && config.search.useDefaultTimezone) {
+        if (appConfig.search?.useDefaultTimezone) {
             // use the default timezone of the server.
-            local += moment.tz(config.defaultTimezone).format('ZZ');
+            local += moment.tz(appConfig.defaultTimezone).format('ZZ');
         } else {
             // use the client timezone of the server.
             local += moment().format('ZZ');
@@ -433,8 +433,8 @@ export function SearchService($location, config, session, multi,
                 criteria = {source: criteria};
                 if (search.repo) {
                     criteria.repo = search.repo;
-                } else if (config.defaultSearch) {
-                    criteria.repo = DEFAULT_REPOS.filter((repo) => config.defaultSearch[repo] !== false).join(',');
+                } else if (appConfig.defaultSearch) {
+                    criteria.repo = DEFAULT_REPOS.filter((repo) => appConfig.defaultSearch[repo] !== false).join(',');
                 }
             }
 
@@ -668,7 +668,7 @@ export function SearchService($location, config, session, multi,
      * Check if elasticsearch highlight feature is configured or not.
      */
     this.getElasticHighlight = function() {
-        return config.features && config.features.elasticHighlight ? 1 : 0;
+        return appConfig.features?.elasticHighlight ? 1 : 0;
     };
 
     /**
@@ -760,7 +760,7 @@ export function SearchService($location, config, session, multi,
      * @description Returns the list of fields to be used in projections
      */
     this.getProjectedFields = function() {
-        var uiConfig = config.list || DEFAULT_LIST_CONFIG;
+        var uiConfig = appConfig.list || DEFAULT_LIST_CONFIG;
         var uiFields: any = _.union(uiConfig.priority, uiConfig.firstLine, uiConfig.secondLine);
 
         let projectedFields: any = [];
@@ -781,7 +781,7 @@ export function SearchService($location, config, session, multi,
      * @description updates singleLine value after computation
      */
     this.updateSingleLineStatus = function(singleLinePref) {
-        if (singleLinePref && _.get(config, 'list.singleLine')) {
+        if (singleLinePref && appConfig.list?.singleLine) {
             self.singleLine = true;
             return;
         }

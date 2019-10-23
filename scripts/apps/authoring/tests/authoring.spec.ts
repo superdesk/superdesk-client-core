@@ -1,5 +1,7 @@
 import {AuthoringWorkspaceService} from '../authoring/services/AuthoringWorkspaceService';
 import _ from 'lodash';
+import {appConfig} from 'appConfig';
+import {ISuperdeskGlobalConfig} from 'superdesk-api';
 
 describe('authoring', () => {
     var GUID = 'urn:tag:superdesk-1';
@@ -2176,14 +2178,16 @@ describe('authoring themes', () => {
 });
 
 describe('send item directive', () => {
-    beforeEach(window.module(($provide) => {
-        $provide.constant('config', {
-            server: {url: undefined},
+    beforeEach(() => {
+        const testConfig: Partial<ISuperdeskGlobalConfig> = {
+            server: {url: undefined, ws: undefined},
             iframely: {key: '123'},
             editor: {},
             features: {onlyEditor3: false},
-        });
-    }));
+        };
+
+        Object.assign(appConfig, testConfig);
+    });
 
     beforeEach(window.module('superdesk.core.editor3'));
     beforeEach(window.module('superdesk.apps.editor2'));

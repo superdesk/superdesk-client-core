@@ -3,6 +3,8 @@ import {shallow, mount} from 'enzyme';
 import mockStore, {embedBlockAndContent} from './utils';
 import {EmbedBlockComponent as EmbedBlock} from '../embeds/EmbedBlock';
 import {EmbedInputComponent as EmbedInput} from '../embeds/EmbedInput';
+import {ISuperdeskGlobalConfig} from 'superdesk-api';
+import {appConfig} from 'appConfig';
 
 describe('editor3.components.embed-block', () => {
     it('should render entity html', () => {
@@ -16,7 +18,9 @@ describe('editor3.components.embed-block', () => {
 
 describe('editor3.components.embed-input', () => {
     beforeEach(window.module(($provide) => {
-        $provide.constant('config', {iframely: {key: 'key'}});
+        const testConfig: Partial<ISuperdeskGlobalConfig> = {iframely: {key: 'key'}};
+
+        Object.assign(appConfig, testConfig);
     }));
 
     it('should render', () => {

@@ -1,7 +1,9 @@
+import {appConfig} from "appConfig";
+import {ISuperdeskGlobalConfig} from "superdesk-api";
 
 describe('superdesk ui', () => {
-    beforeEach(window.module(($provide) => {
-        $provide.constant('config', {
+    beforeEach(() => {
+        const testConfig: Partial<ISuperdeskGlobalConfig> = {
             model: {
                 timeformat: 'HH:mm:ss',
                 dateformat: 'DD/MM/YYYY',
@@ -11,9 +13,11 @@ describe('superdesk ui', () => {
                 dateformat: 'MM/DD/YYYY',
             },
             defaultTimezone: 'Europe/London',
-            server: {url: undefined},
-        });
-    }));
+            server: {url: undefined, ws: undefined},
+        };
+
+        Object.assign(appConfig, testConfig);
+    });
 
     beforeEach(window.module('superdesk.core.ui'));
     beforeEach(window.module('superdesk.templates-cache'));
@@ -132,7 +136,7 @@ describe('superdesk ui', () => {
             );
         });
 
-        it('applies the default timezone', inject(($compile, $rootScope, config) => {
+        it('applies the default timezone', () => {
             var serverTzData = {
                 zones: {
                     'Europe/Rome': ['1 - CET'],
@@ -151,7 +155,7 @@ describe('superdesk ui', () => {
 
             isoScope.timeZones = [];
             delete isoScope.timezone;
-            config.defaultTimezone = 'Europe/Rome';
+            appConfig.defaultTimezone = 'Europe/Rome';
 
             getTzDataDeferred.resolve(serverTzData);
             isoScope.$digest();
@@ -163,7 +167,7 @@ describe('superdesk ui', () => {
             isoScope.$digest();
 
             expect(isoScope.timezone).toEqual('Europe/Rome');
-        }));
+        });
 
         describe('scope\'s searchTimeZones() method', () => {
             it('sets the time zone search term to the given term ',

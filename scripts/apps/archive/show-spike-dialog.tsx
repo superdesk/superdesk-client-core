@@ -7,10 +7,9 @@ import {ModalBody} from 'core/ui/components/Modal/ModalBody';
 import {ModalFooter} from 'core/ui/components/Modal/ModalFooter';
 import {onSpikeMiddlewareResult} from 'superdesk-api';
 import {gettext} from 'core/utils';
-import {get} from 'lodash';
+import {appConfig} from 'appConfig';
 
 export function showSpikeDialog<T>(
-    config: any,
     modal: any,
     doSpike: () => void,
     promptForConfirmationMessage: string,
@@ -19,7 +18,7 @@ export function showSpikeDialog<T>(
 ) {
     var warnings: Array<{text: string}> = [];
     const initialValue: Promise<onSpikeMiddlewareResult> = Promise.resolve({});
-    const skipConfirmationPrompt = !get(config, 'confirm_spike', true);
+    const skipConfirmationPrompt = !(appConfig.confirm_spike ?? true);
 
     middlewares.reduce(
         (current, next) => {

@@ -4,7 +4,7 @@ import {gettext} from 'core/utils';
 import {appConfig} from 'appConfig';
 
 IngestSourcesContent.$inject = ['ingestSources', 'notify', 'api', '$location',
-    'modal', '$filter', 'config', 'privileges'];
+    'modal', '$filter', 'privileges'];
 
 /**
  * @ngdoc directive
@@ -23,7 +23,7 @@ IngestSourcesContent.$inject = ['ingestSources', 'notify', 'api', '$location',
  * @description Handles the management for Ingest Sources.
  */
 export function IngestSourcesContent(ingestSources, notify, api, $location,
-    modal, $filter, config, privileges) {
+    modal, $filter, privileges) {
     return {
         templateUrl: 'scripts/apps/ingest/views/settings/ingest-sources-content.html',
         link: function($scope) {
@@ -337,8 +337,8 @@ export function IngestSourcesContent(ingestSources, notify, api, $location,
                     $scope.provider = cloneDeep(provider || {});
 
                     $scope.provider.update_schedule = $scope.provider.update_schedule
-                        || config.ingest.DEFAULT_SCHEDULE;
-                    $scope.provider.idle_time = $scope.provider.idle_time || config.ingest.DEFAULT_IDLE_TIME;
+                        || appConfig.ingest.DEFAULT_SCHEDULE;
+                    $scope.provider.idle_time = $scope.provider.idle_time || appConfig.ingest.DEFAULT_IDLE_TIME;
 
                     initTupleFields();
                 };

@@ -1,3 +1,5 @@
+import {ISuperdeskGlobalConfig} from "superdesk-api";
+import {appConfig} from "appConfig";
 
 describe('MetadataWidgetCtrl controller', () => {
     var metadata, // the metadata service
@@ -13,8 +15,8 @@ describe('MetadataWidgetCtrl controller', () => {
     beforeEach(window.module('superdesk.apps.vocabularies'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
 
-    beforeEach(window.module(($provide) => {
-        $provide.constant('config', {
+    beforeEach(() => {
+        const testConfig: Partial<ISuperdeskGlobalConfig> = {
             model: {
                 timeformat: 'HH:mm:ss',
                 dateformat: 'DD/MM/YYYY',
@@ -24,9 +26,11 @@ describe('MetadataWidgetCtrl controller', () => {
                 dateformat: 'MM/DD/YYYY',
             },
             defaultTimezone: 'Europe/London',
-            server: {url: undefined},
-        });
-    }));
+            server: {url: undefined, ws: undefined},
+        };
+
+        Object.assign(appConfig, testConfig);
+    });
 
     beforeEach(inject((
         $rootScope, $controller, $q, _metadata_, preferencesService,

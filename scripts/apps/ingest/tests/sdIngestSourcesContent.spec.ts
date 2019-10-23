@@ -1,3 +1,5 @@
+import {ISuperdeskGlobalConfig} from "superdesk-api";
+import {appConfig} from "appConfig";
 
 /**
 * Module with tests for the sdIngestSourcesContent directive
@@ -9,8 +11,8 @@ describe('sdIngestSourcesContent directive', () => {
 
     beforeEach(window.module('superdesk.apps.searchProviders'));
     beforeEach(window.module('superdesk.apps.ingest'));
-    beforeEach(window.module(($provide) => {
-        $provide.constant('config', {
+    beforeEach(() => {
+        const testConfig: Partial<ISuperdeskGlobalConfig> = {
             model: {
                 timeformat: 'HH:mm:ss',
                 dateformat: 'DD/MM/YYYY',
@@ -20,7 +22,7 @@ describe('sdIngestSourcesContent directive', () => {
                 dateformat: 'MM/DD/YYYY',
             },
             defaultTimezone: 'Europe/London',
-            server: {url: undefined},
+            server: {url: undefined, ws: undefined},
             ingest: {
                 PROVIDER_DASHBOARD_DEFAULTS: {
                     show_log_messages: true,
@@ -32,8 +34,10 @@ describe('sdIngestSourcesContent directive', () => {
                 DEFAULT_SCHEDULE: {minutes: 5, seconds: 0},
                 DEFAULT_IDLE_TIME: {hours: 0, minutes: 0},
             },
-        });
-    }));
+        };
+
+        Object.assign(appConfig, testConfig);
+    });
 
     beforeEach(inject(($compile, $rootScope, $templateCache, ingestSources, $q) => {
         spyOn(ingestSources, 'fetchAllFeedingServicesAllowed').and.returnValue(Promise.resolve([{

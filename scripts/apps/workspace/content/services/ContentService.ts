@@ -28,7 +28,6 @@ import {appConfig} from 'appConfig';
  */
 ContentService.$inject = [
     'api',
-    'superdesk',
     'templates',
     'desks',
     'packages',
@@ -39,11 +38,10 @@ ContentService.$inject = [
     '$rootScope',
     'session',
     'send',
-    'config',
     'renditions',
 ];
-export function ContentService(api, superdesk, templates, desks, packages, archiveService, notify,
-    $filter, $q, $rootScope, session, send, config, renditions) {
+export function ContentService(api, templates, desks, packages, archiveService, notify,
+    $filter, $q, $rootScope, session, send, renditions) {
     const TEXT_TYPE = 'text';
 
     const self = this;
@@ -377,7 +375,7 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
             }
 
             return api.find(item._type, item._id);
-        } else if (isMediaEditable(config) && fetchExternal) {
+        } else if (isMediaEditable() && fetchExternal) {
             return renditions.ingest(item);
         }
 

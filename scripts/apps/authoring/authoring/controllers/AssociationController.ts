@@ -14,10 +14,10 @@ import {IArticle} from 'superdesk-api';
  *
  * @description Controller for handling adding/uploading images to association fields
  */
-AssociationController.$inject = ['config', 'content', 'superdesk',
-    'mediaIdGenerator', 'authoring', 'renditions', 'notify'];
-export function AssociationController(config, content, superdesk,
-    mediaIdGenerator, authoring, renditions, notify) {
+AssociationController.$inject = ['content', 'superdesk',
+    'mediaIdGenerator', 'renditions', 'notify'];
+export function AssociationController(content, superdesk,
+    mediaIdGenerator, renditions, notify) {
     const self = this;
 
     this.checkRenditions = checkRenditions;
@@ -29,7 +29,7 @@ export function AssociationController(config, content, superdesk,
      * @description Check if featured media can be edited or not. i.e. metadata/crops can be changed or not.
      */
     this.isMediaEditable = function() {
-        return isMediaEditable(config);
+        return isMediaEditable();
     };
 
     /**

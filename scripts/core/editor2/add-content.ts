@@ -1,3 +1,5 @@
+import {appConfig} from "appConfig";
+
 angular.module('superdesk.apps.editor2.content', []).directive('sdAddContent', ['$window',
     function($window) {
         return {
@@ -35,8 +37,8 @@ angular.module('superdesk.apps.editor2.content', []).directive('sdAddContent', [
         };
     }]);
 
-AddContentCtrl.$inject = ['$scope', '$element', 'superdesk', 'editor', '$timeout', 'config', '$q'];
-function AddContentCtrl(scope, element, superdesk, editor, $timeout, config, $q) {
+AddContentCtrl.$inject = ['$scope', '$element', 'superdesk', 'editor', '$timeout', '$q'];
+function AddContentCtrl(scope, element, superdesk, editor, $timeout, $q) {
     var elementHolder = element.find('div:first-child').first();
     var self = this;
 
@@ -50,7 +52,7 @@ function AddContentCtrl(scope, element, superdesk, editor, $timeout, config, $q)
 
     angular.extend(self, {
         expanded: false,
-        config: angular.extend({embeds: true}, config.editor || {}), // should be on by default
+        config: angular.extend({embeds: true}, appConfig.editor || {}), // should be on by default
         // update the (+) vertical position on the left and his visibility (hidden/shown)
         updateState: function(event, editorElem) {
             // hide if medium is not defined yett (can happen at initialization) or
