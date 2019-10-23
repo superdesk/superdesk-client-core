@@ -815,6 +815,7 @@ declare module 'superdesk-api' {
             getOwnPrivileges(): Promise<any>;
         };
         session: {
+            getToken(): string;
             getCurrentUser(): Promise<IUser>;
         };
         utilities: {
@@ -840,6 +841,9 @@ declare module 'superdesk-api' {
 
 
     export interface ISuperdeskGlobalConfig {
+        server: {
+            url: string;
+        };
         defaultRoute: string;
         features: {
             swimlane: {
