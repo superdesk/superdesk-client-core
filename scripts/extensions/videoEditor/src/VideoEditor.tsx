@@ -107,7 +107,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
     };
 
     handleToggleCrop = (aspect: number) => {
-        const cropAspect = aspect || this.state.crop.aspect;
+        const cropAspect = aspect || this.state.crop.aspect || 0;
 
         this.setState({ cropEnabled: !this.state.cropEnabled }, () => {
             if (this.state.cropEnabled === false) {
@@ -247,7 +247,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                                     <ReactCrop
                                                         src={this.state.cropImg}
                                                         crop={this.state.crop}
-                                                        onChange={(newCrop: IVideoEditor['crop']) => {
+                                                        onChange={(newCrop: ReactCrop.Crop) => {
                                                             this.setState({ crop: newCrop }, this.checkIsDirty);
                                                         }}
                                                         style={{

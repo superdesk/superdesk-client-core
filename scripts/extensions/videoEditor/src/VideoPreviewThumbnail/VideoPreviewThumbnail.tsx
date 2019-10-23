@@ -65,8 +65,8 @@ export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
 
         this.drawCanvas(
             video,
-            this.props.crop.x,
-            this.props.crop.y,
+            this.props.crop.x || 0,
+            this.props.crop.y || 0,
             this.props.crop.width || video.videoWidth,
             this.props.crop.height || video.videoHeight
         );
