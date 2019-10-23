@@ -97,7 +97,7 @@ export function CardsService(search, session, desks) {
         var desk = desks.deskLookup ? desks.deskLookup[deskId] : null;
         var states = PUBLISHED_STATES;
 
-        if (appConfig.monitoring?.scheduled) {
+        if (appConfig.monitoring != null && appConfig.monitoring.scheduled) {
             states = PUBLISHED_STATES.filter((state) => state !== ITEM_STATE.SCHEDULED);
         }
 

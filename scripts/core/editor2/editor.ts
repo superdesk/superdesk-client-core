@@ -1463,7 +1463,7 @@ angular.module('superdesk.apps.editor2', [
                                     // load the media and update the block
                                     $q.when((function() {
                                         if (
-                                            appConfig?.features != null
+                                            appConfig.features != null
                                             && appConfig.features.editFeaturedImage != null
                                             && !appConfig.features.editFeaturedImage
                                             && media._type === 'externalsource'

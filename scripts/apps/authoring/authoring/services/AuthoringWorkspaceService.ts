@@ -105,7 +105,10 @@ export class AuthoringWorkspaceService {
     ) {
         if (item) {
             // disable edit of external ingest sources that are not editable (editFeaturedImage false or not available)
-            if (item._type === 'externalsource' && !!appConfig.features?.editFeaturedImage === false) {
+            if (
+                item._type === 'externalsource'
+                && !!(appConfig.features != null && appConfig.features.editFeaturedImage === false)
+            ) {
                 return;
             }
             this.authoringOpen(item._id, action || 'edit', item._type || null);
@@ -140,7 +143,10 @@ export class AuthoringWorkspaceService {
         };
 
         // disable open for external ingest sources that are not editable (editFeaturedImage false or not available)
-        if (item._type === 'externalsource' && !!appConfig.features?.editFeaturedImage === false) {
+        if (
+            item._type === 'externalsource'
+            && !!(appConfig.features != null && appConfig.features.editFeaturedImage === false)
+        ) {
             return;
         }
 
@@ -279,7 +285,12 @@ export class AuthoringWorkspaceService {
     sendRowViewEvents() {
         let evnt = this.superdeskFlags.flags.authoring ? 'rowview:narrow' : 'rowview:default';
 
-        if (this.superdeskFlags.flags.previewing && this.search.singleLine && appConfig.list?.narrowView) {
+        if (
+            this.superdeskFlags.flags.previewing
+            && this.search.singleLine
+            && appConfig.list != null
+            && appConfig.list.narrowView
+        ) {
             this.$rootScope.$broadcast(evnt);
         }
     }

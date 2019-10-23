@@ -17,7 +17,7 @@ export default [
         return {
             pattern: /src=".*vidible\.tv.*pid=(.+)\/(.+).js/g,
             name: EMBED_PROVIDERS.vidible,
-            condition: () => appConfig.editor?.vidible,
+            condition: () => appConfig.editor != null && appConfig.editor.vidible,
             callback: (match) => api.get(`vidible/bcid/${match[2]}/pid/${match[1]}`)
                 .then((data) => ({association: data})),
         };

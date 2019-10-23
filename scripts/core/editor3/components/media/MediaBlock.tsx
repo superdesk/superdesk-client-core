@@ -152,7 +152,9 @@ export class MediaBlockComponent extends React.Component<any, any> {
             !readOnly
             && (
                 data._type !== 'externalsource'
-                || (applyDefault(appConfig.features?.editFeaturedImage, true))
+                || (appConfig.features == null || appConfig.features.editFeaturedImage == null
+                    ? true
+                    : appConfig.features.editFeaturedImage)
             );
 
         const removable = !readOnly;

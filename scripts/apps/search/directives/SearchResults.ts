@@ -436,7 +436,11 @@ export function SearchResults(
              * then, sends rowview event
              */
             function sendRowViewEvents(item?) {
-                let sendEvent = scope.singleLine && superdeskFlags.flags.authoring && appConfig.list?.narrowView;
+                let sendEvent = scope.singleLine
+                    && superdeskFlags.flags.authoring
+                    && appConfig.list != null
+                    && appConfig.list.narrowView;
+
                 let evnt = item ? 'rowview:narrow' : 'rowview:default';
 
                 if (sendEvent) {

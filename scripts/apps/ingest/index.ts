@@ -137,7 +137,9 @@ angular.module('superdesk.apps.ingest', [
                 privileges: {fetch: 1},
                 additionalCondition: ['desks', function(desks) {
                     // Fetching to 'personal' desk is not allowed
-                    return appConfig.features?.editFeaturedImage && !_.isNil(desks.getCurrentDeskId());
+                    return appConfig.features != null
+                        && appConfig.features.editFeaturedImage
+                        && !_.isNil(desks.getCurrentDeskId());
                 }],
             })
 
@@ -150,7 +152,9 @@ angular.module('superdesk.apps.ingest', [
                 privileges: {fetch: 1},
                 additionalCondition: ['desks', function(desks) {
                     // Fetching to 'personal' desk is not allowed
-                    return appConfig.features?.editFeaturedImage && !_.isNil(desks.getCurrentDeskId());
+                    return appConfig.features != null
+                        && appConfig.features.editFeaturedImage
+                        && !_.isNil(desks.getCurrentDeskId());
                 }],
             });
 

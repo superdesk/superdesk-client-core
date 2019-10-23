@@ -29,7 +29,7 @@ function ErrorHttpInterceptorFactory($q) {
  */
 angular.module('superdesk.core.error', [])
     .config(['$httpProvider', '$provide', function($httpProvider, $provide) {
-        if (appConfig.raven?.dsn) {
+        if (appConfig.raven != null && appConfig.raven.dsn) {
             Raven.config(appConfig.raven.dsn, {
                 logger: 'javascript-client',
                 release: appConfig.version,

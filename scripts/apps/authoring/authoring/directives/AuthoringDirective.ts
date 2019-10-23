@@ -167,7 +167,11 @@ export function AuthoringDirective(
              * @returns {Boolean}
              */
             $scope.canPublishOnDesk = function() {
-                return !($scope.deskType === 'authoring' && appConfig.features?.noPublishOnAuthoringDesk);
+                return !(
+                    $scope.deskType === 'authoring'
+                    && appConfig.features != null
+                    && appConfig.features.noPublishOnAuthoringDesk
+                );
             };
 
             getDeskStage();
@@ -377,8 +381,8 @@ export function AuthoringDirective(
             function checkMediaAssociatedToUpdate() {
                 let rewriteOf = $scope.item.rewrite_of;
 
-                if (!appConfig.features?.confirmMediaOnUpdate ||
-                    !appConfig.features?.editFeaturedImage ||
+                if (!(appConfig.features != null && appConfig.features.confirmMediaOnUpdate) ||
+                    !(appConfig.features != null && appConfig.features.editFeaturedImage) ||
                     !rewriteOf || _.includes(['kill', 'correct', 'takedown'], $scope.action) ||
                     $scope.item.associations && $scope.item.associations.featuremedia) {
                     return $q.when(true);
@@ -546,7 +550,7 @@ export function AuthoringDirective(
             };
 
             $scope.isRemovedField = function(fieldName) {
-                return appConfig.infoRemovedFields?.hasOwnProperty(fieldName);
+                return appConfig.infoRemovedFields != null && appConfig.infoRemovedFields.hasOwnProperty(fieldName);
             };
 
             function afterTansa(e, isCancelled) {

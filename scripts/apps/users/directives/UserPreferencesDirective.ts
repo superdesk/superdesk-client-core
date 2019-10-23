@@ -167,7 +167,7 @@ export function UserPreferencesDirective(
 
             scope.showCategory = function(preference) {
                 if (preference.category === 'rows') {
-                    return appConfig.list?.singleLineView;
+                    return appConfig.list != null && appConfig.list.singleLineView;
                 }
                 const noShowCategories = [
                     'article_defaults',

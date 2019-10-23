@@ -236,7 +236,7 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
 
             if (currentDesk) {
                 self.groups.push({_id: currentDesk._id + ':output', type: DESK_OUTPUT, header: currentDesk.name});
-                if (appConfig.monitoring?.scheduled) {
+                if (appConfig.monitoring != null && appConfig.monitoring.scheduled) {
                     self.groups.push({
                         _id: currentDesk._id + ':scheduled',
                         type: SCHEDULED_OUTPUT,

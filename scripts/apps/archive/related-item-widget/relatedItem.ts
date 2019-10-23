@@ -119,7 +119,7 @@ function RelatedItemController(
         });
 
     function today() {
-        if (appConfig.search?.useDefaultTimezone) {
+        if (appConfig.search != null && appConfig.search.useDefaultTimezone) {
             return moment()
                 .tz(appConfig.defaultTimezone)
                 .format('YYYY-MM-DD') + 'T00:00:00' + moment.tz(appConfig.defaultTimezone).format('ZZ');

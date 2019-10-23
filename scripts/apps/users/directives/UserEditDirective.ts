@@ -26,7 +26,7 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
             scope.twitterPattern = usersService.twitterPattern;
             scope.phonePattern = usersService.phonePattern;
             scope.signOffPattern = usersService.signOffPattern;
-            scope.hideSignOff = appConfig.user?.sign_off_mapping;
+            scope.hideSignOff = appConfig.user != null && appConfig.user.sign_off_mapping;
 
             scope.dirty = false;
             scope.errorMessage = null;

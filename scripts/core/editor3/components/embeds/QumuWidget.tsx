@@ -21,7 +21,7 @@ function getQumuData(html) {
 }
 
 export const isQumuWidget = (html) => {
-    return appConfig.features?.qumu && html.includes(QumuString);
+    return appConfig.features != null && appConfig.features.qumu && html.includes(QumuString);
 };
 const getQumuConfigString = (html) => html.slice(html.indexOf('{'), html.lastIndexOf('}') + 1);
 

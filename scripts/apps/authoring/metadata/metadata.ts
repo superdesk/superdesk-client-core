@@ -18,7 +18,7 @@ function MetadataCtrl(
     preferencesService, archiveService, moment, content) {
     desks.initialize();
 
-    $scope.change_profile = appConfig.item_profile?.change_profile === 1 &&
+    $scope.change_profile = appConfig.item_profile != null && appConfig.item_profile.change_profile === 1 &&
                             _.get($scope, 'origItem.type') === 'text';
 
     metadata.initialize().then(() => {
@@ -1099,11 +1099,11 @@ export function MetadataService(api, subscribersService, vocabularies, $rootScop
         popup_width: {},
         single_value: {},
         cvs: [],
-        search_cvs: appConfig?.search_cvs || [
+        search_cvs: appConfig.search_cvs || [
             {id: 'subject', name: 'Subject', field: 'subject', list: 'subjectcodes'},
             {id: 'companycodes', name: 'Company Codes', field: 'company_codes', list: 'company_codes'},
         ],
-        search_config: appConfig?.search || {
+        search_config: appConfig.search || {
             slugline: 1, headline: 1, unique_name: 1, story_text: 1, byline: 1,
             keywords: 1, creator: 1, from_desk: 1, to_desk: 1, spike: 1,
             scheduled: 1, company_codes: 1, ingest_provider: 1, marked_desks: 1,

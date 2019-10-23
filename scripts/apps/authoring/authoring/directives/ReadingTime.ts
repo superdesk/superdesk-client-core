@@ -22,7 +22,9 @@ export function ReadingTime() {
             '<span ng-if="readingTime>0" class="char-count reading-time" translate>' +
             '{{readingTime}} min read</span>',
         link: function ReadingTimeLink(scope, elem, attrs) {
-            const timeToRead = applyDefault(appConfig.authoring?.timeToRead, true);
+            const timeToRead = appConfig.authoring == null || appConfig.authoring.timeToRead == null
+                ? true
+                : appConfig.authoring.timeToRead;
 
             if (!timeToRead) {
                 scope.readingTime = null;

@@ -138,7 +138,7 @@ export function AuthoringHeaderDirective(
             });
 
             function getNoMissingLink() {
-                return appConfig.features?.noMissingLink;
+                return appConfig.features != null && appConfig.features.noMissingLink;
             }
 
             function getRelatedItems() {

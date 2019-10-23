@@ -160,7 +160,7 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, $q) {
 
         // check if data are valid
         try {
-            if (appConfig.features?.validatePointOfInterestForImages === true) {
+            if (appConfig.features != null && appConfig.features.validatePointOfInterestForImages === true) {
                 poiIsInsideEachCrop();
             }
         } catch (e) {
@@ -231,7 +231,11 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, $q) {
     */
     $scope.done = () => {
         if ($scope.data.isDirty) {
-            if ($scope.data.item.type === 'picture' && appConfig.features?.validatePointOfInterestForImages === true) {
+            if (
+                $scope.data.item.type === 'picture'
+                && appConfig.features != null
+                && appConfig.features.validatePointOfInterestForImages === true
+            ) {
                 if (!$scope.saveCrops() || !$scope.applyMetadataChanges()) {
                     return;
                 }
@@ -507,7 +511,7 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, $q) {
     // init poi if not set
     if (!$scope.data.poi || !Object.keys($scope.data.poi).length) {
         $scope.data.poi = {x: 0.5, y: 0.5};
-        if (!appConfig.features?.validatePointOfInterestForImages) {
+        if (!(appConfig.features != null && appConfig.features.validatePointOfInterestForImages)) {
             $scope.saveCrops(); // save it as defaults
         }
     }

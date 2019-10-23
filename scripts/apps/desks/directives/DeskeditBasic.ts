@@ -86,7 +86,9 @@ export function DeskeditBasic(desks, WizardHandler, metadata, $filter) {
             };
 
             scope.showNoPublishOnAuthoringDesk = function(deskType) {
-                return deskType === 'authoring' && appConfig.features?.noPublishOnAuthoringDesk;
+                return deskType === 'authoring'
+                    && appConfig.features != null
+                    && appConfig.features.noPublishOnAuthoringDesk;
             };
 
             scope.$watch('desk.edit', (newVal) => {

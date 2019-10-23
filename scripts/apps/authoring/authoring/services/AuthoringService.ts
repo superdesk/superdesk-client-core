@@ -210,7 +210,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         }
 
         // Remove sign off from update (if it is not mapped), it will get the publishing user appended in the backend
-        if (updates.sign_off && !(appConfig.user?.sign_off_mapping)) {
+        if (updates.sign_off && !(appConfig.user != null && appConfig.user.sign_off_mapping)) {
             delete updates.sign_off;
         }
 

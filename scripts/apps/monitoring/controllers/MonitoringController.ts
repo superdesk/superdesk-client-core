@@ -21,7 +21,7 @@ export function MonitoringController($rootScope, $scope, $location, desks, super
     this.viewSingleGroup = viewSingleGroup;
     this.viewMonitoringHome = viewMonitoringHome;
 
-    this.hasSwimlaneView = appConfig.features?.swimlane ? 1 : 0;
+    this.hasSwimlaneView = appConfig.features != null && appConfig.features.swimlane ? 1 : 0;
     this.columnsLimit = null;
 
     // init swimlane view using preferences - use session preferences if set, or fallback to user preferences
@@ -66,8 +66,12 @@ export function MonitoringController($rootScope, $scope, $location, desks, super
     function preview(item) {
         self.previewItem = item;
         self.state['with-preview'] = superdeskFlags.flags.previewing = !!item;
-        const sendPreviewEvent = appConfig.list?.narrowView
-            && search.singleLine && superdeskFlags.flags.authoring;
+        const sendPreviewEvent =
+            appConfig.list != null
+            && appConfig.list.narrowView
+            && search.singleLine
+            && superdeskFlags.flags.authoring;
+
         const evnt = item ? 'rowview:narrow' : 'rowview:default';
 
         if (!_.isNil(self.previewItem)) {

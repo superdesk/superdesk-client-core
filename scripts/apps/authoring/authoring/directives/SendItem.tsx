@@ -351,7 +351,7 @@ export function SendItem($q,
                 if (!privileges.privileges.embargo) {
                     return false;
                 }
-                if (appConfig.ui?.publishEmbargo === false) {
+                if (appConfig.ui != null && appConfig.ui.publishEmbargo === false) {
                     return false;
                 }
                 var prePublishCondition = scope.item && archiveService.getType(scope.item) !== 'ingest' &&
@@ -427,7 +427,9 @@ export function SendItem($q,
                 }
             }
 
-            scope.showSendAndPublish = () => applyDefault(appConfig.ui?.sendAndPublish, true);
+            scope.showSendAndPublish = () => appConfig.ui == null || appConfig.ui.sendAndPublish == null
+                ? true
+                : appConfig.ui.sendAndPublish;
 
             /**
              * Check if the Send and Publish is allowed or not.
@@ -487,7 +489,9 @@ export function SendItem($q,
              * @returns {Boolean}
              */
             function canPublishOnDesk() {
-                return !(isAuthoringDesk() && appConfig.features?.noPublishOnAuthoringDesk);
+                return !(
+                    isAuthoringDesk() && appConfig.features != null && appConfig.features.noPublishOnAuthoringDesk
+                );
             }
 
             /**
@@ -964,7 +968,7 @@ export function SendItem($q,
              * @return {Boolean}
              */
             function noPublishOnAuthoringDesk() {
-                return appConfig.features?.noPublishOnAuthoringDesk;
+                return appConfig.features != null && appConfig.features.noPublishOnAuthoringDesk;
             }
 
             // update actions on item save

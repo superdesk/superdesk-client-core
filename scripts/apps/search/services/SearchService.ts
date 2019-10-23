@@ -74,13 +74,19 @@ export function SearchService($location, session, multi,
     preferencesService.get('singleline:view').then((result) => {
         if (result) {
             // No preference, but global config set
-            if (result.enabled === null && appConfig.list?.singleLineView && appConfig.list?.singleLine) {
+            if (
+                result.enabled === null
+                && appConfig.list != null
+                && appConfig.list.singleLineView
+                && appConfig.list != null
+                && appConfig.list.singleLine
+            ) {
                 this.singleLine = true;
                 return;
             }
 
             // Preference set, but singleLine not in config
-            if (result.enabled && !appConfig.list?.singleLine) {
+            if (result.enabled && !(appConfig.list != null && appConfig.list.singleLine)) {
                 this.singleLine = false;
                 return;
             }
@@ -251,7 +257,7 @@ export function SearchService($location, session, multi,
     function formatDate(date, timeSuffix) {
         var local = moment(date, appConfig.view.dateformat).format('YYYY-MM-DD') + timeSuffix;
 
-        if (appConfig.search?.useDefaultTimezone) {
+        if (appConfig.search != null && appConfig.search.useDefaultTimezone) {
             // use the default timezone of the server.
             local += moment.tz(appConfig.defaultTimezone).format('ZZ');
         } else {
@@ -668,7 +674,7 @@ export function SearchService($location, session, multi,
      * Check if elasticsearch highlight feature is configured or not.
      */
     this.getElasticHighlight = function() {
-        return appConfig.features?.elasticHighlight ? 1 : 0;
+        return appConfig.features != null && appConfig.features.elasticHighlight ? 1 : 0;
     };
 
     /**
@@ -781,7 +787,7 @@ export function SearchService($location, session, multi,
      * @description updates singleLine value after computation
      */
     this.updateSingleLineStatus = function(singleLinePref) {
-        if (singleLinePref && appConfig.list?.singleLine) {
+        if (singleLinePref && appConfig.list != null && appConfig.list.singleLine) {
             self.singleLine = true;
             return;
         }

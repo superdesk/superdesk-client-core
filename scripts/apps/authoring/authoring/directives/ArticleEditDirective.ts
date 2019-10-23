@@ -66,14 +66,14 @@ export function ArticleEditDirective(
                 scope.toggleDetails = true;
                 scope.errorMessage = null;
                 scope.contentType = null;
-                scope.canListEditSignOff = appConfig.user?.sign_off_mapping;
+                scope.canListEditSignOff = appConfig.user != null && appConfig.user.sign_off_mapping;
                 scope.editSignOff = false;
                 scope.mediaLoading = false;
                 scope.validator = appConfig.validator_media_metadata;
                 scope.features = appConfig.features;
 
                 var mainEditScope = scope.$parent.$parent;
-                var autopopulateByline = appConfig.features?.autopopulateByline;
+                var autopopulateByline = appConfig.features != null && appConfig.features.autopopulateByline;
 
                 scope.label = (id) => getLabelForFieldId(id);
 
@@ -215,7 +215,7 @@ export function ArticleEditDirective(
                  * Return current signoff mapping
                  */
                 scope.getSignOffMapping = function() {
-                    if (appConfig.user?.sign_off_mapping) {
+                    if (appConfig.user != null && appConfig.user.sign_off_mapping) {
                         return appConfig.user.sign_off_mapping;
                     }
                     return null;
@@ -225,7 +225,7 @@ export function ArticleEditDirective(
                  * Modify the sign-off with the value from sign_off_mapping field from user
                  */
                 scope.modifySignOff = function(user) {
-                    if (appConfig.user?.sign_off_mapping) {
+                    if (appConfig.user != null && appConfig.user.sign_off_mapping) {
                         scope.item.sign_off = user[appConfig.user.sign_off_mapping];
                         autosave.save(scope.item, scope.origItem);
                     }

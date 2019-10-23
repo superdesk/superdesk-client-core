@@ -1,9 +1,10 @@
 import _ from 'lodash';
 import {appConfig} from 'appConfig';
-import {applyDefault} from './helpers/typescript-helpers';
 
 export function isMediaEditable() {
-    return applyDefault(appConfig.features?.editFeaturedImage, true) === true;
+    return (appConfig.features == null || appConfig.features.editFeaturedImage == null
+        ? true
+        : appConfig.features.editFeaturedImage) === true;
 }
 
 /**
