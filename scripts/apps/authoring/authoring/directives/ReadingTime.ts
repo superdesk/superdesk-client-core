@@ -1,6 +1,7 @@
-import {get, compact, trim, filter} from 'lodash';
+import {compact, trim, filter} from 'lodash';
 import {cleanHtml} from '../helpers';
 import {appConfig} from 'appConfig';
+import {applyDefault} from 'core/helpers/typescript-helpers';
 
 /**
  * @ngdoc directive
@@ -21,7 +22,7 @@ export function ReadingTime() {
             '<span ng-if="readingTime>0" class="char-count reading-time" translate>' +
             '{{readingTime}} min read</span>',
         link: function ReadingTimeLink(scope, elem, attrs) {
-            const timeToRead = appConfig.authoring?.timeToRead ?? true;
+            const timeToRead = applyDefault(appConfig.authoring?.timeToRead, true);
 
             if (!timeToRead) {
                 scope.readingTime = null;

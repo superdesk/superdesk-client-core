@@ -2,6 +2,7 @@ import _ from 'lodash';
 import {gettext} from 'core/utils';
 import momentTimezone from 'moment-timezone';
 import {appConfig} from 'appConfig';
+import {applyDefault} from 'core/helpers/typescript-helpers';
 
 DateTimeDirective.$inject = ['datetime', 'moment'];
 function DateTimeDirective(datetime, moment) {
@@ -239,7 +240,7 @@ export default angular.module('superdesk.core.datetime', [
 
     // format datetime obj to time string
     .filter('time', ['moment', function timeFilterFactory(moment) {
-        var TIME_FORMAT = appConfig.view?.timeformat ?? 'h:mm';
+        var TIME_FORMAT = applyDefault(appConfig.view?.timeformat, 'h:mm');
 
         return function timeFilter(time) {
             var m = moment(time, 'HH:mm:ss');

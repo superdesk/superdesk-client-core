@@ -2,6 +2,7 @@
 /* tslint:disable:max-line-length */
 import {gettext} from 'core/utils';
 import {appConfig} from 'appConfig';
+import {applyDefault} from 'core/helpers/typescript-helpers';
 
 /**
  * @ngdoc directive
@@ -180,7 +181,7 @@ export function UserPreferencesDirective(
                 return _.indexOf(noShowCategories, preference.category) < 0;
             };
 
-            scope.profileConfig = appConfig.profile ?? {};
+            scope.profileConfig = applyDefault(appConfig.profile, {});
 
             /**
              * Determine if the planning related preferences should be shown based on the existance of the

@@ -1,5 +1,6 @@
 import {gettext} from 'core/utils';
 import {appConfig} from 'appConfig';
+import {applyDefault} from 'core/helpers/typescript-helpers';
 
 UserEditDirective.$inject = ['api', 'notify', 'usersService', 'userList', 'session', 'lodash',
     'langmap', '$location', '$route', 'superdesk', 'features', 'asset', 'privileges',
@@ -221,7 +222,7 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
                 resetUser(user);
             });
 
-            scope.profileConfig = appConfig.profile ?? {};
+            scope.profileConfig = applyDefault(appConfig.profile, {});
         },
     };
 }

@@ -5,6 +5,7 @@ import {gettext} from 'core/utils';
 import {isPublished} from 'apps/archive/utils';
 import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
 import {appConfig} from 'appConfig';
+import {applyDefault} from 'core/helpers/typescript-helpers';
 
 SendItem.$inject = [
     '$q',
@@ -426,7 +427,7 @@ export function SendItem($q,
                 }
             }
 
-            scope.showSendAndPublish = () => appConfig.ui?.sendAndPublish ?? true;
+            scope.showSendAndPublish = () => applyDefault(appConfig.ui?.sendAndPublish, true);
 
             /**
              * Check if the Send and Publish is allowed or not.

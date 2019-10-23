@@ -5,6 +5,7 @@ import * as actions from '../../actions';
 import Textarea from 'react-textarea-autosize';
 import {gettext} from 'core/utils';
 import {appConfig} from 'appConfig';
+import {applyDefault} from 'core/helpers/typescript-helpers';
 
 function getTranslationForAssignRights(value) {
     if (value === 'single-usage') {
@@ -151,7 +152,7 @@ export class MediaBlockComponent extends React.Component<any, any> {
             !readOnly
             && (
                 data._type !== 'externalsource'
-                || (appConfig.features?.editFeaturedImage ?? true)
+                || (applyDefault(appConfig.features?.editFeaturedImage, true))
             );
 
         const removable = !readOnly;
