@@ -53,7 +53,7 @@ export class VideoEditorTools extends React.Component<IProps> {
                         onSelect={this.handleCrop}
                         resetState={this.props.video.cropEnabled === false}
                         isButton={true}
-                        className={getClass('video__dropdown')}
+                        className={getClass('video__dropdown__crop')}
                     />
                     <button
                         className={`
@@ -73,6 +73,7 @@ export class VideoEditorTools extends React.Component<IProps> {
                     items={resolutions}
                     onSelect={this.handleQuality}
                     resetState={this.props.video.quality === 0}
+                    className={resolutions.length === 1 && getClass('video__dropdown__quality--disable')}
                 />
             </div>
         );

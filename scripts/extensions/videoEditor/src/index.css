@@ -182,9 +182,19 @@
   background-image: none;
 }
 
-.video__dropdown {
+.video__dropdown__crop {
   margin-left: 0.2rem;
   margin-right: 0.2rem;
+}
+
+.video__dropdown__quality--disable:active {
+  pointer-events: none;
+}
+.video__dropdown__quality--disable:hover::before {
+  content: "Maximum quality resize allowed";
+  white-space: nowrap;
+  bottom: 3rem;
+  position: absolute;
 }
 
 .video__loading {
