@@ -669,7 +669,7 @@ export function MonitoringGroup(
                         }
                     }
                 } else if (scope.group != null && scope.group.type === 'personal') {
-                    provider = 'production';
+                    provider = 'news';
                 } else {
                     provider = 'archive';
                 }
