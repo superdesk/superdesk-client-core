@@ -3,6 +3,7 @@
   "main": "dist/extension.js",
   "scripts": {
     "compile": "tsc",
+    "compile-e2e": "echo 'No end-to-end tests defined'",
     "watch": "tsc -watch"
   },
   "devDependencies": {
@@ -11,5 +12,8 @@
   "dependencies": {
     "@types/react-image-crop": "^8.1.2",
     "react-image-crop": "^8.3.0"
+  },
+  "peerDependencies": {
+    "react": "16.8.6"
   }
 }
