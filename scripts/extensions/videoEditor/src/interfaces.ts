@@ -17,7 +17,14 @@ export interface IArticleVideo extends IArticle {
 }
 
 export interface IVideoEditor {
-    crop: object;
+    crop: {
+        aspect: number,
+        unit: string,
+        x: number,
+        y: number,
+        width: number,
+        height: number,
+    };
     cropEnabled: boolean;
     quality: number;
     degree: number;

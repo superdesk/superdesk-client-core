@@ -107,15 +107,35 @@ export class VideoEditor extends React.Component<IProps, IState> {
     };
 
     handleToggleCrop = (aspect: number) => {
-        if (aspect) {
-            this.setState({ crop: { ...this.state.crop, aspect: aspect } });
-        }
+        const cropAspect = aspect || this.state.crop.aspect;
 
         this.setState({ cropEnabled: !this.state.cropEnabled }, () => {
             if (this.state.cropEnabled === false) {
                 this.setState({ crop: this.initState.crop }, this.checkIsDirty);
             } else {
-                this.checkIsDirty();
+                // draw sample crop area, only draw 80% instead of full video width, height so
+                // user can resize, move easily
+                let { videoWidth, videoHeight } = this.ref.current!;
+                videoWidth = (videoWidth * 80) / 100;
+                videoHeight = (videoHeight * 80) / 100;
+
+                const ratio = videoWidth / videoHeight;
+                if (ratio > 1) {
+                    videoWidth = videoHeight * cropAspect;
+                } else {
+                    videoHeight = videoWidth * cropAspect;
+                }
+                this.setState(
+                    {
+                        crop: {
+                            ...this.initState.crop,
+                            aspect: cropAspect,
+                            width: videoWidth,
+                            height: videoHeight,
+                        },
+                    },
+                    this.checkIsDirty
+                );
             }
         });
     };
@@ -219,15 +239,16 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                                     <ReactCrop
                                                         src={this.state.cropImg}
                                                         crop={this.state.crop}
-                                                        onChange={(newCrop: object) => {
+                                                        onChange={(newCrop: IVideoEditor['crop']) => {
                                                             this.setState({ crop: newCrop }, this.checkIsDirty);
                                                         }}
                                                         style={{
-                                                            maxWidth: width,
-                                                            maxHeight: height,
+                                                            width: width,
+                                                            height: height,
                                                             background: 'unset',
                                                             position: 'absolute',
                                                             marginTop: '2rem',
+                                                            top: 0,
                                                         }}
                                                     />
                                                 )}
