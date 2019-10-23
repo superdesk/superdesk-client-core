@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ISuperdesk } from 'superdesk-api';
 import VideoEditorContext from '../VideoEditorContext';
 import { IArticleVideo, IVideoEditor } from '../interfaces';
 import { get, pick } from 'lodash';
@@ -108,11 +109,30 @@ export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
                     // reuse thumbnail from canvas so we don't have to display old one,
                     // new thumbnail will be loaded when user reset changes
                     this.handleReset(false);
+                    this.setState({ rotateDegree: this.props.rotate });
                     this.props.onToggleLoading(true);
                     this.getPreviewThumbnail();
                 })
                 .catch((err: any) => console.log(err));
         } else if (this.state.type === 'upload') {
+            const form = new FormData();
+            form.append('file', this.state.value as File);
+
+            const { session, instance }: ISuperdesk = this.context.superdesk;
+            const host = instance.config.server.url;
+            fetch(`${host}/video_edit/${this.props.article._id}`, {
+                method: 'PUT',
+                headers: {
+                    Authorization: session.getToken(),
+                    'If-Match': this.props.article._etag,
+                },
+                body: form,
+            })
+                .then(res => res.json())
+                .then((res: any) => {
+                    this.handleReset();
+                    this.setPreviewThumbnail(res.renditions.thumbnail.href + `?t=${Math.random()}`);
+                });
         }
     };
 
