@@ -1,5 +1,5 @@
-import {appConfig} from "appConfig";
-import {ISuperdeskGlobalConfig} from "superdesk-api";
+import {appConfig} from 'appConfig';
+import {ISuperdeskGlobalConfig} from 'superdesk-api';
 
 describe('superdesk.core.services.asset module', () => {
     beforeEach(window.module('superdesk.core.services.asset'));

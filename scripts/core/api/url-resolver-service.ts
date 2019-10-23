@@ -1,4 +1,5 @@
 import {appConfig} from 'appConfig';
+import _ from 'lodash';
 
 URLResolver.$inject = ['$http', '$q', '$log'];
 function URLResolver($http, $q, $log) {

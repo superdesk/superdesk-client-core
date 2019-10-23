@@ -1,4 +1,4 @@
-import {appConfig} from "appConfig";
+import {appConfig} from 'appConfig';
 
 export default [
     ['EMBED_PROVIDERS', function(EMBED_PROVIDERS) {

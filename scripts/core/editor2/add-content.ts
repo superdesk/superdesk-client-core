@@ -1,4 +1,4 @@
-import {appConfig} from "appConfig";
+import {appConfig} from 'appConfig';
 
 angular.module('superdesk.apps.editor2.content', []).directive('sdAddContent', ['$window',
     function($window) {

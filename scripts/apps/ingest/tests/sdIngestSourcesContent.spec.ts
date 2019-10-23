@@ -1,5 +1,5 @@
-import {ISuperdeskGlobalConfig} from "superdesk-api";
-import {appConfig} from "appConfig";
+import {ISuperdeskGlobalConfig} from 'superdesk-api';
+import {appConfig} from 'appConfig';
 
 /**
 * Module with tests for the sdIngestSourcesContent directive

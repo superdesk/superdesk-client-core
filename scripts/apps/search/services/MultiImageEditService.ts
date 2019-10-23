@@ -1,4 +1,4 @@
-import {appConfig} from "appConfig";
+import {appConfig} from 'appConfig';
 
 MultiImageEditModalController.$inject = ['$scope', 'imagesOriginal', 'saveHandler'];
 function MultiImageEditModalController($scope, imagesOriginal, saveHandler) {

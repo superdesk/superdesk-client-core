@@ -1,4 +1,4 @@
-import {appConfig} from "appConfig";
+import {appConfig} from 'appConfig';
 
 function NoopTracking() {
     this.track = angular.noop;

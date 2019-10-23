@@ -1,5 +1,5 @@
-import {ISuperdeskGlobalConfig} from "superdesk-api";
-import {appConfig} from "appConfig";
+import {ISuperdeskGlobalConfig} from 'superdesk-api';
+import {appConfig} from 'appConfig';
 
 describe('Embed Code Handlers', () => {
     var ctrl, scope;

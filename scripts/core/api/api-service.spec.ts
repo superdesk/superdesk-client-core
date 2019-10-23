@@ -1,5 +1,6 @@
-import {appConfig} from "appConfig";
-import {ISuperdeskGlobalConfig} from "superdesk-api";
+import {appConfig} from 'appConfig';
+import {ISuperdeskGlobalConfig} from 'superdesk-api';
+import _ from 'lodash';
 
 function collection(data) {
     return {_items: data};

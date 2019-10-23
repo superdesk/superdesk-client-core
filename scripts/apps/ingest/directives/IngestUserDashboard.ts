@@ -1,4 +1,4 @@
-import {appConfig} from "appConfig";
+import {appConfig} from 'appConfig';
 
 IngestUserDashboard.$inject = ['api', 'userList', 'privileges', 'moment'];
 export function IngestUserDashboard(api, userList, privileges, moment) {

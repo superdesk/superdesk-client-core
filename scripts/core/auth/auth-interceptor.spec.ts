@@ -1,6 +1,6 @@
-import {ISuperdeskGlobalConfig} from "superdesk-api";
-import {appConfig} from "appConfig";
-import _ from "lodash";
+import {ISuperdeskGlobalConfig} from 'superdesk-api';
+import {appConfig} from 'appConfig';
+import _ from 'lodash';
 
 describe('auth interceptor', () => {
     beforeEach(window.module('superdesk.core.auth.interceptor'));

@@ -1,4 +1,4 @@
-import {appConfig} from "appConfig";
+import {appConfig} from 'appConfig';
 
 describe('Upload controller', () => {
     var files = [{type: 'image/jpeg'}],

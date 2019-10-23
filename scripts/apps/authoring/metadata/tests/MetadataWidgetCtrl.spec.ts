@@ -1,5 +1,6 @@
-import {ISuperdeskGlobalConfig} from "superdesk-api";
-import {appConfig} from "appConfig";
+import {ISuperdeskGlobalConfig} from 'superdesk-api';
+import {appConfig} from 'appConfig';
+import _ from 'lodash';
 
 describe('MetadataWidgetCtrl controller', () => {
     var metadata, // the metadata service

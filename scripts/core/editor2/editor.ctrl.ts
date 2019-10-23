@@ -1,4 +1,4 @@
-import {appConfig} from "appConfig";
+import {appConfig} from 'appConfig';
 
 angular.module('superdesk.apps.editor2.ctrl', []).controller('SdTextEditorController', SdTextEditorController);
 
