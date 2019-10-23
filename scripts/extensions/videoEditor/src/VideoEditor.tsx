@@ -203,6 +203,14 @@ export class VideoEditor extends React.Component<IProps, IState> {
             height: 0,
         };
 
+        const { videoWidth, videoHeight } = this.ref.current! || { videoWidth: 1, videoHeight: 1 };
+        let scaleRatio = videoWidth / videoHeight || 1;
+        if (this.state.degree % 180 === 0) {
+            scaleRatio = 1;
+        } else if (scaleRatio > 1) {
+            scaleRatio = 1 / scaleRatio;
+        }
+
         return (
             <div className="modal modal--fullscreen modal--dark-ui in" style={{ zIndex: 1050, display: 'block' }}>
                 <div className="modal__dialog">
@@ -222,7 +230,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                     <div className="sd-photo-preview__video">
                                         <div className="sd-photo-preview__video-inner">
                                             <div className="sd-photo-preview__video-container">
-                                                <div style={{ transform: `rotate(${degree})` }}>
+                                                <div style={{ transform: `rotate(${degree}) scale(${scaleRatio})` }}>
                                                     <video
                                                         ref={this.ref}
                                                         src={videoSrc}
