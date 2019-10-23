@@ -102,7 +102,6 @@
                     <div sd-item-rendition
                         data-item="selected.preview"
                         data-rendition="viewImage"
-                        data-draggable="false"
                         ng-click="preview(item)"></div>
                     <p class="nav-space description-text" ng-if="selected.preview.headline !== selected.preview.description_text &&
                       selected.preview.description_text">{{selected.preview.description_text}}</p>
@@ -112,7 +111,6 @@
             <div ng-if="selected.preview.associations.featuremedia">
                 <div sd-item-rendition
                     data-item="selected.preview.associations.featuremedia"
-                    data-draggable="false"
                     data-rendition="viewImage"></div>
                 <p class="nav-space description-text">{{selected.preview.associations.featuremedia.description_text}}</p>
             </div>
@@ -166,7 +164,7 @@
                 </div>
                 <div ng-if="field.field_type === 'media'" class="association">
                     <div ng-repeat="(mediaId, media) in getAssociatedItems(item.associations, field._id) track by mediaId">
-                        <img draggable="false" src="{{media.renditions.viewImage.href}}" ng-if="media.type === 'picture'">
+                        <img src="{{media.renditions.viewImage.href}}" ng-if="media.type === 'picture'">
                         <video controls="controls" ng-if="media.type === 'video'">
                             <source vsrc="{{rendition.href}}"
                                     ng-repeat="(key, rendition) in media.renditions"

@@ -67,6 +67,7 @@ $roles-border: 1px solid #f0f0f0;
             background: #f2f2f2;
             padding: 10px 16px;
             white-space: nowrap;
+            z-index: 1; // ensure that relatively positioned items in tables aren't displayed on top of the sticky toolbar
         }
         .name {
             min-width: 270px;

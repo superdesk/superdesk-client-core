@@ -205,11 +205,12 @@ class Editor3Directive {
                 item: this.item,
                 pathToValue: this.pathToValue,
             };
+
             const content = getInitialContent(props);
             const state = store.getState();
             const editorState = EditorState.push(state.editorState, content, 'change-block-data');
 
-            store.dispatch(changeEditorState(editorState, true, true));
+            store.dispatch(changeEditorState(editorState, false, true));
         });
 
         // this is triggered from MacrosController.call

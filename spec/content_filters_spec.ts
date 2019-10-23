@@ -85,18 +85,16 @@ describe('content filters', () => {
         filterConditions.selectFilterConditionParameter('Urgency');
         filterConditions.selectFilterConditionParameter('nin');
         filterConditions.openPredefinedValues();
-        browser.actions().sendKeys('1')
-            .perform();
-        browser.actions().sendKeys(protractor.Key.DOWN)
-            .perform();
-        browser.actions().sendKeys(protractor.Key.ENTER)
+        browser.actions()
+            .sendKeys('1')
+            .sendKeys(protractor.Key.DOWN)
+            .sendKeys(protractor.Key.ENTER)
             .perform();
         filterConditions.openPredefinedValues();
-        browser.actions().sendKeys('2')
-            .perform();
-        browser.actions().sendKeys(protractor.Key.DOWN)
-            .perform();
-        browser.actions().sendKeys(protractor.Key.ENTER)
+        browser.actions()
+            .sendKeys('2')
+            .sendKeys(protractor.Key.DOWN)
+            .sendKeys(protractor.Key.ENTER)
             .perform();
         filterConditions.save();
 
@@ -104,11 +102,11 @@ describe('content filters', () => {
         monitoring.openMonitoring();
         workspace.selectDesk('Politics Desk');
         monitoring.actionOnItem('Edit', 2, 0); // setup item5
-        authoring.writeText('Help needed');
+        authoring.writeText(protractor.Key.HOME + 'Help needed');
         authoring.save();
         authoring.close();
         monitoring.actionOnItem('Edit', 2, 1); // setup item9
-        authoring.setHeaderSluglineText('Another amazing story');
+        authoring.setHeaderSluglineText(protractor.Key.HOME + 'Another amazing story');
         authoring.save();
         authoring.close();
         monitoring.actionOnItem('Edit', 2, 2); // setup item7
@@ -218,7 +216,7 @@ describe('content filters', () => {
         monitoring.openMonitoring();
         workspace.selectDesk('Politics Desk');
         monitoring.actionOnItem('Edit', 2, 0); // setup item5
-        authoring.writeText('Help needed');
+        authoring.writeText(protractor.Key.HOME + 'Help needed');
         authoring.save();
         authoring.publish();
 
@@ -236,7 +234,7 @@ describe('content filters', () => {
         monitoring.openMonitoring();
         workspace.selectDesk('Politics Desk');
         monitoring.actionOnItem('Edit', 2, 0); // setup item5
-        authoring.writeText('Help needed');
+        authoring.writeText(protractor.Key.HOME + 'Help needed');
         authoring.save();
         authoring.publish();
 

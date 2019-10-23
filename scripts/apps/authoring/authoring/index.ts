@@ -100,7 +100,7 @@ angular.module('superdesk.apps.authoring', [
     .directive('sdArticleEdit', directive.ArticleEditDirective)
     .directive('sdAuthoring', directive.AuthoringDirective)
     .directive('sdAuthoringTopbar', directive.AuthoringTopbarDirective)
-    .component('sdAuthoringTopbarReact', reactToAngular1(AuthoringTopbarReact, ['article', 'onChange']))
+    .component('sdAuthoringTopbarReact', reactToAngular1(AuthoringTopbarReact, ['article', 'action', 'onChange']))
     .directive('sdPreviewFormatted', directive.PreviewFormattedDirective)
     .directive('sdAuthoringContainer', directive.AuthoringContainerDirective)
     .directive('sdAuthoringEmbedded', directive.AuthoringEmbeddedDirective)
@@ -205,9 +205,9 @@ angular.module('superdesk.apps.authoring', [
                 priority: 3,
                 icon: 'edit-line',
                 keyboardShortcut: 'ctrl+alt+m',
-                controller: ['data', 'multiImageEdit', 'authoring', 'api',
-                    function(data, multiImageEdit, authoring, api) {
-                        api.find('archive', data.item._id).then((item) => {
+                controller: ['data', 'multiImageEdit', 'authoring', 'lock',
+                    function(data, multiImageEdit, authoring, lock) {
+                        lock.lock(data.item, true, 'edit').then((item) => {
                             multiImageEdit.edit([item], (response) => authoring.save(item, response[0]));
                         });
                     }],

@@ -902,7 +902,7 @@ describe('authoring actions', () => {
 
             allowedActions(itemActions, ['save', 'edit', 'duplicate', 'spike', 're_write',
                 'mark_item_for_highlight', 'mark_item_for_desks',
-                'package_item', 'multi_edit', 'publish', 'add_to_current', 'export', 'set_label']);
+                'package_item', 'multi_edit', 'publish', 'add_to_current', 'export', 'set_label', 'send']);
         }));
 
     it('cannot perform publish if the item is marked for not publication',
@@ -934,7 +934,7 @@ describe('authoring actions', () => {
 
             allowedActions(itemActions, ['save', 'edit', 'duplicate', 'spike', 're_write',
                 'mark_item_for_highlight', 'package_item', 'multi_edit', 'add_to_current',
-                'export', 'set_label']);
+                'export', 'set_label', 'send']);
         }));
 
     it('cannot perform publish if the item is highlight package',
@@ -965,7 +965,7 @@ describe('authoring actions', () => {
             var itemActions = authoring.itemActions(item);
 
             allowedActions(itemActions, ['save', 'edit', 'duplicate', 'spike',
-                'package_item', 'multi_edit', 'add_to_current', 'set_label']);
+                'package_item', 'multi_edit', 'add_to_current', 'set_label', 'send']);
         }));
 
     it('cannot publish if user does not have publish privileges on the desk',
@@ -997,7 +997,7 @@ describe('authoring actions', () => {
 
             allowedActions(itemActions, ['save', 'edit', 'duplicate', 'spike', 're_write',
                 'mark_item_for_highlight', 'package_item', 'multi_edit', 'add_to_current',
-                'export', 'set_label']);
+                'export', 'set_label', 'send']);
         }));
 
     it('can only view the item if the user does not have desk membership',
@@ -1442,7 +1442,7 @@ describe('authoring actions', () => {
                 're_write', 'set_label']);
         }));
 
-    it('Cannot send item if the no move privileges',
+    it('Can send item even if there is no move privileges',
         inject((privileges, desks, authoring, $q, $rootScope) => {
             var item = {
                 _id: 'test',
@@ -1475,7 +1475,7 @@ describe('authoring actions', () => {
 
             allowedActions(itemActions, ['save', 'edit', 'duplicate', 'spike', 'add_to_current',
                 're_write', 'mark_item_for_highlight', 'package_item', 'multi_edit', 'publish',
-                'export', 'set_label']);
+                'export', 'set_label', 'send']);
         }));
 
     it('Can send item if the version greater then zero',

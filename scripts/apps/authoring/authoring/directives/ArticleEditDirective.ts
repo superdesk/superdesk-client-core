@@ -3,6 +3,7 @@ import {FIELD_KEY_SEPARATOR} from 'core/editor3/helpers/fieldsMeta';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 import {MEDIA_TYPES} from 'apps/vocabularies/constants';
 import {isPublished} from 'apps/archive/utils';
+import {resetFieldMetadata} from 'core/editor3/helpers/fieldsMeta';
 
 /**
  * @ngdoc directive
@@ -98,6 +99,12 @@ export function ArticleEditDirective(
                 scope.preview = function(item) {
                     superdesk.intent('preview', 'item', item);
                 };
+
+                elem.on('drop dragdrop', (event) => {
+                    if (!scope._editable) {
+                        return false;
+                    }
+                });
 
                 /* End: Dateline related properties */
 
@@ -314,6 +321,11 @@ export function ArticleEditDirective(
                         .then((picture) => {
                             scope.item._etag = picture._etag;
 
+                            // draftjs editor state will be
+                            // outdated after editing in modal
+                            resetFieldMetadata(scope.item);
+                            scope.refresh();
+
                             if (isPublished(scope.item)) {
                                 mainEditScope.dirty = true;
 
@@ -390,6 +402,10 @@ export function ArticleEditDirective(
                 scope.$watch('item.body_html', () => suggest.trigger(scope.item, scope.origItem));
 
                 scope.extra = {}; // placeholder for fields not part of item
+            });
+
+            scope.$on('$destroy', () => {
+                elem.off('drop dragdrop');
             });
         },
     };

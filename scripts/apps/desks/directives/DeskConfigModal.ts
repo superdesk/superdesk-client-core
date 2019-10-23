@@ -1,4 +1,5 @@
 import {gettext} from 'core/utils';
+import {appConfig} from '../../../appConfig';
 
 /**
  * @ngdoc directive
@@ -26,12 +27,18 @@ export function DeskConfigModal(metadata, content, templates, api, deployConfig)
         require: '^sdDeskConfig',
         templateUrl: 'scripts/apps/desks/views/desk-config-modal.html',
         link: function(scope, elem, attrs, ctrl) {
-            scope.monitoringViews = {
-                '': {label: gettext('None')},
-                list: {label: gettext('List View'), icon: 'list-view'},
-                swimlane: {label: gettext('Swimlane View'), icon: 'kanban-view'},
-                photogrid: {label: gettext('Photo Grid View'), icon: 'grid-view'},
-            };
+            const views = {};
+
+            views[''] = {label: gettext('None')};
+            views['list'] = {label: gettext('List View'), icon: 'list-view'};
+
+            if (appConfig.features.swimlane != null) {
+                views['swimlane'] = {label: gettext('Swimlane View'), icon: 'kanban-view'};
+            }
+
+            views['photogrid'] = {label: gettext('Photo Grid View'), icon: 'grid-view'};
+
+            scope.monitoringViews = views;
 
             /*
              * Initialize metadata

@@ -20,7 +20,20 @@
                 </thead>
                 <tbody>
                     <tr ng-repeat="p in privileges">
-                        <td class="name">{{ :: p.label | translate }}</td>
+                        <td class="name">
+                            <div style="display: flex">
+                                <span>{{ :: p.label | translate }}</span>
+
+                                <span
+                                    ng-if="p.description"
+                                    sd-tooltip="{{ :: p.description }}"
+                                    flow="right"
+                                    style="margin-left: 6px"
+                                >
+                                    <span class="icon-info-sign"></span>
+                                </span>
+                            </div>
+                        </td>
                         <td ng-repeat="role in roles">
                             <input type="checkbox" ng-true-value="1" ng-false-value="0" ng-model="role.privileges[p.name]">
                         </td>

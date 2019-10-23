@@ -61,6 +61,12 @@ declare module 'superdesk-api' {
             pages?: Array<IPage>;
             customFieldTypes?: Array<ICustomFieldType>;
             authoringActions?(article: IArticle): Promise<Array<IArticleAction>>;
+            notifications?: {
+                [id: string]: (notification) => {
+                    body: string;
+                    actions: Array<{label: string; onClick(): void;}>;
+                };
+            };
             entities?: {
                 article?: {
                     getActions?(article: IArticle): Promise<Array<IArticleAction>>;
@@ -182,7 +188,8 @@ declare module 'superdesk-api' {
         _type: 'ingest' | 'archive' | 'published' | 'archived' | string;
         guid: string;
         translated_from: string;
-        translation_id: string;
+        translation_id: string; // if C is translated from B which is translated from A, all will have the same translation_id
+        translations: Array<IArticle['_id']>; // direct translations only, not all items with same translation_id
         usageterms: any;
         keywords: any;
         language: any;
@@ -240,6 +247,7 @@ declare module 'superdesk-api' {
         task_id?: any;
         ingest_provider?: any;
         archive_item?: any;
+        item_id?: string; // id of corresponding item in 'published' collection
 
         highlights?: Array<string>;
         highlight?: any;
@@ -407,7 +415,7 @@ declare module 'superdesk-api' {
         endpoint: string;
         page: {
             from: number;
-            size?: number;
+            size: number;
         };
         sort: Array<{[field: string]: 'asc' | 'desc'}>;
 
@@ -610,6 +618,7 @@ declare module 'superdesk-api' {
         getToggleElement(isOpen: boolean, onClick: () => void): JSX.Element;
         renderItem(key: string, item: T, closeDropdown:() => void): JSX.Element;
         wrapperStyles?: React.CSSProperties;
+        'data-test-id'?: string;
     }
 
     interface ISpacingProps {
@@ -667,6 +676,7 @@ declare module 'superdesk-api' {
             page: number,
             sortOption: ISortOption,
             filterValues: ICrudManagerFilters,
+            max_results?: number,
             formatFiltersForServer?: (filters: ICrudManagerFilters) => ICrudManagerFilters,
         ): Promise<IRestApiResponse<T>>;
         patch<T extends IBaseRestApiResponse>(endpoint, current: T, next: T): Promise<T>;
@@ -769,7 +779,7 @@ declare module 'superdesk-api' {
             Alert: React.ComponentType<IAlertComponentProps>;
             Figure: React.ComponentType<IFigureComponentProps>;
             DropZone: React.ComponentType<IDropZoneComponentProps>;
-            Modal: React.ComponentType;
+            Modal: React.ComponentType<{'data-test-id'?: string}>;
             ModalHeader: React.ComponentType<IPropsModalHeader>;
             ModalBody: React.ComponentType;
             ModalFooter: React.ComponentType;
@@ -779,7 +789,7 @@ declare module 'superdesk-api' {
             ArticleItemConcise: React.ComponentType<{article: IArticle}>;
             GroupLabel: React.ComponentType<ISpacingProps>;
             Icon: React.ComponentType<IPropsIcon>;
-            TopMenuDropdownButton: React.ComponentType<{onClick: () => void; active: boolean}>;
+            TopMenuDropdownButton: React.ComponentType<{onClick: () => void; active: boolean; 'data-test-id'?: string;}>;
             getDropdownTree: <T>() => React.ComponentType<IPropsDropdownTree<T>>;
         };
         forms: {
@@ -806,6 +816,7 @@ declare module 'superdesk-api' {
             getOwnPrivileges(): Promise<any>;
         };
         session: {
+            getToken(): string;
             getCurrentUser(): Promise<IUser>;
         };
         utilities: {
@@ -831,6 +842,9 @@ declare module 'superdesk-api' {
 
 
     export interface ISuperdeskGlobalConfig {
+        server: {
+            url: string;
+        };
         defaultRoute: string;
         features: {
             swimlane: {

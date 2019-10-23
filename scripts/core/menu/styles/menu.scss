@@ -288,7 +288,7 @@
         }
     }
     .top-menu__info {
-        display: inline-flex;
+        display: flex;
         height: 30px;
         padding: 0 20px;
         background-color: rgba(0,0,0,0.5);
@@ -297,6 +297,8 @@
         font-size: 12px;
         border-radius: 15px;
         align-items: center;
+        white-space: nowrap;
+        max-width: 700px;
     }
     .top-menu__info-label {
         font-weight: 300;
@@ -305,6 +307,9 @@
     }
     .top-menu__info-text {
         font-weight: 400;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
     .top-menu__info-icon {
         margin-right: 6px;

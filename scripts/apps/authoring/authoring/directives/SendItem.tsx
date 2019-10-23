@@ -816,16 +816,26 @@ export function SendItem($q,
             }
 
             /**
-             * Set the last selected desk based on the user action.
-             * To be called after currentUserAction is set
+             * Sets the desk and stage list for user to move the story to.
+             * Also sets the last selected desk based on the user action.
+             * if user has the move privilege and if the story is not published she can send the story to any desk.
+             * if user doesn't have the move privilege or if the story is published
+             * then story can be sent only to member desks.
+             * This function to be called after currentUserAction is set
              */
             function setDesksAndStages() {
                 if (!scope.currentUserAction) {
                     return;
                 }
                 // set the desks for desk filter
-                if (scope.currentUserAction === ctrl.userActions.publish) {
+                if (scope.currentUserAction === ctrl.userActions.publish || !privileges.privileges.move) {
                     scope.desks = scope.userDesks;
+
+                    if (!_.isEmpty(scope.desks)) {
+                        scope.selectDesk(scope.desks[0]);
+                    } else {
+                        scope.selectedDesk = null;
+                    }
                 } else {
                     scope.desks = scope.allDesks;
                 }

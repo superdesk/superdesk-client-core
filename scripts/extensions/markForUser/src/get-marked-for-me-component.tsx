@@ -37,7 +37,7 @@ export function getMarkedForMeComponent(superdesk: ISuperdesk) {
 
             if (user != null) {
                 superdesk.dataApiByEntity.article.query({
-                    page: {from: 0},
+                    page: {from: 0, size: 300},
                     sort: [{'_updated': 'desc'}],
                     filterValues: {marked_for_user: [user._id]},
                 }).then((articles) => {
@@ -115,11 +115,15 @@ export function getMarkedForMeComponent(superdesk: ISuperdesk) {
                         items: itemsByDesk[deskId],
                     }))}
                     getToggleElement={(isOpen, onClick) => (
-                        <TopMenuDropdownButton onClick={() => {
-                            if (desksInOrder.length > 0) {
-                                onClick();
-                            }
-                        }} active={isOpen}>
+                        <TopMenuDropdownButton
+                            onClick={() => {
+                                if (desksInOrder.length > 0) {
+                                    onClick();
+                                }
+                            }}
+                            active={isOpen}
+                            data-test-id="toggle-button"
+                        >
                             <Badge type="highlight" marginRight={6}>{articles._items.length}</Badge>
                             {gettext('Marked for me')}
                         </TopMenuDropdownButton>
@@ -134,12 +138,14 @@ export function getMarkedForMeComponent(superdesk: ISuperdesk) {
                                     closeDropdown();
                                     superdesk.ui.article.view(item._id);
                                 }}
+                                data-test-id="item"
                             >
                                 <ArticleItemConcise article={item} />
                             </button>
                         );
                     }}
                     wrapperStyles={{width: 430, padding: 15, paddingTop: 0}}
+                    data-test-id="marked-for-me-dropdown"
                 />
             );
         }

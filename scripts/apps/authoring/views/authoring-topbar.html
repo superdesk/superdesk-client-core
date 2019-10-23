@@ -1,7 +1,14 @@
-<div id="subnav" class="subnav subnav--authoring" ng-class="{'auth-sendto': views.send, 'subnav--locked': isLocked()}" sd-media-query min-width="900">
+<div
+  id="subnav"
+  class="subnav subnav--authoring"
+  ng-class="{'auth-sendto': views.send, 'subnav--locked': isLocked()}"
+  sd-media-query min-width="900"
+  data-test-id="authoring-topbar"
+>
 
     <sd-authoring-topbar-react
       article="item"
+      action="action"
       on-change="handleArticleChange"
     ></sd-authoring-topbar-react>
 
@@ -49,6 +56,15 @@
                 title="{{ :: 'To Desk' | translate }}">
                 <span class="btn__text" translate>To Desk</span>
                 <span class="btn__text--short" translate>T D</span>
+        </button>
+        <button
+                ng-if="$root.config.features.customAuthoringTopbar.closeAndContinue === true"
+                class="btn btn--custom"
+                ng-disabled="!canRewriteArticle()"
+                ng-click="saveAndContinue(closeAndContinue, false)"
+                title="{{gettext('Close and Continue')}}">
+                <span class="btn__text" translate>Close and Continue</span>
+                <span class="btn__text--short" translate>C & C</span>
         </button>
         <button
                 ng-if="$root.config.features.customAuthoringTopbar.publish === true"

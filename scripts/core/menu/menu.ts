@@ -109,19 +109,26 @@ angular.module('superdesk.core.menu', [
 
                     scope.items = [];
 
-                    workspaceMenu
-                        .filter((item) => !item.if || scope.$eval(item.if))
-                        .forEach((item) => {
-                            const itemGroup = item.group || group;
+                    function setMenuItems() {
+                        scope.items = [];
 
-                            if (itemGroup !== group) {
-                                scope.items.push({hr: 1});
-                                group = itemGroup;
-                            }
+                        workspaceMenu
+                            .filter((item) => !item.if || scope.$eval(item.if))
+                            .forEach((item) => {
+                                const itemGroup = item.group || group;
 
-                            scope.items.push(item);
-                        });
-                    // menu items and groups - end
+                                if (itemGroup !== group) {
+                                    if (scope.items.length > 0) {
+                                        // only put a separator if there's at least one item already in the list
+                                        scope.items.push({hr: 1});
+                                    }
+                                    group = itemGroup;
+                                }
+
+                                scope.items.push(item);
+                            });
+                        // menu items and groups - end
+                    }
 
                     /*
                         Marking item as active even if current path doesn't match exactly to item href path
@@ -129,6 +136,10 @@ angular.module('superdesk.core.menu', [
                         /a/b should be set active.
                     */
                     function getActiveMenuItemPath(currentPath: string) {
+                        if (typeof currentPath !== 'string') {
+                            return null;
+                        }
+
                         const matchingUrls = scope.items
                             .filter((item) =>
                                 typeof item.href === 'string'
@@ -182,12 +193,18 @@ angular.module('superdesk.core.menu', [
                     };
 
                     function setActiveMenuItem(route) {
+                        if (typeof route !== 'object' || typeof route.href !== 'string') {
+                            return;
+                        }
+
                         _.each(scope.menu, (activity) => {
                             activity.isActive = route && route.href &&
                                     route.href.substr(0, activity.href.length) === activity.href;
                         });
 
-                        scope.activeMenuItemPath = getActiveMenuItemPath(route.href);
+                        if (route && route.href) {
+                            scope.activeMenuItemPath = getActiveMenuItemPath(route.href);
+                        }
                     }
 
                     scope.$on('$locationChangeStart', () => {
@@ -205,6 +222,8 @@ angular.module('superdesk.core.menu', [
 
                     privileges.loaded.then(() => {
                         scope.privileges = privileges.privileges;
+                        setMenuItems();
+                        setActiveMenuItem(ctrl.currentRoute);
                     });
 
                     scope.openAbout = function() {

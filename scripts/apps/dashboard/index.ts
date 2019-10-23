@@ -16,6 +16,8 @@ import * as svc from './services';
 
 import {gettext} from 'core/utils';
 
+import {dashboardRoute} from 'appConfig';
+
 angular.module('superdesk.apps.dashboard.widgets', [])
     .provider('dashboardWidgets', svc.DashboardWidgets);
 
@@ -57,8 +59,9 @@ angular.module('superdesk.apps.dashboard', [
         });
 
         workspaceMenuProvider.item({
+            if: 'privileges.dashboard',
             icon: 'dashboard',
-            href: '/workspace',
+            href: dashboardRoute,
             label: gettext('Dashboard'),
             shortcut: 'ctrl+alt+b',
             order: 100,

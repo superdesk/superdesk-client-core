@@ -16,6 +16,7 @@ module.exports = function(grunt) {
                 subscriptions: true,
             },
             validatePointOfInterestForImages: true,
+            hideRoutedDesks: false,
         },
         auth: {google: false},
         ingest: {
@@ -29,7 +30,11 @@ module.exports = function(grunt) {
             DEFAULT_SCHEDULE: {minutes: 5, seconds: 0},
             DEFAULT_IDLE_TIME: {hours: 0, minutes: 0},
         },
+
+        // enabling all extensions on master to run e2e tests from extensions
         enabledExtensions: {
+            annotationsLibrary: 1,
+            markForUser: 1,
             planning: 1,
             videoEditor: 1,
             // extensionFolderName: 1,

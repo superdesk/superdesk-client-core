@@ -76,6 +76,7 @@ export default angular.module('superdesk.apps.highlights', [
             });
 
         workspaceMenuProvider.item({
+            if: 'privileges.highlights_read',
             href: '/workspace/highlights',
             label: gettext('Highlights'),
             templateUrl: 'scripts/apps/highlights/views/menu.html',

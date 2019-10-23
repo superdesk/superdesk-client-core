@@ -1,4 +1,5 @@
 import {getSpellchecker} from 'core/editor3/components/spellchecker/default-spellcheckers';
+import {gettext} from 'core/utils';
 
 /**
  * Spellcheck module
@@ -388,6 +389,15 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _, pref
     function ignoreWord(word) {
         getItemIgnored()[word] = 1;
     }
+
+    /**
+     * Return list of ignored words
+     *
+     * @return {Array} list of words
+     */
+    this.getIgnoredWords = function getIgnoredWords(): Array<string> {
+        return Object.keys(getItemIgnored());
+    };
 
     /**
      * Test if given word is in ingored

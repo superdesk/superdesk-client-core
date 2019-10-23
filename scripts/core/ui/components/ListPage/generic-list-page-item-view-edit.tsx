@@ -13,6 +13,7 @@ import {connectServices} from 'core/helpers/ReactRenderAsync';
 import {FormViewEdit} from 'core/ui/components/generic-form/from-group';
 import {IFormGroup} from 'superdesk-api';
 import {isHttpApiError} from 'core/helpers/network';
+import {gettext} from 'core/utils';
 
 interface IProps {
     operation: 'editing' | 'creation';

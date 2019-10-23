@@ -2,7 +2,7 @@ import {get, includes} from 'lodash';
 import {IArticle} from 'superdesk-api';
 import {getCustomEventNamePrefixed} from 'core/notification/notification';
 
-type IAuthoringAction = 'view' | 'edit' | 'kill' | 'takedown' | 'correct';
+export type IAuthoringAction = 'view' | 'edit' | 'kill' | 'takedown' | 'correct';
 
 /**
  * @ngdoc service
