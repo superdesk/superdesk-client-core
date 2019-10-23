@@ -1,11 +1,13 @@
 import * as React from 'react';
 import VideoEditorContext from '../VideoEditorContext';
-import { IArticleVideo } from '../interfaces';
-import { get } from 'lodash';
+import { IArticleVideo, IVideoEditor } from '../interfaces';
+import { get, pick } from 'lodash';
 
 interface IProps {
     videoRef: React.RefObject<HTMLVideoElement>;
     article: IArticleVideo;
+    crop: IVideoEditor['crop'];
+    rotate: IVideoEditor['degree'];
     onToggleLoading: (isLoading: boolean) => void;
 }
 
@@ -15,13 +17,15 @@ interface IState {
     value: number | File; // capture positon or uploaded File
     // most recent changed preview thumbnail, for re-drawing thumbnail when reset changes
     thumbnail: string;
+    // deprived from props to save rotate degree only when user captures thumbnail
+    rotateDegree: number;
 }
 
 export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
     static contextType = VideoEditorContext;
     private ref: React.RefObject<HTMLCanvasElement>;
     private size: number;
-    private interval: any;
+    private interval: number;
 
     constructor(props: IProps) {
         super(props);
@@ -30,9 +34,11 @@ export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
             type: '',
             value: 0,
             thumbnail: get(this.props.article.renditions, 'thumbnail.href'),
+            rotateDegree: 0,
         };
         this.ref = React.createRef();
         this.size = 160; // max size of element
+        this.interval = 0;
     }
 
     componentDidMount() {
@@ -48,11 +54,22 @@ export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
     }
 
     handleClick = () => {
-        this.setState({ dirty: true, type: 'capture', value: this.props.videoRef.current!.currentTime });
+        this.setState({
+            dirty: true,
+            type: 'capture',
+            value: this.props.videoRef.current!.currentTime,
+            rotateDegree: this.props.rotate,
+        });
         const video = this.props.videoRef.current;
         if (!video) return;
 
-        this.drawCanvas(video, video.videoWidth, video.videoHeight);
+        this.drawCanvas(
+            video,
+            this.props.crop.x,
+            this.props.crop.y,
+            this.props.crop.width || video.videoWidth,
+            this.props.crop.height || video.videoHeight
+        );
         this.setState({ dirty: true });
     };
 
@@ -67,11 +84,24 @@ export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
     handleSave = () => {
         const { dataApi } = this.context.superdesk;
         if (this.state.type === 'capture') {
+            const crop = pick(this.props.crop, ['x', 'y', 'width', 'height']);
+            const body = {
+                type: 'capture',
+                // Captured thumbnail from server and from canvas have small difference in time (position)
+                position: (this.state.value as number) - 0.04,
+                crop: Object.values(crop).join(','),
+                rotate: this.state.rotateDegree,
+            };
+            if (body.crop === '0,0,0,0') {
+                delete body.crop;
+            }
+            if (body.rotate === 0) {
+                delete body.rotate;
+            }
+
             dataApi
                 .create('video_edit', {
-                    // Captured thumbnail from server and from canvas have small difference
-                    // in time (position)
-                    capture: { type: 'capture', position: (this.state.value as number) - 0.04 },
+                    capture: body,
                     item: this.props.article,
                 })
                 .then((_: any) => {
@@ -89,14 +119,14 @@ export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
     setPreviewThumbnail = (src: string) => {
         const image = new Image();
         image.onload = () => {
-            this.drawCanvas(image, image.width, image.height);
+            this.drawCanvas(image, 0, 0, image.width, image.height);
         };
         image.src = src;
     };
 
     getPreviewThumbnail = () => {
         const { dataApi } = this.context.superdesk;
-        this.interval = setInterval(() => {
+        this.interval = window.setInterval(() => {
             dataApi
                 .findOne('video_edit', this.props.article._id + `?t=${Math.random()}`) // avoid caching response
                 .then((response: any) => {
@@ -121,10 +151,16 @@ export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
                 this.setPreviewThumbnail(this.state.thumbnail + `?t=${Math.random()}`);
             }
         }
-        this.setState({ dirty: false, type: '', value: 0 });
+        this.setState({ dirty: false, type: '', value: 0, rotateDegree: 0 });
     };
 
-    drawCanvas = (element: any, width: number, height: number) => {
+    drawCanvas = (
+        element: HTMLImageElement | HTMLVideoElement,
+        x: number,
+        y: number,
+        width: number,
+        height: number
+    ) => {
         const ctx = this.ref.current!.getContext('2d');
         const ratio = width / height;
         let [drawWidth, drawHeight] = [this.size, this.size];
@@ -135,7 +171,7 @@ export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
         }
         this.ref.current!.width = drawWidth;
         this.ref.current!.height = drawHeight;
-        ctx!.drawImage(element, 0, 0, drawWidth, drawHeight);
+        ctx!.drawImage(element, x, y, width, height, 0, 0, drawWidth, drawHeight);
     };
 
     render() {
@@ -143,7 +179,11 @@ export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
         return (
             <div className="sd-photo-preview__thumbnail-edit">
                 <div className={getClass('thumbnail-edit__preview')}>
-                    <canvas ref={this.ref} className={getClass('thumbnail-edit__preview-canvas')}></canvas>
+                    <canvas
+                        ref={this.ref}
+                        className={getClass('thumbnail-edit__preview-canvas')}
+                        style={{ transform: `rotate(${this.state.rotateDegree}deg)` }}
+                    ></canvas>
                 </div>
                 <div className={getClass('thumbnail-edit__container')}>
                     {!this.state.dirty ? (

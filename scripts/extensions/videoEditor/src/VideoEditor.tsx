@@ -276,6 +276,8 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                             videoRef={this.ref}
                                             article={this.props.article}
                                             onToggleLoading={this.handleToggleLoading}
+                                            crop={this.state.crop}
+                                            rotate={this.state.degree}
                                         />
                                         <VideoTimeline
                                             video={this.ref}
