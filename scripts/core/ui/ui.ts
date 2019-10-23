@@ -913,6 +913,9 @@ function splitterWidget(superdesk, $timeout) {
                     header.css({
                         width: superdesk.headerWidth,
                     });
+
+                    // Trigger resize event to update elements
+                    $timeout(() => window.dispatchEvent(new Event('resize')), 0, false);
                 },
             });
         },
