@@ -11,7 +11,11 @@ export function getActionsInitialize(superdesk: ISuperdesk) {
         // and aren't displayed in the list item until the article is saved
         const locked = isLocked(articleNext);
 
-        if (isPersonal(articleNext) || locked) {
+        if (
+            isPersonal(articleNext)
+            || locked
+            || articleNext.state === 'spiked'
+        ) {
             return Promise.resolve([]);
         }
 
