@@ -16,6 +16,7 @@ let body = angular.element('body');
 function loadConfigs(callback) {
     // can't use network helpers since they depend on angular being loaded
     var oReq = new XMLHttpRequest();
+
     oReq.addEventListener('load', function() {
         const serverConfig = JSON.parse(this.responseText).config;
 
