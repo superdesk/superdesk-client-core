@@ -1,5 +1,5 @@
-import {ISuperdeskGlobalConfig} from "superdesk-api";
-import {appConfig} from "appConfig";
+import {ISuperdeskGlobalConfig} from 'superdesk-api';
+import {appConfig} from 'appConfig';
 
 /* jshint maxlen:false */
 var SERVER_URL = 'http://localhost/resource',

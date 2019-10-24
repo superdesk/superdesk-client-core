@@ -1,5 +1,5 @@
-import {appConfig} from "appConfig";
-import {ISuperdeskGlobalConfig} from "superdesk-api";
+import {appConfig} from 'appConfig';
+import {ISuperdeskGlobalConfig} from 'superdesk-api';
 
 describe('superdesk.core.datetime module', () => {
     beforeEach(window.module('superdesk.mocks'));

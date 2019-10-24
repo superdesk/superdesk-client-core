@@ -846,7 +846,7 @@ declare module 'superdesk-api' {
         schema: any;
         editor: {
             vidible?: any;
-            picture: any;
+            picture?: any;
         };
         feedback_url: any;
         override_ednote_for_corrections: any;

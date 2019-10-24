@@ -283,7 +283,7 @@ describe('authoring', () => {
                 features: {
                     ...appConfig.features,
                     editFeaturedImage: 1,
-                confirmMediaOnUpdate: 1,
+                    confirmMediaOnUpdate: 1,
                 },
             };
 
