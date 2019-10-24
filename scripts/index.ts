@@ -36,7 +36,9 @@ export function startApp(
     started = true;
 
     for (const key in customUiComponents) {
-        CC[key] = customUiComponents[key];
+        if (customUiComponents.hasOwnProperty(key)) {
+            CC[key] = customUiComponents[key];
+        }
     }
 
     // update config via config.js
