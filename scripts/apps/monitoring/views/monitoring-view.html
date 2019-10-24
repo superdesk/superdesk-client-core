@@ -22,7 +22,31 @@
                             </ul>
                         </div>
                                         
-                        <h3 class="subnav__page-title sd-flex-no-grow sd-empty"><span ng-if="type === 'spike'"><span translate>Spiked Items</span> <span ng-if="aggregate.spikeGroups.length === 1" class="label-total">{{ monitoring.totalItems}}</span></span><span ng-if="type === 'personal'" translate>Personal Items</span><span ng-if="type === 'highlights'" sd-highlight-label data-highlight="monitoring.queryParam.highlight" data-total="monitoring.totalItems"></span><span ng-if="monitoring.singleGroup.subheader && monitoring.singleGroup.singleViewType == null">{{ monitoring.singleGroup.header}} / {{ monitoring.singleGroup.subheader}} {{ monitoring.singleGroup.type}}<span class="label-total">{{ monitoring.totalItems}}</span></span><span ng-if="monitoring.singleGroup.singleViewType === 'desk'">{{ monitoring.singleGroup.header }} {{ monitoring.singleGroup.singleViewType}}<span class="label-total">{{ monitoring.totalItems}}</span></span></h3>
+                        <h3 class="subnav__page-title sd-flex-no-grow sd-empty">
+                            <span ng-if="type === 'spike'">
+                                <span translate>Spiked Items</span>
+                                <span ng-if="aggregate.spikeGroups.length === 1" class="label-total">{{ monitoring.totalItems}}</span>
+                            </span>
+                            <span ng-if="type === 'personal'">
+                                <button class="sd-checkbox sd-checkbox--button-style"
+                                    ng-class="{checked: !personalShowSent}"
+                                    ng-click="togglePersonalShowSent()"
+                                    translate>Personal Items</button>
+                                <button class="sd-checkbox sd-checkbox--button-style"
+                                    ng-class="{checked: personalShowSent}"
+                                    ng-click="togglePersonalShowSent()"
+                                    translate>Sent Items</button>
+                            </span>
+                            <span ng-if="type === 'highlights'" sd-highlight-label data-highlight="monitoring.queryParam.highlight" data-total="monitoring.totalItems"></span>
+                            <span ng-if="monitoring.singleGroup.subheader && monitoring.singleGroup.singleViewType == null">
+                                {{ monitoring.singleGroup.header}} / {{ monitoring.singleGroup.subheader}} {{ monitoring.singleGroup.type}}
+                                <span class="label-total">{{ monitoring.totalItems}}</span>
+                            </span>
+                            <span ng-if="monitoring.singleGroup.singleViewType === 'desk'">
+                                {{ monitoring.singleGroup.header }} {{ monitoring.singleGroup.singleViewType}}
+                                <span class="label-total">{{ monitoring.totalItems}}</span>
+                            </span>
+                        </h3>
 
                         <!-- search not implemented for usage with custom data source -->
                         <div ng-if="customDataSource == null" class="flat-searchbar monitoring-flat-searchbar" ng-class="{extended: aggregate.monitoringSearch}">
@@ -188,7 +212,7 @@
                                 </div>
                             </div>
                             <div ng-if="type === 'personal'" class="list">
-                                <div sd-monitoring-group data-view="view" data-group="{'type': 'personal', 'query': query, 'fileType': aggregate.getSelectedFileTypes()}" view-type="'personal'">
+                                <div sd-monitoring-group data-view="view" data-group="{'type': 'personal', 'query': query, 'fileType': aggregate.getSelectedFileTypes(), sent: personalShowSent}" view-type="'personal'">
                                 </div>
                             </div>
                             <div ng-if="type === 'custom-monitoring-view'" class="list">

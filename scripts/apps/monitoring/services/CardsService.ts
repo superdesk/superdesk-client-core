@@ -46,10 +46,19 @@ export function CardsService(api, search, session, desks, config) {
 
         case 'spike-personal':
         case 'personal':
-            query.filter({bool: {
-                must: {term: {original_creator: session.identity._id}},
-                must_not: {exists: {field: 'task.desk'}},
-            }});
+            if (card.sent) {
+                query.filter({bool: {
+                    must: [
+                        {term: {original_creator: session.identity._id}},
+                        {exists: {field: 'task.desk'}},
+                    ],
+                }});
+            } else {
+                query.filter({bool: {
+                    must: {term: {original_creator: session.identity._id}},
+                    must_not: {exists: {field: 'task.desk'}},
+                }});
+            }
             break;
 
         case 'spike':
