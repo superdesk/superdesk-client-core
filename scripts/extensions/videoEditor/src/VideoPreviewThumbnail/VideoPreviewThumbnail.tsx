@@ -25,7 +25,6 @@ interface IState {
 export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
     static contextType = VideoEditorContext;
     private ref: React.RefObject<HTMLCanvasElement>;
-    private size: number;
     private interval: number;
 
     constructor(props: IProps) {
@@ -38,7 +37,6 @@ export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
             rotateDegree: 0,
         };
         this.ref = React.createRef();
-        this.size = 160; // max size of element
         this.interval = 0;
     }
 
@@ -87,7 +85,6 @@ export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
         if (this.state.type === 'capture') {
             const crop = pick(this.props.crop, ['x', 'y', 'width', 'height']);
             const body = {
-                type: 'capture',
                 // Captured thumbnail from server and from canvas have small difference in time (position)
                 position: (this.state.value as number) - 0.04,
                 crop: Object.values(crop).join(','),
@@ -182,12 +179,13 @@ export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
         height: number
     ) => {
         const ctx = this.ref.current!.getContext('2d');
+
+        let [drawWidth, drawHeight] = [200, 160];
         const ratio = width / height;
-        let [drawWidth, drawHeight] = [this.size, this.size];
         if (ratio > 1) {
-            drawHeight = this.size / ratio;
+            drawHeight = drawWidth / ratio;
         } else {
-            drawWidth = this.size * ratio;
+            drawWidth = drawHeight * ratio;
         }
         this.ref.current!.width = drawWidth;
         this.ref.current!.height = drawHeight;

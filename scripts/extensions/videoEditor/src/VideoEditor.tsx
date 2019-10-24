@@ -58,8 +58,8 @@ export class VideoEditor extends React.Component<IProps, IState> {
 
     componentDidMount() {
         const canvas = document.createElement('canvas');
-        canvas.width = 1000;
-        canvas.height = 1000;
+        canvas.width = 2000;
+        canvas.height = 2000;
         const ctx = canvas.getContext('2d');
         ctx!.globalAlpha = 0;
         ctx!.fillStyle = 'rgba(0, 0, 200, 0.5)';
@@ -276,6 +276,10 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                                         src={this.state.cropImg}
                                                         crop={this.state.crop}
                                                         onChange={(newCrop: ReactCrop.Crop) => {
+                                                            newCrop.x = Math.round(newCrop.x);
+                                                            newCrop.y = Math.round(newCrop.y);
+                                                            newCrop.width = Math.round(newCrop.width);
+                                                            newCrop.height = Math.round(newCrop.height);
                                                             this.setState({ crop: newCrop }, this.checkIsDirty);
                                                         }}
                                                         style={{

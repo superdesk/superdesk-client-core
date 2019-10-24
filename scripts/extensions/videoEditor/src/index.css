@@ -211,7 +211,7 @@
 }
 
 .thumbnail-edit__container {
-  width: 16rem;
+  width: 20rem;
   height: 16rem;
   display: flex;
   justify-content: center;
@@ -220,7 +220,7 @@
 }
 
 .thumbnail-edit__preview {
-  width: 16rem;
+  width: 20rem;
   height: 16rem;
   position: absolute;
   display: flex;
