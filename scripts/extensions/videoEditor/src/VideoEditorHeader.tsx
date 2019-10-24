@@ -4,11 +4,10 @@ interface IProps {
     isDirty: boolean;
     onClose: () => void;
     onReset: () => void;
+    onSave: () => void;
 }
 
 export class VideoEditorHeader extends React.Component<IProps> {
-    handleSave = () => {};
-
     render() {
         return (
             <>
@@ -18,7 +17,7 @@ export class VideoEditorHeader extends React.Component<IProps> {
                         <button className="btn btn--primary btn--ui-dark btn--hollow" onClick={this.props.onReset}>
                             Cancel
                         </button>
-                        <button className="btn btn--primary btn--ui-dark sd-margin-l-2" onClick={this.handleSave}>
+                        <button className="btn btn--primary btn--ui-dark sd-margin-l-2" onClick={this.props.onSave}>
                             Save
                         </button>
                     </div>

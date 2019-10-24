@@ -165,6 +165,31 @@ export class VideoEditor extends React.Component<IProps, IState> {
         });
     };
 
+    handleSave = () => {
+        const { dataApi } = this.props.superdesk;
+        const crop = pick(this.state.crop, ['x', 'y', 'width', 'height']);
+        const body = {
+            type: 'edit',
+            crop: Object.values(crop).join(','),
+            rotate: this.state.degree,
+            trim: this.state.trim,
+            scale: this.state.quality,
+        };
+        if (body.crop === '0,0,0,0') {
+            delete body.crop;
+        }
+        if (body.rotate === 0) {
+            delete body.rotate;
+        }
+        dataApi
+            .create('video_edit', {
+                capture: body,
+                item: this.props.article,
+            })
+            .then((res: any) => res.json())
+            .then(res => console.log(res));
+    };
+
     checkIsDirty = () => {
         const state = pick(this.state, ['crop', 'trim', 'degree', 'quality']);
         // ignore trim.end as initState don't load video duration due to ref can be null when component did mount
@@ -222,6 +247,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                             <VideoEditorHeader
                                 onClose={this.props.onClose}
                                 onReset={this.handleReset}
+                                onSave={this.handleSave}
                                 isDirty={this.state.isDirty}
                             />
                         </div>
