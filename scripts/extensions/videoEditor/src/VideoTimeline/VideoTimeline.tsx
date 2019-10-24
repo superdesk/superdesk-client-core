@@ -91,11 +91,10 @@ export class VideoTimeline extends React.Component<IProps, IState> {
     };
     // drag and drop left and right bar.
     handleDragStart(e: React.DragEvent<HTMLDivElement>) {
-        //set shadow drag image is empty
-        //e.dataTransfer.setDragImage(document.createElement('img'), 0, 0);
-
-        var img = document.createElement('img');
-        e.dataTransfer.setDragImage(img, 100000, 100000);
+        // hide drag ghost image
+        const img = new Image();
+        img.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=';
+        e.dataTransfer.setDragImage(img, 0, 0);
         e.dataTransfer.setData('text/plain', '');
     }
 
