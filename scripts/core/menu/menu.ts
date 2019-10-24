@@ -1,6 +1,5 @@
 import {reactToAngular1} from 'superdesk-ui-framework';
 import {GlobalMenuHorizontal} from './GlobalMenuHorizontal';
-import { flags } from 'apps/search/components/fields/flags';
 
 SuperdeskFlagsService.$inject = ['config'];
 function SuperdeskFlagsService(config) {
