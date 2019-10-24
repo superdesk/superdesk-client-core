@@ -73,7 +73,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
         clearInterval(this.intervalThumbnails);
     }
 
-    handleTrim = (start: number, end: number) => {
+    handleTrim = (start: number, end: number, runCheckIsDirty: boolean = false) => {
         this.setState(
             {
                 trim: {
@@ -81,7 +81,9 @@ export class VideoEditor extends React.Component<IProps, IState> {
                     end: end,
                 },
             },
-            this.checkIsDirty
+            () => {
+                runCheckIsDirty && this.checkIsDirty();
+            }
         );
     };
 

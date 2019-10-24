@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { debounce } from 'lodash';
 import { BarIcon } from './BarIcon';
 import { ListThumbnails } from './ListThumbnails';
 import VideoEditorContext from '../VideoEditorContext';
@@ -11,7 +12,7 @@ interface IProps {
         start: number;
         end: number;
     };
-    onTrim: (start: number, end: number) => void;
+    onTrim: (start: number, end: number, runCheckIsDirty: boolean) => void;
 }
 interface IState {
     currentTime: number;
@@ -21,7 +22,7 @@ export class VideoTimeline extends React.Component<IProps, IState> {
     static contextType = VideoEditorContext;
     private wrapper: React.RefObject<HTMLDivElement>;
     private controlbar: React.RefObject<HTMLDivElement>;
-    private intervalTimer: any;
+    private intervalTimer: number;
     private PositionX: any;
 
     constructor(props: IProps) {
@@ -31,11 +32,12 @@ export class VideoTimeline extends React.Component<IProps, IState> {
         };
         this.wrapper = React.createRef();
         this.controlbar = React.createRef();
+        this.intervalTimer = 0;
     }
 
     componentDidMount() {
         // call tick every 100ms to update current time state
-        this.intervalTimer = setInterval(this.tick, 100);
+        this.intervalTimer = window.setInterval(this.tick, 100);
         document.addEventListener('dragover', this.handledragover);
     }
 
@@ -85,7 +87,7 @@ export class VideoTimeline extends React.Component<IProps, IState> {
     };
     videoLoadedData = () => {
         //Set trim data when video loaded
-        this.props.onTrim(0, this.props.video.current!.duration);
+        this.props.onTrim(0, this.props.video.current!.duration, false);
     };
     // drag and drop left and right bar.
     handleDragStart(e: React.DragEvent<HTMLDivElement>) {
@@ -97,18 +99,19 @@ export class VideoTimeline extends React.Component<IProps, IState> {
         e.dataTransfer.setData('text/plain', '');
     }
 
-    handleDrag = (type: string) => {
+    handleDrag = debounce((type: string) => {
         let time = this.getPositionInBar(this.PositionX) * this.props.video.current!.duration;
         if (type == 'left') {
-            this.props.onTrim(time, this.props.trim.end);
+            this.props.onTrim(time, this.props.trim.end, false);
         }
         if (type == 'right') {
-            this.props.onTrim(this.props.trim.start, time);
+            this.props.onTrim(this.props.trim.start, time, false);
         }
-    };
+    }, 5);
 
     handleDragEnd = () => {
         this.setVideoCurrentTime(this.PositionX);
+        this.props.onTrim(this.props.trim.start, this.props.trim.end, true);
     };
 
     getPositionInBar = (pX: number) => {
@@ -127,10 +130,10 @@ export class VideoTimeline extends React.Component<IProps, IState> {
     controlbarsClick = (e: React.MouseEvent) => {
         let time = this.setVideoCurrentTime(e.clientX);
         if (time < this.props.trim.start) {
-            this.props.onTrim(time, this.props.trim.end);
+            this.props.onTrim(time, this.props.trim.end, false);
         }
         if (time > this.props.trim.end) {
-            this.props.onTrim(this.props.trim.start, time);
+            this.props.onTrim(this.props.trim.start, time, false);
         }
     };
 
