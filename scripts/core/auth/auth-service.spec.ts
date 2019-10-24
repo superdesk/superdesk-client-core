@@ -1,5 +1,17 @@
+import {appConfig} from "appConfig";
+import {ISuperdeskGlobalConfig} from "superdesk-api";
+
 describe('auth service', () => {
     beforeEach(() => {
+        const testConfig: Partial<ISuperdeskGlobalConfig> = {
+            server: {
+                url: '',
+                ws: undefined,
+            },
+        };
+
+        Object.assign(appConfig, testConfig);
+
         window.module('superdesk.core.preferences');
         window.module('superdesk.core.services.storage');
         window.module('superdesk.core.auth');
