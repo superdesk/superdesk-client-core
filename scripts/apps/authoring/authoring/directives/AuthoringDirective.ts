@@ -135,6 +135,7 @@ export function AuthoringDirective(
             $scope.fullPreviewUrl = '/#/preview/' + $scope.origItem._id;
             $scope.proofread = false;
             $scope.referrerUrl = referrer.getReferrerUrl();
+            $scope.gettext = gettext;
 
             content.getTypes().then(() => {
                 $scope.content_types = content.types;
@@ -667,6 +668,13 @@ export function AuthoringDirective(
                 });
                 initMedia();
             };
+
+            // Close the current article, create an update of the article and open it in the edit mode.
+            $scope.closeAndContinue = function() {
+                $scope.close().then(authoring.rewrite($scope.item));
+            };
+
+            $scope.canRewriteArticle = () => authoring.itemActions($scope.item).re_write;
 
             $scope.deschedule = function() {
                 $scope.item.publish_schedule = null;
