@@ -25,7 +25,7 @@ describe('Embed Code Handlers', () => {
         ctrl = $controller('SdAddEmbedController', {$scope: scope, $element: element});
     }));
 
-    it('match a twitter url', inject(($rootScope, $q, $httpBackend, config, embedService) => {
+    it('match a twitter url', inject(($rootScope, $q, $httpBackend, embedService) => {
         ctrl.input = 'https://twitter.com/letzi83/status/764062125996113921';
         jasmine.createSpy(embedService, 'get').and.returnValue($q.when({
             meta: {site: 'Twitter'},
@@ -58,7 +58,7 @@ describe('Embed Code Handlers', () => {
         scope.$digest();
     });
 
-    it('match a vidible embed', inject((config, $httpBackend) => {
+    it('match a vidible embed', inject(($httpBackend) => {
         ctrl.input = '<div class="vdb_player vdb_56bb474de4b0568f54a23ed7538612f0e4b00fbb8e898655">' +
         '<script type="text/javascript" src="//delivery.vidible.tv/jsonp/pid=56bb474de4b0568f54a23ed7/' +
         '538612f0e4b00fbb8e898655.js"></script></div>';
@@ -70,8 +70,17 @@ describe('Embed Code Handlers', () => {
             });
         });
         scope.$digest();
-        // retrieve embed with Vidible enabled
-        config.editor.vidible = true;
+
+        const testConfig: Partial<ISuperdeskGlobalConfig> = {
+            editor: {
+                ...appConfig.editor,
+                // retrieve embed with Vidible enabled
+                vidible: true,
+            },
+        };
+
+        Object.assign(appConfig, testConfig);
+
         var apiResponse = {
             height: 360,
             mimeType: 'video/ogg',
@@ -83,7 +92,7 @@ describe('Embed Code Handlers', () => {
         };
 
         $httpBackend
-            .expectGET(config.server.url + '/vidible/bcid/538612f0e4b00fbb8e898655/pid/56bb474de4b0568f54a23ed7')
+            .expectGET(appConfig.server.url + '/vidible/bcid/538612f0e4b00fbb8e898655/pid/56bb474de4b0568f54a23ed7')
             .respond(apiResponse);
         ctrl.retrieveEmbed().then((d) => {
             expect(d).toEqual({

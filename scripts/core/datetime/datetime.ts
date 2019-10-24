@@ -2,6 +2,7 @@ import _ from 'lodash';
 import {gettext} from 'core/utils';
 import momentTimezone from 'moment-timezone';
 import {appConfig} from 'appConfig';
+import {ISuperdeskGlobalConfig} from 'superdesk-api';
 
 DateTimeDirective.$inject = ['datetime', 'moment'];
 function DateTimeDirective(datetime, moment) {
@@ -207,10 +208,6 @@ export default angular.module('superdesk.core.datetime', [
     'superdesk.core.datetime.reldate',
     'superdesk.core.translate',
 ])
-    .config(['defaultConfigProvider', function(defaultConfig) {
-        defaultConfig.set('shortTimeFormat', 'HH:mm'); // 24h format
-    }])
-
     .directive('sdDatetime', DateTimeDirective)
     .directive('sdShortDate', ShortDateDirective)
 

@@ -1,5 +1,17 @@
+import {ISuperdeskGlobalConfig} from 'superdesk-api';
+import {appConfig} from 'appConfig';
 
 describe('item association directive', () => {
+    beforeEach(() => {
+        const testConfig: Partial<ISuperdeskGlobalConfig> = {
+            server: {
+                url: '',
+                ws: undefined,
+            },
+        };
+
+        Object.assign(appConfig, testConfig);
+    });
     beforeEach(window.module('superdesk.apps.authoring'));
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.apps.vocabularies'));
@@ -7,14 +19,20 @@ describe('item association directive', () => {
 
     var elem, scope, item = {associations: {}};
 
-    beforeEach(inject(($compile, $rootScope, config, renditions, $q) => {
+    beforeEach(inject(($compile, $rootScope, renditions, $q) => {
         scope = $rootScope.$new();
         scope.rel = 'featured';
         scope.item = item;
         scope.editable = true;
-        config.features = {
-            editFeaturedImage: true,
+
+        const testConfig: Partial<ISuperdeskGlobalConfig> = {
+            features: {
+                ...appConfig.features,
+                editFeaturedImage: true,
+            },
         };
+
+        Object.assign(appConfig, testConfig);
 
         spyOn(renditions, 'ingest').and.returnValue($q.when({headline: 'foo',
             _type: 'externalsource',
@@ -96,12 +114,18 @@ describe('item association directive', () => {
     }));
 
     it('trigger onchange handler on drop when feature media is not editable',
-        inject(($rootScope, renditions, config) => {
+        inject(($rootScope, renditions) => {
             var event = new window.$.Event('drop');
 
-            config.features = {
-                editFeaturedImage: 0,
+            const testConfig: Partial<ISuperdeskGlobalConfig> = {
+                features: {
+                    ...appConfig.features,
+                    editFeaturedImage: 0,
+                },
             };
+
+            Object.assign(appConfig, testConfig);
+
             scope.item.state = 'in_progress';
             event.originalEvent = {dataTransfer: {
                 types: ['application/superdesk.item.picture'],

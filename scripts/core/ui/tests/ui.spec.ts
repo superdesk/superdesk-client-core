@@ -227,10 +227,10 @@ describe('superdesk ui', () => {
     });
 
     describe('default ui config', () => {
-        it('ui.italicAbstract is on', inject((config) => {
-            expect(config.ui).toBeDefined();
-            expect(config.ui.italicAbstract).toBeTruthy();
-        }));
+        it('ui.italicAbstract is on', () => {
+            expect(appConfig.ui).toBeDefined();
+            expect(appConfig.ui.italicAbstract).toBeTruthy();
+        });
     });
 
     describe('multiple emails', () => {

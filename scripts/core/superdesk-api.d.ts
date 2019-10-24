@@ -846,6 +846,7 @@ declare module 'superdesk-api' {
         schema: any;
         editor: {
             vidible?: any;
+            picture: any;
         };
         feedback_url: any;
         override_ednote_for_corrections: any;
@@ -883,7 +884,7 @@ declare module 'superdesk-api' {
             editorInlineComments?: boolean;
             editorSuggestions?: boolean;
             useTansaProofing?: boolean;
-            editFeaturedImage?: boolean;
+            editFeaturedImage?: any;
             validatePointOfInterestForImages?: any;
             autopopulateByline?: any;
             noPublishOnAuthoringDesk?: any;
@@ -934,8 +935,9 @@ declare module 'superdesk-api' {
             timeToRead?: any;
         };
         ui: {
-            publishEmbargo: any;
-            sendAndPublish: any;
+            publishEmbargo?: any;
+            sendAndPublish?: any;
+            italicAbstract?: any;
         };
         list: {
             narrowView: any;

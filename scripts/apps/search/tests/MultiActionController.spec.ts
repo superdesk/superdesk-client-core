@@ -29,8 +29,13 @@ describe('Multi Action Bar', () => {
     });
 
     it('spike does not prompt if confirm_spike is to false',
-        (done) => inject(($controller, $rootScope, multi, modal, $q, spike, config) => {
-            config.confirm_spike = false;
+        (done) => inject(($controller, $rootScope, multi, modal, $q, spike) => {
+            const testConfig: Partial<ISuperdeskGlobalConfig> = {
+                confirm_spike: false,
+            };
+
+            Object.assign(appConfig, testConfig);
+
             const itemlist = [
                 {
                     _id: 'foo1',
@@ -74,9 +79,14 @@ describe('Multi Action Bar', () => {
             lock,
             session,
             authoringWorkspace: AuthoringWorkspaceService,
-            config,
             metadata,
         ) => {
+            const testConfig: Partial<ISuperdeskGlobalConfig> = {
+                confirm_spike: true,
+            };
+
+            Object.assign(appConfig, testConfig);
+
             const extensionDelay = 1000;
 
             const articleEntities = {
@@ -109,7 +119,7 @@ describe('Multi Action Bar', () => {
                 lock,
                 session,
                 authoringWorkspace,
-                config,
+                appConfig,
                 metadata,
             ).then(() => {
                 const ctrl = $controller(MultiActionBarController, {});

@@ -1198,11 +1198,6 @@ export default angular.module('superdesk.core.ui', [
     'superdesk.core.datetime',
     'superdesk.core.ui.autoheight',
 ])
-
-    .config(['defaultConfigProvider', function(defaultConfig) {
-        defaultConfig.set('ui.italicAbstract', true);
-    }])
-
     .run(['$rootScope', '$location', ($rootScope, $location) => {
         $rootScope.popup = $location.search().popup || false;
     }])

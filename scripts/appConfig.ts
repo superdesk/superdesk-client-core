@@ -7,4 +7,16 @@ if (appConfig.startingDay == null) {
     appConfig.startingDay = '0'; // sunday
 }
 
+if (appConfig.shortTimeFormat == null) {
+    appConfig.shortTimeFormat = 'HH:mm'; // 24h format
+}
+
+if (appConfig.ui == null) {
+    appConfig.ui = {};
+
+    if (appConfig.ui.italicAbstract == null) {
+        appConfig.ui.italicAbstract = true;
+    }
+}
+
 export const dashboardRoute = '/workspace';

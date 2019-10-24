@@ -19,7 +19,7 @@ export function showSpikeDialog<T>(
 ) {
     var warnings: Array<{text: string}> = [];
     const initialValue: Promise<onSpikeMiddlewareResult> = Promise.resolve({});
-    const skipConfirmationPrompt = !(applyDefault(appConfig.confirm_spike, true));
+    const skipConfirmationPrompt = !applyDefault(appConfig.confirm_spike, true);
 
     middlewares.reduce(
         (current, next) => {

@@ -1,3 +1,6 @@
+import {appConfig} from "appConfig";
+import {ISuperdeskGlobalConfig} from "superdesk-api";
+
 describe('superdesk.core.datetime module', () => {
     beforeEach(window.module('superdesk.mocks'));
     beforeEach(window.module('superdesk.core.datetime'));
@@ -12,6 +15,15 @@ describe('superdesk.core.datetime module', () => {
 
     describe('time filter', () => {
         it('can convert model time into time str', inject(($filter) => {
+            const testConfig: Partial<ISuperdeskGlobalConfig> = {
+                view: {
+                    ...appConfig.view,
+                    timeformat: 'h:mm',
+                },
+            };
+
+            Object.assign(appConfig, testConfig);
+
             expect($filter('time')('08:05:35')).toBe('8:05');
         }));
     });
@@ -49,9 +61,9 @@ describe('superdesk.core.datetime module', () => {
     });
 
     describe('default shortTimeFormat config', () => {
-        it('shortTimeFormat is in 24h format', inject((config) => {
-            expect(config.shortTimeFormat).toBeDefined();
-            expect(config.shortTimeFormat).toEqual('HH:mm');
+        it('shortTimeFormat is in 24h format', inject(() => {
+            expect(appConfig.shortTimeFormat).toBeDefined();
+            expect(appConfig.shortTimeFormat).toEqual('HH:mm');
         }));
     });
 });

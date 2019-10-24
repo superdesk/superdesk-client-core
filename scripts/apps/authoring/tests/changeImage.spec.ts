@@ -1,6 +1,8 @@
 import _ from 'lodash';
 import {ChangeImageController} from '../authoring/controllers/ChangeImageController';
 import {gettext} from 'core/utils';
+import {ISuperdeskGlobalConfig} from 'superdesk-api';
+import {appConfig} from 'appConfig';
 
 describe('authoring ChangeImageController', () => {
     beforeEach(window.module('superdesk.core.api'));
@@ -37,7 +39,7 @@ describe('authoring ChangeImageController', () => {
     };
 
     describe('saveAreaOfInterest', () => {
-        it('can notify error if crop is invalid', inject((api, $rootScope, $q, notify, config) => {
+        it('can notify error if crop is invalid', inject((api, $rootScope, $q, notify) => {
             let scope = angular.copy(scopeData);
             let croppingData = {
                 CropRight: 10,
@@ -53,7 +55,7 @@ describe('authoring ChangeImageController', () => {
             );
         }));
 
-        it('can generate picture crop using api save', inject((api, $rootScope, $q, notify, config) => {
+        it('can generate picture crop using api save', inject((api, $rootScope, $q, notify) => {
             let scope = angular.copy(scopeData);
             let croppingData = {
                 CropRight: 2500,
@@ -70,7 +72,7 @@ describe('authoring ChangeImageController', () => {
             expect(api.save).toHaveBeenCalledWith('picture_crop', {item: scope.data.item, crop: croppingData});
         }));
 
-        it('can notify error if picture_crop fails', inject((api, $rootScope, $q, notify, config) => {
+        it('can notify error if picture_crop fails', inject((api, $rootScope, $q, notify) => {
             let scope = angular.copy(scopeData);
             let croppingData = {
                 CropRight: 2500,
@@ -93,7 +95,7 @@ describe('authoring ChangeImageController', () => {
             expect(scope.loaderForAoI).toBeFalsy();
         }));
 
-        it('can notify error if picture_renditions fails', inject((api, $rootScope, $q, notify, config) => {
+        it('can notify error if picture_renditions fails', inject((api, $rootScope, $q, notify) => {
             let scope = angular.copy(scopeData);
             let croppingData = {
                 CropRight: 2500,
@@ -129,7 +131,7 @@ describe('authoring ChangeImageController', () => {
             expect(scope.data.isDirty).toBeTruthy();
         }));
 
-        it('can save new area of interest', inject((api, $rootScope, $q, notify, config) => {
+        it('can save new area of interest', inject((api, $rootScope, $q, notify) => {
             let scope = angular.copy(scopeData);
             let croppingData = {
                 CropRight: 2500,
@@ -170,11 +172,15 @@ describe('authoring ChangeImageController', () => {
             expect($rootScope.$broadcast).toHaveBeenCalledWith('poiUpdate', {x: 0.5, y: 0.5});
         }));
 
-        it('sets default poi if not defined', inject((api, $rootScope, $q, notify, config) => {
-            if (config.features == null) {
-                config.features = {};
-            }
-            config.features.validatePointOfInterestForImages = false;
+        it('sets default poi if not defined', inject((api, $rootScope, $q, notify) => {
+            const testConfig: Partial<ISuperdeskGlobalConfig> = {
+                features: {
+                    ...appConfig.features,
+                    validatePointOfInterestForImages: false,
+                },
+            };
+
+            Object.assign(appConfig, testConfig);
 
             let scope = angular.copy(scopeData);
 
@@ -186,11 +192,15 @@ describe('authoring ChangeImageController', () => {
         }));
 
         it('sets default poi if non defined, but don\'t save when crop validation is on',
-            inject((api, $rootScope, $q, notify, config) => {
-                if (config.features == null) {
-                    config.features = {};
-                }
-                config.features.validatePointOfInterestForImages = true;
+            inject((api, $rootScope, $q, notify) => {
+                const testConfig: Partial<ISuperdeskGlobalConfig> = {
+                    features: {
+                        ...appConfig.features,
+                        validatePointOfInterestForImages: true,
+                    },
+                };
+
+                Object.assign(appConfig, testConfig);
 
                 let scope = angular.copy(scopeData);
 
@@ -202,7 +212,7 @@ describe('authoring ChangeImageController', () => {
             }),
         );
 
-        it('No error thrown if poi is specified', inject((api, $rootScope, $q, notify, config) => {
+        it('No error thrown if poi is specified', inject((api, $rootScope, $q, notify) => {
             let scope = angular.copy(scopeData);
 
             scope.resolve = () => true;
