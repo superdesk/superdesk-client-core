@@ -37,7 +37,7 @@ export function getMarkedForMeComponent(superdesk: ISuperdesk) {
 
             if (user != null) {
                 superdesk.dataApiByEntity.article.query({
-                    page: {from: 0},
+                    page: {from: 0, size: 300},
                     sort: [{'_updated': 'desc'}],
                     filterValues: {marked_for_user: [user._id]},
                 }).then((articles) => {

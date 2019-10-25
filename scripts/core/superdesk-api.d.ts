@@ -344,7 +344,7 @@ declare module 'superdesk-api' {
         is_enabled: boolean;
         needs_activation: boolean;
         desk: IDesk;
-        SIGN_OFF: string;
+        sign_off: string;
         byline: string;
         invisible_stages: Array<any>;
         slack_username: string;
@@ -414,7 +414,7 @@ declare module 'superdesk-api' {
         endpoint: string;
         page: {
             from: number;
-            size?: number;
+            size: number;
         };
         sort: Array<{[field: string]: 'asc' | 'desc'}>;
 
@@ -544,6 +544,10 @@ declare module 'superdesk-api' {
 
 
     // REACT COMPONENTS
+
+    export interface IConfigurableUiComponents {
+        UserAvatar?: React.ComponentType<{user: IUser}>;
+    }    
 
     export interface IListItemProps {
         onClick?(): void;
@@ -678,6 +682,7 @@ declare module 'superdesk-api' {
             page: number,
             sortOption: ISortOption,
             filterValues: ICrudManagerFilters,
+            max_results?: number,
             formatFiltersForServer?: (filters: ICrudManagerFilters) => ICrudManagerFilters,
         ): Promise<IRestApiResponse<T>>;
         patch<T extends IBaseRestApiResponse>(endpoint, current: T, next: T): Promise<T>;
@@ -817,6 +822,7 @@ declare module 'superdesk-api' {
             getOwnPrivileges(): Promise<any>;
         };
         session: {
+            getToken(): string;
             getCurrentUser(): Promise<IUser>;
         };
         utilities: {
@@ -842,6 +848,9 @@ declare module 'superdesk-api' {
 
 
     export interface ISuperdeskGlobalConfig {
+        server: {
+            url: string;
+        };
         defaultRoute: string;
         features: {
             swimlane: {

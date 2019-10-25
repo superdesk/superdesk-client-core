@@ -20,18 +20,21 @@ interface IScope extends ng.IScope {
     saveHandler(images): Promise<void>;
     successHandler?(): void;
     cancelHandler?(): void;
+    getSelectedItemsLength(): number;
 }
 
 MultiImageEditController.$inject = [
     '$scope',
     'modal',
     'notify',
+    'lock',
 ];
 
 export function MultiImageEditController(
     $scope: IScope,
     modal,
     notify,
+    lock,
 ) {
     const saveHandler = $scope.saveHandler;
 
@@ -121,7 +124,7 @@ export function MultiImageEditController(
                 unsavedChangesExist = false;
 
                 if (close && typeof $scope.successHandler === 'function') {
-                    $scope.successHandler();
+                    unlockAndCloseModal($scope.successHandler);
                 }
             });
     };
@@ -134,15 +137,49 @@ export function MultiImageEditController(
             )
                 .then(() => {
                     if (typeof $scope.cancelHandler === 'function') {
-                        $scope.cancelHandler();
+                        unlockAndCloseModal($scope.cancelHandler);
                     }
                 });
         } else if (typeof $scope.cancelHandler === 'function') {
-            $scope.cancelHandler();
+            unlockAndCloseModal($scope.cancelHandler);
         }
     };
 
+    $scope.$on('item:lock', (_e, data) => {
+        const {imagesOriginal} = $scope;
+
+        // while editing metadata if any selected item is unlocked by another user remove that item from selected items
+        if (Array.isArray(imagesOriginal) && data != null && data.item != null) {
+            const unlockedItem = imagesOriginal.find((image) => image._id === data.item);
+
+            notify.error(
+                gettext(
+                    'Item {{headline}} unlocked by another user.',
+                    {headline: unlockedItem.headline || unlockedItem.slugline},
+                ),
+            );
+            $scope.imagesOriginal = angular.copy(imagesOriginal.filter((image) => image._id !== data.item));
+            $scope.metadata = {};
+        }
+    });
+
     $scope.getSelectedImages = () => ($scope.images || []).filter((item) => item.selected);
+
+    $scope.getSelectedItemsLength = () => $scope.getSelectedImages().length || 0;
+
+    function unlockAndCloseModal(callback) {
+        // Before closing the modal unlock all the selected items
+        const unlockItems = $scope.images.map((item) => {
+            // In case of new upload there will be no lock on item
+            // so make sure to unlock only those items which are locked
+            if (item._locked === true) {
+                return lock.unlock(item);
+            }
+            return item;
+        });
+
+        Promise.all(unlockItems).then(callback);
+    }
 
     function updateMetadata() {
         $scope.metadata = {

@@ -2,8 +2,9 @@
   "private": true,
   "main": "dist/src/extension.js",
   "scripts": {
-    "compile": "tsc",
-    "watch": "tsc -watch"
+    "compile": "tsc -p src",
+    "compile-e2e": "tsc -p spec",
+    "watch": "tsc -watch -p src"
   },
   "devDependencies": {
     "@types/jasmine": "2.8.9",
