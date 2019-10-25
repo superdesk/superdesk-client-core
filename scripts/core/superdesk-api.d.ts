@@ -344,7 +344,7 @@ declare module 'superdesk-api' {
         is_enabled: boolean;
         needs_activation: boolean;
         desk: IDesk;
-        SIGN_OFF: string;
+        sign_off: string;
         byline: string;
         invisible_stages: Array<any>;
         slack_username: string;
@@ -544,6 +544,10 @@ declare module 'superdesk-api' {
 
 
     // REACT COMPONENTS
+
+    export interface IConfigurableUiComponents {
+        UserAvatar?: React.ComponentType<{user: IUser}>;
+    }    
 
     export interface IListItemProps {
         onClick?(): void;
