@@ -12,7 +12,6 @@ interface IProps<T> {
     disabled?: boolean;
     loading?: boolean;
     renderItem(item: T): JSX.Element;
-    getItemLabel(item: T): string;
     getItemValue(item: T): string;
     onSelect(value: string): void;
     onSearch?(search: string): void;

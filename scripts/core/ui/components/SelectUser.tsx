@@ -77,7 +77,6 @@ export class SelectUser extends React.Component<IPropsSelectUser, IState> {
                 value={this.props.selectedUserId == null ? undefined : this.props.selectedUserId}
                 items={keyedUsers}
                 getItemValue={(user) => user._id}
-                getItemLabel={(user) => user.display_name + ' ' + user.username}
                 onSelect={(value) => {
                     this.props.onSelect(keyedUsers[value]);
                 }}
