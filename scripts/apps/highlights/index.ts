@@ -73,6 +73,7 @@ export default angular.module('superdesk.apps.highlights', [
                 templateUrl: 'scripts/apps/monitoring/views/highlights-view.html',
                 topTemplateUrl: 'scripts/apps/dashboard/views/workspace-topnav.html',
                 sideTemplateUrl: 'scripts/apps/workspace/views/workspace-sidenav.html',
+                privileges: {highlights_read: 1},
             });
 
         workspaceMenuProvider.item({

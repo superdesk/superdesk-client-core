@@ -56,6 +56,7 @@ angular.module('superdesk.apps.dashboard', [
             priority: -1000,
             adminTools: false,
             category: superdesk.MENU_MAIN,
+            privileges: {dashboard: 1},
         });
 
         workspaceMenuProvider.item({
