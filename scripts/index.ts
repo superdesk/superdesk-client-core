@@ -17,9 +17,10 @@ function loadConfigs() {
     return fetch(appConfig.server.url + '/client_config', {
         method: 'GET',
         mode: 'cors',
-    }).then((res) => res.json().then((json) => {
+    }).then((res) => res.ok ? res.json() : Promise.reject())
+    .then((json) => {
         Object.assign(appConfig, json.config);
-    }));
+    });
 }
 
 body.ready(() => {
