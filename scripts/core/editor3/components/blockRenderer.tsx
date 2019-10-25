@@ -38,7 +38,12 @@ MediaComponent.propTypes = {
     contentState: PropTypes.object.isRequired,
 };
 
-export function getBlockRenderer(props) {
+export interface IBlockRendererProps {
+    readOnly: boolean;
+    dispatch(action): void;
+}
+
+export function getBlockRenderer(props: IBlockRendererProps) {
     return function blockRenderer(block) {
         return block.getType() !== 'atomic' ? null : {
             component: MediaComponent,

@@ -1,7 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Textarea from 'react-textarea-autosize';
-import {connect} from 'react-redux';
 import {QumuWidget, isQumuWidget} from './QumuWidget';
 import * as actions from '../../actions';
 import ng from 'core/services/ng';
@@ -9,20 +7,27 @@ import {loadIframelyEmbedJs} from './loadIframely';
 import {debounce} from 'lodash';
 import {gettext} from 'core/utils';
 import {processEmbedCode} from '../../actions';
+import {ContentBlock, ContentState} from 'draft-js';
+import {IBlockRendererProps} from '../blockRenderer';
 
 // debounce to avoid multiple widget load calls on initial load
 // when it gets executed for every embed block
 const loadIframely = debounce(loadIframelyEmbedJs, 100);
 
+interface IProps {
+    contentState: ContentState;
+    block: ContentBlock;
+    blockProps: IBlockRendererProps;
+}
+
 /**
  * @ngdoc React
  * @module superdesk.core.editor3
- * @name EmbedBlockComponent
  * @param {Object} block Information about the block where this component renders.
  * @description This component renders an embed block within the editor, using oEmbed data
  * retrieved from iframe.ly
  */
-export class EmbedBlockComponent extends React.Component<any, any> {
+export class EmbedBlock extends React.Component<IProps> {
     static propTypes: any;
     static defaultProps: any;
 
@@ -79,9 +84,13 @@ export class EmbedBlockComponent extends React.Component<any, any> {
         const entityKey = this.getEntityKey();
         const blockKey = this.getBlockKey();
 
-        this.props.mergeEntityDataByKey(blockKey, entityKey, {
-            description: event.target.value,
-        });
+        this.props.blockProps.dispatch(actions.mergeEntityDataByKey(
+            blockKey,
+            entityKey,
+            {
+                description: event.target.value,
+            },
+        ));
     }
 
     editEmbedHtml() {
@@ -92,9 +101,13 @@ export class EmbedBlockComponent extends React.Component<any, any> {
 
         modal.prompt(gettext('Edit embed'), embed.data.html)
             .then((html) => {
-                this.props.mergeEntityDataByKey(blockKey, entityKey, {
-                    data: {...embed.data, html: processEmbedCode(html)},
-                });
+                this.props.blockProps.dispatch(actions.mergeEntityDataByKey(
+                    blockKey,
+                    entityKey,
+                    {
+                        data: {...embed.data, html: processEmbedCode(html)},
+                    },
+                ));
             });
     }
 
@@ -117,9 +130,9 @@ export class EmbedBlockComponent extends React.Component<any, any> {
     }
 
     onClickDelete() {
-        const {block, removeBlock} = this.props;
+        const {block} = this.props;
 
-        removeBlock(block.getKey());
+        this.props.blockProps.dispatch(actions.removeBlock(block.getKey()));
     }
 
     componentDidMount() {
@@ -134,19 +147,32 @@ export class EmbedBlockComponent extends React.Component<any, any> {
         const embed = this.data();
         const html = embed.data.html;
         const isQumu = isQumuWidget(html);
+        const {readOnly} = this.props.blockProps;
 
         if (isQumu !== true) {
             this.runScripts(html);
         }
 
+        const setLocked = () => {
+            this.props.blockProps.dispatch(actions.setLocked(true));
+        };
+
         return (
             <div className="embed-block">
-                <a className="icn-btn embed-block__remove" onMouseDown={this.onClickDelete}>
-                    <i className="icon-close-small" />
-                </a>
-                <a className="icn-btn embed-block__edit" onMouseDown={this.editEmbedHtml}>
-                    <i className="icon-pencil" />
-                </a>
+                {
+                    readOnly ? null : (
+                        <a className="icn-btn embed-block__remove" onMouseDown={this.onClickDelete}>
+                            <i className="icon-close-small" />
+                        </a>
+                    )
+                }
+                {
+                    readOnly ? null : (
+                        <a className="icn-btn embed-block__edit" onMouseDown={this.editEmbedHtml}>
+                            <i className="icon-pencil" />
+                        </a>
+                    )
+                }
 
                 {
                     isQumu
@@ -156,30 +182,14 @@ export class EmbedBlockComponent extends React.Component<any, any> {
 
                 <Textarea
                     placeholder={gettext('Description')}
-                    onFocus={this.props.setLocked}
-                    onClick={this.props.setLocked}
+                    onFocus={setLocked}
+                    onClick={setLocked}
                     className="image-block__description"
                     value={embed.description || ''}
                     onChange={this.onChangeDescription}
+                    disabled={readOnly}
                 />
             </div>
         );
     }
 }
-
-EmbedBlockComponent.propTypes = {
-    block: PropTypes.object.isRequired,
-    contentState: PropTypes.object.isRequired,
-    removeBlock: PropTypes.func.isRequired,
-    mergeEntityDataByKey: PropTypes.func.isRequired,
-    setLocked: PropTypes.func.isRequired,
-};
-
-const mapDispatchToProps = (dispatch) => ({
-    removeBlock: (blockKey) => dispatch(actions.removeBlock(blockKey)),
-    setLocked: () => dispatch(actions.setLocked(true)),
-    mergeEntityDataByKey: (blockKey, entityKey, valuesToMerge) =>
-        dispatch(actions.mergeEntityDataByKey(blockKey, entityKey, valuesToMerge)),
-});
-
-export const EmbedBlock = connect(null, mapDispatchToProps)(EmbedBlockComponent);

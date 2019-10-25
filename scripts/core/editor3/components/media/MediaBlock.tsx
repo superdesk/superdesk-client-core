@@ -349,7 +349,7 @@ MediaBlockComponent.propTypes = {
     contentState: PropTypes.object.isRequired,
     showTitle: PropTypes.bool,
     readOnly: PropTypes.bool,
-    blockProps: PropTypes.object.isRequired,
+    blockProps: PropTypes.object,
 };
 
 const mapStateToProps = (state) => ({

@@ -16,7 +16,7 @@ import {getVisibleSelectionRect} from 'draft-js';
 
 import {Map} from 'immutable';
 import Toolbar from './toolbar';
-import {getBlockRenderer} from './blockRenderer';
+import {getBlockRenderer, IBlockRendererProps} from './blockRenderer';
 import {customStyleMap} from './customStyleMap';
 import classNames from 'classnames';
 import {handlePastedText} from './handlePastedText';
@@ -501,6 +501,11 @@ export class Editor3Component extends React.Component<IProps> {
             } : {},
         ));
 
+        const blockRendererProps: IBlockRendererProps = {
+            readOnly: locked || readOnly,
+            dispatch: this.props.dispatch,
+        };
+
         return (
             <div className={cx} ref={(div) => this.div = div}>
                 {showToolbar &&
@@ -525,7 +530,7 @@ export class Editor3Component extends React.Component<IProps> {
                         keyBindingFn={this.keyBindingFn}
                         handleBeforeInput={this.handleBeforeInput}
                         blockRenderMap={blockRenderMap}
-                        blockRendererFn={getBlockRenderer({svc: this.props.svc})}
+                        blockRendererFn={getBlockRenderer(blockRendererProps)}
                         customStyleMap={{...customStyleMap, ...this.props.highlightsManager.styleMap}}
                         onChange={(editorStateNext: EditorState) => {
                             // in order to position the popup component we need to know the position of editor selection

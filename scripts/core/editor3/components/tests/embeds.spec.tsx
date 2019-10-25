@@ -1,13 +1,20 @@
 import React from 'react';
 import {shallow, mount} from 'enzyme';
 import mockStore, {embedBlockAndContent} from './utils';
-import {EmbedBlockComponent as EmbedBlock} from '../embeds/EmbedBlock';
+import {EmbedBlock} from '../embeds/EmbedBlock';
 import {EmbedInputComponent as EmbedInput} from '../embeds/EmbedInput';
 
 describe('editor3.components.embed-block', () => {
     it('should render entity html', () => {
+        const noop = () => ({});
         const {block, contentState} = embedBlockAndContent();
-        const wrapper = shallow(<EmbedBlock block={block} contentState={contentState} />);
+        const wrapper = shallow(
+            <EmbedBlock
+                block={block}
+                contentState={contentState}
+                blockProps={{readOnly: false, dispatch: noop}}
+            />,
+        );
 
         expect(wrapper.find('.embed-block__wrapper').html())
             .toBe('<div class="embed-block__wrapper"><h1>Embed Title</h1></div>');
