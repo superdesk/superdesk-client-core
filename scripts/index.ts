@@ -13,22 +13,17 @@ if (appConfig.features.useTansaProofing) {
 
 let body = angular.element('body');
 
-function loadConfigs(callback) {
-    // can't use network helpers since they depend on angular being loaded
-    var oReq = new XMLHttpRequest();
-
-    oReq.addEventListener('load', function() {
-        const serverConfig = JSON.parse(this.responseText).config;
-
-        Object.assign(appConfig, serverConfig);
-        callback();
-    });
-    oReq.open('GET', appConfig.server.url + '/client_config');
-    oReq.send();
+function loadConfigs() {
+    return fetch(appConfig.server.url + '/client_config', {
+        method: 'GET',
+        mode: 'cors',
+    }).then((res) => res.json().then((json) => {
+        Object.assign(appConfig, json.config);
+    }));
 }
 
 body.ready(() => {
-    loadConfigs(() => {
+    loadConfigs().then(() => {
         // update config via config.js
         if (window.superdeskConfig) {
             angular.merge(appConfig, window.superdeskConfig);
