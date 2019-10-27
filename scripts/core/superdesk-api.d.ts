@@ -556,6 +556,9 @@ declare module 'superdesk-api' {
         className?: string;
         inactive?: boolean;
         noHover?: boolean;
+        noShadow?: boolean;
+        noBackground?: boolean;
+        fullWidth?: boolean;
         'data-test-id'?: string;
     }
 

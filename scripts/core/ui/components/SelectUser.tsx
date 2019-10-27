@@ -4,6 +4,7 @@ import {Select2} from './select2';
 import {keyBy} from 'lodash';
 import {gettext} from 'core/utils';
 import {dataApi} from 'core/helpers/CrudManager';
+import {ListItem, ListItemColumn, ListItemRow} from 'core/components/ListItem';
 import {CC} from '../configurable-ui-components';
 
 interface IState {
@@ -76,15 +77,20 @@ export class SelectUser extends React.Component<IPropsSelectUser, IState> {
                 value={this.props.selectedUserId == null ? undefined : this.props.selectedUserId}
                 items={keyedUsers}
                 getItemValue={(user) => user._id}
-                getItemLabel={(user) => user.display_name}
                 onSelect={(value) => {
                     this.props.onSelect(keyedUsers[value]);
                 }}
                 renderItem={(user) => (
-                    <div style={{display: 'flex', alignItems: 'center'}}>
-                        <CC.UserAvatar user={user} />
-                        <div style={{paddingLeft: '0.5em'}}>{user.display_name}</div>
-                    </div>
+                    <ListItem fullWidth noBackground noShadow>
+                        <ListItemColumn noBorder>
+                            <CC.UserAvatar user={user} />
+                        </ListItemColumn>
+
+                        <ListItemColumn ellipsisAndGrow>
+                            <ListItemRow>{user.display_name}</ListItemRow>
+                            <ListItemRow>@{user.username}</ListItemRow>
+                        </ListItemColumn>
+                    </ListItem>
                 )}
                 data-test-id="select-user-dropdown"
                 onSearch={(search) => {

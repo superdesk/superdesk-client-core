@@ -12,7 +12,6 @@ interface IProps<T> {
     disabled?: boolean;
     loading?: boolean;
     renderItem(item: T): JSX.Element;
-    getItemLabel(item: T): string;
     getItemValue(item: T): string;
     onSelect(value: string): void;
     onSearch?(search: string): void;
@@ -168,11 +167,11 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                         display: 'block',
                         width: '100%',
                         textAlign: 'left',
-                        padding: '6px 16px',
+                        padding: 0,
                         background: 'white',
                     };
                     const style: React.CSSProperties = isHighlighted
-                        ? {...commonStyles, background: '#eff7fa'}
+                        ? {...commonStyles, cursor: 'pointer', background: '#eff7fa'}
                         : commonStyles;
 
                     return (
