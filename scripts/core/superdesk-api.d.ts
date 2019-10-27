@@ -420,6 +420,8 @@ declare module 'superdesk-api' {
 
         // can use deep references like {'a.b.c': []}
         filterValues: {[fieldName: string]: Array<string>};
+
+        aggregations: boolean;
     }
 
     interface IElasticSearchAggregationResult {
