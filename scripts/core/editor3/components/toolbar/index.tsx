@@ -15,6 +15,15 @@ import {PopupTypes, changeCase} from '../../actions';
 import {highlightsConfig} from '../../highlightsConfig';
 import {gettext} from 'core/utils';
 
+interface IState {
+    // When true, the toolbar is floating at the top of the item. This
+    // helps the toolbar continue to be visible when it goes out of view
+    // because of scrolling.
+    floating: boolean;
+
+    width: string | number;
+}
+
 /**
  * @ngdoc React
  * @module superdesk.core.editor3
@@ -22,7 +31,7 @@ import {gettext} from 'core/utils';
  * @param {boolean} disabled Disables clicking on the toolbar, if true.
  * @description Holds the editor's toolbar.
  */
-class ToolbarComponent extends React.Component<any, any> {
+class ToolbarComponent extends React.Component<any, IState> {
     static propTypes: any;
     static defaultProps: any;
 
@@ -34,13 +43,34 @@ class ToolbarComponent extends React.Component<any, any> {
         this.scrollContainer = $(props.scrollContainer || window);
         this.onScroll = this.onScroll.bind(this);
 
-        this.state = {
-            // When true, the toolbar is floating at the top of the item. This
-            // helps the toolbar continue to be visible when it goes out of view
-            // because of scrolling.
+        this.computeState = this.computeState.bind(this);
+
+        this.state = this.computeState();
+    }
+
+    computeState(): IState {
+        const defaultState = {
             floating: false,
             width: 'auto',
         };
+
+        if (!this.props.editorNode) {
+            return defaultState;
+        }
+
+        const editorRect = this.props.editorNode.getBoundingClientRect();
+        const pageRect = this.scrollContainer[0].getBoundingClientRect();
+
+        if (!editorRect || !pageRect) {
+            return defaultState;
+        }
+
+        const isToolbarOut = editorRect.top < pageRect.top + 50;
+        const isBottomOut = editorRect.bottom < pageRect.top + 60;
+        const floating = isToolbarOut && !isBottomOut;
+        const width = floating ? editorRect.width : 'auto';
+
+        return {floating, width};
     }
 
     shouldComponentUpdate(nextProps) {
@@ -82,25 +112,7 @@ class ToolbarComponent extends React.Component<any, any> {
      * style, based on the location of the editor within the scroll container.
      */
     onScroll(e) {
-        if (!this.props.editorNode) {
-            return;
-        }
-
-        const editorRect = this.props.editorNode.getBoundingClientRect();
-        const pageRect = this.scrollContainer[0].getBoundingClientRect();
-
-        if (!editorRect || !pageRect) {
-            return;
-        }
-
-        const isToolbarOut = editorRect.top < pageRect.top + 50;
-        const isBottomOut = editorRect.bottom < pageRect.top + 60;
-        const floating = isToolbarOut && !isBottomOut;
-        const width = floating ? editorRect.width : 'auto';
-
-        if (floating !== this.state.floating) {
-            this.setState({floating, width});
-        }
+        this.setState(this.computeState());
     }
 
     componentDidMount() {
