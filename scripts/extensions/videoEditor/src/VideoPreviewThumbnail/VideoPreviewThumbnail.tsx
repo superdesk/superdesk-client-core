@@ -10,6 +10,7 @@ interface IProps {
     crop: IVideoEditor['crop'];
     rotate: IVideoEditor['degree'];
     onToggleLoading: (isLoading: boolean) => void;
+    getCropSize: (crop: IVideoEditor['crop']) => IVideoEditor['crop'];
 }
 
 interface IState {
@@ -61,13 +62,15 @@ export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
         });
         const video = this.props.videoRef.current;
         if (!video) return;
+        const { x, y, width, height, aspect } = this.props.getCropSize(this.props.crop);
 
         this.drawCanvas(
             video,
-            this.props.crop.x || 0,
-            this.props.crop.y || 0,
-            this.props.crop.width || video.videoWidth,
-            this.props.crop.height || video.videoHeight
+            x || 0,
+            y || 0,
+            width || video.videoWidth,
+            height || video.videoHeight,
+            aspect || video.videoWidth / video.videoHeight
         );
         this.setState({ dirty: true });
     };
@@ -83,7 +86,7 @@ export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
     handleSave = () => {
         const { dataApi } = this.context.superdesk;
         if (this.state.type === 'capture') {
-            const crop = pick(this.props.crop, ['x', 'y', 'width', 'height']);
+            const crop = this.props.getCropSize(pick(this.props.crop, ['x', 'y', 'width', 'height']));
             const body = {
                 // Captured thumbnail from server and from canvas have small difference in time (position)
                 position: (this.state.value as number) - 0.04,
@@ -176,12 +179,12 @@ export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
         x: number,
         y: number,
         width: number,
-        height: number
+        height: number,
+        ratio: number = width / height
     ) => {
         const ctx = this.ref.current!.getContext('2d');
 
         let [drawWidth, drawHeight] = [200, 160];
-        const ratio = width / height;
         if (ratio > 1) {
             drawHeight = drawWidth / ratio;
         } else {

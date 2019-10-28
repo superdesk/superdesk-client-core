@@ -220,6 +220,22 @@ export class VideoEditor extends React.Component<IProps, IState> {
         }, 3000);
     };
 
+    // calculate crop real size as crop value is not based on real video size
+    // but scaled video to fit into container
+    getCropSize = (inputCrop: IVideoEditor['crop']): IVideoEditor['crop'] => {
+        const video = this.ref.current!;
+        const rect = video.getBoundingClientRect();
+
+        const crop = { ...inputCrop };
+        const scaleX = video.videoWidth / rect.width;
+        const scaleY = video.videoHeight / rect.height;
+        crop.x = Math.round(crop.x! * scaleX);
+        crop.y = Math.round(crop.y! * scaleY);
+        crop.width = Math.round(crop.width! * scaleX);
+        crop.height = Math.round(crop.height! * scaleY);
+        return crop;
+    };
+
     render() {
         const { gettext } = this.props.superdesk.localization;
         const { getClass } = this.props.superdesk.utilities.CSS;
@@ -276,10 +292,9 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                                         src={this.state.cropImg}
                                                         crop={this.state.crop}
                                                         onChange={(newCrop: ReactCrop.Crop) => {
-                                                            newCrop.x = Math.round(newCrop.x);
-                                                            newCrop.y = Math.round(newCrop.y);
-                                                            newCrop.width = Math.round(newCrop.width);
-                                                            newCrop.height = Math.round(newCrop.height);
+                                                            ['x', 'y', 'width', 'height'].map(
+                                                                key => (newCrop[key] = Math.round(newCrop[key]))
+                                                            );
                                                             this.setState({ crop: newCrop }, this.checkIsDirty);
                                                         }}
                                                         style={{
@@ -310,6 +325,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                             onToggleLoading={this.handleToggleLoading}
                                             crop={this.state.crop}
                                             rotate={this.state.degree}
+                                            getCropSize={this.getCropSize}
                                         />
                                         <VideoTimeline
                                             video={this.ref}
