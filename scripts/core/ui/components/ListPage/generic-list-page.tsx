@@ -36,12 +36,12 @@ import {
 } from 'superdesk-api';
 import {gettext} from 'core/utils';
 
-interface IState {
+interface IState<T extends IBaseRestApiResponse, TBase = Omit<T, keyof IBaseRestApiResponse>> {
     previewItemId: string | null;
     editItemId: string | null;
     newItem: {[key: string]: any} | null;
     filtersOpen: boolean;
-    filterValues: {[key: string]: any};
+    filterValues: Partial<TBase>;
     loading: boolean;
     refetchDataScheduled: boolean;
 }
@@ -54,7 +54,7 @@ interface IPropsConnected<T extends IBaseRestApiResponse> {
 }
 
 export class GenericListPageComponent<T extends IBaseRestApiResponse>
-    extends React.Component<IPropsGenericForm<T> & IPropsConnected<T>, IState>
+    extends React.Component<IPropsGenericForm<T> & IPropsConnected<T>, IState<T>>
     implements IGenericListPageComponent<T>
 {
     searchBarRef: SearchBar | null;
@@ -84,6 +84,7 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
         this.openNewItemForm = this.openNewItemForm.bind(this);
         this.closeNewItemForm = this.closeNewItemForm.bind(this);
         this.deleteItem = this.deleteItem.bind(this);
+        this.getActiveFilters = this.getActiveFilters.bind(this);
         this.removeFilter = this.removeFilter.bind(this);
         this.refetchDataUsingCurrentFilters = this.refetchDataUsingCurrentFilters.bind(this);
         this.filter = this.filter.bind(this);
@@ -109,6 +110,9 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
                 previewItemId: id,
             });
         }
+    }
+    getActiveFilters() {
+        return this.state.filterValues;
     }
     removeFilter(fieldName: string) {
         if (this.props.fieldForSearch != null && this.props.fieldForSearch.field === fieldName) {
@@ -278,7 +282,7 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
             this.setState({
                 newItem: {
                     ...getInitialValues(this.props.formConfig),
-                    ...this.props.newItemTemplate == null ? {} : this.props.newItemTemplate,
+                    ...this.props.getNewItemTemplate == null ? {} : this.props.getNewItemTemplate(this),
                 },
                 previewItemId: null,
             });

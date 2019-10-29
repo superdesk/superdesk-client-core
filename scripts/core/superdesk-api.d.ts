@@ -450,14 +450,14 @@ declare module 'superdesk-api' {
 
     // GENERIC FORM
 
-    export interface IPropsGenericForm<T extends IBaseRestApiResponse> {
+    export interface IPropsGenericForm<T extends IBaseRestApiResponse, TBase = Omit<T, keyof IBaseRestApiResponse>> {
         formConfig: IFormGroup;
         defaultSortOption: ISortOption;
-        defaultFilters?: ICrudManagerFilters;
+        defaultFilters?: Partial<TBase>;
         renderRow(key: string, item: T, page: IGenericListPageComponent<T>): JSX.Element;
 
-        // Allows creating an item with required fields which aren't editable from the GUI
-        newItemTemplate?: {[key: string]: any};
+        // Allows initializing a new item with some fields already filled.
+        getNewItemTemplate?(page: IGenericListPageComponent<T>): Partial<TBase>;
 
         refreshOnEvents?: Array<string>;
 
@@ -597,7 +597,7 @@ declare module 'superdesk-api' {
         onClose?(): void;
     }
 
-    export interface IGenericListPageComponent<T extends IBaseRestApiResponse> {
+    export interface IGenericListPageComponent<T extends IBaseRestApiResponse, TBase = Omit<T, keyof IBaseRestApiResponse>> {
         openPreview(id: string): void;
         startEditing(id: string): void;
         closePreview(): void;
@@ -606,6 +606,7 @@ declare module 'superdesk-api' {
         openNewItemForm(): void;
         closeNewItemForm(): void;
         deleteItem(item: T): void;
+        getActiveFilters(): Partial<TBase>;
         removeFilter(fieldName: string): void;
     }
 
@@ -850,10 +851,26 @@ declare module 'superdesk-api' {
 
 
     export interface ISuperdeskGlobalConfig {
+        // FROM SERVER
+        default_language: string;
+        schema: any;
+        editor: any;
+        feedback_url: any;
+        override_ednote_for_corrections: any;
+        override_ednote_template: any;
+        default_genre: any;
+        japanese_characters_per_minute: any;
+        validator_media_metadata: any;
+        publish_content_expiry_minutes: any;
+        high_priority_queue_enabled: any;
+
+        // FROM CLIENT
         server: {
             url: string;
         };
+        apps: any;
         defaultRoute: string;
+        startingDay: any;
         features: {
             swimlane: {
                 defaultNumberOfColumns: number;
@@ -863,6 +880,7 @@ declare module 'superdesk-api' {
             editorAttachments: boolean;
             editorInlineComments: boolean;
             editorSuggestions: boolean;
+            useTansaProofing: boolean;
         };
         auth: {
             google: boolean
@@ -885,7 +903,6 @@ declare module 'superdesk-api' {
             };
         };
         confirm_spike: boolean;
-        language: string; // default client language
     }
 
 

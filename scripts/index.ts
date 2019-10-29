@@ -15,13 +15,15 @@ if (appConfig.features.useTansaProofing) {
 
 let body = angular.element('body');
 
-function initializeConfigDefaults(config) {
-    const sunday = '0';
-
-    return {
-        ...config,
-        startingDay: config.startingDay != null ? config.startingDay : sunday,
-    };
+function loadConfigs() {
+    return fetch(appConfig.server.url + '/client_config', {
+        method: 'GET',
+        mode: 'cors',
+    })
+        .then((res) => res.ok ? res.json() : Promise.reject())
+        .then((json) => {
+            Object.assign(appConfig, json.config);
+        });
 }
 
 let started = false;
@@ -41,28 +43,30 @@ export function startApp(
         }
     }
 
-    // update config via config.js
-    if (window.superdeskConfig) {
-        angular.merge(appConfig, window.superdeskConfig);
-    }
+    loadConfigs().then(() => {
+        // update config via config.js
+        if (window.superdeskConfig) {
+            angular.merge(appConfig, window.superdeskConfig);
+        }
 
-    // non-mock app configuration must live here to allow tests to override
-    // since tests do not import this file.
-    angular.module('superdesk.config').constant('config', initializeConfigDefaults(appConfig));
+        // non-mock app configuration must live here to allow tests to override
+        // since tests do not import this file.
+        angular.module('superdesk.config').constant('config', appConfig);
 
-    /**
-     * @ngdoc module
-     * @name superdesk-client
-     * @packageName superdesk-client
-     * @description The root superdesk module.
-     */
-    angular.bootstrap(body, [
-        'superdesk.config',
-        'superdesk.core',
-        'superdesk.apps',
-    ].concat(appConfig.apps || []), {strictDi: true});
+        /**
+         * @ngdoc module
+         * @name superdesk-client
+         * @packageName superdesk-client
+         * @description The root superdesk module.
+         */
+        angular.bootstrap(body, [
+            'superdesk.config',
+            'superdesk.core',
+            'superdesk.apps',
+        ].concat(appConfig.apps || []), {strictDi: true});
 
-    window['superdeskIsReady'] = true;
+        window['superdeskIsReady'] = true;
+    });
 }
 
 // the application should be started by importing and calling `startApp` from a customer repository
