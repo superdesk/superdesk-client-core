@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { debounce } from 'lodash';
+import { debounce, isEmpty } from 'lodash';
 import { BarIcon } from './BarIcon';
 import { ListThumbnails } from './ListThumbnails';
 import VideoEditorContext from '../VideoEditorContext';
@@ -16,6 +16,7 @@ interface IProps {
 }
 interface IState {
     currentTime: number;
+    thumnailsRender: Array<IThumbnail>;
 }
 
 export class VideoTimeline extends React.Component<IProps, IState> {
@@ -29,6 +30,7 @@ export class VideoTimeline extends React.Component<IProps, IState> {
         super(props);
         this.state = {
             currentTime: 0,
+            thumnailsRender: [],
         };
         this.wrapper = React.createRef();
         this.controlbar = React.createRef();
@@ -39,6 +41,16 @@ export class VideoTimeline extends React.Component<IProps, IState> {
         // call tick every 100ms to update current time state
         this.intervalTimer = window.setInterval(this.tick, 100);
         document.addEventListener('dragover', this.handledragover);
+        this.setState({
+            thumnailsRender: this.getRenderThumbnails(this.props.thumbnails),
+        });
+    }
+    componentDidUpdate(prevProps: any) {
+        if (prevProps.thumbnails !== this.props.thumbnails) {
+            this.setState({
+                thumnailsRender: this.getRenderThumbnails(this.props.thumbnails),
+            });
+        }
     }
 
     componentWillUnmount() {
@@ -54,7 +66,12 @@ export class VideoTimeline extends React.Component<IProps, IState> {
     getRenderThumbnails = (thumbnails: Array<IThumbnail>) => {
         //get list thumbnail render in list thumbnails get from server
         const video = this.props.video.current!;
-        const widthPic = video && (50 * video.clientWidth) / video.clientHeight;
+        let widthPic = 0;
+        if (isEmpty(thumbnails)) {
+            widthPic = video && (50 * video.clientWidth) / video.clientHeight;
+        } else {
+            widthPic = thumbnails[0].width;
+        }
         const numberThumbnails =
             this.controlbar.current! && Math.floor(this.controlbar.current!.offsetWidth / widthPic);
         const duration = this.props.video.current! ? this.props.video.current!.duration : 0;
@@ -62,17 +79,18 @@ export class VideoTimeline extends React.Component<IProps, IState> {
         const per_delta_image =
             thumbnails.length > 1 ? (thumbnails.length - 1) / numberThumbnails : duration / numberThumbnails;
         for (let i = 0; i <= numberThumbnails; i++) {
-            let thumnail: IThumbnail;
+            let thumbnail: IThumbnail;
             if (this.props.thumbnails && this.props.thumbnails.length > 0) {
-                thumnail = this.props.thumbnails[Math.round(i * per_delta_image)];
-                thumbnailsRender.push(thumnail);
+                thumbnail = this.props.thumbnails[Math.round(i * per_delta_image)];
+                thumbnail.url = thumbnail.url + `?t=${Math.random()}`;
+                thumbnailsRender.push(thumbnail);
             } else {
-                thumnail = {
+                thumbnail = {
                     url: '',
                     width: widthPic,
                     height: 50,
                 };
-                thumbnailsRender.push(thumnail);
+                thumbnailsRender.push(thumbnail);
                 //Loading thumbnail one by one, if we call all api at same time, browser will lag.
             }
         }
@@ -80,10 +98,12 @@ export class VideoTimeline extends React.Component<IProps, IState> {
     };
     tick = () => {
         // updates the current time state
-        let currentTime = this.props.video.current!.currentTime;
-        currentTime < this.props.trim.end
-            ? this.setState({ currentTime: currentTime })
-            : this.props.trim.end > 0 && this.props.video.current!.pause();
+        if (this.props.video.current) {
+            let currentTime = this.props.video.current!.currentTime;
+            currentTime <= this.props.trim.end
+                ? this.setState({ currentTime: currentTime })
+                : this.props.trim.end > 0 && this.props.video.current!.pause();
+        }
     };
     videoLoadedData = () => {
         //Set trim data when video loaded
@@ -162,10 +182,9 @@ export class VideoTimeline extends React.Component<IProps, IState> {
         //set state for control left, right bar
         const left = video ? `${(this.props.trim.start / video.duration) * 100}%` : '0%';
         const right = video ? `${(1 - this.props.trim.end / video.duration) * 100}%` : '0%';
-        const thumnails = this.getRenderThumbnails(this.props.thumbnails);
         return (
             <div className={getClass('timeline-controls')}>
-                <ListThumbnails thumbnails={thumnails} video={this.props.video} />
+                <ListThumbnails thumbnails={this.state.thumnailsRender} video={this.props.video} />
                 <div className={`${getClass('controlbars')}`} ref={this.controlbar} onClick={this.controlbarsClick}>
                     <div
                         className={`${getClass('controlbars__mask')} ${getClass('controlbars__mask--left')}`}
