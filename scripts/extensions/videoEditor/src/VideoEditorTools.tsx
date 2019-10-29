@@ -48,7 +48,7 @@ export class VideoEditorTools extends React.Component<IProps> {
                         <i className={this.props.video.playing ? 'icon-pause' : 'icon-play'}></i>
                     </button>
                     <Dropdown
-                        label={<CropIcon disabled={!!this.props.video.degree} />}
+                        label={<CropIcon />}
                         items={['1:1', '4:3', '16:9']}
                         onSelect={this.handleCrop}
                         resetState={this.props.video.cropEnabled === false}
@@ -59,10 +59,8 @@ export class VideoEditorTools extends React.Component<IProps> {
                         className={`
                             btn btn--ui-dark btn--icon-only btn-hollow
                             ${this.props.video.degree ? 'btn--sd-green' : ''}
-                            ${this.props.video.cropEnabled ? 'btn--disabled' : ''}
                         `}
                         onClick={this.props.onRotate}
-                        disabled={this.props.video.cropEnabled}
                     >
                         <i className="icon-rotate-left"></i>
                     </button>

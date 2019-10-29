@@ -6,7 +6,7 @@ interface IProps {
     onSelect: (item: string) => void;
     isButton?: boolean;
     className?: string;
-    resetState?: boolean;
+    resetState?: boolean; // force close dropdown
 }
 interface IState {
     open: boolean;

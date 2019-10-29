@@ -3,7 +3,7 @@ import * as React from 'react';
 interface ICropIcon {
     onClick?: () => void;
     select?: string | number | null;
-    disabled: boolean;
+    disabled?: boolean;
 }
 export function CropIcon(props: ICropIcon) {
     return (
