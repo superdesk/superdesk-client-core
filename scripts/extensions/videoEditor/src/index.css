@@ -182,6 +182,14 @@
   background-image: none;
 }
 
+.video__crop {
+  margin-top: 2rem;
+}
+.video__crop img {
+  /* avoid limit height (auto) when video is portrait */
+  max-width: unset;
+}
+
 .video__dropdown__crop {
   margin-left: 0.2rem;
   margin-right: 0.2rem;

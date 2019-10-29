@@ -147,22 +147,23 @@ export class VideoEditor extends React.Component<IProps, IState> {
             } else {
                 // draw sample crop area, only draw 80% instead of full video width, height so
                 // user can resize, move easily
-                let { videoWidth, videoHeight } = this.videoRef.current!;
-                videoWidth = (videoWidth * 80) / 100;
-                videoHeight = (videoHeight * 80) / 100;
-                const ratio = videoWidth / videoHeight;
+                let { width, height } = this.videoRef.current!.getBoundingClientRect();
+                width = (width * 80) / 100;
+                height = (height * 80) / 100;
+
+                const ratio = width / height;
                 if (ratio > 1) {
-                    videoWidth = videoHeight * cropAspect;
+                    width = height * cropAspect;
                 } else {
-                    videoHeight = videoWidth * cropAspect;
+                    height = width * cropAspect;
                 }
                 this.setState(
                     {
                         crop: {
                             ...this.initState.crop,
                             aspect: cropAspect,
-                            width: videoWidth,
-                            height: videoHeight,
+                            width: width,
+                            height: height,
                         },
                     },
                     this.checkIsDirty
@@ -287,7 +288,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
     // calculate crop real size as crop value is not based on real video size
     // but scaled video to fit into container
     getCropSize = (inputCrop: IVideoEditor['crop']): IVideoEditor['crop'] => {
-        const video = this.ref.current!;
+        const video = this.videoRef.current!;
         const rect = video.getBoundingClientRect();
 
         const crop = { ...inputCrop };
@@ -336,19 +337,21 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                 <div className="sd-photo-preview sd-photo-preview--edit-video">
                                     <div className="sd-photo-preview__video">
                                         <div className="sd-photo-preview__video-inner">
-                                            <div className="sd-photo-preview__video-container">
-                                                <div style={{ transform: `rotate(${degree}) scale(${scaleRatio})` }}>
-                                                    <video
-                                                        ref={this.videoRef}
-                                                        src={this.state.videoSrc}
-                                                        onPlay={() => this.setState({ playing: true })}
-                                                        onPause={() => this.setState({ playing: false })}
-                                                        onLoadedData={() =>
-                                                            this.handleTrim(0, this.videoRef.current!.duration)
-                                                        }
-                                                        autoPlay
-                                                    ></video>
-                                                </div>
+                                            <div
+                                                className="sd-photo-preview__video-container"
+                                                style={{ alignItems: 'unset' }} // remove space between video and ReactCrop
+                                            >
+                                                <video
+                                                    ref={this.videoRef}
+                                                    src={this.state.videoSrc}
+                                                    onPlay={() => this.setState({ playing: true })}
+                                                    onPause={() => this.setState({ playing: false })}
+                                                    onLoadedData={() =>
+                                                        this.handleTrim(0, this.videoRef.current!.duration)
+                                                    }
+                                                    style={{ transform: `rotate(${degree}) scale(${scaleRatio})` }}
+                                                    autoPlay
+                                                ></video>
 
                                                 {this.state.cropEnabled && (
                                                     <ReactCrop
@@ -358,14 +361,17 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                                             ['x', 'y', 'width', 'height'].map(
                                                                 key => (newCrop[key] = Math.round(newCrop[key]))
                                                             );
-                                                            this.setState({ crop: newCrop }, this.checkIsDirty);
+                                                            this.setState(
+                                                                { crop: Object.assign({}, this.state.crop, newCrop) },
+                                                                this.checkIsDirty
+                                                            );
                                                         }}
+                                                        className={getClass('video__crop')}
                                                         style={{
                                                             width: width,
                                                             height: height,
                                                             background: 'unset',
                                                             position: 'absolute',
-                                                            marginTop: '1.5rem',
                                                         }}
                                                     />
                                                 )}
