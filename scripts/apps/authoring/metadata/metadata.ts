@@ -895,7 +895,7 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                     filteredArray = _.without(subjectCodesArray, term);
 
                 if (subjectCodesArray && filteredArray.length === subjectCodesArray.length) {
-                    _.remove(filteredArray, {name: term});
+                    _.remove(filteredArray, {name: term.name || term});
                 }
 
                 tempItem[scope.field] = filteredArray;
