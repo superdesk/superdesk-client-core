@@ -324,9 +324,13 @@ export function ArticleEditDirective(
                             // draftjs editor state will be
                             // outdated after editing in modal
                             resetFieldMetadata(scope.item);
-                            scope.refresh();
 
-                            if (isPublished(scope.item)) {
+                            // On multiedit mode, there is no refresh function
+                            if (typeof scope.refresh === 'function') {
+                                scope.refresh();
+                            }
+
+                            if (isPublished(scope.item) || scope.articleEdit) {
                                 mainEditScope.dirty = true;
 
                                 // mark dirty in multiedit mode.
