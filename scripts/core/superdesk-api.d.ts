@@ -879,6 +879,12 @@ declare module 'superdesk-api' {
         };
         confirm_spike: boolean;
         language: string; // default client language
+        editor3: {
+            /** set if browser spellcheck is enabled */
+            spellCheck: boolean;
+            /** remove all information except plaintext on paste */
+            stripPastedStyles: boolean;
+        };
     }
 
 

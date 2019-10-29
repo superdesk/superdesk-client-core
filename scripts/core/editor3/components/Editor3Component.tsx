@@ -32,6 +32,7 @@ import {noop} from 'lodash';
 import {getSpellcheckWarningsByBlock} from './spellchecker/SpellcheckerDecorator';
 import {getSpellchecker} from './spellchecker/default-spellcheckers';
 import {IEditorStore} from '../store';
+import {appConfig} from 'core/config';
 
 const MEDIA_TYPES_TRIGGER_DROP_ZONE = [
     'application/superdesk.item.picture',
@@ -544,6 +545,8 @@ export class Editor3Component extends React.Component<IProps> {
                         handlePastedText={handlePastedText.bind(this)}
                         readOnly={locked || readOnly}
                         ref={(editor) => this.handleRefs(editor)}
+                        spellCheck={appConfig.editor3.spellCheck}
+                        stripPastedStyles={appConfig.editor3.stripPastedStyles}
                     />
 
                     {this.props.loading && <div className="loading-overlay active" />}
