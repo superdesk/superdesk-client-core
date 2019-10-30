@@ -4,11 +4,12 @@ import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 import { ISuperdesk } from 'superdesk-api';
 import { get, isEmpty, omit, pick, isEqual } from 'lodash';
+
 import { VideoEditorTools } from './VideoEditorTools';
-import { VideoTimeline } from './VideoTimeline/VideoTimeline';
+import { VideoTimeline } from './VideoTimeline';
 import { VideoEditorHeader } from './VideoEditorHeader';
 import { VideoEditorProvider } from './VideoEditorContext';
-import { VideoPreviewThumbnail } from './VideoPreviewThumbnail/VideoPreviewThumbnail';
+import { VideoPreviewThumbnail } from './VideoPreviewThumbnail';
 import { IArticleVideo, IVideoEditor, IThumbnail } from './interfaces';
 
 interface IProps {

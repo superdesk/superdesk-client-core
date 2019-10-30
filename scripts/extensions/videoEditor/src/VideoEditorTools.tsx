@@ -1,7 +1,5 @@
 import * as React from 'react';
-import { Dropdown } from './Dropdown/Dropdown';
-import { CropIcon } from './Dropdown/CropIcon';
-import { QualityLabel } from './Dropdown/QualityLabel';
+import { CropLabel, Dropdown, QualityLabel } from './Dropdown';
 import VideoEditorContext from './VideoEditorContext';
 import { IVideoEditor } from './interfaces';
 
@@ -48,7 +46,7 @@ export class VideoEditorTools extends React.Component<IProps> {
                         <i className={this.props.video.playing ? 'icon-pause' : 'icon-play'}></i>
                     </button>
                     <Dropdown
-                        label={<CropIcon />}
+                        label={<CropLabel />}
                         items={['1:1', '4:3', '16:9']}
                         onSelect={this.handleCrop}
                         resetState={this.props.video.cropEnabled === false}

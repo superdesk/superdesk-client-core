@@ -1,11 +1,11 @@
 import * as React from 'react';
 
-interface ICropIcon {
+interface IProps {
     onClick?: () => void;
     select?: string | number | null;
     disabled?: boolean;
 }
-export function CropIcon(props: ICropIcon) {
+export function CropLabel(props: IProps) {
     return (
         <button
             className={`

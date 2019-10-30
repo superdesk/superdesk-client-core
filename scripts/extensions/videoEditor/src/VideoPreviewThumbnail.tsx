@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ISuperdesk } from 'superdesk-api';
-import VideoEditorContext from '../VideoEditorContext';
-import { IArticleVideo, IVideoEditor } from '../interfaces';
+import VideoEditorContext from './VideoEditorContext';
+import { IArticleVideo, IVideoEditor } from './interfaces';
 import { get, pick } from 'lodash';
 
 interface IProps {
