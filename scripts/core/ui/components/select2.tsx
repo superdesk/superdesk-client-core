@@ -20,6 +20,8 @@ interface IProps<T> {
 
 interface IState {
     search: string;
+    isOpen: boolean;
+    forceOpen: boolean;
 }
 
 const arrowDownStyles = {
@@ -74,6 +76,8 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
 
         this.state = {
             search: '',
+            isOpen: false,
+            forceOpen: false,
         };
 
         const searchFn = (search: string) => {
@@ -84,8 +88,12 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
     }
 
     render() {
+        const open = this.state.isOpen || this.state.forceOpen;
+
         return (
             <Autocomplete.default
+                open={open}
+                onMenuVisibilityChange={(isOpen) => this.setState({isOpen})}
                 inputProps={{placeholder: this.props.placeholder}}
                 value={this.props.value}
                 items={Object.values(this.props.items)}
@@ -133,7 +141,8 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                             {...propsAutocomplete}
                             type="button"
                             className="sd-line-input__select-custom"
-                            disabled={this.props.disabled}
+                            disabled={this.props.disabled || this.state.forceOpen}
+                            onClick={() => this.setState({isOpen: !this.state.isOpen})}
                             ref={(element) => {
                                 if (element != null) {
                                     this.lastButtonHeight = element.offsetHeight;
@@ -141,6 +150,8 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                                     // react-autocomplete expects ref to be an input
                                     // but input doesn't support rendering custom children
                                     // so we use a button instead and add a fake method to prevent errors
+                                    // Also, we need to manage the open/close login on our own
+                                    // https://github.com/reactjs/react-autocomplete/blob/41388f7d7760bf6cf38e7946e43d4fddd9c7c176/examples/managed-menu-visibility/app.js#L26-L33
                                     element['setSelectionRange'] = noop;
                                 }
 
