@@ -7,7 +7,7 @@ import {
     SENT_OUTPUT,
     SCHEDULED_OUTPUT,
 } from 'apps/desks/constants';
-import {appConfig} from 'scripts/appConfig';
+import {appConfig} from 'appConfig';
 
 interface ICard {
     _id: string;
