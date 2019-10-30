@@ -8,7 +8,7 @@ import {debounce} from 'lodash';
 import {gettext} from 'core/utils';
 import {processEmbedCode} from '../../actions';
 import {ContentBlock, ContentState} from 'draft-js';
-import {IBlockRendererProps} from '../blockRenderer';
+import {connect} from 'react-redux';
 
 // debounce to avoid multiple widget load calls on initial load
 // when it gets executed for every embed block
@@ -17,7 +17,8 @@ const loadIframely = debounce(loadIframelyEmbedJs, 100);
 interface IProps {
     contentState: ContentState;
     block: ContentBlock;
-    blockProps: IBlockRendererProps;
+    readOnly: boolean;
+    dispatch(action): void;
 }
 
 /**
@@ -27,7 +28,7 @@ interface IProps {
  * @description This component renders an embed block within the editor, using oEmbed data
  * retrieved from iframe.ly
  */
-export class EmbedBlock extends React.Component<IProps> {
+export class EmbedBlockComponent extends React.Component<IProps> {
     static propTypes: any;
     static defaultProps: any;
 
@@ -84,7 +85,7 @@ export class EmbedBlock extends React.Component<IProps> {
         const entityKey = this.getEntityKey();
         const blockKey = this.getBlockKey();
 
-        this.props.blockProps.dispatch(actions.mergeEntityDataByKey(
+        this.props.dispatch(actions.mergeEntityDataByKey(
             blockKey,
             entityKey,
             {
@@ -101,7 +102,7 @@ export class EmbedBlock extends React.Component<IProps> {
 
         modal.prompt(gettext('Edit embed'), embed.data.html)
             .then((html) => {
-                this.props.blockProps.dispatch(actions.mergeEntityDataByKey(
+                this.props.dispatch(actions.mergeEntityDataByKey(
                     blockKey,
                     entityKey,
                     {
@@ -132,7 +133,7 @@ export class EmbedBlock extends React.Component<IProps> {
     onClickDelete() {
         const {block} = this.props;
 
-        this.props.blockProps.dispatch(actions.removeBlock(block.getKey()));
+        this.props.dispatch(actions.removeBlock(block.getKey()));
     }
 
     componentDidMount() {
@@ -147,14 +148,14 @@ export class EmbedBlock extends React.Component<IProps> {
         const embed = this.data();
         const html = embed.data.html;
         const isQumu = isQumuWidget(html);
-        const {readOnly} = this.props.blockProps;
+        const {readOnly} = this.props;
 
         if (isQumu !== true) {
             this.runScripts(html);
         }
 
         const setLocked = () => {
-            this.props.blockProps.dispatch(actions.setLocked(true));
+            this.props.dispatch(actions.setLocked(true));
         };
 
         return (
@@ -193,3 +194,9 @@ export class EmbedBlock extends React.Component<IProps> {
         );
     }
 }
+
+const mapStateToProps = (state) => ({
+    readOnly: state.readOnly,
+});
+
+export const EmbedBlock = connect(mapStateToProps)(EmbedBlockComponent);

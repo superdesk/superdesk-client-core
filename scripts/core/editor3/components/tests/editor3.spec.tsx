@@ -1,12 +1,9 @@
 import React from 'react';
 import {shallow, mount} from 'enzyme';
 import {Editor3Component, getValidMediaType} from '../Editor3Component';
-import {getBlockRenderer} from '../blockRenderer';
-import {EditorState} from 'draft-js';
+import {EditorState, ContentBlock} from 'draft-js';
 import mockStore from './utils';
-import {noop} from 'lodash';
-
-const blockRendererTestProps = {readOnly: false, dispatch: noop};
+import {blockRenderer} from '../blockRenderer';
 
 const editorState = EditorState.createEmpty();
 
@@ -154,26 +151,28 @@ describe('editor3.component', () => {
 
 describe('editor3.blockRenderer', () => {
     it('should return null for non-atomic blocks', () => {
-        expect(getBlockRenderer(blockRendererTestProps)({getType: () => 'non-atomic'})).toBe(null);
+        const block = {getType: () => 'non-atomic'} as unknown as ContentBlock;
+
+        expect(blockRenderer(block)).toBe(null);
     });
 
     it('should return null as component for unrecognised blocks', () => {
-        const block = {getType: () => 'atomic', getEntityAt: () => 'entity_key'};
+        const block = {getType: () => 'atomic', getEntityAt: () => 'entity_key'} as unknown as ContentBlock;
         const contentState = {getEntity: () => ({getType: () => 'not an image'})};
-        const {component, editable} = getBlockRenderer(blockRendererTestProps)(block);
+        const {component, editable} = blockRenderer(block);
 
-        expect(component({block, contentState, blockProps: blockRendererTestProps})).toBe(null);
+        expect(component({block, contentState})).toBe(null);
         expect(editable).toEqual(false);
     });
 
     it('should return non-null as component for recognised blocks', () => {
-        const block = {getType: () => 'atomic', getEntityAt: () => 'entity_key'};
+        const block = {getType: () => 'atomic', getEntityAt: () => 'entity_key'} as unknown as ContentBlock;
         const contentState = {getEntity: () => ({getType: () => 'EMBED', getData: () => ({data: {html: 'abc'}})})};
-        const component = getBlockRenderer(blockRendererTestProps)(block)
-            .component({block, contentState, blockProps: blockRendererTestProps});
+        const component = blockRenderer(block)
+            .component({block, contentState});
         const {options} = mockStore();
 
         expect(component).not.toBe(null);
-        expect(mount(component, options).name()).toBe('EmbedBlock');
+        expect(mount(component, options).name()).toBe('Connect(EmbedBlockComponent)');
     });
 });

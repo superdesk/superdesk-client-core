@@ -1,19 +1,23 @@
 import React from 'react';
-import {shallow, mount} from 'enzyme';
+import {Provider} from 'react-redux';
+import {mount} from 'enzyme';
 import mockStore, {embedBlockAndContent} from './utils';
 import {EmbedBlock} from '../embeds/EmbedBlock';
 import {EmbedInputComponent as EmbedInput} from '../embeds/EmbedInput';
+import {createStore} from 'redux';
 
 describe('editor3.components.embed-block', () => {
     it('should render entity html', () => {
         const noop = () => ({});
         const {block, contentState} = embedBlockAndContent();
-        const wrapper = shallow(
-            <EmbedBlock
-                block={block}
-                contentState={contentState}
-                blockProps={{readOnly: false, dispatch: noop}}
-            />,
+        const wrapper = mount(
+            <Provider store={createStore(() => ({}), {})}>
+                <EmbedBlock
+                    block={block}
+                    contentState={contentState}
+                    blockProps={{readOnly: false, dispatch: noop}}
+                />
+            </Provider>,
         );
 
         expect(wrapper.find('.embed-block__wrapper').html())
