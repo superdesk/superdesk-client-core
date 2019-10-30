@@ -18,7 +18,6 @@ module.exports = function(grunt) {
             validatePointOfInterestForImages: true,
             hideRoutedDesks: false,
         },
-        iframely: {key: '4358cefd09a66b1126c036'},
         auth: {google: false},
         ingest: {
             PROVIDER_DASHBOARD_DEFAULTS: {
