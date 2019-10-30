@@ -21,7 +21,6 @@ interface IProps<T> {
 interface IState {
     search: string;
     isOpen: boolean;
-    forceOpen: boolean;
 }
 
 const arrowDownStyles = {
@@ -77,7 +76,6 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
         this.state = {
             search: '',
             isOpen: false,
-            forceOpen: false,
         };
 
         const searchFn = (search: string) => {
@@ -88,11 +86,9 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
     }
 
     render() {
-        const open = this.state.isOpen || this.state.forceOpen;
-
         return (
             <Autocomplete.default
-                open={open}
+                open={this.state.isOpen}
                 onMenuVisibilityChange={(isOpen) => this.setState({isOpen})}
                 inputProps={{placeholder: this.props.placeholder}}
                 value={this.props.value}
@@ -141,7 +137,7 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                             {...propsAutocomplete}
                             type="button"
                             className="sd-line-input__select-custom"
-                            disabled={this.props.disabled || this.state.forceOpen}
+                            disabled={this.props.disabled}
                             onClick={() => this.setState({isOpen: !this.state.isOpen})}
                             ref={(element) => {
                                 if (element != null) {
