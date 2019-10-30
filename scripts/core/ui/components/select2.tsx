@@ -150,7 +150,7 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                                     // react-autocomplete expects ref to be an input
                                     // but input doesn't support rendering custom children
                                     // so we use a button instead and add a fake method to prevent errors
-                                    // Also, we need to manage the open/close login on our own
+                                    // Also, we need to manage the open/close logic on our own
                                     // https://github.com/reactjs/react-autocomplete/blob/41388f7d7760bf6cf38e7946e43d4fddd9c7c176/examples/managed-menu-visibility/app.js#L26-L33
                                     element['setSelectionRange'] = noop;
                                 }
