@@ -27,6 +27,7 @@ interface IState extends IVideoEditor {
     cropImg: string;
     thumbnails: Array<IThumbnail>;
     loading: boolean;
+    loadingText: string;
     videoSrc: string;
 }
 
@@ -61,6 +62,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
             loading: false,
             thumbnails: [],
             videoSrc: '',
+            loadingText: '',
         };
     }
 
@@ -96,6 +98,10 @@ export class VideoEditor extends React.Component<IProps, IState> {
                             videoSrc: this.videoRef.current!.src = result.project.url + `?t=${Math.random()}`,
                         });
                         this.loadTimelineThumbnails();
+                    } else {
+                        this.setState({
+                            loadingText: 'Video is editing, please wait...',
+                        });
                     }
                 })
                 .catch(() => {
@@ -238,6 +244,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                         thumbnails: [],
                                         videoSrc: this.videoRef.current!.src =
                                             result.project.url + `?t=${Math.random()}`,
+                                        loadingText: 'Video is editing, please wait...',
                                     });
                                     this.loadTimelineThumbnails();
                                 }
@@ -333,7 +340,11 @@ export class VideoEditor extends React.Component<IProps, IState> {
                             />
                         </div>
                         <div className="modal__body modal__body--no-padding">
-                            {this.state.loading && <div className={getClass('video__loading')}></div>}
+                            {this.state.loading && (
+                                <div className={getClass('video__loading')}>
+                                    <div className={getClass('video__loading__text')}>{this.state.loadingText}</div>
+                                </div>
+                            )}
                             <VideoEditorProvider value={{ superdesk: this.props.superdesk }}>
                                 <div className="sd-photo-preview sd-photo-preview--edit-video">
                                     <div className="sd-photo-preview__video">
