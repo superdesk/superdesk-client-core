@@ -124,7 +124,7 @@ interface IProps {
     highlights?: any;
     highlightsManager?: any;
     spellchecking?: IEditorStore['spellchecking'];
-    stripPastedStyles?: boolean;
+    cleanPastedHtml?: boolean;
     onCreateAddSuggestion?(chars): void;
     onCreateDeleteSuggestion?(type): void;
     onPasteFromSuggestingMode?(): void;
@@ -482,7 +482,7 @@ export class Editor3Component extends React.Component<IProps> {
             onTab,
             tabindex,
             scrollContainer,
-            stripPastedStyles,
+            cleanPastedHtml,
         } = this.props;
 
         const cx = classNames({
@@ -548,7 +548,7 @@ export class Editor3Component extends React.Component<IProps> {
                         readOnly={locked || readOnly}
                         ref={(editor) => this.handleRefs(editor)}
                         spellCheck={appConfig.editor3.spellCheck}
-                        stripPastedStyles={stripPastedStyles}
+                        stripPastedStyles={cleanPastedHtml}
                     />
 
                     {this.props.loading && <div className="loading-overlay active" />}
@@ -561,6 +561,6 @@ export class Editor3Component extends React.Component<IProps> {
 Editor3Component.defaultProps = {
     readOnly: false,
     singleLine: false,
-    stripPastedStyles: false,
+    cleanPastedHtml: false,
     editorFormat: [],
 };

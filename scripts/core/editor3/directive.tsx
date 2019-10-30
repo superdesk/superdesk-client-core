@@ -44,7 +44,7 @@ class Editor3Directive {
     scrollContainer: any;
     refreshTrigger: any;
     editorFormat?: Array<string>;
-    stripPastedStyles?: boolean;
+    cleanPastedHtml?: boolean;
 
     constructor() {
         this.scope = {};
@@ -159,7 +159,7 @@ class Editor3Directive {
              */
             showTitle: '=?',
 
-            stripPastedStyles: '=?',
+            cleanPastedHtml: '=?',
         };
     }
 
@@ -254,7 +254,7 @@ class Editor3Directive {
                         <Editor3
                             scrollContainer={this.scrollContainer}
                             singleLine={this.singleLine}
-                            stripPastedStyles={this.stripPastedStyles}
+                            cleanPastedHtml={this.cleanPastedHtml}
                         />
                     </Provider>, $element.get(0),
                 );
