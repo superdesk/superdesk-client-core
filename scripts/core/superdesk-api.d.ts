@@ -882,8 +882,6 @@ declare module 'superdesk-api' {
         editor3: {
             /** set if browser spellcheck is enabled */
             spellCheck: boolean;
-            /** remove all information except plaintext on paste */
-            stripPastedStyles: boolean;
         };
     }
 

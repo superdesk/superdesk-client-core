@@ -186,7 +186,6 @@ function getDefaults(grunt) {
 
         editor3: {
             spellCheck: false,
-            stripPastedStyles: false,
         },
 
         // default timezone for the app

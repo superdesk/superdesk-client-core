@@ -44,6 +44,7 @@ class Editor3Directive {
     scrollContainer: any;
     refreshTrigger: any;
     editorFormat?: Array<string>;
+    stripPastedStyles?: boolean;
 
     constructor() {
         this.scope = {};
@@ -157,6 +158,8 @@ class Editor3Directive {
              * @description Show image title.
              */
             showTitle: '=?',
+
+            stripPastedStyles: '=?',
         };
     }
 
@@ -250,7 +253,9 @@ class Editor3Directive {
                     <Provider store={store}>
                         <Editor3
                             scrollContainer={this.scrollContainer}
-                            singleLine={this.singleLine} />
+                            singleLine={this.singleLine}
+                            stripPastedStyles={this.stripPastedStyles}
+                        />
                     </Provider>, $element.get(0),
                 );
             });
