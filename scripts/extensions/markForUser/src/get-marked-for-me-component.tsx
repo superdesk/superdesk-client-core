@@ -40,6 +40,7 @@ export function getMarkedForMeComponent(superdesk: ISuperdesk) {
                     page: {from: 0, size: 300},
                     sort: [{'_updated': 'desc'}],
                     filterValues: {marked_for_user: [user._id]},
+                    aggregations: true,
                 }).then((articles) => {
                     this.setState({articles});
                 });

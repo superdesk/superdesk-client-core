@@ -23,7 +23,7 @@ import {appConfig} from 'appConfig';
 export function queryElastic(
     parameters: IQueryElasticParameters,
 ) {
-    const {endpoint, page, sort, filterValues} = parameters;
+    const {endpoint, page, sort, filterValues, aggregations} = parameters;
 
     return ng.getServices(['session', 'api'])
         .then((res: any) => {
@@ -67,7 +67,7 @@ export function queryElastic(
             };
 
             const query = {
-                aggregations: 0,
+                aggregations: aggregations === true ? 1 : 0,
                 es_highlight: 0,
                 // projections: [],
                 source,

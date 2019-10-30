@@ -344,7 +344,7 @@ declare module 'superdesk-api' {
         is_enabled: boolean;
         needs_activation: boolean;
         desk: IDesk;
-        SIGN_OFF: string;
+        sign_off: string;
         byline: string;
         invisible_stages: Array<any>;
         slack_username: string;
@@ -420,6 +420,8 @@ declare module 'superdesk-api' {
 
         // can use deep references like {'a.b.c': []}
         filterValues: {[fieldName: string]: Array<string>};
+
+        aggregations: boolean;
     }
 
     interface IElasticSearchAggregationResult {
@@ -545,11 +547,18 @@ declare module 'superdesk-api' {
 
     // REACT COMPONENTS
 
+    export interface IConfigurableUiComponents {
+        UserAvatar?: React.ComponentType<{user: IUser}>;
+    }    
+
     export interface IListItemProps {
         onClick?(): void;
         className?: string;
         inactive?: boolean;
         noHover?: boolean;
+        noShadow?: boolean;
+        noBackground?: boolean;
+        fullWidth?: boolean;
         'data-test-id'?: string;
     }
 

@@ -7,14 +7,34 @@ import {
     SENT_OUTPUT,
     SCHEDULED_OUTPUT,
 } from 'apps/desks/constants';
-import {appConfig} from 'appConfig';
+import {appConfig} from 'scripts/appConfig';
+
+interface ICard {
+    _id: string;
+    deskId: string;
+    fileType: string; // contains JSON array
+    header: string; // example: "Politic Desk"
+    subheader: string; // example: "Working Stage"
+    type: 'stage' | string;
+    search?: {
+        filter?: {
+            query?: {
+                repo?: any;
+                q?: any;
+            };
+        };
+    };
+    max_items?: number;
+    singleViewType?: 'desk' | 'stage' | any;
+    query: any;
+}
 
 CardsService.$inject = ['search', 'session', 'desks'];
 export function CardsService(search, session, desks) {
     this.criteria = getCriteria;
     this.shouldUpdate = shouldUpdate;
 
-    function getCriteriaParams(card) {
+    function getCriteriaParams(card: ICard) {
         let params: any = {};
 
         if (card.type === 'search' && card.search && card.search.filter.query) {
@@ -37,7 +57,7 @@ export function CardsService(search, session, desks) {
         return params;
     }
 
-    function filterQueryByCardType(query, queryParam, card) {
+    function filterQueryByCardType(query, queryParam, card: ICard) {
         let deskId;
 
         switch (card.type) {
@@ -92,7 +112,7 @@ export function CardsService(search, session, desks) {
         }
     }
 
-    function filterQueryByDeskType(query, card) {
+    function filterQueryByDeskType(query, card: ICard) {
         var deskId = card._id.substring(0, card._id.indexOf(':'));
         var desk = desks.deskLookup ? desks.deskLookup[deskId] : null;
         var states = PUBLISHED_STATES;
@@ -118,7 +138,7 @@ export function CardsService(search, session, desks) {
         }
     }
 
-    function filterQueryByCardFileType(query, card) {
+    function filterQueryByCardFileType(query, card: ICard) {
         if (card.fileType) {
             var termsHighlightsPackage = {and: [
                 {bool: {must: {exists: {field: 'highlight'}}}},
@@ -155,7 +175,7 @@ export function CardsService(search, session, desks) {
      * @param {Object} card
      * @param {string} queryString
      */
-    function getCriteria(card, queryString, queryParam) {
+    function getCriteria(card: ICard, queryString, queryParam) {
         var params = getCriteriaParams(card);
         var query = search.query(setFilters(params));
         var criteria: any = {es_highlight: card.query ? search.getElasticHighlight() : 0};
@@ -180,7 +200,7 @@ export function CardsService(search, session, desks) {
         return criteria;
     }
 
-    function shouldUpdate(card, data) {
+    function shouldUpdate(card: ICard, data) {
         switch (card.type) {
         case 'stage':
             // refresh stage if it matches updated stage

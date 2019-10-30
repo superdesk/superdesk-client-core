@@ -13,8 +13,8 @@ module.exports = function buildIndex(o) {
           </head>
           <body ng-class="config.bodyClass">
             <div sd-superdesk-view></div>
-            <script src="app.bundle.js"></script>
             <script src="config.js"></script>
+            <script src="app.bundle.js"></script>
           </body>
         </html>
     `;

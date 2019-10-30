@@ -27,7 +27,11 @@ var config = {
         a: path.join(__dirname, '/spec/**/[a-f]*[Ss]pec.js'),
         b: path.join(__dirname, '/spec/**/[g-m]*[Ss]pec.js'),
         c: path.join(__dirname, '/spec/**/[n-z]*[Ss]pec.js'),
-        d: path.join(__dirname, '/scripts/extensions/*/dist/spec/*[Ss]pec.js'),
+
+        // disable running e2e tests from extensions until testing environment is reconfigured
+        // to run start client from the main repo with all extensions enabled
+
+        // d: path.join(__dirname, '/scripts/extensions/*/dist/spec/*[Ss]pec.js'),
     },
 
     framework: 'jasmine2',
