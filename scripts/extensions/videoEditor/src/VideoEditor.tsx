@@ -137,6 +137,16 @@ export class VideoEditor extends React.Component<IProps, IState> {
         );
     };
 
+    handleCrop = (newCrop: IVideoEditor['crop']) => {
+        // @ts-ignore
+        ['x', 'y', 'width', 'height'].map(key => (newCrop[key] = Math.floor(newCrop[key])));
+        // newCrop lost aspect when cropping while rotating sometimes
+        if (!newCrop.aspect) {
+            newCrop.aspect = this.state.crop.aspect;
+        }
+        this.setState({ crop: newCrop }, this.checkIsDirty);
+    };
+
     handleToggleVideo = () => {
         if (this.state.playing) {
             this.videoRef.current!.pause();
@@ -297,16 +307,53 @@ export class VideoEditor extends React.Component<IProps, IState> {
     // but scaled video to fit into container
     getCropSize = (inputCrop: IVideoEditor['crop']): IVideoEditor['crop'] => {
         const video = this.videoRef.current!;
-        const rect = video.getBoundingClientRect();
+        let { width, height } = video.getBoundingClientRect();
+        if (this.state.degree % 180 !== 0) {
+            [width, height] = [height, width];
+        }
 
-        const crop = { ...inputCrop };
-        const scaleX = video.videoWidth / rect.width;
-        const scaleY = video.videoHeight / rect.height;
-        crop.x = Math.round(crop.x! * scaleX);
-        crop.y = Math.round(crop.y! * scaleY);
-        crop.width = Math.round(crop.width! * scaleX);
-        crop.height = Math.round(crop.height! * scaleY);
+        const crop = Object.assign({}, inputCrop);
+        const scaleX = video.videoWidth / width;
+        const scaleY = video.videoHeight / height;
+        crop.x = Math.floor(crop.x! * scaleX);
+        crop.y = Math.floor(crop.y! * scaleY);
+        crop.width = Math.floor(crop.width! * scaleX);
+        crop.height = Math.floor(crop.height! * scaleY);
         return crop;
+    };
+
+    // get crop value while rotating video
+    getCropRotate = (crop: IVideoEditor['crop']): IVideoEditor['crop'] => {
+        const { width: currentWidth, height: currentHeight } = this.videoRef.current!.getBoundingClientRect();
+        const rotate = this.state.degree;
+        const { x, y, width, height } = crop;
+        if ([x, y, width, height].filter(value => value !== 0).length === 0) return this.getCropSize(crop);
+        switch (rotate) {
+            case -90:
+                return this.getCropSize({
+                    ...crop,
+                    x: Math.abs(currentHeight - height! - y!),
+                    y: x!,
+                    width: height!,
+                    height: width!,
+                });
+            case -180:
+                return this.getCropSize({
+                    ...crop,
+                    x: Math.abs(currentWidth - (x! + width!)),
+                    y: Math.abs(currentHeight - (y! + height!)),
+                });
+            case -270:
+                return this.getCropSize({
+                    ...crop,
+                    x: y!,
+                    y: Math.abs(currentWidth - width! - x!),
+                    width: height!,
+                    height: width!,
+                });
+            default:
+                return this.getCropSize(crop);
+        }
     };
 
     render() {
@@ -369,15 +416,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                                     <ReactCrop
                                                         src={this.state.cropImg}
                                                         crop={this.state.crop}
-                                                        onChange={(newCrop: ReactCrop.Crop) => {
-                                                            ['x', 'y', 'width', 'height'].map(
-                                                                key => (newCrop[key] = Math.round(newCrop[key]))
-                                                            );
-                                                            this.setState(
-                                                                { crop: Object.assign({}, this.state.crop, newCrop) },
-                                                                this.checkIsDirty
-                                                            );
-                                                        }}
+                                                        onChange={this.handleCrop}
                                                         className={getClass('video__crop')}
                                                         style={{
                                                             width: width,
@@ -406,7 +445,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                             onToggleLoading={this.handleToggleLoading}
                                             crop={this.state.crop}
                                             rotate={this.state.degree}
-                                            getCropSize={this.getCropSize}
+                                            getCropRotate={this.getCropRotate}
                                         />
                                         <VideoTimeline
                                             video={this.videoRef}

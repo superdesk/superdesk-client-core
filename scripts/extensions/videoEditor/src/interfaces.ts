@@ -4,7 +4,7 @@ import { Crop } from 'react-image-crop';
 export interface IArticleVideo extends IArticle {
     renditions?: {
         original: {
-            hef: string;
+            href: string;
             media: string;
             mimetype: string;
             version: number;

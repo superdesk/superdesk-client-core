@@ -10,7 +10,7 @@ interface IProps {
     crop: IVideoEditor['crop'];
     rotate: IVideoEditor['degree'];
     onToggleLoading: (isLoading: boolean) => void;
-    getCropSize: (crop: IVideoEditor['crop']) => IVideoEditor['crop'];
+    getCropRotate: (crop: IVideoEditor['crop']) => IVideoEditor['crop'];
 }
 
 interface IState {
@@ -62,7 +62,13 @@ export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
         });
         const video = this.props.videoRef.current;
         if (!video) return;
-        const { x, y, width, height, aspect } = this.props.getCropSize(this.props.crop);
+        let { x, y, width, height, aspect } = this.props.getCropRotate(this.props.crop);
+
+        let canvasSize: [number, number] = [200, 160];
+        if (this.props.rotate % 180 !== 0 && aspect !== 1 && (width !== 0 || height !== 0)) {
+            aspect = 1 / aspect!;
+            canvasSize = [200, 200];
+        }
 
         this.drawCanvas(
             video,
@@ -70,7 +76,8 @@ export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
             y || 0,
             width || video.videoWidth,
             height || video.videoHeight,
-            aspect || video.videoWidth / video.videoHeight
+            aspect || video.videoWidth / video.videoHeight,
+            canvasSize
         );
         this.setState({ dirty: true });
     };
@@ -86,7 +93,7 @@ export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
     handleSave = () => {
         const { dataApi } = this.context.superdesk;
         if (this.state.type === 'capture') {
-            const crop = this.props.getCropSize(pick(this.props.crop, ['x', 'y', 'width', 'height']));
+            const crop = this.props.getCropRotate(pick(this.props.crop, ['x', 'y', 'width', 'height']));
             const body = {
                 // Captured thumbnail from server and from canvas have small difference in time (position)
                 position: (this.state.value as number) - 0.04,
@@ -180,11 +187,12 @@ export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
         y: number,
         width: number,
         height: number,
-        ratio: number = width / height
+        ratio: number = width / height,
+        canvasSize: [number, number] = [200, 160]
     ) => {
         const ctx = this.ref.current!.getContext('2d');
 
-        let [drawWidth, drawHeight] = [200, 160];
+        let [drawWidth, drawHeight] = canvasSize;
         if (ratio > 1) {
             drawHeight = drawWidth / ratio;
         } else {
