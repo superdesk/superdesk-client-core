@@ -118,16 +118,13 @@ export class MediaBlockComponent extends React.Component<any, any> {
             (data._type !== 'externalsource'
             || get(features, 'editFeaturedImage', true));
 
-        const removable = !readOnly;
-        const draggable = removable;
-
         return (
 
             <div className="image-block"
                 onClick={(e) => e.stopPropagation()}
-                draggable={draggable} onDragStart={this.onDragStart}>
+                draggable={!readOnly} onDragStart={this.onDragStart}>
                 {
-                    removable && (
+                    readOnly ? null : (
                         <a className="icn-btn image-block__remove" onClick={this.onClickDelete}>
                             <i className="icon-close-small" />
                         </a>
@@ -142,6 +139,7 @@ export class MediaBlockComponent extends React.Component<any, any> {
                             className="image-block__title"
                             value={data.headline}
                             onChange={this.onChange}
+                            disabled={readOnly}
                         /> : null }
 
                     {mediaType === 'picture' &&
@@ -215,6 +213,7 @@ export class MediaBlockComponent extends React.Component<any, any> {
                                         className="image-block__title"
                                         value={data.headline}
                                         onChange={this.onChange}
+                                        disabled={readOnly}
                                     />
                                 )
                             }
@@ -253,6 +252,7 @@ export class MediaBlockComponent extends React.Component<any, any> {
                                         className="image-block__title"
                                         value={data.headline}
                                         onChange={this.onChange}
+                                        disabled={readOnly}
                                     />
                                 )
                             }
@@ -291,6 +291,7 @@ export class MediaBlockComponent extends React.Component<any, any> {
                         className="image-block__description"
                         value={data.description_text}
                         onChange={this.onChange}
+                        disabled={readOnly}
                     />
                     {editable && (mediaType === 'audio' || mediaType === 'video') &&
                         <div className="image-block__action-bar">
@@ -313,7 +314,7 @@ MediaBlockComponent.propTypes = {
     contentState: PropTypes.object.isRequired,
     showTitle: PropTypes.bool,
     readOnly: PropTypes.bool,
-    blockProps: PropTypes.object.isRequired,
+    blockProps: PropTypes.object,
 };
 
 const mapStateToProps = (state) => ({
