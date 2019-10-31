@@ -7,6 +7,7 @@ import 'external-apps';
 import {appConfig} from 'appConfig';
 import {IConfigurableUiComponents} from 'superdesk-api';
 import {CC} from 'core/ui/configurable-ui-components';
+import {registerExtensions} from 'core/register-extensions';
 
 if (appConfig.features.useTansaProofing) {
     // tslint:disable-next-line:no-var-requires
@@ -43,6 +44,43 @@ export function startApp(
         }
     }
 
+    // added to be able to register activities which didn't work using superdesk reference injected in `core.run`.
+    var _superdesk;
+
+    angular.module('superdesk.register_extensions', [])
+        .config(['superdeskProvider', (superdesk) => {
+            _superdesk = superdesk;
+        }])
+        .run([
+            'modal',
+            'privileges',
+            'lock',
+            'session',
+            'authoringWorkspace',
+            'config',
+            'metadata',
+            (
+                modal,
+                privileges,
+                lock,
+                session,
+                authoringWorkspace,
+                config,
+                metadata,
+            ) => {
+                registerExtensions(
+                    _superdesk,
+                    modal,
+                    privileges,
+                    lock,
+                    session,
+                    authoringWorkspace,
+                    config,
+                    metadata,
+                );
+            },
+        ]);
+
     loadConfigs().then(() => {
         // update config via config.js
         if (window.superdeskConfig) {
@@ -63,6 +101,7 @@ export function startApp(
             'superdesk.config',
             'superdesk.core',
             'superdesk.apps',
+            'superdesk.register_extensions',
         ].concat(appConfig.apps || []), {strictDi: true});
 
         window['superdeskIsReady'] = true;
