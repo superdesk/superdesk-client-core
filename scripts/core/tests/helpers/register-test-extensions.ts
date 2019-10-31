@@ -22,11 +22,18 @@ export function registerTestExtensions(
         extensions[i] = {
             extension: extension,
             activationResult: {},
-            manifest: {
-                main: '',
-            },
         };
     });
 
-    return registerExtensions(superdesk, modal, privileges, lock, session, authoringWorkspace, config, metadata);
+    return registerExtensions(
+        [],
+        superdesk,
+        modal,
+        privileges,
+        lock,
+        session,
+        authoringWorkspace,
+        config,
+        metadata,
+    );
 }

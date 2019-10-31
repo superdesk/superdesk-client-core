@@ -288,31 +288,6 @@ export function getSuperdeskApiImplementation(
         localization: {
             gettext: (message) => gettext(message),
         },
-        extensions: {
-            getExtension: (id: string) => {
-                const extension = extensions[id].extension;
-
-                if (extension == null) {
-                    return Promise.reject('Extension not found.');
-                }
-
-                const {manifest} = extensions[requestingExtensionId];
-
-                if (
-                    manifest.superdeskExtension != null
-                    && Array.isArray(manifest.superdeskExtension.dependencies)
-                    && manifest.superdeskExtension.dependencies.includes(id)
-                ) {
-                    const extensionShallowCopy = {...extension};
-
-                    delete extensionShallowCopy['activate'];
-
-                    return Promise.resolve(extensionShallowCopy);
-                } else {
-                    return Promise.reject('Not authorized.');
-                }
-            },
-        },
         privileges: {
             getOwnPrivileges: () => privileges.loaded.then(() => privileges.privileges),
         },

@@ -88,6 +88,7 @@ describe('Multi Action Bar', () => {
             registerTestExtensions(
                 [
                     {
+                        id: 'test-extension',
                         activate: () => {
                             return Promise.resolve({
                                 contributions: {

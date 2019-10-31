@@ -75,6 +75,7 @@ describe('content', () => {
             registerTestExtensions(
                 [
                     {
+                        id: 'test-extension',
                         activate: () => {
                             return Promise.resolve({
                                 contributions: {

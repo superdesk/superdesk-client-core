@@ -31,6 +31,7 @@ function annotationFromLibraryTabSelectedByDefault(
 }
 
 var extension: IExtension = {
+    id: 'annotationsLibrary',
     activate: (superdesk: ISuperdesk) => {
         const {gettext} = superdesk.localization;
 
