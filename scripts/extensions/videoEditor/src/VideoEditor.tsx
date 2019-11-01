@@ -156,6 +156,13 @@ export class VideoEditor extends React.Component<IProps, IState> {
         if (!newCrop.aspect) {
             newCrop.aspect = this.state.crop.aspect;
         }
+
+        // when first draw crop zone, ReactImageCrop trigger a bulk of change event with the same
+        // newCrop value, using throttle with value about 50 did not help but increase may result in lagging
+        if (Object.values(this.state.crop).toString() === Object.values(newCrop).toString()) {
+            return;
+        }
+
         this.setState({ crop: newCrop }, this.checkIsDirty);
     };
 

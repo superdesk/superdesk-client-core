@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@types/react-image-crop": "^8.1.2",
-    "react-image-crop": "^8.3.0"
+    "react-image-crop": "^8.4.0"
   },
   "peerDependencies": {
     "react": "16.8.6"
