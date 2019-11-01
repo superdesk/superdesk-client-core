@@ -3,7 +3,7 @@ import * as React from 'react';
 interface IProps {
     onClick?: () => void;
     getText?: (text: string) => string;
-    select?: string | number | null;
+    select?: string | null;
     disabled?: boolean;
 }
 export function QualityLabel(props: IProps) {
