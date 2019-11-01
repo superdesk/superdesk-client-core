@@ -9,7 +9,7 @@ interface IProps {
     article: IArticleVideo;
     crop: IVideoEditor['crop'];
     rotate: IVideoEditor['degree'];
-    onToggleLoading: (isLoading: boolean) => void;
+    onToggleLoading: (isLoading: boolean, loadingText?: string) => void;
     getCropRotate: (crop: IVideoEditor['crop']) => IVideoEditor['crop'];
 }
 
@@ -126,7 +126,7 @@ export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
                     // new thumbnail will be loaded when user reset changes
                     this.handleReset(false);
                     this.setState({ rotateDegree: this.props.rotate });
-                    this.props.onToggleLoading(true);
+                    this.props.onToggleLoading(true, 'Saving capture thumbnail...');
                     this.getPreviewThumbnail();
                 })
                 .catch((err: any) => console.log(err));

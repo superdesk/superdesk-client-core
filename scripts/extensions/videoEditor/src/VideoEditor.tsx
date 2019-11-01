@@ -93,17 +93,16 @@ export class VideoEditor extends React.Component<IProps, IState> {
         this.props.onArticleUpdate(cloneDeep(this.state.article));
     };
     handleCheckingVideo = () => {
-        this.handleToggleLoading(true);
+        this.handleToggleLoading(true, 'Loading video...');
         this.intervalCheckVideo = window.setInterval(() => {
             this.props.superdesk.dataApi
                 .findOne('video_edit', this.state.article._id + `?t=${Math.random()}`)
                 .then((result: any) => {
                     if (result.project.processing.video == false) {
-                        clearInterval(this.intervalCheckVideo);
                         this.handleToggleLoading(false);
-                        this.handleReset();
+                        clearInterval(this.intervalCheckVideo);
                         this.setState({
-                            videoSrc: this.videoRef.current!.src = result.project.url + `?t=${Math.random()}`,
+                            videoSrc: result.project.url + `?t=${Math.random()}`,
                             article: {
                                 ...this.state.article,
                                 ...omit(result, 'project'),
@@ -111,9 +110,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                         });
                         this.loadTimelineThumbnails();
                     } else {
-                        this.setState({
-                            loadingText: 'Video is editing, please wait...',
-                        });
+                        this.setState({ loadingText: 'Video is editing, please wait...' });
                     }
                 })
                 .catch(() => {
@@ -208,11 +205,11 @@ export class VideoEditor extends React.Component<IProps, IState> {
         });
     };
 
-    handleToggleLoading = (isToggle: boolean) => {
+    handleToggleLoading = (isToggle: boolean, text: string = '') => {
         if (this.state.playing) {
             this.handleToggleVideo();
         }
-        this.setState({ loading: isToggle });
+        this.setState({ loading: isToggle, loadingText: text || this.state.loadingText });
     };
 
     handleQualityChange = (quality: number) => {
@@ -260,7 +257,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                 })
                 .then(() => {
                     this.setState({ isDirty: false });
-                    this.handleToggleLoading(true);
+                    this.handleToggleLoading(true, 'Video is editing, please wait...');
                     this.intervalVideoEdit = window.setInterval(() => {
                         this.props.superdesk.dataApi
                             .findOne('video_edit', this.state.article._id + `?t=${Math.random()}`)
@@ -279,10 +276,6 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                         },
                                     });
                                     this.loadTimelineThumbnails();
-                                } else {
-                                    this.setState({
-                                        loadingText: 'Video is editing, please wait...',
-                                    });
                                 }
                             })
                             .catch(() => {
