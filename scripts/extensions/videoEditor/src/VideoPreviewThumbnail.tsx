@@ -21,11 +21,13 @@ interface IState {
     thumbnail: string;
     // deprived from props to save rotate degree only when user captures thumbnail
     rotateDegree: number;
+    scale: number;
 }
 
 export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
     static contextType = VideoEditorContext;
     private ref: React.RefObject<HTMLCanvasElement>;
+    private maxCanvasSize: { width: number; height: number };
     private interval: number;
 
     constructor(props: IProps) {
@@ -36,8 +38,10 @@ export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
             value: 0,
             thumbnail: get(this.props.article.renditions, 'thumbnail.href'),
             rotateDegree: 0,
+            scale: 1,
         };
         this.ref = React.createRef();
+        this.maxCanvasSize = { width: 0, height: 0 };
         this.interval = 0;
     }
 
@@ -54,20 +58,25 @@ export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
     }
 
     handleClick = () => {
-        this.setState({
-            dirty: true,
-            type: 'capture',
-            value: this.props.videoRef.current!.currentTime,
-            rotateDegree: this.props.rotate,
-        });
+        this.setState(
+            {
+                dirty: true,
+                type: 'capture',
+                value: this.props.videoRef.current!.currentTime,
+                rotateDegree: this.props.rotate,
+            },
+            this.setScale
+        );
         const video = this.props.videoRef.current;
         if (!video) return;
         let { x, y, width, height, aspect } = this.props.getCropRotate(this.props.crop);
 
-        let canvasSize: [number, number] = [200, 160];
-        if (this.props.rotate % 180 !== 0 && aspect !== 1 && (width !== 0 || height !== 0)) {
-            aspect = 1 / aspect!;
-            canvasSize = [200, 200];
+        let canvasSize = [this.maxCanvasSize.width, this.maxCanvasSize.height];
+        if (this.props.rotate % 180 !== 0) {
+            if (aspect !== 1 && (width !== 0 || height !== 0)) {
+                aspect = 1 / aspect!;
+                canvasSize = [this.maxCanvasSize.height, this.maxCanvasSize.width];
+            }
         }
 
         this.drawCanvas(
@@ -178,7 +187,7 @@ export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
                 this.setPreviewThumbnail(this.state.thumbnail + `?t=${Math.random()}`);
             }
         }
-        this.setState({ dirty: false, type: '', value: 0, rotateDegree: 0 });
+        this.setState({ dirty: false, type: '', value: 0, rotateDegree: 0, scale: 1 });
     };
 
     drawCanvas = (
@@ -188,7 +197,7 @@ export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
         width: number,
         height: number,
         ratio: number = width / height,
-        canvasSize: [number, number] = [200, 160]
+        canvasSize: number[] = [this.maxCanvasSize.width, this.maxCanvasSize.height]
     ) => {
         const ctx = this.ref.current!.getContext('2d');
 
@@ -203,15 +212,44 @@ export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
         ctx!.drawImage(element, x, y, width, height, 0, 0, drawWidth, drawHeight);
     };
 
+    // get wrapper size dynamically so can use to calculate canvas size to fit content into
+    getWrapperSize = (element: any) => {
+        const { width, height } = element.getBoundingClientRect();
+        this.maxCanvasSize = {
+            width: width,
+            height: height,
+        };
+    };
+
+    setScale = () => {
+        let scale = 1;
+        // calculate scale while rotating to make sure image is not exceeded maximum wrapper size,
+        if (this.ref.current! && this.state.rotateDegree % 180 !== 0) {
+            // scale is calculated on previous call
+            if (this.state.scale !== 1) {
+                return;
+            }
+            const { width, height } = this.ref.current!.getBoundingClientRect();
+            const ratio = width / height;
+
+            if (ratio >= 1 && width > this.maxCanvasSize.width) {
+                scale = this.maxCanvasSize.height / width;
+            } else if (ratio < 1 && height > this.maxCanvasSize.height) {
+                scale = this.maxCanvasSize.height / height;
+            }
+        }
+        this.setState({ scale: scale });
+    };
+
     render() {
         const { getClass } = this.context.superdesk.utilities.CSS;
+
         return (
             <div className="sd-photo-preview__thumbnail-edit">
-                <div className={getClass('thumbnail-edit__preview')}>
+                <div className={getClass('thumbnail-edit__preview')} ref={this.getWrapperSize}>
                     <canvas
                         ref={this.ref}
-                        className={getClass('thumbnail-edit__preview-canvas')}
-                        style={{ transform: `rotate(${this.state.rotateDegree}deg)` }}
+                        style={{ transform: `rotate(${this.state.rotateDegree}deg) scale(${this.state.scale})` }}
                     ></canvas>
                 </div>
                 <div className={getClass('thumbnail-edit__container')}>

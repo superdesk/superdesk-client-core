@@ -237,7 +237,6 @@
   height: 16rem;
   position: absolute;
   display: flex;
+  justify-content: center;
+  align-items: center;
 } 
-.thumbnail-edit__preview-canvas {
-  margin: auto;
-}
