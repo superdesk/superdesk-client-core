@@ -2,8 +2,8 @@ import * as React from 'react';
 // @ts-ignore
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
-import { ISuperdesk } from 'superdesk-api';
-import { get, isEmpty, omit, pick, isEqual } from 'lodash';
+import { ISuperdesk, IArticle } from 'superdesk-api';
+import { get, isEmpty, omit, pick, isEqual, cloneDeep } from 'lodash';
 
 import { VideoEditorTools } from './VideoEditorTools';
 import { VideoTimeline } from './VideoTimeline';
@@ -16,6 +16,7 @@ interface IProps {
     article: IArticleVideo;
     superdesk: ISuperdesk;
     onClose: () => void;
+    onArticleUpdate: (articleUpdate: IArticle) => void;
 }
 
 interface IState extends IVideoEditor {
@@ -29,6 +30,7 @@ interface IState extends IVideoEditor {
     loading: boolean;
     loadingText: string;
     videoSrc: string;
+    article: IArticleVideo;
 }
 
 export class VideoEditor extends React.Component<IProps, IState> {
@@ -63,6 +65,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
             thumbnails: [],
             videoSrc: '',
             loadingText: '',
+            article: cloneDeep(this.props.article),
         };
     }
 
@@ -84,11 +87,16 @@ export class VideoEditor extends React.Component<IProps, IState> {
         clearInterval(this.intervalVideoEdit);
         clearInterval(this.intervalCheckVideo);
     }
+
+    handleClose = () => {
+        this.props.onClose();
+        this.props.onArticleUpdate(cloneDeep(this.state.article));
+    };
     handleCheckingVideo = () => {
         this.handleToggleLoading(true);
         this.intervalCheckVideo = window.setInterval(() => {
             this.props.superdesk.dataApi
-                .findOne('video_edit', this.props.article._id + `?t=${Math.random()}`)
+                .findOne('video_edit', this.state.article._id + `?t=${Math.random()}`)
                 .then((result: any) => {
                     if (result.project.processing.video == false) {
                         clearInterval(this.intervalCheckVideo);
@@ -96,6 +104,10 @@ export class VideoEditor extends React.Component<IProps, IState> {
                         this.handleReset();
                         this.setState({
                             videoSrc: this.videoRef.current!.src = result.project.url + `?t=${Math.random()}`,
+                            article: {
+                                ...this.state.article,
+                                ...omit(result, 'project'),
+                            },
                         });
                         this.loadTimelineThumbnails();
                     } else {
@@ -237,14 +249,14 @@ export class VideoEditor extends React.Component<IProps, IState> {
             dataApi
                 .create('video_edit', {
                     edit: body,
-                    item: this.props.article,
+                    item: this.state.article,
                 })
                 .then(() => {
                     this.setState({ isDirty: false });
                     this.handleToggleLoading(true);
                     this.intervalVideoEdit = window.setInterval(() => {
                         this.props.superdesk.dataApi
-                            .findOne('video_edit', this.props.article._id + `?t=${Math.random()}`)
+                            .findOne('video_edit', this.state.article._id + `?t=${Math.random()}`)
                             .then((result: any) => {
                                 if (result.project.processing.video == false) {
                                     clearInterval(this.intervalVideoEdit);
@@ -254,9 +266,16 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                         thumbnails: [],
                                         videoSrc: this.videoRef.current!.src =
                                             result.project.url + `?t=${Math.random()}`,
-                                        loadingText: 'Video is editing, please wait...',
+                                        article: {
+                                            ...this.state.article,
+                                            ...omit(result, 'project'),
+                                        },
                                     });
                                     this.loadTimelineThumbnails();
+                                } else {
+                                    this.setState({
+                                        loadingText: 'Video is editing, please wait...',
+                                    });
                                 }
                             })
                             .catch(() => {
@@ -284,7 +303,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
     loadTimelineThumbnails = () => {
         this.intervalThumbnails = window.setInterval(() => {
             this.props.superdesk.dataApi
-                .findOne('video_edit', this.props.article._id + `?t=${Math.random()}`)
+                .findOne('video_edit', this.state.article._id + `?t=${Math.random()}`)
                 .then((result: any) => {
                     if (!isEmpty(result.project.thumbnails.timeline)) {
                         clearInterval(this.intervalThumbnails);
@@ -293,7 +312,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                         !result.project.processing.thumbnails_timeline &&
                             this.props.superdesk.dataApi.findOne(
                                 'video_edit',
-                                this.props.article._id + `?action=timeline&t=${Math.random()}`
+                                this.state.article._id + `?action=timeline&t=${Math.random()}`
                             );
                     }
                 })
@@ -374,25 +393,25 @@ export class VideoEditor extends React.Component<IProps, IState> {
         }
 
         return (
-            <div className="modal modal--fullscreen modal--dark-ui in" style={{ zIndex: 1050, display: 'block' }}>
-                <div className="modal__dialog">
-                    <div className="modal__content">
-                        <div className="modal__header modal__header--flex">
-                            <h3 className="modal__heading">{gettext('Edit Video')}</h3>
-                            <VideoEditorHeader
-                                onClose={this.props.onClose}
-                                onReset={this.handleReset}
-                                onSave={this.handleSave}
-                                isDirty={this.state.isDirty}
-                            />
-                        </div>
-                        <div className="modal__body modal__body--no-padding">
-                            {this.state.loading && (
-                                <div className={getClass('video__loading')}>
-                                    <div className={getClass('video__loading__text')}>{this.state.loadingText}</div>
-                                </div>
-                            )}
-                            <VideoEditorProvider value={{ superdesk: this.props.superdesk }}>
+            <VideoEditorProvider value={{ superdesk: this.props.superdesk }}>
+                <div className="modal modal--fullscreen modal--dark-ui in" style={{ zIndex: 1050, display: 'block' }}>
+                    <div className="modal__dialog">
+                        <div className="modal__content">
+                            <div className="modal__header modal__header--flex">
+                                <h3 className="modal__heading">{gettext('Edit Video')}</h3>
+                                <VideoEditorHeader
+                                    onClose={this.handleClose}
+                                    onReset={this.handleReset}
+                                    onSave={this.handleSave}
+                                    isDirty={this.state.isDirty}
+                                />
+                            </div>
+                            <div className="modal__body modal__body--no-padding">
+                                {this.state.loading && (
+                                    <div className={getClass('video__loading')}>
+                                        <div className={getClass('video__loading__text')}>{this.state.loadingText}</div>
+                                    </div>
+                                )}
                                 <div className="sd-photo-preview sd-photo-preview--edit-video">
                                     <div className="sd-photo-preview__video">
                                         <div className="sd-photo-preview__video-inner">
@@ -433,7 +452,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                                 onCrop={this.handleToggleCrop}
                                                 onQualityChange={this.handleQualityChange}
                                                 video={this.state}
-                                                videoHeadline={this.props.article.headline}
+                                                videoHeadline={this.state.article.headline}
                                                 videoHeight={get(this.videoRef.current, 'videoHeight')}
                                             />
                                         </div>
@@ -441,7 +460,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                     <div className="sd-photo-preview__thumb-strip sd-photo-preview__thumb-strip--video">
                                         <VideoPreviewThumbnail
                                             videoRef={this.videoRef}
-                                            article={this.props.article}
+                                            article={this.state.article}
                                             onToggleLoading={this.handleToggleLoading}
                                             crop={this.state.crop}
                                             rotate={this.state.degree}
@@ -455,11 +474,11 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                         />
                                     </div>
                                 </div>
-                            </VideoEditorProvider>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </VideoEditorProvider>
         );
     }
 }

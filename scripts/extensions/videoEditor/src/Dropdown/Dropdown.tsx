@@ -1,4 +1,5 @@
 import * as React from 'react';
+import VideoEditorContext from '../VideoEditorContext';
 
 interface IProps {
     label: React.ReactElement<any>;
@@ -14,6 +15,7 @@ interface IState {
 }
 
 export class Dropdown extends React.Component<IProps, IState> {
+    static contextType = VideoEditorContext;
     constructor(props: IProps) {
         super(props);
         this.state = {
@@ -52,6 +54,7 @@ export class Dropdown extends React.Component<IProps, IState> {
     };
 
     render() {
+        const { gettext } = this.context.superdesk.localization;
         return (
             <div className={`dropdown ${this.state.open ? 'open' : ''} ${this.props.className || ''}`}>
                 {React.cloneElement(this.props.label as React.ReactElement<any>, {
@@ -61,7 +64,7 @@ export class Dropdown extends React.Component<IProps, IState> {
                 <ul className="dropdown__menu">
                     {this.props.items.map(item => (
                         <li key={item} onClick={() => this.handleSelect(item)}>
-                            <a>{item}</a>
+                            <a>{gettext(item)}</a>
                         </li>
                     ))}
                 </ul>

@@ -39,6 +39,7 @@ export class VideoEditorTools extends React.Component<IProps> {
         const videoHeight = this.props.videoHeight || 0;
         const resolutions = ['Same'].concat([360, 480, 720, 1080].filter(i => i < videoHeight).map(i => i + 'p'));
         const { getClass } = this.context.superdesk.utilities.CSS;
+        const { gettext } = this.context.superdesk.localization;
         return (
             <div className="sd-photo-preview__video-tools">
                 <div>
@@ -65,7 +66,7 @@ export class VideoEditorTools extends React.Component<IProps> {
                 </div>
                 <span className="sd-photo-preview__label mlr-auto">{this.props.videoHeadline}</span>
                 <Dropdown
-                    label={<QualityLabel />}
+                    label={<QualityLabel getText={gettext} />}
                     items={resolutions}
                     onSelect={this.handleQuality}
                     resetState={this.props.video.quality === 0}
