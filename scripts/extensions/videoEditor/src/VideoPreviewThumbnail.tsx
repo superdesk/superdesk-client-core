@@ -249,7 +249,6 @@ export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
                 <div className={getClass('thumbnail-edit__preview')} ref={this.getWrapperSize}>
                     <canvas
                         ref={this.ref}
-                        className={getClass('thumbnail-edit__preview-canvas')}
                         style={{ transform: `rotate(${this.state.rotateDegree}deg) scale(${this.state.scale})` }}
                     ></canvas>
                 </div>
