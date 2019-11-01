@@ -214,6 +214,8 @@ export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
 
     // get wrapper size dynamically so can use to calculate canvas size to fit content into
     getWrapperSize = (element: any) => {
+        if (element == null) return;
+
         const { width, height } = element.getBoundingClientRect();
         this.maxCanvasSize = {
             width: width,
