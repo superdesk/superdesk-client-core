@@ -8,11 +8,11 @@ export interface IArticleVideo extends IArticle {
             media: string;
             mimetype: string;
             version: number;
-        },
+        };
         thumbnail: {
-            href: string,
-            mimetype: string,
-        }
+            href: string;
+            mimetype: string;
+        };
     };
     project?: object;
 }
@@ -29,4 +29,12 @@ export interface IThumbnail {
     url: string;
     width: number;
     height: number;
-};
+}
+
+export interface IDropdownLabel {
+    onClick?: () => void;
+    getText?: (text: string) => string;
+    title?: string | undefined;
+    disabled?: boolean;
+    selectedItem?: string;
+}

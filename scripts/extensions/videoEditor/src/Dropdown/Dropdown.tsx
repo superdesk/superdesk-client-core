@@ -11,7 +11,7 @@ interface IProps {
 }
 interface IState {
     open: boolean;
-    select: string | number | null;
+    selectedItem: string | number | null;
 }
 
 export class Dropdown extends React.Component<IProps, IState> {
@@ -20,7 +20,7 @@ export class Dropdown extends React.Component<IProps, IState> {
         super(props);
         this.state = {
             open: false,
-            select: null,
+            selectedItem: null,
         };
     }
 
@@ -29,7 +29,7 @@ export class Dropdown extends React.Component<IProps, IState> {
             if (this.props.resetState === true) {
                 this.setState({
                     open: false,
-                    select: null,
+                    selectedItem: null,
                 });
             }
         }
@@ -38,9 +38,9 @@ export class Dropdown extends React.Component<IProps, IState> {
     handleToggle = () => {
         // use for custom action when select is not null
         // e.g: toggle crop mode
-        if (!this.state.open && this.state.select && this.props.isButton) {
+        if (!this.state.open && this.state.selectedItem && this.props.isButton) {
             this.props.onSelect('');
-            this.setState({ select: null });
+            this.setState({ selectedItem: null });
             return;
         }
         this.setState({
@@ -49,7 +49,7 @@ export class Dropdown extends React.Component<IProps, IState> {
     };
 
     handleSelect = (item: string) => {
-        this.setState({ open: false, select: item });
+        this.setState({ open: false, selectedItem: item });
         this.props.onSelect(item);
     };
 
@@ -59,7 +59,7 @@ export class Dropdown extends React.Component<IProps, IState> {
             <div className={`dropdown ${this.state.open ? 'open' : ''} ${this.props.className || ''}`}>
                 {React.cloneElement(this.props.label as React.ReactElement<any>, {
                     onClick: this.handleToggle,
-                    select: this.state.select,
+                    selectedItem: this.state.selectedItem,
                 })}
                 <ul className="dropdown__menu">
                     {this.props.items.map(item => (

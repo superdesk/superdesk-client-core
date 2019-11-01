@@ -38,6 +38,8 @@ export class VideoEditorTools extends React.Component<IProps> {
     render() {
         const videoHeight = this.props.videoHeight || 0;
         const resolutions = ['Same'].concat([360, 480, 720, 1080].filter(i => i < videoHeight).map(i => i + 'p'));
+        const qualityDisabled = resolutions.length === 1;
+
         const { getClass } = this.context.superdesk.utilities.CSS;
         const { gettext } = this.context.superdesk.localization;
         return (
@@ -66,11 +68,16 @@ export class VideoEditorTools extends React.Component<IProps> {
                 </div>
                 <span className="sd-photo-preview__label mlr-auto">{this.props.videoHeadline}</span>
                 <Dropdown
-                    label={<QualityLabel getText={gettext} />}
+                    label={
+                        <QualityLabel
+                            getText={gettext}
+                            title={qualityDisabled ? gettext('Maximum quality resize allowed') : undefined}
+                        />
+                    }
                     items={resolutions}
                     onSelect={this.handleQuality}
                     resetState={this.props.video.quality === 0}
-                    className={resolutions.length === 1 && getClass('video__dropdown__quality--disable')}
+                    className={qualityDisabled && getClass('video__dropdown__quality--disable')}
                 />
             </div>
         );

@@ -1,15 +1,11 @@
 import * as React from 'react';
+import { IDropdownLabel } from '../interfaces';
 
-interface IProps {
-    onClick?: () => void;
-    getText?: (text: string) => string;
-    select?: string | null;
-    disabled?: boolean;
-}
-export function QualityLabel(props: IProps) {
+export function QualityLabel(props: IDropdownLabel) {
+    const value = String(props.selectedItem || 'Same');
     return (
-        <p onClick={props.onClick}>
-            {props.getText!('Quality')}: {props.getText!(String(props.select || 'Same'))}
+        <p onClick={props.onClick} sd-tooltip={props.title}>
+            {props.getText!('Quality')}: {props.getText!(value)}
         </p>
     );
 }
