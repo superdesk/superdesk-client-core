@@ -137,11 +137,12 @@ export class VideoEditor extends React.Component<IProps, IState> {
         this.setState(
             prevState => ({ degree: prevState.degree - 90 }),
             () => {
-                if (this.state.degree % 360 === 0) {
-                    this.setState({ degree: 0 }, this.checkIsDirty);
-                } else {
-                    this.checkIsDirty();
+                const degree = this.state.degree % 360 === 0 ? 0 : this.state.degree;
+                let crop = this.initState.crop;
+                if (this.state.cropEnabled) {
+                    crop = this.getCropSample();
                 }
+                this.setState({ degree: degree, crop: crop }, this.checkIsDirty);
             }
         );
     };
@@ -175,24 +176,8 @@ export class VideoEditor extends React.Component<IProps, IState> {
         const cropAspect = aspect || this.state.crop.aspect || 0;
         let crop = this.initState.crop;
 
-        // calculate sample crop zone, only draw 80% instead of full width / height so user can easily resize, move
         if (this.state.cropEnabled === false) {
-            let { width, height } = this.videoRef.current!.getBoundingClientRect();
-            width = (width * 80) / 100;
-            height = (height * 80) / 100;
-
-            const ratio = width / height;
-            if (ratio > 1) {
-                width = height * cropAspect;
-            } else {
-                height = width * cropAspect;
-            }
-            crop = {
-                ...crop,
-                aspect: cropAspect,
-                width: width,
-                height: height,
-            };
+            crop = this.getCropSample(cropAspect);
         }
 
         this.setState({ cropEnabled: !this.state.cropEnabled, crop: crop }, this.checkIsDirty);
@@ -332,6 +317,26 @@ export class VideoEditor extends React.Component<IProps, IState> {
         crop.width = Math.floor(crop.width! * scaleX);
         crop.height = Math.floor(crop.height! * scaleY);
         return crop;
+    };
+
+    // calculate sample crop zone, only draw 80% instead of full width / height so user can easily resize, move
+    getCropSample = (aspect: number | undefined = this.state.crop.aspect) => {
+        let { width, height } = this.videoRef.current!.getBoundingClientRect();
+        width = (width * 80) / 100;
+        height = (height * 80) / 100;
+
+        const ratio = width / height;
+        if (ratio > 1) {
+            width = height * aspect!;
+        } else {
+            height = width * aspect!;
+        }
+        return {
+            ...this.initState.crop,
+            aspect: aspect,
+            width: width,
+            height: height,
+        };
     };
 
     // get crop value while rotating video
