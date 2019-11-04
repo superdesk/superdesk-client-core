@@ -1,9 +1,51 @@
 import _ from 'lodash';
+import {IArticle} from 'superdesk-api';
 import {FIELD_KEY_SEPARATOR} from 'core/editor3/helpers/fieldsMeta';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 import {MEDIA_TYPES} from 'apps/vocabularies/constants';
 import {isPublished} from 'apps/archive/utils';
 import {resetFieldMetadata} from 'core/editor3/helpers/fieldsMeta';
+
+interface IScope extends ng.IScope {
+    handleUrlsChange: any;
+    toggleDetails: any;
+    errorMessage: any;
+    contentType: number;
+    canListEditSignOff: any;
+    editSignOff: any;
+    mediaLoading: any;
+    validator: any;
+    features: any;
+    item: IArticle;
+    origItem: IArticle;
+    label: any;
+    FIELD_KEY_SEPARATOR: any;
+    mediaTypes: any;
+    monthNames: any;
+    dateline: any;
+    preview: any;
+    _editable: any;
+    metadata: any;
+    daysInMonth: any;
+    articleEdit: any;
+    dirty: boolean;
+    extra: any;
+    autosave(item: any): any;
+    modifySignOff(item: any): void;
+    updateDateline(item: any, city: any): void;
+    resetNumberOfDays(dateline: any, datelineMonth?: any): void;
+    modifyDatelineDate(day: Date): void;
+    getSignOffMapping(): void;
+    searchSignOff(search: string): void;
+    changeSignOffEdit(): void;
+    editMedia(tab: string): void;
+    refresh(): void;
+    save(): void;
+    applyCrop(): void;
+    addHelplineToFooter(): void;
+    maxUploads(options: any): void;
+    toggleSMS(): void;
+}
 
 /**
  * @ngdoc directive
@@ -59,7 +101,7 @@ export function ArticleEditDirective(
 ) {
     return {
         templateUrl: 'scripts/apps/authoring/views/article-edit.html',
-        link: function(scope, elem) {
+        link: function(scope: IScope, elem) {
             getLabelNameResolver().then((getLabelForFieldId) => {
                 scope.handleUrlsChange = function(fieldId, value) {
                     if (!scope.item.extra) {
@@ -78,7 +120,7 @@ export function ArticleEditDirective(
                 scope.validator = deployConfig.getSync('validator_media_metadata');
                 scope.features = config.features;
 
-                var mainEditScope = scope.$parent.$parent;
+                var mainEditScope: any = scope.$parent.$parent;
                 var autopopulateByline = config.features && config.features.autopopulateByline;
 
                 scope.label = (id) => getLabelForFieldId(id);
@@ -128,7 +170,7 @@ export function ArticleEditDirective(
                     }
                 }
 
-                scope.$watch('item', (item) => {
+                scope.$watch('item', (item: IArticle) => {
                     if (item) {
                         /* Creates a copy of dateline object from item.__proto__.dateline */
                         if (item.dateline) {
@@ -256,7 +298,7 @@ export function ArticleEditDirective(
                  * Updates the sign_off field with the new value generated on the server side
                  * once the story is saved
                  */
-                scope.$watch('origItem.sign_off', (newValue, oldValue) => {
+                scope.$watch('origItem.sign_off', (newValue: string, oldValue: string) => {
                     if (newValue !== oldValue) {
                         scope.item.sign_off = newValue;
                     }
@@ -324,9 +366,15 @@ export function ArticleEditDirective(
                             // draftjs editor state will be
                             // outdated after editing in modal
                             resetFieldMetadata(scope.item);
-                            scope.refresh();
 
-                            if (isPublished(scope.item)) {
+                            // On multiedit mode, there is no refresh function
+                            if (typeof scope.refresh === 'function') {
+                                scope.refresh();
+                            }
+
+                            // If articleEdit is present in scope
+                            // then item is edited from multiedit mode
+                            if (isPublished(scope.item) || scope.articleEdit) {
                                 mainEditScope.dirty = true;
 
                                 // mark dirty in multiedit mode.

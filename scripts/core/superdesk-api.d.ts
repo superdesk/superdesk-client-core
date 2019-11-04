@@ -207,7 +207,7 @@ declare module 'superdesk-api' {
         sms: string;
         abstract: string;
         byline: string;
-        dateline: string;
+        dateline: any;
         body_html: string;
         footer: string;
         firstcreated: any;
@@ -250,6 +250,7 @@ declare module 'superdesk-api' {
 
         highlights?: Array<string>;
         highlight?: any;
+        sms_message?: any;
 
         // storage for custom fields created by users
         extra?: {[key: string]: any};
