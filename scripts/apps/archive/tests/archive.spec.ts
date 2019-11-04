@@ -1,5 +1,5 @@
 import {DuplicateController} from '../controllers';
-import {registerTestExtensions} from 'core/tests/helpers/register-test-extensions';
+import {registerExtensions} from 'core/register-extensions';
 import {isPublished} from '../utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 
@@ -72,7 +72,7 @@ describe('content', () => {
             spyOn(articleEntities, 'onSpike').and.callThrough();
             spyOn(modal, 'createCustomModal').and.callThrough(); // called after middlewares
 
-            registerTestExtensions(
+            registerExtensions(
                 [
                     {
                         id: 'test-extension',

@@ -1,5 +1,5 @@
 import {MultiActionBarController} from '../controllers';
-import {registerTestExtensions} from 'core/tests/helpers/register-test-extensions';
+import {registerExtensions} from 'core/register-extensions';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 
 describe('Multi Action Bar', () => {
@@ -85,7 +85,7 @@ describe('Multi Action Bar', () => {
                 },
             };
 
-            registerTestExtensions(
+            registerExtensions(
                 [
                     {
                         id: 'test-extension',
