@@ -6,7 +6,7 @@ import {IArticle} from 'superdesk-api';
 import {gettext} from 'core/utils';
 
 import {IExtensionActivationResult} from 'superdesk-api';
-import {extensions} from 'core/extension-imports.generated';
+import {extensions} from 'appConfig';
 import {showSpikeDialog} from 'apps/archive/show-spike-dialog';
 
 /**

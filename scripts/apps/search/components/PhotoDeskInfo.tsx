@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {PhotoDeskFields} from './PhotoDeskFields';
 import {DEFAULT_GRID_VIEW_FIELDS_CONFIG} from 'apps/search/constants';
 import {get, flatMap} from 'lodash';
-import {extensions} from 'core/extension-imports.generated';
+import {extensions} from 'appConfig';
 
 export const PhotoDeskInfo: React.StatelessComponent<any> = (props) => {
     const {datetime} = props.svc;

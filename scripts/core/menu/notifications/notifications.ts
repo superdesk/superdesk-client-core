@@ -3,7 +3,7 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
-import {extensions} from 'core/extension-imports.generated';
+import {extensions} from 'appConfig';
 import {IExtensionActivationResult} from 'superdesk-api';
 import {logger} from 'core/services/logger';
 

@@ -3,7 +3,7 @@ import {getDataUrl} from 'core/upload/image-preview-directive';
 import {gettext} from 'core/utils';
 import {isEmpty, pickBy} from 'lodash';
 import {handleBinaryFile} from '@metadata/exif';
-import {extensions} from 'core/extension-imports.generated';
+import {extensions} from 'appConfig';
 import {IPTCMetadata, IUser, IArticle} from 'superdesk-api';
 
 /* eslint-disable complexity */

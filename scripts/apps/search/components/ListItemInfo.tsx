@@ -3,7 +3,7 @@ import classNames from 'classnames';
 
 import {renderArea} from '../helpers';
 import {flatMap} from 'lodash';
-import {extensions} from 'core/extension-imports.generated';
+import {extensions} from 'appConfig';
 import {IDesk, IArticle} from 'superdesk-api';
 
 export interface IPropsItemListInfo {

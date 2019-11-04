@@ -15,7 +15,7 @@ import * as ctrl from './controllers';
 
 import {gettext} from 'core/utils';
 
-import {extensions} from 'core/extension-imports.generated';
+import {extensions} from 'appConfig';
 
 import {IExtensionActivationResult, IArticle} from 'superdesk-api';
 import {showSpikeDialog} from './show-spike-dialog';

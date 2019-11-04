@@ -1,4 +1,4 @@
-import {extensions} from 'core/extension-imports.generated';
+import {extensions} from 'appConfig';
 import {IExtensionActivationResult} from 'superdesk-api';
 
 const prefix = '__internal__';

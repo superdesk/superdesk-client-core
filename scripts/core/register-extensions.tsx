@@ -2,7 +2,7 @@ import {flatMap, noop} from 'lodash';
 import {getSuperdeskApiImplementation} from './get-superdesk-api-implementation';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {IExtensions, IExtension} from 'superdesk-api';
-import {extensions as extensionsGenerated} from './extension-imports.generated';
+import {extensions as extensionsImported} from 'appConfig';
 
 export function registerExtensions(
     extensions: Array<IExtension>,
@@ -23,7 +23,7 @@ export function registerExtensions(
             activationResult: {},
         };
 
-        extensionsGenerated[extension.id] = extensionsWithActivationResult[extension.id];
+        extensionsImported[extension.id] = extensionsWithActivationResult[extension.id];
     });
 
     return Promise.all(
