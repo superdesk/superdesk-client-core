@@ -585,7 +585,7 @@ function MetaWordsListDirective() {
              * Removes the term from the user selected terms
              */
             scope.removeTerm = function(term) {
-                var temp = _.without(scope.item[scope.field], term);
+                var temp = scope.item[scope.field].filter((item) => !_.isEqual(item, term));
 
                 // build object
                 var o = {};
@@ -893,11 +893,7 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
             scope.removeTerm = function(term) {
                 var tempItem = {},
                     subjectCodesArray = scope.item[scope.field],
-                    filteredArray = _.without(subjectCodesArray, term);
-
-                if (subjectCodesArray && filteredArray.length === subjectCodesArray.length) {
-                    _.remove(filteredArray, {name: term});
-                }
+                    filteredArray = subjectCodesArray.filter((item) => !_.isEqual(item, term));
 
                 tempItem[scope.field] = filteredArray;
 

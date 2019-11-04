@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import json5 from 'json5';
-import ng from 'core/services/ng';
 import {uuid} from 'core/helpers/uuid';
 import {extend} from 'lodash';
 import {appConfig} from 'appConfig';
