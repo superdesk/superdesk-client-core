@@ -9,7 +9,7 @@ import { VideoEditorTools } from './VideoEditorTools';
 import { VideoTimeline } from './VideoTimeline';
 import { VideoEditorHeader } from './VideoEditorHeader';
 import { VideoEditorProvider } from './VideoEditorContext';
-import { VideoPreviewThumbnail } from './VideoPreviewThumbnail';
+import { VideoEditorThumbnail } from './VideoEditorThumbnail';
 import { IArticleVideo, IVideoEditor, IThumbnail } from './interfaces';
 
 interface IProps {
@@ -460,7 +460,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                         </div>
                                     </div>
                                     <div className="sd-photo-preview__thumb-strip sd-photo-preview__thumb-strip--video">
-                                        <VideoPreviewThumbnail
+                                        <VideoEditorThumbnail
                                             videoRef={this.videoRef}
                                             article={this.state.article}
                                             onToggleLoading={this.handleToggleLoading}

@@ -17,14 +17,14 @@ interface IState {
     dirty: boolean;
     type: 'capture' | 'upload' | '';
     value: number | File; // capture positon or uploaded File
-    // most recent changed preview thumbnail, for re-drawing thumbnail when reset changes
+    // most recent updated thumbnail, for re-drawing thumbnail when reset changes
     thumbnail: string;
     // deprived from props to save rotate degree only when user captures thumbnail
     rotateDegree: number;
     scale: number;
 }
 
-export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
+export class VideoEditorThumbnail extends React.Component<IProps, IState> {
     static contextType = VideoEditorContext;
     private ref: React.RefObject<HTMLCanvasElement>;
     private maxCanvasSize: { width: number; height: number };
@@ -47,7 +47,7 @@ export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
 
     componentDidMount() {
         if (this.state.thumbnail) {
-            this.setPreviewThumbnail(this.state.thumbnail);
+            this.setThumbnail(this.state.thumbnail);
         }
     }
 
@@ -95,7 +95,7 @@ export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
 
     handleChange = (files: FileList | null) => {
         const reader = new FileReader();
-        reader.onload = () => this.setPreviewThumbnail(reader.result as string);
+        reader.onload = () => this.setThumbnail(reader.result as string);
         const file = files ? files[0] : null;
         reader.readAsDataURL(file!);
         this.setState({ dirty: true, value: file!, type: 'upload' });
@@ -129,7 +129,7 @@ export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
                     this.handleReset(false);
                     this.setState({ rotateDegree: this.props.rotate });
                     this.props.onToggleLoading(true, 'Saving capture thumbnail...');
-                    this.getPreviewThumbnail();
+                    this.getThumbnail();
                 })
                 .catch((err: any) => console.log(err));
         } else if (this.state.type === 'upload') {
@@ -149,12 +149,12 @@ export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
                 .then(res => res.json())
                 .then((res: any) => {
                     this.handleReset();
-                    this.setPreviewThumbnail(res.renditions.thumbnail.href + `?t=${Math.random()}`);
+                    this.setThumbnail(res.renditions.thumbnail.href + `?t=${Math.random()}`);
                 });
         }
     };
 
-    setPreviewThumbnail = (src: string) => {
+    setThumbnail = (src: string) => {
         const image = new Image();
         image.onload = () => {
             this.drawCanvas(image, 0, 0, image.width, image.height);
@@ -162,7 +162,7 @@ export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
         image.src = src;
     };
 
-    getPreviewThumbnail = () => {
+    getThumbnail = () => {
         const { dataApi } = this.context.superdesk;
         this.interval = window.setInterval(() => {
             dataApi
@@ -188,7 +188,7 @@ export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
             scale = 1;
 
             if (this.state.thumbnail) {
-                this.setPreviewThumbnail(this.state.thumbnail);
+                this.setThumbnail(this.state.thumbnail);
             }
         }
         this.setState({ dirty: false, type: '', value: 0, rotateDegree: 0, scale: scale });
