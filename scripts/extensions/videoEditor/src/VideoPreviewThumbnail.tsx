@@ -36,7 +36,7 @@ export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
             dirty: false,
             type: '',
             value: 0,
-            thumbnail: get(this.props.article.renditions, 'thumbnail.href'),
+            thumbnail: get(this.props.article.renditions, 'thumbnail.href') + `?t=${Math.random()}`,
             rotateDegree: 0,
             scale: 1,
         };
@@ -47,7 +47,7 @@ export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
 
     componentDidMount() {
         if (this.state.thumbnail) {
-            this.setPreviewThumbnail(this.state.thumbnail + `?t=${Math.random()}`);
+            this.setPreviewThumbnail(this.state.thumbnail);
         }
     }
 
@@ -165,7 +165,7 @@ export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
                 .then((response: any) => {
                     if (response.project.processing.thumbnail_preview === false) {
                         clearInterval(this.interval);
-                        this.setState({ thumbnail: response.renditions.thumbnail.href });
+                        this.setState({ thumbnail: response.renditions.thumbnail.href + `?t=${Math.random()}` });
                         this.props.onToggleLoading(false);
                     }
                 })
@@ -183,7 +183,7 @@ export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
             scale = 1;
 
             if (this.state.thumbnail) {
-                this.setPreviewThumbnail(this.state.thumbnail + `?t=${Math.random()}`);
+                this.setPreviewThumbnail(this.state.thumbnail);
             }
         }
         this.setState({ dirty: false, type: '', value: 0, rotateDegree: 0, scale: scale });
