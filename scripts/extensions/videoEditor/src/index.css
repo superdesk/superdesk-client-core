@@ -224,19 +224,9 @@
 }
 
 .thumbnail-edit__container {
-  width: 20rem;
-  height: 16rem;
+  height: 100%;
+  width: calc(16rem * 16/9);
   display: flex;
-  justify-content: center;
   align-items: center;
-  position: relative;
-}
-
-.thumbnail-edit__preview {
-  width: 20rem;
-  height: 16rem;
-  position: absolute;
-  display: flex;
   justify-content: center;
-  align-items: center;
 }

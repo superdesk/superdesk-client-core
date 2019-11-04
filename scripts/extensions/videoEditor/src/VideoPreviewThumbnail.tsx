@@ -58,15 +58,12 @@ export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
     }
 
     handleClick = () => {
-        this.setState(
-            {
-                dirty: true,
-                type: 'capture',
-                value: this.props.videoRef.current!.currentTime,
-                rotateDegree: this.props.rotate,
-            },
-            this.setScale
-        );
+        this.setState({
+            dirty: true,
+            type: 'capture',
+            value: this.props.videoRef.current!.currentTime,
+            rotateDegree: this.props.rotate,
+        });
         const video = this.props.videoRef.current;
         if (!video) return;
         let { x, y, width, height, aspect } = this.props.getCropRotate(this.props.crop);
@@ -179,15 +176,17 @@ export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
     };
 
     handleReset = (clearCanvas: boolean = true) => {
+        let scale = this.state.scale;
         const ctx = this.ref.current!.getContext('2d');
         if (clearCanvas === true) {
             ctx!.clearRect(0, 0, this.ref.current!.width, this.ref.current!.height);
+            scale = 1;
 
             if (this.state.thumbnail) {
                 this.setPreviewThumbnail(this.state.thumbnail + `?t=${Math.random()}`);
             }
         }
-        this.setState({ dirty: false, type: '', value: 0, rotateDegree: 0, scale: 1 });
+        this.setState({ dirty: false, type: '', value: 0, rotateDegree: 0, scale: scale });
     };
 
     drawCanvas = (
@@ -210,6 +209,7 @@ export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
         this.ref.current!.width = drawWidth;
         this.ref.current!.height = drawHeight;
         ctx!.drawImage(element, x, y, width, height, 0, 0, drawWidth, drawHeight);
+        this.setScale();
     };
 
     // get wrapper size dynamically so can use to calculate canvas size to fit content into
@@ -224,21 +224,17 @@ export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
     };
 
     setScale = () => {
+        // calculate scale while rotating to make sure image is not exceeded maximum wrapper size
         let scale = 1;
-        // calculate scale while rotating to make sure image is not exceeded maximum wrapper size,
-        if (this.ref.current! && this.state.rotateDegree % 180 !== 0) {
-            // scale is calculated on previous call
-            if (this.state.scale !== 1) {
-                return;
-            }
-            const { width, height } = this.ref.current!.getBoundingClientRect();
-            const ratio = width / height;
+        if (!this.ref.current) return;
 
-            if (ratio >= 1 && width > this.maxCanvasSize.width) {
-                scale = this.maxCanvasSize.height / width;
-            } else if (ratio < 1 && height > this.maxCanvasSize.height) {
-                scale = this.maxCanvasSize.height / height;
-            }
+        const { height } = this.ref.current.getBoundingClientRect();
+
+        if (height > this.maxCanvasSize.height) {
+            scale = this.maxCanvasSize.height / height;
+        } else if (height === this.maxCanvasSize.height && this.state.scale < 1) {
+            // scale was calculated on previous call
+            return;
         }
         this.setState({ scale: scale });
     };
@@ -248,49 +244,53 @@ export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
 
         return (
             <div className="sd-photo-preview__thumbnail-edit">
-                <div className={getClass('thumbnail-edit__preview')} ref={this.getWrapperSize}>
+                <div className="sd-photo-preview__thumbnail-edit-label">Video thumbnail</div>
+                <div className="image-overlay">
+                    <div className="image-overlay__button-block">
+                        {!this.state.dirty ? (
+                            <>
+                                <a
+                                    className="image-overlay__button"
+                                    sd-tooltip="Use current frame"
+                                    onClick={this.handleClick}
+                                >
+                                    <i className="icon-photo"></i>
+                                </a>
+                                <form className="sd-margin-l--1">
+                                    <label>
+                                        <input
+                                            type="file"
+                                            style={{ display: 'none' }}
+                                            accept=".png,.jpg,.jpeg,.webp"
+                                            onChange={e => this.handleChange(e.target.files)}
+                                        />
+                                        <a className="image-overlay__button" sd-tooltip="Upload image">
+                                            <i className="icon-upload"></i>
+                                        </a>
+                                    </label>
+                                </form>
+                            </>
+                        ) : (
+                            <>
+                                <a className="image-overlay__button" sd-tooltip="Save change" onClick={this.handleSave}>
+                                    <i className="icon-ok"></i>
+                                </a>
+                                <a
+                                    className="image-overlay__button"
+                                    sd-tooltip="Reset change"
+                                    onClick={() => this.handleReset()}
+                                >
+                                    <i className="icon-close-thick"></i>
+                                </a>
+                            </>
+                        )}
+                    </div>
+                </div>
+                <div className={getClass('thumbnail-edit__container')} ref={this.getWrapperSize}>
                     <canvas
                         ref={this.ref}
                         style={{ transform: `rotate(${this.state.rotateDegree}deg) scale(${this.state.scale})` }}
                     ></canvas>
-                </div>
-                <div className={getClass('thumbnail-edit__container')}>
-                    {!this.state.dirty ? (
-                        <>
-                            <button
-                                className="btn btn--icon-only-circle btn--large btn--hollow sd-margin-r--1"
-                                onClick={this.handleClick}
-                            >
-                                <i className="icon-photo icon--white"></i>
-                            </button>
-                            <form>
-                                <label className="btn btn--icon-only-circle btn--large btn--hollow">
-                                    <input
-                                        type="file"
-                                        style={{ display: 'none' }}
-                                        accept=".png,.jpg,.jpeg,.webp"
-                                        onChange={e => this.handleChange(e.target.files)}
-                                    />
-                                    <i className="icon-upload icon--white"></i>
-                                </label>
-                            </form>
-                        </>
-                    ) : (
-                        <>
-                            <button
-                                className="btn btn--icon-only-circle btn--large btn--primary sd-margin-r--1"
-                                onClick={this.handleSave}
-                            >
-                                <i className="icon-ok icon--white"></i>
-                            </button>
-                            <button
-                                className="btn btn--icon-only-circle btn--large btn--hollow"
-                                onClick={() => this.handleReset()}
-                            >
-                                <i className="icon-close-thick icon--white"></i>
-                            </button>
-                        </>
-                    )}
                 </div>
             </div>
         );
