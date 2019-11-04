@@ -155,7 +155,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
         }
 
         // when first draw crop zone, ReactImageCrop trigger a bulk of change event with the same
-        // newCrop value, using throttle with value about 50 did not help but increase may result in lagging
+        // newCrop value, using throttle with value about 50 did not help much but increase interval may result in lagging
         if (Object.values(this.state.crop).toString() === Object.values(newCrop).toString()) {
             return;
         }
@@ -173,36 +173,29 @@ export class VideoEditor extends React.Component<IProps, IState> {
 
     handleToggleCrop = (aspect: number) => {
         const cropAspect = aspect || this.state.crop.aspect || 0;
+        let crop = this.initState.crop;
 
-        this.setState({ cropEnabled: !this.state.cropEnabled }, () => {
-            if (this.state.cropEnabled === false) {
-                this.setState({ crop: this.initState.crop }, this.checkIsDirty);
+        // calculate sample crop zone, only draw 80% instead of full width / height so user can easily resize, move
+        if (this.state.cropEnabled === false) {
+            let { width, height } = this.videoRef.current!.getBoundingClientRect();
+            width = (width * 80) / 100;
+            height = (height * 80) / 100;
+
+            const ratio = width / height;
+            if (ratio > 1) {
+                width = height * cropAspect;
             } else {
-                // draw sample crop area, only draw 80% instead of full video width, height so
-                // user can resize, move easily
-                let { width, height } = this.videoRef.current!.getBoundingClientRect();
-                width = (width * 80) / 100;
-                height = (height * 80) / 100;
-
-                const ratio = width / height;
-                if (ratio > 1) {
-                    width = height * cropAspect;
-                } else {
-                    height = width * cropAspect;
-                }
-                this.setState(
-                    {
-                        crop: {
-                            ...this.initState.crop,
-                            aspect: cropAspect,
-                            width: width,
-                            height: height,
-                        },
-                    },
-                    this.checkIsDirty
-                );
+                height = width * cropAspect;
             }
-        });
+            crop = {
+                ...crop,
+                aspect: cropAspect,
+                width: width,
+                height: height,
+            };
+        }
+
+        this.setState({ cropEnabled: !this.state.cropEnabled, crop: crop }, this.checkIsDirty);
     };
 
     handleToggleLoading = (isToggle: boolean, text: string = '') => {
