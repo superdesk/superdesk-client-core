@@ -58,34 +58,39 @@ export class VideoPreviewThumbnail extends React.Component<IProps, IState> {
     }
 
     handleClick = () => {
-        this.setState({
-            dirty: true,
-            type: 'capture',
-            value: this.props.videoRef.current!.currentTime,
-            rotateDegree: this.props.rotate,
-        });
-        const video = this.props.videoRef.current;
-        if (!video) return;
-        let { x, y, width, height, aspect } = this.props.getCropRotate(this.props.crop);
+        this.setState(
+            {
+                dirty: true,
+                type: 'capture',
+                value: this.props.videoRef.current!.currentTime,
+                rotateDegree: this.props.rotate,
+            },
+            () => {
+                // make sure rotateDegree is updated so we can calculate scale ratio correctly
+                const video = this.props.videoRef.current;
+                if (!video) return;
+                let { x, y, width, height, aspect } = this.props.getCropRotate(this.props.crop);
 
-        let canvasSize = [this.maxCanvasSize.width, this.maxCanvasSize.height];
-        if (this.props.rotate % 180 !== 0) {
-            if (aspect !== 1 && (width !== 0 || height !== 0)) {
-                aspect = 1 / aspect!;
-                canvasSize = [this.maxCanvasSize.height, this.maxCanvasSize.width];
+                let canvasSize = [this.maxCanvasSize.width, this.maxCanvasSize.height];
+                if (this.props.rotate % 180 !== 0) {
+                    if (aspect !== 1 && (width !== 0 || height !== 0)) {
+                        aspect = 1 / aspect!;
+                        canvasSize = [this.maxCanvasSize.height, this.maxCanvasSize.width];
+                    }
+                }
+
+                this.drawCanvas(
+                    video,
+                    x || 0,
+                    y || 0,
+                    width || video.videoWidth,
+                    height || video.videoHeight,
+                    aspect || video.videoWidth / video.videoHeight,
+                    canvasSize
+                );
+                this.setState({ dirty: true });
             }
-        }
-
-        this.drawCanvas(
-            video,
-            x || 0,
-            y || 0,
-            width || video.videoWidth,
-            height || video.videoHeight,
-            aspect || video.videoWidth / video.videoHeight,
-            canvasSize
         );
-        this.setState({ dirty: true });
     };
 
     handleChange = (files: FileList | null) => {
