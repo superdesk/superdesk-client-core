@@ -5,6 +5,7 @@ import {connect} from 'react-redux';
 import {embed, hidePopups} from '../../actions';
 import {gettext} from 'core/utils';
 import {appConfig} from 'appConfig';
+import {OverlayTrigger, Tooltip} from 'react-bootstrap';
 
 const fallbackAPIKey = '1d1728bf82b2ac8139453f'; // register to author's personal account
 const GenericError = gettext('This URL could not be embedded.');
@@ -130,6 +131,14 @@ export class EmbedInputComponent extends React.Component<any, any> {
 
         return (
             <form onSubmit={this.onSubmit} className="embed-dialog" onKeyUp={this.onKeyUp}>
+                <OverlayTrigger overlay={
+                    <Tooltip id="create_new_embed_tooltip">
+                        <p translate>To get a responsive embed code, paste a URL.</p>
+                        <p translate>If you paste an embed code, it will be used &quot;as is&quot;.</p>
+                    </Tooltip>
+                }>
+                    <i className="icon-info-sign icon--blue sd-margin-x--1" />
+                </OverlayTrigger>
                 <input type="url"
                     ref={(txt) => {
                         this.txt = txt;
