@@ -205,7 +205,7 @@ $editor-styleButton-size: 3rem;
 	.embed-block__edit {
 		top: 3rem;
 	}
-	
+
 	.image-block__image {
 		position: relative;
 		background-color: rgb(37, 37, 37);
@@ -235,7 +235,7 @@ $editor-styleButton-size: 3rem;
 	}
 	.image-block__image-action {
         @include image-overlay_action-button;
-        
+
         & + .image-block__image-action {
             margin-left: 2rem;
         }
@@ -252,7 +252,7 @@ $editor-styleButton-size: 3rem;
 			}
 		}
 	}
-	
+
 	.table-block {
 		table td {
 			font-weight: 300;
@@ -510,7 +510,7 @@ $editor-styleButton-size: 3rem;
 		top: 0;
 		z-index: 2000;
 		display: flex;
-		align-content: center;
+		align-items: center;
 		flex-direction: row;
 		background-color: #fff;
 		width: 100%;
@@ -838,10 +838,10 @@ $editor-styleButton-size: 3rem;
 	}
 }
 
-// Style overrides for Custom fields in the article header 
+// Style overrides for Custom fields in the article header
 
 .authoring-header__input-editor3 {
-	.Editor3-editor .public-DraftEditorPlaceholder-root, 
+	.Editor3-editor .public-DraftEditorPlaceholder-root,
 	.Editor3-editor .public-DraftEditor-content {
 		padding: 3px 0 2px;
 	}
@@ -852,7 +852,7 @@ $editor-styleButton-size: 3rem;
 		border-bottom: 1px solid rgba(0, 0, 0, 0.15);
 		transition: border linear 0.2s, box-shadow linear 0.2s, background-color linear 0.2s;
 		&:hover {
-			border-color: rgba(0, 0, 0, 0.3);	
+			border-color: rgba(0, 0, 0, 0.3);
 		}
 		&:focus-within {
 			box-shadow: 0 1px 0 0 #5ea9c8 !important;
