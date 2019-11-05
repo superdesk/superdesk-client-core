@@ -768,10 +768,9 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                     scope.terms = $filter('sortByName')(_.filter(filterSelected(searchList), (t) => {
                         var searchObj = {};
                         const termLower = term.toLowerCase();
-                        // if there are translations available and the item language is other than "en",
-                        // search the term from the translations
+                        // if there are translations available search term from the translations
                         const searchFromTranslations = t.translations != null && t.translations.name != null
-                            && t.translations.name[scope.item.language] != null && scope.item.language !== 'en';
+                            && t.translations.name[scope.item.language] != null;
 
                         searchObj[scope.uniqueField] = t[scope.uniqueField];
 
