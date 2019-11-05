@@ -41,8 +41,9 @@
          data-read-only="!_editable"
          data-item="item"
          data-refresh-trigger="refreshTrigger"
-         data-tabindex="editor.headline.order">
-    </div>
+         data-tabindex="editor.headline.order"
+         data-clean-pasted-html="editor.headline.cleanPastedHTML"
+    ></div>
 </div>
 
 <div class="field"
@@ -170,8 +171,9 @@
          data-read-only="!_editable"
          data-item="item"
          data-refresh-trigger="refreshTrigger"
-         data-tabindex="editor.abstract.order">
-    </div>
+         data-tabindex="editor.abstract.order"
+         data-clean-pasted-html="editor.abstract.cleanPastedHTML"
+    ></div>
 </div>
 
 <div class="field"
@@ -314,8 +316,9 @@
          data-item="item"
          data-refresh-trigger="refreshTrigger"
          data-show-title="editor.body_html.imageTitle"
-         data-tabindex="editor.body_html.order">
-    </div>
+         data-tabindex="editor.body_html.order"
+         data-clean-pasted-html="editor.body_html.cleanPastedHTML"
+    ></div>
 </div>
 
 <div class="field media-item"
@@ -415,8 +418,9 @@
          data-language="item.language"
          data-item="item"
          data-refresh-trigger="refreshTrigger"
-         data-tabindex="editor.media_description.order">
-    </div>
+         data-tabindex="editor.media_description.order"
+         data-clean-pasted-html="editor.description_text.cleanPastedHTML"
+    ></div>
 </div>
 
 <div class="field"
@@ -482,8 +486,9 @@
          data-language="item.language"
          data-item="item"
          data-refresh-trigger="refreshTrigger"
-         data-tabindex="editor.body_footer.order">
-    </div>
+         data-tabindex="editor.body_footer.order"
+         data-clean-pasted-html="editor.body_footer.cleanPastedHTML"
+    ></div>
 </div>
 
 <div class="composite-preview" ng-if="item.type === 'composite'">
@@ -569,8 +574,9 @@
         data-editor-format="editor[field._id].formatOptions"
         data-item="item"
         data-refresh-trigger="refreshTrigger"
-        data-tabindex="editor[field._id].order">
-    </div>
+        data-tabindex="editor[field._id].order"
+        data-clean-pasted-html="editor[field._id].cleanPastedHTML"
+    ></div>
     <div class="sd-editor__info-text" ng-if="helper_text[field._id]">{{field.helper_text}}</div>
 </div>
 

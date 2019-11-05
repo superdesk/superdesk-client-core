@@ -879,6 +879,9 @@ declare module 'superdesk-api' {
         };
         confirm_spike: boolean;
         language: string; // default client language
+        editor3: {
+            browserSpellCheck: boolean;
+        };
     }
 
 

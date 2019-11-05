@@ -32,6 +32,7 @@ import {noop} from 'lodash';
 import {getSpellcheckWarningsByBlock} from './spellchecker/SpellcheckerDecorator';
 import {getSpellchecker} from './spellchecker/default-spellcheckers';
 import {IEditorStore} from '../store';
+import {appConfig} from 'core/config';
 
 const MEDIA_TYPES_TRIGGER_DROP_ZONE = [
     'application/superdesk.item.picture',
@@ -123,6 +124,7 @@ interface IProps {
     highlights?: any;
     highlightsManager?: any;
     spellchecking?: IEditorStore['spellchecking'];
+    cleanPastedHtml?: boolean;
     onCreateAddSuggestion?(chars): void;
     onCreateDeleteSuggestion?(type): void;
     onPasteFromSuggestingMode?(): void;
@@ -480,6 +482,7 @@ export class Editor3Component extends React.Component<IProps> {
             onTab,
             tabindex,
             scrollContainer,
+            cleanPastedHtml,
         } = this.props;
 
         const cx = classNames({
@@ -544,6 +547,8 @@ export class Editor3Component extends React.Component<IProps> {
                         handlePastedText={handlePastedText.bind(this)}
                         readOnly={locked || readOnly}
                         ref={(editor) => this.handleRefs(editor)}
+                        spellCheck={appConfig.editor3.browserSpellCheck}
+                        stripPastedStyles={cleanPastedHtml}
                     />
 
                     {this.props.loading && <div className="loading-overlay active" />}
@@ -556,5 +561,6 @@ export class Editor3Component extends React.Component<IProps> {
 Editor3Component.defaultProps = {
     readOnly: false,
     singleLine: false,
+    cleanPastedHtml: false,
     editorFormat: [],
 };
