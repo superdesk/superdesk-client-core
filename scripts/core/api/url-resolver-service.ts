@@ -1,7 +1,9 @@
+import {appConfig} from 'appConfig';
+import _ from 'lodash';
 
-URLResolver.$inject = ['$http', '$q', '$log', 'config'];
-function URLResolver($http, $q, $log, config) {
-    var _links, baseUrl = config.server.url;
+URLResolver.$inject = ['$http', '$q', '$log'];
+function URLResolver($http, $q, $log) {
+    var _links, baseUrl = appConfig.server.url;
 
     function basejoin(path) {
         return baseUrl + (path.indexOf('/') === 0 ? path : '/' + path);

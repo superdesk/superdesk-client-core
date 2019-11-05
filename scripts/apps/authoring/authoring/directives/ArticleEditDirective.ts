@@ -5,6 +5,7 @@ import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 import {MEDIA_TYPES} from 'apps/vocabularies/constants';
 import {isPublished} from 'apps/archive/utils';
 import {resetFieldMetadata} from 'core/editor3/helpers/fieldsMeta';
+import {appConfig} from 'appConfig';
 
 interface IScope extends ng.IScope {
     handleUrlsChange: any;
@@ -59,7 +60,6 @@ interface IScope extends ng.IScope {
  * @requires superdesk
  * @requires content
  * @requires config
- * @requires deployConfig
  * @requires session
  * @requires history
  * @requires $interpolate
@@ -76,9 +76,6 @@ ArticleEditDirective.$inject = [
     'metadata',
     '$filter',
     'superdesk',
-    'content',
-    'config',
-    'deployConfig',
     'session',
     'history',
     '$interpolate',
@@ -90,9 +87,6 @@ export function ArticleEditDirective(
     metadata,
     $filter,
     superdesk,
-    content,
-    config,
-    deployConfig,
     session,
     history,
     $interpolate,
@@ -114,14 +108,14 @@ export function ArticleEditDirective(
                 scope.toggleDetails = true;
                 scope.errorMessage = null;
                 scope.contentType = null;
-                scope.canListEditSignOff = config.user && config.user.sign_off_mapping;
+                scope.canListEditSignOff = appConfig.user != null && appConfig.user.sign_off_mapping;
                 scope.editSignOff = false;
                 scope.mediaLoading = false;
-                scope.validator = deployConfig.getSync('validator_media_metadata');
-                scope.features = config.features;
+                scope.validator = appConfig.validator_media_metadata;
+                scope.features = appConfig.features;
 
                 var mainEditScope: any = scope.$parent.$parent;
-                var autopopulateByline = config.features && config.features.autopopulateByline;
+                var autopopulateByline = appConfig.features != null && appConfig.features.autopopulateByline;
 
                 scope.label = (id) => getLabelForFieldId(id);
 
@@ -263,8 +257,8 @@ export function ArticleEditDirective(
                  * Return current signoff mapping
                  */
                 scope.getSignOffMapping = function() {
-                    if (config.user && config.user.sign_off_mapping) {
-                        return config.user.sign_off_mapping;
+                    if (appConfig.user != null && appConfig.user.sign_off_mapping) {
+                        return appConfig.user.sign_off_mapping;
                     }
                     return null;
                 };
@@ -273,8 +267,8 @@ export function ArticleEditDirective(
                  * Modify the sign-off with the value from sign_off_mapping field from user
                  */
                 scope.modifySignOff = function(user) {
-                    if (config.user && config.user.sign_off_mapping) {
-                        scope.item.sign_off = user[config.user.sign_off_mapping];
+                    if (appConfig.user != null && appConfig.user.sign_off_mapping) {
+                        scope.item.sign_off = user[appConfig.user.sign_off_mapping];
                         autosave.save(scope.item, scope.origItem);
                     }
                 };

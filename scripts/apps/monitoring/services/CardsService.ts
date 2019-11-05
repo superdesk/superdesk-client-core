@@ -7,6 +7,7 @@ import {
     SENT_OUTPUT,
     SCHEDULED_OUTPUT,
 } from 'apps/desks/constants';
+import {appConfig} from 'appConfig';
 
 interface ICard {
     _id: string;
@@ -28,8 +29,8 @@ interface ICard {
     query: any;
 }
 
-CardsService.$inject = ['api', 'search', 'session', 'desks', 'config'];
-export function CardsService(api, search, session, desks, config) {
+CardsService.$inject = ['search', 'session', 'desks'];
+export function CardsService(search, session, desks) {
     this.criteria = getCriteria;
     this.shouldUpdate = shouldUpdate;
 
@@ -116,7 +117,7 @@ export function CardsService(api, search, session, desks, config) {
         var desk = desks.deskLookup ? desks.deskLookup[deskId] : null;
         var states = PUBLISHED_STATES;
 
-        if (config.monitoring && config.monitoring.scheduled) {
+        if (appConfig.monitoring != null && appConfig.monitoring.scheduled) {
             states = PUBLISHED_STATES.filter((state) => state !== ITEM_STATE.SCHEDULED);
         }
 

@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
+import {appConfig} from 'appConfig';
 
 /**
  * @ngdoc service
@@ -13,8 +14,8 @@ import {gettext} from 'core/utils';
  *
  * @description Handles retrieval of data from legal archive
  */
-LegalArchiveService.$inject = ['api', '$location', 'config', 'moment', 'sort'];
-export function LegalArchiveService(api, $location, config, moment, sortService) {
+LegalArchiveService.$inject = ['api', '$location', 'moment', 'sort'];
+export function LegalArchiveService(api, $location, moment, sortService) {
     var DEFAULT_PER_PAGE = 25;
 
     this.default_items = Object.freeze({_meta: {max_results: DEFAULT_PER_PAGE, page: 1, total: 1}});
@@ -60,8 +61,8 @@ export function LegalArchiveService(api, $location, config, moment, sortService)
         var where = [];
 
         function prepareDate(val, timeSuffix) {
-            var local = moment(val, config.view.dateformat).format('YYYY-MM-DD') + timeSuffix +
-            moment.tz(config.defaultTimezone).format('ZZ');
+            var local = moment(val, appConfig.view.dateformat).format('YYYY-MM-DD') + timeSuffix +
+            moment.tz(appConfig.defaultTimezone).format('ZZ');
 
             return moment(local, 'YYYY-MM-DDTHH:mm:ssZZ').utc()
                 .format('YYYY-MM-DDTHH:mm:ssZZ');

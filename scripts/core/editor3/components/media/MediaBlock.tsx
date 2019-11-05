@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
-import ng from 'core/services/ng';
 import * as actions from '../../actions';
 import Textarea from 'react-textarea-autosize';
-import {get} from 'lodash';
 import {gettext} from 'core/utils';
+import {appConfig} from 'appConfig';
+import {applyDefault} from 'core/helpers/typescript-helpers';
 
 function getTranslationForAssignRights(value) {
     if (value === 'single-usage') {
@@ -111,12 +111,15 @@ export class MediaBlockComponent extends React.Component<any, any> {
         const rendition = data.renditions.baseImage || data.renditions.viewImage || data.renditions.original;
         const alt = data.alt_text || data.description_text || data.caption;
         const mediaType = data.type;
-        const {features} = ng.get('config');
 
         const editable =
-            !readOnly &&
-            (data._type !== 'externalsource'
-            || get(features, 'editFeaturedImage', true));
+            !readOnly
+            && (
+                data._type !== 'externalsource'
+                || (appConfig.features == null || appConfig.features.editFeaturedImage == null
+                    ? true
+                    : appConfig.features.editFeaturedImage)
+            );
 
         return (
 

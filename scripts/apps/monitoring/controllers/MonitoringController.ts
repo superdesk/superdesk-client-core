@@ -1,12 +1,13 @@
 import _ from 'lodash';
+import {appConfig} from 'appConfig';
 
 /**
  * @ngdoc controller
  * @module superdesk.apps.monitoring
  */
-MonitoringController.$inject = ['$rootScope', '$scope', '$location', 'desks', 'config', 'superdeskFlags',
+MonitoringController.$inject = ['$rootScope', '$scope', '$location', 'desks', 'superdeskFlags',
     'search', '$filter', 'preferencesService', '$q'];
-export function MonitoringController($rootScope, $scope, $location, desks, config, superdeskFlags,
+export function MonitoringController($rootScope, $scope, $location, desks, superdeskFlags,
     search, $filter, preferencesService, $q) {
     this.state = {};
 
@@ -20,7 +21,7 @@ export function MonitoringController($rootScope, $scope, $location, desks, confi
     this.viewSingleGroup = viewSingleGroup;
     this.viewMonitoringHome = viewMonitoringHome;
 
-    this.hasSwimlaneView = config.features && config.features.swimlane ? 1 : 0;
+    this.hasSwimlaneView = appConfig.features != null && appConfig.features.swimlane ? 1 : 0;
     this.columnsLimit = null;
 
     // init swimlane view using preferences - use session preferences if set, or fallback to user preferences
@@ -65,8 +66,12 @@ export function MonitoringController($rootScope, $scope, $location, desks, confi
     function preview(item) {
         self.previewItem = item;
         self.state['with-preview'] = superdeskFlags.flags.previewing = !!item;
-        const sendPreviewEvent = _.get(config, 'list.narrowView')
-            && search.singleLine && superdeskFlags.flags.authoring;
+        const sendPreviewEvent =
+            appConfig.list != null
+            && appConfig.list.narrowView
+            && search.singleLine
+            && superdeskFlags.flags.authoring;
+
         const evnt = item ? 'rowview:narrow' : 'rowview:default';
 
         if (!_.isNil(self.previewItem)) {
@@ -117,7 +122,9 @@ export function MonitoringController($rootScope, $scope, $location, desks, confi
         self.viewColumn = viewColumn;
 
         if (self.viewColumn) {
-            self.columnsLimit = numberOfColumns ? numberOfColumns : config.features.swimlane.defaultNumberOfColumns;
+            self.columnsLimit = numberOfColumns
+                ? numberOfColumns
+                : appConfig.features.swimlane.defaultNumberOfColumns;
         } else {
             self.columnsLimit = null;
         }

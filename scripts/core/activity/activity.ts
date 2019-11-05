@@ -1,7 +1,7 @@
 import {forEach} from 'lodash';
 import langmap from 'core/lang';
 import {gettext} from 'core/utils';
-import {dashboardRoute} from 'appConfig';
+import {dashboardRoute, appConfig} from 'appConfig';
 
 interface IActivityData {
     priority: number; // priority used for ordering.
@@ -153,9 +153,9 @@ function SuperdeskProvider($routeProvider, _) {
      * @description This service allows interacting with registered activities.
      */
     this.$get = ['$q', '$rootScope', 'activityService', 'activityChooser',
-        'betaService', 'features', 'privileges', '$injector', 'config',
+        'betaService', 'features', 'privileges', '$injector',
         function superdeskFactory($q, $rootScope, activityService, activityChooser, betaService,
-            features, privileges, $injector, config) {
+            features, privileges, $injector) {
             /**
              * Render main menu depending on registered acitivites
              */
@@ -188,15 +188,15 @@ function SuperdeskProvider($routeProvider, _) {
             }
 
             function checkActivityEnabled(activity) {
-                if (!_.get(config, 'activity')) {
+                if (!appConfig.activity) {
                     return true;
                 }
 
-                if (_.isUndefined(config.activity[activity._id])) {
+                if (_.isUndefined(appConfig.activity[activity._id])) {
                     return true;
                 }
 
-                return config.activity[activity._id];
+                return appConfig.activity[activity._id];
             }
 
             /**

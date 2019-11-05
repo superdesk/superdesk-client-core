@@ -1,10 +1,10 @@
 import {limits} from 'apps/desks/constants';
 import _ from 'lodash';
 import {gettext} from 'core/utils';
+import {appConfig} from 'appConfig';
 
-DeskeditStages.$inject = ['api', 'WizardHandler', 'tasks', 'desks', 'notify',
-    'macros', 'deployConfig'];
-export function DeskeditStages(api, WizardHandler, tasks, desks, notify, macros, deployConfig) {
+DeskeditStages.$inject = ['api', 'WizardHandler', 'tasks', 'desks', 'notify', 'macros'];
+export function DeskeditStages(api, WizardHandler, tasks, desks, notify, macros) {
     return {
         link: function(scope) {
             var orig = null;
@@ -12,7 +12,7 @@ export function DeskeditStages(api, WizardHandler, tasks, desks, notify, macros,
             scope.limits = limits;
             scope.saving = false;
             scope.statuses = tasks.statuses;
-            scope.systemExpiry = deployConfig.getSync('content_expiry_minutes');
+            scope.systemExpiry = appConfig.content_expiry_minutes;
 
             if (scope.desk.edit && scope.desk.edit.name) {
                 macros.getByDesk(scope.desk.edit.name, true).then((_macros) => {

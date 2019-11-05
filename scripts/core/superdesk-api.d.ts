@@ -855,7 +855,10 @@ declare module 'superdesk-api' {
         // FROM SERVER
         default_language: string;
         schema: any;
-        editor: any;
+        editor: {
+            vidible?: any;
+            picture?: any;
+        };
         feedback_url: any;
         override_ednote_for_corrections: any;
         override_ednote_template: any;
@@ -864,24 +867,45 @@ declare module 'superdesk-api' {
         validator_media_metadata: any;
         publish_content_expiry_minutes: any;
         high_priority_queue_enabled: any;
+        attachments_max_size: any;
+        attachments_max_files: any;
+        ingest_expiry_minutes: any;
+        content_expiry_minutes: any;
+        xmpp_auth: any;
+        saml_auth: any;
+        google_auth: any;
+        saml_label: any;
+        
 
         // FROM CLIENT
         server: {
             url: string;
+            ws: any;
         };
         apps: any;
         defaultRoute: string;
         startingDay: any;
         features: {
-            swimlane: {
+            swimlane?: {
                 defaultNumberOfColumns: number;
             };
-            editor3: boolean;
-            qumu: boolean;
-            editorAttachments: boolean;
-            editorInlineComments: boolean;
-            editorSuggestions: boolean;
-            useTansaProofing: boolean;
+            editor3?: boolean;
+            qumu?: boolean;
+            editorAttachments?: boolean;
+            editorInlineComments?: boolean;
+            editorSuggestions?: boolean;
+            useTansaProofing?: boolean;
+            editFeaturedImage?: any;
+            validatePointOfInterestForImages?: any;
+            autopopulateByline?: any;
+            noPublishOnAuthoringDesk?: any;
+            confirmMediaOnUpdate?: any;
+            noMissingLink?: any;
+            hideRoutedDesks?: any;
+            autorefreshContent?: any;
+            elasticHighlight?: any;
+            editor3?: any;
+            onlyEditor3?: any;
         };
         auth: {
             google: boolean
@@ -904,6 +928,81 @@ declare module 'superdesk-api' {
             };
         };
         confirm_spike: boolean;
+        defaultTimezone: any;
+        search: {
+            useDefaultTimezone: any;
+        };
+        search_cvs: any;
+        view: {
+            dateformat: any;
+            timeformat: any;
+        };
+        user: {
+            sign_off_mapping: any;
+        };
+        infoRemovedFields: {};
+        previewSubjectFilterKey: any;
+        authoring?: {
+            timeToRead?: any;
+        };
+        ui: {
+            publishEmbargo?: any;
+            sendAndPublish?: any;
+            italicAbstract?: any;
+        };
+        list: {
+            narrowView: any;
+            singleLineView: any;
+            singleLine: any;
+            priority: any;
+            firstLine: any;
+            secondLine: any;
+        };
+        item_profile: {
+            change_profile: any;
+        };
+        model: {
+            timeformat: any;
+            dateformat: any;
+        };
+        monitoring: {
+            scheduled: any;
+        };
+        defaultSearch: any;
+        profile: any;
+        profileLanguages: Array<any>;
+        subscriptionLevel: any;
+        workspace: any;
+        activity: any;
+        analytics: {
+            piwik: {
+                url: any;
+            };
+            ga: {
+                id: any;
+            };
+        };
+        longDateFormat: any;
+        shortTimeFormat: any;
+        shortDateFormat: any;
+        shortWeekFormat: any;
+        ArchivedDateFormat: any;
+        ArchivedDateOnCalendarYear: any;
+        iframely: {
+            key: any;
+        };
+        raven: {
+            dsn: any;
+        };
+        version: any;
+        releaseDate: any;
+        isTestEnvironment: any;
+        environmentName: any;
+        workspace: any;
+        paths: {
+            superdesk: any;
+        };
+        language: any;
     }
 
 

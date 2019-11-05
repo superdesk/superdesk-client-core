@@ -1,5 +1,5 @@
-import {ElementFinder, by} from "protractor";
-import {hover, el} from "./index";
+import {ElementFinder, by} from 'protractor';
+import {hover, el} from './index';
 
 export function executeContextMenuAction(articleItem: ElementFinder, action: string) {
     hover(articleItem);

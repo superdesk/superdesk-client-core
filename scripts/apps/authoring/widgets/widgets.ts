@@ -4,6 +4,7 @@ import {gettext} from 'core/utils';
 import {isKilled} from 'apps/archive/utils';
 import {AuthoringWorkspaceService} from '../authoring/services/AuthoringWorkspaceService';
 import {IContentProfile} from 'superdesk-api';
+import {appConfig} from 'appConfig';
 
 function AuthoringWidgetsProvider() {
     var widgets = [];
@@ -43,7 +44,7 @@ function AuthoringWidgetsProvider() {
 }
 
 WidgetsManagerCtrl.$inject = ['$scope', '$routeParams', 'authoringWidgets', 'archiveService', 'authoringWorkspace',
-    'keyboardManager', '$location', 'desks', 'lock', 'content', 'config', 'lodash', 'privileges', '$injector'];
+    'keyboardManager', '$location', 'desks', 'lock', 'content', 'lodash', 'privileges', '$injector'];
 function WidgetsManagerCtrl($scope,
     $routeParams,
     authoringWidgets,
@@ -54,7 +55,6 @@ function WidgetsManagerCtrl($scope,
     desks,
     lock,
     content,
-    config,
     _,
     privileges,
     $injector,
@@ -90,7 +90,7 @@ function WidgetsManagerCtrl($scope,
             !!widget.display[display] &&
                 // If the widget requires a feature configured, then test this
                 // feature name against the config (defaulting to true)
-                (!widget.feature || !!_.get(config.features, widget.feature, true))
+                (!widget.feature || !!_.get(appConfig.features, widget.feature, true))
         ));
 
         content.getType(item.profile).then((contentProfile: IContentProfile) => {
