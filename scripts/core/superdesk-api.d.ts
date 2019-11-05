@@ -880,8 +880,7 @@ declare module 'superdesk-api' {
         confirm_spike: boolean;
         language: string; // default client language
         editor3: {
-            /** set if browser spellcheck is enabled */
-            spellCheck: boolean;
+            browserSpellCheck: boolean;
         };
     }
 

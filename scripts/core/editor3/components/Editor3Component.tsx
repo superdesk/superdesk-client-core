@@ -547,7 +547,7 @@ export class Editor3Component extends React.Component<IProps> {
                         handlePastedText={handlePastedText.bind(this)}
                         readOnly={locked || readOnly}
                         ref={(editor) => this.handleRefs(editor)}
-                        spellCheck={appConfig.editor3.spellCheck}
+                        spellCheck={appConfig.editor3.browserSpellCheck}
                         stripPastedStyles={cleanPastedHtml}
                     />
 
