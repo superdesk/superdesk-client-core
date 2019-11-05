@@ -5,6 +5,7 @@ import {gettext} from 'core/utils';
 import {isPublished, isKilled} from 'apps/archive/utils';
 import {ITEM_STATE, CANCELED_STATES, READONLY_STATES} from 'apps/archive/constants';
 import {AuthoringWorkspaceService} from './AuthoringWorkspaceService';
+import {appConfig} from 'appConfig';
 
 interface IPublishOptions {
     notifyErrors: boolean;
@@ -33,9 +34,9 @@ interface IPublishOptions {
  * @description Authoring Service is responsible for management of the actions on a story
  */
 AuthoringService.$inject = ['$q', '$location', 'api', 'lock', 'autosave', 'confirm', 'privileges',
-    'desks', 'superdeskFlags', 'notify', 'session', '$injector', 'moment', 'config'];
+    'desks', 'superdeskFlags', 'notify', 'session', '$injector', 'moment'];
 export function AuthoringService($q, $location, api, lock, autosave, confirm, privileges, desks, superdeskFlags,
-    notify, session, $injector, moment, config) {
+    notify, session, $injector, moment) {
     var self = this;
 
     // TODO: have to trap desk update event for refereshing users desks.
@@ -209,7 +210,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         }
 
         // Remove sign off from update (if it is not mapped), it will get the publishing user appended in the backend
-        if (updates.sign_off && !(config.user && config.user.sign_off_mapping)) {
+        if (updates.sign_off && !(appConfig.user != null && appConfig.user.sign_off_mapping)) {
             delete updates.sign_off;
         }
 
@@ -629,7 +630,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         var now = moment();
         var schedule = moment.tz(
             timestamp.replace('+0000', '').replace('Z', ''), // avoid timezone info here
-            timezone || config.defaultTimezone,
+            timezone || appConfig.defaultTimezone,
         );
 
         if (!schedule.isValid()) {

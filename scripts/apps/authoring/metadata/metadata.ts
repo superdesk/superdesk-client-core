@@ -4,20 +4,21 @@ import MetaPlaceDirective from './MetaPlaceDirective';
 import {VOCABULARY_SELECTION_TYPES} from '../../vocabularies/constants';
 import {gettext} from 'core/utils';
 import PlacesServiceFactory from './PlacesService';
+import {appConfig} from 'appConfig';
 
 const SINGLE_SELECTION = VOCABULARY_SELECTION_TYPES.SINGLE_SELECTION.id;
 
 MetadataCtrl.$inject = [
     '$scope', 'desks', 'metadata', 'privileges', 'datetimeHelper', 'userList',
-    'preferencesService', 'archiveService', 'config', 'moment', 'content',
+    'preferencesService', 'archiveService', 'moment', 'content',
 ];
 
 function MetadataCtrl(
     $scope, desks, metadata, privileges, datetimeHelper, userList,
-    preferencesService, archiveService, config, moment, content) {
+    preferencesService, archiveService, moment, content) {
     desks.initialize();
 
-    $scope.change_profile = config.item_profile && config.item_profile.change_profile === 1 &&
+    $scope.change_profile = appConfig.item_profile != null && appConfig.item_profile.change_profile === 1 &&
                             _.get($scope, 'origItem.type') === 'text';
 
     metadata.initialize().then(() => {
@@ -151,7 +152,7 @@ function MetadataCtrl(
         // set embargo time default on initial date selection
         if (newValue && oldValue === undefined) {
             $scope.item.embargo_time = moment('00:01', 'HH:mm')
-                .format(config.model.timeformat);
+                .format(appConfig.model.timeformat);
         }
 
         setEmbargoTS(newValue, oldValue);
@@ -1086,19 +1087,19 @@ function MetaLocatorsDirective(places) {
     };
 }
 
-MetadataService.$inject = ['api', 'subscribersService', 'config', 'vocabularies', '$rootScope', 'session', '$filter'];
-export function MetadataService(api, subscribersService, config, vocabularies, $rootScope, session, $filter) {
+MetadataService.$inject = ['api', 'subscribersService', 'vocabularies', '$rootScope', 'session', '$filter'];
+export function MetadataService(api, subscribersService, vocabularies, $rootScope, session, $filter) {
     var service = {
         values: {},
         helper_text: {},
         popup_width: {},
         single_value: {},
         cvs: [],
-        search_cvs: config.search_cvs || [
+        search_cvs: appConfig.search_cvs || [
             {id: 'subject', name: 'Subject', field: 'subject', list: 'subjectcodes'},
             {id: 'companycodes', name: 'Company Codes', field: 'company_codes', list: 'company_codes'},
         ],
-        search_config: config.search || {
+        search_config: appConfig.search || {
             slugline: 1, headline: 1, unique_name: 1, story_text: 1, byline: 1,
             keywords: 1, creator: 1, from_desk: 1, to_desk: 1, spike: 1,
             scheduled: 1, company_codes: 1, ingest_provider: 1, marked_desks: 1,

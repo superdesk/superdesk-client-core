@@ -48,7 +48,7 @@ class Editor3Directive {
     constructor() {
         this.scope = {};
         this.controllerAs = 'vm';
-        this.controller = ['config', '$element', 'editor3', '$scope', '$rootScope', this.initialize];
+        this.controller = ['$element', 'editor3', '$scope', '$rootScope', this.initialize];
 
         this.bindToController = {
             /**
@@ -160,7 +160,7 @@ class Editor3Directive {
         };
     }
 
-    initialize(config, $element, editor3, $scope, $rootScope) {
+    initialize($element, editor3, $scope, $rootScope) {
         if (this.item == null) {
             throw new Error('Item must be provided in order to be able to save editor_state on it');
         }

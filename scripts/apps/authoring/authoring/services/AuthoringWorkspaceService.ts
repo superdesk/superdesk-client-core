@@ -1,6 +1,7 @@
 import {get, includes} from 'lodash';
 import {IArticle} from 'superdesk-api';
 import {getCustomEventNamePrefixed} from 'core/notification/notification';
+import {appConfig} from 'appConfig';
 
 export type IAuthoringAction = 'view' | 'edit' | 'kill' | 'takedown' | 'correct';
 
@@ -16,7 +17,6 @@ export class AuthoringWorkspaceService {
     private superdeskFlags: any;
     private authoring: any;
     private send: any;
-    private config: any;
     private suggest: any;
     private $rootScope: any;
     private search: any;
@@ -32,12 +32,11 @@ export class AuthoringWorkspaceService {
     authoringTopBarButtonsToHide: {};
     displayAuthoringHeaderCollapedByDefault: any;
 
-    constructor($location, superdeskFlags, authoring, send, config, suggest, $rootScope, search, $window) {
+    constructor($location, superdeskFlags, authoring, send, suggest, $rootScope, search, $window) {
         this.$location = $location;
         this.superdeskFlags = superdeskFlags;
         this.authoring = authoring;
         this.send = send;
-        this.config = config;
         this.suggest = suggest;
         this.$rootScope = $rootScope;
         this.search = search;
@@ -106,7 +105,10 @@ export class AuthoringWorkspaceService {
     ) {
         if (item) {
             // disable edit of external ingest sources that are not editable (editFeaturedImage false or not available)
-            if (item._type === 'externalsource' && !!get(this.config.features, 'editFeaturedImage') === false) {
+            if (
+                item._type === 'externalsource'
+                && !!(appConfig.features != null && appConfig.features.editFeaturedImage === false)
+            ) {
                 return;
             }
             this.authoringOpen(item._id, action || 'edit', item._type || null);
@@ -141,7 +143,10 @@ export class AuthoringWorkspaceService {
         };
 
         // disable open for external ingest sources that are not editable (editFeaturedImage false or not available)
-        if (item._type === 'externalsource' && !!get(this.config.features, 'editFeaturedImage') === false) {
+        if (
+            item._type === 'externalsource'
+            && !!(appConfig.features != null && appConfig.features.editFeaturedImage === false)
+        ) {
             return;
         }
 
@@ -280,7 +285,12 @@ export class AuthoringWorkspaceService {
     sendRowViewEvents() {
         let evnt = this.superdeskFlags.flags.authoring ? 'rowview:narrow' : 'rowview:default';
 
-        if (this.superdeskFlags.flags.previewing && this.search.singleLine && get(this.config, 'list.narrowView')) {
+        if (
+            this.superdeskFlags.flags.previewing
+            && this.search.singleLine
+            && appConfig.list != null
+            && appConfig.list.narrowView
+        ) {
             this.$rootScope.$broadcast(evnt);
         }
     }
@@ -327,7 +337,6 @@ AuthoringWorkspaceService.$inject = [
     'superdeskFlags',
     'authoring',
     'send',
-    'config',
     'suggest',
     '$rootScope',
     'search',

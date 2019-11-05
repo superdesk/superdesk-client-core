@@ -5,6 +5,7 @@ import {isEmpty, pickBy} from 'lodash';
 import {handleBinaryFile} from '@metadata/exif';
 import {extensions} from 'appConfig';
 import {IPTCMetadata, IUser, IArticle} from 'superdesk-api';
+import {appConfig} from 'appConfig';
 
 /* eslint-disable complexity */
 
@@ -64,7 +65,6 @@ UploadController.$inject = [
     'api',
     'archiveService',
     'session',
-    'deployConfig',
     'desks',
     'notify',
     '$location',
@@ -76,7 +76,6 @@ export function UploadController(
     api,
     archiveService,
     session,
-    deployConfig,
     desks,
     notify,
     $location,
@@ -92,7 +91,7 @@ export function UploadController(
     $scope.allowPicture = !($scope.locals && $scope.locals.data && $scope.locals.data.allowPicture === false);
     $scope.allowVideo = !($scope.locals && $scope.locals.data && $scope.locals.data.allowVideo === false);
     $scope.allowAudio = !($scope.locals && $scope.locals.data && $scope.locals.data.allowAudio === false);
-    $scope.validator = _.omit(deployConfig.getSync('validator_media_metadata'), ['archive_description']);
+    $scope.validator = _.omit(appConfig.validator_media_metadata, ['archive_description']);
     $scope.deskSelectionAllowed = ($location.path() !== '/workspace/personal') && $scope.locals &&
         $scope.locals.data && $scope.locals.data.deskSelectionAllowed === true;
     if ($scope.deskSelectionAllowed === true) {

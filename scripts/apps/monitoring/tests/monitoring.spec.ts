@@ -1,4 +1,6 @@
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
+import {ISuperdeskGlobalConfig} from 'superdesk-api';
+import {appConfig} from 'appConfig';
 
 describe('monitoring', () => {
     beforeEach(window.module('superdesk.apps.monitoring'));
@@ -7,10 +9,17 @@ describe('monitoring', () => {
     beforeEach(window.module('superdesk.apps.searchProviders'));
 
     it('can switch between list and swimlane view',
-        inject(($controller, $rootScope, $q, preferencesService, config) => {
-            config.features = {
-                swimlane: {defaultNumberOfColumns: 4},
+        inject(($controller, $rootScope, $q, preferencesService) => {
+            const testConfig: Partial<ISuperdeskGlobalConfig> = {
+                features: {
+                    ...appConfig.features,
+                    swimlane: {
+                        defaultNumberOfColumns: 4,
+                    },
+                },
             };
+
+            Object.assign(appConfig, testConfig);
 
             spyOn(preferencesService, 'update');
             spyOn(preferencesService, 'get').and.callFake((name) => {

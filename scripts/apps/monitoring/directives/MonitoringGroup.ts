@@ -5,6 +5,7 @@ import {GET_LABEL_MAP} from '../../workspace/content/constants';
 import {isPublished} from 'apps/archive/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {DESK_OUTPUT} from 'apps/desks/constants';
+import {appConfig} from 'appConfig';
 
 const translatedFields = GET_LABEL_MAP();
 
@@ -85,7 +86,6 @@ MonitoringGroup.$inject = [
     'desks',
     'search',
     'multi',
-    'config',
     '$rootScope',
 ];
 export function MonitoringGroup(
@@ -99,7 +99,6 @@ export function MonitoringGroup(
     desks,
     search,
     multi,
-    config,
     $rootScope,
 ) {
     let ITEM_HEIGHT = 57;
@@ -146,7 +145,7 @@ export function MonitoringGroup(
 
             ITEM_HEIGHT = search.singleLine ? 29 : 57;
 
-            const customSorts = getCustomSortForGroup(config, scope.group);
+            const customSorts = getCustomSortForGroup(scope.group);
 
             if (customSorts != null) {
                 scope.customSortOptions = translateCustomSorts(customSorts.allowed_fields_to_sort);
@@ -569,7 +568,7 @@ export function MonitoringGroup(
                     }
                 })()
                     .then((items) => {
-                        if (config.features.autorefreshContent && data != null) {
+                        if (appConfig.features.autorefreshContent && data != null) {
                             data.force = true;
                         }
 

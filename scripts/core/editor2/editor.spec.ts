@@ -1,8 +1,15 @@
+import {ISuperdeskGlobalConfig} from 'superdesk-api';
+import {appConfig} from 'appConfig';
 
 describe('text editor', () => {
-    beforeEach(window.module(($provide) => {
-        $provide.constant('config', {server: {url: undefined}, iframely: {key: '123'}});
-    }));
+    beforeEach(() => {
+        const testConfig: Partial<ISuperdeskGlobalConfig> = {
+            server: {url: undefined, ws: undefined},
+            iframely: {key: '123'},
+        };
+
+        Object.assign(appConfig, testConfig);
+    });
 
     beforeEach(window.module('superdesk.apps.publish'));
     beforeEach(window.module('superdesk.config'));

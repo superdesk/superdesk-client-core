@@ -1,3 +1,7 @@
+import {appConfig} from 'appConfig';
+import {ISuperdeskGlobalConfig} from 'superdesk-api';
+import _ from 'lodash';
+
 function collection(data) {
     return {_items: data};
 }
@@ -34,8 +38,10 @@ var HTTP_API = {
     },
 };
 
-function doConfig($provide) {
-    $provide.constant('config', {server: {url: SERVER_URL}});
+function doConfig() {
+    const testConfig: Partial<ISuperdeskGlobalConfig> = {server: {url: SERVER_URL, ws: undefined}};
+
+    Object.assign(appConfig, testConfig);
 }
 
 describe('API Provider', () => {

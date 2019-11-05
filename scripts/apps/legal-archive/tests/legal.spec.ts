@@ -1,4 +1,6 @@
 import {gettext} from 'core/utils';
+import {ISuperdeskGlobalConfig} from 'superdesk-api';
+import {appConfig} from 'appConfig';
 
 describe('legal archive service', () => {
     beforeEach(window.module('superdesk.core.api'));
@@ -8,8 +10,8 @@ describe('legal archive service', () => {
     /**
      * Mock some of the dependencies of the parent directives.
      */
-    beforeEach(window.module(($provide) => {
-        $provide.constant('config', {
+    beforeEach(() => {
+        const testConfig: Partial<ISuperdeskGlobalConfig> = {
             model: {
                 timeformat: 'HH:mm:ss',
                 dateformat: 'DD/MM/YYYY',
@@ -19,9 +21,11 @@ describe('legal archive service', () => {
                 dateformat: 'MM/DD/YYYY',
             },
             defaultTimezone: 'UTC',
-            server: {url: undefined},
-        });
-    }));
+            server: {url: undefined, ws: undefined},
+        };
+
+        Object.assign(appConfig, testConfig);
+    });
 
     it('can create base query', inject((legal) => {
         var criteria = legal.getCriteria();

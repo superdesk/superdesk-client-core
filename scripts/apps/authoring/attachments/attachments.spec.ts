@@ -3,6 +3,7 @@ import thunk from 'redux-thunk';
 
 import {attachments as attachmentsReducer} from './reducer';
 import * as actions from './actions';
+import {appConfig} from 'appConfig';
 
 describe('attachments', () => {
     beforeEach(window.module('superdesk.apps.authoring.attachments'));
@@ -35,13 +36,14 @@ describe('attachments', () => {
         const file = {title: 'foo'};
         const files = [file];
 
-        beforeEach(inject((attachments, deployConfig, api, $q, $rootScope) => {
+        beforeEach(inject((attachments, api, $q, $rootScope) => {
             store = createStore(attachmentsReducer, applyMiddleware(thunk.withExtraArgument({
                 attachments: attachments,
-                deployConfig: deployConfig,
             })));
 
-            spyOn(deployConfig, 'getSync').and.returnValue(100);
+            appConfig.attachments_max_size = 100;
+            appConfig.attachments_max_files = 100;
+
             spyOn(api, 'query').and.returnValue($q.when({_items: files}));
 
             store.dispatch(actions.initAttachments(item));

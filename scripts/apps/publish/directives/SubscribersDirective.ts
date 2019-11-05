@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
+import {appConfig} from 'appConfig';
 
 /**
  * @ngdoc directive
@@ -22,13 +23,12 @@ import {gettext} from 'core/utils';
 SubscribersDirective.$inject = [
     'notify', 'api', 'subscribersService', 'adminPublishSettingsService', 'modal',
     'metadata', 'contentFilters', '$q', '$filter', 'products', '$rootScope',
-    'deployConfig',
 ];
 
 export function SubscribersDirective(
     notify, api, subscribersService, adminPublishSettingsService,
     modal, metadata, contentFilters, $q, $filter, products, $rootScope,
-    deployConfig) {
+) {
     return {
         scope: {
             subscribersList: '=',
@@ -45,7 +45,7 @@ export function SubscribersDirective(
             $scope.directProducts = null;
             $scope.subTypes = null;
             $scope.search = {};
-            $scope.highPriorityQueueEnabled = deployConfig.getSync('high_priority_queue_enabled');
+            $scope.highPriorityQueueEnabled = appConfig.high_priority_queue_enabled;
 
             if (angular.isDefined(metadata.values.subscriber_types)) {
                 $scope.subTypes = metadata.values.subscriber_types;

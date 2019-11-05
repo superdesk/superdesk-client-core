@@ -194,7 +194,7 @@ angular.module('superdesk.apps.authoring', [
                     authoringWorkspace.popup(data.item, 'edit');
                 }],
                 filters: [{action: 'list', type: 'archive'}],
-                additionalCondition: ['authoring', 'item', 'config', 'lock', function(authoring, item, config, lock) {
+                additionalCondition: ['authoring', 'item', 'lock', function(authoring, item, lock) {
                     return authoring.itemActions(item).edit && !lock.isLockedByMe(item);
                 }],
             })
@@ -226,7 +226,7 @@ angular.module('superdesk.apps.authoring', [
                     send.allAs([data.item], 'send_to');
                 }],
                 filters: [{action: 'list', type: 'archive'}],
-                additionalCondition: ['authoring', 'item', 'config', (authoring, item, config) =>
+                additionalCondition: ['authoring', 'item', (authoring, item) =>
                     authoring.itemActions(item).send && item.type !== 'composite',
                 ],
             })
@@ -329,7 +329,7 @@ angular.module('superdesk.apps.authoring', [
                     {action: 'list', type: 'archived'},
                     {action: 'list', type: 'legal_archive'},
                 ],
-                additionalCondition: ['authoring', 'item', 'config', function(authoring, item, config) {
+                additionalCondition: ['authoring', 'item', function(authoring, item) {
                     return authoring.itemActions(item).view;
                 }],
             })
