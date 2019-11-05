@@ -20,6 +20,7 @@ interface IProps<T> {
 
 interface IState {
     search: string;
+    isOpen: boolean;
 }
 
 const arrowDownStyles = {
@@ -74,6 +75,7 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
 
         this.state = {
             search: '',
+            isOpen: false,
         };
 
         const searchFn = (search: string) => {
@@ -86,6 +88,8 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
     render() {
         return (
             <Autocomplete.default
+                open={this.state.isOpen}
+                onMenuVisibilityChange={(isOpen) => this.setState({isOpen})}
                 inputProps={{placeholder: this.props.placeholder}}
                 value={this.props.value}
                 items={Object.values(this.props.items)}
@@ -134,6 +138,7 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                             type="button"
                             className="sd-line-input__select-custom"
                             disabled={this.props.disabled}
+                            onClick={() => this.setState({isOpen: !this.state.isOpen})}
                             ref={(element) => {
                                 if (element != null) {
                                     this.lastButtonHeight = element.offsetHeight;
@@ -141,6 +146,7 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                                     // react-autocomplete expects ref to be an input
                                     // but input doesn't support rendering custom children
                                     // so we use a button instead and add a fake method to prevent errors
+                                    // Also, we need to manage the open/close logic on our own
                                     element['setSelectionRange'] = noop;
                                 }
 

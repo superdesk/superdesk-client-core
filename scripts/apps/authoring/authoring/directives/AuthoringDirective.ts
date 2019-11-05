@@ -168,11 +168,8 @@ export function AuthoringDirective(
              * @returns {Boolean}
              */
             $scope.canPublishOnDesk = function() {
-                return !(
-                    $scope.deskType === 'authoring'
-                    && appConfig.features != null
-                    && appConfig.features.noPublishOnAuthoringDesk
-                );
+                return !($scope.deskType === 'authoring' && appConfig.features.noPublishOnAuthoringDesk) &&
+                    privileges.userHasPrivileges({publish: 1});
             };
 
             getDeskStage();
@@ -863,8 +860,15 @@ export function AuthoringDirective(
             };
 
             $scope.sendToNextStage = function() {
-                var stageIndex, stageList = desks.deskStages[desks.activeDeskId];
-                var selectedStage, selectedDesk = desks.deskLookup[desks.activeDeskId];
+                var currentDeskId = desks.getCurrentDeskId();
+
+                if (_.isNil(currentDeskId)) {
+                    notify.error(gettext('Failed to send to next stage.'));
+                    return;
+                }
+
+                var stageIndex, stageList = desks.deskStages[currentDeskId];
+                var selectedStage, selectedDesk = desks.deskLookup[currentDeskId];
 
                 for (var i = 0; i < stageList.length; i++) {
                     if (stageList[i]._id === $scope.stage._id) {
