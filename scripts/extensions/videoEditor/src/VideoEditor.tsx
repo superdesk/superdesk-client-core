@@ -29,6 +29,7 @@ interface IState extends IVideoEditor {
     thumbnails: Array<IThumbnail>;
     loading: boolean;
     loadingText: string;
+    scale: number;
     videoSrc: string;
     article: IArticleVideo;
 }
@@ -39,6 +40,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
     private intervalVideoEdit: number;
     private intervalCheckVideo: number;
     private initState: Pick<IState, 'crop' | 'degree' | 'trim' | 'quality'>;
+    wrapperSize: { width: number; height: number };
 
     constructor(props: IProps) {
         super(props);
@@ -62,11 +64,13 @@ export class VideoEditor extends React.Component<IProps, IState> {
             cropImg: '',
             playing: false,
             loading: false,
+            loadingText: '',
+            scale: 1,
             thumbnails: [],
             videoSrc: '',
-            loadingText: '',
             article: cloneDeep(this.props.article),
         };
+        this.wrapperSize = { width: 0, height: 0 };
     }
 
     componentDidMount() {
@@ -135,14 +139,14 @@ export class VideoEditor extends React.Component<IProps, IState> {
 
     handleRotate = () => {
         this.setState(
-            prevState => ({ degree: prevState.degree - 90 }),
+            prevState => ({ degree: prevState.degree - 90, scale: 1 }),
             () => {
                 const degree = this.state.degree % 360 === 0 ? 0 : this.state.degree;
                 let crop = this.initState.crop;
                 if (this.state.cropEnabled) {
                     crop = this.getCropSample();
                 }
-                this.setState({ degree: degree, crop: crop }, this.checkIsDirty);
+                this.setState({ degree: degree, crop: crop, scale: this.getScale() }, this.checkIsDirty);
             }
         );
     };
@@ -195,15 +199,23 @@ export class VideoEditor extends React.Component<IProps, IState> {
     };
 
     handleReset = () => {
-        this.setState({
-            ...this.initState,
-            trim: {
-                start: 0,
-                end: this.videoRef.current!.duration,
+        this.setState(
+            {
+                ...this.initState,
+                trim: {
+                    start: 0,
+                    end: this.videoRef.current!.duration,
+                },
+                isDirty: false,
+                cropEnabled: false,
+                scale: 1,
             },
-            isDirty: false,
-            cropEnabled: false,
-        });
+            () => {
+                this.setState({
+                    scale: this.getScale(),
+                });
+            }
+        );
     };
 
     handleSave = () => {
@@ -246,8 +258,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                     this.handleReset();
                                     this.setState({
                                         thumbnails: [],
-                                        videoSrc: this.videoRef.current!.src =
-                                            result.project.url + `?t=${Math.random()}`,
+                                        videoSrc: result.project.url + `?t=${Math.random()}`,
                                         article: {
                                             ...this.state.article,
                                             ...omit(result, 'project'),
@@ -375,21 +386,38 @@ export class VideoEditor extends React.Component<IProps, IState> {
         }
     };
 
+    // get wrapper size dynamically to scale video so that it's not too small or too big
+    getWrapperSize = (element: any) => {
+        if (element == null) return;
+        const { width, height } = element.getBoundingClientRect();
+        this.wrapperSize = {
+            width: width,
+            height: height - 100, // subtract VideoEditorTools size and video margin
+        };
+    };
+
+    getScale = (): number => {
+        if (!this.videoRef.current || this.videoRef.current.videoHeight === 0) return 1;
+        const videoHeight =
+            this.state.degree % 180 !== 0 ? this.videoRef.current.videoWidth : this.videoRef.current.videoHeight;
+        const { height } = this.videoRef.current.getBoundingClientRect();
+        // ensure video image quality is not broken when scaling up
+        const vh = videoHeight < this.wrapperSize.height ? videoHeight : this.wrapperSize.height;
+        return vh / height;
+    };
+
     render() {
         const { gettext } = this.props.superdesk.localization;
         const { getClass } = this.props.superdesk.utilities.CSS;
         const degree = this.state.degree + 'deg';
-        const { width, height } = (this.videoRef.current && this.videoRef.current.getBoundingClientRect()) || {
-            width: 0,
-            height: 0,
-        };
 
-        const { videoWidth, videoHeight } = this.videoRef.current! || { videoWidth: 1, videoHeight: 1 };
-        let scaleRatio = videoWidth / videoHeight || 1;
-        if (this.state.degree % 180 === 0) {
-            scaleRatio = 1;
-        } else if (scaleRatio > 1) {
-            scaleRatio = 1 / scaleRatio;
+        let width = 0,
+            height = 0,
+            videoHeight = 1;
+        if (this.videoRef.current) {
+            ({ width, height } = this.videoRef.current.getBoundingClientRect());
+            videoHeight =
+                this.state.degree % 180 !== 0 ? this.videoRef.current.videoWidth : this.videoRef.current.videoHeight;
         }
 
         return (
@@ -413,12 +441,9 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                     </div>
                                 )}
                                 <div className="sd-photo-preview sd-photo-preview--edit-video">
-                                    <div className="sd-photo-preview__video">
+                                    <div className="sd-photo-preview__video" ref={this.getWrapperSize}>
                                         <div className="sd-photo-preview__video-inner">
-                                            <div
-                                                className="sd-photo-preview__video-container"
-                                                style={{ alignItems: 'unset' }} // remove space between video and ReactCrop
-                                            >
+                                            <div className="sd-photo-preview__video-container">
                                                 <video
                                                     ref={this.videoRef}
                                                     src={this.state.videoSrc}
@@ -427,7 +452,10 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                                     onLoadedData={() =>
                                                         this.handleTrim(0, this.videoRef.current!.duration)
                                                     }
-                                                    style={{ transform: `rotate(${degree}) scale(${scaleRatio})` }}
+                                                    style={{
+                                                        transform: `rotate(${degree}) scale(${this.state.scale})`,
+                                                        height: `${videoHeight}px`,
+                                                    }}
                                                     autoPlay
                                                 ></video>
 

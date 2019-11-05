@@ -183,7 +183,7 @@
 }
 
 .video__crop {
-  margin-top: 2rem;
+  margin: 1rem auto;
 }
 .video__crop img {
   /* avoid limit height (auto) when video is portrait */
