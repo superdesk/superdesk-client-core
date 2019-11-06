@@ -1,4 +1,5 @@
 import {gettext} from 'core/utils';
+import {IFunctionPointsService} from 'apps/extension-points/services/FunctionPoints';
 
 angular.module('superdesk.apps.dashboard.widgets.relatedItem', [
     'superdesk.apps.dashboard.widgets.base',
@@ -58,6 +59,7 @@ RelatedItemController.$inject = [
     'familyService',
     'moment',
     'content',
+    'functionPoints',
 ];
 
 function RelatedItemController(
@@ -75,6 +77,7 @@ function RelatedItemController(
     familyService,
     moment,
     content,
+    functionPoints: IFunctionPointsService,
 ) {
     $scope.type = 'archiveWidget';
     $scope.itemListOptions = {
@@ -179,8 +182,14 @@ function RelatedItemController(
                     {update: angular.extend({}, $scope.origItem, $scope.item)},
                     item)
                     .then((newItem) => {
+                        return functionPoints.run('archive:rewrite_after', Object.assign({
+                            _id: newItem._id,
+                            type: newItem.type,
+                        }, newItem));
+                    })
+                    .then((itemNext) => {
                         notify.success(gettext('Story is associated as update.'));
-                        authoringWorkspace.edit(newItem);
+                        authoringWorkspace.edit(itemNext);
                     }, (response) => {
                         if (angular.isDefined(response.data._message)) {
                             notify.error(
