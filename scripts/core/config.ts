@@ -85,12 +85,16 @@ function DeployConfigFactory(api, $q) {
         }
     }
 
-    return new DeployConfig();
+    const deployConfig = new DeployConfig();
+
+    deployConfig.fetch();
+
+    return deployConfig;
 }
 
 angular.module('superdesk.config', ['superdesk.core.api'])
     .factory('deployConfig', DeployConfigFactory)
 
-    .run(['$rootScope', 'deployConfig', function($rootScope, deployConfig) {
+    .run(['$rootScope', 'deployConfig', function($rootScope) {
         $rootScope.config = appConfig || {};
     }]);
