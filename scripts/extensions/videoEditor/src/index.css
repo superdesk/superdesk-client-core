@@ -223,7 +223,7 @@
   top: 80px;
 }
 
-.thumbnail-edit__container {
+.video__thumbnail__container {
   height: 100%;
   width: calc(16rem * 16/9);
   display: flex;

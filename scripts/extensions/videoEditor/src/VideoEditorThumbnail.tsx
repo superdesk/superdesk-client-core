@@ -36,7 +36,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
             dirty: false,
             type: '',
             value: 0,
-            thumbnail: get(this.props.article.renditions, 'thumbnail.href') + `?t=${Math.random()}`,
+            thumbnail: get(this.props.article.renditions, 'thumbnail.href' + `?t=${Math.random()}`),
             rotateDegree: 0,
             scale: 1,
         };
@@ -72,11 +72,19 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
                 let { x, y, width, height, aspect } = this.props.getCropRotate(this.props.crop);
 
                 let canvasSize = [this.maxCanvasSize.width, this.maxCanvasSize.height];
-                if (this.props.rotate % 180 !== 0) {
-                    if (aspect !== 1 && (width !== 0 || height !== 0)) {
+                // crop is disabled or has not drew crop zone yet
+                const isDisabledCrop = [x, y, width, height].every(value => value === 0);
+                if (isDisabledCrop) {
+                    aspect = video.videoWidth / video.videoHeight;
+                }
+
+                if (this.state.rotateDegree % 180 !== 0) {
+                    if (!isDisabledCrop) {
                         aspect = 1 / aspect!;
-                        canvasSize = [this.maxCanvasSize.height, this.maxCanvasSize.width];
                     }
+                    // make thumbnail overflow then scale it down, otherwise thumbnail will be too small
+                    // once rotated because we draw thumbnail based on canvas width
+                    canvasSize = [this.maxCanvasSize.height, this.maxCanvasSize.width];
                 }
 
                 this.drawCanvas(
@@ -85,7 +93,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
                     y || 0,
                     width || video.videoWidth,
                     height || video.videoHeight,
-                    aspect || video.videoWidth / video.videoHeight,
+                    aspect,
                     canvasSize
                 );
                 this.setState({ dirty: true });
@@ -291,7 +299,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
                         )}
                     </div>
                 </div>
-                <div className={getClass('thumbnail-edit__container')} ref={this.getWrapperSize}>
+                <div className={getClass('video__thumbnail__container')} ref={this.getWrapperSize}>
                     <canvas
                         ref={this.ref}
                         style={{ transform: `rotate(${this.state.rotateDegree}deg) scale(${this.state.scale})` }}
