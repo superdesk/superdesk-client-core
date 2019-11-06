@@ -10,14 +10,42 @@ import {applyMiddleware as coreApplyMiddleware} from 'core/middleware';
 import {onChangeMiddleware, getArticleSchemaMiddleware} from '..';
 import {IFunctionPointsService} from 'apps/extension-points/services/FunctionPoints';
 import {isPublished} from 'apps/archive/utils';
-import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
-import {copyJson} from 'core/helpers/utils';
-import {appConfig} from 'appConfig';
 
 /**
  * @ngdoc directive
  * @module superdesk.apps.authoring
  * @name sdAuthoring
+ *
+ * @requires superdesk
+ * @requires superdeskFlags
+ * @requires authoringWorkspace
+ * @requires notify
+ * @requires desks
+ * @requires authoring
+ * @requires api
+ * @requires session
+ * @requires lock
+ * @requires privileges
+ * @requires content
+ * @requires $location
+ * @requires referrer
+ * @requires macros
+ * @requires $timeout
+ * @requires $q
+ * @requires modal
+ * @requires archiveService
+ * @requires confirm
+ * @requires reloadService
+ * @requires $rootScope
+ * @requires $interpolate
+ * @requires metadata
+ * @requires suggest
+ * @requires config
+ * @requires deployConfig
+ * @requires editorResolver
+ * @requires $sce
+ * @requires mediaIdGenerator
+ * @requires functionPoints
  *
  * @description
  *   This directive is responsible for generating superdesk content authoring form.
@@ -25,6 +53,7 @@ import {appConfig} from 'appConfig';
 
 AuthoringDirective.$inject = [
     'superdesk',
+    'superdeskFlags',
     'authoringWorkspace',
     'notify',
     'desks',
@@ -37,51 +66,33 @@ AuthoringDirective.$inject = [
     '$location',
     'referrer',
     'macros',
+    '$timeout',
     '$q',
     'modal',
     'archiveService',
     'confirm',
     'reloadService',
     '$rootScope',
+    '$interpolate',
+    'metadata',
     'suggest',
+    'config',
+    'deployConfig',
     'editorResolver',
     'compareVersions',
     'embedService',
+    '$sce',
     'mediaIdGenerator',
     'relationsService',
     '$injector',
     'functionPoints',
 ];
-export function AuthoringDirective(
-    superdesk,
-    authoringWorkspace: AuthoringWorkspaceService,
-    notify,
-    desks,
-    authoring,
-    api,
-    session,
-    lock,
-    privileges,
-    content,
-    $location,
-    referrer,
-    macros,
-    $q,
-    modal,
-    archiveService,
-    confirm,
-    reloadService,
-    $rootScope,
-    suggest,
-    editorResolver,
-    compareVersions,
-    embedService,
-    mediaIdGenerator,
-    relationsService,
-    $injector,
-
-    functionPoints: IFunctionPointsService,
-) {
+export function AuthoringDirective(superdesk, superdeskFlags, authoringWorkspace, notify,
+                                   desks, authoring, api, session, lock, privileges, content, $location,
+                                   referrer, macros, $timeout, $q, modal, archiveService, confirm, reloadService,
+                                   $rootScope, $interpolate, metadata, suggest, config, deployConfig, editorResolver,
+                                   compareVersions, embedService, $sce, mediaIdGenerator, relationsService, $injector,
+                                   functionPoints: IFunctionPointsService) {
     return {
         link: function($scope, elem, attrs) {
             var _closing;
@@ -135,7 +146,6 @@ export function AuthoringDirective(
             $scope.fullPreviewUrl = '/#/preview/' + $scope.origItem._id;
             $scope.proofread = false;
             $scope.referrerUrl = referrer.getReferrerUrl();
-            $scope.gettext = gettext;
 
             content.getTypes().then(() => {
                 $scope.content_types = content.types;
@@ -168,8 +178,7 @@ export function AuthoringDirective(
              * @returns {Boolean}
              */
             $scope.canPublishOnDesk = function() {
-                return !($scope.deskType === 'authoring' && appConfig.features.noPublishOnAuthoringDesk) &&
-                    privileges.userHasPrivileges({publish: 1});
+                return !($scope.deskType === 'authoring' && config.features.noPublishOnAuthoringDesk);
             };
 
             getDeskStage();
@@ -246,8 +255,8 @@ export function AuthoringDirective(
                 if ($scope.save_enabled()) {
                     modal.confirm(gettext('You have unsaved changes, do you want to continue?'))
                         .then(() => {
-                            _exportHighlight(item._id);
-                        },
+                                _exportHighlight(item._id);
+                            },
                         );
                 } else {
                     _exportHighlight(item._id);
@@ -379,8 +388,8 @@ export function AuthoringDirective(
             function checkMediaAssociatedToUpdate() {
                 let rewriteOf = $scope.item.rewrite_of;
 
-                if (!(appConfig.features != null && appConfig.features.confirmMediaOnUpdate) ||
-                    !(appConfig.features != null && appConfig.features.editFeaturedImage) ||
+                if (!_.get(config, 'features.confirmMediaOnUpdate') ||
+                    !_.get(config, 'features.editFeaturedImage') ||
                     !rewriteOf || _.includes(['kill', 'correct', 'takedown'], $scope.action) ||
                     $scope.item.associations && $scope.item.associations.featuremedia) {
                     return $q.when(true);
@@ -415,6 +424,22 @@ export function AuthoringDirective(
                     type: _.get(orig, 'type'),
                 }, item))
                     .then(() => checkMediaAssociatedToUpdate())
+                    .then(() => {
+                        if (action == 'publish'){
+                            $scope.item.flags.change_types = ""
+                        } else {
+                            if($scope.item.flags.change_types.length == 0){
+                                $scope.item.flags.change_types = null
+                            }
+                        }
+                        return true;
+                    }).then(() => {
+                        if($scope.item.flags.change_types !== null){
+                            $scope.item.flags.change_types_tmp = $scope.item.flags.change_types;
+                            $scope.item.flags.change_types = "";
+                        }
+                        return true;
+                    })
                     .then((result) => {
                         if (result) {
                             return authoring.publish(orig, item, action);
@@ -424,6 +449,7 @@ export function AuthoringDirective(
                     .then((response) => {
                         notify.success(gettext('Item published.'));
                         $scope.item = response;
+                        $scope.item.flags.change_types = "";
                         $scope.dirty = false;
                         authoringWorkspace.close(true);
                         return true;
@@ -431,6 +457,10 @@ export function AuthoringDirective(
                         let issues = _.get(response, 'data._issues');
 
                         if (issues) {
+                            if(_.get(issues, 'flags.change_types')){
+                                notify.error("Please Select Type of Change");
+                                return $q.reject(false);
+                            }
                             if (angular.isDefined(issues['validator exception'])) {
                                 var errors = issues['validator exception'];
                                 var modifiedErrors = errors.replace(/\[/g, '')
@@ -456,7 +486,7 @@ export function AuthoringDirective(
                                     authoring.open(item._id, true).then((res) => {
                                         $scope.origItem = res;
                                         $scope.dirty = false;
-                                        $scope.item = copyJson($scope.origItem);
+                                        $scope.item = _.create($scope.origItem);
                                     });
                                 }
 
@@ -486,7 +516,7 @@ export function AuthoringDirective(
             }
 
             function validateForPublish(item) {
-                var validator = appConfig.validator_media_metadata;
+                var validator = deployConfig.getSync('validator_media_metadata');
 
                 if (item.type === 'picture' || item.type === 'graphic') {
                     // required media metadata fields are defined in superdesk.config.js
@@ -533,12 +563,12 @@ export function AuthoringDirective(
                     }
 
                     switch ($scope.item.language) {
-                    case 'nb-NO':
-                        window.tansa.settings.profileId = _.get($rootScope, 'config.tansa.profile.nb');
-                        break;
-                    case 'nn-NO':
-                        window.tansa.settings.profileId = _.get($rootScope, 'config.tansa.profile.nn');
-                        break;
+                        case 'nb-NO':
+                            window.tansa.settings.profileId = _.get($rootScope, 'config.tansa.profile.nb');
+                            break;
+                        case 'nn-NO':
+                            window.tansa.settings.profileId = _.get($rootScope, 'config.tansa.profile.nn');
+                            break;
                     }
 
                     window.RunTansaProofing();
@@ -548,7 +578,7 @@ export function AuthoringDirective(
             };
 
             $scope.isRemovedField = function(fieldName) {
-                return appConfig.infoRemovedFields != null && appConfig.infoRemovedFields.hasOwnProperty(fieldName);
+                return _.has(config.infoRemovedFields, fieldName);
             };
 
             function afterTansa(e, isCancelled) {
@@ -597,7 +627,7 @@ export function AuthoringDirective(
                             return modal.confirm({
                                 bodyText: gettext(
                                     'There are unpublished related items that won\'t be sent out as related items.'
-                        + ' Do you want to publish the article anyway?',
+                                    + ' Do you want to publish the article anyway?',
                                 ),
                             }).then((ok) => ok ? performPublish() : false);
                         }
@@ -665,13 +695,6 @@ export function AuthoringDirective(
                 });
                 initMedia();
             };
-
-            // Close the current article, create an update of the article and open it in the edit mode.
-            $scope.closeAndContinue = function() {
-                $scope.close().then(authoring.rewrite($scope.item));
-            };
-
-            $scope.canRewriteArticle = () => authoring.itemActions($scope.item).re_write;
 
             $scope.deschedule = function() {
                 $scope.item.publish_schedule = null;
@@ -759,7 +782,7 @@ export function AuthoringDirective(
              * Close preview and start working again
              */
             $scope.closePreview = function() {
-                $scope.item = copyJson($scope.origItem);
+                $scope.item = _.create($scope.origItem);
                 $scope._editable = $scope.action !== 'view' && authoring.isEditable($scope.origItem);
 
                 if ($scope.isPreview) {
@@ -824,17 +847,17 @@ export function AuthoringDirective(
             };
 
             /**
-             * On changing the content profile add the new (key, default-value) to the item
-             * if new content profile has some additional keys than item
+             * On change content profile the default values from new content profile
+             * will overwrite the current values from item
              *
              * @function changeProfile
-             * @param {Object} item - item being edited currently
+             * @param {Object} item - ucurrent edited content items
              */
             $scope.changeProfile = function(item) {
                 angular.forEach($scope.content_types, (profile) => {
                     if (item.profile === profile._id && profile.schema) {
                         angular.forEach(profile.schema, (schema, key) => {
-                            if (schema && schema.default && !(key in item)) {
+                            if (schema && schema.default) {
                                 item[key] = _.cloneDeep(schema.default);
                             }
                         });
@@ -860,15 +883,8 @@ export function AuthoringDirective(
             };
 
             $scope.sendToNextStage = function() {
-                var currentDeskId = desks.getCurrentDeskId();
-
-                if (_.isNil(currentDeskId)) {
-                    notify.error(gettext('Failed to send to next stage.'));
-                    return;
-                }
-
-                var stageIndex, stageList = desks.deskStages[currentDeskId];
-                var selectedStage, selectedDesk = desks.deskLookup[currentDeskId];
+                var stageIndex, stageList = desks.deskStages[desks.activeDeskId];
+                var selectedStage, selectedDesk = desks.deskLookup[desks.activeDeskId];
 
                 for (var i = 0; i < stageList.length; i++) {
                     if (stageList[i]._id === $scope.stage._id) {
@@ -1181,6 +1197,7 @@ export function AuthoringDirective(
                 urls: $injector.get('urls'),
                 notify: notify,
                 superdesk: superdesk,
+                deployConfig: deployConfig,
                 attachments: $injector.get('attachments'),
             })));
 
@@ -1214,8 +1231,6 @@ export function AuthoringDirective(
 
                 $scope.autosave($scope.item, 200);
             };
-
-            $scope.refresh = () => $scope.refreshTrigger++;
         },
     };
 }

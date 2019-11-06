@@ -4,29 +4,29 @@ import MetaPlaceDirective from './MetaPlaceDirective';
 import {VOCABULARY_SELECTION_TYPES} from '../../vocabularies/constants';
 import {gettext} from 'core/utils';
 import PlacesServiceFactory from './PlacesService';
-import {appConfig} from 'appConfig';
 
 const SINGLE_SELECTION = VOCABULARY_SELECTION_TYPES.SINGLE_SELECTION.id;
 
 MetadataCtrl.$inject = [
     '$scope', 'desks', 'metadata', 'privileges', 'datetimeHelper', 'userList',
-    'preferencesService', 'archiveService', 'moment', 'content',
+    'preferencesService', 'archiveService', 'config', 'moment', 'content',
 ];
 
 function MetadataCtrl(
     $scope, desks, metadata, privileges, datetimeHelper, userList,
-    preferencesService, archiveService, moment, content) {
+    preferencesService, archiveService, config, moment, content) {
     desks.initialize();
 
-    $scope.change_profile = appConfig.item_profile != null && appConfig.item_profile.change_profile === 1 &&
-                            _.get($scope, 'origItem.type') === 'text';
+    $scope.change_profile = config.item_profile && config.item_profile.change_profile === 1 &&
+        _.get($scope, 'origItem.type') === 'text';
 
     metadata.initialize().then(() => {
         $scope.metadata = metadata.values;
         return preferencesService.get();
     })
         .then(setAvailableCategories)
-        .then(setAvailableCompanyCodes);
+        .then(setAvailableCompanyCodes)
+        .then(setChangeTypes);
 
     $scope.$watch(() => desks.active.desk, (activeDeskId) => {
         content.getDeskProfiles(activeDeskId ? desks.getCurrentDesk() : null, $scope.item.profile)
@@ -40,13 +40,13 @@ function MetadataCtrl(
     };
 
     /**
-    * Builds a list of categories available for selection in scope. Used by
-    * the "category" menu in the Authoring metadata section.
-    *
-    * @function setAvailableCategories
-    * @param {Object} prefs - user preferences setting, including the
-    *   preferred categories settings, among other things
-    */
+     * Builds a list of categories available for selection in scope. Used by
+     * the "category" menu in the Authoring metadata section.
+     *
+     * @function setAvailableCategories
+     * @param {Object} prefs - user preferences setting, including the
+     *   preferred categories settings, among other things
+     */
     function setAvailableCategories(prefs) {
         var all, // all available categories
             assigned = {}, // category codes already assigned to the article
@@ -72,12 +72,20 @@ function MetadataCtrl(
         $scope.availableCategories = _.sortBy(filtered, 'name');
     }
 
+    function setChangeTypes(){
+        //add type of changes
+        $scope.changeTypes = [
+            {name: "Grammar Correction", qcode: "1", scheme: "change_types"},
+            {name: "Republishing", qcode: "2", scheme: "change_types"}
+        ];
+    }
+
     /**
-    * Builds a list of company_codes available for selection in scope. Used by
-    * the "company_codes" menu in the Authoring metadata section.
-    *
-    * @function setAvailableCompanyCodes
-    */
+     * Builds a list of company_codes available for selection in scope. Used by
+     * the "company_codes" menu in the Authoring metadata section.
+     *
+     * @function setAvailableCompanyCodes
+     */
     function setAvailableCompanyCodes() {
         var all, // all available company codes
             assigned = {}, // company codes already assigned to the article
@@ -152,7 +160,7 @@ function MetadataCtrl(
         // set embargo time default on initial date selection
         if (newValue && oldValue === undefined) {
             $scope.item.embargo_time = moment('00:01', 'HH:mm')
-                .format(appConfig.model.timeformat);
+                .format(config.model.timeformat);
         }
 
         setEmbargoTS(newValue, oldValue);
@@ -356,6 +364,7 @@ function MetaDropdownDirective($filter) {
             key: '@',
             tabindex: '=',
             containingDirective: '@',
+            dropleft: '@',
         },
         templateUrl: 'scripts/apps/authoring/metadata/views/metadata-dropdown.html',
         link: function(scope, elem) {
@@ -365,7 +374,7 @@ function MetaDropdownDirective($filter) {
                 var fieldObject: {[fieldId: string]: any} = {};
 
                 if (item) {
-                    if (scope.cv && scope.cv._id != null) {
+                    if (scope.cv) {
                         // if there is cv as well as field, store cv._id as scheme
                         // so that it can be differentiated from another cv inside same parent field(subject).
                         // ex: subject:[{name: "a", qcode: "a", scheme: "new-cv"}]
@@ -585,7 +594,7 @@ function MetaWordsListDirective() {
              * Removes the term from the user selected terms
              */
             scope.removeTerm = function(term) {
-                var temp = scope.item[scope.field].filter((item) => !_.isEqual(item, term));
+                var temp = _.without(scope.item[scope.field], term);
 
                 // build object
                 var o = {};
@@ -679,7 +688,7 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                                 if (item.name === selectedItem.name) {
                                     updates[scope.field].push(selectedItem);
                                 }
-                            // this is for subject (which is not dependent)
+                                // this is for subject (which is not dependent)
                             } else if (updates[scope.field].indexOf(selectedItem) === -1) {
                                 updates[scope.field].push(selectedItem);
                             }
@@ -708,7 +717,7 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                 } else {
                     scope.selectedItems = selected.filter((term) => !term.scheme || term.scheme === scope.field);
                 }
-            }, true);
+            });
 
             scope.$on('$destroy', () => {
                 metadata.subjectScope = null;
@@ -768,23 +777,16 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
 
                     scope.terms = $filter('sortByName')(_.filter(filterSelected(searchList), (t) => {
                         var searchObj = {};
-                        const termLower = term.toLowerCase();
 
                         searchObj[scope.uniqueField] = t[scope.uniqueField];
                         if (searchUnique) {
-                            // In case we want to search by some unique field like qcode as well as name
-                            // see SD-4829
-                            return t.name.toLowerCase().includes(termLower)
-                                || t[scope.uniqueField].toLowerCase().includes(termLower)
-                                && !_.find(scope.item[scope.field], searchObj);
+                            return (t.name.toLowerCase().indexOf(term.toLowerCase()) !== -1 ||
+                                t[scope.uniqueField].toLowerCase().indexOf(term.toLowerCase()) !== -1) &&
+                                !_.find(scope.item[scope.field], searchObj);
                         }
 
-                        return t.name.toLowerCase().includes(termLower)
-                            || (t.user != null && t.user.username.toLowerCase().includes(termLower))
-                            // make sure to skip the terms which are already added for ex:
-                            // {qcode: "1", name: "Arbeidsliv", scheme: "subject_custom"}  is already added
-                            // and if user search for "Arbeidsliv" again he shouln't get any search results
-                            && !_.find(scope.item[scope.field], searchObj);
+                        return t.name.toLowerCase().indexOf(term.toLowerCase()) !== -1 &&
+                            !_.find(scope.item[scope.field], searchObj);
                     }));
                     scope.activeList = true;
                 }
@@ -893,7 +895,11 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
             scope.removeTerm = function(term) {
                 var tempItem = {},
                     subjectCodesArray = scope.item[scope.field],
-                    filteredArray = subjectCodesArray.filter((item) => !_.isEqual(item, term));
+                    filteredArray = _.without(subjectCodesArray, term);
+
+                if (subjectCodesArray && filteredArray.length === subjectCodesArray.length) {
+                    _.remove(filteredArray, {name: term});
+                }
 
                 tempItem[scope.field] = filteredArray;
 
@@ -1087,19 +1093,19 @@ function MetaLocatorsDirective(places) {
     };
 }
 
-MetadataService.$inject = ['api', 'subscribersService', 'vocabularies', '$rootScope', 'session', '$filter'];
-export function MetadataService(api, subscribersService, vocabularies, $rootScope, session, $filter) {
+MetadataService.$inject = ['api', 'subscribersService', 'config', 'vocabularies', '$rootScope', 'session', '$filter'];
+function MetadataService(api, subscribersService, config, vocabularies, $rootScope, session, $filter) {
     var service = {
         values: {},
         helper_text: {},
         popup_width: {},
         single_value: {},
         cvs: [],
-        search_cvs: appConfig.search_cvs || [
+        search_cvs: config.search_cvs || [
             {id: 'subject', name: 'Subject', field: 'subject', list: 'subjectcodes'},
             {id: 'companycodes', name: 'Company Codes', field: 'company_codes', list: 'company_codes'},
         ],
-        search_config: appConfig.search || {
+        search_config: config.search || {
             slugline: 1, headline: 1, unique_name: 1, story_text: 1, byline: 1,
             keywords: 1, creator: 1, from_desk: 1, to_desk: 1, spike: 1,
             scheduled: 1, company_codes: 1, ingest_provider: 1, marked_desks: 1,
