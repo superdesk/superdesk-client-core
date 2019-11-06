@@ -415,6 +415,22 @@ export function AuthoringDirective(
                     type: _.get(orig, 'type'),
                 }, item))
                     .then(() => checkMediaAssociatedToUpdate())
+                    .then(() => {
+                        if (action == 'publish'){
+                            $scope.item.flags.change_types = ""
+                        } else {
+                            if($scope.item.flags.change_types.length == 0){
+                                $scope.item.flags.change_types = null
+                            }
+                        }
+                        return true;
+                    }).then(() => {
+                        if($scope.item.flags.change_types !== null){
+                            $scope.item.flags.change_types_tmp = $scope.item.flags.change_types;
+                            $scope.item.flags.change_types = "";
+                        }
+                        return true;
+                    })
                     .then((result) => {
                         if (result) {
                             return authoring.publish(orig, item, action);
@@ -423,6 +439,7 @@ export function AuthoringDirective(
                     })
                     .then((response) => {
                         notify.success(gettext('Item published.'));
+                        $scope.item.flags.change_types = "";
                         $scope.item = response;
                         $scope.dirty = false;
                         authoringWorkspace.close(true);
@@ -431,6 +448,10 @@ export function AuthoringDirective(
                         let issues = _.get(response, 'data._issues');
 
                         if (issues) {
+                            if(_.get(issues, 'flags.change_types')){
+                                notify.error("Please Select Type of Change");
+                                return $q.reject(false);
+                            }
                             if (angular.isDefined(issues['validator exception'])) {
                                 var errors = issues['validator exception'];
                                 var modifiedErrors = errors.replace(/\[/g, '')
