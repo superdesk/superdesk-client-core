@@ -119,7 +119,7 @@ export default function createEditorStore(props: IProps, spellcheck, isReact = f
     }
 
     const store = createStore<IEditorStore, any, any, any>(reducers, {
-        editorState: EditorState.createWithContent(content),
+        editorState: EditorState.createWithContent(content, getCustomDecorator()),
         searchTerm: {pattern: '', index: -1, caseSensitive: false},
         popup: {type: PopupTypes.Hidden},
         readOnly: props.readOnly,
