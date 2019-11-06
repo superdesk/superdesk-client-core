@@ -2,7 +2,7 @@ import * as React from 'react';
 import { ISuperdesk } from 'superdesk-api';
 import VideoEditorContext from './VideoEditorContext';
 import { IArticleVideo, IVideoEditor } from './interfaces';
-import { get, pick } from 'lodash';
+import { get, pick, flatten } from 'lodash';
 
 interface IProps {
     videoRef: React.RefObject<HTMLVideoElement>;
@@ -141,7 +141,10 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
                     this.props.onToggleLoading(true, 'Saving capture thumbnail...');
                     this.getThumbnail();
                 })
-                .catch((err: any) => console.log(err));
+                .catch((err: any) => {
+                    const message = JSON.parse(err._message) || {};
+                    this.context.superdesk.ui.alert(flatten(Object.values(message)).join('<br/>'));
+                });
         } else if (this.state.type === 'upload') {
             const form = new FormData();
             form.append('file', this.state.value as File);
