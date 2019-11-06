@@ -185,22 +185,23 @@ function RelatedItemController(
                         return functionPoints.run('archive:rewrite_after', Object.assign({
                             _id: newItem._id,
                             type: newItem.type,
-                        }, newItem));}).
-                        then((itemNext) => {
-                                notify.success(gettext('Story is associated as update.'));
-                                authoringWorkspace.edit(itemNext);
-                            }, (response) => {
-                                if (angular.isDefined(response.data._message)) {
-                                    notify.error(
-                                        gettext(
-                                            'Failed to associate update: {{message}}',
-                                            {message: response.data._message},
-                                        ),
-                                    );
-                                } else {
-                                    notify.error(gettext('There is an error. Failed to associate update.'));
-                                }
-                            });
+                        }, newItem));
+                    })
+                    .then((itemNext) => {
+                        notify.success(gettext('Story is associated as update.'));
+                        authoringWorkspace.edit(itemNext);
+                    }, (response) => {
+                        if (angular.isDefined(response.data._message)) {
+                            notify.error(
+                                gettext(
+                                    'Failed to associate update: {{message}}',
+                                    {message: response.data._message},
+                                ),
+                            );
+                        } else {
+                            notify.error(gettext('There is an error. Failed to associate update.'));
+                        }
+                    });
             },
             class: 'open',
             icon: 'icon-expand',
