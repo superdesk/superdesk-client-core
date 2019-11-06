@@ -36,7 +36,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
             dirty: false,
             type: '',
             value: 0,
-            thumbnail: get(this.props.article.renditions, 'thumbnail.href' + `?t=${Math.random()}`),
+            thumbnail: get(this.props.article.renditions, 'thumbnail.href'),
             rotateDegree: 0,
             scale: 1,
         };
@@ -47,7 +47,9 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
 
     componentDidMount() {
         if (this.state.thumbnail) {
-            this.setThumbnail(this.state.thumbnail);
+            const thumbnail = this.state.thumbnail + `?t=${Math.random()}`;
+            this.setState({ thumbnail: thumbnail });
+            this.setThumbnail(thumbnail);
         }
     }
 
@@ -256,7 +258,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
         const { getClass } = this.context.superdesk.utilities.CSS;
 
         return (
-            <div className="sd-photo-preview__thumbnail-edit">
+            <div className={`sd-photo-preview__thumbnail-edit ${getClass('video__thumbnail__container')}`}>
                 <div className="sd-photo-preview__thumbnail-edit-label">Video thumbnail</div>
                 <div className="image-overlay">
                     <div className="image-overlay__button-block">
@@ -299,7 +301,13 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
                         )}
                     </div>
                 </div>
-                <div className={getClass('video__thumbnail__container')} ref={this.getWrapperSize}>
+                {!this.state.thumbnail && (
+                    <div className={getClass('video__thumbnail--empty')}>
+                        <div className="upload__info-icon"></div>
+                        <p className={getClass('video__thumbnail--empty__text')}>No thumbnail</p>
+                    </div>
+                )}
+                <div className={getClass('video__thumbnail__wrapper')} ref={this.getWrapperSize}>
                     <canvas
                         ref={this.ref}
                         style={{ transform: `rotate(${this.state.rotateDegree}deg) scale(${this.state.scale})` }}
