@@ -36,15 +36,18 @@ interface IState extends IVideoEditor {
 
 export class VideoEditor extends React.Component<IProps, IState> {
     private videoRef: React.RefObject<HTMLVideoElement>;
+    private reactCropRef: React.RefObject<HTMLDivElement>;
     private intervalThumbnails: number;
     private intervalVideoEdit: number;
     private intervalCheckVideo: number;
     private initState: Pick<IState, 'crop' | 'degree' | 'trim' | 'quality'>;
-    wrapperSize: { width: number; height: number };
+    private reactCropMarginDelta: number;
+    wrapperSize: { width: number; height: number; x: number; y: number };
 
     constructor(props: IProps) {
         super(props);
         this.videoRef = React.createRef();
+        this.reactCropRef = React.createRef();
         this.intervalThumbnails = 0;
         this.intervalVideoEdit = 0;
         this.intervalCheckVideo = 0;
@@ -70,7 +73,8 @@ export class VideoEditor extends React.Component<IProps, IState> {
             videoSrc: '',
             article: cloneDeep(this.props.article),
         };
-        this.wrapperSize = { width: 0, height: 0 };
+        this.wrapperSize = { width: 0, height: 0, x: 0, y: 0 };
+        this.reactCropMarginDelta = 0;
     }
 
     componentDidMount() {
@@ -183,8 +187,16 @@ export class VideoEditor extends React.Component<IProps, IState> {
         if (this.state.cropEnabled === false) {
             crop = this.getCropSample(cropAspect);
         }
-
-        this.setState({ cropEnabled: !this.state.cropEnabled, crop: crop }, this.checkIsDirty);
+        this.reactCropMarginDelta = 0;
+        this.setState({ cropEnabled: !this.state.cropEnabled, crop: crop }, () => {
+            this.checkIsDirty();
+            // chrome adds 1rem extra (ghost) margin to ReactCrop cause crop area and video mismatch
+            if (this.reactCropRef.current != null) {
+                const element = get(this.reactCropRef.current, 'componentRef');
+                const { y } = element.getBoundingClientRect();
+                this.reactCropMarginDelta = y - this.wrapperSize.y - 20;
+            }
+        });
     };
 
     handleToggleLoading = (isToggle: boolean, text: string = '') => {
@@ -389,10 +401,12 @@ export class VideoEditor extends React.Component<IProps, IState> {
     // get wrapper size dynamically to scale video so that it's not too small or too big
     getWrapperSize = (element: any) => {
         if (element == null) return;
-        const { width, height } = element.getBoundingClientRect();
+        const { width, height, x, y } = element.getBoundingClientRect();
         this.wrapperSize = {
             width: width,
             height: height - 100, // subtract VideoEditorTools size and video margin
+            x: x,
+            y: y,
         };
     };
 
@@ -414,7 +428,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
         let width = 0,
             height = 0,
             videoHeight = 1;
-        if (this.videoRef.current) {
+        if (this.videoRef.current != null) {
             ({ width, height } = this.videoRef.current.getBoundingClientRect());
             videoHeight =
                 this.state.degree % 180 !== 0 ? this.videoRef.current.videoWidth : this.videoRef.current.videoHeight;
@@ -461,6 +475,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
 
                                                 {this.state.cropEnabled && (
                                                     <ReactCrop
+                                                        ref={this.reactCropRef}
                                                         src={this.state.cropImg}
                                                         crop={this.state.crop}
                                                         onChange={this.handleCrop}
@@ -470,6 +485,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                                             height: height,
                                                             background: 'unset',
                                                             position: 'absolute',
+                                                            margin: `calc(3rem - ${this.reactCropMarginDelta}px) auto 1rem`,
                                                         }}
                                                     />
                                                 )}

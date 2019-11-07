@@ -182,9 +182,6 @@
   background-image: none;
 }
 
-.video__crop {
-  margin: 1rem auto;
-}
 .video__crop img {
   /* avoid limit height (auto) when video is portrait */
   max-width: unset;
