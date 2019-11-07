@@ -862,9 +862,8 @@ export function AuthoringDirective(
             $scope.sendToNextStage = function() {
                 var currentDeskId = desks.getCurrentDeskId();
 
-                if (_.isNil(currentDeskId)) {
-                    notify.error(gettext('Failed to send to next stage.'));
-                    return;
+                if (currentDeskId == null) {
+                    throw new Error('currentDeskId is null');
                 }
 
                 var stageIndex, stageList = desks.deskStages[currentDeskId];
