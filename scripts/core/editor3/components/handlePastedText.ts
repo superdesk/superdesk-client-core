@@ -82,6 +82,10 @@ export function handlePastedText(text: string, _html: string): DraftHandleValue 
         return 'handled';
     }
 
+    if (this.props.cleanPastedHtml) { // force plain text, but keep line breaks
+        html = '<p>' + text.split('\n').join('</p><p>') + '</p>';
+    }
+
     if (suggestingMode) {
         if (!Suggestions.allowEditSuggestionOnLeft(editorState, author)
             && !Suggestions.allowEditSuggestionOnRight(editorState, author)) {
