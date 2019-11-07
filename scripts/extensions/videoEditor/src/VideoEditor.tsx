@@ -147,10 +147,11 @@ export class VideoEditor extends React.Component<IProps, IState> {
             () => {
                 const degree = this.state.degree % 360 === 0 ? 0 : this.state.degree;
                 let crop = this.initState.crop;
+                const scale = this.getScale();
                 if (this.state.cropEnabled) {
-                    crop = this.getCropSample();
+                    crop = this.getCropSample(this.state.crop.aspect!, scale);
                 }
-                this.setState({ degree: degree, crop: crop, scale: this.getScale() }, this.checkIsDirty);
+                this.setState({ degree: degree, crop: crop, scale: scale }, this.checkIsDirty);
             }
         );
     };
@@ -343,10 +344,10 @@ export class VideoEditor extends React.Component<IProps, IState> {
     };
 
     // calculate sample crop zone, only draw 80% instead of full width / height so user can easily resize, move
-    getCropSample = (aspect: number | undefined = this.state.crop.aspect) => {
+    getCropSample = (aspect: number, scale: number = 1) => {
         let { width, height } = this.videoRef.current!.getBoundingClientRect();
-        width = (width * 80) / 100;
-        height = (height * 80) / 100;
+        width = (width * scale * 80) / 100;
+        height = (height * scale * 80) / 100;
 
         const ratio = width / height;
         if (ratio > 1) {
