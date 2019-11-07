@@ -233,7 +233,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
 
     handleSave = () => {
         const { dataApi } = this.props.superdesk;
-        const crop = pick(this.state.crop, ['x', 'y', 'width', 'height']);
+        const crop = this.getCropRotate(pick(this.state.crop, ['x', 'y', 'width', 'height']));
         const body = {
             crop: Object.values(crop).join(','),
             rotate: this.state.degree,
