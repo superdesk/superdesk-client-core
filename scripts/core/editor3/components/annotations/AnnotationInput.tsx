@@ -13,7 +13,7 @@ import {gettext} from 'core/utils';
 import {Editor3Standalone} from 'core/editor3/react';
 import {getContentStateFromHtml} from 'core/editor3/html/from-html';
 import {getRangeAndTextForStyle} from 'core/editor3/helpers/highlights';
-import {extensions} from 'core/extension-imports.generated';
+import {extensions} from 'appConfig';
 import {flatMap} from 'lodash';
 import {IEditor3AnnotationInputTab} from 'superdesk-api';
 import {stateToHTML} from 'draft-js-export-html';

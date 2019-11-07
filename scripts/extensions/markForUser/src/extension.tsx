@@ -11,6 +11,7 @@ interface IMarkForUserNotification {
 }
 
 const extension: IExtension = {
+    id: 'markForUser',
     activate: (superdesk: ISuperdesk) => {
         const {gettext} = superdesk.localization;
 

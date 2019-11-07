@@ -1,5 +1,5 @@
 import React from 'react';
-import {extensions} from './extension-imports.generated';
+import {extensions} from 'appConfig';
 import {logger} from './services/logger';
 
 export class ExtensionPage extends React.Component {

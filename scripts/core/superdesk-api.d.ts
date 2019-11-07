@@ -82,18 +82,12 @@ declare module 'superdesk-api' {
 
 
     export type IExtension = DeepReadonly<{
+        id: string;
         activate: (superdesk: ISuperdesk) => Promise<IExtensionActivationResult>;
     }>;
 
     export type IExtensionObject = {
         extension: IExtension;
-        manifest: {
-            [key: string]: any;
-            main: string; // extension will be imported from here
-            superdeskExtension?: {
-                dependencies?: Array<string>;
-            };
-        };
         activationResult: IExtensionActivationResult;
     };
 
@@ -818,9 +812,6 @@ declare module 'superdesk-api' {
         };
         localization: {
             gettext(message: string): string;
-        };
-        extensions: {
-            getExtension(id: string): Promise<Omit<IExtension, 'activate'>>;
         };
         privileges: {
             getOwnPrivileges(): Promise<any>;

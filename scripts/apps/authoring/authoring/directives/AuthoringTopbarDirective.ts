@@ -1,6 +1,6 @@
 import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
 import {getSpellchecker} from 'core/editor3/components/spellchecker/default-spellcheckers';
-import {extensions} from 'core/extension-imports.generated';
+import {extensions} from 'appConfig';
 import {showModal} from 'core/services/modalService';
 import {IArticleAction} from 'superdesk-api';
 import {get, flatMap} from 'lodash';
