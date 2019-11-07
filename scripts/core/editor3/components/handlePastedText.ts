@@ -82,6 +82,11 @@ export function handlePastedText(text: string, _html: string): DraftHandleValue 
         return 'handled';
     }
 
+    // preserve line breaks when pasting or forcing plain text
+    if (text != null && (this.props.cleanPastedHtml || html == null)) {
+        html = '<p>' + text.split('\n').join('</p><p>') + '</p>';
+    }
+
     if (suggestingMode) {
         if (!Suggestions.allowEditSuggestionOnLeft(editorState, author)
             && !Suggestions.allowEditSuggestionOnRight(editorState, author)) {
