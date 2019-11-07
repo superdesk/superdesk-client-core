@@ -37,17 +37,19 @@ interface IState extends IVideoEditor {
 export class VideoEditor extends React.Component<IProps, IState> {
     private videoRef: React.RefObject<HTMLVideoElement>;
     private reactCropRef: React.RefObject<HTMLDivElement>;
+    private reactCropWrapperRef: React.RefObject<HTMLDivElement>;
     private intervalThumbnails: number;
     private intervalVideoEdit: number;
     private intervalCheckVideo: number;
     private initState: Pick<IState, 'crop' | 'degree' | 'trim' | 'quality'>;
     private reactCropMarginDelta: number;
-    wrapperSize: { width: number; height: number; x: number; y: number };
+    wrapperSize: { width: number; height: number };
 
     constructor(props: IProps) {
         super(props);
         this.videoRef = React.createRef();
         this.reactCropRef = React.createRef();
+        this.reactCropWrapperRef = React.createRef();
         this.intervalThumbnails = 0;
         this.intervalVideoEdit = 0;
         this.intervalCheckVideo = 0;
@@ -73,7 +75,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
             videoSrc: '',
             article: cloneDeep(this.props.article),
         };
-        this.wrapperSize = { width: 0, height: 0, x: 0, y: 0 };
+        this.wrapperSize = { width: 0, height: 0 };
         this.reactCropMarginDelta = 0;
     }
 
@@ -194,8 +196,9 @@ export class VideoEditor extends React.Component<IProps, IState> {
             // chrome adds 1rem extra (ghost) margin to ReactCrop cause crop area and video mismatch
             if (this.reactCropRef.current != null) {
                 const element = get(this.reactCropRef.current, 'componentRef');
-                const { y } = element.getBoundingClientRect();
-                this.reactCropMarginDelta = y - this.wrapperSize.y - 20;
+                const { top } = element.getBoundingClientRect();
+                const { top: wrapperTop } = this.reactCropWrapperRef.current!.getBoundingClientRect();
+                this.reactCropMarginDelta = top - wrapperTop - 20;
             }
         });
     };
@@ -402,12 +405,10 @@ export class VideoEditor extends React.Component<IProps, IState> {
     // get wrapper size dynamically to scale video so that it's not too small or too big
     getWrapperSize = (element: any) => {
         if (element == null) return;
-        const { width, height, x, y } = element.getBoundingClientRect();
+        const { width, height } = element.getBoundingClientRect();
         this.wrapperSize = {
             width: width,
             height: height - 100, // subtract VideoEditorTools size and video margin
-            x: x,
-            y: y,
         };
     };
 
@@ -458,7 +459,10 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                 <div className="sd-photo-preview sd-photo-preview--edit-video">
                                     <div className="sd-photo-preview__video" ref={this.getWrapperSize}>
                                         <div className="sd-photo-preview__video-inner">
-                                            <div className="sd-photo-preview__video-container">
+                                            <div
+                                                className="sd-photo-preview__video-container"
+                                                ref={this.reactCropWrapperRef}
+                                            >
                                                 <video
                                                     ref={this.videoRef}
                                                     src={this.state.videoSrc}
