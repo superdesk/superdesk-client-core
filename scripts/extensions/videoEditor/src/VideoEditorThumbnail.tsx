@@ -249,7 +249,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
         const { height } = this.ref.current.getBoundingClientRect();
 
         if (height > this.maxCanvasSize.height) {
-            scale = this.maxCanvasSize.height / height;
+            scale = this.maxCanvasSize.height / (height / this.state.scale);
         } else if (height === this.maxCanvasSize.height && this.state.scale < 1) {
             // scale was calculated on previous call
             return;
