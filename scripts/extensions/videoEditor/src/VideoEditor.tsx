@@ -507,6 +507,9 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                             videoRef={this.videoRef}
                                             article={this.state.article}
                                             onToggleLoading={this.handleToggleLoading}
+                                            onSave={(article: IArticleVideo) =>
+                                                this.setState({ article: { ...this.state.article, ...article } })
+                                            }
                                             crop={this.state.crop}
                                             rotate={this.state.degree}
                                             getCropRotate={this.getCropRotate}

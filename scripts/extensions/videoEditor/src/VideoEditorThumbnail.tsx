@@ -10,6 +10,7 @@ interface IProps {
     crop: IVideoEditor['crop'];
     rotate: IVideoEditor['degree'];
     onToggleLoading: (isLoading: boolean, loadingText?: string) => void;
+    onSave: (article: IArticleVideo) => void;
     getCropRotate: (crop: IVideoEditor['crop']) => IVideoEditor['crop'];
 }
 
@@ -162,7 +163,10 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
                 .then(res => res.json())
                 .then((res: any) => {
                     this.handleReset();
-                    this.setThumbnail(res.renditions.thumbnail.href + `?t=${Math.random()}`);
+                    this.props.onSave(res);
+                    const url = res.renditions.thumbnail.href + `?t=${Math.random()}`;
+                    this.setState({ thumbnail: url });
+                    this.setThumbnail(url);
                 });
         }
     };
@@ -184,6 +188,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
                     if (response.project.processing.thumbnail_preview === false) {
                         clearInterval(this.interval);
                         this.setState({ thumbnail: response.renditions.thumbnail.href + `?t=${Math.random()}` });
+                        this.props.onSave(response);
                         this.props.onToggleLoading(false);
                     }
                 })
@@ -304,7 +309,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
                         )}
                     </div>
                 </div>
-                {!this.state.thumbnail && (
+                {!this.state.thumbnail && !this.state.value && (
                     <div className={getClass('video__thumbnail--empty')}>
                         <div className="upload__info-icon"></div>
                         <p className={getClass('video__thumbnail--empty__text')}>No thumbnail</p>
