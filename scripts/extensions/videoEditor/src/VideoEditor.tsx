@@ -3,7 +3,7 @@ import * as React from 'react';
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 import { ISuperdesk, IArticle } from 'superdesk-api';
-import { get, isEmpty, omit, pick, isEqual, cloneDeep } from 'lodash';
+import { get, isEmpty, omit, pick, isEqual, cloneDeep, flatten } from 'lodash';
 
 import { VideoEditorTools } from './VideoEditorTools';
 import { VideoTimeline } from './VideoTimeline';
@@ -36,7 +36,7 @@ interface IState extends IVideoEditor {
 
 export class VideoEditor extends React.Component<IProps, IState> {
     private videoRef: React.RefObject<HTMLVideoElement>;
-    private reactCropRef: React.RefObject<HTMLDivElement>;
+    private reactCropRef: React.RefObject<ReactCrop>;
     private reactCropWrapperRef: React.RefObject<HTMLDivElement>;
     private intervalThumbnails: number;
     private intervalVideoEdit: number;
@@ -123,7 +123,8 @@ export class VideoEditor extends React.Component<IProps, IState> {
                         this.setState({ loadingText: 'Video is editing, please wait...' });
                     }
                 })
-                .catch(() => {
+                .catch((err: any) => {
+                    this.showErrorMessage(err);
                     clearInterval(this.intervalCheckVideo);
                 });
         }, 3000);
@@ -282,11 +283,12 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                     });
                                     this.loadTimelineThumbnails();
                                 }
-                            })
-                            .catch(() => {
-                                clearInterval(this.intervalVideoEdit);
                             });
                     }, 3000);
+                })
+                .catch((err: any) => {
+                    this.showErrorMessage(err);
+                    clearInterval(this.intervalVideoEdit);
                 });
         }
     };
@@ -321,7 +323,8 @@ export class VideoEditor extends React.Component<IProps, IState> {
                             );
                     }
                 })
-                .catch(() => {
+                .catch((err: any) => {
+                    this.showErrorMessage(err);
                     clearInterval(this.intervalThumbnails);
                 });
         }, 3000);
@@ -422,6 +425,11 @@ export class VideoEditor extends React.Component<IProps, IState> {
         return vh / height;
     };
 
+    showErrorMessage = (errorResponse: any) => {
+        const message = JSON.parse(errorResponse._message) || {};
+        this.props.superdesk.ui.alert(flatten(Object.values(message)).join('<br/>'));
+    };
+
     render() {
         const { gettext } = this.props.superdesk.localization;
         const { getClass } = this.props.superdesk.utilities.CSS;
@@ -514,6 +522,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                             onSave={(article: IArticleVideo) =>
                                                 this.setState({ article: { ...this.state.article, ...article } })
                                             }
+                                            onError={this.showErrorMessage}
                                             crop={this.state.crop}
                                             rotate={this.state.degree}
                                             getCropRotate={this.getCropRotate}

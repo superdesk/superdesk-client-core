@@ -2,7 +2,7 @@ import * as React from 'react';
 import { ISuperdesk } from 'superdesk-api';
 import VideoEditorContext from './VideoEditorContext';
 import { IArticleVideo, IVideoEditor } from './interfaces';
-import { get, pick, flatten } from 'lodash';
+import { get, pick } from 'lodash';
 
 interface IProps {
     videoRef: React.RefObject<HTMLVideoElement>;
@@ -11,6 +11,7 @@ interface IProps {
     rotate: IVideoEditor['degree'];
     onToggleLoading: (isLoading: boolean, loadingText?: string) => void;
     onSave: (article: IArticleVideo) => void;
+    onError: (err: any) => void;
     getCropRotate: (crop: IVideoEditor['crop']) => IVideoEditor['crop'];
 }
 
@@ -142,10 +143,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
                     this.props.onToggleLoading(true, 'Saving capture thumbnail...');
                     this.getThumbnail();
                 })
-                .catch((err: any) => {
-                    const message = JSON.parse(err._message) || {};
-                    this.context.superdesk.ui.alert(flatten(Object.values(message)).join('<br/>'));
-                });
+                .catch(this.props.onError);
         } else if (this.state.type === 'upload') {
             const form = new FormData();
             form.append('file', this.state.value as File);
