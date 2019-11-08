@@ -94,8 +94,8 @@ function MultieditService(storage, superdesk, authoringWorkspace: AuthoringWorks
     }
 }
 
-MultieditController.$inject = ['$scope', 'multiEdit', 'lock', 'workqueue'];
-function MultieditController($scope, multiEdit, lock, workqueue) {
+MultieditController.$inject = ['$scope', 'multiEdit'];
+function MultieditController($scope, multiEdit) {
     $scope.$watch(() => multiEdit.items, (items) => {
         $scope.boards = items;
     });
@@ -206,6 +206,7 @@ function MultieditArticleDirective(authoring, content, multiEdit, lock, $timeout
 
             scope.autosave = function(item) {
                 scope.dirty = true;
+                console.log(item, scope.origItem);
                 authoring.autosave(item, scope.origItem);
             };
 
