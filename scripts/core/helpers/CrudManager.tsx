@@ -266,7 +266,7 @@ export function connectCrudManager<Props, PropsToConnect, Entity extends IBaseRe
         }
 
         refresh(): Promise<IRestApiResponse<Entity>> {
-            return this.read(1, this.state.activeSortOption, this.state.activeFilters);
+            return this.read(this.state._meta.page, this.state.activeSortOption, this.state.activeFilters);
         }
 
         sort(sortOption: ISortOption): Promise<IRestApiResponse<Entity>> {
