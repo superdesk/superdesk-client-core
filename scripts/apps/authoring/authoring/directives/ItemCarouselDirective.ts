@@ -1,5 +1,3 @@
-/* global _ */
-
 import 'owl.carousel';
 import _ from 'lodash';
 import * as ctrl from '../controllers';

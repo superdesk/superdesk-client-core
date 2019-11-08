@@ -43,10 +43,11 @@ function mapIPTCExtensions(metadata: IPTCMetadata, user: IUser): Promise<Partial
 
     return Object.values(extensions).filter(({activationResult}) =>
         activationResult.contributions && activationResult.contributions.iptcMapping,
-    ).reduce((accumulator, {activationResult}) =>
-        accumulator.then((_item) => activationResult.contributions.iptcMapping(metadata, _item))
-        , Promise.resolve(item))
-        .then((_item: Partial<IArticle>) => pickBy(_item));
+    ).reduce(
+        (accumulator, {activationResult}) =>
+            accumulator.then((_item) => activationResult.contributions.iptcMapping(metadata, _item)),
+        Promise.resolve(item),
+    ).then((_item: Partial<IArticle>) => pickBy(_item));
 }
 
 function serializePromises(promiseCreators: Array<() => Promise<any>>): Promise<Array<any>> {
