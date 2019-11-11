@@ -59,9 +59,10 @@ function pasteContentFromOpenEditor(
     return 'not-handled';
 }
 
-export function prepareTextForPaste(text: string) {
-    return '\r<p>\r' + text.split('\n').join('</p>\n<p>\r') + '</p>';
-}
+// preserve line breaks when pasting or forcing plain text
+// \r are important for draft convertFromHTML to preserve initial spaces on each line
+export const createHtmlFromText = (text: string): string =>
+    '\r<p>\r' + text.split('\n').join('</p>\n<p>\r') + '</p>';
 
 /**
  * @ngdoc method
@@ -86,10 +87,8 @@ export function handlePastedText(text: string, _html: string): DraftHandleValue 
         return 'handled';
     }
 
-    // preserve line breaks when pasting or forcing plain text
-    // \r are important for draft convertFromHTML to preserve initial spaces on each line
     if (text != null && (this.props.cleanPastedHtml || html == null)) {
-        html = prepareTextForPaste(text);
+        html = createHtmlFromText(text);
     }
 
     if (suggestingMode) {
