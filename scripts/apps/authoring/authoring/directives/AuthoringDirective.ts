@@ -419,7 +419,7 @@ export function AuthoringDirective(
                         if (action == 'publish'){
                             $scope.item.flags.change_types = ""
                         } else {
-                            if($scope.item.flags.change_types.length == 0){
+                            if($scope.item.flags.change_types == null || $scope.item.flags.change_types.length == 0){
                                 $scope.item.flags.change_types = null
                             }
                         }
