@@ -187,6 +187,10 @@
   max-width: unset;
 }
 
+.video__rotate__transition {
+  transition: transform 0.3s ease
+}
+
 .video__dropdown__crop {
   margin-left: 0.2rem;
   margin-right: 0.2rem;

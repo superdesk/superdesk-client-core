@@ -43,6 +43,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
     private intervalCheckVideo: number;
     private initState: Pick<IState, 'crop' | 'degree' | 'trim' | 'quality'>;
     private reactCropMarginDelta: number;
+    private hasTransitionRun: boolean;
     wrapperSize: { width: number; height: number };
 
     constructor(props: IProps) {
@@ -77,6 +78,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
         };
         this.wrapperSize = { width: 0, height: 0 };
         this.reactCropMarginDelta = 0;
+        this.hasTransitionRun = true;
     }
 
     componentDidMount() {
@@ -145,18 +147,33 @@ export class VideoEditor extends React.Component<IProps, IState> {
     };
 
     handleRotate = () => {
-        this.setState(
-            prevState => ({ degree: prevState.degree - 90, scale: 1 }),
-            () => {
-                const degree = this.state.degree % 360 === 0 ? 0 : this.state.degree;
-                let crop = this.initState.crop;
-                const scale = this.getScale();
-                if (this.state.cropEnabled) {
-                    crop = this.getCropSample(this.state.crop.aspect!, scale);
-                }
-                this.setState({ degree: degree, crop: crop, scale: scale }, this.checkIsDirty);
-            }
-        );
+        this.hasTransitionRun = false;
+        const { getClass } = this.props.superdesk.utilities.CSS;
+        const classList = this.videoRef.current!.classList;
+        if (!classList.contains(getClass('video__rotate__transition'))) {
+            classList.add(getClass('video__rotate__transition'));
+        }
+        this.setState(prevState => ({ degree: prevState.degree - 90, scale: 1 }));
+    };
+
+    handleRotateTransitionEnd = () => {
+        // avoid transition rerun after set scale
+        if (this.hasTransitionRun === true) return;
+
+        this.hasTransitionRun = true;
+        const { getClass } = this.props.superdesk.utilities.CSS;
+        const degree = this.state.degree % 360 === 0 ? 0 : this.state.degree;
+        // avoid running transition on setting 360 degree to 0
+        if (degree === 0) {
+            this.videoRef.current!.classList.remove(getClass('video__rotate__transition'));
+        }
+
+        const scale = this.getScale();
+        let crop = this.initState.crop;
+        if (this.state.cropEnabled) {
+            crop = this.getCropSample(this.state.crop.aspect!, scale);
+        }
+        this.setState({ degree: degree, crop: crop, scale: scale }, this.checkIsDirty);
     };
 
     handleCrop = (newCrop: IVideoEditor['crop']) => {
@@ -483,6 +500,8 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                                         transform: `rotate(${degree}) scale(${this.state.scale})`,
                                                         height: `${videoHeight}px`,
                                                     }}
+                                                    className={getClass('video__rotate__transition')}
+                                                    onTransitionEnd={this.handleRotateTransitionEnd}
                                                     autoPlay
                                                 ></video>
 
