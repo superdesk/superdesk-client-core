@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { IDropdownLabel } from '../interfaces';
 
-export function CropLabel(props: IDropdownLabel) {
+function Label(props: IDropdownLabel) {
     return (
         <button
             className={`
@@ -15,3 +15,4 @@ export function CropLabel(props: IDropdownLabel) {
         </button>
     );
 }
+export const CropLabel = React.memo(Label);

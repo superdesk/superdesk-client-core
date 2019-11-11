@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { IDropdownLabel } from '../interfaces';
 
-export function QualityLabel(props: IDropdownLabel) {
+function Label(props: IDropdownLabel) {
     const value = String(props.selectedItem || 'Same');
     return (
         <p onClick={props.onClick} sd-tooltip={props.title}>
@@ -9,3 +9,5 @@ export function QualityLabel(props: IDropdownLabel) {
         </p>
     );
 }
+
+export const QualityLabel = React.memo(Label);
