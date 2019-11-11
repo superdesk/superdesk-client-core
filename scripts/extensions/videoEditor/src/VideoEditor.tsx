@@ -456,7 +456,13 @@ export class VideoEditor extends React.Component<IProps, IState> {
             height = 0,
             videoHeight = 1;
         if (this.videoRef.current != null) {
+            const scale = this.getScale();
             ({ width, height } = this.videoRef.current.getBoundingClientRect());
+            if (scale !== 1) {
+                // video has not applied scale yet so ReactCrop will exceed video size
+                width = width * scale;
+                height = height * scale;
+            }
             videoHeight =
                 this.state.degree % 180 !== 0 ? this.videoRef.current.videoWidth : this.videoRef.current.videoHeight;
         }
@@ -510,6 +516,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                                         ref={this.reactCropRef}
                                                         src={this.state.cropImg}
                                                         crop={this.state.crop}
+                                                        keepSelection={true}
                                                         onChange={this.handleCrop}
                                                         className={getClass('video__crop')}
                                                         style={{
