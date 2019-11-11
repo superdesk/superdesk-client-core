@@ -153,7 +153,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
         if (!classList.contains(getClass('video__rotate__transition'))) {
             classList.add(getClass('video__rotate__transition'));
         }
-        this.setState(prevState => ({ degree: prevState.degree - 90, scale: 1 }));
+        this.setState(prevState => ({ degree: prevState.degree - 90, scale: 1, cropEnabled: false }));
     };
 
     handleRotateTransitionEnd = () => {
@@ -169,11 +169,18 @@ export class VideoEditor extends React.Component<IProps, IState> {
         }
 
         const scale = this.getScale();
-        let crop = this.initState.crop;
-        if (this.state.cropEnabled) {
-            crop = this.getCropSample(this.state.crop.aspect!, scale);
-        }
-        this.setState({ degree: degree, crop: crop, scale: scale }, this.checkIsDirty);
+        let crop = this.state.crop;
+        let refValue = this.videoRef.current!.getBoundingClientRect();
+        let currentValue = this.state.degree % 180 == -90 ? refValue.width : refValue.height;
+        crop = {
+            ...crop,
+            aspect: 1 / crop.aspect!,
+            x: crop.y,
+            y: currentValue! - (crop.x! + crop.width!),
+            height: crop.width,
+            width: crop.height,
+        };
+        this.setState({ degree: degree, crop: crop, cropEnabled: true, scale: scale }, this.checkIsDirty);
     };
 
     handleCrop = (newCrop: IVideoEditor['crop']) => {
