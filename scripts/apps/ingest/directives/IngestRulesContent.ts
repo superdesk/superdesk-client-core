@@ -10,7 +10,7 @@ export function IngestRulesContent(api, notify, modal, $filter) {
 
             scope.editRuleset = null;
 
-            api('rule_sets').query()
+            api('rule_sets').query({max_results: 50})
                 .then((result) => {
                     scope.rulesets = $filter('sortByName')(result._items);
                 });
