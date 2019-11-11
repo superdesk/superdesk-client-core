@@ -8,7 +8,6 @@ import { get, isEmpty, omit, pick, isEqual, cloneDeep, flatten } from 'lodash';
 import { VideoEditorTools } from './VideoEditorTools';
 import { VideoTimeline } from './VideoTimeline';
 import { VideoEditorHeader } from './VideoEditorHeader';
-import { VideoEditorProvider } from './VideoEditorContext';
 import { VideoEditorThumbnail } from './VideoEditorThumbnail';
 import { IArticleVideo, IVideoEditor, IThumbnail } from './interfaces';
 
@@ -475,7 +474,6 @@ export class VideoEditor extends React.Component<IProps, IState> {
         }
 
         return (
-            <VideoEditorProvider value={{ superdesk: this.props.superdesk }}>
                 <div className="modal modal--fullscreen modal--dark-ui in" style={{ zIndex: 1050, display: 'block' }}>
                     <div className="modal__dialog">
                         <div className="modal__content">
@@ -572,7 +570,6 @@ export class VideoEditor extends React.Component<IProps, IState> {
                         </div>
                     </div>
                 </div>
-            </VideoEditorProvider>
         );
     }
 }
