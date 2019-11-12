@@ -8,7 +8,7 @@ interface IProps {
     onSave: () => void;
 }
 
-export class VideoEditorHeader extends React.Component<IProps> {
+export class VideoEditorHeader extends React.PureComponent<IProps> {
     static contextType = VideoEditorContext;
     render() {
         const { gettext } = this.context.superdesk.localization;

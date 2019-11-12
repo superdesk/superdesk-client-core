@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-export function BarIcon() {
+function Icon() {
     return (
         <svg
             width="50px"
@@ -20,3 +20,5 @@ export function BarIcon() {
         </svg>
     );
 }
+
+export const BarIcon = React.memo(Icon);

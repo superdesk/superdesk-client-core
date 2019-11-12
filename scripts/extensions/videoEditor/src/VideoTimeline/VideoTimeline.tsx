@@ -42,13 +42,13 @@ export class VideoTimeline extends React.Component<IProps, IState> {
         this.intervalTimer = window.setInterval(this.tick, 100);
         document.addEventListener('dragover', this.handledragover);
         this.setState({
-            thumnailsRender: this.getRenderThumbnails(this.props.thumbnails),
+            thumnailsRender: this.getRenderThumbnails(),
         });
     }
     componentDidUpdate(prevProps: any) {
-        if (prevProps.thumbnails !== this.props.thumbnails) {
+        if (JSON.stringify(prevProps.thumbnails) !== JSON.stringify(this.props.thumbnails)) {
             this.setState({
-                thumnailsRender: this.getRenderThumbnails(this.props.thumbnails),
+                thumnailsRender: this.getRenderThumbnails(),
             });
         }
     }
@@ -63,7 +63,8 @@ export class VideoTimeline extends React.Component<IProps, IState> {
         }
     };
 
-    getRenderThumbnails = (thumbnails: Array<IThumbnail>) => {
+    getRenderThumbnails = () => {
+        const thumbnails = this.props.thumbnails;
         //get list thumbnail render in list thumbnails get from server
         const video = this.props.video.current!;
         let widthPic = 0;
@@ -79,20 +80,16 @@ export class VideoTimeline extends React.Component<IProps, IState> {
         const per_delta_image =
             thumbnails.length > 1 ? (thumbnails.length - 1) / numberThumbnails : duration / numberThumbnails;
         for (let i = 0; i <= numberThumbnails; i++) {
-            let thumbnail: IThumbnail;
+            let thumbnail: IThumbnail = {
+                url: '',
+                width: widthPic,
+                height: 50,
+            };
             if (this.props.thumbnails && this.props.thumbnails.length > 0) {
                 thumbnail = this.props.thumbnails[Math.round(i * per_delta_image)];
                 thumbnail.url = thumbnail.url + `?t=${Math.random()}`;
-                thumbnailsRender.push(thumbnail);
-            } else {
-                thumbnail = {
-                    url: '',
-                    width: widthPic,
-                    height: 50,
-                };
-                thumbnailsRender.push(thumbnail);
-                //Loading thumbnail one by one, if we call all api at same time, browser will lag.
             }
+            thumbnailsRender.push(thumbnail);
         }
         return thumbnailsRender;
     };
@@ -184,7 +181,7 @@ export class VideoTimeline extends React.Component<IProps, IState> {
         const right = video ? `${(1 - this.props.trim.end / video.duration) * 100}%` : '0%';
         return (
             <div className={getClass('timeline-controls')}>
-                <ListThumbnails thumbnails={this.state.thumnailsRender} video={this.props.video} />
+                <ListThumbnails thumbnails={this.state.thumnailsRender} />
                 <div className={`${getClass('controlbars')}`} ref={this.controlbar} onClick={this.controlbarsClick}>
                     <div
                         className={`${getClass('controlbars__mask')} ${getClass('controlbars__mask--left')}`}
