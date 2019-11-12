@@ -450,10 +450,11 @@ export class VideoEditor extends React.Component<IProps, IState> {
     };
 
     getScale = (): number => {
-        if (!this.videoRef.current || this.videoRef.current.videoHeight === 0) return 1;
-        const videoHeight =
-            this.state.degree % 180 !== 0 ? this.videoRef.current.videoWidth : this.videoRef.current.videoHeight;
-        const { height } = this.videoRef.current.getBoundingClientRect();
+        const videoRef = this.videoRef.current;
+        if (!videoRef || videoRef.videoHeight === 0 || this.state.degree === 0) return 1;
+
+        const videoHeight = this.state.degree % 180 !== 0 ? videoRef.videoWidth : videoRef.videoHeight;
+        const { height } = videoRef.getBoundingClientRect();
         // ensure video image quality is not broken when scaling up
         const vh = videoHeight < this.wrapperSize.height ? videoHeight : this.wrapperSize.height;
         return vh / height;
