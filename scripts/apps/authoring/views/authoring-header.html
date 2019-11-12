@@ -423,6 +423,26 @@
                     <div class="authoring-header__hint" ng-if="helper_text[field._id]">{{field.helper_text}}</div>
                 </div>
             </div>
+
+            <!-- custom fields from extensions API -->
+            <div class="authoring-header__item"
+                ng-repeat="field in fields track by field._id"
+                ng-if="field.custom_field_type != null && editor[field._id].section === 'header'"
+                sd-width="{{ editor[field._id].sdWidth || 'full' }}"
+                data-required="schema[field._id].required"
+                order="{{ editor[field._id].order }}"
+                sd-validation-error="error[field._id.toLowerCase()]">
+                <label class="authoring-header__item-label">{{field.display_name}}</label>
+                <div class="authoring-header__input-holder">
+                    <div class="authoring-header__hint" ng-if="helper_text[field._id]">{{field.helper_text}}</div>
+                    <sd-authoring-custom-field
+                        item="item"
+                        field="field"
+                        on-change="setCustomValue"
+                        editable="_editable"
+                    ></sd-authoring-custom-field>
+                </div>
+            </div>
     
             <div class="authoring-header__item"
                  sd-validation-error="error.company_codes"
