@@ -206,7 +206,6 @@ function MultieditArticleDirective(authoring, content, multiEdit, lock, $timeout
 
             scope.autosave = function(item) {
                 scope.dirty = true;
-                console.log(item, scope.origItem);
                 authoring.autosave(item, scope.origItem);
             };
 
