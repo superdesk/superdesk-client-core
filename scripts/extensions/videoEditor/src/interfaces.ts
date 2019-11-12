@@ -1,6 +1,12 @@
 import { IArticle } from 'superdesk-api';
 import { Crop } from 'react-image-crop';
 
+
+interface ICrop extends Crop{
+    scale?:number,
+    value?:number
+}
+
 export interface IArticleVideo extends IArticle {
     renditions?: {
         original: {
@@ -18,7 +24,7 @@ export interface IArticleVideo extends IArticle {
 }
 
 export interface IVideoEditor {
-    crop: Crop;
+    crop: ICrop;
     cropEnabled: boolean;
     quality: number;
     degree: number;

@@ -55,7 +55,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
         this.intervalVideoEdit = 0;
         this.intervalCheckVideo = 0;
         this.initState = {
-            crop: { aspect: 16 / 9, unit: 'px', width: 0, height: 0, x: 0, y: 0 },
+            crop: { aspect: 16 / 9, unit: 'px', scale: 1, width: 0, height: 0, x: 0, y: 0 },
             degree: 0,
             trim: {
                 start: 0,
@@ -153,13 +153,16 @@ export class VideoEditor extends React.Component<IProps, IState> {
         if (!classList.contains(getClass('video__rotate__transition'))) {
             classList.add(getClass('video__rotate__transition'));
         }
-        this.setState(prevState => ({ degree: prevState.degree - 90, scale: 1, cropEnabled: false }));
+        const cropRef = get(this.reactCropRef.current, 'componentRef');
+        if (cropRef) {
+            cropRef.style.visibility = 'hidden';
+        }
+        this.setState(prevState => ({ degree: prevState.degree - 90, scale: 1 }));
     };
 
     handleRotateTransitionEnd = () => {
         // avoid transition rerun after set scale
         if (this.hasTransitionRun === true) return;
-
         this.hasTransitionRun = true;
         const { getClass } = this.props.superdesk.utilities.CSS;
         const degree = this.state.degree % 360 === 0 ? 0 : this.state.degree;
@@ -167,20 +170,26 @@ export class VideoEditor extends React.Component<IProps, IState> {
         if (degree === 0) {
             this.videoRef.current!.classList.remove(getClass('video__rotate__transition'));
         }
-
         const scale = this.getScale();
         let crop = this.state.crop;
         let refValue = this.videoRef.current!.getBoundingClientRect();
         let currentValue = this.state.degree % 180 == -90 ? refValue.width : refValue.height;
+        let delta = (scale / crop.scale!) * (currentValue / crop.value!);
         crop = {
             ...crop,
             aspect: 1 / crop.aspect!,
-            x: crop.y,
-            y: currentValue! - (crop.x! + crop.width!),
-            height: crop.width,
-            width: crop.height,
+            x: crop.y! * delta,
+            y: currentValue! - (crop.x! + crop.width!) * delta,
+            height: crop.width! * delta,
+            width: crop.height! * delta,
+            scale: scale,
+            value: currentValue,
         };
-        this.setState({ degree: degree, crop: crop, cropEnabled: true, scale: scale }, this.checkIsDirty);
+        const cropRef = get(this.reactCropRef.current, 'componentRef');
+        if (cropRef) {
+            cropRef.style.visibility = 'unset';
+        }
+        this.setState({ degree: degree, crop: crop, scale: scale }, this.checkIsDirty);
     };
 
     handleCrop = (newCrop: IVideoEditor['crop']) => {
@@ -190,7 +199,14 @@ export class VideoEditor extends React.Component<IProps, IState> {
         if (!newCrop.aspect) {
             newCrop.aspect = this.state.crop.aspect;
         }
-
+        if (this.state.degree == 0) {
+            let refValue = this.videoRef.current!.getBoundingClientRect();
+            newCrop = {
+                ...newCrop,
+                scale: this.getScale(),
+                value: this.state.degree % 180 == -90 ? refValue.width : refValue.height,
+            };
+        }
         // when first draw crop zone, ReactImageCrop trigger a bulk of change event with the same
         // newCrop value, using throttle with value about 50 did not help much but increase interval may result in lagging
         if (Object.values(this.state.crop).toString() === Object.values(newCrop).toString()) {
@@ -435,7 +451,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
         const { width, height } = element.getBoundingClientRect();
         this.wrapperSize = {
             width: width,
-            height: height - 100, // subtract VideoEditorTools size and video margin
+            height: height, // subtract VideoEditorTools size and video margin
         };
     };
 
@@ -445,7 +461,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
             this.state.degree % 180 !== 0 ? this.videoRef.current.videoWidth : this.videoRef.current.videoHeight;
         const { height } = this.videoRef.current.getBoundingClientRect();
         // ensure video image quality is not broken when scaling up
-        const vh = videoHeight < this.wrapperSize.height ? videoHeight : this.wrapperSize.height;
+        const vh = videoHeight < this.wrapperSize.height ? videoHeight : this.wrapperSize.height - 100;
         return vh / height;
     };
 
