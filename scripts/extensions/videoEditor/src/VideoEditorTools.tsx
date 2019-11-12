@@ -10,7 +10,7 @@ interface IProps {
     onQualityChange: (quality: number) => void;
     video: IVideoEditor;
     videoHeadline: string;
-    videoHeight: number | undefined;
+    videoResolution: number;
 }
 
 export class VideoEditorTools extends React.Component<IProps> {
@@ -36,8 +36,8 @@ export class VideoEditorTools extends React.Component<IProps> {
     };
 
     render() {
-        const videoHeight = this.props.videoHeight || 0;
-        const resolutions = ['Same'].concat([360, 480, 720, 1080].filter(i => i < videoHeight).map(i => i + 'p'));
+        const videoResolution = this.props.videoResolution;
+        const resolutions = ['Same'].concat([360, 480, 720, 1080].filter(i => i < videoResolution).map(i => i + 'p'));
         const qualityDisabled = resolutions.length === 1;
 
         const { getClass } = this.context.superdesk.utilities.CSS;
@@ -71,7 +71,11 @@ export class VideoEditorTools extends React.Component<IProps> {
                     label={
                         <QualityLabel
                             getText={gettext}
-                            title={qualityDisabled ? gettext('Maximum quality resize allowed') : undefined}
+                            title={
+                                qualityDisabled
+                                    ? gettext('Maximum quality resize allowed')
+                                    : gettext('Video resolution to scale down')
+                            }
                         />
                     }
                     items={resolutions}
