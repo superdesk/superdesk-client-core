@@ -474,102 +474,100 @@ export class VideoEditor extends React.Component<IProps, IState> {
         }
 
         return (
-                <div className="modal modal--fullscreen modal--dark-ui in" style={{ zIndex: 1050, display: 'block' }}>
-                    <div className="modal__dialog">
-                        <div className="modal__content">
-                            <div className="modal__header modal__header--flex">
-                                <h3 className="modal__heading">{gettext('Edit Video')}</h3>
-                                <VideoEditorHeader
-                                    onClose={this.handleClose}
-                                    onReset={this.handleReset}
-                                    onSave={this.handleSave}
-                                    isDirty={this.state.isDirty}
-                                />
-                            </div>
-                            <div className="modal__body modal__body--no-padding">
-                                {this.state.loading && (
-                                    <div className={getClass('video__loading')}>
-                                        <div className={getClass('video__loading__text')}>{this.state.loadingText}</div>
-                                    </div>
-                                )}
-                                <div className="sd-photo-preview sd-photo-preview--edit-video">
-                                    <div className="sd-photo-preview__video" ref={this.getWrapperSize}>
-                                        <div className="sd-photo-preview__video-inner">
-                                            <div
-                                                className="sd-photo-preview__video-container"
-                                                ref={this.reactCropWrapperRef}
-                                            >
-                                                <video
-                                                    ref={this.videoRef}
-                                                    src={this.state.videoSrc}
-                                                    onPlay={() => this.setState({ playing: true })}
-                                                    onPause={() => this.setState({ playing: false })}
-                                                    onLoadedData={() =>
-                                                        this.handleTrim(0, this.videoRef.current!.duration)
-                                                    }
-                                                    style={{
-                                                        transform: `rotate(${degree}) scale(${this.state.scale})`,
-                                                        height: `${videoHeight}px`,
-                                                    }}
-                                                    className={getClass('video__rotate__transition')}
-                                                    onTransitionEnd={this.handleRotateTransitionEnd}
-                                                    autoPlay
-                                                ></video>
+            <div className="modal modal--fullscreen modal--dark-ui in" style={{ zIndex: 1050, display: 'block' }}>
+                <div className="modal__dialog">
+                    <div className="modal__content">
+                        <div className="modal__header modal__header--flex">
+                            <h3 className="modal__heading">{gettext('Edit Video')}</h3>
+                            <VideoEditorHeader
+                                onClose={this.handleClose}
+                                onReset={this.handleReset}
+                                onSave={this.handleSave}
+                                isDirty={this.state.isDirty}
+                            />
+                        </div>
+                        <div className="modal__body modal__body--no-padding">
+                            {this.state.loading && (
+                                <div className={getClass('video__loading')}>
+                                    <div className={getClass('video__loading__text')}>{this.state.loadingText}</div>
+                                </div>
+                            )}
+                            <div className="sd-photo-preview sd-photo-preview--edit-video">
+                                <div className="sd-photo-preview__video" ref={this.getWrapperSize}>
+                                    <div className="sd-photo-preview__video-inner">
+                                        <div
+                                            className="sd-photo-preview__video-container"
+                                            ref={this.reactCropWrapperRef}
+                                        >
+                                            <video
+                                                ref={this.videoRef}
+                                                src={this.state.videoSrc}
+                                                onPlay={() => this.setState({ playing: true })}
+                                                onPause={() => this.setState({ playing: false })}
+                                                onLoadedData={() => this.handleTrim(0, this.videoRef.current!.duration)}
+                                                style={{
+                                                    transform: `rotate(${degree}) scale(${this.state.scale})`,
+                                                    height: `${videoHeight}px`,
+                                                }}
+                                                className={getClass('video__rotate__transition')}
+                                                onTransitionEnd={this.handleRotateTransitionEnd}
+                                                autoPlay
+                                            ></video>
 
-                                                {this.state.cropEnabled && (
-                                                    <ReactCrop
-                                                        ref={this.reactCropRef}
-                                                        src={this.state.cropImg}
-                                                        crop={this.state.crop}
-                                                        keepSelection={true}
-                                                        onChange={this.handleCrop}
-                                                        className={getClass('video__crop')}
-                                                        style={{
-                                                            width: width,
-                                                            height: height,
-                                                            background: 'unset',
-                                                            position: 'absolute',
-                                                            margin: `calc(3rem - ${this.reactCropMarginDelta}px) auto 1rem`,
-                                                        }}
-                                                    />
-                                                )}
-                                            </div>
-                                            <VideoEditorTools
-                                                onToggleVideo={this.handleToggleVideo}
-                                                onRotate={this.handleRotate}
-                                                onCrop={this.handleToggleCrop}
-                                                onQualityChange={this.handleQualityChange}
-                                                video={this.state}
-                                                videoHeadline={this.state.article.headline}
-                                                videoHeight={get(this.videoRef.current, 'videoHeight')}
-                                            />
+                                            {this.state.cropEnabled && (
+                                                <ReactCrop
+                                                    ref={this.reactCropRef}
+                                                    src={this.state.cropImg}
+                                                    crop={this.state.crop}
+                                                    keepSelection={true}
+                                                    onChange={this.handleCrop}
+                                                    className={getClass('video__crop')}
+                                                    style={{
+                                                        width: width,
+                                                        height: height,
+                                                        background: 'unset',
+                                                        position: 'absolute',
+                                                        margin: `calc(3rem - ${this.reactCropMarginDelta}px) auto 1rem`,
+                                                    }}
+                                                />
+                                            )}
                                         </div>
-                                    </div>
-                                    <div className="sd-photo-preview__thumb-strip sd-photo-preview__thumb-strip--video">
-                                        <VideoEditorThumbnail
-                                            videoRef={this.videoRef}
-                                            article={this.state.article}
-                                            onToggleLoading={this.handleToggleLoading}
-                                            onSave={(article: IArticleVideo) =>
-                                                this.setState({ article: { ...this.state.article, ...article } })
-                                            }
-                                            onError={this.showErrorMessage}
-                                            crop={this.state.crop}
-                                            rotate={this.state.degree}
-                                            getCropRotate={this.getCropRotate}
-                                        />
-                                        <VideoTimeline
-                                            video={this.videoRef}
-                                            trim={this.state.trim}
-                                            onTrim={this.handleTrim}
-                                            thumbnails={this.state.thumbnails}
+                                        <VideoEditorTools
+                                            onToggleVideo={this.handleToggleVideo}
+                                            onRotate={this.handleRotate}
+                                            onCrop={this.handleToggleCrop}
+                                            onQualityChange={this.handleQualityChange}
+                                            video={this.state}
+                                            videoHeadline={this.state.article.headline}
+                                            videoHeight={get(this.videoRef.current, 'videoHeight')}
                                         />
                                     </div>
+                                </div>
+                                <div className="sd-photo-preview__thumb-strip sd-photo-preview__thumb-strip--video">
+                                    <VideoEditorThumbnail
+                                        videoRef={this.videoRef}
+                                        article={this.state.article}
+                                        onToggleLoading={this.handleToggleLoading}
+                                        onSave={(article: IArticleVideo) =>
+                                            this.setState({ article: { ...this.state.article, ...article } })
+                                        }
+                                        onError={this.showErrorMessage}
+                                        crop={this.state.crop}
+                                        rotate={this.state.degree}
+                                        getCropRotate={this.getCropRotate}
+                                    />
+                                    <VideoTimeline
+                                        video={this.videoRef}
+                                        trim={this.state.trim}
+                                        onTrim={this.handleTrim}
+                                        thumbnails={this.state.thumbnails}
+                                    />
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
         );
     }
 }
