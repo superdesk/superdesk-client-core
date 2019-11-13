@@ -11,6 +11,6 @@
     "typescript": "3.7.2"
   },
   "dependencies": {
-    "moment": "^2.24.0"
+    "date-fns": "^2.7.0"
   }
 }
