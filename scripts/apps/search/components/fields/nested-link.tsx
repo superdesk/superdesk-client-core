@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {gettext} from 'core/utils';
 import {IPropsItemListInfo} from '../ListItemInfo';
-import {appConfig} from 'core/config';
+import {appConfig} from 'appConfig';
 
 class NestedLink extends React.PureComponent<IPropsItemListInfo> {
     static propTypes: any;

@@ -28,7 +28,7 @@ describe('media metadata editor', () => {
         spyOn(metadata, 'initialize').and.returnValue($q.when({}));
     }));
 
-    it('dislays all fields', inject(($rootScope, $controller) => {
+    it('displays all fields', inject(($rootScope, $controller) => {
         const testConfig: Partial<ISuperdeskGlobalConfig> = {
             editor: {
                 picture: {
@@ -58,6 +58,7 @@ describe('media metadata editor', () => {
                     category: {type: 'list'},
                 },
             },
+            validator_media_metadata: {},
         };
 
         Object.assign(appConfig, testConfig);
