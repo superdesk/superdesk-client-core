@@ -2,7 +2,7 @@ import * as React from 'react';
 import { ISuperdesk } from 'superdesk-api';
 import VideoEditorContext from './VideoEditorContext';
 import { IArticleVideo, IVideoEditor } from './interfaces';
-import { get, pick } from 'lodash';
+import { pick } from 'lodash';
 
 interface IProps {
     videoRef: React.RefObject<HTMLVideoElement>;
@@ -38,7 +38,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
             dirty: false,
             type: '',
             value: 0,
-            thumbnail: get(this.props.article.renditions, 'thumbnail.href'),
+            thumbnail: this.props.article.renditions?.thumbnail!.href,
             rotateDegree: 0,
             scale: 1,
         };

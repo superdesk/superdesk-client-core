@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { IExtension, IExtensionActivationResult, ISuperdesk } from 'superdesk-api';
 import { getVideoEditModal } from './get-video-editor-modal';
-import { get } from 'lodash';
 import { IArticleVideo } from './interfaces';
 
 function getEditVideoAction(superdesk: ISuperdesk) {
@@ -10,10 +9,7 @@ function getEditVideoAction(superdesk: ISuperdesk) {
 
     return class EditVideoAction extends React.PureComponent<{ article: IArticleVideo }> {
         render() {
-            if (
-                this.props.article.type === 'video' &&
-                'video_editor_id' in get(this.props.article, 'renditions.original')
-            ) {
+            if (this.props.article.type === 'video' && 'video_editor_id' in this.props.article?.renditions!.original) {
                 return (
                     <button
                         className="btn btn--hollow btn--small"

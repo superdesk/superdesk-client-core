@@ -3,7 +3,7 @@ import * as React from 'react';
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 import { ISuperdesk, IArticle } from 'superdesk-api';
-import { get, isEmpty, omit, pick, isEqual, cloneDeep, flatten } from 'lodash';
+import { isEmpty, omit, pick, isEqual, cloneDeep, flatten } from 'lodash';
 
 import { VideoEditorTools } from './VideoEditorTools';
 import { VideoTimeline } from './VideoTimeline';
@@ -152,7 +152,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
         if (!classList.contains(getClass('video__rotate__transition'))) {
             classList.add(getClass('video__rotate__transition'));
         }
-        const cropRef = get(this.reactCropRef.current, 'componentRef');
+        const cropRef = this.reactCropRef.current?.componentRef;
         if (cropRef) {
             cropRef.style.visibility = 'hidden';
         }
@@ -187,7 +187,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                 value: currentValue,
             };
 
-            const cropRef = get(this.reactCropRef.current, 'componentRef');
+            const cropRef = this.reactCropRef.current?.componentRef;
             if (cropRef) {
                 cropRef.style.visibility = 'unset';
             }
@@ -239,7 +239,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
             this.checkIsDirty();
             // chrome adds 1rem extra (ghost) margin to ReactCrop cause crop area and video mismatch
             if (this.reactCropRef.current != null) {
-                const element = get(this.reactCropRef.current, 'componentRef');
+                const element = this.reactCropRef.current?.componentRef;
                 const { top } = element.getBoundingClientRect();
                 const { top: wrapperTop } = this.reactCropWrapperRef.current!.getBoundingClientRect();
                 this.reactCropMarginDelta = top - wrapperTop - 20;
@@ -575,8 +575,8 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                             video={this.state}
                                             videoHeadline={this.state.article.headline}
                                             videoResolution={Math.min(
-                                                get(videoRef, 'videoWidth', 0),
-                                                get(videoRef, 'videoHeight', 0)
+                                                videoRef?.videoWidth ?? 0,
+                                                videoRef?.videoHeight ?? 0
                                             )}
                                         />
                                     </div>
