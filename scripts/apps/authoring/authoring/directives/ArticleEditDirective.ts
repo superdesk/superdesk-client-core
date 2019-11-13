@@ -41,7 +41,7 @@ interface IScope extends ng.IScope {
     changeSignOffEdit(): void;
     editMedia(tab: string): void;
     refresh(): void;
-    save(): void;
+    save(item?: any): void;
     applyCrop(): void;
     addHelplineToFooter(): void;
     maxUploads(options: any): void;
@@ -373,6 +373,7 @@ export function ArticleEditDirective(
 
                                 // mark dirty in multiedit mode.
                                 if (scope.articleEdit) {
+                                    scope.save(scope.item);
                                     scope.articleEdit.$setDirty();
                                 }
                             } else {

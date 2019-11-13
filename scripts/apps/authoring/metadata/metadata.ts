@@ -769,8 +769,17 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                     scope.terms = $filter('sortByName')(_.filter(filterSelected(searchList), (t) => {
                         var searchObj = {};
                         const termLower = term.toLowerCase();
+                        // if there are translations available search term from the translations
+                        const searchFromTranslations = t.translations != null && t.translations.name != null
+                            && t.translations.name[scope.item.language] != null;
 
                         searchObj[scope.uniqueField] = t[scope.uniqueField];
+
+                        if (searchFromTranslations) {
+                            return t.translations.name[scope.item.language].toLowerCase().includes(termLower)
+                                && !_.find(scope.item[scope.field], searchObj);
+                        }
+
                         if (searchUnique) {
                             // In case we want to search by some unique field like qcode as well as name
                             // see SD-4829

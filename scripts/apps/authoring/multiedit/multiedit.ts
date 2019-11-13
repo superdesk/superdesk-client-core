@@ -94,8 +94,8 @@ function MultieditService(storage, superdesk, authoringWorkspace: AuthoringWorks
     }
 }
 
-MultieditController.$inject = ['$scope', 'multiEdit', 'lock', 'workqueue'];
-function MultieditController($scope, multiEdit, lock, workqueue) {
+MultieditController.$inject = ['$scope', 'multiEdit'];
+function MultieditController($scope, multiEdit) {
     $scope.$watch(() => multiEdit.items, (items) => {
         $scope.boards = items;
     });
