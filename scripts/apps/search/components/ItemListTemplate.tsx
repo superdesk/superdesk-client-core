@@ -43,8 +43,8 @@ export class ListItemTemplate extends React.Component<IPropsItemsListTemplate> {
                     narrow={this.props.narrow}
                     svc={this.props.svc}
                     scope={this.props.scope}
+                    isNested={this.props.isNested}
                     showNested={this.props.showNested}
-                    nestedCount={this.props.nestedCount}
                     toggleNested={this.props.toggleNested}
                 />
                 {this.props.getActionsMenu()}

@@ -9,7 +9,7 @@ import Adapter from 'enzyme-adapter-react-16';
 
 Enzyme.configure({adapter: new Adapter()});
 
-var testsContext = require.context('.', true, /.spec.(js|jsx|ts|tsx)$/);
+var testsContext = require.context('scripts', true, /.spec.(ts|tsx)$/);
 
 testsContext.keys().filter((path) => {
     /*

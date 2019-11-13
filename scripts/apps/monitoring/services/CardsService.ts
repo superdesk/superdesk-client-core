@@ -27,6 +27,7 @@ interface ICard {
     max_items?: number;
     singleViewType?: 'desk' | 'stage' | any;
     query: any;
+    sent?: boolean;
 }
 
 CardsService.$inject = ['search', 'session', 'desks'];
@@ -66,10 +67,19 @@ export function CardsService(search, session, desks) {
 
         case 'spike-personal':
         case 'personal':
-            query.filter({bool: {
-                must: {term: {original_creator: session.identity._id}},
-                must_not: {exists: {field: 'task.desk'}},
-            }});
+            if (card.sent) {
+                query.filter({bool: {
+                    must: [
+                        {term: {original_creator: session.identity._id}},
+                        {exists: {field: 'task.desk'}},
+                    ],
+                }});
+            } else {
+                query.filter({bool: {
+                    must: {term: {original_creator: session.identity._id}},
+                    must_not: {exists: {field: 'task.desk'}},
+                }});
+            }
             break;
 
         case 'spike':
@@ -122,19 +132,23 @@ export function CardsService(search, session, desks) {
         }
 
         if (desk) {
+            const must: Array<{}> = [
+                {term: {'task.desk': deskId}},
+                {terms: {state: states}},
+            ];
+
             if (desk.desk_type === 'authoring') {
-                query.filter({or: [
+                query.filter({bool: {should: [
                     {term: {'task.last_authoring_desk': deskId}},
-                    {and: [
-                        {term: {'task.desk': deskId}},
-                        {terms: {state: states}},
-                    ]},
-                ]});
+                    {bool: {must}},
+                ]}});
             } else if (desk.desk_type === 'production') {
-                query.filter({and: [
-                    {term: {'task.desk': deskId}},
-                    {terms: {state: states}}]});
+                query.filter({bool: {must}});
             }
+        }
+
+        if (appConfig.features.nestedItemsInOutputStage) {
+            query.setOption('hidePreviousVersions', true);
         }
     }
 
