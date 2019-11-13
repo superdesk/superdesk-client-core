@@ -1,6 +1,7 @@
 import {ISuperdesk, IEditorComponentProps} from 'superdesk-api';
 import * as React from 'react';
 import set from 'date-fns/set';
+import format from 'date-fns/format';
 import addMinutes from 'date-fns/addMinutes';
 
 export function getDateTimeField(superdesk: ISuperdesk) {
@@ -11,8 +12,8 @@ export function getDateTimeField(superdesk: ISuperdesk) {
             const selected = this.props.value != null;
 
             const date = this.props.value != null ? new Date(this.props.value) : null;
-            const day = date == null ? '' : date.toISOString().slice(0, 10);
-            const hour = date == null ? '' : date.toISOString().slice(11, 16);
+            const day = date == null ? '' : format(date, 'yyyy-MM-dd'); // ISO8601
+            const hour = date == null ? '' : format(date, 'HH:mm'); // ISO8601
 
             const checkbox = (
                 <input
@@ -81,7 +82,7 @@ export function getDateTimeField(superdesk: ISuperdesk) {
                                     set(
                                         date,
                                         {
-                                            hours: parseInt(value[0], 10) + 2,
+                                            hours: parseInt(value[0], 10),
                                             minutes: parseInt(value[1], 10),
                                         },
                                     ).toISOString(),
