@@ -102,7 +102,7 @@ export function IngestSourcesContent(ingestSources, notify, api, $location,
                 function fetchProviders() {
                     var criteria = criteria || {};
 
-                    criteria.max_results = $location.search().max_results || 25;
+                    criteria.max_results = $location.search().max_results || 200;
                     criteria.page = $scope.searchPage || $location.search().page || 1;
                     criteria.sort = 'name';
                     var andTerms = [];
@@ -158,12 +158,12 @@ export function IngestSourcesContent(ingestSources, notify, api, $location,
                     openProviderModal();
                 });
 
-                api('rule_sets').query()
+                api('rule_sets').query({max_results: 200})
                     .then((result) => {
                         $scope.rulesets = $filter('sortByName')(result._items);
                     });
 
-                api('routing_schemes').query()
+                api('routing_schemes').query({max_results: 200})
                     .then((result) => {
                         $scope.routingScheme = $filter('sortByName')(result._items);
                     });
