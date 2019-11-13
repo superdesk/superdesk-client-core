@@ -4,10 +4,6 @@ import {MediaBlockComponent as MediaBlock} from '../media/MediaBlock';
 import {imageBlockAndContent} from './utils';
 import Textarea from 'react-textarea-autosize';
 
-const servicesStub = {
-    svc: {},
-};
-
 describe('editor3.components.media-block', () => {
     it('should render', () => {
         const {block, contentState} = imageBlockAndContent();
@@ -17,7 +13,6 @@ describe('editor3.components.media-block', () => {
                 changeCaption={() => ({})}
                 setLocked={() => ({})}
                 block={block}
-                blockProps={servicesStub}
                 contentState={contentState} />);
 
         expect(wrapper.find('img').props().src).toBe('image_href');
@@ -34,7 +29,6 @@ describe('editor3.components.media-block', () => {
                 changeCaption={() => ({})}
                 setLocked={() => ({})}
                 block={block}
-                blockProps={servicesStub}
                 contentState={contentState} />);
 
         wrapper.find('.image-block__image-action').first()

@@ -1,4 +1,4 @@
-import {extensions} from 'core/extension-imports.generated';
+import {extensions} from 'appConfig';
 import {IExtensionActivationResult} from 'superdesk-api';
 
 const prefix = '__internal__';
@@ -7,8 +7,7 @@ const prefix = '__internal__';
 
 export function registerInternalExtension(name: string, activationResult: IExtensionActivationResult) {
     extensions[prefix + name] = {
-        extension: {activate: () => Promise.resolve({})},
-        manifest: {main: 'not-required-for-internal-extensions'},
+        extension: {id: prefix + name, activate: () => Promise.resolve({})},
         activationResult,
     };
 }

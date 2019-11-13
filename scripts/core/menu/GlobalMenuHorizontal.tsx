@@ -1,6 +1,6 @@
 import React from 'react';
 import {flatMap} from 'lodash';
-import {extensions} from 'core/extension-imports.generated';
+import {extensions} from 'appConfig';
 
 export class GlobalMenuHorizontal extends React.PureComponent {
     render() {

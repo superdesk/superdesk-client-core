@@ -36,9 +36,6 @@ import ng from 'core/services/ng';
 import {reactToAngular1} from 'superdesk-ui-framework';
 
 import {ExtensionPage} from './extension-page';
-import {registerExtensions} from './register-extensions';
-import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
-import {dashboardRoute} from 'appConfig';
 
 /* globals __SUPERDESK_CONFIG__: true */
 const appConfig = __SUPERDESK_CONFIG__;
@@ -83,10 +80,8 @@ core.constant('lodash', _);
 
 const styles = 'display: flex; height: 100%;';
 
-let _superdesk;
-
 core.component('sdExtensionPage', reactToAngular1(ExtensionPage, [], [], styles));
-core.config(['$routeProvider', 'superdeskProvider', ($routeProvider, superdesk) => {
+core.config(['$routeProvider', ($routeProvider) => {
     // set initial default route to personal
     // when user is logged in, it will be overwritten by a default route
     // from configs if user has permissions to that route
@@ -94,24 +89,22 @@ core.config(['$routeProvider', 'superdeskProvider', ($routeProvider, superdesk) 
         redirectTo: '/workspace/personal',
     });
 
-    if (appConfig.defaultRoute === dashboardRoute) {
-        ng.getService('privileges')
-            .then((privileges) => privileges.loaded.then(() => privileges))
-            .then((privileges) => {
-                if (privileges.userHasPrivileges({dashboard: 1})) {
+    ng.getServices(['superdesk', 'privileges']).then((res: Array<any>) => {
+        const __superdesk = res[0];
+        const privileges = res[1];
+
+        const activity = __superdesk.activities[appConfig.defaultRoute];
+
+        if (activity != null) {
+            privileges.loaded.then(() => {
+                if (privileges.userHasPrivileges(activity.privileges || {})) {
                     $routeProvider.when('/', {
-                        redirectTo: dashboardRoute,
+                        redirectTo: appConfig.defaultRoute,
                     });
                 }
             });
-    } else {
-        $routeProvider.when('/', {
-            redirectTo: appConfig.defaultRoute,
-        });
-    }
-
-    // added to be able to register activities which didn't work using superdesk reference injected in `core.run`.
-    _superdesk = superdesk;
+        }
+    });
 }]);
 
 // due to angular 1.6
@@ -128,27 +121,5 @@ core.run(['$document', ($document) => {
         });
     }
 }]);
-
-core.run([
-    'modal',
-    'privileges',
-    'lock',
-    'session',
-    'authoringWorkspace',
-    'config',
-    'metadata',
-    (modal, privileges, lock, session, authoringWorkspace: AuthoringWorkspaceService, config, metadata) => {
-        registerExtensions(
-            _superdesk,
-            modal,
-            privileges,
-            lock,
-            session,
-            authoringWorkspace,
-            config,
-            metadata,
-        );
-    },
-]);
 
 export default core;

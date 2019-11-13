@@ -6,20 +6,33 @@ import {IListItemProps, IPropsListItemColumn} from 'superdesk-api';
 
 export class ListItem extends React.Component<IListItemProps> {
     render() {
+        const inlineStyles: React.CSSProperties = {
+            cursor: typeof this.props.onClick === 'function' ? 'pointer' : 'inherit',
+        };
+
+        if (this.props.fullWidth) {
+            inlineStyles.width = '100%';
+        }
+
+        if (this.props.noBackground) {
+            inlineStyles.background = 'transparent';
+        }
+
         return (
             <div
                 onClick={this.props.onClick}
                 className={
                     classNames(
                         this.props.className,
-                        'sd-list-item sd-shadow--z1',
+                        'sd-list-item',
                         {
                             'inactive': this.props.inactive,
                             'sd-list-item--no-hover': this.props.noHover,
+                            'sd-shadow--z1': this.props.noShadow !== true,
                         },
                     )
                 }
-                style={{cursor: typeof this.props.onClick === 'function' ? 'pointer' : 'initial'}}
+                style={inlineStyles}
                 data-test-id={this.props['data-test-id']}
             >
                 {this.props.children}

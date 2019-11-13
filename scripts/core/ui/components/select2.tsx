@@ -12,7 +12,6 @@ interface IProps<T> {
     disabled?: boolean;
     loading?: boolean;
     renderItem(item: T): JSX.Element;
-    getItemLabel(item: T): string;
     getItemValue(item: T): string;
     onSelect(value: string): void;
     onSearch?(search: string): void;
@@ -21,6 +20,7 @@ interface IProps<T> {
 
 interface IState {
     search: string;
+    isOpen: boolean;
 }
 
 const arrowDownStyles = {
@@ -75,6 +75,7 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
 
         this.state = {
             search: '',
+            isOpen: false,
         };
 
         const searchFn = (search: string) => {
@@ -87,6 +88,8 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
     render() {
         return (
             <Autocomplete.default
+                open={this.state.isOpen}
+                onMenuVisibilityChange={(isOpen) => this.setState({isOpen})}
                 inputProps={{placeholder: this.props.placeholder}}
                 value={this.props.value}
                 items={Object.values(this.props.items)}
@@ -135,6 +138,7 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                             type="button"
                             className="sd-line-input__select-custom"
                             disabled={this.props.disabled}
+                            onClick={() => this.setState({isOpen: !this.state.isOpen})}
                             ref={(element) => {
                                 if (element != null) {
                                     this.lastButtonHeight = element.offsetHeight;
@@ -142,6 +146,7 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                                     // react-autocomplete expects ref to be an input
                                     // but input doesn't support rendering custom children
                                     // so we use a button instead and add a fake method to prevent errors
+                                    // Also, we need to manage the open/close logic on our own
                                     element['setSelectionRange'] = noop;
                                 }
 
@@ -168,11 +173,11 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                         display: 'block',
                         width: '100%',
                         textAlign: 'left',
-                        padding: '6px 16px',
+                        padding: 0,
                         background: 'white',
                     };
                     const style: React.CSSProperties = isHighlighted
-                        ? {...commonStyles, background: '#eff7fa'}
+                        ? {...commonStyles, cursor: 'pointer', background: '#eff7fa'}
                         : commonStyles;
 
                     return (

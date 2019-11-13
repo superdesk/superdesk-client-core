@@ -83,18 +83,12 @@ declare module 'superdesk-api' {
 
 
     export type IExtension = DeepReadonly<{
+        id: string;
         activate: (superdesk: ISuperdesk) => Promise<IExtensionActivationResult>;
     }>;
 
     export type IExtensionObject = {
         extension: IExtension;
-        manifest: {
-            [key: string]: any;
-            main: string; // extension will be imported from here
-            superdeskExtension?: {
-                dependencies?: Array<string>;
-            };
-        };
         activationResult: IExtensionActivationResult;
     };
 
@@ -208,7 +202,7 @@ declare module 'superdesk-api' {
         sms: string;
         abstract: string;
         byline: string;
-        dateline: string;
+        dateline: any;
         body_html: string;
         footer: string;
         firstcreated: any;
@@ -251,6 +245,7 @@ declare module 'superdesk-api' {
 
         highlights?: Array<string>;
         highlight?: any;
+        sms_message?: any;
 
         // storage for custom fields created by users
         extra?: {[key: string]: any};
@@ -345,7 +340,7 @@ declare module 'superdesk-api' {
         is_enabled: boolean;
         needs_activation: boolean;
         desk: IDesk;
-        SIGN_OFF: string;
+        sign_off: string;
         byline: string;
         invisible_stages: Array<any>;
         slack_username: string;
@@ -421,6 +416,8 @@ declare module 'superdesk-api' {
 
         // can use deep references like {'a.b.c': []}
         filterValues: {[fieldName: string]: Array<string>};
+
+        aggregations: boolean;
     }
 
     interface IElasticSearchAggregationResult {
@@ -449,14 +446,14 @@ declare module 'superdesk-api' {
 
     // GENERIC FORM
 
-    export interface IPropsGenericForm<T extends IBaseRestApiResponse> {
+    export interface IPropsGenericForm<T extends IBaseRestApiResponse, TBase = Omit<T, keyof IBaseRestApiResponse>> {
         formConfig: IFormGroup;
         defaultSortOption: ISortOption;
-        defaultFilters?: ICrudManagerFilters;
+        defaultFilters?: Partial<TBase>;
         renderRow(key: string, item: T, page: IGenericListPageComponent<T>): JSX.Element;
 
-        // Allows creating an item with required fields which aren't editable from the GUI
-        newItemTemplate?: {[key: string]: any};
+        // Allows initializing a new item with some fields already filled.
+        getNewItemTemplate?(page: IGenericListPageComponent<T>): Partial<TBase>;
 
         refreshOnEvents?: Array<string>;
 
@@ -546,11 +543,18 @@ declare module 'superdesk-api' {
 
     // REACT COMPONENTS
 
+    export interface IConfigurableUiComponents {
+        UserAvatar?: React.ComponentType<{user: IUser}>;
+    }    
+
     export interface IListItemProps {
         onClick?(): void;
         className?: string;
         inactive?: boolean;
         noHover?: boolean;
+        noShadow?: boolean;
+        noBackground?: boolean;
+        fullWidth?: boolean;
         'data-test-id'?: string;
     }
 
@@ -589,7 +593,7 @@ declare module 'superdesk-api' {
         onClose?(): void;
     }
 
-    export interface IGenericListPageComponent<T extends IBaseRestApiResponse> {
+    export interface IGenericListPageComponent<T extends IBaseRestApiResponse, TBase = Omit<T, keyof IBaseRestApiResponse>> {
         openPreview(id: string): void;
         startEditing(id: string): void;
         closePreview(): void;
@@ -598,6 +602,7 @@ declare module 'superdesk-api' {
         openNewItemForm(): void;
         closeNewItemForm(): void;
         deleteItem(item: T): void;
+        getActiveFilters(): Partial<TBase>;
         removeFilter(fieldName: string): void;
     }
 
@@ -809,9 +814,6 @@ declare module 'superdesk-api' {
         localization: {
             gettext(message: string): string;
         };
-        extensions: {
-            getExtension(id: string): Promise<Omit<IExtension, 'activate'>>;
-        };
         privileges: {
             getOwnPrivileges(): Promise<any>;
         };
@@ -842,19 +844,60 @@ declare module 'superdesk-api' {
 
 
     export interface ISuperdeskGlobalConfig {
+        // FROM SERVER
+        default_language: string;
+        schema: any;
+        editor: {
+            vidible?: any;
+            picture?: any;
+        };
+        feedback_url: any;
+        override_ednote_for_corrections: any;
+        override_ednote_template: any;
+        default_genre: any;
+        japanese_characters_per_minute: any;
+        validator_media_metadata: any;
+        publish_content_expiry_minutes: any;
+        high_priority_queue_enabled: any;
+        attachments_max_size: any;
+        attachments_max_files: any;
+        ingest_expiry_minutes: any;
+        content_expiry_minutes: any;
+        xmpp_auth: any;
+        saml_auth: any;
+        google_auth: any;
+        saml_label: any;
+        
+
+        // FROM CLIENT
         server: {
             url: string;
+            ws: any;
         };
+        apps: any;
         defaultRoute: string;
+        startingDay: any;
         features: {
-            swimlane: {
+            swimlane?: {
                 defaultNumberOfColumns: number;
             };
-            editor3: boolean;
-            qumu: boolean;
-            editorAttachments: boolean;
-            editorInlineComments: boolean;
-            editorSuggestions: boolean;
+            editor3?: boolean;
+            qumu?: boolean;
+            editorAttachments?: boolean;
+            editorInlineComments?: boolean;
+            editorSuggestions?: boolean;
+            useTansaProofing?: boolean;
+            editFeaturedImage?: any;
+            validatePointOfInterestForImages?: any;
+            autopopulateByline?: any;
+            noPublishOnAuthoringDesk?: any;
+            confirmMediaOnUpdate?: any;
+            noMissingLink?: any;
+            hideRoutedDesks?: any;
+            autorefreshContent?: any;
+            elasticHighlight?: any;
+            editor3?: any;
+            onlyEditor3?: any;
         };
         auth: {
             google: boolean
@@ -877,7 +920,81 @@ declare module 'superdesk-api' {
             };
         };
         confirm_spike: boolean;
-        language: string; // default client language
+        defaultTimezone: any;
+        search: {
+            useDefaultTimezone: any;
+        };
+        search_cvs: any;
+        view: {
+            dateformat: any;
+            timeformat: any;
+        };
+        user: {
+            sign_off_mapping: any;
+        };
+        infoRemovedFields: {};
+        previewSubjectFilterKey: any;
+        authoring?: {
+            timeToRead?: any;
+        };
+        ui: {
+            publishEmbargo?: any;
+            sendAndPublish?: any;
+            italicAbstract?: any;
+        };
+        list: {
+            narrowView: any;
+            singleLineView: any;
+            singleLine: any;
+            priority: any;
+            firstLine: any;
+            secondLine: any;
+        };
+        item_profile: {
+            change_profile: any;
+        };
+        model: {
+            timeformat: any;
+            dateformat: any;
+        };
+        monitoring: {
+            scheduled: any;
+        };
+        defaultSearch: any;
+        profile: any;
+        profileLanguages: Array<any>;
+        subscriptionLevel: any;
+        workspace: any;
+        activity: any;
+        analytics: {
+            piwik: {
+                url: any;
+            };
+            ga: {
+                id: any;
+            };
+        };
+        longDateFormat: any;
+        shortTimeFormat: any;
+        shortDateFormat: any;
+        shortWeekFormat: any;
+        ArchivedDateFormat: any;
+        ArchivedDateOnCalendarYear: any;
+        iframely: {
+            key: any;
+        };
+        raven: {
+            dsn: any;
+        };
+        version: any;
+        releaseDate: any;
+        isTestEnvironment: any;
+        environmentName: any;
+        workspace: any;
+        paths: {
+            superdesk: any;
+        };
+        language: any;
     }
 
 

@@ -73,6 +73,7 @@ export default angular.module('superdesk.core.directives.typeahead', [])
 
                 this.selectActive = function() {
                     this.select($scope.active);
+                    $scope.focused = true; // don't loose focus on enter
                 };
 
                 this.select = function(item) {

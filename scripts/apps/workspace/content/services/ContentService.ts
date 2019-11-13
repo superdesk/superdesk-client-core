@@ -3,6 +3,7 @@ import {get, omit, isEmpty, zipObject} from 'lodash';
 import {gettext} from 'core/utils';
 import {isMediaEditable} from 'core/config';
 import {IArticle} from 'superdesk-api';
+import {appConfig} from 'appConfig';
 
 /**
  * @ngdoc service
@@ -20,7 +21,6 @@ import {IArticle} from 'superdesk-api';
  * @requires $q
  * @requires $rootScope
  * @requires session
- * @requires deployConfig
  *
  * @description Content Service is responsible for creating packages or content items based
  * on templates or content types.
@@ -28,7 +28,6 @@ import {IArticle} from 'superdesk-api';
  */
 ContentService.$inject = [
     'api',
-    'superdesk',
     'templates',
     'desks',
     'packages',
@@ -38,13 +37,11 @@ ContentService.$inject = [
     '$q',
     '$rootScope',
     'session',
-    'deployConfig',
     'send',
-    'config',
     'renditions',
 ];
-export function ContentService(api, superdesk, templates, desks, packages, archiveService, notify,
-    $filter, $q, $rootScope, session, deployConfig, send, config, renditions) {
+export function ContentService(api, templates, desks, packages, archiveService, notify,
+    $filter, $q, $rootScope, session, send, renditions) {
     const TEXT_TYPE = 'text';
 
     const self = this;
@@ -261,7 +258,7 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
      */
     this.schema = function(profile, contentType) {
         const schema = get(profile, 'schema',
-            get(deployConfig.getSync('schema'), contentType, constant.DEFAULT_SCHEMA));
+            get(appConfig.schema, contentType, constant.DEFAULT_SCHEMA));
 
         return angular.extend({}, schema);
     };
@@ -275,7 +272,7 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
      */
     this.editor = function(profile, contentType) {
         const editor = get(profile, 'editor',
-            get(deployConfig.getSync('editor'), contentType, constant.DEFAULT_EDITOR));
+            get(appConfig.editor, contentType, constant.DEFAULT_EDITOR));
 
         return angular.extend({}, editor);
     };
@@ -378,7 +375,7 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
             }
 
             return api.find(item._type, item._id);
-        } else if (isMediaEditable(config) && fetchExternal) {
+        } else if (isMediaEditable() && fetchExternal) {
             return renditions.ingest(item);
         }
 

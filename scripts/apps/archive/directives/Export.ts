@@ -2,7 +2,6 @@ import _ from 'lodash';
 
 class LinkFunction {
     api: any;
-    config: any;
     multi: any;
     notify: any;
     storage: any;
@@ -10,9 +9,8 @@ class LinkFunction {
     urls: any;
     scope: any;
 
-    constructor(api, config, multi, notify, storage, session, urls, scope) {
+    constructor(api, multi, notify, storage, session, urls, scope) {
         this.api = api;
-        this.config = config;
         this.multi = multi;
         this.notify = notify;
         this.storage = storage;
@@ -124,11 +122,11 @@ class LinkFunction {
  * @description This directive is used to export articles in selected formats and download the exported file
  *
  */
-export function Export(api, config, multi, notify, storage, session, urls) {
+export function Export(api, multi, notify, storage, session, urls) {
     return {
         templateUrl: 'scripts/apps/archive/views/export.html',
-        link: (scope) => new LinkFunction(api, config, multi, notify, storage, session, urls, scope),
+        link: (scope) => new LinkFunction(api, multi, notify, storage, session, urls, scope),
     };
 }
 
-Export.$inject = ['api', 'config', 'multi', 'notify', 'storage', 'session', 'urls'];
+Export.$inject = ['api', 'multi', 'notify', 'storage', 'session', 'urls'];

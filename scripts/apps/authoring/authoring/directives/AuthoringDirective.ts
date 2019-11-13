@@ -12,6 +12,7 @@ import {IFunctionPointsService} from 'apps/extension-points/services/FunctionPoi
 import {isPublished} from 'apps/archive/utils';
 import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
 import {copyJson} from 'core/helpers/utils';
+import {appConfig} from 'appConfig';
 
 /**
  * @ngdoc directive
@@ -43,8 +44,6 @@ AuthoringDirective.$inject = [
     'reloadService',
     '$rootScope',
     'suggest',
-    'config',
-    'deployConfig',
     'editorResolver',
     'compareVersions',
     'embedService',
@@ -74,8 +73,6 @@ export function AuthoringDirective(
     reloadService,
     $rootScope,
     suggest,
-    config,
-    deployConfig,
     editorResolver,
     compareVersions,
     embedService,
@@ -171,7 +168,8 @@ export function AuthoringDirective(
              * @returns {Boolean}
              */
             $scope.canPublishOnDesk = function() {
-                return !($scope.deskType === 'authoring' && config.features.noPublishOnAuthoringDesk);
+                return !($scope.deskType === 'authoring' && appConfig.features.noPublishOnAuthoringDesk) &&
+                    privileges.userHasPrivileges({publish: 1});
             };
 
             getDeskStage();
@@ -381,8 +379,8 @@ export function AuthoringDirective(
             function checkMediaAssociatedToUpdate() {
                 let rewriteOf = $scope.item.rewrite_of;
 
-                if (!_.get(config, 'features.confirmMediaOnUpdate') ||
-                    !_.get(config, 'features.editFeaturedImage') ||
+                if (!(appConfig.features != null && appConfig.features.confirmMediaOnUpdate) ||
+                    !(appConfig.features != null && appConfig.features.editFeaturedImage) ||
                     !rewriteOf || _.includes(['kill', 'correct', 'takedown'], $scope.action) ||
                     $scope.item.associations && $scope.item.associations.featuremedia) {
                     return $q.when(true);
@@ -488,7 +486,7 @@ export function AuthoringDirective(
             }
 
             function validateForPublish(item) {
-                var validator = deployConfig.getSync('validator_media_metadata');
+                var validator = appConfig.validator_media_metadata;
 
                 if (item.type === 'picture' || item.type === 'graphic') {
                     // required media metadata fields are defined in superdesk.config.js
@@ -550,7 +548,7 @@ export function AuthoringDirective(
             };
 
             $scope.isRemovedField = function(fieldName) {
-                return _.has(config.infoRemovedFields, fieldName);
+                return appConfig.infoRemovedFields != null && appConfig.infoRemovedFields.hasOwnProperty(fieldName);
             };
 
             function afterTansa(e, isCancelled) {
@@ -862,8 +860,14 @@ export function AuthoringDirective(
             };
 
             $scope.sendToNextStage = function() {
-                var stageIndex, stageList = desks.deskStages[desks.activeDeskId];
-                var selectedStage, selectedDesk = desks.deskLookup[desks.activeDeskId];
+                var currentDeskId = desks.getCurrentDeskId();
+
+                if (currentDeskId == null) {
+                    throw new Error('currentDeskId is null');
+                }
+
+                var stageIndex, stageList = desks.deskStages[currentDeskId];
+                var selectedStage, selectedDesk = desks.deskLookup[currentDeskId];
 
                 for (var i = 0; i < stageList.length; i++) {
                     if (stageList[i]._id === $scope.stage._id) {
@@ -1176,7 +1180,6 @@ export function AuthoringDirective(
                 urls: $injector.get('urls'),
                 notify: notify,
                 superdesk: superdesk,
-                deployConfig: deployConfig,
                 attachments: $injector.get('attachments'),
             })));
 

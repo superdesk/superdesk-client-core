@@ -1,11 +1,13 @@
 import {gettext} from 'core/utils';
+import {appConfig} from 'appConfig';
+import {applyDefault} from 'core/helpers/typescript-helpers';
 
 UserEditDirective.$inject = ['api', 'notify', 'usersService', 'userList', 'session', 'lodash',
     'langmap', '$location', '$route', 'superdesk', 'features', 'asset', 'privileges',
-    'desks', 'keyboardManager', 'gettextCatalog', 'config', 'metadata', 'deployConfig', 'modal'];
+    'desks', 'keyboardManager', 'gettextCatalog', 'metadata', 'modal'];
 export function UserEditDirective(api, notify, usersService, userList, session, _,
     langmap, $location, $route, superdesk, features, asset, privileges, desks, keyboardManager,
-    gettextCatalog, config, metadata, deployConfig, modal) {
+    gettextCatalog, metadata, modal) {
     return {
         templateUrl: asset.templateUrl('apps/users/views/edit-form.html'),
         scope: {
@@ -24,12 +26,12 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
             scope.twitterPattern = usersService.twitterPattern;
             scope.phonePattern = usersService.phonePattern;
             scope.signOffPattern = usersService.signOffPattern;
-            scope.hideSignOff = config.user && config.user.sign_off_mapping;
+            scope.hideSignOff = appConfig.user != null && appConfig.user.sign_off_mapping;
 
             scope.dirty = false;
             scope.errorMessage = null;
 
-            scope.xmppEnabled = deployConfig.getSync('xmpp_auth');
+            scope.xmppEnabled = appConfig.xmpp_auth;
 
             scope.$watch('origUser', () => {
                 scope.user = _.create(scope.origUser);
@@ -41,7 +43,7 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
             resetUser(scope.origUser);
 
             scope.isNetworkSubscription = () =>
-                ['solo', 'team'].indexOf(config.subscriptionLevel) === -1;
+                ['solo', 'team'].indexOf(appConfig.subscriptionLevel) === -1;
 
             scope.$watchCollection('user', (user) => {
                 _.each(user, (value, key) => {
@@ -63,7 +65,7 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
             // get available translation languages
             var noBaseLanguage = true;
 
-            scope.languages = config.profileLanguages.map((lang) => {
+            scope.languages = appConfig.profileLanguages.map((lang) => {
                 if (lang === gettextCatalog.baseLanguage) {
                     noBaseLanguage = false;
                 }
@@ -220,7 +222,7 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
                 resetUser(user);
             });
 
-            scope.profileConfig = _.get(config, 'profile', {});
+            scope.profileConfig = applyDefault(appConfig.profile, {});
         },
     };
 }

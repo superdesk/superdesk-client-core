@@ -3,8 +3,9 @@ import {getDataUrl} from 'core/upload/image-preview-directive';
 import {gettext} from 'core/utils';
 import {isEmpty, pickBy} from 'lodash';
 import {handleBinaryFile} from '@metadata/exif';
-import {extensions} from 'core/extension-imports.generated';
+import {extensions} from 'appConfig';
 import {IPTCMetadata, IUser, IArticle} from 'superdesk-api';
+import {appConfig} from 'appConfig';
 
 /* eslint-disable complexity */
 
@@ -42,10 +43,11 @@ function mapIPTCExtensions(metadata: IPTCMetadata, user: IUser): Promise<Partial
 
     return Object.values(extensions).filter(({activationResult}) =>
         activationResult.contributions && activationResult.contributions.iptcMapping,
-    ).reduce((accumulator, {activationResult}) =>
-        accumulator.then((_item) => activationResult.contributions.iptcMapping(metadata, _item))
-        , Promise.resolve(item))
-        .then((_item: Partial<IArticle>) => pickBy(_item));
+    ).reduce(
+        (accumulator, {activationResult}) =>
+            accumulator.then((_item) => activationResult.contributions.iptcMapping(metadata, _item)),
+        Promise.resolve(item),
+    ).then((_item: Partial<IArticle>) => pickBy(_item));
 }
 
 function serializePromises(promiseCreators: Array<() => Promise<any>>): Promise<Array<any>> {
@@ -64,7 +66,6 @@ UploadController.$inject = [
     'api',
     'archiveService',
     'session',
-    'deployConfig',
     'desks',
     'notify',
     '$location',
@@ -76,7 +77,6 @@ export function UploadController(
     api,
     archiveService,
     session,
-    deployConfig,
     desks,
     notify,
     $location,
@@ -92,7 +92,7 @@ export function UploadController(
     $scope.allowPicture = !($scope.locals && $scope.locals.data && $scope.locals.data.allowPicture === false);
     $scope.allowVideo = !($scope.locals && $scope.locals.data && $scope.locals.data.allowVideo === false);
     $scope.allowAudio = !($scope.locals && $scope.locals.data && $scope.locals.data.allowAudio === false);
-    $scope.validator = _.omit(deployConfig.getSync('validator_media_metadata'), ['archive_description']);
+    $scope.validator = _.omit(appConfig.validator_media_metadata, ['archive_description']);
     $scope.deskSelectionAllowed = ($location.path() !== '/workspace/personal') && $scope.locals &&
         $scope.locals.data && $scope.locals.data.deskSelectionAllowed === true;
     if ($scope.deskSelectionAllowed === true) {

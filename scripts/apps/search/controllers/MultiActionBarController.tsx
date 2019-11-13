@@ -6,7 +6,7 @@ import {IArticle} from 'superdesk-api';
 import {gettext} from 'core/utils';
 
 import {IExtensionActivationResult} from 'superdesk-api';
-import {extensions} from 'core/extension-imports.generated';
+import {extensions} from 'appConfig';
 import {showSpikeDialog} from 'apps/archive/show-spike-dialog';
 
 /**
@@ -32,13 +32,13 @@ import {showSpikeDialog} from 'apps/archive/show-spike-dialog';
  */
 
 MultiActionBarController.$inject = [
-    '$rootScope', 'multi', 'multiEdit', 'multiImageEdit', 'send', 'remove', 'modal', '$q', 'lock',
-    'packages', 'superdesk', 'notify', 'spike', 'authoring', 'privileges', '$location', 'config', 'api',
+    '$rootScope', 'multi', 'multiEdit', 'multiImageEdit', 'send', 'remove', 'modal', 'lock',
+    'packages', 'superdesk', 'notify', 'spike', 'authoring', '$location',
 ];
 
 export function MultiActionBarController(
-    $rootScope, multi, multiEdit, multiImageEdit, send, remove, modal, $q, lock,
-    packages, superdesk, notify, spike, authoring, privileges, $location, config, api,
+    $rootScope, multi, multiEdit, multiImageEdit, send, remove, modal, lock,
+    packages, superdesk, notify, spike, authoring, $location,
 ) {
     this.send = function() {
         send.all(multi.getItems());
@@ -133,7 +133,6 @@ export function MultiActionBarController(
         const items: Array<IArticle> = multi.getItems();
 
         showSpikeDialog(
-            config,
             modal,
             () => spikeMultiple(),
             gettext('Are you sure you want to spike the items?'),

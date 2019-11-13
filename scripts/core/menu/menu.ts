@@ -1,14 +1,15 @@
 import {reactToAngular1} from 'superdesk-ui-framework';
 import {GlobalMenuHorizontal} from './GlobalMenuHorizontal';
+import {appConfig} from 'appConfig';
 
-SuperdeskFlagsService.$inject = ['config'];
-function SuperdeskFlagsService(config) {
+SuperdeskFlagsService.$inject = [];
+function SuperdeskFlagsService() {
     this.flags = {
         menu: false,
         notifications: false,
     };
 
-    angular.extend(this.flags, config.ui);
+    angular.extend(this.flags, appConfig.ui);
 }
 
 /**
@@ -36,8 +37,8 @@ angular.module('superdesk.core.menu', [
 
     // set flags for other directives
     .directive('sdSuperdeskView', ['asset', function(asset) {
-        SuperdeskViewController.$inject = ['superdeskFlags', 'superdesk', '$scope', '$route', 'session'];
-        function SuperdeskViewController(superdeskFlags, superdesk, $scope, $route, session) {
+        SuperdeskViewController.$inject = ['superdeskFlags', 'superdesk', '$scope', '$route', 'session', '$timeout'];
+        function SuperdeskViewController(superdeskFlags, superdesk, $scope, $route, session, $timeout) {
             $scope.session = session;
 
             this.flags = superdeskFlags.flags;
@@ -61,6 +62,13 @@ angular.module('superdesk.core.menu', [
                 this.flags.workspace = !!route.sideTemplateUrl;
                 this.flags.workqueue = this.flags.workqueue || true;
             });
+
+            $scope.$watch(() => {
+                return superdeskFlags.flags.hideMonitoring;
+            }, () => {
+                // Trigger resize event to update elements, 500ms delay is for animation
+                $timeout(() => window.dispatchEvent(new Event('resize')), 500, false);
+            });
         }
 
         return {
@@ -77,8 +85,6 @@ angular.module('superdesk.core.menu', [
         'userNotifications',
         'asset',
         'privileges',
-        'config',
-        'deployConfig',
         'lodash',
         'workspaceMenu',
         function(
@@ -88,8 +94,6 @@ angular.module('superdesk.core.menu', [
             userNotifications,
             asset,
             privileges,
-            config,
-            deployConfig,
             _,
             workspaceMenu,
         ) {
@@ -100,9 +104,9 @@ angular.module('superdesk.core.menu', [
                     scope.currentRoute = null;
                     scope.flags = ctrl.flags;
                     scope.menu = [];
-                    scope.isTestEnvironment = config.isTestEnvironment;
-                    scope.environmentName = config.environmentName;
-                    scope.workspaceConfig = config.workspace || {}; // it's used in workspaceMenu.filter
+                    scope.isTestEnvironment = appConfig.isTestEnvironment;
+                    scope.environmentName = appConfig.environmentName;
+                    scope.workspaceConfig = appConfig.workspace || {}; // it's used in workspaceMenu.filter
 
                     // menu items and groups - start
                     let group = null;
@@ -159,9 +163,7 @@ angular.module('superdesk.core.menu', [
                         });
                     }
 
-                    deployConfig.get('feedback_url').then((url) => {
-                        scope.feedback_url = url;
-                    });
+                    scope.feedback_url = appConfig.feedback_url;
 
                     superdesk.getMenu(superdesk.MENU_MAIN)
                         .then(filterSettingsIfEmpty)
@@ -235,18 +237,18 @@ angular.module('superdesk.core.menu', [
                 },
             };
         }])
-    .directive('sdAbout', ['asset', 'config', 'api', function(asset, config, api) {
+    .directive('sdAbout', ['asset', 'api', function(asset, api) {
         return {
             templateUrl: asset.templateUrl('core/menu/views/about.html'),
             link: function(scope) {
                 api.query('backend_meta', {}).then(
                     (metadata) => {
-                        scope.build_rev = config.version || metadata.meta_rev;
+                        scope.build_rev = appConfig.version || metadata.meta_rev;
                         scope.modules = metadata.modules;
                     });
-                scope.version = config.version;
+                scope.version = appConfig.version;
                 scope.year = (new Date()).getUTCFullYear();
-                scope.releaseDate = config.releaseDate;
+                scope.releaseDate = appConfig.releaseDate;
             },
         };
     }]);

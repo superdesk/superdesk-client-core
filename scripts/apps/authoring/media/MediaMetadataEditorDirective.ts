@@ -1,8 +1,9 @@
 import {max, sortBy, get, isEmpty} from 'lodash';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
+import {appConfig} from 'appConfig';
 
-MediaMetadataEditorDirective.$inject = ['metadata', 'deployConfig', 'features', '$q', 'session'];
-export default function MediaMetadataEditorDirective(metadata, deployConfig, features, $q, session) {
+MediaMetadataEditorDirective.$inject = ['metadata', 'features', '$q', 'session'];
+export default function MediaMetadataEditorDirective(metadata, features, $q, session) {
     function getCV(field) {
         const cv = metadata.cvs.find((_cv) => _cv._id === field || _cv.schema_field === field);
 
@@ -45,8 +46,8 @@ export default function MediaMetadataEditorDirective(metadata, deployConfig, fea
                 getLabelForFieldId: getLabelNameResolver(),
                 metadataInit: metadata.initialize(),
             }).then(({getLabelForFieldId}) => {
-                const editor = get(deployConfig.getSync('editor'), 'picture', {});
-                const schema = get(deployConfig.getSync('schema'), 'picture', {});
+                const editor = get(appConfig.editor, 'picture', {});
+                const schema = get(appConfig.schema, 'picture', {});
 
                 // get last order
                 let nextOrder = max(Object.keys(editor).map((field) => get(editor, `${field}.order`, 0))) + 1;

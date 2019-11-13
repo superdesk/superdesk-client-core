@@ -18,15 +18,16 @@ import {
 import {isObject} from 'lodash';
 import ng from 'core/services/ng';
 import {httpRequestJsonLocal, httpRequestVoidLocal} from './network';
+import {appConfig} from 'appConfig';
 
 export function queryElastic(
     parameters: IQueryElasticParameters,
 ) {
-    const {endpoint, page, sort, filterValues} = parameters;
+    const {endpoint, page, sort, filterValues, aggregations} = parameters;
 
-    return ng.getServices(['config', 'session', 'api'])
+    return ng.getServices(['session', 'api'])
         .then((res: any) => {
-            const [config, session] = res;
+            const [session] = res;
 
             const source = {
                 query: {
@@ -66,7 +67,7 @@ export function queryElastic(
             };
 
             const query = {
-                aggregations: 0,
+                aggregations: aggregations === true ? 1 : 0,
                 es_highlight: 0,
                 // projections: [],
                 source,
@@ -79,7 +80,7 @@ export function queryElastic(
             return new Promise((resolve) => {
                 const xhr = new XMLHttpRequest();
 
-                xhr.open('GET', config.server.url + '/' + endpoint + queryString, true);
+                xhr.open('GET', appConfig.server.url + '/' + endpoint + queryString, true);
 
                 xhr.setRequestHeader('Content-Type', 'application/json');
                 xhr.setRequestHeader('Authorization', session.token);
@@ -265,7 +266,7 @@ export function connectCrudManager<Props, PropsToConnect, Entity extends IBaseRe
         }
 
         refresh(): Promise<IRestApiResponse<Entity>> {
-            return this.read(1, this.state.activeSortOption, this.state.activeFilters);
+            return this.read(this.state._meta.page, this.state.activeSortOption, this.state.activeFilters);
         }
 
         sort(sortOption: ISortOption): Promise<IRestApiResponse<Entity>> {

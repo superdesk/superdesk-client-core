@@ -1,6 +1,5 @@
 import ng from 'core/services/ng';
 import {insertMedia} from './toolbar';
-import {makeIframesResponsive} from 'core/helpers/make-iframes-responsive';
 import {logger} from 'core/services/logger';
 import {SelectionState} from 'draft-js';
 import {IArticle} from 'superdesk-api';
@@ -190,17 +189,12 @@ export function moveBlock(block, dest, insertionMode) {
 }
 
 export function processEmbedCode(data) {
-    if (typeof data === 'string') {
-        return makeIframesResponsive(data);
-    } else if (typeof data === 'object' && typeof data.html === 'string') {
-        return {
-            ...data,
-            html: makeIframesResponsive(data.html),
-        };
-    } else {
+    if (typeof data !== 'string' &&
+        (typeof data !== 'object' && typeof data.html !== 'string')
+    ) {
         logger.error(new Error('embed format not recognized'));
-        return data;
     }
+    return data;
 }
 
 /**

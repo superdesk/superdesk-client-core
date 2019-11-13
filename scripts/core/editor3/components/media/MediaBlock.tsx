@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
-import ng from 'core/services/ng';
 import * as actions from '../../actions';
 import Textarea from 'react-textarea-autosize';
-import {get} from 'lodash';
 import {gettext} from 'core/utils';
+import {appConfig} from 'appConfig';
+import {applyDefault} from 'core/helpers/typescript-helpers';
 
 function getTranslationForAssignRights(value) {
     if (value === 'single-usage') {
@@ -18,10 +18,6 @@ function getTranslationForAssignRights(value) {
         return '';
     }
 }
-
-const DRAG_SCROLL_BUFFER = 150; // px
-const DRAG_SCROLL_BY = 50; // px
-const DRAG_SCROLL_TIMEOUT = 200; // ms
 
 /**
  * @ngdoc React
@@ -46,7 +42,6 @@ export class MediaBlockComponent extends React.Component<any, any> {
         this.data = this.data.bind(this);
         this.onChange = this.onChange.bind(this);
         this.onDragStart = this.onDragStart.bind(this);
-        this.onDrag = this.onDrag.bind(this);
     }
 
     /**
@@ -110,60 +105,29 @@ export class MediaBlockComponent extends React.Component<any, any> {
         event.dataTransfer.setData('superdesk/editor3-block', this.props.block.getKey());
     }
 
-    componentDidMount() {
-        this.container = document.getElementsByClassName('page-content-container')[0];
-    }
-
-    componentWillUnmount() {
-        this.container = null;
-    }
-
-    onDrag(event) {
-        let y = event.pageY;
-
-        if (!this.scrollTimeout) {
-            this.scrollTimeout = setTimeout(() => {
-                // firefox does not provide pageY on drag event
-                // so there is a window listener which populates the value
-                // but it runs only after drag event so it must read it here
-                if (!y && window['dragPageY']) {
-                    y = window['dragPageY'];
-                }
-
-                if (y < DRAG_SCROLL_BUFFER) {
-                    this.container.scrollTop -= DRAG_SCROLL_BY;
-                } else if (y + DRAG_SCROLL_BUFFER > $(window).height()) {
-                    this.container.scrollTop += DRAG_SCROLL_BY;
-                }
-
-                this.scrollTimeout = null;
-            }, DRAG_SCROLL_TIMEOUT);
-        }
-    }
-
     render() {
         const {setLocked, showTitle, readOnly} = this.props;
         const data = this.data();
         const rendition = data.renditions.baseImage || data.renditions.viewImage || data.renditions.original;
         const alt = data.alt_text || data.description_text || data.caption;
         const mediaType = data.type;
-        const {features} = ng.get('config');
 
         const editable =
-            !readOnly &&
-            (data._type !== 'externalsource'
-            || get(features, 'editFeaturedImage', true));
-
-        const removable = !readOnly;
-        const draggable = removable;
+            !readOnly
+            && (
+                data._type !== 'externalsource'
+                || (appConfig.features == null || appConfig.features.editFeaturedImage == null
+                    ? true
+                    : appConfig.features.editFeaturedImage)
+            );
 
         return (
 
             <div className="image-block"
                 onClick={(e) => e.stopPropagation()}
-                draggable={draggable} onDragStart={this.onDragStart} onDrag={this.onDrag}>
+                draggable={!readOnly} onDragStart={this.onDragStart}>
                 {
-                    removable && (
+                    readOnly ? null : (
                         <a className="icn-btn image-block__remove" onClick={this.onClickDelete}>
                             <i className="icon-close-small" />
                         </a>
@@ -178,6 +142,7 @@ export class MediaBlockComponent extends React.Component<any, any> {
                             className="image-block__title"
                             value={data.headline}
                             onChange={this.onChange}
+                            disabled={readOnly}
                         /> : null }
 
                     {mediaType === 'picture' &&
@@ -251,6 +216,7 @@ export class MediaBlockComponent extends React.Component<any, any> {
                                         className="image-block__title"
                                         value={data.headline}
                                         onChange={this.onChange}
+                                        disabled={readOnly}
                                     />
                                 )
                             }
@@ -289,6 +255,7 @@ export class MediaBlockComponent extends React.Component<any, any> {
                                         className="image-block__title"
                                         value={data.headline}
                                         onChange={this.onChange}
+                                        disabled={readOnly}
                                     />
                                 )
                             }
@@ -327,6 +294,7 @@ export class MediaBlockComponent extends React.Component<any, any> {
                         className="image-block__description"
                         value={data.description_text}
                         onChange={this.onChange}
+                        disabled={readOnly}
                     />
                     {editable && (mediaType === 'audio' || mediaType === 'video') &&
                         <div className="image-block__action-bar">
@@ -349,7 +317,7 @@ MediaBlockComponent.propTypes = {
     contentState: PropTypes.object.isRequired,
     showTitle: PropTypes.bool,
     readOnly: PropTypes.bool,
-    blockProps: PropTypes.object.isRequired,
+    blockProps: PropTypes.object,
 };
 
 const mapStateToProps = (state) => ({
