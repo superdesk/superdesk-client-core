@@ -7,10 +7,15 @@ import {
     IPreviewComponentProps,
 } from 'superdesk-api';
 import {getDateTimeField} from './getDateTimeField';
+import {getConfigComponent} from './getConfigComponent';
 
 class DateTimePreview extends React.PureComponent<IPreviewComponentProps> {
     render() {
-        return <div>{this.props.value}</div>;
+        if (this.props.value == null) {
+            return null;
+        } else {
+            return <div>{new Date(this.props.value).toLocaleString()}</div>;
+        }
     }
 }
 
@@ -27,6 +32,7 @@ const extension: IExtension = {
                         label: gettext('Datetime'),
                         editorComponent: getDateTimeField(superdesk),
                         previewComponent: DateTimePreview,
+                        configComponent: getConfigComponent(superdesk),
                     },
                 ],
             },

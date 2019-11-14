@@ -1011,11 +1011,17 @@ declare module 'superdesk-api' {
         value: any;
     }
 
+    export interface IConfigComponentProps {
+        config: {[key: string]: any};
+        onChange(config: {[key: string]: any}): void;
+    }
+
     export interface ICustomFieldType {
         id: string;
         label: string;
         editorComponent: React.ComponentType<IEditorComponentProps>;
         previewComponent: React.ComponentType<IPreviewComponentProps>;
+        configComponent?: React.ComponentType<IConfigComponentProps>;
     }
 
 
