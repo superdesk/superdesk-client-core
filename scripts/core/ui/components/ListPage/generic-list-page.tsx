@@ -33,6 +33,7 @@ import {
     IGenericListPageComponent,
     ICrudManagerFilters,
     ICrudManager,
+    IFormGroup,
 } from 'superdesk-api';
 import {gettext} from 'core/utils';
 
@@ -221,27 +222,12 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
     refetchDataUsingCurrentFilters() {
         const execute = () => {
             const {filterValues} = this.state;
-            const formConfigForFilters = getFormGroupForFiltering(this.props.formConfig);
-            const fieldTypesLookup = getFormFieldsFlat(formConfigForFilters)
-                .reduce((accumulator, item) => ({...accumulator, ...{[item.field]: item.type}}), {});
             const filtersValidated = this.validateFilters(filterValues);
 
             this.props.items.read(
                 1,
                 this.props.items.activeSortOption,
                 filtersValidated,
-                (filters: ICrudManagerFilters) => {
-                    let filtersFormatted = {};
-
-                    for (let fieldName in filters) {
-                        filtersFormatted[fieldName] = generateFilterForServer(
-                            fieldTypesLookup[fieldName],
-                            filters[fieldName],
-                        );
-                    }
-
-                    return filtersFormatted;
-                },
             );
         };
 
@@ -494,7 +480,9 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
                                             marginPagesDisplayed={2}
                                             pageRangeDisplayed={5}
                                             onPageChange={({selected}) => {
-                                                this.props.items.goToPage(selected + 1);
+                                                if (this.props.items._meta.page !== (selected + 1)) {
+                                                    this.props.items.goToPage(selected + 1);
+                                                }
                                             }}
                                             initialPage={this.props.items._meta.page - 1}
                                             containerClassName={'bs-pagination'}
@@ -613,12 +601,33 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
     }
 }
 
-export const getGenericListPageComponent = <T extends IBaseRestApiResponse>(resource: string) =>
-    connectServices<IPropsGenericForm<T>>(
+export const getGenericListPageComponent = <T extends IBaseRestApiResponse>(resource: string, formConfig?: IFormGroup) => {
+    return connectServices<IPropsGenericForm<T>>(
         connectCrudManager<IPropsGenericForm<T>, IPropsConnected<T>, T>(
             GenericListPageComponent,
             'items',
             resource,
+            (filters: IFormGroup) => {
+                if (formConfig == null) {
+                    return filters;
+                }
+
+                const formConfigForFilters = getFormGroupForFiltering(formConfig);
+                const fieldTypesLookup = getFormFieldsFlat(formConfigForFilters)
+                    .reduce((accumulator, item) => ({...accumulator, ...{[item.field]: item.type}}), {});
+
+                let filtersFormatted = {};
+
+                for (let fieldName in filters) {
+                    filtersFormatted[fieldName] = generateFilterForServer(
+                        fieldTypesLookup[fieldName],
+                        filters[fieldName],
+                    );
+                }
+
+                return filtersFormatted;
+            },
         )
         , ['modal', '$rootScope', 'notify'],
     );
+};

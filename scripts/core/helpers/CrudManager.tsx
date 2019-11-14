@@ -1,24 +1,15 @@
 /* eslint-disable react/display-name */
-
-import React from 'react';
-import {generate} from 'json-merge-patch';
-import {connectServices} from './ReactRenderAsync';
-import {
-    IBaseRestApiResponse,
-    ICrudManagerState,
-    ICrudManagerMethods,
-    ISortOption,
-    ICrudManagerFilters,
-    IRestApiResponse,
-    IDataApi,
-    IQueryElasticParameters,
-    IArticleQueryResult,
-    IArticleQuery,
-} from 'superdesk-api';
-import {isObject} from 'lodash';
-import ng from 'core/services/ng';
-import {httpRequestJsonLocal, httpRequestVoidLocal} from './network';
 import {appConfig} from 'appConfig';
+import ng from 'core/services/ng';
+import {generateFilterForServer} from 'core/ui/components/generic-form/generate-filter-for-server';
+import {generate} from 'json-merge-patch';
+import {isObject} from 'lodash';
+import React from 'react';
+import {IArticleQuery, IArticleQueryResult, IBaseRestApiResponse, ICrudManagerFilters, ICrudManagerMethods, ICrudManagerState, IDataApi, IQueryElasticParameters, IRestApiResponse, ISortOption, IFormGroup} from 'superdesk-api';
+import {httpRequestJsonLocal, httpRequestVoidLocal} from './network';
+import {connectServices} from './ReactRenderAsync';
+import {getFormGroupForFiltering} from 'core/ui/components/generic-form/get-form-group-for-filtering';
+import {getFormFieldsFlat} from 'core/ui/components/generic-form/get-form-fields-flat';
 
 export function queryElastic(
     parameters: IQueryElasticParameters,
@@ -194,6 +185,7 @@ export function connectCrudManager<Props, PropsToConnect, Entity extends IBaseRe
     WrappedComponent, // : React.ComponentType<Props & PropsToConnect>
     name: string,
     endpoint: string,
+    formatFiltersForServer?: (filters: ICrudManagerFilters) => ICrudManagerFilters,
 ): React.ComponentType<Props> {
     const component = class extends React.Component<Props, ICrudManagerState<Entity>>
         implements ICrudManagerMethods<Entity> {
@@ -231,7 +223,6 @@ export function connectCrudManager<Props, PropsToConnect, Entity extends IBaseRe
             page: number,
             sortOption: ISortOption,
             filterValues: ICrudManagerFilters = {},
-            formatFiltersForServer?: (filters: ICrudManagerFilters) => ICrudManagerFilters,
         ): Promise<IRestApiResponse<Entity>> {
             return dataApi.query(
                 endpoint,
