@@ -180,6 +180,7 @@ declare module 'superdesk-api' {
         _current_version: number;
         _type: 'ingest' | 'archive' | 'published' | 'archived' | string;
         guid: string;
+        family_id: string;
         translated_from: string;
         translation_id: string; // if C is translated from B which is translated from A, all will have the same translation_id
         translations: Array<IArticle['_id']>; // direct translations only, not all items with same translation_id
@@ -235,7 +236,10 @@ declare module 'superdesk-api' {
         broadcast: any;
         flags: any;
         source: string;
-        correction_sequence: any;
+        /** correction counter, is reset on rewrite */
+        correction_sequence: number;
+        /** rewrite counter */
+        rewrite_sequence: number;
         fetch_endpoint?: any;
         task_id?: any;
         ingest_provider?: any;
@@ -275,6 +279,15 @@ declare module 'superdesk-api' {
             archive?: boolean;
             externalsource: boolean;
         };
+    }
+
+    export interface IPublishedArticle extends IArticle {
+
+        /** id in published collection, different for each correction */
+        item_id: string; 
+
+        /** item copy in archive collection, always the latest version of the item */
+        archive_item: IArticle;
     }
 
     export interface IUserRole extends IBaseRestApiResponse {
@@ -895,8 +908,8 @@ declare module 'superdesk-api' {
             hideRoutedDesks?: any;
             autorefreshContent?: any;
             elasticHighlight?: any;
-            editor3?: any;
             onlyEditor3?: any;
+            nestedItemsInOutputStage?: boolean;
         };
         auth: {
             google: boolean
@@ -993,7 +1006,10 @@ declare module 'superdesk-api' {
         paths: {
             superdesk: any;
         };
-        language: any;
+        language: string; // default client language
+        editor3: {
+            browserSpellCheck: boolean;
+        };
     }
 
 
