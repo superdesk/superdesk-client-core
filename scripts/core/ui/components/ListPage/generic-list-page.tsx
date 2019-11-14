@@ -601,8 +601,8 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
     }
 }
 
-export const getGenericListPageComponent = <T extends IBaseRestApiResponse>(resource: string, formConfig?: IFormGroup) => {
-    return connectServices<IPropsGenericForm<T>>(
+export const getGenericListPageComponent = <T extends IBaseRestApiResponse>(resource: string, formConfig?: IFormGroup) =>
+    connectServices<IPropsGenericForm<T>>(
         connectCrudManager<IPropsGenericForm<T>, IPropsConnected<T>, T>(
             GenericListPageComponent,
             'items',
@@ -630,4 +630,3 @@ export const getGenericListPageComponent = <T extends IBaseRestApiResponse>(reso
         )
         , ['modal', '$rootScope', 'notify'],
     );
-};
