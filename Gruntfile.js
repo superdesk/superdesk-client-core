@@ -32,14 +32,11 @@ module.exports = function(grunt) {
         configPath: path.join(__dirname, 'tasks', 'options'),
     });
 
-    // Linting tasks and alias
-    grunt.registerTask('hint', ['eslint']);
-
     // Test runner tasks and CI
     grunt.registerTask('test', ['ngtemplates:dev', 'karma:unit']);
-    grunt.registerTask('ci', ['test', 'hint']);
+    grunt.registerTask('ci', ['test']);
     grunt.registerTask('unit', ['test']);
-    grunt.registerTask('ci:travis', ['ngtemplates:dev', 'karma:travis', 'hint']);
+    grunt.registerTask('ci:travis', ['ngtemplates:dev', 'karma:travis']);
     grunt.registerTask('bamboo', ['karma:bamboo']);
 
     // UI styling documentation

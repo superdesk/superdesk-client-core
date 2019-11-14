@@ -2681,7 +2681,7 @@ eslint-plugin-jasmine@^2.9.1:
   version "2.10.1"
   resolved "https://registry.yarnpkg.com/eslint-plugin-jasmine/-/eslint-plugin-jasmine-2.10.1.tgz#5733b709e751f4bc40e31e1c16989bd2cdfbec97"
 
-eslint-plugin-react@^7.16.0, eslint-plugin-react@^7.5.1:
+eslint-plugin-react@7.16.0, eslint-plugin-react@^7.5.1:
   version "7.16.0"
   resolved "https://registry.yarnpkg.com/eslint-plugin-react/-/eslint-plugin-react-7.16.0.tgz#9928e4f3e2122ed3ba6a5b56d0303ba3e41d8c09"
   dependencies:
@@ -2761,7 +2761,7 @@ eslint@6.6.0:
     text-table "^0.2.0"
     v8-compile-cache "^2.0.3"
 
-eslint@^4.0.0, eslint@^4.11.0:
+eslint@^4.11.0:
   version "4.19.1"
   resolved "https://registry.yarnpkg.com/eslint/-/eslint-4.19.1.tgz#32d1d653e1d90408854bfb296f076ec7e186a300"
   dependencies:
@@ -3729,13 +3729,6 @@ grunt-contrib-copy@1.0.0:
   dependencies:
     chalk "^1.1.1"
     file-sync-cmp "^0.1.0"
-
-grunt-eslint@^20.1.0:
-  version "20.2.0"
-  resolved "https://registry.yarnpkg.com/grunt-eslint/-/grunt-eslint-20.2.0.tgz#beeda46fa9b84e00863742aa4bcc84846cd27bca"
-  dependencies:
-    chalk "^2.1.0"
-    eslint "^4.0.0"
 
 grunt-filerev@2.3.1:
   version "2.3.1"
