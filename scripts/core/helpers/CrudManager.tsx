@@ -1,15 +1,23 @@
 /* eslint-disable react/display-name */
 import {appConfig} from 'appConfig';
 import ng from 'core/services/ng';
-import {generateFilterForServer} from 'core/ui/components/generic-form/generate-filter-for-server';
 import {generate} from 'json-merge-patch';
 import {isObject} from 'lodash';
 import React from 'react';
-import {IArticleQuery, IArticleQueryResult, IBaseRestApiResponse, ICrudManagerFilters, ICrudManagerMethods, ICrudManagerState, IDataApi, IQueryElasticParameters, IRestApiResponse, ISortOption, IFormGroup} from 'superdesk-api';
+import {
+    IBaseRestApiResponse,
+    ICrudManagerState,
+    ICrudManagerMethods,
+    ISortOption,
+    ICrudManagerFilters,
+    IRestApiResponse,
+    IDataApi,
+    IQueryElasticParameters,
+    IArticleQueryResult,
+    IArticleQuery,
+} from 'superdesk-api';
 import {httpRequestJsonLocal, httpRequestVoidLocal} from './network';
 import {connectServices} from './ReactRenderAsync';
-import {getFormGroupForFiltering} from 'core/ui/components/generic-form/get-form-group-for-filtering';
-import {getFormFieldsFlat} from 'core/ui/components/generic-form/get-form-fields-flat';
 
 export function queryElastic(
     parameters: IQueryElasticParameters,
