@@ -19,6 +19,16 @@ class DateTimePreview extends React.PureComponent<IPreviewComponentProps> {
     }
 }
 
+export interface IDateTimeFieldConfig {
+    initial_offset_minutes: number;
+    increment_steps: Array<number>;
+}
+
+export const defaultDateTimeConfig: IDateTimeFieldConfig = {
+    initial_offset_minutes: 0,
+    increment_steps: [],
+};
+
 const extension: IExtension = {
     id: 'datetimeField',
     activate: (superdesk: ISuperdesk) => {

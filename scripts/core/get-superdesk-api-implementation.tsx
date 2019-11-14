@@ -6,7 +6,7 @@ import {
     IContentProfile,
     IEvents,
 } from 'superdesk-api';
-import {gettext} from 'core/utils';
+import {gettext, gettextPlural} from 'core/utils';
 import {getGenericListPageComponent} from './ui/components/ListPage/generic-list-page';
 import {ListItem, ListItemColumn, ListItemActionsMenu} from './components/ListItem';
 import {getFormFieldPreviewComponent} from './ui/components/generic-form/form-field';
@@ -286,7 +286,8 @@ export function getSuperdeskApiImplementation(
             getFormFieldPreviewComponent,
         },
         localization: {
-            gettext: (message) => gettext(message),
+            gettext: (message, params) => gettext(message, params),
+            gettextPlural: (count, singular, plural, params) => gettextPlural(count, singular, plural, params),
         },
         privileges: {
             getOwnPrivileges: () => privileges.loaded.then(() => privileges.privileges),

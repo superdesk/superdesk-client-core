@@ -811,7 +811,8 @@ declare module 'superdesk-api' {
             ): JSX.Element;
         };
         localization: {
-            gettext(message: string): string;
+            gettext(message: string, params?: {[key: string]: string | number}): string;
+            gettextPlural(count: number, singular: string, plural: string, params?: {[key: string]: string | number}): string;
         };
         privileges: {
             getOwnPrivileges(): Promise<any>;
@@ -999,11 +1000,12 @@ declare module 'superdesk-api' {
 
     // CUSTOM FIELD TYPES
 
-    export interface IEditorComponentProps {
+    export interface IEditorComponentProps<IConfig> {
         item: IArticle;
         value: any;
         setValue: (value: any) => void;
         readOnly: boolean;
+        config: IConfig;
     }
 
     export interface IPreviewComponentProps {
@@ -1011,18 +1013,18 @@ declare module 'superdesk-api' {
         value: any;
     }
 
-    // T must be a plain object
-    export interface IConfigComponentProps<T extends {}> {
-        config: T;
-        onChange(config: T): void;
+    // IConfig must be a plain object
+    export interface IConfigComponentProps<IConfig extends {}> {
+        config: IConfig;
+        onChange(config: IConfig): void;
     }
 
-    export interface ICustomFieldType {
+    export interface ICustomFieldType<IConfig> {
         id: string;
         label: string;
-        editorComponent: React.ComponentType<IEditorComponentProps>;
+        editorComponent: React.ComponentType<IEditorComponentProps<IConfig>>;
         previewComponent: React.ComponentType<IPreviewComponentProps>;
-        configComponent?: React.ComponentType<IConfigComponentProps>;
+        configComponent?: React.ComponentType<IConfigComponentProps<IConfig>>;
     }
 
 

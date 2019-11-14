@@ -3,15 +3,19 @@ import * as React from 'react';
 import set from 'date-fns/set';
 import format from 'date-fns/format';
 import addMinutes from 'date-fns/addMinutes';
+import {IDateTimeFieldConfig, defaultDateTimeConfig} from './extension';
 
 export function getDateTimeField(superdesk: ISuperdesk) {
-    const gettext = superdesk.localization.gettext;
+    const {gettext, gettextPlural} = superdesk.localization;
 
-    return class DateTimeField extends React.PureComponent<IEditorComponentProps> {
+    return class DateTimeField extends React.PureComponent<IEditorComponentProps<IDateTimeFieldConfig>> {
         render() {
             const selected = this.props.value != null;
 
-            const date = this.props.value != null ? new Date(this.props.value) : null;
+            const date = this.props.value != null
+                ? addMinutes(new Date(this.props.value), this.props.config.initial_offset_minutes)
+                : null;
+
             const day = date == null ? '' : format(date, 'yyyy-MM-dd'); // ISO8601
             const hour = date == null ? '' : format(date, 'HH:mm'); // ISO8601
 
@@ -91,36 +95,44 @@ export function getDateTimeField(superdesk: ISuperdesk) {
                             style={{width: 130}}
                         />
 
-                        <button
-                            disabled={date == null}
-                            onClick={() => {
-                                if (date != null) {
-                                    this.props.setValue(addMinutes(date, 10).toISOString());
-                                }
-                            }}
-                        >
-                            {gettext('+ 10 min')}
-                        </button>
-                        <button
-                            disabled={date == null}
-                            onClick={() => {
-                                if (date != null) {
-                                    this.props.setValue(addMinutes(date, 30).toISOString());
-                                }
-                            }}
-                        >
-                            {gettext('+ 30 min')}
-                        </button>
-                        <button
-                            disabled={date == null}
-                            onClick={() => {
-                                if (date != null) {
-                                    this.props.setValue(addMinutes(date, 60).toISOString());
-                                }
-                            }}
-                        >
-                            {gettext('+ 1 hour')}
-                        </button>
+                        {
+                            (this.props.config ?? defaultDateTimeConfig).increment_steps.map((step, i) => {
+                                const stepAbsolute = Math.abs(step);
+                                const fullHours = Math.floor(stepAbsolute / 60);
+                                const remainingMinutes = stepAbsolute % 60;
+
+                                return (
+                                    <button
+                                        key={i}
+                                        disabled={date == null}
+                                        onClick={() => {
+                                            if (date != null) {
+                                                this.props.setValue(addMinutes(date, step).toISOString());
+                                            }
+                                        }}
+                                    >
+                                        {
+                                            step >= 0 ? '+ ' : '- '
+                                        }
+                                        {
+                                            fullHours < 1
+                                                ? null
+                                                : gettextPlural(
+                                                    fullHours,
+                                                    '{{x}} hour',
+                                                    '{{x}} hours',
+                                                    {x: fullHours},
+                                                ) + ' '
+                                        }
+                                        {
+                                            remainingMinutes === 0
+                                                ? null
+                                                : gettext('{{x}} min', {x: remainingMinutes})
+                                        }
+                                    </button>
+                                );
+                            })
+                        }
 
                     </div>
                 );

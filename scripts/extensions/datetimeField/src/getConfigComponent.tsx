@@ -1,21 +1,14 @@
+/* eslint-disable react/no-multi-comp */
+
 import {ISuperdesk, IConfigComponentProps} from 'superdesk-api';
 import * as React from 'react';
-
-interface IConfig {
-    initial_time_offset: number;
-    increment_steps: Array<number>;
-}
+import {IDateTimeFieldConfig, defaultDateTimeConfig} from './extension';
 
 interface ISpacer {
     type: 'horizontal';
     spacing: 'medium';
     children: Array<React.ReactNode>;
 }
-
-const defaultConfig: IConfig = {
-    initial_time_offset: 0,
-    increment_steps: [],
-};
 
 class Spacer extends React.PureComponent<ISpacer> {
     render() {
@@ -32,9 +25,9 @@ class Spacer extends React.PureComponent<ISpacer> {
 export function getConfigComponent(superdesk: ISuperdesk) {
     const gettext = superdesk.localization.gettext;
 
-    return class DateTimeFieldConfig extends React.PureComponent<IConfigComponentProps<IConfig>> {
+    return class DateTimeFieldConfig extends React.PureComponent<IConfigComponentProps<IDateTimeFieldConfig>> {
         render() {
-            const config: IConfig = this.props.config ?? defaultConfig;
+            const config: IDateTimeFieldConfig = this.props.config ?? defaultDateTimeConfig;
             const {onChange} = this.props;
 
             return (
@@ -44,11 +37,11 @@ export function getConfigComponent(superdesk: ISuperdesk) {
                     <Spacer type="horizontal" spacing="medium">
                         <input
                             type="number"
-                            value={config.initial_time_offset}
+                            value={config.initial_offset_minutes}
                             onChange={(event) => {
                                 onChange({
                                     ...config,
-                                    initial_time_offset: parseInt(event.target.value, 10),
+                                    initial_offset_minutes: parseInt(event.target.value, 10),
                                 });
                             }}
                             style={{width: 54}}
@@ -83,6 +76,7 @@ export function getConfigComponent(superdesk: ISuperdesk) {
                                                 return _value;
                                             }
                                         });
+
                                         onChange({
                                             ...config,
                                             increment_steps: nextIncrementSteps,
