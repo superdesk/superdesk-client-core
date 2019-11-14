@@ -35,7 +35,8 @@ export function getAnnotationsLibraryPage(superdesk: ISuperdesk) {
                 ],
             };
 
-            const AnnotationsLibraryPageComponent = getGenericListPageComponent<IKnowledgeBaseItem>('concept_items', formConfig);
+            const AnnotationsLibraryPageComponent =
+                getGenericListPageComponent<IKnowledgeBaseItem>('concept_items', formConfig);
 
             const renderRow = (
                 key: string,

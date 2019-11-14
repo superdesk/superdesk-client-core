@@ -601,32 +601,33 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
     }
 }
 
-export const getGenericListPageComponent = <T extends IBaseRestApiResponse>(resource: string, formConfig?: IFormGroup) =>
-    connectServices<IPropsGenericForm<T>>(
-        connectCrudManager<IPropsGenericForm<T>, IPropsConnected<T>, T>(
-            GenericListPageComponent,
-            'items',
-            resource,
-            (filters: IFormGroup) => {
-                if (formConfig == null) {
-                    return filters;
-                }
+export const getGenericListPageComponent =
+    <T extends IBaseRestApiResponse>(resource: string, formConfig?: IFormGroup) =>
+        connectServices<IPropsGenericForm<T>>(
+            connectCrudManager<IPropsGenericForm<T>, IPropsConnected<T>, T>(
+                GenericListPageComponent,
+                'items',
+                resource,
+                (filters: IFormGroup) => {
+                    if (formConfig == null) {
+                        return filters;
+                    }
 
-                const formConfigForFilters = getFormGroupForFiltering(formConfig);
-                const fieldTypesLookup = getFormFieldsFlat(formConfigForFilters)
-                    .reduce((accumulator, item) => ({...accumulator, ...{[item.field]: item.type}}), {});
+                    const formConfigForFilters = getFormGroupForFiltering(formConfig);
+                    const fieldTypesLookup = getFormFieldsFlat(formConfigForFilters)
+                        .reduce((accumulator, item) => ({...accumulator, ...{[item.field]: item.type}}), {});
 
-                let filtersFormatted = {};
+                    let filtersFormatted = {};
 
-                for (let fieldName in filters) {
-                    filtersFormatted[fieldName] = generateFilterForServer(
-                        fieldTypesLookup[fieldName],
-                        filters[fieldName],
-                    );
-                }
+                    for (let fieldName in filters) {
+                        filtersFormatted[fieldName] = generateFilterForServer(
+                            fieldTypesLookup[fieldName],
+                            filters[fieldName],
+                        );
+                    }
 
-                return filtersFormatted;
-            },
-        )
-        , ['modal', '$rootScope', 'notify'],
-    );
+                    return filtersFormatted;
+                },
+            )
+            , ['modal', '$rootScope', 'notify'],
+        );
