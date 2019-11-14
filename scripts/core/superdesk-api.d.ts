@@ -1011,9 +1011,10 @@ declare module 'superdesk-api' {
         value: any;
     }
 
-    export interface IConfigComponentProps {
-        config: {[key: string]: any};
-        onChange(config: {[key: string]: any}): void;
+    // T must be a plain object
+    export interface IConfigComponentProps<T extends {}> {
+        config: T;
+        onChange(config: T): void;
     }
 
     export interface ICustomFieldType {

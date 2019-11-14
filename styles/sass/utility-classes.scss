@@ -133,3 +133,13 @@ ul.list-view.list-without-items {
         display: inline;
     }
 }
+
+
+.spacer-horizontal-medium {
+    display: flex;
+    align-items: center;
+}
+
+.spacer-horizontal-medium > * + * {
+    margin-left: 10px;
+}
