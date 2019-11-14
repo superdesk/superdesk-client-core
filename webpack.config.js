@@ -258,6 +258,7 @@ function getDefaults(grunt) {
             'en',
             'el',
             'en_GB',
+            'fr_CA',
             'es',
             'da',
             'ar',
