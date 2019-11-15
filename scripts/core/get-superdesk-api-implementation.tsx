@@ -50,6 +50,7 @@ import {Icon} from './ui/components/Icon2';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {httpRequestJsonLocal} from './helpers/network';
 import ng from 'core/services/ng';
+import {Spacer} from './ui/components/Spacer';
 
 function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
@@ -276,6 +277,7 @@ export function getSuperdeskApiImplementation(
             TopMenuDropdownButton,
             Icon,
             getDropdownTree: () => DropdownTree,
+            Spacer,
         },
         forms: {
             FormFieldType,

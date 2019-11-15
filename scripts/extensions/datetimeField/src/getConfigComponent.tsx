@@ -1,29 +1,12 @@
 /* eslint-disable react/no-multi-comp */
 
-import {ISuperdesk, IConfigComponentProps} from 'superdesk-api';
 import * as React from 'react';
+import {ISuperdesk, IConfigComponentProps} from 'superdesk-api';
 import {IDateTimeFieldConfig, defaultDateTimeConfig} from './extension';
-
-interface ISpacer {
-    type: 'horizontal';
-    spacing: 'medium';
-    children: Array<React.ReactNode>;
-}
-
-class Spacer extends React.PureComponent<ISpacer> {
-    render() {
-        return (
-            <div className="spacer-horizontal-medium">
-                {this.props.children.map((el, i) => (
-                    <div key={i}>{el}</div>
-                ))}
-            </div>
-        );
-    }
-}
 
 export function getConfigComponent(superdesk: ISuperdesk) {
     const gettext = superdesk.localization.gettext;
+    const {Spacer} = superdesk.components;
 
     return class DateTimeFieldConfig extends React.PureComponent<IConfigComponentProps<IDateTimeFieldConfig>> {
         render() {

@@ -618,19 +618,19 @@ declare module 'superdesk-api' {
         removeFilter(fieldName: string): void;
     }
 
-    interface IPropsSelectUser {
+    export interface IPropsSelectUser {
         onSelect(user: IUser): void;
         selectedUserId?: string;
         disabled?: boolean;
     }
 
 
-    interface IDropdownTreeGroup<T> {
+    export interface IDropdownTreeGroup<T> {
         render(): JSX.Element | null;
         items: Array<T | IDropdownTreeGroup<T>>;
     }
 
-    interface IPropsDropdownTree<T> {
+    export interface IPropsDropdownTree<T> {
         groups: Array<IDropdownTreeGroup<T>>;
         getToggleElement(isOpen: boolean, onClick: () => void): JSX.Element;
         renderItem(key: string, item: T, closeDropdown:() => void): JSX.Element;
@@ -638,7 +638,7 @@ declare module 'superdesk-api' {
         'data-test-id'?: string;
     }
 
-    interface ISpacingProps {
+    export interface ISpacingProps {
         margin?: number;
         marginTop?: number;
         marginRight?: number;
@@ -659,6 +659,13 @@ declare module 'superdesk-api' {
     export interface IPropsIcon {
         className: string;
         size?: number;
+    }
+
+    export interface IPropsSpacer {
+        type: 'horizontal' | 'vertical';
+        spacing: 'medium';
+        align?: 'start' | 'end' | 'center';
+        children: Array<React.ReactNode>;
     }
 
 
@@ -808,6 +815,7 @@ declare module 'superdesk-api' {
             Icon: React.ComponentType<IPropsIcon>;
             TopMenuDropdownButton: React.ComponentType<{onClick: () => void; active: boolean; 'data-test-id'?: string;}>;
             getDropdownTree: <T>() => React.ComponentType<IPropsDropdownTree<T>>;
+            Spacer: React.ComponentType<IPropsSpacer>;
         };
         forms: {
             FormFieldType: typeof FormFieldType;
