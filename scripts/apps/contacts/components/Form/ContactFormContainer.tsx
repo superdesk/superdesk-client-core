@@ -1,13 +1,40 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {validateRequiredFormFields, replaceUrls} from '../../../contacts/helpers';
-import {FB_URL, IG_URL} from '../../../contacts/constants';
-import {ContactProfile} from './ContactProfile';
-import {ActionBar} from './ActionBar';
 import {get, set, isEqual, cloneDeep, some, isEmpty, extend, each, omit, isNil} from 'lodash';
-import {gettext} from 'core/utils';
 
-export class ContactFormContainer extends React.Component<any, any> {
+import {gettext} from 'core/utils';
+import {StretchBar} from 'core/ui/components/SubNav';
+
+import {validateRequiredFormFields, getContactType, validateAssignableType} from '../../helpers';
+import {FB_URL, IG_URL} from '../../constants';
+import {ProfileDetail} from './ProfileDetail';
+import {IContact, IContactsService} from '../../Contacts';
+
+interface IProps {
+    svc: {
+        contacts: IContactsService;
+        notify: any;
+        privileges: any;
+        metadata: any;
+    };
+    contact: IContact;
+    onSave(result: IContact): void;
+    onCancel(): void;
+    onDirty(): void;
+    onValidation(valid: boolean): void;
+    triggerSave: boolean;
+    hideActionBar: boolean;
+}
+
+interface IState {
+    currentContact: IContact;
+    errors: {[key: string]: string};
+    originalContact: IContact;
+    dirty: boolean;
+    isFormValid: boolean;
+}
+
+export class ContactFormContainer extends React.Component<IProps, IState> {
     static propTypes: any;
     static defaultProps: any;
 
@@ -34,14 +61,16 @@ export class ContactFormContainer extends React.Component<any, any> {
 
         this.setState({isFormValid: valid});
 
-        if (this.state.dirty) {
+        if (this.state.dirty && this.props.onDirty) {
             this.props.onDirty();
         }
 
-        this.props.onValidation(valid);
+        if(this.props.onValidation) {
+            this.props.onValidation(valid);
+        }
     }
 
-    validateField(fieldName, value, e) {
+    validateField(fieldName, value, e, diff) {
         const fieldValidationErrors = this.state.errors;
 
         const {contacts} = this.props.svc;
@@ -64,6 +93,15 @@ export class ContactFormContainer extends React.Component<any, any> {
             break;
         }
 
+        if (!validateAssignableType(diff)) {
+            fieldValidationErrors.contact_email = gettext(
+                'Contact type "{{ contact_type }}" MUST have an email',
+                {contact_type: get(diff, 'contact_type.name')},
+            );
+        } else if (get(fieldValidationErrors, 'contact_email')) {
+            delete fieldValidationErrors.contact_email;
+        }
+
         return fieldValidationErrors;
     }
 
@@ -74,7 +112,7 @@ export class ContactFormContainer extends React.Component<any, any> {
     }
 
     save() {
-        const {svc, onSave} = this.props;
+        const {svc} = this.props;
         const {notify, contacts} = svc;
 
         const origContact = this.state.originalContact;
@@ -101,17 +139,19 @@ export class ContactFormContainer extends React.Component<any, any> {
         diff = omit(diff, 'type');
 
         return contacts.save(origContact, diff)
-            .then((response) => {
+            .then((result: IContact) => {
                 notify.pop();
                 notify.success(gettext('contact saved.'));
-
-                const result = replaceUrls(response);
 
                 this.setState({
                     originalContact: result,
                     currentContact: result,
                     dirty: false,
-                }, onSave(result));
+                }, () => {
+                    if (this.props.onSave) {
+                        this.props.onSave(result);
+                    }
+                });
             }, (response) => {
                 notify.pop();
 
@@ -137,31 +177,66 @@ export class ContactFormContainer extends React.Component<any, any> {
         this.setState({
             currentContact: diff,
             dirty: !isEqual(origContact, diff),
-            errors: this.validateField(field, value, e),
+            errors: this.validateField(field, value, e, diff),
         }, this.validateForm);
     }
 
     render() {
         const {svc, contact, onCancel, hideActionBar} = this.props;
+        const {
+            isFormValid = false,
+            dirty = false,
+            errors = {},
+        } = this.state;
         const {privileges} = svc;
 
         const readOnly = !get(privileges, 'privileges.contacts', false);
+        const currentContact: IContact = this.state.currentContact || null;
+        const contactType: string = getContactType(currentContact) || 'person';
+        const iconName = contactType === 'organisation' ?
+            'icon-business' :
+            'icon-user';
 
         return (
             <div id={contact._id} key={contact._id} className="contact-form">
-                <form name="contactForm">
-                    {!hideActionBar && <ActionBar
-                        svc={svc}
-                        readOnly={readOnly}
-                        onSave={this.save}
-                        onCancel={onCancel}
-                        dirty={get(this.state, 'dirty', false)}
-                        valid={get(this.state, 'isFormValid', false)} />}
-                    <ContactProfile svc={svc}
-                        contact={get(this.state, 'currentContact', {})}
-                        dirty={get(this.state, 'dirty', false)}
-                        onChange={this.onChange} readOnly={readOnly}
-                        errors={get(this.state, 'errors', {})} />
+                <form name="contactForm"
+                    className="side-panel side-panel--shadow-right"
+                    onSubmit={(e) => e.preventDefault()}
+                >
+                    {!hideActionBar && (
+                        <div className="subnav subnav--darker">
+                            <StretchBar>
+                                <div className="contact__type-icon"
+                                    data-sd-tooltip="Organisation Contact"
+                                    data-flow="right"
+                                >
+                                    <i className={iconName} />
+                                </div>
+                            </StretchBar>
+                            <StretchBar right={true}>
+                                <button className="btn" onClick={onCancel}>
+                                    {gettext('Cancel')}
+                                </button>
+                                {!readOnly && (
+                                    <button
+                                        className="btn btn--primary"
+                                        onClick={this.save}
+                                        disabled={!isFormValid || !dirty}
+                                    >{gettext('Save')}</button>
+                                )}
+                            </StretchBar>
+                        </div>
+                    )}
+                    <div className="profile-info">
+                        <ProfileDetail
+                            contact={currentContact}
+                            svc={svc}
+                            onChange={this.onChange}
+                            readOnly={readOnly}
+                            errors={errors}
+                            contactType={contactType}
+                        />
+                    </div>
                 </form>
             </div>
         );
@@ -179,9 +254,4 @@ ContactFormContainer.propTypes = {
     hideActionBar: PropTypes.bool,
 };
 
-ContactFormContainer.defaultProps = {
-    onDirty: () => { /* no-op */ },
-    onValidation: () => { /* no-op */ },
-    onSave: () => { /* no-op */ },
-    hideActionBar: false,
-};
+ContactFormContainer.defaultProps = {hideActionBar: false};

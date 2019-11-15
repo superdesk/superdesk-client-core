@@ -1,13 +1,50 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import {Row, LineInput, InputArray, MultiTextInput, Input, SelectInput, Toggle, ToggleBox,
-    ContactNumberInput, Label, SelectFieldSearchInput} from './index';
 import {get, set, isEmpty, findKey, orderBy, map} from 'lodash';
-import {validateMinRequiredField} from '../../../contacts/helpers';
+
 import {gettext} from 'core/utils';
 
-export class ProfileDetail extends React.Component<any, any> {
+import {InputArray, MultiTextInput, Input, Toggle, ToggleBox,
+    ContactNumberInput, Label, SelectFieldSearchInput} from './index';
+import {validateMinRequiredField} from '../../../contacts/helpers';
+import {IContact, IContactsService} from '../../Contacts';
+
+import {
+    Row,
+    RowItem,
+    LineInput,
+    SelectInput,
+} from 'core/ui/components/Form';
+
+interface IProps {
+    svc: {
+        metadata: any;
+        contacts: IContactsService;
+        privileges: any;
+    };
+    contact: IContact;
+    contactType: string;
+    onChange(field: string, value: any, e?: any): void;
+    readOnly: boolean;
+    errors: {[key: string]: string};
+}
+
+interface IState {
+    jobTitles: any;
+    stateNames: any;
+    countries: any;
+    phoneUsages: any;
+    mobileUsages: any;
+    displayOtherStateField: any;
+    requiredField: any;
+    touched: any;
+    organisations: any;
+    orgValue: any;
+    contactTypes: any;
+}
+
+export class ProfileDetail extends React.Component<IProps, IState> {
     static propTypes: any;
     static defaultProps: any;
 
@@ -16,7 +53,7 @@ export class ProfileDetail extends React.Component<any, any> {
         const {svc, contact} = props;
         const {metadata} = svc;
 
-        let stateNames = [], countries = [];
+        let stateNames = [], countries = [], contactTypes = [];
 
         if (metadata.values.regions) {
             stateNames = orderBy(metadata.values.regions, 'name', 'asc');
@@ -24,6 +61,10 @@ export class ProfileDetail extends React.Component<any, any> {
 
         if (metadata.values.countries) {
             countries = orderBy(metadata.values.countries, 'name', 'asc');
+        }
+
+        if (metadata.values.contact_type) {
+            contactTypes = orderBy(metadata.values.contact_type, 'name', 'asc');
         }
 
         this.state = {
@@ -37,6 +78,7 @@ export class ProfileDetail extends React.Component<any, any> {
             touched: {},
             organisations: [],
             orgValue: get(contact, 'organisation', ''),
+            contactTypes: contactTypes,
         };
 
         this.changeOtherStateField = this.changeOtherStateField.bind(this);
@@ -129,17 +171,43 @@ export class ProfileDetail extends React.Component<any, any> {
                     </div>
                 }
 
-                {!readOnly &&
-                    <Row>
+                <Row flex={true}>
+                    {get(this.state, 'contactTypes.length', 0) > 0 && (
+                        <RowItem>
+                            <SelectInput
+                                field="contact_type"
+                                label={gettext('Contact Type')}
+                                value={get(contact, 'contact_type', {})}
+                                onChange={onChange}
+                                options={get(this.state, 'contactTypes', [])}
+                                labelField="name"
+                                keyField="qcode"
+                                clearable={true}
+                                readOnly={readOnly}
+                            />
+                        </RowItem>
+                    )}
+                    <RowItem noGrow={true}>
                         <LineInput readOnly={readOnly}>
                             <Label text={gettext('public')} />
                             <Toggle
                                 value={get(contact, 'public', false)}
                                 onChange={(e) => onChange('public', e.target.value)}
-                                readOnly={readOnly} />
+                                readOnly={readOnly}
+                            />
                         </LineInput>
-                    </Row>
-                }
+                    </RowItem>
+                    <RowItem noGrow={true}>
+                        <LineInput readOnly={readOnly}>
+                            <Label text={gettext('Active')} />
+                            <Toggle
+                                value={get(contact, 'is_active', false)}
+                                onChange={(e) => onChange('is_active', e.target.value)}
+                                readOnly={readOnly}
+                            />
+                        </LineInput>
+                    </RowItem>
+                </Row>
 
                 <Row>
                     <LineInput readOnly={readOnly} hint={gettext('e.g. professor, commissioner')}>
@@ -239,8 +307,17 @@ export class ProfileDetail extends React.Component<any, any> {
                 </Row>
 
                 <Row>
-                    <LineInput readOnly={readOnly} required={isRequired}>
+                    <LineInput
+                        readOnly={readOnly}
+                        required={isRequired || get(contact, 'contact_type.assignable')}
+                        invalid={!!get(errors, 'contact_email')}
+                    >
                         <Label text={gettext('email')} />
+                        {get(errors, 'contact_email') && (
+                            <div className="sd-line-input__message">
+                                {get(errors, 'contact_email')}
+                            </div>
+                        )}
                         <InputArray
                             field="contact_email"
                             type="email"
@@ -410,7 +487,7 @@ export class ProfileDetail extends React.Component<any, any> {
                         {!this.state.displayOtherStateField && <SelectInput
                             field="contact_state"
                             label={gettext('State/Province or Region')}
-                            value={get(contact, 'contact_state', '')}
+                            value={get(contact, 'contact_state', {})}
                             onChange={onChange}
                             options={get(this.state, 'stateNames', [])}
                             labelField="name"
@@ -442,7 +519,7 @@ export class ProfileDetail extends React.Component<any, any> {
                         <SelectInput
                             label={gettext('Country')}
                             field="country"
-                            value={get(contact, 'country', '')}
+                            value={get(contact, 'country', {})}
                             onChange={onChange}
                             type="text"
                             readOnly={readOnly}
