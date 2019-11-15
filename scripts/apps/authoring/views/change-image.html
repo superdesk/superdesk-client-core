@@ -128,7 +128,7 @@
         </div>
 
         <div class="sd-column-box__slide-in-column sd-column-box__slide-in-column--large sd-column-box__slide-in-column--dark-ui" ng-class="{'sd-column-box__slide-in-column--closed' : !showMetadata}" ng-show="nav !== 'crop'">
-            <div class="sd-column-box__slide-in-column-inner sd-slide-in-panel">
+            <div class="sd-column-box__slide-in-column-inner sd-slide-in-panel" ng-controller="MediaFieldsController as fields">
                 <div class="sd-slide-in-panel__header">
                     <h3 class="sd-slide-in-panel__heading" ng-if="nav !== 'image-edit'" translate>Metadata</h3>
                     <h3 class="sd-slide-in-panel__heading" ng-if="nav === 'image-edit'" translate>Controls</h3>
@@ -150,7 +150,9 @@
                              data-boxed="true"
                              data-on-change="metadata.isDirty = true"
                              data-disabled="!data.editable"
-                             data-associated="data.isAssociated">
+                             data-associated="data.isAssociated"
+                             data-fields="fields.fields"
+                            >
                         </div>
                     </div>
                 </div>
@@ -159,7 +161,9 @@
                      data-metadata="data.metadata"
                      data-validator="validator"
                      ng-if="nav === 'view'"
-                     data-on-change="metadata.isDirty = true">
+                     data-on-change="metadata.isDirty = true"
+                     data-fields="fields.fields"
+                     >
                 </div>
 
                 <div class="sd-slide-in-panel__content" ng-if="nav === 'image-edit'">

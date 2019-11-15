@@ -7,6 +7,7 @@ interface IHttpRequestOptions {
     url: string; // absolute url
     payload?: {};
     headers?: {[key: string]: any};
+    urlParams?: {[key: string]: any};
 }
 
 interface IHttpRequestOptionsLocal extends Omit<IHttpRequestOptions, 'url'> {
@@ -34,7 +35,15 @@ export function isHttpApiError(x): x is IHttpLocalApiErrorResponse {
 function httpRequestBase(options: IHttpRequestOptions): Promise<Response> {
     const {method, url, payload, headers} = options;
 
-    return fetch(url, {
+    const _url = new URL(url);
+
+    if (options.urlParams != null) {
+        Object.keys(options.urlParams).forEach((key) => {
+            _url.searchParams.append(key, options.urlParams[key]);
+        });
+    }
+
+    return fetch(_url.toString(), {
         method,
         headers: headers || {},
         mode: 'cors',
@@ -58,6 +67,7 @@ export function httpRequestVoidLocal(options: IHttpRequestOptionsLocal): Promise
             return httpRequestBase({
                 ...options,
                 url: appConfig.server.url + options.path,
+                urlParams: options.urlParams,
                 headers: {
                     ...(options.headers || {}),
                     'Authorization': session.token,

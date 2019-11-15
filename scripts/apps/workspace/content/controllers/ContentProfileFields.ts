@@ -129,6 +129,8 @@ export default function ContentProfileFields($scope, content, vocabularies, meta
 
                 this.sections[section].enabled.push(key);
                 this.model.editor[key].order = index + 1; // keep order in sync
+                // keep required value of editor fields in sync with the schema fields SDNTB-615
+                this.model.editor[key].required = this.model.schema[key].required;
             });
 
             Object.keys(this.model.editor)
