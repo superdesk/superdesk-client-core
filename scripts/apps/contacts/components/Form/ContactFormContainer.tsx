@@ -65,7 +65,7 @@ export class ContactFormContainer extends React.Component<IProps, IState> {
             this.props.onDirty();
         }
 
-        if(this.props.onValidation) {
+        if (this.props.onValidation) {
             this.props.onValidation(valid);
         }
     }
