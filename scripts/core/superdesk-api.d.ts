@@ -769,7 +769,7 @@ declare module 'superdesk-api' {
                 WrappedComponent: React.ComponentType<Props & PropsToConnect>,
                 name: string,
                 endpoint: string,
-                formatFiltersForServer: (filters: ICrudManagerFilters) => ICrudManagerFilters,
+                formatFiltersForServer?: (filters: ICrudManagerFilters) => ICrudManagerFilters,
             ): React.ComponentType<Props>;
             ListItem: React.ComponentType<IListItemProps>;
             ListItemColumn: React.ComponentType<IPropsListItemColumn>;

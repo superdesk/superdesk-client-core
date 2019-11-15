@@ -193,7 +193,7 @@ export function connectCrudManager<Props, PropsToConnect, Entity extends IBaseRe
     WrappedComponent, // : React.ComponentType<Props & PropsToConnect>
     name: string,
     endpoint: string,
-    formatFiltersForServer: (filters: ICrudManagerFilters) => ICrudManagerFilters,
+    formatFiltersForServer?: (filters: ICrudManagerFilters) => ICrudManagerFilters,
 ): React.ComponentType<Props> {
     const component = class extends React.Component<Props, ICrudManagerState<Entity>>
         implements ICrudManagerMethods<Entity> {
