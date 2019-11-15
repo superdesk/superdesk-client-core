@@ -602,17 +602,13 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
 }
 
 export const getGenericListPageComponent =
-    <T extends IBaseRestApiResponse>(resource: string, formConfig?: IFormGroup) =>
+    <T extends IBaseRestApiResponse>(resource: string, formConfig: IFormGroup) =>
         connectServices<IPropsGenericForm<T>>(
             connectCrudManager<IPropsGenericForm<T>, IPropsConnected<T>, T>(
                 GenericListPageComponent,
                 'items',
                 resource,
                 (filters: IFormGroup) => {
-                    if (formConfig == null) {
-                        return filters;
-                    }
-
                     const formConfigForFilters = getFormGroupForFiltering(formConfig);
                     const fieldTypesLookup = getFormFieldsFlat(formConfigForFilters)
                         .reduce((accumulator, item) => ({...accumulator, ...{[item.field]: item.type}}), {});
