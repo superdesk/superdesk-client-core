@@ -21,11 +21,7 @@
                     </a>
                     <!-- video -->
                     <div class="item-association__video-container" ng-if="carouselItem[carouselItem.fieldId] && carouselItem[carouselItem.fieldId].type === 'video'">
-                        <video controls="controls">
-                            <source vsrc="{{rendition.href}}"
-                                    ng-repeat="(key, rendition) in carouselItem[carouselItem.fieldId].renditions"
-                                    ng-if="associations.checkRenditions.isVideo(rendition)" html5vfix>
-                        </video>
+                        <sd-video item="carouselItem[carouselItem.fieldId]"></sd-video>
                         <div class="item-association__metadata item-association__metadata--plain">
                             <span>
                                 <em>{{:: 'Credit:' | translate}}</em>

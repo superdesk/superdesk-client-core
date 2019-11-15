@@ -279,6 +279,16 @@ declare module 'superdesk-api' {
             archive?: boolean;
             externalsource: boolean;
         };
+
+        // media renditions
+        renditions: {
+            [key: string]: {
+                href: string;
+                width?: number;
+                height?: number;
+                mimetype: string;
+            };
+        };
     }
 
     export interface IPublishedArticle extends IArticle {
