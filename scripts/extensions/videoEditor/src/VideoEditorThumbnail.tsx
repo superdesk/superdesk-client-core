@@ -21,7 +21,7 @@ interface IState {
     value: number | File; // capture positon or uploaded File
     // most recent updated thumbnail, for re-drawing thumbnail when reset changes
     thumbnail: string;
-    // deprived from props to save rotate degree only when user captures thumbnail
+    // save current rotate degree when user captures thumbnail
     rotateDegree: number;
     scale: number;
 }
@@ -262,17 +262,18 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
 
     render() {
         const { getClass } = this.context.superdesk.utilities.CSS;
+        const { gettext } = this.context.superdesk.localization;
 
         return (
             <div className={`sd-photo-preview__thumbnail-edit ${getClass('video__thumbnail__container')}`}>
-                <div className="sd-photo-preview__thumbnail-edit-label">Video thumbnail</div>
+                <div className="sd-photo-preview__thumbnail-edit-label">{gettext('Video thumbnail')}</div>
                 <div className="image-overlay">
                     <div className="image-overlay__button-block">
                         {!this.state.dirty ? (
                             <>
                                 <a
                                     className="image-overlay__button"
-                                    sd-tooltip="Use current frame"
+                                    sd-tooltip={gettext('Use current frame')}
                                     onClick={this.handleClick}
                                 >
                                     <i className="icon-photo"></i>
@@ -285,7 +286,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
                                             accept=".png,.jpg,.jpeg,.webp"
                                             onChange={e => this.handleChange(e.target.files)}
                                         />
-                                        <a className="image-overlay__button" sd-tooltip="Upload image">
+                                        <a className="image-overlay__button" sd-tooltip={gettext('Upload image')}>
                                             <i className="icon-upload"></i>
                                         </a>
                                     </label>
@@ -293,12 +294,16 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
                             </>
                         ) : (
                             <>
-                                <a className="image-overlay__button" sd-tooltip="Save change" onClick={this.handleSave}>
+                                <a
+                                    className="image-overlay__button"
+                                    sd-tooltip={gettext('Save change')}
+                                    onClick={this.handleSave}
+                                >
                                     <i className="icon-ok"></i>
                                 </a>
                                 <a
                                     className="image-overlay__button"
-                                    sd-tooltip="Reset change"
+                                    sd-tooltip={gettext('Reset change')}
                                     onClick={() => this.handleReset()}
                                 >
                                     <i className="icon-close-thick"></i>
@@ -310,7 +315,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
                 {!this.state.thumbnail && !this.state.value && (
                     <div className={getClass('video__thumbnail--empty')}>
                         <div className="upload__info-icon"></div>
-                        <p className={getClass('video__thumbnail--empty__text')}>No thumbnail</p>
+                        <p className={getClass('video__thumbnail--empty__text')}>{gettext('No thumbnail')}</p>
                     </div>
                 )}
                 <div className={getClass('video__thumbnail__wrapper')} ref={this.getWrapperSize}>
