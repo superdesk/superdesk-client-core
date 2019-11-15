@@ -38,7 +38,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
             dirty: false,
             type: '',
             value: 0,
-            thumbnail: this.props.article.renditions?.thumbnail!.href,
+            thumbnail: this.props.article.renditions?.thumbnail!?.href,
             rotateDegree: 0,
             scale: 1,
         };
