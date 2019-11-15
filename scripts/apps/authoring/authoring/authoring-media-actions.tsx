@@ -1,7 +1,7 @@
 import React from 'react';
 import {IArticle} from 'superdesk-api';
 import {flatMap} from 'lodash';
-import {extensions} from 'core/extension-imports.generated';
+import {extensions} from 'appConfig';
 
 interface IProps {
     article: IArticle;
