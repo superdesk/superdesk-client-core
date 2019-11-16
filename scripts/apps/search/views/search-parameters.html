@@ -257,4 +257,11 @@
 
     </fieldset>
     <div ng-if="hasTemplate(providerType)" ng-include="getTemplate(providerType)"></div>
+
+    <search-panel-widgets
+        provider="providerType"
+        params="params"
+        set-params="updateParams"
+    ></search-panel-widgets>
+
 </form>
