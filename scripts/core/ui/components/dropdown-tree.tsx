@@ -53,6 +53,7 @@ export class DropdownTree<T> extends React.PureComponent<IPropsDropdownTree<T>, 
         return (
             <div
                 style={{display: 'flex', position: 'relative', lineHeight: 'initial'}}
+                data-test-id={this.props['data-test-id']}
             >
                 {getToggleElement(this.state.open, onClick)}
                 {

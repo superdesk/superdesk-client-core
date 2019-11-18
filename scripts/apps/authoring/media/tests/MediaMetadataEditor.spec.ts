@@ -1,6 +1,18 @@
 import * as helper from 'apps/workspace/helpers/getLabelForFieldId';
+import {appConfig} from 'appConfig';
+import {ISuperdeskGlobalConfig} from 'superdesk-api';
 
 describe('media metadata editor', () => {
+    beforeEach(() => {
+        const testConfig: Partial<ISuperdeskGlobalConfig> = {
+            server: {
+                url: '',
+                ws: undefined,
+            },
+        };
+
+        Object.assign(appConfig, testConfig);
+    });
     beforeEach(window.module(($provide) => {
         $provide.service('metadata', ($q) => ({
             initialize: () => $q.when({}),
@@ -11,20 +23,13 @@ describe('media metadata editor', () => {
     beforeEach(window.module('superdesk.config'));
     beforeEach(window.module('superdesk.apps.authoring.media'));
 
-    beforeEach(inject(($q) => {
+    beforeEach(inject(($q, metadata) => {
         spyOn(helper, 'getLabelNameResolver').and.returnValue($q.when(() => { /* no-op */ }));
+        spyOn(metadata, 'initialize').and.returnValue($q.when({}));
     }));
 
-    it('dislays all fields', inject(($rootScope, $compile, deployConfig) => {
-        deployConfig.config = {
-            schema: {
-                picture: {
-                    slugline: {type: 'string'},
-                    headline: {type: 'string'},
-                    genre: {type: 'list'},
-                    category: {type: 'list'},
-                },
-            },
+    it('displays all fields', inject(($rootScope, $controller) => {
+        const testConfig: Partial<ISuperdeskGlobalConfig> = {
             editor: {
                 picture: {
                     slugline: {
@@ -45,23 +50,30 @@ describe('media metadata editor', () => {
                     },
                 },
             },
+            schema: {
+                picture: {
+                    slugline: {type: 'string'},
+                    headline: {type: 'string'},
+                    genre: {type: 'list'},
+                    category: {type: 'list'},
+                },
+            },
+            validator_media_metadata: {},
         };
-        let scope = $rootScope.$new(true);
 
-        scope.item = {_id: 'foo'};
+        Object.assign(appConfig, testConfig);
 
-        let elm = $compile('<div sd-media-metadata-editor data-item="item"></div>')(scope);
+        const ctrl = $controller('MediaFieldsController');
 
-        scope.$digest();
+        $rootScope.$digest();
 
-        let iScope = elm.isolateScope();
-
-        expect(iScope.fields.length).toBe(4);
-        expect(iScope.fields.map((f) => f.field)).toEqual(['slugline', 'headline', 'category', 'genre']);
+        expect(ctrl.fields).not.toBeUndefined();
+        expect(ctrl.fields.length).toBe(4);
+        expect(ctrl.fields.map((f) => f.field)).toEqual(['slugline', 'headline', 'category', 'genre']);
     }));
 
-    it('dislays fields with dislayOnMediaEditor set', inject(($rootScope, $compile, deployConfig) => {
-        deployConfig.config = {
+    it('displays fields with dislayOnMediaEditor set', inject(($rootScope, $controller) => {
+        const testConfig: Partial<ISuperdeskGlobalConfig> = {
             schema: {
                 picture: {
                     slugline: {type: 'string'},
@@ -95,17 +107,18 @@ describe('media metadata editor', () => {
                 },
             },
         };
+
+        Object.assign(appConfig, testConfig);
+
         let scope = $rootScope.$new(true);
 
         scope.item = {_id: 'foo'};
 
-        let elm = $compile('<div sd-media-metadata-editor data-item="item"></div>')(scope);
+        const ctrl = $controller('MediaFieldsController');
 
-        scope.$digest();
+        $rootScope.$digest();
 
-        let iScope = elm.isolateScope();
-
-        expect(iScope.fields.length).toBe(2);
-        expect(iScope.fields.map((f) => f.field)).toEqual(['slugline', 'headline']);
+        expect(ctrl.fields.length).toBe(2);
+        expect(ctrl.fields.map((f) => f.field)).toEqual(['slugline', 'headline']);
     }));
 });

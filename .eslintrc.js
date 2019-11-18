@@ -21,16 +21,9 @@ module.exports = Object.assign({}, sharedConfigs, {
         // but keep internal properties unquoted unless required
         'quote-props': 0,
 
-        "comma-dangle": ["error", {
-            "arrays": "always-multiline",
-            "objects": "always-multiline",
-            "imports": "always-multiline",
-            "exports": "always-multiline",
-            "functions": "always-multiline"
-        }],
         'newline-per-chained-call': ["error", {"ignoreChainWithDepth": 3}],
     }),
-    parser: 'typescript-eslint-parser',
+    parser: '@typescript-eslint/parser',
     overrides: [
         {
             files: ['*.ts', '*.tsx'],
@@ -46,6 +39,18 @@ module.exports = Object.assign({}, sharedConfigs, {
                 'quote-props': 0,
                 'arrow-body-style': 0,
                 'max-len': 0, // handled by tslint
+
+                "comma-dangle": ["error", {
+                    "arrays": "always-multiline",
+                    "objects": "always-multiline",
+                    "imports": "always-multiline",
+                    "exports": "always-multiline",
+                    "functions": "always-multiline"
+                }],
+
+
+                // allow calling hasOwnProperty
+                "no-prototype-builtins": 0,
             },
         },
     ],

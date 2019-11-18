@@ -1,4 +1,5 @@
 import _, {cloneDeep} from 'lodash';
+import {appConfig} from 'appConfig';
 
 /**
  * @ngdoc directive
@@ -26,7 +27,6 @@ SearchPanel.$inject = [
     'metadata',
     '$rootScope',
     'session',
-    'config',
 ];
 
 export function SearchPanel($location,
@@ -36,7 +36,6 @@ export function SearchPanel($location,
     metadata,
     $rootScope,
     session,
-    config,
 ) {
     desks.initialize();
     return {
@@ -51,7 +50,7 @@ export function SearchPanel($location,
             providerType: '=',
         },
         link: function(scope, element, attrs, controller) {
-            scope.config = config;
+            scope.config = appConfig;
             scope.flags = controller.flags;
             scope.sTab = 'advancedSearch';
             scope.innerTab = 'parameters';

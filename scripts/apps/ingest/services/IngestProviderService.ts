@@ -1,7 +1,8 @@
 import _ from 'lodash';
+import {appConfig} from 'appConfig';
 
-IngestProviderService.$inject = ['api', '$q', 'preferencesService', '$filter', 'searchProviderService', 'config'];
-export function IngestProviderService(api, $q, preferencesService, $filter, searchProviderService, config) {
+IngestProviderService.$inject = ['api', '$q', 'preferencesService', '$filter', 'searchProviderService'];
+export function IngestProviderService(api, $q, preferencesService, $filter, searchProviderService) {
     var _getAllIngestProviders = function(criteria = {}, page = 1, providers = []) {
         return api.query('ingest_providers', _.extend({max_results: 200, page: page}, criteria))
             .then((result) => {
@@ -47,11 +48,11 @@ export function IngestProviderService(api, $q, preferencesService, $filter, sear
     };
 
     var _forcedExtend = function(dest, src) {
-        _.each(config.ingest.PROVIDER_DASHBOARD_DEFAULTS, (value, key) => {
+        _.each(appConfig.ingest.PROVIDER_DASHBOARD_DEFAULTS, (value, key) => {
             if (_.has(src, key)) {
                 dest[key] = src[key];
             } else {
-                dest[key] = config.ingest.PROVIDER_DASHBOARD_DEFAULTS[key];
+                dest[key] = appConfig.ingest.PROVIDER_DASHBOARD_DEFAULTS[key];
             }
         });
     };
@@ -111,7 +112,7 @@ export function IngestProviderService(api, $q, preferencesService, $filter, sear
 
                         provider.dashboard_enabled = !!userProvider;
                         _forcedExtend(provider,
-                            userProvider ? userProvider : config.ingest.PROVIDER_DASHBOARD_DEFAULTS);
+                            userProvider ? userProvider : appConfig.ingest.PROVIDER_DASHBOARD_DEFAULTS);
                     });
 
                     deferred.resolve(ingestProviders);

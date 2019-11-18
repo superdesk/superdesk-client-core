@@ -98,7 +98,7 @@ angular.module('superdesk.apps.authoring', [
     .directive('sdArticleEdit', directive.ArticleEditDirective)
     .directive('sdAuthoring', directive.AuthoringDirective)
     .directive('sdAuthoringTopbar', directive.AuthoringTopbarDirective)
-    .component('sdAuthoringTopbarReact', reactToAngular1(AuthoringTopbarReact, ['article', 'onChange']))
+    .component('sdAuthoringTopbarReact', reactToAngular1(AuthoringTopbarReact, ['article', 'action', 'onChange']))
     .directive('sdPreviewFormatted', directive.PreviewFormattedDirective)
     .directive('sdAuthoringContainer', directive.AuthoringContainerDirective)
     .directive('sdAuthoringEmbedded', directive.AuthoringEmbeddedDirective)
@@ -194,7 +194,7 @@ angular.module('superdesk.apps.authoring', [
                     authoringWorkspace.popup(data.item, 'edit');
                 }],
                 filters: [{action: 'list', type: 'archive'}],
-                additionalCondition: ['authoring', 'item', 'config', 'lock', function(authoring, item, config, lock) {
+                additionalCondition: ['authoring', 'item', 'lock', function(authoring, item, lock) {
                     return authoring.itemActions(item).edit && !lock.isLockedByMe(item);
                 }],
             })
@@ -203,9 +203,9 @@ angular.module('superdesk.apps.authoring', [
                 priority: 3,
                 icon: 'edit-line',
                 keyboardShortcut: 'ctrl+alt+m',
-                controller: ['data', 'multiImageEdit', 'authoring', 'api',
-                    function(data, multiImageEdit, authoring, api) {
-                        api.find('archive', data.item._id).then((item) => {
+                controller: ['data', 'multiImageEdit', 'authoring', 'lock',
+                    function(data, multiImageEdit, authoring, lock) {
+                        lock.lock(data.item, true, 'edit').then((item) => {
                             multiImageEdit.edit([item], (response) => authoring.save(item, response[0]));
                         });
                     }],
@@ -226,7 +226,7 @@ angular.module('superdesk.apps.authoring', [
                     send.allAs([data.item], 'send_to');
                 }],
                 filters: [{action: 'list', type: 'archive'}],
-                additionalCondition: ['authoring', 'item', 'config', (authoring, item, config) =>
+                additionalCondition: ['authoring', 'item', (authoring, item) =>
                     authoring.itemActions(item).send && item.type !== 'composite',
                 ],
             })
@@ -329,7 +329,7 @@ angular.module('superdesk.apps.authoring', [
                     {action: 'list', type: 'archived'},
                     {action: 'list', type: 'legal_archive'},
                 ],
-                additionalCondition: ['authoring', 'item', 'config', function(authoring, item, config) {
+                additionalCondition: ['authoring', 'item', function(authoring, item) {
                     return authoring.itemActions(item).view;
                 }],
             })
@@ -359,20 +359,26 @@ angular.module('superdesk.apps.authoring', [
                 priority: 50,
                 icon: 'kill',
                 group: 'corrections',
-                controller: ['data', 'authoring', 'familyService',
-                    (data, authoring, familyService) => {
+                controller: ['data', 'authoring', 'familyService', 'notify',
+                    (data, authoring, familyService, notify) => {
                         const item = data.item;
                         let relatedItems = [];
+
+                        const handleSuccess = () => {
+                            notify.success(gettext('Item was unpublished successfully.'));
+                        };
 
                         familyService.fetchRelatedByState(item.archive_item, [ITEM_STATE.PUBLISHED])
                             .then((items) => {
                                 relatedItems = items;
 
                                 const unpublish = (selected) => {
-                                    authoring.publish(item.archive_item, {}, 'unpublish');
+                                    authoring.publish(item.archive_item, {}, 'unpublish', {notifyErrors: true})
+                                        .then(handleSuccess);
                                     relatedItems.forEach((relatedItem) => {
                                         if (selected[relatedItem._id]) {
-                                            authoring.publish(relatedItem, {}, 'unpublish');
+                                            authoring.publish(relatedItem, {}, 'unpublish', {notifyErrors: true})
+                                                .then(handleSuccess);
                                         }
                                     });
                                 };

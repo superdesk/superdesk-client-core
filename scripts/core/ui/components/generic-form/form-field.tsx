@@ -42,11 +42,13 @@ export function getFormFieldComponent(type: FormFieldType): React.ComponentType<
 export function getFormFieldPreviewComponent(
     item: {readonly [key: string]: any},
     formFieldConfig: IFormField,
+    options: { showAsPlainText?: boolean } = {},
 ): JSX.Element {
     const Component = getFormFieldComponent(formFieldConfig.type);
 
     return (
         <Component
+            showAsPlainText={!!options.showAsPlainText}
             formValues={item}
             previewOutput={true}
             value={item[formFieldConfig.field]}

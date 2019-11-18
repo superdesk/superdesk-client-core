@@ -33,8 +33,13 @@ export class TextEditor3 extends React.Component<IProps, IState> {
         this.setState({rawDraftContentState});
         this.props.onChange(editor3StateToHtml(convertFromRaw(rawDraftContentState)));
     }
-    componentDidUpdate() {
-        if (this.props.value !== editor3StateToHtml(convertFromRaw(this.state.rawDraftContentState))) {
+    componentDidUpdate(prevProps) {
+        // draft-js convertFromHTML method removes the blank lines
+        // for ex: "<p><br></p><p>hello</p>" will get converted to "<p>Hello</p>"
+        // due to this props value never matches HTML created from state.rawDraftContentState
+        // So, to avoid infinite loop match prevProps.value with current props.value as well
+        if (this.props.value !== prevProps.value
+            && this.props.value !== editor3StateToHtml(convertFromRaw(this.state.rawDraftContentState))) {
             // This component holds it's own state which is derived from props
             // internal state is reloaded when it doesn't match with what's in the props
             // holding own state is required to prevent infinite loops which would happen because
@@ -46,7 +51,7 @@ export class TextEditor3 extends React.Component<IProps, IState> {
     }
     render() {
         if (this.props.previewOutput) {
-            return <UserHtmlSingleLine html={this.props.value} />;
+            return <UserHtmlSingleLine html={this.props.value} showAsPlainText={!!this.props.showAsPlainText} />;
         }
 
         return (

@@ -34,13 +34,13 @@ declare module 'superdesk-api' {
     export type IDisplayPriority = number;
 
     export interface IArticleAction {
-        labelForGroup?: string;
+        groupId?: string; // action lists can specify which groups they wanna render via an id
         priority?: IDisplayPriority;
         icon?: string;
         label: string;
         onTrigger(): void;
     }
-    
+
     export interface IArticleActionBulk {
         priority?: IDisplayPriority;
         label: string;
@@ -59,6 +59,13 @@ declare module 'superdesk-api' {
             authoringTopbarWidgets?: Array<React.ComponentType<{article: IArticle}>>;
             pages?: Array<IPage>;
             customFieldTypes?: Array<ICustomFieldType>;
+            authoringActions?(article: IArticle): Promise<Array<IArticleAction>>;
+            notifications?: {
+                [id: string]: (notification) => {
+                    body: string;
+                    actions: Array<{label: string; onClick(): void;}>;
+                };
+            };
             entities?: {
                 article?: {
                     getActions?(article: IArticle): Promise<Array<IArticleAction>>;
@@ -69,23 +76,18 @@ declare module 'superdesk-api' {
                     onSpikeMultiple?(items: Array<IArticle>): Promise<onSpikeMiddlewareResult>;
                 };
             };
+            iptcMapping?(data: IPTCMetadata, item: Partial<IArticle>): Promise<Partial<IArticle>>;
         }
     }
 
 
     export type IExtension = DeepReadonly<{
+        id: string;
         activate: (superdesk: ISuperdesk) => Promise<IExtensionActivationResult>;
     }>;
 
     export type IExtensionObject = {
         extension: IExtension;
-        manifest: {
-            [key: string]: any;
-            main: string; // extension will be imported from here
-            superdeskExtension?: {
-                dependencies?: Array<string>;
-            };
-        };
         activationResult: IExtensionActivationResult;
     };
 
@@ -178,8 +180,10 @@ declare module 'superdesk-api' {
         _current_version: number;
         _type: 'ingest' | 'archive' | 'published' | 'archived' | string;
         guid: string;
+        family_id: string;
         translated_from: string;
-        translation_id: string;
+        translation_id: string; // if C is translated from B which is translated from A, all will have the same translation_id
+        translations: Array<IArticle['_id']>; // direct translations only, not all items with same translation_id
         usageterms: any;
         keywords: any;
         language: any;
@@ -198,7 +202,7 @@ declare module 'superdesk-api' {
         sms: string;
         abstract: string;
         byline: string;
-        dateline: string;
+        dateline: any;
         body_html: string;
         footer: string;
         firstcreated: any;
@@ -232,14 +236,19 @@ declare module 'superdesk-api' {
         broadcast: any;
         flags: any;
         source: string;
-        correction_sequence: any;
+        /** correction counter, is reset on rewrite */
+        correction_sequence: number;
+        /** rewrite counter */
+        rewrite_sequence: number;
         fetch_endpoint?: any;
         task_id?: any;
         ingest_provider?: any;
         archive_item?: any;
+        item_id?: string; // id of corresponding item in 'published' collection
 
         highlights?: Array<string>;
         highlight?: any;
+        sms_message?: any;
 
         // storage for custom fields created by users
         extra?: {[key: string]: any};
@@ -270,6 +279,15 @@ declare module 'superdesk-api' {
             archive?: boolean;
             externalsource: boolean;
         };
+    }
+
+    export interface IPublishedArticle extends IArticle {
+
+        /** id in published collection, different for each correction */
+        item_id: string; 
+
+        /** item copy in archive collection, always the latest version of the item */
+        archive_item: IArticle;
     }
 
     export interface IUserRole extends IBaseRestApiResponse {
@@ -334,12 +352,13 @@ declare module 'superdesk-api' {
         is_enabled: boolean;
         needs_activation: boolean;
         desk: IDesk;
-        SIGN_OFF: string;
-        BYLINE: string;
+        sign_off: string;
+        byline: string;
         invisible_stages: Array<any>;
         slack_username: string;
         slack_user_id: string;
     }
+
 
     export interface IContentProfile {
         _id: string;
@@ -354,8 +373,8 @@ declare module 'superdesk-api' {
         created_by: string;
         updated_by: string;
     }
-    
-    
+
+
 
     // PAGE
 
@@ -384,7 +403,7 @@ declare module 'superdesk-api' {
         title: string;
         href: string;
     }
-    
+
     // Eve properties
     export interface IRestApiResponse<T extends IBaseRestApiResponse> {
         _items: Array<T>;
@@ -403,12 +422,14 @@ declare module 'superdesk-api' {
         endpoint: string;
         page: {
             from: number;
-            size?: number;
+            size: number;
         };
         sort: Array<{[field: string]: 'asc' | 'desc'}>;
-    
+
         // can use deep references like {'a.b.c': []}
         filterValues: {[fieldName: string]: Array<string>};
+
+        aggregations: boolean;
     }
 
     interface IElasticSearchAggregationResult {
@@ -418,7 +439,7 @@ declare module 'superdesk-api' {
     }
 
     export type IArticleQuery = Omit<IQueryElasticParameters, 'endpoint'>;
-    
+
     interface IArticleQueryResult extends IRestApiResponse<IArticle> {
         _aggregations: {
             category?: IElasticSearchAggregationResult;
@@ -432,18 +453,19 @@ declare module 'superdesk-api' {
             urgency?: IElasticSearchAggregationResult;
         };
     }
-    
+
 
 
     // GENERIC FORM
 
-    export interface IPropsGenericForm<T extends IBaseRestApiResponse> {
+    export interface IPropsGenericForm<T extends IBaseRestApiResponse, TBase = Omit<T, keyof IBaseRestApiResponse>> {
         formConfig: IFormGroup;
         defaultSortOption: ISortOption;
+        defaultFilters?: Partial<TBase>;
         renderRow(key: string, item: T, page: IGenericListPageComponent<T>): JSX.Element;
-    
-        // Allows creating an item with required fields which aren't editable from the GUI
-        newItemTemplate?: {[key: string]: any};
+
+        // Allows initializing a new item with some fields already filled.
+        getNewItemTemplate?(page: IGenericListPageComponent<T>): Partial<TBase>;
 
         refreshOnEvents?: Array<string>;
 
@@ -466,24 +488,24 @@ declare module 'superdesk-api' {
 
     export interface IFormField { // don't forget to update runtime type checks
         type: FormFieldType;
-    
+
         required?: boolean;
-    
+
         // custom components for some fields might not require a label or want include a custom one
         label?: string;
-    
+
         field: string;
-    
+
         // can be used to pass read-only fields or display specific flags
         // component theme, variant or initial state could be set using this
         component_parameters?: {[key: string]: any};
     }
-    
+
     export interface IFormGroupCollapsible { // don't forget to update runtime type checks
         label: string;
         openByDefault: boolean;
     }
-    
+
     export interface IFormGroup { // don't forget to update runtime type checks
         direction: 'vertical' | 'horizontal';
         type: 'inline' | IFormGroupCollapsible;
@@ -501,13 +523,13 @@ declare module 'superdesk-api' {
         field: string;
         direction: 'ascending' | 'descending';
     }
-    
+
 
     export interface ICrudManagerState<Entity extends IBaseRestApiResponse> extends IRestApiResponse<Entity> {
         activeFilters: ICrudManagerFilters;
         activeSortOption?: ISortOption;
     }
-    
+
     export interface ICrudManagerMethods<Entity extends IBaseRestApiResponse> {
         read(
             page: number,
@@ -523,21 +545,28 @@ declare module 'superdesk-api' {
         removeFilter(fieldName: string): Promise<IRestApiResponse<Entity>>;
         goToPage(nextPage: number): Promise<IRestApiResponse<Entity>>;
     }
-    
+
 
     export interface ICrudManager<Entity extends IBaseRestApiResponse> extends ICrudManagerState<Entity>, ICrudManagerMethods<Entity> {
         // allow exposing it as one interface for consumer components
     }
 
-    
+
 
     // REACT COMPONENTS
+
+    export interface IConfigurableUiComponents {
+        UserAvatar?: React.ComponentType<{user: IUser}>;
+    }    
 
     export interface IListItemProps {
         onClick?(): void;
         className?: string;
         inactive?: boolean;
         noHover?: boolean;
+        noShadow?: boolean;
+        noBackground?: boolean;
+        fullWidth?: boolean;
         'data-test-id'?: string;
     }
 
@@ -545,6 +574,7 @@ declare module 'superdesk-api' {
         ellipsisAndGrow?: boolean;
         noBorder?: boolean;
         justifyContent?: string;
+        bold?: boolean;
     }
 
     export interface IGridComponentProps {
@@ -575,7 +605,7 @@ declare module 'superdesk-api' {
         onClose?(): void;
     }
 
-    export interface IGenericListPageComponent<T extends IBaseRestApiResponse> {
+    export interface IGenericListPageComponent<T extends IBaseRestApiResponse, TBase = Omit<T, keyof IBaseRestApiResponse>> {
         openPreview(id: string): void;
         startEditing(id: string): void;
         closePreview(): void;
@@ -584,6 +614,7 @@ declare module 'superdesk-api' {
         openNewItemForm(): void;
         closeNewItemForm(): void;
         deleteItem(item: T): void;
+        getActiveFilters(): Partial<TBase>;
         removeFilter(fieldName: string): void;
     }
 
@@ -604,6 +635,7 @@ declare module 'superdesk-api' {
         getToggleElement(isOpen: boolean, onClick: () => void): JSX.Element;
         renderItem(key: string, item: T, closeDropdown:() => void): JSX.Element;
         wrapperStyles?: React.CSSProperties;
+        'data-test-id'?: string;
     }
 
     interface ISpacingProps {
@@ -637,6 +669,7 @@ declare module 'superdesk-api' {
         label: string;
         selectedByDefault(annotationText: string, mode: 'create' | 'edit'): Promise<boolean>;
         component: React.ComponentType<IPropsAnnotationInputComponent>;
+        onAnnotationCreate(language: string, annotationText: string, definitionHtml: string): void;
     }
 
     export interface IPropsAnnotationInputComponent {
@@ -660,13 +693,14 @@ declare module 'superdesk-api' {
             page: number,
             sortOption: ISortOption,
             filterValues: ICrudManagerFilters,
+            max_results?: number,
             formatFiltersForServer?: (filters: ICrudManagerFilters) => ICrudManagerFilters,
         ): Promise<IRestApiResponse<T>>;
         patch<T extends IBaseRestApiResponse>(endpoint, current: T, next: T): Promise<T>;
         delete<T extends IBaseRestApiResponse>(endpoint, item: T): Promise<void>;
     }
 
-    
+
 
     // EVENTS
 
@@ -707,6 +741,9 @@ declare module 'superdesk-api' {
         state: {
             articleInEditMode?: IArticle['_id'];
         };
+        instance: {
+            config: ISuperdeskGlobalConfig
+        };
         ui: {
             article: {
                 view(id: string): void;
@@ -731,13 +768,17 @@ declare module 'superdesk-api' {
             contentProfile: {
                 get(id: string): Promise<IContentProfile>;
             };
+            vocabulary: {
+                getIptcSubjects(): Promise<Array<ISubject>>;
+                getVocabulary(id: string): Promise<Array<ISubject>>;
+            };
         };
         helpers: {
             assertNever(x: never): never;
         },
         components: {
             UserHtmlSingleLine: React.ComponentType<{html: string}>;
-            getGenericListPageComponent<T extends IBaseRestApiResponse>(resource: string): React.ComponentType<IPropsGenericForm<T>>;                        
+            getGenericListPageComponent<T extends IBaseRestApiResponse>(resource: string): React.ComponentType<IPropsGenericForm<T>>;
             connectCrudManager<Props, PropsToConnect, Entity extends IBaseRestApiResponse>(
                 WrappedComponent: React.ComponentType<Props & PropsToConnect>,
                 name: string,
@@ -755,7 +796,7 @@ declare module 'superdesk-api' {
             Alert: React.ComponentType<IAlertComponentProps>;
             Figure: React.ComponentType<IFigureComponentProps>;
             DropZone: React.ComponentType<IDropZoneComponentProps>;
-            Modal: React.ComponentType;
+            Modal: React.ComponentType<{'data-test-id'?: string}>;
             ModalHeader: React.ComponentType<IPropsModalHeader>;
             ModalBody: React.ComponentType;
             ModalFooter: React.ComponentType;
@@ -765,7 +806,7 @@ declare module 'superdesk-api' {
             ArticleItemConcise: React.ComponentType<{article: IArticle}>;
             GroupLabel: React.ComponentType<ISpacingProps>;
             Icon: React.ComponentType<IPropsIcon>;
-            TopMenuDropdownButton: React.ComponentType<{onClick: () => void; active: boolean}>;
+            TopMenuDropdownButton: React.ComponentType<{onClick: () => void; active: boolean; 'data-test-id'?: string;}>;
             getDropdownTree: <T>() => React.ComponentType<IPropsDropdownTree<T>>;
         };
         forms: {
@@ -779,18 +820,17 @@ declare module 'superdesk-api' {
                     readonly [key: string]: any;
                 },
                 formFieldConfig: any,
+                options: { showAsPlainText?: boolean } = {}
             ): JSX.Element;
         };
         localization: {
             gettext(message: string): string;
         };
-        extensions: {
-            getExtension(id: string): Promise<Omit<IExtension, 'activate'>>;
-        };
         privileges: {
             getOwnPrivileges(): Promise<any>;
         };
         session: {
+            getToken(): string;
             getCurrentUser(): Promise<IUser>;
         };
         utilities: {
@@ -815,6 +855,163 @@ declare module 'superdesk-api' {
     }>;
 
 
+    export interface ISuperdeskGlobalConfig {
+        // FROM SERVER
+        default_language: string;
+        schema: any;
+        editor: {
+            vidible?: any;
+            picture?: any;
+        };
+        feedback_url: any;
+        override_ednote_for_corrections: any;
+        override_ednote_template: any;
+        default_genre: any;
+        japanese_characters_per_minute: any;
+        validator_media_metadata: any;
+        publish_content_expiry_minutes: any;
+        high_priority_queue_enabled: any;
+        attachments_max_size: any;
+        attachments_max_files: any;
+        ingest_expiry_minutes: any;
+        content_expiry_minutes: any;
+        xmpp_auth: any;
+        saml_auth: any;
+        google_auth: any;
+        saml_label: any;
+        
+
+        // FROM CLIENT
+        server: {
+            url: string;
+            ws: any;
+        };
+        apps: any;
+        defaultRoute: string;
+        startingDay: any;
+        features: {
+            swimlane?: {
+                defaultNumberOfColumns: number;
+            };
+            editor3?: boolean;
+            qumu?: boolean;
+            editorAttachments?: boolean;
+            editorInlineComments?: boolean;
+            editorSuggestions?: boolean;
+            useTansaProofing?: boolean;
+            editFeaturedImage?: any;
+            validatePointOfInterestForImages?: any;
+            autopopulateByline?: any;
+            noPublishOnAuthoringDesk?: any;
+            confirmMediaOnUpdate?: any;
+            noMissingLink?: any;
+            hideRoutedDesks?: any;
+            autorefreshContent?: any;
+            elasticHighlight?: any;
+            onlyEditor3?: any;
+            nestedItemsInOutputStage?: boolean;
+        };
+        auth: {
+            google: boolean
+        };
+        ingest: {
+            PROVIDER_DASHBOARD_DEFAULTS: {
+                show_log_messages: boolean;
+                show_ingest_count: boolean;
+                show_time: boolean;
+                log_messages: 'error';
+                show_status: boolean;
+            }
+            DEFAULT_SCHEDULE: {
+                minutes: number;
+                seconds: number;
+            }
+            DEFAULT_IDLE_TIME: {
+                hours: number;
+                minutes: number;
+            };
+        };
+        confirm_spike: boolean;
+        defaultTimezone: any;
+        search: {
+            useDefaultTimezone: any;
+        };
+        search_cvs: any;
+        view: {
+            dateformat: any;
+            timeformat: any;
+        };
+        user: {
+            sign_off_mapping: any;
+        };
+        infoRemovedFields: {};
+        previewSubjectFilterKey: any;
+        authoring?: {
+            timeToRead?: any;
+        };
+        ui: {
+            publishEmbargo?: any;
+            sendAndPublish?: any;
+            italicAbstract?: any;
+        };
+        list: {
+            narrowView: any;
+            singleLineView: any;
+            singleLine: any;
+            priority: any;
+            firstLine: any;
+            secondLine: any;
+        };
+        item_profile: {
+            change_profile: any;
+        };
+        model: {
+            timeformat: any;
+            dateformat: any;
+        };
+        monitoring: {
+            scheduled: any;
+        };
+        defaultSearch: any;
+        profile: any;
+        profileLanguages: Array<any>;
+        subscriptionLevel: any;
+        workspace: any;
+        activity: any;
+        analytics: {
+            piwik: {
+                url: any;
+            };
+            ga: {
+                id: any;
+            };
+        };
+        longDateFormat: any;
+        shortTimeFormat: any;
+        shortDateFormat: any;
+        shortWeekFormat: any;
+        ArchivedDateFormat: any;
+        ArchivedDateOnCalendarYear: any;
+        iframely: {
+            key: any;
+        };
+        raven: {
+            dsn: any;
+        };
+        version: any;
+        releaseDate: any;
+        isTestEnvironment: any;
+        environmentName: any;
+        workspace: any;
+        paths: {
+            superdesk: any;
+        };
+        language: string; // default client language
+        editor3: {
+            browserSpellCheck: boolean;
+        };
+    }
+
 
     // CUSTOM FIELD TYPES
 
@@ -835,5 +1032,56 @@ declare module 'superdesk-api' {
         label: string;
         editorComponent: React.ComponentType<IEditorComponentProps>;
         previewComponent: React.ComponentType<IPreviewComponentProps>;
+    }
+
+
+    // IPTC picture metadata
+
+    interface IPTCMetadata {
+        // envelope
+        Destination: string;
+        ServiceIdentifier: string;
+        ProductID: string;
+        DateSent: string;
+        TimeSent: string;
+
+        // application
+        ObjectName: string;
+        EditStatus: string;
+        Urgency: string;
+        SubjectReference: string;
+        Category: string;
+        SupplementalCategories: string;
+        Keywords: string;
+        ContentLocationCode: string;
+        ContentLocationName: string;
+        ReleaseDate: string;
+        ReleaseTime: string;
+        ExpirationDate: string;
+        ExpirationTime: string;
+        SpecialInstructions: string;
+        DateCreated: string;
+        TimeCreated: string;
+        'By-line': string;
+        'By-lineTitle': string;
+        City: string;
+        'Sub-location': string;
+        'Province-State': string;
+        'Country-PrimaryLocationCode': string;
+        'Country-PrimaryLocationName': string;
+        OriginalTransmissionReference: string;
+        Headline: string;
+        Credit: string;
+        Source: string;
+        CopyrightNotice: string;
+        Contact: string;
+        'Caption-Abstract': string;
+        'Writer-Editor': string;
+        LanguageIdentifier: string;
+    }
+
+    interface ISubject {
+        name: string;
+        qcode: string;
     }
 }

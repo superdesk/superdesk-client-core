@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import {appConfig} from 'appConfig';
 
 export default angular.module('superdesk.core.services.server', [])
     /**
@@ -12,10 +13,10 @@ export default angular.module('superdesk.core.services.server', [])
      *
      * @description TODO
      */
-    .service('server', ['$q', '$http', 'config', function($q, $http, config) {
+    .service('server', ['$q', '$http', function($q, $http) {
         return {
             _makeUrl: function() {
-                var url = config.server.url;
+                var url = appConfig.server.url;
 
                 for (var i = 0; i < arguments.length; i++) {
                     url += '/' + arguments[i];
@@ -25,7 +26,7 @@ export default angular.module('superdesk.core.services.server', [])
             },
 
             _wrapUrl: function(url) {
-                if (config.server.url.indexOf('https') === 0) {
+                if (appConfig.server.url.indexOf('https') === 0) {
                     return 'https://' + url;
                 }
 

@@ -18,7 +18,7 @@ import {
 } from './ui/components/generic-form/interfaces/form';
 import {UserHtmlSingleLine} from './helpers/UserHtmlSingleLine';
 import {Row, Item, Column} from './ui/components/List';
-import {connectCrudManager, dataApi, dataApiByEntity} from './helpers/CrudManager';
+import {connectCrudManager, dataApi, dataApiByEntity, generatePatch} from './helpers/CrudManager';
 import {generateFilterForServer} from './ui/components/generic-form/generate-filter-for-server';
 import {assertNever, Writeable} from './helpers/typescript-helpers';
 import {flatMap, memoize} from 'lodash';
@@ -48,6 +48,8 @@ import {TopMenuDropdownButton} from './ui/components/TopMenuDropdownButton';
 import {dispatchInternalEvent} from './internal-events';
 import {Icon} from './ui/components/Icon2';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
+import {httpRequestJsonLocal} from './helpers/network';
+import ng from 'core/services/ng';
 
 function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
@@ -128,6 +130,8 @@ export function getSuperdeskApiImplementation(
     lock,
     session,
     authoringWorkspace: AuthoringWorkspaceService,
+    config,
+    metadata,
 ): ISuperdesk {
     return {
         dataApi: dataApi,
@@ -152,17 +156,39 @@ export function getSuperdeskApiImplementation(
                     onUpdateBeforeMiddlewares.reduce(
                         (current, next) => current.then((result) => next(result)),
                         Promise.resolve(__articleNext),
-                    ).then((articleNext) => {
-                        dataApi.findOne<IArticle>('archive', articleNext._id)
-                            .then((articleCurrent) => {
-                                dataApi.patch('archive', articleCurrent, articleNext).then((articleNextFromServer) => {
-                                    const onUpdateAfterFunctions = getOnUpdateAfterFunctions(extensions);
+                    ).then((articleNext: IArticle) => {
+                        const isPublished = articleNext.item_id != null;
 
-                                    onUpdateAfterFunctions.forEach((fn) => {
-                                        fn(articleNextFromServer);
+                        (function(): Promise<any> {
+                            // distinction between handling published and non-published items
+                            // should be removed: SDESK-4687
+                            if (isPublished) {
+                                return dataApi.findOne<IArticle>('published', articleNext.item_id)
+                                    .then((articleCurrent) => {
+                                        const patch = generatePatch(articleCurrent, articleNext);
+
+                                        return httpRequestJsonLocal({
+                                            'method': 'PATCH',
+                                            path: '/published/' + articleNext.item_id,
+                                            payload: patch,
+                                            headers: {
+                                                'If-Match': articleNext._etag,
+                                            },
+                                        });
                                     });
-                                });
+                            } else {
+                                return dataApi.findOne<IArticle>('archive', articleNext._id)
+                                    .then((articleCurrent) => {
+                                        dataApi.patch('archive', articleCurrent, articleNext);
+                                    });
+                            }
+                        })().then((articleNextFromServer) => {
+                            const onUpdateAfterFunctions = getOnUpdateAfterFunctions(extensions);
+
+                            onUpdateAfterFunctions.forEach((fn) => {
+                                fn(articleNextFromServer);
                             });
+                        });
                     }).catch((err) => {
                         if (err instanceof Error) {
                             logger.error(err);
@@ -189,12 +215,22 @@ export function getSuperdeskApiImplementation(
                     return getContentTypeMemoized(id);
                 },
             },
+            vocabulary: {
+                getIptcSubjects: () => metadata.initialize().then(() => metadata.values.subjectcodes),
+                getVocabulary: (id: string) => metadata.initialize().then(() => metadata.values[id]),
+            },
         },
         state: applicationState,
+        instance: {
+            config,
+        },
         ui: {
             article: {
                 view: (id: string) => {
-                    authoringWorkspace.edit({_id: id}, 'view');
+                    ng.getService('$location').then(($location) => {
+                        $location.url('/workspace/monitoring');
+                        authoringWorkspace.edit({_id: id}, 'view');
+                    });
                 },
                 addImage: (field: string, image: IArticle) => {
                     dispatchInternalEvent('addImage', {field, image});
@@ -252,35 +288,11 @@ export function getSuperdeskApiImplementation(
         localization: {
             gettext: (message) => gettext(message),
         },
-        extensions: {
-            getExtension: (id: string) => {
-                const extension = extensions[id].extension;
-
-                if (extension == null) {
-                    return Promise.reject('Extension not found.');
-                }
-
-                const {manifest} = extensions[requestingExtensionId];
-
-                if (
-                    manifest.superdeskExtension != null
-                    && Array.isArray(manifest.superdeskExtension.dependencies)
-                    && manifest.superdeskExtension.dependencies.includes(id)
-                ) {
-                    const extensionShallowCopy = {...extension};
-
-                    delete extensionShallowCopy['activate'];
-
-                    return Promise.resolve(extensionShallowCopy);
-                } else {
-                    return Promise.reject('Not authorized.');
-                }
-            },
-        },
         privileges: {
             getOwnPrivileges: () => privileges.loaded.then(() => privileges.privileges),
         },
         session: {
+            getToken: () => session.token,
             getCurrentUser: () => session.getIdentity(),
         },
         utilities: {

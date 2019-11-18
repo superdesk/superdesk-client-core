@@ -1,9 +1,10 @@
 import _ from 'lodash';
 import * as helpers from 'apps/authoring/authoring/helpers';
 import {gettext} from 'core/utils';
+import {appConfig} from 'appConfig';
 
-AuthoringEmbeddedDirective.$inject = ['api', 'notify', '$filter', 'config', 'deployConfig'];
-export function AuthoringEmbeddedDirective(api, notify, $filter, config, deployConfig) {
+AuthoringEmbeddedDirective.$inject = ['api', 'notify', '$filter'];
+export function AuthoringEmbeddedDirective(api, notify, $filter) {
     return {
         templateUrl: 'scripts/apps/authoring/views/authoring.html',
         scope: {
@@ -16,16 +17,16 @@ export function AuthoringEmbeddedDirective(api, notify, $filter, config, deployC
                  *
                  * @param {string} template - template to use (set in backend)
                  */
-                let date = $filter('formatLocalDateTimeString')(scope.item.versioncreated, config.view.dateformat +
-                    ' ' + config.view.timeformat);
+                let date = $filter('formatLocalDateTimeString')(scope.item.versioncreated, appConfig.view.dateformat +
+                    ' ' + appConfig.view.timeformat);
 
                 if (template == null) {
                     const lineBreak = '\r\n\r\n';
                     // no template specified in backend, we use default one
-                    let slugline = scope.item.slugline ? '"' + scope.item.slugline + '" ' : '';
+                    let slugline = scope.item.slugline ? '"' + scope.item.slugline + '"' : '';
 
                     scope.item.ednote = gettext(
-                        'In the story {{slugline}} sent at: {{date}} {{lineBreak}}. This is corrected repeat.',
+                        'In the story {{slugline}} sent at: {{date}}.{{lineBreak}}This is a corrected repeat.',
                         {slugline, date, lineBreak});
                 } else {
                     // we use template from backend
@@ -52,15 +53,13 @@ export function AuthoringEmbeddedDirective(api, notify, $filter, config, deployC
                     notify.error(gettext('Failed to apply kill template to the item.'));
                 });
             } else if (scope.action === 'correct') {
-                deployConfig.all({
-                    override: 'override_ednote_for_corrections',
-                    template: 'override_ednote_template',
-                }).then((_config) => {
-                    if (_config.override) {
-                        overrideEdnote(_config.template);
-                    }
-                    scope.origItem = scope.item;
-                });
+                const {override_ednote_for_corrections, override_ednote_template} = appConfig;
+
+                if (override_ednote_for_corrections) {
+                    overrideEdnote(override_ednote_template);
+                }
+
+                scope.origItem = scope.item;
                 scope.item.flags.marked_for_sms = false;
                 scope.item.sms_message = '';
             } else {

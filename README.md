@@ -58,10 +58,6 @@ To configure the build, the `superdesk.config.js` file must export a function th
 - `shortDateFormat`: `'MM/DD'` - format for other days in item list
 - `longDateFormat`: `'LLL'` - format with full date and time
 
-##### Language
-
-- `language`: `'en'` - default language
-
 ##### Authoring
 
 - `previewSubjectFilterKey`: `null` - full preview in authoring displays only matching subjects
@@ -86,6 +82,7 @@ You can configure what will be displayed in list views, there are 3 areas in lis
 - `secondLine` - optional second line - defaults are:
     - `profile`
     - `state` - workflow state
+    - `scheduledDateTime` - scheduled date and time where date and time format are taken from view.dateformat and view.timeformat respectively
     - `embargo` - flag if item is embargoed
     - `update` - flag if item is an update
     - `takekey`

@@ -1,3 +1,5 @@
+import {ISuperdeskGlobalConfig} from 'superdesk-api';
+import {appConfig} from 'appConfig';
 
 describe('spellcheck', () => {
     var DICT = {
@@ -18,9 +20,16 @@ describe('spellcheck', () => {
         LANG = 'en-US',
         errors = [];
 
-    beforeEach(window.module(($provide) => {
-        $provide.constant('config', {server: {url: undefined}, iframely: {key: '123'}, editor: {}, features: {}});
-    }));
+    beforeEach(() => {
+        const testConfig: Partial<ISuperdeskGlobalConfig> = {
+            server: {url: undefined, ws: undefined},
+            iframely: {key: '123'},
+            editor: {},
+            features: {},
+        };
+
+        Object.assign(appConfig, testConfig);
+    });
 
     beforeEach(window.module('superdesk.apps.editor2'));
     beforeEach(window.module('superdesk.core.editor3'));

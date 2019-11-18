@@ -8,12 +8,15 @@ import {
     getDefaultKeyBinding,
     DefaultDraftBlockRenderMap,
     KeyBindingUtil,
+    SelectionState,
+    DraftDragType,
+    DraftHandleValue,
 } from 'draft-js';
 import {getVisibleSelectionRect} from 'draft-js';
 
 import {Map} from 'immutable';
 import Toolbar from './toolbar';
-import {getBlockRenderer} from './blockRenderer';
+import {blockRenderer} from './blockRenderer';
 import {customStyleMap} from './customStyleMap';
 import classNames from 'classnames';
 import {handlePastedText} from './handlePastedText';
@@ -29,12 +32,23 @@ import {noop} from 'lodash';
 import {getSpellcheckWarningsByBlock} from './spellchecker/SpellcheckerDecorator';
 import {getSpellchecker} from './spellchecker/default-spellcheckers';
 import {IEditorStore} from '../store';
+import {appConfig} from 'appConfig';
 
-const VALID_MEDIA_TYPES = [
+const MEDIA_TYPES_TRIGGER_DROP_ZONE = [
     'application/superdesk.item.picture',
     'application/superdesk.item.graphic',
     'application/superdesk.item.video',
     'application/superdesk.item.audio',
+];
+
+const EVENT_TYPES_TRIGGER_DROP_ZONE = [
+    ...MEDIA_TYPES_TRIGGER_DROP_ZONE,
+    'superdesk/editor3-block',
+    'Files',
+];
+
+const VALID_MEDIA_TYPES = [
+    ...MEDIA_TYPES_TRIGGER_DROP_ZONE,
     'text/uri-list',
     'text/html',
     'Files',
@@ -51,7 +65,13 @@ export const EDITOR_GLOBAL_REFS = 'editor3-refs';
  * @return {String}
  */
 export function getValidMediaType(event) {
-    return VALID_MEDIA_TYPES.find((mediaType) => event.dataTransfer.types.indexOf(mediaType) !== -1);
+    return VALID_MEDIA_TYPES.find((mediaType) => event.dataTransfer.types.includes(mediaType));
+}
+
+export function dragEventShouldShowDropZone(event) {
+    const intersection = EVENT_TYPES_TRIGGER_DROP_ZONE.filter((type) => event.dataTransfer.types.includes(type));
+
+    return intersection.length > 0;
 }
 
 /**
@@ -64,12 +84,17 @@ export function getValidMediaType(event) {
 */
 export function canDropMedia(e, editorConfig) {
     const {editorFormat, readOnly, singleLine} = editorConfig;
-    const supportsMedia = !readOnly && !singleLine && editorFormat.indexOf('media') !== -1;
+    const supportsMedia = !readOnly && !singleLine && editorFormat.includes('media');
+
+    if (!supportsMedia) {
+        return false;
+    }
+
     const mediaType = getValidMediaType(e.originalEvent);
     const dataTransfer = e.originalEvent.dataTransfer;
     let isValidMedia = !!mediaType;
 
-    if (mediaType === 'Files' && dataTransfer.files) {
+    if (mediaType === 'Files' && dataTransfer.files.length > 0) {
         // checks if files dropped from external folder are valid or not
         const isValidFileType = Object.values(dataTransfer.files).every(
             (file: File) => file.type.startsWith('audio/')
@@ -80,7 +105,7 @@ export function canDropMedia(e, editorConfig) {
         }
     }
 
-    return supportsMedia && isValidMedia;
+    return isValidMedia;
 }
 
 interface IProps {
@@ -99,6 +124,7 @@ interface IProps {
     highlights?: any;
     highlightsManager?: any;
     spellchecking?: IEditorStore['spellchecking'];
+    cleanPastedHtml?: boolean;
     onCreateAddSuggestion?(chars): void;
     onCreateDeleteSuggestion?(type): void;
     onPasteFromSuggestingMode?(): void;
@@ -109,6 +135,10 @@ interface IProps {
     onTab?(): void;
     dragDrop?(): void;
     dispatch?(action: any): void;
+}
+
+interface IState {
+    draggingInProgress: boolean;
 }
 
 /**
@@ -123,7 +153,7 @@ interface IProps {
  * @description Editor3 is a draft.js based editor that support customizable
  *  formatting, spellchecker and media files.
  */
-export class Editor3Component extends React.Component<IProps> {
+export class Editor3Component extends React.Component<IProps, IState> {
     static propTypes: any;
     static defaultProps: any;
 
@@ -132,6 +162,7 @@ export class Editor3Component extends React.Component<IProps> {
     div: any;
     editor: any;
     spellcheckCancelFn: () => void;
+    onDragEnd: () => void;
 
     constructor(props) {
         super(props);
@@ -144,8 +175,19 @@ export class Editor3Component extends React.Component<IProps> {
         this.handleKeyCommand = this.handleKeyCommand.bind(this);
         this.handleBeforeInput = this.handleBeforeInput.bind(this);
         this.keyBindingFn = this.keyBindingFn.bind(this);
+        this.handleDropOnEditor = this.handleDropOnEditor.bind(this);
         this.spellcheck = this.spellcheck.bind(this);
         this.spellcheckCancelFn = noop;
+
+        this.onDragEnd = () => {
+            if (this.state.draggingInProgress !== false) {
+                this.setState({draggingInProgress: false});
+            }
+        };
+
+        this.state = {
+            draggingInProgress: false,
+        };
     }
 
     /**
@@ -201,6 +243,23 @@ export class Editor3Component extends React.Component<IProps> {
      */
     onDragOver(e) {
         return !canDropMedia(e, this.props);
+    }
+
+    handleDropOnEditor(selection: SelectionState, dataTransfer: any, isInternal: DraftDragType): DraftHandleValue {
+        this.onDragEnd();
+
+        if (isInternal) {
+            const {editorState} = this.props;
+            const targetBlockKey = selection.getStartKey();
+            const block = editorState.getCurrentContent().getBlockForKey(targetBlockKey);
+
+            if (block && block.getType() === 'atomic') {
+                // Avoid dragging internal text inside an atomic block.
+                // Draft will replace the block data with the text, which
+                // will break the block until page refresh
+                return 'handled';
+            }
+        }
     }
 
     keyBindingFn(e) {
@@ -440,6 +499,7 @@ export class Editor3Component extends React.Component<IProps> {
             onTab,
             tabindex,
             scrollContainer,
+            cleanPastedHtml,
         } = this.props;
 
         const cx = classNames({
@@ -449,7 +509,7 @@ export class Editor3Component extends React.Component<IProps> {
             'unstyled__block--invisibles': this.props.invisibles,
         });
 
-        const mediaEnabled = this.props.editorFormat.indexOf('media') !== -1;
+        const mediaEnabled = this.props.editorFormat.includes('media');
 
         const blockRenderMap = DefaultDraftBlockRenderMap.merge(Map(
             mediaEnabled ? {
@@ -462,15 +522,34 @@ export class Editor3Component extends React.Component<IProps> {
         ));
 
         return (
-            <div className={cx} ref={(div) => this.div = div}>
-                {showToolbar &&
-                    <Toolbar
-                        disabled={locked || readOnly}
-                        scrollContainer={scrollContainer}
-                        editorNode={this.editorNode}
-                        highlightsManager={this.props.highlightsManager}
-                        editorWrapperElement={this.div}
-                    />
+            <div
+                className={cx}
+                ref={(div) => this.div = div}
+                onDragStart={() => {
+                    // known issue: dragging text doesn't work when the top of the editor is in the viewport
+                    // https://github.com/facebook/draft-js/issues/2218
+
+                    if (this.state.draggingInProgress !== true) {
+                        this.setState({draggingInProgress: true});
+                    }
+                }}
+
+                // "dragend" event won't fire if an item is dropped inside draft-js field
+                // it's handled there separately
+                onDragEnd={this.onDragEnd}
+            >
+                {
+                    showToolbar && this.state.draggingInProgress !== true
+                        ? (
+                            <Toolbar
+                                disabled={locked || readOnly}
+                                scrollContainer={scrollContainer}
+                                editorNode={this.editorNode}
+                                highlightsManager={this.props.highlightsManager}
+                                editorWrapperElement={this.div}
+                            />
+                        )
+                        : null
                 }
                 <HighlightsPopup
                     editorNode={this.editorNode}
@@ -480,11 +559,12 @@ export class Editor3Component extends React.Component<IProps> {
                 />
                 <div className="focus-screen" onMouseDown={this.focus}>
                     <Editor editorState={editorState}
+                        handleDrop={this.handleDropOnEditor}
                         handleKeyCommand={this.handleKeyCommand}
                         keyBindingFn={this.keyBindingFn}
                         handleBeforeInput={this.handleBeforeInput}
                         blockRenderMap={blockRenderMap}
-                        blockRendererFn={getBlockRenderer({svc: this.props.svc})}
+                        blockRendererFn={blockRenderer}
                         customStyleMap={{...customStyleMap, ...this.props.highlightsManager.styleMap}}
                         onChange={(editorStateNext: EditorState) => {
                             // in order to position the popup component we need to know the position of editor selection
@@ -503,6 +583,8 @@ export class Editor3Component extends React.Component<IProps> {
                         handlePastedText={handlePastedText.bind(this)}
                         readOnly={locked || readOnly}
                         ref={(editor) => this.handleRefs(editor)}
+                        spellCheck={appConfig.editor3.browserSpellCheck}
+                        stripPastedStyles={cleanPastedHtml}
                     />
 
                     {this.props.loading && <div className="loading-overlay active" />}
@@ -515,5 +597,6 @@ export class Editor3Component extends React.Component<IProps> {
 Editor3Component.defaultProps = {
     readOnly: false,
     singleLine: false,
+    cleanPastedHtml: false,
     editorFormat: [],
 };

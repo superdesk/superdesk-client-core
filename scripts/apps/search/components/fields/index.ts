@@ -11,6 +11,7 @@ import {versioncreated} from './versioncreated';
 import {versioncreator} from './versioncreator';
 import {profile} from './profile';
 import {state} from './state';
+import {scheduledDateTime} from './scheduledDateTime';
 import {embargo} from './embargo';
 import {update} from './update';
 import {updated} from './updated';
@@ -33,6 +34,7 @@ import {copyright} from './copyright';
 import {usageterms} from './usageterms';
 import {nestedlink} from './nested-link';
 import {associatedItems} from './associatedItems';
+import {Translations} from './translations';
 
 interface IFieldProps extends Partial<IPropsItemListInfo> {
     item: IPropsItemListInfo['item']; // this one not nullable
@@ -50,6 +52,7 @@ export const fields: {[key: string]: React.ComponentType<IFieldProps>} = {
     versioncreator,
     profile,
     state,
+    scheduledDateTime,
     embargo,
     update,
     updated,
@@ -72,4 +75,5 @@ export const fields: {[key: string]: React.ComponentType<IFieldProps>} = {
     usageterms,
     nestedlink,
     associatedItems,
+    translations: Translations,
 };

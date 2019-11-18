@@ -1,3 +1,5 @@
+import {ISuperdeskGlobalConfig} from 'superdesk-api';
+import {appConfig} from 'appConfig';
 
 describe('DataService', () => {
     beforeEach(() => {
@@ -6,9 +8,13 @@ describe('DataService', () => {
         window.module('superdesk.core.services.server');
     });
 
-    beforeEach(window.module(($provide) => {
-        $provide.constant('config', {server: {url: 'http://localhost'}});
-    }));
+    beforeEach(() => {
+        const testConfig: Partial<ISuperdeskGlobalConfig> = {
+            server: {url: 'http://localhost', ws: undefined},
+        };
+
+        Object.assign(appConfig, testConfig);
+    });
 
     var DataAdapter, httpBackend;
 

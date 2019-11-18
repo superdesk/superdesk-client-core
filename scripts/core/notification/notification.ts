@@ -11,6 +11,7 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
 import {IEvents, IPublicWebsocketMessages} from 'superdesk-api';
+import {appConfig} from 'appConfig';
 
 export const getCustomEventNamePrefixed = (name: keyof IEvents) => 'internal-websocket-event--' + name;
 
@@ -29,8 +30,8 @@ export function isWebsocketEventPublic(eventName: string) {
     return Object.keys(publicWebsocketMessageNames).includes(eventName);
 }
 
-WebSocketProxy.$inject = ['$rootScope', 'config', '$interval', 'session', 'SESSION_EVENTS'];
-function WebSocketProxy($rootScope, config, $interval, session, SESSION_EVENTS) {
+WebSocketProxy.$inject = ['$rootScope', '$interval', 'session', 'SESSION_EVENTS'];
+function WebSocketProxy($rootScope, $interval, session, SESSION_EVENTS) {
     var ws = null;
     var connectTimer = -1;
     var TIMEOUT = 5000;
@@ -55,13 +56,13 @@ function WebSocketProxy($rootScope, config, $interval, session, SESSION_EVENTS) 
         CLOSED: 3,
     };
 
-    if (!config.server.ws) {
+    if (!appConfig.server.ws) {
         return;
     }
 
     var connect = function() {
         if (!ws || ws.readyState === readyState.CLOSED) {
-            ws = new WebSocket(config.server.ws);
+            ws = new WebSocket(appConfig.server.ws);
             bindEvents();
         }
     };

@@ -1,6 +1,6 @@
 <div class="metadata-view">
 
-    <div>
+    <div class="metadata-view__content-block">
         <dl>
             <dt translate>Slugline</dt>
             <dd sd-html-preview="item.slugline"></dd>
@@ -79,7 +79,7 @@
         </dl>
     </div>
 
-    <div>
+    <div class="metadata-view__content-block">
         <dl ng-if="item._current_version">
             <dt translate>Version</dt>
             <dd>{{ item._current_version }}</dd>
@@ -111,7 +111,7 @@
         </dl>
     </div>
 
-    <div>
+    <div class="metadata-view__content-block">
         <!-- Story details -->
         <dl ng-if="item.language">
             <dt translate>Language</dt>
@@ -166,7 +166,7 @@
         </dl>
     </div>
 
-    <div ng-if="item.copyrightholder || item.copyrightholder || item.usageterms">
+    <div class="metadata-view__content-block" ng-if="item.copyrightholder || item.copyrightholder || item.usageterms">
         <!-- copyright details details -->
         <dl>
             <dt translate>Copyright holder</dt>
@@ -181,7 +181,8 @@
             <dd ng-if="item.usageterms">{{ item.usageterms }}</dd>
         </dl>
     </div>
-    <div>
+    
+    <div class="metadata-view__content-block">
         <dl>
             <dt translate>State</dt>
             <dd>
@@ -213,7 +214,7 @@
             <dd sd-html-preview="item.archive_description"></dd>
         </dl>
     </div>
-    <div ng-if="item.associations && item.associations.featuremedia"
+    <div class="metadata-view__content-block" ng-if="item.associations && item.associations.featuremedia"
          sd-associated-item-metadata
          data-association="item.associations.featuremedia" data-title="Feature Media">
     </div>

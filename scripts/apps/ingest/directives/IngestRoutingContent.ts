@@ -231,7 +231,7 @@ export function IngestRoutingContent(api, notify, modal, contentFilters, $filter
              * @description Function for initialization default routing schemas
              */
             function initSchemes() {
-                api('routing_schemes').query()
+                api('routing_schemes').query({max_results: 200})
                     .then((result) => {
                         scope.schemes = $filter('sortByName')(result._items);
                     });

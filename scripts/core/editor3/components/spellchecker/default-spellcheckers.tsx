@@ -1,18 +1,19 @@
 import ng from 'core/services/ng';
 import {ISpellchecker, ISpellcheckerAction, ISpellcheckWarning, ISpellcheckerSuggestion} from './interfaces';
 import {httpRequestJsonLocal} from 'core/helpers/network';
+import {gettext} from 'core/utils';
 
 const actions: {[key: string]: ISpellcheckerAction} = {
     addToDictionary: {
         label: gettext('Add to dictionary'),
         perform: (warning: ISpellcheckWarning) => ng.getService('spellcheck').then((spellcheck) => {
-            spellcheck.addWord(warning.text, false);
+            return spellcheck.addWord(warning.text, false);
         }),
     },
     ignoreWord: {
         label: gettext('Ignore word'),
         perform: (warning: ISpellcheckWarning) => ng.getService('spellcheck').then((spellcheck) => {
-            spellcheck.addWord(warning.text, false);
+            return spellcheck.addWord(warning.text, true);
         }),
     },
 };
@@ -60,6 +61,7 @@ export function getSpellchecker(language: string): ISpellchecker {
         fr: 'grammalecte',
         nl: 'leuven_dutch',
     })[language];
+    const ignore = spellcheck.getIgnoredWords();
 
     if (spellcheckerName == null && spellcheck.isActiveDictionary === false) {
         return null;
@@ -68,7 +70,10 @@ export function getSpellchecker(language: string): ISpellchecker {
         return {
             check: (str: string) => httpRequestJsonLocal<{errors: Array<ISpellcheckWarning>}>({
                 method: 'POST',
-                payload: {spellchecker: spellcheckerName, text: str},
+                payload: {
+                    spellchecker: spellcheckerName,
+                    text: str,
+                    ignore: ignore},
                 path: '/spellchecker',
             }).then((json) => json.errors, (err) => []),
             getSuggestions: (str) => httpRequestJsonLocal<ISpellcheckWarning>({
@@ -76,7 +81,10 @@ export function getSpellchecker(language: string): ISpellchecker {
                 payload: {spellchecker: spellcheckerName, text: str, suggestions: true},
                 path: '/spellchecker',
             }).then((spellcheckerWarning) => spellcheckerWarning.suggestions, (err) => []),
-            actions: {},
+            actions: {
+                addToDictionary: actions.addToDictionary,
+                ignoreWord: actions.ignoreWord,
+            },
         };
     } else {
         return {check, getSuggestions, actions};

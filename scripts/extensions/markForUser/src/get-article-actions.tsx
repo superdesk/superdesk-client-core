@@ -11,14 +11,18 @@ export function getActionsInitialize(superdesk: ISuperdesk) {
         // and aren't displayed in the list item until the article is saved
         const locked = isLocked(articleNext);
 
-        if (isPersonal(articleNext) || locked) {
+        if (
+            isPersonal(articleNext)
+            || locked
+            || articleNext.state === 'spiked'
+        ) {
             return Promise.resolve([]);
         }
 
         const markForUser: IArticleAction = {
             label: gettext('Mark for user'),
-            labelForGroup: gettext('Relations'),
             icon: 'icon-assign',
+            groupId: 'highlights',
             onTrigger: () => {
                 manageMarkedUserForSingleArticle(superdesk, articleNext);
             },
@@ -26,8 +30,8 @@ export function getActionsInitialize(superdesk: ISuperdesk) {
 
         const unmark: IArticleAction = {
             label: gettext('Unmark user'),
-            labelForGroup: gettext('Relations'),
             icon: 'icon-assign',
+            groupId: 'highlights',
             onTrigger: () => {
                 superdesk.entities.article.update({
                     ...articleNext,
@@ -38,7 +42,7 @@ export function getActionsInitialize(superdesk: ISuperdesk) {
 
         const markForOtherUser: IArticleAction = {
             label: gettext('Mark for other user'),
-            labelForGroup: gettext('Relations'),
+            groupId: 'highlights',
             icon: 'icon-assign',
             onTrigger: () => {
                 manageMarkedUserForSingleArticle(superdesk, articleNext);

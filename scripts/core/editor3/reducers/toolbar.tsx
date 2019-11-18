@@ -300,7 +300,7 @@ function changeCase(state: IEditorStore, payload: {changeTo: ITextCase, selectio
 
     const nextEditorState = EditorState.push(state.editorState, nextContentState, 'spellcheck-change');
 
-    return {...state, editorState: EditorState.forceSelection(nextEditorState, selection)};
+    return onChange(state, EditorState.forceSelection(nextEditorState, selection));
 }
 
 export default toolbar;

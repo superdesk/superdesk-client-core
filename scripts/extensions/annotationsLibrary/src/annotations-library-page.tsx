@@ -4,7 +4,7 @@ import {
     IGenericListPageComponent,
     ISuperdesk,
 } from 'superdesk-api';
-import {IKnowledgeBaseItem} from './interfaces';
+import {IKnowledgeBaseItem, IKnowledgeBaseItemBase} from './interfaces';
 import {getFields} from './GetFields';
 
 export function getAnnotationsLibraryPage(superdesk: ISuperdesk) {
@@ -43,14 +43,11 @@ export function getAnnotationsLibraryPage(superdesk: ISuperdesk) {
                 page: IGenericListPageComponent<IKnowledgeBaseItem>,
             ) => (
                 <ListItem key={key} onClick={() => page.openPreview(item._id)}>
-                    <ListItemColumn>
+                    <ListItemColumn bold noBorder>
                         {getFormFieldPreviewComponent(item, nameField)}
                     </ListItemColumn>
-                    <ListItemColumn>
-                        {getFormFieldPreviewComponent(item, languageField)}
-                    </ListItemColumn>
                     <ListItemColumn ellipsisAndGrow noBorder>
-                        {getFormFieldPreviewComponent(item, definitionField)}
+                        {getFormFieldPreviewComponent(item, definitionField, {showAsPlainText: true})}
                     </ListItemColumn>
                     <ListItemActionsMenu>
                         <div style={{display: 'flex'}}>
@@ -83,8 +80,32 @@ export function getAnnotationsLibraryPage(superdesk: ISuperdesk) {
                     defaultSortOption={{field: 'name', direction: 'ascending'}}
                     formConfig={formConfig}
                     renderRow={renderRow}
-                    newItemTemplate={{cpnat_type: 'cpnat:abstract'}}
+                    getNewItemTemplate={(page) => {
+                        const baseTemplate: Partial<IKnowledgeBaseItemBase> = {
+                            cpnat_type: 'cpnat:abstract',
+                        };
+                        const filteredLanguage = page.getActiveFilters().language;
+
+                        if (filteredLanguage != null) {
+                            return {
+                                ...baseTemplate,
+                                language: filteredLanguage,
+                            };
+                        } else if (superdesk.instance.config.default_language != null) {
+                            return {
+                                ...baseTemplate,
+                                language: superdesk.instance.config.default_language,
+                            };
+                        } else {
+                            return baseTemplate;
+                        }
+                    }}
                     fieldForSearch={nameField}
+                    defaultFilters={
+                        superdesk.instance.config.default_language == null
+                            ? {}
+                            : {language: superdesk.instance.config.default_language}
+                    }
                 />
             );
         }

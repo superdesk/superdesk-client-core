@@ -1,5 +1,7 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
+import {appConfig} from 'appConfig';
+import {ISearchOptions} from '../services/SearchService';
 
 SearchResults.$inject = [
     '$location',
@@ -11,7 +13,6 @@ SearchResults.$inject = [
     'search',
     'session',
     '$rootScope',
-    'config',
     'superdeskFlags',
     'notify',
 ];
@@ -36,7 +37,6 @@ function isObjectId(value) {
  * @requires search
  * @requires session
  * @requires $rootScope
- * @requires config
  *
  * @description Item list with sidebar preview
  */
@@ -50,7 +50,6 @@ export function SearchResults(
     search,
     session,
     $rootScope,
-    config,
     superdeskFlags,
     notify,
 ) { // uff - should it use injector instead?
@@ -87,7 +86,11 @@ export function SearchResults(
                 ? scope.search.getSearch
                 : () => $location.search();
 
-            var criteria = search.query(getSearch()).getCriteria(true),
+            const queryOptions: ISearchOptions = {
+                hidePreviousVersions: scope.search.hideNested === true,
+            };
+
+            var criteria = search.query(getSearch(), queryOptions).getCriteria(true),
                 oldQuery = _.omit(getSearch(), '_id');
 
             scope.flags = controller.flags;
@@ -187,7 +190,7 @@ export function SearchResults(
              * Function for fetching total items and filling scope for the first time.
              */
             function _queryItems(event?, data?) {
-                criteria = search.query(getSearch()).getCriteria(true);
+                criteria = search.query(getSearch(), queryOptions).getCriteria(true);
                 criteria.source.size = 50;
                 var originalQuery;
 
@@ -224,7 +227,7 @@ export function SearchResults(
                 }
 
                 return api.query(getProvider(criteria), criteria).then((items) => {
-                    if (config.features.autorefreshContent && data != null) {
+                    if (appConfig.features.autorefreshContent && data != null) {
                         data.force = true;
                     }
 
@@ -362,7 +365,7 @@ export function SearchResults(
                         $location.search('page', null);
                     }
 
-                    criteria = search.query(getSearch()).getCriteria(true);
+                    criteria = search.query(getSearch(), queryOptions).getCriteria(true);
                     criteria.source.from = 0;
                     criteria.source.size = 50;
                     criteria.aggregations = $rootScope.aggregations;
@@ -438,8 +441,11 @@ export function SearchResults(
              * then, sends rowview event
              */
             function sendRowViewEvents(item?) {
-                let sendEvent = scope.singleLine && superdeskFlags.flags.authoring && config.list
-                    && config.list.narrowView;
+                let sendEvent = scope.singleLine
+                    && superdeskFlags.flags.authoring
+                    && appConfig.list != null
+                    && appConfig.list.narrowView;
+
                 let evnt = item ? 'rowview:narrow' : 'rowview:default';
 
                 if (sendEvent) {

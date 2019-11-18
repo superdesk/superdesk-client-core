@@ -1,5 +1,7 @@
 import {AuthoringWorkspaceService} from '../authoring/services/AuthoringWorkspaceService';
 import _ from 'lodash';
+import {appConfig} from 'appConfig';
+import {ISuperdeskGlobalConfig} from 'superdesk-api';
 
 describe('authoring', () => {
     var GUID = 'urn:tag:superdesk-1';
@@ -181,7 +183,7 @@ describe('authoring', () => {
     }));
 
     it('confirm the associated media not called',
-        inject((api, $q, $rootScope, config, confirm) => {
+        inject((api, $q, $rootScope, confirm) => {
             let item = {
                 _id: 'test',
                 headline: 'headline',
@@ -199,9 +201,14 @@ describe('authoring', () => {
 
             let defered = $q.defer();
 
-            config.features = {
-                editFeaturedImage: 1,
+            const testConfig: Partial<ISuperdeskGlobalConfig> = {
+                features: {
+                    ...appConfig.features,
+                    editFeaturedImage: 1,
+                },
             };
+
+            Object.assign(appConfig, testConfig);
 
             spyOn(api, 'find').and.returnValue($q.when({rewriteOf}));
             spyOn(confirm, 'confirmFeatureMedia').and.returnValue(defered.promise);
@@ -214,7 +221,7 @@ describe('authoring', () => {
         }));
 
     it('confirm the associated media not called if not rewrite_of',
-        inject((api, $q, $rootScope, config, confirm) => {
+        inject((api, $q, $rootScope, confirm) => {
             let item = {
                 _id: 'test',
                 headline: 'headline',
@@ -232,10 +239,15 @@ describe('authoring', () => {
 
             let defered = $q.defer();
 
-            config.features = {
-                editFeaturedImage: 1,
-                confirmMediaOnUpdate: 1,
+            const testConfig: Partial<ISuperdeskGlobalConfig> = {
+                features: {
+                    ...appConfig.features,
+                    editFeaturedImage: 1,
+                    confirmMediaOnUpdate: 1,
+                },
             };
+
+            Object.assign(appConfig, testConfig);
 
             spyOn(api, 'find').and.returnValue($q.when({rewriteOf}));
             spyOn(confirm, 'confirmFeatureMedia').and.returnValue(defered.promise);
@@ -248,7 +260,7 @@ describe('authoring', () => {
         }));
 
     it('confirm the associated media called if rewrite_of but no associated media on edited item',
-        (done) => inject((api, $q, $rootScope, config, confirm, authoring) => {
+        (done) => inject((api, $q, $rootScope, confirm, authoring) => {
             let item = {
                 _id: 'test',
                 headline: 'headline',
@@ -267,10 +279,15 @@ describe('authoring', () => {
 
             let defered = $q.defer();
 
-            config.features = {
-                editFeaturedImage: 1,
-                confirmMediaOnUpdate: 1,
+            const testConfig: Partial<ISuperdeskGlobalConfig> = {
+                features: {
+                    ...appConfig.features,
+                    editFeaturedImage: 1,
+                    confirmMediaOnUpdate: 1,
+                },
             };
+
+            Object.assign(appConfig, testConfig);
 
             spyOn(api, 'find').and.returnValue($q.when(rewriteOf));
             spyOn(confirm, 'confirmFeatureMedia').and.returnValue(defered.promise);
@@ -293,7 +310,7 @@ describe('authoring', () => {
         }));
 
     it('confirm the associated media but do not use the associated media',
-        inject((api, $q, $rootScope, config, confirm, authoring) => {
+        inject((api, $q, $rootScope, confirm, authoring) => {
             let item = {
                 _id: 'test',
                 rewrite_of: 'rewriteOf',
@@ -310,10 +327,15 @@ describe('authoring', () => {
 
             let defered = $q.defer();
 
-            config.features = {
-                editFeaturedImage: 1,
-                confirmMediaOnUpdate: 1,
+            const testConfig: Partial<ISuperdeskGlobalConfig> = {
+                features: {
+                    ...appConfig.features,
+                    editFeaturedImage: 1,
+                    confirmMediaOnUpdate: 1,
+                },
             };
+
+            Object.assign(appConfig, testConfig);
 
             spyOn(api, 'find').and.returnValue($q.when(rewriteOf));
             spyOn(confirm, 'confirmFeatureMedia').and.returnValue(defered.promise);
@@ -902,7 +924,7 @@ describe('authoring actions', () => {
 
             allowedActions(itemActions, ['save', 'edit', 'duplicate', 'spike', 're_write',
                 'mark_item_for_highlight', 'mark_item_for_desks',
-                'package_item', 'multi_edit', 'publish', 'add_to_current', 'export', 'set_label']);
+                'package_item', 'multi_edit', 'publish', 'add_to_current', 'export', 'set_label', 'send']);
         }));
 
     it('cannot perform publish if the item is marked for not publication',
@@ -934,7 +956,7 @@ describe('authoring actions', () => {
 
             allowedActions(itemActions, ['save', 'edit', 'duplicate', 'spike', 're_write',
                 'mark_item_for_highlight', 'package_item', 'multi_edit', 'add_to_current',
-                'export', 'set_label']);
+                'export', 'set_label', 'send']);
         }));
 
     it('cannot perform publish if the item is highlight package',
@@ -965,7 +987,7 @@ describe('authoring actions', () => {
             var itemActions = authoring.itemActions(item);
 
             allowedActions(itemActions, ['save', 'edit', 'duplicate', 'spike',
-                'package_item', 'multi_edit', 'add_to_current', 'set_label']);
+                'package_item', 'multi_edit', 'add_to_current', 'set_label', 'send']);
         }));
 
     it('cannot publish if user does not have publish privileges on the desk',
@@ -997,7 +1019,7 @@ describe('authoring actions', () => {
 
             allowedActions(itemActions, ['save', 'edit', 'duplicate', 'spike', 're_write',
                 'mark_item_for_highlight', 'package_item', 'multi_edit', 'add_to_current',
-                'export', 'set_label']);
+                'export', 'set_label', 'send']);
         }));
 
     it('can only view the item if the user does not have desk membership',
@@ -1442,7 +1464,7 @@ describe('authoring actions', () => {
                 're_write', 'set_label']);
         }));
 
-    it('Cannot send item if the no move privileges',
+    it('Can send item even if there is no move privileges',
         inject((privileges, desks, authoring, $q, $rootScope) => {
             var item = {
                 _id: 'test',
@@ -1475,7 +1497,7 @@ describe('authoring actions', () => {
 
             allowedActions(itemActions, ['save', 'edit', 'duplicate', 'spike', 'add_to_current',
                 're_write', 'mark_item_for_highlight', 'package_item', 'multi_edit', 'publish',
-                'export', 'set_label']);
+                'export', 'set_label', 'send']);
         }));
 
     it('Can send item if the version greater then zero',
@@ -2176,14 +2198,16 @@ describe('authoring themes', () => {
 });
 
 describe('send item directive', () => {
-    beforeEach(window.module(($provide) => {
-        $provide.constant('config', {
-            server: {url: undefined},
+    beforeEach(() => {
+        const testConfig: Partial<ISuperdeskGlobalConfig> = {
+            server: {url: undefined, ws: undefined},
             iframely: {key: '123'},
             editor: {},
             features: {onlyEditor3: false},
-        });
-    }));
+        };
+
+        Object.assign(appConfig, testConfig);
+    });
 
     beforeEach(window.module('superdesk.core.editor3'));
     beforeEach(window.module('superdesk.apps.editor2'));
@@ -2332,7 +2356,7 @@ describe('send item directive', () => {
         }));
 
     it('can show send and publish button',
-        inject(($compile, $rootScope, config) => {
+        inject(($compile, $rootScope) => {
             var scope, elem, iscope;
 
             scope = $rootScope.$new();
@@ -2352,7 +2376,16 @@ describe('send item directive', () => {
             scope.$digest();
             iscope = elem.isolateScope();
             expect(iscope.canSendAndPublish()).toBeFalsy();
-            config.ui = {sendAndPublish: 1};
+
+            const testConfig: Partial<ISuperdeskGlobalConfig> = {
+                ui: {
+                    ...appConfig.ui,
+                    sendAndPublish: 1,
+                },
+            };
+
+            Object.assign(appConfig, testConfig);
+
             expect(iscope.canSendAndPublish()).toBeFalsy();
             iscope.selectedDesk = {_id: '123'};
             iscope.selectedStage = {_id: '456'};

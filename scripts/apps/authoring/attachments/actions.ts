@@ -1,17 +1,18 @@
 import {gettext, gettextCatalog} from 'core/utils';
 import {filesize} from 'core/ui/ui';
+import {appConfig} from 'appConfig';
 
 export const INIT_ATTACHMENTS = 'INIT_ATTACHMENTS';
 export function initAttachments(item) {
-    return (dispatch, geState, {deployConfig, attachments}) => {
+    return (dispatch, geState, {attachments}) => {
         attachments.byItem(item)
             .then((files) => {
                 dispatch({
                     type: INIT_ATTACHMENTS,
                     payload: {
                         files: files,
-                        maxSize: deployConfig.getSync('attachments_max_size'),
-                        maxFiles: deployConfig.getSync('attachments_max_files'),
+                        maxSize: appConfig.attachments_max_size,
+                        maxFiles: appConfig.attachments_max_files,
                     },
                 });
             });

@@ -1,9 +1,8 @@
 /* eslint-disable newline-per-chained-call */
 
 import {browser, element, by} from 'protractor';
-import {el, els, s} from './helpers/e2e-helpers';
+import {el, els, s, ECE} from 'end-to-end-testing-helpers';
 import {nav} from './helpers/utils';
-import {ECE} from './helpers/expected-conditions-extended';
 
 describe('internal destinations & generic-page-list', () => {
     // The following tests also cover all other pages using generic-page-list

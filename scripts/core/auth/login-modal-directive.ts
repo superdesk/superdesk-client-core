@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
+import {appConfig} from 'appConfig';
 
 /**
  * Login modal is watching session token and displays modal when needed
@@ -8,12 +9,10 @@ angular.module('superdesk.core.auth.login', []).directive('sdLoginModal', [
     'session',
     'auth',
     'features',
-    'config',
-    'deployConfig',
     'usersService',
     'notify',
     '$route',
-    function(session, auth, features, config, deployConfig, usersService, notify, $route) {
+    function(session, auth, features, usersService, notify, $route) {
         return {
             replace: true,
             // login template can be overriden (like on superdesk-fi)
@@ -22,19 +21,15 @@ angular.module('superdesk.core.auth.login', []).directive('sdLoginModal', [
                 scope.features = features;
                 scope.changePassword = false;
 
-                deployConfig.all({
-                    xmpp: 'xmpp_auth',
-                    saml: 'saml_auth',
-                    google: 'google_auth',
-                }).then((methods) => {
-                    scope.methods = methods;
-                });
+                scope.methods = {
+                    xmpp: appConfig.xmpp_auth,
+                    saml: appConfig.saml_auth,
+                    google: appConfig.google_auth,
+                };
 
-                deployConfig.all({
-                    saml: 'saml_label',
-                }).then((labels) => {
-                    scope.labels = labels;
-                });
+                scope.labels = {
+                    saml: appConfig.saml_label,
+                };
 
                 scope.authenticate = function() {
                     scope.isLoading = true;
@@ -83,7 +78,7 @@ angular.module('superdesk.core.auth.login', []).directive('sdLoginModal', [
                     window.open(apiUrl + '/login/' + service);
                 };
 
-                const apiUrl = _.get(config, 'server.url', '')
+                const apiUrl = appConfig.server.url
                     .replace('api/', 'api'); // make sure there is no trailing /
                 const handleAuthMessage = (event) => {
                     if (event.origin === apiUrl.replace('/api', '') && event.data.type === 'oauth') {

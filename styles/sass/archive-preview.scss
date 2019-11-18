@@ -353,13 +353,11 @@
         padding: 2.4rem 2.4rem $bottom-view-padding;
         overflow: auto;
     }
-
     .article-versions {
         padding-top: 10px;
         padding-right: 10px;
         padding-left: 10px;
     }
-
     .related-item-view, .mediaUsed {
         position: absolute;
         top:0; left: 0; right: 0; bottom: 0;
@@ -1323,5 +1321,18 @@ figure.preview-overlay-on {
             word-wrap: break-word;
             margin-top: 0.7rem;
         }
+    }
+}
+
+.content-item-preview, .preview-content {
+    .preview-label {
+        display: inline-block;
+        font-size: 1.1rem;
+        margin: 0 0.5rem 0 0;
+        line-height: 2.6rem;
+        color: var(--color-label-text);
+        text-transform: uppercase;
+        font-weight: 500;
+        letter-spacing: 0.08em;
     }
 }

@@ -1,6 +1,7 @@
 import {gettext} from 'core/utils';
 import {isPublished} from 'apps/archive/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
+import {appConfig} from 'appConfig';
 
 angular.module('superdesk.apps.dashboard.widgets.relatedItem', [
     'superdesk.apps.dashboard.widgets.base',
@@ -55,7 +56,6 @@ RelatedItemController.$inject = [
     'authoringWorkspace',
     'authoring',
     'privileges',
-    'config',
     'storage',
     'familyService',
     'moment',
@@ -72,7 +72,6 @@ function RelatedItemController(
     authoringWorkspace: AuthoringWorkspaceService,
     authoring,
     privileges,
-    config,
     storage,
     familyService,
     moment,
@@ -120,10 +119,10 @@ function RelatedItemController(
         });
 
     function today() {
-        if (config.search && config.search.useDefaultTimezone) {
+        if (appConfig.search != null && appConfig.search.useDefaultTimezone) {
             return moment()
-                .tz(config.defaultTimezone)
-                .format('YYYY-MM-DD') + 'T00:00:00' + moment.tz(config.defaultTimezone).format('ZZ');
+                .tz(appConfig.defaultTimezone)
+                .format('YYYY-MM-DD') + 'T00:00:00' + moment.tz(appConfig.defaultTimezone).format('ZZ');
         }
         return moment().format('YYYY-MM-DD') + 'T00:00:00' + moment().format('ZZ');
     }

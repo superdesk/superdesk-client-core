@@ -85,6 +85,7 @@ WorkqueueCtrl.$inject = [
     'confirm',
     'referrer',
     'notify',
+    '$timeout',
 ];
 function WorkqueueCtrl(
     $scope,
@@ -101,6 +102,7 @@ function WorkqueueCtrl(
     confirm,
     referrer,
     notify,
+    $timeout,
 ) {
     $scope.active = null;
     $scope.workqueue = workqueue;
@@ -144,7 +146,11 @@ function WorkqueueCtrl(
         }
 
         if (item) {
-            updateWorkqueue();
+            // There are cases when publishing an item, that item stays in the workqueue
+            // because of 'content:update' and 'item:unlock' websocket notifications back to back
+            // with the first updateWorkqueue being cached with this item still in it
+            // So wait 150ms to ensure we don't get cached
+            $timeout(updateWorkqueue, 150);
         }
     });
 

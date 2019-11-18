@@ -166,7 +166,7 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                     scope.$watch('rendition.name', () => {
                         cropData = scope.cropData || {};
                         if (cropData && cropData.CropBottom) {
-                            refreshImage(img.src, [
+                            setImageSelect([
                                 cropData.CropLeft,
                                 cropData.CropTop,
                                 cropData.CropRight,
@@ -182,7 +182,7 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                         cropData = scope.cropData || {};
                         if (cropData && cropData.CropBottom) {
                             if (!isEqualCrop(newVal, oldVal)) {
-                                refreshImage(img.src, [
+                                setImageSelect([
                                     cropData.CropLeft,
                                     cropData.CropTop,
                                     cropData.CropRight,
@@ -232,16 +232,19 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                             CropBottom: Math.round(center.y + selectionHeight / 2),
                         };
 
-                        angular.extend(cropData, crop);
+                        // trigger scope.cropData listener which will re-render selection
                         scope.$applyAsync(() => {
-                            refreshImage(img.src, [
-                                cropData.CropLeft,
-                                cropData.CropTop,
-                                cropData.CropRight,
-                                cropData.CropBottom,
-                            ]);
+                            angular.extend(scope.cropData, crop);
                         });
                     });
+
+                    function setImageSelect(selection) {
+                        if (jcropApi) {
+                            jcropApi.setOptions({onSelect: () => null}); // don't fire events on manual refresh
+                            jcropApi.setSelect(selection);
+                            jcropApi.setOptions({onSelect: updateScope}); // re-enable events
+                        }
+                    }
 
                     function refreshImage(src, setSelect) {
                         img = imageFactory.makeInstance();
@@ -282,15 +285,11 @@ export default angular.module('superdesk.core.upload.imagecrop', [
 
                                 // Store the Jcrop API in the jcropApi variable
                                 jcropApi = self;
+
                                 // define onSelect once Jcrop initialized
                                 jcropApi.setOptions({
                                     onSelect: updateScope,
                                 });
-
-                                // Make initial crops selection available for new image.
-                                if (_.isEmpty(scope.cropData)) {
-                                    updateScope(jcropApi.tellSelect());
-                                }
                             });
                         };
 

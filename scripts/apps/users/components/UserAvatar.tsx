@@ -12,7 +12,7 @@ import classNames from 'classnames';
  * at that URL, otherwise it shows the initial of `displayName`.
  */
 export const UserAvatar: React.StatelessComponent<any> = ({displayName, pictureUrl, title, ...rest}) =>
-    <div className="user-avatar" {...rest} title={title || displayName}>
+    <div className="user-avatar" {...rest} title={title || displayName} data-test-id="user-avatar">
         <figure className={classNames(
             'avatar avatar--no-margin',
             {'no-bg': pictureUrl},

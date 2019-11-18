@@ -11,14 +11,7 @@ import {uniq} from 'lodash';
 import {getDraftCharacterListForSelection} from './getDraftCharacterListForSelection';
 import {resizeDraftSelection} from './resizeDraftSelection';
 import {styleNameBelongsToHighlight} from './highlights';
-
-function isSelectionAtEndOfBlock(editorState: EditorState): boolean {
-    const selection = editorState.getSelection();
-    const endBlockKey = selection.getEndKey();
-    const block = editorState.getCurrentContent().getBlockForKey(endBlockKey);
-
-    return block.getLength() === selection.getEndOffset();
-}
+import {isSelectionAtEndOfBlock} from './selectionPositionInBlock';
 
 /**
  * Returns the characters before and after the cursor.

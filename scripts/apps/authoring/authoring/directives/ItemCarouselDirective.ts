@@ -1,13 +1,12 @@
-/* global _ */
-
 import 'owl.carousel';
 import _ from 'lodash';
 import * as ctrl from '../controllers';
 import {waitForMediaToLoad} from 'core/helpers/waitForMediaToBeReady';
 import {getSuperdeskType} from 'core/utils';
 import {gettext} from 'core/utils';
-import {IArticle} from 'superdesk-api';
 import {addInternalEventListener} from 'core/internal-events';
+import {isAllowedMediaType, getAllowedTypeNames} from './ItemAssociationDirective';
+import {IArticle} from 'superdesk-api';
 
 const carouselContainerSelector = '.sd-media-carousel__content';
 
@@ -35,6 +34,15 @@ function getItemsCount(items: Array<any>): number {
     return items
         .filter((_item) => _item[_item.fieldId] != null)
         .length;
+}
+
+function isOrderChanged(items: Array<any>, prevItems: Array<any>): boolean {
+    return !!items.filter((_item, index) => {
+        const fieldId = _item.fieldId;
+
+        return items[index][fieldId] != null && prevItems[index][fieldId] != null
+        && items[index][fieldId].order !== prevItems[index][fieldId].order;
+    }).length;
 }
 
 /**
@@ -65,10 +73,6 @@ export function ItemCarouselDirective(notify) {
         link: function(scope: IScope, elem, attr, controller) {
             let carousel;
             let previousItems: Array<any>;
-            const allowed = {picture: scope.allowPicture, video: scope.allowVideo, audio: scope.allowAudio};
-            const ALLOWED_TYPES = Object.keys(allowed)
-                .filter((key) => allowed[key] === true)
-                .map((key) => 'application/superdesk.item.' + key);
 
             scope.currentIndex = 0;
 
@@ -76,13 +80,14 @@ export function ItemCarouselDirective(notify) {
              * Initialize carousel after all content is loaded
              * otherwise carousel height is messed up
              */
-            scope.$watch('items', (items: Array<any>) => {
-                // Don't execute if there are no items or their length is same as before
-                if (items == null || previousItems && getItemsCount(items) === getItemsCount(previousItems)) {
+            scope.$watchCollection('items', (items: Array<any>) => {
+                // Don't execute if there are no items or their length is same as before and their order is unchanged
+                if (items == null || previousItems && getItemsCount(items) === getItemsCount(previousItems)
+                    && !isOrderChanged(items, previousItems)) {
                     return false;
                 }
 
-                previousItems = items;
+                previousItems = _.cloneDeep(items);
                 let field = _.find(items, (item) => !item[item.fieldId]);
 
                 scope.rel = field ? field.fieldId : null;
@@ -142,12 +147,7 @@ export function ItemCarouselDirective(notify) {
                 carousel.trigger('to.owl.carousel', [index]);
             };
 
-            elem.on('dragover', (event) => {
-                event.preventDefault();
-                event.stopPropagation();
-            });
-
-            function canAddImage(image: IArticle): boolean {
+            function canAddMediaItems(internalIds: Array<IArticle['_id']>, externalItemsCount: number = 0): boolean {
                 const mediaItemsForCurrentField = Object.keys(scope.item.associations || {})
                     .filter((key) => key.startsWith(scope.field._id) && scope.item.associations[key] != null)
                     .map((key) => scope.item.associations[key]);
@@ -155,13 +155,24 @@ export function ItemCarouselDirective(notify) {
                 const currentUploads = mediaItemsForCurrentField.length;
 
                 const itemAlreadyAddedAsMediaGallery = mediaItemsForCurrentField.some(
-                    (mediaItem) => mediaItem._id === image._id,
+                    (mediaItem) => internalIds.includes(mediaItem._id),
                 );
 
                 if (currentUploads >= scope.maxUploads) {
                     notify.error(
                         gettext(
                             'Media item was not added, because the field reached the limit of allowed media items.',
+                        ),
+                    );
+                    return false;
+                }
+
+                // check files from external folder does not exceed the maxUploads limit
+                if (currentUploads + externalItemsCount > scope.maxUploads) {
+                    notify.error(
+                        gettext(
+                            'Select at most {{maxUploads}} files to upload.',
+                            {maxUploads: scope.maxUploads - currentUploads},
                         ),
                     );
                     return false;
@@ -175,30 +186,41 @@ export function ItemCarouselDirective(notify) {
                 return true;
             }
 
-            elem.on('drop dragdrop', (event) => {
-                const type = getSuperdeskType(event);
+            if (!elem.hasClass('no-drop-zone') && scope.editable) {
+                elem.on('dragover', (event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                });
 
-                event.preventDefault();
-                event.stopPropagation();
-
-                if (ALLOWED_TYPES.includes(type) || type === 'Files') {
-                    const item = angular.fromJson(event.originalEvent.dataTransfer.getData(type));
-
-                    if (canAddImage(item)) {
-                        scope.currentIndex = 0;
-                        controller.initializeUploadOnDrop(scope, event);
+                elem.on('drop dragdrop', (event) => {
+                    if (!scope.editable) {
+                        return;
                     }
-                } else {
-                    const allowedTypeNames = [
-                        (scope.allowPicture === true ? gettext('image') : ''),
-                        (scope.allowVideo === true ? gettext('video') : ''),
-                        (scope.allowAudio === true ? gettext('audio') : ''),
-                    ].filter(Boolean).join(', ');
-                    const message = gettext('Only the following content item types are allowed: ');
+                    const type = getSuperdeskType(event);
 
-                    notify.error(message + allowedTypeNames);
-                }
-            });
+                    event.preventDefault();
+                    event.stopPropagation();
+
+                    if (isAllowedMediaType(scope, event)) {
+                        const itemStr = event.originalEvent.dataTransfer.getData(type);
+                        const internalIds = typeof itemStr === 'string' && itemStr.length > 0
+                            ? [JSON.parse(itemStr)._id]
+                            : [];
+                        const externalItemsCount = Object.values(event.originalEvent.dataTransfer.files || []).length;
+
+                        if (canAddMediaItems(internalIds, externalItemsCount)) {
+                            // add a new item at the last position in the carousel
+                            scope.currentIndex = scope.carouselItems != null ? scope.carouselItems.length : 0;
+                            controller.initializeUploadOnDrop(scope, event);
+                        }
+                    } else {
+                        const allowedTypeNames = getAllowedTypeNames(scope);
+                        const message = gettext('Only the following content item types are allowed: ');
+
+                        notify.error(message + allowedTypeNames);
+                    }
+                });
+            }
 
             /**
              * @ngdoc method
@@ -220,13 +242,25 @@ export function ItemCarouselDirective(notify) {
              * @param {Object} item Item object
              */
             scope.remove = function(item) {
-                controller.updateItemAssociation(scope, null, item.fieldId);
+                controller.updateItemAssociation(scope, null, item.fieldId).then(reorderMediaItems);
                 // if we deleted the last item from the carousel then reduce the currentIndex by one so that
                 // gallery does not disappear
                 if (scope.currentIndex && scope.currentIndex === scope.carouselItems.length - 1) {
                     scope.currentIndex -= 1;
                 }
             };
+
+            function reorderMediaItems() {
+                scope.carouselItems.forEach((item, index) => {
+                    let data = {};
+
+                    // assign index as new order since carouselItems are sorted by order
+                    item[item.fieldId].order = index;
+                    data[item.fieldId] = item[item.fieldId];
+                    scope.item.associations = angular.extend({}, scope.item.associations, data);
+                });
+                scope.onchange();
+            }
 
             /**
              * @ngdoc method
@@ -262,16 +296,7 @@ export function ItemCarouselDirective(notify) {
                                     .index(ui.item);
 
                             scope.carouselItems.splice(end, 0, scope.carouselItems.splice(start, 1)[0]);
-
-                            angular.forEach(scope.carouselItems, (item) => {
-                                let data = {};
-
-                                item[item.fieldId].order = scope.carouselItems.indexOf(item);
-                                data[item.fieldId] = item[item.fieldId];
-                                scope.item.associations = angular.extend({}, scope.item.associations, data);
-                            });
-
-                            scope.onchange();
+                            reorderMediaItems();
                         }
                     },
                     update: function(event, ui) {
@@ -287,7 +312,7 @@ export function ItemCarouselDirective(notify) {
             const removeAddImageEventListener = addInternalEventListener('addImage', (event) => {
                 const {field, image} = event.detail;
 
-                if (scope.field._id === field && canAddImage(image)) {
+                if (scope.field._id === field && canAddMediaItems([image._id])) {
                     controller.addAssociation(scope, image);
                 }
             });

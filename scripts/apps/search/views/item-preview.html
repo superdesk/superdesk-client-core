@@ -28,14 +28,14 @@
         </button>
     </header>
     <div class="content">
-        <div ng-if="vm.current_tab === 'content'" sd-media-preview data-item="item"></div>
-        <div ng-if="vm.current_tab === 'metadata'" sd-media-metadata data-item="item"></div>
+        <div ng-if="vm.current_tab === 'content'" sd-media-preview data-item="item" class="sd-wrap-helper"></div>
+        <div ng-if="vm.current_tab === 'metadata'" sd-media-metadata data-item="item" class="sd-wrap-helper"></div>
         <div ng-if="vm.current_tab === 'related' && showRelatedTab"
              sd-media-related data-item="item"
-             data-related-items="relatedItems">
+             data-related-items="relatedItems" class="sd-wrap-helper">
         </div>
-        <div ng-if="vm.current_tab === 'history' && showHistoryTab" sd-versioning-history data-item="item"></div>
-        <div ng-if="vm.current_tab === 'used' && isMediaUsed" sd-media-used data-item="item"></div>
-        <div ng-if="vm.current_tab === 'assignment' && isAssigned" sd-assignment-preview data-item="item"></div>
+        <div ng-if="vm.current_tab === 'history' && showHistoryTab" sd-versioning-history data-item="item" class="sd-wrap-helper"></div>
+        <div ng-if="vm.current_tab === 'used' && isMediaUsed" sd-media-used data-item="item" class="sd-wrap-helper"></div>
+        <div ng-if="vm.current_tab === 'assignment' && isAssigned" sd-assignment-preview data-item="item" class="sd-wrap-helper"></div>
     </div>
 </div>

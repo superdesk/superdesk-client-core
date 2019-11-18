@@ -190,7 +190,13 @@ export class LinkInputComponent extends React.Component<any, any> {
     renderAttachment() {
         return (
             <div>
-                <AttachmentList item={this.props.item} onClick={this.selectAttachment} selected={this.state.selected} />
+                <div style={{height: '24rem', overflowY: 'scroll'}}>
+                    <AttachmentList
+                        item={this.props.item}
+                        onClick={this.selectAttachment}
+                        selected={this.state.selected}
+                    />
+                </div>
                 <div className="dropdown__menu-footer dropdown__menu-footer--align-right">
                     <button className="btn btn--cancel"
                         onClick={this.props.hidePopups}>{gettext('Cancel')}</button>

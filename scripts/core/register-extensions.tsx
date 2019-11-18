@@ -1,28 +1,45 @@
 import {flatMap, noop} from 'lodash';
 import {getSuperdeskApiImplementation} from './get-superdesk-api-implementation';
-import {extensions} from 'core/extension-imports.generated';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
+import {IExtensions, IExtension} from 'superdesk-api';
+import {extensions as extensionsImported} from 'appConfig';
 
 export function registerExtensions(
+    extensions: Array<IExtension>,
     superdesk,
     modal,
     privileges,
     lock,
     session,
     authoringWorkspace: AuthoringWorkspaceService,
+    config,
+    metadata,
 ): Promise<void> {
+    const extensionsWithActivationResult: IExtensions = {};
+
+    extensions.forEach((extension) => {
+        extensionsWithActivationResult[extension.id] = {
+            extension,
+            activationResult: {},
+        };
+
+        extensionsImported[extension.id] = extensionsWithActivationResult[extension.id];
+    });
+
     return Promise.all(
-        Object.keys(extensions).map((extensionId) => {
-            const extensionObject = extensions[extensionId];
+        Object.keys(extensionsWithActivationResult).map((extensionId) => {
+            const extensionObject = extensionsWithActivationResult[extensionId];
 
             const superdeskApi = getSuperdeskApiImplementation(
                 extensionId,
-                extensions,
+                extensionsWithActivationResult,
                 modal,
                 privileges,
                 lock,
                 session,
                 authoringWorkspace,
+                config,
+                metadata,
             );
 
             return extensionObject.extension.activate(superdeskApi).then((activationResult) => {

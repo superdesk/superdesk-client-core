@@ -9,6 +9,7 @@ import {
     CharacterMetadata,
 } from 'draft-js';
 import {List, Repeat} from 'immutable';
+import {isSelectionAtStartOfBlock} from './selectionPositionInBlock';
 
 export function insertEntity(
     editorState: EditorState,
@@ -22,8 +23,7 @@ export function insertEntity(
         : editorState.getSelection().getEndKey();
     const contentState = editorState.getCurrentContent().createEntity(draftEntityType, mutability, data);
     const entityKey = contentState.getLastCreatedEntityKey();
-
-    const blocksToInsert: Array<ContentBlock> = [];
+    let blocksToInsert: Array<ContentBlock> = [];
 
     if (contentState.getBlockForKey(targetBlockKey).getType() === 'atomic') {
         // ensure there's always an empty text block between 2 atomic blocks
@@ -40,34 +40,45 @@ export function insertEntity(
         }),
     );
 
-    const blockAfter = contentState.getBlockAfter(targetBlockKey);
+    const blockShouldBeInsertedBeforeSelection = isSelectionAtStartOfBlock(editorState);
+    const adjacentBlock = blockShouldBeInsertedBeforeSelection
+        ? contentState.getBlockBefore(targetBlockKey)
+        : contentState.getBlockAfter(targetBlockKey);
 
-    if (blockAfter == null || blockAfter.getType() === 'atomic') {
+    if (adjacentBlock == null || adjacentBlock.getType() === 'atomic') {
         // ensure there's always an empty text block between 2 atomic blocks
-        // ensure an atomic block is never last
-        blocksToInsert.push(ContentState.createFromText(' ').getFirstBlock());
+        blocksToInsert = blockShouldBeInsertedBeforeSelection
+            ? [ContentState.createFromText(' ').getFirstBlock(), ...blocksToInsert] // atomic block won't be first
+            : [...blocksToInsert, ContentState.createFromText(' ').getFirstBlock()] // atomic block won't be last
+        ;
     }
 
-    const contentStateWithBlockInserted = insertBlocksAfter(contentState, blocksToInsert, targetBlockKey);
+    const contentStateWithBlockInserted = blockShouldBeInsertedBeforeSelection
+        ? insertBlocksBefore(contentState, blocksToInsert, targetBlockKey)
+        : insertBlocksAfter(contentState, blocksToInsert, targetBlockKey);
 
     return EditorState.push(editorState, contentStateWithBlockInserted, 'insert-fragment');
 }
 
-// inserts blocks after a given block key
-function insertBlocksAfter(
+function insertBlocks(
     contentState: ContentState,
-    blocksToInsert: Array<ContentBlock>,
-    afterKey: string,
-): ContentState {
+    blocksToInsert,
+    nextToKey: string,
+    position: 'before' | 'after',
+) {
     const blocksArray: Array<ContentBlock> = [];
 
     contentState.getBlocksAsArray().forEach((block) => {
-        blocksArray.push(block);
-
-        if (block.getKey() === afterKey) {
-            blocksToInsert.forEach((blockToInsert) => {
-                blocksArray.push(blockToInsert);
-            });
+        if (block.getKey() === nextToKey) {
+            if (position === 'after') {
+                blocksArray.push(...[block, ...blocksToInsert]);
+            } else if (position === 'before') {
+                blocksArray.push(...[...blocksToInsert, block]);
+            } else {
+                console.warn('Wrong argument `position` in `insertBlocks` function');
+            }
+        } else {
+            blocksArray.push(block);
         }
     });
 
@@ -81,4 +92,20 @@ function insertBlocksAfter(
     });
 
     return Modifier.replaceWithFragment(contentState, selection, BlockMapBuilder.createFromArray(blocksArray));
+}
+
+export function insertBlocksAfter(
+    contentState: ContentState,
+    blocksToInsert: Array<ContentBlock>,
+    afterKey: string,
+): ContentState {
+    return insertBlocks(contentState, blocksToInsert, afterKey, 'after');
+}
+
+export function insertBlocksBefore(
+    contentState: ContentState,
+    blocksToInsert: Array<ContentBlock>,
+    beforeKey: string,
+): ContentState {
+    return insertBlocks(contentState, blocksToInsert, beforeKey, 'before');
 }

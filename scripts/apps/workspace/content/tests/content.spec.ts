@@ -1,5 +1,6 @@
 
 import {waitUntil} from 'core/helpers/waitUtil';
+import {appConfig} from 'appConfig';
 
 describe('superdesk.apps.workspace.content', () => {
     beforeEach(window.module('superdesk.mocks'));
@@ -193,28 +194,6 @@ describe('superdesk.apps.workspace.content', () => {
             editor = content.editor(contentType);
             expect(editor.foo).toBe(2);
             expect(editor.slugline).toBeFalsy();
-        }));
-
-        it('can get custom package schema', inject((content, deployConfig) => {
-            const packageSchema = {headline: {}};
-
-            spyOn(deployConfig, 'getSync').and.returnValue({composite: packageSchema});
-
-            const schema = content.schema(null, 'composite');
-
-            expect(deployConfig.getSync).toHaveBeenCalledWith('schema');
-            expect(schema).toEqual(packageSchema);
-        }));
-
-        it('can get custom package editor', inject((content, deployConfig) => {
-            const packageEditor = {headline: {}};
-
-            spyOn(deployConfig, 'getSync').and.returnValue({composite: packageEditor});
-
-            const editor = content.editor(null, 'composite');
-
-            expect(deployConfig.getSync).toHaveBeenCalledWith('editor');
-            expect(editor).toEqual(packageEditor);
         }));
 
         it('can filter custom fields per profile', inject((content) => {

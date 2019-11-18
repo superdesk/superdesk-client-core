@@ -8,6 +8,9 @@ export interface IInputType<T> {
     readonly disabled: boolean;
     readonly value: T;
 
+    // used to display html fields without formatting
+    readonly showAsPlainText?: boolean;
+
     // below issues only apply to primary field defined in IFormField['field']
     readonly issues: Array<string>;
 

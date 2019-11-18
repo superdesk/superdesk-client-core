@@ -1,13 +1,18 @@
+import {appConfig} from 'appConfig';
+import {ISuperdeskGlobalConfig} from 'superdesk-api';
+
 describe('renditions service', () => {
     beforeEach(window.module('superdesk.apps.authoring'));
     beforeEach(window.module('superdesk.apps.ingest'));
 
-    beforeEach(window.module(($provide) => {
-        $provide.constant('config', {
+    beforeEach(() => {
+        const testConfig: Partial<ISuperdeskGlobalConfig> = {
             features: {editFeaturedImage: true},
-            server: {url: ''},
-        });
-    }));
+            server: {url: '', ws: undefined},
+        };
+
+        Object.assign(appConfig, testConfig);
+    });
 
     it('can fetch external media', inject((renditions, api, desks, privileges, $q, $rootScope) => {
         const item = {

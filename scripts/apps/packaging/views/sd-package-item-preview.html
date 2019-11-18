@@ -20,6 +20,7 @@
       <div ng-hide=":: data.headline || data.slugline || data.description_text" translate>Blank headline received</div>
     </div>
     <div>
+      <span ng-if="data.pubstatus === 'canceled'" title="unpublished" class="state-label state-unpublished">unpublished</span>
       <span ng-if="label" class="state-label state-in_progress" translate>label: <b>{{label.name}}</b></span></span>
       <span class="package-item__item-creator">
         Created <time sd-datetime data-date="data.firstcreated" data-from-now="true"></time>
@@ -29,7 +30,7 @@
 
     <div class="package-item__item-abstract" ng-if="data.abstract" ng-bind-html="data.abstract"></div>
   </div>
-  
+
   <div class="package-item__action-menu" sd-item-actions-menu data-item="data" data-active="data"></div>
 
   <div class="package-details" ng-if="data.type === 'composite'"><i class="svg-icon-right"></i></div>

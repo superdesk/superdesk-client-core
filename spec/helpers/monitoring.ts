@@ -2,8 +2,7 @@
 
 import {element, by, browser, protractor, ElementFinder} from 'protractor';
 import {nav, waitFor, acceptConfirm} from './utils';
-import {s} from './e2e-helpers';
-import {ECE} from './expected-conditions-extended';
+import {s, ECE} from 'end-to-end-testing-helpers';
 import {multiAction} from './actions';
 
 class Monitoring {

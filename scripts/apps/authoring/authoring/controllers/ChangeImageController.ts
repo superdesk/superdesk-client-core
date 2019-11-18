@@ -1,5 +1,6 @@
 import {get} from 'lodash';
 import {gettext} from 'core/utils';
+import {appConfig} from 'appConfig';
 
 /**
  * @ngdoc controller
@@ -12,7 +13,6 @@ import {gettext} from 'core/utils';
  * @requires lodash
  * @requires api
  * @requires $rootScope
- * @requires deployConfig
  *
  * @description Controller is responsible for cropping pictures and setting Point of Interest for an image.
  */
@@ -28,12 +28,11 @@ export function validateMediaFieldsThrows(validator, metadata) {
     }
 }
 
-ChangeImageController.$inject = ['$scope', 'notify', 'lodash', 'api', '$rootScope',
-    'deployConfig', '$q', 'config'];
-export function ChangeImageController($scope, notify, _, api, $rootScope, deployConfig, $q, config) {
+ChangeImageController.$inject = ['$scope', 'notify', 'lodash', 'api', '$rootScope', '$q'];
+export function ChangeImageController($scope, notify, _, api, $rootScope, $q) {
     $scope.data = $scope.locals.data;
     $scope.data.cropData = {};
-    $scope.validator = deployConfig.getSync('validator_media_metadata');
+    $scope.validator = appConfig.validator_media_metadata;
     const sizes = {};
 
     const DEFAULT_CONTROLS = {
@@ -59,7 +58,7 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, deploy
         'place',
         'keywords',
         'extra',
-    ].concat(Object.keys(get(deployConfig.getSync('schema'), 'picture', {})));
+    ].concat(Object.keys(get(appConfig.schema, 'picture', {})));
 
     $scope.controls = angular.copy(DEFAULT_CONTROLS);
 
@@ -90,6 +89,7 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, deploy
 
     $scope.data.isDirty = false;
     $scope.isNew = $scope.data.isNew === true;
+
     // should show the metadata form in the view
     $scope.data.showMetadataEditor = $scope.data.showMetadataEditor === true;
     // initialize metadata from `item`
@@ -160,7 +160,7 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, deploy
 
         // check if data are valid
         try {
-            if (config.features.validatePointOfInterestForImages === true) {
+            if (appConfig.features != null && appConfig.features.validatePointOfInterestForImages === true) {
                 poiIsInsideEachCrop();
             }
         } catch (e) {
@@ -231,7 +231,11 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, deploy
     */
     $scope.done = () => {
         if ($scope.data.isDirty) {
-            if ($scope.data.item.type === 'picture' && config.features.validatePointOfInterestForImages === true) {
+            if (
+                $scope.data.item.type === 'picture'
+                && appConfig.features != null
+                && appConfig.features.validatePointOfInterestForImages === true
+            ) {
                 if (!$scope.saveCrops() || !$scope.applyMetadataChanges()) {
                     return;
                 }
@@ -246,7 +250,7 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, deploy
                 ]),
             });
         } else {
-            $scope.reject();
+            $scope.reject({done: true});
         }
     };
 
@@ -499,7 +503,6 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, deploy
         $scope.$applyAsync(() => {
             if (angular.isDefined(renditionName)) {
                 $scope.data.cropData[renditionName] = angular.extend({}, cropData, sizes[renditionName]);
-                $scope.data.isDirty = true;
                 $scope.crops.isDirty = true;
             }
         });
@@ -508,7 +511,7 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, deploy
     // init poi if not set
     if (!$scope.data.poi || !Object.keys($scope.data.poi).length) {
         $scope.data.poi = {x: 0.5, y: 0.5};
-        if (!config.features.validatePointOfInterestForImages) {
+        if (!(appConfig.features != null && appConfig.features.validatePointOfInterestForImages)) {
             $scope.saveCrops(); // save it as defaults
         }
     }

@@ -8,7 +8,7 @@ export const flags: React.StatelessComponent<IPropsItemListInfo> = (props) => {
     const elems = [
         _flags.marked_for_not_publication ?
             React.createElement(
-                'div', {
+                'span', {
                     className: 'state-label not-for-publication',
                     title: gettext('Not For Publication'),
                     key: 'not-for-publication',
@@ -16,7 +16,7 @@ export const flags: React.StatelessComponent<IPropsItemListInfo> = (props) => {
             : null,
         _flags.marked_for_legal ?
             React.createElement(
-                'div', {
+                'span', {
                     className: 'state-label legal',
                     title: gettext('Legal'),
                     key: 'legal',
@@ -24,14 +24,14 @@ export const flags: React.StatelessComponent<IPropsItemListInfo> = (props) => {
             : null,
         _flags.marked_for_sms ?
             React.createElement(
-                'div', {
+                'span', {
                     className: 'state-label sms',
                     key: 'sms'},
                 gettext('Sms'))
             : null,
     ].filter(angular.identity);
 
-    return elems.length ? React.createElement('div', {key: 'flags'}, elems) : null;
+    return elems.length ? React.createElement('span', {className: 'sd-wrap-helper', key: 'flags'}, elems) : null;
 };
 
 flags.propTypes = {

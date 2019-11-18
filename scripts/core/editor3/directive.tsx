@@ -44,11 +44,12 @@ class Editor3Directive {
     scrollContainer: any;
     refreshTrigger: any;
     editorFormat?: Array<string>;
+    cleanPastedHtml?: boolean;
 
     constructor() {
         this.scope = {};
         this.controllerAs = 'vm';
-        this.controller = ['config', '$element', 'editor3', '$scope', '$rootScope', this.initialize];
+        this.controller = ['$element', 'editor3', '$scope', '$rootScope', this.initialize];
 
         this.bindToController = {
             /**
@@ -157,10 +158,12 @@ class Editor3Directive {
              * @description Show image title.
              */
             showTitle: '=?',
+
+            cleanPastedHtml: '=?',
         };
     }
 
-    initialize(config, $element, editor3, $scope, $rootScope) {
+    initialize($element, editor3, $scope, $rootScope) {
         if (this.item == null) {
             throw new Error('Item must be provided in order to be able to save editor_state on it');
         }
@@ -205,11 +208,12 @@ class Editor3Directive {
                 item: this.item,
                 pathToValue: this.pathToValue,
             };
+
             const content = getInitialContent(props);
             const state = store.getState();
             const editorState = EditorState.push(state.editorState, content, 'change-block-data');
 
-            store.dispatch(changeEditorState(editorState, true, true));
+            store.dispatch(changeEditorState(editorState, false, true));
         });
 
         // this is triggered from MacrosController.call
@@ -249,7 +253,9 @@ class Editor3Directive {
                     <Provider store={store}>
                         <Editor3
                             scrollContainer={this.scrollContainer}
-                            singleLine={this.singleLine} />
+                            singleLine={this.singleLine}
+                            cleanPastedHtml={this.cleanPastedHtml}
+                        />
                     </Provider>, $element.get(0),
                 );
             });

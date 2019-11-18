@@ -126,10 +126,9 @@ export function ContentProfileSchemaEditor(vocabularies) {
 
             scope.getEditor3FormattingOptions = (fieldName) => {
                 const isCustomPlainTextField = typeof scope.fields[fieldName] === 'object'
-                    && typeof scope.fields[fieldName].field_options === 'object'
-                    && scope.fields[fieldName].field_options.single === true;
+                    && scope.fields[fieldName].field_type === 'text';
 
-                if (Object.keys(HAS_RICH_FORMATTING_OPTIONS).includes(fieldName) && !isCustomPlainTextField) {
+                if (Object.keys(HAS_RICH_FORMATTING_OPTIONS).includes(fieldName) || isCustomPlainTextField) {
                     return EDITOR3_RICH_FORMATTING_OPTIONS;
                 } else {
                     return EDITOR3_PLAINTEXT_FORMATTING_OPTIONS;

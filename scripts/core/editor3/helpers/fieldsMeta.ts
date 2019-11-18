@@ -48,3 +48,11 @@ export function setFieldMetadata(item, fieldKey, contentKey, contentValue) {
         [contentKey]: wrapper.wrap(contentValue),
     };
 }
+
+export function resetFieldMetadata(item) {
+    if (item[META_FIELD_NAME]) {
+        Object.keys(item[META_FIELD_NAME]).forEach((key) => {
+            setFieldMetadata(item, key, fieldsMetaKeys.draftjsState, null);
+        });
+    }
+}

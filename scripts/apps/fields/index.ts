@@ -1,6 +1,6 @@
 
 import {logger} from 'core/services/logger';
-import {extensions} from 'core/extension-imports.generated';
+import {extensions} from 'appConfig';
 import {ICustomFieldType} from 'superdesk-api';
 
 type ICustomFieldTypeMap = {[id: string]: ICustomFieldType};

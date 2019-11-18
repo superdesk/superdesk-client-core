@@ -12,6 +12,7 @@ import {IFunctionPointsService} from 'apps/extension-points/services/FunctionPoi
 import {isPublished} from 'apps/archive/utils';
 import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
 import {copyJson} from 'core/helpers/utils';
+import {appConfig} from 'appConfig';
 
 /**
  * @ngdoc directive
@@ -43,8 +44,6 @@ AuthoringDirective.$inject = [
     'reloadService',
     '$rootScope',
     'suggest',
-    'config',
-    'deployConfig',
     'editorResolver',
     'compareVersions',
     'embedService',
@@ -74,8 +73,6 @@ export function AuthoringDirective(
     reloadService,
     $rootScope,
     suggest,
-    config,
-    deployConfig,
     editorResolver,
     compareVersions,
     embedService,
@@ -138,6 +135,7 @@ export function AuthoringDirective(
             $scope.fullPreviewUrl = '/#/preview/' + $scope.origItem._id;
             $scope.proofread = false;
             $scope.referrerUrl = referrer.getReferrerUrl();
+            $scope.gettext = gettext;
 
             content.getTypes().then(() => {
                 $scope.content_types = content.types;
@@ -170,7 +168,8 @@ export function AuthoringDirective(
              * @returns {Boolean}
              */
             $scope.canPublishOnDesk = function() {
-                return !($scope.deskType === 'authoring' && config.features.noPublishOnAuthoringDesk);
+                return !($scope.deskType === 'authoring' && appConfig.features.noPublishOnAuthoringDesk) &&
+                    privileges.userHasPrivileges({publish: 1});
             };
 
             getDeskStage();
@@ -380,8 +379,8 @@ export function AuthoringDirective(
             function checkMediaAssociatedToUpdate() {
                 let rewriteOf = $scope.item.rewrite_of;
 
-                if (!_.get(config, 'features.confirmMediaOnUpdate') ||
-                    !_.get(config, 'features.editFeaturedImage') ||
+                if (!(appConfig.features != null && appConfig.features.confirmMediaOnUpdate) ||
+                    !(appConfig.features != null && appConfig.features.editFeaturedImage) ||
                     !rewriteOf || _.includes(['kill', 'correct', 'takedown'], $scope.action) ||
                     $scope.item.associations && $scope.item.associations.featuremedia) {
                     return $q.when(true);
@@ -487,7 +486,7 @@ export function AuthoringDirective(
             }
 
             function validateForPublish(item) {
-                var validator = deployConfig.getSync('validator_media_metadata');
+                var validator = appConfig.validator_media_metadata;
 
                 if (item.type === 'picture' || item.type === 'graphic') {
                     // required media metadata fields are defined in superdesk.config.js
@@ -549,7 +548,7 @@ export function AuthoringDirective(
             };
 
             $scope.isRemovedField = function(fieldName) {
-                return _.has(config.infoRemovedFields, fieldName);
+                return appConfig.infoRemovedFields != null && appConfig.infoRemovedFields.hasOwnProperty(fieldName);
             };
 
             function afterTansa(e, isCancelled) {
@@ -666,6 +665,13 @@ export function AuthoringDirective(
                 });
                 initMedia();
             };
+
+            // Close the current article, create an update of the article and open it in the edit mode.
+            $scope.closeAndContinue = function() {
+                $scope.close().then(authoring.rewrite($scope.item));
+            };
+
+            $scope.canRewriteArticle = () => authoring.itemActions($scope.item).re_write;
 
             $scope.deschedule = function() {
                 $scope.item.publish_schedule = null;
@@ -818,17 +824,17 @@ export function AuthoringDirective(
             };
 
             /**
-             * On change content profile the default values from new content profile
-             * will overwrite the current values from item
+             * On changing the content profile add the new (key, default-value) to the item
+             * if new content profile has some additional keys than item
              *
              * @function changeProfile
-             * @param {Object} item - ucurrent edited content items
+             * @param {Object} item - item being edited currently
              */
             $scope.changeProfile = function(item) {
                 angular.forEach($scope.content_types, (profile) => {
                     if (item.profile === profile._id && profile.schema) {
                         angular.forEach(profile.schema, (schema, key) => {
-                            if (schema && schema.default) {
+                            if (schema && schema.default && !(key in item)) {
                                 item[key] = _.cloneDeep(schema.default);
                             }
                         });
@@ -854,8 +860,14 @@ export function AuthoringDirective(
             };
 
             $scope.sendToNextStage = function() {
-                var stageIndex, stageList = desks.deskStages[desks.activeDeskId];
-                var selectedStage, selectedDesk = desks.deskLookup[desks.activeDeskId];
+                var currentDeskId = desks.getCurrentDeskId();
+
+                if (currentDeskId == null) {
+                    throw new Error('currentDeskId is null');
+                }
+
+                var stageIndex, stageList = desks.deskStages[currentDeskId];
+                var selectedStage, selectedDesk = desks.deskLookup[currentDeskId];
 
                 for (var i = 0; i < stageList.length; i++) {
                     if (stageList[i]._id === $scope.stage._id) {
@@ -1168,7 +1180,6 @@ export function AuthoringDirective(
                 urls: $injector.get('urls'),
                 notify: notify,
                 superdesk: superdesk,
-                deployConfig: deployConfig,
                 attachments: $injector.get('attachments'),
             })));
 
@@ -1202,6 +1213,8 @@ export function AuthoringDirective(
 
                 $scope.autosave($scope.item, 200);
             };
+
+            $scope.refresh = () => $scope.refreshTrigger++;
         },
     };
 }

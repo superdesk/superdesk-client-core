@@ -1,6 +1,7 @@
 import {forEach} from 'lodash';
 import langmap from 'core/lang';
 import {gettext} from 'core/utils';
+import {dashboardRoute, appConfig} from 'appConfig';
 
 interface IActivityData {
     priority: number; // priority used for ordering.
@@ -152,16 +153,16 @@ function SuperdeskProvider($routeProvider, _) {
      * @description This service allows interacting with registered activities.
      */
     this.$get = ['$q', '$rootScope', 'activityService', 'activityChooser',
-        'betaService', 'features', 'privileges', '$injector', 'config',
+        'betaService', 'features', 'privileges', '$injector',
         function superdeskFactory($q, $rootScope, activityService, activityChooser, betaService,
-            features, privileges, $injector, config) {
+            features, privileges, $injector) {
             /**
              * Render main menu depending on registered acitivites
              */
             betaService.isBeta().then((beta) => {
                 forEach(activities, (activity, id) => {
                     if (activity.beta === true && !beta || !isAllowed(activity)) {
-                        $routeProvider.when(activity.when, {redirectTo: '/workspace'});
+                        $routeProvider.when(activity.when, {redirectTo: dashboardRoute});
                     }
                 });
             });
@@ -187,15 +188,15 @@ function SuperdeskProvider($routeProvider, _) {
             }
 
             function checkActivityEnabled(activity) {
-                if (!_.get(config, 'activity')) {
+                if (!appConfig.activity) {
                     return true;
                 }
 
-                if (_.isUndefined(config.activity[activity._id])) {
+                if (_.isUndefined(appConfig.activity[activity._id])) {
                     return true;
                 }
 
-                return config.activity[activity._id];
+                return appConfig.activity[activity._id];
             }
 
             /**
@@ -571,8 +572,8 @@ angular.module('superdesk.core.activity', [
             if (currentRoute && previousRoute) {
                 if (currentRoute.$$route !== undefined && previousRoute.$$route !== undefined) {
                     if (currentRoute.$$route.originalPath === '/') {
-                        this.setReferrerUrl('/workspace');
-                        localStorage.setItem('referrerUrl', '/workspace');
+                        this.setReferrerUrl(dashboardRoute);
+                        localStorage.setItem('referrerUrl', dashboardRoute);
                         sessionStorage.removeItem('previewUrl');
                     } else if (currentRoute.$$route.authoring && (!previousRoute.$$route.authoring ||
                         previousRoute.$$route._id === 'packaging')) {
@@ -594,7 +595,7 @@ angular.module('superdesk.core.activity', [
             if (typeof referrerURL === 'undefined' || referrerURL === null) {
                 if (typeof localStorage.getItem('referrerUrl') === 'undefined'
                 || localStorage.getItem('referrerUrl') === null) {
-                    this.setReferrerUrl('/workspace');
+                    this.setReferrerUrl(dashboardRoute);
                 } else {
                     referrerURL = localStorage.getItem('referrerUrl');
                 }

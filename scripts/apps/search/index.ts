@@ -87,9 +87,11 @@ angular.module('superdesk.apps.search', [
                 sideTemplateUrl: 'scripts/apps/workspace/views/workspace-sidenav.html',
                 controller: SearchController,
                 controllerAs: 'search',
+                privileges: {use_global_saved_searches: 1},
             });
 
             workspaceMenuProvider.item({
+                if: 'privileges.use_global_saved_searches',
                 href: '/search',
                 label: gettext('Search'),
                 templateUrl: asset.templateUrl('apps/search/views/menu.html'),

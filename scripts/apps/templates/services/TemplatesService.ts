@@ -47,6 +47,7 @@ export function TemplatesService(api, session, $q, preferencesService, privilege
         'sms_message',
         'company_codes',
         'extra',
+        'authors',
     ];
 
     /**

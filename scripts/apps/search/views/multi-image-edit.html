@@ -65,31 +65,36 @@
         </div>
 
         <div class="sd-column-box__slide-in-column sd-column-box__slide-in-column--large sd-column-box__slide-in-column--dark-ui">
-            <div class="sd-column-box__slide-in-column-inner sd-slide-in-panel">
+            <div class="sd-column-box__slide-in-column-inner sd-slide-in-panel" ng-controller="MediaFieldsController as fields">
                 <div class="sd-slide-in-panel__header">
                     <h3 class="sd-slide-in-panel__heading" translate>Metadata</h3>
                 </div>
                 <div class="sd-slide-in-panel__content">
                     <div class="sd-slide-in-panel__content-block sd-slide-in-panel__content-block--first">
                         <div class="sd-alert sd-alert--hollow sd-alert--primary sd-alert--small" style="margin: -1rem 0 3rem;">
-                            <span translate>Currently editing: {{getSelectedImages().length}} items</span>
+                            <span translate>Currently editing: {{getSelectedItemsLength()}} items</span>
                         </div>
                         <div sd-media-metadata-editor
                             data-item="metadata"
                             data-validator="validator"
-                            data-disabled="!getSelectedImages().length"
+                            data-disabled="getSelectedItemsLength() === 0"
                             data-dark="true"
                             data-boxed="true"
                             data-on-change="onChange(key)"
                             data-placeholder="placeholder"
+                            data-multi="getSelectedImages().length > 1"
+                            data-fields="fields.fields"
                         ></div>
                     </div>
                 </div>
                 <div sd-media-copy-metadata
+                    ng-if="getSelectedImages().length"
                     class="sd-slide-in-panel__footer"
                     data-metadata="metadata"
                     data-validator="validator"
-                    data-on-change="metadataDirty = !metadataDirty">
+                    data-on-change="setMetadataDirty(!metadataDirty)"
+                    data-fields="fields.fields"
+                    >
                 </div>
             </div>
         </div>

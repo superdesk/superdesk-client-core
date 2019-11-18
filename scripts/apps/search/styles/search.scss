@@ -35,6 +35,9 @@
         flex-grow: 1;
         text-align: right;
     }
+    .subnav__stage-group--ui-responsive {
+        display: none;
+    }
 }
 
 .ui-responsive-small {
@@ -43,6 +46,24 @@
         .button.search-icon {
             width: 40px;
         }
+    }
+    .flat-searchbar {
+        &.extended {
+            z-index: 2;
+
+            .search-handler {
+                input {
+                    max-width: 110px;
+                }
+            }
+        }
+        .search-handler {
+            padding: 10px 6px;
+            min-width: 32px;
+        }
+    }
+    .subnav__stage-group--ui-responsive {
+        display: none;
     }
 }
 

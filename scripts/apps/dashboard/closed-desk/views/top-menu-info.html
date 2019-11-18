@@ -5,9 +5,9 @@
         'top-menu__info-icon--red': routingTo,
         'icon-upload': routingTo,
 }"></i>
-
-    <span class="top-menu__info-label" ng-show="routingFrom" translate>Routed from:</span>
-    <span class="top-menu__info-text" ng-show="routingFrom">{{ routingFrom }}</span>
+    <span class="top-menu__info-label" ng-show="routingFrom && hideRoutedDesks" translate>Routed from other desks</span>
+    <span class="top-menu__info-label" ng-show="routingFrom && !hideRoutedDesks" translate>Routed from:</span>
+    <span class="top-menu__info-text" ng-show="routingFrom && !hideRoutedDesks">{{ routingFrom }}</span>
 
     <span class="top-menu__info-label" ng-show="routingTo" translate>Routing to:</span>
     <span class="top-menu__info-text" ng-show="routingTo">{{ routingTo }}</span>
