@@ -280,13 +280,20 @@ declare module 'superdesk-api' {
             externalsource: boolean;
         };
 
-        // media renditions
+        /** Wrapper for different renditions of non-textual content of the news object */
         renditions: {
             [key: string]: {
+                /** The URL for accessing the rendition as a resource */
                 href: string;
-                width?: number;
-                height?: number;
+
+                /** A MIME type which applies to the rendition */
                 mimetype: string;
+
+                /** For still and moving images: the width of the display area measured in pixels */
+                width?: number;
+
+                /** For still and moving images: the height of the display area measured in pixels */
+                height?: number;
             };
         };
     }
