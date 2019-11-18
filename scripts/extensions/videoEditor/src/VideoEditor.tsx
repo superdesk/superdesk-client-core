@@ -101,7 +101,17 @@ export class VideoEditor extends React.Component<IProps, IState> {
 
     handleClose = () => {
         this.props.onClose();
-        this.props.onArticleUpdate(cloneDeep(this.state.article));
+        const omitFields = [
+            'annotations',
+            'project',
+            'semantics',
+            'time_zone',
+            '_editable',
+            '_locked',
+            '_type',
+            '_status',
+        ];
+        this.props.onArticleUpdate(omit(cloneDeep(this.state.article), omitFields) as IArticleVideo);
     };
     handleCheckingVideo = () => {
         this.handleToggleLoading(true, 'Loading video...');
@@ -116,7 +126,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                             videoSrc: result.project.url + `?t=${Math.random()}`,
                             article: {
                                 ...this.state.article,
-                                ...omit(result, 'project'),
+                                ...result,
                             },
                         });
                         this.loadTimelineThumbnails();
@@ -332,7 +342,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                         videoSrc: result.project.url + `?t=${Math.random()}`,
                                         article: {
                                             ...this.state.article,
-                                            ...omit(result, 'project'),
+                                            ...result,
                                         },
                                     });
                                     this.loadTimelineThumbnails();
