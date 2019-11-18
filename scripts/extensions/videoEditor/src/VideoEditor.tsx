@@ -110,9 +110,11 @@ export class VideoEditor extends React.Component<IProps, IState> {
             '_locked',
             '_type',
             '_status',
+            '_latest_version',
         ];
         this.props.onArticleUpdate(omit(cloneDeep(this.state.article), omitFields) as IArticleVideo);
     };
+
     handleCheckingVideo = () => {
         this.handleToggleLoading(true, 'Loading video...');
         this.intervalCheckVideo = window.setInterval(() => {
@@ -495,7 +497,11 @@ export class VideoEditor extends React.Component<IProps, IState> {
 
     showErrorMessage = (errorResponse: any) => {
         const message = JSON.parse(errorResponse._message) || {};
-        this.props.superdesk.ui.alert(flatten(Object.values(message)).join('<br/>'));
+        const error: Array<string> = flatten(Object.values(message)).map(x => {
+            if (typeof x === 'object') return JSON.stringify(x);
+            return x;
+        });
+        this.props.superdesk.ui.alert(error.join('<br/>'));
     };
 
     render() {

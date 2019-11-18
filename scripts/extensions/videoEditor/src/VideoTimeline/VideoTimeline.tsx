@@ -73,9 +73,8 @@ export class VideoTimeline extends React.Component<IProps, IState> {
         } else {
             widthPic = thumbnails[0].width;
         }
-        const numberThumbnails =
-            this.controlbar.current! && Math.floor(this.controlbar.current!.offsetWidth / widthPic);
-        const duration = this.props.video.current! ? this.props.video.current!.duration : 0;
+        const numberThumbnails = Math.floor(this.controlbar.current!?.offsetWidth / widthPic);
+        const duration = video?.duration ?? 0;
         let thumbnailsRender: Array<IThumbnail> = [];
         const per_delta_image =
             thumbnails.length > 1 ? (thumbnails.length - 1) / numberThumbnails : duration / numberThumbnails;
