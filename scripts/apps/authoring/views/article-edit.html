@@ -762,6 +762,7 @@
      data-required="schema.slugline.required">
     <label class="field__label">{{label('slugline')}}</label>
     <span ng-if="schema.slugline.maxlength" sd-character-count data-item="item.slugline" data-html="true" data-limit="schema.slugline.maxlength"></span>
+    <span ng-if="invalidSluglineError != null" class="disallowed-char-error">{{invalidSluglineError}}</span>
     <div id="title" class="slugline"
          sd-editor3
          data-path-to-value="'slugline'"
