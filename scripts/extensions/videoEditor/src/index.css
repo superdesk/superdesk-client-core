@@ -1,11 +1,10 @@
 .timeline-controls {
-  position: relative;
-  box-sizing: border-box;
-  top: 40%;
-  height:56px;
-  left: 2%;
   display: block;
-  width: 80%;
+  position: relative;
+  height: 56px;
+  margin: auto 3rem;
+  max-width: calc(100vw - 6rem - 16rem * 16/9);
+  width: 100%;
 }
 
 .controlbars {
