@@ -1222,12 +1222,13 @@ export function AuthoringDirective(
             $scope.refresh = () => $scope.refreshTrigger++;
 
             $scope.$watch('item.slugline', (newVal) => {
-                if(newVal != null && $rootScope.config.disallowedSluglineCharacters != null) {
+                if (newVal != null && $rootScope.config.disallowedSluglineCharacters != null) {
                     const disallowedCharacters = $rootScope.config.disallowedSluglineCharacters.split('');
                     const invalidCharString = disallowedCharacters.filter((char) => newVal.includes(char)).join(', ');
 
                     $scope.invalidSluglineError = invalidCharString.length > 0
-                        ? gettext('Character {{chars}} not allowed in the slugline.', {chars: invalidCharString}) : null;
+                        ? gettext('Character {{chars}} not allowed in the slugline.', {chars: invalidCharString})
+                        : null;
                 }
             });
         },
