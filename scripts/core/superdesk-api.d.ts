@@ -77,7 +77,7 @@ declare module 'superdesk-api' {
                 };
             };
             iptcMapping?(data: IPTCMetadata, item: Partial<IArticle>): Promise<Partial<IArticle>>;
-            searchPanelWidgets?: Array<React.ComponentType<ISeachPanelWidgetProps>>;
+            searchPanelWidgets?: Array<React.ComponentType<ISearchPanelWidgetProps>>;
         }
     }
 
