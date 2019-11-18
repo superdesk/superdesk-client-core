@@ -280,19 +280,26 @@ declare module 'superdesk-api' {
             externalsource: boolean;
         };
 
-        /** Wrapper for different renditions of non-textual content of the news object */
+        /**
+         * Wrapper for different renditions of non-textual content of the news object
+         *
+         * There can be multiple renditions for single item with different sizes/mimetypes.
+         *
+         * Picture renditions used in UI are generated automatically by Superdesk:
+         * - **thumbnail** - used in lists
+         * - **viewImage** - used in sidebar preview
+         * - **baseImage** - used in media editor, full screen preview
+         *
+         * Video items can also provide **thumbnail** and **viewImage** renditions which will be
+         * then used in list/preview.
+         */
         renditions: {
             [key: string]: {
-                /** The URL for accessing the rendition as a resource */
                 href: string;
-
-                /** A MIME type which applies to the rendition */
                 mimetype: string;
 
-                /** For still and moving images: the width of the display area measured in pixels */
+                // picture and video only
                 width?: number;
-
-                /** For still and moving images: the height of the display area measured in pixels */
                 height?: number;
             };
         };
