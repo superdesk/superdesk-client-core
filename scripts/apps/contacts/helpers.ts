@@ -76,11 +76,16 @@ export function validateRequiredField(contact: IContact): boolean {
     return !invalid;
 }
 
+function contactHasEmailAddress(contact: IContact): boolean {
+    return contact && contact.contact_email && contact.contact_email.length > 0 &&
+        !contact.contact_email.some((email) => !email || email.length === 0);
+}
+
 export function validateMinRequiredField(contact: IContact): boolean {
     return _.some(LOOKUP_FIELDS, (field) => {
         switch (field) {
         case 'contact_email':
-            return _.get(contact, field, []).length > 0 && !_.some(contact[field], (v) => _.isEmpty(v));
+            return contactHasEmailAddress(contact);
         case 'contact_phone':
         case 'mobile':
             return _.get(contact, field, []).length > 0 &&
@@ -96,8 +101,7 @@ export function validateAssignableType(contact: IContact): boolean {
         return true;
     }
 
-    return _.get(contact, 'contact_email.length', 0) > 0 &&
-        !_.some(contact.contact_email, (v) => _.isEmpty(v));
+    return contactHasEmailAddress(contact);
 }
 
 export const scrollListItemIfNeeded = (selectedIndex, listRefElement) => {

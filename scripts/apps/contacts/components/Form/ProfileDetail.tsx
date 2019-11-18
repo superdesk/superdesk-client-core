@@ -44,7 +44,7 @@ interface IState {
     contactTypes: any;
 }
 
-export class ProfileDetail extends React.Component<IProps, IState> {
+export class ProfileDetail extends React.PureComponent<IProps, IState> {
     static propTypes: any;
     static defaultProps: any;
 

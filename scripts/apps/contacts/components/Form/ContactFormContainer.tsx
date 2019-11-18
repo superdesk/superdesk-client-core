@@ -34,7 +34,7 @@ interface IState {
     isFormValid: boolean;
 }
 
-export class ContactFormContainer extends React.Component<IProps, IState> {
+export class ContactFormContainer extends React.PureComponent<IProps, IState> {
     static propTypes: any;
     static defaultProps: any;
 
