@@ -5,7 +5,7 @@ function Label(props: IDropdownLabel) {
     return (
         <button
             className={`
-                dropdown__toggle btn btn--ui-dark btn--icon-only btn-hollow
+                dropdown__toggle btn btn--ui-dark btn--hollow btn--icon-only btn--large
                 ${props.selectedItem ? 'btn--sd-green' : ''}
             `}
             onClick={props.onClick}

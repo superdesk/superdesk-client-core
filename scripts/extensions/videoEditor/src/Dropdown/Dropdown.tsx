@@ -64,7 +64,7 @@ export class Dropdown extends React.Component<IProps, IState> {
                 <ul className="dropdown__menu">
                     {this.props.items.map(item => (
                         <li key={item} onClick={() => this.handleSelect(item)}>
-                            <a>{gettext(item)}</a>
+                            <button>{gettext(item)}</button>
                         </li>
                     ))}
                 </ul>

@@ -4,9 +4,16 @@ import { IDropdownLabel } from '../interfaces';
 function Label(props: IDropdownLabel) {
     const value = String(props.selectedItem || 'Same');
     return (
-        <p onClick={props.onClick} sd-tooltip={props.title}>
-            {props.getText!('Quality')}: {props.getText!(value)}
-        </p>
+        <button
+            className="dropdown__toggle dark-ui dropdown-toggle"
+            aria-haspopup="true"
+            aria-expanded="false"
+            onClick={props.onClick}
+            sd-tooltip={props.title}
+        >
+            {props.getText!(value)}
+            <span className="dropdown__caret dropdown__caret--white"></span>
+        </button>
     );
 }
 
