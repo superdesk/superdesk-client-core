@@ -81,10 +81,10 @@ declare module 'superdesk-api' {
         }
     }
 
-    export type ISearchPanelWidgetProps = {
+    export type ISearchPanelWidgetProps<T> = {
         provider: string;
-        params: any;
-        setParams: (params) => void;
+        params: T;
+        setParams: (params: Partial<T>) => void;
     };
 
     export type IExtension = DeepReadonly<{
