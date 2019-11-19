@@ -12,7 +12,7 @@ export class SearchPanelWidgets extends React.PureComponent<IProps> {
     render() {
         const widgets = flatMap(
             Object.values(extensions)
-                .map((extension) => extension.activationResult?.contributions?.searchPanelWidgets ?? [])
+                .map((extension) => extension.activationResult?.contributions?.searchPanelWidgets || [])
                 .filter((_widgets) => _widgets != null),
         );
 
