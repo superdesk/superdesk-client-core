@@ -26,12 +26,16 @@ export class Dropdown extends React.Component<IProps, IState> {
 
     componentDidUpdate(prevProps: IProps) {
         if (this.props.resetState !== prevProps.resetState) {
-            if (this.props.resetState === true) {
-                this.setState({
-                    open: false,
-                    selectedItem: null,
-                });
-            }
+            this.handleResetState();
+        }
+    }
+
+    handleResetState = () => {
+        if (this.props.resetState === true) {
+            this.setState({
+                open: false,
+                selectedItem: null,
+            });
         }
     }
 
@@ -40,21 +44,22 @@ export class Dropdown extends React.Component<IProps, IState> {
         // e.g: toggle crop mode
         if (!this.state.open && this.state.selectedItem && this.props.isButton) {
             this.props.onSelect('');
-            this.setState({ selectedItem: null });
+            this.setState({selectedItem: null});
             return;
         }
         this.setState({
             open: !this.state.open,
         });
-    };
+    }
 
     handleSelect = (item: string) => {
-        this.setState({ open: false, selectedItem: item });
+        this.setState({open: false, selectedItem: item});
         this.props.onSelect(item);
-    };
+    }
 
     render() {
-        const { gettext } = this.context.superdesk.localization;
+        const {gettext} = this.context.superdesk.localization;
+
         return (
             <div className={`dropdown ${this.state.open ? 'open' : ''} ${this.props.className || ''}`}>
                 {React.cloneElement(this.props.label as React.ReactElement<any>, {
@@ -62,7 +67,7 @@ export class Dropdown extends React.Component<IProps, IState> {
                     selectedItem: this.state.selectedItem,
                 })}
                 <ul className="dropdown__menu">
-                    {this.props.items.map(item => (
+                    {this.props.items.map((item) => (
                         <li key={item} onClick={() => this.handleSelect(item)}>
                             <button>{gettext(item)}</button>
                         </li>

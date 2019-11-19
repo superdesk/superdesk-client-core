@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { IExtension, IExtensionActivationResult, ISuperdesk } from 'superdesk-api';
-import { getVideoEditModal } from './get-video-editor-modal';
-import { IArticleVideo } from './interfaces';
+import {IExtension, IExtensionActivationResult, ISuperdesk} from 'superdesk-api';
+import {getVideoEditModal} from './get-video-editor-modal';
+import {IArticleVideo} from './interfaces';
 
 function getEditVideoAction(superdesk: ISuperdesk) {
-    const { gettext } = superdesk.localization;
-    const { showModal } = superdesk.ui;
+    const {gettext} = superdesk.localization;
+    const {showModal} = superdesk.ui;
 
     return class EditVideoAction extends React.PureComponent<{ article: IArticleVideo }> {
         render() {

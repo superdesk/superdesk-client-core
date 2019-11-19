@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { IDropdownLabel } from '../interfaces';
+import {IDropdownLabel} from '../interfaces';
 
 function Label(props: IDropdownLabel) {
     const value = String(props.selectedItem || 'Same');
+
     return (
         <button
             className="dropdown__toggle dark-ui dropdown-toggle"
@@ -12,7 +13,7 @@ function Label(props: IDropdownLabel) {
             sd-tooltip={props.title}
         >
             {props.getText!(value)}
-            <span className="dropdown__caret dropdown__caret--white"></span>
+            <span className="dropdown__caret dropdown__caret--white" />
         </button>
     );
 }

@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { CropLabel, Dropdown, QualityLabel } from './Dropdown';
+import {CropLabel, Dropdown, QualityLabel} from './Dropdown';
 import VideoEditorContext from './VideoEditorContext';
-import { IVideoEditor } from './interfaces';
+import {IVideoEditor} from './interfaces';
 
 interface IProps {
     onToggleVideo: () => void;
@@ -15,40 +15,42 @@ interface IProps {
 
 export class VideoEditorTools extends React.Component<IProps> {
     static contextType = VideoEditorContext;
-    constructor(props: IProps) {
-        super(props);
-    }
 
     handleCrop = (aspect: string) => {
         // convert aspect to number
         // 16:9 => 16/9
         const [x, y] = aspect.split(':');
-        const aspectValue = parseInt(x) / parseInt(y);
+        const aspectValue = parseInt(x, 10) / parseInt(y, 10);
+
         this.props.onCrop(aspectValue);
-    };
+    }
 
     handleQuality = (quality: string) => {
         let q = quality.replace('p', '');
+
         if (q === 'Same') {
             q = '0';
         }
-        this.props.onQualityChange(parseInt(q));
-    };
+        this.props.onQualityChange(parseInt(q, 10));
+    }
 
     render() {
         const videoResolution = this.props.videoResolution;
-        const resolutions = ['Same'].concat([360, 480, 720, 1080].filter(i => i < videoResolution).map(i => i + 'p'));
+        const resolutions = ['Same'].concat([360, 480, 720, 1080].filter(
+            (i) => i < videoResolution).map((i) => i + 'p'),
+        );
         const qualityDisabled = resolutions.length === 1;
 
-        const { getClass } = this.context.superdesk.utilities.CSS;
-        const { gettext } = this.context.superdesk.localization;
+        const {getClass} = this.context.superdesk.utilities.CSS;
+        const {gettext} = this.context.superdesk.localization;
+
         return (
             <div className="sd-photo-preview__video-tools">
                 <button
                     className="btn btn--ui-dark btn--hollow btn--icon-only btn--large"
                     onClick={this.props.onToggleVideo}
                 >
-                    <i className={this.props.video.playing ? 'icon-pause' : 'icon-play'}></i>
+                    <i className={this.props.video.playing ? 'icon-pause' : 'icon-play'} />
                 </button>
                 <Dropdown
                     label={<CropLabel />}
@@ -65,7 +67,7 @@ export class VideoEditorTools extends React.Component<IProps> {
                         `}
                     onClick={this.props.onRotate}
                 >
-                    <i className="icon-rotate-left"></i>
+                    <i className="icon-rotate-left" />
                 </button>
                 <span className="sd-photo-preview__label mlr-auto">{this.props.videoHeadline}</span>
                 <div>

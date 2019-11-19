@@ -1,10 +1,9 @@
-import { IArticle } from 'superdesk-api';
-import { Crop } from 'react-image-crop';
-
+import {IArticle} from 'superdesk-api';
+import {Crop} from 'react-image-crop';
 
 interface ICrop extends Crop{
-    scale?:number,
-    value?:number
+    scale?: number;
+    value?: number;
 }
 
 export interface IArticleVideo extends IArticle {

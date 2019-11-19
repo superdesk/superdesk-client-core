@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { IDropdownLabel } from '../interfaces';
+import {IDropdownLabel} from '../interfaces';
 
 function Label(props: IDropdownLabel) {
     return (
@@ -11,7 +11,7 @@ function Label(props: IDropdownLabel) {
             onClick={props.onClick}
             disabled={props.disabled}
         >
-            <i className="icon-crop"></i>
+            <i className="icon-crop" />
         </button>
     );
 }
