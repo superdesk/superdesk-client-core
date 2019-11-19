@@ -776,9 +776,6 @@ declare module 'superdesk-api' {
                 getIptcSubjects(): Promise<Array<ISubject>>;
                 getVocabulary(id: string): Promise<Array<ISubject>>;
             };
-            desk: {
-                getDeskStages(deskId: string): Promise<Array<IStage>>;
-            };
         };
         helpers: {
             assertNever(x: never): never;
