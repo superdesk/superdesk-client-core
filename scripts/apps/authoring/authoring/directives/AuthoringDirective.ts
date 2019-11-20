@@ -112,6 +112,7 @@ export function AuthoringDirective(
             $scope.mediaFieldVersions = {};
             $scope.refreshTrigger = 0;
             $scope.isPreview = false;
+            $scope.fieldsWithInvalidChar = [];
 
             $scope.$watch('origItem', (newValue, oldValue) => {
                 $scope.itemActions = null;
@@ -564,8 +565,10 @@ export function AuthoringDirective(
              * in $scope.
              */
             $scope.publish = function() {
-                if ($scope.invalidSluglineError != null) {
-                    notify.error(gettext('Invalid SLUGLINE. Item not published.'));
+                if ($scope.fieldsWithInvalidChar.length > 0) {
+                    const invalidFields = $scope.fieldsWithInvalidChar.join(' & ');
+
+                    notify.error(gettext('Invalid {{field}}. Item can\'t be published.', {field: invalidFields}));
                     return Promise.reject();
                 }
 
@@ -1221,16 +1224,13 @@ export function AuthoringDirective(
 
             $scope.refresh = () => $scope.refreshTrigger++;
 
-            $scope.$watch('item.slugline', (newVal) => {
-                if (newVal != null && $rootScope.config.disallowedSluglineCharacters != null) {
-                    const disallowedCharacters = $rootScope.config.disallowedSluglineCharacters.split('');
-                    const invalidCharString = disallowedCharacters.filter((char) => newVal.includes(char)).join(', ');
-
-                    $scope.invalidSluglineError = invalidCharString.length > 0
-                        ? gettext('Character {{chars}} not allowed in the slugline.', {chars: invalidCharString})
-                        : null;
+            $scope.handleFieldsWithInvalidChar = (field, isError) => {
+                if (isError === true && !$scope.fieldsWithInvalidChar.includes(field)) {
+                    $scope.fieldsWithInvalidChar.push(field);
+                } else if (isError === false && $scope.fieldsWithInvalidChar.includes(field)) {
+                    $scope.fieldsWithInvalidChar = $scope.fieldsWithInvalidChar.filter((_field) => _field !== field);
                 }
-            });
+            };
         },
     };
 }

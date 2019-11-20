@@ -1677,3 +1677,12 @@ feature-image {
     }
 }
 
+.disallowed-char-error {
+    font-size: 11px;
+    font-style: italic;
+    color: $red;
+    float: right;
+    margin-bottom: -16px;
+    margin-left: 5px;
+}
+

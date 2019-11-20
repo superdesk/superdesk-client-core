@@ -744,6 +744,10 @@
      order="{{editor.slugline.order}}">
     <label class="field__label">{{label('slugline')}}</label>
     <span ng-if="schema.slugline.maxlength" sd-character-count data-item="item.slugline" data-html="true" data-limit="schema.slugline.maxlength"></span>
+    <sd-validate-characters class="disallowed-char-error"
+        item="item.slugline"
+        on-change="handleFieldsWithInvalidChar"
+        field="'slugline'"></sd-validate-characters>
     <input type="text" class="slugline"
        id="slugline"
        data-language="item.language"
@@ -762,7 +766,10 @@
      data-required="schema.slugline.required">
     <label class="field__label">{{label('slugline')}}</label>
     <span ng-if="schema.slugline.maxlength" sd-character-count data-item="item.slugline" data-html="true" data-limit="schema.slugline.maxlength"></span>
-    <span ng-if="invalidSluglineError != null" class="disallowed-char-error">{{invalidSluglineError}}</span>
+    <sd-validate-characters class="disallowed-char-error"
+        item="item.slugline"
+        on-change="handleFieldsWithInvalidChar"
+        field="'slugline'"></sd-validate-characters>
     <div id="title" class="slugline"
          sd-editor3
          data-path-to-value="'slugline'"
