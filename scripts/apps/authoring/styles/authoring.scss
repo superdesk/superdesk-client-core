@@ -705,15 +705,6 @@
     &----half {
         flex-basis: 50%;
     }
-
-    .disallowed-char-error {
-        font-size: 11px;
-        font-style: italic;
-        color: $red;
-        float: right;
-        margin-bottom: -16px;
-        margin-left: 5px;
-    }
 }
 
 .authoring-header__item .authoring-header__hint {
