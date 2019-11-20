@@ -5,10 +5,15 @@ import {get, set, isEqual, cloneDeep, some, isEmpty, extend, each, omit, isNil} 
 import {gettext} from 'core/utils';
 import {StretchBar} from 'core/ui/components/SubNav';
 
-import {validateRequiredFormFields, getContactType, validateAssignableType} from '../../helpers';
+import {
+    validateRequiredFormFields,
+    getContactType,
+    validateAssignableType,
+    getContactTypeObject,
+} from '../../helpers';
 import {FB_URL, IG_URL} from '../../constants';
 import {ProfileDetail} from './ProfileDetail';
-import {IContact, IContactsService} from '../../Contacts';
+import {IContact, IContactsService, IContactType} from '../../Contacts';
 
 interface IProps {
     svc: {
@@ -56,8 +61,10 @@ export class ContactFormContainer extends React.PureComponent<IProps, IState> {
     }
 
     validateForm() {
-        const valid = validateRequiredFormFields(this.state.currentContact) &&
-            !some(this.state.errors, (value) => !isEmpty(value));
+        const {metadata} = this.props.svc;
+
+        const valid = validateRequiredFormFields(this.state.currentContact, metadata.values.contact_type) &&
+            !Object.values(this.state.errors).some((value) => !value || value.length === 0);
 
         this.setState({isFormValid: valid});
 
@@ -73,7 +80,7 @@ export class ContactFormContainer extends React.PureComponent<IProps, IState> {
     validateField(fieldName, value, e, diff) {
         const fieldValidationErrors = this.state.errors;
 
-        const {contacts} = this.props.svc;
+        const {contacts, metadata} = this.props.svc;
         const twitterPattern = contacts.twitterPattern;
 
         if (e && e.target.type === 'email') {
@@ -93,10 +100,15 @@ export class ContactFormContainer extends React.PureComponent<IProps, IState> {
             break;
         }
 
-        if (!validateAssignableType(diff)) {
+        if (!validateAssignableType(diff, metadata.values.contact_type)) {
+            const contactType = getContactTypeObject(
+                metadata.values.contact_type,
+                diff.contact_type,
+            );
+
             fieldValidationErrors.contact_email = gettext(
                 'Contact type "{{ contact_type }}" MUST have an email',
-                {contact_type: get(diff, 'contact_type.name')},
+                {contact_type: contactType.name},
             );
         } else if (get(fieldValidationErrors, 'contact_email')) {
             delete fieldValidationErrors.contact_email;

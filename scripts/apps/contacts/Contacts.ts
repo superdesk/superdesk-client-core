@@ -11,8 +11,6 @@ export interface IContactType {
     assignable?: boolean;
 }
 
-type ContactType = IContactType | string;
-
 export interface IContact {
     _id: string;
     is_active?: boolean;
@@ -37,7 +35,7 @@ export interface IContact {
     postcode?: string;
     country?: string;
     notes?: string;
-    contact_type?: string | ContactType;
+    contact_type?: string;
 }
 
 export interface IContactsService {
@@ -55,7 +53,6 @@ export interface IContactsService {
     toggleStatus(contact: IContact, active: boolean): Promise<IContact>;
     togglePublic(contact: IContact, isPublic: boolean): Promise<IContact>;
     save(contact: IContact, updates: IContact): Promise<IContact>;
-    convertForServer(contact: IContact): IContact;
     convertForClient(contact: IContact): IContact;
 
     sortOptions: Array<{

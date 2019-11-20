@@ -7,8 +7,8 @@ import {gettext} from 'core/utils';
 
 import {InputArray, MultiTextInput, Input, Toggle, ToggleBox,
     ContactNumberInput, Label, SelectFieldSearchInput} from './index';
-import {validateMinRequiredField} from '../../../contacts/helpers';
-import {IContact, IContactsService} from '../../Contacts';
+import {validateMinRequiredField, getContactTypeObject} from '../../../contacts/helpers';
+import {IContact, IContactsService, IContactType} from '../../Contacts';
 
 import {
     Row,
@@ -19,7 +19,16 @@ import {
 
 interface IProps {
     svc: {
-        metadata: any;
+        metadata: {
+            values: {
+                regions: Array<any>;
+                countries: Array<any>;
+                contact_type: Array<IContactType>;
+                contact_job_titles: Array<any>;
+                contact_phone_usage: Array<any>;
+                contact_mobile_usage: Array<any>;
+            }
+        };
         contacts: IContactsService;
         privileges: any;
     };
@@ -31,24 +40,25 @@ interface IProps {
 }
 
 interface IState {
-    jobTitles: any;
-    stateNames: any;
-    countries: any;
-    phoneUsages: any;
-    mobileUsages: any;
-    displayOtherStateField: any;
-    requiredField: any;
-    touched: any;
-    organisations: any;
-    orgValue: any;
-    contactTypes: any;
+    jobTitles?: any;
+    stateNames?: any;
+    countries?: any;
+    phoneUsages?: any;
+    mobileUsages?: any;
+    displayOtherStateField?: any;
+    requiredField?: any;
+    touched?: any;
+    organisations?: any;
+    orgValue?: any;
+    contactTypes?: Array<IContactType>;
+    contactType?: IContactType;
 }
 
 export class ProfileDetail extends React.PureComponent<IProps, IState> {
     static propTypes: any;
     static defaultProps: any;
 
-    constructor(props) {
+    constructor(props: IProps) {
         super(props);
         const {svc, contact} = props;
         const {metadata} = svc;
@@ -77,8 +87,9 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
             requiredField: !validateMinRequiredField(contact) || false,
             touched: {},
             organisations: [],
-            orgValue: get(contact, 'organisation', ''),
+            orgValue: (contact && contact.organisation) ? contact.organisation : '',
             contactTypes: contactTypes,
+            contactType: null,
         };
 
         this.changeOtherStateField = this.changeOtherStateField.bind(this);
@@ -86,6 +97,18 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
         this.isFieldInvalid = this.isFieldInvalid.bind(this);
         this.getSearchResult = this.getSearchResult.bind(this);
         this.handleOrgChange = this.handleOrgChange.bind(this);
+        this.onContactTypeChanged = this.onContactTypeChanged.bind(this);
+    }
+
+    componentDidMount(): void {
+        if (this.props.contact && this.props.contact.contact_type) {
+            this.setState({
+                contactType: getContactTypeObject(
+                    this.state.contactTypes,
+                    this.props.contact.contact_type,
+                ),
+            });
+        }
     }
 
     onBlur(e) {
@@ -136,26 +159,40 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
         this.props.onChange(field, value);
     }
 
-    componentWillReceiveProps(nextProps) {
+    componentWillReceiveProps(nextProps: IProps) {
         if (nextProps.contact !== this.props.contact) {
             const displayOtherState = this.shouldDisplayOtherState(nextProps);
-
-            this.setState({
+            const newState: IState = {
                 displayOtherStateField: displayOtherState,
                 requiredField: !validateMinRequiredField(nextProps.contact) || false,
                 orgValue: get(nextProps.contact, 'organisation', ''),
-            });
+            };
+
+            if (nextProps.contact.contact_type !== this.props.contact.contact_type) {
+                newState.contactType = getContactTypeObject(
+                    this.state.contactTypes,
+                    nextProps.contact.contact_type,
+                );
+            }
+
+            this.setState(newState);
         }
+    }
+
+    onContactTypeChanged(field: string, value: IContactType) {
+        this.props.onChange(
+            'contact_type',
+            (value && value.qcode) ? value.qcode : null,
+        );
     }
 
     render() {
         const {contact, onChange, readOnly, errors, contactType} = this.props;
 
         const contactLabel = contactType === 'person' ? gettext('Role') : gettext('Point of contact');
-
         const isRequired = get(this.state, 'requiredField', false);
-
         const MSG_REQUIRED = gettext('This field is required.');
+        const isAssignable = this.state.contactType && this.state.contactType.assignable;
 
         return (
             <div className="details-info">
@@ -175,10 +212,10 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                     {get(this.state, 'contactTypes.length', 0) > 0 && (
                         <RowItem>
                             <SelectInput
-                                field="contact_type"
+                                field="contactType"
                                 label={gettext('Contact Type')}
-                                value={get(contact, 'contact_type', {})}
-                                onChange={onChange}
+                                value={this.state.contactType || {}}
+                                onChange={this.onContactTypeChanged}
                                 options={get(this.state, 'contactTypes', [])}
                                 labelField="name"
                                 keyField="qcode"
@@ -309,7 +346,7 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                 <Row>
                     <LineInput
                         readOnly={readOnly}
-                        required={isRequired || get(contact, 'contact_type.assignable')}
+                        required={isRequired || isAssignable}
                         invalid={!!get(errors, 'contact_email')}
                     >
                         <Label text={gettext('email')} />

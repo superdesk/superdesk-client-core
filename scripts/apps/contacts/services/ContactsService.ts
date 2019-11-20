@@ -4,7 +4,7 @@ import {FILTER_FIELDS, URL_PARAMETERS} from '../constants';
 import {gettext} from 'core/utils';
 
 import {replaceUrls} from '../helpers';
-import {IContact, IContactType, IContactsService} from '../Contacts';
+import {IContact, IContactsService} from '../Contacts';
 
 const DEFAULT_PAGE_SIZE = 50;
 
@@ -47,7 +47,6 @@ export class ContactsService implements IContactsService {
         this.toggleStatus = this.toggleStatus.bind(this);
         this.togglePublic = this.togglePublic.bind(this);
         this.save = this.save.bind(this);
-        this.convertForServer = this.convertForServer.bind(this);
         this.convertForClient = this.convertForClient.bind(this);
 
         this.twitterPattern = /^@([A-Za-z0-9_]{1,15}$)/;
@@ -165,18 +164,8 @@ export class ContactsService implements IContactsService {
     }
 
     save(contact, updates) {
-        return this.api.save('contacts', contact, this.convertForServer(updates))
+        return this.api.save('contacts', contact, updates)
             .then(this.convertForClient);
-    }
-
-    convertForServer(contact: IContact) {
-        if (!contact || typeof contact.contact_type === 'string') {
-            return contact;
-        } else if (contact.contact_type.qcode) {
-            contact.contact_type = contact.contact_type.qcode;
-        }
-
-        return contact;
     }
 
     convertForClient(response: IContact) {
@@ -184,16 +173,7 @@ export class ContactsService implements IContactsService {
             return response;
         }
 
-        const contact: IContact = replaceUrls(response);
-
-        if (typeof contact.contact_type === 'string' && get(this.metadata, 'values.contact_type.length', 0) > 0) {
-            contact.contact_type = find(
-                this.metadata.values.contact_type,
-                {qcode: contact.contact_type},
-            ) as IContactType;
-        }
-
-        return contact;
+        return replaceUrls(response);
     }
 }
 
