@@ -1215,6 +1215,14 @@ export function AuthoringDirective(
             };
 
             $scope.refresh = () => $scope.refreshTrigger++;
+
+            $scope.sluglines = [];
+            if (appConfig.slugline_autocomplete) {
+                api.query('slugline_autocomplete').then((response) => {
+                    $scope.sluglines = response._items.map((_item) => _item.slugline);
+                    $scope.sluglines.sort();
+                });
+            }
         },
     };
 }

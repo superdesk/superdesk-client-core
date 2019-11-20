@@ -903,6 +903,7 @@ declare module 'superdesk-api' {
         saml_auth: any;
         google_auth: any;
         saml_label: any;
+        slugline_autocomplete: boolean;
 
 
         // FROM CLIENT
