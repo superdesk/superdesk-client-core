@@ -119,7 +119,7 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
      * @description onSubmit is called when the user clicks the Submit button in the UI.
      * Consequently, it calls the `onSubmit` prop, passing it the value of the text input.
      */
-    onSubmit() {
+    onSubmit(_event, reusingAnnotationFromExtensions = false) {
         const {body, type} = this.state;
         const _hidePopups = this.props.hidePopups;
         const {highlightId} = this.props.data;
@@ -129,13 +129,15 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
             const annotationType = type;
 
             if (highlightId === undefined) {
-                this.annotationInputTabsFromExtensions.forEach((tab) => {
-                    tab.onAnnotationCreate(
-                        this.props.language,
-                        this.getAnnotatedText(),
-                        stateToHTML(convertFromRaw(body)),
-                    );
-                });
+                if (!reusingAnnotationFromExtensions) {
+                    this.annotationInputTabsFromExtensions.forEach((tab) => {
+                        tab.onAnnotationCreate(
+                            this.props.language,
+                            this.getAnnotatedText(),
+                            stateToHTML(convertFromRaw(body)),
+                        );
+                    });
+                }
 
                 this.props.highlightsManager.addHighlight(
                     highlightsConfig.ANNOTATION.type,
@@ -307,7 +309,7 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
                                                         onApplyAnnotation={(html: string) => {
                                                             this.onChange(
                                                                 convertToRaw(getContentStateFromHtml(html)),
-                                                                this.onSubmit,
+                                                                (ev) => this.onSubmit(ev, true),
                                                             );
                                                         }}
                                                     />

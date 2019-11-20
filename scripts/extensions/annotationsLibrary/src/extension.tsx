@@ -36,18 +36,12 @@ function annotationFromLibraryTabSelectedByDefault(
 }
 
 function onAnnotationCreate(superdesk: ISuperdesk, language: string, annotationText: string, definitionHtml: string) {
-    annotationExistsInKnowledgeBase(superdesk, annotationText)
-        .then((exists) => {
-            // Don't create a knowledge base item for that annotation if it already exists
-            if (!exists) {
-                superdesk.dataApi.create(RESOURCE, {
-                    language: language,
-                    name: annotationText,
-                    definition_html: definitionHtml,
-                    cpnat_type: 'cpnat:abstract',
-                });
-            }
-        });
+    superdesk.dataApi.create(RESOURCE, {
+        language: language,
+        name: annotationText,
+        definition_html: definitionHtml,
+        cpnat_type: 'cpnat:abstract',
+    });
 }
 
 var extension: IExtension = {
