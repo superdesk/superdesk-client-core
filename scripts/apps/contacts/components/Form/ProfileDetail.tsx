@@ -1,22 +1,69 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import {Row, LineInput, InputArray, MultiTextInput, Input, SelectInput, Toggle, ToggleBox,
-    ContactNumberInput, Label, SelectFieldSearchInput} from './index';
 import {get, set, isEmpty, findKey, orderBy, map} from 'lodash';
-import {validateMinRequiredField} from '../../../contacts/helpers';
+
 import {gettext} from 'core/utils';
 
-export class ProfileDetail extends React.Component<any, any> {
+import {InputArray, MultiTextInput, Input, Toggle, ToggleBox,
+    ContactNumberInput, Label, SelectFieldSearchInput} from './index';
+import {validateMinRequiredField, getContactTypeObject} from '../../../contacts/helpers';
+import {IContact, IContactsService, IContactType} from '../../Contacts';
+
+import {
+    Row,
+    RowItem,
+    LineInput,
+    SelectInput,
+} from 'core/ui/components/Form';
+
+interface IProps {
+    svc: {
+        metadata: {
+            values: {
+                regions: Array<any>;
+                countries: Array<any>;
+                contact_type: Array<IContactType>;
+                contact_job_titles: Array<any>;
+                contact_phone_usage: Array<any>;
+                contact_mobile_usage: Array<any>;
+            }
+        };
+        contacts: IContactsService;
+        privileges: any;
+    };
+    contact: IContact;
+    contactType: string;
+    onChange(field: string, value: any, e?: any): void;
+    readOnly: boolean;
+    errors: {[key: string]: string};
+}
+
+interface IState {
+    jobTitles?: any;
+    stateNames?: any;
+    countries?: any;
+    phoneUsages?: any;
+    mobileUsages?: any;
+    displayOtherStateField?: any;
+    requiredField?: any;
+    touched?: any;
+    organisations?: any;
+    orgValue?: any;
+    contactTypes?: Array<IContactType>;
+    contactType?: IContactType;
+}
+
+export class ProfileDetail extends React.PureComponent<IProps, IState> {
     static propTypes: any;
     static defaultProps: any;
 
-    constructor(props) {
+    constructor(props: IProps) {
         super(props);
         const {svc, contact} = props;
         const {metadata} = svc;
 
-        let stateNames = [], countries = [];
+        let stateNames = [], countries = [], contactTypes = [];
 
         if (metadata.values.regions) {
             stateNames = orderBy(metadata.values.regions, 'name', 'asc');
@@ -24,6 +71,10 @@ export class ProfileDetail extends React.Component<any, any> {
 
         if (metadata.values.countries) {
             countries = orderBy(metadata.values.countries, 'name', 'asc');
+        }
+
+        if (metadata.values.contact_type) {
+            contactTypes = orderBy(metadata.values.contact_type, 'name', 'asc');
         }
 
         this.state = {
@@ -36,7 +87,9 @@ export class ProfileDetail extends React.Component<any, any> {
             requiredField: !validateMinRequiredField(contact) || false,
             touched: {},
             organisations: [],
-            orgValue: get(contact, 'organisation', ''),
+            orgValue: (contact && contact.organisation) ? contact.organisation : '',
+            contactTypes: contactTypes,
+            contactType: null,
         };
 
         this.changeOtherStateField = this.changeOtherStateField.bind(this);
@@ -44,6 +97,18 @@ export class ProfileDetail extends React.Component<any, any> {
         this.isFieldInvalid = this.isFieldInvalid.bind(this);
         this.getSearchResult = this.getSearchResult.bind(this);
         this.handleOrgChange = this.handleOrgChange.bind(this);
+        this.onContactTypeChanged = this.onContactTypeChanged.bind(this);
+    }
+
+    componentDidMount(): void {
+        if (this.props.contact && this.props.contact.contact_type) {
+            this.setState({
+                contactType: getContactTypeObject(
+                    this.state.contactTypes,
+                    this.props.contact.contact_type,
+                ),
+            });
+        }
     }
 
     onBlur(e) {
@@ -94,26 +159,40 @@ export class ProfileDetail extends React.Component<any, any> {
         this.props.onChange(field, value);
     }
 
-    componentWillReceiveProps(nextProps) {
+    componentWillReceiveProps(nextProps: IProps) {
         if (nextProps.contact !== this.props.contact) {
             const displayOtherState = this.shouldDisplayOtherState(nextProps);
-
-            this.setState({
+            const newState: IState = {
                 displayOtherStateField: displayOtherState,
                 requiredField: !validateMinRequiredField(nextProps.contact) || false,
                 orgValue: get(nextProps.contact, 'organisation', ''),
-            });
+            };
+
+            if (nextProps.contact.contact_type !== this.props.contact.contact_type) {
+                newState.contactType = getContactTypeObject(
+                    this.state.contactTypes,
+                    nextProps.contact.contact_type,
+                );
+            }
+
+            this.setState(newState);
         }
+    }
+
+    onContactTypeChanged(field: string, value: IContactType) {
+        this.props.onChange(
+            'contact_type',
+            (value && value.qcode) ? value.qcode : null,
+        );
     }
 
     render() {
         const {contact, onChange, readOnly, errors, contactType} = this.props;
 
         const contactLabel = contactType === 'person' ? gettext('Role') : gettext('Point of contact');
-
         const isRequired = get(this.state, 'requiredField', false);
-
         const MSG_REQUIRED = gettext('This field is required.');
+        const isAssignable = this.state.contactType && this.state.contactType.assignable;
 
         return (
             <div className="details-info">
@@ -129,17 +208,43 @@ export class ProfileDetail extends React.Component<any, any> {
                     </div>
                 }
 
-                {!readOnly &&
-                    <Row>
-                        <LineInput readOnly={readOnly} className="sd-line-input__toggle">
+                <Row flex={true}>
+                    {get(this.state, 'contactTypes.length', 0) > 0 && (
+                        <RowItem>
+                            <SelectInput
+                                field="contactType"
+                                label={gettext('Contact Type')}
+                                value={this.state.contactType || {}}
+                                onChange={this.onContactTypeChanged}
+                                options={get(this.state, 'contactTypes', [])}
+                                labelField="name"
+                                keyField="qcode"
+                                clearable={true}
+                                readOnly={readOnly}
+                            />
+                        </RowItem>
+                    )}
+                    <RowItem noGrow={true}>
+                        <LineInput readOnly={readOnly}>
                             <Label text={gettext('public')} />
                             <Toggle
                                 value={get(contact, 'public', false)}
                                 onChange={(e) => onChange('public', e.target.value)}
-                                readOnly={readOnly} />
+                                readOnly={readOnly}
+                            />
                         </LineInput>
-                    </Row>
-                }
+                    </RowItem>
+                    <RowItem noGrow={true}>
+                        <LineInput readOnly={readOnly}>
+                            <Label text={gettext('Active')} />
+                            <Toggle
+                                value={get(contact, 'is_active', false)}
+                                onChange={(e) => onChange('is_active', e.target.value)}
+                                readOnly={readOnly}
+                            />
+                        </LineInput>
+                    </RowItem>
+                </Row>
 
                 <Row>
                     <LineInput readOnly={readOnly} hint={gettext('e.g. professor, commissioner')}>
@@ -239,8 +344,17 @@ export class ProfileDetail extends React.Component<any, any> {
                 </Row>
 
                 <Row>
-                    <LineInput readOnly={readOnly} required={isRequired}>
+                    <LineInput
+                        readOnly={readOnly}
+                        required={isRequired || isAssignable}
+                        invalid={!!get(errors, 'contact_email')}
+                    >
                         <Label text={gettext('email')} />
+                        {get(errors, 'contact_email') && (
+                            <div className="sd-line-input__message">
+                                {get(errors, 'contact_email')}
+                            </div>
+                        )}
                         <InputArray
                             field="contact_email"
                             type="email"
@@ -410,7 +524,7 @@ export class ProfileDetail extends React.Component<any, any> {
                         {!this.state.displayOtherStateField && <SelectInput
                             field="contact_state"
                             label={gettext('State/Province or Region')}
-                            value={get(contact, 'contact_state', '')}
+                            value={get(contact, 'contact_state', {})}
                             onChange={onChange}
                             options={get(this.state, 'stateNames', [])}
                             labelField="name"
@@ -442,7 +556,7 @@ export class ProfileDetail extends React.Component<any, any> {
                         <SelectInput
                             label={gettext('Country')}
                             field="country"
-                            value={get(contact, 'country', '')}
+                            value={get(contact, 'country', {})}
                             onChange={onChange}
                             type="text"
                             readOnly={readOnly}
