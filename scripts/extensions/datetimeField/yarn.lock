@@ -172,7 +172,7 @@ cross-spawn@^5.1.0:
     shebang-command "^1.2.0"
     which "^1.2.9"
 
-date-fns@^2.7.0:
+date-fns@2.7.0:
   version "2.7.0"
   resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.7.0.tgz#8271d943cc4636a1f27698f1b8d6a9f1ceb74026"
 
@@ -686,6 +686,10 @@ pluralize@^7.0.0:
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/pluralize/-/pluralize-7.0.0.tgz#298b89df8b93b0221dbf421ad2b1b1ea23fc6777"
 
+popper.js@1.14.4:
+  version "1.14.4"
+  resolved "https://registry.yarnpkg.com/popper.js/-/popper.js-1.14.4.tgz#8eec1d8ff02a5a3a152dd43414a15c7b79fd69b6"
+
 prelude-ls@~1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/prelude-ls/-/prelude-ls-1.1.2.tgz#21932a549f5e52ffd9a827f570e04be62a97da54"
@@ -863,6 +867,12 @@ superdesk-code-style@1.3.0:
     eslint-plugin-angular "^3.1.1"
     eslint-plugin-jasmine "^2.9.1"
     eslint-plugin-react "^7.5.1"
+
+superdesk-ui-framework@^2.0.11:
+  version "2.0.11"
+  resolved "https://registry.yarnpkg.com/superdesk-ui-framework/-/superdesk-ui-framework-2.0.11.tgz#61007cd7617ec53f2dec6b604d606fdd506ca7a2"
+  dependencies:
+    popper.js "1.14.4"
 
 supports-color@^2.0.0:
   version "2.0.0"

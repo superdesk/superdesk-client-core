@@ -664,7 +664,7 @@ declare module 'superdesk-api' {
     export interface IPropsSpacer {
         type: 'horizontal' | 'vertical';
         spacing: 'medium';
-        align?: 'start' | 'end' | 'center';
+        align?: 'start' | 'end' | 'center' | 'stretch';
         children: Array<React.ReactNode>;
     }
 
