@@ -1039,7 +1039,7 @@ declare module 'superdesk-api' {
 
     // IConfig must be a plain object
     export interface IConfigComponentProps<IConfig extends {}> {
-        config: IConfig;
+        config: IConfig | null;
         onChange(config: IConfig): void;
     }
 

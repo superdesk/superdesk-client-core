@@ -13,7 +13,7 @@ export class CustomFieldConfigs extends React.PureComponent<{vocabulary: IVocabu
 
             return (
                 <ConfigComponent
-                    config={this.props.vocabulary.custom_field_config ?? {}}
+                    config={this.props.vocabulary.custom_field_config ?? null}
                     onChange={this.props.onChange}
                 />
             );
