@@ -796,7 +796,7 @@ declare module 'superdesk-api' {
                 getVocabulary(id: string): Promise<Array<ISubject>>;
             };
             desk: {
-                getDeskStages(deskId: string): Promise<Array<IStage>>;
+                getStagesOrdered(deskId: IDesk['_id']): Promise<Array<IStage>>;
             };
         };
         helpers: {
