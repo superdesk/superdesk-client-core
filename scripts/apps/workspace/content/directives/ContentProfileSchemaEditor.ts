@@ -1,5 +1,6 @@
 import {includes} from 'lodash';
 import {getLabelForFieldId} from '../../helpers/getLabelForFieldId';
+import {appConfig} from 'appConfig';
 
 interface IScope extends ng.IScope {
     getEditor3FormattingOptions: (fieldName: string) => Array<string>;
@@ -9,6 +10,7 @@ interface IScope extends ng.IScope {
     formattingOptions: Array<string>;
     schemaKeysOrdering: any;
     schemaKeysDisabled: any;
+    canValidateChars: boolean;
     hasFormatOptions(field): boolean;
     hasImageSelected(field): boolean;
     label(id): string;
@@ -123,6 +125,7 @@ export function ContentProfileSchemaEditor(vocabularies) {
         },
         link: function(scope: IScope, elem, attr, form) {
             scope.formattingOptions = FORMATTING_OPTIONS;
+            scope.canValidateChars = appConfig != null && appConfig.disallowed_characters != null;
 
             scope.getEditor3FormattingOptions = (fieldName) => {
                 const isCustomPlainTextField = typeof scope.fields[fieldName] === 'object'

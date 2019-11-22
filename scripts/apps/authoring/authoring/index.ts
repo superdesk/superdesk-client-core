@@ -147,7 +147,7 @@ angular.module('superdesk.apps.authoring', [
     .component('sdValidateCharacters',
         reactToAngular1(
             ValidateCharacters,
-            ['item', 'field', 'onChange'],
+            ['item', 'field'],
         ),
     )
 

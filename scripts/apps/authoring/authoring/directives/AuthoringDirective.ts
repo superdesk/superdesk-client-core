@@ -112,7 +112,6 @@ export function AuthoringDirective(
             $scope.mediaFieldVersions = {};
             $scope.refreshTrigger = 0;
             $scope.isPreview = false;
-            $scope.fieldsWithInvalidChar = [];
 
             $scope.$watch('origItem', (newValue, oldValue) => {
                 $scope.itemActions = null;
@@ -565,13 +564,6 @@ export function AuthoringDirective(
              * in $scope.
              */
             $scope.publish = function() {
-                if ($scope.fieldsWithInvalidChar.length > 0) {
-                    const invalidFields = $scope.fieldsWithInvalidChar.join(' & ');
-
-                    notify.error(gettext('Invalid {{field}}. Item can\'t be published.', {field: invalidFields}));
-                    return Promise.reject();
-                }
-
                 if (helpers.itemHasUnresolvedSuggestions($scope.item)) {
                     modal.alert({
                         headerText: gettext('Resolving suggestions'),
@@ -1223,14 +1215,6 @@ export function AuthoringDirective(
             };
 
             $scope.refresh = () => $scope.refreshTrigger++;
-
-            $scope.handleFieldsWithInvalidChar = (field, isError) => {
-                if (isError === true && !$scope.fieldsWithInvalidChar.includes(field)) {
-                    $scope.fieldsWithInvalidChar.push(field);
-                } else if (isError === false && $scope.fieldsWithInvalidChar.includes(field)) {
-                    $scope.fieldsWithInvalidChar = $scope.fieldsWithInvalidChar.filter((_field) => _field !== field);
-                }
-            };
         },
     };
 }

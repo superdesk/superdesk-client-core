@@ -98,9 +98,9 @@
                         tabindex="{{editor.slugline.order}}"
                     >
                     <span ng-if="schema.slugline.maxlength" sd-character-count data-item="item.slugline" data-html="true" data-limit="schema.slugline.maxlength"></span>
-                    <sd-validate-characters class="disallowed-char-error"
+                    <sd-validate-characters ng-if="schema.slugline.validate_characters"
+                        class="disallowed-char-error"
                         item="item.slugline"
-                        on-change="handleFieldsWithInvalidChar"
                         field="'slugline'"></sd-validate-characters>
                 </div>
             </div>

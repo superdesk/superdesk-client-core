@@ -7,6 +7,10 @@
 
     <label class="field__label">{{label('headline')}}</label>
     <span ng-if="schema.headline.maxlength" sd-character-count data-item="item.headline" data-html="true" data-limit="schema.headline.maxlength"></span>
+    <sd-validate-characters ng-if="schema.headline.validate_characters"
+        class="disallowed-char-error"
+        item="item.headline"
+        field="'headline'"></sd-validate-characters>
     <div id="title" class="headline"
          sd-text-editor
          data-config="{toolbar: false, imageDragging: false, disableReturn: true, disableEditing: isPublished(item), tabindex: editor.headline.order, paste: {cleanPastedHTML: editor.headline.cleanPastedHTML}}"
@@ -28,6 +32,10 @@
 
     <label class="field__label">{{label('headline')}}</label>
     <span ng-if="schema.headline.maxlength" sd-character-count data-item="item.headline" data-html="true" data-limit="schema.headline.maxlength"></span>
+    <sd-validate-characters ng-if="schema.headline.validate_characters"
+        class="disallowed-char-error"
+        item="item.headline"
+        field="'headline'"></sd-validate-characters>
     <div id="title" class="headline"
          sd-editor3
          data-path-to-value="'headline'"
@@ -744,9 +752,9 @@
      order="{{editor.slugline.order}}">
     <label class="field__label">{{label('slugline')}}</label>
     <span ng-if="schema.slugline.maxlength" sd-character-count data-item="item.slugline" data-html="true" data-limit="schema.slugline.maxlength"></span>
-    <sd-validate-characters class="disallowed-char-error"
+    <sd-validate-characters ng-if="schema.slugline.validate_characters"
+        class="disallowed-char-error"
         item="item.slugline"
-        on-change="handleFieldsWithInvalidChar"
         field="'slugline'"></sd-validate-characters>
     <input type="text" class="slugline"
        id="slugline"
@@ -766,9 +774,9 @@
      data-required="schema.slugline.required">
     <label class="field__label">{{label('slugline')}}</label>
     <span ng-if="schema.slugline.maxlength" sd-character-count data-item="item.slugline" data-html="true" data-limit="schema.slugline.maxlength"></span>
-    <sd-validate-characters class="disallowed-char-error"
+    <sd-validate-characters ng-if="schema.slugline.validate_characters"
+        class="disallowed-char-error"
         item="item.slugline"
-        on-change="handleFieldsWithInvalidChar"
         field="'slugline'"></sd-validate-characters>
     <div id="title" class="slugline"
          sd-editor3
