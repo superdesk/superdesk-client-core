@@ -11,7 +11,10 @@ export function manageMarkedUserForSingleArticle(superdesk: ISuperdesk, article:
                     const currentStageIndex = stages.findIndex((stage) => task.stage === stage._id);
 
                     if (currentStageIndex !== -1 && currentStageIndex + 1 < stages.length) {
-                        task.stage = stages[currentStageIndex + 1]._id;
+                        return {
+                            ...task,
+                            stage: stages[currentStageIndex + 1]._id,
+                        };
                     }
 
                     return task;
