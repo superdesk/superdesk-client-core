@@ -32,7 +32,7 @@
             </div>
 
             <div ng-if="item.type === 'video'">
-                <video controls="controls" sd-sources data-renditions="item.renditions"></video>
+                <sd-video item="item"></sd-video>
             </div>
 
             <div ng-if="item.associations.featuremedia" class="picture-preview">

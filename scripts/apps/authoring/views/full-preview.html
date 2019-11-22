@@ -130,11 +130,7 @@
                     <div ng-if="field.field_type === 'media' && !hide_media" class="association">
                         <div ng-repeat="(mediaId, media) in getAssociationItems(item.associations, field._id) track by mediaId">
                             <img src="{{media.renditions.viewImage.href}}" ng-if="!hide_media && media.type === 'picture'">
-                            <video controls="controls" ng-if="media.type === 'video'">
-                                <source vsrc="{{rendition.href}}"
-                                        ng-repeat="(key, rendition) in media.renditions"
-                                        ng-if="checkRenditions.isVideo(rendition)" html5vfix>
-                            </video>
+                            <sd-video ng-if="media.type === 'video'" item="media"></sd-video>
                             <audio controls="controls" ng-if="media.type === 'audio'">
                                 <source vsrc="{{rendition.href}}"
                                         ng-repeat="(key, rendition) in media.renditions"
