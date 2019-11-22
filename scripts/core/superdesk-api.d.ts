@@ -77,9 +77,15 @@ declare module 'superdesk-api' {
                 };
             };
             iptcMapping?(data: IPTCMetadata, item: Partial<IArticle>): Promise<Partial<IArticle>>;
+            searchPanelWidgets?: Array<React.ComponentType<ISearchPanelWidgetProps>>;
         }
     }
 
+    export type ISearchPanelWidgetProps<T> = {
+        provider: string;
+        params: T;
+        setParams: (params: Partial<T>) => void;
+    };
 
     export type IExtension = DeepReadonly<{
         id: string;
@@ -97,7 +103,6 @@ declare module 'superdesk-api' {
         label: string;
         url: string;
     }>;
-
 
 
 
@@ -397,7 +402,6 @@ declare module 'superdesk-api' {
         created_by: string;
         updated_by: string;
     }
-
 
 
     // PAGE

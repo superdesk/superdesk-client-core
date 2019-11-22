@@ -415,6 +415,10 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
 
             scope.hasTemplate = (providerType) =>
                 providerType != null && $templateCache.get(scope.getTemplate(providerType)) != null;
+
+            scope.updateParams = (updates) =>
+                // apply to make it work for react components
+                scope.$applyAsync(() => Object.assign(scope.params, updates));
         },
     };
 }
