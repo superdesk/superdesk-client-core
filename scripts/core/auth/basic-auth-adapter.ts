@@ -32,7 +32,7 @@ angular.module('superdesk.core.auth.basic', [])
             .then((url) => $http.post(url, {username: username, password: password}))
             .then(this.setToken);
 
-                /**
+        /**
          * @ngdoc method
          * @name authAdapter#authenticate
          * @param {string} authorization_code Authorization code return from keycloak

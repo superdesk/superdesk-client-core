@@ -879,7 +879,8 @@ declare module 'superdesk-api' {
         saml_auth: any;
         google_auth: any;
         saml_label: any;
-        
+        oidc_auth: any;
+        keycloak_config: any;
 
         // FROM CLIENT
         server: {
