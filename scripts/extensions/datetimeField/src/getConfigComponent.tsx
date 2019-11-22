@@ -3,6 +3,7 @@
 import * as React from 'react';
 import {ISuperdesk, IConfigComponentProps} from 'superdesk-api';
 import {IDateTimeFieldConfig, defaultDateTimeConfig} from './extension';
+import {Button, FormLabel, IconButton} from 'superdesk-ui-framework/app-typescript/dist';
 
 export function getConfigComponent(superdesk: ISuperdesk) {
     const gettext = superdesk.localization.gettext;
@@ -14,76 +15,89 @@ export function getConfigComponent(superdesk: ISuperdesk) {
             const {onChange} = this.props;
 
             return (
-                <div>
-                    <div>{gettext('Initial time offset')}</div>
+                <Spacer type="vertical" spacing="medium">
+                    <div>
+                        <FormLabel text={gettext('Initial time offset')} />
 
-                    <Spacer type="horizontal" spacing="medium">
-                        <input
-                            type="number"
-                            value={config.initial_offset_minutes}
-                            onChange={(event) => {
-                                onChange({
-                                    ...config,
-                                    initial_offset_minutes: parseInt(event.target.value, 10),
-                                });
-                            }}
-                            style={{width: 54}}
-                        />
-                        {gettext('minutes')}
-                    </Spacer>
-
-                    <div>{gettext('Time increment steps')}</div>
-
-                    {
-                        config.increment_steps.map((value, i) => (
-                            <Spacer type="horizontal" spacing="medium" key={i}>
-                                <button
-                                    onClick={() => {
-                                        onChange({
-                                            ...config,
-                                            increment_steps: config.increment_steps.filter((_, _i) => i !== _i),
-                                        });
-                                    }}
-                                >
-                                    x
-                                </button>
-
+                        <Spacer type="horizontal" spacing="medium" align="end">
+                            <div className="sd-line-input sd-line-input--no-margin sd-line-input--no-label">
                                 <input
+                                    className="sd-line-input__input"
                                     type="number"
-                                    value={value}
+                                    value={config.initial_offset_minutes}
                                     onChange={(event) => {
-                                        const nextIncrementSteps = config.increment_steps.map((_value, j) => {
-                                            if (j === i) {
-                                                return parseInt(event.target.value, 10);
-                                            } else {
-                                                return _value;
-                                            }
-                                        });
-
                                         onChange({
                                             ...config,
-                                            increment_steps: nextIncrementSteps,
+                                            initial_offset_minutes: parseInt(event.target.value, 10),
                                         });
                                     }}
                                     style={{width: 54}}
                                 />
+                            </div>
+                            {gettext('minutes')}
+                        </Spacer>
+                    </div>
 
-                                {gettext('minutes')}
-                            </Spacer>
-                        ))
-                    }
+                    <div>
+                        <FormLabel text={gettext('Time increment steps')} />
 
-                    <button
+                        {
+                            config.increment_steps.map((value, i) => (
+                                <Spacer type="horizontal" spacing="medium" align="center" key={i}>
+                                    <IconButton
+                                        icon="remove-sign"
+                                        onClick={() => {
+                                            onChange({
+                                                ...config,
+                                                increment_steps: config.increment_steps.filter((_, _i) => i !== _i),
+                                            });
+                                        }}
+                                    />
+
+                                    <Spacer type="horizontal" spacing="medium" align="end" key={i}>
+                                        <div className="sd-line-input sd-line-input--no-margin sd-line-input--no-label">
+                                            <input
+                                                className="sd-line-input__input"
+                                                type="number"
+                                                value={value}
+                                                onChange={(event) => {
+                                                    const nextIncrementSteps = config.increment_steps
+                                                        .map((_value, j) => {
+                                                            if (j === i) {
+                                                                return parseInt(event.target.value, 10);
+                                                            } else {
+                                                                return _value;
+                                                            }
+                                                        });
+
+                                                    onChange({
+                                                        ...config,
+                                                        increment_steps: nextIncrementSteps,
+                                                    });
+                                                }}
+                                                style={{width: 54}}
+                                            />
+                                        </div>
+
+                                        {gettext('minutes')}
+                                    </Spacer>
+                                </Spacer>
+                            ))
+                        }
+                    </div>
+
+                    <Button
+                        text={gettext('Add step')}
+                        size="small"
+                        style="hollow"
                         onClick={() => {
                             onChange({
                                 ...config,
                                 increment_steps: config.increment_steps.concat(0),
                             });
                         }}
-                    >
-                        {gettext('Add step')}
-                    </button>
-                </div>
+                    />
+                </Spacer>
             );
         }
     };

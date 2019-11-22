@@ -77,6 +77,7 @@ export function getDateTimeField(superdesk: ISuperdesk) {
                             <input
                                 type="time"
                                 value={hour}
+                                required
                                 onChange={(event) => {
                                     if (event.target.value === '' || date == null) {
                                         return;
@@ -95,7 +96,6 @@ export function getDateTimeField(superdesk: ISuperdesk) {
                                     );
                                 }}
                                 style={{
-                                    width: 100,
                                     border: 0,
                                     borderBottom: '1px solid #999',
                                 }}
