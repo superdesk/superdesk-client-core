@@ -340,6 +340,8 @@ export class VideoEditor extends React.Component<IProps, IState> {
             scale: this.state.quality,
         };
 
+        const {gettext} = this.props.superdesk.localization;
+
         if (body.crop === '0,0,0,0') {
             delete body.crop;
         }
@@ -360,7 +362,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                 })
                 .then(() => {
                     this.setState({isDirty: false});
-                    this.handleToggleLoading(true, 'Video is editing, please wait...');
+                    this.handleToggleLoading(true, gettext('Video is editing, please wait...'));
                     this.intervalVideoEdit = window.setInterval(() => {
                         this.props.superdesk.dataApi
                             .findOne('video_edit', this.state.article._id + `?t=${Math.random()}`)
