@@ -4,7 +4,7 @@ import {VideoEditor} from './VideoEditor';
 import {VideoEditorProvider} from './VideoEditorContext';
 
 export function getVideoEditModal(superdesk: ISuperdesk, article: IArticle) {
-    return class VideoEditModal extends React.PureComponent<{ closeModal(): void }> {
+    return class VideoEditModal extends React.PureComponent<{closeModal(): void}> {
         render() {
             return (
                 <VideoEditorProvider value={{superdesk: superdesk}}>
