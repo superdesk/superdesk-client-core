@@ -35,6 +35,8 @@ export class VideoTimeline extends React.Component<IProps, IState> {
         this.wrapper = React.createRef();
         this.controlbar = React.createRef();
         this.intervalTimer = 0;
+
+        this.handleDrag = debounce(this.handleDrag.bind(this), 5);
     }
 
     componentDidMount() {
@@ -52,6 +54,17 @@ export class VideoTimeline extends React.Component<IProps, IState> {
 
     componentWillUnmount() {
         clearInterval(this.intervalTimer);
+    }
+
+    handleDrag(type: string) {
+        let time = this.getPositionInBar(this.PositionX) * this.props.video.current!.duration;
+
+        if (type === 'left') {
+            this.props.onTrim(time, this.props.trim.end, false);
+        }
+        if (type === 'right') {
+            this.props.onTrim(this.props.trim.start, time, false);
+        }
     }
 
     handledragover = (e: any) => {
@@ -118,17 +131,6 @@ export class VideoTimeline extends React.Component<IProps, IState> {
         e.dataTransfer.setDragImage(img, 0, 0);
         e.dataTransfer.setData('text/plain', '');
     }
-
-    handleDrag = debounce((type: string) => {
-        let time = this.getPositionInBar(this.PositionX) * this.props.video.current!.duration;
-
-        if (type === 'left') {
-            this.props.onTrim(time, this.props.trim.end, false);
-        }
-        if (type === 'right') {
-            this.props.onTrim(this.props.trim.start, time, false);
-        }
-    }, 5);
 
     handleDragEnd = () => {
         this.setVideoCurrentTime(this.PositionX);
