@@ -119,7 +119,9 @@ export class VideoEditor extends React.Component<IProps, IState> {
     }
 
     handleCheckingVideo = () => {
-        this.handleToggleLoading(true, 'Loading video...');
+        const {gettext} = this.props.superdesk.localization;
+
+        this.handleToggleLoading(true, gettext('Loading video...'));
         this.intervalCheckVideo = window.setInterval(() => {
             this.props.superdesk.dataApi
                 .findOne('video_edit', this.state.article._id + `?t=${Math.random()}`)
@@ -136,7 +138,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                         });
                         this.loadTimelineThumbnails();
                     } else {
-                        this.setState({loadingText: 'Video is editing, please wait...'});
+                        this.setState({loadingText: gettext('Video is editing, please wait...')});
                     }
                 })
                 .catch((err: any) => {
