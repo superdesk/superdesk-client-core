@@ -28,6 +28,13 @@ export function getActionsInitialize(superdesk: ISuperdesk) {
             },
         };
 
+        const markForUserAndSend: IArticleAction = {
+            label: gettext('Mark and send'),
+            icon: 'icon-assign',
+            groupId: 'highlights',
+            onTrigger: () => manageMarkedUserForSingleArticle(superdesk, articleNext, true),
+        };
+
         const unmark: IArticleAction = {
             label: gettext('Unmark user'),
             icon: 'icon-assign',
@@ -49,12 +56,34 @@ export function getActionsInitialize(superdesk: ISuperdesk) {
             },
         };
 
+        const markForOtherUserAndSend: IArticleAction = {
+            label: gettext('Mark for other and send'),
+            groupId: 'highlights',
+            icon: 'icon-assign',
+            onTrigger: () => {
+                manageMarkedUserForSingleArticle(superdesk, articleNext, true);
+            },
+        };
+
         const assigned = articleNext.marked_for_user != null;
+        const hasDesk = articleNext.task != null && articleNext.task.desk != null;
 
         if (assigned) {
-            return Promise.resolve([unmark, markForOtherUser]);
+            const actions = [unmark, markForOtherUser];
+
+            if (hasDesk) {
+                actions.push(markForOtherUserAndSend);
+            }
+
+            return Promise.resolve(actions);
         } else {
-            return Promise.resolve([markForUser]);
+            const actions = [markForUser];
+
+            if (hasDesk) {
+                actions.push(markForUserAndSend);
+            }
+
+            return Promise.resolve(actions);
         }
     };
 }

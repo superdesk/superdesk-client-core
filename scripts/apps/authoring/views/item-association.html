@@ -22,11 +22,7 @@
             </a>
             <!-- video -->
             <div class="item-association__video-container" ng-if="related && related.type === 'video'">
-                <video controls="controls">
-                    <source vsrc="{{ rendition.href}}"
-                            ng-repeat="(key, rendition) in related.renditions"
-                            ng-if="associations.checkRenditions.isVideo(rendition)" html5vfix>
-                </video>
+                <sd-video item="related"></sd-video>
                 <div class="item-association__metadata" sd-media-metadata-view data-item="related"></div>
                 <div class="item-association__action-bar" ng-if="related && editable">
                     <a class="btn btn--hollow btn--small" ng-click="associations.isMediaEditable() && associations.edit(this, related); $event.stopPropagation()"><span translate>Edit metadata</span></a>

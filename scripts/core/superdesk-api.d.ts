@@ -77,9 +77,15 @@ declare module 'superdesk-api' {
                 };
             };
             iptcMapping?(data: IPTCMetadata, item: Partial<IArticle>): Promise<Partial<IArticle>>;
+            searchPanelWidgets?: Array<React.ComponentType<ISearchPanelWidgetProps>>;
         }
     }
 
+    export type ISearchPanelWidgetProps<T> = {
+        provider: string;
+        params: T;
+        setParams: (params: Partial<T>) => void;
+    };
 
     export type IExtension = DeepReadonly<{
         id: string;
@@ -97,7 +103,6 @@ declare module 'superdesk-api' {
         label: string;
         url: string;
     }>;
-
 
 
 
@@ -279,6 +284,30 @@ declare module 'superdesk-api' {
             archive?: boolean;
             externalsource: boolean;
         };
+
+        /**
+         * Wrapper for different renditions of non-textual content of the news object
+         *
+         * There can be multiple renditions for single item with different sizes/mimetypes.
+         *
+         * Picture renditions used in UI are generated automatically by Superdesk:
+         * - **thumbnail** - used in lists
+         * - **viewImage** - used in sidebar preview
+         * - **baseImage** - used in media editor, full screen preview
+         *
+         * Video items can also provide **thumbnail** and **viewImage** renditions which will be
+         * then used in list/preview.
+         */
+        renditions: {
+            [key: string]: {
+                href: string;
+                mimetype: string;
+
+                // picture and video only
+                width?: number;
+                height?: number;
+            };
+        };
     }
 
     export interface IPublishedArticle extends IArticle {
@@ -373,7 +402,6 @@ declare module 'superdesk-api' {
         created_by: string;
         updated_by: string;
     }
-
 
 
     // PAGE
@@ -535,7 +563,6 @@ declare module 'superdesk-api' {
             page: number,
             sort: ISortOption,
             filterValues?: ICrudManagerFilters,
-            formatFiltersForServer?: (filters: ICrudManagerFilters) => ICrudManagerFilters,
         ): Promise<IRestApiResponse<Entity>>;
         update(item: Entity): Promise<Entity>;
         create(item: Entity): Promise<Entity>;
@@ -557,7 +584,7 @@ declare module 'superdesk-api' {
 
     export interface IConfigurableUiComponents {
         UserAvatar?: React.ComponentType<{user: IUser}>;
-    }    
+    }
 
     export interface IListItemProps {
         onClick?(): void;
@@ -779,17 +806,21 @@ declare module 'superdesk-api' {
                 getIptcSubjects(): Promise<Array<ISubject>>;
                 getVocabulary(id: string): Promise<Array<ISubject>>;
             };
+            desk: {
+                getStagesOrdered(deskId: IDesk['_id']): Promise<Array<IStage>>;
+            };
         };
         helpers: {
             assertNever(x: never): never;
         },
         components: {
             UserHtmlSingleLine: React.ComponentType<{html: string}>;
-            getGenericListPageComponent<T extends IBaseRestApiResponse>(resource: string): React.ComponentType<IPropsGenericForm<T>>;
+            getGenericListPageComponent<T extends IBaseRestApiResponse>(resource: string, formConfig: IFormGroup): React.ComponentType<IPropsGenericForm<T>>;
             connectCrudManager<Props, PropsToConnect, Entity extends IBaseRestApiResponse>(
                 WrappedComponent: React.ComponentType<Props & PropsToConnect>,
                 name: string,
                 endpoint: string,
+                formatFiltersForServer?: (filters: ICrudManagerFilters) => ICrudManagerFilters,
             ): React.ComponentType<Props>;
             ListItem: React.ComponentType<IListItemProps>;
             ListItemColumn: React.ComponentType<IPropsListItemColumn>;
@@ -888,7 +919,7 @@ declare module 'superdesk-api' {
         saml_auth: any;
         google_auth: any;
         saml_label: any;
-        
+
 
         // FROM CLIENT
         server: {

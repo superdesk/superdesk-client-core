@@ -1,11 +1,13 @@
 /* eslint-disable max-len */
 /* tslint:disable:max-line-length */
 
-import _, {mapValues, isEmpty} from 'lodash';
+import _, {mapValues} from 'lodash';
 import moment from 'moment-timezone';
 import {gettext} from 'core/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {appConfig} from 'appConfig';
+import {reactToAngular1} from 'superdesk-ui-framework';
+import {VideoComponent} from './components/video';
 
 /**
  * Gives top shadow for scroll elements
@@ -1229,4 +1231,12 @@ export default angular.module('superdesk.core.ui', [
     .directive('sdValidationError', validationDirective)
     .directive('sdLoading', LoadingDirective)
     .directive('sdMultipleEmails', MultipleEmailsValidation)
-    .directive('sdMultiSelect', multiSelectDirective);
+    .directive('sdMultiSelect', multiSelectDirective)
+
+    .component('sdVideo',
+        reactToAngular1(
+            VideoComponent,
+            ['item'],
+        ),
+    )
+;
