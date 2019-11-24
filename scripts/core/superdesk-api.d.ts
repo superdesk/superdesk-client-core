@@ -278,7 +278,14 @@ declare module 'superdesk-api' {
                 mimetype: string;
             };
         };
-        project?: any; // video editor project
+        project?: { // video editor project
+            thumbnails: {
+                timeline: any;
+            };
+            processing: {
+                thumbnails_timeline: any;
+            };
+        };
 
         // might be only used for client-side state
         created: any;
