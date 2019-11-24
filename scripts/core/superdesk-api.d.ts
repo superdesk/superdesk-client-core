@@ -265,6 +265,20 @@ declare module 'superdesk-api' {
             user: IUser['_id'];
         };
 
+        renditions?: {
+            original: {
+                href: string;
+                media: string;
+                mimetype: string;
+                version: number;
+            };
+            thumbnail: {
+                href: string;
+                mimetype: string;
+            };
+        };
+        project?: any; // video editor project
+
         // might be only used for client-side state
         created: any;
         archived: any;

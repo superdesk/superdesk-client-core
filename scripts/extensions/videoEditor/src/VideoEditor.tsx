@@ -9,10 +9,10 @@ import {VideoEditorTools} from './VideoEditorTools';
 import {VideoTimeline} from './VideoTimeline';
 import {VideoEditorHeader} from './VideoEditorHeader';
 import {VideoEditorThumbnail} from './VideoEditorThumbnail';
-import {IArticleVideo, IVideoEditor, IThumbnail} from './interfaces';
+import {IVideoEditor, IThumbnail} from './interfaces';
 
 interface IProps {
-    article: IArticleVideo;
+    article: IArticle;
     superdesk: ISuperdesk;
     onClose: () => void;
     onArticleUpdate: (articleUpdate: IArticle) => void;
@@ -30,7 +30,7 @@ interface IState extends IVideoEditor {
     loadingText: string;
     scale: number;
     videoSrc: string;
-    article: IArticleVideo;
+    article: IArticle;
 }
 
 export class VideoEditor extends React.Component<IProps, IState> {
@@ -115,7 +115,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
             '_latest_version',
         ];
 
-        this.props.onArticleUpdate(omit(cloneDeep(this.state.article), omitFields) as IArticleVideo);
+        this.props.onArticleUpdate(omit(cloneDeep(this.state.article), omitFields) as IArticle);
     }
 
     handleCheckingVideo = () => {
@@ -639,7 +639,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                         videoRef={this.videoRef}
                                         article={this.state.article}
                                         onToggleLoading={this.handleToggleLoading}
-                                        onSave={(article: IArticleVideo) =>
+                                        onSave={(article: IArticle) =>
                                             this.setState({
                                                 article: {...this.state.article, ...article},
                                             })

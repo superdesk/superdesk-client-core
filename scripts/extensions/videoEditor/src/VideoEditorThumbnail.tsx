@@ -1,16 +1,16 @@
 import * as React from 'react';
-import {ISuperdesk} from 'superdesk-api';
+import {ISuperdesk, IArticle} from 'superdesk-api';
 import VideoEditorContext from './VideoEditorContext';
-import {IArticleVideo, IVideoEditor} from './interfaces';
+import {IVideoEditor} from './interfaces';
 import {pick} from 'lodash';
 
 interface IProps {
     videoRef: React.RefObject<HTMLVideoElement>;
-    article: IArticleVideo;
+    article: IArticle;
     crop: IVideoEditor['crop'];
     rotate: IVideoEditor['degree'];
     onToggleLoading: (isLoading: boolean, loadingText?: string) => void;
-    onSave: (article: IArticleVideo) => void;
+    onSave: (article: IArticle) => void;
     onError: (err: any) => void;
     getCropRotate: (crop: IVideoEditor['crop']) => IVideoEditor['crop'];
 }
