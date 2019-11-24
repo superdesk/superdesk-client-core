@@ -4,28 +4,17 @@ import set from 'date-fns/set';
 import format from 'date-fns/format';
 import addMinutes from 'date-fns/addMinutes';
 import {IDateTimeFieldConfig} from './extension';
-import {DatePickerISO, Button, Switch} from 'superdesk-ui-framework';
+import {DatePickerISO, TimePicker, Button, Switch} from 'superdesk-ui-framework';
 
 export function getDateTimeField(superdesk: ISuperdesk) {
     const {gettext, gettextPlural} = superdesk.localization;
     const {Spacer} = superdesk.components;
 
-    return class DateTimeField extends React.PureComponent<IEditorComponentProps<IDateTimeFieldConfig>> {
+    return class DateTimeField extends React.PureComponent<IEditorComponentProps<string | null, IDateTimeFieldConfig>> {
         render() {
-            const selected = this.props.value != null;
-
-            const date = this.props.value != null
-                ? addMinutes(new Date(this.props.value), this.props.config.initial_offset_minutes)
-                : null;
-
-            const day = date == null ? '' : format(date, 'yyyy-MM-dd'); // ISO8601
-            const hour = date == null ? '' : format(date, 'HH:mm'); // ISO8601
-
-            const steps = this.props.config?.increment_steps ?? [];
-
             const checkbox = (
                 <Switch
-                    value={selected}
+                    value={this.props.value != null}
                     onChange={(value) => {
                         if (value) {
                             this.props.setValue(new Date().toISOString());
@@ -36,13 +25,20 @@ export function getDateTimeField(superdesk: ISuperdesk) {
                 />
             );
 
-            if (!selected) {
+            if (this.props.value == null) {
                 return (
                     <div>
                         {checkbox}
                     </div>
                 );
             } else {
+                const date = addMinutes(new Date(this.props.value), this.props.config.initial_offset_minutes);
+
+                const day = date == null ? '' : format(date, 'yyyy-MM-dd'); // ISO8601
+                const hour = date == null ? '' : format(date, 'HH:mm'); // ISO8601
+
+                const steps = this.props.config?.increment_steps ?? [];
+
                 return (
                     <Spacer type="horizontal" align="center" spacing="medium">
                         {checkbox}
@@ -56,16 +52,16 @@ export function getDateTimeField(superdesk: ISuperdesk) {
                                         return;
                                     }
 
-                                    const value = dateString.split('-');
+                                    const [yearStr, monthStr, dayStr] = dateString.split('-');
                                     const nextDate = date ?? new Date();
 
                                     this.props.setValue(
                                         set(
                                             nextDate,
                                             {
-                                                year: parseInt(value[0], 10),
-                                                month: parseInt(value[1], 10) - 1,
-                                                date: parseInt(value[2], 10),
+                                                year: parseInt(yearStr, 10),
+                                                month: parseInt(monthStr, 10) - 1,
+                                                date: parseInt(dayStr, 10),
                                             },
                                         ).toISOString(),
                                     );
@@ -74,30 +70,21 @@ export function getDateTimeField(superdesk: ISuperdesk) {
 
                             <div style={{display: 'flex', alignItems: 'center', height: '100%'}}><span>@</span></div>
 
-                            <input
-                                type="time"
+                            <TimePicker
+                                required // because it's a part of the date-time
                                 value={hour}
-                                required
-                                onChange={(event) => {
-                                    if (event.target.value === '' || date == null) {
-                                        return;
-                                    }
-
-                                    const value = event.target.value.split(':');
+                                onChange={(value) => {
+                                    const [hours, minutes] = value.split(':');
 
                                     this.props.setValue(
                                         set(
                                             date,
                                             {
-                                                hours: parseInt(value[0], 10),
-                                                minutes: parseInt(value[1], 10),
+                                                hours: parseInt(hours, 10),
+                                                minutes: parseInt(minutes, 10),
                                             },
                                         ).toISOString(),
                                     );
-                                }}
-                                style={{
-                                    border: 0,
-                                    borderBottom: '1px solid #999',
                                 }}
                             />
                         </Spacer>

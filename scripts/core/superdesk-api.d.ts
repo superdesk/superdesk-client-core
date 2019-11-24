@@ -1024,10 +1024,10 @@ declare module 'superdesk-api' {
 
     // CUSTOM FIELD TYPES
 
-    export interface IEditorComponentProps<IConfig> {
+    export interface IEditorComponentProps<IValue, IConfig> {
         item: IArticle;
-        value: any;
-        setValue: (value: any) => void;
+        value: IValue;
+        setValue: (value: IValue) => void;
         readOnly: boolean;
         config: IConfig;
     }
