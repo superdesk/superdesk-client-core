@@ -118,10 +118,6 @@ export class VideoTimeline extends React.Component<IProps, IState> {
             }
         }
     }
-    videoLoadedData = () => {
-        // Set trim data when video loaded
-        this.props.onTrim(0, this.props.video.current!.duration, false);
-    }
     // drag and drop left and right bar.
     handleDragStart(e: React.DragEvent<HTMLDivElement>) {
         // hide drag ghost image
