@@ -6,9 +6,12 @@ function getEditVideoAction(superdesk: ISuperdesk) {
     const {gettext} = superdesk.localization;
     const {showModal} = superdesk.ui;
 
-    return class EditVideoAction extends React.PureComponent<{ article: IArticle }> {
+    return class EditVideoAction extends React.PureComponent<{article: IArticle}> {
         render() {
-            if (this.props.article.type === 'video' && 'video_editor_id' in this.props.article?.renditions!?.original) {
+            if (
+                this.props.article.type === 'video'
+                && this.props.article?.renditions?.original?.video_editor_id != null
+            ) {
                 return (
                     <button
                         className="btn btn--hollow btn--small"

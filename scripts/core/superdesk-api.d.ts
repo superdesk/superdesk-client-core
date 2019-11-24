@@ -271,6 +271,7 @@ declare module 'superdesk-api' {
                 media: string;
                 mimetype: string;
                 version: number;
+                video_editor_id?: any;
             };
             thumbnail: {
                 href: string;
