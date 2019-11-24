@@ -6,7 +6,7 @@ import {ISuperdesk, IArticle} from 'superdesk-api';
 import {isEmpty, omit, pick, isEqual, cloneDeep, flatten} from 'lodash';
 
 import {VideoEditorTools} from './VideoEditorTools';
-import {VideoTimeline} from './VideoTimeline';
+import {VideoTimeline} from './VideoTimeline/VideoTimeline';
 import {VideoEditorHeader} from './VideoEditorHeader';
 import {VideoEditorThumbnail} from './VideoEditorThumbnail';
 import {IVideoEditor, IThumbnail} from './interfaces';
