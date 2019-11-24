@@ -221,8 +221,20 @@ export class VideoEditor extends React.Component<IProps, IState> {
     }
 
     handleCrop = (newCrop: IVideoEditor['crop']) => {
-        // @ts-ignore
-        ['x', 'y', 'width', 'height'].map((key) => (newCrop[key] = Math.floor(newCrop[key])));
+        if (
+            newCrop.x == null
+            || newCrop.y == null
+            || newCrop.width == null
+            || newCrop.height == null
+        ) {
+            throw new Error('Invalid state');
+        }
+
+        newCrop.x = Math.floor(newCrop.x);
+        newCrop.y = Math.floor(newCrop.y);
+        newCrop.width = Math.floor(newCrop.width);
+        newCrop.height = Math.floor(newCrop.height);
+
         // newCrop lost aspect when cropping while rotating sometimes
         if (!newCrop.aspect) {
             newCrop.aspect = this.state.crop.aspect;
