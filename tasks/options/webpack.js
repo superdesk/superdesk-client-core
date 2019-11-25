@@ -1,6 +1,7 @@
 /* eslint-disable comma-dangle */
 
 var webpack = require('webpack');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = function(grunt) {
     var config = require('../../webpack.config.js')(grunt);
@@ -23,9 +24,11 @@ module.exports = function(grunt) {
         options: config,
         build: {
             plugins: config.plugins.concat(
-                new webpack.DefinePlugin({'process.env': {NODE_ENV: JSON.stringify('production')}}),
-                new webpack.optimize.UglifyJsPlugin({sourceMap: true})
-            ),
-        },
+                new webpack.DefinePlugin({
+                    'process.env': {NODE_ENV: JSON.stringify('production')}
+                }),
+                new UglifyJsPlugin({sourceMap: true})
+            )
+        }
     };
 };
