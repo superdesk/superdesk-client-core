@@ -188,7 +188,6 @@ export class VideoTimeline extends React.Component<IProps, IState> {
     render() {
         const {getClass} = this.context.superdesk.utilities.CSS;
         const video = this.props.video.current!;
-        // set state for control left, right bar
         const left = video ? `${(this.props.trim.start / video.duration) * 100}%` : '0%';
         const right = video ? `${(1 - this.props.trim.end / video.duration) * 100}%` : '0%';
 
