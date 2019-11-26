@@ -118,7 +118,9 @@ export default function ContentProfileFields($scope, content, vocabularies, meta
                 this.sections[section].enabled.push(key);
                 this.model.editor[key].order = index + 1; // keep order in sync
                 // keep required value of editor fields in sync with the schema fields SDNTB-615
-                this.model.editor[key].required = this.model?.schema[key]?.required ?? false;
+                // some keys might be missing from schema but will be present inside editor
+                // as we store value of some keys inside another key ex: any custom cv is stored inside "subject"
+                this.model.editor[key].required = this.model.schema[key]?.required ?? false;
             });
 
             Object.keys(this.model.editor)
