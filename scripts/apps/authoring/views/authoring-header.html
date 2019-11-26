@@ -80,9 +80,10 @@
                 <label class="authoring-header__item-label uppercase" translate>SLUGLINE</label>
                 <div class="authoring-header__input-holder"
                     sd-static-autocomplete
-                        data-value="item.slugline"
-                        data-available="sluglines"
-                        data-on-select="item.slugline = suggestion; autosave(item)"
+                    data-field="slugline"
+                    data-value="item.slugline"
+                    data-language="item.language"
+                    data-on-select="item.slugline = suggestion; autosave(item)"
                     >
                     <input type="text"
                         tansa-scope-sync

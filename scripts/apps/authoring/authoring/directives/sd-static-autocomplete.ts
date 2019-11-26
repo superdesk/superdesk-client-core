@@ -1,8 +1,12 @@
 import {debounce} from 'lodash';
+import {appConfig} from 'appConfig';
 import {KEYS} from 'core/keyboard/keyboard';
+import {httpRequestJsonLocal} from 'core/helpers/network';
 
 interface IScope extends ng.IScope {
     value: string;
+    field: string;
+    language: string;
     available: Array<string>;
     suggestions: Array<string>;
     activeSuggestion?: number;
@@ -11,17 +15,55 @@ interface IScope extends ng.IScope {
     suggested?: string;
 }
 
+interface IResponse {
+    _items: Array<{
+        value: string;
+    }>;
+}
+
 export const sdStaticAutocompleteDirective = () => ({
     transclude: true,
     template: require('../views/sd-static-autocomplete.html'),
     scope: {
+        field: '@',
         value: '=',
+        language: '=',
         debounce: '=',
-        available: '=',
         onSelect: '&',
     },
     link: (scope: IScope, elem) => {
+        scope.available = [];
         scope.suggestions = [];
+
+        let loaded = null;
+
+        const fetchSuggestions = () => {
+            if (appConfig.archive_autocomplete) {
+                return httpRequestJsonLocal<IResponse>({
+                    method: 'GET',
+                    path: '/archive_autocomplete',
+                    urlParams: {field: scope.field, language: scope.language},
+                }).then((response) => {
+                    scope.$applyAsync(() => {
+                        scope.available = response._items.map((_item) => _item.value);
+                        scope.suggestions = [];
+                    });
+                });
+            }
+
+            return Promise.reject();
+        };
+
+        const filterSuggestions = () => {
+            const search = scope.value ? scope.value.toLocaleLowerCase() : '';
+
+            scope.activeSuggestion = null;
+            scope.suggestions = scope.available.filter(
+                (suggestion) => suggestion.toLocaleLowerCase().includes(search),
+            );
+
+            scope.$applyAsync();
+        };
 
         const updateSuggestions = (newVal: string, oldVal: string) => {
             if (newVal === oldVal) {
@@ -33,14 +75,11 @@ export const sdStaticAutocompleteDirective = () => ({
                 return; // don't suggest after selecting suggestion
             }
 
-            if (scope.available?.length) {
-                const search = newVal ? newVal.toLocaleLowerCase() : '';
-
-                scope.suggestions = scope.available.filter(
-                    (suggestion) => suggestion.toLocaleLowerCase().includes(search),
-                );
-                scope.activeSuggestion = null;
+            if (loaded == null) {
+                loaded = fetchSuggestions();
             }
+
+            loaded.then(filterSuggestions);
         };
 
         scope.$watch('value', updateSuggestions);
