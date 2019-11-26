@@ -19,6 +19,14 @@ interface IState {
     thumnailsRender: Array<IThumbnail>;
 }
 
+function getStrTime(secondsTotal: number) {
+    let mins: number = Math.floor(secondsTotal / 60);
+    let secs: number = Math.floor(secondsTotal % 60);
+    let li = Math.floor((secondsTotal * 10) % 10);
+
+    return (mins < 10 ? '0' + mins : mins) + ':' + (secs < 10 ? '0' + secs : secs) + '.' + li;
+}
+
 export class VideoTimeline extends React.Component<IProps, IState> {
     static contextType = VideoEditorContext;
     private wrapper: React.RefObject<HTMLDivElement>;
@@ -172,14 +180,6 @@ export class VideoTimeline extends React.Component<IProps, IState> {
         return time;
     }
 
-    getStrTime(s: number) {
-        let mins: number = Math.floor(s / 60);
-        let secs: number = Math.floor(s % 60);
-        let li = Math.floor((s * 10) % 10);
-
-        return (mins < 10 ? '0' + mins : mins) + ':' + (secs < 10 ? '0' + secs : secs) + '.' + li;
-    }
-
     render() {
         const {getClass} = this.context.superdesk.utilities.CSS;
         const video = this.props.video.current!;
@@ -212,7 +212,7 @@ export class VideoTimeline extends React.Component<IProps, IState> {
                         <div className={getClass('controlbars__progress-output__content')}>
                             <BarIcon />
                             <div className={getClass('controlbars__progress-output__content__inner')}>
-                                {this.getStrTime(this.state.currentTime)}
+                                {getStrTime(this.state.currentTime)}
                             </div>
                         </div>
                         <div className={getClass('controlbars__progress-output__progress-line')} />
@@ -231,7 +231,7 @@ export class VideoTimeline extends React.Component<IProps, IState> {
                             onDragStart={this.handleDragStart}
                             onDrag={() => this.handleDrag('left')}
                             onDragEnd={this.handleDragEnd}
-                            data-content={this.getStrTime(this.props.trim.start)}
+                            data-content={getStrTime(this.props.trim.start)}
                         />
                         <div
                             className={`${getClass('controlbars__wrapper')} ${getClass('controlbars__wrapper--right')}`}
@@ -239,7 +239,7 @@ export class VideoTimeline extends React.Component<IProps, IState> {
                             onDragStart={this.handleDragStart}
                             onDrag={() => this.handleDrag('right')}
                             onDragEnd={this.handleDragEnd}
-                            data-content={this.getStrTime(this.props.trim.end)}
+                            data-content={getStrTime(this.props.trim.end)}
                         />
                     </div>
                 </div>
