@@ -141,18 +141,22 @@ export class VideoTimeline extends React.Component<IProps, IState> {
         this.props.onTrim(this.props.trim.start, this.props.trim.end, true);
     }
 
-    getPositionInBar = (pX: number) => {
-        const controlbar = this.controlbar.current!;
+    getPositionInBar = (pX: number) => { // returns seconds
+        const controlbar = this.controlbar.current;
+
+        if (controlbar == null) {
+            throw new Error('control bar element is not present');
+        }
+
         var position = (pX - controlbar.getBoundingClientRect().left) / controlbar.offsetWidth;
 
         if (position > 1) {
-            position = 1;
+            return 1;
+        } else if (position < 0) {
+            return 0;
+        } else {
+            return Math.floor(position * 1000) / 1000;
         }
-        if (position < 0) {
-            position = 0;
-        }
-        position = Math.floor(position * 1000) / 1000;
-        return position;
     }
 
     controlbarsClick = (e: React.MouseEvent) => {
