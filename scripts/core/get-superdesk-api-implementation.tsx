@@ -5,6 +5,7 @@ import {
     IArticle,
     IContentProfile,
     IEvents,
+    IStage,
 } from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {getGenericListPageComponent} from './ui/components/ListPage/generic-list-page';
@@ -195,6 +196,11 @@ export function getSuperdeskApiImplementation(
                         }
                     });
                 },
+            },
+            desk: {
+                getStagesOrdered: (deskId: string) =>
+                    dataApi.query<IStage>('stages', 1, {field: '_id', direction: 'ascending'}, {desk: deskId}, 200)
+                        .then((response) => response._items),
             },
             contentProfile: {
                 get: (id) => {

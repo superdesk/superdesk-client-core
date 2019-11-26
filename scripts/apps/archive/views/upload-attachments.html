@@ -18,28 +18,24 @@
                             <div class="bar" style="width:{{ item.progress }}%"></div>
                         </div>
                         <div class="other-info">
-                            <div class="form__row">
-                                <label>Title *</label>
-                                <input type="text" required ng-model="item.meta.title" class="contenteditable-input" />
+                            <div class="sd-line-input">
+                                <label translate>Internal</label><span ng-model="item.meta.internal" sd-switch></span>
                             </div>
-                            <div class="form__row">
-                                <label>Description *</label>
-                                <textarea class="contenteditable-input"
-                                    ng-model="item.meta.description"
-                                    sd-auto-height
-                                    required></textarea>
+                            <div class="sd-line-input sd-line-input--boxed sd-line-input--required">
+                                <label class="sd-line-input__label" translate>Title</label>
+                                <input class="sd-line-input__input" type="text" ng-model="item.meta.title" required>
                             </div>
-                            <div class="form__row">
-                                <label translate>File Name</label>
-                                <div class="contenteditable-input">
-                                    {{ :: item.file.name }}
-                                </div>                        
+                            <div class="sd-line-input sd-line-input--boxed sd-line-input--required">
+                                <label class="sd-line-input__label" translate>Description</label>
+                                <input class="sd-line-input__input" type="text" ng-model="item.meta.description" required>
                             </div>
-                            <div class="form__row">
-                                <label translate>File Size</label>
-                                <div class="contenteditable-input">
-                                    {{ :: item.file.size | filesize }}
-                                </div> 
+                            <div class="sd-line-input sd-line-input--boxed">
+                                <label class="sd-line-input__label" translate>File Name</label>
+                                <input class="sd-line-input__input" type="text" ng-model="item.file.name" disabled>
+                            </div>
+                            <div class="sd-line-input sd-line-input--boxed">
+                                <label class="sd-line-input__label" translate>File Size</label>
+                                <input class="sd-line-input__input" type="text" ng-model="item.file.size" disabled>
                             </div>
                         </div>
                     </div>

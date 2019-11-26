@@ -1,8 +1,9 @@
 /* eslint-disable react/display-name */
-
-import React from 'react';
+import {appConfig} from 'appConfig';
+import ng from 'core/services/ng';
 import {generate} from 'json-merge-patch';
-import {connectServices} from './ReactRenderAsync';
+import {isObject} from 'lodash';
+import React from 'react';
 import {
     IBaseRestApiResponse,
     ICrudManagerState,
@@ -15,10 +16,8 @@ import {
     IArticleQueryResult,
     IArticleQuery,
 } from 'superdesk-api';
-import {isObject} from 'lodash';
-import ng from 'core/services/ng';
 import {httpRequestJsonLocal, httpRequestVoidLocal} from './network';
-import {appConfig} from 'appConfig';
+import {connectServices} from './ReactRenderAsync';
 
 export function queryElastic(
     parameters: IQueryElasticParameters,
@@ -194,6 +193,7 @@ export function connectCrudManager<Props, PropsToConnect, Entity extends IBaseRe
     WrappedComponent, // : React.ComponentType<Props & PropsToConnect>
     name: string,
     endpoint: string,
+    formatFiltersForServer?: (filters: ICrudManagerFilters) => ICrudManagerFilters,
 ): React.ComponentType<Props> {
     const component = class extends React.Component<Props, ICrudManagerState<Entity>>
         implements ICrudManagerMethods<Entity> {
@@ -231,7 +231,6 @@ export function connectCrudManager<Props, PropsToConnect, Entity extends IBaseRe
             page: number,
             sortOption: ISortOption,
             filterValues: ICrudManagerFilters = {},
-            formatFiltersForServer?: (filters: ICrudManagerFilters) => ICrudManagerFilters,
         ): Promise<IRestApiResponse<Entity>> {
             return dataApi.query(
                 endpoint,

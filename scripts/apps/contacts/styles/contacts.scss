@@ -185,7 +185,7 @@
 .sd-line-input__usage {
     min-width: 90px;
     .sd-line-input__label {
-        padding-top: 1.4rem !important;   
+        padding-top: 1.4rem !important;
         &:after {
             content: none !important;
         }
@@ -224,7 +224,7 @@
             &:after {
                 content: none !important;
             }
-        }   
+        }
     }
 }
 
@@ -243,6 +243,14 @@
         color: $white;
     }
     z-index: 1;
+}
+
+.subnav {
+    .contact__type-icon {
+        top: 0;
+        left: 0;
+        position: relative;
+    }
 }
 
 .contact-header__container {

@@ -184,6 +184,10 @@ function getDefaults(grunt) {
             disableEditorToolbar: grunt.option('disableEditorToolbar'),
         },
 
+        editor3: {
+            browserSpellCheck: false,
+        },
+
         // default timezone for the app
         defaultTimezone: grunt.option('defaultTimezone') || 'Europe/London',
 
@@ -254,6 +258,7 @@ function getDefaults(grunt) {
             'en',
             'el',
             'en_GB',
+            'fr_CA',
             'es',
             'da',
             'ar',
