@@ -1,3 +1,4 @@
+import moment from 'moment-timezone';
 import {
     ISuperdesk,
     IExtensions,
@@ -52,6 +53,7 @@ import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/Autho
 import {httpRequestJsonLocal} from './helpers/network';
 import ng from 'core/services/ng';
 import {Spacer} from './ui/components/Spacer';
+import {appConfig} from 'appConfig';
 
 function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
@@ -296,6 +298,12 @@ export function getSuperdeskApiImplementation(
         localization: {
             gettext: (message, params) => gettext(message, params),
             gettextPlural: (count, singular, plural, params) => gettextPlural(count, singular, plural, params),
+            formatDate: (date: Date) => moment(date).tz(appConfig.defaultTimezone).format(appConfig.view.dateformat),
+            formatDateTime: (date: Date) => {
+                return moment(date)
+                    .tz(appConfig.defaultTimezone)
+                    .format(appConfig.view.dateformat + ' ' + appConfig.view.timeformat);
+            },
         },
         privileges: {
             getOwnPrivileges: () => privileges.loaded.then(() => privileges.privileges),

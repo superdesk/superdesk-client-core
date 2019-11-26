@@ -865,6 +865,8 @@ declare module 'superdesk-api' {
         localization: {
             gettext(message: string, params?: {[key: string]: string | number}): string;
             gettextPlural(count: number, singular: string, plural: string, params?: {[key: string]: string | number}): string;
+            formatDate(date: Date): string;
+            formatDateTime(date: Date): string;
         };
         privileges: {
             getOwnPrivileges(): Promise<any>;
@@ -1006,8 +1008,8 @@ declare module 'superdesk-api' {
             change_profile: any;
         };
         model: {
-            timeformat: any;
-            dateformat: any;
+            timeformat: string;
+            dateformat: string;
         };
         monitoring: {
             scheduled: any;

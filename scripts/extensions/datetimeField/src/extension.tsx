@@ -9,14 +9,18 @@ import {
 import {getDateTimeField} from './getDateTimeField';
 import {getConfigComponent} from './getConfigComponent';
 
-class DateTimePreview extends React.PureComponent<IPreviewComponentProps> {
-    render() {
-        if (this.props.value == null) {
-            return null;
-        } else {
-            return <div>{new Date(this.props.value).toLocaleString()}</div>;
+function getDateTimePreviewComponent(superdesk: ISuperdesk) {
+    const {formatDateTime} = superdesk.localization;
+
+    return class DateTimePreview extends React.PureComponent<IPreviewComponentProps> {
+        render() {
+            if (this.props.value == null) {
+                return null;
+            } else {
+                return <div>{formatDateTime(new Date(this.props.value))}</div>;
+            }
         }
-    }
+    };
 }
 
 export interface IDateTimeFieldConfig {
@@ -41,7 +45,7 @@ const extension: IExtension = {
                         id: 'datetime',
                         label: gettext('Datetime'),
                         editorComponent: getDateTimeField(superdesk),
-                        previewComponent: DateTimePreview,
+                        previewComponent: getDateTimePreviewComponent(superdesk),
                         configComponent: getConfigComponent(superdesk),
                     },
                 ],
