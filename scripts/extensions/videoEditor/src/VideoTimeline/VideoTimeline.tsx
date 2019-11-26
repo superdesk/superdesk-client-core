@@ -46,7 +46,7 @@ export class VideoTimeline extends React.Component<IProps, IState> {
         this.setRenderThumbnails();
     }
 
-    componentDidUpdate(prevProps: any) {
+    componentDidUpdate(prevProps: IProps) {
         if (JSON.stringify(prevProps.thumbnails) !== JSON.stringify(this.props.thumbnails)) {
             this.setRenderThumbnails();
         }
