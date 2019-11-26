@@ -366,6 +366,7 @@ function MetaDropdownDirective($filter) {
                 if (item) {
                     if (!scope.multiInputFields.includes(scope.field)) {
                         // single input field
+                        // we use 'name' attribute for string fields and the whole object for other fields
                         fieldObject[scope.field] = item.name || item;
                     } else if (scope.cv && scope.cv._id != null) {
                         // if there is cv as well as field, store cv._id as scheme
