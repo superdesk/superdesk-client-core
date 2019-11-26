@@ -10,7 +10,7 @@ interface IScope extends ng.IScope {
     formattingOptions: Array<string>;
     schemaKeysOrdering: any;
     schemaKeysDisabled: any;
-    canValidateChars: boolean;
+    characterValidationEnabled: boolean;
     hasFormatOptions(field): boolean;
     hasImageSelected(field): boolean;
     label(id): string;
@@ -125,7 +125,7 @@ export function ContentProfileSchemaEditor(vocabularies) {
         },
         link: function(scope: IScope, elem, attr, form) {
             scope.formattingOptions = FORMATTING_OPTIONS;
-            scope.canValidateChars = appConfig != null && appConfig.disallowed_characters != null;
+            scope.characterValidationEnabled = appConfig?.disallowed_characters != null;
 
             scope.getEditor3FormattingOptions = (fieldName) => {
                 const isCustomPlainTextField = typeof scope.fields[fieldName] === 'object'

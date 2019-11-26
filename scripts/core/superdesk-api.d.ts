@@ -889,6 +889,7 @@ declare module 'superdesk-api' {
     export interface ISuperdeskGlobalConfig {
         // FROM SERVER
         default_language: string;
+        disallowed_characters: Array<string>;
         schema: any;
         editor: {
             vidible?: any;

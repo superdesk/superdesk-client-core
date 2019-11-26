@@ -62,8 +62,8 @@
                         <div sd-check ng-model="model.editor[id].cleanPastedHTML"></div>
                     </div>
 
-                    <div class="field" ng-if="canValidateChars && model.schema[id].type === 'string' || fields[id].field_type === 'text'">
-                        <label translate>Validate Chars</label>
+                    <div class="field" ng-if="characterValidationEnabled && (model.schema[id].type === 'string' || fields[id].field_type === 'text')">
+                        <label translate>Validate Characters</label>
                         <div sd-check ng-model="model.schema[id].validate_characters" ng-click="model.editor[id].validate_characters = model.schema[id].validate_characters"></div>
                     </div>
 

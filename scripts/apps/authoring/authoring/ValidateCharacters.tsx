@@ -16,7 +16,7 @@ export class ValidateCharacters extends React.PureComponent<IProps> {
             return null;
         }
 
-        if (appConfig != null && appConfig.disallowed_characters != null) {
+        if (appConfig?.disallowed_characters != null) {
             const invalidCharString = appConfig.disallowed_characters.filter((char) => item.includes(char)).join(', ');
 
             if (invalidCharString.length > 0) {
