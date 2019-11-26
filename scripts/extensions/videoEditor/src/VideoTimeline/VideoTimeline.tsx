@@ -45,6 +45,7 @@ export class VideoTimeline extends React.Component<IProps, IState> {
         this.intervalTimer = 0;
 
         this.handleDrag = debounce(this.handleDrag.bind(this), 5);
+        this.handleTimelineClick = this.handleTimelineClick.bind(this);
     }
 
     componentDidMount() {
@@ -159,7 +160,7 @@ export class VideoTimeline extends React.Component<IProps, IState> {
         }
     }
 
-    controlbarsClick = (e: React.MouseEvent) => {
+    handleTimelineClick = (e: React.MouseEvent) => {
         let time = this.setVideoCurrentTime(e.clientX);
 
         if (time < this.props.trim.start) {
@@ -194,7 +195,7 @@ export class VideoTimeline extends React.Component<IProps, IState> {
         return (
             <div className={getClass('timeline-controls')}>
                 <ListThumbnails thumbnails={this.state.thumnailsRender} />
-                <div className={`${getClass('controlbars')}`} ref={this.controlbar} onClick={this.controlbarsClick}>
+                <div className={`${getClass('controlbars')}`} ref={this.controlbar} onClick={this.handleTimelineClick}>
                     <div
                         className={`${getClass('controlbars__mask')} ${getClass('controlbars__mask--left')}`}
                         style={{
