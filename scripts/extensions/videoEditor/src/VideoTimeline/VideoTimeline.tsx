@@ -142,7 +142,9 @@ export class VideoTimeline extends React.Component<IProps, IState> {
         this.props.onTrim(this.props.trim.start, this.props.trim.end, true);
     }
 
-    getPositionInBar = (pX: number) => { // returns seconds
+    // returns a number between 0 and 1
+    // e.g. if a video is 60 seconds position 0.25 would represent a position at 15 seconds
+    getPositionInBar = (pX: number): number => {
         const controlbar = this.controlbar.current;
 
         if (controlbar == null) {
