@@ -2,6 +2,7 @@ import {debounce} from 'lodash';
 import {appConfig} from 'appConfig';
 import {KEYS} from 'core/keyboard/keyboard';
 import {httpRequestJsonLocal} from 'core/helpers/network';
+import {IRestApiResponse} from 'superdesk-api';
 
 interface IScope extends ng.IScope {
     value: string;
@@ -13,12 +14,6 @@ interface IScope extends ng.IScope {
     select: (suggestion: string) => void;
     onSelect: ({suggestion}: {suggestion: string}) => void;
     suggested?: string;
-}
-
-interface IResponse {
-    _items: Array<{
-        value: string;
-    }>;
 }
 
 export const sdStaticAutocompleteDirective = () => ({
@@ -39,7 +34,7 @@ export const sdStaticAutocompleteDirective = () => ({
 
         const fetchSuggestions = () => {
             if (appConfig.archive_autocomplete) {
-                return httpRequestJsonLocal<IResponse>({
+                return httpRequestJsonLocal<IRestApiResponse<{value: string}>>({
                     method: 'GET',
                     path: '/archive_autocomplete',
                     urlParams: {field: scope.field, language: scope.language},

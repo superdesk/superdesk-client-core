@@ -429,8 +429,8 @@ declare module 'superdesk-api' {
     }
 
     // Eve properties
-    export interface IRestApiResponse<T extends IBaseRestApiResponse> {
-        _items: Array<T>;
+    export interface IRestApiResponse<T> {
+        _items: Array<T & IBaseRestApiResponse>;
         _links: {
             parent: IRestApiLink;
             self: IRestApiLink;
