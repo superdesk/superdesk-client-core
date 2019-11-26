@@ -1,18 +1,18 @@
 language: node_js
-node_js: "10"
+node_js: "12"
 
 addons:
   apt:
     packages:
-        - google-chrome-stable
+      - google-chrome-stable
 
 cache:
-    directories:
-        - $HOME/.cache/yarn
+  directories:
+    - $HOME/.cache/yarn
 
 script:
-    - git checkout -b travis-save-branch
-    - git fetch origin develop:develop
-    - npm run test
-    - npm run lint
-    - npm run build
+  - git checkout -b travis-save-branch
+  - git fetch origin develop:develop
+  - npm run test
+  - npm run lint
+  - npm run build
