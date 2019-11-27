@@ -110,14 +110,23 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
         );
     }
 
-    handleChange = (files: FileList | null) => {
+    handleUpload = (files: FileList | null) => {
+        const file = files?.[0];
+
+        if (file == null) {
+            return;
+        }
+
         const reader = new FileReader();
 
-        reader.onload = () => this.setThumbnail(reader.result as string);
-        const file = files ? files[0] : null;
+        reader.onload = () => {
+            if (typeof reader.result === 'string') {
+                this.setThumbnail(reader.result);
+            }
+        };
 
-        reader.readAsDataURL(file!);
-        this.setState({dirty: true, value: file!, type: 'upload'});
+        reader.readAsDataURL(file);
+        this.setState({dirty: true, value: file, type: 'upload'});
     }
 
     handleSave = () => {
@@ -306,7 +315,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
                                             type="file"
                                             style={{display: 'none'}}
                                             accept=".png,.jpg,.jpeg,.webp"
-                                            onChange={(e) => this.handleChange(e.target.files)}
+                                            onChange={(e) => this.handleUpload(e.target.files)}
                                         />
                                         <a className="image-overlay__button" sd-tooltip={gettext('Upload image')}>
                                             <i className="icon-upload" />
