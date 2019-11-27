@@ -6,6 +6,11 @@ interface IProps {
     item: IArticle;
 }
 
+interface IVideoRenditionItem {
+    mimetype: string;
+    href: string;
+}
+
 export class VideoComponent extends React.PureComponent<IProps> {
     render() {
         const {item} = this.props;
@@ -19,18 +24,16 @@ export class VideoComponent extends React.PureComponent<IProps> {
             poster = item.renditions.viewImage.href;
         }
 
-        const videoRenditions = Object.values(item.renditions)
-            .filter(
-                (rend) => rend.mimetype != null && (rend.mimetype.startsWith('video') ||
-                                                    rend.mimetype.startsWith('application/x-mpegurl')),
-            );
+        let videoRenditions: Array<IVideoRenditionItem> = [];
 
-        if (videoRenditions.length > 0 && videoRenditions[0].mimetype === 'application/x-mpegurl') {
-            return <HLSVideoComponent
-                poster={poster}
-                streamUrl={videoRenditions[0].href}
-                key={videoRenditions[0].href}
-            />;
+        for (const rend of Object.values(item.renditions)) {
+            if (rend.mimetype == null) {
+                continue;
+            } else if (rend.mimetype.toLowerCase() === 'application/x-mpegurl') {
+                return <HLSVideoComponent poster={poster} streamUrl={rend.href} key={rend.href}/>;
+            } else if (rend.mimetype.startsWith('video')) {
+                videoRenditions.push(rend);
+            }
         }
 
         return (
