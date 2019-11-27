@@ -2,6 +2,7 @@ import {isNull, isUndefined, find, filter, keys, findIndex, defer, sortBy, map, 
 import {FIELD_KEY_SEPARATOR} from 'core/editor3/helpers/fieldsMeta';
 import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
 import {appConfig} from 'appConfig';
+import {getLabelForFieldId} from 'apps/workspace/helpers/getLabelForFieldId';
 
 AuthoringHeaderDirective.$inject = [
     'api',
@@ -46,6 +47,10 @@ export function AuthoringHeaderDirective(
             scope.toggleCollapsed = () => {
                 scope.isCollapsed = !scope.isCollapsed;
             };
+
+            initVocabularies().then(() => {
+                scope.getLabelForFieldId = (fieldId) => getLabelForFieldId(fieldId, scope.vocabulariesCollection);
+            });
 
             if (TranslationService.translationsEnabled() === true) {
                 TranslationService.getTranslations(scope.item)
@@ -167,6 +172,16 @@ export function AuthoringHeaderDirective(
                 });
             }
 
+            function initVocabularies() {
+                if (scope.vocabulariesCollection == null) {
+                    return vocabularies.getVocabularies().then(((vocabulariesCollection) => {
+                        scope.vocabulariesCollection = vocabulariesCollection;
+                    }));
+                }
+
+                return Promise.resolve();
+            }
+
             /**
              * Sets the anpa category corresponding to the required subservice: if a subservice
              * field (defined in vocabularies) was declared as required in a content profile
@@ -180,12 +195,12 @@ export function AuthoringHeaderDirective(
                         if (!startsWith(subjectName, 'subservice_')) {
                             return;
                         }
-                        vocabularies.getVocabularies().then((vocabulariesColl) => {
-                            var vocabulary: any = find(vocabulariesColl, {_id: subjectName});
+                        initVocabularies().then(() => {
+                            var vocabulary: any = find(scope.vocabulariesCollection, {_id: subjectName});
 
                             if (vocabulary) {
                                 var qcode = keys(vocabulary.service).pop();
-                                var categoriesVocabulary: any = find(vocabulariesColl, {_id: 'categories'});
+                                var categoriesVocabulary: any = find(scope.vocabulariesCollection, {_id: 'categories'});
                                 var category: any = find(categoriesVocabulary.items, {qcode: qcode});
 
                                 if (category && findIndex(scope.item.anpa_category, {name: category.name}) === -1) {
