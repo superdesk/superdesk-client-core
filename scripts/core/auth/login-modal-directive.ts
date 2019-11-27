@@ -8,11 +8,12 @@ import {appConfig} from 'appConfig';
 angular.module('superdesk.core.auth.login', []).directive('sdLoginModal', [
     'session',
     'auth',
+    'keycloak',
     'features',
     'usersService',
     'notify',
     '$route',
-    function(session, auth, features, usersService, notify, $route) {
+    function(session, auth, keycloak, features, usersService, notify, $route) {
         return {
             replace: true,
             // login template can be overriden (like on superdesk-fi)
@@ -30,6 +31,10 @@ angular.module('superdesk.core.auth.login', []).directive('sdLoginModal', [
                 scope.labels = {
                     saml: appConfig.saml_label,
                 };
+                //Keycloak auth
+                if (appConfig.oidc_auth) {
+                    keycloak.keycloakAuth();
+                }
 
                 scope.authenticate = function() {
                     scope.isLoading = true;
