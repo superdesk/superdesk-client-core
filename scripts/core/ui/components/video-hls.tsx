@@ -1,12 +1,10 @@
 import React from 'react';
 import Hls from 'hls.js';
 
-
 interface IProps {
     poster: string;
-    streamUrl: string
+    streamUrl: string;
 }
-
 
 export class HLSVideoComponent extends React.PureComponent<IProps> {
     videoElement: HTMLElement;

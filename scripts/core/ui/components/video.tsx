@@ -21,7 +21,8 @@ export class VideoComponent extends React.PureComponent<IProps> {
 
         const videoRenditions = Object.values(item.renditions)
             .filter(
-                (rend) => rend.mimetype != null && (rend.mimetype.startsWith('video') || rend.mimetype.startsWith('application/x-mpegurl')),
+                (rend) => rend.mimetype != null && (rend.mimetype.startsWith('video') ||
+                                                    rend.mimetype.startsWith('application/x-mpegurl')),
             );
 
         if (videoRenditions.length > 0 && videoRenditions[0].mimetype === 'application/x-mpegurl') {
