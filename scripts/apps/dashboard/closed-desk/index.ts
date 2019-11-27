@@ -67,8 +67,8 @@ function RoutingWidgetController(desks, privileges, api, notify, $scope) {
     });
 }
 
-TopMenuInfoDirective.$inject = ['desks', '$timeout', 'config'];
-function TopMenuInfoDirective(desks, $timeout, config) {
+TopMenuInfoDirective.$inject = ['desks', '$timeout'];
+function TopMenuInfoDirective(desks, $timeout) {
     return {
         template: require('./views/top-menu-info.html'),
         link: (scope) => {
