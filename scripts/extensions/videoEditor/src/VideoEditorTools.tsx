@@ -73,15 +73,17 @@ export class VideoEditorTools extends React.Component<IProps> {
                 </button>
                 <span className="sd-photo-preview__label mlr-auto">{this.props.videoHeadline}</span>
                 <div>
-                    <span className="sd-text__strong-s">Quality:</span>
+                    <span className="sd-text__strong-s">{gettext('Quality:')}</span>
                     <Dropdown
                         label={
                             <QualityLabel
                                 getText={gettext}
                                 title={
                                     qualityDisabled
-                                        ? gettext('Maximum quality resize allowed')
-                                        : gettext('Video resolution to scale down')
+                                        ? gettext(
+                                            'Changing quality is only supported for 480p and higher quality videos.',
+                                        )
+                                        : null
                                 }
                             />
                         }
