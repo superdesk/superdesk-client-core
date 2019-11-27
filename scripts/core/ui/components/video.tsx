@@ -25,7 +25,11 @@ export class VideoComponent extends React.PureComponent<IProps> {
             );
 
         if (videoRenditions.length > 0 && videoRenditions[0].mimetype === 'application/x-mpegurl') {
-            return <HLSVideoComponent poster={poster} streamUrl={videoRenditions[0].href}/>;
+            return <HLSVideoComponent
+                poster={poster}
+                streamUrl={videoRenditions[0].href}
+                key={videoRenditions[0].href}
+            />;
         }
 
         return (

@@ -12,32 +12,27 @@ export class HLSVideoComponent extends React.PureComponent<IProps> {
     videoElement: HTMLElement;
     hls: Hls;
 
-    _initHLS = () => {
+    private initHLS = () => {
         if (Hls.isSupported() && this.videoElement) {
             this.hls = new Hls();
             this.hls.loadSource(this.props.streamUrl);
             this.hls.attachMedia(this.videoElement);
         }
-    };
+    }
 
-    _destroyHLS = () => {
-        this.hls.stopLoad();
-        this.hls.destroy();
-    };
-
-    componentDidUpdate(prevProps: Readonly<IProps>, prevState: Readonly<{}>, snapshot?: any): void {
-        if (this.props.streamUrl !== prevProps.streamUrl) {
-            this._destroyHLS();
-            this._initHLS();
+    private destroyHLS = () => {
+        if (this.hls) {
+            this.hls.stopLoad();
+            this.hls.destroy();
         }
     }
 
     componentDidMount(): void {
-        this._initHLS();
+        this.initHLS();
     }
 
     componentWillUnmount(): void {
-        this._destroyHLS();
+        this.destroyHLS();
     }
 
     render() {
