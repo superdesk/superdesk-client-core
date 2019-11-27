@@ -1,5 +1,6 @@
 import React from 'react';
 import {IArticle} from 'superdesk-api';
+import {HLSVideoComponent} from './video-hls';
 
 interface IProps {
     item: IArticle;
@@ -19,12 +20,18 @@ export class VideoComponent extends React.PureComponent<IProps> {
         }
 
         const videoRenditions = Object.values(item.renditions)
-            .filter((rendition) => rendition.mimetype != null && rendition.mimetype.startsWith('video'));
+            .filter(
+                (rend) => rend.mimetype != null && (rend.mimetype.startsWith('video') || rend.mimetype.startsWith('application/x-mpegurl')),
+            );
+
+        if (videoRenditions.length > 0 && videoRenditions[0].mimetype === 'application/x-mpegurl') {
+            return <HLSVideoComponent poster={poster} streamUrl={videoRenditions[0].href}/>;
+        }
 
         return (
             <video controls preload="metadata" poster={poster}>
                 {videoRenditions.map((rendition) => (
-                    <source key={rendition.href} src={rendition.href} type={rendition.mimetype} />
+                    <source key={rendition.href} src={rendition.href} type={rendition.mimetype}/>
                 ))}
             </video>
         );
