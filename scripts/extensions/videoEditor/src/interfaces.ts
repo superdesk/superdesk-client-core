@@ -1,6 +1,6 @@
 import {Crop} from 'react-image-crop';
 
-interface ICrop extends Crop {
+export interface ICrop extends Crop {
     scale?: number;
     value?: number;
 }

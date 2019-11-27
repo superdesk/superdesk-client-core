@@ -9,7 +9,7 @@ import {VideoEditorTools} from './VideoEditorTools';
 import {VideoTimeline} from './VideoTimeline/VideoTimeline';
 import {VideoEditorHeader} from './VideoEditorHeader';
 import {VideoEditorThumbnail} from './VideoEditorThumbnail';
-import {IVideoEditor, IThumbnail} from './interfaces';
+import {IVideoEditor, IThumbnail, ICrop} from './interfaces';
 
 interface IProps {
     article: IArticle;
@@ -18,7 +18,7 @@ interface IProps {
     onArticleUpdate: (articleUpdate: IArticle) => void;
 }
 
-interface IState extends IVideoEditor {
+interface IState {
     isDirty: boolean;
     trim: {
         start: number;
@@ -31,6 +31,11 @@ interface IState extends IVideoEditor {
     scale: number;
     videoSrc: string;
     article: IArticle;
+    crop: ICrop;
+    cropEnabled: boolean;
+    quality: number;
+    degree: number;
+    playing: boolean;
 }
 
 export class VideoEditor extends React.Component<IProps, IState> {
