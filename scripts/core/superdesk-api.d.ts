@@ -279,10 +279,12 @@ declare module 'superdesk-api' {
             };
         };
         project?: { // video editor project
+            url: string;
             thumbnails: {
                 timeline: any;
             };
             processing: {
+                video: any;
                 thumbnails_timeline: any;
             };
         };

@@ -129,9 +129,9 @@ export class VideoEditor extends React.Component<IProps, IState> {
         this.handleToggleLoading(true, gettext('Loading video...'));
         this.intervalCheckVideo = window.setInterval(() => {
             this.props.superdesk.dataApi
-                .findOne('video_edit', this.state.article._id + `?t=${Math.random()}`)
-                .then((result: any) => {
-                    if (result.project.processing.video === false) {
+                .findOne<IArticle>('video_edit', this.state.article._id + `?t=${Math.random()}`)
+                .then((result) => {
+                    if (result.project?.processing.video === false) {
                         this.handleToggleLoading(false);
                         clearInterval(this.intervalCheckVideo);
                         this.setState({
