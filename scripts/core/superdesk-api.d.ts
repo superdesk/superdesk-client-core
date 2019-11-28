@@ -1068,7 +1068,7 @@ declare module 'superdesk-api' {
 
     // IPTC picture metadata
 
-    interface IPTCMetadata {
+    export interface IPTCMetadata {
         // envelope
         Destination: string;
         ServiceIdentifier: string;

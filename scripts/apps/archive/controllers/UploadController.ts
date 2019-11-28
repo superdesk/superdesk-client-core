@@ -14,13 +14,17 @@ function getExifData(file: File): Promise<IPTCMetadata> {
         const reader = new FileReader();
 
         reader.onloadend = () => {
-            const exif: {iptcdata: IPTCMetadata} = handleBinaryFile(reader.result);
+            try {
+                const exif: {iptcdata: IPTCMetadata} = handleBinaryFile(reader.result);
 
-            resolve(exif.iptcdata);
+                resolve(exif.iptcdata);
+            } catch (error) {
+                console.error(error);
+                reject(error);
+            }
         };
 
         reader.onerror = reject;
-
         reader.readAsArrayBuffer(file);
     });
 }
@@ -287,14 +291,18 @@ export function UploadController(
 
         return acceptedFiles.length < 1
             ? Promise.resolve()
-            : Promise.all(acceptedFiles.map(({file, getThumbnail}) => getExifData(file)
-                .then((fileMeta) =>
-                    mapIPTCExtensions(fileMeta, $scope.currentUser),
-                ).then((meta) => {
-                    const item = initFile(file, meta, getPseudoId());
+            : Promise.all(acceptedFiles.map(
+                ({file, getThumbnail}) =>
+                    getExifData(file)
+                        .then(
+                            (fileMeta) => mapIPTCExtensions(fileMeta, $scope.currentUser),
+                            () => ({}), // proceed with upload on exif parsing error
+                        )
+                        .then((meta) => {
+                            const item = initFile(file, meta, getPseudoId());
 
-                    return getThumbnail(file).then((htmlString) => item.thumbnailHtml = htmlString);
-                }),
+                            return getThumbnail(file).then((htmlString) => item.thumbnailHtml = htmlString);
+                        }),
             )).then(() => {
                 $scope.$applyAsync(() => {
                     $scope.imagesMetadata = $scope.items.map((item) => item.meta);
