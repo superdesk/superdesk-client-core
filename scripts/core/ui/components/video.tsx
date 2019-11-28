@@ -3,6 +3,8 @@ import {IArticle} from 'superdesk-api';
 
 interface IProps {
     item: IArticle;
+    width?: string;
+    height?: string;
 }
 
 export class VideoComponent extends React.PureComponent<IProps> {
@@ -23,7 +25,12 @@ export class VideoComponent extends React.PureComponent<IProps> {
 
         return (
             // using key to force reload video on selecting different item for preview
-            <video key={item.guid} controls preload="metadata" poster={poster}>
+            <video key={item.guid}
+                controls
+                preload="metadata"
+                poster={poster}
+                width={this.props.width}
+                height={this.props.height}>
                 {videoRenditions.map((rendition) => (
                     <source key={rendition.href} src={rendition.href} type={rendition.mimetype} />
                 ))}
