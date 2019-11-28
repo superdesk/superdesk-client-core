@@ -278,7 +278,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
         let crop = this.initState.crop;
 
         if (this.state.cropEnabled === false) {
-            crop = this.getCropSample(cropAspect);
+            crop = this.getInitialCropSize(cropAspect);
         }
         this.reactCropMarginDelta = 0;
         this.setState({cropEnabled: !this.state.cropEnabled, crop: crop}, () => {
@@ -460,8 +460,10 @@ export class VideoEditor extends React.Component<IProps, IState> {
         return crop;
     }
 
-    // calculate sample crop zone, only draw 80% instead of full width / height so user can easily resize, move
-    getCropSample = (aspect: number, scale: number = 1) => {
+    // Set initial crop size to 80% of full video size to make the UX more user-friendly.
+    // If it was set to 100%, moving the crop area might not be possible
+    // and resize indicators at the corners might not be that clearly visible.
+    getInitialCropSize = (aspect: number, scale: number = 1) => {
         let {width, height} = this.videoRef.current!.getBoundingClientRect();
 
         width = (width * scale * 80) / 100;
