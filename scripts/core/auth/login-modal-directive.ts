@@ -31,7 +31,7 @@ angular.module('superdesk.core.auth.login', []).directive('sdLoginModal', [
                 scope.labels = {
                     saml: appConfig.saml_label,
                 };
-                //Keycloak auth
+                // Keycloak auth
                 if (appConfig.oidc_auth) {
                     keycloak.keycloakAuth();
                 }
