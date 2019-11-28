@@ -22,7 +22,8 @@ export class VideoComponent extends React.PureComponent<IProps> {
             .filter((rendition) => rendition.mimetype != null && rendition.mimetype.startsWith('video'));
 
         return (
-            <video controls preload="metadata" poster={poster}>
+            // using key to force reload video on selecting different item for preview
+            <video key={item.guid} controls preload="metadata" poster={poster}>
                 {videoRenditions.map((rendition) => (
                     <source key={rendition.href} src={rendition.href} type={rendition.mimetype} />
                 ))}
