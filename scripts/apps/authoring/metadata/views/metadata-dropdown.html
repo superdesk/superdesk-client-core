@@ -1,17 +1,17 @@
 <div class="dropdown dropdown--noarrow" dropdown sd-metadropdown-focus>
     <!-- if field is single input field-->
     <button ng-disabled="disabled" class="dropdown__toggle line-input" tabindex="{{tabindex}}" dropdown__toggle ng-if="!multiInputFields.includes(field) && !icon">
-        {{ key && values[item[field]]  && values[item[field]].name ? values[item[field]].name: (item[field].name || item[field] ? item[field].name || item[field] : "none") | translate }}
+        {{ key && values[item[field]]  && values[item[field]].name ? values[item[field]].name: (item[field].name || item[field] ? item[field].name || item[field] : '') | translate }}
         <b class="dropdown__caret"></b>
     </button>
     <!-- if field is multi input field and the data source is not a custom vocabulary-->
     <button ng-disabled="disabled" class="dropdown__toggle line-input" tabindex="{{tabindex}}" dropdown__toggle ng-if="multiInputFields.includes(field) && !icon && !cv">
-        {{ item[field].length > 0 ? item[field][0].name : "none" | translate }}
+        {{ item[field].length > 0 ? item[field][0].name : '' | translate }}
         <b class="dropdown__caret"></b>
     </button>
     <!-- if cv stored inside other parent field ex: subject:[{name: "a", qcode: "a", scheme: cv._id}]-->
     <button ng-disabled="disabled" class="dropdown__toggle line-input" tabindex="{{tabindex}}" dropdown__toggle ng-if="multiInputFields.includes(field) && !icon && cv">
-        {{ item[field].length > 0 ? findItemByScheme(item[field], cv._id).name : "none" | translate }}
+        {{ item[field].length > 0 ? findItemByScheme(item[field], cv._id).name : '' | translate }}
         <b class="dropdown__caret"></b>
     </button>
     <button ng-disabled="disabled" class="dropdown__toggle line-input" tabindex="{{tabindex}}" dropdown__toggle ng-if="icon">
