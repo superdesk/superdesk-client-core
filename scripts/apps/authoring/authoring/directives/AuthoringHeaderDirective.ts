@@ -176,11 +176,10 @@ export function AuthoringHeaderDirective(
                 if (scope.vocabulariesCollection == null) {
                     return vocabularies.getVocabularies().then(((vocabulariesCollection) => {
                         scope.vocabulariesCollection = vocabulariesCollection;
-                        return vocabulariesCollection;
                     }));
                 }
 
-                return Promise.resolve(scope.vocabulariesCollection);
+                return Promise.resolve();
             }
 
             /**
@@ -196,12 +195,12 @@ export function AuthoringHeaderDirective(
                         if (!startsWith(subjectName, 'subservice_')) {
                             return;
                         }
-                        initVocabularies().then((vocabulariesCollection) => {
-                            var vocabulary: any = find(vocabulariesCollection, {_id: subjectName});
+                        initVocabularies().then(() => {
+                            var vocabulary: any = find(scope.vocabulariesCollection, {_id: subjectName});
 
                             if (vocabulary) {
                                 var qcode = keys(vocabulary.service).pop();
-                                var categoriesVocabulary: any = find(vocabulariesCollection, {_id: 'categories'});
+                                var categoriesVocabulary: any = find(scope.vocabulariesCollection, {_id: 'categories'});
                                 var category: any = find(categoriesVocabulary.items, {qcode: qcode});
 
                                 if (category && findIndex(scope.item.anpa_category, {name: category.name}) === -1) {

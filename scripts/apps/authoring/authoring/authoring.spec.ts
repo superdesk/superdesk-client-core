@@ -53,6 +53,7 @@ describe('authoring', () => {
 
             scope.item = {profile: 'motoring'};
             scope.schema = schema;
+            scope.vocabulariesCollection = vocabulariesData;
 
             $compile('<div sd-authoring-header></div>')(scope);
             scope.$digest();
