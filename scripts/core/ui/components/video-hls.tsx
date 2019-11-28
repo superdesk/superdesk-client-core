@@ -4,6 +4,8 @@ import Hls from 'hls.js';
 interface IProps {
     poster: string;
     streamUrl: string;
+    width?: string;
+    height?: string;
 }
 
 export class HLSVideoComponent extends React.PureComponent<IProps> {
@@ -39,6 +41,8 @@ export class HLSVideoComponent extends React.PureComponent<IProps> {
                 preload="metadata"
                 ref={(el) => this.videoElement = el}
                 poster={this.props.poster}
+                width={this.props.width}
+                height={this.props.height}
             />
         );
     }

@@ -32,7 +32,13 @@ export class VideoComponent extends React.PureComponent<IProps> {
             if (rend.mimetype == null) {
                 continue;
             } else if (rend.mimetype.toLowerCase() === 'application/x-mpegurl') {
-                return <HLSVideoComponent poster={poster} streamUrl={rend.href} key={rend.href}/>;
+                return <HLSVideoComponent
+                    poster={poster}
+                    streamUrl={rend.href}
+                    key={rend.href}
+                    width={this.props.width}
+                    height={this.props.height}
+                />;
             } else if (rend.mimetype.startsWith('video')) {
                 videoRenditions.push(rend);
             }
