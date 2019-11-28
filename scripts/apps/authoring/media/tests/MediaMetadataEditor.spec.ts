@@ -110,10 +110,6 @@ describe('media metadata editor', () => {
 
         Object.assign(appConfig, testConfig);
 
-        let scope = $rootScope.$new(true);
-
-        scope.item = {_id: 'foo'};
-
         const ctrl = $controller('MediaFieldsController');
 
         $rootScope.$digest();
