@@ -6,7 +6,10 @@ import {IKnowledgeBaseItem} from './interfaces';
 
 const RESOURCE = 'concept_items';
 
-function annotationExistsInKnowledgeBase(superdesk: ISuperdesk, annotationText: string) {
+function getAnnotationsInKnowledgeBase(
+    superdesk: ISuperdesk,
+    annotationText: string,
+): Promise<IRestApiResponse<IKnowledgeBaseItem>> {
     const {dataApi} = superdesk;
     const {nameField} = getFields(superdesk);
     const {generateFilterForServer} = superdesk.forms;
@@ -16,7 +19,26 @@ function annotationExistsInKnowledgeBase(superdesk: ISuperdesk, annotationText: 
         1,
         {field: 'name', direction: 'ascending'},
         {name: generateFilterForServer(nameField.type, annotationText)},
-    ).then((res: IRestApiResponse<IKnowledgeBaseItem>) => res._items.length > 0);
+    );
+}
+
+function annotationExistsInKnowledgeBase(
+    superdesk: ISuperdesk,
+    annotationText: string,
+    definitionHtml?: string,
+): Promise<boolean> {
+    return getAnnotationsInKnowledgeBase(superdesk, annotationText)
+        .then((res: IRestApiResponse<IKnowledgeBaseItem>) => {
+            if (definitionHtml == null) {
+                // just searching for annotationText
+                return res._items.length > 0;
+            }
+
+            // searching for exact match (text + definition)
+            const matches = res._items.filter((item) => item.definition_html === definitionHtml);
+
+            return matches.length > 0;
+        });
 }
 
 function annotationFromLibraryTabSelectedByDefault(
@@ -35,10 +57,15 @@ function annotationFromLibraryTabSelectedByDefault(
     }
 }
 
-function onAnnotationCreate(superdesk: ISuperdesk, language: string, annotationText: string, definitionHtml: string) {
-    annotationExistsInKnowledgeBase(superdesk, annotationText)
+function onAnnotationCreate(
+    superdesk: ISuperdesk,
+    language: string,
+    annotationText: string,
+    definitionHtml: string,
+) {
+    annotationExistsInKnowledgeBase(superdesk, annotationText, definitionHtml)
         .then((exists) => {
-            // Don't create a knowledge base item for that annotation if it already exists
+            // Don't create another annotation with the same text + definition
             if (!exists) {
                 superdesk.dataApi.create(RESOURCE, {
                     language: language,

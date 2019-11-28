@@ -4,6 +4,8 @@ import {HLSVideoComponent} from './video-hls';
 
 interface IProps {
     item: IArticle;
+    width?: string;
+    height?: string;
 }
 
 interface IVideoRenditionItem {
@@ -37,7 +39,13 @@ export class VideoComponent extends React.PureComponent<IProps> {
         }
 
         return (
-            <video controls preload="metadata" poster={poster}>
+            // using key to force reload video on selecting different item for preview
+            <video key={item.guid}
+                controls
+                preload="metadata"
+                poster={poster}
+                width={this.props.width}
+                height={this.props.height}>
                 {videoRenditions.map((rendition) => (
                     <source key={rendition.href} src={rendition.href} type={rendition.mimetype}/>
                 ))}

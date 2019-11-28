@@ -1,6 +1,6 @@
 {
   "name": "superdesk-core",
-  "version": "1.31.2",
+  "version": "1.32.0-rc.2",
   "license": "AGPL-3.0",
   "repository": {
     "type": "git",
@@ -144,7 +144,8 @@
     "react-addons-test-utils": "^15.6.0",
     "react-test-renderer": "^16.2.0",
     "request": "^2.83.0",
-    "superdesk-code-style": "^1.1.1"
+    "superdesk-code-style": "^1.1.1",
+    "typescript-eslint-parser": "^18.0.0"
   },
   "scripts": {
     "setup-extensions": "node ./tasks/namespace-css-from-extensions.js && node ./tasks/install-extensions.js",
