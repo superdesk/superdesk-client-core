@@ -135,7 +135,10 @@ angular.module('superdesk.apps.ingest', [
                 }],
                 filters: [{action: 'list', type: 'externalsource'}],
                 privileges: {fetch: 1},
-                additionalCondition: ['desks', function(desks) {
+                additionalCondition: ['desks', 'item', function(desks, item) {
+                    if (item._fetchable !== undefined) {
+                        return item._fetchable;
+                    }
                     // Fetching to 'personal' desk is not allowed
                     return appConfig.features != null
                         && appConfig.features.editFeaturedImage
@@ -150,7 +153,10 @@ angular.module('superdesk.apps.ingest', [
                 controller: ctrl.ExternalSourceController,
                 filters: [{action: 'list', type: 'externalsource', id: 'fetch-externalsource'}],
                 privileges: {fetch: 1},
-                additionalCondition: ['desks', function(desks) {
+                additionalCondition: ['desks', 'item', function(desks, item) {
+                    if (item._fetchable !== undefined) {
+                        return item._fetchable;
+                    }
                     // Fetching to 'personal' desk is not allowed
                     return appConfig.features != null
                         && appConfig.features.editFeaturedImage

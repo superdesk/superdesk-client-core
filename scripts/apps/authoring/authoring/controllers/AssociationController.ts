@@ -28,8 +28,8 @@ export function AssociationController(content, superdesk,
      * @public
      * @description Check if featured media can be edited or not. i.e. metadata/crops can be changed or not.
      */
-    this.isMediaEditable = function() {
-        return isMediaEditable();
+    this.isMediaEditable = function(item?: IArticle) {
+        return isMediaEditable(item);
     };
 
     /**
@@ -179,7 +179,7 @@ export function AssociationController(content, superdesk,
                 // save generated association id in order to be able to update the same item after editing.
                 const originalRel = scope.rel;
 
-                if (self.isMediaEditable() && get(item, '_type') === 'externalsource') {
+                if (self.isMediaEditable(item) && get(item, '_type') === 'externalsource') {
                     // if media is editable then association will be updated by self.edit method
                     return renditions.ingest(item)
                         .then((_item) => self.edit(scope, _item, {customRel: originalRel}));

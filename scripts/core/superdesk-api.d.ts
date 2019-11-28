@@ -284,6 +284,7 @@ declare module 'superdesk-api' {
             archive?: boolean;
             externalsource: boolean;
         };
+        _fetchable?: Boolean
 
         /**
          * Wrapper for different renditions of non-textual content of the news object
