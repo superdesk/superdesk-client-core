@@ -67,7 +67,7 @@ export class ItemList extends React.Component<any, IState> {
         this.unbindActionKeyShortcuts = this.unbindActionKeyShortcuts.bind(this);
     }
 
-    multiSelect(items, selected, event?) {
+    multiSelect(items, selected) {
         const {search, multi} = this.props.svc;
         const {scope} = this.props;
 
@@ -82,7 +82,6 @@ export class ItemList extends React.Component<any, IState> {
             });
         });
 
-        this.select(_.last(items), event);
         this.setState({itemsById: itemsById});
     }
 
@@ -121,7 +120,7 @@ export class ItemList extends React.Component<any, IState> {
 
         $timeout.cancel(this.updateTimeout);
 
-        const showPreview = (event == null || event.target == null) ||
+        const showPreview = event == null || event.target == null ||
             querySelectorParent(event.target, '.sd-monitoring-item-multi-select-checkbox') == null;
 
         if (item && scope.preview) {
