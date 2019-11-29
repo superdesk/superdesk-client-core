@@ -77,7 +77,7 @@
                  ng-if="schema.slugline && editor['slugline'].section !== 'content'"
                  sd-width="{{editor.slugline.sdWidth}}"
                  order="{{editor.slugline.order}}">
-                <label class="authoring-header__item-label uppercase" translate>{{getLabelForFieldId('slugline')}}</label>
+                <label class="authoring-header__item-label uppercase">{{getLabelForFieldId('slugline')}}</label>
                 <div class="authoring-header__input-holder">
                     <input type="text"
                            tansa-scope-sync
@@ -123,7 +123,7 @@
                  ng-if="schema.genre && editor.genre && !genreInCvs"
                  sd-width="{{editor.genre.sdWidth}}"
                  order="{{editor.genre.order}}">
-                <label class="authoring-header__item-label" translate>{{getLabelForFieldId('genre')}}</label>
+                <label class="authoring-header__item-label">{{getLabelForFieldId('genre')}}</label>
                 <div class="authoring-header__input-holder">
                     <div sd-meta-dropdown
                          class="data"
@@ -430,7 +430,7 @@
                  ng-if="displayCompanyCodes && schema.company_codes"
                  sd-width="{{editor.company_codes.sdWidth}}"
                  order="{{editor.company_codes.order}}">
-                <label class="authoring-header__item-label" translate>{{getLabelForFieldId('company_codes')}}</label>
+                <label class="authoring-header__item-label">{{getLabelForFieldId('company_codes')}}</label>
                 <div class="authoring-header__input-holder">
                     <div sd-meta-terms
                         class="data"
@@ -455,7 +455,7 @@
                  ng-if="schema.ednote"
                  sd-width="{{editor.ednote.sdWidth}}"
                  order="{{editor.ednote.order}}">
-                <label class="authoring-header__item-label" translate>{{getLabelForFieldId('ednote')}}</label>
+                <label class="authoring-header__item-label">{{getLabelForFieldId('ednote')}}</label>
                 <div class="authoring-header__input-holder">
                     <textarea id="ednote" class="line-input ed-note"
                               sd-auto-height
