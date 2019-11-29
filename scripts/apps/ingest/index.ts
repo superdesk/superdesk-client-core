@@ -10,6 +10,7 @@ import {InsertFilter, ScheduleFilter} from './filters';
 import _ from 'lodash';
 import {coreMenuGroups} from 'core/activity/activity';
 import {gettext} from 'core/utils';
+import {isMediaEditable} from 'core/config';
 import {appConfig} from 'appConfig';
 
 angular.module('superdesk.apps.ingest.send', ['superdesk.core.api', 'superdesk.apps.desks'])
@@ -137,7 +138,7 @@ angular.module('superdesk.apps.ingest', [
                 privileges: {fetch: 1},
                 additionalCondition: ['desks', 'item', function(desks, item) {
                     if (item._fetchable !== undefined) {
-                        return item._fetchable;
+                        return isMediaEditable(item) && !_.isNil(desks.getCurrentDeskId());
                     }
                     // Fetching to 'personal' desk is not allowed
                     return appConfig.features != null
@@ -155,7 +156,7 @@ angular.module('superdesk.apps.ingest', [
                 privileges: {fetch: 1},
                 additionalCondition: ['desks', 'item', function(desks, item) {
                     if (item._fetchable !== undefined) {
-                        return item._fetchable;
+                        return isMediaEditable(item) && !_.isNil(desks.getCurrentDeskId());
                     }
                     // Fetching to 'personal' desk is not allowed
                     return appConfig.features != null
