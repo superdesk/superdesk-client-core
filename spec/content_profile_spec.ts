@@ -43,7 +43,7 @@ describe('Content profiles', () => {
         templates.cancel();
     });
 
-    fit('displays defined fields in authoring', () => {
+    it('displays defined fields in authoring', () => {
         // create a new content profile
         contentProfiles.openContentProfileSettings();
         contentProfiles.addNew('Simple');
