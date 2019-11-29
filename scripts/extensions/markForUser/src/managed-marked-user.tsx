@@ -5,15 +5,17 @@ export function manageMarkedUserForSingleArticle(superdesk: ISuperdesk, article:
     const getTask = () => {
         const task: IArticle['task'] = article.task || null;
 
-        if (sendToNextStage && task?.desk) {
+        if (sendToNextStage && task != null && task.desk != null) {
             return superdesk.entities.desk.getStagesOrdered(task.desk)
                 .then((stages) => {
                     const currentStageIndex = stages.findIndex((stage) => task.stage === stage._id);
 
-                    if (currentStageIndex !== -1 && currentStageIndex + 1 < stages.length) {
+                    if (currentStageIndex !== -1) {
+                        const nextStageIndex = currentStageIndex + 1 === stages.length ? 0 : currentStageIndex + 1;
+
                         return {
                             ...task,
-                            stage: stages[currentStageIndex + 1]._id,
+                            stage: stages[nextStageIndex]._id,
                         };
                     }
 
