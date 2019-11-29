@@ -313,7 +313,7 @@ declare module 'superdesk-api' {
     export interface IPublishedArticle extends IArticle {
 
         /** id in published collection, different for each correction */
-        item_id: string; 
+        item_id: string;
 
         /** item copy in archive collection, always the latest version of the item */
         archive_item: IArticle;
@@ -1087,7 +1087,7 @@ declare module 'superdesk-api' {
 
     // IPTC picture metadata
 
-    interface IPTCMetadata {
+    export interface IPTCMetadata {
         // envelope
         Destination: string;
         ServiceIdentifier: string;

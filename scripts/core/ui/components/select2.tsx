@@ -15,6 +15,7 @@ interface IProps<T> {
     getItemValue(item: T): string;
     onSelect(value: string): void;
     onSearch?(search: string): void;
+    onFocus: boolean;
     'data-test-id'?: string;
 }
 
@@ -75,7 +76,7 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
 
         this.state = {
             search: '',
-            isOpen: false,
+            isOpen: this.props.onFocus === true,
         };
 
         const searchFn = (search: string) => {
