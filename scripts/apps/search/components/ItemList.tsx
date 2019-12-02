@@ -8,6 +8,7 @@ import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
 import {gettext} from 'core/utils';
 import {IArticle} from 'superdesk-api';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
+import {CHECKBOX_PARENT_CLASS} from './constants';
 
 interface IState {
     narrow: boolean;
@@ -122,7 +123,8 @@ export class ItemList extends React.Component<any, IState> {
         $timeout.cancel(this.updateTimeout);
 
         const showPreview = event == null || event.target == null ||
-            querySelectorParent(event.target, '.sd-monitoring-item-multi-select-checkbox') == null;
+            (querySelectorParent(event.target, '.' + CHECKBOX_PARENT_CLASS) == null &&
+            event.target.classList.contains(CHECKBOX_PARENT_CLASS) === false);
 
         if (item && scope.preview) {
             scope.$apply(() => {

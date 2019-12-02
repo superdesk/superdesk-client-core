@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {SelectBox} from './index';
+import {CHECKBOX_PARENT_CLASS} from './constants';
 
 function hasThumbnail(item) {
     return item.renditions && item.renditions.thumbnail;
@@ -20,9 +21,9 @@ export const PhotoDeskPreview: React.StatelessComponent<any> = (props) => {
     }
 
     return (
-        <div className="sd-grid-item__thumb sd-monitoring-item-multi-select-checkbox">
+        <div className="sd-grid-item__thumb">>
             {preview}
-            <SelectBox item={item} classes="sd-grid-item__checkbox"
+            <SelectBox item={item} classes={`sd-grid-item__checkbox ${CHECKBOX_PARENT_CLASS}`}
                 onMultiSelect={props.onMultiSelect} svc={props.svc}/>
         </div>
     );
