@@ -126,7 +126,6 @@ export class ItemList extends React.Component<any, IState> {
 
         if (item && scope.preview) {
             scope.$apply(() => {
-                // always show preview if set to true, never if false, figure it out on null for BC
                 if (showPreview) {
                     scope.preview(item);
                 }
