@@ -365,7 +365,11 @@ function MetaDropdownDirective($filter) {
                 var fieldObject: {[fieldId: string]: any} = {};
 
                 if (item) {
-                    if (scope.cv && scope.cv._id != null) {
+                    if (!scope.multiInputFields.includes(scope.field)) {
+                        // single input field
+                        // we use 'name' attribute for string fields and the whole object for other fields
+                        fieldObject[scope.field] = item.name || item;
+                    } else if (scope.cv && scope.cv._id != null) {
                         // if there is cv as well as field, store cv._id as scheme
                         // so that it can be differentiated from another cv inside same parent field(subject).
                         // ex: subject:[{name: "a", qcode: "a", scheme: "new-cv"}]

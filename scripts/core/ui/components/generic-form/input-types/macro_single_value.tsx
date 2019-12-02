@@ -19,7 +19,7 @@ export const MacroSingleValue = getSelectSingleValue(
                     })
                         .then(
                             (stages: IRestApiResponse<IMacro>) =>
-                                stages._items.map(({label}) => ({id: label, label: label})),
+                                stages._items.map(({label, name}) => ({id: name, label: label})),
                         );
                 }
             }),

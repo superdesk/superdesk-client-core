@@ -5,7 +5,7 @@ import * as actions from '../../actions';
 import Textarea from 'react-textarea-autosize';
 import {gettext} from 'core/utils';
 import {appConfig} from 'appConfig';
-import {applyDefault} from 'core/helpers/typescript-helpers';
+import {VideoComponent} from 'core/ui/components/video';
 
 function getTranslationForAssignRights(value) {
     if (value === 'single-usage') {
@@ -220,7 +220,7 @@ export class MediaBlockComponent extends React.Component<any, any> {
                                     />
                                 )
                             }
-                            <video controls src={rendition.href} width="100%" height="100%" />
+                            <VideoComponent item={data} width="100%" height="100%" />
                             <div className="image-block__metadata image-block__metadata--side-marg0">
                                 <span>
                                     <em>{gettext('Credit:')}{' '}</em>

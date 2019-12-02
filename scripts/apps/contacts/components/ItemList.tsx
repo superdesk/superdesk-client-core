@@ -5,10 +5,34 @@ import classNames from 'classnames';
 import {Item} from 'apps/contacts/components';
 import {gettext} from 'core/utils';
 
-/**
- * Contact Item list component
- */
-export class ItemList extends React.Component<any, any> {
+import {IContact} from '../Contacts';
+
+interface IProps {
+    svc: {
+        $timeout: any;
+        Keys: {
+            right: any;
+            down: any;
+            left: any;
+            up: any;
+        };
+    };
+    scope: {
+        preview(item: IContact): void;
+        $apply: any;
+        viewColumn: boolean;
+        loading: boolean;
+    };
+}
+
+interface IState {
+    itemsList: Array<any>;
+    itemsById: {[key: string]: IContact};
+    selected: string;
+    view: string;
+}
+
+export class ItemList extends React.Component<IProps, IState> {
     static propTypes: any;
     static defaultProps: any;
 
@@ -17,7 +41,12 @@ export class ItemList extends React.Component<any, any> {
     constructor(props) {
         super(props);
 
-        this.state = {itemsList: [], itemsById: {}, selected: null, view: 'photogrid'};
+        this.state = {
+            itemsList: [],
+            itemsById: {},
+            selected: null,
+            view: 'photogrid',
+        };
 
         this.select = this.select.bind(this);
         this.setSelectedItem = this.setSelectedItem.bind(this);
@@ -38,7 +67,7 @@ export class ItemList extends React.Component<any, any> {
                     scope.preview(item);
                 });
             }
-        }, 500, false);
+        }, 0, false);
     }
 
     setSelectedItem(item) {

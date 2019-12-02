@@ -77,9 +77,15 @@ declare module 'superdesk-api' {
                 };
             };
             iptcMapping?(data: IPTCMetadata, item: Partial<IArticle>): Promise<Partial<IArticle>>;
+            searchPanelWidgets?: Array<React.ComponentType<ISearchPanelWidgetProps>>;
         }
     }
 
+    export type ISearchPanelWidgetProps<T> = {
+        provider: string;
+        params: T;
+        setParams: (params: Partial<T>) => void;
+    };
 
     export type IExtension = DeepReadonly<{
         id: string;
@@ -97,7 +103,6 @@ declare module 'superdesk-api' {
         label: string;
         url: string;
     }>;
-
 
 
 
@@ -308,7 +313,7 @@ declare module 'superdesk-api' {
     export interface IPublishedArticle extends IArticle {
 
         /** id in published collection, different for each correction */
-        item_id: string; 
+        item_id: string;
 
         /** item copy in archive collection, always the latest version of the item */
         archive_item: IArticle;
@@ -397,7 +402,6 @@ declare module 'superdesk-api' {
         created_by: string;
         updated_by: string;
     }
-
 
 
     // PAGE
@@ -795,6 +799,9 @@ declare module 'superdesk-api' {
                 getIptcSubjects(): Promise<Array<ISubject>>;
                 getVocabulary(id: string): Promise<Array<ISubject>>;
             };
+            desk: {
+                getStagesOrdered(deskId: IDesk['_id']): Promise<Array<IStage>>;
+            };
         };
         helpers: {
             assertNever(x: never): never;
@@ -1062,7 +1069,7 @@ declare module 'superdesk-api' {
 
     // IPTC picture metadata
 
-    interface IPTCMetadata {
+    export interface IPTCMetadata {
         // envelope
         Destination: string;
         ServiceIdentifier: string;

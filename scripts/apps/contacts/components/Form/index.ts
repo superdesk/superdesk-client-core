@@ -1,7 +1,5 @@
 export {ContactFormContainer} from './ContactFormContainer';
-export {ContactProfile} from './ContactProfile';
 export {ActionBar} from './ActionBar';
-export {ProfileHeader} from './ProfileHeader';
 export {ProfileDetail} from './ProfileDetail';
 export {Row} from './Row';
 export {InputArray} from './InputArray';
