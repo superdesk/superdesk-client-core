@@ -433,8 +433,8 @@ declare module 'superdesk-api' {
     }
 
     // Eve properties
-    export interface IRestApiResponse<T extends IBaseRestApiResponse> {
-        _items: Array<T>;
+    export interface IRestApiResponse<T> {
+        _items: Array<T & IBaseRestApiResponse>;
         _links: {
             parent: IRestApiLink;
             self: IRestApiLink;
@@ -910,6 +910,7 @@ declare module 'superdesk-api' {
         saml_auth: any;
         google_auth: any;
         saml_label: any;
+        archive_autocomplete: boolean;
 
 
         // FROM CLIENT

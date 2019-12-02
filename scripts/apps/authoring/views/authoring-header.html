@@ -78,18 +78,25 @@
                  sd-width="{{editor.slugline.sdWidth}}"
                  order="{{editor.slugline.order}}">
                 <label class="authoring-header__item-label uppercase">{{getLabelForFieldId('slugline')}}</label>
-                <div class="authoring-header__input-holder">
+                <div class="authoring-header__input-holder"
+                    sd-static-autocomplete
+                    data-field="slugline"
+                    data-value="item.slugline"
+                    data-language="item.language"
+                    data-on-select="item.slugline = suggestion; autosave(item)"
+                    >
                     <input type="text"
-                           tansa-scope-sync
-                           tabindex="{{editor.slugline.order}}"
-                           class="line-input slugline"
-                           id="slugline"
-                           ng-model="item.slugline"
-                           ng-model-options="{debounce: 500}"
-                           ng-change="autosave(item)"
-                           ng-disabled="!_editable"
-                           ng-trim="false"
-                           tabindex="{{editor.slugline.order}}">
+                        tansa-scope-sync
+                        tabindex="{{editor.slugline.order}}"
+                        class="line-input slugline"
+                        id="slugline"
+                        ng-model="item.slugline"
+                        ng-model-options="{debounce: 500}"
+                        ng-change="autosave(item)"
+                        ng-disabled="!_editable"
+                        ng-trim="false"
+                        tabindex="{{editor.slugline.order}}"
+                    >
                     <span ng-if="schema.slugline.maxlength" sd-character-count data-item="item.slugline" data-html="true" data-limit="schema.slugline.maxlength"></span>
                 </div>
             </div>
