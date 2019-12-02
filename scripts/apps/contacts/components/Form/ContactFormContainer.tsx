@@ -83,7 +83,7 @@ export class ContactFormContainer extends React.PureComponent<IProps, IState> {
         if (e && e.target.type === 'email') {
             if (e.target.validity.typeMismatch) {
                 fieldValidationErrors[e.target.name] = gettext('Please provide a valid email address');
-            }  else if (fieldValidationErrors[e.target.name]) {
+            } else if (fieldValidationErrors[e.target.name]) {
                 delete fieldValidationErrors[e.target.name];
             }
         } else if (fieldName === 'twitter') {
@@ -97,6 +97,7 @@ export class ContactFormContainer extends React.PureComponent<IProps, IState> {
         }
 
         const metadata = this.props.svc.metadata;
+
         if (!validateAssignableType(diff, metadata.values.contact_type)) {
             const contactType = getContactTypeObject(
                 metadata.values.contact_type,
