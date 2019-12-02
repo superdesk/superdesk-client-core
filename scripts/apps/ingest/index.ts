@@ -136,15 +136,11 @@ angular.module('superdesk.apps.ingest', [
                 }],
                 filters: [{action: 'list', type: 'externalsource'}],
                 privileges: {fetch: 1},
-                additionalCondition: ['desks', 'item', function(desks, item) {
-                    if (item._fetchable !== undefined) {
-                        return isMediaEditable(item) && !_.isNil(desks.getCurrentDeskId());
-                    }
-                    // Fetching to 'personal' desk is not allowed
-                    return appConfig.features != null
-                        && appConfig.features.editFeaturedImage
-                        && !_.isNil(desks.getCurrentDeskId());
-                }],
+                additionalCondition: ['desks', 'item', (desks, item) =>
+                    isMediaEditable(item)
+                    // fetching to 'personal' desk is not allowed
+                    && !_.isNil(desks.getCurrentDeskId()),
+                ],
             })
 
             .activity('externalsource', {
@@ -154,15 +150,11 @@ angular.module('superdesk.apps.ingest', [
                 controller: ctrl.ExternalSourceController,
                 filters: [{action: 'list', type: 'externalsource', id: 'fetch-externalsource'}],
                 privileges: {fetch: 1},
-                additionalCondition: ['desks', 'item', function(desks, item) {
-                    if (item._fetchable !== undefined) {
-                        return isMediaEditable(item) && !_.isNil(desks.getCurrentDeskId());
-                    }
-                    // Fetching to 'personal' desk is not allowed
-                    return appConfig.features != null
-                        && appConfig.features.editFeaturedImage
-                        && !_.isNil(desks.getCurrentDeskId());
-                }],
+                additionalCondition: ['desks', 'item', (desks, item) =>
+                    isMediaEditable(item)
+                    // fetching to 'personal' desk is not allowed
+                    && !_.isNil(desks.getCurrentDeskId()),
+                ],
             });
 
         workspaceMenuProvider.item({
