@@ -20,7 +20,7 @@ export const PhotoDeskPreview: React.StatelessComponent<any> = (props) => {
     }
 
     return (
-        <div className="sd-grid-item__thumb">
+        <div className="sd-grid-item__thumb sd-monitoring-item-multi-select-checkbox">
             {preview}
             <SelectBox item={item} classes="sd-grid-item__checkbox"
                 onMultiSelect={props.onMultiSelect} svc={props.svc}/>

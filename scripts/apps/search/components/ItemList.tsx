@@ -82,7 +82,7 @@ export class ItemList extends React.Component<any, IState> {
             });
         });
 
-        this.select(_.last(items), event, {preview: false});
+        this.select(_.last(items), event);
         this.setState({itemsById: itemsById});
     }
 
@@ -100,7 +100,7 @@ export class ItemList extends React.Component<any, IState> {
         this.setState({narrow: setNarrow});
     }
 
-    select(item, event, {preview} = {preview: null}) {
+    select(item, event) {
         if (typeof this.props.onMonitoringItemSelect === 'function') {
             this.props.onMonitoringItemSelect(item, event);
             return;
@@ -127,7 +127,7 @@ export class ItemList extends React.Component<any, IState> {
         if (item && scope.preview) {
             scope.$apply(() => {
                 // always show preview if set to true, never if false, figure it out on null for BC
-                if (preview === true || (preview !== false && showPreview)) {
+                if (showPreview) {
                     scope.preview(item);
                 }
                 this.bindActionKeyShortcuts(item);
