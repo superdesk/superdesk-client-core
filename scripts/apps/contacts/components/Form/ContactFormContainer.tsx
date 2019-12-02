@@ -64,7 +64,7 @@ export class ContactFormContainer extends React.PureComponent<IProps, IState> {
         const {metadata} = this.props.svc;
 
         const valid = validateRequiredFormFields(this.state.currentContact, metadata.values.contact_type) &&
-            !Object.values(this.state.errors).some((value) => !value || value.length === 0);
+            !Object.values(this.state.errors).some((value) => value && value.length > 0);
 
         this.setState({isFormValid: valid});
 
@@ -80,26 +80,23 @@ export class ContactFormContainer extends React.PureComponent<IProps, IState> {
     validateField(fieldName, value, e, diff) {
         const fieldValidationErrors = this.state.errors;
 
-        const {contacts, metadata} = this.props.svc;
-        const twitterPattern = contacts.twitterPattern;
-
         if (e && e.target.type === 'email') {
             if (e.target.validity.typeMismatch) {
                 fieldValidationErrors[e.target.name] = gettext('Please provide a valid email address');
-            } else {
-                fieldValidationErrors[e.target.name] = '';
+            }  else if (fieldValidationErrors[e.target.name]) {
+                delete fieldValidationErrors[e.target.name];
+            }
+        } else if (fieldName === 'twitter') {
+            const twitterPattern = this.props.svc.contacts.twitterPattern;
+
+            if (!isEmpty(value) && !value.match(twitterPattern)) {
+                fieldValidationErrors[fieldName] = gettext('Please provide a valid twitter account');
+            } else if (fieldValidationErrors[fieldName]) {
+                delete fieldValidationErrors[fieldName];
             }
         }
 
-        switch (fieldName) {
-        case 'twitter':
-            fieldValidationErrors[fieldName] = value.match(twitterPattern) || isEmpty(value) ? '' :
-                gettext('Please provide a valid twitter account');
-            break;
-        default:
-            break;
-        }
-
+        const metadata = this.props.svc.metadata;
         if (!validateAssignableType(diff, metadata.values.contact_type)) {
             const contactType = getContactTypeObject(
                 metadata.values.contact_type,
@@ -110,7 +107,7 @@ export class ContactFormContainer extends React.PureComponent<IProps, IState> {
                 'Contact type "{{ contact_type }}" MUST have an email',
                 {contact_type: contactType.name},
             );
-        } else if (get(fieldValidationErrors, 'contact_email')) {
+        } else if (fieldValidationErrors['contact_email']) {
             delete fieldValidationErrors.contact_email;
         }
 
