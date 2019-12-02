@@ -32,6 +32,7 @@ export class VideoComponent extends React.PureComponent<IProps> {
             if (rend.mimetype == null) {
                 continue;
             } else if (rend.mimetype.toLowerCase() === 'application/x-mpegurl') {
+                // HLSVideoComponent can handle only one stream url
                 return <HLSVideoComponent
                     poster={poster}
                     streamUrl={rend.href}

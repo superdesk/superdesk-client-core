@@ -8,6 +8,10 @@ interface IProps {
     height?: string;
 }
 
+/**
+ * HLSVideoComponent is rendered by VideoComponent when item's rendition has an 'application/x-mpegurl' mimetype.
+ * NOTE: It can handle only one stream url.
+ */
 export class HLSVideoComponent extends React.PureComponent<IProps> {
     videoElement: HTMLElement;
     hls: Hls;
