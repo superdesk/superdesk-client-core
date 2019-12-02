@@ -108,19 +108,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
 
     handleClose = () => {
         this.props.onClose();
-        const omitFields = [
-            'annotations',
-            'project',
-            'semantics',
-            'time_zone',
-            '_editable',
-            '_locked',
-            '_type',
-            '_status',
-            '_latest_version',
-        ];
-
-        this.props.onArticleUpdate(omit(cloneDeep(this.state.article), omitFields) as IArticle);
+        this.props.onArticleUpdate(this.state.article);
     }
 
     handleCheckingVideo = () => {
