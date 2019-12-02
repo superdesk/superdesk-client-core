@@ -13,9 +13,10 @@ import {ItemPhotoGrid} from './ItemPhotoGrid';
 import {ListItemTemplate} from './ItemListTemplate';
 import {ItemMgridTemplate} from './ItemMgridTemplate';
 import {IArticle, IDesk, IPublishedArticle} from 'superdesk-api';
+import {isMediaEditable} from 'core/config';
+import {httpRequestJsonLocal} from 'core/helpers/network';
 import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
-import {httpRequestJsonLocal} from 'core/helpers/network';
 
 function isButtonClicked(event): boolean {
     const selector = 'button';
@@ -198,6 +199,10 @@ export class Item extends React.Component<IProps, IState> {
     }
 
     dbClick(event) {
+        if (!isMediaEditable(this.props.item)) {
+            return;
+        }
+
         if (isButtonClicked(event)) {
             return;
         }
