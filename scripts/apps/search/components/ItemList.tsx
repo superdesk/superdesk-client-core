@@ -67,7 +67,7 @@ export class ItemList extends React.Component<any, IState> {
         this.unbindActionKeyShortcuts = this.unbindActionKeyShortcuts.bind(this);
     }
 
-    multiSelect(items, selected) {
+    multiSelect(items, selected, event?) {
         const {search, multi} = this.props.svc;
         const {scope} = this.props;
 
@@ -82,6 +82,7 @@ export class ItemList extends React.Component<any, IState> {
             });
         });
 
+        this.select(_.last(items), event, {preview: false});
         this.setState({itemsById: itemsById});
     }
 
@@ -99,7 +100,7 @@ export class ItemList extends React.Component<any, IState> {
         this.setState({narrow: setNarrow});
     }
 
-    select(item, event) {
+    select(item, event, {preview} = {preview: null}) {
         if (typeof this.props.onMonitoringItemSelect === 'function') {
             this.props.onMonitoringItemSelect(item, event);
             return;
@@ -125,7 +126,8 @@ export class ItemList extends React.Component<any, IState> {
 
         if (item && scope.preview) {
             scope.$apply(() => {
-                if (showPreview) {
+                // always show preview if set to true, never if false, figure it out on null for BC
+                if (preview === true || (preview !== false && showPreview)) {
                     scope.preview(item);
                 }
                 this.bindActionKeyShortcuts(item);
