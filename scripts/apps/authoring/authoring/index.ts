@@ -23,6 +23,7 @@ import {getUnpublishConfirmModal} from './components/unpublish-confirm-modal';
 import {ITEM_STATE} from 'apps/archive/constants';
 import {AuthoringWorkspaceService} from './services';
 import {AuthoringMediaActions} from './authoring-media-actions';
+import {sdStaticAutocompleteDirective} from './directives/sd-static-autocomplete';
 
 export interface IOnChangeParams {
     item: IArticle;
@@ -111,6 +112,7 @@ angular.module('superdesk.apps.authoring', [
     .directive('sdRemoveTags', directive.RemoveTagsDirective)
     .directive('tansaScopeSync', directive.TansaScopeSyncDirective)
     .directive('sdItemActionByIntent', directive.ItemActionsByIntentDirective)
+    .directive('sdStaticAutocomplete', sdStaticAutocompleteDirective)
 
     .component('sdLineCount',
         reactToAngular1(
