@@ -62,11 +62,17 @@ export function ContentCreateDirective(
              * @param {Object} template
              */
             scope.createFromTemplate = function(template) {
-                content.createItemFromTemplate(template)
-                    .then(edit)
-                    .then(() => {
-                        getRecentTemplates(desks.activeDeskId);
-                    });
+                if (template?._id == null) {
+                    throw new Error('Template ID is null');
+                }
+
+                templates.find(template._id).then((updatedTemplate) => {
+                    content.createItemFromTemplate(updatedTemplate)
+                        .then(edit)
+                        .then(() => {
+                            getRecentTemplates(desks.activeDeskId);
+                        });
+                });
             };
 
             /**
@@ -107,15 +113,6 @@ export function ContentCreateDirective(
                     });
                 }
             }
-
-            /**
-             * Create a new item using given type and start editing
-             *
-             * @param {Object} contentType
-             */
-            scope.createFromTemplate = function(template) {
-                content.createItemFromTemplate(template).then(edit);
-            };
         },
     };
 }
