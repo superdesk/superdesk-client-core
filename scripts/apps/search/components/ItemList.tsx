@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import {Item} from './index';
 import {isCheckAllowed, closeActionsMenu, bindMarkItemShortcut} from '../helpers';
 import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
+import {isMediaEditable} from 'core/config';
 import {gettext} from 'core/utils';
 import {IArticle} from 'superdesk-api';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
@@ -240,6 +241,9 @@ export class ItemList extends React.Component<any, IState> {
         }
 
         if (item._type === 'externalsource') {
+            if (!isMediaEditable(item)) {
+                return;
+            }
             this.setActioning(item, true);
             superdesk.intent('list', 'externalsource', {item: item}, 'fetch-externalsource')
                 .then((archiveItem) => {
