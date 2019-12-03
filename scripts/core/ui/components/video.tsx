@@ -13,6 +13,9 @@ interface IVideoRenditionItem {
     href: string;
 }
 
+/**
+ * VideoComponent is used to render a player for an item with type video.
+ */
 export class VideoComponent extends React.PureComponent<IProps> {
     render() {
         const {item} = this.props;
