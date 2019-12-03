@@ -2,6 +2,7 @@ import {get, keyBy} from 'lodash';
 import {IArticle} from 'superdesk-api';
 import {getLabelForFieldId} from '../../helpers/getLabelForFieldId';
 import {getTypeForFieldId} from '../../helpers/getTypeForFieldId';
+import {getFields} from 'apps/fields';
 
 const ARTICLE_HEADER_FIELDS = new Set<keyof IArticle>([
     'keywords',
@@ -59,6 +60,17 @@ export default function ContentProfileFields($scope, content, vocabularies, meta
 
             ARTICLE_COMMON_FIELDS.forEach((id) => {
                 articleCommonFields.add(id);
+            });
+
+            const fieldsFromExtensions = Object.keys(getFields());
+
+            customFields.forEach((customField) => {
+                if (
+                    customField.custom_field_type != null
+                    && fieldsFromExtensions.includes(customField.custom_field_type)
+                ) {
+                    articleCommonFields.add(customField._id);
+                }
             });
 
             customTextAndDateVocabularies.forEach((filteredCustomField) => {

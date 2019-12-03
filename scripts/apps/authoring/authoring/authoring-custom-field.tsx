@@ -32,6 +32,7 @@ export class AuthoringCustomField extends React.PureComponent<IProps> {
                     value={get(item.extra, field._id)}
                     setValue={(value) => this.setValue(value)}
                     readOnly={!editable}
+                    config={field.custom_field_config}
                 />
             </div>
         );

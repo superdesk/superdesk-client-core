@@ -3,7 +3,7 @@ import {logger} from 'core/services/logger';
 import {extensions} from 'appConfig';
 import {ICustomFieldType} from 'superdesk-api';
 
-type ICustomFieldTypeMap = {[id: string]: ICustomFieldType};
+type ICustomFieldTypeMap = {[id: string]: ICustomFieldType<any>};
 
 export function getFields(): ICustomFieldTypeMap {
     const fields: ICustomFieldTypeMap = {};
@@ -19,7 +19,7 @@ export function getFields(): ICustomFieldTypeMap {
     return fields;
 }
 
-export function getField(customFieldTypeId: ICustomFieldType['id']): ICustomFieldType | null {
+export function getField(customFieldTypeId: ICustomFieldType<any>['id']): ICustomFieldType<any> | null {
     const fields = getFields();
     const fieldType = fields[customFieldTypeId];
 

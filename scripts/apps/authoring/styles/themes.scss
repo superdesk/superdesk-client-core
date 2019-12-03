@@ -332,7 +332,7 @@ body, html {
         word-break: break-all;
     }
     // inputs
-    .text-editor, input, .field__select {
+    .text-editor, .field__select {
         border: 1px solid rgba(123, 123, 123, 0) !important;
         border-bottom-color: rgba(123, 123, 123, 0.30) !important;
         padding: 0;
@@ -351,7 +351,7 @@ body, html {
         -moz-appearance: none;
         -webkit-appearance: none;
     }
-    .text-editor:hover, .headline:hover, .abstract:hover, input:hover, .field__select:hover {
+    .text-editor:hover, .headline:hover, .abstract:hover, .field__select:hover {
         border-bottom-color: rgba(123, 123, 123, 0.60) !important;
         cursor: text;
     }
