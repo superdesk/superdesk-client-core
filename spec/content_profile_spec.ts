@@ -51,7 +51,7 @@ describe('Content profiles', () => {
         element(by.buttonText('Content fields')).click();
         contentProfiles.disableField('Abstract');
         element(by.buttonText('Header fields')).click();
-        contentProfiles.setRequired('Editorial Note');
+        contentProfiles.setRequired('Ed. Note');
         contentProfiles.update();
         templates.openTemplatesSettings();
         expect(templates.getListCount()).toBeGreaterThan(2);

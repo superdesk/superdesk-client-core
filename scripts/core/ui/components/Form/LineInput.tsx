@@ -44,7 +44,7 @@ export const LineInput: React.StatelessComponent<any> = ({
     )}
     onClick={onClick ? onClick : undefined}>
         {children}
-        {hint && <div className="sd-line-input__hint">{hint}</div>}
+        {hint && !message && <div className="sd-line-input__hint">{hint}</div>}
         {message && <div className="sd-line-input__message">{message}</div>}
     </div>
 );
