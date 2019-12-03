@@ -13,9 +13,9 @@ import {ItemPhotoGrid} from './ItemPhotoGrid';
 import {ListItemTemplate} from './ItemListTemplate';
 import {ItemMgridTemplate} from './ItemMgridTemplate';
 import {IArticle, IDesk, IPublishedArticle} from 'superdesk-api';
+import {httpRequestJsonLocal} from 'core/helpers/network';
 import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
-import {httpRequestJsonLocal} from 'core/helpers/network';
 
 function isButtonClicked(event): boolean {
     const selector = 'button';

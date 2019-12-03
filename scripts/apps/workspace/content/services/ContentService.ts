@@ -375,7 +375,7 @@ export function ContentService(api, templates, desks, packages, archiveService, 
             }
 
             return api.find(item._type, item._id);
-        } else if (isMediaEditable() && fetchExternal) {
+        } else if (isMediaEditable(item) && fetchExternal) {
             return renditions.ingest(item);
         }
 

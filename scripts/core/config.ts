@@ -1,7 +1,12 @@
 import _ from 'lodash';
 import {appConfig} from 'appConfig';
+import {IArticle} from 'superdesk-api';
 
-export function isMediaEditable() {
+export function isMediaEditable(item?: IArticle) {
+    if (item !== undefined && item._fetchable !== undefined) {
+        return item._fetchable;
+    }
+
     return (appConfig.features == null || appConfig.features.editFeaturedImage == null
         ? true
         : appConfig.features.editFeaturedImage) === true;
