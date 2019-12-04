@@ -284,6 +284,7 @@ declare module 'superdesk-api' {
             archive?: boolean;
             externalsource: boolean;
         };
+        _fetchable?: boolean;
 
         /**
          * Wrapper for different renditions of non-textual content of the news object
@@ -314,6 +315,15 @@ declare module 'superdesk-api' {
 
         /** id in published collection, different for each correction */
         item_id: string;
+
+        /** item copy in archive collection, always the latest version of the item */
+        archive_item: IArticle;
+    }
+
+    export interface IPublishedArticle extends IArticle {
+
+        /** id in published collection, different for each correction */
+        item_id: string; 
 
         /** item copy in archive collection, always the latest version of the item */
         archive_item: IArticle;
@@ -433,8 +443,8 @@ declare module 'superdesk-api' {
     }
 
     // Eve properties
-    export interface IRestApiResponse<T extends IBaseRestApiResponse> {
-        _items: Array<T>;
+    export interface IRestApiResponse<T> {
+        _items: Array<T & IBaseRestApiResponse>;
         _links: {
             parent: IRestApiLink;
             self: IRestApiLink;
@@ -645,19 +655,19 @@ declare module 'superdesk-api' {
         removeFilter(fieldName: string): void;
     }
 
-    interface IPropsSelectUser {
+    export interface IPropsSelectUser {
         onSelect(user: IUser): void;
         selectedUserId?: string;
         disabled?: boolean;
     }
 
 
-    interface IDropdownTreeGroup<T> {
+    export interface IDropdownTreeGroup<T> {
         render(): JSX.Element | null;
         items: Array<T | IDropdownTreeGroup<T>>;
     }
 
-    interface IPropsDropdownTree<T> {
+    export interface IPropsDropdownTree<T> {
         groups: Array<IDropdownTreeGroup<T>>;
         getToggleElement(isOpen: boolean, onClick: () => void): JSX.Element;
         renderItem(key: string, item: T, closeDropdown:() => void): JSX.Element;
@@ -665,7 +675,7 @@ declare module 'superdesk-api' {
         'data-test-id'?: string;
     }
 
-    interface ISpacingProps {
+    export interface ISpacingProps {
         margin?: number;
         marginTop?: number;
         marginRight?: number;
@@ -686,6 +696,13 @@ declare module 'superdesk-api' {
     export interface IPropsIcon {
         className: string;
         size?: number;
+    }
+
+    export interface IPropsSpacer {
+        type: 'horizontal' | 'vertical';
+        spacing: 'medium';
+        align?: 'start' | 'end' | 'center' | 'stretch';
+        children: Array<React.ReactNode>;
     }
 
 
@@ -839,6 +856,7 @@ declare module 'superdesk-api' {
             Icon: React.ComponentType<IPropsIcon>;
             TopMenuDropdownButton: React.ComponentType<{onClick: () => void; active: boolean; 'data-test-id'?: string;}>;
             getDropdownTree: <T>() => React.ComponentType<IPropsDropdownTree<T>>;
+            Spacer: React.ComponentType<IPropsSpacer>;
         };
         forms: {
             FormFieldType: typeof FormFieldType;
@@ -855,7 +873,10 @@ declare module 'superdesk-api' {
             ): JSX.Element;
         };
         localization: {
-            gettext(message: string): string;
+            gettext(message: string, params?: {[key: string]: string | number}): string;
+            gettextPlural(count: number, singular: string, plural: string, params?: {[key: string]: string | number}): string;
+            formatDate(date: Date): string;
+            formatDateTime(date: Date): string;
         };
         privileges: {
             getOwnPrivileges(): Promise<any>;
@@ -910,6 +931,7 @@ declare module 'superdesk-api' {
         saml_auth: any;
         google_auth: any;
         saml_label: any;
+        archive_autocomplete: boolean;
 
 
         // FROM CLIENT
@@ -997,8 +1019,8 @@ declare module 'superdesk-api' {
             change_profile: any;
         };
         model: {
-            timeformat: any;
-            dateformat: any;
+            timeformat: string;
+            dateformat: string;
         };
         monitoring: {
             scheduled: any;
@@ -1046,11 +1068,12 @@ declare module 'superdesk-api' {
 
     // CUSTOM FIELD TYPES
 
-    export interface IEditorComponentProps {
+    export interface IEditorComponentProps<IValue, IConfig> {
         item: IArticle;
-        value: any;
-        setValue: (value: any) => void;
+        value: IValue;
+        setValue: (value: IValue) => void;
         readOnly: boolean;
+        config: IConfig;
     }
 
     export interface IPreviewComponentProps {
@@ -1058,11 +1081,18 @@ declare module 'superdesk-api' {
         value: any;
     }
 
-    export interface ICustomFieldType {
+    // IConfig must be a plain object
+    export interface IConfigComponentProps<IConfig extends {}> {
+        config: IConfig | null;
+        onChange(config: IConfig): void;
+    }
+
+    export interface ICustomFieldType<IConfig> {
         id: string;
         label: string;
-        editorComponent: React.ComponentType<IEditorComponentProps>;
+        editorComponent: React.ComponentType<IEditorComponentProps<IConfig>>;
         previewComponent: React.ComponentType<IPreviewComponentProps>;
+        configComponent?: React.ComponentType<IConfigComponentProps<IConfig>>;
     }
 
 

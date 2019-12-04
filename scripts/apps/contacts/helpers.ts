@@ -109,6 +109,10 @@ export function validateAssignableType(contact: IContact, contactTypes: Array<IC
 }
 
 export function getContactTypeObject(contactTypes: Array<IContactType>, qcode: string): IContactType {
+    if (contactTypes === undefined) {
+        return null;
+    }
+
     return contactTypes.find(
         (contactType: IContactType) => contactType.qcode === qcode,
     ) || null;

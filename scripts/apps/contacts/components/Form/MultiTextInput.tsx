@@ -31,7 +31,7 @@ export class MultiTextInput extends React.Component<any, any> {
 
     isFieldInvalid(field, value, errors) {
         this.errorMessage = get(this.state.touched, field, false) &&
-            isEmpty(value) ? gettext('This field is required.') : get(errors, field, '');
+            isEmpty(value) ? gettext('This field is required.') : errors[field] || '';
 
         return !isEmpty(this.errorMessage);
     }

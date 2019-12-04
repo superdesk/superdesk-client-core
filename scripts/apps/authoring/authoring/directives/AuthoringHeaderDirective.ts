@@ -2,6 +2,7 @@ import {isNull, isUndefined, find, filter, keys, findIndex, defer, sortBy, map, 
 import {FIELD_KEY_SEPARATOR} from 'core/editor3/helpers/fieldsMeta';
 import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
 import {appConfig} from 'appConfig';
+import {getLabelForFieldId} from 'apps/workspace/helpers/getLabelForFieldId';
 
 AuthoringHeaderDirective.$inject = [
     'api',
@@ -46,6 +47,10 @@ export function AuthoringHeaderDirective(
             scope.toggleCollapsed = () => {
                 scope.isCollapsed = !scope.isCollapsed;
             };
+
+            initVocabularies().then(() => {
+                scope.getLabelForFieldId = (fieldId) => getLabelForFieldId(fieldId, scope.vocabulariesCollection);
+            });
 
             if (TranslationService.translationsEnabled() === true) {
                 TranslationService.getTranslations(scope.item)
@@ -165,6 +170,16 @@ export function AuthoringHeaderDirective(
                 scope.$watch('item.slugline', () => {
                     $timeout(getRelatedItems, 800);
                 });
+            }
+
+            function initVocabularies() {
+                if (scope.vocabulariesCollection == null) {
+                    return vocabularies.getVocabularies().then(((vocabulariesCollection) => {
+                        scope.vocabulariesCollection = vocabulariesCollection;
+                    }));
+                }
+
+                return Promise.resolve();
             }
 
             /**

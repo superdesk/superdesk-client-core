@@ -23,4 +23,5 @@ export interface IVocabulary {
     tags: Array<IVocabularyTag>;
     date_shortcuts: Array<{value: number; term: string; label: string}>;
     custom_field_type: string;
+    custom_field_config: {[key: string]: any};
 }

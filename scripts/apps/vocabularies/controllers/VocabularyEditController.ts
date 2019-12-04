@@ -180,4 +180,10 @@ export function VocabularyEditController($scope, notify, api, vocabularies, meta
         id: id,
         label: fields[id].label,
     }));
+
+    $scope.setCustomFieldConfig = (config) => {
+        $scope.vocabulary.custom_field_config = config;
+        $scope.editForm.$setDirty();
+        $scope.$apply();
+    };
 }
