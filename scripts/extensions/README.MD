@@ -6,6 +6,10 @@ The main purpose of extensions is to reduce the complexity and interdependencies
 
 It's easiest to copy the `helloWorld` extension and change the directory name.
 
+# Writing end-to-end tests for extensions
+
+Writing the tests is almost the same as in the core, typescript specific things and e2e helpers module are the only differences. Often stricter typescript compiler options are used for extensions, so you'll need to install `@types/jasmine` package. Ensure that `compile` npm script also compiles e2e tests which after compiling should end up in `extensions/extenstion-name/spec/dist`. See an example in `markForUser` extension. You can import e2e helpers from a local package `end-to-end-testing-helpers`.
+
 # How extensions work
 
 Extensions must be implemented as standalone ES6 modules. Every extension must export `activate` function which will receive a single argument enabling access to the extensions API.

@@ -61,14 +61,13 @@ class TranslationsWidgetComponent extends React.Component<IProps, IState> {
         const listClassNames = 'sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border';
 
         return (
-            <div className="widget">
+            <div className="widget sd-list-item-group sd-list-item-group--space-between-items sd-padding--1">
                 {
                     translations.sort(sortOldestFirst).map((translation: IArticle) => (
                         <div
                             key={translation._id}
                             onClick={() => authoringWorkspace.popup(translation, 'edit')}
                             className="sd-list-item sd-shadow--z1"
-                            style={{marginBottom: 6}}
                         >
                             <div className={listClassNames}>
                                 <div className="sd-list-item__row">

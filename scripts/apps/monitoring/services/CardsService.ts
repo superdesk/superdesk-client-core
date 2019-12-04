@@ -7,13 +7,35 @@ import {
     SENT_OUTPUT,
     SCHEDULED_OUTPUT,
 } from 'apps/desks/constants';
+import {appConfig} from 'appConfig';
 
-CardsService.$inject = ['api', 'search', 'session', 'desks', 'config'];
-export function CardsService(api, search, session, desks, config) {
+interface ICard {
+    _id: string;
+    deskId: string;
+    fileType: string; // contains JSON array
+    header: string; // example: "Politic Desk"
+    subheader: string; // example: "Working Stage"
+    type: 'stage' | string;
+    search?: {
+        filter?: {
+            query?: {
+                repo?: any;
+                q?: any;
+            };
+        };
+    };
+    max_items?: number;
+    singleViewType?: 'desk' | 'stage' | any;
+    query: any;
+    sent?: boolean;
+}
+
+CardsService.$inject = ['search', 'session', 'desks'];
+export function CardsService(search, session, desks) {
     this.criteria = getCriteria;
     this.shouldUpdate = shouldUpdate;
 
-    function getCriteriaParams(card) {
+    function getCriteriaParams(card: ICard) {
         let params: any = {};
 
         if (card.type === 'search' && card.search && card.search.filter.query) {
@@ -36,7 +58,7 @@ export function CardsService(api, search, session, desks, config) {
         return params;
     }
 
-    function filterQueryByCardType(query, queryParam, card) {
+    function filterQueryByCardType(query, queryParam, card: ICard) {
         let deskId;
 
         switch (card.type) {
@@ -45,10 +67,19 @@ export function CardsService(api, search, session, desks, config) {
 
         case 'spike-personal':
         case 'personal':
-            query.filter({bool: {
-                must: {term: {original_creator: session.identity._id}},
-                must_not: {exists: {field: 'task.desk'}},
-            }});
+            if (card.sent) {
+                query.filter({bool: {
+                    must: [
+                        {term: {original_creator: session.identity._id}},
+                        {exists: {field: 'task.desk'}},
+                    ],
+                }});
+            } else {
+                query.filter({bool: {
+                    must: {term: {original_creator: session.identity._id}},
+                    must_not: {exists: {field: 'task.desk'}},
+                }});
+            }
             break;
 
         case 'spike':
@@ -91,33 +122,37 @@ export function CardsService(api, search, session, desks, config) {
         }
     }
 
-    function filterQueryByDeskType(query, card) {
+    function filterQueryByDeskType(query, card: ICard) {
         var deskId = card._id.substring(0, card._id.indexOf(':'));
         var desk = desks.deskLookup ? desks.deskLookup[deskId] : null;
         var states = PUBLISHED_STATES;
 
-        if (config.monitoring && config.monitoring.scheduled) {
+        if (appConfig.monitoring != null && appConfig.monitoring.scheduled) {
             states = PUBLISHED_STATES.filter((state) => state !== ITEM_STATE.SCHEDULED);
         }
 
         if (desk) {
+            const must: Array<{}> = [
+                {term: {'task.desk': deskId}},
+                {terms: {state: states}},
+            ];
+
             if (desk.desk_type === 'authoring') {
-                query.filter({or: [
+                query.filter({bool: {should: [
                     {term: {'task.last_authoring_desk': deskId}},
-                    {and: [
-                        {term: {'task.desk': deskId}},
-                        {terms: {state: states}},
-                    ]},
-                ]});
+                    {bool: {must}},
+                ]}});
             } else if (desk.desk_type === 'production') {
-                query.filter({and: [
-                    {term: {'task.desk': deskId}},
-                    {terms: {state: states}}]});
+                query.filter({bool: {must}});
             }
+        }
+
+        if (appConfig.features.nestedItemsInOutputStage) {
+            query.setOption('hidePreviousVersions', true);
         }
     }
 
-    function filterQueryByCardFileType(query, card) {
+    function filterQueryByCardFileType(query, card: ICard) {
         if (card.fileType) {
             var termsHighlightsPackage = {and: [
                 {bool: {must: {exists: {field: 'highlight'}}}},
@@ -154,7 +189,7 @@ export function CardsService(api, search, session, desks, config) {
      * @param {Object} card
      * @param {string} queryString
      */
-    function getCriteria(card, queryString, queryParam) {
+    function getCriteria(card: ICard, queryString, queryParam) {
         var params = getCriteriaParams(card);
         var query = search.query(setFilters(params));
         var criteria: any = {es_highlight: card.query ? search.getElasticHighlight() : 0};
@@ -179,7 +214,7 @@ export function CardsService(api, search, session, desks, config) {
         return criteria;
     }
 
-    function shouldUpdate(card, data) {
+    function shouldUpdate(card: ICard, data) {
         switch (card.type) {
         case 'stage':
             // refresh stage if it matches updated stage

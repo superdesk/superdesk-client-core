@@ -99,14 +99,19 @@
             <div ng-if="selected.preview.type === 'picture' || selected.preview.type === 'graphic'" class="picture-preview">
                 <div>
                     <span translate>Original</span>
-                    <div sd-item-rendition data-item="selected.preview" data-rendition="viewImage" ng-click="preview(item);"></div>
+                    <div sd-item-rendition
+                        data-item="selected.preview"
+                        data-rendition="viewImage"
+                        ng-click="preview(item)"></div>
                     <p class="nav-space description-text" ng-if="selected.preview.headline !== selected.preview.description_text &&
                       selected.preview.description_text">{{selected.preview.description_text}}</p>
                 </div>
             </div>
 
             <div ng-if="selected.preview.associations.featuremedia">
-                <div sd-item-rendition data-item="selected.preview.associations.featuremedia" data-rendition="viewImage"></div>
+                <div sd-item-rendition
+                    data-item="selected.preview.associations.featuremedia"
+                    data-rendition="viewImage"></div>
                 <p class="nav-space description-text">{{selected.preview.associations.featuremedia.description_text}}</p>
             </div>
 
@@ -115,7 +120,7 @@
             </div>
 
             <div ng-if="selected.preview.type === 'video'">
-                <video controls="controls" sd-sources data-renditions="selected.preview.renditions"></video>
+                <sd-video item="selected.preview"></sd-video>
             </div>
 
             <div class="text abstract" ng-show="selected.preview.abstract && (selected.preview.type !== 'picture' || !selected.preview.description_text)"
@@ -154,18 +159,13 @@
                 && associationExists(item.associations, field._id)"
                 order="{{editor[field._id].order}}"
                 class="body preview-editor">
-                <div class="preview-label">
-                    <label translate>{{field.display_name}}</label>
+                <div>
+                    <label class="preview-label" translate>{{field.display_name}}</label>
                 </div>
-
                 <div ng-if="field.field_type === 'media'" class="association">
                     <div ng-repeat="(mediaId, media) in getAssociatedItems(item.associations, field._id) track by mediaId">
                         <img src="{{media.renditions.viewImage.href}}" ng-if="media.type === 'picture'">
-                        <video controls="controls" ng-if="media.type === 'video'">
-                            <source vsrc="{{rendition.href}}"
-                                    ng-repeat="(key, rendition) in media.renditions"
-                                    ng-if="checkRenditions.isVideo(rendition)" html5vfix>
-                        </video>
+                        <sd-video ng-if="media.type === 'video'" item="media"></sd-video>
                         <audio controls="controls" ng-if="media.type === 'audio'">
                             <source vsrc="{{rendition.href}}"
                                     ng-repeat="(key, rendition) in media.renditions"

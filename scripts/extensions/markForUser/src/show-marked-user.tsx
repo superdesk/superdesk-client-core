@@ -14,6 +14,7 @@ export function getDisplayMarkedUserComponent(superdesk: ISuperdesk) {
                     <button
                         onClick={() => manageMarkedUserForSingleArticle(superdesk, this.props.article)}
                         style={{padding: 0}}
+                        data-test-id="marked-for-user"
                     >
                         <UserAvatar userId={this.props.article.marked_for_user} />
                     </button>

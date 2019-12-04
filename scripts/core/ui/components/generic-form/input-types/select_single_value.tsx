@@ -1,6 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import {IInputType} from '../interfaces/input-types';
+import {gettext} from 'core/utils';
 
 type ISelectSingleValueItems = Array<{id: string, label: string}>;
 

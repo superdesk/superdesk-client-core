@@ -1,12 +1,11 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
-export const Modal: React.StatelessComponent = (props) => (
-    <div>
-        {props.children}
-    </div>
-);
-
-Modal.propTypes = {
-    children: PropTypes.any.isRequired,
-};
+export class Modal extends React.PureComponent<{'data-test-id'?: string}> {
+    render() {
+        return (
+            <div data-test-id={this.props['data-test-id']}>
+                {this.props.children}
+            </div>
+        );
+    }
+}

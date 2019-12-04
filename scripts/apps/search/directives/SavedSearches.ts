@@ -6,10 +6,11 @@ import {IPrivilegesService} from 'types/Services/Privileges';
 import {forEach, clone, filter} from 'lodash';
 import {mapPredefinedDateFiltersServerToClient} from './DateFilters';
 import {gettext} from 'core/utils';
+import {appConfig} from 'appConfig';
 
 SavedSearches.$inject = [
     '$rootScope', 'api', 'session', 'modal', 'notify', 'asset',
-    '$location', 'desks', 'privileges', 'savedSearch', 'config',
+    '$location', 'desks', 'privileges', 'savedSearch',
 ];
 
 interface ISavedSearchesScope extends ng.IScope {
@@ -36,14 +37,14 @@ interface ISavedSearchesScope extends ng.IScope {
 }
 
 export function SavedSearches($rootScope, api, session, modal, notify, asset, $location,
-    desks, privileges, savedSearch, config): ng.IDirective {
+    desks, privileges, savedSearch): ng.IDirective {
     return {
         templateUrl: asset.templateUrl('apps/search/views/saved-searches.html'),
         scope: {},
         link: function(scope: ISavedSearchesScope) {
             const resource = api('saved_searches');
 
-            scope.config = config;
+            scope.config = appConfig;
 
             scope.selected = null;
             scope.searchText = null;

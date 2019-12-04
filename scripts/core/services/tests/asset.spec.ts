@@ -1,9 +1,15 @@
+import {appConfig} from 'appConfig';
+import {ISuperdeskGlobalConfig} from 'superdesk-api';
 
 describe('superdesk.core.services.asset module', () => {
     beforeEach(window.module('superdesk.core.services.asset'));
-    beforeEach(window.module(($provide) => {
-        $provide.constant('config', {paths: {superdesk: 'scripts/bower_components/superdesk/app/'}});
-    }));
+    beforeEach(() => {
+        const testConfig: Partial<ISuperdeskGlobalConfig> = {
+            paths: {superdesk: 'scripts/bower_components/superdesk/app/'},
+        };
+
+        Object.assign(appConfig, testConfig);
+    });
 
     var asset;
 

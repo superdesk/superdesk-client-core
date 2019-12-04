@@ -1,8 +1,9 @@
 
 import {EditorState, ContentState, SelectionState, convertFromRaw} from 'draft-js';
 import {cursorAtEndPosition, cursorAtPosition} from './utils';
-import {insertContentInState} from '../handlePastedText';
+import {insertContentInState, createHtmlFromText} from '../handlePastedText';
 import {getAnnotationsFromContentState} from 'core/editor3/helpers/editor3CustomData';
+import {getContentStateFromHtml} from 'core/editor3/html/from-html';
 
 describe('editor3.handlePastedText', () => {
     it('should insert text without selection', () => {
@@ -102,5 +103,12 @@ describe('editor3.handlePastedText', () => {
                 getAnnotationsFromContentState(editorState2.getCurrentContent())[0].body,
             ).toBe('<p>test annotation</p>');
         });
+    });
+
+    it('can keep spaces/line-breaks in plain text', () => {
+        const text = '  foo\n   bar';
+        const contentState = getContentStateFromHtml(createHtmlFromText(text));
+
+        expect(contentState.getPlainText('\n')).toEqual(text);
     });
 });

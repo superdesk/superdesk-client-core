@@ -1,9 +1,10 @@
 import {cloneDeep, get, isEqual} from 'lodash';
 import {gettext} from 'core/utils';
 import {IContentProfile} from 'superdesk-api';
+import {appConfig} from 'appConfig';
 
-ContentProfilesController.$inject = ['$scope', '$location', 'notify', 'content', 'modal', '$q', 'config'];
-export function ContentProfilesController($scope, $location, notify, content, modal, $q, config) {
+ContentProfilesController.$inject = ['$scope', '$location', 'notify', 'content', 'modal', '$q'];
+export function ContentProfilesController($scope, $location, notify, content, modal, $q) {
     var self = this;
 
     // creating will be true while the modal for creating a new content
@@ -32,7 +33,7 @@ export function ContentProfilesController($scope, $location, notify, content, mo
         });
     };
 
-    $scope.withEditor3 = config.features.editor3;
+    $scope.withEditor3 = appConfig.features != null && appConfig.features.editor3;
 
     /**
      * @description Refreshes the list of content profiles by fetching them.

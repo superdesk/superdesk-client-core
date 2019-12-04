@@ -1323,3 +1323,16 @@ figure.preview-overlay-on {
         }
     }
 }
+
+.content-item-preview, .preview-content {
+    .preview-label {
+        display: inline-block;
+        font-size: 1.1rem;
+        margin: 0 0.5rem 0 0;
+        line-height: 2.6rem;
+        color: var(--color-label-text);
+        text-transform: uppercase;
+        font-weight: 500;
+        letter-spacing: 0.08em;
+    }
+}

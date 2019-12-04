@@ -1,20 +1,22 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
 
+export const KEYS = Object.freeze({
+    pageup: 33,
+    pagedown: 34,
+    left: 37,
+    up: 38,
+    right: 39,
+    down: 40,
+    enter: 13,
+    escape: 27,
+    space: 32,
+    backspace: 8,
+});
+
 export default angular.module('superdesk.core.keyboard', [])
 
-    .constant('Keys', Object.freeze({
-        pageup: 33,
-        pagedown: 34,
-        left: 37,
-        up: 38,
-        right: 39,
-        down: 40,
-        enter: 13,
-        escape: 27,
-        space: 32,
-        backspace: 8,
-    }))
+    .constant('Keys', KEYS)
 
     .constant('shiftNums', {
         '`': '~',

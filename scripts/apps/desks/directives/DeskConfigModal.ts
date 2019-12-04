@@ -1,4 +1,5 @@
 import {gettext} from 'core/utils';
+import {appConfig} from '../../../appConfig';
 
 /**
  * @ngdoc directive
@@ -12,8 +13,8 @@ import {gettext} from 'core/utils';
  * @description Generates modal for editing desks
  */
 
-DeskConfigModal.$inject = ['metadata', 'content', 'templates', 'api', 'deployConfig'];
-export function DeskConfigModal(metadata, content, templates, api, deployConfig) {
+DeskConfigModal.$inject = ['metadata', 'content', 'templates', 'api'];
+export function DeskConfigModal(metadata, content, templates, api) {
     return {
         scope: {
             modalActive: '=active',
@@ -26,12 +27,18 @@ export function DeskConfigModal(metadata, content, templates, api, deployConfig)
         require: '^sdDeskConfig',
         templateUrl: 'scripts/apps/desks/views/desk-config-modal.html',
         link: function(scope, elem, attrs, ctrl) {
-            scope.monitoringViews = {
-                '': {label: gettext('None')},
-                list: {label: gettext('List View'), icon: 'list-view'},
-                swimlane: {label: gettext('Swimlane View'), icon: 'kanban-view'},
-                photogrid: {label: gettext('Photo Grid View'), icon: 'grid-view'},
-            };
+            const views = {};
+
+            views[''] = {label: gettext('None')};
+            views['list'] = {label: gettext('List View'), icon: 'list-view'};
+
+            if (appConfig.features.swimlane != null) {
+                views['swimlane'] = {label: gettext('Swimlane View'), icon: 'kanban-view'};
+            }
+
+            views['photogrid'] = {label: gettext('Photo Grid View'), icon: 'grid-view'};
+
+            scope.monitoringViews = views;
 
             /*
              * Initialize metadata
@@ -41,7 +48,7 @@ export function DeskConfigModal(metadata, content, templates, api, deployConfig)
                 scope.metadata = metadata.values;
             });
 
-            scope.systemExpiry = deployConfig.getSync('content_expiry_minutes');
+            scope.systemExpiry = appConfig.content_expiry_minutes;
             /*
              * Initialize content types
              * @return {Object} profiles

@@ -1,6 +1,7 @@
 import React from 'react';
 import {ISortOption} from 'superdesk-api';
 import {DropdownTree} from '../dropdown-tree';
+import {gettext} from 'core/utils';
 
 export interface ISortFields {
     label: string;

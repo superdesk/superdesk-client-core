@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import {get} from 'lodash';
 import {uniq, pickBy, isEmpty, forEach} from 'lodash';
 import {validateMediaFieldsThrows} from 'apps/authoring/authoring/controllers/ChangeImageController';
 import {logger} from 'core/services/logger';
@@ -19,18 +20,21 @@ interface IScope extends ng.IScope {
     saveHandler(images): Promise<void>;
     successHandler?(): void;
     cancelHandler?(): void;
+    getSelectedItemsLength(): number;
 }
 
 MultiImageEditController.$inject = [
     '$scope',
     'modal',
     'notify',
+    'lock',
 ];
 
 export function MultiImageEditController(
     $scope: IScope,
     modal,
     notify,
+    lock,
 ) {
     const saveHandler = $scope.saveHandler;
 
@@ -55,19 +59,24 @@ export function MultiImageEditController(
 
     $scope.isDirty = () => unsavedChangesExist;
 
-    $scope.selectImage = (image) => {
+    $scope.selectImage = (image, update: boolean = true) => {
         if ($scope.images.length === 1) {
             $scope.images[0].selected = true;
         } else {
             image.selected = !image.selected;
         }
-        updateMetadata();
+
+        if (update) {
+            // refresh metadata visible in the editor according to selected images
+            updateMetadata();
+        }
     };
 
     // wait for images for initial load
     $scope.$watch('images', (images: Array<any>) => {
         if (images != null && images.length) {
-            images.forEach($scope.selectImage);
+            images.forEach((image) => $scope.selectImage(image, false));
+            updateMetadata();
         }
     });
 
@@ -115,7 +124,7 @@ export function MultiImageEditController(
                 unsavedChangesExist = false;
 
                 if (close && typeof $scope.successHandler === 'function') {
-                    $scope.successHandler();
+                    unlockAndCloseModal($scope.successHandler);
                 }
             });
     };
@@ -128,15 +137,49 @@ export function MultiImageEditController(
             )
                 .then(() => {
                     if (typeof $scope.cancelHandler === 'function') {
-                        $scope.cancelHandler();
+                        unlockAndCloseModal($scope.cancelHandler);
                     }
                 });
         } else if (typeof $scope.cancelHandler === 'function') {
-            $scope.cancelHandler();
+            unlockAndCloseModal($scope.cancelHandler);
         }
     };
 
+    $scope.$on('item:lock', (_e, data) => {
+        const {imagesOriginal} = $scope;
+
+        // while editing metadata if any selected item is unlocked by another user remove that item from selected items
+        if (Array.isArray(imagesOriginal) && data != null && data.item != null) {
+            const unlockedItem = imagesOriginal.find((image) => image._id === data.item);
+
+            notify.error(
+                gettext(
+                    'Item {{headline}} unlocked by another user.',
+                    {headline: unlockedItem.headline || unlockedItem.slugline},
+                ),
+            );
+            $scope.imagesOriginal = angular.copy(imagesOriginal.filter((image) => image._id !== data.item));
+            $scope.metadata = {};
+        }
+    });
+
     $scope.getSelectedImages = () => ($scope.images || []).filter((item) => item.selected);
+
+    $scope.getSelectedItemsLength = () => $scope.getSelectedImages().length || 0;
+
+    function unlockAndCloseModal(callback) {
+        // Before closing the modal unlock all the selected items
+        const unlockItems = $scope.images.map((item) => {
+            // In case of new upload there will be no lock on item
+            // so make sure to unlock only those items which are locked
+            if (item._locked === true) {
+                return lock.unlock(item);
+            }
+            return item;
+        });
+
+        Promise.all(unlockItems).then(callback);
+    }
 
     function updateMetadata() {
         $scope.metadata = {
@@ -150,36 +193,64 @@ export function MultiImageEditController(
             copyrightholder: compare('copyrightholder'),
             usageterms: compare('usageterms'),
             copyrightnotice: compare('copyrightnotice'),
-            extra: compare('extra'),
+            extra: compareExtra(),
             language: compare('language'),
             creditline: compare('creditline'),
         };
     }
 
-    function compare(fieldName) {
-        const uniqueValues = uniq(
-            $scope.getSelectedImages()
-                .filter((item) => item[fieldName] != null)
+    function getUniqueValues(field: string) {
+        const uniqueValues = {};
 
-                // IArticle['subject'] is a collection of custom vocabulary items
-                // stringifying is required to compare arrays
-                .map((item) => JSON.stringify(item[fieldName])),
-        );
+        $scope.getSelectedImages()
+            .map((item) => get(item, field))
+            .filter((value) => value != null && value !== '')
+            .map((value) => JSON.stringify(value))
+            .forEach((value) => uniqueValues[value] = 1);
+        return Object.keys(uniqueValues);
+    }
 
-        const defaultValues = {
-            subject: [],
-            extra: {},
-        };
+    /**
+     * Populate .extra metadata for editing.
+     *
+     * Works like compare() but for custom fields stored in .extra.
+     */
+    function compareExtra() {
+        // get unique values for each extra field
+        const extra = {};
+        const values = {};
 
-        if (uniqueValues.length < 1) {
-            return defaultValues[fieldName] || '';
-        } else if (uniqueValues.length > 1) {
-            $scope.placeholder[fieldName] = '(multiple values)';
-            return defaultValues[fieldName] || '';
-        } else {
-            $scope.placeholder[fieldName] = '';
+        $scope.getSelectedImages().forEach((item) => {
+            if (item.extra != null) {
+                for (const field in item.extra) {
+                    if (!values.hasOwnProperty(field)) {
+                        values[field] = getUniqueValues('extra.' + field);
+                        extra[field] = getMetaValue(field, values[field]);
+                    }
+                }
+            }
+        });
+
+        return extra;
+    }
+
+    function getMetaValue(field: string, uniqueValues: Array<string>, defaultValue = null) {
+        $scope.placeholder[field] = '';
+
+        if (uniqueValues.length === 1) {
             return JSON.parse(uniqueValues[0]);
+        } else if (uniqueValues.length > 1) {
+            $scope.placeholder[field] = gettext('(multiple values)');
         }
+
+        return defaultValue || '';
+    }
+
+    function compare(fieldName) {
+        const uniqueValues = getUniqueValues(fieldName);
+        const defaultValues = {subject: []};
+
+        return getMetaValue(fieldName, uniqueValues, defaultValues[fieldName]);
     }
 }
 
@@ -218,13 +289,12 @@ export function MultiImageEditDirective(asset, $sce) {
                 }
             };
 
-            scope.$watch('metadataDirty', (newValue: boolean, oldValue: boolean) => {
-                if (newValue !== oldValue) {
-                    forEach(scope.metadata, (metadata, key) => {
-                        scope.onChange(key);
-                    });
-                }
-            });
+            scope.setMetadataDirty = (value) => {
+                scope.metadataDirty = value;
+                forEach(scope.metadata, (metadata, key) => {
+                    scope.onChange(key);
+                });
+            };
         },
     };
 }

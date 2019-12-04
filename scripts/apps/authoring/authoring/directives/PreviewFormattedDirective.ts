@@ -1,7 +1,7 @@
 import {gettext} from 'core/utils';
 
-PreviewFormattedDirective.$inject = ['api', 'config', 'notify', 'storage'];
-export function PreviewFormattedDirective(api, config, notify, storage) {
+PreviewFormattedDirective.$inject = ['api', 'notify', 'storage'];
+export function PreviewFormattedDirective(api, notify, storage) {
     return {
         templateUrl: 'scripts/apps/authoring/views/preview-formatted.html',
         link: function(scope) {

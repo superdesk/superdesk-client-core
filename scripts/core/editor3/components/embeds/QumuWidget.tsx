@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import json5 from 'json5';
-import ng from 'core/services/ng';
 import {uuid} from 'core/helpers/uuid';
 import {extend} from 'lodash';
+import {appConfig} from 'appConfig';
 
 // String identifying embed codes that are Qumu widgets.
 const QumuString = 'KV.widget';
@@ -20,9 +20,7 @@ function getQumuData(html) {
 }
 
 export const isQumuWidget = (html) => {
-    const config = ng.get('config');
-
-    return config.features != null && config.features.qumu && html.includes(QumuString);
+    return appConfig.features != null && appConfig.features.qumu && html.includes(QumuString);
 };
 const getQumuConfigString = (html) => html.slice(html.indexOf('{'), html.lastIndexOf('}') + 1);
 

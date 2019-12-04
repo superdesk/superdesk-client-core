@@ -6,7 +6,7 @@ module.exports = function(config) {
 
     // in karma, entry is read from files prop
     webpackConfig.entry = null;
-    webpackConfig.devtool = 'inline-source-map';
+    webpackConfig.devtool = 'eval';
 
     config.set({
         frameworks: [

@@ -1,6 +1,6 @@
 import {IBaseRestApiResponse} from 'superdesk-api';
 
-export interface IKnowledgeBaseItem extends IBaseRestApiResponse {
+export interface IKnowledgeBaseItemBase {
     name: string;
     labels?: Array<string>;
     language: string;
@@ -10,4 +10,8 @@ export interface IKnowledgeBaseItem extends IBaseRestApiResponse {
     // http://cv.iptc.org/newscodes/cpnature/
     cpnat_type: 'cpnat:abstract' | 'cpnat:event' | 'cpnat:geoArea'
         | 'cpnat:object' | 'cpnat:organisation' | 'cpnat:person' | 'cpnat:poi';
+}
+
+export interface IKnowledgeBaseItem extends IKnowledgeBaseItemBase, IBaseRestApiResponse {
+    //
 }

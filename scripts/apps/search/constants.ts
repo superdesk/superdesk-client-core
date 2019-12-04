@@ -136,6 +136,9 @@ export const CORE_PROJECTED_FIELDS = {
         'alt_text',
         'description_text',
 
+        'rewrite_sequence',
+        'correction_sequence',
+
         // Added in order not to lose data while drag-and-droping an image to the body | SDESK-1508
         'byline',
         'copyrightholder',
@@ -152,6 +155,11 @@ export const CORE_PROJECTED_FIELDS = {
         // mark for user plugin
 
         'marked_for_user',
+
+        // translations
+
+        'translated_from',
+        'translations',
     ],
 };
 

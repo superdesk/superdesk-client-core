@@ -22,7 +22,7 @@ interface IProps {
  * @name TableBlockComponent
  * @description Handles a cell in the table, as well as the containing editor.
  */
-export class TableBlockComponent extends React.Component<IProps, any> {
+export class TableBlockComponent extends React.Component<IProps> {
     static propTypes: any;
     static defaultProps: any;
 

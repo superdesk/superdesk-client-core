@@ -202,11 +202,6 @@ $split-modal-sidebar : 200px;
             display: flex;
             flex-direction: column;
             flex-shrink: 0;
-            > div {
-                min-height: 24px;
-                overflow: hidden;
-                margin-bottom: 10px;
-            }
             .preview-label {
                 min-width: 100px;
                 vertical-align: top;
@@ -223,22 +218,49 @@ $split-modal-sidebar : 200px;
                     display: inline-block;
                 }
             }
+            &--top {
+                > div {
+                    min-height: 24px;
+                    overflow: hidden;
+                    margin-bottom: 10px;
+                }
+            }
+            & + .metadata {
+                margin-top: 0;
+            }
         }
         .headline {
-            min-height: 33px;
-            font-size: 28px;
+            min-height: 3.3rem;
+            font-size: 2.8rem;
             line-height: 120%;
             font-weight: 500;
             padding: 0;
-            margin: 0 0 30px;
+            margin: 0 0 3rem;
+        }
+        .abstract {
+            font-size: 2rem;
+            line-height: 120%;
+            font-weight: 400;
+            margin-bottom: 2.4rem;
+            p {
+                font-size: 2rem;
+                line-height: 120%;
+                font-weight: 400;
+                margin-bottom: 0;
+            }
         }
         .byline {
-            font-size: 16px;
+            font-size: 1.6rem;
+            font-weight: 300;
+            margin: 0 0 0.8rem;
+        }
+        .dateline {
+            font-size: 1.4rem;
             font-weight: 500;
-            margin: 0 0 30px;
+            margin: 0 0 2.4rem;
         }
         .association {
-            margin-bottom: 40px;
+            margin-bottom: 4rem;
             p {
                 font-style: italic;
             }
@@ -247,13 +269,13 @@ $split-modal-sidebar : 200px;
             margin-bottom: 30px;
         }
         p {
-            font-size: 16px;
+            font-size: 1.6rem;
             line-height: 150%;
             font-weight: 300;
-            margin: 0 0 16px;
+            margin: 0 0 1.6rem;
         }
         figure {
-            margin-bottom: 20px;
+            margin-bottom: 2rem;
         }
         figcaption {
             color: $grayLight;
@@ -265,12 +287,12 @@ $split-modal-sidebar : 200px;
         &.hide-images {
             .association {
                 p {
-                    padding: 10px;
+                    padding: 1rem;
                     border: 1px solid black;
                 }
                 i {
                     vertical-align: middle;
-                    margin-right: 10px;
+                    margin-right: 1rem;
                 }
             }
             figure, .media-block {

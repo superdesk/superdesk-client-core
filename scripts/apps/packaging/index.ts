@@ -112,7 +112,7 @@ angular.module('superdesk.apps.packaging', [
                     send.allAs([data.item], 'send_to');
                 }],
                 filters: [{action: 'list', type: 'archive'}],
-                additionalCondition: ['authoring', 'item', 'config', (authoring, item, config) =>
+                additionalCondition: ['authoring', 'item', (authoring, item) =>
                     authoring.itemActions(item).send && item.type === 'composite',
                 ],
                 group: 'packaging',

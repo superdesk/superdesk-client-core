@@ -1,6 +1,8 @@
 import {isNull, isUndefined, find, filter, keys, findIndex, defer, sortBy, map, forEach, startsWith} from 'lodash';
 import {FIELD_KEY_SEPARATOR} from 'core/editor3/helpers/fieldsMeta';
 import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
+import {appConfig} from 'appConfig';
+import {getLabelForFieldId} from 'apps/workspace/helpers/getLabelForFieldId';
 
 AuthoringHeaderDirective.$inject = [
     'api',
@@ -10,7 +12,6 @@ AuthoringHeaderDirective.$inject = [
     'metadata',
     'vocabularies',
     '$timeout',
-    'config',
     'moment',
     'features',
     'TranslationService',
@@ -24,7 +25,6 @@ export function AuthoringHeaderDirective(
     metadata,
     vocabularies,
     $timeout,
-    config,
     moment,
     features,
     TranslationService,
@@ -48,11 +48,15 @@ export function AuthoringHeaderDirective(
                 scope.isCollapsed = !scope.isCollapsed;
             };
 
+            initVocabularies().then(() => {
+                scope.getLabelForFieldId = (fieldId) => getLabelForFieldId(fieldId, scope.vocabulariesCollection);
+            });
+
             if (TranslationService.translationsEnabled() === true) {
                 TranslationService.getTranslations(scope.item)
                     .then((translations) => {
                         scope.translationsInfo = {
-                            count: translations._meta.total,
+                            count: translations._items.filter((item) => item.translated_from != null).length,
                             translatedFromReference: translations._items.find(
                                 (item) => item._id === scope.item.translated_from,
                             ),
@@ -139,8 +143,7 @@ export function AuthoringHeaderDirective(
             });
 
             function getNoMissingLink() {
-                return config.features && 'noMissingLink' in config.features
-                    && config.features.noMissingLink;
+                return appConfig.features != null && appConfig.features.noMissingLink;
             }
 
             function getRelatedItems() {
@@ -148,8 +151,8 @@ export function AuthoringHeaderDirective(
                 scope.missing_link = false;
                 if (scope.item.slugline && scope.item.type === 'text') {
                     // get the midnight based on the defaultTimezone not the user timezone.
-                    var fromDateTime = moment().tz(config.defaultTimezone)
-                        .format(config.view.dateformat);
+                    var fromDateTime = moment().tz(appConfig.defaultTimezone)
+                        .format(appConfig.view.dateformat);
 
                     archiveService.getRelatedItems(scope.item, fromDateTime)
                         .then((items) => {
@@ -167,6 +170,16 @@ export function AuthoringHeaderDirective(
                 scope.$watch('item.slugline', () => {
                     $timeout(getRelatedItems, 800);
                 });
+            }
+
+            function initVocabularies() {
+                if (scope.vocabulariesCollection == null) {
+                    return vocabularies.getVocabularies().then(((vocabulariesCollection) => {
+                        scope.vocabulariesCollection = vocabulariesCollection;
+                    }));
+                }
+
+                return Promise.resolve();
             }
 
             /**

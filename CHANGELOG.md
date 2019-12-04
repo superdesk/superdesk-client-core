@@ -1,5 +1,80 @@
 # Superdesk Client Changelog
 
+## [1.32.0] 2019-12-03
+
+### Added
+
+- Add `contact_type` field to contacts.
+- Add sent items filter to personal space.
+- Add `save, close and update` action.
+- Support internal attachments.
+- Allow filter condition on `featuremedia` field
+- Introduce configuration for main left toolbar.
+- Add translation info to lists.
+- Add Grammalecte & Leuven spellchecker support.
+- Add new API for custom field types.
+- Implement mark for user action.
+- Allow custom sort for a group in monitoring.
+- Add annotations library extension.
+- Introduce new API for client extensions.
+- Allow different spellcheckers for different languages.
+
+### Changed
+
+- Avoid opening preview when item is selected via checkbox.
+- Change colours used in suggestion mode.
+- Refactor article side-tab widgets.
+
+### Fixed
+
+- Fix email validation for media contacts
+- Handle gracefuly exif parsing error on image upload.
+- Fix metadata dropdown for single selection fields.
+- Fix new ingest routing schemas not visible.
+- Fix pasting plain text to editor3.
+- Fix issue with removing products after reverting to previous version.
+- Fix media gallery carousel issue on resize.
+- Keep order of media items in media gallery.
+- Adjust height automatically for SMS text input.
+- Fix hiding of nested items in lists.
+- Fix item schema not loading when killing an item from archived.
+- Fix multi image edit of custom fields.
+- Fix drag&drop of media from external folder to feature media and custom media fields.
+- Fix UI issue with translations pane in the story edit mode.
+- Disallow using swimlane view when not configured.
+- Fix text drop near atomic block in editor3.
+- Fix required fields missing when pasting media metadata.
+- Fix render of items when `secondLine` config is empty.
+- Add embedded images without changes to crop.
+- Insert embed before current block if cursor is at the beginning.
+- Fix text dragging in editor3 in Chrome.
+- Prevent drag&drop of a picture from preview pane.
+- Number of translations of a story counts also the original.
+- Changing content profile removes values from some metadata fields.
+- Fix grammar issue with default ednote for correction.
+- Prevent drag&drop of media to read only fields.
+- Show custom video/audio related items in preview.
+- Fix editing custom text fields on image upload.
+- Multi edit is not displaying custom fields.
+- Fix inserting embeds in the body.
+- Fix editing of image metadata in Firefox.
+- Fix parsing html with empty characters in editor3.
+- Make embeds responsive in the editor3.
+- Fix save button not enabled on disallowing multiple media items.
+- Links from preview lead to blank page.
+
+## [1.31.2] 2019-10-03
+
+### Fixed
+
+- Display notification on unpublish error/success.
+
+## [1.31.1] 2019-09-11
+
+### Fixed
+
+- Display string fields with no related cv in media metadata editor.
+
 ## [1.31.0] 2019-08-26
 
 ### Added

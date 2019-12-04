@@ -361,6 +361,10 @@
     &--text-light {
         @include text-light();
     }
+
+    .sd-checkbox {
+        font-size: 1.4rem;
+    }
 }
 .subnav__desk-stage {
     flex-grow: 1;

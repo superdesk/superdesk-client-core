@@ -10,6 +10,8 @@ import {InsertFilter, ScheduleFilter} from './filters';
 import _ from 'lodash';
 import {coreMenuGroups} from 'core/activity/activity';
 import {gettext} from 'core/utils';
+import {isMediaEditable} from 'core/config';
+import {appConfig} from 'appConfig';
 
 angular.module('superdesk.apps.ingest.send', ['superdesk.core.api', 'superdesk.apps.desks'])
     .service('send', svc.SendService);
@@ -134,10 +136,11 @@ angular.module('superdesk.apps.ingest', [
                 }],
                 filters: [{action: 'list', type: 'externalsource'}],
                 privileges: {fetch: 1},
-                additionalCondition: ['config', 'desks', function(config, desks) {
-                    // Fetching to 'personal' desk is not allowed
-                    return config.features.editFeaturedImage && !_.isNil(desks.getCurrentDeskId());
-                }],
+                additionalCondition: ['desks', 'item', (desks, item) =>
+                    isMediaEditable(item)
+                    // fetching to 'personal' desk is not allowed
+                    && !_.isNil(desks.getCurrentDeskId()),
+                ],
             })
 
             .activity('externalsource', {
@@ -147,10 +150,11 @@ angular.module('superdesk.apps.ingest', [
                 controller: ctrl.ExternalSourceController,
                 filters: [{action: 'list', type: 'externalsource', id: 'fetch-externalsource'}],
                 privileges: {fetch: 1},
-                additionalCondition: ['config', 'desks', function(config, desks) {
-                    // Fetching to 'personal' desk is not allowed
-                    return config.features.editFeaturedImage && !_.isNil(desks.getCurrentDeskId());
-                }],
+                additionalCondition: ['desks', 'item', (desks, item) =>
+                    isMediaEditable(item)
+                    // fetching to 'personal' desk is not allowed
+                    && !_.isNil(desks.getCurrentDeskId()),
+                ],
             });
 
         workspaceMenuProvider.item({

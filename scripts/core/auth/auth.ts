@@ -1,11 +1,12 @@
 import {gettext} from 'core/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
+import {appConfig} from 'appConfig';
 
 /**
  * Expire session on 401 server response
  */
-AuthExpiredInterceptor.$inject = ['session', '$q', '$injector', '$browser', 'config', 'lodash'];
-function AuthExpiredInterceptor(session, $q, $injector, $browser, config, _) {
+AuthExpiredInterceptor.$inject = ['session', '$q', '$injector', '$browser', 'lodash'];
+function AuthExpiredInterceptor(session, $q, $injector, $browser, _) {
     function handleAuthExpired(response) {
         $browser.$$completeOutstandingRequest(angular.noop);
         session.expire();
@@ -21,14 +22,14 @@ function AuthExpiredInterceptor(session, $q, $injector, $browser, config, _) {
 
     return {
         response: function(response) {
-            if (_.startsWith(response.config.url, config.server.url) && response.status === 401) {
+            if (_.startsWith(response.config.url, appConfig.server.url) && response.status === 401) {
                 return handleAuthExpired(response);
             }
 
             return response;
         },
         responseError: function(response) {
-            if (_.startsWith(response.config.url, config.server.url) && response.status === 401) {
+            if (_.startsWith(response.config.url, appConfig.server.url) && response.status === 401) {
                 if (!((response.data || {})._issues || {}).credentials) {
                     return handleAuthExpired(response);
                 }

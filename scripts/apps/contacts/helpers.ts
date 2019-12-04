@@ -2,6 +2,7 @@ import React from 'react';
 import _ from 'lodash';
 import {DEFAULT_LIST_CONFIG, LOOKUP_FIELDS, FB_URL, IG_URL} from './constants';
 import * as fields from './components/fields';
+import {IContact, IContactType} from './Contacts';
 
 export const onEventCapture = (event?) => {
     if (event) {
@@ -10,7 +11,7 @@ export const onEventCapture = (event?) => {
     }
 };
 
-export function replaceUrls(contact) {
+export function replaceUrls(contact: IContact): IContact {
     if (contact.facebook) {
         _.set(contact, 'facebook', _.replace(contact.facebook, FB_URL, ''));
     }
@@ -49,19 +50,21 @@ export function renderArea(area, itemProps, props) {
 /**
  * renders the contents passed as array of elements
  */
-export function renderContents(contents) {
+export function renderContents(contents: IContact) {
     return React.createElement.apply(null, contents);
 }
 
-export function getContactType(contact) {
-    return _.some([contact.first_name, contact.last_name], (v) => !_.isEmpty(v)) ? 'person' : 'organisation';
+export function getContactType(contact: IContact): string {
+    return contact && _.some([contact.first_name, contact.last_name], (v) => !_.isEmpty(v)) ? 'person' : 'organisation';
 }
 
-export function validateRequiredFormFields(contact) {
-    return validateRequiredField(contact) && validateMinRequiredField(contact);
+export function validateRequiredFormFields(contact: IContact, contactTypes: Array<IContactType>): boolean {
+    return validateRequiredField(contact) &&
+        validateMinRequiredField(contact) &&
+        validateAssignableType(contact, contactTypes);
 }
 
-export function validateRequiredField(contact) {
+export function validateRequiredField(contact: IContact): boolean {
     const REQUIRED_CONTACT_FIELDS = getContactType(contact) === 'person' ?
         ['first_name', 'last_name'] : ['organisation'];
 
@@ -75,18 +78,44 @@ export function validateRequiredField(contact) {
     return !invalid;
 }
 
-export function validateMinRequiredField(contact) {
+function contactHasEmailAddress(contact: IContact): boolean {
+    return contact && contact.contact_email && contact.contact_email.length > 0 &&
+        !contact.contact_email.some((email) => !email || email.length === 0);
+}
+
+export function validateMinRequiredField(contact: IContact): boolean {
     return _.some(LOOKUP_FIELDS, (field) => {
         switch (field) {
         case 'contact_email':
-            return _.get(contact, field, 0).length > 0 && !_.some(contact[field], (v) => _.isEmpty(v));
+            return contactHasEmailAddress(contact);
         case 'contact_phone':
         case 'mobile':
-            return _.get(contact, field, 0).length > 0 && !_.some(_.map(contact[field], 'number'), (v) => _.isEmpty(v));
+            return _.get(contact, field, []).length > 0 &&
+                !_.some(_.map(contact[field], 'number'), (v) => _.isEmpty(v));
         default:
             return !_.isEmpty(contact[field]);
         }
     });
+}
+
+export function validateAssignableType(contact: IContact, contactTypes: Array<IContactType>): boolean {
+    const contactType = getContactTypeObject(contactTypes, contact.contact_type);
+
+    if (!contactType || !contactType.assignable) {
+        return true;
+    }
+
+    return contactHasEmailAddress(contact);
+}
+
+export function getContactTypeObject(contactTypes: Array<IContactType>, qcode: string): IContactType {
+    if (contactTypes === undefined) {
+        return null;
+    }
+
+    return contactTypes.find(
+        (contactType: IContactType) => contactType.qcode === qcode,
+    ) || null;
 }
 
 export const scrollListItemIfNeeded = (selectedIndex, listRefElement) => {

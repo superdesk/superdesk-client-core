@@ -3,7 +3,7 @@ import classNames from 'classnames';
 
 import {renderArea} from '../helpers';
 import {flatMap} from 'lodash';
-import {extensions} from 'core/extension-imports.generated';
+import {extensions} from 'appConfig';
 import {IDesk, IArticle} from 'superdesk-api';
 
 export interface IPropsItemListInfo {
@@ -16,8 +16,8 @@ export interface IPropsItemListInfo {
     openAuthoringView: (rewrittenBy?: string) => void;
     narrow: any;
     swimlane: any;
-    nestedCount: number;
     versioncreator: any;
+    isNested: boolean;
     showNested: boolean;
     toggleNested: (event) => void;
     svc: any;

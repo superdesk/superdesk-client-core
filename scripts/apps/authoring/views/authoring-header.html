@@ -59,48 +59,55 @@
                     </a>
                 </div>
             </div>
-    
+
             <div ng-if="translationService.translationsEnabled() && translationsInfo != null">
                 <span ng-if="item.translated_from != null" class="authoring-header__label-2" translate>Translated from</span>
                 <span ng-if="item.translated_from != null" class="label label--hollow">{{translationsInfo.translatedFromReference.language}}</span>
-    
+
                 <span ng-if="item.translated_from == null" class="label label--primary label--hollow" translate>Original</span>
                 <a href ng-click="activateTranslationsWidget()"><strong>({{translationsInfo.count}})</strong> <span translate>translations</span></a>
             </div>
         </div>
-    
+
         <div class="authoring-header__detailed" sd-media-query min-width="550">
-    
+
             <div class="authoring-header__item"
                  sd-validation-error="error.slugline"
                  data-required="schema.slugline.required"
                  ng-if="schema.slugline && editor['slugline'].section !== 'content'"
                  sd-width="{{editor.slugline.sdWidth}}"
                  order="{{editor.slugline.order}}">
-                <label class="authoring-header__item-label uppercase" translate>SLUGLINE</label>
-                <div class="authoring-header__input-holder">
+                <label class="authoring-header__item-label uppercase">{{getLabelForFieldId('slugline')}}</label>
+                <div class="authoring-header__input-holder"
+                    sd-static-autocomplete
+                    data-field="slugline"
+                    data-value="item.slugline"
+                    data-language="item.language"
+                    data-on-select="item.slugline = suggestion; autosave(item)"
+                    >
                     <input type="text"
-                           tansa-scope-sync
-                           tabindex="{{editor.slugline.order}}"
-                           class="line-input slugline"
-                           id="slugline"
-                           ng-model="item.slugline"
-                           ng-model-options="{debounce: 500}"
-                           ng-change="autosave(item)"
-                           ng-disabled="!_editable"
-                           ng-trim="false"
-                           tabindex="{{editor.slugline.order}}">
+                        tansa-scope-sync
+                        tabindex="{{editor.slugline.order}}"
+                        class="line-input slugline"
+                        id="slugline"
+                        ng-model="item.slugline"
+                        ng-model-options="{debounce: 500}"
+                        ng-change="autosave(item)"
+                        ng-disabled="!_editable"
+                        ng-trim="false"
+                        tabindex="{{editor.slugline.order}}"
+                    >
                     <span ng-if="schema.slugline.maxlength" sd-character-count data-item="item.slugline" data-html="true" data-limit="schema.slugline.maxlength"></span>
                 </div>
             </div>
-    
+
             <div class="authoring-header__item"
                  sd-validation-error="error.keywords"
                  data-required="schema.keywords.required"
                  ng-if="schema.keywords"
                  sd-width="{{editor.keywords.sdWidth}}"
                  order="{{editor.keywords.order}}">
-                <label class="authoring-header__item-label" translate>KEYWORDS</label>
+                <label class="authoring-header__item-label">{{getLabelForFieldId('keywords')}}</label>
                 <div class="authoring-header__input-holder">
                     <div sd-meta-words-list
                         class="data terms-box"
@@ -116,14 +123,14 @@
                     <div class="authoring-header__hint" ng-if="helper_text.keywords">{{helper_text.keywords}}</div>
                 </div>
             </div>
-    
+
             <div class="authoring-header__item"
                  sd-validation-error="error.genre"
                  data-required="schema.genre.required"
                  ng-if="schema.genre && editor.genre && !genreInCvs"
                  sd-width="{{editor.genre.sdWidth}}"
                  order="{{editor.genre.order}}">
-                <label class="authoring-header__item-label" translate>GENRE</label>
+                <label class="authoring-header__item-label">{{getLabelForFieldId('genre')}}</label>
                 <div class="authoring-header__input-holder">
                     <div sd-meta-dropdown
                          class="data"
@@ -138,14 +145,14 @@
                     <div class="authoring-header__hint" ng-if="helper_text.genre">{{helper_text.genre}}</div>
                 </div>
             </div>
-    
+
             <div class="authoring-header__item"
                  sd-validation-error="error.anpa_take_key"
                  data-required="schema.anpa_take_key.required"
                  ng-if="schema.anpa_take_key"
                  sd-width="{{editor.anpa_take_key.sdWidth}}"
                  order="{{editor.anpa_take_key.order}}">
-                <label class="authoring-header__item-label" translate>TAKEKEY</label>
+                <label class="authoring-header__item-label">{{getLabelForFieldId('anpa_take_key')}}</label>
                 <div class="authoring-header__input-holder">
                     <input type="text"
                            tabindex="{{editor.anpa_take_key.order}}"
@@ -158,14 +165,14 @@
                            tabindex="{{editor.anpa_take_key.order}}">
                 </div>
             </div>
-    
+
             <div class="authoring-header__item"
                  sd-validation-error="error.place"
                  data-required="schema.place.required"
                  ng-if="metadata.locators && schema.place && editor.place && !placeInCvs"
                  sd-width="{{editor.place.sdWidth}}"
                  order="{{editor.place.order}}">
-                <label class="authoring-header__item-label" translate>PLACE</label>
+                <label class="authoring-header__item-label">{{getLabelForFieldId('place')}}</label>
                 <div class="authoring-header__input-holder">
                     <div sd-meta-terms ng-if="!features.places_autocomplete && !single_value.locators"
                          class="data"
@@ -178,7 +185,7 @@
                          ng-disabled="!_editable"
                          data-change="autosave(item)">
                     </div>
-    
+
                     <div sd-meta-dropdown ng-if="!features.places_autocomplete && single_value.locators"
                          class="data"
                          data-tabindex="editor.place.order"
@@ -190,7 +197,7 @@
                          ng-disabled="!_editable"
                          data-change="autosave(item)">
                     </div>
-    
+
                     <div sd-meta-place ng-if="features.places_autocomplete"
                         class="data"
                         data-tabindex="editor.place.order"
@@ -199,19 +206,19 @@
                         ng-disabled="!_editable"
                         data-change="autosave(item)">
                     </div>
-    
+
                     <div class="authoring-header__hint" ng-if="helper_text.locators">{{helper_text.locators}}</div>
                 </div>
             </div>
-    
+
             <div class="authoring-header__item"
                  sd-validation-error="error.language"
                  data-required="schema.language.required"
                  ng-if="metadata.languages && schema.language && editor.language"
                  sd-width="{{editor.language.sdWidth}}"
                  order="{{editor.language.order}}">
-    
-                <label class="authoring-header__item-label" translate>LANGUAGE</label>
+
+                <label class="authoring-header__item-label">{{getLabelForFieldId('language')}}</label>
                 <div class="authoring-header__input-holder">
                     <div sd-meta-dropdown
                          class="data"
@@ -226,14 +233,14 @@
                     </div>
                 </div>
             </div>
-    
+
             <div class="authoring-header__item"
                  sd-validation-error="error.priority"
                  data-required="schema.priority.required"
                  ng-if="schema.priority"
                  sd-width="{{editor.priority.sdWidth}}"
                  order="{{editor.priority.order}}">
-                <label class="authoring-header__item-label" translate>PRIORITY</label>
+                <label class="authoring-header__item-label">{{getLabelForFieldId('priority')}}</label>
                 <div class="authoring-header__input-holder">
                     <div sd-meta-dropdown
                          data-item="item"
@@ -256,7 +263,7 @@
                  ng-if="schema.urgency && shouldDisplayUrgency()"
                  sd-width="{{editor.urgency.sdWidth}}"
                  order="{{editor.urgency.order}}">
-                <label class="authoring-header__item-label" translate>URGENCY</label>
+                <label class="authoring-header__item-label">{{getLabelForFieldId('urgency')}}</label>
                 <div class="authoring-header__input-holder">
                     <div sd-meta-dropdown
                          data-item="item"
@@ -273,14 +280,14 @@
                     <div class="authoring-header__hint" ng-if="helper_text.urgency">{{helper_text.urgency}}</div>
                 </div>
             </div>
-    
+
             <div class="authoring-header__item" id="category-setting"
                  sd-validation-error="error.anpa_category"
                  data-required="schema.anpa_category.required"
                  ng-if="metadata.categories && schema.anpa_category"
                  sd-width="{{editor.anpa_category.sdWidth}}"
                  order="{{editor.anpa_category.order}}">
-                <label class="authoring-header__item-label uppercase" translate>ANPA Category</label>
+                <label class="authoring-header__item-label uppercase">{{getLabelForFieldId('anpa_category')}}</label>
                 <div class="authoring-header__input-holder">
                     <div sd-meta-terms
                         class="data"
@@ -300,14 +307,14 @@
                     <div class="authoring-header__hint" ng-if="helper_text.categories">{{helper_text.categories}}</div>
                 </div>
             </div>
-    
+
             <div class="authoring-header__item"
                  sd-validation-error="error.subject"
                  data-required="schema.subject.required"
                  ng-if="metadata.subjectcodes && schema.subject && editor.subject"
                  sd-width="{{editor.subject.sdWidth}}"
                  order="{{editor.subject.order}}">
-                <label class="authoring-header__item-label" translate>SUBJECT</label>
+                <label class="authoring-header__item-label">{{getLabelForFieldId('subject')}}</label>
                 <div class="authoring-header__input-holder">
                     <div id="subjects"
                         sd-meta-terms
@@ -325,7 +332,7 @@
                    </div>
                 </div>
             </div>
-    
+
             <div class="authoring-header__item"
                  ng-repeat="cv in cvs track by cv._id"
                  sd-validation-error="error[cv.display_name.toLowerCase()]"
@@ -369,7 +376,7 @@
                    <div class="authoring-header__hint" ng-if="helper_text[cv._id]">{{helper_text[cv._id]}}</div>
                 </div>
             </div>
-    
+
             <!-- custom text editor fields -->
             <div class="authoring-header__item"
                 ng-repeat="field in fields track by field._id"
@@ -378,7 +385,7 @@
                 data-required="schema[field._id].required"
                 order="{{ editor[field._id].order }}"
                 sd-validation-error="error[field._id.toLowerCase()]">
-    
+
                 <label class="authoring-header__item-label">{{field.display_name}}</label>
                 <span ng-if="schema[field._id].maxlength || schema[field._id].minlength" sd-character-count
                     data-item="item.extra[field._id]" data-html="true" data-limit="schema[field._id].maxlength"></span>
@@ -401,7 +408,7 @@
                     <div class="authoring-header__hint" ng-if="helper_text[field._id]">{{field.helper_text}}</div>
                 </div>
             </div>
-    
+
             <!-- custom date editor fields -->
             <div class="authoring-header__item"
                 ng-repeat="field in fields track by field._id"
@@ -423,6 +430,26 @@
                     <div class="authoring-header__hint" ng-if="helper_text[field._id]">{{field.helper_text}}</div>
                 </div>
             </div>
+
+            <!-- custom fields from extensions API -->
+            <div class="authoring-header__item"
+                ng-repeat="field in fields track by field._id"
+                ng-if="field.custom_field_type != null && editor[field._id].section === 'header'"
+                sd-width="{{ editor[field._id].sdWidth || 'full' }}"
+                data-required="schema[field._id].required"
+                order="{{ editor[field._id].order }}"
+                sd-validation-error="error[field._id.toLowerCase()]">
+                <label class="authoring-header__item-label">{{field.display_name}}</label>
+                <div class="authoring-header__input-holder">
+                    <div class="authoring-header__hint" ng-if="helper_text[field._id]">{{field.helper_text}}</div>
+                    <sd-authoring-custom-field
+                        item="item"
+                        field="field"
+                        on-change="setCustomValue"
+                        editable="_editable"
+                    ></sd-authoring-custom-field>
+                </div>
+            </div>
     
             <div class="authoring-header__item"
                  sd-validation-error="error.company_codes"
@@ -430,7 +457,7 @@
                  ng-if="displayCompanyCodes && schema.company_codes"
                  sd-width="{{editor.company_codes.sdWidth}}"
                  order="{{editor.company_codes.order}}">
-                <label class="authoring-header__item-label" translate>COMPANY</label>
+                <label class="authoring-header__item-label">{{getLabelForFieldId('company_codes')}}</label>
                 <div class="authoring-header__input-holder">
                     <div sd-meta-terms
                         class="data"
@@ -448,14 +475,14 @@
                     </div>
                 </div>
             </div>
-    
+
             <div class="authoring-header__item"
                  sd-validation-error="error.ednote"
                  data-required="schema.ednote.required"
                  ng-if="schema.ednote"
                  sd-width="{{editor.ednote.sdWidth}}"
                  order="{{editor.ednote.order}}">
-                <label class="authoring-header__item-label" translate>ED. NOTE</label>
+                <label class="authoring-header__item-label">{{getLabelForFieldId('ednote')}}</label>
                 <div class="authoring-header__input-holder">
                     <textarea id="ednote" class="line-input ed-note"
                               sd-auto-height
@@ -467,9 +494,9 @@
                               tabindex="{{editor.ednote.order}}">
                     </textarea>
                 </div>
-    
+
             </div>
-    
+
             <div class="authoring-header__item"
                  sd-validation-error="error.authors"
                  data-required="schema.authors.required"
@@ -478,7 +505,7 @@
                  order="{{editor.authors.order}}"
                  ng-controller="PopulateAuthorsController"
             >
-                <label class="authoring-header__item-label" translate>AUTHORS</label>
+            <label class="authoring-header__item-label">{{getLabelForFieldId('authors')}}</label>
                 <div class="authoring-header__input-holder">
                     <div id="authors"
                         sd-meta-terms
@@ -500,5 +527,5 @@
             </div>
         </div>
     </div>
-    <button class="authoring-header__toggle" ng-class="{active: !isCollapsed}" ng-click="toggleCollapsed()" tabindex="-1"><i class="icon-chevron-up-thin"></i></button>
+        <button class="authoring-header__toggle" ng-class="{active: !isCollapsed}" ng-click="toggleCollapsed()" tabindex="-1"><i class="icon-chevron-up-thin"></i></button>
 </div>

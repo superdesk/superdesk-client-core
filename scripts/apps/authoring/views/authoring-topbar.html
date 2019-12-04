@@ -1,7 +1,14 @@
-<div id="subnav" class="subnav subnav--authoring" ng-class="{'auth-sendto': views.send, 'subnav--locked': isLocked()}" sd-media-query min-width="900">
+<div
+  id="subnav"
+  class="subnav subnav--authoring"
+  ng-class="{'auth-sendto': views.send, 'subnav--locked': isLocked()}"
+  sd-media-query min-width="900"
+  data-test-id="authoring-topbar"
+>
 
     <sd-authoring-topbar-react
       article="item"
+      action="action"
       on-change="handleArticleChange"
     ></sd-authoring-topbar-react>
 
@@ -51,19 +58,25 @@
                 <span class="btn__text--short" translate>T D</span>
         </button>
         <button
-                ng-if="$root.config.features.customAuthoringTopbar.publish === true"
+                ng-if="$root.config.features.customAuthoringTopbar.closeAndContinue === true && canRewriteArticle()"
+                class="btn btn--custom"
+                ng-click="saveAndContinue(closeAndContinue, false)"
+                title="{{gettext('Close and Continue')}}">
+                <span class="btn__text" translate>Close and Continue</span>
+                <span class="btn__text--short" translate>C & C</span>
+        </button>
+        <button
+                ng-if="$root.config.features.customAuthoringTopbar.publish === true && canPublishOnDesk()"
                 class="btn btn--custom btn--publish"
                 type="submit"
-                ng-if="canPublishOnDesk()"
                 ng-click="saveAndContinue(publish, true)"
                 title="{{ :: 'Publish' | translate }}">
                 <span class="btn__text" translate>Publish</span>
                 <span class="btn__text--short" translate>P</span>
         </button>
         <button
-                ng-if="$root.config.features.customAuthoringTopbar.publishAndContinue === true"
+                ng-if="$root.config.features.customAuthoringTopbar.publishAndContinue === true && canPublishOnDesk() && canRewriteArticle()"
                 class="btn btn--custom btn--publish-plus"
-                ng-if="canPublishOnDesk()"
                 ng-click="saveAndContinue(publishAndContinue, true)"
                 title="{{ :: 'Publish and Continue' | translate }}">
                 <span class="btn__text">{{ :: 'Publish and Continue' | translate }}</span>

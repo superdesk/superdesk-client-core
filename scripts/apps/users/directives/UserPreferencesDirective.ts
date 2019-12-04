@@ -1,6 +1,8 @@
 /* eslint-disable max-len */
 /* tslint:disable:max-line-length */
 import {gettext} from 'core/utils';
+import {appConfig} from 'appConfig';
+import {applyDefault} from 'core/helpers/typescript-helpers';
 
 /**
  * @ngdoc directive
@@ -12,11 +14,11 @@ import {gettext} from 'core/utils';
  *   themselves.
  */
 UserPreferencesDirective.$inject = ['session', 'preferencesService', 'notify', 'asset',
-    'metadata', 'desks', 'modal', '$timeout', '$q', 'userList', 'lodash', 'config', 'search'];
+    'metadata', 'desks', 'modal', '$timeout', '$q', 'userList', 'lodash', 'search'];
 
 export function UserPreferencesDirective(
     session, preferencesService, notify, asset, metadata, desks, modal,
-    $timeout, $q, userList, _, config, search,
+    $timeout, $q, userList, _, search,
 ) {
     // human readable labels for server values
     const LABELS = {
@@ -165,7 +167,7 @@ export function UserPreferencesDirective(
 
             scope.showCategory = function(preference) {
                 if (preference.category === 'rows') {
-                    return _.get(config, 'list.singleLineView');
+                    return appConfig.list != null && appConfig.list.singleLineView;
                 }
                 const noShowCategories = [
                     'article_defaults',
@@ -179,7 +181,7 @@ export function UserPreferencesDirective(
                 return _.indexOf(noShowCategories, preference.category) < 0;
             };
 
-            scope.profileConfig = _.get(config, 'profile', {});
+            scope.profileConfig = applyDefault(appConfig.profile, {});
 
             /**
              * Determine if the planning related preferences should be shown based on the existance of the
@@ -271,9 +273,11 @@ export function UserPreferencesDirective(
                 // preferred by default, unless of course the user
                 // changes this preference setting.
                 scope.defaultCategories = {};
-                helperData.default_categories.forEach((cat) => {
-                    scope.defaultCategories[cat.qcode] = true;
-                });
+                if (Array.isArray(helperData.default_categories)) {
+                    helperData.default_categories.forEach((cat) => {
+                        scope.defaultCategories[cat.qcode] = true;
+                    });
+                }
 
                 // Create a list of categories for the UI widgets to
                 // work on. New category objects are created so that

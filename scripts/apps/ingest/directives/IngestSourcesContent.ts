@@ -1,9 +1,10 @@
 import _ from 'lodash';
 import {cloneDeep} from 'lodash';
 import {gettext} from 'core/utils';
+import {appConfig} from 'appConfig';
 
 IngestSourcesContent.$inject = ['ingestSources', 'notify', 'api', '$location',
-    'modal', '$filter', 'config', 'deployConfig', 'privileges'];
+    'modal', '$filter', 'privileges'];
 
 /**
  * @ngdoc directive
@@ -17,13 +18,12 @@ IngestSourcesContent.$inject = ['ingestSources', 'notify', 'api', '$location',
  * @requires modal
  * @requires $filter
  * @requires config
- * @requires deployConfig
  * @requires privileges
  *
  * @description Handles the management for Ingest Sources.
  */
 export function IngestSourcesContent(ingestSources, notify, api, $location,
-    modal, $filter, config, deployConfig, privileges) {
+    modal, $filter, privileges) {
     return {
         templateUrl: 'scripts/apps/ingest/views/settings/ingest-sources-content.html',
         link: function($scope) {
@@ -77,7 +77,7 @@ export function IngestSourcesContent(ingestSources, notify, api, $location,
                 $scope.seconds = [0, 5, 10, 15, 30, 45];
                 $scope.hours = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
                     13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24];
-                $scope.ingestExpiry = deployConfig.getSync('ingest_expiry_minutes');
+                $scope.ingestExpiry = appConfig.ingest_expiry_minutes;
 
                 $scope.statusFilters = [
                     {label: gettext('Active'), id: 'active'},
@@ -102,7 +102,7 @@ export function IngestSourcesContent(ingestSources, notify, api, $location,
                 function fetchProviders() {
                     var criteria = criteria || {};
 
-                    criteria.max_results = $location.search().max_results || 25;
+                    criteria.max_results = $location.search().max_results || 200;
                     criteria.page = $scope.searchPage || $location.search().page || 1;
                     criteria.sort = 'name';
                     var andTerms = [];
@@ -158,12 +158,12 @@ export function IngestSourcesContent(ingestSources, notify, api, $location,
                     openProviderModal();
                 });
 
-                api('rule_sets').query()
+                api('rule_sets').query({max_results: 200})
                     .then((result) => {
                         $scope.rulesets = $filter('sortByName')(result._items);
                     });
 
-                api('routing_schemes').query()
+                api('routing_schemes').query({max_results: 200})
                     .then((result) => {
                         $scope.routingScheme = $filter('sortByName')(result._items);
                     });
@@ -337,8 +337,8 @@ export function IngestSourcesContent(ingestSources, notify, api, $location,
                     $scope.provider = cloneDeep(provider || {});
 
                     $scope.provider.update_schedule = $scope.provider.update_schedule
-                        || config.ingest.DEFAULT_SCHEDULE;
-                    $scope.provider.idle_time = $scope.provider.idle_time || config.ingest.DEFAULT_IDLE_TIME;
+                        || appConfig.ingest.DEFAULT_SCHEDULE;
+                    $scope.provider.idle_time = $scope.provider.idle_time || appConfig.ingest.DEFAULT_IDLE_TIME;
 
                     initTupleFields();
                 };

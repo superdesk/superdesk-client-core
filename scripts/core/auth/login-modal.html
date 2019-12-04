@@ -1,5 +1,5 @@
 <div class="login-screen" ng-show="active">
-    <div class="login-form-container">
+    <div class="login-form-container" data-test-id="login-page">
         <p ng-if="identity._id" class="session-error">{{ 'Your session has expired.'|translate }}<br />{{ 'Please log in again.'|translate }}</p>
 
         <div class="logo-handler" ng-show="!identity.Avatar">
@@ -10,12 +10,12 @@
             <figure class="avatar" style="background-image:url('{{ identity.Avatar.href || 'images/avatar_200.png' }}')" ng-show="identity.Avatar"></figure>
             <form name="loginForm" ng-submit="authenticate()">
                 <fieldset class="inputs">
-                    <input type="text" id="login-username" ng-model="username" placeholder="{{ 'username'|translate }}" class="fullwidth-input" ng-disabled="identity.Id" required />
-                    <input type="password" id="login-password" ng-model="password" placeholder="{{ 'password'|translate }}" class="fullwidth-input login-pass" required />
+                    <input type="text" id="login-username" ng-model="username" placeholder="{{ 'username'|translate }}" class="fullwidth-input" ng-disabled="identity.Id" required data-test-id="username" />
+                    <input type="password" id="login-password" ng-model="password" placeholder="{{ 'password'|translate }}" class="fullwidth-input login-pass" required data-test-id="password" />
                 </fieldset>
 
                 <fieldset class="buttons">
-                    <button ng-disabled="isLoading" id="login-btn" type="submit" class="btn btn--sd-green">
+                    <button ng-disabled="isLoading" id="login-btn" type="submit" class="btn btn--sd-green" data-test-id="submit">
                         {{ 'Log In' | translate }}
                         <div class="spinner" ng-show="isLoading">
                           <div class="dot1"></div>

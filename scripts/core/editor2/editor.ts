@@ -14,6 +14,7 @@ import {get} from 'lodash';
 import {gettext, escapeRegExp} from 'core/utils';
 
 import './customAnchor';
+import {appConfig} from 'appConfig';
 
 var TYPING_CLASS = 'typing';
 
@@ -597,8 +598,8 @@ function EditorService(spellcheck, $q, renditionsService, utils) {
     };
 }
 
-SdTextEditorBlockEmbedController.$inject = ['$timeout', 'editor', 'renditions', 'config'];
-function SdTextEditorBlockEmbedController($timeout, editor, renditions, config) {
+SdTextEditorBlockEmbedController.$inject = ['$timeout', 'editor', 'renditions'];
+function SdTextEditorBlockEmbedController($timeout, editor, renditions) {
     var self = this;
 
     angular.extend(self, {
@@ -877,8 +878,8 @@ angular.module('superdesk.apps.editor2', [
         }),
     )
     .directive('sdTextEditorBlockText', ['editor', 'spellcheck', '$timeout',
-        '$q', 'config', '$rootScope',
-        function(editor, spellcheck, $timeout, $q, config, $rootScope) {
+        '$q', '$rootScope',
+        function(editor, spellcheck, $timeout, $q, $rootScope) {
             var TOP_OFFSET = 134; // header height
 
             var EDITOR_CONFIG = {
@@ -910,8 +911,8 @@ angular.module('superdesk.apps.editor2', [
                 targetBlank: true,
             };
 
-            if (config.editor) {
-                angular.extend(EDITOR_CONFIG, config.editor);
+            if (appConfig.editor) {
+                angular.extend(EDITOR_CONFIG, appConfig.editor);
             }
 
             /**
@@ -1461,8 +1462,12 @@ angular.module('superdesk.apps.editor2', [
                                 self.sdEditorCtrl.splitAndInsert(self, imageBlock).then((block) => {
                                     // load the media and update the block
                                     $q.when((function() {
-                                        if (config.features && 'editFeaturedImage' in config.features &&
-                                            !config.features.editFeaturedImage && media._type === 'externalsource') {
+                                        if (
+                                            appConfig.features != null
+                                            && appConfig.features.editFeaturedImage != null
+                                            && !appConfig.features.editFeaturedImage
+                                            && media._type === 'externalsource'
+                                        ) {
                                             return media;
                                         }
                                         return renditions.ingest(media);
@@ -1527,12 +1532,9 @@ angular.module('superdesk.apps.editor2', [
             },
         });
     }])
-    .config(['embedServiceProvider', 'iframelyServiceProvider', '$injector',
-        function(embedServiceProvider, iframelyServiceProvider, $injector) {
-            var config = $injector.get('config');
-            // iframe.ly private key
-
-            iframelyServiceProvider.setKey(config.iframely.key);
+    .config(['embedServiceProvider', 'iframelyServiceProvider',
+        function(embedServiceProvider, iframelyServiceProvider) {
+            iframelyServiceProvider.setKey(appConfig.iframely.key);
             // don't use noembed as first choice
             embedServiceProvider.setConfig('useOnlyFallback', true);
             // iframely respect the original embed for more services than 'embedly'

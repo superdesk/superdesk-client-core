@@ -21,11 +21,7 @@
                     </a>
                     <!-- video -->
                     <div class="item-association__video-container" ng-if="carouselItem[carouselItem.fieldId] && carouselItem[carouselItem.fieldId].type === 'video'">
-                        <video controls="controls">
-                            <source vsrc="{{rendition.href}}"
-                                    ng-repeat="(key, rendition) in carouselItem[carouselItem.fieldId].renditions"
-                                    ng-if="associations.checkRenditions.isVideo(rendition)" html5vfix>
-                        </video>
+                        <sd-video item="carouselItem[carouselItem.fieldId]"></sd-video>
                         <div class="item-association__metadata item-association__metadata--plain">
                             <span>
                                 <em>{{:: 'Credit:' | translate}}</em>
@@ -119,26 +115,29 @@
                     </div>
                 </figure>
 
-                <div contenteditable="{{editable}}"
-                     sd-auto-height
-                     tansa-scope-sync
-                     ng-model="carouselItem[carouselItem.fieldId].headline"
-                     ng-model-options="{debounce: 1000}"
-                     ng-change="onchange()"
-                     sd-placeholder="Add title"
-                     ng-if="carouselItem[carouselItem.fieldId] && showTitle"
-                     class="sd-media-carousel__media-title">
-                </div>
-                <div contenteditable="{{editable}}"
-                     sd-auto-height
-                     tansa-scope-sync
-                     ng-model="carouselItem[carouselItem.fieldId].description_text"
-                     ng-model-options="{debounce: 1000}"
-                     ng-change="onchange()"
-                     sd-placeholder="Add caption"
-                     ng-if="carouselItem[carouselItem.fieldId]"
-                     class="sd-media-carousel__media-caption">
-                </div>
+                <sd-line-input
+                    ng-if="carouselItem[carouselItem.fieldId] && showTitle"
+                    ng-model="carouselItem[carouselItem.fieldId].headline"
+                    class="sd-media-carousel__media-title"
+                    data-onchange="onchange()"
+                    data-placeholder="Add title"
+                    data-disabled="!editable"
+                    data-textarea="false"
+                    data-sync="true"
+                    tansa-scope-sync
+                    ></sd-line-input>
+
+                <sd-line-input
+                    ng-if="carouselItem[carouselItem.fieldId]"
+                    ng-model="carouselItem[carouselItem.fieldId].description_text"
+                    class="sd-media-carousel__media-caption"
+                    data-onchange="onchange()"
+                    data-placeholder="Add caption"
+                    data-disabled="!editable"
+                    data-textarea="true"
+                    data-sync="true"
+                    tansa-scope-sync
+                    ></sd-line-input>
 
                 <div sd-item-crops
                      data-item="item.associations[fieldVersion.fieldId]"

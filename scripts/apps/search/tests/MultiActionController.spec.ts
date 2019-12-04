@@ -1,6 +1,8 @@
 import {MultiActionBarController} from '../controllers';
-import {registerTestExtensions} from 'core/tests/helpers/register-test-extensions';
+import {registerExtensions} from 'core/register-extensions';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
+import {ISuperdeskGlobalConfig} from 'superdesk-api';
+import {appConfig} from 'appConfig';
 
 describe('Multi Action Bar', () => {
     beforeEach(window.module('superdesk.templates-cache'));
@@ -9,8 +11,8 @@ describe('Multi Action Bar', () => {
     beforeEach(window.module('superdesk.apps.search'));
     beforeEach(window.module('superdesk.apps.authoring'));
 
-    beforeEach(window.module(($provide) => {
-        $provide.constant('config', {
+    beforeEach(() => {
+        const testConfig: Partial<ISuperdeskGlobalConfig> = {
             model: {
                 timeformat: 'HH:mm:ss',
                 dateformat: 'DD/MM/YYYY',
@@ -20,13 +22,20 @@ describe('Multi Action Bar', () => {
                 dateformat: 'MM/DD/YYYY',
             },
             defaultTimezone: 'Europe/London',
-            server: {url: undefined},
-        });
-    }));
+            server: {url: undefined, ws: undefined},
+        };
+
+        Object.assign(appConfig, testConfig);
+    });
 
     it('spike does not prompt if confirm_spike is to false',
-        (done) => inject(($controller, $rootScope, multi, modal, $q, spike, config) => {
-            config.confirm_spike = false;
+        (done) => inject(($controller, $rootScope, multi, modal, $q, spike) => {
+            const testConfig: Partial<ISuperdeskGlobalConfig> = {
+                confirm_spike: false,
+            };
+
+            Object.assign(appConfig, testConfig);
+
             const itemlist = [
                 {
                     _id: 'foo1',
@@ -70,9 +79,14 @@ describe('Multi Action Bar', () => {
             lock,
             session,
             authoringWorkspace: AuthoringWorkspaceService,
-            config,
             metadata,
         ) => {
+            const testConfig: Partial<ISuperdeskGlobalConfig> = {
+                confirm_spike: true,
+            };
+
+            Object.assign(appConfig, testConfig);
+
             const extensionDelay = 1000;
 
             const articleEntities = {
@@ -85,9 +99,10 @@ describe('Multi Action Bar', () => {
                 },
             };
 
-            registerTestExtensions(
+            registerExtensions(
                 [
                     {
+                        id: 'test-extension',
                         activate: () => {
                             return Promise.resolve({
                                 contributions: {
@@ -105,7 +120,7 @@ describe('Multi Action Bar', () => {
                 lock,
                 session,
                 authoringWorkspace,
-                config,
+                appConfig,
                 metadata,
             ).then(() => {
                 const ctrl = $controller(MultiActionBarController, {});
