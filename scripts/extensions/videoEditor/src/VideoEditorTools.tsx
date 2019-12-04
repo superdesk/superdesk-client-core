@@ -58,7 +58,7 @@ export class VideoEditorTools extends React.Component<IProps> {
                     label={<CropLabel />}
                     items={['1:1', '4:3', '16:9']}
                     onSelect={this.handleCrop}
-                    resetState={this.props.video.cropEnabled === false}
+                    disabled={this.props.video.cropEnabled === false}
                     isButton={true}
                     className={getClass('video__dropdown__crop')}
                 />
@@ -89,7 +89,7 @@ export class VideoEditorTools extends React.Component<IProps> {
                         }
                         items={resolutions}
                         onSelect={this.handleQuality}
-                        resetState={this.props.video.quality === 0}
+                        disabled={this.props.video.quality === 0}
                         className={qualityDisabled && getClass('video__dropdown__quality--disable')}
                     />
                 </div>

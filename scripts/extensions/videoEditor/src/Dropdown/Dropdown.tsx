@@ -7,7 +7,7 @@ interface IProps {
     onSelect: (item: string) => void;
     isButton?: boolean;
     className?: string;
-    resetState?: boolean; // force close dropdown
+    disabled?: boolean; // force close dropdown
 }
 interface IState {
     open: boolean;
@@ -25,13 +25,13 @@ export class Dropdown extends React.Component<IProps, IState> {
     }
 
     componentDidUpdate(prevProps: IProps) {
-        if (this.props.resetState !== prevProps.resetState) {
+        if (this.props.disabled !== prevProps.disabled) {
             this.handleResetState();
         }
     }
 
     handleResetState = () => {
-        if (this.props.resetState === true) {
+        if (this.props.disabled === true) {
             this.setState({
                 open: false,
                 selectedItem: null,
