@@ -22,6 +22,8 @@ export class Dropdown extends React.Component<IProps, IState> {
             open: false,
             selectedItem: null,
         };
+        this.handleToggle = this.handleToggle.bind(this);
+        this.handleSelect = this.handleSelect.bind(this);
     }
 
     componentDidUpdate(prevProps: IProps) {
@@ -30,7 +32,7 @@ export class Dropdown extends React.Component<IProps, IState> {
         }
     }
 
-    handleDisable = () => {
+    handleDisable() {
         if (this.props.disabled === true) {
             this.setState({
                 open: false,
@@ -39,7 +41,7 @@ export class Dropdown extends React.Component<IProps, IState> {
         }
     }
 
-    handleToggle = () => {
+    handleToggle() {
         // use for custom action when item is already selected
         // e.g. toggle crop mode
         if (!this.state.open && this.state.selectedItem && this.props.isButton) {
@@ -52,7 +54,7 @@ export class Dropdown extends React.Component<IProps, IState> {
         });
     }
 
-    handleSelect = (value: number) => {
+    handleSelect(value: number) {
         this.setState({open: false, selectedItem: value});
         this.props.onSelect(value);
     }

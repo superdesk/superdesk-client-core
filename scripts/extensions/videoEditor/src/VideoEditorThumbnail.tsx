@@ -45,6 +45,11 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
         this.ref = React.createRef();
         this.maxCanvasSize = {width: 0, height: 0};
         this.interval = 0;
+
+        this.handleClick = this.handleClick.bind(this);
+        this.handleUpload = this.handleUpload.bind(this);
+        this.handleSave = this.handleSave.bind(this);
+        this.getWrapperSize = this.getWrapperSize.bind(this);
     }
 
     componentDidMount() {
@@ -62,7 +67,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
         }
     }
 
-    handleClick = () => {
+    handleClick() {
         this.setState(
             {
                 dirty: true,
@@ -110,7 +115,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
         );
     }
 
-    handleUpload = (files: FileList | null) => {
+    handleUpload(files: FileList | null) {
         const file = files?.[0];
 
         if (file == null) {
@@ -129,7 +134,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
         this.setState({dirty: true, value: file, type: 'upload'});
     }
 
-    handleSave = () => {
+    handleSave() {
         const {dataApi} = this.context.superdesk;
 
         if (this.state.type === 'capture') {
@@ -190,7 +195,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
         }
     }
 
-    setThumbnail = (src: string) => {
+    setThumbnail(src: string) {
         const image = new Image();
 
         image.onload = () => {
@@ -199,7 +204,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
         image.src = src;
     }
 
-    getThumbnail = () => {
+    getThumbnail() {
         const {dataApi} = this.context.superdesk;
 
         this.interval = window.setInterval(() => {
@@ -219,7 +224,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
         }, 1500);
     }
 
-    handleReset = (clearCanvas: boolean = true) => {
+    handleReset(clearCanvas: boolean = true) {
         let scale = this.state.scale;
         const ctx = this.ref.current!.getContext('2d');
 
@@ -234,7 +239,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
         this.setState({dirty: false, type: '', value: 0, rotateDegree: 0, scale: scale});
     }
 
-    drawCanvas = (
+    drawCanvas(
         element: HTMLImageElement | HTMLVideoElement,
         x: number,
         y: number,
@@ -242,7 +247,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
         height: number,
         ratio: number = width / height,
         canvasSize: Array<number> = [this.maxCanvasSize.width, this.maxCanvasSize.height],
-    ) => {
+    ) {
         const ctx = this.ref.current!.getContext('2d');
 
         let [drawWidth, drawHeight] = canvasSize;
@@ -259,7 +264,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
     }
 
     // get wrapper size dynamically so can use to calculate canvas size to fit content into
-    getWrapperSize = (element: any) => {
+    getWrapperSize(element: any) {
         if (element == null) {
             return;
         }
@@ -272,7 +277,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
         };
     }
 
-    setScale = () => {
+    setScale() {
         // calculate scale while rotating to make sure image is not exceeded maximum wrapper size
         let scale = 1;
 
