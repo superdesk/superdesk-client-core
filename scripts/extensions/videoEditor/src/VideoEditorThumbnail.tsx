@@ -29,16 +29,12 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
     private ref: React.RefObject<HTMLCanvasElement>;
     private maxCanvasSize: { width: number; height: number };
     private interval: number;
+    private initState: IState;
 
     constructor(props: IProps) {
         super(props);
-        this.state = {
-            dirty: false,
-            type: '',
-            value: 0,
-            rotateDegree: 0,
-            scale: 1,
-        };
+        this.initState = {dirty: false, type: '', value: 0, rotateDegree: 0, scale: 1};
+        this.state = this.initState;
         this.ref = React.createRef();
         this.maxCanvasSize = {width: 0, height: 0};
         this.interval = 0;
@@ -132,6 +128,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
 
     handleSave() {
         const {dataApi} = this.context.superdesk;
+        const {gettext} = this.context.superdesk.localization;
 
         if (this.state.type === 'capture') {
             const crop = this.props.getCropRotate(pick(this.props.crop, ['x', 'y', 'width', 'height']));
@@ -157,9 +154,12 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
                 .then((_: IArticle) => {
                     // reuse thumbnail from canvas so we don't have to display old one,
                     // new thumbnail will be loaded when user reset changes
-                    this.handleReset(false);
-                    this.setState({rotateDegree: this.props.rotate});
-                    this.props.onToggleLoading(true, 'Saving capture thumbnail...');
+                    this.setState({
+                        ...this.initState,
+                        scale: this.state.scale,
+                        rotateDegree: this.props.rotate,
+                    });
+                    this.props.onToggleLoading(true, gettext('Saving capture thumbnail...'));
                     this.getThumbnail();
                 })
                 .catch(this.props.onError);
@@ -181,7 +181,11 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
             })
                 .then<IArticle>((res) => res.json())
                 .then((res) => {
-                    this.handleReset();
+                    this.setState({
+                        ...this.initState,
+                        scale: this.state.scale,
+                    });
+                    this.clearCanvas();
                     this.props.onSave(res);
                     this.setThumbnail(res.renditions?.thumbnail?.href + `?t=${Math.random()}`);
                 });
@@ -216,23 +220,6 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
         }, 1500);
     }
 
-    handleReset(clearCanvas: boolean = true) {
-        let scale = this.state.scale;
-        const ctx = this.ref.current!.getContext('2d');
-
-        if (clearCanvas === true) {
-            ctx!.clearRect(0, 0, this.ref.current!.width, this.ref.current!.height);
-            scale = 1;
-
-            const thumbnail = this.props.article.renditions?.thumbnail?.href;
-
-            if (thumbnail) {
-                this.setThumbnail(thumbnail);
-            }
-        }
-        this.setState({dirty: false, type: '', value: 0, rotateDegree: 0, scale: scale});
-    }
-
     drawCanvas(
         element: HTMLImageElement | HTMLVideoElement,
         x: number,
@@ -255,6 +242,16 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
         this.ref.current!.height = drawHeight;
         ctx!.drawImage(element, x, y, width, height, 0, 0, drawWidth, drawHeight);
         this.setScale();
+    }
+
+    clearCanvas() {
+        const ctx = this.ref.current!.getContext('2d');
+        const thumbnail = this.props.article.renditions?.thumbnail?.href;
+
+        ctx!.clearRect(0, 0, this.ref.current!.width, this.ref.current!.height);
+        if (thumbnail) {
+            this.setThumbnail(thumbnail);
+        }
     }
 
     // get wrapper size dynamically so can use to calculate canvas size to fit content into
@@ -334,7 +331,13 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
                                 <a
                                     className="image-overlay__button"
                                     sd-tooltip={gettext('Reset change')}
-                                    onClick={() => this.handleReset()}
+                                    onClick={() => {
+                                        this.clearCanvas();
+                                        this.setState({
+                                            ...this.initState,
+                                            scale: this.state.scale,
+                                        });
+                                    }}
                                 >
                                     <i className="icon-close-thick" />
                                 </a>
