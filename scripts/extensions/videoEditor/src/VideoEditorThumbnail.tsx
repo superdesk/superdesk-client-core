@@ -19,8 +19,6 @@ interface IState {
     dirty: boolean;
     type: 'capture' | 'upload' | '';
     value: number | File; // capture positon or uploaded File
-    // most recent updated thumbnail, for re-drawing thumbnail when reset changes
-    thumbnail: string;
     // save current rotate degree when user captures thumbnail
     rotateDegree: number;
     scale: number;
@@ -38,7 +36,6 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
             dirty: false,
             type: '',
             value: 0,
-            thumbnail: this.props.article.renditions?.thumbnail!?.href,
             rotateDegree: 0,
             scale: 1,
         };
@@ -53,11 +50,10 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
     }
 
     componentDidMount() {
-        if (this.state.thumbnail) {
-            const thumbnail = this.state.thumbnail + `?t=${Math.random()}`;
+        let thumbnail = this.props.article.renditions?.thumbnail?.href;
 
-            this.setState({thumbnail: thumbnail});
-            this.setThumbnail(thumbnail);
+        if (thumbnail) {
+            this.setThumbnail(thumbnail + `?t=${Math.random()}`);
         }
     }
 
@@ -187,10 +183,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
                 .then((res: any) => {
                     this.handleReset();
                     this.props.onSave(res);
-                    const url = res.renditions.thumbnail.href + `?t=${Math.random()}`;
-
-                    this.setState({thumbnail: url});
-                    this.setThumbnail(url);
+                    this.setThumbnail(res.renditions.thumbnail.href + `?t=${Math.random()}`);
                 });
         }
     }
@@ -213,7 +206,6 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
                 .then((response: any) => {
                     if (response.project.processing.thumbnail_preview === false) {
                         clearInterval(this.interval);
-                        this.setState({thumbnail: response.renditions.thumbnail.href + `?t=${Math.random()}`});
                         this.props.onSave(response);
                         this.props.onToggleLoading(false);
                     }
@@ -232,8 +224,10 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
             ctx!.clearRect(0, 0, this.ref.current!.width, this.ref.current!.height);
             scale = 1;
 
-            if (this.state.thumbnail) {
-                this.setThumbnail(this.state.thumbnail);
+            const thumbnail = this.props.article.renditions?.thumbnail?.href;
+
+            if (thumbnail) {
+                this.setThumbnail(thumbnail);
             }
         }
         this.setState({dirty: false, type: '', value: 0, rotateDegree: 0, scale: scale});
@@ -348,7 +342,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
                         )}
                     </div>
                 </div>
-                {!this.state.thumbnail && !this.state.value && (
+                {!this.props.article.renditions?.thumbnail?.href && !this.state.value && (
                     <div className={getClass('video__thumbnail--empty')}>
                         <div className="upload__info-icon" />
                         <p className={getClass('video__thumbnail--empty__text')}>{gettext('No thumbnail')}</p>
