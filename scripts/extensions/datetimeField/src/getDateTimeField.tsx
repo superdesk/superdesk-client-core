@@ -17,7 +17,9 @@ export function getDateTimeField(superdesk: ISuperdesk) {
                     value={this.props.value != null}
                     onChange={(value) => {
                         if (value) {
-                            this.props.setValue(new Date().toISOString());
+                            this.props.setValue(
+                                addMinutes(new Date(), this.props.config.initial_offset_minutes).toISOString(),
+                            );
                         } else {
                             this.props.setValue(null);
                         }
@@ -32,10 +34,10 @@ export function getDateTimeField(superdesk: ISuperdesk) {
                     </div>
                 );
             } else {
-                const date = addMinutes(new Date(this.props.value), this.props.config.initial_offset_minutes);
+                const date = new Date(this.props.value);
 
-                const day = date == null ? '' : format(date, 'yyyy-MM-dd'); // ISO8601
-                const hour = date == null ? '' : format(date, 'HH:mm'); // ISO8601
+                const day = format(date, 'yyyy-MM-dd'); // ISO8601
+                const hour = format(date, 'HH:mm'); // ISO8601
 
                 const steps = this.props.config?.increment_steps ?? [];
 
@@ -53,11 +55,10 @@ export function getDateTimeField(superdesk: ISuperdesk) {
                                     }
 
                                     const [yearStr, monthStr, dayStr] = dateString.split('-');
-                                    const nextDate = date ?? new Date();
 
                                     this.props.setValue(
                                         set(
-                                            nextDate,
+                                            date,
                                             {
                                                 year: parseInt(yearStr, 10),
                                                 month: parseInt(monthStr, 10) - 1,
