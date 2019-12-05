@@ -285,11 +285,19 @@ declare module 'superdesk-api' {
         project?: { // video editor project
             url: string;
             thumbnails: {
-                timeline: any;
+                preview: {
+                    url: string;
+                };
+                timeline: Array<{
+                    url: string
+                    width: number;
+                    height: number;
+                }>;
             };
             processing: {
-                video: any;
-                thumbnails_timeline: any;
+                video: boolean;
+                thumbnail_preview: boolean;
+                thumbnails_timeline: boolean;
             };
         };
 
