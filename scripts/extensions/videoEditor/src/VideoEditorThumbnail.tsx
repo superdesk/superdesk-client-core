@@ -154,7 +154,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
                     capture: body,
                     item: this.props.article,
                 })
-                .then((_: any) => {
+                .then((_: IArticle) => {
                     // reuse thumbnail from canvas so we don't have to display old one,
                     // new thumbnail will be loaded when user reset changes
                     this.handleReset(false);
@@ -179,11 +179,11 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
                 },
                 body: form,
             })
-                .then((res) => res.json())
-                .then((res: any) => {
+                .then<IArticle>((res) => res.json())
+                .then((res) => {
                     this.handleReset();
                     this.props.onSave(res);
-                    this.setThumbnail(res.renditions.thumbnail.href + `?t=${Math.random()}`);
+                    this.setThumbnail(res.renditions?.thumbnail?.href + `?t=${Math.random()}`);
                 });
         }
     }
@@ -203,8 +203,8 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
         this.interval = window.setInterval(() => {
             dataApi
                 .findOne('video_edit', this.props.article._id + `?t=${Math.random()}`) // avoid caching response
-                .then((response: any) => {
-                    if (response.project.processing.thumbnail_preview === false) {
+                .then((response: IArticle) => {
+                    if (response.project?.processing?.thumbnail_preview === false) {
                         clearInterval(this.interval);
                         this.props.onSave(response);
                         this.props.onToggleLoading(false);
@@ -258,7 +258,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
     }
 
     // get wrapper size dynamically so can use to calculate canvas size to fit content into
-    getWrapperSize(element: any) {
+    getWrapperSize(element: HTMLDivElement) {
         if (element == null) {
             return;
         }
