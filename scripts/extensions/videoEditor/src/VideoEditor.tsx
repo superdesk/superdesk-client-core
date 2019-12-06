@@ -431,12 +431,12 @@ export class VideoEditor extends React.Component<IProps, IState> {
             this.props.superdesk.dataApi
                 .findOne<IArticle>('video_edit', this.state.article._id + `?t=${Math.random()}`)
                 .then((result: IArticle) => {
-                    if (result.project?.thumbnails.timeline != null) {
+                    if (isEmpty(result.project?.thumbnails.timeline) === true) {
                         clearInterval(this.intervalThumbnails);
                         this.setState({
-                            thumbnails: result.project.thumbnails.timeline,
+                            thumbnails: result.project?.thumbnails.timeline,
                         });
-                    } else if (result.project?.processing.thumbnails_timeline != null) {
+                    } else if (result.project?.processing.thumbnails_timeline === false) {
                         this.props.superdesk.dataApi.findOne(
                             'video_edit',
                             this.state.article._id + `?action=timeline&t=${Math.random()}`,
