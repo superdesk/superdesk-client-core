@@ -1,6 +1,5 @@
 import * as React from 'react';
 import VideoEditorContext from './VideoEditorContext';
-import {IVideoEditor} from './interfaces';
 import {Dropdown} from './Dropdown/Dropdown';
 import {CropLabel} from './Dropdown/CropLabel';
 import {QualityLabel} from './Dropdown/QualityLabel';
@@ -10,12 +9,15 @@ interface IProps {
     onRotate: () => void;
     onCrop: (aspect: number) => void;
     onQualityChange: (quality: number) => void;
-    video: IVideoEditor;
+    cropEnabled: boolean;
+    videoPlaying: boolean;
+    videoDegree: number;
+    videoQuality: number;
     videoHeadline: string;
     videoResolution: number;
 }
 
-export class VideoEditorTools extends React.Component<IProps> {
+export class VideoEditorTools extends React.PureComponent<IProps> {
     static contextType = VideoEditorContext;
 
     render() {
@@ -41,20 +43,20 @@ export class VideoEditorTools extends React.Component<IProps> {
                     className="btn btn--ui-dark btn--hollow btn--icon-only btn--large"
                     onClick={this.props.onToggleVideo}
                 >
-                    <i className={this.props.video.playing ? 'icon-pause' : 'icon-play'} />
+                    <i className={this.props.videoPlaying ? 'icon-pause' : 'icon-play'} />
                 </button>
                 <Dropdown
                     label={<CropLabel />}
                     items={cropItems}
                     onSelect={this.props.onCrop}
-                    disabled={this.props.video.cropEnabled === false}
+                    disabled={this.props.cropEnabled === false}
                     isButton={true}
                     className={getClass('video__dropdown__crop')}
                 />
                 <button
                     className={`
                         btn btn--ui-dark btn--hollow btn--icon-only btn--large
-                            ${this.props.video.degree ? 'btn--sd-green' : ''}
+                            ${this.props.videoDegree ? 'btn--sd-green' : ''}
                         `}
                     onClick={this.props.onRotate}
                 >
@@ -78,7 +80,7 @@ export class VideoEditorTools extends React.Component<IProps> {
                         }
                         items={resolutions}
                         onSelect={this.props.onQualityChange}
-                        disabled={this.props.video.quality === 0}
+                        disabled={this.props.videoQuality === 0}
                         className={qualityDisabled && getClass('video__dropdown__quality--disable')}
                     />
                 </div>

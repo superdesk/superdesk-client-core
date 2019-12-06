@@ -625,16 +625,8 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                             <video
                                                 ref={this.videoRef}
                                                 src={this.state.videoSrc}
-                                                onPlay={() =>
-                                                    this.setState({
-                                                        playing: true,
-                                                    })
-                                                }
-                                                onPause={() =>
-                                                    this.setState({
-                                                        playing: false,
-                                                    })
-                                                }
+                                                onPlay={() => this.setState({playing: true})}
+                                                onPause={() => this.setState({playing: false})}
                                                 onLoadedData={() => this.handleTrim(0, videoRef!.duration)}
                                                 style={{
                                                     transform: `rotate(${degree}) scale(${this.state.scale})`,
@@ -668,7 +660,10 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                             onRotate={this.handleRotate}
                                             onCrop={this.handleToggleCrop}
                                             onQualityChange={this.handleQualityChange}
-                                            video={this.state}
+                                            cropEnabled= {this.state.cropEnabled}
+                                            videoDegree={this.state.degree}
+                                            videoPlaying={this.state.playing}
+                                            videoQuality={this.state.quality}
                                             videoHeadline={this.state.article.headline}
                                             videoResolution={Math.min(
                                                 videoRef?.videoWidth ?? 0,
@@ -683,12 +678,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                         article={this.state.article}
                                         onToggleLoading={this.handleToggleLoading}
                                         onSave={(article: IArticle) =>
-                                            this.setState({
-                                                article: {
-                                                    ...this.state.article,
-                                                    ...article,
-                                                },
-                                            })
+                                            this.setState({article: {...this.state.article, ...article}})
                                         }
                                         onError={this.showErrorMessage}
                                         crop={this.state.crop}
