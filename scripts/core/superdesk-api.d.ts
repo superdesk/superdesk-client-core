@@ -982,7 +982,7 @@ declare module 'superdesk-api' {
         };
         search_cvs: any;
         view: {
-            dateformat: any;
+            dateformat: string; // a combination of YYYY, MM, and DD with a custom separator e.g. 'MM/DD/YYYY'
             timeformat: any;
         };
         user: {

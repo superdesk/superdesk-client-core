@@ -47,6 +47,7 @@ export function getDateTimeField(superdesk: ISuperdesk) {
 
                         <Spacer type="horizontal" align="stretch" spacing="medium">
                             <DatePickerISO
+                                dateFormat={superdesk.instance.config.view.dateformat}
                                 value={day}
                                 onChange={(dateString) => {
                                     if (dateString === '') {
