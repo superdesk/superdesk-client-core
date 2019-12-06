@@ -29,6 +29,29 @@ function loadConfigs() {
 
 let started = false;
 
+function isDateFormatValid() {
+    const {dateformat} = appConfig.view;
+
+    if (
+        dateformat.includes('YYYY') !== true
+        || dateformat.includes('MM') !== true
+        || dateformat.includes('DD') !== true
+    ) {
+        return false;
+    }
+
+    const separators = dateformat
+        .replace('YYYY', '')
+        .replace('MM', '')
+        .replace('DD', '');
+
+    if (separators.length !== 2 || separators[0] !== separators[1]) {
+        return false;
+    }
+
+    return true;
+}
+
 export function startApp(
     extensions: Array<IExtension>,
     customUiComponents: IConfigurableUiComponents,
@@ -93,6 +116,10 @@ export function startApp(
         ]);
 
     loadConfigs().then(() => {
+        if (isDateFormatValid() !== true) {
+            document.write('Invalid date format specified in config.view.dateFormat');
+            return;
+        }
         /**
          * @ngdoc module
          * @name superdesk-client
