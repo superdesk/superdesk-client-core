@@ -1,5 +1,5 @@
 import React from 'react';
-import {get} from 'lodash';
+import {get, throttle, Cancelable} from 'lodash';
 
 import {getField} from 'apps/fields';
 import {IArticle} from 'superdesk-api';
@@ -12,11 +12,54 @@ interface IProps {
     onChange: (field: IVocabulary, value: any) => any;
 }
 
-export class AuthoringCustomField extends React.PureComponent<IProps> {
-    setValue(value) {
-        this.props.onChange(this.props.field, value);
-    }
+// IProps['onChange'] updates the item asynchronously
+// it causes input lag and in some cases input components lose their internal state
+// and can't work properly. See https://jsfiddle.net/kcLd4y57/
+// Internal state is used to fix this.
+interface IState {
+    value: any;
+}
 
+function getValue(props: IProps) {
+    return get(props.item.extra, props.field._id);
+}
+
+export class AuthoringCustomField extends React.PureComponent<IProps, IState> {
+    onChangeThrottled: ((field: IVocabulary, value: any) => void) & Cancelable;
+
+    // IProps['item'] is mutated when updating so prevProps from `componentDidUpdate`
+    // can't be used to compare the previous value. This property is used instead.
+    lastPropsValue: any;
+
+    constructor(props: IProps) {
+        super(props);
+
+        this.state = {
+            value: getValue(props),
+        };
+
+        this.lastPropsValue = this.state.value;
+
+        this.onChangeThrottled = throttle((field: IVocabulary, value: any) => {
+            this.props.onChange(field, value);
+        }, 300);
+
+        this.setValue = this.setValue.bind(this);
+    }
+    setValue(value) {
+        this.setState({value});
+        this.onChangeThrottled(this.props.field, value);
+    }
+    componentDidUpdate() {
+        const propsValue = getValue(this.props);
+        const propsValueChanged = JSON.stringify(propsValue) !== JSON.stringify(this.lastPropsValue);
+
+        if (propsValueChanged && JSON.stringify(propsValue) !== JSON.stringify(this.state.value)) {
+            this.setState({value: propsValue});
+        }
+
+        this.lastPropsValue = propsValue;
+    }
     render() {
         const {item, field, editable} = this.props;
         const FieldType = getField(field.custom_field_type);
@@ -29,7 +72,7 @@ export class AuthoringCustomField extends React.PureComponent<IProps> {
             <div>
                 <FieldType.editorComponent
                     item={item}
-                    value={get(item.extra, field._id)}
+                    value={this.state.value}
                     setValue={(value) => this.setValue(value)}
                     readOnly={!editable}
                     config={field.custom_field_config}
