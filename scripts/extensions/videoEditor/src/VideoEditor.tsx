@@ -40,6 +40,7 @@ interface IState {
 
 export class VideoEditor extends React.Component<IProps, IState> {
     private videoRef: React.RefObject<HTMLVideoElement>;
+    private timelineRef: React.RefObject<VideoTimeline>;
     private reactCropRef: React.RefObject<ReactCrop>;
     private reactCropWrapperRef: React.RefObject<HTMLDivElement>;
     private intervalThumbnails: number;
@@ -53,13 +54,23 @@ export class VideoEditor extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
         this.videoRef = React.createRef();
+        this.timelineRef = React.createRef();
         this.reactCropRef = React.createRef();
         this.reactCropWrapperRef = React.createRef();
         this.intervalThumbnails = 0;
         this.intervalVideoEdit = 0;
         this.intervalCheckVideo = 0;
         this.initState = {
-            crop: {aspect: 16 / 9, unit: 'px', scale: 1, width: 0, height: 0, x: 0, y: 0, value: 0},
+            crop: {
+                aspect: 16 / 9,
+                unit: 'px',
+                scale: 1,
+                width: 0,
+                height: 0,
+                x: 0,
+                y: 0,
+                value: 0,
+            },
             degree: 0,
             trim: {
                 start: 0,
@@ -87,7 +98,9 @@ export class VideoEditor extends React.Component<IProps, IState> {
         this.handleClose = this.handleClose.bind(this);
         this.handleTrim = this.handleTrim.bind(this);
         this.handleRotate = this.handleRotate.bind(this);
-        this.handleRotateTransitionEnd = this.handleRotateTransitionEnd.bind(this);
+        this.handleRotateTransitionEnd = this.handleRotateTransitionEnd.bind(
+            this,
+        );
         this.handleCrop = this.handleCrop.bind(this);
         this.handleToggleLoading = this.handleToggleLoading.bind(this);
         this.handleToggleCrop = this.handleToggleCrop.bind(this);
@@ -133,13 +146,17 @@ export class VideoEditor extends React.Component<IProps, IState> {
         this.handleToggleLoading(true, gettext('Loading video...'));
         this.intervalCheckVideo = window.setInterval(() => {
             this.props.superdesk.dataApi
-                .findOne<IArticle>('video_edit', this.state.article._id + `?t=${Math.random()}`)
+                .findOne<IArticle>(
+                    'video_edit',
+                    this.state.article._id + `?t=${Math.random()}`,
+                )
                 .then((result) => {
                     if (result.project?.processing.video === false) {
                         this.handleToggleLoading(false);
                         clearInterval(this.intervalCheckVideo);
                         this.setState({
-                            videoSrc: result.project.url + `?t=${Math.random()}`,
+                            videoSrc:
+                                result.project.url + `?t=${Math.random()}`,
                             article: {
                                 ...this.state.article,
                                 ...result,
@@ -147,7 +164,11 @@ export class VideoEditor extends React.Component<IProps, IState> {
                         });
                         this.loadTimelineThumbnails();
                     } else {
-                        this.setState({loadingText: gettext('Video is editing, please wait...')});
+                        this.setState({
+                            loadingText: gettext(
+                                'Video is editing, please wait...',
+                            ),
+                        });
                     }
                 })
                 .catch((err: any) => {
@@ -157,7 +178,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
         }, 3000);
     }
 
-    handleTrim(start: number, end: number, runCheckIsDirty: boolean = false) {
+    handleTrim(start: number, end: number) {
         this.setState(
             {
                 trim: {
@@ -166,9 +187,8 @@ export class VideoEditor extends React.Component<IProps, IState> {
                 },
             },
             () => {
-                if (runCheckIsDirty) {
-                    this.checkIsDirty();
-                }
+                this.timelineRef.current!.updateTrim(start, end);
+                this.checkIsDirty();
             },
         );
     }
@@ -186,7 +206,10 @@ export class VideoEditor extends React.Component<IProps, IState> {
         if (cropRef) {
             cropRef.style.visibility = 'hidden';
         }
-        this.setState((prevState) => ({degree: prevState.degree - 90, scale: 1}));
+        this.setState((prevState) => ({
+            degree: prevState.degree - 90,
+            scale: 1,
+        }));
     }
 
     handleRotateTransitionEnd() {
@@ -200,7 +223,9 @@ export class VideoEditor extends React.Component<IProps, IState> {
         // avoid running transition on setting 360 degree to 0
 
         if (degree === 0) {
-            this.videoRef.current!.classList.remove(getClass('video__rotate__transition'));
+            this.videoRef.current!.classList.remove(
+                getClass('video__rotate__transition'),
+            );
         }
         const scale = this.getScale();
 
@@ -208,7 +233,10 @@ export class VideoEditor extends React.Component<IProps, IState> {
 
         if (this.state.cropEnabled) {
             let refValue = this.videoRef.current!.getBoundingClientRect();
-            let currentValue = this.state.degree % 180 === -90 ? refValue.width : refValue.height;
+            let currentValue =
+                this.state.degree % 180 === -90
+                    ? refValue.width
+                    : refValue.height;
             let delta = (scale / crop.scale!) * (currentValue / crop.value!);
 
             crop = {
@@ -228,15 +256,18 @@ export class VideoEditor extends React.Component<IProps, IState> {
                 cropRef.style.visibility = 'unset';
             }
         }
-        this.setState({degree: degree, crop: crop, scale: scale}, this.checkIsDirty);
+        this.setState(
+            {degree: degree, crop: crop, scale: scale},
+            this.checkIsDirty,
+        );
     }
 
     handleCrop(newCrop: IVideoEditor['crop']) {
         if (
-            newCrop.x == null
-            || newCrop.y == null
-            || newCrop.width == null
-            || newCrop.height == null
+            newCrop.x == null ||
+            newCrop.y == null ||
+            newCrop.width == null ||
+            newCrop.height == null
         ) {
             throw new Error('Invalid state');
         }
@@ -256,13 +287,19 @@ export class VideoEditor extends React.Component<IProps, IState> {
         const crop = {
             ...newCrop,
             scale: this.getScale(),
-            value: this.state.degree % 180 === -90 ? refValue.width : refValue.height,
+            value:
+                this.state.degree % 180 === -90
+                    ? refValue.width
+                    : refValue.height,
         };
 
         // when first draw crop zone, ReactImageCrop trigger a bulk of change event with the same
         // newCrop value, using throttle with value about 50 did not help much but increase interval \
         // may result in lagging
-        if (Object.values(this.state.crop).toString() === Object.values(crop).toString()) {
+        if (
+            Object.values(this.state.crop).toString() ===
+            Object.values(crop).toString()
+        ) {
             return;
         }
 
@@ -285,17 +322,22 @@ export class VideoEditor extends React.Component<IProps, IState> {
             crop = this.getInitialCropSize(cropAspect);
         }
         this.reactCropMarginDelta = 0;
-        this.setState({cropEnabled: !this.state.cropEnabled, crop: crop}, () => {
-            this.checkIsDirty();
-            // chrome adds 1rem extra (ghost) margin to ReactCrop cause crop area and video mismatch
-            if (this.reactCropRef.current != null) {
-                const element = this.reactCropRef.current?.['componentRef'];
-                const {top} = element.getBoundingClientRect();
-                const {top: wrapperTop} = this.reactCropWrapperRef.current!.getBoundingClientRect();
+        this.setState(
+            {cropEnabled: !this.state.cropEnabled, crop: crop},
+            () => {
+                this.checkIsDirty();
+                // chrome adds 1rem extra (ghost) margin to ReactCrop cause crop area and video mismatch
+                if (this.reactCropRef.current != null) {
+                    const element = this.reactCropRef.current?.['componentRef'];
+                    const {top} = element.getBoundingClientRect();
+                    const {
+                        top: wrapperTop,
+                    } = this.reactCropWrapperRef.current!.getBoundingClientRect();
 
-                this.reactCropMarginDelta = top - wrapperTop - 20;
-            }
-        });
+                    this.reactCropMarginDelta = top - wrapperTop - 20;
+                }
+            },
+        );
     }
 
     handleToggleLoading(isToggle: boolean, text: string = '') {
@@ -343,7 +385,9 @@ export class VideoEditor extends React.Component<IProps, IState> {
 
     handleSave() {
         const {dataApi} = this.props.superdesk;
-        const crop = this.getCropRotate(pick(this.state.crop, ['x', 'y', 'width', 'height']));
+        const crop = this.getCropRotate(
+            pick(this.state.crop, ['x', 'y', 'width', 'height']),
+        );
         const body = {
             crop: Object.values(crop).join(','),
             rotate: this.state.degree,
@@ -373,10 +417,16 @@ export class VideoEditor extends React.Component<IProps, IState> {
                 })
                 .then(() => {
                     this.setState({isDirty: false});
-                    this.handleToggleLoading(true, gettext('Video is editing, please wait...'));
+                    this.handleToggleLoading(
+                        true,
+                        gettext('Video is editing, please wait...'),
+                    );
                     this.intervalVideoEdit = window.setInterval(() => {
                         this.props.superdesk.dataApi
-                            .findOne('video_edit', this.state.article._id + `?t=${Math.random()}`)
+                            .findOne(
+                                'video_edit',
+                                this.state.article._id + `?t=${Math.random()}`,
+                            )
                             .then((result: any) => {
                                 if (result.project.processing.video === false) {
                                     clearInterval(this.intervalVideoEdit);
@@ -384,7 +434,9 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                     this.handleReset();
                                     this.setState({
                                         thumbnails: [],
-                                        videoSrc: result.project.url + `?t=${Math.random()}`,
+                                        videoSrc:
+                                            result.project.url +
+                                            `?t=${Math.random()}`,
                                         article: {
                                             ...this.state.article,
                                             ...result,
@@ -410,8 +462,18 @@ export class VideoEditor extends React.Component<IProps, IState> {
         if (
             state.trim.end !== this.videoRef.current!.duration ||
             !isEqual(
-                omit(state, ['trim.end', 'crop.aspect', 'crop.value', 'crop.scale']),
-                omit(this.initState, ['trim.end', 'crop.aspect', 'crop.value', 'crop.scale']),
+                omit(state, [
+                    'trim.end',
+                    'crop.aspect',
+                    'crop.value',
+                    'crop.scale',
+                ]),
+                omit(this.initState, [
+                    'trim.end',
+                    'crop.aspect',
+                    'crop.value',
+                    'crop.scale',
+                ]),
             )
         ) {
             this.setState({isDirty: true});
@@ -423,15 +485,23 @@ export class VideoEditor extends React.Component<IProps, IState> {
     loadTimelineThumbnails() {
         this.intervalThumbnails = window.setInterval(() => {
             this.props.superdesk.dataApi
-                .findOne<IArticle>('video_edit', this.state.article._id + `?t=${Math.random()}`)
+                .findOne<IArticle>(
+                    'video_edit',
+                    this.state.article._id + `?t=${Math.random()}`,
+                )
                 .then((result: IArticle) => {
                     if (result.project?.thumbnails.timeline != null) {
                         clearInterval(this.intervalThumbnails);
-                        this.setState({thumbnails: result.project.thumbnails.timeline});
-                    } else if (result.project?.processing.thumbnails_timeline != null) {
+                        this.setState({
+                            thumbnails: result.project.thumbnails.timeline,
+                        });
+                    } else if (
+                        result.project?.processing.thumbnails_timeline != null
+                    ) {
                         this.props.superdesk.dataApi.findOne(
                             'video_edit',
-                            this.state.article._id + `?action=timeline&t=${Math.random()}`,
+                            this.state.article._id +
+                                `?action=timeline&t=${Math.random()}`,
                         );
                     }
                 })
@@ -489,7 +559,10 @@ export class VideoEditor extends React.Component<IProps, IState> {
 
     // get crop value while rotating video
     getCropRotate(crop: IVideoEditor['crop']): IVideoEditor['crop'] {
-        const {width: currentWidth, height: currentHeight} = this.videoRef.current!.getBoundingClientRect();
+        const {
+            width: currentWidth,
+            height: currentHeight,
+        } = this.videoRef.current!.getBoundingClientRect();
         const rotate = this.state.degree;
         const {x, y, width, height} = crop;
         // do not use state cropEnabled, because user can toggle crop then capture without draw crop zone
@@ -542,14 +615,24 @@ export class VideoEditor extends React.Component<IProps, IState> {
     getScale(): number {
         const videoRef = this.videoRef.current;
 
-        if (!videoRef || videoRef.videoHeight === 0 || this.state.degree === 0) {
+        if (
+            !videoRef ||
+            videoRef.videoHeight === 0 ||
+            this.state.degree === 0
+        ) {
             return 1;
         }
 
-        const videoHeight = this.state.degree % 180 !== 0 ? videoRef.videoWidth : videoRef.videoHeight;
+        const videoHeight =
+            this.state.degree % 180 !== 0
+                ? videoRef.videoWidth
+                : videoRef.videoHeight;
         const {height} = videoRef.getBoundingClientRect();
         // ensure video image quality is not broken when scaling up
-        const vh = videoHeight < this.wrapperSize.height ? videoHeight : this.wrapperSize.height;
+        const vh =
+            videoHeight < this.wrapperSize.height
+                ? videoHeight
+                : this.wrapperSize.height;
 
         return vh / height;
     }
@@ -585,15 +668,23 @@ export class VideoEditor extends React.Component<IProps, IState> {
                 width = width * scale;
                 height = height * scale;
             }
-            videoHeight = this.state.degree % 180 !== 0 ? videoRef.videoWidth : videoRef.videoHeight;
+            videoHeight =
+                this.state.degree % 180 !== 0
+                    ? videoRef.videoWidth
+                    : videoRef.videoHeight;
         }
 
         return (
-            <div className="modal modal--fullscreen modal--dark-ui in" style={{zIndex: 1050, display: 'block'}}>
+            <div
+                className="modal modal--fullscreen modal--dark-ui in"
+                style={{zIndex: 1050, display: 'block'}}
+            >
                 <div className="modal__dialog">
                     <div className="modal__content">
                         <div className="modal__header modal__header--flex">
-                            <h3 className="modal__heading">{gettext('Edit Video')}</h3>
+                            <h3 className="modal__heading">
+                                {gettext('Edit Video')}
+                            </h3>
                             <VideoEditorHeader
                                 onClose={this.handleClose}
                                 onReset={this.handleReset}
@@ -604,11 +695,20 @@ export class VideoEditor extends React.Component<IProps, IState> {
                         <div className="modal__body modal__body--no-padding">
                             {this.state.loading && (
                                 <div className={getClass('video__loading')}>
-                                    <div className={getClass('video__loading__text')}>{this.state.loadingText}</div>
+                                    <div
+                                        className={getClass(
+                                            'video__loading__text',
+                                        )}
+                                    >
+                                        {this.state.loadingText}
+                                    </div>
                                 </div>
                             )}
                             <div className="sd-photo-preview sd-photo-preview--edit-video">
-                                <div className="sd-photo-preview__video" ref={this.getWrapperSize}>
+                                <div
+                                    className="sd-photo-preview__video"
+                                    ref={this.getWrapperSize}
+                                >
                                     <div className="sd-photo-preview__video-inner">
                                         <div
                                             className="sd-photo-preview__video-container"
@@ -617,15 +717,33 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                             <video
                                                 ref={this.videoRef}
                                                 src={this.state.videoSrc}
-                                                onPlay={() => this.setState({playing: true})}
-                                                onPause={() => this.setState({playing: false})}
-                                                onLoadedData={() => this.handleTrim(0, videoRef!.duration)}
+                                                onPlay={() =>
+                                                    this.setState({
+                                                        playing: true,
+                                                    })
+                                                }
+                                                onPause={() =>
+                                                    this.setState({
+                                                        playing: false,
+                                                    })
+                                                }
+                                                onLoadedData={() =>
+                                                    this.handleTrim(
+                                                        0,
+                                                        videoRef!.duration,
+                                                    )
+                                                }
                                                 style={{
                                                     transform: `rotate(${degree}) scale(${this.state.scale})`,
                                                     height: `${videoHeight}px`,
                                                 }}
-                                                className={getClass('video__rotate__transition')}
-                                                onTransitionEnd={this.handleRotateTransitionEnd}
+                                                className={getClass(
+                                                    'video__rotate__transition',
+                                                )}
+                                                onTransitionEnd={
+                                                    this
+                                                        .handleRotateTransitionEnd
+                                                }
                                                 autoPlay
                                             />
 
@@ -636,7 +754,9 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                                     crop={this.state.crop}
                                                     keepSelection={true}
                                                     onChange={this.handleCrop}
-                                                    className={getClass('video__crop')}
+                                                    className={getClass(
+                                                        'video__crop',
+                                                    )}
                                                     style={{
                                                         width: width,
                                                         height: height,
@@ -648,12 +768,18 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                             )}
                                         </div>
                                         <VideoEditorTools
-                                            onToggleVideo={this.handleToggleVideo}
+                                            onToggleVideo={
+                                                this.handleToggleVideo
+                                            }
                                             onRotate={this.handleRotate}
                                             onCrop={this.handleToggleCrop}
-                                            onQualityChange={this.handleQualityChange}
+                                            onQualityChange={
+                                                this.handleQualityChange
+                                            }
                                             video={this.state}
-                                            videoHeadline={this.state.article.headline}
+                                            videoHeadline={
+                                                this.state.article.headline
+                                            }
                                             videoResolution={Math.min(
                                                 videoRef?.videoWidth ?? 0,
                                                 videoRef?.videoHeight ?? 0,
@@ -665,10 +791,15 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                     <VideoEditorThumbnail
                                         videoRef={this.videoRef}
                                         article={this.state.article}
-                                        onToggleLoading={this.handleToggleLoading}
+                                        onToggleLoading={
+                                            this.handleToggleLoading
+                                        }
                                         onSave={(article: IArticle) =>
                                             this.setState({
-                                                article: {...this.state.article, ...article},
+                                                article: {
+                                                    ...this.state.article,
+                                                    ...article,
+                                                },
                                             })
                                         }
                                         onError={this.showErrorMessage}
@@ -677,6 +808,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                         getCropRotate={this.getCropRotate}
                                     />
                                     <VideoTimeline
+                                        ref={this.timelineRef}
                                         video={this.videoRef}
                                         trim={this.state.trim}
                                         onTrim={this.handleTrim}
