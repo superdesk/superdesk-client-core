@@ -19,8 +19,6 @@ interface IState {
     dirty: boolean;
     type: 'capture' | 'upload' | '';
     value: number | File; // capture positon or uploaded File
-    // most recent updated thumbnail, for re-drawing thumbnail when reset changes
-    thumbnail: string;
     // save current rotate degree when user captures thumbnail
     rotateDegree: number;
     scale: number;
@@ -31,27 +29,26 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
     private ref: React.RefObject<HTMLCanvasElement>;
     private maxCanvasSize: { width: number; height: number };
     private interval: number;
+    private initState: IState;
 
     constructor(props: IProps) {
         super(props);
-        this.state = {
-            dirty: false,
-            type: '',
-            value: 0,
-            thumbnail: this.props.article.renditions?.thumbnail!?.href,
-            rotateDegree: 0,
-            scale: 1,
-        };
+        this.initState = {dirty: false, type: '', value: 0, rotateDegree: 0, scale: 1};
+        this.state = this.initState;
         this.ref = React.createRef();
         this.maxCanvasSize = {width: 0, height: 0};
         this.interval = 0;
+
+        this.handleClick = this.handleClick.bind(this);
+        this.handleUpload = this.handleUpload.bind(this);
+        this.handleSave = this.handleSave.bind(this);
+        this.getWrapperSize = this.getWrapperSize.bind(this);
     }
 
     componentDidMount() {
-        if (this.state.thumbnail) {
-            const thumbnail = this.state.thumbnail + `?t=${Math.random()}`;
+        const thumbnail = this.props.article.renditions?.thumbnail?.href;
 
-            this.setState({thumbnail: thumbnail});
+        if (thumbnail) {
             this.setThumbnail(thumbnail);
         }
     }
@@ -62,7 +59,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
         }
     }
 
-    handleClick = () => {
+    handleClick() {
         this.setState(
             {
                 dirty: true,
@@ -110,7 +107,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
         );
     }
 
-    handleUpload = (files: FileList | null) => {
+    handleUpload(files: FileList | null) {
         const file = files?.[0];
 
         if (file == null) {
@@ -129,8 +126,9 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
         this.setState({dirty: true, value: file, type: 'upload'});
     }
 
-    handleSave = () => {
+    handleSave() {
         const {dataApi} = this.context.superdesk;
+        const {gettext} = this.context.superdesk.localization;
 
         if (this.state.type === 'capture') {
             const crop = this.props.getCropRotate(pick(this.props.crop, ['x', 'y', 'width', 'height']));
@@ -153,12 +151,15 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
                     capture: body,
                     item: this.props.article,
                 })
-                .then((_: any) => {
+                .then((_: IArticle) => {
                     // reuse thumbnail from canvas so we don't have to display old one,
                     // new thumbnail will be loaded when user reset changes
-                    this.handleReset(false);
-                    this.setState({rotateDegree: this.props.rotate});
-                    this.props.onToggleLoading(true, 'Saving capture thumbnail...');
+                    this.setState({
+                        ...this.initState,
+                        scale: this.state.scale,
+                        rotateDegree: this.props.rotate,
+                    });
+                    this.props.onToggleLoading(true, gettext('Saving capture thumbnail...'));
                     this.getThumbnail();
                 })
                 .catch(this.props.onError);
@@ -178,19 +179,20 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
                 },
                 body: form,
             })
-                .then((res) => res.json())
-                .then((res: any) => {
-                    this.handleReset();
+                .then<IArticle>((res) => res.json())
+                .then((res) => {
+                    this.setState({
+                        ...this.initState,
+                        scale: this.state.scale,
+                    });
+                    this.clearCanvas();
                     this.props.onSave(res);
-                    const url = res.renditions.thumbnail.href + `?t=${Math.random()}`;
-
-                    this.setState({thumbnail: url});
-                    this.setThumbnail(url);
+                    this.setThumbnail(res.renditions?.thumbnail?.href ?? '');
                 });
         }
     }
 
-    setThumbnail = (src: string) => {
+    setThumbnail(src: string) {
         const image = new Image();
 
         image.onload = () => {
@@ -199,16 +201,15 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
         image.src = src;
     }
 
-    getThumbnail = () => {
+    getThumbnail() {
         const {dataApi} = this.context.superdesk;
 
         this.interval = window.setInterval(() => {
             dataApi
-                .findOne('video_edit', this.props.article._id + `?t=${Math.random()}`) // avoid caching response
-                .then((response: any) => {
-                    if (response.project.processing.thumbnail_preview === false) {
+                .findOne('video_edit', this.props.article._id)
+                .then((response: IArticle) => {
+                    if (response.project?.processing?.thumbnail_preview === false) {
                         clearInterval(this.interval);
-                        this.setState({thumbnail: response.renditions.thumbnail.href + `?t=${Math.random()}`});
                         this.props.onSave(response);
                         this.props.onToggleLoading(false);
                     }
@@ -219,22 +220,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
         }, 1500);
     }
 
-    handleReset = (clearCanvas: boolean = true) => {
-        let scale = this.state.scale;
-        const ctx = this.ref.current!.getContext('2d');
-
-        if (clearCanvas === true) {
-            ctx!.clearRect(0, 0, this.ref.current!.width, this.ref.current!.height);
-            scale = 1;
-
-            if (this.state.thumbnail) {
-                this.setThumbnail(this.state.thumbnail);
-            }
-        }
-        this.setState({dirty: false, type: '', value: 0, rotateDegree: 0, scale: scale});
-    }
-
-    drawCanvas = (
+    drawCanvas(
         element: HTMLImageElement | HTMLVideoElement,
         x: number,
         y: number,
@@ -242,7 +228,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
         height: number,
         ratio: number = width / height,
         canvasSize: Array<number> = [this.maxCanvasSize.width, this.maxCanvasSize.height],
-    ) => {
+    ) {
         const ctx = this.ref.current!.getContext('2d');
 
         let [drawWidth, drawHeight] = canvasSize;
@@ -258,8 +244,18 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
         this.setScale();
     }
 
+    clearCanvas() {
+        const ctx = this.ref.current!.getContext('2d');
+        const thumbnail = this.props.article.renditions?.thumbnail?.href;
+
+        ctx!.clearRect(0, 0, this.ref.current!.width, this.ref.current!.height);
+        if (thumbnail) {
+            this.setThumbnail(thumbnail);
+        }
+    }
+
     // get wrapper size dynamically so can use to calculate canvas size to fit content into
-    getWrapperSize = (element: any) => {
+    getWrapperSize(element: HTMLDivElement) {
         if (element == null) {
             return;
         }
@@ -272,7 +268,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
         };
     }
 
-    setScale = () => {
+    setScale() {
         // calculate scale while rotating to make sure image is not exceeded maximum wrapper size
         let scale = 1;
 
@@ -335,7 +331,13 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
                                 <a
                                     className="image-overlay__button"
                                     sd-tooltip={gettext('Reset change')}
-                                    onClick={() => this.handleReset()}
+                                    onClick={() => {
+                                        this.clearCanvas();
+                                        this.setState({
+                                            ...this.initState,
+                                            scale: this.state.scale,
+                                        });
+                                    }}
                                 >
                                     <i className="icon-close-thick" />
                                 </a>
@@ -343,7 +345,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
                         )}
                     </div>
                 </div>
-                {!this.state.thumbnail && !this.state.value && (
+                {!this.props.article.renditions?.thumbnail?.href && !this.state.value && (
                     <div className={getClass('video__thumbnail--empty')}>
                         <div className="upload__info-icon" />
                         <p className={getClass('video__thumbnail--empty__text')}>{gettext('No thumbnail')}</p>

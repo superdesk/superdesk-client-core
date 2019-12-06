@@ -83,6 +83,22 @@ export class VideoEditor extends React.Component<IProps, IState> {
         this.wrapperSize = {width: 0, height: 0};
         this.reactCropMarginDelta = 0;
         this.hasTransitionRun = true;
+
+        this.handleClose = this.handleClose.bind(this);
+        this.handleTrim = this.handleTrim.bind(this);
+        this.handleRotate = this.handleRotate.bind(this);
+        this.handleRotateTransitionEnd = this.handleRotateTransitionEnd.bind(this);
+        this.handleCrop = this.handleCrop.bind(this);
+        this.handleToggleLoading = this.handleToggleLoading.bind(this);
+        this.handleToggleCrop = this.handleToggleCrop.bind(this);
+        this.handleToggleVideo = this.handleToggleVideo.bind(this);
+        this.handleQualityChange = this.handleQualityChange.bind(this);
+        this.handleReset = this.handleReset.bind(this);
+        this.handleSave = this.handleSave.bind(this);
+        this.getCropRotate = this.getCropRotate.bind(this);
+        this.getWrapperSize = this.getWrapperSize.bind(this);
+        this.showErrorMessage = this.showErrorMessage.bind(this);
+        this.checkIsDirty = this.checkIsDirty.bind(this);
     }
 
     componentDidMount() {
@@ -106,12 +122,12 @@ export class VideoEditor extends React.Component<IProps, IState> {
         clearInterval(this.intervalCheckVideo);
     }
 
-    handleClose = () => {
+    handleClose() {
         this.props.onClose();
         this.props.onArticleUpdate(this.state.article);
     }
 
-    handleCheckingVideo = () => {
+    handleCheckingVideo() {
         const {gettext} = this.props.superdesk.localization;
 
         this.handleToggleLoading(true, gettext('Loading video...'));
@@ -141,7 +157,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
         }, 3000);
     }
 
-    handleTrim = (start: number, end: number, runCheckIsDirty: boolean = false) => {
+    handleTrim(start: number, end: number, runCheckIsDirty: boolean = false) {
         this.setState(
             {
                 trim: {
@@ -157,7 +173,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
         );
     }
 
-    handleRotate = () => {
+    handleRotate() {
         this.hasTransitionRun = false;
         const {getClass} = this.props.superdesk.utilities.CSS;
         const classList = this.videoRef.current!.classList;
@@ -173,7 +189,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
         this.setState((prevState) => ({degree: prevState.degree - 90, scale: 1}));
     }
 
-    handleRotateTransitionEnd = () => {
+    handleRotateTransitionEnd() {
         // avoid transition rerun after set scale
         if (this.hasTransitionRun === true) {
             return;
@@ -215,7 +231,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
         this.setState({degree: degree, crop: crop, scale: scale}, this.checkIsDirty);
     }
 
-    handleCrop = (newCrop: IVideoEditor['crop']) => {
+    handleCrop(newCrop: IVideoEditor['crop']) {
         if (
             newCrop.x == null
             || newCrop.y == null
@@ -253,7 +269,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
         this.setState({crop: crop}, this.checkIsDirty);
     }
 
-    handleToggleVideo = () => {
+    handleToggleVideo() {
         if (this.state.playing) {
             this.videoRef.current!.pause();
         } else {
@@ -261,7 +277,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
         }
     }
 
-    handleToggleCrop = (aspect: number) => {
+    handleToggleCrop(aspect: number) {
         const cropAspect = aspect || this.state.crop.aspect || 0;
         let crop = this.initState.crop;
 
@@ -282,7 +298,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
         });
     }
 
-    handleToggleLoading = (isToggle: boolean, text: string = '') => {
+    handleToggleLoading(isToggle: boolean, text: string = '') {
         if (this.state.playing) {
             this.handleToggleVideo();
         }
@@ -292,7 +308,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
         });
     }
 
-    handleQualityChange = (quality: number) => {
+    handleQualityChange(quality: number) {
         if (!this.videoRef.current) {
             return;
         }
@@ -305,7 +321,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
         this.setState({quality: Math.ceil(newQuality)}, this.checkIsDirty);
     }
 
-    handleReset = () => {
+    handleReset() {
         this.setState(
             {
                 ...this.initState,
@@ -325,7 +341,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
         );
     }
 
-    handleSave = () => {
+    handleSave() {
         const {dataApi} = this.props.superdesk;
         const crop = this.getCropRotate(pick(this.state.crop, ['x', 'y', 'width', 'height']));
         const body = {
@@ -386,7 +402,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
         }
     }
 
-    checkIsDirty = () => {
+    checkIsDirty() {
         const state = pick(this.state, ['crop', 'trim', 'degree', 'quality']);
         // ignore trim.end as initState don't load video duration due to videoRef can be null when component did mount
         // confirm bar should not be toggled when user change crop aspect
@@ -404,7 +420,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
         }
     }
 
-    loadTimelineThumbnails = () => {
+    loadTimelineThumbnails() {
         this.intervalThumbnails = window.setInterval(() => {
             this.props.superdesk.dataApi
                 .findOne<IArticle>('video_edit', this.state.article._id + `?t=${Math.random()}`)
@@ -428,7 +444,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
 
     // calculate crop real size as crop value is not based on real video size
     // but scaled video to fit into container
-    getCropSize = (inputCrop: IVideoEditor['crop']): IVideoEditor['crop'] => {
+    getCropSize(inputCrop: IVideoEditor['crop']): IVideoEditor['crop'] {
         const video = this.videoRef.current!;
         let {width, height} = video.getBoundingClientRect();
 
@@ -450,7 +466,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
     // Set initial crop size to 80% of full video size to make the UX more user-friendly.
     // If it was set to 100%, moving the crop area might not be possible
     // and resize indicators at the corners might not be that clearly visible.
-    getInitialCropSize = (aspect: number, scale: number = 1) => {
+    getInitialCropSize(aspect: number, scale: number = 1) {
         let {width, height} = this.videoRef.current!.getBoundingClientRect();
 
         width = (width * scale * 80) / 100;
@@ -472,7 +488,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
     }
 
     // get crop value while rotating video
-    getCropRotate = (crop: IVideoEditor['crop']): IVideoEditor['crop'] => {
+    getCropRotate(crop: IVideoEditor['crop']): IVideoEditor['crop'] {
         const {width: currentWidth, height: currentHeight} = this.videoRef.current!.getBoundingClientRect();
         const rotate = this.state.degree;
         const {x, y, width, height} = crop;
@@ -511,7 +527,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
     }
 
     // get wrapper size dynamically to scale video so that it's not too small or too big
-    getWrapperSize = (element: any) => {
+    getWrapperSize(element: any) {
         if (element == null) {
             return;
         }
@@ -523,7 +539,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
         };
     }
 
-    getScale = (): number => {
+    getScale(): number {
         const videoRef = this.videoRef.current;
 
         if (!videoRef || videoRef.videoHeight === 0 || this.state.degree === 0) {
@@ -538,7 +554,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
         return vh / height;
     }
 
-    showErrorMessage = (errorResponse: any) => {
+    showErrorMessage(errorResponse: any) {
         const message = JSON.parse(errorResponse._message) || {};
         const error: Array<string> = flatten(Object.values(message)).map((x) => {
             if (typeof x === 'object') {

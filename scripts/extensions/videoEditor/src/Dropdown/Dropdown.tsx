@@ -3,11 +3,11 @@ import VideoEditorContext from '../VideoEditorContext';
 
 interface IProps {
     label: React.ReactElement<any>;
-    items: Array<string>;
-    onSelect: (item: string) => void;
+    items: Array<{label: string, value: number}>;
+    onSelect: (item: number) => void;
     isButton?: boolean;
     className?: string;
-    resetState?: boolean; // force close dropdown
+    disabled?: boolean; // force close dropdown
 }
 interface IState {
     open: boolean;
@@ -22,16 +22,18 @@ export class Dropdown extends React.Component<IProps, IState> {
             open: false,
             selectedItem: null,
         };
+        this.handleToggle = this.handleToggle.bind(this);
+        this.handleSelect = this.handleSelect.bind(this);
     }
 
     componentDidUpdate(prevProps: IProps) {
-        if (this.props.resetState !== prevProps.resetState) {
-            this.handleResetState();
+        if (this.props.disabled !== prevProps.disabled) {
+            this.handleDisable();
         }
     }
 
-    handleResetState = () => {
-        if (this.props.resetState === true) {
+    handleDisable() {
+        if (this.props.disabled === true) {
             this.setState({
                 open: false,
                 selectedItem: null,
@@ -39,11 +41,11 @@ export class Dropdown extends React.Component<IProps, IState> {
         }
     }
 
-    handleToggle = () => {
-        // use for custom action when select is not null
-        // e.g: toggle crop mode
+    handleToggle() {
+        // use for custom action when item is already selected
+        // e.g. toggle crop mode
         if (!this.state.open && this.state.selectedItem && this.props.isButton) {
-            this.props.onSelect('');
+            this.props.onSelect(0);
             this.setState({selectedItem: null});
             return;
         }
@@ -52,9 +54,9 @@ export class Dropdown extends React.Component<IProps, IState> {
         });
     }
 
-    handleSelect = (item: string) => {
-        this.setState({open: false, selectedItem: item});
-        this.props.onSelect(item);
+    handleSelect(value: number) {
+        this.setState({open: false, selectedItem: value});
+        this.props.onSelect(value);
     }
 
     render() {
@@ -68,8 +70,8 @@ export class Dropdown extends React.Component<IProps, IState> {
                 })}
                 <ul className="dropdown__menu">
                     {this.props.items.map((item) => (
-                        <li key={item} onClick={() => this.handleSelect(item)}>
-                            <button>{gettext(item)}</button>
+                        <li key={item.value} onClick={() => this.handleSelect(item.value)}>
+                            <button>{gettext(item.label)}</button>
                         </li>
                     ))}
                 </ul>
