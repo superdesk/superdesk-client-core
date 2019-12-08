@@ -42,7 +42,7 @@ export class AuthoringCustomField extends React.PureComponent<IProps, IState> {
 
         this.onChangeThrottled = throttle((field: IVocabulary, value: any) => {
             this.props.onChange(field, value);
-        }, 300);
+        }, 300, {leading: false});
 
         this.setValue = this.setValue.bind(this);
     }
@@ -55,6 +55,7 @@ export class AuthoringCustomField extends React.PureComponent<IProps, IState> {
         const propsValueChanged = JSON.stringify(propsValue) !== JSON.stringify(this.lastPropsValue);
 
         if (propsValueChanged && JSON.stringify(propsValue) !== JSON.stringify(this.state.value)) {
+            // eslint-disable-next-line react/no-did-update-set-state
             this.setState({value: propsValue});
         }
 
