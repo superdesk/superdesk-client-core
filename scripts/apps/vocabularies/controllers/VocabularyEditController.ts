@@ -3,7 +3,7 @@ import {MEDIA_TYPES, MEDIA_TYPE_KEYS, VOCABULARY_SELECTION_TYPES, IVocabularySel
 import {gettext} from 'core/utils';
 import {getFields} from 'apps/fields';
 import {IVocabulary} from 'superdesk-interfaces/Vocabulary';
-import {IScope as IScopeConfigController} from './VocabularyConfigController'
+import {IScope as IScopeConfigController} from './VocabularyConfigController';
 
 VocabularyEditController.$inject = [
     '$scope',
