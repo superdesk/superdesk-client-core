@@ -69,7 +69,7 @@ export class ItemList extends React.Component<any, IState> {
         this.unbindActionKeyShortcuts = this.unbindActionKeyShortcuts.bind(this);
     }
 
-    multiSelect(items, selected, event?) {
+    multiSelect(items, selected) {
         const {search, multi} = this.props.svc;
         const {scope} = this.props;
 
@@ -84,7 +84,6 @@ export class ItemList extends React.Component<any, IState> {
             });
         });
 
-        this.select(_.last(items), event, {preview: false});
         this.setState({itemsById: itemsById});
     }
 
@@ -102,7 +101,7 @@ export class ItemList extends React.Component<any, IState> {
         this.setState({narrow: setNarrow});
     }
 
-    select(item, event, {preview}: {preview?: boolean} = {preview: null}) {
+    select(item, event) {
         if (typeof this.props.onMonitoringItemSelect === 'function') {
             this.props.onMonitoringItemSelect(item, event);
             return;
@@ -129,7 +128,7 @@ export class ItemList extends React.Component<any, IState> {
 
         if (item && scope.preview) {
             scope.$apply(() => {
-                if (preview !== false && showPreview || preview === true) {
+                if (showPreview) {
                     scope.preview(item);
                 }
                 this.bindActionKeyShortcuts(item);
