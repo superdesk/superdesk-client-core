@@ -3,7 +3,7 @@ import * as React from 'react';
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 import {ISuperdesk, IArticle} from 'superdesk-api';
-import {isEmpty, omit, pick, isEqual, cloneDeep, flatten} from 'lodash';
+import {isEmpty, omit, isEqual, cloneDeep, flatten} from 'lodash';
 
 import {VideoEditorTools} from './VideoEditorTools';
 import {VideoTimeline} from './VideoTimeline/VideoTimeline';
@@ -19,9 +19,14 @@ interface IProps {
 }
 
 interface IState {
-    trim: {
-        start: number;
-        end: number;
+    transformations: {
+        trim: {
+            start: number;
+            end: number;
+        };
+        crop: ICrop;
+        quality: number;
+        degree: number;
     };
     cropImg: string;
     thumbnails: Array<IThumbnail>;
@@ -30,10 +35,7 @@ interface IState {
     scale: number;
     videoSrc: string;
     article: IArticle;
-    crop: ICrop;
     cropEnabled: boolean;
-    quality: number;
-    degree: number;
     playing: boolean;
 }
 
@@ -45,7 +47,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
     private intervalThumbnails: number;
     private intervalVideoEdit: number;
     private intervalCheckVideo: number;
-    private initState: Pick<IState, 'crop' | 'degree' | 'trim' | 'quality'>;
+    private initTransformations: IState['transformations'];
     private reactCropMarginDelta: number;
     private hasTransitionRun: boolean;
     wrapperSize: { width: number; height: number };
@@ -59,7 +61,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
         this.intervalThumbnails = 0;
         this.intervalVideoEdit = 0;
         this.intervalCheckVideo = 0;
-        this.initState = {
+        this.initTransformations = {
             crop: {
                 aspect: 16 / 9,
                 unit: 'px',
@@ -78,7 +80,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
             quality: 0,
         };
         this.state = {
-            ...this.initState,
+            transformations: this.initTransformations,
             cropEnabled: false,
             cropImg: '',
             playing: false,
@@ -171,9 +173,12 @@ export class VideoEditor extends React.Component<IProps, IState> {
     handleTrim(start: number, end: number) {
         this.setState(
             {
-                trim: {
-                    start: start,
-                    end: end,
+                transformations: {
+                    ...this.state.transformations,
+                    trim: {
+                        start: start,
+                        end: end,
+                    },
                 },
             },
             () => {
@@ -196,7 +201,10 @@ export class VideoEditor extends React.Component<IProps, IState> {
             cropRef.style.visibility = 'hidden';
         }
         this.setState((prevState) => ({
-            degree: prevState.degree - 90,
+            transformations: {
+                ...this.state.transformations,
+                degree: prevState.transformations.degree - 90,
+            },
             scale: 1,
         }));
     }
@@ -208,7 +216,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
         }
         this.hasTransitionRun = true;
         const {getClass} = this.props.superdesk.utilities.CSS;
-        const degree = this.state.degree % 360 === 0 ? 0 : this.state.degree;
+        const degree = this.state.transformations.degree % 360 === 0 ? 0 : this.state.transformations.degree;
         // avoid running transition on setting 360 degree to 0
 
         if (degree === 0) {
@@ -216,11 +224,11 @@ export class VideoEditor extends React.Component<IProps, IState> {
         }
         const scale = this.getScale();
 
-        let crop = this.state.crop;
+        let crop = this.state.transformations.crop;
 
         if (this.state.cropEnabled) {
             let refValue = this.videoRef.current!.getBoundingClientRect();
-            let currentValue = this.state.degree % 180 === -90 ? refValue.width : refValue.height;
+            let currentValue = this.state.transformations.degree % 180 === -90 ? refValue.width : refValue.height;
             let delta = (scale / crop.scale!) * (currentValue / crop.value!);
 
             crop = {
@@ -240,7 +248,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                 cropRef.style.visibility = 'unset';
             }
         }
-        this.setState({degree: degree, crop: crop, scale: scale});
+        this.setState({transformations: {...this.state.transformations, degree: degree, crop: crop}, scale: scale});
     }
 
     handleCrop(newCrop: IVideoEditor['crop']) {
@@ -255,7 +263,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
 
         // newCrop lost aspect when cropping while rotating sometimes
         if (!newCrop.aspect) {
-            newCrop.aspect = this.state.crop.aspect;
+            newCrop.aspect = this.state.transformations.crop.aspect;
         }
 
         let refValue = this.videoRef.current!.getBoundingClientRect();
@@ -263,17 +271,17 @@ export class VideoEditor extends React.Component<IProps, IState> {
         const crop = {
             ...newCrop,
             scale: this.getScale(),
-            value: this.state.degree % 180 === -90 ? refValue.width : refValue.height,
+            value: this.state.transformations.degree % 180 === -90 ? refValue.width : refValue.height,
         };
 
         // when first draw crop zone, ReactImageCrop trigger a bulk of change event with the same
         // newCrop value, using throttle with value about 50 did not help much but increase interval \
         // may result in lagging
-        if (Object.values(this.state.crop).toString() === Object.values(crop).toString()) {
+        if (Object.values(this.state.transformations.crop).toString() === Object.values(crop).toString()) {
             return;
         }
 
-        this.setState({crop: crop});
+        this.setState({transformations: {...this.state.transformations, crop: crop}});
     }
 
     handleToggleVideo() {
@@ -285,23 +293,26 @@ export class VideoEditor extends React.Component<IProps, IState> {
     }
 
     handleToggleCrop(aspect: number) {
-        const cropAspect = aspect || this.state.crop.aspect || 0;
-        let crop = this.initState.crop;
+        const cropAspect = aspect || this.state.transformations.crop.aspect || 0;
+        let crop = this.initTransformations.crop;
 
         if (this.state.cropEnabled === false) {
             crop = this.getInitialCropSize(cropAspect);
         }
         this.reactCropMarginDelta = 0;
-        this.setState({cropEnabled: !this.state.cropEnabled, crop: crop}, () => {
-            // chrome adds 1rem extra (ghost) margin to ReactCrop cause crop area and video mismatch
-            if (this.reactCropRef.current != null) {
-                const element = this.reactCropRef.current?.['componentRef'];
-                const {top} = element.getBoundingClientRect();
-                const {top: wrapperTop} = this.reactCropWrapperRef.current!.getBoundingClientRect();
+        this.setState(
+            {cropEnabled: !this.state.cropEnabled, transformations: {...this.state.transformations, crop: crop}},
+            () => {
+                // chrome adds 1rem extra (ghost) margin to ReactCrop cause crop area and video mismatch
+                if (this.reactCropRef.current != null) {
+                    const element = this.reactCropRef.current?.['componentRef'];
+                    const {top} = element.getBoundingClientRect();
+                    const {top: wrapperTop} = this.reactCropWrapperRef.current!.getBoundingClientRect();
 
-                this.reactCropMarginDelta = top - wrapperTop - 20;
-            }
-        });
+                    this.reactCropMarginDelta = top - wrapperTop - 20;
+                }
+            },
+        );
     }
 
     handleToggleLoading(isToggle: boolean, text: string = '') {
@@ -324,14 +335,20 @@ export class VideoEditor extends React.Component<IProps, IState> {
         // resolution is calculated based on video height but video editor scale based on video width
         const newQuality = ratio > 1 ? quality : quality * ratio;
 
-        this.setState({quality: Math.ceil(newQuality)});
+        this.setState({transformations: {...this.state.transformations, quality: Math.ceil(newQuality)}});
     }
 
     handleReset() {
         this.handleTrim(0, this.videoRef.current!.duration);
         this.setState(
             {
-                ...this.initState,
+                transformations: {
+                    ...this.initTransformations,
+                    trim: {
+                        start: 0,
+                        end: this.videoRef.current!.duration,
+                    },
+                },
                 cropEnabled: false,
                 scale: 1,
             },
@@ -345,12 +362,13 @@ export class VideoEditor extends React.Component<IProps, IState> {
 
     handleSave() {
         const {dataApi} = this.props.superdesk;
-        const crop = this.getCropRotate(pick(this.state.crop, ['x', 'y', 'width', 'height']));
+        const {x, y, width, height} = this.state.transformations.crop;
+        const crop = this.getCropRotate({x: x, y: y, width: width, height: height});
         const body = {
             crop: Object.values(crop).join(','),
-            rotate: this.state.degree,
-            trim: Object.values(this.state.trim).join(','),
-            scale: this.state.quality,
+            rotate: this.state.transformations.degree,
+            trim: Object.values(this.state.transformations.trim).join(','),
+            scale: this.state.transformations.quality,
         };
 
         const {gettext} = this.props.superdesk.localization;
@@ -404,18 +422,17 @@ export class VideoEditor extends React.Component<IProps, IState> {
     }
 
     checkIsDirty() {
-        const state = pick(this.state, ['crop', 'trim', 'degree', 'quality']);
-
-        if (this.videoRef.current === null || state.trim.end === 0) {
+        if (this.videoRef.current === null || this.state.transformations.trim.end === 0) {
             return false;
         }
-        // ignore trim.end as initState don't load video duration due to videoRef can be null when component did mount
+
+        // ignore trim.end as initState don't load video duration due to videoRef can be null in componentDidMount
         // confirm bar should not be toggled when user change crop aspect
         if (
-            state.trim.end !== this.videoRef.current!.duration ||
+            this.state.transformations.trim.end !== this.videoRef.current!.duration ||
             !isEqual(
-                omit(state, ['trim.end', 'crop.aspect', 'crop.value', 'crop.scale']),
-                omit(this.initState, ['trim.end', 'crop.aspect', 'crop.value', 'crop.scale']),
+                omit(this.state.transformations, ['trim.end', 'crop.aspect', 'crop.value', 'crop.scale']),
+                omit(this.initTransformations, ['trim.end', 'crop.aspect', 'crop.value', 'crop.scale']),
             )
         ) {
             return true;
@@ -455,7 +472,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
         const video = this.videoRef.current!;
         let {width, height} = video.getBoundingClientRect();
 
-        if (this.state.degree % 180 !== 0) {
+        if (this.state.transformations.degree % 180 !== 0) {
             [width, height] = [height, width];
         }
 
@@ -487,7 +504,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
             height = width * aspect!;
         }
         return {
-            ...this.initState.crop,
+            ...this.initTransformations.crop,
             aspect: aspect,
             width: width,
             height: height,
@@ -497,7 +514,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
     // get crop value while rotating video
     getCropRotate(crop: IVideoEditor['crop']): IVideoEditor['crop'] {
         const {width: currentWidth, height: currentHeight} = this.videoRef.current!.getBoundingClientRect();
-        const rotate = this.state.degree;
+        const rotate = this.state.transformations.degree;
         const {x, y, width, height} = crop;
         // do not use state cropEnabled, because user can toggle crop then capture without draw crop zone
 
@@ -549,11 +566,11 @@ export class VideoEditor extends React.Component<IProps, IState> {
     getScale(): number {
         const videoRef = this.videoRef.current;
 
-        if (!videoRef || videoRef.videoHeight === 0 || this.state.degree === 0) {
+        if (!videoRef || videoRef.videoHeight === 0 || this.state.transformations.degree === 0) {
             return 1;
         }
 
-        const videoHeight = this.state.degree % 180 !== 0 ? videoRef.videoWidth : videoRef.videoHeight;
+        const videoHeight = this.state.transformations.degree % 180 !== 0 ? videoRef.videoWidth : videoRef.videoHeight;
         const {height} = videoRef.getBoundingClientRect();
         // ensure video image quality is not broken when scaling up
         const vh = videoHeight < this.wrapperSize.height ? videoHeight : this.wrapperSize.height;
@@ -576,7 +593,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
     render() {
         const {gettext} = this.props.superdesk.localization;
         const {getClass} = this.props.superdesk.utilities.CSS;
-        const degree = this.state.degree + 'deg';
+        const degree = this.state.transformations.degree + 'deg';
         const videoRef = this.videoRef.current;
 
         let width = 0,
@@ -592,7 +609,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                 width = width * scale;
                 height = height * scale;
             }
-            videoHeight = this.state.degree % 180 !== 0 ? videoRef.videoWidth : videoRef.videoHeight;
+            videoHeight = this.state.transformations.degree % 180 !== 0 ? videoRef.videoWidth : videoRef.videoHeight;
         }
 
         return (
@@ -640,7 +657,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                                 <ReactCrop
                                                     ref={this.reactCropRef}
                                                     src={this.state.cropImg}
-                                                    crop={this.state.crop}
+                                                    crop={this.state.transformations.crop}
                                                     keepSelection={true}
                                                     onChange={this.handleCrop}
                                                     className={getClass('video__crop')}
@@ -660,9 +677,9 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                             onCrop={this.handleToggleCrop}
                                             onQualityChange={this.handleQualityChange}
                                             cropEnabled={this.state.cropEnabled}
-                                            videoDegree={this.state.degree}
+                                            videoDegree={this.state.transformations.degree}
                                             videoPlaying={this.state.playing}
-                                            videoQuality={this.state.quality}
+                                            videoQuality={this.state.transformations.quality}
                                             videoHeadline={this.state.article.headline}
                                             videoResolution={Math.min(
                                                 videoRef?.videoWidth ?? 0,
@@ -680,14 +697,14 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                             this.setState({article: {...this.state.article, ...article}})
                                         }
                                         onError={this.showErrorMessage}
-                                        crop={this.state.crop}
-                                        rotate={this.state.degree}
+                                        crop={this.state.transformations.crop}
+                                        rotate={this.state.transformations.degree}
                                         getCropRotate={this.getCropRotate}
                                     />
                                     <VideoTimeline
                                         ref={this.timelineRef}
                                         video={this.videoRef}
-                                        trim={this.state.trim}
+                                        trim={this.state.transformations.trim}
                                         onTrim={this.handleTrim}
                                         thumbnails={this.state.thumbnails}
                                     />
