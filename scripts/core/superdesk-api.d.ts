@@ -183,68 +183,68 @@ declare module 'superdesk-api' {
     export interface IArticle extends IBaseRestApiResponse {
         _id: string;
         _current_version: number;
-        _type: 'ingest' | 'archive' | 'published' | 'archived' | string;
+        _type?: 'ingest' | 'archive' | 'published' | 'archived' | string;
         guid: string;
         family_id: string;
-        translated_from: string;
-        translation_id: string; // if C is translated from B which is translated from A, all will have the same translation_id
-        translations: Array<IArticle['_id']>; // direct translations only, not all items with same translation_id
-        usageterms: any;
-        keywords: any;
+        translated_from?: string;
+        translation_id?: string; // if C is translated from B which is translated from A, all will have the same translation_id
+        translations?: Array<IArticle['_id']>; // direct translations only, not all items with same translation_id
+        usageterms?: any;
+        keywords?: any;
         language: any;
         slugline: string;
         genre: any;
-        anpa_take_key: any;
+        anpa_take_key?: any;
         place: any;
-        priority: any;
+        priority?: any;
         urgency: any;
-        anpa_category: any;
-        subject: any;
-        company_codes: Array<any>;
-        ednote: string;
-        authors: Array<IAuthor>;
+        anpa_category?: any;
+        subject?: any;
+        company_codes?: Array<any>;
+        ednote?: string;
+        authors?: Array<IAuthor>;
         headline: string;
-        sms: string;
-        abstract: string;
+        sms?: string;
+        abstract?: string;
         byline: string;
-        dateline: any;
-        body_html: string;
-        footer: string;
+        dateline?: any;
+        body_html?: string;
+        footer?: string;
         firstcreated: any;
         versioncreated: any;
-        body_footer: string;
-        is_spiked: any;
+        body_footer?: string;
+        is_spiked?: any;
         expiry: any;
-        copyrightholder: string;
-        copyrightnotice: string;
+        copyrightholder?: string;
+        copyrightnotice?: string;
         sign_off: string;
-        feature_media: any;
-        media_description: string;
-        associations: { string: IArticle };
+        feature_media?: any;
+        media_description?: string;
+        associations?: { string: IArticle };
         type: 'text' | 'picture' | 'video' | 'audio' | 'preformatted' | 'graphic' | 'composite';
         firstpublished?: string;
-        linked_in_packages: Array<{
+        linked_in_packages?: Array<{
             package: string;
             package_type: string; // deprecated
         }>;
-        gone: any;
+        gone?: any;
         lock_action: any;
         lock_user: any;
         lock_session: any;
         rewritten_by?: string;
         profile: string;
-        word_count: number;
+        word_count?: number;
         version_creator: string;
         state: ITEM_STATE;
-        embargo: any;
-        signal: any;
-        broadcast: any;
+        embargo?: any;
+        signal?: any;
+        broadcast?: any;
         flags: any;
         source: string;
         /** correction counter, is reset on rewrite */
-        correction_sequence: number;
+        correction_sequence?: number;
         /** rewrite counter */
-        rewrite_sequence: number;
+        rewrite_sequence?: number;
         fetch_endpoint?: any;
         task_id?: any;
         ingest_provider?: any;
@@ -265,25 +265,26 @@ declare module 'superdesk-api' {
         };
 
         // might be only used for client-side state
-        created: any;
-        archived: any;
+        created?: any;
+        archived?: any;
 
-        // planning extension
-        assignment_id?: string;
-
-        // markForUser extension
-        marked_for_user?: string | null;
-
-        // remove when SDESK-4343 is done.
-        selected: any;
-
-        // other fields which don't exist in the database, don't belong to this entity and should be removed
-        error?: any;
-        _editable: any;
-        actioning?: {
-            archive?: boolean;
-            externalsource: boolean;
+        unique_name: any;
+        pubstatus: any;
+        schedule_settings: any;
+        format: any;
+        fields_meta?: {
+            [key: string]: {
+                draftjsState?: any;
+            }
         };
+        version: any;
+        template: any;
+        original_creator: string;
+        unique_id: any;
+        operation: any;
+        lock_time: string;
+        force_unlock?: boolean;
+        _status: any;
         _fetchable?: boolean;
 
         /**
@@ -299,7 +300,7 @@ declare module 'superdesk-api' {
          * Video items can also provide **thumbnail** and **viewImage** renditions which will be
          * then used in list/preview.
          */
-        renditions: {
+        renditions?: {
             [key: string]: {
                 href: string;
                 mimetype: string;
@@ -308,6 +309,24 @@ declare module 'superdesk-api' {
                 width?: number;
                 height?: number;
             };
+        };
+
+        // planning extension
+        assignment_id?: string;
+        event_id?: any;
+
+        // markForUser extension
+        marked_for_user?: string | null;
+
+        // remove when SDESK-4343 is done.
+        selected?: any;
+
+        // other fields which don't exist in the database, don't belong to this entity and should be removed
+        error?: any;
+        _editable?: any;
+        actioning?: {
+            archive?: boolean;
+            externalsource: boolean;
         };
     }
 
@@ -433,6 +452,7 @@ declare module 'superdesk-api' {
         _links: {
             parent?: any;
             collection?: any;
+            self?: any;
         };
         _id: string;
     }
@@ -991,7 +1011,7 @@ declare module 'superdesk-api' {
         };
         search_cvs: any;
         view: {
-            dateformat: any;
+            dateformat: string; // a combination of YYYY, MM, and DD with a custom separator e.g. 'MM/DD/YYYY'
             timeformat: any;
         };
         user: {
