@@ -24,6 +24,8 @@ interface IState {
     scale: number;
 }
 
+const initialState: IState = {dirty: false, type: '', value: 0, rotateDegree: 0, scale: 1};
+
 export class VideoEditorThumbnail extends React.Component<IProps, IState> {
     static contextType = VideoEditorContext;
     declare context: React.ContextType<typeof VideoEditorContext>;
@@ -31,12 +33,11 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
     private ref: React.RefObject<HTMLCanvasElement>;
     private maxCanvasSize: { width: number; height: number };
     private interval: number;
-    private initState: IState;
 
     constructor(props: IProps) {
         super(props);
-        this.initState = {dirty: false, type: '', value: 0, rotateDegree: 0, scale: 1};
-        this.state = this.initState;
+
+        this.state = initialState;
         this.ref = React.createRef();
         this.maxCanvasSize = {width: 0, height: 0};
         this.interval = 0;
@@ -156,7 +157,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
                     // reuse thumbnail from canvas so we don't have to display old one,
                     // new thumbnail will be loaded when user reset changes
                     this.setState({
-                        ...this.initState,
+                        ...initialState,
                         scale: this.state.scale,
                         rotateDegree: this.props.rotate,
                     });
@@ -183,7 +184,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
                 .then((res) => res.json())
                 .then((res: IArticle) => {
                     this.setState({
-                        ...this.initState,
+                        ...initialState,
                         scale: this.state.scale,
                     });
                     this.clearCanvas();
@@ -341,7 +342,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
                                     onClick={() => {
                                         this.clearCanvas();
                                         this.setState({
-                                            ...this.initState,
+                                            ...initialState,
                                             scale: this.state.scale,
                                         });
                                     }}
