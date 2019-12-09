@@ -57,10 +57,8 @@ export function ContentCreateDirective(
             };
 
             scope.$on('template:update', (e, data) => {
-                if (data?.desks.includes(desks.activeDeskId)) {
-                    getRecentTemplates(desks.activeDeskId);
-                    getDefaultTemplate();
-                }
+                getRecentTemplates(desks.activeDeskId);
+                getDefaultTemplate();
             });
 
             /**
