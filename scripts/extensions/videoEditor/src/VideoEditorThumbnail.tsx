@@ -180,8 +180,8 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
                 },
                 body: form,
             })
-                .then<IArticle>((res) => res.json())
-                .then((res) => {
+                .then((res) => res.json())
+                .then((res: IArticle) => {
                     this.setState({
                         ...this.initState,
                         scale: this.state.scale,
