@@ -26,3 +26,12 @@ export interface IDropdownLabel {
     disabled?: boolean;
     selectedItem?: string;
 }
+
+export interface IErrorMessage {
+    internal_error: number;
+    _message: {
+        crop: Array<string>;
+        trim: Array<string>;
+    };
+    _status: 'ERR';
+}

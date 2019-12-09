@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {ISuperdesk, IArticle} from 'superdesk-api';
 import VideoEditorContext from './VideoEditorContext';
-import {IVideoEditor} from './interfaces';
+import {IVideoEditor, IErrorMessage} from './interfaces';
 import {pick} from 'lodash';
 
 interface IProps {
@@ -11,7 +11,7 @@ interface IProps {
     rotate: IVideoEditor['degree'];
     onToggleLoading: (isLoading: boolean, loadingText?: string) => void;
     onSave: (article: IArticle) => void;
-    onError: (err: any) => void;
+    onError: (err: IErrorMessage) => void;
     getCropRotate: (crop: IVideoEditor['crop']) => IVideoEditor['crop'];
 }
 
@@ -214,7 +214,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
                         this.props.onToggleLoading(false);
                     }
                 })
-                .catch((_: any) => {
+                .catch((_: IErrorMessage) => {
                     clearInterval(this.interval);
                 });
         }, 1500);

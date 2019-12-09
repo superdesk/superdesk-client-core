@@ -3,13 +3,13 @@ import * as React from 'react';
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 import {ISuperdesk, IArticle} from 'superdesk-api';
-import {isEmpty, omit, isEqual, cloneDeep, flatten} from 'lodash';
+import {isEmpty, omit, isEqual, cloneDeep} from 'lodash';
 
 import {VideoEditorTools} from './VideoEditorTools';
 import {VideoTimeline} from './VideoTimeline/VideoTimeline';
 import {VideoEditorHeader} from './VideoEditorHeader';
 import {VideoEditorThumbnail} from './VideoEditorThumbnail';
-import {IVideoEditor, IThumbnail, ICrop} from './interfaces';
+import {IVideoEditor, IThumbnail, ICrop, IErrorMessage} from './interfaces';
 
 interface IProps {
     article: IArticle;
@@ -163,7 +163,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                         });
                     }
                 })
-                .catch((err: any) => {
+                .catch((err: IErrorMessage) => {
                     this.showErrorMessage(err);
                     clearInterval(this.intervalCheckVideo);
                 });
@@ -414,7 +414,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                             });
                     }, 3000);
                 })
-                .catch((err: any) => {
+                .catch((err: IErrorMessage) => {
                     this.showErrorMessage(err);
                     clearInterval(this.intervalVideoEdit);
                 });
@@ -453,13 +453,13 @@ export class VideoEditor extends React.Component<IProps, IState> {
                     } else if (result.project?.processing.thumbnails_timeline === false) {
                         this.props.superdesk.dataApi
                             .findOne('video_edit', this.state.article._id + `?action=timeline&t=${Math.random()}`)
-                            .catch((err: any) => {
+                            .catch((err: IErrorMessage) => {
                                 this.showErrorMessage(err);
                                 clearInterval(this.intervalThumbnails);
                             });
                     }
                 })
-                .catch((err: any) => {
+                .catch((err: IErrorMessage) => {
                     this.showErrorMessage(err);
                     clearInterval(this.intervalThumbnails);
                 });
@@ -578,14 +578,8 @@ export class VideoEditor extends React.Component<IProps, IState> {
         return vh / height;
     }
 
-    showErrorMessage(errorResponse: any) {
-        const message = JSON.parse(errorResponse._message) || {};
-        const error: Array<string> = flatten(Object.values(message)).map((x) => {
-            if (typeof x === 'object') {
-                return JSON.stringify(x);
-            }
-            return x;
-        });
+    showErrorMessage(errorResponse: IErrorMessage) {
+        const error = Object.values(errorResponse._message).reduce((acc, curr) => acc.concat(curr), []);
 
         this.props.superdesk.ui.alert(error.join('<br/>'));
     }
