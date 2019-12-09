@@ -4,6 +4,7 @@ import {gettext} from 'core/utils';
 import {getFields} from 'apps/fields';
 import {IVocabulary} from 'superdesk-interfaces/Vocabulary';
 import {IDirectiveScope} from 'types/Angular/DirectiveScope';
+import {IScope as IScopeConfigController} from './VocabularyConfigController'
 
 VocabularyEditController.$inject = [
     '$scope',
@@ -15,7 +16,7 @@ VocabularyEditController.$inject = [
     'relationsService',
 ];
 
-interface IScope extends IDirectiveScope<any> {
+interface IScope extends IScopeConfigController {
     idRegex: string;
     vocabulary: IVocabulary;
     selectionTypes: IVocabularySelectionTypes;
@@ -48,7 +49,7 @@ export function VocabularyEditController(
     $scope.idRegex = idRegex;
     $scope.selectionTypes = VOCABULARY_SELECTION_TYPES;
 
-    if ($scope.vocabulary.field_type === 'related_content') {
+    if ($scope.matchFieldTypeToTab('related-content-fields', $scope.vocabulary.field_type)) {
         // Insert default allowed workflows
         if ($scope.vocabulary.field_options == null) {
             $scope.vocabulary.field_options = {allowed_workflows: relationsService.getDefaultAllowedWorkflows()};

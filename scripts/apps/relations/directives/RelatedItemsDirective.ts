@@ -4,15 +4,23 @@ import {gettext} from 'core/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {IArticle} from 'superdesk-api';
 import {IVocabulary} from 'superdesk-interfaces/Vocabulary';
+import {IDirectiveScope} from 'types/Angular/DirectiveScope';
 
 const ARCHIVE_TYPES = ['archive', 'published'];
 const isInArchive = (item: IArticle) => item._type != null && ARCHIVE_TYPES.includes(item._type);
 
-interface IScope {
+interface IScope extends IDirectiveScope<void> {
     field: IVocabulary;
     editable: boolean;
     item: IArticle;
+    loading: boolean;
+    relatedItems: Array<IArticle>;
     onchange: () => void;
+    addRelatedItem: (item: IArticle) => void;
+    isEmptyRelatedItems: (fieldId: string) => void;
+    refreshRelatedItems: () => void;
+    removeRelatedItem: (key: string) => void;
+    openRelatedItem: (item: IArticle) => void;
 }
 
 /**
@@ -68,7 +76,7 @@ export function RelatedItemsDirective(authoringWorkspace: AuthoringWorkspaceServ
                         .map((key) => scope.item.associations[key]);
 
                     const currentCount = relatedItemsForCurrentField.length;
-                    const maxCount = scope.field?.field_options?.multiple_items?.enabed === true
+                    const maxCount = scope.field?.field_options?.multiple_items?.enabled === true
                         ? scope.field.field_options.multiple_items.max_items
                         : 1;
 
@@ -161,30 +169,6 @@ export function RelatedItemsDirective(authoringWorkspace: AuthoringWorkspaceServ
                     });
             };
             scope.refreshRelatedItems();
-
-            /**
-             * Reorder related items on related items list
-             *
-             * @param {int} start
-             * @param {int} end
-             */
-            scope.reorder = (start, end) => {
-                if (!scope.editable) {
-                    return;
-                }
-                const related = getRelatedKeys(scope.item, scope.field._id);
-                const newRelated = related.slice(0);
-
-                newRelated.splice(end.index, 0, newRelated.splice(start.index, 1)[0]);
-
-                const updated = related.reduce((obj, key, index) => {
-                    obj[key] = scope.item.associations[newRelated[index]];
-                    return obj;
-                }, {});
-
-                scope.item.associations = angular.extend({}, scope.item.associations, updated);
-                scope.onchange();
-            };
 
             /**
              * Return the next key for related item associated to current field
