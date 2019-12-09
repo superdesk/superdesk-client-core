@@ -328,13 +328,10 @@ export class VideoEditor extends React.Component<IProps, IState> {
     }
 
     handleReset() {
+        this.handleTrim(0, this.videoRef.current!.duration);
         this.setState(
             {
                 ...this.initState,
-                trim: {
-                    start: 0,
-                    end: this.videoRef.current!.duration,
-                },
                 cropEnabled: false,
                 scale: 1,
             },
@@ -434,13 +431,15 @@ export class VideoEditor extends React.Component<IProps, IState> {
                     if (isEmpty(result.project?.thumbnails.timeline) === true) {
                         clearInterval(this.intervalThumbnails);
                         this.setState({
-                            thumbnails: result.project?.thumbnails.timeline,
+                            thumbnails: result.project?.thumbnails.timeline ?? [],
                         });
                     } else if (result.project?.processing.thumbnails_timeline === false) {
-                        this.props.superdesk.dataApi.findOne(
-                            'video_edit',
-                            this.state.article._id + `?action=timeline&t=${Math.random()}`,
-                        );
+                        this.props.superdesk.dataApi
+                            .findOne('video_edit', this.state.article._id + `?action=timeline&t=${Math.random()}`)
+                            .catch((err: any) => {
+                                this.showErrorMessage(err);
+                                clearInterval(this.intervalThumbnails);
+                            });
                     }
                 })
                 .catch((err: any) => {
@@ -660,7 +659,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                             onRotate={this.handleRotate}
                                             onCrop={this.handleToggleCrop}
                                             onQualityChange={this.handleQualityChange}
-                                            cropEnabled= {this.state.cropEnabled}
+                                            cropEnabled={this.state.cropEnabled}
                                             videoDegree={this.state.degree}
                                             videoPlaying={this.state.playing}
                                             videoQuality={this.state.quality}
