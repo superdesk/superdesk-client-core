@@ -24,6 +24,8 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
                 );
             }
 
+            $scope.$on('template:update', (e, data) => fetchTemplates());
+
             desks.initialize().then(() => {
                 $scope.desks = desks.desks;
                 selectDesk(null);
@@ -221,8 +223,7 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
                             (response) => {
                                 notifySaveError(response, notify);
                             },
-                        )
-                        .then(fetchTemplates);
+                        );
                 }
             };
 
@@ -319,8 +320,7 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
                         } else {
                             notify.error(gettext('There was an error. Template cannot be deleted.'));
                         }
-                    })
-                    .then(fetchTemplates);
+                    });
             };
 
             $scope.cancel = function() {
