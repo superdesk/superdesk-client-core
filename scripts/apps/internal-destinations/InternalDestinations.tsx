@@ -8,8 +8,6 @@ import {IInternalDestination} from 'superdesk-interfaces/InternalDestination';
 import {IFormField, IFormGroup} from 'superdesk-api';
 import {FormFieldType} from 'core/ui/components/generic-form/interfaces/form';
 
-const InternalDestinationsPageComponent = getGenericListPageComponent<IInternalDestination>('internal_destinations');
-
 const nameField: IFormField = {
     label: gettext('Destination name'),
     type: FormFieldType.textSingleLine,
@@ -73,6 +71,9 @@ const formConfig: IFormGroup = {
         macroField,
     ],
 };
+
+const InternalDestinationsPageComponent =
+    getGenericListPageComponent<IInternalDestination>('internal_destinations', formConfig);
 
 const renderRow = (
     key: string,

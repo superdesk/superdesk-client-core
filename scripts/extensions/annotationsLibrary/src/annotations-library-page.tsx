@@ -19,8 +19,6 @@ export function getAnnotationsLibraryPage(superdesk: ISuperdesk) {
             } = superdesk.components;
             const {getFormFieldPreviewComponent} = superdesk.forms;
 
-            const AnnotationsLibraryPageComponent = getGenericListPageComponent<IKnowledgeBaseItem>('concept_items');
-
             const {
                 nameField,
                 languageField,
@@ -36,6 +34,9 @@ export function getAnnotationsLibraryPage(superdesk: ISuperdesk) {
                     definitionField,
                 ],
             };
+
+            const AnnotationsLibraryPageComponent =
+                getGenericListPageComponent<IKnowledgeBaseItem>('concept_items', formConfig);
 
             const renderRow = (
                 key: string,
