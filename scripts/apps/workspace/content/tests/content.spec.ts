@@ -153,21 +153,6 @@ describe('superdesk.apps.workspace.content', () => {
             expect(success).toHaveBeenCalledWith(type);
         }));
 
-        it('can create item using content type', inject((api, content, desks, session) => {
-            var type = {_id: 'test'};
-            var success = jasmine.createSpy('ok');
-
-            spyOn(desks, 'getCurrentDesk').and.returnValue({_id: 'sports', working_stage: 'inbox'});
-            session.identity = {_id: 'foo'};
-            content.createItemFromContentType(type).then(success);
-            expect(api.save).toHaveBeenCalledWith('archive', {
-                profile: type._id,
-                type: 'text',
-                version: 0,
-                task: {desk: 'sports', stage: 'inbox', user: 'foo'},
-            });
-        }));
-
         it('can get schema for content type', inject((content) => {
             var schema = content.schema();
 

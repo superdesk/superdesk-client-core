@@ -28,7 +28,7 @@ export function ContentCreateDirective(
             function getRecentTemplates(deskId) {
                 var NUM_ITEMS = 5;
 
-                return templates.getRecentTemplates(desks.activeDeskId, NUM_ITEMS).then((result) => {
+                return templates.getRecentTemplates(deskId, NUM_ITEMS).then((result) => {
                     scope.contentTemplates = result._items;
                 });
             }
@@ -55,6 +55,11 @@ export function ContentCreateDirective(
             scope.canCreatePackage = function() {
                 return $location.path() !== '/workspace/personal';
             };
+
+            scope.$on('template:update', (e, data) => {
+                getRecentTemplates(desks.activeDeskId);
+                getDefaultTemplate();
+            });
 
             /**
              * Create and start editing an item based on given package
@@ -107,15 +112,6 @@ export function ContentCreateDirective(
                     });
                 }
             }
-
-            /**
-             * Create a new item using given type and start editing
-             *
-             * @param {Object} contentType
-             */
-            scope.createFromTemplate = function(template) {
-                content.createItemFromTemplate(template).then(edit);
-            };
         },
     };
 }

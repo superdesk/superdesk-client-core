@@ -139,24 +139,6 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
     };
 
     /**
-     * Create new item using given content type
-     *
-     * @param {Object} contentType
-     * @return {Promise}
-     */
-    this.createItemFromContentType = function(contentType) {
-        var item = {
-            type: TEXT_TYPE,
-            profile: contentType._id,
-            version: 0,
-        };
-
-        archiveService.addTaskToArticle(item);
-
-        return save(item);
-    };
-
-    /**
      * Creates a new content profile.
      *
      * @param {Object} data
