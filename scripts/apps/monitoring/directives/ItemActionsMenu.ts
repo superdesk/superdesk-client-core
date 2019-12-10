@@ -1,4 +1,4 @@
-import {AUTHORING_MENU_GROUPS, IAuthoringMenuGroup} from '../../authoring/authoring/constants';
+import {AUTHORING_MENU_GROUPS} from '../../authoring/authoring/constants';
 import {IArticle} from 'superdesk-api';
 import {IActivity} from 'superdesk-interfaces/Activity';
 
@@ -6,6 +6,13 @@ export interface IActionsMenuItemExtra {
     label: string;
     icon?: string;
     onTrigger(): void;
+}
+
+interface IAuthoringMenuGroup {
+    _id: string;
+    label?: string;
+    concate?: boolean;
+    actions?: Array<IActivity>;
 }
 
 interface IScope extends ng.IScope {
@@ -100,12 +107,14 @@ export function ItemActionsMenu(superdesk, activityService, workflowService, arc
                 let menuGroups: Array<IAuthoringMenuGroup> = [];
 
                 // take default menu groups, add activities and push to `menuGroups`
-                AUTHORING_MENU_GROUPS.forEach((_group) => {
-                    if (activitiesByGroupName[_group._id]) {
-                        let groupCopy: IAuthoringMenuGroup = {..._group};
-
-                        groupCopy.actions = activitiesByGroupName[_group._id];
-                        menuGroups.push(groupCopy);
+                AUTHORING_MENU_GROUPS.forEach((group) => {
+                    if (activitiesByGroupName[group._id]) {
+                        menuGroups.push({
+                            _id: group._id,
+                            label: group.label,
+                            concate: group.concate,
+                            actions:  activitiesByGroupName[group._id],
+                        });
                     }
                 });
 
