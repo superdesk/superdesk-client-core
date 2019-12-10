@@ -56,6 +56,7 @@ export const CONTENT_FIELDS_DEFAULTS = Object.freeze({
 
 export const DEFAULT_ACTIONS = Object.freeze({
     publish: false,
+    unpublish: false,
     correct: false,
     kill: false,
     deschedule: false,
