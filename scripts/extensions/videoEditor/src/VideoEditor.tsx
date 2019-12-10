@@ -395,9 +395,9 @@ export class VideoEditor extends React.Component<IProps, IState> {
                     this.handleToggleLoading(true, gettext('Video is editing, please wait...'));
                     this.intervalVideoEdit = window.setInterval(() => {
                         this.props.superdesk.dataApi
-                            .findOne('video_edit', this.state.article._id + `?t=${Math.random()}`)
-                            .then((result: any) => {
-                                if (result.project.processing.video === false) {
+                            .findOne<IArticle>('video_edit', this.state.article._id + `?t=${Math.random()}`)
+                            .then((result) => {
+                                if (result.project?.processing?.video === false) {
                                     clearInterval(this.intervalVideoEdit);
                                     this.handleToggleLoading(false);
                                     this.handleReset();
@@ -551,7 +551,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
     }
 
     // get wrapper size dynamically to scale video so that it's not too small or too big
-    getWrapperSize(element: any) {
+    getWrapperSize(element: HTMLDivElement) {
         if (element == null) {
             return;
         }

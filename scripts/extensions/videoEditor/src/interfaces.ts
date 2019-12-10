@@ -24,7 +24,7 @@ export interface IDropdownLabel {
     getText?: (text: string) => string;
     title?: string | undefined;
     disabled?: boolean;
-    selectedItem?: string;
+    selectedItem?: string | number | null;
 }
 
 export interface IErrorMessage {

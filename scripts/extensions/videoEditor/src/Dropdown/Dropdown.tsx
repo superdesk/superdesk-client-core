@@ -1,8 +1,9 @@
 import * as React from 'react';
 import VideoEditorContext from '../VideoEditorContext';
+import {IDropdownLabel} from '../interfaces';
 
 interface IProps {
-    label: React.ReactElement<any>;
+    label: React.ReactElement<HTMLButtonElement | HTMLDivElement>;
     items: Array<{label: string, value: number}>;
     onSelect: (item: number) => void;
     isButton?: boolean;
@@ -64,7 +65,7 @@ export class Dropdown extends React.Component<IProps, IState> {
 
         return (
             <div className={`dropdown ${this.state.open ? 'open' : ''} ${this.props.className || ''}`}>
-                {React.cloneElement(this.props.label as React.ReactElement<any>, {
+                {React.cloneElement<IDropdownLabel>(this.props.label, {
                     onClick: this.handleToggle,
                     selectedItem: this.state.selectedItem,
                 })}
