@@ -1,6 +1,6 @@
 import React from 'react';
 import {TypeIcon, SelectBox} from './index';
-import classNames from 'classnames';
+import {CHECKBOX_PARENT_CLASS} from './constants';
 
 interface IProps {
     selectingDisabled?: boolean;
@@ -38,7 +38,7 @@ export class ListTypeIcon extends React.Component<IProps, IState> {
         return React.createElement(
             'div',
             {
-                className: classNames('list-field type-icon sd-monitoring-item-multi-select-checkbox'),
+                className: 'list-field type-icon ' + CHECKBOX_PARENT_CLASS,
                 onMouseEnter: selectingDisabled ? null : this.setHover,
                 onMouseLeave: selectingDisabled ? null : this.unsetHover,
                 style: {lineHeight: 0},
