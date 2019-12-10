@@ -1,5 +1,7 @@
-import _ from 'lodash';
+import _, {flatMap} from 'lodash';
 import {checkRenditions} from 'apps/authoring/authoring/controllers/AssociationController';
+import {extensions} from 'appConfig';
+import {IExtensionActivationResult, IArticleAction} from 'superdesk-api';
 
 /**
  * @ngdoc directive
@@ -108,6 +110,20 @@ export function MediaPreview(api, $rootScope, desks, superdesk, content, storage
             scope.$on('$destroy', () => {
                 elem.off('dragstart');
             });
+
+            scope.getActionsFromExtensions = (): Promise<Array<IArticleAction>> => {
+                const getActionsFromExtensions
+                    : Array<IExtensionActivationResult['contributions']['entities']['article']['getActions']>
+                = flatMap(
+                    Object.values(extensions),
+                    (extension) => extension.activationResult.contributions?.entities?.article?.getActions ?? [],
+                );
+
+                return Promise.all(getActionsFromExtensions.map((getPromise) => getPromise(scope.item)))
+                    .then((res) => {
+                        return flatMap(res);
+                    });
+            };
         },
     };
 }

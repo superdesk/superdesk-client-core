@@ -1,18 +1,15 @@
 import {AUTHORING_MENU_GROUPS} from '../../authoring/authoring/constants';
-import {IArticle} from 'superdesk-api';
+import {IArticle, IArticleAction} from 'superdesk-api';
 import {IActivity} from 'superdesk-interfaces/Activity';
 
-export interface IActionsMenuItemExtra {
-    label: string;
-    icon?: string;
-    onTrigger(): void;
-}
+type IAction =
+    {kind: 'activity-based'; activity: IActivity} | {kind: 'extension-action'; articleAction: IArticleAction};
 
 interface IAuthoringMenuGroup {
     _id: string;
     label?: string;
     concate?: boolean;
-    actions?: Array<IActivity>;
+    actions?: Array<IAction>;
 }
 
 interface IScope extends ng.IScope {
@@ -20,7 +17,7 @@ interface IScope extends ng.IScope {
     open: any;
     active: any;
     menuGroups: Array<IAuthoringMenuGroup>;
-    itemsExtra?: Array<IActionsMenuItemExtra>;
+    getActionsFromExtensions?: () => Promise<Array<IArticleAction>>;
     toggleActions(open: boolean): void;
     stopEvent(event: any): void;
     run(activity: any): void;
@@ -32,7 +29,7 @@ export function ItemActionsMenu(superdesk, activityService, workflowService, arc
         scope: {
             item: '=',
             active: '=',
-            itemsExtra: '=',
+            getActionsFromExtensions: '=',
         },
         templateUrl: 'scripts/apps/monitoring/views/item-actions-menu.html',
         link: function(scope: IScope) {
@@ -42,7 +39,8 @@ export function ItemActionsMenu(superdesk, activityService, workflowService, arc
              * @param {boolean} isOpen
              */
             scope.toggleActions = function(isOpen) {
-                scope.menuGroups = isOpen ? getActions(scope.item) : scope.menuGroups;
+                getActions(scope.item);
+
                 scope.open = isOpen;
 
                 if (!isOpen) {
@@ -87,47 +85,104 @@ export function ItemActionsMenu(superdesk, activityService, workflowService, arc
              *
              * This is not context aware, it will return everything.
              */
-            function getActions(item: IArticle): Array<IAuthoringMenuGroup> {
-                let intent = {action: 'list', type: getType(item)};
-                let activitiesByGroupName: {[groupName: string]: Array<IActivity>} = {};
+            function getActions(item: IArticle): void {
+                scope.menuGroups = [];
 
-                // group activities by `activity.group`
-                superdesk.findActivities(intent, item).forEach((activity: IActivity) => {
-                    if (workflowService.isActionAllowed(scope.item, activity.action)) {
-                        let group = activity.group ?? 'default';
+                (
+                    typeof scope.getActionsFromExtensions === 'function'
+                        ? scope.getActionsFromExtensions()
+                        : Promise.resolve<Array<IArticleAction>>([])
+                )
+                    .then((actionsFromExtensions) => {
+                        let intent = {action: 'list', type: getType(item)};
+                        let activitiesByGroupName: {[groupName: string]: Array<IActivity>} = {};
 
-                        if (activitiesByGroupName[group] == null) {
-                            activitiesByGroupName[group] = [];
+                        // group activities by `activity.group`
+                        superdesk.findActivities(intent, item).forEach((activity: IActivity) => {
+                            if (workflowService.isActionAllowed(scope.item, activity.action)) {
+                                let group = activity.group ?? 'default';
+
+                                if (activitiesByGroupName[group] == null) {
+                                    activitiesByGroupName[group] = [];
+                                }
+
+                                activitiesByGroupName[group].push(activity);
+                            }
+                        });
+
+                        let menuGroups: Array<IAuthoringMenuGroup> = [];
+
+                        // take default menu groups, add activities and push to `menuGroups`
+                        AUTHORING_MENU_GROUPS.forEach((group) => {
+                            if (activitiesByGroupName[group._id]) {
+                                menuGroups.push({
+                                    _id: group._id,
+                                    label: group.label,
+                                    concate: group.concate,
+                                    actions: activitiesByGroupName[group._id]
+                                        .map((activity) => ({kind: 'activity-based', activity: activity})),
+                                });
+                            }
+                        });
+
+                        // go over `activitiesByGroupName` and add groups not present
+                        // in default groups (AUTHORING_MENU_GROUPS)
+                        Object.keys(activitiesByGroupName).forEach((groupName) => {
+                            var existingGroup = AUTHORING_MENU_GROUPS.find((g) => g._id === groupName);
+
+                            if (!existingGroup) {
+                                menuGroups.push({
+                                    _id: groupName,
+                                    label: groupName,
+                                    actions: activitiesByGroupName[groupName]
+                                        .map((activity) => ({kind: 'activity-based', activity: activity})),
+                                });
+                            }
+                        });
+
+                        // handle actions from extensions
+                        let extensionActionsByGroupName: {[groupName: string]: Array<IArticleAction>} = {};
+
+                        for (const action of actionsFromExtensions) {
+                            let name = action.groupId ?? 'default';
+
+                            if (extensionActionsByGroupName[name] == null) {
+                                extensionActionsByGroupName[name] = [];
+                            }
+
+                            extensionActionsByGroupName[name].push(action);
                         }
 
-                        activitiesByGroupName[group].push(activity);
-                    }
-                });
+                        Object.keys(extensionActionsByGroupName).forEach((group) => {
+                            const existingGroup = menuGroups.find((_group) => _group._id === group);
 
-                let menuGroups: Array<IAuthoringMenuGroup> = [];
+                            if (existingGroup == null) {
+                                menuGroups.push({
+                                    _id: group,
+                                    label: group,
+                                    actions: extensionActionsByGroupName[group]
+                                        .map((articleAction) => ({
+                                            kind: 'extension-action',
+                                            articleAction: articleAction,
+                                        })),
+                                });
+                            } else {
+                                if (existingGroup.actions == null) {
+                                    existingGroup.actions = [];
+                                }
 
-                // take default menu groups, add activities and push to `menuGroups`
-                AUTHORING_MENU_GROUPS.forEach((group) => {
-                    if (activitiesByGroupName[group._id]) {
-                        menuGroups.push({
-                            _id: group._id,
-                            label: group.label,
-                            concate: group.concate,
-                            actions:  activitiesByGroupName[group._id],
+                                existingGroup.actions = existingGroup.actions.concat(
+                                    extensionActionsByGroupName[group]
+                                        .map((articleAction) => ({
+                                            kind: 'extension-action',
+                                            articleAction: articleAction,
+                                        })),
+                                );
+                            }
                         });
-                    }
-                });
 
-                // go over `activitiesByGroupName` and add groups not present in default groups (AUTHORING_MENU_GROUPS)
-                Object.keys(activitiesByGroupName).forEach((groupName) => {
-                    var existingGroup = AUTHORING_MENU_GROUPS.find((g) => g._id === groupName);
-
-                    if (!existingGroup) {
-                        menuGroups.push({_id: groupName, label: groupName, actions: activitiesByGroupName[groupName]});
-                    }
-                });
-
-                return menuGroups;
+                        scope.menuGroups = menuGroups;
+                    });
             }
 
             /**
