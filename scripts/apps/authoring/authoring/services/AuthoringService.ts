@@ -277,7 +277,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             .then((items) => {
                 relatedItems = items;
 
-                const unpublish = (selected) => {
+                const unpublishAction = (selected) => {
                     self.publish(item, {}, 'unpublish', {notifyErrors: true})
                         .then(handleSuccess);
                     relatedItems.forEach((relatedItem) => {
@@ -288,7 +288,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
                     });
                 };
 
-                showModal(getUnpublishConfirmModal(item, relatedItems, unpublish));
+                showModal(getUnpublishConfirmModal(item, relatedItems, unpublishAction));
             });
     };
 

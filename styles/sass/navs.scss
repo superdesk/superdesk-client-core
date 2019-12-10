@@ -488,6 +488,21 @@
         flex-grow: 0;
         margin:0 4px;
     }
+    .btn__text--short {
+        display: none;
+    }
+    .btn__text {
+        display: inline;
+    }
+}
+
+.compact .subnav__button-stack--default {
+    .btn__text--short {
+        display: inline;
+    }
+    .btn__text {
+        display: none;
+    }
 }
 
 .shortcut {

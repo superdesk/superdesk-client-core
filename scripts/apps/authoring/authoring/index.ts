@@ -361,7 +361,7 @@ angular.module('superdesk.apps.authoring', [
                 controller: ['data', 'authoring',
                     (data, authoring) => {
                         return authoring.unpublish(data.item.archive_item);
-                    }
+                    },
                 ],
                 filters: [{action: 'list', type: 'archive'}],
                 additionalCondition: ['authoring', 'item', (authoring, item) => authoring.itemActions(item).kill],
