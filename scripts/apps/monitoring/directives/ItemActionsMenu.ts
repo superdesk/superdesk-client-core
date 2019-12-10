@@ -1,4 +1,23 @@
-import {AUTHORING_MENU_GROUPS} from '../../authoring/authoring/constants';
+import {AUTHORING_MENU_GROUPS, IAuthoringMenuGroup} from '../../authoring/authoring/constants';
+import {IArticle} from 'superdesk-api';
+import {IActivity} from 'superdesk-interfaces/Activity';
+
+export interface IActionsMenuItemExtra {
+    label: string;
+    icon?: string;
+    onTrigger(): void;
+}
+
+interface IScope extends ng.IScope {
+    item?: IArticle;
+    open: any;
+    active: any;
+    menuGroups: Array<IAuthoringMenuGroup>;
+    itemsExtra?: Array<IActionsMenuItemExtra>;
+    toggleActions(open: boolean): void;
+    stopEvent(event: any): void;
+    run(activity: any): void;
+}
 
 ItemActionsMenu.$inject = ['superdesk', 'activityService', 'workflowService', 'archiveService', '$rootScope'];
 export function ItemActionsMenu(superdesk, activityService, workflowService, archiveService, $rootScope) {
@@ -6,9 +25,10 @@ export function ItemActionsMenu(superdesk, activityService, workflowService, arc
         scope: {
             item: '=',
             active: '=',
+            itemsExtra: '=',
         },
         templateUrl: 'scripts/apps/monitoring/views/item-actions-menu.html',
-        link: function(scope) {
+        link: function(scope: IScope) {
             /**
              * Populate scope actions when dropdown is opened.
              *
@@ -59,39 +79,42 @@ export function ItemActionsMenu(superdesk, activityService, workflowService, arc
              * Get available actions for given item.
              *
              * This is not context aware, it will return everything.
-             *
-             * @param {object} item
-             * @return {object}
              */
-            function getActions(item) {
+            function getActions(item: IArticle): Array<IAuthoringMenuGroup> {
                 let intent = {action: 'list', type: getType(item)};
-                let groups: any = {};
+                let activitiesByGroupName: {[groupName: string]: Array<IActivity>} = {};
 
-                superdesk.findActivities(intent, item).forEach((activity) => {
+                // group activities by `activity.group`
+                superdesk.findActivities(intent, item).forEach((activity: IActivity) => {
                     if (workflowService.isActionAllowed(scope.item, activity.action)) {
-                        let group = activity.group || 'default';
+                        let group = activity.group ?? 'default';
 
-                        groups[group] = groups[group] || [];
-                        groups[group].push(activity);
+                        if (activitiesByGroupName[group] == null) {
+                            activitiesByGroupName[group] = [];
+                        }
+
+                        activitiesByGroupName[group].push(activity);
                     }
                 });
 
-                let menuGroups = [];
+                let menuGroups: Array<IAuthoringMenuGroup> = [];
 
-                AUTHORING_MENU_GROUPS.forEach((mg) => {
-                    if (groups[mg._id]) {
-                        let group: any = {...mg};
+                // take default menu groups, add activities and push to `menuGroups`
+                AUTHORING_MENU_GROUPS.forEach((_group) => {
+                    if (activitiesByGroupName[_group._id]) {
+                        let groupCopy: IAuthoringMenuGroup = {..._group};
 
-                        group.actions = groups[mg._id];
-                        menuGroups.push(group);
+                        groupCopy.actions = activitiesByGroupName[_group._id];
+                        menuGroups.push(groupCopy);
                     }
                 });
 
-                Object.keys(groups).forEach((groupName) => {
+                // go over `activitiesByGroupName` and add groups not present in default groups (AUTHORING_MENU_GROUPS)
+                Object.keys(activitiesByGroupName).forEach((groupName) => {
                     var existingGroup = AUTHORING_MENU_GROUPS.find((g) => g._id === groupName);
 
                     if (!existingGroup) {
-                        menuGroups.push({_id: groupName, label: groupName, actions: groups[groupName]});
+                        menuGroups.push({_id: groupName, label: groupName, actions: activitiesByGroupName[groupName]});
                     }
                 });
 
