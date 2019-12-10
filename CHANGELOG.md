@@ -1,5 +1,15 @@
 # Superdesk Client Changelog
 
+## [1.32.1] 2019-12-10
+
+### Fixed
+
+- Fix saving priority with non-numeric names.
+- Right after updating a template the old one is still used.
+- Unable to unset content filter or macro in ingest settings.
+- Avoid opening preview when selecting items in photo grid view.
+- Fix search and edit on annotations library.
+
 ## [1.32.0] 2019-12-03
 
 ### Added
