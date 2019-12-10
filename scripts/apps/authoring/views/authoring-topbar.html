@@ -119,7 +119,7 @@
             <span class="btn__text--short" translate>T</span>
       </button>
 
-      <button class="btn btn--primary" ng-if="item._type !== 'legal_archive' && userHasPrivileges({takedown: 1}) === true"
+      <button class="btn btn--primary" ng-if="item._type !== 'legal_archive' && userHasPrivileges({unpublish: 1}) === true"
         ng-show="(action === 'view' || !item._editable) && itemActions.unpublish"
         ng-click="openAction('unpublish')"
         title="{{gettext('Unpublish')}}">

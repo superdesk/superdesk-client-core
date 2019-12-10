@@ -8,6 +8,7 @@ import {getUnpublishConfirmModal} from '../components/unpublish-confirm-modal';
 import {ITEM_STATE, CANCELED_STATES, READONLY_STATES} from 'apps/archive/constants';
 import {AuthoringWorkspaceService} from './AuthoringWorkspaceService';
 import {appConfig} from 'appConfig';
+import {IPublishedArticle} from 'superdesk-api';
 
 interface IPublishOptions {
     notifyErrors: boolean;
@@ -266,20 +267,20 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             );
     };
 
-    this.unpublish = function unpublish(item) {
+    this.unpublish = function unpublish(item: IPublishedArticle) {
         let relatedItems = [];
 
         const handleSuccess = () => {
             notify.success(gettext('Item was unpublished successfully.'));
         };
 
-        familyService.fetchRelatedByState(item, [ITEM_STATE.PUBLISHED])
-            .then((items) => {
+        familyService.fetchRelatedByState(item, [ITEM_STATE.PUBLISHED]).then((items) => {
                 relatedItems = items;
 
                 const unpublishAction = (selected) => {
                     self.publish(item, {}, 'unpublish', {notifyErrors: true})
                         .then(handleSuccess);
+
                     relatedItems.forEach((relatedItem) => {
                         if (selected[relatedItem._id]) {
                             self.publish(relatedItem, {}, 'unpublish', {notifyErrors: true})
