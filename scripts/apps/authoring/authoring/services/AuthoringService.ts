@@ -2,6 +2,7 @@ import _ from 'lodash';
 import {get} from 'lodash';
 import * as helpers from 'apps/authoring/authoring/helpers';
 import {gettext} from 'core/utils';
+import {logger} from 'core/services/logger';
 import {isPublished, isKilled} from 'apps/archive/utils';
 import {showModal} from 'core/services/modalService';
 import {getUnpublishConfirmModal} from '../components/unpublish-confirm-modal';
@@ -274,23 +275,28 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             notify.success(gettext('Item was unpublished successfully.'));
         };
 
+        if (item.state !== 'published') {
+            logger.warn('Trying to unpublish non published item');
+            return;
+        }
+
         familyService.fetchRelatedByState(item, [ITEM_STATE.PUBLISHED]).then((items) => {
-                relatedItems = items;
+            relatedItems = items;
 
-                const unpublishAction = (selected) => {
-                    self.publish(item, {}, 'unpublish', {notifyErrors: true})
-                        .then(handleSuccess);
+            const unpublishAction = (selected) => {
+                self.publish(item, {}, 'unpublish', {notifyErrors: true})
+                    .then(handleSuccess);
 
-                    relatedItems.forEach((relatedItem) => {
-                        if (selected[relatedItem._id]) {
-                            self.publish(relatedItem, {}, 'unpublish', {notifyErrors: true})
-                                .then(handleSuccess);
-                        }
-                    });
-                };
+                relatedItems.forEach((relatedItem) => {
+                    if (selected[relatedItem._id]) {
+                        self.publish(relatedItem, {}, 'unpublish', {notifyErrors: true})
+                            .then(handleSuccess);
+                    }
+                });
+            };
 
-                showModal(getUnpublishConfirmModal(item, relatedItems, unpublishAction));
-            });
+            showModal(getUnpublishConfirmModal(item, relatedItems, unpublishAction));
+        });
     };
 
     this.saveWorkConfirmation = function saveWorkAuthoring(orig, diff, isDirty, message) {

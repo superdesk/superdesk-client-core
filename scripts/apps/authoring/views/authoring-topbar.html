@@ -98,7 +98,7 @@
       <button class="btn btn--primary" ng-if="item._type !== 'legal_archive' && !isLocked() && userHasPrivileges({rewrite: 1}) === true"
         ng-show="(action === 'view' || !item._editable) && itemActions.re_write"
         ng-click="openAction('rewrite')"
-        title="{{gettext('Update')}">
+        title="{{gettext('Update')}}">
             <span class="btn__text" translate>Update</span>
             <span class="btn__text--short" translate>U</span>
       </button>
