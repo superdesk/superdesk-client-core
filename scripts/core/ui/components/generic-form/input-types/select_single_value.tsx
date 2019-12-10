@@ -88,7 +88,7 @@ export function getSelectSingleValue(
                         value={this.props.value || ''}
                         className="sd-line-input__select"
                         onChange={(event) => {
-                            this.props.onChange(event.target.value === '' ? this.initialValue : event.target.value);
+                            this.props.onChange(event.target.value);
                         }}
                         data-test-id={`gform-input--${this.props.formField.field}`}
                     >
