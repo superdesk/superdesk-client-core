@@ -18,8 +18,27 @@
         </li>
         <li ng-repeat-start="group in menuGroups"></li>
         <li class="dropdown__menu-divider"></li>
-        <li ng-repeat="activity in group.actions" sd-activity-item></li>
+
+
+        <li ng-repeat="action in group.actions">
+            <!-- Render activity based actions. Should be migrated to extension actions. -->
+            <span
+                ng-if="action.kind === 'activity-based'"
+                ng-init="activity = action.activity"
+                sd-activity-item
+            ></span>
+
+            <!-- Render actions from extensions -->
+            <a ng-if="action.kind === 'extension-action'" ng-click="action.articleAction.onTrigger()">
+                <i ng-if="action.articleAction.icon" class="{{action.articleAction.icon}}"></i>
+                <span>{{action.articleAction.label}}</span>
+            </a>
+        </li>
+
+
         <li ng-if="group.concate" sd-activity-dropdown-item data-group="{group.label}"></li>
+
+
         <li ng-if="!menuGroups.length">
             <div class="info-block" translate>You don't have the privileges to perform any action</div>
         </li>
