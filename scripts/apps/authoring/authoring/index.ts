@@ -11,6 +11,8 @@ import {reactToAngular1} from 'superdesk-ui-framework';
 import {ArticleUrlFields} from './article-url-fields';
 import {AuthoringCustomField} from './authoring-custom-field';
 import {PreviewCustomField} from './preview-custom-field';
+import {ValidateCharacters} from './ValidateCharacters';
+
 import {LineCount} from './components/line-count';
 import {PopulateAuthorsController} from './controllers/PopulateAuthorsController';
 
@@ -138,6 +140,13 @@ angular.module('superdesk.apps.authoring', [
     .component('sdPreviewCustomField',
         reactToAngular1(
             PreviewCustomField,
+            ['item', 'field'],
+        ),
+    )
+
+    .component('sdValidateCharacters',
+        reactToAngular1(
+            ValidateCharacters,
             ['item', 'field'],
         ),
     )
