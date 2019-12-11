@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {ISuperdesk, IArticle} from 'superdesk-api';
+import {IArticle} from 'superdesk-api';
 import VideoEditorContext from './VideoEditorContext';
 import {IVideoEditor, IErrorMessage} from './interfaces';
 import {pick} from 'lodash';
@@ -26,6 +26,8 @@ interface IState {
 
 export class VideoEditorThumbnail extends React.Component<IProps, IState> {
     static contextType = VideoEditorContext;
+    declare context: React.ContextType<typeof VideoEditorContext>;
+
     private ref: React.RefObject<HTMLCanvasElement>;
     private maxCanvasSize: { width: number; height: number };
     private interval: number;
@@ -127,8 +129,8 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
     }
 
     handleSave() {
-        const {dataApi} = this.context.superdesk;
-        const {gettext} = this.context.superdesk.localization;
+        const {dataApi} = this.context;
+        const {gettext} = this.context.localization;
 
         if (this.state.type === 'capture') {
             const crop = this.props.getCropRotate(pick(this.props.crop, ['x', 'y', 'width', 'height']));
@@ -147,7 +149,9 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
             }
 
             dataApi
-                .create('video_edit', {
+                .create<IArticle>('video_edit', {
+                    // TODO: Allow item type differ from response type
+                    // @ts-ignore
                     capture: body,
                     item: this.props.article,
                 })
@@ -168,7 +172,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
 
             form.append('file', this.state.value as File);
 
-            const {session, instance}: ISuperdesk = this.context.superdesk;
+            const {session, instance} = this.context;
             const host = instance.config.server.url;
 
             fetch(`${host}/video_edit/${this.props.article._id}`, {
@@ -188,7 +192,8 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
                     this.clearCanvas();
                     this.props.onSave(res);
                     this.setThumbnail(res.renditions?.thumbnail?.href ?? '');
-                });
+                })
+                .catch(this.props.onError);
         }
     }
 
@@ -202,11 +207,11 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
     }
 
     getThumbnail() {
-        const {dataApi} = this.context.superdesk;
+        const {dataApi} = this.context;
 
         this.interval = window.setInterval(() => {
             dataApi
-                .findOne('video_edit', this.props.article._id)
+                .findOne<IArticle>('video_edit', this.props.article._id)
                 .then((response: IArticle) => {
                     if (response.project?.processing?.thumbnail_preview === false) {
                         clearInterval(this.interval);
@@ -288,8 +293,8 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
     }
 
     render() {
-        const {getClass} = this.context.superdesk.utilities.CSS;
-        const {gettext} = this.context.superdesk.localization;
+        const {getClass} = this.context.utilities.CSS;
+        const {gettext} = this.context.localization;
 
         return (
             <div className={`sd-photo-preview__thumbnail-edit ${getClass('video__thumbnail__container')}`}>

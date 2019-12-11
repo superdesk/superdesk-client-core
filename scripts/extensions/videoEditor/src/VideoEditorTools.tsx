@@ -19,6 +19,7 @@ interface IProps {
 
 export class VideoEditorTools extends React.PureComponent<IProps> {
     static contextType = VideoEditorContext;
+    declare context: React.ContextType<typeof VideoEditorContext>;
 
     render() {
         const videoResolution = this.props.videoResolution;
@@ -34,8 +35,8 @@ export class VideoEditorTools extends React.PureComponent<IProps> {
             return {label: x + ':' + y, value: x / y};
         });
 
-        const {getClass} = this.context.superdesk.utilities.CSS;
-        const {gettext} = this.context.superdesk.localization;
+        const {getClass} = this.context.utilities.CSS;
+        const {gettext} = this.context.localization;
 
         return (
             <div className="sd-photo-preview__video-tools">
@@ -81,7 +82,7 @@ export class VideoEditorTools extends React.PureComponent<IProps> {
                         items={resolutions}
                         onSelect={this.props.onQualityChange}
                         disabled={this.props.videoQuality === 0}
-                        className={qualityDisabled && getClass('video__dropdown__quality--disable')}
+                        className={qualityDisabled ? getClass('video__dropdown__quality--disable') : ''}
                     />
                 </div>
             </div>

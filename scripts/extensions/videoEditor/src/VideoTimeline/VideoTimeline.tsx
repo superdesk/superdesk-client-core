@@ -42,6 +42,7 @@ function getStrTime(secondsTotal: number) {
 
 export class VideoTimeline extends React.Component<IProps, IState> {
     static contextType = VideoEditorContext;
+    declare context: React.ContextType<typeof VideoEditorContext>;
     private wrapper: React.RefObject<HTMLDivElement>;
     private controlbar: React.RefObject<HTMLDivElement>;
     private intervalTimer: number;
@@ -219,14 +220,14 @@ export class VideoTimeline extends React.Component<IProps, IState> {
     }
 
     render() {
-        const {getClass} = this.context.superdesk.utilities.CSS;
+        const {getClass} = this.context.utilities.CSS;
         const video = this.props.video.current!;
         const left = video ? `${(this.state.trim.start / video.duration) * 100}%` : '0%';
         const right = video ? `${(1 - this.state.trim.end / video.duration) * 100}%` : '0%';
 
         return (
             <div className={getClass('timeline-controls')}>
-                <ListThumbnails thumbnails={this.state.thumbnailsRender} />
+                <ListThumbnails thumbnails={this.state.thumbnailsRender} getClass={getClass} />
                 <div className={`${getClass('controlbars')}`} ref={this.controlbar} onClick={this.handleTimelineClick}>
                     <div
                         className={`${getClass('controlbars__mask')} ${getClass('controlbars__mask--left')}`}

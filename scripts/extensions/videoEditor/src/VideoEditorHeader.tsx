@@ -10,8 +10,10 @@ interface IProps {
 
 export class VideoEditorHeader extends React.PureComponent<IProps> {
     static contextType = VideoEditorContext;
+    declare context: React.ContextType<typeof VideoEditorContext>;
+
     render() {
-        const {gettext} = this.context.superdesk.localization;
+        const {gettext} = this.context.localization;
 
         return (
             <>

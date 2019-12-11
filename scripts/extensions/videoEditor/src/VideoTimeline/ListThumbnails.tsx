@@ -1,16 +1,14 @@
 import * as React from 'react';
-import VideoEditorContext from '../VideoEditorContext';
 import {IThumbnail} from '../interfaces';
 
 interface IProps {
     thumbnails: Array<IThumbnail>;
+    getClass: (className: string) => string;
 }
 
 export class ListThumbnails extends React.PureComponent<IProps> {
-    static contextType = VideoEditorContext;
-
     render() {
-        const {getClass} = this.context.superdesk.utilities.CSS;
+        const getClass = this.props.getClass;
 
         return (
             <div className={`${getClass('frames')} ${getClass('frames--thumbs')}`}>

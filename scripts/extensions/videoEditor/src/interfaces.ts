@@ -22,7 +22,7 @@ export interface IThumbnail {
 export interface IDropdownLabel {
     onClick?: () => void;
     getText?: (text: string) => string;
-    title?: string | undefined;
+    title?: string | null;
     disabled?: boolean;
     selectedItem?: string | number | null;
 }
