@@ -137,46 +137,49 @@ export function ItemActionsMenu(superdesk, activityService, workflowService, arc
                             }
                         });
 
-                        // handle actions from extensions
-                        let extensionActionsByGroupName: {[groupName: string]: Array<IArticleAction>} = {};
+                        // actions(except viewing an item) are not allowed for items in legal archive
+                        if (item._type !== 'legal_archive') {
+                            // handle actions from extensions
+                            let extensionActionsByGroupName: {[groupName: string]: Array<IArticleAction>} = {};
 
-                        for (const action of actionsFromExtensions) {
-                            const name = action.groupId ?? 'default';
+                            for (const action of actionsFromExtensions) {
+                                const name = action.groupId ?? 'default';
 
-                            if (extensionActionsByGroupName[name] == null) {
-                                extensionActionsByGroupName[name] = [];
-                            }
-
-                            extensionActionsByGroupName[name].push(action);
-                        }
-
-                        Object.keys(extensionActionsByGroupName).forEach((group) => {
-                            const existingGroup = menuGroups.find((_group) => _group._id === group);
-
-                            if (existingGroup == null) {
-                                menuGroups.push({
-                                    _id: group,
-                                    label: group,
-                                    actions: extensionActionsByGroupName[group]
-                                        .map((articleAction) => ({
-                                            kind: 'extension-action',
-                                            articleAction: articleAction,
-                                        })),
-                                });
-                            } else {
-                                if (existingGroup.actions == null) {
-                                    existingGroup.actions = [];
+                                if (extensionActionsByGroupName[name] == null) {
+                                    extensionActionsByGroupName[name] = [];
                                 }
 
-                                existingGroup.actions = existingGroup.actions.concat(
-                                    extensionActionsByGroupName[group]
-                                        .map((articleAction) => ({
-                                            kind: 'extension-action',
-                                            articleAction: articleAction,
-                                        })),
-                                );
+                                extensionActionsByGroupName[name].push(action);
                             }
-                        });
+
+                            Object.keys(extensionActionsByGroupName).forEach((group) => {
+                                const existingGroup = menuGroups.find((_group) => _group._id === group);
+
+                                if (existingGroup == null) {
+                                    menuGroups.push({
+                                        _id: group,
+                                        label: group,
+                                        actions: extensionActionsByGroupName[group]
+                                            .map((articleAction) => ({
+                                                kind: 'extension-action',
+                                                articleAction: articleAction,
+                                            })),
+                                    });
+                                } else {
+                                    if (existingGroup.actions == null) {
+                                        existingGroup.actions = [];
+                                    }
+
+                                    existingGroup.actions = existingGroup.actions.concat(
+                                        extensionActionsByGroupName[group]
+                                            .map((articleAction) => ({
+                                                kind: 'extension-action',
+                                                articleAction: articleAction,
+                                            })),
+                                    );
+                                }
+                            });
+                        }
 
                         scope.menuGroups = menuGroups;
                     });

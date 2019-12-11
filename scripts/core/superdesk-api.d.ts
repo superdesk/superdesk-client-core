@@ -183,7 +183,7 @@ declare module 'superdesk-api' {
     export interface IArticle extends IBaseRestApiResponse {
         _id: string;
         _current_version: number;
-        _type?: 'ingest' | 'archive' | 'published' | 'archived' | string;
+        _type?: 'ingest' | 'archive' | 'published' | 'archived' | 'legal_archive' | string;
         guid: string;
         family_id: string;
         translated_from?: string;
