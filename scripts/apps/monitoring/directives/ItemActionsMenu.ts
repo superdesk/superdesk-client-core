@@ -1,6 +1,8 @@
 import {AUTHORING_MENU_GROUPS} from '../../authoring/authoring/constants';
-import {IArticle, IArticleAction} from 'superdesk-api';
+import {IArticle, IArticleAction, IExtensionActivationResult} from 'superdesk-api';
 import {IActivity} from 'superdesk-interfaces/Activity';
+import {flatMap} from 'lodash';
+import {extensions} from 'appConfig';
 
 type IAction =
     {kind: 'activity-based'; activity: IActivity} | {kind: 'extension-action'; articleAction: IArticleAction};
@@ -17,10 +19,23 @@ interface IScope extends ng.IScope {
     open: any;
     active: any;
     menuGroups: Array<IAuthoringMenuGroup>;
-    getActionsFromExtensions?: () => Promise<Array<IArticleAction>>;
     toggleActions(open: boolean): void;
     stopEvent(event: any): void;
     run(activity: any): void;
+}
+
+function getActionsFromExtensions(item: IArticle): Promise<Array<IArticleAction>> {
+    const actionGetters
+        : Array<IExtensionActivationResult['contributions']['entities']['article']['getActions']>
+    = flatMap(
+        Object.values(extensions),
+        (extension) => extension.activationResult.contributions?.entities?.article?.getActions ?? [],
+    );
+
+    return Promise.all(actionGetters.map((getPromise) => getPromise(item)))
+        .then((res) => {
+            return flatMap(res);
+        });
 }
 
 ItemActionsMenu.$inject = ['superdesk', 'activityService', 'workflowService', 'archiveService', '$rootScope'];
@@ -29,7 +44,6 @@ export function ItemActionsMenu(superdesk, activityService, workflowService, arc
         scope: {
             item: '=',
             active: '=',
-            getActionsFromExtensions: '=',
         },
         templateUrl: 'scripts/apps/monitoring/views/item-actions-menu.html',
         link: function(scope: IScope) {
@@ -88,11 +102,7 @@ export function ItemActionsMenu(superdesk, activityService, workflowService, arc
             function getActions(item: IArticle): void {
                 scope.menuGroups = [];
 
-                (
-                    typeof scope.getActionsFromExtensions === 'function'
-                        ? scope.getActionsFromExtensions()
-                        : Promise.resolve<Array<IArticleAction>>([])
-                )
+                getActionsFromExtensions(item)
                     .then((actionsFromExtensions) => {
                         let intent = {action: 'list', type: getType(item)};
                         let activitiesByGroupName: {[groupName: string]: Array<IActivity>} = {};
