@@ -815,6 +815,8 @@ export function AuthoringDirective(
                     authoringWorkspace.takedown($scope.item);
                 } else if (action === 'rewrite') {
                     authoring.rewrite($scope.item);
+                } else if (action === 'unpublish') {
+                    authoring.unpublish($scope.item);
                 }
             };
 
