@@ -141,7 +141,7 @@ export function ItemActionsMenu(superdesk, activityService, workflowService, arc
                         let extensionActionsByGroupName: {[groupName: string]: Array<IArticleAction>} = {};
 
                         for (const action of actionsFromExtensions) {
-                            let name = action.groupId ?? 'default';
+                            const name = action.groupId ?? 'default';
 
                             if (extensionActionsByGroupName[name] == null) {
                                 extensionActionsByGroupName[name] = [];

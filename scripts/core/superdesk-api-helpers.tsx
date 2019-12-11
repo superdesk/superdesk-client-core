@@ -1,6 +1,6 @@
-import {IArticle, IArticleAction, IExtensionActivationResult} from "superdesk-api";
-import {flatMap} from "lodash";
-import {extensions} from "appConfig";
+import {IArticle, IArticleAction, IExtensionActivationResult} from 'superdesk-api';
+import {flatMap} from 'lodash';
+import {extensions} from 'appConfig';
 
 export function getActionsFromExtensions(item: IArticle): Promise<Array<IArticleAction>> {
     const actionGetters
