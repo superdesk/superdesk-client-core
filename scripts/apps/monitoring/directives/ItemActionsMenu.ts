@@ -3,6 +3,7 @@ import {IArticle, IArticleAction, IExtensionActivationResult} from 'superdesk-ap
 import {IActivity} from 'superdesk-interfaces/Activity';
 import {flatMap} from 'lodash';
 import {extensions} from 'appConfig';
+import {getActionsFromExtensions} from 'core/superdesk-api-helpers';
 
 type IAction =
     {kind: 'activity-based'; activity: IActivity} | {kind: 'extension-action'; articleAction: IArticleAction};
@@ -22,20 +23,6 @@ interface IScope extends ng.IScope {
     toggleActions(open: boolean): void;
     stopEvent(event: any): void;
     run(activity: any): void;
-}
-
-function getActionsFromExtensions(item: IArticle): Promise<Array<IArticleAction>> {
-    const actionGetters
-        : Array<IExtensionActivationResult['contributions']['entities']['article']['getActions']>
-    = flatMap(
-        Object.values(extensions),
-        (extension) => extension.activationResult.contributions?.entities?.article?.getActions ?? [],
-    );
-
-    return Promise.all(actionGetters.map((getPromise) => getPromise(item)))
-        .then((res) => {
-            return flatMap(res);
-        });
 }
 
 ItemActionsMenu.$inject = ['superdesk', 'activityService', 'workflowService', 'archiveService', '$rootScope'];

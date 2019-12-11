@@ -9,10 +9,9 @@ import SubmenuDropdown from './SubmenuDropdown';
 import {AUTHORING_MENU_GROUPS} from '../../../authoring/authoring/constants';
 import {closeActionsMenu, menuHolderElem, positionPopup} from '../../helpers';
 import {gettext} from 'core/utils';
-import {IExtensionActivationResult, IArticle, IArticleAction, IDisplayPriority} from 'superdesk-api';
-import {extensions} from 'appConfig';
-import {flatMap} from 'lodash';
+import {IArticle, IArticleAction, IDisplayPriority} from 'superdesk-api';
 import {sortByDisplayPriority} from 'core/helpers/sortByDisplayPriority';
+import {getActionsFromExtensions} from 'core/superdesk-api-helpers';
 
 interface IProps {
     item: IArticle;
@@ -45,22 +44,9 @@ export default class MenuItems extends React.Component<IProps, IState> {
     componentDidMount() {
         document.addEventListener('click', this.handleClickOutside, true);
 
-        const getActionsFromExtensions
-            : Array<IExtensionActivationResult['contributions']['entities']['article']['getActions']>
-            = flatMap(
-                Object.values(extensions).map(({activationResult}) => activationResult),
-                (activationResult) =>
-                    activationResult.contributions != null
-                    && activationResult.contributions.entities != null
-                    && activationResult.contributions.entities.article != null
-                    && activationResult.contributions.entities.article.getActions != null
-                        ? activationResult.contributions.entities.article.getActions
-                        : [],
-            );
-
-        Promise.all(getActionsFromExtensions.map((getPromise) => getPromise(this.props.item))).then((res) => {
+        getActionsFromExtensions(this.props.item).then((actions) => {
             this.setState({
-                actionsFromExtensions: flatMap(res),
+                actionsFromExtensions: actions,
             });
         });
     }
