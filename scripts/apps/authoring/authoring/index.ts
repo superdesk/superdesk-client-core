@@ -362,7 +362,7 @@ angular.module('superdesk.apps.authoring', [
                     },
                 ],
                 filters: [{action: 'list', type: 'archive'}],
-                additionalCondition: ['authoring', 'item', (authoring, item) => authoring.itemActions(item).kill],
+                additionalCondition: ['authoring', 'item', (authoring, item) => authoring.itemActions(item).unpublish],
                 privileges: {unpublish: 1},
             })
             .activity('edit.unpublished', {
