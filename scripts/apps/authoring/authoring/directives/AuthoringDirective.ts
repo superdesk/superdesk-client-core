@@ -787,7 +787,7 @@ export function AuthoringDirective(
             $scope.save_enabled = function() {
                 confirm.dirty = $scope.dirty;
 
-                return ($scope.dirty || $scope.item._autosave != null) &&
+                return ($scope.dirty || $scope.item._autosave != null) && !api.loading &&
                     _.reduce($scope.isValidEmbed, (agg, val) => agg && val, true);
             };
 

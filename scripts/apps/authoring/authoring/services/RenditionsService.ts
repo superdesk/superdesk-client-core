@@ -129,6 +129,8 @@ export function RenditionsService(metadata, $q, api, superdesk, _, notify) {
                         }
                     });
 
+                    api.loading = 'true';
+
                     return $q.all(savingImagePromises)
                         // return the cropped images
                         .then((croppedImages) => {
@@ -151,9 +153,11 @@ export function RenditionsService(metadata, $q, api, superdesk, _, notify) {
 
                             // apply the metadata changes
                             angular.extend(item, result.metadata);
+                            api.loading = false;
                             return item;
                         })
                         .catch(() => {
+                            api.loading = false;
                             notify.error(gettext('Failed to generate picture crops.'));
                         });
                 }).catch((response) => {

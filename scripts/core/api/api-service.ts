@@ -7,6 +7,8 @@
 function APIProvider() {
     var apis = {};
 
+    this.loading = false;
+
     /**
      * @ngdoc method
      * @name apiProvider#api_
