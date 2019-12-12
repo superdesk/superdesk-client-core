@@ -45,7 +45,7 @@ export class VideoTimeline extends React.Component<IProps, IState> {
     private wrapper: React.RefObject<HTMLDivElement>;
     private controlbar: React.RefObject<HTMLDivElement>;
     private intervalTimer: number;
-    private PositionX: any;
+    private PositionX: number;
 
     constructor(props: IProps) {
         super(props);
@@ -60,6 +60,7 @@ export class VideoTimeline extends React.Component<IProps, IState> {
         this.wrapper = React.createRef();
         this.controlbar = React.createRef();
         this.intervalTimer = 0;
+        this.PositionX = 0;
         this.handleDrag = debounce(this.handleDrag.bind(this), 5);
         this.handleTimelineClick = this.handleTimelineClick.bind(this);
         this.handledragover = this.handledragover.bind(this);
