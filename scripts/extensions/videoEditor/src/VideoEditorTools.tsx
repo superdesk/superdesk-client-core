@@ -5,6 +5,7 @@ import {CropLabel} from './Dropdown/CropLabel';
 import {QualityLabel} from './Dropdown/QualityLabel';
 
 interface IProps {
+    wrapperRef: (element: HTMLDivElement) => void;
     onToggleVideo: () => void;
     onRotate: () => void;
     onCrop: (aspect: number) => void;
@@ -17,7 +18,7 @@ interface IProps {
     videoResolution: number;
 }
 
-export class VideoEditorTools extends React.PureComponent<IProps> {
+class VideoEditorController extends React.PureComponent<IProps> {
     static contextType = VideoEditorContext;
     declare context: React.ContextType<typeof VideoEditorContext>;
 
@@ -39,7 +40,7 @@ export class VideoEditorTools extends React.PureComponent<IProps> {
         const {gettext} = this.context.localization;
 
         return (
-            <div className="sd-photo-preview__video-tools">
+            <div className="sd-photo-preview__video-tools" ref={this.props.wrapperRef}>
                 <button
                     className="btn btn--ui-dark btn--hollow btn--icon-only btn--large"
                     onClick={this.props.onToggleVideo}
@@ -89,3 +90,7 @@ export class VideoEditorTools extends React.PureComponent<IProps> {
         );
     }
 }
+
+export const VideoEditorTools = React.forwardRef((props: IProps, ref: React.Ref<HTMLDivElement>) =>
+    <VideoEditorController wrapperRef={ref} {...props} />,
+);

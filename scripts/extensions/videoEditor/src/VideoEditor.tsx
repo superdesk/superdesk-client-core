@@ -48,7 +48,8 @@ export class VideoEditor extends React.Component<IProps, IState> {
     private intervalCheckVideo: number;
     private initTransformations: IState['transformations'];
     private hasTransitionRun: boolean;
-    wrapperSize: { width: number; height: number };
+    // maximum size of video will scale up to
+    private wrapperSize: { width: number; height: number };
 
     constructor(props: IProps) {
         super(props);
@@ -104,6 +105,8 @@ export class VideoEditor extends React.Component<IProps, IState> {
         this.handleSave = this.handleSave.bind(this);
         this.getCropRotate = this.getCropRotate.bind(this);
         this.getWrapperSize = this.getWrapperSize.bind(this);
+        this.getToolsWrapperSize = this.getToolsWrapperSize.bind(this);
+        this.getVideoContainerSize = this.getVideoContainerSize.bind(this);
         this.showErrorMessage = this.showErrorMessage.bind(this);
         this.checkIsDirty = this.checkIsDirty.bind(this);
     }
@@ -536,7 +539,6 @@ export class VideoEditor extends React.Component<IProps, IState> {
         }
     }
 
-    // get wrapper size dynamically to scale video so that it's not too small or too big
     getWrapperSize(element: HTMLDivElement) {
         if (element == null) {
             return;
@@ -545,8 +547,30 @@ export class VideoEditor extends React.Component<IProps, IState> {
 
         this.wrapperSize = {
             width: width,
-            height: height - 100, // subtract VideoEditorTools size and video margin
+            // in case ref callback of child element is run before this function
+            height: height + this.wrapperSize.height,
         };
+    }
+
+    getToolsWrapperSize(element: HTMLDivElement) {
+        if (element == null) {
+            return;
+        }
+        const {height} = element.getBoundingClientRect();
+        const {marginTop} = window.getComputedStyle(element);
+        // the remain of margin bottom of video tools is too big and overflowed to timeline
+        const margin = parseFloat(marginTop) * 2;
+
+        this.wrapperSize.height = this.wrapperSize.height - height - margin;
+    }
+
+    getVideoContainerSize(element: HTMLDivElement) {
+        if (element == null) {
+            return;
+        }
+        const {marginTop} = window.getComputedStyle(element);
+
+        this.wrapperSize.height = this.wrapperSize.height - parseFloat(marginTop);
     }
 
     getScale(): number {
@@ -617,6 +641,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                         <div
                                             className="sd-photo-preview__video-container"
                                             style={{marginTop: '2rem'}}
+                                            ref={this.getVideoContainerSize}
                                         >
                                             <video
                                                 ref={this.videoRef}
@@ -654,6 +679,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                             )}
                                         </div>
                                         <VideoEditorTools
+                                            wrapperRef={this.getToolsWrapperSize}
                                             onToggleVideo={this.handleToggleVideo}
                                             onRotate={this.handleRotate}
                                             onCrop={this.handleToggleCrop}
