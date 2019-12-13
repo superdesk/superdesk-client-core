@@ -1,5 +1,28 @@
 # Superdesk Client Changelog
 
+## [1.32.2] 2019-12-13
+
+### Added
+
+- Add `Unpublish` button to authoring topbar.
+- Add `fr_CA` localization.
+
+### Fixed
+
+- Unpublish action not shown when user has unpublish privilege.
+- Users should be only able to send content to desks
+  where they are members if they have no privilege.
+
+## [1.32.1] 2019-12-10
+
+### Fixed
+
+- Fix saving priority with non-numeric names.
+- Right after updating a template the old one is still used.
+- Unable to unset content filter or macro in ingest settings.
+- Avoid opening preview when selecting items in photo grid view.
+- Fix search and edit on annotations library.
+
 ## [1.32.0] 2019-12-03
 
 ### Added
