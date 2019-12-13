@@ -9,7 +9,7 @@ interface IProps {
     article: IArticle;
     crop: IVideoEditor['crop'];
     rotate: IVideoEditor['degree'];
-    onToggleLoading: (isLoading: boolean, loadingText?: string) => void;
+    onToggleLoading: (isLoading: boolean, loadingText?: string, type?: 'video' | 'thumbnail') => void;
     onSave: (article: IArticle) => void;
     onError: (err: IErrorMessage) => void;
     getCropRotate: (crop: IVideoEditor['crop']) => IVideoEditor['crop'];
@@ -163,7 +163,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
                         scale: this.state.scale,
                         rotateDegree: this.props.rotate,
                     });
-                    this.props.onToggleLoading(true, gettext('Saving capture thumbnail...'));
+                    this.props.onToggleLoading(true, gettext('Saving capture thumbnail...'), 'thumbnail');
                     this.getThumbnail();
                 })
                 .catch(this.props.onError);
@@ -216,7 +216,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
                     if (response.project?.processing?.thumbnail_preview === false) {
                         clearInterval(this.interval);
                         this.props.onSave(response);
-                        this.props.onToggleLoading(false);
+                        this.props.onToggleLoading(false, '', 'thumbnail');
                     }
                 })
                 .catch((_: IErrorMessage) => {

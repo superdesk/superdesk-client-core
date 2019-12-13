@@ -30,7 +30,10 @@ interface IState {
     };
     cropImg: string;
     thumbnails: Array<IThumbnail>;
-    loading: boolean;
+    loading: {
+        video: boolean,
+        thumbnail: boolean,
+    };
     loadingText: string;
     scale: number;
     videoSrc: string;
@@ -82,7 +85,10 @@ export class VideoEditor extends React.Component<IProps, IState> {
             cropEnabled: false,
             cropImg: '',
             playing: false,
-            loading: false,
+            loading: {
+                video: false,
+                thumbnail: false,
+            },
             loadingText: '',
             scale: 1,
             thumbnails: [],
@@ -304,12 +310,15 @@ export class VideoEditor extends React.Component<IProps, IState> {
         });
     }
 
-    handleToggleLoading(isToggle: boolean, text: string = '') {
+    handleToggleLoading(isToggle: boolean, text: string = '', type: 'video' | 'thumbnail' = 'video') {
         if (this.state.playing) {
             this.handleToggleVideo();
         }
         this.setState({
-            loading: isToggle,
+            loading: {
+                ...this.state.loading,
+                [type]: isToggle,
+            },
             loadingText: text || this.state.loadingText,
         });
     }
@@ -386,13 +395,15 @@ export class VideoEditor extends React.Component<IProps, IState> {
                         this.props.superdesk.dataApi
                             .findOne<IArticle>('video_edit', this.state.article._id + `?t=${Math.random()}`)
                             .then((result) => {
-                                if (result.project?.processing?.video === false) {
+                                const processing = result.project?.processing;
+
+                                if (processing?.video === false && processing?.thumbnail_preview === false) {
                                     clearInterval(this.intervalVideoEdit);
                                     this.handleToggleLoading(false);
                                     this.handleReset();
                                     this.setState({
                                         thumbnails: [],
-                                        videoSrc: result.project.url + `?t=${Math.random()}`,
+                                        videoSrc: result.project?.url + `?t=${Math.random()}`,
                                         article: {
                                             ...this.state.article,
                                             ...result,
@@ -615,6 +626,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
             }
             videoHeight = this.state.transformations.degree % 180 !== 0 ? videoRef.videoWidth : videoRef.videoHeight;
         }
+        const isLoading = this.state.loading.video || this.state.loading.thumbnail;
 
         return (
             <div className="modal modal--fullscreen modal--dark-ui in" style={{zIndex: 1050, display: 'block'}}>
@@ -627,10 +639,11 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                 onReset={this.handleReset}
                                 onSave={this.handleSave}
                                 isDirty={this.checkIsDirty()}
+                                isVideoLoading={this.state.loading.video}
                             />
                         </div>
                         <div className="modal__body modal__body--no-padding">
-                            {this.state.loading && (
+                            {isLoading && (
                                 <div className={getClass('video__loading')}>
                                     <div className={getClass('video__loading__text')}>{this.state.loadingText}</div>
                                 </div>

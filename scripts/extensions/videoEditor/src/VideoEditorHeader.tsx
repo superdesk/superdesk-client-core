@@ -6,6 +6,7 @@ interface IProps {
     onClose: () => void;
     onReset: () => void;
     onSave: () => void;
+    isVideoLoading: boolean;
 }
 
 export class VideoEditorHeader extends React.PureComponent<IProps> {
@@ -17,7 +18,7 @@ export class VideoEditorHeader extends React.PureComponent<IProps> {
 
         return (
             <>
-                {this.props.isDirty ? (
+                {!this.props.isVideoLoading && this.props.isDirty ? (
                     <div className="modal__sliding-toolbar">
                         <div className="sliding-toolbar__inner" />
                         <button className="btn btn--primary btn--ui-dark btn--hollow" onClick={this.props.onReset}>
