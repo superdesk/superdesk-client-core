@@ -15,7 +15,6 @@ export const DEFAULT_LIST_CONFIG = {
         'OrgName',
         'ContactLocation',
         'SocialInfo',
-
     ],
     singleLine: [
         'ContactName',

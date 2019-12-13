@@ -72,6 +72,18 @@ export const DEFAULT_LIST_CONFIG = {
     ],
 };
 
+export const DEFAULT_RELATED_ITEMS_LIST_CONFIG = {
+    firstLine: [
+        'slugline',
+        'headline',
+        'versioncreated',
+    ],
+    secondLine: [
+        'state',
+        'desk',
+    ],
+};
+
 export const DEFAULT_GRID_VIEW_FIELDS_CONFIG = [
     'source',
 ];
@@ -92,7 +104,7 @@ interface ISwimlaneGroup {
     ellipsis?: boolean;
 }
 
-export const DEFAULT_SWIMLANE_FIELDS_CONFIG: {[key: string]: Array<ISwimlaneGroup>} = {
+export const DEFAULT_SWIMLANE_FIELDS_CONFIG: { [key: string]: Array<ISwimlaneGroup> } = {
     left: [{fields: ['urgency']}, {fields: ['slugline', 'headline'], ellipsis: true}],
     right: [{fields: ['versioncreated']}],
 };

@@ -5,7 +5,7 @@ import {removeLodash} from 'core/filters';
 import {IPropsItemListInfo} from '../ListItemInfo';
 
 export const state: React.StatelessComponent<Pick<IPropsItemListInfo, 'item' | 'svc'>> = (props) => {
-    const datetime = props.svc.datetime;
+    const datetime = props.svc?.datetime;
 
     if (props.item.state !== undefined && props.item.state !== null) {
         let title = removeLodash(props.item.state);
