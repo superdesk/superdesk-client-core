@@ -6,7 +6,7 @@
     <li ng-if="!defaultTemplate">
         <button id="create_text_article" ng-click="create()">
             <i class="icon-plus-sign icon--blue"></i>
-            {{ :: 'Plain text' | translate }}
+            <span translate>Plain text</span>
         </button>
     </li>
 
@@ -20,7 +20,7 @@
     <li ng-if="item">
         <button id="package_item" ng-click="createPackage(item)">
             <i class="icon-plus-sign icon--blue"></i>
-            {{ :: 'Package current item' | translate }}
+            <span translate>Package current item</span>
         </button>
     </li>
 </ul>
@@ -50,13 +50,13 @@
     <li ng-if="canCreatePackage() && !$root.config.features.hideCreatePackage">
         <button id="create_package"  ng-click="createPackage()">
             <i class="icon-package-plus"></i>
-            {{ :: 'Create Package' | translate }}
+            <span translate>Create Package</span>
         </button>
     </li>
 
     <li ng-if="openUpload">
         <button ng-click="openUpload()" id="start-upload-btn">
-            <i class="icon-upload"></i> {{ :: 'Upload Media' | translate }}
+            <i class="icon-upload"></i> <span translate>Upload Media</span>
         </button>
     </li>
 </ul>
