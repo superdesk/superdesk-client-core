@@ -28,6 +28,13 @@ export function RelatedItemsDirective(authoringWorkspace: AuthoringWorkspaceServ
         },
         templateUrl: 'scripts/apps/relations/views/related-items.html',
         link: function(scope, elem, attr) {
+
+            scope.onCreated = (item: IArticle) => {
+                scope.addRelatedItem(item);
+            };
+
+            scope.gettext = gettext;
+
             const dragOverClass = 'dragover';
             const allowed = ((scope.field || {}).field_options || {}).allowed_types || {};
             const ALLOWED_TYPES = Object.keys(allowed)

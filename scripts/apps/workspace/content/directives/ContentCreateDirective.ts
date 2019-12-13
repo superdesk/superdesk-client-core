@@ -1,7 +1,26 @@
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
+import {IArticle} from 'superdesk-api';
 
-ContentCreateDirective.$inject = ['desks', 'templates', 'content', 'authoringWorkspace',
-    'superdesk', 'keyboardManager', '$location'];
+ContentCreateDirective.$inject = [
+    'desks',
+    'templates',
+    'content',
+    'authoringWorkspace',
+    'superdesk',
+    'keyboardManager',
+    '$location',
+];
+
+interface IScope extends ng.IScope {
+    onCreated?: (item: IArticle) => Promise<IArticle>;
+    defaultTemplate: any;
+    openUpload: () => void;
+    createFromTemplate: (template: any) => void;
+    canCreatePackage: () => boolean;
+    createPackage: () => void;
+    create: (type?: any) => void;
+    contentTemplates: any;
+}
 
 export function ContentCreateDirective(
     desks,
@@ -13,9 +32,11 @@ export function ContentCreateDirective(
     $location,
 ) {
     return {
-        scope: true,
+        scope: {
+            onCreated: '=',
+        },
         templateUrl: 'scripts/apps/workspace/content/views/sd-content-create.html',
-        link: function(scope) {
+        link: function(scope: IScope) {
             /**
              * Start editing given item in sidebar editor
              *
@@ -68,8 +89,12 @@ export function ContentCreateDirective(
              */
             scope.createFromTemplate = function(template) {
                 content.createItemFromTemplate(template)
-                    .then(edit)
-                    .then(() => {
+                    .then((item: IArticle) => {
+                        if (typeof scope.onCreated === 'function') {
+                            scope.onCreated(item);
+                        }
+
+                        edit(item);
                         getRecentTemplates(desks.activeDeskId);
                     });
             };

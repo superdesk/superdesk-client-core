@@ -1,7 +1,12 @@
+<div class="dropdown dropdown--align-right strict" dropdown>
+    <button tooltip="gettext('Create')" tooltip-placement="left" class="navbtn dropdown__toggle sd-create-btn" dropdown__toggle></button>
+    <div class="dropdown__menu dropdown__menu--has-head-foot pull-right" sd-content-create on-created="onCreated"></div>
+</div>
+
 <button class="item-association item-association--no-click" 
         ng-if="isEmptyRelatedItems(field._id)"
         ng-class="{'item-association--loading': loading}">
-        <span class="item-association__text-label">{{'Drop items here' | translate}}</span>  
+        <span class="item-association__text-label" translate>Drop items here</span>  
 </button>
 <div class="related-items" ng-if="!isEmptyRelatedItems(field._id)">
     <div ng-if="loading" class="loading-overlay" ng-class="{active: loading}" style="opacity: 0.5;"></div>
