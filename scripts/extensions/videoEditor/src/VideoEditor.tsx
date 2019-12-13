@@ -3,13 +3,13 @@ import * as React from 'react';
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 import {ISuperdesk, IArticle} from 'superdesk-api';
-import {isEmpty, omit, isEqual, cloneDeep, flatten} from 'lodash';
+import {isEmpty, omit, isEqual, cloneDeep} from 'lodash';
 
 import {VideoEditorTools} from './VideoEditorTools';
 import {VideoTimeline} from './VideoTimeline/VideoTimeline';
 import {VideoEditorHeader} from './VideoEditorHeader';
 import {VideoEditorThumbnail} from './VideoEditorThumbnail';
-import {IVideoEditor, IThumbnail, ICrop} from './interfaces';
+import {IVideoEditor, IThumbnail, ICrop, IErrorMessage} from './interfaces';
 
 interface IProps {
     article: IArticle;
@@ -43,21 +43,19 @@ export class VideoEditor extends React.Component<IProps, IState> {
     private videoRef: React.RefObject<HTMLVideoElement>;
     private timelineRef: React.RefObject<VideoTimeline>;
     private reactCropRef: React.RefObject<ReactCrop>;
-    private reactCropWrapperRef: React.RefObject<HTMLDivElement>;
     private intervalThumbnails: number;
     private intervalVideoEdit: number;
     private intervalCheckVideo: number;
     private initTransformations: IState['transformations'];
-    private reactCropMarginDelta: number;
     private hasTransitionRun: boolean;
-    wrapperSize: { width: number; height: number };
+    // maximum size of video will scale up to
+    private wrapperSize: { width: number; height: number };
 
     constructor(props: IProps) {
         super(props);
         this.videoRef = React.createRef();
         this.timelineRef = React.createRef();
         this.reactCropRef = React.createRef();
-        this.reactCropWrapperRef = React.createRef();
         this.intervalThumbnails = 0;
         this.intervalVideoEdit = 0;
         this.intervalCheckVideo = 0;
@@ -92,7 +90,6 @@ export class VideoEditor extends React.Component<IProps, IState> {
             article: cloneDeep(this.props.article),
         };
         this.wrapperSize = {width: 0, height: 0};
-        this.reactCropMarginDelta = 0;
         this.hasTransitionRun = true;
 
         this.handleClose = this.handleClose.bind(this);
@@ -108,6 +105,8 @@ export class VideoEditor extends React.Component<IProps, IState> {
         this.handleSave = this.handleSave.bind(this);
         this.getCropRotate = this.getCropRotate.bind(this);
         this.getWrapperSize = this.getWrapperSize.bind(this);
+        this.getToolsWrapperSize = this.getToolsWrapperSize.bind(this);
+        this.getVideoContainerSize = this.getVideoContainerSize.bind(this);
         this.showErrorMessage = this.showErrorMessage.bind(this);
         this.checkIsDirty = this.checkIsDirty.bind(this);
     }
@@ -163,7 +162,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                         });
                     }
                 })
-                .catch((err: any) => {
+                .catch((err: IErrorMessage) => {
                     this.showErrorMessage(err);
                     clearInterval(this.intervalCheckVideo);
                 });
@@ -217,8 +216,8 @@ export class VideoEditor extends React.Component<IProps, IState> {
         this.hasTransitionRun = true;
         const {getClass} = this.props.superdesk.utilities.CSS;
         const degree = this.state.transformations.degree % 360 === 0 ? 0 : this.state.transformations.degree;
-        // avoid running transition on setting 360 degree to 0
 
+        // avoid running transition on setting 360 degree to 0
         if (degree === 0) {
             this.videoRef.current!.classList.remove(getClass('video__rotate__transition'));
         }
@@ -299,20 +298,10 @@ export class VideoEditor extends React.Component<IProps, IState> {
         if (this.state.cropEnabled === false) {
             crop = this.getInitialCropSize(cropAspect);
         }
-        this.reactCropMarginDelta = 0;
-        this.setState(
-            {cropEnabled: !this.state.cropEnabled, transformations: {...this.state.transformations, crop: crop}},
-            () => {
-                // chrome adds 1rem extra (ghost) margin to ReactCrop cause crop area and video mismatch
-                if (this.reactCropRef.current != null) {
-                    const element = this.reactCropRef.current?.['componentRef'];
-                    const {top} = element.getBoundingClientRect();
-                    const {top: wrapperTop} = this.reactCropWrapperRef.current!.getBoundingClientRect();
-
-                    this.reactCropMarginDelta = top - wrapperTop - 20;
-                }
-            },
-        );
+        this.setState({
+            transformations: {...this.state.transformations, crop: crop},
+            cropEnabled: !this.state.cropEnabled,
+        });
     }
 
     handleToggleLoading(isToggle: boolean, text: string = '') {
@@ -395,9 +384,9 @@ export class VideoEditor extends React.Component<IProps, IState> {
                     this.handleToggleLoading(true, gettext('Video is editing, please wait...'));
                     this.intervalVideoEdit = window.setInterval(() => {
                         this.props.superdesk.dataApi
-                            .findOne('video_edit', this.state.article._id + `?t=${Math.random()}`)
-                            .then((result: any) => {
-                                if (result.project.processing.video === false) {
+                            .findOne<IArticle>('video_edit', this.state.article._id + `?t=${Math.random()}`)
+                            .then((result) => {
+                                if (result.project?.processing?.video === false) {
                                     clearInterval(this.intervalVideoEdit);
                                     this.handleToggleLoading(false);
                                     this.handleReset();
@@ -414,7 +403,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                             });
                     }, 3000);
                 })
-                .catch((err: any) => {
+                .catch((err: IErrorMessage) => {
                     this.showErrorMessage(err);
                     clearInterval(this.intervalVideoEdit);
                 });
@@ -453,13 +442,13 @@ export class VideoEditor extends React.Component<IProps, IState> {
                     } else if (result.project?.processing.thumbnails_timeline === false) {
                         this.props.superdesk.dataApi
                             .findOne('video_edit', this.state.article._id + `?action=timeline&t=${Math.random()}`)
-                            .catch((err: any) => {
+                            .catch((err: IErrorMessage) => {
                                 this.showErrorMessage(err);
                                 clearInterval(this.intervalThumbnails);
                             });
                     }
                 })
-                .catch((err: any) => {
+                .catch((err: IErrorMessage) => {
                     this.showErrorMessage(err);
                     clearInterval(this.intervalThumbnails);
                 });
@@ -550,8 +539,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
         }
     }
 
-    // get wrapper size dynamically to scale video so that it's not too small or too big
-    getWrapperSize(element: any) {
+    getWrapperSize(element: HTMLDivElement) {
         if (element == null) {
             return;
         }
@@ -559,8 +547,30 @@ export class VideoEditor extends React.Component<IProps, IState> {
 
         this.wrapperSize = {
             width: width,
-            height: height - 100, // subtract VideoEditorTools size and video margin
+            // in case ref callback of child element is run before this function
+            height: height + this.wrapperSize.height,
         };
+    }
+
+    getToolsWrapperSize(element: HTMLDivElement) {
+        if (element == null) {
+            return;
+        }
+        const {height} = element.getBoundingClientRect();
+        const {marginTop} = window.getComputedStyle(element);
+        // the remain of margin bottom of video tools is too big and overflowed to timeline
+        const margin = parseFloat(marginTop) * 2;
+
+        this.wrapperSize.height = this.wrapperSize.height - height - margin;
+    }
+
+    getVideoContainerSize(element: HTMLDivElement) {
+        if (element == null) {
+            return;
+        }
+        const {marginTop} = window.getComputedStyle(element);
+
+        this.wrapperSize.height = this.wrapperSize.height - parseFloat(marginTop);
     }
 
     getScale(): number {
@@ -578,14 +588,8 @@ export class VideoEditor extends React.Component<IProps, IState> {
         return vh / height;
     }
 
-    showErrorMessage(errorResponse: any) {
-        const message = JSON.parse(errorResponse._message) || {};
-        const error: Array<string> = flatten(Object.values(message)).map((x) => {
-            if (typeof x === 'object') {
-                return JSON.stringify(x);
-            }
-            return x;
-        });
+    showErrorMessage(errorResponse: IErrorMessage) {
+        const error = Object.values(errorResponse._message).reduce((acc, curr) => acc.concat(curr), []);
 
         this.props.superdesk.ui.alert(error.join('<br/>'));
     }
@@ -636,7 +640,8 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                     <div className="sd-photo-preview__video-inner">
                                         <div
                                             className="sd-photo-preview__video-container"
-                                            ref={this.reactCropWrapperRef}
+                                            style={{marginTop: '2rem'}}
+                                            ref={this.getVideoContainerSize}
                                         >
                                             <video
                                                 ref={this.videoRef}
@@ -647,6 +652,9 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                                 style={{
                                                     transform: `rotate(${degree}) scale(${this.state.scale})`,
                                                     height: `${videoHeight}px`,
+                                                    // chrome will add extra position for react crop if video has
+                                                    // margin top, even if margin of those two are equal
+                                                    marginTop: 0,
                                                 }}
                                                 className={getClass('video__rotate__transition')}
                                                 onTransitionEnd={this.handleRotateTransitionEnd}
@@ -666,12 +674,12 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                                         height: height,
                                                         background: 'unset',
                                                         position: 'absolute',
-                                                        margin: `calc(3rem - ${this.reactCropMarginDelta}px) auto 1rem`,
                                                     }}
                                                 />
                                             )}
                                         </div>
                                         <VideoEditorTools
+                                            wrapperRef={this.getToolsWrapperSize}
                                             onToggleVideo={this.handleToggleVideo}
                                             onRotate={this.handleRotate}
                                             onCrop={this.handleToggleCrop}

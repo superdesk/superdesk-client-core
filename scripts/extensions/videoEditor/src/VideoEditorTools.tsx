@@ -5,6 +5,7 @@ import {CropLabel} from './Dropdown/CropLabel';
 import {QualityLabel} from './Dropdown/QualityLabel';
 
 interface IProps {
+    wrapperRef: (element: HTMLDivElement) => void;
     onToggleVideo: () => void;
     onRotate: () => void;
     onCrop: (aspect: number) => void;
@@ -17,8 +18,9 @@ interface IProps {
     videoResolution: number;
 }
 
-export class VideoEditorTools extends React.PureComponent<IProps> {
+class VideoEditorController extends React.PureComponent<IProps> {
     static contextType = VideoEditorContext;
+    declare context: React.ContextType<typeof VideoEditorContext>;
 
     render() {
         const videoResolution = this.props.videoResolution;
@@ -34,11 +36,11 @@ export class VideoEditorTools extends React.PureComponent<IProps> {
             return {label: x + ':' + y, value: x / y};
         });
 
-        const {getClass} = this.context.superdesk.utilities.CSS;
-        const {gettext} = this.context.superdesk.localization;
+        const {getClass} = this.context.utilities.CSS;
+        const {gettext} = this.context.localization;
 
         return (
-            <div className="sd-photo-preview__video-tools">
+            <div className="sd-photo-preview__video-tools" ref={this.props.wrapperRef}>
                 <button
                     className="btn btn--ui-dark btn--hollow btn--icon-only btn--large"
                     onClick={this.props.onToggleVideo}
@@ -81,10 +83,14 @@ export class VideoEditorTools extends React.PureComponent<IProps> {
                         items={resolutions}
                         onSelect={this.props.onQualityChange}
                         disabled={this.props.videoQuality === 0}
-                        className={qualityDisabled && getClass('video__dropdown__quality--disable')}
+                        className={qualityDisabled ? getClass('video__dropdown__quality--disable') : ''}
                     />
                 </div>
             </div>
         );
     }
 }
+
+export const VideoEditorTools = React.forwardRef((props: IProps, ref: React.Ref<HTMLDivElement>) =>
+    <VideoEditorController wrapperRef={ref} {...props} />,
+);

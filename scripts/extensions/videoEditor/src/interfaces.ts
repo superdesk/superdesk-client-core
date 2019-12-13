@@ -22,7 +22,16 @@ export interface IThumbnail {
 export interface IDropdownLabel {
     onClick?: () => void;
     getText?: (text: string) => string;
-    title?: string | undefined;
+    title?: string | null;
     disabled?: boolean;
-    selectedItem?: string;
+    selectedItem?: string | number | null;
+}
+
+export interface IErrorMessage {
+    internal_error: number;
+    _message: {
+        crop: Array<string>;
+        trim: Array<string>;
+    };
+    _status: 'ERR';
 }
