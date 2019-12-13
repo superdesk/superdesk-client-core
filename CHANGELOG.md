@@ -1,5 +1,18 @@
 # Superdesk Client Changelog
 
+## [1.32.2] 2019-12-13
+
+### Added
+
+- Add `Unpublish` button to authoring topbar.
+- Add `fr_CA` localization.
+
+### Fixed
+
+- Unpublish action not shown when user has unpublish privilege.
+- Users should be only able to send content to desks
+  where they are members if they have no privilege.
+
 ## [1.32.1] 2019-12-10
 
 ### Fixed
