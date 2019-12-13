@@ -54,13 +54,8 @@ export function ContentCreateDirective(
                 });
             }
 
-            /**
-             * Create and start editing item of given type
-             *
-             * @param {string} type
-             */
-            scope.create = function(type) {
-                content.createItem(type).then(edit);
+            scope.create = function() {
+                content.createItem().then(edit);
             };
 
             /**
