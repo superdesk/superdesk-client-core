@@ -1,5 +1,14 @@
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {IArticle} from 'superdesk-api';
+import {IContentTemplate} from 'superdesk-interfaces/ContentTemplate';
+import {assertNever, isArray} from 'core/helpers/typescript-helpers';
+
+type IItemCreationAction =
+    { kind: 'plain-text'}
+    | {kind: 'from-template'; template: IContentTemplate}
+    | {kind: 'create-package'}
+    | {kind: 'upload-media'}
+;
 
 ContentCreateDirective.$inject = [
     'desks',
@@ -9,16 +18,17 @@ ContentCreateDirective.$inject = [
     'superdesk',
     'keyboardManager',
     '$location',
+    'packages',
 ];
 
 interface IScope extends ng.IScope {
-    onCreated?: (item: IArticle) => Promise<IArticle>;
+    createFromTemplate: (template: IContentTemplate) => Promise<IArticle>;
+    create: (action: IItemCreationAction) => Promise<IArticle>;
+    onCreated?: (item: Array<IArticle>) => void;
     defaultTemplate: any;
     openUpload: () => void;
-    createFromTemplate: (template: any) => void;
     canCreatePackage: () => boolean;
     createPackage: () => void;
-    create: (type?: any) => void;
     contentTemplates: any;
 }
 
@@ -30,6 +40,7 @@ export function ContentCreateDirective(
     superdesk,
     keyboardManager,
     $location,
+    packages,
 ) {
     return {
         scope: {
@@ -37,15 +48,6 @@ export function ContentCreateDirective(
         },
         templateUrl: 'scripts/apps/workspace/content/views/sd-content-create.html',
         link: function(scope: IScope) {
-            /**
-             * Start editing given item in sidebar editor
-             *
-             * @param {Object} item
-             */
-            function edit(item) {
-                authoringWorkspace.edit(item);
-            }
-
             function getRecentTemplates(deskId) {
                 var NUM_ITEMS = 5;
 
@@ -54,15 +56,39 @@ export function ContentCreateDirective(
                 });
             }
 
-            scope.create = function() {
-                content.createItem().then(edit);
+            scope.create = function(action: IItemCreationAction) {
+                return (() => {
+                    if (action.kind === 'plain-text') {
+                        return content.createItem();
+                    } else if (action.kind === 'from-template') {
+                        return content.createItemFromTemplate(action.template)
+                            .then((item: IArticle) => {
+                                getRecentTemplates(desks.activeDeskId);
+
+                                return item;
+                            });
+                    } else if (action.kind === 'create-package') {
+                        return packages.createEmptyPackage();
+                    } else if (action.kind === 'upload-media') {
+                        return superdesk.intent('upload', 'media', {deskSelectionAllowed: true});
+                    } else {
+                        assertNever(action);
+                    }
+                })().then((result: IArticle | Array<IArticle>) => {
+                    if (typeof scope.onCreated === 'function') {
+                        scope.onCreated(
+                            isArray(result) ? result : [result],
+                        );
+                    }
+
+                    if (action.kind !== 'upload-media' && !isArray(result)) {
+                        authoringWorkspace.edit(result);
+                    }
+                });
             };
 
-            /**
-             * Create and start editing a package
-             */
-            scope.createPackage = function() {
-                content.createPackageItem().then(edit);
+            scope.createFromTemplate = function(template: IContentTemplate) {
+                return scope.create({kind: 'from-template', template});
             };
 
             /**
@@ -76,30 +102,6 @@ export function ContentCreateDirective(
                 getRecentTemplates(desks.activeDeskId);
                 getDefaultTemplate();
             });
-
-            /**
-             * Create and start editing an item based on given package
-             *
-             * @param {Object} template
-             */
-            scope.createFromTemplate = function(template) {
-                content.createItemFromTemplate(template)
-                    .then((item: IArticle) => {
-                        if (typeof scope.onCreated === 'function') {
-                            scope.onCreated(item);
-                        }
-
-                        edit(item);
-                        getRecentTemplates(desks.activeDeskId);
-                    });
-            };
-
-            /**
-             * Start content upload modal
-             */
-            scope.openUpload = function openUpload() {
-                superdesk.intent('upload', 'media', {deskSelectionAllowed: true});
-            };
 
             scope.contentTemplates = null;
 
@@ -115,7 +117,11 @@ export function ContentCreateDirective(
                     e.preventDefault();
                 }
 
-                scope.defaultTemplate ? scope.createFromTemplate(scope.defaultTemplate) : scope.create();
+                if (scope.defaultTemplate) {
+                    scope.create({kind: 'from-template', template: scope.defaultTemplate});
+                } else {
+                    scope.create({kind: 'plain-text'});
+                }
             });
 
             scope.$on('$destroy', () => {

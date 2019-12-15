@@ -92,18 +92,6 @@ export function ContentService(api, templates, desks, packages, archiveService, 
      * @param {Object} item
      * @return {Promise}
      */
-    this.createPackageItem = function(item) {
-        var data = item ? {items: [item]} : {};
-
-        return packages.createEmptyPackage(data);
-    };
-
-    /**
-     * Create a package containing given item
-     *
-     * @param {Object} item
-     * @return {Promise}
-     */
     this.createPackageFromItems = function(item) {
         return packages.createPackageFromItems([item]);
     };

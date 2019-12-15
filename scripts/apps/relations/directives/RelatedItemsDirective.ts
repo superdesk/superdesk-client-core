@@ -29,8 +29,10 @@ export function RelatedItemsDirective(authoringWorkspace: AuthoringWorkspaceServ
         templateUrl: 'scripts/apps/relations/views/related-items.html',
         link: function(scope, elem, attr) {
 
-            scope.onCreated = (item: IArticle) => {
-                scope.addRelatedItem(item);
+            scope.onCreated = (items: Array<IArticle>) => {
+                items.forEach((item) => {
+                    scope.addRelatedItem(item);
+                });
             };
 
             scope.gettext = gettext;

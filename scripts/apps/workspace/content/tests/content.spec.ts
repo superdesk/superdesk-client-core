@@ -28,14 +28,14 @@ describe('superdesk.apps.workspace.content', () => {
             expect(done).toHaveBeenCalledWith(ITEM);
         }));
 
-        it('can create packages', inject((api, content, desks, session, $rootScope) => {
+        it('can create packages', inject((api, packages, desks, session, $rootScope) => {
             session.identity = {_id: '1'};
             desks.userDesks = {_items: []};
             spyOn(desks, 'getCurrentDesk')
                 .and
                 .returnValue({_id: '1', name: 'sport', working_stage: '2', incoming_stage: '3'});
 
-            content.createPackageItem().then(done);
+            packages.createEmptyPackage().then(done);
             $rootScope.$digest();
             expect(api.save).toHaveBeenCalledWith('archive', {headline: '', slugline: '',
                 description_text: '', type: 'composite',
