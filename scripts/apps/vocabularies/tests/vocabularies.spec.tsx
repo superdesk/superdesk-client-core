@@ -57,7 +57,7 @@ describe('vocabularies', () => {
                     {bar: 'bellsprout', spam: 'sandslash', is_active: true},
                     {qux: 'quagsire', foo: 'frillish', corge: 'corfish', is_active: true},
                 ]};
-                scope.matchFieldTypeToTab = () => angular.noop;
+                scope.matchFieldTypeToTab = angular.noop;
                 $controller('VocabularyEdit', {$scope: scope});
             }));
 
