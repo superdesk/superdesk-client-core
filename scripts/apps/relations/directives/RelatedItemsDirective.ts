@@ -14,6 +14,7 @@ interface IScope extends IDirectiveScope<void> {
     editable: boolean;
     item: IArticle;
     loading: boolean;
+    reorder: (start: {index: number}, end: {index: number}) => void;
     relatedItems: Array<IArticle>;
     onchange: () => void;
     addRelatedItem: (item: IArticle) => void;
@@ -90,9 +91,10 @@ export function RelatedItemsDirective(authoringWorkspace: AuthoringWorkspaceServ
                     const isWorkflowAllowed = relationsService.itemHasAllowedStatus(item, scope.field);
 
                     if (!isWorkflowAllowed) {
-                        notify.error(
-                            gettext('The following status is not allowed in this field: ') + `"${item.state}"`,
-                        );
+                        notify.error(gettext(
+                            'The following status is not allowed in this field: {{status}}',
+                            {status: item.state},
+                        ));
                         return;
                     }
 
@@ -154,11 +156,26 @@ export function RelatedItemsDirective(authoringWorkspace: AuthoringWorkspaceServ
                 return keys.length === 0;
             };
 
+            scope.reorder = (start, end) => {
+                if (!scope.editable) {
+                    return;
+                }
+                const related = getRelatedKeys(scope.item, scope.field._id);
+                const newRelated = related.slice(0);
+
+                newRelated.splice(end.index, 0, newRelated.splice(start.index, 1)[0]);
+
+                const updated = related.reduce((obj, key, index) => {
+                    obj[key] = scope.item.associations[newRelated[index]];
+                    return obj;
+                }, {});
+
+                scope.item.associations = angular.extend({}, scope.item.associations, updated);
+                scope.onchange();
+            };
+
             /**
             * Get related items for fieldId
-            *
-            * @param {String} fieldId
-            * @return {[Object]}
             */
             scope.refreshRelatedItems = () => {
                 scope.loading = true;

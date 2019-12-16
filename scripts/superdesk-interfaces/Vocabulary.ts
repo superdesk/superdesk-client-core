@@ -25,7 +25,7 @@ export interface IVocabulary extends IBaseRestApiResponse {
         | 'embed'
         | 'related_content'
         | 'custom';
-    field_options?: {
+    field_options?: { // Used for related content fields
         allowed_types?: any;
         allowed_workflows?: any;
         multiple_items?: { enabled: boolean; max_items: number };
