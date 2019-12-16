@@ -914,6 +914,7 @@ declare module 'superdesk-api' {
                 error(error: Error): void;
                 warn(message: string, json: {[key: string]: any}): void;
             };
+            dateToServerString(date: Date): string; // outputs a string for parsing by the server
         };
         addWebsocketMessageListener<T extends string>(
             eventName: T,
