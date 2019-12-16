@@ -953,6 +953,7 @@ declare module 'superdesk-api' {
         google_auth: any;
         saml_label: any;
         archive_autocomplete: boolean;
+        workflow_allow_multiple_updates: boolean;
 
 
         // FROM CLIENT
