@@ -57,6 +57,7 @@ describe('vocabularies', () => {
                     {bar: 'bellsprout', spam: 'sandslash', is_active: true},
                     {qux: 'quagsire', foo: 'frillish', corge: 'corfish', is_active: true},
                 ]};
+                scope.matchFieldTypeToTab = () => angular.noop;
                 $controller('VocabularyEdit', {$scope: scope});
             }));
 
@@ -77,6 +78,7 @@ describe('vocabularies', () => {
                 scope.vocabulary = {items: [testItem]};
                 scope.closeVocabulary = jasmine.createSpy('close');
                 scope.updateVocabulary = jasmine.createSpy('update');
+                scope.matchFieldTypeToTab = angular.noop;
                 $controller('VocabularyEdit', {$scope: scope});
             }));
 
