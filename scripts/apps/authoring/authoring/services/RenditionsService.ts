@@ -1,6 +1,4 @@
-import {isEmpty} from 'lodash';
 import {IArticle} from 'superdesk-api';
-import {gettext} from 'core/utils';
 
 /**
  * @ngdoc service
@@ -8,8 +6,8 @@ import {gettext} from 'core/utils';
  * @name renditions
  * @description Renditions Service allows the user to generate different crops.
  */
-RenditionsService.$inject = ['metadata', '$q', 'api', 'superdesk', 'lodash', 'notify'];
-export function RenditionsService(metadata, $q, api, superdesk, _, notify) {
+RenditionsService.$inject = ['metadata', '$q', 'api', 'superdesk', 'lodash'];
+export function RenditionsService(metadata, $q, api, superdesk, _) {
     var self = this;
 
     /**
@@ -90,76 +88,9 @@ export function RenditionsService(metadata, $q, api, superdesk, _, notify) {
                 showMetadataEditor: true,
                 ...cropOptions,
             })
-                .then((result) => {
-                    const renditionNames = [];
-                    const savingImagePromises = [];
-
-                    // applying metadata changes
-                    angular.forEach(result.cropData, (croppingData, renditionName) => {
-                        // if there a change in the crop co-ordinates
-                        const keys = ['CropLeft', 'CropTop', 'CropBottom', 'CropRight'];
-
-                        const canAdd = !keys.every((key) => {
-                            const sameCoords = angular.isDefined(item.renditions[renditionName]) &&
-                            item.renditions[renditionName][key] === croppingData[key];
-
-                            return sameCoords;
-                        });
-
-                        if (canAdd) {
-                            renditionNames.push(renditionName);
-                        }
-                    });
-
-                    // perform the request to make the cropped images
-                    renditionNames.forEach((renditionName) => {
-                        if (!isEmpty(result.cropData[renditionName]) &&
-                            item.renditions[renditionName] !== result.cropData[renditionName]) {
-                            const rendition = renditions.find((_rendition) => renditionName === _rendition.name);
-                            const crop = {
-                                ...result.cropData[renditionName],
-                                // it should send the size we need, not the one we have
-                                width: rendition.width,
-                                height: rendition.height,
-                            };
-
-                            savingImagePromises.push(
-                                api.save('picture_crop', {item: clonedItem, crop: crop}),
-                            );
-                        }
-                    });
-
-                    api.loading = 'true';
-
-                    return $q.all(savingImagePromises)
-                        // return the cropped images
-                        .then((croppedImages) => {
-                            // save created images in "association" property
-                            croppedImages.forEach((image, index) => {
-                                const url = image.href;
-
-                                // update association renditions
-                                result.metadata.renditions[renditionNames[index]] = angular.extend(
-                                    image.crop,
-                                    {
-                                        href: url,
-                                        width: image.width,
-                                        height: image.height,
-                                        media: image._id,
-                                        mimetype: image.item.mimetype,
-                                    },
-                                );
-                            });
-
-                            // apply the metadata changes
-                            angular.extend(item, result.metadata);
-                            api.loading = false;
-                            return item;
-                        })
-                        .catch(() => {
-                            api.loading = false;
-                            notify.error(gettext('Failed to generate picture crops.'));
-                        });
+                .then((metaData) => {
+                    // apply the metadata changes
+                    return _.extend(item, metaData);
                 }).catch((response) => {
                     // if new crops not generated continue with default one
                     // see https://github.com/superdesk/superdesk-client-core/pull/3117#discussion_r328440897
