@@ -308,6 +308,9 @@ export function getSuperdeskApiImplementation(
                 getClass: (originalName: string) => getCssNameForExtension(originalName, requestingExtensionId),
                 getId: (originalName: string) => getCssNameForExtension(originalName, requestingExtensionId),
             },
+            dateToServerString: (date: Date) => {
+                return date.toISOString().slice(0, 19) + '+0000';
+            },
         },
         addWebsocketMessageListener: (eventName, handler) => {
             const eventNameFinal = getWebsocketMessageEventName(
