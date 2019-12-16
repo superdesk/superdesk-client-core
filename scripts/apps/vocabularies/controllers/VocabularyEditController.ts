@@ -48,7 +48,7 @@ export function VocabularyEditController(
     $scope.idRegex = idRegex;
     $scope.selectionTypes = VOCABULARY_SELECTION_TYPES;
 
-    if ($scope.matchFieldTypeToTab.('related-content-fields', $scope.vocabulary.field_type)) {
+    if ($scope.matchFieldTypeToTab('related-content-fields', $scope.vocabulary.field_type)) {
         // Insert default allowed workflows
         if ($scope.vocabulary.field_options == null) {
             $scope.vocabulary.field_options = {allowed_workflows: relationsService.getDefaultAllowedWorkflows()};
