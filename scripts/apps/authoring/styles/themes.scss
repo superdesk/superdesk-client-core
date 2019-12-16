@@ -229,6 +229,7 @@ body, html {
     max-width: 900px;
 
     .field {
+        position: relative;
         max-width: 100%;
         margin-bottom: 20px;
         .full-preview {
@@ -281,6 +282,11 @@ body, html {
         }
         .dropdown {
             display: block;
+        }
+        .related-items--dropdown {
+            position: absolute;
+            right: 0;
+            top: 0;
         }
     }
     
