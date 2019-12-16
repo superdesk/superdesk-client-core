@@ -3,11 +3,12 @@ import {IPropsItemListInfo} from '../ListItemInfo';
 
 class ScheduledDateTime extends React.PureComponent<Pick<IPropsItemListInfo, 'item' | 'svc'>> {
     render() {
-        const datetime = this.props.svc.datetime;
         const scheduled = this.props.item.archive_item
             ? this.props.item.archive_item.schedule_settings.utc_publish_schedule : null;
 
         if (this.props.item.state != null && this.props.item.state === 'scheduled' && scheduled != null) {
+            const datetime = this.props.svc.datetime;
+
             return (
                 <span
                     key="scheduledDateTime"

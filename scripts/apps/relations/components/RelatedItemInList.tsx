@@ -19,7 +19,7 @@ export class RelatedItemInListComponent extends React.PureComponent<IProps, ISta
     constructor(props: IProps) {
         super(props);
 
-        this.listConfig = appConfig.list || DEFAULT_RELATED_ITEMS_LIST_CONFIG;
+        this.listConfig = appConfig.list?.relatedItems || DEFAULT_RELATED_ITEMS_LIST_CONFIG;
 
         this.state = {
             desk: null,
@@ -38,13 +38,14 @@ export class RelatedItemInListComponent extends React.PureComponent<IProps, ISta
 
         const {listConfig} = this;
         const itemProps = {item, desk, listConfig};
+        const elemProps = {className: 'line line--no-margin'};
 
         return (
             <div className="mlist-view mlist-view--no-shadow">
                 <div className="media-box media-box--no-padding">
                     <div className="item-info">
-                        {renderArea('firstLine', itemProps)}
-                        {renderArea('secondLine', itemProps)}
+                        {renderArea('firstLine', itemProps, elemProps)}
+                        {renderArea('secondLine', itemProps, elemProps)}
                     </div>
                 </div>
             </div>

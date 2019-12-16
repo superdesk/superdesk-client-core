@@ -886,6 +886,9 @@ $rightfield-width:60px;
                 line-height: 18px;
                 position: relative;
                 margin-left: 38px;
+                &--no-margin {
+                    margin-left: 0;
+                }
                 display: flex;
                 box-sizing: border-box;
                 white-space: nowrap;

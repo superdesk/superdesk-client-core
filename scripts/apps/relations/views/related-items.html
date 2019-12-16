@@ -13,6 +13,11 @@
                 <div class="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border">
                     <sd-related-item-in-list-react item="relatedItem" />
                 </div>
+                <div class="sd-list-item__column" ng-if="relatedItem.associations.featuremedia">
+                    <figure class="sd-list-item__thumbnail">
+                        <img src="{{relatedItem.associations.featuremedia.renditions.viewImage.href}}" alt="gettext('Thumbnail for related item')">
+                    </figure>
+                </div>
                 <div class="sd-list-item__action-menu sd-list-item__action-menu--direction-row">
                     <button class="icn-btn" ng-if="relatedItem._type === 'archive'"
                         ng-click="openRelatedItem(relatedItem)"><i class="icon-pencil"></i></button>

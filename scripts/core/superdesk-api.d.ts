@@ -220,7 +220,7 @@ declare module 'superdesk-api' {
         sign_off: string;
         feature_media?: any;
         media_description?: string;
-        associations?: { string: IArticle };
+        associations?: any;
         type: 'text' | 'picture' | 'video' | 'audio' | 'preformatted' | 'graphic' | 'composite';
         firstpublished?: string;
         linked_in_packages?: Array<{
@@ -342,7 +342,7 @@ declare module 'superdesk-api' {
     export interface IPublishedArticle extends IArticle {
 
         /** id in published collection, different for each correction */
-        item_id: string; 
+        item_id: string;
 
         /** item copy in archive collection, always the latest version of the item */
         archive_item: IArticle;
@@ -1033,8 +1033,12 @@ declare module 'superdesk-api' {
             singleLineView: any;
             singleLine: any;
             priority: any;
-            firstLine: any;
-            secondLine: any;
+            firstLine: Array<string>,
+            secondLine: Array<string>,
+            relatedItems: {
+                firstLine: Array<string>,
+                secondLine: Array<string>,
+            };
         };
         item_profile: {
             change_profile: any;
