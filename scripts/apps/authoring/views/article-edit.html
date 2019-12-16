@@ -679,7 +679,6 @@
      sd-validation-error="error[field._id]"
      order="{{editor[field._id].order}}"
      data-required="schema[field._id].required">
-    <label class="field__label" translate>{{field.display_name}}</label>
 
     <div ng-if="_editable"
         sd-related_items
@@ -689,10 +688,14 @@
         data-onchange="autosave(item, 0)">
     </div>
 
-    <div ng-if="!_editable"
-        sd-related-items-preview
-        data-item="item"
-        data-field="field">
+    <div ng-if="!_editable">
+        <label class="field__label">{{field.display_name}}</label>
+
+        <div 
+            sd-related-items-preview
+            data-item="item"
+            data-field="field">
+        </div>
     </div>
 
     <div class="sd-editor__info-text" ng-if="helper_text[field._id]">{{field.helper_text}}</div>
