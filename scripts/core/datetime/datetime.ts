@@ -211,11 +211,11 @@ export default angular.module('superdesk.core.datetime', [
     .directive('sdDatetime', DateTimeDirective)
     .directive('sdShortDate', ShortDateDirective)
 
-    .filter('reldate', [[], function reldateFactory() {
+    .filter('reldate', function reldateFactory() {
         return function reldate(date) {
             return moment(date).fromNow();
         };
-    }])
+    })
 
     /**
      * Returns the difference between given date and the
