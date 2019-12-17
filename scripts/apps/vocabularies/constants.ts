@@ -14,6 +14,17 @@ export const MEDIA_TYPES = {
 
 export const MEDIA_TYPE_KEYS = Object.keys(MEDIA_TYPES).map((type) => MEDIA_TYPES[type].id);
 
+export interface IVocabularySelectionType {
+    id: string;
+    label: string;
+}
+
+export interface IVocabularySelectionTypes {
+    SINGLE_SELECTION: IVocabularySelectionType;
+    MULTIPLE_SELECTION: IVocabularySelectionType;
+    DO_NOT_SHOW: IVocabularySelectionType;
+}
+
 export const VOCABULARY_SELECTION_TYPES = {
     SINGLE_SELECTION: {
         id: 'single selection',
