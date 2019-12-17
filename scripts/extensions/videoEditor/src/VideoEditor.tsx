@@ -591,7 +591,13 @@ export class VideoEditor extends React.Component<IProps, IState> {
         const {height} = videoRef.getBoundingClientRect();
         // ensure video image quality is not broken when scaling up
         const vh = videoHeight < this.wrapperSize.height ? videoHeight : this.wrapperSize.height;
+        // round approximate 1 value (e.g. 1.0059880239)
+        // it causes unnecessary transformation transition on resetting state when rotating 360 degree
+        const scale = Math.trunc(vh / height * 100) / 100;
 
+        if (scale === 1) {
+            return scale;
+        }
         return vh / height;
     }
 
