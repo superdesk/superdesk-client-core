@@ -2,7 +2,7 @@ import React from 'react';
 import {appConfig} from 'appConfig';
 import {DEFAULT_RELATED_ITEMS_LIST_CONFIG} from 'apps/search/constants';
 import {renderArea} from 'apps/search/helpers';
-import {IArticle, IDesk} from 'superdesk-api';
+import {IArticle, IDesk, ISuperdeskGlobalConfig} from 'superdesk-api';
 import {dataApi} from 'core/helpers/CrudManager';
 
 interface IProps {
@@ -14,7 +14,7 @@ interface IState {
 }
 
 export class RelatedItemInListComponent extends React.PureComponent<IProps, IState> {
-    listConfig: any;
+    listConfig: ISuperdeskGlobalConfig['list']['relatedItems'];
 
     constructor(props: IProps) {
         super(props);

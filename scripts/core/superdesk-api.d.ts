@@ -180,6 +180,12 @@ declare module 'superdesk-api' {
         UNPUBLISHED = 'unpublished',
     }
 
+
+    export interface IRelatedArticle {
+        _id: IArticle['_id'];
+        type: IArticle['type'];
+    }
+
     export interface IArticle extends IBaseRestApiResponse {
         _id: string;
         _current_version: number;

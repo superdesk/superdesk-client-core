@@ -1,8 +1,28 @@
 import _ from 'lodash';
+import moment from 'moment';
 import {gettext} from 'core/utils';
 import momentTimezone from 'moment-timezone';
 import {appConfig} from 'appConfig';
-import {ISuperdeskGlobalConfig} from 'superdesk-api';
+
+const ISO_DATE_FORMAT = 'YYYY-MM-DD';
+const ISO_WEEK_FORMAT = 'YYYY-W';
+const ISO_YEAR_FORMAT = 'YYYY';
+
+const LONG_FORMAT = appConfig.longDateFormat || 'LLL';
+const TIME_FORMAT = appConfig.shortTimeFormat || 'hh:mm';
+const DATE_FORMAT = appConfig.shortDateFormat || 'MM/DD';
+const WEEK_FORMAT = appConfig.shortWeekFormat || 'dddd, ' + TIME_FORMAT;
+const ARCHIVE_FORMAT = appConfig.ArchivedDateFormat || DATE_FORMAT;
+
+
+/**
+* Get long representation of given datetime
+*
+* @param {String} d iso format datetime
+*/
+export function longFormat(d: string): string {
+    return moment(d).format(LONG_FORMAT);
+}
 
 DateTimeDirective.$inject = ['datetime', 'moment'];
 function DateTimeDirective(datetime, moment) {
@@ -56,16 +76,6 @@ function ShortDateDirective(moment) {
 
 DateTimeService.$inject = ['moment'];
 function DateTimeService(moment) {
-    var ISO_DATE_FORMAT = 'YYYY-MM-DD';
-    var ISO_WEEK_FORMAT = 'YYYY-W';
-    var ISO_YEAR_FORMAT = 'YYYY';
-
-    var LONG_FORMAT = appConfig.longDateFormat || 'LLL';
-    var TIME_FORMAT = appConfig.shortTimeFormat || 'hh:mm';
-    var DATE_FORMAT = appConfig.shortDateFormat || 'MM/DD';
-    var WEEK_FORMAT = appConfig.shortWeekFormat || 'dddd, ' + TIME_FORMAT;
-    var ARCHIVE_FORMAT = appConfig.ArchivedDateFormat || DATE_FORMAT;
-
     /**
      * Get short representation of given datetime
      *
@@ -89,15 +99,7 @@ function DateTimeService(moment) {
         return m.format(DATE_FORMAT);
     };
 
-    /**
-     * Get long representation of given datetime
-     *
-     * @param {String} d iso format datetime
-     * @return {String}
-     */
-    this.longFormat = function(d) {
-        return moment(d).format(LONG_FORMAT);
-    };
+    this.longFormat = longFormat.bind(this);
 
     /**
      * Get date and time format for scheduled datetime
