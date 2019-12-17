@@ -9,7 +9,7 @@ import {VideoEditorTools} from './VideoEditorTools';
 import {VideoTimeline} from './VideoTimeline/VideoTimeline';
 import {VideoEditorHeader} from './VideoEditorHeader';
 import {VideoEditorThumbnail} from './VideoEditorThumbnail';
-import {IVideoEditor, IThumbnail, ICrop, IErrorMessage, ITimelineThumbnail} from './interfaces';
+import {IThumbnail, ICrop, IErrorMessage, ITimelineThumbnail} from './interfaces';
 
 interface IProps {
     article: IArticle;
@@ -256,7 +256,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
         this.setState({transformations: {...this.state.transformations, degree: degree, crop: crop}, scale: scale});
     }
 
-    handleCrop(newCrop: IVideoEditor['crop']) {
+    handleCrop(newCrop: ICrop) {
         if (newCrop.x == null || newCrop.y == null || newCrop.width == null || newCrop.height == null) {
             throw new Error('Invalid state');
         }
@@ -279,8 +279,8 @@ export class VideoEditor extends React.Component<IProps, IState> {
             value: this.state.transformations.degree % 180 === -90 ? refValue.width : refValue.height,
         };
 
-        // when first draw crop zone, ReactImageCrop trigger a bulk of change event with the same
-        // newCrop value, using throttle with value about 50 did not help much but increase interval \
+        // when first draw crop area, ReactImageCrop trigger a bulk of change event with the same
+        // newCrop value, using throttle with value about 50 did not help much but increase interval
         // may result in lagging
         if (Object.values(this.state.transformations.crop).toString() === Object.values(crop).toString()) {
             return;
@@ -464,7 +464,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
 
     // calculate crop real size as crop value is not based on real video size
     // but scaled video to fit into container
-    getCropSize(inputCrop: IVideoEditor['crop']): IVideoEditor['crop'] {
+    getCropSize(inputCrop: ICrop): ICrop {
         const video = this.videoRef.current!;
         let {width, height} = video.getBoundingClientRect();
 
@@ -508,13 +508,13 @@ export class VideoEditor extends React.Component<IProps, IState> {
     }
 
     // get crop value while rotating video
-    getCropRotate(crop: IVideoEditor['crop']): IVideoEditor['crop'] {
+    getCropRotate(crop: ICrop): ICrop {
         const {width: currentWidth, height: currentHeight} = this.videoRef.current!.getBoundingClientRect();
         const rotate = this.state.transformations.degree;
         const {x, y, width, height} = crop;
-        // do not use state cropEnabled, because user can toggle crop then capture without draw crop zone
 
-        if ([x, y, width, height].filter((value) => value !== 0).length === 0) {
+        // do not use state cropEnabled, because user can toggle crop then capture without draw crop area
+        if ([x, y, width, height].every((value) => value === 0) === true) {
             return this.getCropSize(crop);
         }
 
