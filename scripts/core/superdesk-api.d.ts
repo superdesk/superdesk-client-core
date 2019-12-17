@@ -59,7 +59,6 @@ declare module 'superdesk-api' {
             authoringTopbarWidgets?: Array<React.ComponentType<{article: IArticle}>>;
             pages?: Array<IPage>;
             customFieldTypes?: Array<ICustomFieldType>;
-            authoringActions?(article: IArticle): Promise<Array<IArticleAction>>;
             notifications?: {
                 [id: string]: (notification) => {
                     body: string;

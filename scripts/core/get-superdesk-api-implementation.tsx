@@ -146,7 +146,7 @@ export function getSuperdeskApiImplementation(
             article: {
                 isPersonal: (article) => article.task == null || article.task.desk == null,
                 isLocked: (article) => article['lock_session'] != null,
-                isLockedByCurrentUser: (article) => lock.isLocked(article),
+                isLockedByCurrentUser: (article) => lock.isLockedInCurrentSession(article),
                 update: (_articleNext) => {
                     const __articleNext = {..._articleNext};
 

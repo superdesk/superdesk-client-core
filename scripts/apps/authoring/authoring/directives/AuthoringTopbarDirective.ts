@@ -1,9 +1,7 @@
 import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
 import {getSpellchecker} from 'core/editor3/components/spellchecker/default-spellcheckers';
-import {extensions} from 'appConfig';
-import {showModal} from 'core/services/modalService';
 import {IArticleAction} from 'superdesk-api';
-import {get, flatMap} from 'lodash';
+import {getArticleActionsFromExtensions} from 'core/superdesk-api-helpers';
 
 /**
  * @ngdoc directive
@@ -23,6 +21,14 @@ export function AuthoringTopbarDirective(
     return {
         templateUrl: 'scripts/apps/authoring/views/authoring-topbar.html',
         link: function(scope) {
+            function setActionsFromExtensions() {
+                scope.articleActionsFromExtensions = [];
+
+                getArticleActionsFromExtensions(scope.item).then((articleActions) => {
+                    scope.articleActionsFromExtensions = articleActions;
+                });
+            }
+
             scope.additionalButtons = authoringWorkspace.authoringTopBarAdditionalButtons;
             scope.buttonsToHide = authoringWorkspace.authoringTopBarButtonsToHide;
 
@@ -66,25 +72,15 @@ export function AuthoringTopbarDirective(
                 return TranslationService.checkAvailability(scope.item);
             };
 
-            scope.authoringActionsFromExtensions = [];
-
             scope.triggerActionFromExtension = (actionToTrigger: IArticleAction) => {
                 actionToTrigger.onTrigger();
             };
 
-            const authoringActionsFromExtensions = flatMap(
-                Object.values(extensions).map((ext) => ext.activationResult),
-                (activationResult) =>
-                    activationResult.contributions &&
-                    activationResult.contributions.authoringActions
-                        ? activationResult.contributions.authoringActions
-                        : [],
-            );
+            scope.$watch('item', () => {
+                setActionsFromExtensions();
+            }, true);
 
-            Promise.all(authoringActionsFromExtensions.map((getPromise) => getPromise(scope.item)))
-                .then((actions) => {
-                    scope.authoringActionsFromExtensions = flatMap(actions);
-                });
+            setActionsFromExtensions();
         },
     };
 }

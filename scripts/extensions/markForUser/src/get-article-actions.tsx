@@ -3,17 +3,16 @@ import {manageMarkedUserForSingleArticle} from './managed-marked-user';
 
 export function getActionsInitialize(superdesk: ISuperdesk) {
     const {gettext} = superdesk.localization;
-    const {isPersonal, isLocked} = superdesk.entities.article;
+    const {isPersonal, isLocked, isLockedByCurrentUser} = superdesk.entities.article;
 
     return function getActions(articleNext: IArticle) {
-        // it doesn't make sense to display the action since it wouldn't get updated in the list anyway
-        // when article is locked for editing all changes are temporary
-        // and aren't displayed in the list item until the article is saved
         const locked = isLocked(articleNext);
+        const lockedByCurrentUser = isLockedByCurrentUser(articleNext);
+        const lockedBySomeoneElse = locked && !lockedByCurrentUser;
 
         if (
             isPersonal(articleNext)
-            || locked
+            || lockedBySomeoneElse // marking for user is sometimes allowed for users holding the lock
             || articleNext.state === 'spiked'
         ) {
             return Promise.resolve([]);
@@ -26,13 +25,6 @@ export function getActionsInitialize(superdesk: ISuperdesk) {
             onTrigger: () => {
                 manageMarkedUserForSingleArticle(superdesk, articleNext);
             },
-        };
-
-        const markForUserAndSend: IArticleAction = {
-            label: gettext('Mark and send'),
-            icon: 'icon-assign',
-            groupId: 'highlights',
-            onTrigger: () => manageMarkedUserForSingleArticle(superdesk, articleNext, true),
         };
 
         const unmark: IArticleAction = {
@@ -56,6 +48,16 @@ export function getActionsInitialize(superdesk: ISuperdesk) {
             },
         };
 
+        // Mark and send isn't allowed for locked items even if for users holding the lock
+        // because items can't be sent if they are still being edited
+
+        const markForUserAndSend: IArticleAction = {
+            label: gettext('Mark and send'),
+            icon: 'icon-assign',
+            groupId: 'highlights',
+            onTrigger: () => manageMarkedUserForSingleArticle(superdesk, articleNext, true),
+        };
+
         const markForOtherUserAndSend: IArticleAction = {
             label: gettext('Mark for other and send'),
             groupId: 'highlights',
@@ -71,7 +73,7 @@ export function getActionsInitialize(superdesk: ISuperdesk) {
         if (assigned) {
             const actions = [unmark, markForOtherUser];
 
-            if (hasDesk) {
+            if (hasDesk && !locked) {
                 actions.push(markForOtherUserAndSend);
             }
 
@@ -79,7 +81,7 @@ export function getActionsInitialize(superdesk: ISuperdesk) {
         } else {
             const actions = [markForUser];
 
-            if (hasDesk) {
+            if (hasDesk && !locked) {
                 actions.push(markForUserAndSend);
             }
 

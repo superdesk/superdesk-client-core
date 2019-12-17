@@ -1,9 +1,7 @@
 import {AUTHORING_MENU_GROUPS} from '../../authoring/authoring/constants';
-import {IArticle, IArticleAction, IExtensionActivationResult} from 'superdesk-api';
+import {IArticle, IArticleAction} from 'superdesk-api';
 import {IActivity} from 'superdesk-interfaces/Activity';
-import {flatMap} from 'lodash';
-import {extensions} from 'appConfig';
-import {getActionsFromExtensions} from 'core/superdesk-api-helpers';
+import {getArticleActionsFromExtensions} from 'core/superdesk-api-helpers';
 
 type IAction =
     {kind: 'activity-based'; activity: IActivity} | {kind: 'extension-action'; articleAction: IArticleAction};
@@ -89,7 +87,7 @@ export function ItemActionsMenu(superdesk, activityService, workflowService, arc
             function getActions(item: IArticle): void {
                 scope.menuGroups = [];
 
-                getActionsFromExtensions(item)
+                getArticleActionsFromExtensions(item)
                     .then((actionsFromExtensions) => {
                         let intent = {action: 'list', type: getType(item)};
                         let activitiesByGroupName: {[groupName: string]: Array<IActivity>} = {};
