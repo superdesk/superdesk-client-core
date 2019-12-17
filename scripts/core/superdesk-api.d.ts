@@ -189,7 +189,7 @@ declare module 'superdesk-api' {
     export interface IArticle extends IBaseRestApiResponse {
         _id: string;
         _current_version: number;
-        _type?: 'ingest' | 'archive' | 'published' | 'archived' | string;
+        _type?: 'ingest' | 'archive' | 'published' | 'archived' | 'legal_archive' | string;
         guid: string;
         family_id: string;
         translated_from?: string;
@@ -920,6 +920,7 @@ declare module 'superdesk-api' {
                 error(error: Error): void;
                 warn(message: string, json: {[key: string]: any}): void;
             };
+            dateToServerString(date: Date): string; // outputs a string for parsing by the server
         };
         addWebsocketMessageListener<T extends string>(
             eventName: T,
@@ -959,6 +960,7 @@ declare module 'superdesk-api' {
         google_auth: any;
         saml_label: any;
         archive_autocomplete: boolean;
+        workflow_allow_multiple_updates: boolean;
 
 
         // FROM CLIENT

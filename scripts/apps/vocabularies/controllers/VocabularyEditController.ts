@@ -1,7 +1,9 @@
 import _ from 'lodash';
-import {MEDIA_TYPES, MEDIA_TYPE_KEYS, VOCABULARY_SELECTION_TYPES} from '../constants';
+import {MEDIA_TYPES, MEDIA_TYPE_KEYS, VOCABULARY_SELECTION_TYPES, IVocabularySelectionTypes} from '../constants';
 import {gettext} from 'core/utils';
 import {getFields} from 'apps/fields';
+import {IVocabulary} from 'superdesk-interfaces/Vocabulary';
+import {IScope as IScopeConfigController} from './VocabularyConfigController';
 
 VocabularyEditController.$inject = [
     '$scope',
@@ -10,15 +12,50 @@ VocabularyEditController.$inject = [
     'vocabularies',
     'metadata',
     'cvSchema',
+    'relationsService',
 ];
+
+interface IScope extends IScopeConfigController {
+    idRegex: string;
+    vocabulary: IVocabulary;
+    selectionTypes: IVocabularySelectionTypes;
+    closeVocabulary: () => void;
+    updateVocabulary: (result: any) => void;
+    issues: Array<any> | null;
+    _errorUniqueness: boolean;
+    errorMessage: string;
+    save: () => void;
+    requireAllowedTypesSelection: () => void;
+    addItem: () => void;
+    cancel: () => void;
+    model: any;
+    schema: any;
+    schemaFields: Array<any>;
+    itemsValidation: { valid: boolean };
+    removeItem: (index: number) => void;
+    customFieldTypes: Array<{id: string, label: string}>;
+    setCustomFieldConfig: (config: any) => void;
+    editForm: any;
+}
 
 const idRegex = '^[a-zA-Z0-9-_]+$';
 
-export function VocabularyEditController($scope, notify, api, vocabularies, metadata, cvSchema) {
+export function VocabularyEditController(
+    $scope: IScope, notify, api, vocabularies, metadata, cvSchema, relationsService,
+) {
     var origVocabulary = _.cloneDeep($scope.vocabulary);
 
     $scope.idRegex = idRegex;
     $scope.selectionTypes = VOCABULARY_SELECTION_TYPES;
+
+    if ($scope.matchFieldTypeToTab('related-content-fields', $scope.vocabulary.field_type)) {
+        // Insert default allowed workflows
+        if ($scope.vocabulary.field_options == null) {
+            $scope.vocabulary.field_options = {allowed_workflows: relationsService.getDefaultAllowedWorkflows()};
+        } else if ($scope.vocabulary.field_options.allowed_workflows == null) {
+            $scope.vocabulary.field_options.allowed_workflows = relationsService.getDefaultAllowedWorkflows();
+        }
+    }
 
     function onSuccess(result) {
         notify.success(gettext('Vocabulary saved successfully'));
@@ -48,7 +85,7 @@ export function VocabularyEditController($scope, notify, api, vocabularies, meta
 
     function checkForUniqueValues() {
         const uniqueField = $scope.vocabulary.unique_field || 'qcode';
-        const list = $scope.vocabulary.items || {};
+        const list = $scope.vocabulary.items || [];
 
         if (list.find((item) => uniqueField in item)) {
             const uniqueList = _.uniqBy(list, (item) => item[uniqueField]);
@@ -64,7 +101,7 @@ export function VocabularyEditController($scope, notify, api, vocabularies, meta
     $scope.save = function() {
         $scope._errorUniqueness = false;
         $scope.errorMessage = null;
-        delete $scope.vocabulary._deleted;
+        delete $scope.vocabulary['_deleted'];
 
         if ($scope.vocabulary._id === 'crop_sizes') {
             var activeItems = _.filter($scope.vocabulary.items, (o) => o.is_active);
@@ -87,7 +124,7 @@ export function VocabularyEditController($scope, notify, api, vocabularies, meta
             $scope.errorMessage = gettext('The values should be unique for {{uniqueField}}', {uniqueField});
         }
 
-        if ($scope.vocabulary.field_type === MEDIA_TYPES.GALLERY) {
+        if ($scope.vocabulary.field_type === MEDIA_TYPES.GALLERY.id) {
             const allowedTypes = $scope.vocabulary.field_options.allowed_types;
 
             Object.keys(allowedTypes).forEach((key) => {
@@ -166,10 +203,8 @@ export function VocabularyEditController($scope, notify, api, vocabularies, meta
 
     /**
      * Remove item from vocabulary items
-     *
-     * @param {number} index
      */
-    $scope.removeItem = (index) => {
+    $scope.removeItem = (index: number) => {
         $scope.vocabulary.items.splice(index, 1);
         $scope.vocabulary.items = $scope.vocabulary.items.slice(); // trigger watch on items collection
     };

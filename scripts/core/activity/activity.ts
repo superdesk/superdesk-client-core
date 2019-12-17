@@ -2,18 +2,7 @@ import {forEach} from 'lodash';
 import langmap from 'core/lang';
 import {gettext} from 'core/utils';
 import {dashboardRoute, appConfig} from 'appConfig';
-
-interface IActivityData {
-    priority: number; // priority used for ordering.
-    when: string; // $route.when param
-    href: string; // path for links generated for given activity
-    filters: Array<object>; //  list of `action` `type` pairs.
-    beta: boolean; // is activity available only in beta mode?
-    reloadOnSearch: boolean; // $route.reloadOnSearch param
-    auth: boolean; // does activity require authenticated user?
-    features: object; // map of features this activity requires
-    condition: () => any; // method used to check if the activity is enabled for a specific item.
-}
+import {IActivity} from 'superdesk-interfaces/Activity';
 
 var constants = {
     MENU_MAIN: 'superdesk.core.menu.main',
@@ -88,7 +77,7 @@ function SuperdeskProvider($routeProvider, _) {
     };
 
     // Register a new activity.
-    this.activity = function(id, activityData: IActivityData) {
+    this.activity = function(id, activityData: IActivity) {
         var activity = angular.extend({
             _id: id,
             priority: 0,

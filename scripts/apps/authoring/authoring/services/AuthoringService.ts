@@ -2,10 +2,14 @@ import _ from 'lodash';
 import {get} from 'lodash';
 import * as helpers from 'apps/authoring/authoring/helpers';
 import {gettext} from 'core/utils';
+import {logger} from 'core/services/logger';
 import {isPublished, isKilled} from 'apps/archive/utils';
+import {showModal} from 'core/services/modalService';
+import {getUnpublishConfirmModal} from '../components/unpublish-confirm-modal';
 import {ITEM_STATE, CANCELED_STATES, READONLY_STATES} from 'apps/archive/constants';
 import {AuthoringWorkspaceService} from './AuthoringWorkspaceService';
 import {appConfig} from 'appConfig';
+import {IPublishedArticle} from 'superdesk-api';
 
 interface IPublishOptions {
     notifyErrors: boolean;
@@ -34,9 +38,9 @@ interface IPublishOptions {
  * @description Authoring Service is responsible for management of the actions on a story
  */
 AuthoringService.$inject = ['$q', '$location', 'api', 'lock', 'autosave', 'confirm', 'privileges',
-    'desks', 'superdeskFlags', 'notify', 'session', '$injector', 'moment'];
+    'desks', 'superdeskFlags', 'notify', 'session', '$injector', 'moment', 'familyService'];
 export function AuthoringService($q, $location, api, lock, autosave, confirm, privileges, desks, superdeskFlags,
-    notify, session, $injector, moment) {
+    notify, session, $injector, moment, familyService) {
     var self = this;
 
     // TODO: have to trap desk update event for refereshing users desks.
@@ -262,6 +266,37 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
                     return $q.reject(reason);
                 },
             );
+    };
+
+    this.unpublish = function unpublish(item: IPublishedArticle) {
+        let relatedItems = [];
+
+        const handleSuccess = () => {
+            notify.success(gettext('Item was unpublished successfully.'));
+        };
+
+        if (item.state !== 'published') {
+            logger.warn('Trying to unpublish non published item');
+            return;
+        }
+
+        familyService.fetchRelatedByState(item, [ITEM_STATE.PUBLISHED]).then((items) => {
+            relatedItems = items;
+
+            const unpublishAction = (selected) => {
+                self.publish(item, {}, 'unpublish', {notifyErrors: true})
+                    .then(handleSuccess);
+
+                relatedItems.forEach((relatedItem) => {
+                    if (selected[relatedItem._id]) {
+                        self.publish(relatedItem, {}, 'unpublish', {notifyErrors: true})
+                            .then(handleSuccess);
+                    }
+                });
+            };
+
+            showModal(getUnpublishConfirmModal(item, relatedItems, unpublishAction));
+        });
     };
 
     this.saveWorkConfirmation = function saveWorkAuthoring(orig, diff, isDirty, message) {
@@ -511,6 +546,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             action.kill = userPrivileges.kill && lockedByMe && !isReadOnlyState;
             action.correct = userPrivileges.correct && lockedByMe && !isReadOnlyState;
             action.takedown = userPrivileges.takedown && lockedByMe && !isReadOnlyState;
+            action.unpublish = userPrivileges.unpublish && lockedByMe && !isReadOnlyState;
         }
     };
 
@@ -543,7 +579,11 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         action.re_write = !isReadOnlyState && _.includes(['text'], currentItem.type) &&
             !currentItem.embargo && !currentItem.rewritten_by &&
             (!currentItem.broadcast || !currentItem.broadcast.master_id) &&
-            (!currentItem.rewrite_of || currentItem.rewrite_of && isPublished(currentItem));
+            (
+                !currentItem.rewrite_of || (
+                    currentItem.rewrite_of && isPublished(currentItem)
+                ) || appConfig.workflow_allow_multiple_updates
+            );
 
         action.resend = _.includes(['text'], currentItem.type) &&
             isPublished(currentItem, false);
