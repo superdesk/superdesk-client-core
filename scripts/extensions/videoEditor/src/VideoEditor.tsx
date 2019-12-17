@@ -328,7 +328,6 @@ export class VideoEditor extends React.Component<IProps, IState> {
     }
 
     handleReset() {
-        this.handleTrim(0, this.videoRef.current!.duration);
         this.setState(
             {
                 transformations: {
@@ -342,6 +341,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                 scale: 1,
             },
             () => {
+                this.timelineRef.current!.updateTrim(0, this.videoRef.current!.duration);
                 this.setState({
                     scale: this.getScale(),
                 });
@@ -432,20 +432,32 @@ export class VideoEditor extends React.Component<IProps, IState> {
     loadTimelineThumbnails() {
         this.intervalThumbnails = window.setInterval(() => {
             this.props.superdesk.dataApi
-                .findOne<IArticle>('video_edit', this.state.article._id + `?t=${Math.random()}`)
-                .then((result: IArticle) => {
-                    if (isEmpty(result.project?.thumbnails.timeline) === true) {
+                .findOne<IArticle>('video_edit', this.state.article._id + `?action=timeline&t=${Math.random()}`)
+                .then((result: any) => {
+                    if (!isEmpty(result.thumbnails)) {
                         clearInterval(this.intervalThumbnails);
                         this.setState({
-                            thumbnails: result.project?.thumbnails.timeline ?? [],
+                            thumbnails: result.thumbnails.timeline ?? [],
                         });
-                    } else if (result.project?.processing.thumbnails_timeline === false) {
-                        this.props.superdesk.dataApi
-                            .findOne('video_edit', this.state.article._id + `?action=timeline&t=${Math.random()}`)
-                            .catch((err: IErrorMessage) => {
-                                this.showErrorMessage(err);
-                                clearInterval(this.intervalThumbnails);
-                            });
+                    }
+                })
+                .catch((err: IErrorMessage) => {
+                    this.showErrorMessage(err);
+                    clearInterval(this.intervalThumbnails);
+                });
+        }, 3000);
+    }
+
+    loadTimelineThumbnailsN() {
+        this.intervalThumbnails = window.setInterval(() => {
+            this.props.superdesk.dataApi
+                .findOne<IArticle>('video_edit', this.state.article._id + `?action=timeline&t=${Math.random()}`)
+                .then((result: any) => {
+                    if (isEmpty(result.processing) === false) {
+                        clearInterval(this.intervalThumbnails);
+                        this.setState({
+                            thumbnails: result.thumbnails ?? [],
+                        });
                     }
                 })
                 .catch((err: IErrorMessage) => {
