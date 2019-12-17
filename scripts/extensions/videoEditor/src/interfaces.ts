@@ -19,6 +19,11 @@ export interface IThumbnail {
     height: number;
 }
 
+export interface ITimelineThumbnail {
+    processing: boolean;
+    thumbnails: Array<IThumbnail> | [];
+}
+
 export interface IDropdownLabel {
     onClick?: () => void;
     getText?: (text: string) => string;

@@ -9,7 +9,7 @@ import {VideoEditorTools} from './VideoEditorTools';
 import {VideoTimeline} from './VideoTimeline/VideoTimeline';
 import {VideoEditorHeader} from './VideoEditorHeader';
 import {VideoEditorThumbnail} from './VideoEditorThumbnail';
-import {IVideoEditor, IThumbnail, ICrop, IErrorMessage} from './interfaces';
+import {IVideoEditor, IThumbnail, ICrop, IErrorMessage, ITimelineThumbnail} from './interfaces';
 
 interface IProps {
     article: IArticle;
@@ -443,37 +443,21 @@ export class VideoEditor extends React.Component<IProps, IState> {
     loadTimelineThumbnails() {
         this.intervalThumbnails = window.setInterval(() => {
             this.props.superdesk.dataApi
-                .findOne<IArticle>('video_edit', this.state.article._id + `?action=timeline&t=${Math.random()}`)
-                .then((result: any) => {
-                    if (!isEmpty(result.thumbnails)) {
+                .findOne<ITimelineThumbnail>('video_edit', this.state.article._id + '?action=timeline')
+                .then((result: ITimelineThumbnail) => {
+                    if (result.thumbnails.length > 0) {
                         clearInterval(this.intervalThumbnails);
-                        this.setState({
-                            thumbnails: result.thumbnails.timeline ?? [],
-                        });
+                        this.setState({thumbnails: result.thumbnails});
                     }
                 })
                 .catch((err: IErrorMessage) => {
-                    this.showErrorMessage(err);
                     clearInterval(this.intervalThumbnails);
-                });
-        }, 3000);
-    }
-
-    loadTimelineThumbnailsN() {
-        this.intervalThumbnails = window.setInterval(() => {
-            this.props.superdesk.dataApi
-                .findOne<IArticle>('video_edit', this.state.article._id + `?action=timeline&t=${Math.random()}`)
-                .then((result: any) => {
-                    if (isEmpty(result.processing) === false) {
-                        clearInterval(this.intervalThumbnails);
-                        this.setState({
-                            thumbnails: result.thumbnails ?? [],
-                        });
+                    // conflict happens when user trigger another video edit right after finished one
+                    // error should not be showed as this is not caused by user intentionally
+                    if (err.internal_error === 409) {
+                        return;
                     }
-                })
-                .catch((err: IErrorMessage) => {
                     this.showErrorMessage(err);
-                    clearInterval(this.intervalThumbnails);
                 });
         }, 3000);
     }
