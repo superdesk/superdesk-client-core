@@ -44,7 +44,6 @@ interface IState {
 
 export class VideoEditor extends React.Component<IProps, IState> {
     private videoRef: React.RefObject<HTMLVideoElement>;
-    private timelineRef: React.RefObject<VideoTimeline>;
     private reactCropRef: React.RefObject<ReactCrop>;
     private intervalThumbnails: number;
     private intervalVideoEdit: number;
@@ -57,7 +56,6 @@ export class VideoEditor extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
         this.videoRef = React.createRef();
-        this.timelineRef = React.createRef();
         this.reactCropRef = React.createRef();
         this.intervalThumbnails = 0;
         this.intervalVideoEdit = 0;
@@ -176,20 +174,15 @@ export class VideoEditor extends React.Component<IProps, IState> {
     }
 
     handleTrim(start: number, end: number) {
-        this.setState(
-            {
-                transformations: {
-                    ...this.state.transformations,
-                    trim: {
-                        start: start,
-                        end: end,
-                    },
+        this.setState({
+            transformations: {
+                ...this.state.transformations,
+                trim: {
+                    start: start,
+                    end: end,
                 },
             },
-            () => {
-                this.timelineRef.current!.updateTrim(start, end);
-            },
-        );
+        });
     }
 
     handleRotate() {
@@ -350,7 +343,6 @@ export class VideoEditor extends React.Component<IProps, IState> {
                 scale: 1,
             },
             () => {
-                this.timelineRef.current!.updateTrim(0, this.videoRef.current!.duration);
                 this.setState({
                     scale: this.getScale(),
                 });
@@ -725,7 +717,6 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                         getCropRotate={this.getCropRotate}
                                     />
                                     <VideoTimeline
-                                        ref={this.timelineRef}
                                         video={this.videoRef}
                                         trim={this.state.transformations.trim}
                                         onTrim={this.handleTrim}
