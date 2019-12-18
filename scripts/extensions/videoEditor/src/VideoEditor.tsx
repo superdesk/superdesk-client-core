@@ -121,8 +121,12 @@ export class VideoEditor extends React.Component<IProps, IState> {
         canvas.height = 2000;
         const ctx = canvas.getContext('2d');
 
-        ctx!.globalAlpha = 0;
-        ctx!.fillStyle = 'rgba(0, 0, 200, 0.5)';
+        if (ctx == null) {
+            return;
+        }
+
+        ctx.globalAlpha = 0;
+        ctx.fillStyle = 'rgba(0, 0, 200, 0.5)';
         this.handleCheckingVideo();
         this.setState({
             cropImg: canvas.toDataURL(),
