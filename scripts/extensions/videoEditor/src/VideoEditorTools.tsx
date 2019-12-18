@@ -64,7 +64,9 @@ class VideoEditorController extends React.PureComponent<IProps> {
                 >
                     <i className="icon-rotate-left" />
                 </button>
-                <span className="sd-photo-preview__label mlr-auto">{this.props.videoHeadline}</span>
+                <span className={`sd-photo-preview__label mlr-auto ${getClass('video__headline')}`}>
+                    {this.props.videoHeadline}
+                </span>
                 <div>
                     <span className="sd-text__strong-s">{gettext('Quality:')}</span>
                     <Dropdown

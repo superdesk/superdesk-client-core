@@ -240,3 +240,8 @@
   padding-top: 1rem;
   color: grey;
 }
+
+.video__headline {
+  text-overflow: ellipsis;
+  max-width: 55vw;
+}
