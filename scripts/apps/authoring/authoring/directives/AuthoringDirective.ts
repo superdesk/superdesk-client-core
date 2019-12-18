@@ -11,7 +11,7 @@ import {onChangeMiddleware, getArticleSchemaMiddleware} from '..';
 import {IFunctionPointsService} from 'apps/extension-points/services/FunctionPoints';
 import {isPublished} from 'apps/archive/utils';
 import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
-import {copyJson} from 'core/helpers/utils';
+import {copyJson, isExtraFieldType} from 'core/helpers/utils';
 import {appConfig} from 'appConfig';
 
 /**
@@ -833,15 +833,64 @@ export function AuthoringDirective(
              * @param {Object} item - item being edited currently
              */
             $scope.changeProfile = function(item) {
-                angular.forEach($scope.content_types, (profile) => {
-                    if (item.profile === profile._id && profile.schema) {
-                        angular.forEach(profile.schema, (schema, key) => {
-                            if (schema && schema.default && !(key in item)) {
-                                item[key] = _.cloneDeep(schema.default);
+                const profile = $scope.content_types.find((_profile) => _profile._id === item.profile);
+
+                if (item.profile === profile._id && profile.schema) {
+                    angular.forEach(profile.schema, (schema, key) => {
+                        if (schema && schema.default && !(key in item)) {
+                            item[key] = _.cloneDeep(schema.default);
+                        }
+                    });
+                }
+
+                if (appConfig.metadataToChangeOnProfileChange) {
+                    // Retrieve field to change from the config.
+                    const configProfile = appConfig.metadataToChangeOnProfileChange.profiles.find(
+                        (p) => p.profile === profile.label);
+                    const fieldsToChange = configProfile ? configProfile.fields
+                        : appConfig.metadataToChangeOnProfileChange.default.fields;
+
+                    const multiInputFields = ['place', 'genre', 'anpa_category', 'subject', 'authors'];
+                    const allowedSubjectScheme = profile.schema?.subject.schema.schema.scheme.allowed || [];
+
+                    if (fieldsToChange && profile.schema) {
+                        _.forEach(fieldsToChange, (value, field) => {
+                            // check if the field is enabled in the editor
+                            if (profile.editor[field] != null) {
+                                let fieldObject: {[fieldId: string]: any} = {};
+                                let parentField = '';
+
+                                // decide the parent field
+                                // i.e. if the field should go inside 'sbuject' or 'extra' or is itself a separate field
+                                if (allowedSubjectScheme.includes(field)) {
+                                    parentField = 'subject';
+                                } else if (isExtraFieldType(profile.schema[field])) {
+                                    parentField = 'extra';
+                                } else {
+                                    parentField = field;
+                                }
+
+                                if (parentField === 'extra') {
+                                    fieldObject.extra = item.extra || {};
+                                    fieldObject.extra[field] = value;
+                                } else if (parentField === 'subject') {
+                                    // add field as scheme to the value so that
+                                    // it can be differentiated from another cv inside same parent field(subject).
+                                    value.scheme = field;
+
+                                    fieldObject[parentField] = item[parentField].filter((f) => f?.scheme !== field);
+                                    fieldObject[parentField].push(value);
+                                } else if (multiInputFields.includes(parentField)) {
+                                    fieldObject[parentField] = Array.isArray(value) ? value : [value];
+                                } else {
+                                    // single input field
+                                    fieldObject[field] = value.qcode ? value.qcode : (value.name || value);
+                                }
+                                _.extend(item, fieldObject);
                             }
                         });
                     }
-                });
+                }
 
                 $scope.autosave(item);
             };

@@ -1086,6 +1086,10 @@ declare module 'superdesk-api' {
         editor3: {
             browserSpellCheck: boolean;
         };
+        metadataToChangeOnProfileChange: {
+            profiles: Array<any>,
+            default: any
+        }
     }
 
 
