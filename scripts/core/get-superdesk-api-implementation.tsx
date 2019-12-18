@@ -20,7 +20,7 @@ import {
 } from './ui/components/generic-form/interfaces/form';
 import {UserHtmlSingleLine} from './helpers/UserHtmlSingleLine';
 import {Row, Item, Column} from './ui/components/List';
-import {connectCrudManager, dataApi, dataApiByEntity, patchArticle} from './helpers/CrudManager';
+import {connectCrudManager, dataApi, dataApiByEntity} from './helpers/CrudManager';
 import {generateFilterForServer} from './ui/components/generic-form/generate-filter-for-server';
 import {assertNever, Writeable} from './helpers/typescript-helpers';
 import {flatMap, memoize} from 'lodash';
@@ -60,36 +60,6 @@ function getContentType(id): Promise<IContentProfile> {
 
 const getContentTypeMemoized = memoize(getContentType);
 let getContentTypeMemoizedLastCall: number = 0; // unix time
-
-function getOnUpdateBeforeMiddlewares(
-    extensions: IExtensions,
-): Array<IExtensionActivationResult['contributions']['entities']['article']['onUpdateBefore']> {
-    return flatMap(
-        Object.values(extensions).map(({activationResult}) => activationResult),
-        (activationResult) =>
-            activationResult.contributions != null
-            && activationResult.contributions.entities != null
-            && activationResult.contributions.entities.article != null
-            && activationResult.contributions.entities.article.onUpdateBefore != null
-                ? activationResult.contributions.entities.article.onUpdateBefore
-                : [],
-    );
-}
-
-function getOnUpdateAfterFunctions(
-    extensions: IExtensions,
-): Array<IExtensionActivationResult['contributions']['entities']['article']['onUpdateAfter']> {
-    return flatMap(
-        Object.values(extensions).map(({activationResult}) => activationResult),
-        (activationResult) =>
-            activationResult.contributions != null
-            && activationResult.contributions.entities != null
-            && activationResult.contributions.entities.article != null
-            && activationResult.contributions.entities.article.onUpdateAfter != null
-                ? activationResult.contributions.entities.article.onUpdateAfter
-                : [],
-    );
-}
 
 // stores a map between custom callback & callback passed to DOM
 // so the original event listener can be removed later
@@ -147,42 +117,26 @@ export function getSuperdeskApiImplementation(
                 isPersonal: (article) => article.task == null || article.task.desk == null,
                 isLocked: (article) => article['lock_session'] != null,
                 isLockedByCurrentUser: (article) => lock.isLockedInCurrentSession(article),
-                update: (_articleNext) => {
-                    const __articleNext = {..._articleNext};
-
-                    // remove UI state property. It shoudln't be here in the first place,
-                    // but can't be removed easily. The line below should be removed when SDESK-4343 is done.
-                    delete __articleNext.selected;
-
-                    const onUpdateBeforeMiddlewares = getOnUpdateBeforeMiddlewares(extensions);
+                patch: (article, patch) => {
+                    const onUpdateBeforeMiddlewares = Object.values(extensions)
+                        .map((extension) => extension.activationResult?.contributions?.entities?.article?.onPatchBefore)
+                        .filter((middleware) => middleware != null);
 
                     onUpdateBeforeMiddlewares.reduce(
-                        (current, next) => current.then((result) => next(result)),
-                        Promise.resolve(__articleNext),
-                    ).then((articleNext: IArticle) => {
-                        const isPublished = articleNext.item_id != null;
+                        (current, next) => current.then((result) => next(article._id, result)),
+                        Promise.resolve(patch),
+                    ).then((patchFinal) => {
+                        // distinction between handling published and non-published items
+                        // should be removed: SDESK-4687
+                        const isPublished = article.item_id != null;
 
-                        (function(): Promise<any> {
-                            // distinction between handling published and non-published items
-                            // should be removed: SDESK-4687
-                            if (isPublished) {
-                                return dataApi.findOne<IArticle>('published', articleNext.item_id)
-                                    .then((articleCurrent) => {
-                                        return patchArticle('published', articleCurrent, articleNext);
-                                    });
-                            } else {
-                                return dataApi.findOne<IArticle>('archive', articleNext._id)
-                                    .then((articleCurrent) => {
-                                        return patchArticle('archive', articleCurrent, articleNext);
-                                    });
-                            }
-                        })().then((articleNextFromServer) => {
-                            const onUpdateAfterFunctions = getOnUpdateAfterFunctions(extensions);
+                        return dataApi.patchRaw<IArticle>(
+                            (isPublished ? 'published' : 'archive'),
+                            article._id,
+                            article._etag,
+                            patchFinal,
+                        );
 
-                            onUpdateAfterFunctions.forEach((fn) => {
-                                fn(articleNextFromServer);
-                            });
-                        });
                     }).catch((err) => {
                         if (err instanceof Error) {
                             logger.error(err);

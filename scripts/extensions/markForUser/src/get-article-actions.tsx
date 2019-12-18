@@ -32,10 +32,12 @@ export function getActionsInitialize(superdesk: ISuperdesk) {
             icon: 'icon-assign',
             groupId: 'highlights',
             onTrigger: () => {
-                superdesk.entities.article.update({
-                    ...articleNext,
-                    marked_for_user: null,
-                });
+                superdesk.entities.article.patch(
+                    articleNext,
+                    {
+                        marked_for_user: null,
+                    },
+                );
             },
         };
 
