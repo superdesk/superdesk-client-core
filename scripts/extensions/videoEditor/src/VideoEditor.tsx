@@ -105,7 +105,6 @@ export class VideoEditor extends React.Component<IProps, IState> {
         this.handleToggleCrop = this.handleToggleCrop.bind(this);
         this.handleToggleVideo = this.handleToggleVideo.bind(this);
         this.handleQualityChange = this.handleQualityChange.bind(this);
-        this.handleReset = this.handleReset.bind(this);
         this.handleSave = this.handleSave.bind(this);
         this.getCropRotate = this.getCropRotate.bind(this);
         this.getWrapperSize = this.getWrapperSize.bind(this);
@@ -329,27 +328,6 @@ export class VideoEditor extends React.Component<IProps, IState> {
         this.setState({transformations: {...this.state.transformations, quality: Math.ceil(newQuality)}});
     }
 
-    handleReset() {
-        this.setState(
-            {
-                transformations: {
-                    ...this.initTransformations,
-                    trim: {
-                        start: 0,
-                        end: this.videoRef.current!.duration,
-                    },
-                },
-                cropEnabled: false,
-                scale: 1,
-            },
-            () => {
-                this.setState({
-                    scale: this.getScale(),
-                });
-            },
-        );
-    }
-
     handleSave() {
         const {dataApi} = this.props.superdesk;
         const {x, y, width, height} = this.state.transformations.crop;
@@ -391,9 +369,12 @@ export class VideoEditor extends React.Component<IProps, IState> {
 
                                 if (processing?.video === false && processing?.thumbnail_preview === false) {
                                     clearInterval(this.intervalVideoEdit);
-                                    this.handleToggleLoading(false);
-                                    this.handleReset();
                                     this.setState({
+                                        ...this.getResetState(),
+                                        loading: {
+                                            thumbnail: false,
+                                            video: false,
+                                        },
                                         thumbnails: [],
                                         videoSrc: result.project?.url + `?t=${Math.random()}`,
                                         article: {
@@ -452,6 +433,20 @@ export class VideoEditor extends React.Component<IProps, IState> {
                     this.showErrorMessage(err);
                 });
         }, 3000);
+    }
+
+    getResetState() {
+        return {
+            transformations: {
+                ...this.initTransformations,
+                trim: {
+                    start: 0,
+                    end: this.videoRef.current!.duration,
+                },
+            },
+            cropEnabled: false,
+            scale: 1,
+        };
     }
 
     // calculate crop real size as crop value is not based on real video size
@@ -630,7 +625,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                             <h3 className="modal__heading">{gettext('Edit Video')}</h3>
                             <VideoEditorHeader
                                 onClose={this.handleClose}
-                                onReset={this.handleReset}
+                                onReset={() => this.setState({...this.getResetState()})}
                                 onSave={this.handleSave}
                                 isDirty={this.checkIsDirty()}
                                 isVideoLoading={this.state.loading.video}
