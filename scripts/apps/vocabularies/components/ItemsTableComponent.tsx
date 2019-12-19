@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import ObjectEditor from './ObjectEditor';
 import {has} from 'lodash';
 import {gettext} from 'core/utils';
@@ -7,7 +6,7 @@ import {gettext} from 'core/utils';
 interface IProps {
     model: any;
     schema: any;
-    schemaFields: any;
+    schemaFields: Array<any>;
     update(item, key, value): void;
     remove(index): void;
 }
@@ -56,16 +55,6 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
                 <label>{field.label || gettext(field.key)}</label>
             </th>
         ));
-    }
-
-    header() {
-        const {schema} = this.props;
-        const fields = schema ? this.getSchemaKeys() : this.getModelKeys();
-
-        fields.push(<th key="is_active"><label>{gettext('Active')}</label></th>);
-        fields.push(<th key={''} />);
-
-        return <tr>{fields}</tr>;
     }
 
     setCaretPosition(ctrl, pos) {
@@ -162,14 +151,6 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
         }
     }
 
-    modelItem(item, keys) {
-        return keys.map((key) => (
-            <td key={key}>
-                {this.inputField({key: key, type: key}, item)}
-            </td>
-        ));
-    }
-
     modelBody() {
         const {model} = this.props;
         const keys = Object.keys(model).filter((key) => key !== 'is_active');
@@ -177,7 +158,13 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
 
         return this.state.items.map((item, index) => (
             <tr key={index}>
-                {this.modelItem(item, keys)}
+                {
+                    keys.map((key) => (
+                        <td key={key}>
+                            {this.inputField({key: key, type: key}, item)}
+                        </td>
+                    ))
+                }
                 {this.toggleActiveButton(item)}
                 {this.removeItemButton(index, removeDisabled)}
             </tr>
@@ -223,28 +210,24 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
         );
     }
 
-    body() {
-        return this.props.schema ? this.schemaBody() : this.modelBody();
-    }
-
     render() {
+        const {schema} = this.props;
+        const fields = schema ? this.getSchemaKeys() : this.getModelKeys();
+
+        fields.push(<th key="is_active"><label>{gettext('Active')}</label></th>);
+        fields.push(<th key={'column_for_remove_button'} />);
+
+        const header =  <tr>{fields}</tr>;
+
         return (
             <table>
                 <thead>
-                    {this.header()}
+                    {header}
                 </thead>
                 <tbody>
-                    {this.body()}
+                    {this.props.schema ? this.schemaBody() : this.modelBody()}
                 </tbody>
             </table>
         );
     }
 }
-
-ItemsTableComponent.propTypes = {
-    model: PropTypes.object,
-    schema: PropTypes.object,
-    schemaFields: PropTypes.array,
-    update: PropTypes.func.isRequired,
-    remove: PropTypes.func.isRequired,
-};
