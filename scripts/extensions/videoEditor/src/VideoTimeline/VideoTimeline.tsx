@@ -132,15 +132,16 @@ export class VideoTimeline extends React.Component<IProps, IState> {
             widthPic = thumbnails[0].width;
         }
         const numberThumbnails = Math.floor(this.controlbar.current!?.offsetWidth / widthPic);
-        const duration = video?.duration ?? 0;
         let thumbnailsRender: Array<IThumbnail> = [];
-        const per_delta_image =
-            thumbnails.length > 1 ? (thumbnails.length - 1) / numberThumbnails : duration / numberThumbnails;
+
         if (this.props.thumbnails && this.props.thumbnails.length > 0) {
+            const per_delta_image = (thumbnails.length - 1) / numberThumbnails;
+
             for (let i = 0; i <= numberThumbnails; i++) {
                 let thumbnail = this.props.thumbnails[Math.round(i * per_delta_image)];
+
                 thumbnail.url = thumbnail.url + `?t=${Math.random()}`;
-                thumbnailsRender.push(thumbnail  );
+                thumbnailsRender.push(thumbnail);
             }
         }
         this.setState({thumbnailsRender: thumbnailsRender});
@@ -195,6 +196,7 @@ export class VideoTimeline extends React.Component<IProps, IState> {
 
     handleTimelineClick(e: React.MouseEvent) {
         let time = this.setVideoCurrentTime(e.clientX);
+
         if (time < this.state.trim.start) {
             this.props.onTrim(time, this.state.trim.end);
             this.updateTrim(time, this.state.trim.end);
@@ -207,6 +209,7 @@ export class VideoTimeline extends React.Component<IProps, IState> {
 
     setVideoCurrentTime(pX: number) {
         let time = this.getPositionInBar(pX) * this.props.video.current!.duration;
+
         this.props.video.current!.currentTime = time;
         this.setState({currentTime: time});
         return time;
