@@ -3,18 +3,24 @@ import ObjectEditor from './ObjectEditor';
 import {has} from 'lodash';
 import {gettext} from 'core/utils';
 
+interface ISchemaField {
+    key: string;
+    label?: string;
+    type?: 'object' | string;
+}
+
 interface IProps {
-    model: any;
-    schema: any;
-    schemaFields: Array<any>;
+    model: {[key: string]: any};
+    schema: {[key: string]: any};
+    schemaFields: Array<ISchemaField>;
     update(item, key, value): void;
     remove(index): void;
 }
 
 interface IState {
     targetInput: any;
-    items: any;
-    itemsValidation: any;
+    items: Array<{[key: string]: any}>;
+    itemsValidation: Array<{[key: string]: any}>;
     caretPosition: any;
 }
 
@@ -42,7 +48,7 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
             .filter((key) => key !== 'is_active')
             .map((key) => (
                 <th key={key}>
-                    <label>{gettext(key)}</label>
+                    <label>{key}</label>
                 </th>
             ));
     }
@@ -52,7 +58,7 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
 
         return schemaFields.map((field) => (
             <th key={field.key}>
-                <label>{field.label || gettext(field.key)}</label>
+                <label>{field.label || field.key}</label>
             </th>
         ));
     }
