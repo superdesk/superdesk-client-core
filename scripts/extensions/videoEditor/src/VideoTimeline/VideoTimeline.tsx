@@ -43,10 +43,9 @@ function getStrTime(secondsTotal: number) {
 export class VideoTimeline extends React.Component<IProps, IState> {
     static contextType = VideoEditorContext;
     declare context: React.ContextType<typeof VideoEditorContext>;
-    private wrapper: React.RefObject<HTMLDivElement>;
     private controlbar: React.RefObject<HTMLDivElement>;
     private intervalTimer: number;
-    private PositionX: number;
+    private positionX: number;
 
     constructor(props: IProps) {
         super(props);
@@ -58,10 +57,9 @@ export class VideoTimeline extends React.Component<IProps, IState> {
                 end: this.props.trim.start,
             },
         };
-        this.wrapper = React.createRef();
         this.controlbar = React.createRef();
         this.intervalTimer = 0;
-        this.PositionX = 0;
+        this.positionX = 0;
         this.handleDrag = debounce(this.handleDrag.bind(this), 5);
         this.handleTimelineClick = this.handleTimelineClick.bind(this);
         this.handledragover = this.handledragover.bind(this);
@@ -79,8 +77,15 @@ export class VideoTimeline extends React.Component<IProps, IState> {
     }
 
     componentDidUpdate(prevProps: IProps) {
-        if (JSON.stringify(prevProps.thumbnails) !== JSON.stringify(this.props.thumbnails)) {
+        if (prevProps.thumbnails !== this.props.thumbnails) {
             this.setRenderThumbnails();
+        }
+        if (
+            prevProps.trim !== this.props.trim &&
+            this.props.trim.start === 0 &&
+            this.props.trim.end === this.props.video.current?.duration
+        ) {
+            this.updateTrim(0, this.props.trim.end);
         }
     }
 
@@ -98,7 +103,7 @@ export class VideoTimeline extends React.Component<IProps, IState> {
     }
 
     handleDrag(type: string) {
-        let time = this.getPositionInBar(this.PositionX) * this.props.video.current!.duration;
+        let time = this.getPositionInBar(this.positionX) * this.props.video.current!.duration;
 
         if (type === 'left') {
             this.updateTrim(time, this.state.trim.end);
@@ -110,7 +115,7 @@ export class VideoTimeline extends React.Component<IProps, IState> {
 
     handledragover(e: any) {
         if (e.clientX) {
-            this.PositionX = e.clientX;
+            this.positionX = e.clientX;
         }
     }
 
@@ -163,7 +168,7 @@ export class VideoTimeline extends React.Component<IProps, IState> {
     }
 
     handleDragEnd() {
-        this.setVideoCurrentTime(this.PositionX);
+        this.setVideoCurrentTime(this.positionX);
         this.props.onTrim(this.state.trim.start, this.state.trim.end);
     }
 
@@ -249,7 +254,6 @@ export class VideoTimeline extends React.Component<IProps, IState> {
                         <div className={getClass('controlbars__progress-output__progress-line')} />
                     </div>
                     <div
-                        ref={this.wrapper}
                         className={`${getClass('controlbars__wrapper-out')}`}
                         style={{
                             left: left,

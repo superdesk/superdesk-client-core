@@ -236,6 +236,9 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
     ) {
         const ctx = this.ref.current!.getContext('2d');
 
+        if (ctx == null) {
+            return;
+        }
         let [drawWidth, drawHeight] = canvasSize;
 
         if (ratio > 1) {
@@ -245,15 +248,19 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
         }
         this.ref.current!.width = drawWidth;
         this.ref.current!.height = drawHeight;
-        ctx!.drawImage(element, x, y, width, height, 0, 0, drawWidth, drawHeight);
+        ctx.drawImage(element, x, y, width, height, 0, 0, drawWidth, drawHeight);
         this.setScale();
     }
 
     clearCanvas() {
-        const ctx = this.ref.current!.getContext('2d');
+        const ctx = this.ref.current?.getContext('2d');
+
+        if (ctx == null) {
+            return;
+        }
         const thumbnail = this.props.article.renditions?.thumbnail?.href;
 
-        ctx!.clearRect(0, 0, this.ref.current!.width, this.ref.current!.height);
+        ctx.clearRect(0, 0, this.ref.current!.width, this.ref.current!.height);
         if (thumbnail) {
             this.setThumbnail(thumbnail);
         }

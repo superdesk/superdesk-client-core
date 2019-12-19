@@ -44,7 +44,6 @@ interface IState {
 
 export class VideoEditor extends React.Component<IProps, IState> {
     private videoRef: React.RefObject<HTMLVideoElement>;
-    private timelineRef: React.RefObject<VideoTimeline>;
     private reactCropRef: React.RefObject<ReactCrop>;
     private intervalThumbnails: number;
     private intervalVideoEdit: number;
@@ -57,7 +56,6 @@ export class VideoEditor extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
         this.videoRef = React.createRef();
-        this.timelineRef = React.createRef();
         this.reactCropRef = React.createRef();
         this.intervalThumbnails = 0;
         this.intervalVideoEdit = 0;
@@ -107,7 +105,6 @@ export class VideoEditor extends React.Component<IProps, IState> {
         this.handleToggleCrop = this.handleToggleCrop.bind(this);
         this.handleToggleVideo = this.handleToggleVideo.bind(this);
         this.handleQualityChange = this.handleQualityChange.bind(this);
-        this.handleReset = this.handleReset.bind(this);
         this.handleSave = this.handleSave.bind(this);
         this.getCropRotate = this.getCropRotate.bind(this);
         this.getWrapperSize = this.getWrapperSize.bind(this);
@@ -124,8 +121,12 @@ export class VideoEditor extends React.Component<IProps, IState> {
         canvas.height = 2000;
         const ctx = canvas.getContext('2d');
 
-        ctx!.globalAlpha = 0;
-        ctx!.fillStyle = 'rgba(0, 0, 200, 0.5)';
+        if (ctx == null) {
+            return;
+        }
+
+        ctx.globalAlpha = 0;
+        ctx.fillStyle = 'rgba(0, 0, 200, 0.5)';
         this.handleCheckingVideo();
         this.setState({
             cropImg: canvas.toDataURL(),
@@ -176,20 +177,15 @@ export class VideoEditor extends React.Component<IProps, IState> {
     }
 
     handleTrim(start: number, end: number) {
-        this.setState(
-            {
-                transformations: {
-                    ...this.state.transformations,
-                    trim: {
-                        start: start,
-                        end: end,
-                    },
+        this.setState({
+            transformations: {
+                ...this.state.transformations,
+                trim: {
+                    start: start,
+                    end: end,
                 },
             },
-            () => {
-                this.timelineRef.current!.updateTrim(start, end);
-            },
-        );
+        });
     }
 
     handleRotate() {
@@ -336,28 +332,6 @@ export class VideoEditor extends React.Component<IProps, IState> {
         this.setState({transformations: {...this.state.transformations, quality: Math.ceil(newQuality)}});
     }
 
-    handleReset() {
-        this.setState(
-            {
-                transformations: {
-                    ...this.initTransformations,
-                    trim: {
-                        start: 0,
-                        end: this.videoRef.current!.duration,
-                    },
-                },
-                cropEnabled: false,
-                scale: 1,
-            },
-            () => {
-                this.timelineRef.current!.updateTrim(0, this.videoRef.current!.duration);
-                this.setState({
-                    scale: this.getScale(),
-                });
-            },
-        );
-    }
-
     handleSave() {
         const {dataApi} = this.props.superdesk;
         const {x, y, width, height} = this.state.transformations.crop;
@@ -399,9 +373,12 @@ export class VideoEditor extends React.Component<IProps, IState> {
 
                                 if (processing?.video === false && processing?.thumbnail_preview === false) {
                                     clearInterval(this.intervalVideoEdit);
-                                    this.handleToggleLoading(false);
-                                    this.handleReset();
                                     this.setState({
+                                        ...this.getResetState(),
+                                        loading: {
+                                            thumbnail: false,
+                                            video: false,
+                                        },
                                         thumbnails: [],
                                         videoSrc: result.project?.url + `?t=${Math.random()}`,
                                         article: {
@@ -460,6 +437,20 @@ export class VideoEditor extends React.Component<IProps, IState> {
                     this.showErrorMessage(err);
                 });
         }, 3000);
+    }
+
+    getResetState() {
+        return {
+            transformations: {
+                ...this.initTransformations,
+                trim: {
+                    start: 0,
+                    end: this.videoRef.current!.duration,
+                },
+            },
+            cropEnabled: false,
+            scale: 1,
+        };
     }
 
     // calculate crop real size as crop value is not based on real video size
@@ -638,7 +629,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                             <h3 className="modal__heading">{gettext('Edit Video')}</h3>
                             <VideoEditorHeader
                                 onClose={this.handleClose}
-                                onReset={this.handleReset}
+                                onReset={() => this.setState({...this.getResetState()})}
                                 onSave={this.handleSave}
                                 isDirty={this.checkIsDirty()}
                                 isVideoLoading={this.state.loading.video}
@@ -725,7 +716,6 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                         getCropRotate={this.getCropRotate}
                                     />
                                     <VideoTimeline
-                                        ref={this.timelineRef}
                                         video={this.videoRef}
                                         trim={this.state.transformations.trim}
                                         onTrim={this.handleTrim}
