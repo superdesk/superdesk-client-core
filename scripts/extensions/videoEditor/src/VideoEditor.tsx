@@ -50,8 +50,9 @@ export class VideoEditor extends React.Component<IProps, IState> {
     private intervalCheckVideo: number;
     private initTransformations: IState['transformations'];
     private hasTransitionRun: boolean;
-    // maximum size of video will scale up to
-    private wrapperSize: { width: number; height: number };
+    private videoWrapper: HTMLDivElement | null;
+    private videoContainerSize: number;
+    private videoToolsSize: number;
 
     constructor(props: IProps) {
         super(props);
@@ -93,7 +94,9 @@ export class VideoEditor extends React.Component<IProps, IState> {
             videoSrc: '',
             article: cloneDeep(this.props.article),
         };
-        this.wrapperSize = {width: 0, height: 0};
+        this.videoWrapper = null;
+        this.videoContainerSize = 0;
+        this.videoToolsSize = 0;
         this.hasTransitionRun = true;
 
         this.handleClose = this.handleClose.bind(this);
@@ -107,9 +110,9 @@ export class VideoEditor extends React.Component<IProps, IState> {
         this.handleQualityChange = this.handleQualityChange.bind(this);
         this.handleSave = this.handleSave.bind(this);
         this.getCropRotate = this.getCropRotate.bind(this);
-        this.getWrapperSize = this.getWrapperSize.bind(this);
-        this.getToolsWrapperSize = this.getToolsWrapperSize.bind(this);
-        this.getVideoContainerSize = this.getVideoContainerSize.bind(this);
+        this.setVideoWrapper = this.setVideoWrapper.bind(this);
+        this.setVideoToolsSize = this.setVideoToolsSize.bind(this);
+        this.setVideoContainerSize = this.setVideoContainerSize.bind(this);
         this.showErrorMessage = this.showErrorMessage.bind(this);
         this.checkIsDirty = this.checkIsDirty.bind(this);
     }
@@ -537,20 +540,14 @@ export class VideoEditor extends React.Component<IProps, IState> {
         }
     }
 
-    getWrapperSize(element: HTMLDivElement) {
+    setVideoWrapper(element: HTMLDivElement) {
         if (element == null) {
             return;
         }
-        const {width, height} = element.getBoundingClientRect();
-
-        this.wrapperSize = {
-            width: width,
-            // in case ref callback of child element is run before this function
-            height: height + this.wrapperSize.height,
-        };
+        this.videoWrapper = element;
     }
 
-    getToolsWrapperSize(element: HTMLDivElement) {
+    setVideoToolsSize(element: HTMLDivElement) {
         if (element == null) {
             return;
         }
@@ -559,16 +556,25 @@ export class VideoEditor extends React.Component<IProps, IState> {
         // the remain of margin bottom of video tools is too big and overflowed to timeline
         const margin = parseFloat(marginTop) * 2;
 
-        this.wrapperSize.height = this.wrapperSize.height - height - margin;
+        this.videoToolsSize = height + margin;
     }
 
-    getVideoContainerSize(element: HTMLDivElement) {
+    setVideoContainerSize(element: HTMLDivElement) {
         if (element == null) {
             return;
         }
         const {marginTop} = window.getComputedStyle(element);
 
-        this.wrapperSize.height = this.wrapperSize.height - parseFloat(marginTop);
+        this.videoContainerSize = parseFloat(marginTop);
+    }
+
+    getWrapperHeight() {
+        if (this.videoWrapper == null) {
+            return 0;
+        }
+        const {height} = this.videoWrapper.getBoundingClientRect();
+
+        return height - this.videoToolsSize - this.videoContainerSize;
     }
 
     getScale(): number {
@@ -579,11 +585,12 @@ export class VideoEditor extends React.Component<IProps, IState> {
         }
 
         const videoHeight = this.state.transformations.degree % 180 !== 0 ? videoRef.videoWidth : videoRef.videoHeight;
+        const wrapperHeight = this.getWrapperHeight();
         const {height} = videoRef.getBoundingClientRect();
         // ensure video image quality is not broken when scaling up
-        const vh = videoHeight < this.wrapperSize.height ? videoHeight : this.wrapperSize.height;
+        const vh = videoHeight < wrapperHeight ? videoHeight : wrapperHeight;
         // round approximate 1 value (e.g. 1.0059880239)
-        // it causes unnecessary transformation transition on resetting state when rotating 360 degree
+        // avoid running unnecessary transformation transition on resetting state when rotating 360 degree
         const scale = Math.trunc(vh / height * 100) / 100;
 
         if (scale === 1) {
@@ -642,12 +649,12 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                 </div>
                             )}
                             <div className="sd-photo-preview sd-photo-preview--edit-video">
-                                <div className="sd-photo-preview__video" ref={this.getWrapperSize}>
+                                <div className="sd-photo-preview__video" ref={this.setVideoWrapper}>
                                     <div className="sd-photo-preview__video-inner">
                                         <div
                                             className="sd-photo-preview__video-container"
                                             style={{marginTop: '2rem'}}
-                                            ref={this.getVideoContainerSize}
+                                            ref={this.setVideoContainerSize}
                                         >
                                             <video
                                                 ref={this.videoRef}
@@ -685,7 +692,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                             )}
                                         </div>
                                         <VideoEditorTools
-                                            wrapperRef={this.getToolsWrapperSize}
+                                            wrapperRef={this.setVideoToolsSize}
                                             onToggleVideo={this.handleToggleVideo}
                                             onRotate={this.handleRotate}
                                             onCrop={this.handleToggleCrop}
