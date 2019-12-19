@@ -130,21 +130,13 @@ export class VideoTimeline extends React.Component<IProps, IState> {
         let thumbnailsRender: Array<IThumbnail> = [];
         const per_delta_image =
             thumbnails.length > 1 ? (thumbnails.length - 1) / numberThumbnails : duration / numberThumbnails;
-
-        for (let i = 0; i <= numberThumbnails; i++) {
-            let thumbnail: IThumbnail = {
-                url: '',
-                width: widthPic,
-                height: 50,
-            };
-
-            if (this.props.thumbnails && this.props.thumbnails.length > 0) {
-                thumbnail = this.props.thumbnails[Math.round(i * per_delta_image)];
+        if (this.props.thumbnails && this.props.thumbnails.length > 0) {
+            for (let i = 0; i <= numberThumbnails; i++) {
+                let thumbnail = this.props.thumbnails[Math.round(i * per_delta_image)];
                 thumbnail.url = thumbnail.url + `?t=${Math.random()}`;
+                thumbnailsRender.push(thumbnail  );
             }
-            thumbnailsRender.push(thumbnail);
         }
-
         this.setState({thumbnailsRender: thumbnailsRender});
     }
     tick() {

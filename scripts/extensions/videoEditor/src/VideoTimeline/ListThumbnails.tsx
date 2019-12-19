@@ -12,10 +12,13 @@ export class ListThumbnails extends React.PureComponent<IProps> {
 
         return (
             <div className={`${getClass('frames')} ${getClass('frames--thumbs')}`}>
-                <div className={getClass('frames__inner')}>
+                <div
+                    className={`${getClass('frames__inner')} ${this.props.thumbnails.length === 0 &&
+                        getClass('frames__inner--load')}`}
+                >
                     {this.props.thumbnails.map((item: IThumbnail, index: number) => (
                         <video
-                            className={`${getClass('frames__video')} ${item.url && getClass('frames__video--loaded')}`}
+                            className={`${getClass('frames__video')}`}
                             poster={item.url}
                             width={item.width}
                             height={item.height}
