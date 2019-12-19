@@ -5,7 +5,7 @@ import {IErrorMessage, ICrop} from './interfaces';
 import {pick} from 'lodash';
 
 interface IProps {
-    videoRef: React.RefObject<HTMLVideoElement>;
+    video: HTMLVideoElement;
     article: IArticle;
     crop: ICrop;
     rotate: number;
@@ -66,16 +66,13 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
             {
                 dirty: true,
                 type: 'capture',
-                value: this.props.videoRef.current!.currentTime,
+                value: this.props.video.currentTime,
                 rotateDegree: this.props.rotate,
             },
             () => {
                 // make sure rotateDegree is updated so we can calculate scale ratio correctly
-                const video = this.props.videoRef.current;
+                const video = this.props.video;
 
-                if (!video) {
-                    return;
-                }
                 let {x, y, width, height, aspect} = this.props.getCropRotate(this.props.crop);
 
                 let canvasSize = [this.maxCanvasSize.width, this.maxCanvasSize.height];

@@ -6,7 +6,7 @@ import VideoEditorContext from '../VideoEditorContext';
 import {IThumbnail} from '../interfaces';
 
 interface IProps {
-    video: React.RefObject<HTMLVideoElement>;
+    video: HTMLVideoElement;
     thumbnails: Array<IThumbnail>;
     trim: {
         start: number;
@@ -84,7 +84,7 @@ export class VideoTimeline extends React.Component<IProps, IState> {
         if (
             prevProps.trim !== this.props.trim &&
             this.props.trim.start === 0 &&
-            this.props.trim.end === this.props.video.current?.duration
+            this.props.trim.end === this.props.video.duration
         ) {
             this.updateTrim(0, this.props.trim.end);
         }
@@ -104,7 +104,7 @@ export class VideoTimeline extends React.Component<IProps, IState> {
     }
 
     handleDrag(type: string) {
-        let time = this.getPositionInBar(this.positionX) * this.props.video.current!.duration;
+        let time = this.getPositionInBar(this.positionX) * this.props.video.duration;
 
         if (type === 'left') {
             this.updateTrim(time, this.state.trim.end);
@@ -123,7 +123,7 @@ export class VideoTimeline extends React.Component<IProps, IState> {
     setRenderThumbnails() {
         const thumbnails = this.props.thumbnails;
         // get list thumbnail render in list thumbnails get from server
-        const video = this.props.video.current!;
+        const video = this.props.video;
         let widthPic = 0;
 
         if (isEmpty(thumbnails)) {
@@ -148,15 +148,13 @@ export class VideoTimeline extends React.Component<IProps, IState> {
     }
     tick() {
         // updates the current time state
-        if (this.props.video.current) {
-            let currentTime = this.props.video.current!.currentTime;
+        let currentTime = this.props.video.currentTime;
 
-            if (currentTime <= this.state.trim.end) {
-                this.setState({currentTime: currentTime});
-            } else if (this.state.trim.end > 0) {
-                this.setState({currentTime: this.state.trim.end});
-                this.props.video.current!.pause();
-            }
+        if (currentTime <= this.state.trim.end) {
+            this.setState({currentTime: currentTime});
+        } else if (this.state.trim.end > 0) {
+            this.setState({currentTime: this.state.trim.end});
+            this.props.video.pause();
         }
     }
     // drag and drop left and right bar.
@@ -208,16 +206,16 @@ export class VideoTimeline extends React.Component<IProps, IState> {
     }
 
     setVideoCurrentTime(pX: number) {
-        let time = this.getPositionInBar(pX) * this.props.video.current!.duration;
+        let time = this.getPositionInBar(pX) * this.props.video.duration;
 
-        this.props.video.current!.currentTime = time;
+        this.props.video.currentTime = time;
         this.setState({currentTime: time});
         return time;
     }
 
     render() {
         const {getClass} = this.context.utilities.CSS;
-        const video = this.props.video.current!;
+        const video = this.props.video;
         const left = video ? `${(this.state.trim.start / video.duration) * 100}%` : '0%';
         const right = video ? `${(1 - this.state.trim.end / video.duration) * 100}%` : '0%';
 

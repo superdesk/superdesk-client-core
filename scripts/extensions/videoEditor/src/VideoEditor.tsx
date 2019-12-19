@@ -710,24 +710,28 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                     </div>
                                 </div>
                                 <div className="sd-photo-preview__thumb-strip sd-photo-preview__thumb-strip--video">
-                                    <VideoEditorThumbnail
-                                        videoRef={this.videoRef}
-                                        article={this.state.article}
-                                        onToggleLoading={this.handleToggleLoading}
-                                        onSave={(article: IArticle) =>
-                                            this.setState({article: {...this.state.article, ...article}})
-                                        }
-                                        onError={this.showErrorMessage}
-                                        crop={this.state.transformations.crop}
-                                        rotate={this.state.transformations.degree}
-                                        getCropRotate={this.getCropRotate}
-                                    />
-                                    <VideoTimeline
-                                        video={this.videoRef}
-                                        trim={this.state.transformations.trim}
-                                        onTrim={this.handleTrim}
-                                        thumbnails={this.state.thumbnails}
-                                    />
+                                    {videoRef && (
+                                        <>
+                                            <VideoEditorThumbnail
+                                                video={videoRef}
+                                                article={this.state.article}
+                                                onToggleLoading={this.handleToggleLoading}
+                                                onSave={(article: IArticle) =>
+                                                    this.setState({article: {...this.state.article, ...article}})
+                                                }
+                                                onError={this.showErrorMessage}
+                                                crop={this.state.transformations.crop}
+                                                rotate={this.state.transformations.degree}
+                                                getCropRotate={this.getCropRotate}
+                                            />
+                                            <VideoTimeline
+                                                video={videoRef}
+                                                trim={this.state.transformations.trim}
+                                                onTrim={this.handleTrim}
+                                                thumbnails={this.state.thumbnails}
+                                            />
+                                        </>
+                                    )}
                                 </div>
                             </div>
                         </div>
