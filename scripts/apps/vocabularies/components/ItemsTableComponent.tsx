@@ -4,7 +4,22 @@ import ObjectEditor from './ObjectEditor';
 import {has} from 'lodash';
 import {gettext} from 'core/utils';
 
-export default class ItemsTableComponent extends React.Component<any, any> {
+interface IProps {
+    model: any;
+    schema: any;
+    schemaFields: any;
+    update(item, key, value): void;
+    remove(index): void;
+}
+
+interface IState {
+    targetInput: any;
+    items: any;
+    itemsValidation: any;
+    caretPosition: any;
+}
+
+export default class ItemsTableComponent extends React.Component<IProps, IState> {
     static propTypes: any;
     static defaultProps: any;
 
