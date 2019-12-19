@@ -11,7 +11,7 @@ export class BarIcon extends React.PureComponent {
                 width="24"
                 height="30"
                 viewBox="0 0 24 24"
-                style={{position: 'absolute', top: -10}}
+                style={{position: 'absolute', top: -14}}
             >
                 <path fill="none" d="M0 0h24v24H0V0z" />
                 <path
