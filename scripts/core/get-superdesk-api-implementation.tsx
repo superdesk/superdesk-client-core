@@ -2,7 +2,6 @@ import moment from 'moment-timezone';
 import {
     ISuperdesk,
     IExtensions,
-    IExtensionActivationResult,
     IArticle,
     IContentProfile,
     IEvents,
@@ -136,7 +135,6 @@ export function getSuperdeskApiImplementation(
                             article._etag,
                             patchFinal,
                         );
-
                     }).catch((err) => {
                         if (err instanceof Error) {
                             logger.error(err);
