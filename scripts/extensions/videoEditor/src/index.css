@@ -55,7 +55,7 @@
 
 .controlbars__progress-output__content {
   position: relative;
-  transform: translate(0, -20.073px);
+  transform: translate(0, -20px);
   text-align: center;
 }
 
@@ -65,8 +65,8 @@
   font-size: 11px;
   padding: 0 9px;
   box-sizing: border-box;
-  transform: translate(0, -24px);
-  height: 16px;
+  transform: translate(0, -10px);
+  height: 18px;
   line-height: 18px;
   border-radius: 30px;
 }

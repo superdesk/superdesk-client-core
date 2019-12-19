@@ -71,6 +71,7 @@ export class VideoTimeline extends React.Component<IProps, IState> {
 
     componentDidMount() {
         // call tick every 100ms to update current time state
+        // Don't use event timeupdate, because cannot set timeloop, default is 250ms
         this.intervalTimer = window.setInterval(this.tick, 100);
         document.addEventListener('dragover', this.handledragover);
         this.setRenderThumbnails();
@@ -194,24 +195,18 @@ export class VideoTimeline extends React.Component<IProps, IState> {
 
     handleTimelineClick(e: React.MouseEvent) {
         let time = this.setVideoCurrentTime(e.clientX);
-
         if (time < this.state.trim.start) {
             this.props.onTrim(time, this.state.trim.end);
+            this.updateTrim(time, this.state.trim.end);
         }
         if (time > this.state.trim.end) {
             this.props.onTrim(this.state.trim.start, time);
+            this.updateTrim(this.state.trim.start, time);
         }
     }
 
     setVideoCurrentTime(pX: number) {
         let time = this.getPositionInBar(pX) * this.props.video.current!.duration;
-
-        if (time < this.state.trim.start) {
-            time = this.state.trim.start;
-        }
-        if (time > this.state.trim.end) {
-            time = this.state.trim.end;
-        }
         this.props.video.current!.currentTime = time;
         this.setState({currentTime: time});
         return time;
