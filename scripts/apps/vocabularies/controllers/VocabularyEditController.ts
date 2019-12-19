@@ -36,6 +36,8 @@ interface IScope extends IScopeConfigController {
     customFieldTypes: Array<{id: string, label: string}>;
     setCustomFieldConfig: (config: any) => void;
     editForm: any;
+    tab: 'general' | 'items';
+    setTab: (tab: IScope['tab']) => void;
 }
 
 const idRegex = '^[a-zA-Z0-9-_]+$';
@@ -44,6 +46,12 @@ export function VocabularyEditController(
     $scope: IScope, notify, api, vocabularies, metadata, cvSchema, relationsService,
 ) {
     var origVocabulary = _.cloneDeep($scope.vocabulary);
+
+    $scope.tab = 'general';
+
+    $scope.setTab = function(tab: IScope['tab']) {
+        $scope.tab = tab;
+    };
 
     $scope.idRegex = idRegex;
     $scope.selectionTypes = VOCABULARY_SELECTION_TYPES;
