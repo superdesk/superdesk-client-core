@@ -579,7 +579,11 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         action.re_write = !isReadOnlyState && _.includes(['text'], currentItem.type) &&
             !currentItem.embargo && !currentItem.rewritten_by &&
             (!currentItem.broadcast || !currentItem.broadcast.master_id) &&
-            (!currentItem.rewrite_of || currentItem.rewrite_of && isPublished(currentItem));
+            (
+                !currentItem.rewrite_of || (
+                    currentItem.rewrite_of && isPublished(currentItem)
+                ) || appConfig.workflow_allow_multiple_updates
+            );
 
         action.resend = _.includes(['text'], currentItem.type) &&
             isPublished(currentItem, false);

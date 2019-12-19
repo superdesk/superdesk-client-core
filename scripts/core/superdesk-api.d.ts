@@ -914,6 +914,7 @@ declare module 'superdesk-api' {
                 error(error: Error): void;
                 warn(message: string, json: {[key: string]: any}): void;
             };
+            dateToServerString(date: Date): string; // outputs a string for parsing by the server
         };
         addWebsocketMessageListener<T extends string>(
             eventName: T,
@@ -953,6 +954,7 @@ declare module 'superdesk-api' {
         google_auth: any;
         saml_label: any;
         archive_autocomplete: boolean;
+        workflow_allow_multiple_updates: boolean;
 
 
         // FROM CLIENT

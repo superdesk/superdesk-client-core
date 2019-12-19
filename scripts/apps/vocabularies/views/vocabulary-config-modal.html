@@ -182,6 +182,21 @@
                     </div>
                 </div>
 
+                <div class="sd-line-input" ng-if="matchFieldTypeToTab('related-content-fields', vocabulary.field_type)">
+                    <label class="form-label form__row-label" translate>Filters</label>
+                    <div class="sd-line-input__message sd-margin-b--1" translate>Only allow content with the following status:</div>
+                    <div class="form__row-item form__row-item--no-grow">
+                        <div class="form__row">
+                            <sd-check ng-model="vocabulary.field_options.allowed_workflows.in_progress">
+                                <span translate>In Progress</span>
+                            </sd-check>
+                            <sd-check ng-model="vocabulary.field_options.allowed_workflows.published">
+                                <span translate>Published</span>
+                            </sd-check>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="vocabulary-items__wrapper" ng-if="matchFieldTypeToTab('vocabularies', vocabulary.field_type)">
                     <h3 class="sd-line-input__label" translate>Items</h3>
                     <div sd-vocabulary-config-modal-items></div>

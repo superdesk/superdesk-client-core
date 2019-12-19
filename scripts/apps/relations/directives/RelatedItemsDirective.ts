@@ -1,11 +1,29 @@
-import {get} from 'lodash';
 import {getSuperdeskType} from 'core/utils';
 import {gettext} from 'core/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {IArticle} from 'superdesk-api';
+import {IVocabulary} from 'superdesk-interfaces/Vocabulary';
+import {IDirectiveScope} from 'types/Angular/DirectiveScope';
 
 const ARCHIVE_TYPES = ['archive', 'published'];
 const isInArchive = (item: IArticle) => item._type != null && ARCHIVE_TYPES.includes(item._type);
+
+interface IScope extends IDirectiveScope<void> {
+    onCreated: (items: Array<IArticle>) => void;
+    gettext: (text: any, params?: any) => string;
+    field: IVocabulary;
+    editable: boolean;
+    item: IArticle;
+    loading: boolean;
+    reorder: (start: {index: number}, end: {index: number}) => void;
+    relatedItems: Array<IArticle>;
+    onchange: () => void;
+    addRelatedItem: (item: IArticle) => void;
+    isEmptyRelatedItems: (fieldId: string) => void;
+    refreshRelatedItems: () => void;
+    removeRelatedItem: (key: string) => void;
+    openRelatedItem: (item: IArticle) => void;
+}
 
 /**
  * @ngdoc directive
@@ -27,7 +45,7 @@ export function RelatedItemsDirective(authoringWorkspace: AuthoringWorkspaceServ
             onchange: '&onchange',
         },
         templateUrl: 'scripts/apps/relations/views/related-items.html',
-        link: function(scope, elem, attr) {
+        link: function(scope: IScope, elem, attr) {
             scope.onCreated = (items: Array<IArticle>) => {
                 items.forEach((item) => {
                     scope.addRelatedItem(item);
@@ -37,7 +55,8 @@ export function RelatedItemsDirective(authoringWorkspace: AuthoringWorkspaceServ
             scope.gettext = gettext;
 
             const dragOverClass = 'dragover';
-            const allowed = ((scope.field || {}).field_options || {}).allowed_types || {};
+            const fieldOptions = scope.field?.field_options || {};
+            const allowed = fieldOptions.allowed_types || {};
             const ALLOWED_TYPES = Object.keys(allowed)
                 .filter((key) => allowed[key] === true)
                 .map((key) => 'application/superdesk.item.' + key);
@@ -67,24 +86,34 @@ export function RelatedItemsDirective(authoringWorkspace: AuthoringWorkspaceServ
                         .map((key) => scope.item.associations[key]);
 
                     const currentCount = relatedItemsForCurrentField.length;
-                    const maxCount = get(scope, 'field.field_options.multiple_items.enabled') === true
-                        ? get(scope, 'field.field_options.multiple_items.max_items')
+                    const maxCount = scope.field?.field_options?.multiple_items?.enabled === true
+                        ? scope.field.field_options.multiple_items.max_items
                         : 1;
 
                     const type = getSuperdeskType(event, false);
-                    const item = angular.fromJson(event.originalEvent.dataTransfer.getData(type));
+                    const item: IArticle = angular.fromJson(event.originalEvent.dataTransfer.getData(type));
 
                     const itemAlreadyAddedAsRelated = relatedItemsForCurrentField.some(
                         (relatedItem) => relatedItem._id === item._id,
                     );
 
+                    const isWorkflowAllowed = relationsService.itemHasAllowedStatus(item, scope.field);
+
+                    if (!isWorkflowAllowed) {
+                        notify.error(gettext(
+                            'The following status is not allowed in this field: {{status}}',
+                            {status: item.state},
+                        ));
+                        return;
+                    }
+
                     if (scope.item._id === item._id) {
-                        notify.error('Cannot add self as related item.');
+                        notify.error(gettext('Cannot add self as related item.'));
                         return;
                     }
 
                     if (itemAlreadyAddedAsRelated) {
-                        notify.error('This item is already added as related.');
+                        notify.error(gettext('This item is already added as related.'));
                         return;
                     }
 
@@ -136,28 +165,6 @@ export function RelatedItemsDirective(authoringWorkspace: AuthoringWorkspaceServ
                 return keys.length === 0;
             };
 
-            /**
-            * Get related items for fieldId
-            *
-            * @param {String} fieldId
-            * @return {[Object]}
-            */
-            scope.refreshRelatedItems = () => {
-                scope.loading = true;
-                relationsService.getRelatedItemsForField(scope.item, scope.field._id)
-                    .then((items) => {
-                        scope.relatedItems = items;
-                        scope.loading = false;
-                    });
-            };
-            scope.refreshRelatedItems();
-
-            /**
-             * Reorder related items on related items list
-             *
-             * @param {int} start
-             * @param {int} end
-             */
             scope.reorder = (start, end) => {
                 if (!scope.editable) {
                     return;
@@ -175,6 +182,19 @@ export function RelatedItemsDirective(authoringWorkspace: AuthoringWorkspaceServ
                 scope.item.associations = angular.extend({}, scope.item.associations, updated);
                 scope.onchange();
             };
+
+            /**
+            * Get related items for fieldId
+            */
+            scope.refreshRelatedItems = () => {
+                scope.loading = true;
+                relationsService.getRelatedItemsForField(scope.item, scope.field._id)
+                    .then((items) => {
+                        scope.relatedItems = items;
+                        scope.loading = false;
+                    });
+            };
+            scope.refreshRelatedItems();
 
             /**
              * Return the next key for related item associated to current field
