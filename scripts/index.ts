@@ -8,11 +8,7 @@ import {appConfig} from 'appConfig';
 import {IConfigurableUiComponents, IExtension} from 'superdesk-api';
 import {CC} from 'core/ui/configurable-ui-components';
 import {registerExtensions} from 'core/register-extensions';
-
-if (appConfig.features.useTansaProofing) {
-    // tslint:disable-next-line:no-var-requires
-    require('apps/tansa');
-}
+import {setupTansa} from 'apps/tansa';
 
 let body = angular.element('body');
 
@@ -134,6 +130,10 @@ export function startApp(
         ].concat(appConfig.apps || []), {strictDi: true});
 
         window['superdeskIsReady'] = true;
+
+        if (appConfig.features.useTansaProofing) {
+            setupTansa();
+        }
     });
 }
 
