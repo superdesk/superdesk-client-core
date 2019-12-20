@@ -30,7 +30,12 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
 
     constructor(props) {
         super(props);
-        this.state = {items: [], itemsValidation: [], caretPosition: '', targetInput: ''};
+        this.state = {
+            items: [],
+            itemsValidation: [],
+            caretPosition: '',
+            targetInput: '',
+        };
     }
 
     componentDidUpdate() {
