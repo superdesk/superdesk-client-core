@@ -41,28 +41,6 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
         }
     }
 
-    getModelKeys() {
-        const {model} = this.props;
-
-        return Object.keys(model)
-            .filter((key) => key !== 'is_active')
-            .map((key) => (
-                <th key={key}>
-                    <label>{key}</label>
-                </th>
-            ));
-    }
-
-    getSchemaKeys() {
-        const {schemaFields} = this.props;
-
-        return schemaFields.map((field) => (
-            <th key={field.key}>
-                <label>{field.label || field.key}</label>
-            </th>
-        ));
-    }
-
     setCaretPosition(ctrl, pos) {
         if (ctrl.setSelectionRange) {
             ctrl.focus();
@@ -70,7 +48,7 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
         }
     }
 
-    inputField(field, item, index?) {
+    inputField(field: ISchemaField, item, index) {
         const value = item[field.key] || '';
         const disabled = !item.is_active;
         const update = (event) => {
@@ -157,81 +135,49 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
         }
     }
 
-    modelBody() {
-        const {model} = this.props;
-        const keys = Object.keys(model).filter((key) => key !== 'is_active');
-        const removeDisabled = !this.props.schema && this.state.items.length <= 1;
-
-        return this.state.items.map((item, index) => (
-            <tr key={index}>
-                {
-                    keys.map((key) => (
-                        <td key={key}>
-                            {this.inputField({key: key, type: key}, item)}
-                        </td>
-                    ))
-                }
-                {this.toggleActiveButton(item)}
-                {this.removeItemButton(index, removeDisabled)}
-            </tr>
-        ));
-    }
-
-    schemaBody() {
-        const {schemaFields} = this.props;
-
-        return this.state.items.map((item, index) => (
-            <tr key={index}>
-                {schemaFields.map((field) => (
-                    <td key={field.key}>
-                        {this.inputField(field, item, index)}
-                    </td>
-                ))}
-                {this.toggleActiveButton(item)}
-                {this.removeItemButton(index)}
-            </tr>
-        ));
-    }
-
-    toggleActiveButton(item) {
-        return (
-            <td>
-                <span className="vocabularyStatus">
-                    <input type="checkbox"
-                        checked={!!item.is_active}
-                        onChange={() => this.props.update(item, 'is_active', !item.is_active)}
-                    />
-                </span>
-            </td>
-        );
-    }
-
-    removeItemButton(index, disabled?) {
-        return (
-            <td>
-                <button className="icn-btn" disabled={!!disabled} onClick={() => this.props.remove(index)}>
-                    <i className="icon-close-small" />
-                </button>
-            </td>
-        );
-    }
-
     render() {
-        const {schema} = this.props;
-        const fields = schema ? this.getSchemaKeys() : this.getModelKeys();
-
-        fields.push(<th key="is_active"><label>{gettext('Active')}</label></th>);
-        fields.push(<th key={'column_for_remove_button'} />);
-
-        const header =  <tr>{fields}</tr>;
-
         return (
             <table>
                 <thead>
-                    {header}
+                <tr>
+                    {
+                        this.props.schemaFields.map((field) => (
+                            <th key={field.key}>
+                                <label>{field.label || field.key}</label>
+                            </th>
+                        ))
+                    }
+                    <th>
+                        <label>{gettext('Active')}</label>
+                    </th>
+                    <th />
+                </tr>
                 </thead>
                 <tbody>
-                    {this.props.schema ? this.schemaBody() : this.modelBody()}
+                    {
+                        this.state.items.map((item, index) => (
+                            <tr key={index}>
+                                {this.props.schemaFields.map((field) => (
+                                    <td key={field.key}>
+                                        {this.inputField(field, item, index)}
+                                    </td>
+                                ))}
+                                <td>
+                                    <span className="vocabularyStatus">
+                                        <input type="checkbox"
+                                            checked={!!item.is_active}
+                                            onChange={() => this.props.update(item, 'is_active', !item.is_active)}
+                                        />
+                                    </span>
+                                </td>
+                                <td>
+                                    <button className="icn-btn" onClick={() => this.props.remove(index)}>
+                                        <i className="icon-close-small" />
+                                    </button>
+                                </td>
+                            </tr>
+                        ))
+                    }
                 </tbody>
             </table>
         );

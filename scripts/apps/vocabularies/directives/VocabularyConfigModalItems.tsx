@@ -63,12 +63,17 @@ export const VocabularyConfigModalItems: any = () => ({
             });
         };
 
+        const schemaFields = scope.schemaFields
+            || Object.keys(scope.model)
+                .filter((key) => key !== 'is_active')
+                .map((key) => ({key: key, label: key, type: key}));
+
         // render component
         ReactDOM.render(<ItemsTableComponent
             ref={(ref) => component = ref}
             model={scope.model}
             schema={scope.schema}
-            schemaFields={scope.schemaFields}
+            schemaFields={schemaFields}
             remove={remove}
             update={update}
         />, element[0]);
