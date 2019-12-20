@@ -131,7 +131,7 @@ export class VideoTimeline extends React.Component<IProps, IState> {
         } else {
             widthPic = thumbnails[0].width;
         }
-        const numberThumbnails = Math.floor(this.controlbar.current!?.offsetWidth / widthPic);
+        const numberThumbnails = Math.floor((this.controlbar.current?.offsetWidth ?? 1) / widthPic);
         let thumbnailsRender: Array<IThumbnail> = [];
 
         if (this.props.thumbnails && this.props.thumbnails.length > 0) {

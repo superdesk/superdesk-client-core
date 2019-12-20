@@ -208,10 +208,10 @@ export class VideoEditor extends React.Component<IProps, IState> {
     handleRotate() {
         this.hasTransitionRun = false;
         const {getClass} = this.props.superdesk.utilities.CSS;
-        const classList = this.videoRef.current!.classList;
+        const classList = this.videoRef.current?.classList;
 
-        if (!classList.contains(getClass('video__rotate__transition'))) {
-            classList.add(getClass('video__rotate__transition'));
+        if (!classList?.contains(getClass('video__rotate__transition'))) {
+            classList?.add(getClass('video__rotate__transition'));
         }
         const cropRef = this.reactCropRef.current?.['componentRef'];
 
@@ -229,7 +229,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
 
     handleRotateTransitionEnd() {
         // avoid transition rerun after set scale
-        if (this.hasTransitionRun === true) {
+        if (this.hasTransitionRun === true || this.videoRef.current == null) {
             return;
         }
         this.hasTransitionRun = true;
@@ -238,24 +238,26 @@ export class VideoEditor extends React.Component<IProps, IState> {
 
         // avoid running transition on setting 360 degree to 0
         if (degree === 0) {
-            this.videoRef.current!.classList.remove(getClass('video__rotate__transition'));
+            this.videoRef.current.classList.remove(getClass('video__rotate__transition'));
         }
         const scale = this.getScale();
 
         let crop = this.state.transformations.crop;
 
         if (this.state.cropEnabled) {
-            let refValue = this.videoRef.current!.getBoundingClientRect();
-            let currentValue = this.state.transformations.degree % 180 === -90 ? refValue.width : refValue.height;
-            let delta = (scale / crop.scale!) * (currentValue / crop.value!);
+            const refValue = this.videoRef.current.getBoundingClientRect();
+            const currentValue = this.state.transformations.degree % 180 === -90 ? refValue.width : refValue.height;
+            // @ts-ignore
+            // TODO: reduce complexity
+            const delta = (scale / (crop.scale)) * (currentValue / crop.value);
 
             crop = {
                 ...crop,
-                aspect: 1 / crop.aspect!,
-                x: crop.y! * delta,
-                y: currentValue! - (crop.x! + crop.width!) * delta,
-                height: crop.width! * delta,
-                width: crop.height! * delta,
+                aspect: 1 / (crop.aspect ?? 1),
+                x: crop.y * delta,
+                y: currentValue - (crop.x + crop.width) * delta,
+                height: crop.width * delta,
+                width: crop.height * delta,
                 scale: scale,
                 value: currentValue,
             };
@@ -273,6 +275,9 @@ export class VideoEditor extends React.Component<IProps, IState> {
         if (newCrop.x == null || newCrop.y == null || newCrop.width == null || newCrop.height == null) {
             throw new Error('Invalid state');
         }
+        if (this.videoRef.current == null) {
+            throw new Error('Could not load video');
+        }
 
         newCrop.x = Math.floor(newCrop.x);
         newCrop.y = Math.floor(newCrop.y);
@@ -284,8 +289,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
             newCrop.aspect = this.state.transformations.crop.aspect;
         }
 
-        let refValue = this.videoRef.current!.getBoundingClientRect();
-
+        const refValue = this.videoRef.current.getBoundingClientRect();
         const crop = {
             ...newCrop,
             scale: this.getScale(),
@@ -304,9 +308,9 @@ export class VideoEditor extends React.Component<IProps, IState> {
 
     handleToggleVideo() {
         if (this.state.playing) {
-            this.videoRef.current!.pause();
+            this.videoRef.current?.pause();
         } else {
-            this.videoRef.current!.play();
+            this.videoRef.current?.play();
         }
     }
 
@@ -368,7 +372,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
         if (body.rotate === 0) {
             delete body.rotate;
         }
-        if (body.trim === `0,${this.videoRef.current!.duration}`) {
+        if (body.trim === `0,${this.videoRef.current?.duration}`) {
             delete body.trim;
         }
         if (body.scale === 0) {
@@ -398,7 +402,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
         // ignore trim.end as initState don't load video duration due to videoRef can be null in componentDidMount
         // confirm bar should not be toggled when user change crop aspect
         if (
-            this.state.transformations.trim.end !== this.videoRef.current!.duration ||
+            this.state.transformations.trim.end !== this.videoRef.current.duration ||
             !isEqual(
                 omit(this.state.transformations, ['trim.end', 'crop.aspect', 'crop.value', 'crop.scale']),
                 omit(this.initTransformations, ['trim.end', 'crop.aspect', 'crop.value', 'crop.scale']),
@@ -437,7 +441,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                 ...this.initTransformations,
                 trim: {
                     start: 0,
-                    end: this.videoRef.current!.duration,
+                    end: this.videoRef.current?.duration ?? 0,
                 },
             },
             cropEnabled: false,
@@ -448,7 +452,11 @@ export class VideoEditor extends React.Component<IProps, IState> {
     // calculate crop real size as crop value is not based on real video size
     // but scaled video to fit into container
     getCropSize(inputCrop: ICrop): ICrop {
-        const video = this.videoRef.current!;
+        const video = this.videoRef.current;
+
+        if (video == null) {
+            throw new Error('Could not get video');
+        }
         let {width, height} = video.getBoundingClientRect();
 
         if (this.state.transformations.degree % 180 !== 0) {
@@ -459,10 +467,10 @@ export class VideoEditor extends React.Component<IProps, IState> {
         const scaleX = video.videoWidth / width;
         const scaleY = video.videoHeight / height;
 
-        crop.x = Math.floor(crop.x! * scaleX);
-        crop.y = Math.floor(crop.y! * scaleY);
-        crop.width = Math.floor(crop.width! * scaleX);
-        crop.height = Math.floor(crop.height! * scaleY);
+        crop.x = Math.floor(crop.x * scaleX);
+        crop.y = Math.floor(crop.y * scaleY);
+        crop.width = Math.floor(crop.width * scaleX);
+        crop.height = Math.floor(crop.height * scaleY);
         return crop;
     }
 
@@ -470,7 +478,10 @@ export class VideoEditor extends React.Component<IProps, IState> {
     // If it was set to 100%, moving the crop area might not be possible
     // and resize indicators at the corners might not be that clearly visible.
     getInitialCropSize(aspect: number, scale: number = 1) {
-        let {width, height} = this.videoRef.current!.getBoundingClientRect();
+        if (this.videoRef.current == null) {
+            throw new Error('Could not load video');
+        }
+        let {width, height} = this.videoRef.current.getBoundingClientRect();
 
         width = (width * scale * 80) / 100;
         height = (height * scale * 80) / 100;
@@ -478,9 +489,9 @@ export class VideoEditor extends React.Component<IProps, IState> {
         const ratio = width / height;
 
         if (ratio > 1) {
-            width = height * aspect!;
+            width = height * aspect;
         } else {
-            height = width * aspect!;
+            height = width * aspect;
         }
         return {
             ...this.initTransformations.crop,
@@ -492,7 +503,11 @@ export class VideoEditor extends React.Component<IProps, IState> {
 
     // get crop value while rotating video
     getCropRotate(crop: ICrop): ICrop {
-        const {width: currentWidth, height: currentHeight} = this.videoRef.current!.getBoundingClientRect();
+        if (this.videoRef.current == null) {
+            throw new Error('Could not get rotated video crop value');
+        }
+
+        const {width: currentWidth, height: currentHeight} = this.videoRef.current.getBoundingClientRect();
         const rotate = this.state.transformations.degree;
         const {x, y, width, height} = crop;
 
@@ -500,24 +515,24 @@ export class VideoEditor extends React.Component<IProps, IState> {
         case -90:
             return this.getCropSize({
                 ...crop,
-                x: Math.abs(currentHeight - height! - y!),
-                y: x!,
-                width: height!,
-                height: width!,
+                x: Math.abs(currentHeight - height - y),
+                y: x,
+                width: height,
+                height: width,
             });
         case -180:
             return this.getCropSize({
                 ...crop,
-                x: Math.abs(currentWidth - (x! + width!)),
-                y: Math.abs(currentHeight - (y! + height!)),
+                x: Math.abs(currentWidth - (x + width)),
+                y: Math.abs(currentHeight - (y + height)),
             });
         case -270:
             return this.getCropSize({
                 ...crop,
-                x: y!,
-                y: Math.abs(currentWidth - width! - x!),
-                width: height!,
-                height: width!,
+                x: y,
+                y: Math.abs(currentWidth - width - x),
+                width: height,
+                height: width,
             });
         default:
             return this.getCropSize(crop);
@@ -645,7 +660,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                                 src={this.state.videoSrc}
                                                 onPlay={() => this.setState({playing: true})}
                                                 onPause={() => this.setState({playing: false})}
-                                                onLoadedData={() => this.handleTrim(0, videoRef!.duration)}
+                                                onLoadedData={() => this.handleTrim(0, videoRef?.duration ?? 0)}
                                                 style={{
                                                     transform: `rotate(${degree}) scale(${this.state.scale})`,
                                                     height: `${videoHeight}px`,

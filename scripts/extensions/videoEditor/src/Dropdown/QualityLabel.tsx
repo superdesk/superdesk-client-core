@@ -13,7 +13,7 @@ export class QualityLabel extends React.PureComponent<IDropdownLabel> {
                 onClick={this.props.onClick}
                 sd-tooltip={this.props.title}
             >
-                {this.props.getText!(value)}
+                {this.props.getText?.(value)}
                 <span className="dropdown__caret dropdown__caret--white" />
             </button>
         );

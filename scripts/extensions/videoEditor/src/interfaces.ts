@@ -1,6 +1,10 @@
-import {Crop} from 'react-image-crop';
-
-export interface ICrop extends Crop {
+export interface ICrop {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    unit?: 'px' | '%';
+    aspect?: number;
     scale?: number;
     value?: number;
 }

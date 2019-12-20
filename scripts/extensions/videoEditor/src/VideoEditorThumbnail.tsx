@@ -85,7 +85,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
 
                 if (this.state.rotateDegree % 180 !== 0) {
                     if (!isDisabledCrop) {
-                        aspect = 1 / aspect!;
+                        aspect = 1 / (aspect ?? 1);
                     }
                     // make thumbnail overflow then scale it down, otherwise thumbnail will be too small
                     // once rotated because we draw thumbnail based on canvas width
@@ -129,11 +129,11 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
         const {dataApi} = this.context;
         const {gettext} = this.context.localization;
 
-        if (this.state.type === 'capture') {
+        if (this.state.type === 'capture' && typeof this.state.value === 'number') {
             const crop = this.props.getCropRotate(pick(this.props.crop, ['x', 'y', 'width', 'height']));
             const body = {
                 // Captured thumbnail from server and from canvas have small difference in time (position)
-                position: (this.state.value as number) - 0.04,
+                position: (this.state.value) - 0.04,
                 crop: Object.values(crop).join(','),
                 rotate: this.state.rotateDegree,
             };
@@ -164,10 +164,10 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
                     this.getThumbnail();
                 })
                 .catch(this.props.onError);
-        } else if (this.state.type === 'upload') {
+        } else if (this.state.type === 'upload' && this.state.value instanceof File) {
             const form = new FormData();
 
-            form.append('file', this.state.value as File);
+            form.append('file', this.state.value);
 
             const {session, instance} = this.context;
             const host = instance.config.server.url;
@@ -231,10 +231,8 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
         ratio: number = width / height,
         canvasSize: Array<number> = [this.maxCanvasSize.width, this.maxCanvasSize.height],
     ) {
-        const ctx = this.ref.current!.getContext('2d');
-
-        if (ctx == null) {
-            return;
+        if (this.ref.current == null) {
+            throw new Error('Could not get current canvas');
         }
         let [drawWidth, drawHeight] = canvasSize;
 
@@ -243,21 +241,21 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
         } else {
             drawWidth = drawHeight * ratio;
         }
-        this.ref.current!.width = drawWidth;
-        this.ref.current!.height = drawHeight;
-        ctx.drawImage(element, x, y, width, height, 0, 0, drawWidth, drawHeight);
+        this.ref.current.width = drawWidth;
+        this.ref.current.height = drawHeight;
+        this.ref.current.getContext('2d')?.drawImage(element, x, y, width, height, 0, 0, drawWidth, drawHeight);
         this.setScale();
     }
 
     clearCanvas() {
         const ctx = this.ref.current?.getContext('2d');
 
-        if (ctx == null) {
-            return;
+        if (this.ref.current == null || ctx == null) {
+            throw new Error('Could not get current canvas');
         }
+        ctx.clearRect(0, 0, this.ref.current.width, this.ref.current.height);
         const thumbnail = this.props.article.renditions?.thumbnail?.href;
 
-        ctx.clearRect(0, 0, this.ref.current!.width, this.ref.current!.height);
         if (thumbnail) {
             this.setThumbnail(thumbnail);
         }
