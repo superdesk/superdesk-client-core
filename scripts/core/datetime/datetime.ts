@@ -243,7 +243,7 @@ export default angular.module('superdesk.core.datetime', [
         return function timeFilter(time) {
             var m = moment(time, 'HH:mm:ss');
 
-            return m.format(TIME_FORMAT);
+            return m.format(CONFIG_TIME_FORMAT);
         };
     })
 
