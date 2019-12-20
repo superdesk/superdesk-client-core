@@ -119,6 +119,9 @@ export class VideoEditor extends React.Component<IProps, IState> {
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
 
+        // initilize image for React Crop
+        // this is the boudary of crop area, user can't move, draw crop outside of this so image need
+        // to be big enough to cover entire video even once rotated
         canvas.width = 2000;
         canvas.height = 2000;
         if (ctx == null) {
