@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactPaginate from 'react-paginate';
 import ObjectEditor from './ObjectEditor';
 import {has} from 'lodash';
 import {gettext} from 'core/utils';
@@ -15,6 +16,7 @@ interface IProps {
     schemaFields: Array<ISchemaField>;
     update(item, key, value): void;
     remove(index): void;
+    addItem(): void;
 }
 
 interface IState {
@@ -22,6 +24,13 @@ interface IState {
     items: Array<{[key: string]: any}>;
     itemsValidation: Array<{[key: string]: any}>;
     caretPosition: any;
+    page: number;
+}
+
+const pageSize = 5;
+
+function getPageCount(items: IState['items']) {
+    return Math.ceil(items.length / pageSize);
 }
 
 export default class ItemsTableComponent extends React.Component<IProps, IState> {
@@ -35,6 +44,7 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
             itemsValidation: [],
             caretPosition: '',
             targetInput: '',
+            page: 1,
         };
     }
 
@@ -51,6 +61,18 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
             ctrl.focus();
             ctrl.setSelectionRange(pos, pos);
         }
+    }
+
+    receiveState(items: IState['items'], itemsValidation: IState['itemsValidation']) {
+        const pageCount = getPageCount(items);
+
+        this.setState({
+            items: items,
+            itemsValidation: itemsValidation,
+
+            // if items are removed, the page needs to be updated so it doesn't point to a page that no longer exists
+            page: Math.min(this.state.page, pageCount),
+        });
     }
 
     inputField(field: ISchemaField, item, index) {
@@ -141,50 +163,97 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
     }
 
     render() {
+        const takeFrom = (this.state.page - 1) * pageSize;
+        const takeTo = this.state.page * pageSize;
+
         return (
-            <table>
-                <thead>
-                <tr>
-                    {
-                        this.props.schemaFields.map((field) => (
-                            <th key={field.key}>
-                                <label>{field.label || field.key}</label>
-                            </th>
-                        ))
-                    }
-                    <th>
-                        <label>{gettext('Active')}</label>
-                    </th>
-                    <th />
-                </tr>
-                </thead>
-                <tbody>
-                    {
-                        this.state.items.map((item, index) => (
-                            <tr key={index}>
-                                {this.props.schemaFields.map((field) => (
-                                    <td key={field.key}>
-                                        {this.inputField(field, item, index)}
-                                    </td>
-                                ))}
-                                <td>
-                                    <span className="vocabularyStatus">
-                                        <input type="checkbox"
-                                            checked={!!item.is_active}
-                                            onChange={() => this.props.update(item, 'is_active', !item.is_active)}
-                                        />
-                                    </span>
-                                </td>
-                                <td>
-                                    <button className="icn-btn" onClick={() => this.props.remove(index)}>
-                                        <i className="icon-close-small" />
-                                    </button>
-                                </td>
-                            </tr>
-                        ))
-                    }
-                </tbody>
-            </table>
+            <div>
+                <ReactPaginate
+                    previousLabel={gettext('prev')}
+                    nextLabel={gettext('next')}
+                    pageCount={getPageCount(this.state.items)}
+                    marginPagesDisplayed={2}
+                    pageRangeDisplayed={5}
+                    onPageChange={({selected}) => {
+                        this.setState({page: selected + 1});
+                    }}
+                    forcePage={this.state.page - 1}
+                    containerClassName="bs-pagination"
+                    activeClassName="active"
+                />
+
+                <div className="vocabulary-items__button-bar">
+                    <button
+                        id="add-new-btn"
+                        className="btn btn--primary"
+                        onClick={() => {
+                            this.props.addItem();
+
+                            // using a timeout to wait for this.state.items to update after adding an item
+                            // in case adding an item causes page count to increase
+                            setTimeout(() => {
+                                this.setState({page: getPageCount(this.state.items)});
+                            });
+                        }}
+                    >
+                        <i className="icon-plus-sign"></i>
+                        <span>{gettext('Add Item')}</span>
+                    </button>
+                </div>
+
+                <table>
+                    <thead>
+                    <tr>
+                        {
+                            this.props.schemaFields.map((field) => (
+                                <th key={field.key}>
+                                    <label>{field.label || field.key}</label>
+                                </th>
+                            ))
+                        }
+                        <th>
+                            <label>{gettext('Active')}</label>
+                        </th>
+                        <th />
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {
+                            this.state.items.slice(takeFrom, takeTo).map((item, i) => {
+                                const absoluteIndex = takeFrom + i;
+
+                                return (
+                                    <tr key={absoluteIndex}>
+                                        {this.props.schemaFields.map((field) => (
+                                            <td key={field.key}>
+                                                {this.inputField(field, item, absoluteIndex)}
+                                            </td>
+                                        ))}
+                                        <td>
+                                            <span className="vocabularyStatus">
+                                                <input type="checkbox"
+                                                    checked={!!item.is_active}
+                                                    onChange={
+                                                        () => this.props.update(item, 'is_active', !item.is_active)
+                                                    }
+                                                />
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <button
+                                                className="icn-btn"
+                                                onClick={() => this.props.remove(absoluteIndex)}
+                                            >
+                                                <i className="icon-close-small" />
+                                            </button>
+                                        </td>
+                                    </tr>
+                                );
+                            })
+                        }
+                    </tbody>
+                </table>
+            </div>
         );
     }
 }

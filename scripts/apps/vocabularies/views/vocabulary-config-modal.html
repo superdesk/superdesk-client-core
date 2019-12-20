@@ -32,11 +32,7 @@
                     <ng-form name="vocabularyForm" class="vocabularyForm">
                         <div ng-show="tab === 'items' && matchFieldTypeToTab('vocabularies', vocabulary.field_type)">
                             <div class="vocabulary-items__wrapper">
-                                <h3 class="sd-line-input__label" translate>Items</h3>
                                 <div sd-vocabulary-config-modal-items></div>
-                            </div>
-                            <div class="vocabulary-items__button-bar">
-                                <button id="add-new-btn" class="btn btn--primary" ng-click="addItem()"><i class="icon-plus-sign"></i><span translate>Add Item</span></button>
                             </div>
         
                             <div ng-if="errorMessage" class="sd-line-input sd-line-input--invalid">

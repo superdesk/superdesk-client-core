@@ -63,6 +63,13 @@ export const VocabularyConfigModalItems: any = () => ({
             });
         };
 
+        const add = () => {
+            scope.$applyAsync(() => {
+                ngForm.$setDirty();
+                scope.addItem();
+            });
+        };
+
         const schemaFields = scope.schemaFields
             || Object.keys(scope.model)
                 .filter((key) => key !== 'is_active')
@@ -75,6 +82,7 @@ export const VocabularyConfigModalItems: any = () => ({
             schema={scope.schema}
             schemaFields={schemaFields}
             remove={remove}
+            addItem={add}
             update={update}
         />, element[0]);
 
@@ -88,7 +96,7 @@ export const VocabularyConfigModalItems: any = () => ({
         scope.$watchCollection('vocabulary.items', (items) => {
             if (items && component) {
                 validateItems(items);
-                component.setState({items, itemsValidation});
+                component.receiveState(items, itemsValidation);
             }
         });
     },
