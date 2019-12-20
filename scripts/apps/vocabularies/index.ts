@@ -16,6 +16,7 @@ import {coreMenuGroups} from 'core/activity/activity';
 import {gettext} from 'core/utils';
 import {reactToAngular1} from 'superdesk-ui-framework';
 import {CustomFieldConfigs} from './custom-field-configs';
+import {VocabularyConfigModalItems} from './directives/VocabularyConfigModalItems';
 
 /**
  * @ngdoc module
@@ -36,7 +37,7 @@ angular.module('superdesk.apps.vocabularies', [
     .directive('sdVocabularyConfigModal', directive.VocabularyConfigModal)
     .component('sdCustomFieldConfigs', reactToAngular1(CustomFieldConfigs, ['vocabulary', 'onChange']))
     .directive('sdVocabularyObjectField', directive.VocabularyObjectField)
-    .directive('sdVocabularyConfigModalItems', directive.VocabularyConfigModalItems)
+    .directive('sdVocabularyConfigModalItems', VocabularyConfigModalItems)
 
     .factory('cvSchema', SchemaFactory)
 
