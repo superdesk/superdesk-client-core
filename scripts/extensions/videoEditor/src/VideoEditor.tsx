@@ -496,11 +496,6 @@ export class VideoEditor extends React.Component<IProps, IState> {
         const rotate = this.state.transformations.degree;
         const {x, y, width, height} = crop;
 
-        // do not use state cropEnabled, because user can toggle crop then capture without draw crop area
-        if ([x, y, width, height].every((value) => value === 0) === true) {
-            return this.getCropSize(crop);
-        }
-
         switch (rotate) {
         case -90:
             return this.getCropSize({
