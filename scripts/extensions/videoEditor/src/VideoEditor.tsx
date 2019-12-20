@@ -46,7 +46,6 @@ export class VideoEditor extends React.Component<IProps, IState> {
     private videoRef: React.RefObject<HTMLVideoElement>;
     private reactCropRef: React.RefObject<ReactCrop>;
     private intervalThumbnails: number;
-    private intervalVideoEdit: number;
     private intervalCheckVideo: number;
     private initTransformations: IState['transformations'];
     private hasTransitionRun: boolean;
@@ -59,7 +58,6 @@ export class VideoEditor extends React.Component<IProps, IState> {
         this.videoRef = React.createRef();
         this.reactCropRef = React.createRef();
         this.intervalThumbnails = 0;
-        this.intervalVideoEdit = 0;
         this.intervalCheckVideo = 0;
         this.initTransformations = {
             crop: {
@@ -119,18 +117,28 @@ export class VideoEditor extends React.Component<IProps, IState> {
 
     componentDidMount() {
         const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
 
         canvas.width = 2000;
         canvas.height = 2000;
-        const ctx = canvas.getContext('2d');
-
         if (ctx == null) {
             return;
         }
 
         ctx.globalAlpha = 0;
         ctx.fillStyle = 'rgba(0, 0, 200, 0.5)';
-        this.handleCheckingVideo();
+        const {gettext} = this.props.superdesk.localization;
+
+        this.handleToggleLoading(true, gettext('Loading video...'));
+        this.handleCheckingVideo(false, () => {
+            const text = gettext('Video is editing, please wait...');
+
+            if (this.state.loadingText !== text) {
+                this.setState({
+                    loadingText: text,
+                });
+            }
+        });
         this.setState({
             cropImg: canvas.toDataURL(),
         });
@@ -138,7 +146,6 @@ export class VideoEditor extends React.Component<IProps, IState> {
 
     componentWillUnmount() {
         clearInterval(this.intervalThumbnails);
-        clearInterval(this.intervalVideoEdit);
         clearInterval(this.intervalCheckVideo);
     }
 
@@ -147,19 +154,25 @@ export class VideoEditor extends React.Component<IProps, IState> {
         this.props.onArticleUpdate(this.state.article);
     }
 
-    handleCheckingVideo() {
-        const {gettext} = this.props.superdesk.localization;
-
-        this.handleToggleLoading(true, gettext('Loading video...'));
+    handleCheckingVideo(resetState: boolean = true, callback?: () => void) {
         this.intervalCheckVideo = window.setInterval(() => {
             this.props.superdesk.dataApi
                 .findOne<IArticle>('video_edit', this.state.article._id + `?t=${Math.random()}`)
                 .then((result) => {
-                    if (result.project?.processing.video === false) {
-                        this.handleToggleLoading(false);
+                    const processing = result.project?.processing;
+
+                    if (processing?.video === false && processing?.thumbnail_preview === false) {
+                        const state = resetState ? this.getResetState() : {};
+
                         clearInterval(this.intervalCheckVideo);
                         this.setState({
-                            videoSrc: result.project.url + `?t=${Math.random()}`,
+                            ...state,
+                            loading: {
+                                thumbnail: false,
+                                video: false,
+                            },
+                            thumbnails: [],
+                            videoSrc: result.project?.url + `?t=${Math.random()}`,
                             article: {
                                 ...this.state.article,
                                 ...result,
@@ -167,9 +180,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                         });
                         this.loadTimelineThumbnails();
                     } else {
-                        this.setState({
-                            loadingText: gettext('Video is editing, please wait...'),
-                        });
+                        callback?.();
                     }
                 })
                 .catch((err: IErrorMessage) => {
@@ -368,35 +379,10 @@ export class VideoEditor extends React.Component<IProps, IState> {
                 })
                 .then(() => {
                     this.handleToggleLoading(true, gettext('Video is editing, please wait...'));
-                    this.intervalVideoEdit = window.setInterval(() => {
-                        this.props.superdesk.dataApi
-                            .findOne<IArticle>('video_edit', this.state.article._id + `?t=${Math.random()}`)
-                            .then((result) => {
-                                const processing = result.project?.processing;
-
-                                if (processing?.video === false && processing?.thumbnail_preview === false) {
-                                    clearInterval(this.intervalVideoEdit);
-                                    this.setState({
-                                        ...this.getResetState(),
-                                        loading: {
-                                            thumbnail: false,
-                                            video: false,
-                                        },
-                                        thumbnails: [],
-                                        videoSrc: result.project?.url + `?t=${Math.random()}`,
-                                        article: {
-                                            ...this.state.article,
-                                            ...result,
-                                        },
-                                    });
-                                    this.loadTimelineThumbnails();
-                                }
-                            });
-                    }, 3000);
+                    this.handleCheckingVideo();
                 })
                 .catch((err: IErrorMessage) => {
                     this.showErrorMessage(err);
-                    clearInterval(this.intervalVideoEdit);
                 });
         }
     }
