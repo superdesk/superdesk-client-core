@@ -11,8 +11,6 @@ interface ISchemaField {
 }
 
 interface IProps {
-    model: {[key: string]: any};
-    schema: {[key: string]: any};
     schemaFields: Array<ISchemaField>;
     update(item, key, value): void;
     remove(index): void;

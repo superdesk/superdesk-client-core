@@ -78,8 +78,6 @@ export const VocabularyConfigModalItems: any = () => ({
         // render component
         ReactDOM.render(<ItemsTableComponent
             ref={(ref) => component = ref}
-            model={scope.model}
-            schema={scope.schema}
             schemaFields={schemaFields}
             remove={remove}
             addItem={add}
