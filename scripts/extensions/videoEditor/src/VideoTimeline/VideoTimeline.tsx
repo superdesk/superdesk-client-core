@@ -104,7 +104,7 @@ export class VideoTimeline extends React.Component<IProps, IState> {
         });
     }
 
-    handleDrag(type: string) {
+    handleDrag(type: 'left' | 'right') {
         let time = this.getPositionInBar(this.positionX) * this.props.video.duration;
 
         if (type === 'left') {
@@ -115,7 +115,7 @@ export class VideoTimeline extends React.Component<IProps, IState> {
         }
     }
 
-    handleDragOver(e: any) {
+    handleDragOver(e: DragEvent | React.DragEvent<HTMLDivElement>) {
         if (e.clientX) {
             this.positionX = e.clientX;
         }
