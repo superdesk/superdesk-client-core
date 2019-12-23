@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {debounce, isEmpty} from 'lodash';
+import {debounce} from 'lodash';
 import {BarIcon} from './BarIcon';
 import {ListThumbnails} from './ListThumbnails';
 import VideoEditorContext from '../VideoEditorContext';
@@ -62,7 +62,7 @@ export class VideoTimeline extends React.Component<IProps, IState> {
         this.positionX = 0;
         this.handleDrag = debounce(this.handleDrag.bind(this), 5);
         this.handleTimelineClick = this.handleTimelineClick.bind(this);
-        this.handledragover = this.handledragover.bind(this);
+        this.handleDragOver = this.handleDragOver.bind(this);
         this.handleDragEnd = this.handleDragEnd.bind(this);
         this.tick = this.tick.bind(this);
 
@@ -73,13 +73,13 @@ export class VideoTimeline extends React.Component<IProps, IState> {
         // call tick every 100ms to update current time state
         // Don't use event timeupdate, because cannot set timeloop, default is 250ms
         this.intervalTimer = window.setInterval(this.tick, 100);
-        document.addEventListener('dragover', this.handledragover);
-        this.setRenderThumbnails();
+        document.addEventListener('dragover', this.handleDragOver);
+        this.setThumbnailsRender();
     }
 
     componentDidUpdate(prevProps: IProps) {
         if (prevProps.thumbnails !== this.props.thumbnails) {
-            this.setRenderThumbnails();
+            this.setThumbnailsRender();
         }
         if (
             prevProps.trim !== this.props.trim &&
@@ -92,6 +92,7 @@ export class VideoTimeline extends React.Component<IProps, IState> {
 
     componentWillUnmount() {
         clearInterval(this.intervalTimer);
+        document.removeEventListener('dragover', this.handleDragOver);
     }
 
     updateTrim(start: number, end: number) {
@@ -114,38 +115,28 @@ export class VideoTimeline extends React.Component<IProps, IState> {
         }
     }
 
-    handledragover(e: any) {
+    handleDragOver(e: any) {
         if (e.clientX) {
             this.positionX = e.clientX;
         }
     }
 
-    setRenderThumbnails() {
-        const thumbnails = this.props.thumbnails;
-        // get list thumbnail render in list thumbnails get from server
-        const video = this.props.video;
-        let widthPic = 0;
+    // calculate list of thumbnails will be rendered on the UI because of space limit
+    setThumbnailsRender() {
+        const width = this.props.thumbnails?.[0]?.width ?? 1;
+        const total = Math.floor((this.controlbar.current?.offsetWidth ?? 1) / width);
+        // index spacing between each timeline thumbnail
+        // e.g. 1 4 7 10 (delta = 3)
+        const delta = (this.props.thumbnails.length - 1) / total;
+        const thumbnailsIndex = Array.from(
+            Array(total + 1).keys(),
+            (i) => Math.round(i * delta),
+        );
+        const thumbnails = this.props.thumbnails.filter((_, index) => thumbnailsIndex.includes(index));
 
-        if (isEmpty(thumbnails)) {
-            widthPic = video && (50 * video.clientWidth) / video.clientHeight;
-        } else {
-            widthPic = thumbnails[0].width;
-        }
-        const numberThumbnails = Math.floor((this.controlbar.current?.offsetWidth ?? 1) / widthPic);
-        let thumbnailsRender: Array<IThumbnail> = [];
-
-        if (this.props.thumbnails && this.props.thumbnails.length > 0) {
-            const per_delta_image = (thumbnails.length - 1) / numberThumbnails;
-
-            for (let i = 0; i <= numberThumbnails; i++) {
-                let thumbnail = this.props.thumbnails[Math.round(i * per_delta_image)];
-
-                thumbnail.url = thumbnail.url + `?t=${Math.random()}`;
-                thumbnailsRender.push(thumbnail);
-            }
-        }
-        this.setState({thumbnailsRender: thumbnailsRender});
+        this.setState({thumbnailsRender: thumbnails});
     }
+
     tick() {
         // updates the current time state
         let currentTime = this.props.video.currentTime;
@@ -157,6 +148,7 @@ export class VideoTimeline extends React.Component<IProps, IState> {
             this.props.video.pause();
         }
     }
+
     // drag and drop left and right bar.
     handleDragStart(e: React.DragEvent<HTMLDivElement>) {
         // hide drag ghost image
