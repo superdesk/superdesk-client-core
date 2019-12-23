@@ -300,7 +300,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
         const {gettext} = this.context.localization;
 
         return (
-            <div className={`sd-photo-preview__thumbnail-edit ${getClass('video__thumbnail__container')}`}>
+            <div className={`sd-photo-preview__thumbnail-edit ${getClass('thumbnail__container')}`}>
                 <div className="sd-photo-preview__thumbnail-edit-label">{gettext('Video thumbnail')}</div>
                 <div className="image-overlay">
                     <div className="image-overlay__button-block">
@@ -354,12 +354,12 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
                     </div>
                 </div>
                 {!this.props.article.renditions?.thumbnail?.href && !this.state.value && (
-                    <div className={getClass('video__thumbnail--empty')}>
+                    <div className={getClass('thumbnail--empty')}>
                         <div className="upload__info-icon" />
-                        <p className={getClass('video__thumbnail--empty__text')}>{gettext('No thumbnail')}</p>
+                        <p className={getClass('thumbnail--empty__text')}>{gettext('No thumbnail')}</p>
                     </div>
                 )}
-                <div className={getClass('video__thumbnail__wrapper')} ref={this.getWrapperSize}>
+                <div className={getClass('thumbnail__wrapper')} ref={this.getWrapperSize}>
                     <canvas
                         ref={this.ref}
                         style={{transform: `rotate(${this.state.rotateDegree}deg) scale(${this.state.scale})`}}

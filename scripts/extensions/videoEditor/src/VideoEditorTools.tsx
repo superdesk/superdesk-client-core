@@ -53,7 +53,7 @@ class VideoEditorController extends React.PureComponent<IProps> {
                     onSelect={this.props.onCrop}
                     disabled={this.props.cropEnabled === false}
                     isButton={true}
-                    className={getClass('video__dropdown__crop')}
+                    className={getClass('dropdown__crop')}
                 />
                 <button
                     className={`
@@ -64,7 +64,7 @@ class VideoEditorController extends React.PureComponent<IProps> {
                 >
                     <i className="icon-rotate-left" />
                 </button>
-                <span className={`sd-photo-preview__label mlr-auto ${getClass('video__headline')}`}>
+                <span className={`sd-photo-preview__label mlr-auto ${getClass('info__headline')}`}>
                     {this.props.videoHeadline}
                 </span>
                 <div>
@@ -85,7 +85,7 @@ class VideoEditorController extends React.PureComponent<IProps> {
                         items={resolutions}
                         onSelect={this.props.onQualityChange}
                         disabled={this.props.videoQuality === 0}
-                        className={qualityDisabled ? getClass('video__dropdown__quality--disable') : ''}
+                        className={qualityDisabled ? getClass('dropdown__quality--disable') : ''}
                     />
                 </div>
             </div>

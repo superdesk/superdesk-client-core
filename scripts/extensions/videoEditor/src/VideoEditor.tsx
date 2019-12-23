@@ -210,8 +210,8 @@ export class VideoEditor extends React.Component<IProps, IState> {
         const {getClass} = this.props.superdesk.utilities.CSS;
         const classList = this.videoRef.current?.classList;
 
-        if (!classList?.contains(getClass('video__rotate__transition'))) {
-            classList?.add(getClass('video__rotate__transition'));
+        if (!classList?.contains(getClass('rotate__transition'))) {
+            classList?.add(getClass('rotate__transition'));
         }
         const cropRef = this.reactCropRef.current?.['componentRef'];
 
@@ -238,7 +238,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
 
         // avoid running transition on setting 360 degree to 0
         if (degree === 0) {
-            this.videoRef.current.classList.remove(getClass('video__rotate__transition'));
+            this.videoRef.current.classList.remove(getClass('rotate__transition'));
         }
         const scale = this.getScale();
 
@@ -647,8 +647,8 @@ export class VideoEditor extends React.Component<IProps, IState> {
                         </div>
                         <div className="modal__body modal__body--no-padding">
                             {isLoading && (
-                                <div className={getClass('video__loading')}>
-                                    <div className={getClass('video__loading__text')}>{this.state.loadingText}</div>
+                                <div className={getClass('loading')}>
+                                    <div className={getClass('loading__text')}>{this.state.loadingText}</div>
                                 </div>
                             )}
                             <div className="sd-photo-preview sd-photo-preview--edit-video">
@@ -672,7 +672,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                                     // margin top, even if margin of those two are equal
                                                     marginTop: 0,
                                                 }}
-                                                className={getClass('video__rotate__transition')}
+                                                className={getClass('rotate__transition')}
                                                 onTransitionEnd={this.handleRotateTransitionEnd}
                                                 autoPlay
                                             />
@@ -684,7 +684,9 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                                     crop={this.state.transformations.crop}
                                                     keepSelection={true}
                                                     onChange={this.handleCrop}
-                                                    className={getClass('video__crop')}
+                                                    className={getClass('crop')}
+                                                    /* avoid limit height (auto) when video is portrait */
+                                                    imageStyle={{maxWidth: 'unset'}}
                                                     style={{
                                                         width: width,
                                                         height: height,
