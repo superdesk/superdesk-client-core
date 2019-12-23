@@ -226,8 +226,15 @@ declare module 'superdesk-api' {
         sign_off: string;
         feature_media?: any;
         media_description?: string;
-        associations?: any;
-        type: 'text' | 'picture' | 'video' | 'audio' | 'preformatted' | 'graphic' | 'composite';
+        associations?: IArticle | IRelatedArticle;
+        type:
+            | 'text'
+            | 'picture'
+            | 'video'
+            | 'audio'
+            | 'preformatted'
+            | 'graphic'
+            | 'composite';
         firstpublished?: string;
         linked_in_packages?: Array<{
             package: string;
