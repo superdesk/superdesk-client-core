@@ -451,12 +451,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
 
     // calculate crop real size as crop value is not based on real video size
     // but scaled video to fit into container
-    getCropSize(inputCrop: ICrop): ICrop {
-        const video = this.videoRef.current;
-
-        if (video == null) {
-            throw new Error('Could not get video');
-        }
+    getCropSize(video: HTMLVideoElement, inputCrop: ICrop): ICrop {
         let {width, height} = video.getBoundingClientRect();
 
         if (this.state.transformations.degree % 180 !== 0) {
@@ -513,29 +508,38 @@ export class VideoEditor extends React.Component<IProps, IState> {
 
         switch (rotate) {
         case -90:
-            return this.getCropSize({
-                ...crop,
-                x: Math.abs(currentHeight - height - y),
-                y: x,
-                width: height,
-                height: width,
-            });
+            return this.getCropSize(
+                this.videoRef.current,
+                    {
+                    ...crop,
+                    x: Math.abs(currentHeight - height - y),
+                    y: x,
+                    width: height,
+                    height: width,
+                },
+            );
         case -180:
-            return this.getCropSize({
-                ...crop,
-                x: Math.abs(currentWidth - (x + width)),
-                y: Math.abs(currentHeight - (y + height)),
-            });
+            return this.getCropSize(
+                this.videoRef.current,
+                {
+                    ...crop,
+                    x: Math.abs(currentWidth - (x + width)),
+                    y: Math.abs(currentHeight - (y + height)),
+                },
+            );
         case -270:
-            return this.getCropSize({
-                ...crop,
-                x: y,
-                y: Math.abs(currentWidth - width - x),
-                width: height,
-                height: width,
-            });
+            return this.getCropSize(
+                this.videoRef.current,
+                {
+                    ...crop,
+                    x: y,
+                    y: Math.abs(currentWidth - width - x),
+                    width: height,
+                    height: width,
+                },
+            );
         default:
-            return this.getCropSize(crop);
+            return this.getCropSize(this.videoRef.current, crop);
         }
     }
 
