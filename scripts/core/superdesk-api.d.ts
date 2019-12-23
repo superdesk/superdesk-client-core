@@ -226,7 +226,7 @@ declare module 'superdesk-api' {
         sign_off: string;
         feature_media?: any;
         media_description?: string;
-        associations?: IArticle | IRelatedArticle;
+        associations?: {[id: string]: IArticle | IRelatedArticle};
         type:
             | 'text'
             | 'picture'
