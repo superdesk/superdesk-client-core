@@ -135,37 +135,20 @@
   transform: translateX(50%);
 }
 
-.frames--thumbs {
+.timeline__thumbnails {
   overflow: hidden;
-}
-
-.frames {
   display: block;
-  width: 100%;
-}
-
-.frames__inner {
   width: 100%;
   white-space: nowrap;
   border-radius: 5px;  
   min-height: 50px;
-  position: relative;
-  left: 0px;
 }
-.frames__inner--load{
+.timeline__thumbnails--loading {
   background-image: url(~images/three-dots.svg);
   background-repeat: no-repeat;
   background-position: center center;
   background-color: rgba(0, 0, 0, 0.4);
   background-size: 70px;
-}
-
-.frames__video {
-  display: inline-block;
-  object-fit: contain;
-  margin: 0;
-  font-size: 0;
-  padding: 0;
 }
 
 .video__crop img {
