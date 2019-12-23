@@ -69,7 +69,3 @@ export function getSpacingProps<T extends ISpacingProps>(item: T): ISpacingProps
 export function copyJson(obj) {
     return JSON.parse(JSON.stringify(obj));
 }
-
-export const isExtraFieldType = (fieldObj): boolean => {
-    return fieldObj != null && ['custom', 'date', 'embed', 'text', 'urls'].includes(fieldObj.type);
-};

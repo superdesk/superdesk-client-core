@@ -78,6 +78,9 @@ declare module 'superdesk-api' {
             };
             iptcMapping?(data: IPTCMetadata, item: Partial<IArticle>): Promise<Partial<IArticle>>;
             searchPanelWidgets?: Array<React.ComponentType<ISearchPanelWidgetProps>>;
+            authoring?: {
+                onUpdate?(current: IArticle, next: IArticle): Promise<IArticle>;
+            };
         }
     }
 
@@ -1086,10 +1089,6 @@ declare module 'superdesk-api' {
         editor3: {
             browserSpellCheck: boolean;
         };
-        metadataToChangeOnProfileChange: {
-            profiles: Array<any>,
-            default: any
-        }
     }
 
 
