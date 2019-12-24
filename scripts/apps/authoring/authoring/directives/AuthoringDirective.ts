@@ -846,40 +846,31 @@ export function AuthoringDirective(
                 $scope.autosave(item);
             };
 
-            Object.values(extensions).forEach((extension) => {
-                if (extension.activationResult?.contributions?.authoring != null) {
-                    $scope.onUpdateFromExtension = extension.activationResult.contributions.authoring.onUpdate;
-                }
-            });
-
-            function performOnUpdateFromExtensionAndAutosave(item, origItem, timeout) {
-                $scope.onUpdateFromExtension($scope.origItem._autosave ?? $scope.origItem, $scope.item)
-                    .then((article) => {
-                        angular.extend($scope.item, article);
-                        var autosavedItem = authoring.autosave(item, origItem, timeout);
-
-                        authoringWorkspace.addAutosave();
-                        initMedia();
-                        updateSchema();
-                        return autosavedItem;
-                    });
-            }
-
             $scope.autosave = function(item, timeout) {
                 $scope.dirty = true;
                 angular.extend($scope.item, item); // make sure all changes are available
                 return coreApplyMiddleware(onChangeMiddleware, {item: $scope.item, original: $scope.origItem}, 'item')
                     .then(() => {
-                        if ($scope.onUpdateFromExtension != null) {
-                            performOnUpdateFromExtensionAndAutosave($scope.item, $scope.origItem, timeout);
-                        } else {
+                        const onUpdateFromExtensions = Object.values(extensions).map(
+                            (extension) => extension.activationResult?.contributions?.authoring)
+                            .filter((updates) => updates != null);
+
+                        const reducerFunc = (current, next) => current.then(
+                            (result) => next.onUpdate($scope.origItem._autosave ?? $scope.origItem, result));
+
+                        (
+                            onUpdateFromExtensions.length < 1
+                                ? Promise.resolve(item)
+                                : onUpdateFromExtensions.reduce(reducerFunc, Promise.resolve($scope.item))
+                                    .then((nextItem) => angular.extend($scope.item, nextItem))
+                        ).then(() => {
                             var autosavedItem = authoring.autosave($scope.item, $scope.origItem, timeout);
 
                             authoringWorkspace.addAutosave();
                             initMedia();
                             updateSchema();
                             return autosavedItem;
-                        }
+                        });
                     });
             };
 
