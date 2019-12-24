@@ -114,6 +114,7 @@ describe('authoring', () => {
             .then(() => {
                 expect($scope.dirty).toBe(true);
 
+                $timeout.flush(3001);
                 expect(api.save).toHaveBeenCalled();
                 expect($scope.item.headline).toBe(headline);
 
