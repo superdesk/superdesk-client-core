@@ -3,7 +3,7 @@ import * as React from 'react';
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 import {ISuperdesk, IArticle} from 'superdesk-api';
-import {isEmpty, omit, isEqual, cloneDeep} from 'lodash';
+import {omit, isEqual, cloneDeep} from 'lodash';
 
 import {VideoEditorTools} from './VideoEditorTools';
 import {VideoTimeline} from './VideoTimeline/VideoTimeline';
@@ -120,7 +120,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
         const ctx = canvas.getContext('2d');
 
         // initilize image for React Crop
-        // this is the boudary of crop area, user can't move, draw crop outside of this so image need
+        // this is the boudary of crop area, user can't move or draw crop outside of this so image need
         // to be big enough to cover entire video even once rotated
         canvas.width = 2000;
         canvas.height = 2000;
@@ -378,7 +378,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
         if (body.scale === 0) {
             delete body.scale;
         }
-        if (!isEmpty(body)) {
+        if (Object.keys(body).length !== 0) {
             dataApi
                 .create('video_edit', {
                     edit: body,
@@ -496,7 +496,8 @@ export class VideoEditor extends React.Component<IProps, IState> {
         };
     }
 
-    // get crop value while rotating video
+    // get original crop value while rotating video
+    // because server crops video before rotating
     getCropRotate(crop: ICrop): ICrop {
         if (this.videoRef.current == null) {
             throw new Error('Could not get rotated video crop value');
@@ -510,7 +511,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
         case -90:
             return this.getCropSize(
                 this.videoRef.current,
-                    {
+                {
                     ...crop,
                     x: Math.abs(currentHeight - height - y),
                     y: x,

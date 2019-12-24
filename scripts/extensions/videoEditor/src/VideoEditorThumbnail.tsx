@@ -19,8 +19,7 @@ interface IState {
     dirty: boolean;
     type: 'capture' | 'upload' | '';
     value: number | File; // capture positon or uploaded File
-    // save current rotate degree when user captures thumbnail
-    rotateDegree: number;
+    rotateDegree: number; // save current rotate degree when user captures thumbnail
     scale: number;
 }
 
@@ -76,8 +75,9 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
 
                 let {x, y, width, height, aspect} = this.props.getCropRotate(this.props.crop);
 
+                aspect = aspect ?? 1;
                 let canvasSize = [this.maxCanvasSize.width, this.maxCanvasSize.height];
-                // crop is disabled or has not drew crop zone yet
+                // crop is disabled or has not drew crop area yet
                 const isDisabledCrop = [x, y, width, height].every((value) => value === 0);
 
                 if (isDisabledCrop) {
@@ -86,7 +86,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
 
                 if (this.state.rotateDegree % 180 !== 0) {
                     if (!isDisabledCrop) {
-                        aspect = 1 / (aspect ?? 1);
+                        aspect = 1 / aspect;
                     }
                     // make thumbnail overflow then scale it down, otherwise thumbnail will be too small
                     // once rotated because we draw thumbnail based on canvas width
@@ -148,13 +148,13 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
 
             dataApi
                 .create<IArticle>('video_edit', {
-                    // TODO: Allow item type differ from response type
+                    // TODO: Allow params type differ from response type
                     // @ts-ignore
                     capture: body,
                     item: this.props.article,
                 })
                 .then((_: IArticle) => {
-                    // reuse thumbnail from canvas so we don't have to display old one,
+                    // reuse thumbnail from canvas so we don't have to display the old one,
                     // new thumbnail will be loaded when user reset changes
                     this.setState({
                         ...initialState,
@@ -262,7 +262,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
         }
     }
 
-    // get wrapper size dynamically so can use to calculate canvas size to fit content into
+    // get wrapper size dynamically to use for calculating canvas size to fit content into
     getWrapperSize(element: HTMLDivElement) {
         if (element == null) {
             return;

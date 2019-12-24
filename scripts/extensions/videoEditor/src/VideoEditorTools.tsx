@@ -23,10 +23,9 @@ class VideoEditorController extends React.PureComponent<IProps> {
     declare context: React.ContextType<typeof VideoEditorContext>;
 
     render() {
-        const videoResolution = this.props.videoResolution;
         const resolutions = [{label: 'Same', value: 0}].concat(
             [480, 720, 1080]
-                .filter((i) => i < videoResolution)
+                .filter((i) => i < this.props.videoResolution)
                 .map((i) => ({label: i + 'p', value: i})),
         );
         const qualityDisabled = resolutions.length === 1;
