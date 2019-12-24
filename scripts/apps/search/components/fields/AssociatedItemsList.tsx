@@ -6,6 +6,7 @@ const TYPES_TO_ICONS = {
     graphic: 'icon-graphic',
     video: 'icon-video',
     audio: 'icon-audio',
+    text: 'icon-text',
 };
 
 interface IProps {
