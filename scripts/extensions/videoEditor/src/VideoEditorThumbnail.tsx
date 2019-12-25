@@ -249,7 +249,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
         this.ref.current.width = drawWidth;
         this.ref.current.height = drawHeight;
         this.ref.current.getContext('2d')?.drawImage(element, x, y, width, height, 0, 0, drawWidth, drawHeight);
-        this.setScale();
+        this.setScale(this.ref.current);
     }
 
     clearCanvas() {
@@ -271,7 +271,6 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
         if (element == null) {
             return;
         }
-
         const {width, height} = element.getBoundingClientRect();
 
         this.maxCanvasSize = {
@@ -280,15 +279,10 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
         };
     }
 
-    setScale() {
+    setScale(ref: HTMLCanvasElement) {
         // calculate scale while rotating to make sure image is not exceeded maximum wrapper size
         let scale = 1;
-
-        if (!this.ref.current) {
-            return;
-        }
-
-        const height = this.ref.current.getBoundingClientRect().height / this.state.scale;
+        const height = ref.getBoundingClientRect().height / this.state.scale;
 
         if (height > this.maxCanvasSize.height) {
             scale = this.maxCanvasSize.height / height;
