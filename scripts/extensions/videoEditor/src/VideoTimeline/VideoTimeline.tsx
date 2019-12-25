@@ -73,6 +73,7 @@ export class VideoTimeline extends React.Component<IProps, IState> {
         // call tick every 100ms to update current time state
         // Don't use event timeupdate, because cannot set timeloop, default is 250ms
         this.intervalTimer = window.setInterval(this.tick, 100);
+        // Use dragover event window to save position X, because event.clientX can not get in Firefox
         document.addEventListener('dragover', this.handleDragOver);
         this.setThumbnailsRender();
     }
