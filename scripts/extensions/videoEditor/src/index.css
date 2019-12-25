@@ -118,14 +118,13 @@
   line-height: 6px;
 }
 
-.controlbars__wrapper:after {
+.controlbars__wrapper__content {
   transition: left 100ms linear, transform 100ms linear;
   position: absolute;
   font-size: 12px;
   color: #00e0ff;
   left: 50%;
   transform: translate(-50%, 0);
-  content: attr(data-content);
   font-weight: 400;
   bottom: -35px;
 }

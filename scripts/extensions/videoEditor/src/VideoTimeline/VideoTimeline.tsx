@@ -254,16 +254,22 @@ export class VideoTimeline extends React.Component<IProps, IState> {
                             onDragStart={this.handleDragStart}
                             onDrag={() => this.handleDrag('left')}
                             onDragEnd={this.handleDragEnd}
-                            data-content={getStrTime(this.state.trim.start)}
-                        />
+                        >
+                            <span className={getClass('controlbars__wrapper__content')}>
+                                {getStrTime(this.state.trim.start)}
+                            </span>
+                        </div>
                         <div
                             className={`${getClass('controlbars__wrapper')} ${getClass('controlbars__wrapper--right')}`}
                             draggable={true}
                             onDragStart={this.handleDragStart}
                             onDrag={() => this.handleDrag('right')}
                             onDragEnd={this.handleDragEnd}
-                            data-content={getStrTime(this.state.trim.end)}
-                        />
+                        >
+                            <span className={getClass('controlbars__wrapper__content')}>
+                                {getStrTime(this.state.trim.end)}
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
