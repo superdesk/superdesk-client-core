@@ -5,9 +5,11 @@ import classNames from 'classnames';
 import {Item} from './index';
 import {isCheckAllowed, closeActionsMenu, bindMarkItemShortcut} from '../helpers';
 import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
+import {isMediaEditable} from 'core/config';
 import {gettext} from 'core/utils';
 import {IArticle} from 'superdesk-api';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
+import {CHECKBOX_PARENT_CLASS} from './constants';
 
 interface IState {
     narrow: boolean;
@@ -67,7 +69,7 @@ export class ItemList extends React.Component<any, IState> {
         this.unbindActionKeyShortcuts = this.unbindActionKeyShortcuts.bind(this);
     }
 
-    multiSelect(items, selected, event?) {
+    multiSelect(items, selected) {
         const {search, multi} = this.props.svc;
         const {scope} = this.props;
 
@@ -82,7 +84,6 @@ export class ItemList extends React.Component<any, IState> {
             });
         });
 
-        this.select(_.last(items), event);
         this.setState({itemsById: itemsById});
     }
 
@@ -121,8 +122,9 @@ export class ItemList extends React.Component<any, IState> {
 
         $timeout.cancel(this.updateTimeout);
 
-        const showPreview = (event == null || event.target == null) ||
-            querySelectorParent(event.target, '.sd-monitoring-item-multi-select-checkbox') == null;
+        const showPreview = event == null || event.target == null ||
+            (querySelectorParent(event.target, '.' + CHECKBOX_PARENT_CLASS) == null &&
+            event.target.classList.contains(CHECKBOX_PARENT_CLASS) === false);
 
         if (item && scope.preview) {
             scope.$apply(() => {
@@ -240,6 +242,9 @@ export class ItemList extends React.Component<any, IState> {
         }
 
         if (item._type === 'externalsource') {
+            if (!isMediaEditable(item)) {
+                return;
+            }
             this.setActioning(item, true);
             superdesk.intent('list', 'externalsource', {item: item}, 'fetch-externalsource')
                 .then((archiveItem) => {

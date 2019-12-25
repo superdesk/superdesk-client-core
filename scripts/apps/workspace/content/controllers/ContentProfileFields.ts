@@ -2,6 +2,7 @@ import {get, keyBy} from 'lodash';
 import {IArticle} from 'superdesk-api';
 import {getLabelForFieldId} from '../../helpers/getLabelForFieldId';
 import {getTypeForFieldId} from '../../helpers/getTypeForFieldId';
+import {getFields} from 'apps/fields';
 
 const ARTICLE_HEADER_FIELDS = new Set<keyof IArticle>([
     'keywords',
@@ -61,6 +62,17 @@ export default function ContentProfileFields($scope, content, vocabularies, meta
                 articleCommonFields.add(id);
             });
 
+            const fieldsFromExtensions = Object.keys(getFields());
+
+            customFields.forEach((customField) => {
+                if (
+                    customField.custom_field_type != null
+                    && fieldsFromExtensions.includes(customField.custom_field_type)
+                ) {
+                    articleCommonFields.add(customField._id);
+                }
+            });
+
             customTextAndDateVocabularies.forEach((filteredCustomField) => {
                 articleCommonFields.add(filteredCustomField._id);
             });
@@ -118,7 +130,9 @@ export default function ContentProfileFields($scope, content, vocabularies, meta
                 this.sections[section].enabled.push(key);
                 this.model.editor[key].order = index + 1; // keep order in sync
                 // keep required value of editor fields in sync with the schema fields SDNTB-615
-                this.model.editor[key].required = this.model.schema[key].required;
+                // some keys might be missing from schema but will be present inside editor
+                // as we store value of some keys inside another key ex: any custom cv is stored inside "subject"
+                this.model.editor[key].required = this.model.schema[key]?.required ?? false;
             });
 
             Object.keys(this.model.editor)

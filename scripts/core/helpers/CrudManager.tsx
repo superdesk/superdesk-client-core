@@ -15,6 +15,7 @@ import {
     IQueryElasticParameters,
     IArticleQueryResult,
     IArticleQuery,
+    IArticle,
 } from 'superdesk-api';
 import {httpRequestJsonLocal, httpRequestVoidLocal} from './network';
 import {connectServices} from './ReactRenderAsync';
@@ -123,6 +124,14 @@ export function generatePatch<T extends IBaseRestApiResponse>(item1: T, item2: T
     return patch;
 }
 
+export function generatePatchIArticle(a: IArticle, b: IArticle) {
+    const patch = generatePatch(a, b);
+
+    delete patch['es_highlight'];
+
+    return patch;
+}
+
 export const dataApi: IDataApi = {
     findOne: (endpoint, id) => httpRequestJsonLocal({
         method: 'GET',
@@ -187,6 +196,19 @@ export const dataApi: IDataApi = {
         },
     }),
 };
+
+export function patchArticle(endpoint: 'archive' | 'published', item1: IArticle, item2: IArticle) {
+    const patch = generatePatchIArticle(item1, item2);
+
+    return httpRequestJsonLocal({
+        'method': 'PATCH',
+        path: '/' + endpoint + '/' + item1._id,
+        payload: patch,
+        headers: {
+            'If-Match': item1._etag,
+        },
+    });
+}
 
 export function connectCrudManager<Props, PropsToConnect, Entity extends IBaseRestApiResponse>(
     // type stoped working after react 16.8 upgrade. See if it's fixed by a future React types or TypeScript update

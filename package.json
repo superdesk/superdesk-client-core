@@ -1,6 +1,6 @@
 {
   "name": "superdesk-core",
-  "version": "1.32.0-rc.2",
+  "version": "1.32.2",
   "license": "AGPL-3.0",
   "repository": {
     "type": "git",
@@ -75,6 +75,7 @@
     "grunt-filerev": "2.3.1",
     "grunt-usemin": "3.1.1",
     "grunt-webpack": "3.0.2",
+    "hls.js": "0.12.4",
     "html-loader": "0.5.5",
     "immutable": "3.8.2",
     "jquery": "3.3.1",
@@ -115,7 +116,7 @@
     "sass-loader": "6.0.6",
     "shortid": "2.2.8",
     "style-loader": "0.20.2",
-    "superdesk-ui-framework": "2.1.4",
+    "superdesk-ui-framework": "2.1.7",
     "ts-loader": "3.5.0",
     "tslint": "5.11.0",
     "typescript": "3.7.2",

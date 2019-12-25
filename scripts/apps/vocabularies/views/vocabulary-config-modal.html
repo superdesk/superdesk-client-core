@@ -127,82 +127,99 @@
                     </ul>
                 </div>
 
-                    <div class="sd-line-input" ng-if="matchFieldTypeToTab('vocabularies', vocabulary.field_type)">
-                        <sd-check ng-model="vocabulary.preffered_items">{{ :: 'Available in user/desk preferences' | translate }}</sd-check>
-                    </div>
+                <div class="sd-line-input" ng-if="matchFieldTypeToTab('vocabularies', vocabulary.field_type)">
+                    <sd-check ng-model="vocabulary.preffered_items">{{ :: 'Available in user/desk preferences' | translate }}</sd-check>
+                </div>
 
-                    <div class="form__row" ng-show="matchFieldTypeToTab('text-fields', vocabulary.field_type)">
-                        <sd-check id="field-text-single" ng-model="vocabulary.field_options.single">{{'Single line' | translate}}</sd-check>
-                    </div>
+                <div class="form__row" ng-show="matchFieldTypeToTab('text-fields', vocabulary.field_type)">
+                    <sd-check id="field-text-single" ng-model="vocabulary.field_options.single">{{'Single line' | translate}}</sd-check>
+                </div>
 
-                    <div class="form__row" ng-show="matchFieldTypeToTab('related-content-fields', vocabulary.field_type)">
-                        <label for="field-media-type" class="form-label form__row-label" translate>Content Type</label>
+                <div class="form__row" ng-show="matchFieldTypeToTab('related-content-fields', vocabulary.field_type)">
+                    <label for="field-media-type" class="form-label form__row-label" translate>Content Type</label>
 
-                        <div class="form__row form__row--inner form__row--flex">
-                            <div class="form__row-item form__row-item--no-grow">
-                                <select class="input-medium" ng-model="vocabulary.field_type">
-                                    <option value="{{type.id}}" ng-repeat="type in mediaTypes">{{type.label}}</option>
-                                </select>
+                    <div class="form__row form__row--inner form__row--flex">
+                        <div class="form__row-item form__row-item--no-grow">
+                            <select class="input-medium" ng-model="vocabulary.field_type">
+                                <option value="{{type.id}}" ng-repeat="type in mediaTypes">{{type.label}}</option>
+                            </select>
+                        </div>
+                        <div class="form__row-item form__row-item--no-grow">
+                            <div class="form__row">
+                                <sd-check name="field_type" ng-model="vocabulary.field_options.allowed_types.picture" data-icon="photo">{{'Image' | translate}}</sd-check>
+                                <sd-check name="field_type" ng-model="vocabulary.field_options.allowed_types.video" data-icon="video">{{'Video' | translate}}</sd-check>
+                                <sd-check name="field_type" ng-model="vocabulary.field_options.allowed_types.audio" data-icon="audio">{{'Audio' | translate}}</sd-check>
                             </div>
-                            <div class="form__row-item form__row-item--no-grow">
-                                <div class="form__row">
-                                    <sd-check name="field_type" ng-model="vocabulary.field_options.allowed_types.picture" data-icon="photo">{{'Image' | translate}}</sd-check>
-                                    <sd-check name="field_type" ng-model="vocabulary.field_options.allowed_types.video" data-icon="video">{{'Video' | translate}}</sd-check>
-                                    <sd-check name="field_type" ng-model="vocabulary.field_options.allowed_types.audio" data-icon="audio">{{'Audio' | translate}}</sd-check>
-                                </div>
-                                <div class="form__row" ng-if="vocabulary.field_type === mediaTypes.RELATED_CONTENT.id">
-                                    <sd-check name="field_type" ng-model="vocabulary.field_options.allowed_types.text" data-icon="text">{{'Text' | translate}}</sd-check>
-                                    <sd-check name="field_type" ng-model="vocabulary.field_options.allowed_types.preformatted" data-icon="text">{{'Preformatted' | translate}}</sd-check>
-                                    <sd-check name="field_type" ng-model="vocabulary.field_options.allowed_types.graphic" data-icon="graphic">{{'Graphic' | translate}}</sd-check>
-                                    <sd-check name="field_type" ng-model="vocabulary.field_options.allowed_types.composite" data-icon="composite">{{'Composite' | translate}}</sd-check>
-                                </div>
+                            <div class="form__row" ng-if="vocabulary.field_type === mediaTypes.RELATED_CONTENT.id">
+                                <sd-check name="field_type" ng-model="vocabulary.field_options.allowed_types.text" data-icon="text">{{'Text' | translate}}</sd-check>
+                                <sd-check name="field_type" ng-model="vocabulary.field_options.allowed_types.preformatted" data-icon="text">{{'Preformatted' | translate}}</sd-check>
+                                <sd-check name="field_type" ng-model="vocabulary.field_options.allowed_types.graphic" data-icon="graphic">{{'Graphic' | translate}}</sd-check>
+                                <sd-check name="field_type" ng-model="vocabulary.field_options.allowed_types.composite" data-icon="composite">{{'Composite' | translate}}</sd-check>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="form__row" ng-show="matchFieldTypeToTab('related-content-fields', vocabulary.field_type)">
-                        <div class="form__row-item">
-                            <span id="multiple_items" sd-switch ng-model="vocabulary.field_options.multiple_items.enabled"></span>
-                            <label for="multiple_items" translate>Allow Multiple Items</label>
+                <div class="form__row" ng-show="matchFieldTypeToTab('related-content-fields', vocabulary.field_type)">
+                    <div class="form__row-item">
+                        <span id="multiple_items" sd-switch ng-model="vocabulary.field_options.multiple_items.enabled"></span>
+                        <label for="multiple_items" translate>Allow Multiple Items</label>
+                    </div>
+                    <div class="form__row form__row--inner form__row--flex" ng-if="vocabulary.field_options.multiple_items.enabled">
+                        <div class="form__row-item form__row-item--no-grow">
+                            <span translate>Max. number of items</span>
                         </div>
-                        <div class="form__row form__row--inner form__row--flex" ng-if="vocabulary.field_options.multiple_items.enabled">
-                            <div class="form__row-item form__row-item--no-grow">
-                                <span translate>Max. number of items</span>
-                            </div>
-                            <div class="form__row-item form__row-item--no-grow">
-                                <input id="max_items" name="max_items" type="number"
-                                        min="2" max="99" class="input-small line-input"
-                                        ng-model="vocabulary.field_options.multiple_items.max_items"
-                                        style="width: 60px; text-align: center;">
-                            </div>
-                            <div ng-if="vocabularyForm.max_items.$invalid" class="sd-line-input sd-line-input--invalid">
-                                <p ng-if="vocabularyForm.max_items.$error.min" class="sd-line-input__message" translate>Value must be greater than or equal to 2.</p>
-                                <p ng-if="vocabularyForm.max_items.$error.max" class="sd-line-input__message" translate>Value must be less than or equal to 99.</p>
-                            </div>
+                        <div class="form__row-item form__row-item--no-grow">
+                            <input id="max_items" name="max_items" type="number"
+                                    min="2" max="99" class="input-small line-input"
+                                    ng-model="vocabulary.field_options.multiple_items.max_items"
+                                    style="width: 60px; text-align: center;">
+                        </div>
+                        <div ng-if="vocabularyForm.max_items.$invalid" class="sd-line-input sd-line-input--invalid">
+                            <p ng-if="vocabularyForm.max_items.$error.min" class="sd-line-input__message" translate>Value must be greater than or equal to 2.</p>
+                            <p ng-if="vocabularyForm.max_items.$error.max" class="sd-line-input__message" translate>Value must be less than or equal to 99.</p>
                         </div>
                     </div>
+                </div>
 
-                    <div class="vocabulary-items__wrapper" ng-if="matchFieldTypeToTab('vocabularies', vocabulary.field_type)">
-                        <h3 class="sd-line-input__label" translate>Items</h3>
-                        <div sd-vocabulary-config-modal-items></div>
+                <div class="sd-line-input" ng-if="matchFieldTypeToTab('related-content-fields', vocabulary.field_type)">
+                    <label class="form-label form__row-label" translate>Filters</label>
+                    <div class="sd-line-input__message sd-margin-b--1" translate>Only allow content with the following status:</div>
+                    <div class="form__row-item form__row-item--no-grow">
+                        <div class="form__row">
+                            <sd-check ng-model="vocabulary.field_options.allowed_workflows.in_progress">
+                                <span translate>In Progress</span>
+                            </sd-check>
+                            <sd-check ng-model="vocabulary.field_options.allowed_workflows.published">
+                                <span translate>Published</span>
+                            </sd-check>
+                        </div>
                     </div>
-                    <div class="vocabulary-items__button-bar" ng-show="matchFieldTypeToTab('vocabularies', vocabulary.field_type)">
-                        <button id="add-new-btn" class="btn btn--primary" ng-click="addItem()"><i class="icon-plus-sign"></i> {{'Add Item' | translate}}</button>
-                    </div>
+                </div>
 
-            <div ng-if="errorMessage" class="sd-line-input sd-line-input--invalid">
-                <p class="sd-line-input__message">{{ errorMessage }}</p>
-            </div>
+                <div class="vocabulary-items__wrapper" ng-if="matchFieldTypeToTab('vocabularies', vocabulary.field_type)">
+                    <h3 class="sd-line-input__label" translate>Items</h3>
+                    <div sd-vocabulary-config-modal-items></div>
+                </div>
+                <div class="vocabulary-items__button-bar" ng-show="matchFieldTypeToTab('vocabularies', vocabulary.field_type)">
+                    <button id="add-new-btn" class="btn btn--primary" ng-click="addItem()"><i class="icon-plus-sign"></i> {{'Add Item' | translate}}</button>
+                </div>
+
+                <div ng-if="errorMessage" class="sd-line-input sd-line-input--invalid">
+                    <p class="sd-line-input__message">{{ errorMessage }}</p>
+                </div>
+
+                <div class="form__row" ng-if="matchFieldTypeToTab('custom-fields', vocabulary.field_type)">
+                    <sd-custom-field-configs vocabulary="vocabulary" on-change="setCustomFieldConfig"></sd-custom-field-configs>
+                </div>
             </ng-form>
-                </div>
-
-                <div class="modal__footer">
-                    <button id="save-edit-btn" type="submit" class="btn btn--primary pull-right" ng-click="save()"
-                        ng-disabled="!editForm.$dirty || editForm.$invalid || !itemsValidation.valid || requireAllowedTypesSelection()" translate>Save
-                    </button>
-                    <button id="cancel-edit-btn" type="button" class="btn pull-right" ng-click="cancel()" translate>Cancel
-                    </button>
-
-                </div>
         </div>
+
+        <div class="modal__footer">
+            <button id="save-edit-btn" type="submit" class="btn btn--primary pull-right" ng-click="save()"
+                ng-disabled="!editForm.$dirty || editForm.$invalid || !itemsValidation.valid || requireAllowedTypesSelection()" translate>Save
+            </button>
+            <button id="cancel-edit-btn" type="button" class="btn pull-right" ng-click="cancel()" translate>Cancel</button>
+        </div>
+    </div>
 </form>

@@ -6,7 +6,7 @@ import {gettext} from 'core/utils';
 
 const OTHER = gettext('Other');
 
-interface IScope extends IDirectiveScope<void> {
+export interface IScope extends IDirectiveScope<void> {
     vocabularies: Array<IVocabulary>;
     vocabulary: any;
     tags: IVocabulary['tags'];

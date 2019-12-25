@@ -7,6 +7,10 @@
 
     <label class="field__label">{{label('headline')}}</label>
     <span ng-if="schema.headline.maxlength" sd-character-count data-item="item.headline" data-html="true" data-limit="schema.headline.maxlength"></span>
+    <sd-validate-characters ng-if="schema.headline.validate_characters"
+        class="disallowed-char-error"
+        item="item.headline"
+        field="'headline'"></sd-validate-characters>
     <div id="title" class="headline"
          sd-text-editor
          data-config="{toolbar: false, imageDragging: false, disableReturn: true, disableEditing: isPublished(item), tabindex: editor.headline.order, paste: {cleanPastedHTML: editor.headline.cleanPastedHTML}}"
@@ -28,6 +32,10 @@
 
     <label class="field__label">{{label('headline')}}</label>
     <span ng-if="schema.headline.maxlength" sd-character-count data-item="item.headline" data-html="true" data-limit="schema.headline.maxlength"></span>
+    <sd-validate-characters ng-if="schema.headline.validate_characters"
+        class="disallowed-char-error"
+        item="item.headline"
+        field="'headline'"></sd-validate-characters>
     <div id="title" class="headline"
          sd-editor3
          data-path-to-value="'headline'"
@@ -565,6 +573,8 @@
     <label class="field__label">{{field.display_name}}</label>
     <span ng-if="schema[field._id].maxlength || schema[field._id].minlength" sd-character-count
         data-item="item.extra[field._id]" data-html="true" data-limit="schema[field._id].maxlength"></span>
+    <sd-validate-characters ng-if="schema[field._id].validate_characters"
+        class="disallowed-char-error" item="item.extra[field._id]" field="field.display_name"></sd-validate-characters>
     <div sd-editor3
         data-path-to-value="'extra' + FIELD_KEY_SEPARATOR + field._id"
         data-single-line="field.field_options.single"
@@ -711,7 +721,7 @@
 
 <!-- Custom fields -->
 <div class="field" ng-repeat="field in fields track by field._id"
-    ng-if="field.field_type === 'custom'"
+    ng-if="field.field_type === 'custom' && editor[field._id].section === 'content'"
     sd-width="{{editor[field._id].sdWidth || 'full'}}"
     sd-validation-error="error[field.display_name.toLowerCase()]"
     order="{{editor[field._id].order}}"
@@ -747,6 +757,10 @@
      order="{{editor.slugline.order}}">
     <label class="field__label">{{label('slugline')}}</label>
     <span ng-if="schema.slugline.maxlength" sd-character-count data-item="item.slugline" data-html="true" data-limit="schema.slugline.maxlength"></span>
+    <sd-validate-characters ng-if="schema.slugline.validate_characters"
+        class="disallowed-char-error"
+        item="item.slugline"
+        field="'slugline'"></sd-validate-characters>
     <input type="text" class="slugline"
        id="slugline"
        data-language="item.language"
@@ -765,6 +779,10 @@
      data-required="schema.slugline.required">
     <label class="field__label">{{label('slugline')}}</label>
     <span ng-if="schema.slugline.maxlength" sd-character-count data-item="item.slugline" data-html="true" data-limit="schema.slugline.maxlength"></span>
+    <sd-validate-characters ng-if="schema.slugline.validate_characters"
+        class="disallowed-char-error"
+        item="item.slugline"
+        field="'slugline'"></sd-validate-characters>
     <div id="title" class="slugline"
          sd-editor3
          data-path-to-value="'slugline'"
