@@ -220,7 +220,6 @@ declare module 'superdesk-api' {
         copyrightnotice: string;
         sign_off: string;
         feature_media: any;
-        media: string;
         media_description: string;
         associations: { string: IArticle };
         type: 'text' | 'picture' | 'video' | 'audio' | 'preformatted' | 'graphic' | 'composite';
@@ -272,7 +271,7 @@ declare module 'superdesk-api' {
                 media: string;
                 mimetype: string;
                 version: number;
-                video_editor_id?: any;
+                video_editor_id?: string;
             };
             viewImage: {
                 href: string;

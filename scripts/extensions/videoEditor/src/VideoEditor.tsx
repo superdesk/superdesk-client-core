@@ -384,7 +384,6 @@ export class VideoEditor extends React.Component<IProps, IState> {
                     edit: body,
                     item: {
                         _id: this.state.article._id,
-                        media: this.state.article.media,
                         renditions: this.state.article.renditions,
                     },
                 })

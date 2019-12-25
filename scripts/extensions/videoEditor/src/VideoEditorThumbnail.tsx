@@ -153,7 +153,6 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
                     capture: body,
                     item: {
                         _id: this.props.article._id,
-                        media: this.props.article.media,
                         renditions: this.props.article.renditions,
                     },
                 })
