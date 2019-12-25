@@ -151,7 +151,11 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
                     // TODO: Allow params type differ from response type
                     // @ts-ignore
                     capture: body,
-                    item: this.props.article,
+                    item: {
+                        _id: this.props.article._id,
+                        media: this.props.article.media,
+                        renditions: this.props.article.renditions,
+                    },
                 })
                 .then((_: IArticle) => {
                     // reuse thumbnail from canvas so we don't have to display the old one,

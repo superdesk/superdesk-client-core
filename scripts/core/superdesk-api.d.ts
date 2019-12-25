@@ -220,6 +220,7 @@ declare module 'superdesk-api' {
         copyrightnotice: string;
         sign_off: string;
         feature_media: any;
+        media: string;
         media_description: string;
         associations: { string: IArticle };
         type: 'text' | 'picture' | 'video' | 'audio' | 'preformatted' | 'graphic' | 'composite';

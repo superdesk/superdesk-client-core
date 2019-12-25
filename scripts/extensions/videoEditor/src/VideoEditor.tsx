@@ -382,7 +382,11 @@ export class VideoEditor extends React.Component<IProps, IState> {
             dataApi
                 .create('video_edit', {
                     edit: body,
-                    item: this.state.article,
+                    item: {
+                        _id: this.state.article._id,
+                        media: this.state.article.media,
+                        renditions: this.state.article.renditions,
+                    },
                 })
                 .then(() => {
                     this.handleToggleLoading(true, gettext('Video is editing, please wait...'));
