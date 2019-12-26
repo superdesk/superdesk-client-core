@@ -1,6 +1,30 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
 
+interface IScope {
+    testLookup: any;
+    productLookup: any;
+    loading: boolean;
+    resultType: 'All' | 'Match' | 'No-Match';
+    products: Array<any>;
+    contentFilters: any;
+    subscribers: any;
+    geoRestrictions: any;
+    product_types: any;
+    newProduct: () => void;
+    product: any;
+    modalActive: boolean;
+    modalTab: 'details' | 'subscribers';
+    edit: (product: any) => void;
+    cancel: () => void;
+    save: () => void;
+    remove: (product: any) => void;
+    test: () => void;
+    articleId: string;
+    rawResults: string;
+    filteredProducts: Array<any>;
+}
+
 /**
  * @ngdoc controller
  * @module superdesk.apps.products
@@ -17,7 +41,7 @@ import {gettext} from 'core/utils';
  */
 ProductsConfigController.$inject = ['$scope', 'notify', 'api', 'products', 'modal',
     'subscribersService', 'metadata', '$filter'];
-export function ProductsConfigController($scope, notify, api, products, modal,
+export function ProductsConfigController($scope: IScope, notify, api, products, modal,
     subscribersService, metadata, $filter) {
     $scope.testLookup = {};
     $scope.productLookup = {};
@@ -108,6 +132,7 @@ export function ProductsConfigController($scope, notify, api, products, modal,
      * @param {Object} product The product to be edited.
      */
     $scope.edit = function(product) {
+        $scope.modalTab = 'details';
         $scope.product = product;
         $scope.product.edit = _.create(product);
         $scope.product.edit.content_filter = _.create(product.content_filter || {});
