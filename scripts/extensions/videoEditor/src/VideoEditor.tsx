@@ -175,7 +175,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                 video: false,
                             },
                             thumbnails: [],
-                            videoSrc: result.project?.url + `?t=${Math.random()}`,
+                            videoSrc: result.renditions?.original?.href + `?t=${Math.random()}`,
                             article: {
                                 ...this.state.article,
                                 ...result,
