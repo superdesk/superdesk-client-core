@@ -347,8 +347,8 @@ export class VideoEditor extends React.Component<IProps, IState> {
 
         const {videoWidth, videoHeight} = this.videoRef.current;
         const ratio = videoWidth / videoHeight;
-        // resolution is calculated based on video height but video editor scale based on video width
-        const newQuality = ratio > 1 ? quality : quality * ratio;
+        // resolution is calculated based on video height but video server scales based on video width
+        const newQuality = ratio > 1 ? quality * ratio : quality;
 
         this.setState({transformations: {...this.state.transformations, quality: Math.ceil(newQuality)}});
     }
