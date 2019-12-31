@@ -21,8 +21,10 @@
                     </div>
                 </div>
                 <div class="sd-list-item__action-menu sd-list-item__action-menu--direction-row">
-                    <button class="icn-btn" ng-if="relatedItem._type === 'archive'" ng-click="openRelatedItem(relatedItem)"><i class="icon-pencil"></i></button>
                     <button class="icn-btn" ng-click="removeRelatedItem(key)"><i class="icon-close-small"></i></button>
+                </div>
+                <div class="sd-list-item__action-menu--direction-row">
+                    <div class="icn-btn" sd-item-actions-menu data-item="relatedItem" data-active="relatedItem"></div>
                 </div>
             </div>
         </li>
