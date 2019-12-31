@@ -28,7 +28,6 @@ interface IState {
         quality: number;
         degree: number;
     };
-    cropImg: string;
     thumbnails: Array<IThumbnail>;
     loading: {
         video: boolean,
@@ -45,6 +44,7 @@ interface IState {
 export class VideoEditor extends React.Component<IProps, IState> {
     private videoRef: React.RefObject<HTMLVideoElement>;
     private reactCropRef: React.RefObject<ReactCrop>;
+    private reactCropInitImage: string;
     private intervalThumbnails: number;
     private intervalCheckVideo: number;
     private initTransformations: IState['transformations'];
@@ -80,7 +80,6 @@ export class VideoEditor extends React.Component<IProps, IState> {
         this.state = {
             transformations: this.initTransformations,
             cropEnabled: false,
-            cropImg: '',
             playing: false,
             loading: {
                 video: false,
@@ -96,6 +95,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
         this.videoContainerSize = 0;
         this.videoToolsSize = 0;
         this.hasTransitionRun = true;
+        this.reactCropInitImage = '';
 
         this.handleClose = this.handleClose.bind(this);
         this.handleTrim = this.handleTrim.bind(this);
@@ -142,9 +142,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                 });
             }
         });
-        this.setState({
-            cropImg: canvas.toDataURL(),
-        });
+        this.reactCropInitImage = canvas.toDataURL();
     }
 
     componentWillUnmount() {
@@ -689,7 +687,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                             {this.state.cropEnabled && (
                                                 <ReactCrop
                                                     ref={this.reactCropRef}
-                                                    src={this.state.cropImg}
+                                                    src={this.reactCropInitImage}
                                                     crop={this.state.transformations.crop}
                                                     keepSelection={true}
                                                     onChange={this.handleCrop}
