@@ -41,13 +41,19 @@ interface IState {
     playing: boolean;
 }
 
+const initTransformations: IState['transformations'] = {
+    crop: {aspect: 16 / 9, unit: 'px', scale: 1, width: 0, height: 0, x: 0, y: 0, value: 0},
+    degree: 0,
+    trim: {start: 0, end: 0},
+    quality: 0,
+};
+
 export class VideoEditor extends React.Component<IProps, IState> {
     private videoRef: React.RefObject<HTMLVideoElement>;
     private reactCropRef: React.RefObject<ReactCrop>;
     private reactCropInitImage: string;
     private intervalThumbnails: number;
     private intervalCheckVideo: number;
-    private initTransformations: IState['transformations'];
     private hasTransitionRun: boolean;
     private videoWrapper: HTMLDivElement | null;
     private videoContainerSize: number;
@@ -59,26 +65,8 @@ export class VideoEditor extends React.Component<IProps, IState> {
         this.reactCropRef = React.createRef();
         this.intervalThumbnails = 0;
         this.intervalCheckVideo = 0;
-        this.initTransformations = {
-            crop: {
-                aspect: 16 / 9,
-                unit: 'px',
-                scale: 1,
-                width: 0,
-                height: 0,
-                x: 0,
-                y: 0,
-                value: 0,
-            },
-            degree: 0,
-            trim: {
-                start: 0,
-                end: 0,
-            },
-            quality: 0,
-        };
         this.state = {
-            transformations: this.initTransformations,
+            transformations: initTransformations,
             cropEnabled: false,
             playing: false,
             loading: {
@@ -314,7 +302,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
 
     handleToggleCrop(aspect: number) {
         const cropAspect = aspect || this.state.transformations.crop.aspect || 0;
-        let crop = this.initTransformations.crop;
+        let crop = initTransformations.crop;
 
         if (this.state.cropEnabled === false) {
             crop = this.getInitialCropSize(cropAspect);
@@ -406,7 +394,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
             this.state.transformations.trim.end !== this.videoRef.current.duration ||
             !isEqual(
                 omit(this.state.transformations, ['trim.end', 'crop.aspect', 'crop.value', 'crop.scale']),
-                omit(this.initTransformations, ['trim.end', 'crop.aspect', 'crop.value', 'crop.scale']),
+                omit(initTransformations, ['trim.end', 'crop.aspect', 'crop.value', 'crop.scale']),
             )
         ) {
             return true;
@@ -439,7 +427,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
     getResetState() {
         return {
             transformations: {
-                ...this.initTransformations,
+                ...initTransformations,
                 trim: {
                     start: 0,
                     end: this.videoRef.current?.duration ?? 0,
@@ -490,7 +478,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
             height = width * aspect;
         }
         return {
-            ...this.initTransformations.crop,
+            ...initTransformations.crop,
             aspect: aspect,
             width: width,
             height: height,
