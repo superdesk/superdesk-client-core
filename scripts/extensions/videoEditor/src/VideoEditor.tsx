@@ -405,7 +405,10 @@ export class VideoEditor extends React.Component<IProps, IState> {
     loadTimelineThumbnails() {
         this.intervalThumbnails = window.setInterval(() => {
             this.props.superdesk.dataApi
-                .findOne<ITimelineThumbnail>('video_edit', this.state.article._id + '?action=timeline')
+                .findOne<ITimelineThumbnail>(
+                    'video_edit',
+                    this.state.article._id + `?action=timeline&t=${Math.random()}`,
+                )
                 .then((result: ITimelineThumbnail) => {
                     if (result.thumbnails.length > 0) {
                         clearInterval(this.intervalThumbnails);
