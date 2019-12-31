@@ -3,7 +3,7 @@ import {IDropdownLabel} from '../interfaces';
 
 export class QualityLabel extends React.PureComponent<IDropdownLabel> {
     render() {
-        const value = String(this.props.selectedItem || 'Same');
+        const value = this.props.selectedItem?.value ? this.props.selectedItem?.label : 'Same';
 
         return (
             <button

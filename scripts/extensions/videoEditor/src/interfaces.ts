@@ -25,7 +25,10 @@ export interface IDropdownLabel {
     getText?: (text: string) => string;
     title?: string | null;
     disabled?: boolean;
-    selectedItem?: string | number | null;
+    selectedItem?: {
+        label: string;
+        value: number;
+    };
 }
 
 export interface IErrorMessage {
