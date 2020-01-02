@@ -51,7 +51,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
         const thumbnail = this.props.article.renditions?.thumbnail?.href;
 
         if (thumbnail) {
-            this.setThumbnail(thumbnail + `?t=${Math.random()}`);
+            this.setThumbnail(thumbnail);
         }
     }
 
@@ -192,7 +192,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
                     });
                     this.clearCanvas();
                     this.props.onSave(res);
-                    this.setThumbnail(res.renditions?.thumbnail?.href + `?t=${Math.random()}`);
+                    this.setThumbnail(res.renditions?.thumbnail?.href ?? '');
                 })
                 .catch(this.props.onError);
         }
@@ -212,7 +212,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
 
         this.interval = window.setInterval(() => {
             dataApi
-                .findOne<IArticle>('video_edit', this.props.article._id + `?t=${Math.random()}`)
+                .findOne<IArticle>('video_edit', this.props.article._id)
                 .then((response: IArticle) => {
                     if (response.project?.processing?.thumbnail_preview === false) {
                         clearInterval(this.interval);
@@ -261,7 +261,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
         const thumbnail = this.props.article.renditions?.thumbnail?.href;
 
         if (thumbnail) {
-            this.setThumbnail(thumbnail + `?t=${Math.random()}`);
+            this.setThumbnail(thumbnail);
         }
     }
 

@@ -146,7 +146,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
     handleCheckingVideo(resetState: boolean = true, callback?: () => void) {
         this.intervalCheckVideo = window.setInterval(() => {
             this.props.superdesk.dataApi
-                .findOne<IArticle>('video_edit', this.state.article._id + `?t=${Math.random()}`)
+                .findOne<IArticle>('video_edit', this.state.article._id)
                 .then((result) => {
                     const processing = result.project?.processing;
 
@@ -161,7 +161,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                 video: false,
                             },
                             thumbnails: [],
-                            videoSrc: result.renditions?.original?.href + `?t=${Math.random()}`,
+                            videoSrc: result.renditions?.original?.href ?? '',
                             article: {
                                 ...this.state.article,
                                 ...result,
@@ -405,10 +405,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
     loadTimelineThumbnails() {
         this.intervalThumbnails = window.setInterval(() => {
             this.props.superdesk.dataApi
-                .findOne<ITimelineThumbnail>(
-                    'video_edit',
-                    this.state.article._id + `?action=timeline&t=${Math.random()}`,
-                )
+                .findOne<ITimelineThumbnail>('video_edit', this.state.article._id + '?action=timeline')
                 .then((result: ITimelineThumbnail) => {
                     if (result.thumbnails.length > 0) {
                         clearInterval(this.intervalThumbnails);
