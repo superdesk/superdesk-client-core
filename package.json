@@ -1,6 +1,6 @@
 {
   "name": "superdesk-core",
-  "version": "1.31.2",
+  "version": "1.32.2",
   "license": "AGPL-3.0",
   "repository": {
     "type": "git",
@@ -75,6 +75,7 @@
     "grunt-filerev": "2.3.1",
     "grunt-usemin": "3.1.1",
     "grunt-webpack": "3.0.2",
+    "hls.js": "0.12.4",
     "html-loader": "0.5.5",
     "immutable": "3.8.2",
     "jquery": "3.3.1",
@@ -116,7 +117,7 @@
     "sass-loader": "6.0.6",
     "shortid": "2.2.8",
     "style-loader": "0.20.2",
-    "superdesk-ui-framework": "2.0.11",
+    "superdesk-ui-framework": "2.1.7",
     "ts-loader": "3.5.0",
     "tslint": "5.11.0",
     "typescript": "3.7.2",
@@ -130,7 +131,6 @@
     "btoa": "^1.1.2",
     "enzyme": "3.9.0",
     "enzyme-adapter-react-16": "^1.1.1",
-    "grunt-eslint": "^20.1.0",
     "grunt-karma": "^2.0.0",
     "jasmine-core": "^2.99.1",
     "jasmine-reporters": "^2.3.0",
@@ -144,7 +144,8 @@
     "react-addons-test-utils": "^15.6.0",
     "react-test-renderer": "^16.2.0",
     "request": "^2.83.0",
-    "superdesk-code-style": "^1.1.1"
+    "superdesk-code-style": "^1.1.1",
+    "typescript-eslint-parser": "^18.0.0"
   },
   "scripts": {
     "setup-extensions": "node ./tasks/namespace-css-from-extensions.js && node ./tasks/install-extensions.js",

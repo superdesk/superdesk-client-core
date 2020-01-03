@@ -1,3 +1,4 @@
+import moment from 'moment-timezone';
 import {
     ISuperdesk,
     IExtensions,
@@ -5,8 +6,9 @@ import {
     IArticle,
     IContentProfile,
     IEvents,
+    IStage,
 } from 'superdesk-api';
-import {gettext} from 'core/utils';
+import {gettext, gettextPlural} from 'core/utils';
 import {getGenericListPageComponent} from './ui/components/ListPage/generic-list-page';
 import {ListItem, ListItemColumn, ListItemActionsMenu} from './components/ListItem';
 import {getFormFieldPreviewComponent} from './ui/components/generic-form/form-field';
@@ -18,7 +20,7 @@ import {
 } from './ui/components/generic-form/interfaces/form';
 import {UserHtmlSingleLine} from './helpers/UserHtmlSingleLine';
 import {Row, Item, Column} from './ui/components/List';
-import {connectCrudManager, dataApi, dataApiByEntity, generatePatch} from './helpers/CrudManager';
+import {connectCrudManager, dataApi, dataApiByEntity, patchArticle} from './helpers/CrudManager';
 import {generateFilterForServer} from './ui/components/generic-form/generate-filter-for-server';
 import {assertNever, Writeable} from './helpers/typescript-helpers';
 import {flatMap, memoize} from 'lodash';
@@ -48,8 +50,9 @@ import {TopMenuDropdownButton} from './ui/components/TopMenuDropdownButton';
 import {dispatchInternalEvent} from './internal-events';
 import {Icon} from './ui/components/Icon2';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
-import {httpRequestJsonLocal} from './helpers/network';
 import ng from 'core/services/ng';
+import {Spacer} from './ui/components/Spacer';
+import {appConfig} from 'appConfig';
 
 function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
@@ -165,21 +168,12 @@ export function getSuperdeskApiImplementation(
                             if (isPublished) {
                                 return dataApi.findOne<IArticle>('published', articleNext.item_id)
                                     .then((articleCurrent) => {
-                                        const patch = generatePatch(articleCurrent, articleNext);
-
-                                        return httpRequestJsonLocal({
-                                            'method': 'PATCH',
-                                            path: '/published/' + articleNext.item_id,
-                                            payload: patch,
-                                            headers: {
-                                                'If-Match': articleNext._etag,
-                                            },
-                                        });
+                                        return patchArticle('published', articleCurrent, articleNext);
                                     });
                             } else {
                                 return dataApi.findOne<IArticle>('archive', articleNext._id)
                                     .then((articleCurrent) => {
-                                        dataApi.patch('archive', articleCurrent, articleNext);
+                                        return patchArticle('archive', articleCurrent, articleNext);
                                     });
                             }
                         })().then((articleNextFromServer) => {
@@ -195,6 +189,11 @@ export function getSuperdeskApiImplementation(
                         }
                     });
                 },
+            },
+            desk: {
+                getStagesOrdered: (deskId: string) =>
+                    dataApi.query<IStage>('stages', 1, {field: '_id', direction: 'ascending'}, {desk: deskId}, 200)
+                        .then((response) => response._items),
             },
             contentProfile: {
                 get: (id) => {
@@ -276,6 +275,7 @@ export function getSuperdeskApiImplementation(
             TopMenuDropdownButton,
             Icon,
             getDropdownTree: () => DropdownTree,
+            Spacer,
         },
         forms: {
             FormFieldType,
@@ -286,7 +286,14 @@ export function getSuperdeskApiImplementation(
             getFormFieldPreviewComponent,
         },
         localization: {
-            gettext: (message) => gettext(message),
+            gettext: (message, params) => gettext(message, params),
+            gettextPlural: (count, singular, plural, params) => gettextPlural(count, singular, plural, params),
+            formatDate: (date: Date) => moment(date).tz(appConfig.defaultTimezone).format(appConfig.view.dateformat),
+            formatDateTime: (date: Date) => {
+                return moment(date)
+                    .tz(appConfig.defaultTimezone)
+                    .format(appConfig.view.dateformat + ' ' + appConfig.view.timeformat);
+            },
         },
         privileges: {
             getOwnPrivileges: () => privileges.loaded.then(() => privileges.privileges),
@@ -300,6 +307,9 @@ export function getSuperdeskApiImplementation(
             CSS: {
                 getClass: (originalName: string) => getCssNameForExtension(originalName, requestingExtensionId),
                 getId: (originalName: string) => getCssNameForExtension(originalName, requestingExtensionId),
+            },
+            dateToServerString: (date: Date) => {
+                return date.toISOString().slice(0, 19) + '+0000';
             },
         },
         addWebsocketMessageListener: (eventName, handler) => {

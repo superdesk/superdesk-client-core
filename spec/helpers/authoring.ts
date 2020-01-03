@@ -193,10 +193,10 @@ class Authoring {
         this.save_publish_button = element(by.buttonText('Save and publish'));
         this.save_button = element(by.buttonText('Save'));
         this.edit_button = element(by.id('Edit'));
-        this.update_button = element(by.buttonText('Update'));
-        this.edit_correct_button = element(by.buttonText('Correct'));
-        this.edit_kill_button = element(by.buttonText('Kill'));
-        this.edit_takedown_button = element(by.buttonText('Takedown'));
+        this.update_button = element(by.css('[title="Update"]'));
+        this.edit_correct_button = element(by.css('[title="Correct"]'));
+        this.edit_kill_button = element(by.css('[title="Kill"]'));
+        this.edit_takedown_button = element(by.css('[title="Takedown"]'));
 
         this.navbarMenuBtn = element(by.css('.dropdown__toggle.sd-create-btn'));
         this.newPlainArticleLink = element(by.id('create_text_article'));

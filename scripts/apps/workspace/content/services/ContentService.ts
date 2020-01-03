@@ -136,24 +136,6 @@ export function ContentService(api, templates, desks, packages, archiveService, 
     };
 
     /**
-     * Create new item using given content type
-     *
-     * @param {Object} contentType
-     * @return {Promise}
-     */
-    this.createItemFromContentType = function(contentType) {
-        var item = {
-            type: TEXT_TYPE,
-            profile: contentType._id,
-            version: 0,
-        };
-
-        archiveService.addTaskToArticle(item);
-
-        return save(item);
-    };
-
-    /**
      * Creates a new content profile.
      *
      * @param {Object} data
@@ -375,7 +357,7 @@ export function ContentService(api, templates, desks, packages, archiveService, 
             }
 
             return api.find(item._type, item._id);
-        } else if (isMediaEditable() && fetchExternal) {
+        } else if (isMediaEditable(item) && fetchExternal) {
             return renditions.ingest(item);
         }
 

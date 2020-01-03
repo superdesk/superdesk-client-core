@@ -240,7 +240,7 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, $q) {
                     return;
                 }
             }
-            $scope.resolve({
+            const data = {
                 cropData: $scope.data.cropData,
                 metadata: _.pick($scope.data.metadata, [
                     ...EDITABLE_METADATA,
@@ -248,7 +248,9 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, $q) {
                     'renditions',
                     '_etag',
                 ]),
-            });
+            };
+
+            generateCrops(data);
         } else {
             $scope.reject({done: true});
         }
@@ -300,6 +302,72 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, $q) {
         return _.pick(metadata, EDITABLE_METADATA);
     }
 
+    function generateCrops(data) {
+        const item = _.cloneDeep($scope.data.item);
+        const renditions = _.cloneDeep($scope.data.renditions);
+        const renditionNames = [];
+        const savingImagePromises = [];
+
+        $scope.loading = true;
+
+        _.forEach(data.cropData, (croppingData, renditionName) => {
+            const keys = ['CropLeft', 'CropTop', 'CropBottom', 'CropRight'];
+            const canAdd = !keys.every((key) => {
+                // if there a change in the crop co-ordinates
+                const isSameCoords = item.renditions?.[renditionName]?.[key] === croppingData[key];
+
+                return isSameCoords;
+            });
+
+            if (canAdd) {
+                renditionNames.push(renditionName);
+            }
+        });
+
+        // perform the request to make the cropped images
+        renditionNames.forEach((renditionName) => {
+            if (data.cropData?.[renditionName] !== item.renditions[renditionName]) {
+                const rendition = renditions.find((_rendition) => renditionName === _rendition.name);
+                const crop = {
+                    ...data.cropData[renditionName],
+                    // it should send the size we need, not the one we have
+                    width: rendition.width,
+                    height: rendition.height,
+                };
+
+                savingImagePromises.push(
+                    api.save('picture_crop', {item: item, crop: crop}),
+                );
+            }
+        });
+
+        $q.all(savingImagePromises)
+            .then((croppedImages) => {
+                croppedImages.forEach((image, index) => {
+                    const url = image.href;
+
+                    // update association renditions
+                    data.metadata.renditions[renditionNames[index]] = _.extend(
+                        image.crop,
+                        {
+                            href: url,
+                            width: image.width,
+                            height: image.height,
+                            media: image._id,
+                            mimetype: image.item.mimetype,
+                        },
+                    );
+                });
+
+                $scope.resolve(data.metadata);
+            })
+            .catch(() => {
+                notify.error(gettext('Failed to generate picture crops.'));
+                $scope.reject({done: true});
+            }).finally(() => {
+                $scope.loading = false;
+            });
+    }
     /**
     * @ngdoc method
     * @name ChangeImageController#saveAreaOfInterest

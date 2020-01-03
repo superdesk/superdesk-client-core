@@ -11,6 +11,8 @@ import {reactToAngular1} from 'superdesk-ui-framework';
 import {ArticleUrlFields} from './article-url-fields';
 import {AuthoringCustomField} from './authoring-custom-field';
 import {PreviewCustomField} from './preview-custom-field';
+import {ValidateCharacters} from './ValidateCharacters';
+
 import {LineCount} from './components/line-count';
 import {PopulateAuthorsController} from './controllers/PopulateAuthorsController';
 
@@ -18,10 +20,8 @@ import {gettext} from 'core/utils';
 import {IArticle} from 'superdesk-api';
 import {IArticleSchema} from 'superdesk-interfaces/ArticleSchema';
 import {AuthoringTopbarReact} from './authoring-topbar-react';
-import {showModal} from 'core/services/modalService';
-import {getUnpublishConfirmModal} from './components/unpublish-confirm-modal';
-import {ITEM_STATE} from 'apps/archive/constants';
 import {AuthoringWorkspaceService} from './services';
+import {sdStaticAutocompleteDirective} from './directives/sd-static-autocomplete';
 
 export interface IOnChangeParams {
     item: IArticle;
@@ -109,6 +109,7 @@ angular.module('superdesk.apps.authoring', [
     .directive('sdRemoveTags', directive.RemoveTagsDirective)
     .directive('tansaScopeSync', directive.TansaScopeSyncDirective)
     .directive('sdItemActionByIntent', directive.ItemActionsByIntentDirective)
+    .directive('sdStaticAutocomplete', sdStaticAutocompleteDirective)
 
     .component('sdLineCount',
         reactToAngular1(
@@ -136,6 +137,13 @@ angular.module('superdesk.apps.authoring', [
     .component('sdPreviewCustomField',
         reactToAngular1(
             PreviewCustomField,
+            ['item', 'field'],
+        ),
+    )
+
+    .component('sdValidateCharacters',
+        reactToAngular1(
+            ValidateCharacters,
             ['item', 'field'],
         ),
     )
@@ -359,36 +367,13 @@ angular.module('superdesk.apps.authoring', [
                 priority: 50,
                 icon: 'kill',
                 group: 'corrections',
-                controller: ['data', 'authoring', 'familyService', 'notify',
-                    (data, authoring, familyService, notify) => {
-                        const item = data.item;
-                        let relatedItems = [];
-
-                        const handleSuccess = () => {
-                            notify.success(gettext('Item was unpublished successfully.'));
-                        };
-
-                        familyService.fetchRelatedByState(item.archive_item, [ITEM_STATE.PUBLISHED])
-                            .then((items) => {
-                                relatedItems = items;
-
-                                const unpublish = (selected) => {
-                                    authoring.publish(item.archive_item, {}, 'unpublish', {notifyErrors: true})
-                                        .then(handleSuccess);
-                                    relatedItems.forEach((relatedItem) => {
-                                        if (selected[relatedItem._id]) {
-                                            authoring.publish(relatedItem, {}, 'unpublish', {notifyErrors: true})
-                                                .then(handleSuccess);
-                                        }
-                                    });
-                                };
-
-                                showModal(getUnpublishConfirmModal(item, relatedItems, unpublish));
-                            });
+                controller: ['data', 'authoring',
+                    (data, authoring) => {
+                        return authoring.unpublish(data.item.archive_item);
                     },
                 ],
                 filters: [{action: 'list', type: 'archive'}],
-                additionalCondition: ['authoring', 'item', (authoring, item) => authoring.itemActions(item).kill],
+                additionalCondition: ['authoring', 'item', (authoring, item) => authoring.itemActions(item).unpublish],
                 privileges: {unpublish: 1},
             })
             .activity('edit.unpublished', {
