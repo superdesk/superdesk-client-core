@@ -73,7 +73,7 @@
                     required="true"
                 ></div>
 
-                <div sd-form-input
+                <div sd-form-input ng-if="!provider.search_provider.startsWith('scanpix')"
                     id="provider-url"
                     label="{{gettext('URL')}}"
                     placeholder="{{gettext('url of the search provider')}}"
