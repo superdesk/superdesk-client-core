@@ -10,25 +10,23 @@ angular.module('superdesk.core.auth.keycloak', []).service('keycloak', [
     'auth',
     '$rootScope',
     function(session, auth, $rootScope) {
+        let keycloak = null;
+
         this.keycloakAuth = () => {
-            $rootScope.keycloak = Keycloak(appConfig.keycloak_config);
-            $rootScope.keycloak.configs = appConfig.keycloak_config;
-            $rootScope.keycloak
-                .init({
-                    onLoad: 'login-required',
-                })
+            keycloak = Keycloak(appConfig.keycloak_config);
+
+            keycloak.configs = appConfig.keycloak_config;
+            keycloak
+                .init({onLoad: 'login-required'})
                 .success(() => {
-                    auth.loginOIDC($rootScope.keycloak.token);
+                    auth.loginOIDC(keycloak.token);
                 });
         };
         $rootScope.$watch(
             () => session.identity,
             () => {
-                if (
-                    session.identity == null &&
-                    ($rootScope.keycloak || {}).authenticated
-                ) {
-                    $rootScope.keycloak.logout();
+                if (session.identity == null && (keycloak || {}).authenticated) {
+                    keycloak.logout();
                 }
             },
         );
