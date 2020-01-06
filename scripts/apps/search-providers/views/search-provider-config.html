@@ -1,7 +1,7 @@
 <div class="sd-page__flex-helper" ng-hide="hideList">
     <div class="sd-page__header">
         <span class="sd-page__element-grow"></span>
-        <button id="addSearchProvider" class="btn btn--primary" ng-click="edit()" ng-disabled="noProvidersAllowed" title="{{gettext(noProvidersAllowed ? 'There are no providers available.' : 'Add New Search Provider')}}">
+        <button id="addSearchProvider" class="btn btn--primary" ng-click="edit()" ng-disabled="noProvidersAllowed" title="{{noProvidersAllowed ? gettext('There are no providers available.') : gettext('Add New Search Provider')}}">
             <i class="icon-plus-sign icon--white"></i> <span translate>Add New</span>
         </button>
     </div>
@@ -77,7 +77,7 @@
                     id="provider-url"
                     label="{{gettext('URL')}}"
                     placeholder="{{gettext('url of the search provider')}}"
-                    model="provider.url"
+                    model="provider.config.url"
                     required="true"
                 ></div>
 
