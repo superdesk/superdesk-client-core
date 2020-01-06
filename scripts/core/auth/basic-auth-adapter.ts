@@ -39,7 +39,7 @@ angular.module('superdesk.core.auth.basic', [])
          * @returns {Promise} If successful, session data is returned, including session token
          * @description authenticate user using oidc auth
          */
-        this.authenticateOIDC = (authorization_code) => urls.resource('oidcauth')
+        this.authenticateOIDC = (authorization_code) => urls.resource('auth_oidc')
             .then((url) => $http.post(url, {}, {headers: {Authorization: formatTokenBearer(authorization_code)}}))
             .then(this.setToken);
 
