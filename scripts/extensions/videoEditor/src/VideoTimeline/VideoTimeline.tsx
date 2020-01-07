@@ -82,12 +82,8 @@ export class VideoTimeline extends React.Component<IProps, IState> {
         if (prevProps.thumbnails !== this.props.thumbnails) {
             this.setThumbnailsRender();
         }
-        if (
-            prevProps.trim !== this.props.trim &&
-            this.props.trim.start === 0 &&
-            this.props.trim.end === this.props.video.duration
-        ) {
-            this.updateTrim(0, this.props.trim.end);
+        if (this.props.trim !== prevProps.trim) {
+            this.updateTrim(this.props.trim.start, this.props.trim.end);
         }
     }
 
@@ -141,6 +137,10 @@ export class VideoTimeline extends React.Component<IProps, IState> {
     tick() {
         // updates the current time state
         let currentTime = this.props.video.currentTime;
+
+        if (currentTime === this.state.currentTime) {
+            return;
+        }
 
         if (currentTime <= this.state.trim.end) {
             this.setState({currentTime: currentTime});
@@ -218,21 +218,15 @@ export class VideoTimeline extends React.Component<IProps, IState> {
                 <div className={`${getClass('controlbars')}`} ref={this.controlbar} onClick={this.handleTimelineClick}>
                     <div
                         className={`${getClass('controlbars__mask')} ${getClass('controlbars__mask--left')}`}
-                        style={{
-                            width: left,
-                        }}
+                        style={{width: left}}
                     />
                     <div
                         className={`${getClass('controlbars__mask')} ${getClass('controlbars__mask--right')}`}
-                        style={{
-                            width: right,
-                        }}
+                        style={{width: right}}
                     />
                     <div
                         className={getClass('controlbars__progress-output')}
-                        style={{
-                            left: video ? `${(this.state.currentTime / video.duration) * 100}%` : '0%',
-                        }}
+                        style={{left: video ? `${(this.state.currentTime / video.duration) * 100}%` : '0%'}}
                     >
                         <div className={getClass('controlbars__progress-output__content')}>
                             <BarIcon />
@@ -244,10 +238,7 @@ export class VideoTimeline extends React.Component<IProps, IState> {
                     </div>
                     <div
                         className={`${getClass('controlbars__wrapper-out')}`}
-                        style={{
-                            left: left,
-                            right: right,
-                        }}
+                        style={{left: left, right: right}}
                     >
                         <div
                             className={`${getClass('controlbars__wrapper')} ${getClass('controlbars__wrapper--left')}`}
