@@ -32,13 +32,16 @@ export function MediaPreview(api, $rootScope, desks, superdesk, content, storage
                     .then((type) => {
                         scope.editor = content.editor(type);
                         scope.fields = content.fields(type);
+                        scope.previewFields = content.previewFields(scope.editor, scope.fields);
                     });
             } else {
                 content.getCustomFields().then(() => {
                     scope.editor = content.editor(null, scope.selected.preview.type);
                     scope.fields = content.fields({editor: scope.editor});
+                    scope.previewFields = content.previewFields(scope.editor, scope.fields);
                 });
             }
+
             // prevent dragging from preview
             elem.on('dragstart', () => false);
 

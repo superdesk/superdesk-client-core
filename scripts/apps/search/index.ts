@@ -9,6 +9,7 @@ import {MultiImageEditDirective} from './MultiImageEdit';
 import {gettext} from 'core/utils';
 import {MultiActionBarReact} from 'apps/monitoring/MultiActionBarReact';
 import {reactToAngular1} from 'superdesk-ui-framework';
+import {PreviewSubject} from './components/preview-subject';
 
 angular.module('superdesk.apps.search.react', [
     'superdesk.apps.highlights',
@@ -70,6 +71,12 @@ angular.module('superdesk.apps.search', [
         reactToAngular1(
             MultiActionBarReact,
             ['context', 'articles', 'hideMultiActionBar', 'getCoreActions', 'compact'],
+        ),
+    )
+    .component('sdPreviewSubject',
+        reactToAngular1(
+            PreviewSubject,
+            ['item', 'fields', 'editor'],
         ),
     )
     .directive('sdMultiActionBar', directive.MultiActionBar)

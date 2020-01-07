@@ -195,7 +195,7 @@ declare module 'superdesk-api' {
         priority: any;
         urgency: any;
         anpa_category: any;
-        subject: any;
+        subject?: Array<ISubject>;
         company_codes: Array<any>;
         ednote: string;
         authors: Array<IAuthor>;
@@ -358,13 +358,17 @@ declare module 'superdesk-api' {
         slack_user_id: string;
     }
 
+    export type IContentProfileEditorConfig = {[key: string]: {
+        order: number;
+        preview?: boolean;
+    }}
 
     export interface IContentProfile {
         _id: string;
         label: string;
         description: string;
         schema: Object;
-        editor: Object;
+        editor: IContentProfileEditorConfig;
         widgets_config: Array<{widget_id: string; is_displayed: boolean}>;
         priority: number;
         enabled: boolean;
@@ -955,5 +959,6 @@ declare module 'superdesk-api' {
     interface ISubject {
         name: string;
         qcode: string;
+        scheme?: string;
     }
 }
