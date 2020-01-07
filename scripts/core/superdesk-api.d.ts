@@ -969,6 +969,16 @@ declare module 'superdesk-api' {
         archive_autocomplete: boolean;
         workflow_allow_multiple_updates: boolean;
 
+        // TANSA SERVER CONFIG
+        tansa?: {
+            base_url: string;
+            app_id: string;
+            app_version: string;
+            user_id: string;
+            profile_id: number;
+            license_key: string;
+            profiles: {[language: string]: number};
+        },
 
         // FROM CLIENT
         server: {
