@@ -13,8 +13,8 @@
                     <h6 id="providerType">{{ providerLabels[provider.search_provider] }}</h6>
                     <span class="label offProvider" ng-if="provider.is_closed" translate>Closed</span>
                     <div class="actions">
-                        <button ng-click="edit(provider)" title="{{gettext('Edit Search Provider')}}"><i class="icon-pencil"></i></button>
-                        <button ng-click="remove(provider)" ng-show="!provider.last_item_update" title="{{gettext('Remove Search Provider')}}"><i class="icon-trash"></i></button>
+                        <button ng-click="edit(provider)" title="{{ gettext('Edit Search Provider') }}"><i class="icon-pencil"></i></button>
+                        <button ng-click="remove(provider)" ng-show="!provider.last_item_update" title="{{ gettext('Remove Search Provider') }}"><i class="icon-trash"></i></button>
                     </div>
                 </div>
             </li>
@@ -32,25 +32,25 @@
             <fieldset>
                 <div sd-form-switch-inverted
                     id="provider-status"
-                    label="{{gettext('Status')}}"
-                    title="{{gettext(provider.is_closed ? 'Open' : 'Close')}}"
+                    label="{{ gettext('Status') }}"
+                    title="{{ provider.is_closed ? gettext('Open') : gettext('Close') }}"
                     model="provider.is_closed">
                 ></div>
 
                 <div sd-form-checkbox
-                    label="{{gettext('Is Default')}}"
-                    title="{{gettext(provider.is_default ? 'Default' : '')}}"
+                    label="{{ gettext('Is Default') }}"
+                    title="{{ provider.is_default ? gettext('Default') : '' }}"
                     model="provider.is_default"
                 ></div>
 
                 <div sd-form-checkbox
-                    label="{{gettext('Open advanced search panel by default')}}"
+                    label="{{ gettext('Open advanced search panel by default') }}"
                     model="provider.advanced_search"
                 ></div>
 
                 <div sd-form-select
                     id="provider-type"
-                    label="{{gettext('Provider Type')}}"
+                    label="{{ gettext('Provider Type') }}"
                     model="provider.search_provider"
                     options="providerTypesOptions"
                     option-label="label"
@@ -60,23 +60,23 @@
 
                 <div sd-form-input ng-if="!provider.search_provider.startsWith('scanpix')"
                     id="provider-name"
-                    label="{{gettext('Name')}}"
+                    label="{{ gettext('Name') }}"
                     model="provider.name"
                     required="true"
                 ></div>
 
                 <div sd-form-input ng-if="!provider.search_provider.startsWith('scanpix')"
                     id="provider-source"
-                    label="{{gettext('Source')}}"
-                    placeholder="{{gettext('source of the search provider')}}"
+                    label="{{ gettext('Source') }}"
+                    placeholder="{{ gettext('source of the search provider') }}"
                     model="provider.source"
                     required="true"
                 ></div>
 
                 <div sd-form-input ng-if="!provider.search_provider.startsWith('scanpix')"
                     id="provider-url"
-                    label="{{gettext('URL')}}"
-                    placeholder="{{gettext('url of the search provider')}}"
+                    label="{{ gettext('URL') }}"
+                    placeholder="{{ gettext('url of the search provider') }}"
                     model="provider.config.url"
                     required="true"
                 ></div>
@@ -87,16 +87,16 @@
 
                 <div sd-form-input
                     id="provider-username"
-                    label="{{gettext('Username')}}"
-                    placeholder="{{gettext('search provider username')}}"
+                    label="{{ gettext('Username') }}"
+                    placeholder="{{ gettext('search provider username') }}"
                     model="provider.config.username"
                 ></div>
 
                 <div sd-form-input
                     type="password"
                     id="provider-password"
-                    label="{{gettext('Password')}}"
-                    placeholder="{{gettext('search provider password')}}"
+                    label="{{ gettext('Password') }}"
+                    placeholder="{{ gettext('search provider password') }}"
                     model="provider.config.password"
                 ></div>
             </fieldset>
