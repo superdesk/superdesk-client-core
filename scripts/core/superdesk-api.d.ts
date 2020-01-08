@@ -433,10 +433,41 @@ declare module 'superdesk-api' {
         slack_user_id: string;
     }
 
-    export type IContentProfileEditorConfig = {[key: string]: {
-        order: number;
+    export interface IVocabularyTag {
+        text: string;
+    }
+
+    export interface IVocabulary {
+        _id: string;
+        display_name: string;
+        helper_text: string;
+        popup_width: number;
+        type: string;
+        items: Array<{name: string; qcode: string}>;
+        single_value: boolean;
+        schema_field: string;
+        dependent: boolean;
+        service: {};
+        priority: number;
+        unique_field: string;
+        schema: {};
+        init_version: number;
+        preffered_items: boolean;
+        tags: Array<IVocabularyTag>;
+        field_type: 'text' | 'media' | 'date' | 'embed' | 'related_content' | 'custom';
+    }
+
+    export interface IArticleField extends IVocabulary {
+        single?: boolean;
         preview?: boolean;
-    }}
+        field_options: {
+            single?: boolean;
+        };
+        date_shortcuts: Array<{value: number; term: string; label: string}>;
+        custom_field_type: string;
+    }
+
+    export type IContentProfileEditorConfig = {[key: string]: IArticleField};
 
     export interface IContentProfile {
         _id: string;
@@ -451,6 +482,8 @@ declare module 'superdesk-api' {
         created_by: string;
         updated_by: string;
     }
+
+    
 
 
     // PAGE
