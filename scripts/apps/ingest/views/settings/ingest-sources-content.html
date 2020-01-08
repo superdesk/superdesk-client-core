@@ -193,6 +193,11 @@
                         <div class="sd-alert sd-alert--hollow sd-alert--alert sd-alert--small" ng-show="error" translate>
                             An error occured when testing config.
                         </div>
+
+                        <div class="form__row" ng-show="error || provider.skip_config_test != null">
+                            <span sd-switch ng-model="provider.skip_config_test"></span><label translate>Skip config test</label>
+                        </div>
+
                         <div sd-ingest-provider-config></div>
                     </div>
 
