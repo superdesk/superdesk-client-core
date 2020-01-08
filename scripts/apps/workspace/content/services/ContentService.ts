@@ -2,8 +2,7 @@ import * as constant from '../constants';
 import {get, omit, isEmpty, zipObject} from 'lodash';
 import {gettext} from 'core/utils';
 import {isMediaEditable} from 'core/config';
-import {IArticle, IContentProfileEditorConfig} from 'superdesk-api';
-import {IVocabulary} from 'superdesk-interfaces/Vocabulary';
+import {IArticle, IContentProfileEditorConfig, IArticleField} from 'superdesk-api';
 
 /**
  * @ngdoc service
@@ -278,7 +277,7 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
     /**
      * Get fields with preview enabled
      */
-    this.previewFields = (editor: IContentProfileEditorConfig, fields: Array<IVocabulary>): Array<IVocabulary> =>
+    this.previewFields = (editor: IContentProfileEditorConfig, fields: Array<IArticleField>): Array<IArticleField> =>
         editor == null || fields == null ? []
             : fields.filter((field) => editor[field._id] != null && editor[field._id].preview);
 

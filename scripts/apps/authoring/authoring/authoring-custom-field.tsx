@@ -2,14 +2,13 @@ import React from 'react';
 import {get} from 'lodash';
 
 import {getField} from 'apps/fields';
-import {IArticle} from 'superdesk-api';
-import {IVocabulary} from 'superdesk-interfaces/Vocabulary';
+import {IArticle, IArticleField} from 'superdesk-api';
 
 interface IProps {
     item: IArticle;
-    field: IVocabulary;
+    field: IArticleField;
     editable: boolean;
-    onChange: (field: IVocabulary, value: any) => any;
+    onChange: (field: IArticleField, value: any) => any;
 }
 
 export class AuthoringCustomField extends React.PureComponent<IProps> {

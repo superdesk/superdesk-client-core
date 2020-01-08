@@ -1,10 +1,9 @@
 import React from 'react';
-import {IArticle} from 'superdesk-api';
-import {IVocabulary} from 'superdesk-interfaces/Vocabulary';
+import {IArticle, IArticleField} from 'superdesk-api';
 
 interface IProps {
     item: IArticle;
-    fields: Array<IVocabulary>;
+    fields: Array<IArticleField>;
 }
 
 export class PreviewSubject extends React.PureComponent<IProps> {
