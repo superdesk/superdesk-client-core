@@ -4,10 +4,10 @@ import {SCHEDULED_OUTPUT, DESK_OUTPUT} from 'apps/desks/constants';
 import {appConfig} from 'appConfig';
 
 AggregateCtrl.$inject = ['$scope', 'desks', 'workspaces', 'preferencesService', 'storage',
-    'savedSearch'];
+    'savedSearch', 'content'];
 
 export function AggregateCtrl($scope, desks, workspaces, preferencesService, storage,
-    savedSearch) {
+    savedSearch, content) {
     var PREFERENCES_KEY = 'agg:view';
     var defaultMaxItems = 10;
     var self = this;
@@ -25,11 +25,16 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
     this.stageLookup = {};
     this.fileTypes = ['all', 'text', 'picture', 'graphic', 'composite',
         'highlightsPackage', 'video', 'audio'];
-    this.selectedFileType = $scope.type === 'monitoring' ? storage.getItem('selectedFileType') || [] : [];
     this.monitoringSearch = false;
     this.searchQuery = null;
-
     this.isOutputType = desks.isOutputType;
+
+    this.activeProfiles = [];
+    this.activeFilters = {
+        profile: $scope.type === 'monitoring' ? storage.getItem('profile') || [] : [],
+        fileType: $scope.type === 'monitoring' ? storage.getItem('fileType') || [] : [],
+    };
+    this.activeFilterTags = [];
 
     desks.initialize()
         .then(angular.bind(this, function() {
@@ -55,6 +60,7 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
                 .then(angular.bind(this, function(settings) {
                     initGroups(settings);
                     setupCards();
+                    getActiveProfiles();
                     this.loading = false;
                     this.settings = settings;
                 }));
@@ -258,7 +264,7 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
             }
         }
         initSpikeGroups(settings.type === 'desk');
-        updateFileTypeCriteria();
+        updateFilteringCriteria();
         self.search(self.searchQuery);
     }
 
@@ -338,9 +344,9 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
      */
     this.hasFileType = function(fileType) {
         if (fileType === 'all') {
-            return this.selectedFileType.length === 0;
+            return this.activeFilters.fileType.length === 0;
         }
-        return this.selectedFileType.indexOf(fileType) > -1;
+        return this.activeFilters.fileType.includes(fileType);
     };
 
     /**
@@ -348,44 +354,70 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
      * @return [{string}] fileType
      */
     this.getSelectedFileTypes = function() {
-        return this.selectedFileType.length === 0 ? null : JSON.stringify(this.selectedFileType);
+        return this.activeFilters.fileType.length === 0 ? null : JSON.stringify(this.this.activeFilters.fileType);
     };
 
-    /**
-     * Update the type filter criteria
-     */
-    function updateFileTypeCriteria() {
-        var value = self.selectedFileType.length === 0 ? null : JSON.stringify(self.selectedFileType);
+    function updateFilteringCriteria() {
+        _.forEach(self.activeFilters, (filterValue, filterType) => {
+            var value = filterValue.length === 0 ? null : JSON.stringify(filterValue);
 
-        _.each(self.groups, (item) => {
-            item.fileType = value;
-        });
-        _.each(self.spikeGroups, (item) => {
-            item.fileType = value;
+            _.each(self.groups, (item) => {
+                item[filterType] = value;
+            });
+            _.each(self.spikeGroups, (item) => {
+                item[filterType] = value;
+            });
         });
     }
 
-    /**
-     * Set the current 'fileType' filter
-     * param {string} fileType
-     */
-    this.setFileType = function(fileType) {
-        if (fileType === 'all') {
-            this.selectedFileType = [];
-        } else {
-            var index = this.selectedFileType.indexOf(fileType);
-
-            if (index > -1) {
-                this.selectedFileType.splice(index, 1);
+    this.setFilterType = function(filterType, filterValue, $event?) {
+        if (filterType === 'profile') {
+            if (!this.activeFilters.profile.includes(filterValue._id)) {
+                this.activeFilters.profile.push(filterValue._id);
+                this.activeFilterTags.push({'key': filterValue._id, 'label': filterValue.label});
+            }
+        } else if (filterType === 'file') {
+            if (filterValue === 'all') {
+                this.activeFilters.fileType = [];
             } else {
-                this.selectedFileType.push(fileType);
+                let filterIndex = this.activeFilters.fileType.indexOf(filterValue);
+
+                if (filterIndex > -1) {
+                    this.activeFilters.fileType.splice(filterIndex, 1);
+                } else {
+                    this.activeFilters.fileType.push(filterValue);
+                }
             }
         }
-        if ($scope.type === 'monitoring') {
-            storage.setItem('selectedFileType', this.selectedFileType);
+        updateFilterInStore();
+        updateFilteringCriteria();
+
+        if ($event?.ctrlKey) {
+            $event.stopPropagation();
+            return null;
         }
-        updateFileTypeCriteria();
     };
+
+    this.removeFilter = (filter) => {
+        if (filter == null) {
+            this.activeFilters.profile = [];
+            this.activeFilterTags = [];
+        } else {
+            this.activeFilters.profile = this.activeFilters.profile.filter((profile) => profile !== filter);
+            this.activeFilterTags = this.activeFilterTags.filter((tags) => tags.key !== filter);
+        }
+
+        updateFilterInStore();
+        updateFilteringCriteria();
+    };
+
+    // Save filters in the store
+    function updateFilterInStore() {
+        if ($scope.type === 'monitoring') {
+            storage.setItem('fileType', self.activeFilters.fileType);
+            storage.setItem('profile', self.activeFilters.profile);
+        }
+    }
 
     /**
      * Add card metadata into current groups
@@ -521,4 +553,19 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
     $scope.$on('open:resend', (evt, item) => {
         $scope.resend = item;
     });
+
+    function getActiveProfiles() {
+        content.getTypes(false).then((profiles) => {
+            self.activeProfiles = profiles;
+
+            // initialize the activeFilterTags once the activeProfiles are available
+            if (self.activeFilters.profile.length > 0) {
+                self.activeFilterTags = self.activeFilters.profile.map((filter) => {
+                    const profile = profiles.find((p) => p._id === filter);
+
+                    return {key: profile._id, label: profile.label};
+                });
+            }
+        });
+    }
 }

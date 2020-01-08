@@ -13,6 +13,7 @@ interface ICard {
     _id: string;
     deskId: string;
     fileType: string; // contains JSON array
+    profile: string;
     header: string; // example: "Politic Desk"
     subheader: string; // example: "Working Stage"
     type: 'stage' | string;
@@ -180,6 +181,14 @@ export function CardsService(search, session, desks) {
         }
     }
 
+    function filterQueryByContentProfile(query, card: ICard) {
+        if (card.profile) {
+            var termsProfileType: any = {terms: {profile: JSON.parse(card.profile)}};
+
+            query.filter(termsProfileType);
+        }
+    }
+
     /**
      * Get items criteria for given card
      *
@@ -195,6 +204,7 @@ export function CardsService(search, session, desks) {
         var criteria: any = {es_highlight: card.query ? search.getElasticHighlight() : 0};
 
         filterQueryByCardType(query, queryParam, card);
+        filterQueryByContentProfile(query, card);
         filterQueryByCardFileType(query, card);
 
         if (queryString) {
