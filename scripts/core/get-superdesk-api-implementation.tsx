@@ -61,6 +61,8 @@ function getContentType(id): Promise<IContentProfile> {
 const getContentTypeMemoized = memoize(getContentType);
 let getContentTypeMemoizedLastCall: number = 0; // unix time
 
+const isPublished = (article) => article.item_id != null;
+
 function getOnUpdateBeforeMiddlewares(
     extensions: IExtensions,
 ): Array<IExtensionActivationResult['contributions']['entities']['article']['onUpdateBefore']> {
@@ -147,6 +149,8 @@ export function getSuperdeskApiImplementation(
                 isPersonal: (article) => article.task == null || article.task.desk == null,
                 isLocked: (article) => article['lock_session'] != null,
                 isLockedByCurrentUser: (article) => lock.isLocked(article),
+                isArchived: (article) => article._type === 'archived',
+                isPublished: (article) => isPublished(article),
                 update: (_articleNext) => {
                     const __articleNext = {..._articleNext};
 
@@ -160,12 +164,10 @@ export function getSuperdeskApiImplementation(
                         (current, next) => current.then((result) => next(result)),
                         Promise.resolve(__articleNext),
                     ).then((articleNext: IArticle) => {
-                        const isPublished = articleNext.item_id != null;
-
                         (function(): Promise<any> {
                             // distinction between handling published and non-published items
                             // should be removed: SDESK-4687
-                            if (isPublished) {
+                            if (isPublished(articleNext)) {
                                 return dataApi.findOne<IArticle>('published', articleNext.item_id)
                                     .then((articleCurrent) => {
                                         return patchArticle('published', articleCurrent, articleNext);

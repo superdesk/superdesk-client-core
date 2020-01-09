@@ -827,6 +827,9 @@ declare module 'superdesk-api' {
                 isLockedByCurrentUser(article: IArticle): boolean;
 
                 isPersonal(article: IArticle): boolean;
+
+                isArchived(article: IArticle): boolean;
+                isPublished(article: IArticle): boolean;
                 update(nextArticle: IArticle): void;
             };
             contentProfile: {

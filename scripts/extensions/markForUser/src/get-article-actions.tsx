@@ -3,7 +3,7 @@ import {manageMarkedUserForSingleArticle} from './managed-marked-user';
 
 export function getActionsInitialize(superdesk: ISuperdesk) {
     const {gettext} = superdesk.localization;
-    const {isPersonal, isLocked} = superdesk.entities.article;
+    const {isPersonal, isLocked, isArchived, isPublished} = superdesk.entities.article;
 
     return function getActions(articleNext: IArticle) {
         // it doesn't make sense to display the action since it wouldn't get updated in the list anyway
@@ -79,7 +79,7 @@ export function getActionsInitialize(superdesk: ISuperdesk) {
         } else {
             const actions = [markForUser];
 
-            if (hasDesk) {
+            if (hasDesk && !isPublished(articleNext) && !isArchived(articleNext)) {
                 actions.push(markForUserAndSend);
             }
 
