@@ -659,7 +659,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                                 src={this.state.videoSrc}
                                                 onPlay={() => this.setState({playing: true})}
                                                 onPause={() => this.setState({playing: false})}
-                                                onLoadedData={() => this.handleTrim(0, videoRef?.duration ?? 0)}
+                                                onDurationChange={() => this.handleTrim(0, videoRef?.duration ?? 0)}
                                                 style={{
                                                     transform: `rotate(${degree}) scale(${this.state.scale})`,
                                                     height: `${videoHeight}px`,
