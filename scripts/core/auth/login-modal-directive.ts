@@ -122,7 +122,9 @@ angular.module('superdesk.core.auth.login', []).directive('sdLoginModal', [
                     scope.sessionId = session.sessionId;
                     scope.username = session.identity ? session.identity.UserName : null;
                     scope.password = null;
-                    if (!triggerLogin[0] && triggerLogin[1] === true) {
+                    // when OIDC is enabled, user will always be redirected to Keycloak server to log in
+                    // showing login screen before redirect may cause flashing
+                    if (!triggerLogin[0] && triggerLogin[1] === true && appConfig.oidc_auth === false) {
                         scope.active = true;
                         var focusElem = scope.username ? 'password' : 'username';
 
