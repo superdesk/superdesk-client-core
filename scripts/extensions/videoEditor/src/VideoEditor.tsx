@@ -161,7 +161,10 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                 video: false,
                             },
                             thumbnails: [],
-                            videoSrc: result.renditions?.original?.href ?? '',
+                            // force browser to reload video duration after trimming video
+                            // because if video src does not change, browser will not update video
+                            // duration even after caching is disabled
+                            videoSrc: result.renditions?.original?.href + `?t=${Math.random()}`,
                             article: {
                                 ...this.state.article,
                                 ...result,
