@@ -594,7 +594,7 @@ export function AuthoringDirective(
                             return modal.confirm({
                                 bodyText: gettext(
                                     'There are unpublished related items that won\'t be sent out as related items.'
-                        + ' Do you want to publish the article anyway?',
+                                    + ' Do you want to publish the article anyway?',
                                 ),
                             }).then((ok) => ok ? performPublish() : false);
                         }

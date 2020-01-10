@@ -3,18 +3,22 @@ import {get} from 'lodash';
 import {gettext} from 'core/utils';
 import {removeLodash} from 'core/filters';
 import {IPropsItemListInfo} from '../ListItemInfo';
+import {longFormat} from 'core/datetime/datetime';
+import {IArticle} from 'superdesk-api';
 
-export const state: React.StatelessComponent<Pick<IPropsItemListInfo, 'item' | 'svc'>> = (props) => {
-    const datetime = props.svc.datetime;
+interface IProps {
+    item: IArticle;
+}
 
-    if (props.item.state !== undefined && props.item.state !== null) {
+export const state: React.StatelessComponent<Pick<IPropsItemListInfo, 'item' | 'svc'>> = (props: IProps) => {
+    if (props.item.state != null) {
         let title = removeLodash(props.item.state);
 
         if (props.item.state === 'scheduled') {
-            const scheduled = get(props.item, 'archive_item.schedule_settings.utc_publish_schedule');
+            const scheduled = props.item.archive_item?.schedule_settings?.utc_publish_schedule;
 
-            if (scheduled) {
-                title = gettext('Scheduled for {{date}}', {date: datetime.longFormat(scheduled)});
+            if (scheduled != null) {
+                title = gettext('Scheduled for {{date}}', {date: longFormat(scheduled)});
             }
         }
 

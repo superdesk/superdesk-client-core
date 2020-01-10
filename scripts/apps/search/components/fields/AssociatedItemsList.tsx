@@ -1,11 +1,12 @@
 import React from 'react';
-import {IArticle} from 'superdesk-api';
+import {IArticle, IRelatedArticle} from 'superdesk-api';
 
 const TYPES_TO_ICONS = {
     picture: 'icon-photo',
     graphic: 'icon-graphic',
     video: 'icon-video',
     audio: 'icon-audio',
+    text: 'icon-text',
 };
 
 interface IProps {
@@ -15,11 +16,6 @@ interface IProps {
 
 interface IState {
     types: Array<string>;
-}
-
-interface IRelatedArticle {
-    _id: IArticle['_id'];
-    type: IArticle['type'];
 }
 
 /**
