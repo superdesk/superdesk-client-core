@@ -18,7 +18,7 @@
     <div ng-if="loading" class="sd-loader"></div>
     <div class="sd-column-box--2">
         <div class="sd-column-box__main-column sd-column-box__main-column--photo-preview" ng-class="{'toolbar-offset': crops.isDirty, 'sd-column-box__main-column--expanded' : !showMetadata}">
-            <a class="sd-photo-preview__slide-in-button" ng-show="!showMetadata && nav !== 'crop'" ng-click="toggleShowMetadata()" data-sd-tooltip="Open metadata" data-flow="left">
+            <a class="sd-photo-preview__slide-in-button" ng-show="!showMetadata && nav !== 'crop'" ng-click="toggleShowMetadata(true)" data-sd-tooltip="Open metadata" data-flow="left">
                 <i class="icon-backward-thin"></i>
             </a>
             <div class="sd-photo-preview" ng-if="!nav || nav === 'view'">
@@ -133,7 +133,7 @@
                 <div class="sd-slide-in-panel__header">
                     <h3 class="sd-slide-in-panel__heading" ng-if="nav !== 'image-edit'" translate>Metadata</h3>
                     <h3 class="sd-slide-in-panel__heading" ng-if="nav === 'image-edit'" translate>Controls</h3>
-                    <a class="icn-btn sd-slide-in-panel__close" sd-tooltip="Close details" flow="top" ng-click="toggleShowMetadata()"><i class="icon-close-small"></i></a>
+                    <a class="icn-btn sd-slide-in-panel__close" data-sd-tooltip="Close details" data-flow="left" ng-click="toggleShowMetadata(false)"><i class="icon-close-small"></i></a>
                 </div>
                 <div class="sd-slide-in-panel__content" ng-if="nav !== 'image-edit'">
                     <div class="sd-slide-in-panel__content-block sd-slide-in-panel__content-block--first">
