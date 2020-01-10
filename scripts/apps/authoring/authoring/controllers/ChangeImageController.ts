@@ -74,7 +74,7 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, $q) {
         isDirty: false,
     };
     $scope.toggleMetadataPanel = (value?) => {
-        value ? $scope.showMetadata = value : $scope.showMetadata = !$scope.showMetadata;
+        $scope.showMetadata = value != null ? value : !$scope.showMetadata;
     };
 
     if ($scope.data.renditions) {
