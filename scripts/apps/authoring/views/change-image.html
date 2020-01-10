@@ -4,9 +4,9 @@
     <h3 class="modal__heading modal__heading--no-grow" ng-if="nav === 'crop'">{{ :: 'Edit Crops' | translate }}</h3>
 
     <div class="modal__header-buttons  modal__header-buttons--center modal__header-element-grow button-nav">
-        <button class="button-nav__btn" ng-click="nav = 'view'; toggleMetadataPanel(true)" ng-class="{'button-nav__btn--active' : !nav || nav === 'view'}" ng-show="tabs.includes('view')" ng-disabled="!isDoneEnabled()" translate>Details / Metadata</button>
-        <button class="button-nav__btn" ng-click="nav = 'image-edit'; toggleMetadataPanel(true)" ng-show="data.editable && tabs.includes('image-edit')" ng-class="{'button-nav__btn--active': nav === 'image-edit'}" ng-disabled="!isDoneEnabled()" translate>Edit image</button>
-        <button class="button-nav__btn" ng-click="nav = 'crop'; toggleMetadataPanel(false)" ng-show="data.editable && tabs.includes('crop')" ng-class="{'button-nav__btn--active': nav === 'crop'}" ng-disabled="!isDoneEnabled()" translate>Edit crops</button>
+        <button class="button-nav__btn" ng-click="nav = 'view'; toggleShowMetadata(true)" ng-class="{'button-nav__btn--active' : !nav || nav === 'view'}" ng-show="tabs.includes('view')" ng-disabled="!isDoneEnabled()" translate>Details / Metadata</button>
+        <button class="button-nav__btn" ng-click="nav = 'image-edit'; toggleShowMetadata(true)" ng-show="data.editable && tabs.includes('image-edit')" ng-class="{'button-nav__btn--active': nav === 'image-edit'}" ng-disabled="!isDoneEnabled()" translate>Edit image</button>
+        <button class="button-nav__btn" ng-click="nav = 'crop'; toggleShowMetadata(false)" ng-show="data.editable && tabs.includes('crop')" ng-class="{'button-nav__btn--active': nav === 'crop'}" ng-disabled="!isDoneEnabled()" translate>Edit crops</button>
     </div>
 
     <div class="modal__header-buttons modal__header-buttons--right">
@@ -18,7 +18,7 @@
     <div ng-if="loading" class="sd-loader"></div>
     <div class="sd-column-box--2">
         <div class="sd-column-box__main-column sd-column-box__main-column--photo-preview" ng-class="{'toolbar-offset': crops.isDirty, 'sd-column-box__main-column--expanded' : !showMetadata}">
-            <a class="sd-photo-preview__slide-in-button" ng-show="!showMetadata && nav !== 'crop'" ng-click="toggleMetadataPanel()" data-sd-tooltip="Open metadata" data-flow="left">
+            <a class="sd-photo-preview__slide-in-button" ng-show="!showMetadata && nav !== 'crop'" ng-click="toggleShowMetadata()" data-sd-tooltip="Open metadata" data-flow="left">
                 <i class="icon-backward-thin"></i>
             </a>
             <div class="sd-photo-preview" ng-if="!nav || nav === 'view'">
@@ -133,7 +133,7 @@
                 <div class="sd-slide-in-panel__header">
                     <h3 class="sd-slide-in-panel__heading" ng-if="nav !== 'image-edit'" translate>Metadata</h3>
                     <h3 class="sd-slide-in-panel__heading" ng-if="nav === 'image-edit'" translate>Controls</h3>
-                    <a class="icn-btn sd-slide-in-panel__close" sd-tooltip="Close details" flow="top" ng-click="toggleMetadataPanel()"><i class="icon-close-small"></i></a>
+                    <a class="icn-btn sd-slide-in-panel__close" sd-tooltip="Close details" flow="top" ng-click="toggleShowMetadata()"><i class="icon-close-small"></i></a>
                 </div>
                 <div class="sd-slide-in-panel__content" ng-if="nav !== 'image-edit'">
                     <div class="sd-slide-in-panel__content-block sd-slide-in-panel__content-block--first">
