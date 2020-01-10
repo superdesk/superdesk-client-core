@@ -852,16 +852,18 @@ export function AuthoringDirective(
                 return coreApplyMiddleware(onChangeMiddleware, {item: $scope.item, original: $scope.origItem}, 'item')
                     .then(() => {
                         const onUpdateFromExtensions = Object.values(extensions).map(
-                            (extension) => extension.activationResult?.contributions?.authoring)
-                            .filter((updates) => updates != null);
+                            (extension) => extension.activationResult?.contributions?.authoring?.onUpdate,
+                        ).filter((updates) => updates != null);
 
                         const reducerFunc = (current, next) => current.then(
-                            (result) => next.onUpdate($scope.origItem._autosave ?? $scope.origItem, result));
+                            (result) => next($scope.origItem._autosave ?? $scope.origItem, result),
+                        );
 
                         (
                             onUpdateFromExtensions.length < 1
                                 ? Promise.resolve(item)
-                                : onUpdateFromExtensions.reduce(reducerFunc, Promise.resolve($scope.item))
+                                : onUpdateFromExtensions
+                                    .reduce(reducerFunc, Promise.resolve($scope.item))
                                     .then((nextItem) => angular.extend($scope.item, nextItem))
                         ).then(() => {
                             var autosavedItem = authoring.autosave($scope.item, $scope.origItem, timeout);
