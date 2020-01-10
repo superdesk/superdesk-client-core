@@ -73,7 +73,7 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, $q) {
     $scope.crops = {
         isDirty: false,
     };
-    $scope.toggleMetadataPanel = (value?) => {
+    $scope.toggleShowMetadata = (value?) => {
         $scope.showMetadata = value != null ? value : !$scope.showMetadata;
     };
 
