@@ -44,6 +44,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
         this.handleClick = this.handleClick.bind(this);
         this.handleUpload = this.handleUpload.bind(this);
         this.handleSave = this.handleSave.bind(this);
+        this.handleReset = this.handleReset.bind(this);
         this.getWrapperSize = this.getWrapperSize.bind(this);
     }
 
@@ -198,6 +199,15 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
         }
     }
 
+    handleReset() {
+        this.clearCanvas();
+        this.setState({
+            ...initialState,
+            scale: this.state.scale,
+        });
+
+    }
+
     setThumbnail(src: string) {
         const image = new Image();
 
@@ -336,13 +346,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
                                 <a
                                     className="image-overlay__button"
                                     sd-tooltip={gettext('Reset change')}
-                                    onClick={() => {
-                                        this.clearCanvas();
-                                        this.setState({
-                                            ...initialState,
-                                            scale: this.state.scale,
-                                        });
-                                    }}
+                                    onClick={this.handleReset}
                                 >
                                     <i className="icon-close-thick" />
                                 </a>
