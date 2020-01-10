@@ -11,8 +11,8 @@
     "typescript": "3.7.2"
   },
   "dependencies": {
-    "@types/react-image-crop": "^8.1.2",
-    "react-image-crop": "^8.4.0"
+    "@types/react-image-crop": "8.1.2",
+    "react-image-crop": "8.4.2"
   },
   "peerDependencies": {
     "react": "16.8.6"
