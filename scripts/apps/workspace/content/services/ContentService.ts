@@ -4,6 +4,7 @@ import {gettext} from 'core/utils';
 import {isMediaEditable} from 'core/config';
 import {IArticle} from 'superdesk-api';
 import {appConfig} from 'appConfig';
+import {dataApi} from 'core/helpers/CrudManager';
 
 /**
  * @ngdoc service
@@ -117,7 +118,8 @@ export function ContentService(api, templates, desks, packages, archiveService, 
         }
 
         archiveService.addTaskToArticle(item);
-        return save(item).then((_item) => {
+
+        return dataApi.create('archive', item).then((_item) => {
             templates.addRecentTemplate(desks.activeDeskId, template._id);
             return _item;
         });
