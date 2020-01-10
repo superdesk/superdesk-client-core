@@ -79,8 +79,6 @@ export function AuthoringTopbarDirective(
             scope.$watch('item', () => {
                 setActionsFromExtensions();
             }, true);
-
-            setActionsFromExtensions();
         },
     };
 }
