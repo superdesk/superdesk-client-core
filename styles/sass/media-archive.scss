@@ -490,7 +490,7 @@ $sfbox_mediaMaxWidth : 172px;
                 margin-top: 25px;
                 margin-left: -5px;
                 margin-right: -5px;
-                
+
                 &.padded {
                     margin-top: 45px !important;
                 }
@@ -502,12 +502,12 @@ $sfbox_mediaMaxWidth : 172px;
                 }
 
                 .social-info {
-                    position: absolute; 
+                    position: absolute;
                     bottom: 10px;
                     right: 0px;
                     margin-right: 20px;
                     span {
-                        padding-left: 10px; 
+                        padding-left: 10px;
                     }
                 }
             }
@@ -694,6 +694,9 @@ $rightfield-width:60px;
 
 .mlist-view, .compact-view {
     box-shadow: $block-shadow-depth-2;
+    &--no-shadow {
+        box-shadow: none;
+    }
     .list-item-view {
         width: 100%;
         //.box-shadow(0 1px 4px 0 rgba(0,0,0,20%));
@@ -719,6 +722,10 @@ $rightfield-width:60px;
         border-right: 2px solid #fff;
         padding-left: 40px;
         overflow: hidden;
+
+        &--no-padding {
+            padding: 0;
+        }
 
         &:hover {
             background-color: #f4f4f4 !important;
@@ -832,7 +839,6 @@ $rightfield-width:60px;
             }
         }
 
-        
         &.contacts {
             padding-left: 20px;
             .org-label {
@@ -871,7 +877,7 @@ $rightfield-width:60px;
                 padding: 0;
             }
         }
-        
+
 
         .item-info {
             padding: 10px 10px 10px 10px;
@@ -880,6 +886,9 @@ $rightfield-width:60px;
                 line-height: 18px;
                 position: relative;
                 margin-left: 38px;
+                &--no-margin {
+                    margin-left: 0;
+                }
                 display: flex;
                 box-sizing: border-box;
                 white-space: nowrap;

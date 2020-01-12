@@ -275,7 +275,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             notify.success(gettext('Item was unpublished successfully.'));
         };
 
-        if (item.state !== 'published') {
+        if (!isPublished(item)) {
             logger.warn('Trying to unpublish non published item');
             return;
         }

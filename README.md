@@ -102,6 +102,15 @@ You can configure what will be displayed in list views, there are 3 areas in lis
 
 - `singleLineView` - optional config to have thinner rows with elements in singleLine displayed.
 
+- `relatedItems` - configure the fields to be displayed on the related items field inside the authoring. Defaults are:
+    - `firstLine`:
+        - `slugline`
+        - `headline`
+        - `versioncreated`
+    - `secondLine`
+        - `state`
+        - `desk`
+
 ##### Profile
 
 You can disable certain content profile fields. Set value to `false` in order to disable it. Fields are:
