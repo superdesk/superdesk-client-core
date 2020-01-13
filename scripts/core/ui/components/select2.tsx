@@ -94,7 +94,7 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                 inputProps={{placeholder: this.props.placeholder}}
                 value={this.props.value}
                 items={Object.values(this.props.items)}
-                wrapperStyle={{}}
+                wrapperStyle={{width: '100%'}}
                 wrapperProps={{'data-test-id': this.props['data-test-id']} as any}
                 renderMenu={(items, value, style) => {
                     return (
@@ -103,8 +103,8 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                                 this.props.loading === true
                                     ? <div style={{padding: 10}}>{gettext('Loading...')}</div>
                                     : items.length < 1
-                                    ? <div style={{padding: 10}}>{gettext('No items found.')}</div>
-                                    : items
+                                        ? <div style={{padding: 10}}>{gettext('No items found.')}</div>
+                                        : items
                             }
                         </div>
                     );

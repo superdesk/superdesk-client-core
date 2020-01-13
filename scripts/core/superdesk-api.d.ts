@@ -11,10 +11,10 @@ declare module 'superdesk-api' {
 
     export type DeepReadonly<T> =
         T extends Function
-            ? T
-            : T extends Array<infer U>
-                ? DeepReadonlyArray<U>
-                : DeepReadonlyObject<T>;
+        ? T
+        : T extends Array<infer U>
+        ? DeepReadonlyArray<U>
+        : DeepReadonlyObject<T>;
 
     export type Omit<K, V> = Pick<K, Exclude<keyof K, V>>;
 
@@ -22,7 +22,7 @@ declare module 'superdesk-api' {
 
     // EXTENSIONS
 
-    export type onSpikeMiddlewareResult= {warnings?: Array<{text: string}>};
+    export type onSpikeMiddlewareResult = {warnings?: Array<{text: string}>};
 
     /**
      * float number 0 < x < 1. Larger the number, closer the component will be rendered to its side.
@@ -695,6 +695,8 @@ declare module 'superdesk-api' {
         onSelect(user: IUser): void;
         selectedUserId?: string;
         disabled?: boolean;
+        focus?: boolean;
+        expand?: boolean;
     }
 
 
@@ -706,7 +708,7 @@ declare module 'superdesk-api' {
     export interface IPropsDropdownTree<T> {
         groups: Array<IDropdownTreeGroup<T>>;
         getToggleElement(isOpen: boolean, onClick: () => void): JSX.Element;
-        renderItem(key: string, item: T, closeDropdown:() => void): JSX.Element;
+        renderItem(key: string, item: T, closeDropdown: () => void): JSX.Element;
         wrapperStyles?: React.CSSProperties;
         'data-test-id'?: string;
     }
@@ -908,7 +910,7 @@ declare module 'superdesk-api' {
                     readonly [key: string]: any;
                 },
                 formFieldConfig: any,
-                options: { showAsPlainText?: boolean } = {}
+                options: {showAsPlainText?: boolean} = {}
             ): JSX.Element;
         };
         localization: {
@@ -937,7 +939,7 @@ declare module 'superdesk-api' {
         };
         addWebsocketMessageListener<T extends string>(
             eventName: T,
-            handler:(event: T extends keyof IPublicWebsocketMessages
+            handler: (event: T extends keyof IPublicWebsocketMessages
                 ? CustomEvent<IPublicWebsocketMessages[T]>
                 : CustomEvent<IWebsocketMessage<any>>
             ) => void

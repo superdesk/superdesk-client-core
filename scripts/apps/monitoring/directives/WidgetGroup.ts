@@ -23,19 +23,19 @@ WidgetGroup.$inject = [
 export function WidgetGroup(search, api, superdesk, desks, cards, $timeout, $q,
     $location, $anchorScroll, activityService, $rootScope, datetime, metadata) {
     const services = {
-        search: search,
-        api: api,
-        superdesk: superdesk,
-        desks: desks,
-        cards: cards,
-        $timeout: $timeout,
-        $q: $q,
-        $location: $location,
         $anchorScroll: $anchorScroll,
-        activityService: activityService,
+        $location: $location,
+        $q: $q,
         $rootScope: $rootScope,
+        $timeout: $timeout,
+        activityService: activityService,
+        api: api,
+        cards: cards,
         datetime: datetime,
+        desks: desks,
         metadata: metadata,
+        search: search,
+        superdesk: superdesk,
     };
 
     return {
@@ -58,8 +58,8 @@ export function WidgetGroup(search, api, superdesk, desks, cards, $timeout, $q,
             scope.itemsById = {};
 
             /**
-              * Generates Identifier to be used by track by expression.
-              */
+             * Generates Identifier to be used by track by expression.
+             */
             scope.generateTrackByIdentifier = function(item) {
                 return search.generateTrackByIdentifier(item);
             };
@@ -288,7 +288,7 @@ export function WidgetGroup(search, api, superdesk, desks, cards, $timeout, $q,
                 }
 
                 if (container.scrollTop + container.offsetHeight >= container.scrollHeight - 3 &&
-                        lastScrollTop <= container.scrollTop) {
+                    lastScrollTop <= container.scrollTop) {
                     lastScrollTop = container.scrollTop;
                     return scope.fetchNext().then(() => {
                         setFetching();
@@ -413,23 +413,21 @@ export function WidgetGroup(search, api, superdesk, desks, cards, $timeout, $q,
                 });
             };
 
-            scope.getUpdateCallback = function(updateCallback) {
-                scope.updateList = updateCallback;
-            };
-
-            var itemList = React.createElement(WidgetItemListComponent,
-                {
+            scope.updateList = function(listProps) {
+                var itemList = React.createElement(WidgetItemListComponent, {
                     allowed: scope.allowed,
                     customMonitoringWidget: $rootScope.config.features.customMonitoringWidget,
                     svc: services,
                     preview: scope.preview,
                     select: scope.select,
                     edit: scope.edit,
-                    updateCallback: scope.getUpdateCallback,
-                },
-            );
+                    ...listProps,
+                });
 
-            ReactDOM.render(itemList, elem[0]);
+                ReactDOM.render(itemList, elem[0]);
+            };
+
+            scope.updateList({});
 
             // remove react elem on destroy
             scope.$on('$destroy', () => {
