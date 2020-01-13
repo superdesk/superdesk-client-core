@@ -12,7 +12,7 @@ import {IFunctionPointsService} from 'apps/extension-points/services/FunctionPoi
 import {isPublished} from 'apps/archive/utils';
 import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
 import {copyJson} from 'core/helpers/utils';
-import {appConfig} from 'appConfig';
+import {appConfig, extensions} from 'appConfig';
 
 /**
  * @ngdoc directive
@@ -848,13 +848,28 @@ export function AuthoringDirective(
                 angular.extend($scope.item, item); // make sure all changes are available
                 return coreApplyMiddleware(onChangeMiddleware, {item: $scope.item, original: $scope.origItem}, 'item')
                     .then(() => {
-                        var autosavedItem = authoring.autosave($scope.item, $scope.origItem, timeout);
+                        const onUpdateFromExtensions = Object.values(extensions).map(
+                            (extension) => extension.activationResult?.contributions?.authoring?.onUpdate,
+                        ).filter((updates) => updates != null);
 
-                        authoringWorkspace.addAutosave();
+                        const reducerFunc = (current, next) => current.then(
+                            (result) => next($scope.origItem._autosave ?? $scope.origItem, result),
+                        );
 
-                        initMedia();
-                        updateSchema();
-                        return autosavedItem;
+                        (
+                            onUpdateFromExtensions.length < 1
+                                ? Promise.resolve(item)
+                                : onUpdateFromExtensions
+                                    .reduce(reducerFunc, Promise.resolve($scope.item))
+                                    .then((nextItem) => angular.extend($scope.item, nextItem))
+                        ).then(() => {
+                            var autosavedItem = authoring.autosave($scope.item, $scope.origItem, timeout);
+
+                            authoringWorkspace.addAutosave();
+                            initMedia();
+                            updateSchema();
+                            return autosavedItem;
+                        });
                     });
             };
 
