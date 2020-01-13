@@ -76,6 +76,9 @@ declare module 'superdesk-api' {
             };
             iptcMapping?(data: IPTCMetadata, item: Partial<IArticle>): Promise<Partial<IArticle>>;
             searchPanelWidgets?: Array<React.ComponentType<ISearchPanelWidgetProps>>;
+            authoring?: {
+                onUpdate?(current: IArticle, next: IArticle): Promise<IArticle>;
+            };
         }
     }
 
@@ -842,6 +845,9 @@ declare module 'superdesk-api' {
 
                 isPersonal(article: IArticle): boolean;
                 patch(article: IArticle, patch: Partial<IArticle>): void;
+
+                isArchived(article: IArticle): boolean;
+                isPublished(article: IArticle): boolean;
             };
             contentProfile: {
                 get(id: string): Promise<IContentProfile>;

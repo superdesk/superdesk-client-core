@@ -3,7 +3,7 @@ import {manageMarkedUserForSingleArticle} from './managed-marked-user';
 
 export function getActionsInitialize(superdesk: ISuperdesk) {
     const {gettext} = superdesk.localization;
-    const {isPersonal, isLocked, isLockedByCurrentUser} = superdesk.entities.article;
+    const {isPersonal, isLocked, isLockedByCurrentUser, isArchived, isPublished} = superdesk.entities.article;
 
     return function getActions(articleNext: IArticle) {
         const locked = isLocked(articleNext);
@@ -83,7 +83,7 @@ export function getActionsInitialize(superdesk: ISuperdesk) {
         } else {
             const actions = [markForUser];
 
-            if (hasDesk && !locked) {
+            if (hasDesk && !locked && !isPublished(articleNext) && !isArchived(articleNext)) {
                 actions.push(markForUserAndSend);
             }
 

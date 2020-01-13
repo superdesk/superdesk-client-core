@@ -60,6 +60,8 @@ function getContentType(id): Promise<IContentProfile> {
 const getContentTypeMemoized = memoize(getContentType);
 let getContentTypeMemoizedLastCall: number = 0; // unix time
 
+const isPublished = (article) => article.item_id != null;
+
 // stores a map between custom callback & callback passed to DOM
 // so the original event listener can be removed later
 const customEventMap = new Map();
@@ -125,12 +127,10 @@ export function getSuperdeskApiImplementation(
                         (current, next) => current.then((result) => next(article._id, result)),
                         Promise.resolve(patch),
                     ).then((patchFinal) => {
-                        // distinction between handling published and non-published items
-                        // should be removed: SDESK-4687
-                        const isPublished = article.item_id != null;
-
                         return dataApi.patchRaw<IArticle>(
-                            (isPublished ? 'published' : 'archive'),
+                            // distinction between handling published and non-published items
+                            // should be removed: SDESK-4687
+                            (isPublished(article) ? 'published' : 'archive'),
                             article._id,
                             article._etag,
                             patchFinal,
@@ -141,6 +141,8 @@ export function getSuperdeskApiImplementation(
                         }
                     });
                 },
+                isArchived: (article) => article._type === 'archived',
+                isPublished: (article) => isPublished(article),
             },
             desk: {
                 getStagesOrdered: (deskId: string) =>

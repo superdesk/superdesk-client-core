@@ -8,18 +8,18 @@
         <form name="editForm">
             <div class="modal__body-header">
                 <ul class="nav-tabs">
-                    <li ng-class="{'nav-tabs__tab--active': !tab || tab === 'products'}" class="nav-tabs__tab">
-                        <button ng-click="tab = 'products'" class="nav-tabs__link"><span translate>Product Details</span>
+                    <li ng-class="{'nav-tabs__tab--active': modalTab === 'details'}" class="nav-tabs__tab">
+                        <button ng-click="modalTab = 'details'" class="nav-tabs__link"><span translate>Product Details</span>
                         </button>
                     </li>
                     <li ng-class="{'nav-tabs__tab--active': tab === 'subscribers'}" class="nav-tabs__tab">
-                        <button ng-click="tab = 'subscribers'" class="nav-tabs__link"><span translate>Subscribers</span>
+                        <button ng-click="modalTab = 'subscribers'" class="nav-tabs__link"><span translate>Subscribers</span>
                         </button>
-                    </li>               
+                    </li>
                 </ul>
             </div>
             <div class="modal__body-content">
-                <div ng-if="!tab || tab === 'products'" class="nav-tabs__pane">
+                <div ng-if="modalTab === 'details'" class="nav-tabs__pane">
                     <fieldset>
                         <div class="form__row" ng-if="product._id">
                             <div class="sd-line-input sd-line-input--boxed sd-line-input--disabled">
@@ -77,7 +77,7 @@
                         </div>
                     </fieldset>
                 </div>
-                <div ng-if="tab === 'subscribers'" class="nav-tabs__pane">
+                <div ng-if="modalTab === 'subscribers'" class="nav-tabs__pane">
                     <div class="sd-grid-list sd-grid-list--no-margin">
                         <div ng-repeat="subscriber in subscribers| orderBy:name" class="sd-card sd-card--auto-height" ng-if="subscriber.products.indexOf(product.edit._id) >= 0">
                             <span class="sd-card__content  sd-card__content--padd-10">{{::subscriber.name}}</span>
