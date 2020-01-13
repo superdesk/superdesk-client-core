@@ -7,6 +7,7 @@ import {workspace} from './helpers/workspace';
 import {authoring} from './helpers/authoring';
 import {dashboard} from './helpers/dashboard';
 import {desks} from './helpers/desks';
+import {el, s} from 'end-to-end-testing-helpers';
 
 describe('monitoring', () => {
     // Opens desk settings and configure monitoring settings for the named desk
@@ -787,6 +788,37 @@ describe('monitoring', () => {
         expect(previewPane.isPresent()).toBe(true);
         monitoring.actionOnItem('Edit', 3, 2);
         expect(previewPane.isPresent()).toBe(false);
+    });
+
+    fit('Can create items from templates', () => {
+        const slugline = 'slugline template';
+        const editorsNote = 'test editor\'s note for template';
+
+        monitoring.openMonitoring();
+        expect(browser.isElementPresent(element(s(['authoring'])))).toBe(false);
+        el(['content-create']).click();
+        el(['content-create-dropdown']).element(by.buttonText('Plain text')).click();
+
+        expect(browser.isElementPresent(element(s(['authoring'])))).toBe(true);
+        el(['authoring', 'field-slugline']).sendKeys(slugline);
+        el(['authoring', 'field-editors-note']).sendKeys(editorsNote);
+        browser.sleep(500); // input debouncing
+        el(['authoring', 'save']).click();
+
+        el(['authoring', 'actions-button']).click();
+        el(['authoring', 'actions-list']).element(by.buttonText('Save as template')).click();
+        el(['create-template-modal--save']).click();
+        el(['authoring', 'close']).click();
+        expect(browser.isElementPresent(element(s(['authoring'])))).toBe(false);
+
+        el(['content-create']).click();
+        el(['content-create-dropdown']).element(by.buttonText('More templates...')).click();
+        el(['templates-list']).element(by.buttonText(slugline)).click();
+
+        browser.sleep(500); // animation
+        expect(browser.isElementPresent(element(s(['authoring'])))).toBe(true);
+        expect(el(['authoring', 'field-slugline']).getAttribute('value')).toBe(slugline);
+        expect(el(['authoring', 'field-editors-note']).getAttribute('value')).toBe(editorsNote);
     });
 
     xit('can display embargo label when set for published item', () => {
