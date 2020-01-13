@@ -11,10 +11,10 @@ declare module 'superdesk-api' {
 
     export type DeepReadonly<T> =
         T extends Function
-        ? T
-        : T extends Array<infer U>
-        ? DeepReadonlyArray<U>
-        : DeepReadonlyObject<T>;
+            ? T
+            : T extends Array<infer U>
+                ? DeepReadonlyArray<U>
+                : DeepReadonlyObject<T>;
 
     export type Omit<K, V> = Pick<K, Exclude<keyof K, V>>;
 
@@ -696,7 +696,6 @@ declare module 'superdesk-api' {
         selectedUserId?: string;
         disabled?: boolean;
         focus?: boolean;
-        expand?: boolean;
     }
 
 
