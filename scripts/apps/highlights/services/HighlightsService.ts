@@ -115,7 +115,7 @@ export function HighlightsService(api, $q, $cacheFactory, packages, privileges) 
             pkgDefaults.task = highlight.task;
         }
 
-        return packages.createEmptyPackage(pkgDefaults, group);
+        return packages.createEmptyPackage(pkgDefaults, false, group);
     };
 
     /**

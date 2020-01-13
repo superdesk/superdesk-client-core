@@ -46,13 +46,13 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
         return api.save('archive', newPackage);
     };
 
-    this.createEmptyPackage = function(defaults, idRef = 'main') {
+    this.createEmptyPackage = function(defaults, initializeAsUpdated: boolean, idRef = 'main') {
         var newPackage: any = {
             headline: '',
             slugline: '',
             description_text: '',
             type: 'composite',
-            version: 0,
+            version: initializeAsUpdated ? 1 : 0,
             groups: [
                 {
                     role: 'grpRole:NEP',

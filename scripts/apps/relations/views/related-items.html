@@ -5,7 +5,12 @@
             <i class="icon-plus-sign icon--blue"></i><span translate>Create new</span>
         </button>
 
-        <div class="dropdown__menu dropdown__menu--has-head-foot pull-right" sd-content-create on-created="onCreated"></div>
+        <div
+            sd-content-create
+            on-created="onCreated"
+            initialize-as-updated="true"
+            class="dropdown__menu dropdown__menu--has-head-foot pull-right"
+        ></div>
     </div>
 </div>
 

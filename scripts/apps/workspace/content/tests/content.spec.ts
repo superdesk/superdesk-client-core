@@ -1,7 +1,3 @@
-
-import {waitUntil} from 'core/helpers/waitUtil';
-import {appConfig} from 'appConfig';
-
 describe('superdesk.apps.workspace.content', () => {
     beforeEach(window.module('superdesk.mocks'));
     beforeEach(window.module('superdesk.apps.desks'));
@@ -22,7 +18,7 @@ describe('superdesk.apps.workspace.content', () => {
         }));
 
         it('can create plain text items', inject((api, content, $rootScope) => {
-            content.createItem().then(done);
+            content.createItem('text').then(done);
             $rootScope.$digest();
             expect(api.save).toHaveBeenCalledWith('archive', {type: 'text', version: 0});
             expect(done).toHaveBeenCalledWith(ITEM);
@@ -82,7 +78,7 @@ describe('superdesk.apps.workspace.content', () => {
                     body_html: 'test_body_html',
                     irrelevantData: 'yes',
                 },
-            }).then(done);
+            }, false).then(done);
 
             $rootScope.$digest();
             expect(done).toHaveBeenCalledWith(ITEM);

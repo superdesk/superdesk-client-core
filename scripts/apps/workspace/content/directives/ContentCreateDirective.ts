@@ -30,6 +30,12 @@ interface IScope extends ng.IScope {
     canCreatePackage: () => boolean;
     createPackage: () => void;
     contentTemplates: any;
+
+    // If an item is created, but closed without changes, it gets removed
+    // it doesn't work well when creating item and adding as related immediately
+    // user might want to go back and update the item later.
+    // To avoid the item getting removed it is initialized with a higher version
+    initializeAsUpdated: boolean;
 }
 
 export function ContentCreateDirective(
@@ -45,6 +51,7 @@ export function ContentCreateDirective(
     return {
         scope: {
             onCreated: '=',
+            initializeAsUpdated: '=',
         },
         templateUrl: 'scripts/apps/workspace/content/views/sd-content-create.html',
         link: function(scope: IScope) {
@@ -59,16 +66,16 @@ export function ContentCreateDirective(
             scope.create = function(action: IItemCreationAction) {
                 return (() => {
                     if (action.kind === 'plain-text') {
-                        return content.createItem();
+                        return content.createItem('text', scope.initializeAsUpdated);
                     } else if (action.kind === 'from-template') {
-                        return content.createItemFromTemplate(action.template)
+                        return content.createItemFromTemplate(action.template, scope.initializeAsUpdated)
                             .then((item: IArticle) => {
                                 getRecentTemplates(desks.activeDeskId);
 
                                 return item;
                             });
                     } else if (action.kind === 'create-package') {
-                        return packages.createEmptyPackage();
+                        return packages.createEmptyPackage(undefined, scope.initializeAsUpdated);
                     } else if (action.kind === 'upload-media') {
                         return superdesk.intent('upload', 'media', {deskSelectionAllowed: true});
                     } else {
