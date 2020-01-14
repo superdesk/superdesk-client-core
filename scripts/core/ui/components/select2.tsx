@@ -50,7 +50,7 @@ const menuStyleDefault: React.CSSProperties = {
 
 const menuStyle = {
     ...menuStyleDefault,
-    zIndex: 1, // without z-index, items that have opacity set, appear on top of the menu
+    zIndex: 3, // without z-index, items that have opacity set, appear on top of the menu
 };
 
 export class Select2<T> extends React.Component<IProps<T>, IState> {

@@ -1,11 +1,10 @@
-import ng from 'core/services/ng';
-import {getSelectSingleValue} from './select_single_value';
-import {IRestApiResponse, IDesk} from 'superdesk-api';
+import {IDesk} from 'superdesk-api';
+import {getSelectSingleValueAutoComplete} from './select_single_value_autocomplete';
+import {gettext} from 'core/utils';
 
-export const DeskSingleValue = getSelectSingleValue(
-    () =>
-        ng.getService('api')
-            .then((api) => api('desks').query({max_results: 200}))
-            .then((contentFilters: IRestApiResponse<IDesk>) =>
-                contentFilters._items.map(({_id, name}) => ({id: _id, label: name}))),
+export const DeskSingleValue = getSelectSingleValueAutoComplete(
+    'desks',
+    {field: 'name', direction: 'ascending'},
+    gettext('Select a desk'),
+    (item: IDesk) => item.name,
 );
