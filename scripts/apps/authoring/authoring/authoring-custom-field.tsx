@@ -24,7 +24,7 @@ function getValue(props: IProps) {
 }
 
 export class AuthoringCustomField extends React.PureComponent<IProps, IState> {
-    onChangeThrottled: ((field: IVocabulary, value: any) => void) & Cancelable;
+    onChangeThrottled: ((field: IArticleField, value: any) => void) & Cancelable;
 
     // IProps['item'] is mutated when updating so prevProps from `componentDidUpdate`
     // can't be used to compare the previous value. This property is used instead.
@@ -39,7 +39,7 @@ export class AuthoringCustomField extends React.PureComponent<IProps, IState> {
 
         this.lastPropsValue = this.state.value;
 
-        this.onChangeThrottled = throttle((field: IVocabulary, value: any) => {
+        this.onChangeThrottled = throttle((field: IArticleField, value: any) => {
             this.props.onChange(field, value);
         }, 300, {leading: false});
 

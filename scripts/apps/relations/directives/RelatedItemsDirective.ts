@@ -1,16 +1,14 @@
-import {get} from 'lodash';
 import {getSuperdeskType} from 'core/utils';
 import {gettext} from 'core/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
-import {IArticle} from 'superdesk-api';
-import {IVocabulary} from 'superdesk-interfaces/Vocabulary';
+import {IArticle, IArticleField} from 'superdesk-api';
 import {IDirectiveScope} from 'types/Angular/DirectiveScope';
 
 const ARCHIVE_TYPES = ['archive', 'published'];
 const isInArchive = (item: IArticle) => item._type != null && ARCHIVE_TYPES.includes(item._type);
 
 interface IScope extends IDirectiveScope<void> {
-    field: IVocabulary;
+    field: IArticleField;
     editable: boolean;
     item: IArticle;
     loading: boolean;
