@@ -70,6 +70,7 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
     */
     private lastButtonHeight: number;
     private search: (search: string) => void;
+    private wrapper: HTMLDivElement;
 
     constructor(props: IProps<T>) {
         super(props);
@@ -86,112 +87,128 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
         this.search = throttle(searchFn, 300, {leading: false});
     }
 
+    componentDidMount() {
+        // capture all scroll events and close autocomplete on scroll
+        // unless that scroll event is coming from the autocomplete itself
+        window.addEventListener('scroll', (e) => {
+            const {target} = e;
+
+            if (this.state.isOpen === true && target instanceof Node && !this.wrapper.contains(target)) {
+                this.setState({isOpen: false});
+            }
+        }, true);
+    }
+
     render() {
         return (
-            <Autocomplete.default
-                open={this.state.isOpen}
-                onMenuVisibilityChange={(isOpen) => this.setState({isOpen})}
-                inputProps={{placeholder: this.props.placeholder}}
-                value={this.props.value}
-                items={Object.values(this.props.items)}
-                wrapperStyle={{}}
-                wrapperProps={{'data-test-id': this.props['data-test-id']} as any}
-                renderMenu={(items, value, style) => {
-                    return (
-                        <div style={{...style, ...menuStyle}}>
-                            {
-                                this.props.loading === true
-                                    ? <div style={{padding: 10}}>{gettext('Loading...')}</div>
-                                    : items.length < 1
-                                    ? <div style={{padding: 10}}>{gettext('No items found.')}</div>
-                                    : items
-                            }
-                        </div>
-                    );
-                }}
-                renderInput={(propsAutocomplete: any) => {
-                    const selectedItem = this.props.items[this.props.value];
-
-                    if (propsAutocomplete['aria-expanded'] === true) {
+            <div ref={(el) => {
+                this.wrapper = el;
+            }}>
+                <Autocomplete.default
+                    open={this.state.isOpen}
+                    onMenuVisibilityChange={(isOpen) => this.setState({isOpen})}
+                    inputProps={{placeholder: this.props.placeholder}}
+                    value={this.props.value}
+                    items={Object.values(this.props.items)}
+                    wrapperStyle={{}}
+                    wrapperProps={{'data-test-id': this.props['data-test-id']} as any}
+                    renderMenu={(items, value, style) => {
                         return (
-                            <input
-                                {...propsAutocomplete}
-                                onChange={(event) => {
-                                    const value = event.target.value;
-
-                                    this.setState({search: value});
-                                    this.search(value);
-                                }}
-                                value={this.state.search}
-                                style={{height: this.lastButtonHeight + 'px'}}
-                                placeholder={'Search'}
-                                autoFocus
-                                data-test-id="filter-input"
-                            />
-                        );
-                    }
-
-                    const baseButtonStyle = {paddingBottom: 6};
-
-                    return (
-                        <button
-                            {...propsAutocomplete}
-                            type="button"
-                            className="sd-line-input__select-custom"
-                            disabled={this.props.disabled}
-                            onClick={() => this.setState({isOpen: !this.state.isOpen})}
-                            ref={(element) => {
-                                if (element != null) {
-                                    this.lastButtonHeight = element.offsetHeight;
-
-                                    // react-autocomplete expects ref to be an input
-                                    // but input doesn't support rendering custom children
-                                    // so we use a button instead and add a fake method to prevent errors
-                                    // Also, we need to manage the open/close logic on our own
-                                    element['setSelectionRange'] = noop;
+                            <div style={{...style, ...menuStyle}}>
+                                {
+                                    this.props.loading === true
+                                        ? <div style={{padding: 10}}>{gettext('Loading...')}</div>
+                                        : items.length < 1
+                                        ? <div style={{padding: 10}}>{gettext('No items found.')}</div>
+                                        : items
                                 }
+                            </div>
+                        );
+                    }}
+                    renderInput={(propsAutocomplete: any) => {
+                        const selectedItem = this.props.items[this.props.value];
 
-                                const ref: any = propsAutocomplete.ref;
+                        if (propsAutocomplete['aria-expanded'] === true) {
+                            return (
+                                <input
+                                    {...propsAutocomplete}
+                                    onChange={(event) => {
+                                        const value = event.target.value;
 
-                                ref(element);
-                            }}
-                            style={this.props.disabled ? {...baseButtonStyle, opacity: 0.6} : baseButtonStyle}
-                            data-test-id="dropdown-button"
-                        >
-                            {
-                                this.props.value === undefined || selectedItem == null
-                                    ? this.props.placeholder
-                                    : this.props.renderItem(selectedItem)
-                            }
-                            <div style={arrowDownStyles} />
-                        </button>
-                    );
-                }}
-                getItemValue={this.props.getItemValue}
-                onSelect={this.props.onSelect}
-                renderItem={(item: T, isHighlighted) => {
-                    const commonStyles: React.CSSProperties = {
-                        display: 'block',
-                        width: '100%',
-                        textAlign: 'left',
-                        padding: 0,
-                        background: 'white',
-                    };
-                    const style: React.CSSProperties = isHighlighted
-                        ? {...commonStyles, cursor: 'pointer', background: '#eff7fa'}
-                        : commonStyles;
+                                        this.setState({search: value});
+                                        this.search(value);
+                                    }}
+                                    value={this.state.search}
+                                    style={{height: this.lastButtonHeight + 'px'}}
+                                    placeholder={'Search'}
+                                    autoFocus
+                                    data-test-id="filter-input"
+                                />
+                            );
+                        }
 
-                    return (
-                        <button
-                            key={this.props.getItemValue(item)}
-                            style={style}
-                            data-test-id="option"
-                        >
-                            {this.props.renderItem(item)}
-                        </button>
-                    );
-                }}
-            />
+                        const baseButtonStyle = {paddingBottom: 6};
+
+                        return (
+                            <button
+                                {...propsAutocomplete}
+                                type="button"
+                                className="sd-line-input__select-custom"
+                                disabled={this.props.disabled}
+                                onClick={() => this.setState({isOpen: !this.state.isOpen})}
+                                ref={(element) => {
+                                    if (element != null) {
+                                        this.lastButtonHeight = element.offsetHeight;
+
+                                        // react-autocomplete expects ref to be an input
+                                        // but input doesn't support rendering custom children
+                                        // so we use a button instead and add a fake method to prevent errors
+                                        // Also, we need to manage the open/close logic on our own
+                                        element['setSelectionRange'] = noop;
+                                    }
+
+                                    const ref: any = propsAutocomplete.ref;
+
+                                    ref(element);
+                                }}
+                                style={this.props.disabled ? {...baseButtonStyle, opacity: 0.6} : baseButtonStyle}
+                                data-test-id="dropdown-button"
+                            >
+                                {
+                                    this.props.value === undefined || selectedItem == null
+                                        ? this.props.placeholder
+                                        : this.props.renderItem(selectedItem)
+                                }
+                                <div style={arrowDownStyles} />
+                            </button>
+                        );
+                    }}
+                    getItemValue={this.props.getItemValue}
+                    onSelect={this.props.onSelect}
+                    renderItem={(item: T, isHighlighted) => {
+                        const commonStyles: React.CSSProperties = {
+                            display: 'block',
+                            width: '100%',
+                            textAlign: 'left',
+                            padding: 0,
+                            background: 'white',
+                        };
+                        const style: React.CSSProperties = isHighlighted
+                            ? {...commonStyles, cursor: 'pointer', background: '#eff7fa'}
+                            : commonStyles;
+
+                        return (
+                            <button
+                                key={this.props.getItemValue(item)}
+                                style={style}
+                                data-test-id="option"
+                            >
+                                {this.props.renderItem(item)}
+                            </button>
+                        );
+                    }}
+                />
+            </div>
         );
     }
 }
