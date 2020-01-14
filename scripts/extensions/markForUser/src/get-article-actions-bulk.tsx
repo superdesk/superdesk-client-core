@@ -41,10 +41,12 @@ export function getActionsBulkInitialize(superdesk: ISuperdesk) {
                     superdesk,
                     (selectedUserId) => {
                         articles.forEach((article) => {
-                            superdesk.entities.article.update({
-                                ...article,
-                                marked_for_user: selectedUserId,
-                            });
+                            superdesk.entities.article.patch(
+                                article,
+                                {
+                                    marked_for_user: selectedUserId,
+                                },
+                            );
                         });
                     },
                     false,
