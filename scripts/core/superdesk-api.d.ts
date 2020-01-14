@@ -59,7 +59,6 @@ declare module 'superdesk-api' {
             authoringTopbarWidgets?: Array<React.ComponentType<{article: IArticle}>>;
             pages?: Array<IPage>;
             customFieldTypes?: Array<ICustomFieldType>;
-            authoringActions?(article: IArticle): Promise<Array<IArticleAction>>;
             notifications?: {
                 [id: string]: (notification) => {
                     body: string;
@@ -70,8 +69,7 @@ declare module 'superdesk-api' {
                 article?: {
                     getActions?(article: IArticle): Promise<Array<IArticleAction>>;
                     getActionsBulk?(articles: Array<IArticle>): Promise<Array<IArticleActionBulk>>;
-                    onUpdateBefore?(article: IArticle): Promise<IArticle>; // can alter item(immutably), can cancel update
-                    onUpdateAfter?(article: IArticle): void; // can't alter item, can't cancel
+                    onPatchBefore?(id: IArticle['_id'], patch: Partial<IArticle>): Promise<Partial<IArticle>>; // can alter patch(immutably), can cancel patching
                     onSpike?(item: IArticle): Promise<onSpikeMiddlewareResult>;
                     onSpikeMultiple?(items: Array<IArticle>): Promise<onSpikeMiddlewareResult>;
                 };
@@ -336,6 +334,8 @@ declare module 'superdesk-api' {
 
         // remove when SDESK-4343 is done.
         selected?: any;
+
+        es_highlight?: any;
 
         // other fields which don't exist in the database, don't belong to this entity and should be removed
         error?: any;
@@ -777,6 +777,7 @@ declare module 'superdesk-api' {
             formatFiltersForServer?: (filters: ICrudManagerFilters) => ICrudManagerFilters,
         ): Promise<IRestApiResponse<T>>;
         patch<T extends IBaseRestApiResponse>(endpoint, current: T, next: T): Promise<T>;
+        patchRaw<T extends IBaseRestApiResponse>(endpoint, id: T['_id'], etag: T['_etag'], patch: Partial<T>): Promise<T>;
         delete<T extends IBaseRestApiResponse>(endpoint, item: T): Promise<void>;
     }
 
@@ -843,10 +844,10 @@ declare module 'superdesk-api' {
                 isLockedByCurrentUser(article: IArticle): boolean;
 
                 isPersonal(article: IArticle): boolean;
+                patch(article: IArticle, patch: Partial<IArticle>): void;
 
                 isArchived(article: IArticle): boolean;
                 isPublished(article: IArticle): boolean;
-                update(nextArticle: IArticle): void;
             };
             contentProfile: {
                 get(id: string): Promise<IContentProfile>;

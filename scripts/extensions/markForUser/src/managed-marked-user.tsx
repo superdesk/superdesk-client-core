@@ -30,11 +30,13 @@ export function manageMarkedUserForSingleArticle(superdesk: ISuperdesk, article:
         superdesk,
         (selectedUserId) => {
             getTask().then((task) => {
-                superdesk.entities.article.update({
-                    ...article,
-                    marked_for_user: selectedUserId,
-                    task,
-                });
+                superdesk.entities.article.patch(
+                    article,
+                    {
+                        marked_for_user: selectedUserId,
+                        task,
+                    },
+                );
             });
         },
         superdesk.entities.article.isLocked(article) && article._id !== superdesk.state.articleInEditMode,

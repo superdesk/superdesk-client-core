@@ -51,15 +51,18 @@ export class AuthoringTopbarReact extends React.PureComponent<IProps, IState> {
                 contributions: {
                     entities: {
                         article: {
-                            onUpdateBefore: (article) => {
-                                if (this.props.article._id === article._id) {
-                                    this.props.onChange(article);
+                            onPatchBefore: (id, patch) => {
+                                if (this.props.article._id === id) {
+                                    this.props.onChange({
+                                        ...this.props.article,
+                                        ...patch,
+                                    });
                                     console.info('Article is locked and can\'t be updated via HTTP directly.'
                                     + 'The updates will be added to existing diff in article-edit view instead.');
 
                                     return Promise.reject();
                                 } else {
-                                    return Promise.resolve(article);
+                                    return Promise.resolve(patch);
                                 }
                             },
                         },
