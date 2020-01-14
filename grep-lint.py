@@ -18,16 +18,16 @@ rules_to_check = [
     #     'perl_regex': '\|\s*?translate',
     #     'tolerance': True
     # },
-    {
-        'name': 'Do not use angularjs for views anymore. Use React components and use `reactToAngular1` if you need to use React components inside existing angular templates.',
+    # {
+    #     'name': 'Do not use angularjs for views anymore. Use React components and use `reactToAngular1` if you need to use React components inside existing angular templates.',
 
-        # must match:
-        # template: 'test.html'
-        # must not match:
-        # template: 'test', a: '.html'
-        'perl_regex': 'template\s*?:\s*[\'|"|`].+?\.html[\'|"|`]',
-        'tolerance': True
-    },
+    #     # must match:
+    #     # template: 'test.html'
+    #     # must not match:
+    #     # template: 'test', a: '.html'
+    #     'perl_regex': 'template\s*?:\s*[\'|"|`].+?\.html[\'|"|`]',
+    #     'tolerance': True
+    # },
     {
         'name': 'Do not use angularjs for views anymore. Use React components and use `reactToAngular1` if you need to use React components inside existing angular templates.',
 
