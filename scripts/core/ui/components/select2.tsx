@@ -22,6 +22,7 @@ interface IProps<T> {
 interface IState {
     search: string;
     isOpen: boolean;
+    maxHeight: number;
 }
 
 const arrowDownStyles = {
@@ -45,7 +46,6 @@ const menuStyleDefault: React.CSSProperties = {
     fontSize: '90%',
     position: 'fixed',
     overflow: 'auto',
-    maxHeight: '50%',
 };
 
 const menuStyle = {
@@ -78,6 +78,7 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
         this.state = {
             search: '',
             isOpen: this.props.onFocus === true,
+            maxHeight: 200,
         };
 
         const searchFn = (search: string) => {
@@ -106,7 +107,16 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
             }}>
                 <Autocomplete.default
                     open={this.state.isOpen}
-                    onMenuVisibilityChange={(isOpen) => this.setState({isOpen})}
+                    onMenuVisibilityChange={(isOpen) => {
+                        // wait for wrapper ref
+                        setTimeout(() => {
+                            const remainingAtTheBottom =
+                                window.innerHeight - this.wrapper.getBoundingClientRect().bottom - 20;
+                            const oneThirdViewportHeigh = window.innerHeight / 3;
+
+                            this.setState({isOpen, maxHeight: Math.min(remainingAtTheBottom, oneThirdViewportHeigh)});
+                        });
+                    }}
                     inputProps={{placeholder: this.props.placeholder}}
                     value={this.props.value}
                     items={Object.values(this.props.items)}
@@ -114,7 +124,7 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                     wrapperProps={{'data-test-id': this.props['data-test-id']} as any}
                     renderMenu={(items, value, style) => {
                         return (
-                            <div style={{...style, ...menuStyle}}>
+                            <div style={{...style, ...menuStyle, maxHeight: this.state.maxHeight}}>
                                 {
                                     this.props.loading === true
                                         ? <div style={{padding: 10}}>{gettext('Loading...')}</div>
