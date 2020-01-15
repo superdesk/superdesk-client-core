@@ -9,6 +9,7 @@ type IProps = IInputType<string>;
 
 interface IState {
     items: ISelectSingleValueItems;
+    loading: boolean;
 }
 
 export function getSelectSingleValue(
@@ -26,6 +27,7 @@ export function getSelectSingleValue(
 
             this.state = {
                 items: null,
+                loading: false,
             };
 
             this.initialValue = props.value;
@@ -37,10 +39,12 @@ export function getSelectSingleValue(
             this.fetchData = this.fetchData.bind(this);
         }
         fetchData() {
+            this.setState({loading: true});
+
             getItems(this.props)
                 .then((items) => {
                     if (this._mounted) {
-                        this.setState({items});
+                        this.setState({items, loading: false});
                     }
                 });
         }
@@ -61,14 +65,14 @@ export function getSelectSingleValue(
             }
         }
         render() {
-            if (this.props.previewOutput) {
-                if (this.state.items == null) {
-                    return null; // loading
-                } else {
-                    let item = this.state.items.find(({id}) => id === this.props.value);
+            if (this.state.loading) {
+                return null;
+            }
 
-                    return item == null ? <div>{this.props.value}</div> : <div>{item.label}</div>;
-                }
+            if (this.props.previewOutput) {
+                let item = this.state.items.find(({id}) => id === this.props.value);
+
+                return item == null ? <div>{this.props.value}</div> : <div>{item.label}</div>;
             }
 
             const getFirstItemMessage = () => {
