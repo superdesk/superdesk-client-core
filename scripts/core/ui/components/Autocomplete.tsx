@@ -1,14 +1,12 @@
 import React from 'react';
 import {Select2} from './select2';
 import {keyBy} from 'lodash';
-import {dataApi} from 'core/helpers/CrudManager';
 import {ListItem, ListItemColumn, ListItemRow} from 'core/components/ListItem';
-import {IBaseRestApiResponse} from 'superdesk-api';
+import {IBaseRestApiResponse, IRestApiResponse} from 'superdesk-api';
 
 interface IProps<T extends IBaseRestApiResponse> {
-    endpoint: string;
     placeholder: string;
-    sort: {field: string; direction: 'ascending' | 'descending'};
+    query(searchString): Promise<IRestApiResponse<T>>;
     getLabel(item: T): string;
     onSelect(item: T): void;
     selected?: string;
@@ -37,28 +35,7 @@ export class AutoComplete<T extends IBaseRestApiResponse> extends React.Componen
         const searchString = _searchString.trim();
 
         this.setState({loading: true, fetchedItems: null});
-
-        dataApi.query<T>(
-            this.props.endpoint,
-            1,
-            {field: this.props.sort.field, direction: this.props.sort.direction},
-            (
-                searchString.length > 0
-                    ? {
-                        $or: [
-                            {
-                                [this.props.sort.field]: {
-                                    $regex: searchString,
-                                    $options: '-i',
-                                },
-                            },
-                        ],
-                    }
-                    : {}
-            ),
-            50,
-        )
-            .then((res) => {
+            this.props.query(searchString).then((res) => {
                 if (this._mounted) {
                     this.setState({
                         fetchedItems: res._items,

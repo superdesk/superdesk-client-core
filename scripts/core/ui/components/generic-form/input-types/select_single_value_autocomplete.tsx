@@ -2,12 +2,12 @@ import React from 'react';
 import classNames from 'classnames';
 import {IInputType} from '../interfaces/input-types';
 import {AutoComplete} from '../../Autocomplete';
+import {IRestApiResponse} from 'superdesk-api';
 
 type IProps = IInputType<string>;
 
 export function getSelectSingleValueAutoComplete(
-    endpoint: string,
-    sort: {field: string; direction: 'ascending' | 'descending'},
+    query: (searchString: string) => Promise<IRestApiResponse<any>>,
     placeholder: string,
     getLabel: (item) => string,
     getDependentFields?: (props: IProps) => Array<string>,
@@ -50,9 +50,8 @@ export function getSelectSingleValueAutoComplete(
                 }>
                     <label className="sd-line-input__label">{this.props.formField.label}</label>
                     <AutoComplete
-                        endpoint={endpoint}
+                        query={query}
                         placeholder={placeholder}
-                        sort={sort}
                         getLabel={(item) => getLabel(item)}
                         onSelect={(item) => {
                             if (item == null) {
