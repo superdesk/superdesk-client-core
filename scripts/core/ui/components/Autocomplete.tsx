@@ -12,6 +12,7 @@ interface IProps<T extends IBaseRestApiResponse> {
     selected?: string;
     disabled?: boolean;
     onFocus?: boolean;
+    'data-test-id'?: string;
 }
 
 interface IState<T> {
@@ -85,6 +86,7 @@ export class AutoComplete<T extends IBaseRestApiResponse> extends React.Componen
                     this.queryItems(search);
                 }}
                 loading={this.state.loading}
+                data-test-id={this.props['data-test-id']}
             />
         );
     }
