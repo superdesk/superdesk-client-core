@@ -25,6 +25,7 @@ export const ContentFilterSingleValue = getSelectSingleValueAutoComplete(
             50,
         );
     },
+    (id) => dataApi.findOne<IContentFilter>('content_filters', id),
     () => '',
     (item: IContentFilter) => item.name,
 );

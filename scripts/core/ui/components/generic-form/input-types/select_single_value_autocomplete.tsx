@@ -6,13 +6,18 @@ import {IRestApiResponse} from 'superdesk-api';
 
 type IProps = IInputType<string>;
 
+interface IState {
+    item?: any;
+}
+
 export function getSelectSingleValueAutoComplete(
     query: (searchString: string, props: IProps) => Promise<IRestApiResponse<any>>,
+    queryById: (id: string) => Promise<any>,
     getPlaceholder: (props: IProps) => string,
     getLabel: (item) => string,
     getDependentFields?: (props: IProps) => Array<string>,
 ) {
-    return class SelectSingleValueAutoComplete extends React.Component<IProps> {
+    return class SelectSingleValueAutoComplete extends React.Component<IProps, IState> {
         dependentFields: Array<string>;
         initialValue: string | undefined;
         updateCount: number;
@@ -20,9 +25,7 @@ export function getSelectSingleValueAutoComplete(
         constructor(props: IProps) {
             super(props);
 
-            this.state = {
-                items: null,
-            };
+            this.state = {};
 
             this.initialValue = props.value;
             this.updateCount = 0;
@@ -40,7 +43,24 @@ export function getSelectSingleValueAutoComplete(
                 this.updateCount++;
             }
         }
+        componentDidMount() {
+            if (this.props.previewOutput && this.props.value != null) {
+                queryById(this.props.value).then((item) => {
+                    this.setState({item});
+                });
+            }
+        }
         render() {
+            if (this.props.previewOutput && this.props.value != null) {
+                if (this.state.item == null) { // loading
+                    return null;
+                } else {
+                    return (
+                        <div>{getLabel(this.state.item)}</div>
+                    );
+                }
+            }
+
             return (
                 <div className={
                     classNames(

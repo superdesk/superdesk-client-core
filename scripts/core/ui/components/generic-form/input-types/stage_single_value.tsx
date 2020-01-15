@@ -34,6 +34,7 @@ export const StageSingleValue = getSelectSingleValueAutoComplete(
             );
         }
     },
+    (id) => dataApi.findOne<IStage>('stages', id),
     (props) => {
         const deskId = props.formValues[props.formField.component_parameters['deskField']];
 

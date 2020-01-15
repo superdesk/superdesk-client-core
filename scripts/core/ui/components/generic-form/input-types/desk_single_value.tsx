@@ -24,6 +24,7 @@ export const DeskSingleValue = getSelectSingleValueAutoComplete(
         ),
         50,
     ),
+    (id) => dataApi.findOne<IDesk>('desks', id),
     () => gettext('Select a desk'),
     (item: IDesk) => item.name,
 );
