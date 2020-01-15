@@ -12,7 +12,7 @@ export function getSelectSingleValueAutoComplete(
     getLabel: (item) => string,
     getDependentFields?: (props: IProps) => Array<string>,
 ) {
-    return class SelectSingleValue extends React.Component<IProps> {
+    return class SelectSingleValueAutoComplete extends React.Component<IProps> {
         dependentFields: Array<string>;
         initialValue: string | undefined;
 

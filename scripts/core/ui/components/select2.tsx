@@ -8,7 +8,7 @@ import {gettext} from 'core/utils';
 interface IProps<T> {
     items: {[key: string]: T};
     value?: string;
-    placeholder?: string;
+    placeholder?: JSX.Element;
     disabled?: boolean;
     required?: boolean;
     loading?: boolean;
@@ -118,7 +118,6 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                             this.setState({isOpen, maxHeight: Math.min(remainingAtTheBottom, oneThirdViewportHeigh)});
                         });
                     }}
-                    inputProps={{placeholder: this.props.placeholder}}
                     value={this.props.value}
                     items={Object.values(this.props.items)}
                     wrapperStyle={{}}
@@ -190,7 +189,11 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                                     >
                                         {
                                             this.props.value === undefined || selectedItem == null
-                                                ? this.props.placeholder
+                                                ? (
+                                                    <div style={{marginLeft: -8}}>
+                                                        {this.props.placeholder}
+                                                    </div>
+                                                )
                                                 : (
                                                     <div style={{marginLeft: -8}}>
                                                         {this.props.renderItem(selectedItem)}

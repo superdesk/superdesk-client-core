@@ -74,7 +74,13 @@ export class SelectUser extends React.Component<IPropsSelectUser, IState> {
             <Select2
                 onFocus={true}
                 disabled={this.props.disabled}
-                placeholder={gettext('Select a user')}
+                placeholder={
+                    <ListItem fullWidth noBackground noShadow>
+                        <ListItemColumn ellipsisAndGrow>
+                            <ListItemRow>{gettext('Select a user')}</ListItemRow>
+                        </ListItemColumn>
+                    </ListItem>
+                }
                 value={this.props.selectedUserId == null ? undefined : this.props.selectedUserId}
                 items={keyedUsers}
                 getItemValue={(user) => user._id}
