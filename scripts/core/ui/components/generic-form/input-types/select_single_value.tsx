@@ -19,6 +19,7 @@ export function getSelectSingleValue(
     return class SelectSingleValue extends React.Component<IProps, IState> {
         dependentFields: Array<string>;
         initialValue: string | undefined;
+        private _mounted: boolean;
 
         constructor(props: IProps) {
             super(props);
@@ -38,11 +39,18 @@ export function getSelectSingleValue(
         fetchData() {
             getItems(this.props)
                 .then((items) => {
-                    this.setState({items});
+                    if (this._mounted) {
+                        this.setState({items});
+                    }
                 });
         }
         componentDidMount() {
+            this._mounted = true;
+
             this.fetchData();
+        }
+        componentWillUnmount() {
+            this._mounted = false;
         }
         componentDidUpdate(prevProps: IProps) {
             if (
