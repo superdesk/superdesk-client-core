@@ -1,12 +1,30 @@
-import {getSelectSingleValue} from './select_single_value';
 import {IContentFilter} from 'superdesk-interfaces/ContentFilter';
-import ng from 'core/services/ng';
-import {IRestApiResponse} from 'superdesk-api';
+import {dataApi} from 'core/helpers/CrudManager';
+import {getSelectSingleValueAutoComplete} from './select_single_value_autocomplete';
 
-export const ContentFilterSingleValue = getSelectSingleValue(
-    () =>
-        ng.getService('api')
-            .then((api) => api('content_filters').query({max_results: 200}))
-            .then((contentFilters: IRestApiResponse<IContentFilter>) =>
-                contentFilters._items.map(({_id, name}) => ({id: _id, label: name}))),
+export const ContentFilterSingleValue = getSelectSingleValueAutoComplete(
+    (searchString: string) => {
+        return dataApi.query<IContentFilter>(
+            'content_filters',
+            1,
+            {field: 'name', direction: 'ascending'},
+            (
+                searchString.length > 0
+                    ? {
+                        $and: [
+                            {
+                                name: {
+                                    $regex: searchString,
+                                    $options: '-i',
+                                },
+                            },
+                        ],
+                    }
+                    : {}
+            ),
+            50,
+        );
+    },
+    () => '',
+    (item: IContentFilter) => item.name,
 );
