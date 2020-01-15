@@ -303,7 +303,7 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
             }
         });
 
-        _.each(spikeDesks, (item) => {
+        _.each(spikeDesks, (item: any) => {
             if (item._id === 'personal') {
                 self.spikeGroups.push({_id: item._id, type: 'spike-personal', header: item.name});
             } else {
