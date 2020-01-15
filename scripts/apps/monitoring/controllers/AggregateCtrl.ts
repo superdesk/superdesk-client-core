@@ -5,7 +5,6 @@ import {appConfig} from 'appConfig';
 
 AggregateCtrl.$inject = ['$scope', 'desks', 'workspaces', 'preferencesService', 'storage',
     'savedSearch', 'content'];
-
 export function AggregateCtrl($scope, desks, workspaces, preferencesService, storage,
     savedSearch, content) {
     var PREFERENCES_KEY = 'agg:view';
@@ -31,10 +30,10 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
 
     this.activeProfiles = [];
     this.activeFilters = {
-        profile: $scope.type === 'monitoring' ? storage.getItem('profile') || [] : [],
+        contentProfile: $scope.type === 'monitoring' ? storage.getItem('contentProfile') || [] : [],
         fileType: $scope.type === 'monitoring' ? storage.getItem('fileType') || [] : [],
     };
-    this.activeFilterTags = [];
+    this.activeFilterTags = {};
 
     desks.initialize()
         .then(angular.bind(this, function() {
@@ -60,9 +59,8 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
                 .then(angular.bind(this, function(settings) {
                     initGroups(settings);
                     setupCards();
-                    getActiveProfiles();
-                    this.loading = false;
                     this.settings = settings;
+                    getActiveProfiles();
                 }));
         }));
 
@@ -305,7 +303,7 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
             }
         });
 
-        _.each(spikeDesks, (item: any) => {
+        _.each(spikeDesks, (item) => {
             if (item._id === 'personal') {
                 self.spikeGroups.push({_id: item._id, type: 'spike-personal', header: item.name});
             } else {
@@ -354,7 +352,7 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
      * @return [{string}] fileType
      */
     this.getSelectedFileTypes = function() {
-        return this.activeFilters.fileType.length === 0 ? null : JSON.stringify(this.this.activeFilters.fileType);
+        return this.activeFilters.fileType.length === 0 ? null : JSON.stringify(this.activeFilters.fileType);
     };
 
     function updateFilteringCriteria() {
@@ -371,10 +369,17 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
     }
 
     this.setFilterType = function(filterType, filterValue, $event?) {
-        if (filterType === 'profile') {
-            if (!this.activeFilters.profile.includes(filterValue._id)) {
-                this.activeFilters.profile.push(filterValue._id);
-                this.activeFilterTags.push({'key': filterValue._id, 'label': filterValue.label});
+        if (filterType === 'contentProfile') {
+            if (!this.activeFilters.contentProfile.includes(filterValue._id)) {
+                this.activeFilters.contentProfile.push(filterValue._id);
+                const tag = {'key': filterValue._id, 'label': filterValue.label};
+                const type = 'Content profile';
+
+                if (Array.isArray(this.activeFilterTags[type])) {
+                    this.activeFilterTags[type].push(tag);
+                } else {
+                    this.activeFilterTags[type] = [tag];
+                }
             }
         } else if (filterType === 'file') {
             if (filterValue === 'all') {
@@ -398,13 +403,14 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
         }
     };
 
-    this.removeFilter = (filter) => {
+    this.removeFilter = (filter, type?) => {
         if (filter == null) {
-            this.activeFilters.profile = [];
-            this.activeFilterTags = [];
+            this.activeFilters.contentProfile = [];
+            this.activeFilterTags = {};
         } else {
-            this.activeFilters.profile = this.activeFilters.profile.filter((profile) => profile !== filter);
-            this.activeFilterTags = this.activeFilterTags.filter((tags) => tags.key !== filter);
+            this.activeFilters.contentProfile = this.activeFilters.contentProfile
+                .filter((profile) => profile !== filter);
+            this.activeFilterTags[type] = this.activeFilterTags[type].filter((tags) => tags.key !== filter);
         }
 
         updateFilterInStore();
@@ -415,7 +421,7 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
     function updateFilterInStore() {
         if ($scope.type === 'monitoring') {
             storage.setItem('fileType', self.activeFilters.fileType);
-            storage.setItem('profile', self.activeFilters.profile);
+            storage.setItem('contentProfile', self.activeFilters.contentProfile);
         }
     }
 
@@ -556,11 +562,12 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
 
     function getActiveProfiles() {
         content.getTypes(false).then((profiles) => {
+            self.loading = false;
             self.activeProfiles = profiles;
 
             // initialize the activeFilterTags once the activeProfiles are available
-            if (self.activeFilters.profile.length > 0) {
-                self.activeFilterTags = self.activeFilters.profile.map((filter) => {
+            if (self.activeFilters.contentProfile.length > 0) {
+                self.activeFilterTags['Content profile'] = self.activeFilters.contentProfile.map((filter) => {
                     const profile = profiles.find((p) => p._id === filter);
 
                     return {key: profile._id, label: profile.label};

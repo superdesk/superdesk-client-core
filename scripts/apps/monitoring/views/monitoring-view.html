@@ -17,10 +17,10 @@
                                 <li><div class="dropdown__menu-label">{{ gettext('Content Profiles') }}</div></li>
                                 <li ng-repeat="profile in aggregate.activeProfiles">
                                     <button class="label-group"
-                                        ng-click="aggregate.setFilterType('profile', profile, $event)"
-                                        ng-disabled="aggregate.activeFilters.profile.includes(profile._id)"
+                                        ng-click="aggregate.setFilterType('contentProfile', profile, $event)"
+                                        ng-disabled="aggregate.activeFilters.contentProfile.includes(profile._id)"
                                         translate>{{ profile.label }}
-                                        <i ng-show="aggregate.activeFilters.profile.includes(profile._id)" class="icon-ok"></i>
+                                        <i ng-show="aggregate.activeFilters.contentProfile.includes(profile._id)" class="icon-ok"></i>
                                     </button>
                                 </li>
                             </ul>
@@ -197,14 +197,16 @@
                         </div>
                     </div>
                     <!-- Active filter tags -->
-                    <div class="search-tags" ng-if="aggregate.activeFilterTags.length > 0">
+                    <div class="search-tags" ng-if="aggregate.activeFilters.contentProfile.length > 0">
                         <ul class="search-tags__list">
-                            <li ng-repeat="tag in aggregate.activeFilterTags">
-                                <div class="tag-label tag-label--highlight2">
-                                    <span>{{ gettext('Cp:') }}</span>{{ tag.label }}<button class="tag-label__remove" ng-click="aggregate.removeFilter(tag.key)"><i class="icon-close-small"></i></button>
+                            <li ng-repeat="(type, keys) in aggregate.activeFilterTags">
+                            <span>{{ type | translate }}:
+                                <div ng-repeat="key in keys" class="tag-label tag-label--highlight2">
+                                    </span>{{key.label|| key}}
+                                    <button class="tag-label__remove" ng-click="aggregate.removeFilter(key.key, type)"><i class="icon-close-small"></i></button>
                                 </div>
                             </li>
-                            <li><a ng-click="aggregate.removeFilter(null)" translate>Clear filters</a></li>
+                            <li><button class="label--active" ng-click="aggregate.removeFilter(null)" translate>Clear filters</button></li>
                         </ul>
                     </div>
                 </div>

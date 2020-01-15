@@ -218,6 +218,16 @@ describe('monitoring', () => {
             });
         }));
 
+        it('can get criteria for content type filter', inject((cards, session) => {
+            session.identity = {_id: 'foo'};
+            var card = {_id: '123', contentProfile: JSON.stringify(['456'])};
+            var criteria = cards.criteria(card);
+
+            expect(criteria.source.query.filtered.filter.and).toContain({
+                terms: {profile: ['456']},
+            });
+        }));
+
         it('can get criteria for saved search with search', inject((cards, session) => {
             session.identity = {_id: 'foo'};
             var card = {_id: '123', type: 'search', query: 'test',
@@ -239,6 +249,16 @@ describe('monitoring', () => {
             });
         }));
 
+        it('can get criteria for content type filter with search', inject((cards, session) => {
+            session.identity = {_id: 'foo'};
+            var card = {_id: '123', contentProfile: JSON.stringify(['456']), query: 'test'};
+            var criteria = cards.criteria(card);
+
+            expect(criteria.source.query.filtered.filter.and).toContain({
+                terms: {profile: ['456']},
+            });
+        }));
+
         it('can get criteria for multiple file type filter', inject((cards, session) => {
             session.identity = {_id: 'foo'};
             var card = {_id: '123', fileType: JSON.stringify(['text', 'picture'])};
@@ -246,6 +266,16 @@ describe('monitoring', () => {
 
             expect(criteria.source.query.filtered.filter.and).toContain({
                 terms: {type: ['text', 'picture']},
+            });
+        }));
+
+        it('can get criteria for multiple content type filter', inject((cards, session) => {
+            session.identity = {_id: 'foo'};
+            var card = {_id: '123', contentProfile: JSON.stringify(['456', '789'])};
+            var criteria = cards.criteria(card);
+
+            expect(criteria.source.query.filtered.filter.and).toContain({
+                terms: {profile: ['456', '789']},
             });
         }));
     });
