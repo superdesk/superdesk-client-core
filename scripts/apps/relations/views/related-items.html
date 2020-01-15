@@ -34,8 +34,6 @@
                     <img src="{{relatedItem.associations.featuremedia.renditions.viewImage.href}}" alt="{{gettext('Thumbnail for related item')}}">
                 </figure>
                 <div class="sd-list-item__action-menu sd-list-item__action-menu--direction-row">
-                    <button class="icn-btn" ng-if="relatedItem._type === 'archive'"
-                        ng-click="openRelatedItem(relatedItem)"><i class="icon-pencil"></i></button>
                     <button class="icn-btn" ng-click="removeRelatedItem(key)"><i class="icon-close-small"></i></button>
                 </div>
                 <div class="sd-list-item__action-menu--direction-row">

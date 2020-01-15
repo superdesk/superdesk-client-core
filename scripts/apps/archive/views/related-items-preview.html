@@ -14,6 +14,9 @@
                 <span class="sd-overflow-ellipsis sd-list-item--element-grow" title="{{ relatedItem.headline }}">{{ relatedItem.headline || relatedItem.description_text }}</span>
             </div>
         </div>
+        <div class="sd-list-item__action-menu--direction-row" ng-if="showActionMenu">
+            <div class="icn-btn" sd-item-actions-menu data-item="relatedItem" data-active="relatedItem"></div>
+        </div>
     </div>
 </div>
 
