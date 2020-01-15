@@ -10,6 +10,7 @@ interface IProps<T> {
     value?: string;
     placeholder?: string;
     disabled?: boolean;
+    required?: boolean;
     loading?: boolean;
     renderItem(item: T): JSX.Element;
     getItemValue(item: T): string;
@@ -157,40 +158,65 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                             );
                         }
 
-                        const baseButtonStyle = {paddingBottom: 6};
-
+                        const baseButtonStyle = {padding: 0};
                         return (
-                            <button
-                                {...propsAutocomplete}
-                                type="button"
-                                className="sd-line-input__select-custom"
-                                disabled={this.props.disabled}
-                                onClick={() => this.setState({isOpen: !this.state.isOpen})}
-                                ref={(element) => {
-                                    if (element != null) {
-                                        this.lastButtonHeight = element.offsetHeight;
+                            <div style={{display: 'flex', alignItems: 'center'}}>
+                                <div style={{flexGrow: 1}}>
+                                    <button
+                                        {...propsAutocomplete}
+                                        type="button"
+                                        className="sd-line-input__select-custom"
+                                        disabled={this.props.disabled}
+                                        onClick={() => this.setState({isOpen: !this.state.isOpen})}
+                                        ref={(element) => {
+                                            if (element != null) {
+                                                this.lastButtonHeight = element.offsetHeight;
 
-                                        // react-autocomplete expects ref to be an input
-                                        // but input doesn't support rendering custom children
-                                        // so we use a button instead and add a fake method to prevent errors
-                                        // Also, we need to manage the open/close logic on our own
-                                        element['setSelectionRange'] = noop;
-                                    }
+                                                // react-autocomplete expects ref to be an input
+                                                // but input doesn't support rendering custom children
+                                                // so we use a button instead and add a fake method to prevent errors
+                                                // Also, we need to manage the open/close logic on our own
+                                                element['setSelectionRange'] = noop;
+                                            }
 
-                                    const ref: any = propsAutocomplete.ref;
+                                            const ref: any = propsAutocomplete.ref;
 
-                                    ref(element);
-                                }}
-                                style={this.props.disabled ? {...baseButtonStyle, opacity: 0.6} : baseButtonStyle}
-                                data-test-id="dropdown-button"
-                            >
+                                            ref(element);
+                                        }}
+                                        style={
+                                            this.props.disabled ? {...baseButtonStyle, opacity: 0.6} : baseButtonStyle
+                                        }
+                                        data-test-id="dropdown-button"
+                                    >
+                                        {
+                                            this.props.value === undefined || selectedItem == null
+                                                ? this.props.placeholder
+                                                : (
+                                                    <div style={{marginLeft: -8}}>
+                                                        {this.props.renderItem(selectedItem)}
+                                                    </div>
+                                                )
+                                        }
+                                        <div style={arrowDownStyles} />
+                                    </button>
+                                </div>
+
                                 {
-                                    this.props.value === undefined || selectedItem == null
-                                        ? this.props.placeholder
-                                        : this.props.renderItem(selectedItem)
+                                    this.props.disabled || this.props.required || this.props.value == null ? null : (
+                                        <div>
+                                            <button
+                                                onClick={() => {
+                                                    this.props.onSelect(null);
+                                                }}
+                                                className="btn btn--small btn--icon-only-circle"
+                                                style={{marginLeft: 20}}
+                                            >
+                                                <i className="icon-close-small" />
+                                            </button>
+                                        </div>
+                                    )
                                 }
-                                <div style={arrowDownStyles} />
-                            </button>
+                            </div>
                         );
                     }}
                     getItemValue={this.props.getItemValue}

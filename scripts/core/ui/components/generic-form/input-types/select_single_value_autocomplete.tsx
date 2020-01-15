@@ -55,7 +55,11 @@ export function getSelectSingleValueAutoComplete(
                         sort={sort}
                         getLabel={(item) => getLabel(item)}
                         onSelect={(item) => {
-                            this.props.onChange(item._id);
+                            if (item == null) {
+                                this.props.onChange(null);
+                            } else {
+                                this.props.onChange(item._id);
+                            }
                         }}
                         disabled={this.props.disabled}
                         selected={this.props.value}

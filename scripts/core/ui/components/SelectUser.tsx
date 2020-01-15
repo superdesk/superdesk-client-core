@@ -98,6 +98,7 @@ export class SelectUser extends React.Component<IPropsSelectUser, IState> {
                     this.queryUsers(search);
                 }}
                 loading={this.state.loading}
+                required
             />
         );
     }
