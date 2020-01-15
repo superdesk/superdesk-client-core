@@ -158,6 +158,7 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                         }
 
                         const baseButtonStyle = {padding: 0};
+
                         return (
                             <div style={{display: 'flex', alignItems: 'center'}}>
                                 <div style={{flexGrow: 1}}>

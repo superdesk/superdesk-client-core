@@ -36,14 +36,15 @@ export class AutoComplete<T extends IBaseRestApiResponse> extends React.Componen
         const searchString = _searchString.trim();
 
         this.setState({loading: true, fetchedItems: null});
-            this.props.query(searchString).then((res) => {
-                if (this._mounted) {
-                    this.setState({
-                        fetchedItems: res._items,
-                        loading: false,
-                    });
-                }
-            });
+
+        this.props.query(searchString).then((res) => {
+            if (this._mounted) {
+                this.setState({
+                    fetchedItems: res._items,
+                    loading: false,
+                });
+            }
+        });
     }
 
     componentDidMount() {

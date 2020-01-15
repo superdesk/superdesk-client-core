@@ -33,7 +33,6 @@ export function getSelectSingleValueAutoComplete(
             this.dependentFields = typeof getDependentFields === 'function'
                 ? getDependentFields(props)
                 : [];
-
         }
         componentDidUpdate(prevProps: IProps) {
             if (

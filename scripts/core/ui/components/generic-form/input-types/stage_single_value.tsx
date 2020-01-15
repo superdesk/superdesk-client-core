@@ -38,7 +38,7 @@ export const StageSingleValue = getSelectSingleValueAutoComplete(
     (props) => {
         const deskId = props.formValues[props.formField.component_parameters['deskField']];
 
-        if (deskId == null ) {
+        if (deskId == null) {
             return gettext('Select a desk first');
         } else {
             return '';
