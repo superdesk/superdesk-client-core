@@ -13,7 +13,7 @@ export const DeskSingleValue = getSelectSingleValueAutoComplete(
                 ? {
                     $or: [
                         {
-                            [this.props.sort.field]: {
+                            name: {
                                 $regex: searchString,
                                 $options: '-i',
                             },
@@ -24,6 +24,6 @@ export const DeskSingleValue = getSelectSingleValueAutoComplete(
         ),
         50,
     ),
-    gettext('Select a desk'),
+    () => gettext('Select a desk'),
     (item: IDesk) => item.name,
 );

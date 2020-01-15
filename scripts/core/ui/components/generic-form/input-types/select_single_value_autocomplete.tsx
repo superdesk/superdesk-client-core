@@ -7,14 +7,15 @@ import {IRestApiResponse} from 'superdesk-api';
 type IProps = IInputType<string>;
 
 export function getSelectSingleValueAutoComplete(
-    query: (searchString: string) => Promise<IRestApiResponse<any>>,
-    placeholder: string,
+    query: (searchString: string, props: IProps) => Promise<IRestApiResponse<any>>,
+    getPlaceholder: (props: IProps) => string,
     getLabel: (item) => string,
     getDependentFields?: (props: IProps) => Array<string>,
 ) {
     return class SelectSingleValueAutoComplete extends React.Component<IProps> {
         dependentFields: Array<string>;
         initialValue: string | undefined;
+        updateCount: number;
 
         constructor(props: IProps) {
             super(props);
@@ -24,6 +25,7 @@ export function getSelectSingleValueAutoComplete(
             };
 
             this.initialValue = props.value;
+            this.updateCount = 0;
 
             this.dependentFields = typeof getDependentFields === 'function'
                 ? getDependentFields(props)
@@ -35,6 +37,7 @@ export function getSelectSingleValueAutoComplete(
                 this.dependentFields.some((field) => prevProps.formValues[field] !== this.props.formValues[field])
             ) {
                 this.props.onChange(this.initialValue); // resetting the value since dependent field changed
+                this.updateCount++;
             }
         }
         render() {
@@ -50,8 +53,11 @@ export function getSelectSingleValueAutoComplete(
                 }>
                     <label className="sd-line-input__label">{this.props.formField.label}</label>
                     <AutoComplete
-                        query={query}
-                        placeholder={placeholder}
+                        key={this.updateCount} // re-render component so it fetches new options
+                        //  after dependentFields change
+
+                        query={(searchString: string) => query(searchString, this.props)}
+                        placeholder={getPlaceholder(this.props)}
                         getLabel={(item) => getLabel(item)}
                         onSelect={(item) => {
                             if (item == null) {
