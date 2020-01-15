@@ -22,6 +22,7 @@ interface IState<T> {
 }
 
 export class AutoComplete<T extends IBaseRestApiResponse> extends React.Component<IProps<T>, IState<T>> {
+    private _mounted: boolean;
     constructor(props: IProps<T>) {
         super(props);
 
@@ -58,15 +59,22 @@ export class AutoComplete<T extends IBaseRestApiResponse> extends React.Componen
             50,
         )
             .then((res) => {
-                this.setState({
-                    fetchedItems: res._items,
-                    loading: false,
-                });
+                if (this._mounted) {
+                    this.setState({
+                        fetchedItems: res._items,
+                        loading: false,
+                    });
+                }
             });
     }
 
     componentDidMount() {
+        this._mounted = true;
         this.queryItems();
+    }
+
+    componentWillUnmount() {
+        this._mounted = false;
     }
 
     render() {
