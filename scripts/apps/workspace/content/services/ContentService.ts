@@ -2,8 +2,8 @@ import * as constant from '../constants';
 import {get, omit, isEmpty, zipObject} from 'lodash';
 import {gettext} from 'core/utils';
 import {isMediaEditable} from 'core/config';
-import {IArticle} from 'superdesk-api';
 import {appConfig} from 'appConfig';
+import {IArticle, IContentProfileEditorConfig, IArticleField} from 'superdesk-api';
 
 /**
  * @ngdoc service
@@ -270,6 +270,13 @@ export function ContentService(api, templates, desks, packages, archiveService, 
 
         return this._fields ? this._fields.filter((field) => !!editor[field._id]) : [];
     };
+
+    /**
+     * Get fields with preview enabled
+     */
+    this.previewFields = (editor: IContentProfileEditorConfig, fields: Array<IArticleField>): Array<IArticleField> =>
+        editor == null || fields == null ? []
+            : fields.filter((field) => editor[field._id] != null && editor[field._id].preview);
 
     /**
      * Get profiles selected for given desk

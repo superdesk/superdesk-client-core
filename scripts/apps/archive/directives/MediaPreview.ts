@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import {checkRenditions} from 'apps/authoring/authoring/controllers/AssociationController';
+import {IArticleField} from 'superdesk-api';
 
 /**
  * @ngdoc directive
@@ -25,6 +26,11 @@ export function MediaPreview(api, $rootScope, desks, superdesk, content, storage
         link: function(scope, elem) {
             const PREVIEW_HEADER_STATE = 'item_preview:header_state';
 
+            const setSubjectPreviewFields = () => {
+                scope.subjectPreviewFields = content.previewFields(scope.editor, scope.fields)
+                    .filter((field: IArticleField) => field.field_type == null);
+            };
+
             scope.checkRenditions = checkRenditions;
             scope.previewState = {toggleHeader: false};
             if (scope.selected.preview.profile) {
@@ -32,13 +38,16 @@ export function MediaPreview(api, $rootScope, desks, superdesk, content, storage
                     .then((type) => {
                         scope.editor = content.editor(type);
                         scope.fields = content.fields(type);
+                        setSubjectPreviewFields();
                     });
             } else {
                 content.getCustomFields().then(() => {
                     scope.editor = content.editor(null, scope.selected.preview.type);
                     scope.fields = content.fields({editor: scope.editor});
+                    setSubjectPreviewFields();
                 });
             }
+
             // prevent dragging from preview
             elem.on('dragstart', () => false);
 

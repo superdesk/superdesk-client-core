@@ -1087,11 +1087,9 @@ $lightbox-composite-condensed : 100px;
     z-index: 2;
     @include box-sizing(border-box);
     @include box-shadow(0px 1px 3px -1px rgba(0,0,0,0.2));
-        max-height: 45px;
     @include transition(max-height .3s ease-in);
         &.active {
             @include transition(max-height .3s ease-in);
-            max-height: 200px;
             .preview-header__flex-container {
                 display:flex;
                 padding: 8px 0;
@@ -1260,6 +1258,13 @@ $lightbox-composite-condensed : 100px;
               @include text-semibold();
             }
           }
+        
+        .tag-label {
+            max-width: 100%;
+            font-size: 11px;
+            white-space: nowrap;
+            @include text-overflow();
+        }
 }
 
 // Preview image overlay
