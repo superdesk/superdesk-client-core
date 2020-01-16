@@ -33,7 +33,7 @@ export const getSuperdeskType = (event, supportExternalFiles = true) =>
         name.includes('application/superdesk') || supportExternalFiles && name === 'Files',
     );
 
-    /**
+/**
  * @ngdoc method
  * @name gettext
  * @param {String} text - the text that will be translated, it supports parameters (see the example)

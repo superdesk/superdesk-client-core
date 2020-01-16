@@ -22,6 +22,8 @@ module.exports = Object.assign({}, sharedConfigs, {
         'quote-props': 0,
 
         'newline-per-chained-call': ["error", {"ignoreChainWithDepth": 3}],
+
+        'no-prototype-builtins': 0,
     }),
     parser: 'typescript-eslint-parser',
     overrides: [
