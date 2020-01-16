@@ -790,7 +790,7 @@ describe('monitoring', () => {
         expect(previewPane.isPresent()).toBe(false);
     });
 
-    fit('Can create items from templates', () => {
+    it('Can create items from templates', () => {
         const slugline = 'slugline template';
         const editorsNote = 'test editor\'s note for template';
 
