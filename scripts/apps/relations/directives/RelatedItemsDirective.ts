@@ -1,8 +1,7 @@
 import {getSuperdeskType} from 'core/utils';
 import {gettext} from 'core/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
-import {IArticle} from 'superdesk-api';
-import {IVocabulary} from 'superdesk-interfaces/Vocabulary';
+import {IArticle, IArticleField} from 'superdesk-api';
 import {IDirectiveScope} from 'types/Angular/DirectiveScope';
 
 const ARCHIVE_TYPES = ['archive', 'published'];
@@ -11,7 +10,7 @@ const isInArchive = (item: IArticle) => item._type != null && ARCHIVE_TYPES.incl
 interface IScope extends IDirectiveScope<void> {
     onCreated: (items: Array<IArticle>) => void;
     gettext: (text: any, params?: any) => string;
-    field: IVocabulary;
+    field: IArticleField;
     editable: boolean;
     item: IArticle;
     loading: boolean;
