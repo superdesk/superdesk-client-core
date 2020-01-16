@@ -86,7 +86,7 @@
     </div>
     <div class="subnav__button-stack subnav__button-stack--default">
       <button id="Edit" class="btn btn--medium btn--primary" ng-if="item._type !== 'legal_archive'"
-        ng-show="action === 'view' && !item._editable && (itemActions.edit || item.state === 'unpublished')"
+        ng-show="action === 'view' && !item._editable && itemActions.edit"
         ng-click="edit()"
         translate>Edit</button>
 
