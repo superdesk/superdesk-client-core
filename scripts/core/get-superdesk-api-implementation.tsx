@@ -129,7 +129,7 @@ export function getSuperdeskApiImplementation(
     lock,
     session,
     authoringWorkspace: AuthoringWorkspaceService,
-    metadata: MetadataService,
+    metadata,
 ): ISuperdesk {
     return {
         dataApi: dataApi,
