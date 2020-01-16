@@ -39,10 +39,8 @@ export const sdStaticAutocompleteDirective = () => ({
                     path: '/archive_autocomplete',
                     urlParams: {field: scope.field, language: scope.language},
                 }).then((response) => {
-                    scope.$applyAsync(() => {
-                        scope.available = response._items.map((_item) => _item.value);
-                        scope.suggestions = [];
-                    });
+                    scope.available = response._items.map((_item) => _item.value);
+                    scope.suggestions = [];
                 });
             }
 
@@ -65,7 +63,7 @@ export const sdStaticAutocompleteDirective = () => ({
                 return; // avoid render on init
             }
 
-            if (newVal === scope.suggested) {
+            if (scope.suggested != null && newVal === scope.suggested) {
                 scope.suggested = null;
                 return; // don't suggest after selecting suggestion
             }
@@ -120,8 +118,25 @@ export const sdStaticAutocompleteDirective = () => ({
             scope.onSelect({suggestion});
         };
 
+        const renderSuggestions = () => {
+            if (scope.suggestions.length === 0) {
+                updateSuggestions(scope.value, null);
+            }
+        };
+
+        elem.on('click', renderSuggestions);
+
         elem.on('focusout', () => {
-            scope.$applyAsync(resetSuggestions);
+            if (scope.suggestions.length) {
+                // it is triggered also when clicking a suggestion,
+                // but if it runs first it destroys the list so the
+                // select is not fired. thus call it later.
+                setTimeout(() => {
+                    if (scope.suggestions.length) {
+                        scope.$applyAsync(resetSuggestions);
+                    }
+                }, 200);
+            }
         });
 
         elem.on('keydown', (event: KeyboardEvent) => {
@@ -143,6 +158,8 @@ export const sdStaticAutocompleteDirective = () => ({
                     scope.$applyAsync(() => {
                         scope.select(scope.suggestions[scope.activeSuggestion]);
                     });
+                } else {
+                    renderSuggestions();
                 }
                 break;
 

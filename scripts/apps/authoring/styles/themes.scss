@@ -283,7 +283,7 @@ body, html {
             display: block;
         }
     }
-    
+
     //labels
     .field {
         .field__label {
@@ -422,6 +422,11 @@ body, html {
         margin: 10px 0;
         &.item-association {
             margin: 0;
+        }
+        &.sd-list-item__thumbnail {
+            width: 6.4rem;
+            margin: auto 0.8rem;
+            display: flex;
         }
     }
     figure img {
