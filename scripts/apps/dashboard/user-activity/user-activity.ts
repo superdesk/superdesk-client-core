@@ -17,13 +17,9 @@ angular
                 max_sizey: 2,
                 sizex: 1,
                 sizey: 2,
-                classes: 'tabs modal--nested-fix',
-                thumbnail: 'scripts/apps/dashboard/world-clock/thumbnail.svg',
+                thumbnail: 'scripts/apps/users/activity-widget/thumbnail.svg',
                 template:
                     'scripts/apps/dashboard/user-activity/user-activity.html',
-                configurationTemplate:
-                    'scripts/apps/dashboard/user-activity/user-activity-configuration.html',
-                configuration: {},
                 description: gettext('User activity widget'),
                 removeHeader: true,
             });

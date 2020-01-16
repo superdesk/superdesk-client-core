@@ -1,9 +1,8 @@
 import React from 'react';
 import {WidgetItemList} from 'apps/search/components';
-import {IArticle, IUser} from 'superdesk-api';
+import {IArticle, IUser, IStage} from 'superdesk-api';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services';
 import ng from 'core/services/ng';
-import {dataApi} from 'core/helpers/CrudManager';
 import {gettext} from 'core/utils';
 import {SelectUser} from 'core/ui/components/SelectUser';
 
@@ -23,25 +22,95 @@ interface IState {
     groupsData: Array<{ id; itemIds; itemsById }> | null;
 }
 
+function getQueryMarkedForUser(userId) {
+    return {
+        term: {
+            marked_for_user: userId,
+        },
+    };
+}
+
+function getQueryLockedForuser(userId) {
+    return {
+        term: {
+            lock_user: userId,
+        },
+    };
+}
+
+function getQueryNotLockedOrLockedByMe(userId) {
+    return {
+        bool: {
+            should: [
+                {
+                    bool: {
+                        must_not: {
+                            exists: {
+                                field: 'lock_user',
+                            },
+                        },
+                    },
+                },
+                {...getQueryLockedForuser(userId)},
+            ],
+        },
+    };
+}
+
+function getQueryNotMarkedOrMarkedForMe(userId) {
+    return {
+        bool: {
+            should: [
+                {
+                    bool: {
+                        must_not: {
+                            exists: {
+                                field: 'marked_for_user',
+                            },
+                        },
+                    },
+                },
+                {...getQueryMarkedForUser(userId)},
+            ],
+        },
+    };
+}
+
+function getQueryCreatedByUser(userId) {
+    return {
+        terms: {
+            original_creator: [userId],
+        },
+    };
+}
+
 const GET_GROUPS = (userId): Array<IGroup> => {
     return [
         {
             id: 'locked',
             label: gettext('Locked by this user'),
             repo: 'archive',
-            query: {lock_user: userId},
+            query: {...getQueryLockedForuser(userId)},
         },
         {
             id: 'marked',
             label: gettext('Marked for this user'),
             repo: 'archive',
-            query: {marked_for_user: userId},
+            query: {...getQueryMarkedForUser(userId)},
         },
         {
             id: 'created',
             label: gettext('Created by this user'),
             repo: 'archive',
-            query: {original_creator: userId},
+            query: {
+                bool: {
+                    must: [
+                        {...getQueryCreatedByUser(userId)},
+                        {...getQueryNotMarkedOrMarkedForMe(userId)},
+                        {...getQueryNotLockedOrLockedByMe(userId)},
+                    ],
+                },
+            },
         },
         // TODO:
         // {
@@ -87,12 +156,17 @@ export default class UserActivityWidget extends React.Component<{}, IState> {
     }
 
     async fetchItems(group: IGroup) {
-        const {_items} = await dataApi.query(
-            group.repo,
-            1,
-            null,
-            group.query,
-        );
+        const {api, search} = this.services;
+        let query = search.query();
+
+        query.clear_filters();
+        query.size(1).filter(group.query);
+
+        let criteria = query.getCriteria(true);
+
+        criteria.repo = group.repo;
+
+        const {_items} = await api.query('search', criteria);
 
         const itemIds = [];
         const itemsById = {};
