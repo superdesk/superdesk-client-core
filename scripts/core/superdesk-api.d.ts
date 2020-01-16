@@ -407,8 +407,11 @@ declare module 'superdesk-api' {
     export interface IRestApiResponse<T extends IBaseRestApiResponse> {
         _items: Array<T>;
         _links: {
+            last: IRestApiLink;
             parent: IRestApiLink;
+            next?: IRestApiLink;
             self: IRestApiLink;
+            prev?: IRestApiLink;
         };
         _meta: {
             max_results: number;
