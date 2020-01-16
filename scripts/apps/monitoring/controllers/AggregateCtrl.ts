@@ -372,8 +372,8 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
         if (filterType === 'contentProfile') {
             if (!this.activeFilters.contentProfile.includes(filterValue._id)) {
                 this.activeFilters.contentProfile.push(filterValue._id);
-                const tag = {'key': filterValue._id, 'label': filterValue.label};
-                const type = 'Content profile';
+                const tag = {'key': filterValue._id, 'label': gettext(filterValue.label)};
+                const type = gettext('Content profile');
 
                 if (Array.isArray(this.activeFilterTags[type])) {
                     this.activeFilterTags[type].push(tag);
