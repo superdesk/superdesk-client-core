@@ -21,7 +21,6 @@ function fetchPage<T extends IBaseRestApiResponse>(items: Array<T>, url: string,
                 return fetchPage(currentItems, resJson._links.next.href, authenticationToken);
             }
         });
-
 }
 
 export function fetchAllPages<T extends IBaseRestApiResponse>(endpoint: string, sort: ISortOption) {
