@@ -1,6 +1,7 @@
 import React from 'react';
 import ItemsTableComponent from '../components/ItemsTableComponent';
 import {mount} from 'enzyme';
+import {noop} from 'lodash';
 
 describe('vocabularies', () => {
     beforeEach(window.module('superdesk.apps.publish'));
@@ -162,6 +163,7 @@ describe('vocabularies', () => {
                             schemaFields={schemaFields}
                             remove={() => null}
                             update={update}
+                            addItem={noop}
                         />
                     ),
                 );

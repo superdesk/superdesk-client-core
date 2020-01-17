@@ -4,6 +4,7 @@ import ObjectEditor from './ObjectEditor';
 import {has} from 'lodash';
 import {gettext} from 'core/utils';
 import {ISortOption} from 'superdesk-api';
+import {assertNever} from 'core/helpers/typescript-helpers';
 
 interface ISchemaField {
     key: string;
@@ -68,6 +69,7 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
         }
 
         if (this.state.sort == null && this.sortFields.length > 0) {
+            // eslint-disable-next-line react/no-did-update-set-state
             this.setState({
                 sort: {
                     field: this.sortFields.includes('name') ? 'name' : this.sortFields[0],
@@ -205,7 +207,7 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
                     } else {
                         return 0;
                     }
-                } else {
+                } else if (this.state.sort.direction === 'descending') {
                     if (a[this.state.sort.field] < b[this.state.sort.field]) {
                         return 1;
                     } else if (a[this.state.sort.field] > b[this.state.sort.field]) {
@@ -213,6 +215,8 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
                     } else {
                         return 0;
                     }
+                } else {
+                    return assertNever(this.state.sort.direction);
                 }
             });
 
@@ -249,7 +253,7 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
                             });
                         }}
                     >
-                        <i className="icon-plus-sign"></i>
+                        <i className="icon-plus-sign" />
                         <span>{gettext('Add Item')}</span>
                     </button>
                 </div>
@@ -304,19 +308,19 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
 
                 <table>
                     <thead>
-                    <tr>
-                        {
-                            this.props.schemaFields.map((field) => (
-                                <th key={field.key}>
-                                    <label>{field.label || field.key}</label>
-                                </th>
-                            ))
-                        }
-                        <th>
-                            <label>{gettext('Active')}</label>
-                        </th>
-                        <th />
-                    </tr>
+                        <tr>
+                            {
+                                this.props.schemaFields.map((field) => (
+                                    <th key={field.key}>
+                                        <label>{field.label || field.key}</label>
+                                    </th>
+                                ))
+                            }
+                            <th>
+                                <label>{gettext('Active')}</label>
+                            </th>
+                            <th />
+                        </tr>
                     </thead>
                     <tbody>
                         {
