@@ -12,7 +12,7 @@ import {IFunctionPointsService} from 'apps/extension-points/services/FunctionPoi
 import {isPublished} from 'apps/archive/utils';
 import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
 import {copyJson} from 'core/helpers/utils';
-import {appConfig} from 'appConfig';
+import {appConfig, extensions} from 'appConfig';
 
 /**
  * @ngdoc directive
@@ -525,20 +525,17 @@ export function AuthoringDirective(
             var deregisterTansa = $rootScope.$on('tansa:end', afterTansa);
 
             $scope.runTansa = function() {
-                if (window.RunTansaProofing) {
+                if (window.RunTansaProofing && appConfig.tansa != null) {
                     const _editor = editorResolver.get();
 
                     if (_editor && _editor.version() === '3') {
                         $('#editor3Tansa').html(_editor.getHtmlForTansa());
                     }
 
-                    switch ($scope.item.language) {
-                    case 'nb-NO':
-                        window.tansa.settings.profileId = _.get($rootScope, 'config.tansa.profile.nb');
-                        break;
-                    case 'nn-NO':
-                        window.tansa.settings.profileId = _.get($rootScope, 'config.tansa.profile.nn');
-                        break;
+                    const profiles = appConfig.tansa.profiles || {};
+
+                    if (profiles[$scope.item.language] != null) {
+                        window.tansa.settings.profileId = profiles[$scope.item.language];
                     }
 
                     window.RunTansaProofing();
@@ -597,7 +594,7 @@ export function AuthoringDirective(
                             return modal.confirm({
                                 bodyText: gettext(
                                     'There are unpublished related items that won\'t be sent out as related items.'
-                        + ' Do you want to publish the article anyway?',
+                                    + ' Do you want to publish the article anyway?',
                                 ),
                             }).then((ok) => ok ? performPublish() : false);
                         }
@@ -851,13 +848,28 @@ export function AuthoringDirective(
                 angular.extend($scope.item, item); // make sure all changes are available
                 return coreApplyMiddleware(onChangeMiddleware, {item: $scope.item, original: $scope.origItem}, 'item')
                     .then(() => {
-                        var autosavedItem = authoring.autosave($scope.item, $scope.origItem, timeout);
+                        const onUpdateFromExtensions = Object.values(extensions).map(
+                            (extension) => extension.activationResult?.contributions?.authoring?.onUpdate,
+                        ).filter((updates) => updates != null);
 
-                        authoringWorkspace.addAutosave();
+                        const reducerFunc = (current, next) => current.then(
+                            (result) => next($scope.origItem._autosave ?? $scope.origItem, result),
+                        );
 
-                        initMedia();
-                        updateSchema();
-                        return autosavedItem;
+                        (
+                            onUpdateFromExtensions.length < 1
+                                ? Promise.resolve(item)
+                                : onUpdateFromExtensions
+                                    .reduce(reducerFunc, Promise.resolve($scope.item))
+                                    .then((nextItem) => angular.extend($scope.item, nextItem))
+                        ).then(() => {
+                            var autosavedItem = authoring.autosave($scope.item, $scope.origItem, timeout);
+
+                            authoringWorkspace.addAutosave();
+                            initMedia();
+                            updateSchema();
+                            return autosavedItem;
+                        });
                     });
             };
 

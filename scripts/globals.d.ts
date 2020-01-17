@@ -29,7 +29,34 @@ declare const fail: any;
 // tslint:disable-next-line: interface-name
 interface Window {
     instgrm: any;
-    tansa: any;
+
+    // tansa
+
+    tansa: {
+        settings: {
+            profileId: number;
+            platformName?: string;
+            platformVersion?: string;
+            baseUrl: string;
+            parentAppId: string;
+            tansaUserId: string;
+            licenseKey: string;
+            parentAppVersion: string;
+            checkboxPreference: boolean;
+            clientExtenstionJs: string;
+        },
+        useDocumentWriteFun: boolean,
+    };
+    afterProofing: (isCanceled: boolean) => void;
+    tansaJQuery: {
+        pgwBrowser: () => {
+            os: {
+                name: string;
+                fullVersion: string;
+            }
+        };
+    };
+
     $: any;
     _paq: any;
     GoogleAnalyticsObject: any;

@@ -1,4 +1,4 @@
-import {IVocabulary} from 'superdesk-interfaces/Vocabulary';
+import {IArticleField} from 'superdesk-api';
 import {gettext} from 'core/utils';
 
 const TYPE_LABEL = {
@@ -9,7 +9,7 @@ const TYPE_LABEL = {
     related_content: gettext('related content'),
 };
 
-export const getLabelForType = (fieldType: IVocabulary['field_type']) => {
+export const getLabelForType = (fieldType: IArticleField['field_type']) => {
     if (TYPE_LABEL.hasOwnProperty(fieldType)) {
         return TYPE_LABEL[fieldType];
     }
@@ -17,7 +17,7 @@ export const getLabelForType = (fieldType: IVocabulary['field_type']) => {
     return gettext('custom vocabulary');
 };
 
-export const getTypeForFieldId = (fieldId, vocabularies: Array<IVocabulary>) => {
+export const getTypeForFieldId = (fieldId, vocabularies: Array<IArticleField>) => {
     const vocabulary = vocabularies.find((obj) => obj._id === fieldId);
 
     if (vocabulary && vocabulary.field_type) {

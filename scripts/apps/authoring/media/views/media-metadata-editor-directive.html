@@ -1,6 +1,5 @@
-<div class="form__row" ng-repeat="field in fields track by field.field" ng-if="item">
+<div ng-repeat="field in fields track by field.field" ng-if="item">
     <sd-line-input
-        class="sd-line-input--no-margin"
         ng-if="(!field.type && !field.cv) || (field.type === 'string' && !field.cv)"
         ng-model="item[field.field]"
         data-sync="true"
@@ -17,7 +16,6 @@
     />
 
     <sd-line-input
-        class="sd-line-input--no-margin"
         ng-if="field.cv && field.cv.field_type === 'text'"
         data-sync="true"
         ng-model="item.extra[field.field]"
@@ -32,8 +30,8 @@
         data-placeholder="{{ placeholder[field.field] }}"
     />
 
-    <div ng-if="field.cv && !field.cv.field_type">
-        <label class="form-label">{{ field.label }}</label>
+    <div ng-if="field.cv && !field.cv.field_type" class="sd-line-input sd-line-input--boxed" ng-class="{'sd-line-input--required': field.required}">
+        <label class="sd-line-input__label">{{ field.label }}</label>
 
         <div sd-meta-place ng-if="field.field === 'place' && features.places_autocomplete"
             class="data sd-terms--boxed"
@@ -84,7 +82,7 @@
         ></div>
     </div>
 
-    <div ng-if="field.cv && field.cv.field_type === 'date'">
+    <div ng-if="field.cv && field.cv.field_type === 'date'" class="sd-line-input sd-line-input--boxed" ng-class="{'sd-line-input--required': field.required}">
         <label class="form-label">{{ field.label }}</label>
         <div sd-datepicker
             ng-disabled="isDisabled(field)"

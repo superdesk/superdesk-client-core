@@ -31,7 +31,7 @@ export function getSpecValue(spec, value) {
  */
 export function isCheckAllowed(item) {
     return !(item._type === 'items' || item._type === 'externalsource' ||
-            isKilled(item) ||
+        isKilled(item) ||
         item._type === 'published' && !item.last_published_version);
 }
 
@@ -130,18 +130,19 @@ export function positionPopup(target, zIndex = 1000) {
     menuHolderElem().style.zIndex = zIndex.toString();
 }
 
-export function renderArea(area, itemProps, props: {className?: string}, customRender: any = {}) {
+export function renderArea(area: string, itemProps, props?: { className?: string }, customRender: any = {}) {
     // If singleline preference is set, don't show second line
-    if (itemProps.scope.singleLine && area === 'secondLine') {
+    if (itemProps.scope?.singleLine && area === 'secondLine') {
         return;
     }
 
     /* globals __SUPERDESK_CONFIG__: true */
-    const listConfig = __SUPERDESK_CONFIG__.list || DEFAULT_LIST_CONFIG;
+    const listConfig = itemProps.listConfig || __SUPERDESK_CONFIG__.list || DEFAULT_LIST_CONFIG;
+
     let specs = listConfig[area] || [];
 
     // If narrowView configuration is available and also singleline are active
-    if (itemProps.scope.singleLine && itemProps.narrow && listConfig.narrowView) {
+    if (itemProps.scope?.singleLine && itemProps.narrow && listConfig.narrowView) {
         specs = listConfig.narrowView;
     }
 
@@ -162,7 +163,7 @@ export function renderArea(area, itemProps, props: {className?: string}, customR
 
     if (components.length > 0) {
         return <div {...elemProps}>
-            { components }
+            {components}
         </div>;
     }
 

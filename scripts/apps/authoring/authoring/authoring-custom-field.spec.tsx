@@ -1,11 +1,10 @@
 import React from 'react';
 import {mount} from 'enzyme';
 import {AuthoringCustomField} from './authoring-custom-field';
-import {ICustomFieldType, IEditorComponentProps, IArticle} from 'superdesk-api';
+import {ICustomFieldType, IEditorComponentProps, IArticle, IVocabulary} from 'superdesk-api';
 import {registerInternalExtension, unregisterInternalExtension} from 'core/helpers/register-internal-extension';
 import {testArticle} from 'test-data/test-article';
 import {testVocabulary} from 'test-data/test-vocabulary';
-import {IVocabulary} from 'superdesk-interfaces/Vocabulary';
 
 const vocabularyId = 'vocabulary_id';
 

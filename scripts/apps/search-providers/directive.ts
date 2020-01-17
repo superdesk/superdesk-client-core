@@ -9,6 +9,7 @@ export default function SearchProviderConfigDirective(searchProviderService, not
             $scope.origProvider = null;
             $scope.providers = null;
             $scope.newDestination = null;
+            $scope.gettext = gettext;
 
             searchProviderService.getAllowedProviderTypes().then((providerTypes) => {
                 $scope.providerTypes = providerTypes;

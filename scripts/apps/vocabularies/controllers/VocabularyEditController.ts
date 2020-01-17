@@ -2,7 +2,7 @@ import _ from 'lodash';
 import {MEDIA_TYPES, MEDIA_TYPE_KEYS, VOCABULARY_SELECTION_TYPES, IVocabularySelectionTypes} from '../constants';
 import {gettext} from 'core/utils';
 import {getFields} from 'apps/fields';
-import {IVocabulary} from 'superdesk-interfaces/Vocabulary';
+import {IVocabulary} from 'superdesk-api';
 import {IScope as IScopeConfigController} from './VocabularyConfigController';
 
 VocabularyEditController.$inject = [

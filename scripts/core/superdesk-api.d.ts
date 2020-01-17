@@ -59,7 +59,6 @@ declare module 'superdesk-api' {
             authoringTopbarWidgets?: Array<React.ComponentType<{article: IArticle}>>;
             pages?: Array<IPage>;
             customFieldTypes?: Array<ICustomFieldType>;
-            authoringActions?(article: IArticle): Promise<Array<IArticleAction>>;
             notifications?: {
                 [id: string]: (notification) => {
                     body: string;
@@ -70,14 +69,16 @@ declare module 'superdesk-api' {
                 article?: {
                     getActions?(article: IArticle): Promise<Array<IArticleAction>>;
                     getActionsBulk?(articles: Array<IArticle>): Promise<Array<IArticleActionBulk>>;
-                    onUpdateBefore?(article: IArticle): Promise<IArticle>; // can alter item(immutably), can cancel update
-                    onUpdateAfter?(article: IArticle): void; // can't alter item, can't cancel
+                    onPatchBefore?(id: IArticle['_id'], patch: Partial<IArticle>): Promise<Partial<IArticle>>; // can alter patch(immutably), can cancel patching
                     onSpike?(item: IArticle): Promise<onSpikeMiddlewareResult>;
                     onSpikeMultiple?(items: Array<IArticle>): Promise<onSpikeMiddlewareResult>;
                 };
             };
             iptcMapping?(data: IPTCMetadata, item: Partial<IArticle>): Promise<Partial<IArticle>>;
             searchPanelWidgets?: Array<React.ComponentType<ISearchPanelWidgetProps>>;
+            authoring?: {
+                onUpdate?(current: IArticle, next: IArticle): Promise<IArticle>;
+            };
         }
     }
 
@@ -180,6 +181,12 @@ declare module 'superdesk-api' {
         UNPUBLISHED = 'unpublished',
     }
 
+
+    export interface IRelatedArticle {
+        _id: IArticle['_id'];
+        type: IArticle['type'];
+    }
+
     export interface IArticle extends IBaseRestApiResponse {
         _id: string;
         _current_version: number;
@@ -199,7 +206,7 @@ declare module 'superdesk-api' {
         priority?: any;
         urgency: any;
         anpa_category?: any;
-        subject?: any;
+        subject?: Array<ISubject>;
         company_codes?: Array<any>;
         ednote?: string;
         authors?: Array<IAuthor>;
@@ -220,8 +227,15 @@ declare module 'superdesk-api' {
         sign_off: string;
         feature_media?: any;
         media_description?: string;
-        associations?: { string: IArticle };
-        type: 'text' | 'picture' | 'video' | 'audio' | 'preformatted' | 'graphic' | 'composite';
+        associations?: {[id: string]: IArticle | IRelatedArticle};
+        type:
+            | 'text'
+            | 'picture'
+            | 'video'
+            | 'audio'
+            | 'preformatted'
+            | 'graphic'
+            | 'composite';
         firstpublished?: string;
         linked_in_packages?: Array<{
             package: string;
@@ -321,6 +335,8 @@ declare module 'superdesk-api' {
         // remove when SDESK-4343 is done.
         selected?: any;
 
+        es_highlight?: any;
+
         // other fields which don't exist in the database, don't belong to this entity and should be removed
         error?: any;
         _editable?: any;
@@ -342,7 +358,7 @@ declare module 'superdesk-api' {
     export interface IPublishedArticle extends IArticle {
 
         /** id in published collection, different for each correction */
-        item_id: string; 
+        item_id: string;
 
         /** item copy in archive collection, always the latest version of the item */
         archive_item: IArticle;
@@ -417,13 +433,57 @@ declare module 'superdesk-api' {
         slack_user_id: string;
     }
 
+    export interface IVocabularyTag {
+        text: string;
+    }
+
+    export interface IVocabulary extends IBaseRestApiResponse {
+        _deleted: boolean;
+        display_name: string;
+        helper_text?: string;
+        popup_width?: number;
+        type: string;
+        items: Array<{ name: string; qcode: string; is_active: boolean }>;
+        single_value?: boolean;
+        schema_field?: string;
+        dependent?: boolean;
+        service: {};
+        priority?: number;
+        unique_field: string;
+        schema: {};
+        field_type:
+            | 'text'
+            | 'media'
+            | 'date'
+            | 'embed'
+            | 'related_content'
+            | 'custom';
+        field_options?: { // Used for related content fields
+            allowed_types?: any;
+            allowed_workflows?: any;
+            multiple_items?: { enabled: boolean; max_items: number };
+        };
+        custom_field_type?: string;
+        custom_field_config?: { [key: string]: any };
+        date_shortcuts?: Array<{ value: number; term: string; label: string }>;
+        init_version?: number;
+        preffered_items?: boolean;
+        tags?: Array<IVocabularyTag>;
+    }
+
+    export interface IArticleField extends IVocabulary {
+        single?: boolean;
+        preview?: boolean;
+    }
+
+    export type IContentProfileEditorConfig = {[key: string]: IArticleField};
 
     export interface IContentProfile {
         _id: string;
         label: string;
         description: string;
         schema: Object;
-        editor: Object;
+        editor: IContentProfileEditorConfig;
         widgets_config: Array<{widget_id: string; is_displayed: boolean}>;
         priority: number;
         enabled: boolean;
@@ -431,6 +491,8 @@ declare module 'superdesk-api' {
         created_by: string;
         updated_by: string;
     }
+
+    
 
 
     // PAGE
@@ -761,6 +823,7 @@ declare module 'superdesk-api' {
             formatFiltersForServer?: (filters: ICrudManagerFilters) => ICrudManagerFilters,
         ): Promise<IRestApiResponse<T>>;
         patch<T extends IBaseRestApiResponse>(endpoint, current: T, next: T): Promise<T>;
+        patchRaw<T extends IBaseRestApiResponse>(endpoint, id: T['_id'], etag: T['_etag'], patch: Partial<T>): Promise<T>;
         delete<T extends IBaseRestApiResponse>(endpoint, item: T): Promise<void>;
     }
 
@@ -827,7 +890,10 @@ declare module 'superdesk-api' {
                 isLockedByCurrentUser(article: IArticle): boolean;
 
                 isPersonal(article: IArticle): boolean;
-                update(nextArticle: IArticle): void;
+                patch(article: IArticle, patch: Partial<IArticle>): void;
+
+                isArchived(article: IArticle): boolean;
+                isPublished(article: IArticle): boolean;
             };
             contentProfile: {
                 get(id: string): Promise<IContentProfile>;
@@ -956,6 +1022,16 @@ declare module 'superdesk-api' {
         archive_autocomplete: boolean;
         workflow_allow_multiple_updates: boolean;
 
+        // TANSA SERVER CONFIG
+        tansa?: {
+            base_url: string;
+            app_id: string;
+            app_version: string;
+            user_id: string;
+            profile_id: number;
+            license_key: string;
+            profiles: {[language: string]: number};
+        },
 
         // FROM CLIENT
         server: {
@@ -1035,8 +1111,12 @@ declare module 'superdesk-api' {
             singleLineView: any;
             singleLine: any;
             priority: any;
-            firstLine: any;
-            secondLine: any;
+            firstLine: Array<string>,
+            secondLine: Array<string>,
+            relatedItems: {
+                firstLine: Array<string>,
+                secondLine: Array<string>,
+            };
         };
         item_profile: {
             change_profile: any;
@@ -1167,5 +1247,6 @@ declare module 'superdesk-api' {
     interface ISubject {
         name: string;
         qcode: string;
+        scheme?: string;
     }
 }
