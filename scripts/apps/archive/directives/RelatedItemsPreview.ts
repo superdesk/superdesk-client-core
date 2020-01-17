@@ -16,7 +16,7 @@ export function RelatedItemsPreview(relationsService) {
         scope: {
             item: '=',
             field: '<',
-            showActionMenu: '=?',
+            preview: '=?',
         },
         template: require('../views/related-items-preview.html'),
         link: function(scope) {
