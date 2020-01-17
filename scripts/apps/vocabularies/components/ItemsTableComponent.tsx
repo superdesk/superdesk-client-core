@@ -257,6 +257,7 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
                 <input
                     type="text"
                     value={this.state.searchTerm}
+                    placeholder={gettext('Search')}
                     onChange={(event) => {
                         this.setState({searchTerm: event.target.value, page: 1});
                     }}
