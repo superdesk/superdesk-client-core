@@ -44,14 +44,12 @@ describe('templates', () => {
         monitoring.openMonitoring();
         workspace.selectDesk('Sports Desk');
         authoring.createTextItemFromTemplate('new');
-        browser.sleep(1000); // wait for animation
         expect(authoring.getBodyText()).toBe('This is body from the template');
         expect(authoring.getHeaderSluglineText()).toBe('Test Template');
         expect(authoring.getHeadlineText()).toBe('New Item');
 
         authoring.close();
         workspace.selectDesk('Politic Desk');
-        browser.sleep(1000); // wait for animation
         authoring.createTextItemFromTemplate('new');
         expect(authoring.getBodyText()).toBe('This is body from the template');
         expect(authoring.getHeaderSluglineText()).toBe('Test Template');
