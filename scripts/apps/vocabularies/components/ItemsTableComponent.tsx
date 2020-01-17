@@ -19,14 +19,14 @@ interface IProps {
 
 interface IState {
     targetInput: any;
-    items: Array<{[key: string]: any}>;
+    items: Array<{qcode?: string; name?: string; is_active?: boolean}>;
     itemsValidation: Array<{[key: string]: any}>;
     caretPosition: any;
     page: number;
     searchTerm: string;
 }
 
-const pageSize = 5;
+const pageSize = 50;
 
 function getPageCount(items: IState['items']) {
     return Math.ceil(items.length / pageSize);
@@ -35,6 +35,7 @@ function getPageCount(items: IState['items']) {
 export default class ItemsTableComponent extends React.Component<IProps, IState> {
     static propTypes: any;
     static defaultProps: any;
+    getIndex: (item: IState['items'][0]) => number;
 
     constructor(props) {
         super(props);
@@ -46,6 +47,8 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
             page: 1,
             searchTerm: '',
         };
+
+        this.getIndex = (item) => this.state.items.indexOf(item);
     }
 
     componentDidUpdate() {
@@ -75,7 +78,8 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
         });
     }
 
-    inputField(field: ISchemaField, item, index) {
+    inputField(field: ISchemaField, item) {
+        const index = this.getIndex(item);
         const value = item[field.key] || '';
         const disabled = !item.is_active;
         const update = (event) => {
@@ -165,13 +169,18 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
     render() {
         const takeFrom = (this.state.page - 1) * pageSize;
         const takeTo = this.state.page * pageSize;
+        const filteredItems = this.state.items
+            .filter((item) => {
+                return item?.qcode.toLocaleLowerCase().includes(this.state.searchTerm)
+                    || item?.name.toLocaleLowerCase().includes(this.state.searchTerm);
+            });
 
         return (
             <div>
                 <ReactPaginate
                     previousLabel={gettext('prev')}
                     nextLabel={gettext('next')}
-                    pageCount={getPageCount(this.state.items)}
+                    pageCount={getPageCount(filteredItems)}
                     marginPagesDisplayed={2}
                     pageRangeDisplayed={5}
                     onPageChange={({selected}) => {
@@ -205,7 +214,7 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
                     type="text"
                     value={this.state.searchTerm}
                     onChange={(event) => {
-                        this.setState({searchTerm: event.target.value});
+                        this.setState({searchTerm: event.target.value, page: 1});
                     }}
                 />
 
@@ -227,14 +236,12 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
                     </thead>
                     <tbody>
                         {
-                            this.state.items.slice(takeFrom, takeTo).map((item, i) => {
-                                const absoluteIndex = takeFrom + i;
-
+                            filteredItems.slice(takeFrom, takeTo).map((item, i) => {
                                 return (
-                                    <tr key={absoluteIndex}>
+                                    <tr key={this.getIndex(item)}>
                                         {this.props.schemaFields.map((field) => (
                                             <td key={field.key}>
-                                                {this.inputField(field, item, absoluteIndex)}
+                                                {this.inputField(field, item)}
                                             </td>
                                         ))}
                                         <td>
@@ -250,7 +257,9 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
                                         <td>
                                             <button
                                                 className="icn-btn"
-                                                onClick={() => this.props.remove(absoluteIndex)}
+                                                onClick={() => {
+                                                    this.props.remove(this.getIndex(item));
+                                                }}
                                             >
                                                 <i className="icon-close-small" />
                                             </button>
