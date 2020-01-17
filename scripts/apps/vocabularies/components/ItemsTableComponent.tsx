@@ -169,10 +169,11 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
     render() {
         const takeFrom = (this.state.page - 1) * pageSize;
         const takeTo = this.state.page * pageSize;
-        const filteredItems = this.state.items
-            .filter((item) => {
-                return item?.qcode.toLocaleLowerCase().includes(this.state.searchTerm)
-                    || item?.name.toLocaleLowerCase().includes(this.state.searchTerm);
+        const filteredItems = this.state.searchTerm.length < 1
+            ? this.state.items
+            : this.state.items.filter((item) => {
+                return item.qcode?.toLocaleLowerCase().includes(this.state.searchTerm)
+                    || item.name?.toLocaleLowerCase().includes(this.state.searchTerm);
             });
 
         return (
@@ -196,12 +197,15 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
                         id="add-new-btn"
                         className="btn btn--primary"
                         onClick={() => {
-                            this.props.addItem();
+                            // clearing search before adding an item so it doesn't get filtered
+                            this.setState({searchTerm: ''}, () => {
+                                this.props.addItem();
 
-                            // using a timeout to wait for this.state.items to update after adding an item
-                            // in case adding an item causes page count to increase
-                            setTimeout(() => {
-                                this.setState({page: getPageCount(this.state.items)});
+                                // using a timeout to wait for this.state.items to update after adding an item
+                                // in case adding an item causes page count to increase
+                                setTimeout(() => {
+                                    this.setState({page: getPageCount(this.state.items)});
+                                });
                             });
                         }}
                     >

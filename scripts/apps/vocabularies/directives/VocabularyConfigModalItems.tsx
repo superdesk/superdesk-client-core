@@ -67,6 +67,12 @@ export const VocabularyConfigModalItems: any = () => ({
             scope.$applyAsync(() => {
                 ngForm.$setDirty();
                 scope.addItem();
+
+                setTimeout(() => {
+                    const modalBody = document.querySelector('.modal__body');
+
+                    modalBody.scrollTop = modalBody.scrollHeight;
+                });
             });
         };
 
