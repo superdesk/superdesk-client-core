@@ -1,3 +1,6 @@
+import {IArticle} from 'superdesk-api';
+import {IVocabulary} from 'superdesk-interfaces/Vocabulary';
+
 /**
  * @ngdoc directive
  * @module superdesk.apps.archive
@@ -9,6 +12,14 @@
  *
  */
 
+interface IScope extends ng.IScope {
+    item: IArticle;
+    field: IVocabulary;
+    preview: boolean;
+    loading: boolean;
+    relatedItems: Array<IArticle>;
+}
+
 RelatedItemsPreview.$inject = ['relationsService'];
 
 export function RelatedItemsPreview(relationsService) {
@@ -19,7 +30,7 @@ export function RelatedItemsPreview(relationsService) {
             preview: '=?',
         },
         template: require('../views/related-items-preview.html'),
-        link: function(scope) {
+        link: function(scope: IScope) {
             scope.loading = true;
             relationsService.getRelatedItemsForField(scope.item, scope.field._id)
                 .then((items) => {
