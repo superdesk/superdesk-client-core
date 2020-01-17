@@ -1,5 +1,5 @@
 import {getSelectSingleValue} from './select_single_value';
-import {fetchAll} from 'core/helpers/fetch-all-pages';
+import {fetchAll} from 'core/helpers/fetch-all';
 
 export const ContentFilterSingleValue = getSelectSingleValue(
     () => fetchAll('content_filters', {field: 'name', direction: 'ascending'})
