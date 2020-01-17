@@ -23,6 +23,7 @@ interface IState {
     itemsValidation: Array<{[key: string]: any}>;
     caretPosition: any;
     page: number;
+    searchTerm: string;
 }
 
 const pageSize = 5;
@@ -43,6 +44,7 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
             caretPosition: '',
             targetInput: '',
             page: 1,
+            searchTerm: '',
         };
     }
 
@@ -198,6 +200,14 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
                         <span>{gettext('Add Item')}</span>
                     </button>
                 </div>
+
+                <input
+                    type="text"
+                    value={this.state.searchTerm}
+                    onChange={(event) => {
+                        this.setState({searchTerm: event.target.value});
+                    }}
+                />
 
                 <table>
                     <thead>
