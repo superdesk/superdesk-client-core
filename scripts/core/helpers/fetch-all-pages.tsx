@@ -24,7 +24,7 @@ function fetchPage<T extends IBaseRestApiResponse>(items: Array<T>, url: string,
         });
 }
 
-export function fetchAllPages<T extends IBaseRestApiResponse>(endpoint: string, sort: ISortOption) {
+export function fetchAll<T extends IBaseRestApiResponse>(endpoint: string, sort: ISortOption) {
     const sortOption = (sort.direction === 'descending' ? '-' : '') + sort.field;
 
     return ng.getService('session')
