@@ -3,6 +3,7 @@ import {getSuperdeskApiImplementation} from './get-superdesk-api-implementation'
 import {extensions} from 'core/extension-imports.generated';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {MetadataService} from 'apps/authoring/metadata/metadata';
+import {IDeployConfig} from 'superdesk-api';
 
 export function registerExtensions(
     superdesk,
@@ -12,6 +13,7 @@ export function registerExtensions(
     session,
     authoringWorkspace: AuthoringWorkspaceService,
     metadata: MetadataService,
+    deployConfig: IDeployConfig,
 ): Promise<void> {
     return Promise.all(
         Object.keys(extensions).map((extensionId) => {
@@ -26,6 +28,7 @@ export function registerExtensions(
                 session,
                 authoringWorkspace,
                 metadata,
+                deployConfig,
             );
 
             return extensionObject.extension.activate(superdeskApi).then((activationResult) => {

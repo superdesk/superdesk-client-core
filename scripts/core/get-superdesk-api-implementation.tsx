@@ -5,6 +5,7 @@ import {
     IArticle,
     IContentProfile,
     IEvents,
+    IDeployConfig,
 } from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {getGenericListPageComponent} from './ui/components/ListPage/generic-list-page';
@@ -130,6 +131,7 @@ export function getSuperdeskApiImplementation(
     session,
     authoringWorkspace: AuthoringWorkspaceService,
     metadata: MetadataService,
+    deployConfig: IDeployConfig,
 ): ISuperdesk {
     return {
         dataApi: dataApi,
@@ -197,6 +199,9 @@ export function getSuperdeskApiImplementation(
             },
         },
         state: applicationState,
+        instance: {
+            deployConfig,
+        },
         ui: {
             article: {
                 view: (id: string) => {
