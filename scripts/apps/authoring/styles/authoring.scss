@@ -247,7 +247,8 @@
     bottom: 0;
     background: rgba(0,0,0,0.85);
     z-index: $zindexFixedNavbar;
-    ul > li {
+
+    .opened-articles__list > li {
         @include border-box();
         padding: 0 1.6rem;
         max-width: 24rem;
@@ -290,13 +291,15 @@
         }
     }
     .list {
+        display: flex;
+        flex-wrap: wrap;
         margin-left: 31px;
         margin-right: 250px;
         &.full-width {
             margin-right: 0;
         }
         > li {
-            float: left;
+            flex: 1 1 auto;
             border-right: 1px solid #333;
         }
     }
@@ -321,6 +324,15 @@
                 cursor: pointer;
                 background: $sd-blue;
             }
+        }
+    }
+
+    .dropdown__menu.dropdown--dropup {
+        top: auto;
+        bottom: 0;
+
+        li {
+            padding: 0;
         }
     }
 }

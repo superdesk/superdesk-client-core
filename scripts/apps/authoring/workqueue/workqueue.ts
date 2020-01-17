@@ -283,6 +283,13 @@ function WorkqueueCtrl(
             return $rootScope.link('authoring', item);
         }
     };
+
+    $scope.$on('$locationChangeSuccess', () => {
+        $scope.isMultiedit = $route.current && $route.current._id === 'multiedit';
+        if ($scope.isMultiedit) {
+            $scope.active = null;
+        }
+    });
 }
 
 function WorkqueueListDirective() {
