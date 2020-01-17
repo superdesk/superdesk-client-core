@@ -3,6 +3,7 @@ import ReactPaginate from 'react-paginate';
 import ObjectEditor from './ObjectEditor';
 import {has} from 'lodash';
 import {gettext} from 'core/utils';
+import {ISortOption} from 'superdesk-api';
 
 interface ISchemaField {
     key: string;
@@ -24,6 +25,7 @@ interface IState {
     caretPosition: any;
     page: number;
     searchTerm: string;
+    sort: ISortOption | null;
 }
 
 const pageSize = 50;
@@ -36,6 +38,7 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
     static propTypes: any;
     static defaultProps: any;
     getIndex: (item: IState['items'][0]) => number;
+    sortFields: Array<string>;
 
     constructor(props) {
         super(props);
@@ -46,9 +49,11 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
             targetInput: '',
             page: 1,
             searchTerm: '',
+            sort: null,
         };
 
         this.getIndex = (item) => this.state.items.indexOf(item);
+        this.sortFields = [];
     }
 
     componentDidUpdate() {
@@ -56,6 +61,19 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
 
         if (caretPosition != null) {
             this.setCaretPosition(targetInput, caretPosition);
+        }
+
+        if (this.sortFields.length < 1 && this.state.items.length > 0) {
+            this.sortFields = this.state.items.length < 1 ? [] : Object.keys(this.state.items[0]);
+        }
+
+        if (this.state.sort == null && this.sortFields.length > 0) {
+            this.setState({
+                sort: {
+                    field: this.sortFields.includes('name') ? 'name' : this.sortFields[0],
+                    direction: 'ascending',
+                },
+            });
         }
     }
 
@@ -176,12 +194,34 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
                     || item.name?.toLocaleLowerCase().includes(this.state.searchTerm);
             });
 
+        const filteredAndSorted = this.state.sort == null
+            ? filteredItems
+            : filteredItems.sort((a, b) => {
+                if (this.state.sort.direction === 'ascending') {
+                    if (a[this.state.sort.field] < b[this.state.sort.field]) {
+                        return -1;
+                    } else if (a[this.state.sort.field] > b[this.state.sort.field]) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                } else {
+                    if (a[this.state.sort.field] < b[this.state.sort.field]) {
+                        return 1;
+                    } else if (a[this.state.sort.field] > b[this.state.sort.field]) {
+                        return -1;
+                    } else {
+                        return 0;
+                    }
+                }
+            });
+
         return (
             <div>
                 <ReactPaginate
                     previousLabel={gettext('prev')}
                     nextLabel={gettext('next')}
-                    pageCount={getPageCount(filteredItems)}
+                    pageCount={getPageCount(filteredAndSorted)}
                     marginPagesDisplayed={2}
                     pageRangeDisplayed={5}
                     onPageChange={({selected}) => {
@@ -222,6 +262,45 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
                     }}
                 />
 
+                <br />
+
+                {
+                    this.state.sort == null ? null : (
+                        <div>
+                            <span>{gettext('sort')}</span>
+
+                            <select
+                                value={this.state.sort.field}
+                                onChange={(event) => {
+                                    this.setState({sort: {...this.state.sort, field: event.target.value}});
+                                }}
+                            >
+                                {
+                                    this.sortFields.map((field) => {
+                                        return (
+                                            <option key={field}>{field}</option>
+                                        );
+                                    })
+                                }
+                            </select>
+
+                            <select
+                                value={this.state.sort.direction}
+                                onChange={(event) => {
+                                    const direction = event.target.value;
+
+                                    if (direction === 'ascending' || direction === 'descending') {
+                                        this.setState({sort: {...this.state.sort, direction: direction}});
+                                    }
+                                }}
+                            >
+                                <option value="ascending">Ascending</option>
+                                <option value="descending">Descending</option>
+                            </select>
+                        </div>
+                    )
+                }
+
                 <table>
                     <thead>
                     <tr>
@@ -240,7 +319,7 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
                     </thead>
                     <tbody>
                         {
-                            filteredItems.slice(takeFrom, takeTo).map((item, i) => {
+                            filteredAndSorted.slice(takeFrom, takeTo).map((item, i) => {
                                 return (
                                     <tr key={this.getIndex(item)}>
                                         {this.props.schemaFields.map((field) => (
