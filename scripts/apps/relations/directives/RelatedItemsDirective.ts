@@ -8,6 +8,8 @@ const ARCHIVE_TYPES = ['archive', 'published'];
 const isInArchive = (item: IArticle) => item._type != null && ARCHIVE_TYPES.includes(item._type);
 
 interface IScope extends IDirectiveScope<void> {
+    onCreated: (items: Array<IArticle>) => void;
+    gettext: (text: any, params?: any) => string;
     field: IArticleField;
     editable: boolean;
     item: IArticle;
@@ -43,6 +45,14 @@ export function RelatedItemsDirective(authoringWorkspace: AuthoringWorkspaceServ
         },
         templateUrl: 'scripts/apps/relations/views/related-items.html',
         link: function(scope: IScope, elem, attr) {
+            scope.onCreated = (items: Array<IArticle>) => {
+                items.forEach((item) => {
+                    scope.addRelatedItem(item);
+                });
+            };
+
+            scope.gettext = gettext;
+
             const dragOverClass = 'dragover';
             const fieldOptions = scope.field?.field_options || {};
             const allowed = fieldOptions.allowed_types || {};
