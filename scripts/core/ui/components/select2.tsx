@@ -72,6 +72,7 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
     private lastButtonHeight: number;
     private search: (search: string) => void;
     private wrapper: HTMLDivElement;
+    handleClosing: (e: Event) => void;
 
     constructor(props: IProps<T>) {
         super(props);
@@ -87,18 +88,24 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
         };
 
         this.search = throttle(searchFn, 300, {leading: false});
-    }
 
-    componentDidMount() {
-        // capture all scroll events and close autocomplete on scroll
-        // unless that scroll event is coming from the autocomplete itself
-        window.addEventListener('scroll', (e) => {
+        this.handleClosing = (e: Event) => {
+            // capture all scroll events and close autocomplete on scroll
+            // unless that scroll event is coming from the autocomplete itself
             const {target} = e;
 
             if (this.state.isOpen === true && target instanceof Node && !this.wrapper.contains(target)) {
                 this.setState({isOpen: false});
             }
-        }, true);
+        };
+    }
+
+    componentDidMount() {
+        window.addEventListener('scroll', this.handleClosing, true);
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('scroll', this.handleClosing, true);
     }
 
     render() {
