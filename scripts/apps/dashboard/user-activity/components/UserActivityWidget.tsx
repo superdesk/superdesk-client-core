@@ -21,6 +21,7 @@ interface IState {
     user?: IUser;
     groups: Array<IGroup> | null;
     groupsData: Array<{ id; itemIds; itemsById }> | null;
+    loading: boolean;
 }
 
 function genericFetch({search, api}, repo, filters) {
@@ -220,7 +221,24 @@ export default class UserActivityWidget extends React.Component<{}, IState> {
             searchOpen: true,
             groups: null,
             groupsData: null,
+            loading: false,
         };
+    }
+
+    componentDidMount() {
+        [
+            'item:lock',
+            'item:unlock',
+            'item:deleted',
+        ].map((event) =>
+            this.services.$rootScope.$on(event, this.refreshItems.bind(this)),
+        );
+    }
+
+    refreshItems() {
+        if (this.state.user) {
+            this.fetchGroupsData();
+        }
     }
 
     async fetchItems(group: IGroup) {
@@ -249,7 +267,7 @@ export default class UserActivityWidget extends React.Component<{}, IState> {
         const promises = groups.map((group) => this.fetchItems(group));
 
         Promise.all(promises).then((data) => {
-            this.setState({groupsData: data});
+            this.setState({groupsData: data, loading: false});
         });
     }
 
@@ -327,6 +345,8 @@ export default class UserActivityWidget extends React.Component<{}, IState> {
     }
 
     render() {
+        const {loading} = this.state;
+
         return (
             <div className="widget-container">
                 <div className="main-list" style={{top: 0}}>
@@ -356,7 +376,7 @@ export default class UserActivityWidget extends React.Component<{}, IState> {
                                 focus={false}
                                 onSelect={(user) => {
                                     this.setState(
-                                        {user, groups: GET_GROUPS(user._id, this.services)},
+                                        {user, groups: GET_GROUPS(user._id, this.services), loading: true},
                                         () => {
                                             this.fetchGroupsData();
                                         },
@@ -365,6 +385,9 @@ export default class UserActivityWidget extends React.Component<{}, IState> {
                             />
                         </form>
                     </div>
+                    {
+                        loading && <div className="item-group__loading" />
+                    }
                     {this.state.user && this.state.groupsData && (
                         <div className="content-list-holder">
                             <div className="shadow-list-holder">
