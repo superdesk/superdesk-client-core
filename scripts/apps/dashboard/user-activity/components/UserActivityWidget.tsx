@@ -9,8 +9,9 @@ import {SelectUser} from 'core/ui/components/SelectUser';
 interface IGroup {
     id: string;
     label: string;
-    repo: string;
-    query: any;
+    repo?: string; // not used if self.query is a function
+    // pass the query or build multiple queries with the provided function
+    query: any | ((fetchFn: (repo: string, criteria: any) => Promise<any>) => Promise<any>);
     collapsed?: boolean;
 }
 
@@ -20,6 +21,19 @@ interface IState {
     user?: IUser;
     groups: Array<IGroup> | null;
     groupsData: Array<{ id; itemIds; itemsById }> | null;
+}
+
+function genericFetch(searchService, apiService, repo, filters) {
+    let query = searchService.query();
+
+    query.clear_filters();
+    query.size(1).filter(filters);
+
+    let criteria = query.getCriteria(true);
+
+    criteria.repo = repo;
+
+    return apiService.query('search', criteria);
 }
 
 function getQueryMarkedForUser(userId) {
@@ -112,13 +126,13 @@ const GET_GROUPS = (userId): Array<IGroup> => {
                 },
             },
         },
-        // TODO:
-        // {
-        //     id: 'moved',
-        //     label: gettext('Moved to a working stage by this user'),
-        //     repo: 'archive',
-        //     query: {},
-        // },
+        {
+            id: 'moved',
+            label: gettext('Moved to a working stage by this user'),
+            query(fetchFn) {
+                return fetchFn('archive_history', {}); // TODO: fetch items first and then filter here
+            },
+        },
     ];
 };
 
@@ -157,16 +171,9 @@ export default class UserActivityWidget extends React.Component<{}, IState> {
 
     async fetchItems(group: IGroup) {
         const {api, search} = this.services;
-        let query = search.query();
-
-        query.clear_filters();
-        query.size(1).filter(group.query);
-
-        let criteria = query.getCriteria(true);
-
-        criteria.repo = group.repo;
-
-        const {_items} = await api.query('search', criteria);
+        const {_items} = typeof group.query === 'function'
+            ? await group.query((repo, filters) => genericFetch(search, api, repo, filters))
+            : await genericFetch(search, api, group.repo, group.query);
 
         const itemIds = [];
         const itemsById = {};
