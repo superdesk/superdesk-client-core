@@ -1,4 +1,6 @@
-import {IExtension, IArticle, ISuperdesk} from 'superdesk-api';
+import {IExtension, IArticle, ISuperdesk, onPublishMiddlewareResult} from 'superdesk-api';
+import {IPlanningAssignmentService} from './interfaces';
+
 import ng from 'superdesk-core/scripts/core/services/ng';
 
 function onSpike(superdesk: ISuperdesk, item: IArticle) {
@@ -34,7 +36,7 @@ function onSpikeMultiple(superdesk: ISuperdesk, items: Array<IArticle>) {
     }
 }
 
-function onPublishArticle(superdesk: ISuperdesk, item: IArticle) {
+function onPublishArticle(superdesk: ISuperdesk, item: IArticle): Promise<onPublishMiddlewareResult> {
     if (!superdesk ||
         !superdesk.instance ||
         !superdesk.instance.deployConfig ||
@@ -44,22 +46,22 @@ function onPublishArticle(superdesk: ISuperdesk, item: IArticle) {
         return Promise.resolve({});
     }
 
-    const assignmentService = ng.get('assignments');
+    const assignmentService: IPlanningAssignmentService = ng.get('assignments');
 
     return assignmentService.onPublishFromAuthoring(item);
 }
 
-function onArticleRewriteAfter(superdesk: ISuperdesk, item: IArticle) {
+function onArticleRewriteAfter(superdesk: ISuperdesk, item: IArticle): Promise<IArticle> {
     if (!superdesk ||
         !superdesk.instance ||
         !superdesk.instance.deployConfig ||
         !superdesk.instance.deployConfig.config ||
         !superdesk.instance.deployConfig.config.planning_link_updates_to_coverage
     ) {
-        return Promise.resolve({});
+        return Promise.resolve(item);
     }
 
-    const assignmentService = ng.get('assignments');
+    const assignmentService: IPlanningAssignmentService = ng.get('assignments');
 
     return assignmentService.onArchiveRewrite(item);
 }
