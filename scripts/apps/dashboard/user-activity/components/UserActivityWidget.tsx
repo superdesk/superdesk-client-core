@@ -23,8 +23,8 @@ interface IState {
     groupsData: Array<{ id; itemIds; itemsById }> | null;
 }
 
-function genericFetch(searchService, apiService, repo, filters) {
-    let query = searchService.query();
+function genericFetch({search, api}, repo, filters) {
+    let query = search.query();
 
     query.clear_filters();
     query.size(1).filter(filters);
@@ -33,7 +33,7 @@ function genericFetch(searchService, apiService, repo, filters) {
 
     criteria.repo = repo;
 
-    return apiService.query('search', criteria);
+    return api.query('search', criteria);
 }
 
 function getQueryMarkedForUser(userId) {
@@ -44,7 +44,7 @@ function getQueryMarkedForUser(userId) {
     };
 }
 
-function getQueryLockedForuser(userId) {
+function getQueryLockedByUser(userId) {
     return {
         term: {
             lock_user: userId,
@@ -65,7 +65,7 @@ function getQueryNotLockedOrLockedByMe(userId) {
                         },
                     },
                 },
-                {...getQueryLockedForuser(userId)},
+                {...getQueryLockedByUser(userId)},
             ],
         },
     };
@@ -98,13 +98,24 @@ function getQueryCreatedByUser(userId) {
     };
 }
 
-const GET_GROUPS = (userId): Array<IGroup> => {
+function getQueryMovedByUser(userId) {
+    return {
+        bool: {
+            must: [
+                {match: {'task.user': userId}},
+                {term: {operation: 'move'}},
+            ],
+        },
+    };
+}
+
+const GET_GROUPS = (userId, services: any): Array<IGroup> => {
     return [
         {
             id: 'locked',
             label: gettext('Locked by this user'),
             repo: 'archive',
-            query: {...getQueryLockedForuser(userId)},
+            query: {...getQueryLockedByUser(userId)},
         },
         {
             id: 'marked',
@@ -116,25 +127,68 @@ const GET_GROUPS = (userId): Array<IGroup> => {
             id: 'created',
             label: gettext('Created by this user'),
             repo: 'archive',
-            query: {
-                bool: {
-                    must: [
-                        {...getQueryCreatedByUser(userId)},
-                        {...getQueryNotMarkedOrMarkedForMe(userId)},
-                        {...getQueryNotLockedOrLockedByMe(userId)},
-                    ],
-                },
+            query(fetchFn) {
+                return fetchFn('archive', {
+                    bool: {
+                        must: [
+                            {...getQueryCreatedByUser(userId)},
+                            {...getQueryNotMarkedOrMarkedForMe(userId)},
+                            {...getQueryNotLockedOrLockedByMe(userId)},
+                        ],
+                    },
+                }).then((res) => {
+                    res._items = res._items.filter(filterOutItemsInIncomingStage(services));
+
+                    return res;
+                });
             },
         },
         {
             id: 'moved',
             label: gettext('Moved to a working stage by this user'),
             query(fetchFn) {
-                return fetchFn('archive_history', {}); // TODO: fetch items first and then filter here
+                return fetchFn('archive_history', {...getQueryMovedByUser(userId)})
+                    .then((res) => {
+                        res._items = res._items.filter(onlyHistoryItemsInWorkingStage(services));
+
+                        return res;
+                    });
             },
         },
     ];
 };
+
+function onlyHistoryItemsInWorkingStage({desks}) {
+    return (historyItem) => {
+        const stage = getStageForItem(historyItem, {desks});
+
+        return stage.working_stage === true;
+    };
+}
+
+function filterOutItemsInIncomingStage({desks}) {
+    return (item) => {
+        const stage = getStageForItem(item, {desks});
+
+        return stage.default_incoming === false;
+    };
+}
+
+function getStageForItem(item, {desks}) {
+    const stageId = item.task?.stage;
+
+    if (!stageId) {
+        return false;
+    }
+
+    const stage = desks.stageLookup[stageId] || null;
+
+    if (!stage) {
+        console.warn('Tried to find a stage with an invalid id', stageId);
+    }
+
+    return stage;
+}
 
 export default class UserActivityWidget extends React.Component<{}, IState> {
     services: any;
@@ -172,8 +226,8 @@ export default class UserActivityWidget extends React.Component<{}, IState> {
     async fetchItems(group: IGroup) {
         const {api, search} = this.services;
         const {_items} = typeof group.query === 'function'
-            ? await group.query((repo, filters) => genericFetch(search, api, repo, filters))
-            : await genericFetch(search, api, group.repo, group.query);
+            ? await group.query((repo, filters) => genericFetch({search, api}, repo, filters))
+            : await genericFetch({search, api}, group.repo, group.query);
 
         const itemIds = [];
         const itemsById = {};
@@ -302,7 +356,7 @@ export default class UserActivityWidget extends React.Component<{}, IState> {
                                 focus={false}
                                 onSelect={(user) => {
                                     this.setState(
-                                        {user, groups: GET_GROUPS(user._id)},
+                                        {user, groups: GET_GROUPS(user._id, this.services)},
                                         () => {
                                             this.fetchGroupsData();
                                         },
