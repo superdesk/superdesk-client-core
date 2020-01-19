@@ -230,6 +230,7 @@ export default class UserActivityWidget extends React.Component<{}, IState> {
             'item:lock',
             'item:unlock',
             'item:deleted',
+            'item:move',
         ].map((event) =>
             this.services.$rootScope.$on(event, this.refreshItems.bind(this)),
         );
