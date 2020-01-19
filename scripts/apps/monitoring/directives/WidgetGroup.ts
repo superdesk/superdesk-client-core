@@ -414,19 +414,23 @@ export function WidgetGroup(search, api, superdesk, desks, cards, $timeout, $q,
             };
 
             scope.updateList = function(listProps) {
-                var itemList = React.createElement(WidgetItemListComponent, {
-                    allowed: scope.allowed,
-                    customMonitoringWidget: $rootScope.config.features.customMonitoringWidget,
-                    svc: services,
-                    preview: scope.preview,
-                    select: scope.select,
-                    edit: scope.edit,
+                scope.updateListProps = {
+                    ...scope.updateListProps,
                     ...listProps,
-                });
+                };
+                var itemList = React.createElement(WidgetItemListComponent, scope.updateListProps);
 
                 ReactDOM.render(itemList, elem[0]);
             };
 
+            scope.updateListProps = {
+                allowed: scope.allowed,
+                customMonitoringWidget: $rootScope.config.features.customMonitoringWidget,
+                svc: services,
+                preview: scope.preview,
+                select: scope.select,
+                edit: scope.edit,
+            };
             scope.updateList({});
 
             // remove react elem on destroy
