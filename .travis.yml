@@ -5,13 +5,16 @@ sudo: required
 dist: trusty
 
 addons:
-  apt:
-    packages:
-        - google-chrome-stable
+    apt:
+        sources:
+            - google-chrome
 
 cache:
     directories:
         - $HOME/.cache/yarn
+
+before_install:
+  - sudo apt-get install -y --allow-unauthenticated google-chrome-stable
 
 script:
     - npm run test
