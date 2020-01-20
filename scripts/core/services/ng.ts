@@ -1,5 +1,5 @@
-import {waitUntil} from 'superdesk-core/scripts/core/helpers/waitUtil';
-let $injector: any = null;
+import {waitUntil} from 'core/helpers/waitUtil';
+let $injector = null;
 
 /**
  * @class
@@ -14,7 +14,7 @@ export default new class ProviderService {
      * @param {Object} injector The Angular $injector
      * @description Register an injector
      */
-    register(injector: any) {
+    register(injector) {
         $injector = injector;
     }
 
@@ -24,7 +24,7 @@ export default new class ProviderService {
      * @description Gets the given service from the injector. If a mock has been set
      * up for it, it returns that instead.
      */
-    get(name: string): any {
+    get(name) {
         if ($injector === null) {
             throw new Error('ng: $injector not registered for core/services/ng');
         }
@@ -32,16 +32,15 @@ export default new class ProviderService {
         return $injector.get(name);
     }
 
-    waitForServicesToBeAvailable(): Promise<void> {
+    waitForServicesToBeAvailable() {
         return waitUntil(() => $injector != null);
     }
 
-    getService(name: string): any {
+    getService(name) {
         return this.getServices([name]).then((res) => res[0]);
     }
-
-    getServices(names: Array<string>): Promise<Array<any>> {
-        return new Promise((resolve) => {
+    getServices(names) {
+        return new Promise((resolve, reject) => {
             this.waitForServicesToBeAvailable()
                 .then(() => {
                     resolve(names.map((name) => $injector.get(name)));
