@@ -705,6 +705,14 @@ declare module 'superdesk-api' {
         };
     }
 
+    export interface IProviderService {
+        register(injector: any): void;
+        get(name: string): any;
+        waitForServicesToBeAvailable(): Promise<void>;
+        getService(name: string): any;
+        getServices(names: Array<string>): Promise<Array<any>>;
+    }
+
     // APPLICATION API
 
     export type ISuperdesk = DeepReadonly<{
@@ -719,6 +727,7 @@ declare module 'superdesk-api' {
         };
         instance: {
             deployConfig?: IDeployConfig;
+            ng?: IProviderService;
         };
         ui: {
             article: {

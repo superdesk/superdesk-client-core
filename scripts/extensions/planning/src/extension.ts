@@ -1,8 +1,6 @@
 import {IExtension, IArticle, ISuperdesk, onPublishMiddlewareResult} from 'superdesk-api';
 import {IPlanningAssignmentService} from './interfaces';
 
-import ng from 'superdesk-core/scripts/core/services/ng';
-
 function onSpike(superdesk: ISuperdesk, item: IArticle) {
     const {gettext} = superdesk.localization;
 
@@ -37,33 +35,34 @@ function onSpikeMultiple(superdesk: ISuperdesk, items: Array<IArticle>) {
 }
 
 function onPublishArticle(superdesk: ISuperdesk, item: IArticle): Promise<onPublishMiddlewareResult> {
-    if (!superdesk ||
-        !superdesk.instance ||
-        !superdesk.instance.deployConfig ||
-        !superdesk.instance.deployConfig.config ||
-        !superdesk.instance.deployConfig.config.planning_check_for_assignment_on_publish
+    if (superdesk.instance &&
+        superdesk.instance.deployConfig &&
+        superdesk.instance.deployConfig.config &&
+        superdesk.instance.deployConfig.config.planning_check_for_assignment_on_publish &&
+        superdesk.instance.ng
     ) {
-        return Promise.resolve({});
+        const assignmentService: IPlanningAssignmentService = superdesk.instance.ng.get('assignments');
+
+        return assignmentService.onPublishFromAuthoring(item);
     }
 
-    const assignmentService: IPlanningAssignmentService = ng.get('assignments');
-
-    return assignmentService.onPublishFromAuthoring(item);
+    return Promise.resolve({});
 }
 
 function onArticleRewriteAfter(superdesk: ISuperdesk, item: IArticle): Promise<IArticle> {
-    if (!superdesk ||
-        !superdesk.instance ||
-        !superdesk.instance.deployConfig ||
-        !superdesk.instance.deployConfig.config ||
-        !superdesk.instance.deployConfig.config.planning_link_updates_to_coverage
+    if (superdesk &&
+        superdesk.instance &&
+        superdesk.instance.deployConfig &&
+        superdesk.instance.deployConfig.config &&
+        superdesk.instance.deployConfig.config.planning_link_updates_to_coverage &&
+        superdesk.instance.ng
     ) {
-        return Promise.resolve(item);
+        const assignmentService: IPlanningAssignmentService = superdesk.instance.ng.get('assignments');
+
+        return assignmentService.onArchiveRewrite(item);
     }
 
-    const assignmentService: IPlanningAssignmentService = ng.get('assignments');
-
-    return assignmentService.onArchiveRewrite(item);
+    return Promise.resolve(item);
 }
 
 const extension: IExtension = {
