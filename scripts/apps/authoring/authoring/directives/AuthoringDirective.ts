@@ -429,7 +429,7 @@ export function AuthoringDirective(
                 return onPublishMiddlewares.reduce(
                     (current, next) => {
                         return current.then((result) => {
-                            if (result.warnings != null) {
+                            if (result && result.warnings && result.warnings.length > 0) {
                                 warnings = warnings.concat(result.warnings);
                             }
 
@@ -442,11 +442,9 @@ export function AuthoringDirective(
                     initialValue,
                 )
                     .then((result) => {
-                        if (result.warnings != null) {
+                        if (result && result.warnings && result.warnings.length > 0) {
                             warnings = warnings.concat(result.warnings);
                         }
-
-                        return result;
                     })
                     .then(() => checkMediaAssociatedToUpdate())
                     .then((result) => {
