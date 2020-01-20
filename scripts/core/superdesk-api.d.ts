@@ -324,7 +324,9 @@ declare module 'superdesk-api' {
          * - **baseImage** - used in media editor, full screen preview
          *
          * Video items can also provide **thumbnail** and **viewImage** renditions which will be
-         * then used in list/preview.
+         * then used in list/preview. If there is **viewImage** it will use it for grid view/preview,
+         * **thumbnail** will be used as poster when video is being loaded. When there is no **viewImage**
+         * it will use **thumbnail** for both.
          */
         renditions?: {
             /** Original binary uploaded by user. */

@@ -17,14 +17,7 @@ const RENDITION_MAPPING = {
 
 export class VideoThumbnailEditor extends React.Component<IProps> {
     handleFiles(files: FileList) {
-        const file = files.item(0);
-        const notify = ng.get('notify');
-
-        if (file != null && file.type.startsWith('image')) {
-            this.uploadFile(file);
-        } else if (file != null) {
-            notify.error(gettext('Only images can be used for thumbnail.'));
-        }
+        this.uploadFile(files.item(0));
     }
 
     uploadFile(file: File) {
