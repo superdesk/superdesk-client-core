@@ -14,14 +14,15 @@ interface IProps<T> {
     renderItem(item: T): JSX.Element;
     getItemValue(item: T): string;
     onSelect(value: string): void;
-    onSearch?(search: string): void;
-    onFocus: boolean;
+    onSearch?(search: string): Promise<any>;
+    onFocus?: boolean | {hideOptions: boolean};
     'data-test-id'?: string;
 }
 
 interface IState {
     search: string;
     isOpen: boolean;
+    justInitialized: boolean;
 }
 
 const arrowDownStyles = {
@@ -76,11 +77,18 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
 
         this.state = {
             search: '',
-            isOpen: this.props.onFocus === true,
+            isOpen: this.props.onFocus != null,
+            justInitialized: true,
         };
 
         const searchFn = (search: string) => {
-            this.props.onSearch(search);
+            const doSearch = () => this.props.onSearch(search);
+
+            if (this.state.justInitialized === true) {
+                this.setState({justInitialized: false}, doSearch);
+            } else {
+                doSearch();
+            }
         };
 
         this.search = throttle(searchFn, 300, {leading: false});
@@ -97,8 +105,16 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                 wrapperStyle={{}}
                 wrapperProps={{'data-test-id': this.props['data-test-id']} as any}
                 renderMenu={(items, value, style) => {
+                    // options are hidden in order to prevent it covering other UI elements
+                    const hideOptions =
+                        this.state.justInitialized
+                        && typeof this.props.onFocus === 'object'
+                        && this.props.onFocus.hideOptions === true
+                            ? {opacity: 0}
+                            : {};
+
                     return (
-                        <div style={{...style, ...menuStyle}}>
+                        <div style={{...style, ...menuStyle, ...hideOptions}}>
                             {
                                 this.props.loading === true
                                     ? <div style={{padding: 10}}>{gettext('Loading...')}</div>

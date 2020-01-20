@@ -741,6 +741,7 @@ declare module 'superdesk-api' {
         onSelect(user: IUser): void;
         selectedUserId?: string;
         disabled?: boolean;
+        onFocus?: boolean | {hideOptions: boolean};
     }
 
 
