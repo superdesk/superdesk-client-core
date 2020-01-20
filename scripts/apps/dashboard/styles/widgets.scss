@@ -80,6 +80,10 @@
             &--no-shadow, &--no-shadow:hover {
                 box-shadow: none;
             }
+            &--fluid-height {
+                min-height: 34px;
+                height: inherit;
+            }
             input {
                 transition: all ease-in-out 0.16s;
                 flex-grow: 1;
@@ -125,10 +129,7 @@
 
             }
         }
-        .search-box--fluid-height {
-            min-height: 34px;
-            height: inherit;
-        }
+
         .content-list-holder {
             position: static;
             flex-grow: 1;
