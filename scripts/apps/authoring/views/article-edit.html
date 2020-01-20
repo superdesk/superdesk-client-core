@@ -635,7 +635,10 @@
         sd-auto-height
         sd-validation-error="error.extra[field._id].embed"
         tabindex="{{editor[field._id].order}}"></textarea>
-    <input type="text" class="sd-line-input__input" style="margin-bottom: 6px;"
+    <input
+        type="text"
+        class="sd-editor__default-input"
+        style="margin-bottom: 6px;"
         ng-model="item.extra[field._id].description"
         ng-disabled="!_editable"
         sd-remove-tags ng-change="autosave(item)"
