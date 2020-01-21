@@ -379,7 +379,16 @@
                  class="media-container__metadata"
                  data-item="item"></div>
             <div class="media-container__action-bar" ng-if="_editable">
-                <a class="btn btn--hollow btn--small" ng-click="editMedia()"><span translate>Edit metadata</span></a>
+                <div class="flex-grid flex-grid--medium-3">
+                    <div class="flex-grid__item sd-text__left" style="text-align: left;">
+                        <sd-video-thumbnail-editor data-item="item" data-on-change="autosave"></sd-video-thumbnail-editor>
+                    </div>
+                    <div class="flex-grid__item">
+                    </div>
+                    <div class="flex-grid__item">
+                        <a class="btn btn--hollow btn--small" ng-click="editMedia()"><span translate>Edit metadata</span></a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

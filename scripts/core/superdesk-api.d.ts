@@ -187,6 +187,18 @@ declare module 'superdesk-api' {
         type: IArticle['type'];
     }
 
+    export interface IRendition {
+        href: string;
+        mimetype: string;
+
+        /** media storage id, set when item is stored in superdesk */
+        media?: string;
+
+        // picture and video only
+        width?: number;
+        height?: number;
+    };
+
     export interface IArticle extends IBaseRestApiResponse {
         _id: string;
         _current_version: number;
@@ -312,17 +324,29 @@ declare module 'superdesk-api' {
          * - **baseImage** - used in media editor, full screen preview
          *
          * Video items can also provide **thumbnail** and **viewImage** renditions which will be
-         * then used in list/preview.
+         * then used in list/preview. If there is **viewImage** it will use it for grid view/preview,
+         * **thumbnail** will be used as poster when video is being loaded. When there is no **viewImage**
+         * it will use **thumbnail** for both.
          */
         renditions?: {
-            [key: string]: {
-                href: string;
-                mimetype: string;
+            /** Original binary uploaded by user. */
+            original?: IRendition;
 
-                // picture and video only
-                width?: number;
-                height?: number;
-            };
+            /**
+             * Image rendition up to 220x120, used in lists.
+             *
+             * Could be bigger picture for video items, it's used as poster there.
+             */
+            thumbnail?: IRendition;
+
+            /** Image rendition up to 640x640, used in preview/grid view. */
+            viewImage?: IRendition;
+
+            /** Image rendition up to 1400x1400, used for full screen preview. */
+            baseImage?: IRendition;
+
+            /** Other renditions, could be custom, video, audio etc. */
+            [key: string]: IRendition;
         };
 
         // planning extension
@@ -344,15 +368,6 @@ declare module 'superdesk-api' {
             archive?: boolean;
             externalsource: boolean;
         };
-    }
-
-    export interface IPublishedArticle extends IArticle {
-
-        /** id in published collection, different for each correction */
-        item_id: string;
-
-        /** item copy in archive collection, always the latest version of the item */
-        archive_item: IArticle;
     }
 
     export interface IPublishedArticle extends IArticle {
@@ -716,8 +731,12 @@ declare module 'superdesk-api' {
 
     export interface IDropZoneComponentProps {
         label: string;
+        className?: string;
         onDrop: (event: DragEvent) => void;
         canDrop: (event: DragEvent) => boolean;
+
+        onFileSelect?: (files: FileList) => void;
+        fileAccept?: string;
     }
 
     export interface IPropsModalHeader {
