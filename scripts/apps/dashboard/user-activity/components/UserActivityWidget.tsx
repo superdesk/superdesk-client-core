@@ -5,6 +5,7 @@ import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services';
 import ng from 'core/services/ng';
 import {gettext} from 'core/utils';
 import {SelectUser} from 'core/ui/components/SelectUser';
+import {logger} from 'core/services/logger';
 
 interface IGroup {
     id: string;
@@ -279,71 +280,69 @@ export default class UserActivityWidget extends React.Component<{}, IState> {
         const data = groupsData.find((g) => g.id === group.id);
 
         if (!data) {
-            console.warn(
+            logger.warn(
                 `Tried to render group '${group.id}' but no data was found`,
             );
             return null;
         }
 
         return (
-            <>
-                <div className="stage">
-                    <div className="stage-header">
-                        <button
-                            className={`stage-header__toggle ${
-                                group.collapsed ? 'closed' : ''
-                            }`}
-                            onClick={() => {
-                                const newGroups = groups.map((g) => {
-                                    if (g.id === group.id) {
-                                        g.collapsed = !g.collapsed;
-                                    }
+            <div className="stage">
+                <div className="stage-header">
+                    <button
+                        className={`stage-header__toggle ${
+                            group.collapsed ? 'closed' : ''
+                        }`}
+                        onClick={() => {
+                            const newGroups = groups.map((g) => {
+                                if (g.id === group.id) {
+                                    return {...g, collapsed: !g.collapsed};
+                                }
 
-                                    return g;
-                                });
+                                return g;
+                            });
 
-                                this.setState({
-                                    groups: newGroups,
-                                });
-                            }}
-                        >
-                            <i className="icon-chevron-down-thin" />
-                        </button>
-                        <span className="stage-header__name">
-                            {group.label}
-                        </span>
-                        <div className="stage-header__line" />
-                        <span className="label-total stage-header__number">
-                            {data.itemIds.length}
-                        </span>
-                    </div>
-                    {group.collapsed || (
-                        <div className="stage-content">
-                            <WidgetItemList
-                                customUIMessages={{
-                                    empty: gettext('No results for this user'),
-                                }}
-                                allowed={true}
-                                svc={this.services}
-                                preview={(item: IArticle) => {
-                                    this.services.superdesk.intent(
-                                        'preview',
-                                        'item',
-                                        item,
-                                    );
-                                }}
-                                select={angular.noop}
-                                edit={(item: IArticle) => {
-                                    this.services.authoringWorkspace.edit(item);
-                                }}
-                                itemIds={data.itemIds}
-                                itemsById={data.itemsById}
-                                loading={false}
-                            />
-                        </div>
-                    )}
+                            this.setState({
+                                groups: newGroups,
+                            });
+                        }}
+                    >
+                        <i className="icon-chevron-down-thin" />
+                    </button>
+                    <span className="stage-header__name">
+                        {group.label}
+                    </span>
+                    <div className="stage-header__line" />
+                    <span className="label-total stage-header__number">
+                        {data.itemIds.length}
+                    </span>
                 </div>
-            </>
+                {group.collapsed === true ? null : (
+                    <div className="stage-content">
+                        <WidgetItemList
+                            customUIMessages={{
+                                empty: gettext('No results for this user'),
+                            }}
+                            allowed={true}
+                            svc={this.services}
+                            preview={(item: IArticle) => {
+                                this.services.superdesk.intent(
+                                    'preview',
+                                    'item',
+                                    item,
+                                );
+                            }}
+                            select={angular.noop}
+                            edit={(item: IArticle) => {
+                                this.services.authoringWorkspace.edit(item);
+                            }}
+                            itemIds={data.itemIds}
+                            itemsById={data.itemsById}
+                            loading={false}
+                        />
+                    </div>
+                )}
+            </div>
         );
     }
 
@@ -389,21 +388,20 @@ export default class UserActivityWidget extends React.Component<{}, IState> {
                         </form>
                     </div>
                     {
-                        loading && <div className="item-group__loading" />
-                    }
-                    {this.state.user && this.state.groupsData && (
-                        <div className="content-list-holder">
-                            <div className="shadow-list-holder">
-                                <div className="content-list">
-                                    {this.state.groups.map((group) => (
-                                        <div key={`user-activity-${group.id}`}>
-                                            {this.renderGroup(group)}
+                        loading ? <div className="item-group__loading" /> :
+                            this.state.user && this.state.groupsData && (
+                                <div className="content-list-holder">
+                                    <div className="shadow-list-holder">
+                                        <div className="content-list">
+                                            {this.state.groups.map((group) => (
+                                                <div key={`user-activity-${group.id}`}>
+                                                    {this.renderGroup(group)}
+                                                </div>
+                                            ))}
                                         </div>
-                                    ))}
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                    )}
+                            )}
                 </div>
             </div>
         );

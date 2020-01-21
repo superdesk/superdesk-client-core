@@ -35,7 +35,7 @@ export class WidgetItemList extends React.Component<IProps> {
             return (
                 <div className="item-group__no-items">
                     {this.props.customUIMessages?.empty
-                        ? this.props.customUIMessages?.empty
+                        ? this.props.customUIMessages.empty
                         : gettext('No items in this stage')}
                 </div>
             );

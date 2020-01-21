@@ -288,7 +288,8 @@ export function WidgetGroup(search, api, superdesk, desks, cards, $timeout, $q,
                 }
 
                 if (container.scrollTop + container.offsetHeight >= container.scrollHeight - 3 &&
-                    lastScrollTop <= container.scrollTop) {
+                    lastScrollTop <= container.scrollTop
+                ) {
                     lastScrollTop = container.scrollTop;
                     return scope.fetchNext().then(() => {
                         setFetching();
