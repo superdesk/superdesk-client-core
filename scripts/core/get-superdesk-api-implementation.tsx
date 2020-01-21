@@ -6,6 +6,7 @@ import {
     IContentProfile,
     IEvents,
     IDeployConfig,
+    IProviderService,
 } from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {getGenericListPageComponent} from './ui/components/ListPage/generic-list-page';
@@ -202,7 +203,7 @@ export function getSuperdeskApiImplementation(
         state: applicationState,
         instance: {
             deployConfig,
-            ng,
+            ng: ng as IProviderService,
         },
         ui: {
             article: {
