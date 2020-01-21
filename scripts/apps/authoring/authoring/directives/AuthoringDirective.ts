@@ -984,9 +984,17 @@ export function AuthoringDirective(
             });
 
             $scope.$on('item:lock', (_e, data) => {
-                if ($scope.item._id === data.item && !_closing &&
-                    session.sessionId !== data.lock_session) {
-                    authoring.lock($scope.item, data.user);
+                if ($scope.item._id === data.item
+                    && !_closing
+                    && session.sessionId !== data.lock_session
+                ) {
+                    const {
+                        user,
+                        lock_time,
+                        lock_session,
+                    } = data;
+
+                    authoring.lock($scope.item, {user, lock_time, lock_session});
                 }
             });
 

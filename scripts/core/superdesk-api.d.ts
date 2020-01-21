@@ -368,6 +368,7 @@ declare module 'superdesk-api' {
             archive?: boolean;
             externalsource: boolean;
         };
+        _locked?: boolean;
     }
 
     export interface IPublishedArticle extends IArticle {
