@@ -18,8 +18,4 @@ before_install:
 
 script:
     - npm run test
-    - npm run lint
     - npm run build
-
-after_failure:
-    - cat /home/travis/build/superdesk/superdesk-client-core/scripts/extensions/planning/npm-debug.log

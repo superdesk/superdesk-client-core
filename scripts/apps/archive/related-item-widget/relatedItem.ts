@@ -3,7 +3,7 @@ import {isPublished} from 'apps/archive/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {extensions} from 'core/extension-imports.generated';
 import {IArticle, IExtensionActivationResult} from 'superdesk-api';
-import {flatMap} from "lodash";
+import {flatMap} from 'lodash';
 
 angular.module('superdesk.apps.dashboard.widgets.relatedItem', [
     'superdesk.apps.dashboard.widgets.base',
