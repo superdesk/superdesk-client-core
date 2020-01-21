@@ -111,7 +111,7 @@ export class MediaBlockComponent extends React.Component<any, any> {
         const rendition = data.renditions.baseImage || data.renditions.viewImage || data.renditions.original;
         const alt = data.alt_text || data.description_text || data.caption;
         const mediaType = data.type;
-        const editable = !readOnly && isMediaEditable(data);
+        const editable = !readOnly && (data._type !== 'externalsource' || isMediaEditable(data));
 
         return (
 

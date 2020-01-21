@@ -3,12 +3,8 @@ import {appConfig} from 'appConfig';
 import {IArticle} from 'superdesk-api';
 
 export function isMediaEditable(item?: IArticle) {
-    if (item != null) {
-        if (item._type != null) {
-            return item._type !== 'externalsource';
-        } else if (item._fetchable != null) {
-            return item._fetchable;
-        }
+    if (item != null && item._fetchable != null) {
+        return item._fetchable;
     }
 
     return (appConfig.features == null || appConfig.features.editFeaturedImage == null
