@@ -9,7 +9,7 @@ directories.forEach(({extensionName, absolutePath}) => {
 
     execSync(
         `cd ${extensionPath} && npm install && npm run compile`,
-        {stdio: 'inherit'},
+        {stdio: 'inherit'}
     );
 });
 
