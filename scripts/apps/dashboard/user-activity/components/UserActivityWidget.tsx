@@ -194,6 +194,7 @@ function getStageForItem(item, {desks}) {
 
 export default class UserActivityWidget extends React.Component<{}, IState> {
     services: any;
+    unbindListeners: Array<() => void>
 
     constructor(props) {
         super(props);
@@ -224,10 +225,12 @@ export default class UserActivityWidget extends React.Component<{}, IState> {
             groupsData: null,
             loading: false,
         };
+
+        this.refreshItems = this.refreshItems.bind(this);
     }
 
     componentDidMount() {
-        [
+        this.unbindListeners = [
             'item:lock',
             'item:unlock',
             'item:spike',
@@ -235,8 +238,12 @@ export default class UserActivityWidget extends React.Component<{}, IState> {
             'item:publish',
             'item:update',
         ].map((event) =>
-            this.services.$rootScope.$on(event, this.refreshItems.bind(this)),
+            this.services.$rootScope.$on(event, this.refreshItems),
         );
+    }
+
+    componentWillUnmount() {
+        this.unbindListeners.map((unbind) => unbind());
     }
 
     refreshItems() {
@@ -290,9 +297,7 @@ export default class UserActivityWidget extends React.Component<{}, IState> {
             <div className="stage">
                 <div className="stage-header">
                     <button
-                        className={`stage-header__toggle ${
-                            group.collapsed ? 'closed' : ''
-                        }`}
+                        className={`stage-header__toggle ${group.collapsed ? 'closed' : ''}`}
                         onClick={() => {
                             const newGroups = groups.map((g) => {
                                 if (g.id === group.id) {
