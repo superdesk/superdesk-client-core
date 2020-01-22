@@ -72,7 +72,7 @@ export class SelectUser extends React.Component<IPropsSelectUser, IState> {
 
         return (
             <Select2
-                onFocus={this.props.onFocus || true}
+                autoFocus={this.props.autoFocus || true}
                 disabled={this.props.disabled}
                 placeholder={gettext('Select a user')}
                 value={this.props.selectedUserId == null ? undefined : this.props.selectedUserId}

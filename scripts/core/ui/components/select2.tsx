@@ -15,7 +15,9 @@ interface IProps<T> {
     getItemValue(item: T): string;
     onSelect(value: string): void;
     onSearch?(search: string): Promise<any>;
-    onFocus?: boolean | {hideOptions: boolean};
+
+    // dropdown may be hidden until user starts typing in order to prevent it covering other UI elements
+    autoFocus?: boolean | {initializeWithDropdownHidden: boolean};
     'data-test-id'?: string;
 }
 
@@ -77,7 +79,7 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
 
         this.state = {
             search: '',
-            isOpen: this.props.onFocus != null,
+            isOpen: this.props.autoFocus != null,
             justInitialized: true,
         };
 
@@ -105,11 +107,10 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                 wrapperStyle={{}}
                 wrapperProps={{'data-test-id': this.props['data-test-id']} as any}
                 renderMenu={(items, value, style) => {
-                    // options are hidden in order to prevent it covering other UI elements
                     const hideOptions =
                         this.state.justInitialized
-                        && typeof this.props.onFocus === 'object'
-                        && this.props.onFocus.hideOptions === true
+                        && typeof this.props.autoFocus === 'object'
+                        && this.props.autoFocus.initializeWithDropdownHidden === true
                             ? {opacity: 0}
                             : {};
 
