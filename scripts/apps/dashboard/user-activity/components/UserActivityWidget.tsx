@@ -194,7 +194,7 @@ function getStageForItem(item, {desks}) {
 
 export default class UserActivityWidget extends React.Component<{}, IState> {
     services: any;
-    unbindListeners: Array<() => void>
+    unbindListeners: Array<() => void>;
 
     constructor(props) {
         super(props);
