@@ -118,7 +118,6 @@ const GET_GROUPS = (userId, services: any): Array<IGroup> => {
         {
             id: 'locked',
             label: gettext('Locked by this user'),
-            repo: 'archive',
             dataSource: {
                 repo: 'archive',
                 query: {...getQueryLockedByUser(userId)},
