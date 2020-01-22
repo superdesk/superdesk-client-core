@@ -590,7 +590,7 @@ export function AuthoringDirective(
                 // Check if there are unpublished related items without media-gallery
                 return relationsService.getRelatedItemsWithoutMediaGallery($scope.item, $scope.fields)
                     .then((related) => {
-                        if (related.length > 0) {
+                        if (related.length > 0 && !appConfig.publish_associated_items) {
                             return modal.confirm({
                                 bodyText: gettext(
                                     'There are unpublished related items that won\'t be sent out as related items.'

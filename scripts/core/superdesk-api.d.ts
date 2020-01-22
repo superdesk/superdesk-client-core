@@ -1120,6 +1120,7 @@ declare module 'superdesk-api' {
         editor3: {
             browserSpellCheck: boolean;
         };
+        publish_associated_items: boolean;
     }
 
 
