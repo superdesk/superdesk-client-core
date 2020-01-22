@@ -194,7 +194,7 @@ function getStageForItem(item, {desks}) {
 
 export default class UserActivityWidget extends React.Component<{}, IState> {
     services: any;
-    unbindListeners: Array<() => void>;
+    removeListeners: Array<() => void>;
 
     constructor(props) {
         super(props);
@@ -230,7 +230,15 @@ export default class UserActivityWidget extends React.Component<{}, IState> {
     }
 
     componentDidMount() {
-        this.unbindListeners = [
+        this.addListeners();
+    }
+
+    componentWillUnmount() {
+        this.removeListeners.map((unbind) => unbind());
+    }
+
+    addListeners() {
+        this.removeListeners = [
             'item:lock',
             'item:unlock',
             'item:spike',
@@ -240,10 +248,6 @@ export default class UserActivityWidget extends React.Component<{}, IState> {
         ].map((event) =>
             this.services.$rootScope.$on(event, this.refreshItems),
         );
-    }
-
-    componentWillUnmount() {
-        this.unbindListeners.map((unbind) => unbind());
     }
 
     refreshItems() {
