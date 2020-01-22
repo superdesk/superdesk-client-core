@@ -234,7 +234,7 @@ export default class UserActivityWidget extends React.Component<{}, IState> {
     }
 
     componentWillUnmount() {
-        this.removeListeners.forEach((unbind) => unbind());
+        this.removeListeners.forEach((remove) => remove());
     }
 
     addListeners() {
