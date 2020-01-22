@@ -42,7 +42,7 @@ export function WidgetGroup(search, api, superdesk, desks, cards, $timeout, $q,
         scope: {
             stage: '=',
             total: '=',
-            allowed: '=',
+            canEdit: '=',
             showEmpty: '=?',
             maxItems: '=?',
             selected: '=?',
@@ -425,7 +425,7 @@ export function WidgetGroup(search, api, superdesk, desks, cards, $timeout, $q,
             };
 
             scope.updateListProps = {
-                canEdit: scope.allowed,
+                canEdit: scope.canEdit,
                 customMonitoringWidget: $rootScope.config.features.customMonitoringWidget,
                 svc: services,
                 preview: scope.preview,

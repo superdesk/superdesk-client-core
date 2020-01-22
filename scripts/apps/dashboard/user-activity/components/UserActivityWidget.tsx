@@ -7,12 +7,14 @@ import {gettext} from 'core/utils';
 import {SelectUser} from 'core/ui/components/SelectUser';
 import {logger} from 'core/services/logger';
 
+type FetchFunction = (repo: string, criteria: any) => Promise<any>;
+
 interface IGroup {
     id: string;
     label: string;
-    repo?: string; // not used if self.query is a function
-    // pass the query or build multiple queries with the provided function
-    query: any | ((fetchFn: (repo: string, criteria: any) => Promise<any>) => Promise<any>);
+    dataSource:
+        {repo: string, query: object}
+        | ((f: FetchFunction) => Promise<any>);
     collapsed?: boolean;
 }
 
@@ -117,19 +119,23 @@ const GET_GROUPS = (userId, services: any): Array<IGroup> => {
             id: 'locked',
             label: gettext('Locked by this user'),
             repo: 'archive',
-            query: {...getQueryLockedByUser(userId)},
+            dataSource: {
+                repo: 'archive',
+                query: {...getQueryLockedByUser(userId)},
+            },
         },
         {
             id: 'marked',
             label: gettext('Marked for this user'),
-            repo: 'archive',
-            query: {...getQueryMarkedForUser(userId)},
+            dataSource: {
+                repo: 'archive',
+                query: {...getQueryMarkedForUser(userId)},
+            },
         },
         {
             id: 'created',
             label: gettext('Created by this user'),
-            repo: 'archive',
-            query(fetchFn) {
+            dataSource(fetchFn) {
                 return fetchFn('archive', {
                     bool: {
                         must: [
@@ -148,7 +154,7 @@ const GET_GROUPS = (userId, services: any): Array<IGroup> => {
         {
             id: 'moved',
             label: gettext('Moved to a working stage by this user'),
-            query(fetchFn) {
+            dataSource(fetchFn) {
                 return fetchFn('archive_history', {...getQueryMovedByUser(userId)})
                     .then((res) => {
                         res._items = res._items.filter(onlyHistoryItemsInWorkingStage(services));
@@ -258,9 +264,9 @@ export default class UserActivityWidget extends React.Component<{}, IState> {
 
     async fetchItems(group: IGroup) {
         const {api, search} = this.services;
-        const {_items} = typeof group.query === 'function'
-            ? await group.query((repo, filters) => genericFetch({search, api}, repo, filters))
-            : await genericFetch({search, api}, group.repo, group.query);
+        const {_items} = typeof group.dataSource === 'function'
+            ? await group.dataSource((repo, filters) => genericFetch({search, api}, repo, filters))
+            : await genericFetch({search, api}, group.dataSource.repo, group.dataSource.query);
 
         const itemIds = [];
         const itemsById = {};
