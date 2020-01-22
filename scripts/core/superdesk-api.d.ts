@@ -476,7 +476,10 @@ declare module 'superdesk-api' {
             | 'custom';
         field_options?: { // Used for related content fields
             allowed_types?: any;
-            allowed_workflows?: any;
+            allowed_workflows?: {
+                in_progress?: boolean;
+                published?: boolean;
+            };
             multiple_items?: { enabled: boolean; max_items: number };
         };
         custom_field_type?: string;

@@ -22,6 +22,7 @@ interface IScope extends IDirectiveScope<void> {
     refreshRelatedItems: () => void;
     removeRelatedItem: (key: string) => void;
     openRelatedItem: (item: IArticle) => void;
+    canAddRelatedItems: () => boolean;
 }
 
 /**
@@ -52,6 +53,8 @@ export function RelatedItemsDirective(authoringWorkspace: AuthoringWorkspaceServ
             };
 
             scope.gettext = gettext;
+
+            scope.canAddRelatedItems = () => scope.field?.field_options?.allowed_workflows?.in_progress === true;
 
             const dragOverClass = 'dragover';
             const fieldOptions = scope.field?.field_options || {};
