@@ -4,7 +4,7 @@ import {gettext} from 'core/utils';
 import {IArticle} from 'superdesk-api';
 
 interface IProps {
-    allowed?: boolean;
+    canEdit?: boolean;
     customMonitoringWidget?: boolean;
     svc: any;
     preview: (item: IArticle) => void;
@@ -57,7 +57,7 @@ export class WidgetItemList extends React.Component<IProps> {
                                     this.props.selected &&
                                     this.props.selected._id === item._id
                                 }
-                                allowed={this.props.allowed}
+                                canEdit={this.props.canEdit}
                                 customMonitoringWidget={
                                     this.props.customMonitoringWidget
                                 }

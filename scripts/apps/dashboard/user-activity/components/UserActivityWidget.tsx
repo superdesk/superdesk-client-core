@@ -332,7 +332,7 @@ export default class UserActivityWidget extends React.Component<{}, IState> {
                             customUIMessages={{
                                 empty: gettext('No results for this user'),
                             }}
-                            allowed={true}
+                            canEdit={true}
                             svc={this.services}
                             preview={(item: IArticle) => {
                                 this.services.superdesk.intent(

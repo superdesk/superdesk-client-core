@@ -425,7 +425,7 @@ export function WidgetGroup(search, api, superdesk, desks, cards, $timeout, $q,
             };
 
             scope.updateListProps = {
-                allowed: scope.allowed,
+                canEdit: scope.allowed,
                 customMonitoringWidget: $rootScope.config.features.customMonitoringWidget,
                 svc: services,
                 preview: scope.preview,
