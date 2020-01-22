@@ -975,6 +975,7 @@ declare module 'superdesk-api' {
         saml_label: any;
         archive_autocomplete: boolean;
         workflow_allow_multiple_updates: boolean;
+        publish_associated_items: boolean;
 
         // TANSA SERVER CONFIG
         tansa?: {
@@ -1120,7 +1121,6 @@ declare module 'superdesk-api' {
         editor3: {
             browserSpellCheck: boolean;
         };
-        publish_associated_items: boolean;
     }
 
 
