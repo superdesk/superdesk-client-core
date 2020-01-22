@@ -125,8 +125,10 @@ export function ItemPreview(asset, storage, desks, _, familyService, privileges)
              * double up with this api call
              */
             function fetchRelatedItems() {
-                if (scope.item && _.includes(['archive', 'archived'], scope.item._type)) {
-                    familyService.fetchItems(scope.item.family_id || scope.item._id, scope.item)
+                if (scope.item && ['archive', 'archived', 'published'].includes(scope.item._type)) {
+                    familyService.fetchItems(scope.item.family_id)
+                        // filter out current item
+                        .then((res) => ({...res, _items: res._items.filter((item) => item._id !== scope.item._id)}))
                         .then(setRelatedItems);
                 } else {
                     setRelatedItems(null);
