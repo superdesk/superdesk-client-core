@@ -69,7 +69,6 @@ function getQueryNotLockedOrLockedByMe(userId) {
     };
 }
 
-
 function getQueryCreatedByUser(userId) {
     return {
         terms: {
