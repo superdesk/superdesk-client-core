@@ -960,7 +960,7 @@
             color: inherit;
             opacity: 0.75;
             margin: 0;
-            padding: 0 4px 0 0;  
+            padding: 0 4px 0 0;
         }
     }
     &--full {
@@ -1612,6 +1612,12 @@ feature-image {
                 cursor: inherit;
             }
         }
+        .draggable-list__item {
+            border-left: 2px solid transparent;
+            &.locked {
+                border-color: $state-border--locked;
+            }
+        }
     }
     &.dragover {
         border: 1px dashed $sd-blue;
@@ -1619,7 +1625,7 @@ feature-image {
     }
     .groups {
         padding: 0 !important;
-        margin: 0 !important; 
+        margin: 0 !important;
     }
 }
 
