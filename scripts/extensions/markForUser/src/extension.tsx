@@ -4,6 +4,7 @@ import {getActionsInitialize} from './get-article-actions';
 import {getActionsBulkInitialize} from './get-article-actions-bulk';
 import {authoringActionsInitialize} from './get-authoring-actions';
 import {getMarkedForMeComponent} from './get-marked-for-me-component';
+import {getQueryMarkedForUser, getQueryNotMarkedForAnyoneOrMarkedForMe} from './get-article-queries';
 
 interface IMarkForUserNotification {
     message: string;
@@ -12,6 +13,10 @@ interface IMarkForUserNotification {
 
 const extension: IExtension = {
     id: 'markForUser',
+    exposes: {
+        getQueryNotMarkedForAnyoneOrMarkedForMe,
+        getQueryMarkedForUser,
+    },
     activate: (superdesk: ISuperdesk) => {
         const {gettext} = superdesk.localization;
 

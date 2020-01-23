@@ -14,10 +14,10 @@ angular
                 multiple: true,
                 icon: '',
                 max_sizex: 2,
-                max_sizey: 2,
+                max_sizey: 3,
                 sizex: 1,
                 sizey: 2,
-                thumbnail: 'scripts/apps/users/activity-widget/thumbnail.svg',
+                thumbnail: 'scripts/apps/dashboard/user-activity/thumbnail.svg',
                 template:
                     'scripts/apps/dashboard/user-activity/user-activity.html',
                 description: gettext('User activity widget'),

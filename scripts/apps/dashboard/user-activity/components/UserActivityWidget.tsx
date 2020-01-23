@@ -6,12 +6,14 @@ import ng from 'core/services/ng';
 import {gettext} from 'core/utils';
 import {SelectUser} from 'core/ui/components/SelectUser';
 import {logger} from 'core/services/logger';
+import {extensions} from 'appConfig';
 
 type FetchFunction = (repo: string, criteria: any) => Promise<any>;
 
 interface IGroup {
     id: string;
     label: string;
+    precondition?: () => boolean;
     dataSource:
         {repo: string, query: object}
         | ((f: FetchFunction) => Promise<any>);
@@ -38,14 +40,6 @@ function genericFetch({search, api}, repo, filters) {
     criteria.repo = repo;
 
     return api.query('search', criteria);
-}
-
-function getQueryMarkedForUser(userId) {
-    return {
-        term: {
-            marked_for_user: userId,
-        },
-    };
 }
 
 function getQueryLockedByUser(userId) {
@@ -75,24 +69,6 @@ function getQueryNotLockedOrLockedByMe(userId) {
     };
 }
 
-function getQueryNotMarkedOrMarkedForMe(userId) {
-    return {
-        bool: {
-            should: [
-                {
-                    bool: {
-                        must_not: {
-                            exists: {
-                                field: 'marked_for_user',
-                            },
-                        },
-                    },
-                },
-                {...getQueryMarkedForUser(userId)},
-            ],
-        },
-    };
-}
 
 function getQueryCreatedByUser(userId) {
     return {
@@ -126,21 +102,34 @@ const GET_GROUPS = (userId, services: any): Array<IGroup> => {
         {
             id: 'marked',
             label: gettext('Marked for this user'),
-            dataSource: {
-                repo: 'archive',
-                query: {...getQueryMarkedForUser(userId)},
+            precondition() {
+                return Object.values(extensions)
+                    .some(({extension}) =>
+                        extension.exposes?.getQueryMarkedForUser != null,
+                    );
+            },
+            dataSource(fetchFn) {
+                const query = Object.values(extensions)
+                    .map(({extension}) => extension.exposes?.getQueryMarkedForUser?.(userId) || {})
+                    .reduce((acc, curr) => ({...acc, ...curr}), {});
+
+                return fetchFn('archive', query);
             },
         },
         {
             id: 'created',
             label: gettext('Created by this user'),
             dataSource(fetchFn) {
+                const markedQuery = Object.values(extensions)
+                    .map(({extension}) => extension.exposes?.getQueryNotMarkedForAnyoneOrMarkedForMe?.(userId) || {})
+                    .reduce((acc, curr) => ({...acc, ...curr}), {});
+
                 return fetchFn('archive', {
                     bool: {
                         must: [
                             {...getQueryCreatedByUser(userId)},
-                            {...getQueryNotMarkedOrMarkedForMe(userId)},
                             {...getQueryNotLockedOrLockedByMe(userId)},
+                            {...markedQuery},
                         ],
                     },
                 }).then((res) => {
@@ -284,7 +273,17 @@ export default class UserActivityWidget extends React.Component<{}, IState> {
 
     fetchGroupsData() {
         const {groups} = this.state;
-        const promises = groups.map((group) => this.fetchItems(group));
+        const promises = groups
+            .filter((group) => {
+                if (group.precondition != null) {
+                    const shouldBeEnabled = group.precondition();
+
+                    return shouldBeEnabled;
+                }
+
+                return true;
+            })
+            .map((group) => this.fetchItems(group));
 
         Promise.all(promises).then((data) => {
             this.setState({groupsData: data, loading: false});
