@@ -22,9 +22,7 @@ export class ItemPhotoGrid extends React.Component<IProps, never> {
             <div className="sd-wrap-helper">
                 <PhotoDeskPreview
                     item={item}
-                    desk={this.props.desk}
                     onMultiSelect={this.props.onMultiSelect}
-                    swimlane={this.props.swimlane}
                     svc={this.props.svc}
                 />
                 <PhotoDeskInfo

@@ -141,7 +141,8 @@
                 ng-if="action !== 'correct' && action !== 'kill'"
                 title="{{ :: 'Close' | translate }}"
                 sd-hotkey="ctrl+shift+e"
-                sd-hotkey-options="{global: true}">
+                sd-hotkey-options="{global: true}"
+                data-test-id="close">
             <span translate>Close</span>
         </button>
 
@@ -152,7 +153,9 @@
         ng-disabled="!save_enabled() || saveDisabled"
         sd-hotkey="ctrl+shift+s"
         sd-hotkey-options="{global: true}"
-        translate>Save</button>
+        translate
+        data-test-id="save"
+      >Save</button>
 
       <button class="btn btn--primary" type="submit"
         ng-click="previewFormattedItem()"
@@ -215,10 +218,16 @@
         <div id="authoring-extra-dropdown"
              ng-if="item._type !== 'legal_archive' && item._type !== 'archived' && !highlight && item.state !== 'spiked' && buttonsToHide['article-edit--topbar--actions'] !== true"
              class="dropdown pull-left strict" dropdown>
-            <button id="more-actions" class="navbtn dropdown__toggle" title="{{ :: 'More actions' | translate }}" dropdown__toggle>
+            <button
+              id="more-actions"
+              class="navbtn dropdown__toggle"
+              title="{{ :: 'More actions' | translate }}"
+              dropdown__toggle
+              data-test-id="actions-button"
+            >
                 <i class="icon-dots-vertical"></i>
             </button>
-            <div class="dropdown__menu pull-right">
+            <div class="dropdown__menu pull-right" data-test-id="actions-list">
                 <ul ng-controller="TemplateMenu as templateMenu" ng-show="canSaveTemplate()">
                   <li>
                     <button type="button"
@@ -265,34 +274,27 @@
                   </li>
                 </ul>
 
-                <ul ng-if="authoringActionsFromExtensions">
-                    <!-- Extra actions from extensions without a group id -->
-                    <li ng-repeat="action in authoringActionsFromExtensions" ng-if="!action.groupId">
+                <ul ng-if="articleActionsFromExtensions">
+                    <li ng-repeat="action in articleActionsFromExtensions" ng-if="action.groupId !== 'highlights'">
                         <button  ng-click="triggerActionFromExtension(action)">{{action.label}}</button>
                     </li>
                 </ul>
 
                 <ul ng-if="item.task.desk && (itemActions.mark_item_for_desks || itemActions.mark_item_for_highlight)">
                   <li class="dropdown__menu-divider"></li>
-                  <li><span class="dropdown__menu-label" translate>Mark item for</span></li>
                   <li ng-if="itemActions.mark_item_for_highlight">
                     <div class="dropdown highlights-toggle" dropdown>
-                      <button class="dropdown__toggle" dropdown__toggle>
-                        {{ :: 'Highlights' | translate }}
-                      </button>
+                      <button class="dropdown__toggle" dropdown__toggle translate>Highlights</button>
                       <ul class="dropdown__menu dropdown__menu--submenu-left" sd-mark-highlights-dropdown></ul>
                     </div>
                   </li>
                   <li ng-if="itemActions.mark_item_for_desks">
                     <div class="dropdown marks-toggle" dropdown>
-                      <button class="dropdown__toggle" dropdown__toggle>
-                        {{ :: 'Desks' | translate }}
-                      </button>
+                      <button class="dropdown__toggle" dropdown__toggle translate>Marked for desks</button>
                       <ul class="dropdown__menu dropdown__menu--submenu-left" sd-mark-desks-dropdown></ul>
-
                     </div>
                   </li>
-                  <li ng-repeat="action in authoringActionsFromExtensions">
+                  <li ng-repeat="action in articleActionsFromExtensions">
                       <button ng-if="action.groupId === 'highlights'" ng-click="triggerActionFromExtension(action)">{{action.label}}</button>
                   </li>
                 </ul>

@@ -1,16 +1,16 @@
-import {get} from 'lodash';
 import {getSuperdeskType} from 'core/utils';
 import {gettext} from 'core/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
-import {IArticle} from 'superdesk-api';
-import {IVocabulary} from 'superdesk-interfaces/Vocabulary';
+import {IArticle, IArticleField} from 'superdesk-api';
 import {IDirectiveScope} from 'types/Angular/DirectiveScope';
 
 const ARCHIVE_TYPES = ['archive', 'published'];
 const isInArchive = (item: IArticle) => item._type != null && ARCHIVE_TYPES.includes(item._type);
 
 interface IScope extends IDirectiveScope<void> {
-    field: IVocabulary;
+    onCreated: (items: Array<IArticle>) => void;
+    gettext: (text: any, params?: any) => string;
+    field: IArticleField;
     editable: boolean;
     item: IArticle;
     loading: boolean;
@@ -22,6 +22,7 @@ interface IScope extends IDirectiveScope<void> {
     refreshRelatedItems: () => void;
     removeRelatedItem: (key: string) => void;
     openRelatedItem: (item: IArticle) => void;
+    canAddRelatedItems: () => boolean;
 }
 
 /**
@@ -45,6 +46,16 @@ export function RelatedItemsDirective(authoringWorkspace: AuthoringWorkspaceServ
         },
         templateUrl: 'scripts/apps/relations/views/related-items.html',
         link: function(scope: IScope, elem, attr) {
+            scope.onCreated = (items: Array<IArticle>) => {
+                items.forEach((item) => {
+                    scope.addRelatedItem(item);
+                });
+            };
+
+            scope.gettext = gettext;
+
+            scope.canAddRelatedItems = () => scope.field?.field_options?.allowed_workflows?.in_progress === true;
+
             const dragOverClass = 'dragover';
             const fieldOptions = scope.field?.field_options || {};
             const allowed = fieldOptions.allowed_types || {};

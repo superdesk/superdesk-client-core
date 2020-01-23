@@ -59,7 +59,6 @@ declare module 'superdesk-api' {
             authoringTopbarWidgets?: Array<React.ComponentType<{article: IArticle}>>;
             pages?: Array<IPage>;
             customFieldTypes?: Array<ICustomFieldType>;
-            authoringActions?(article: IArticle): Promise<Array<IArticleAction>>;
             notifications?: {
                 [id: string]: (notification) => {
                     body: string;
@@ -70,8 +69,7 @@ declare module 'superdesk-api' {
                 article?: {
                     getActions?(article: IArticle): Promise<Array<IArticleAction>>;
                     getActionsBulk?(articles: Array<IArticle>): Promise<Array<IArticleActionBulk>>;
-                    onUpdateBefore?(article: IArticle): Promise<IArticle>; // can alter item(immutably), can cancel update
-                    onUpdateAfter?(article: IArticle): void; // can't alter item, can't cancel
+                    onPatchBefore?(id: IArticle['_id'], patch: Partial<IArticle>): Promise<Partial<IArticle>>; // can alter patch(immutably), can cancel patching
                     onSpike?(item: IArticle): Promise<onSpikeMiddlewareResult>;
                     onSpikeMultiple?(items: Array<IArticle>): Promise<onSpikeMiddlewareResult>;
                 };
@@ -190,6 +188,18 @@ declare module 'superdesk-api' {
         type: IArticle['type'];
     }
 
+    export interface IRendition {
+        href: string;
+        mimetype: string;
+
+        /** media storage id, set when item is stored in superdesk */
+        media?: string;
+
+        // picture and video only
+        width?: number;
+        height?: number;
+    };
+
     export interface IArticle extends IBaseRestApiResponse {
         _id: string;
         _current_version: number;
@@ -209,7 +219,7 @@ declare module 'superdesk-api' {
         priority?: any;
         urgency: any;
         anpa_category?: any;
-        subject?: any;
+        subject?: Array<ISubject>;
         company_codes?: Array<any>;
         ednote?: string;
         authors?: Array<IAuthor>;
@@ -315,17 +325,29 @@ declare module 'superdesk-api' {
          * - **baseImage** - used in media editor, full screen preview
          *
          * Video items can also provide **thumbnail** and **viewImage** renditions which will be
-         * then used in list/preview.
+         * then used in list/preview. If there is **viewImage** it will use it for grid view/preview,
+         * **thumbnail** will be used as poster when video is being loaded. When there is no **viewImage**
+         * it will use **thumbnail** for both.
          */
         renditions?: {
-            [key: string]: {
-                href: string;
-                mimetype: string;
+            /** Original binary uploaded by user. */
+            original?: IRendition;
 
-                // picture and video only
-                width?: number;
-                height?: number;
-            };
+            /**
+             * Image rendition up to 220x120, used in lists.
+             *
+             * Could be bigger picture for video items, it's used as poster there.
+             */
+            thumbnail?: IRendition;
+
+            /** Image rendition up to 640x640, used in preview/grid view. */
+            viewImage?: IRendition;
+
+            /** Image rendition up to 1400x1400, used for full screen preview. */
+            baseImage?: IRendition;
+
+            /** Other renditions, could be custom, video, audio etc. */
+            [key: string]: IRendition;
         };
 
         // planning extension
@@ -338,6 +360,8 @@ declare module 'superdesk-api' {
         // remove when SDESK-4343 is done.
         selected?: any;
 
+        es_highlight?: any;
+
         // other fields which don't exist in the database, don't belong to this entity and should be removed
         error?: any;
         _editable?: any;
@@ -345,15 +369,7 @@ declare module 'superdesk-api' {
             archive?: boolean;
             externalsource: boolean;
         };
-    }
-
-    export interface IPublishedArticle extends IArticle {
-
-        /** id in published collection, different for each correction */
-        item_id: string;
-
-        /** item copy in archive collection, always the latest version of the item */
-        archive_item: IArticle;
+        _locked?: boolean;
     }
 
     export interface IPublishedArticle extends IArticle {
@@ -434,13 +450,60 @@ declare module 'superdesk-api' {
         slack_user_id: string;
     }
 
+    export interface IVocabularyTag {
+        text: string;
+    }
+
+    export interface IVocabulary extends IBaseRestApiResponse {
+        _deleted: boolean;
+        display_name: string;
+        helper_text?: string;
+        popup_width?: number;
+        type: string;
+        items: Array<{ name: string; qcode: string; is_active: boolean }>;
+        single_value?: boolean;
+        schema_field?: string;
+        dependent?: boolean;
+        service: {};
+        priority?: number;
+        unique_field: string;
+        schema: {};
+        field_type:
+            | 'text'
+            | 'media'
+            | 'date'
+            | 'embed'
+            | 'related_content'
+            | 'custom';
+        field_options?: { // Used for related content fields
+            allowed_types?: any;
+            allowed_workflows?: {
+                in_progress?: boolean;
+                published?: boolean;
+            };
+            multiple_items?: { enabled: boolean; max_items: number };
+        };
+        custom_field_type?: string;
+        custom_field_config?: { [key: string]: any };
+        date_shortcuts?: Array<{ value: number; term: string; label: string }>;
+        init_version?: number;
+        preffered_items?: boolean;
+        tags?: Array<IVocabularyTag>;
+    }
+
+    export interface IArticleField extends IVocabulary {
+        single?: boolean;
+        preview?: boolean;
+    }
+
+    export type IContentProfileEditorConfig = {[key: string]: IArticleField};
 
     export interface IContentProfile {
         _id: string;
         label: string;
         description: string;
         schema: Object;
-        editor: Object;
+        editor: IContentProfileEditorConfig;
         widgets_config: Array<{widget_id: string; is_displayed: boolean}>;
         priority: number;
         enabled: boolean;
@@ -448,6 +511,8 @@ declare module 'superdesk-api' {
         created_by: string;
         updated_by: string;
     }
+
+    
 
 
     // PAGE
@@ -671,8 +736,12 @@ declare module 'superdesk-api' {
 
     export interface IDropZoneComponentProps {
         label: string;
+        className?: string;
         onDrop: (event: DragEvent) => void;
         canDrop: (event: DragEvent) => boolean;
+
+        onFileSelect?: (files: FileList) => void;
+        fileAccept?: string;
     }
 
     export interface IPropsModalHeader {
@@ -779,6 +848,7 @@ declare module 'superdesk-api' {
             formatFiltersForServer?: (filters: ICrudManagerFilters) => ICrudManagerFilters,
         ): Promise<IRestApiResponse<T>>;
         patch<T extends IBaseRestApiResponse>(endpoint, current: T, next: T): Promise<T>;
+        patchRaw<T extends IBaseRestApiResponse>(endpoint, id: T['_id'], etag: T['_etag'], patch: Partial<T>): Promise<T>;
         delete<T extends IBaseRestApiResponse>(endpoint, item: T): Promise<void>;
     }
 
@@ -845,10 +915,10 @@ declare module 'superdesk-api' {
                 isLockedByCurrentUser(article: IArticle): boolean;
 
                 isPersonal(article: IArticle): boolean;
+                patch(article: IArticle, patch: Partial<IArticle>): void;
 
                 isArchived(article: IArticle): boolean;
                 isPublished(article: IArticle): boolean;
-                update(nextArticle: IArticle): void;
             };
             contentProfile: {
                 get(id: string): Promise<IContentProfile>;
@@ -895,7 +965,7 @@ declare module 'superdesk-api' {
             ArticleItemConcise: React.ComponentType<{article: IArticle}>;
             GroupLabel: React.ComponentType<ISpacingProps>;
             Icon: React.ComponentType<IPropsIcon>;
-            TopMenuDropdownButton: React.ComponentType<{onClick: () => void; active: boolean; 'data-test-id'?: string;}>;
+            TopMenuDropdownButton: React.ComponentType<{onClick: () => void; active: boolean; pulsate?: boolean; 'data-test-id'?: string;}>;
             getDropdownTree: <T>() => React.ComponentType<IPropsDropdownTree<T>>;
             Spacer: React.ComponentType<IPropsSpacer>;
         };
@@ -1202,5 +1272,6 @@ declare module 'superdesk-api' {
     interface ISubject {
         name: string;
         qcode: string;
+        scheme?: string;
     }
 }

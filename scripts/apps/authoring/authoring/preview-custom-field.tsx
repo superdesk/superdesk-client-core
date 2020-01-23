@@ -2,12 +2,11 @@ import React from 'react';
 import {get, isEmpty} from 'lodash';
 
 import {getField} from 'apps/fields';
-import {IArticle} from 'superdesk-api';
-import {IVocabulary} from 'superdesk-interfaces/Vocabulary';
+import {IArticle, IArticleField} from 'superdesk-api';
 
 interface IProps {
     item: IArticle;
-    field: IVocabulary;
+    field: IArticleField;
 }
 
 export class PreviewCustomField extends React.PureComponent<IProps> {

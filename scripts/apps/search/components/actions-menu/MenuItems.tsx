@@ -11,7 +11,7 @@ import {closeActionsMenu, menuHolderElem, positionPopup} from '../../helpers';
 import {gettext} from 'core/utils';
 import {IArticle, IArticleAction, IDisplayPriority} from 'superdesk-api';
 import {sortByDisplayPriority} from 'core/helpers/sortByDisplayPriority';
-import {getActionsFromExtensions} from 'core/superdesk-api-helpers';
+import {getArticleActionsFromExtensions} from 'core/superdesk-api-helpers';
 
 interface IProps {
     item: IArticle;
@@ -46,7 +46,7 @@ export default class MenuItems extends React.Component<IProps, IState> {
 
         // actions(except viewing an item) are not allowed for items in legal archive
         if (this.props.item._type !== 'legal_archive') {
-            getActionsFromExtensions(this.props.item).then((actions) => {
+            getArticleActionsFromExtensions(this.props.item).then((actions) => {
                 this.setState({
                     actionsFromExtensions: actions,
                 });

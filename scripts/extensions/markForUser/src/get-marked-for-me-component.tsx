@@ -123,9 +123,10 @@ export function getMarkedForMeComponent(superdesk: ISuperdesk) {
                                 }
                             }}
                             active={isOpen}
+                            pulsate={true}
                             data-test-id="toggle-button"
                         >
-                            <Badge type="highlight" marginRight={6}>{articles._items.length}</Badge>
+                            <Badge type="highlight" marginRight={8}>{articles._items.length}</Badge>
                             {gettext('Marked for me')}
                         </TopMenuDropdownButton>
                     )}

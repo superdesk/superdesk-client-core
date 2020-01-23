@@ -57,6 +57,11 @@
                         </select>
                     </div>
 
+                    <div class="field" ng-if="showPreviewConfig(fields[id])">
+                        <label translate>Show in preview</label>
+                        <div sd-check ng-model="model.editor[id].preview"></div>
+                    </div>
+
                     <div class="field" ng-if="model.schema[id].type === 'string'">
                         <label translate>Clean Pasted HTML</label>
                         <div sd-check ng-model="model.editor[id].cleanPastedHTML"></div>
