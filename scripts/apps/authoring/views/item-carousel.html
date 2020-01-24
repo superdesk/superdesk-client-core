@@ -1,7 +1,9 @@
 <button tabindex="{{tabindex}}" class="item-association" ng-if="!carouselItems.length"
     ng-class="{'item-association--preview': item[item.fieldId], 'item-association--loading': loading}"
-    ng-click="editable && associations.isMediaEditable() && !item[item.fieldId] && upload()">
-    <span class="item-association__text-label">{{'Drop items here or click to upload' | translate}}</span>
+    ng-click="editable && associations.isMediaEditable() && !item[item.fieldId] && upload()"
+    data-test-id="media-gallery--upload-placeholder"
+>
+    <span class="item-association__text-label" translate>Drop items here or click to upload</span>
 </button>
 
 <div class="sd-media-carousel" ng-if="carouselItems.length">
@@ -11,12 +13,18 @@
         <a ng-click="navNext()" class="sd-media-carousel__nav-button sd-media-carousel__nav-button--next-inner"></a>
 
         <div class="sd-media-carousel__content owl-carousel">
-            <div class="sd-media-carousel__page" ng-repeat="carouselItem in carouselItems">
-                <figure class="item-association"
-                        ng-class="{'item-association--preview': carouselItem[carouselItem.fieldId], 'item-association--loading': loading}"
-                        ng-click="editable && associations.isMediaEditable() && !carouselItem[carouselItem.fieldId] && upload()">
-
-                    <a ng-if="carouselItem[carouselItem.fieldId] && editable" class="item-association__remove-item" ng-click="remove(carouselItem); $event.stopPropagation()">
+            <div class="sd-media-carousel__page" ng-repeat="carouselItem in carouselItems" data-test-id="media-gallery-image">
+                <figure
+                    class="item-association"
+                    ng-class="{'item-association--preview': carouselItem[carouselItem.fieldId], 'item-association--loading': loading}"
+                    ng-click="editable && associations.isMediaEditable() && !carouselItem[carouselItem.fieldId] && upload()"
+                >
+                    <a
+                        ng-if="carouselItem[carouselItem.fieldId] && editable"
+                        class="item-association__remove-item"
+                        ng-click="remove(carouselItem); $event.stopPropagation()"
+                        data-test-id="media-gallery-image--remove"
+                    >
                         <i class="icon-close-small"></i>
                     </a>
                     <!-- video -->

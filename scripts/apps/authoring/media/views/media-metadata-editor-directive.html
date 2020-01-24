@@ -1,4 +1,8 @@
-<div ng-repeat="field in fields track by field.field" ng-if="item">
+<div
+    ng-if="item"
+    ng-repeat="field in fields track by field.field"
+    data-test-id="media-metadata-editor"
+>
     <sd-line-input
         ng-if="(!field.type && !field.cv) || (field.type === 'string' && !field.cv)"
         ng-model="item[field.field]"
@@ -13,6 +17,7 @@
         data-maxlength="field.maxlength"
         data-placeholder="{{ placeholder[field.field] }}"
         data-textarea="field.textarea"
+        data-test-id="{{'field--' + field.field}}"
     />
 
     <sd-line-input
@@ -28,6 +33,7 @@
         data-onblur="onBlur()"
         data-maxlength="field.maxlength"
         data-placeholder="{{ placeholder[field.field] }}"
+        data-test-id="{{'field--' + field.field}}"
     />
 
     <div ng-if="field.cv && !field.cv.field_type" class="sd-line-input sd-line-input--boxed" ng-class="{'sd-line-input--required': field.required}">
