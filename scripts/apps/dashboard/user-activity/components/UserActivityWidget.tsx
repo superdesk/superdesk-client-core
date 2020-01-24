@@ -249,25 +249,31 @@ export default class UserActivityWidget extends React.Component<{}, IState> {
         }
     }
 
-    async fetchItems(group: IGroup) {
+    fetchItems(group: IGroup): Promise<{
+        id: string,
+        itemIds: Array<string>,
+        itemsById: Array<{[id: string]: IArticle}>
+    }> {
         const {api, search} = this.services;
-        const {_items} = typeof group.dataSource === 'function'
-            ? await group.dataSource((repo, filters) => genericFetch({search, api}, repo, filters))
-            : await genericFetch({search, api}, group.dataSource.repo, group.dataSource.query);
+        const promise = typeof group.dataSource === 'function'
+            ? group.dataSource((repo, filters) => genericFetch({search, api}, repo, filters))
+            : genericFetch({search, api}, group.dataSource.repo, group.dataSource.query);
 
-        const itemIds = [];
-        const itemsById = {};
+        return promise.then(({_items}) => {
+            const itemIds = [];
+            const itemsById = {};
 
-        for (const item of _items) {
-            itemIds.push(item._id);
-            itemsById[item._id] = item;
-        }
+            for (const item of _items) {
+                itemIds.push(item._id);
+                itemsById[item._id] = item;
+            }
 
-        return {
-            id: group.id,
-            itemIds,
-            itemsById,
-        };
+            return {
+                id: group.id,
+                itemIds,
+                itemsById,
+            };
+        });
     }
 
     fetchGroupsData() {
