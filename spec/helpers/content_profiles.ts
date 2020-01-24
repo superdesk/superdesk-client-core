@@ -1,6 +1,6 @@
 /* eslint-disable newline-per-chained-call */
 
-import {element, by, ElementFinder, browser} from 'protractor';
+import {element, by, ElementFinder, browser, ElementArrayFinder} from 'protractor';
 import {nav} from './utils';
 
 class ContentProfiles {
@@ -19,6 +19,11 @@ class ContentProfiles {
     setRequired: (fieldName: any) => void;
     cancel: () => void;
     openAddFieldDropdown: () => void;
+    openContentProfileDropdown: () => void;
+    selectContentProfile: () => void;
+    removeFilter: () => void;
+    clearFilters: () => void;
+    totalProfiles: () => ElementArrayFinder;
 
     constructor() {
         /** List of content profiles on settings page **/
@@ -152,6 +157,49 @@ class ContentProfiles {
                 .filter((el) => el.isDisplayed())
                 .first()
                 .element(by.tagName('button')).click();
+        };
+
+        /**
+         * Open content profile dropdown.
+        */
+        this.openContentProfileDropdown = () => {
+            element(by.id('content-profile-dropdown')).click();
+        };
+
+        function selectProfile(filtered) {
+            if (filtered.length) {
+                return filtered[1].click();
+            }
+        }
+
+        /**
+         * Returns the list of content profiles.
+        */
+        this.totalProfiles = () => {
+            const dropdownMenu = element(by.id('select-content-profile'));
+
+            return dropdownMenu.all(by.repeater('profile in aggregate.activeProfiles'));
+        };
+
+        /**
+         * Select a content profile from dropdown.
+        */
+        this.selectContentProfile = () => {
+            this.totalProfiles().then(selectProfile);
+        };
+
+        /**
+         * Remove a content profile filter.
+        */
+        this.removeFilter = () => {
+            element(by.className('tag-label__remove')).click();
+        };
+
+        /**
+         * Removes all the content profile filter.
+        */
+        this.clearFilters = () => {
+            element(by.id('clearFilters')).click();
         };
     }
 }

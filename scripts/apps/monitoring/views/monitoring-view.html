@@ -11,9 +11,9 @@
                         </div>
 
                         <!-- Filter content using content profile -->
-                        <div class="dropdown sd-flex-no-shrink" dropdown >
+                        <div id="content-profile-dropdown" class="dropdown sd-flex-no-shrink" dropdown >
                             <button class="filter-trigger dropdown__toggle navbtn navbtn--text-only" dropdown-toggle title="{{ gettext('Filters') }}"><i class="icon-filter-large"></i></button>
-                            <ul class="dropdown__menu dropdown__menu--scrollable">
+                            <ul id="select-content-profile" class="dropdown__menu dropdown__menu--scrollable">
                                 <li><div class="dropdown__menu-label">{{ gettext('Content Profiles') }}</div></li>
                                 <li ng-repeat="profile in aggregate.activeProfiles">
                                     <button class="label-group"
@@ -206,7 +206,7 @@
                                     <button class="tag-label__remove" ng-click="aggregate.removeFilter(key.key, type)"><i class="icon-close-small"></i></button>
                                 </div>
                             </li>
-                            <li><button class="label--active" ng-click="aggregate.removeFilter(null)" translate>Clear filters</button></li>
+                            <li><button id="clearFilters" class="label--active" ng-click="aggregate.removeFilter(null)" translate>Clear filters</button></li>
                         </ul>
                     </div>
                 </div>
