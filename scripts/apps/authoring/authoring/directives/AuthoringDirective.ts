@@ -868,6 +868,9 @@ export function AuthoringDirective(
                             authoringWorkspace.addAutosave();
                             initMedia();
                             updateSchema();
+
+                            $scope.$apply();
+
                             return autosavedItem;
                         });
                     });
