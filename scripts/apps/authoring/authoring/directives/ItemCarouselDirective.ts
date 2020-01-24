@@ -3,7 +3,7 @@ import _ from 'lodash';
 import * as ctrl from '../controllers';
 import {waitForMediaToLoad} from 'core/helpers/waitForMediaToBeReady';
 import {getSuperdeskType} from 'core/utils';
-import {gettext} from 'core/utils';
+import {gettext, gettextPlural} from 'core/utils';
 import {addInternalEventListener} from 'core/internal-events';
 import {isAllowedMediaType, getAllowedTypeNames} from './ItemAssociationDirective';
 import {IArticle} from 'superdesk-api';
@@ -28,6 +28,7 @@ interface IScope extends ng.IScope {
     onchange(): void;
     remove(item: any): void;
     upload(): void;
+    getUploadButtonTitle: () => string;
 }
 
 function getItemsCount(items: Array<any>): number {
@@ -75,6 +76,15 @@ export function ItemCarouselDirective(notify) {
             let previousItems: Array<any>;
 
             scope.currentIndex = 0;
+
+            scope.getUploadButtonTitle = () => scope.carouselItems.length < scope.maxUploads
+                ? ''
+                : gettextPlural(
+                    scope.maxUploads,
+                    'Only 1 image is allowed in this field',
+                    'Only {{number}} images are allowed in this field',
+                    {number: scope.maxUploads},
+                );
 
             /*
              * Initialize carousel after all content is loaded

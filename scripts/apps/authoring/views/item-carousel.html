@@ -147,6 +147,18 @@
             </div>
         </div>
 
+        <div style="margin-top: 20px">
+            <button
+                ng-disabled="carouselItems.length >= maxUploads"
+                ng-attr-title="{{getUploadButtonTitle()}}"
+                ng-click="upload()"
+                class="btn btn--small btn--hollow btn--primary"
+                translate
+            >
+                Upload an image
+            </button>
+        </div>
+
         <div class="sd-media-carousel__thumb-strip">
             <div class="sd-media-carousel__thumb-strip-item" ng-repeat="carouselItem in carouselItems">
                 <div class="sd-media-carousel__thumb" ng-click="goTo($index)" ng-if="carouselItem[carouselItem.fieldId] && carouselItem[carouselItem.fieldId].type === 'picture'">
@@ -159,9 +171,6 @@
                     <i class="icon--2x icon-video" ng-if="!carouselItem[carouselItem.fieldId].renditions.thumbnail"></i>
                     <img ng-if="carouselItem[carouselItem.fieldId] && carouselItem[carouselItem.fieldId].renditions.thumbnail" ng-src="{{carouselItem[carouselItem.fieldId].renditions.thumbnail.href}}">
                 </div>
-            </div>
-            <div class="sd-media-carousel__thumb sd-media-carousel__thumb--add" ng-click="upload()" data-rel="{{carouselItem.fieldId}}" ng-if="carouselItems.length < maxUploads">
-                <i class="icon-plus-sign"></i>
             </div>
         </div>
     </div>
