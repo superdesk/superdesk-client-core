@@ -118,8 +118,9 @@ export function getContactTypeObject(contactTypes: Array<IContactType>, qcode: s
     ) || null;
 }
 
-export const scrollListItemIfNeeded = (selectedIndex, listRefElement) => {
-    if (listRefElement.children.length > 0) {
+export const scrollListItemIfNeeded = (selectedIndex: number, listRefElement: HTMLElement) => {
+    if (listRefElement && listRefElement.children && listRefElement.children.length > 0) {
+
         let activeElement = listRefElement.children[selectedIndex];
 
         if (activeElement) {
