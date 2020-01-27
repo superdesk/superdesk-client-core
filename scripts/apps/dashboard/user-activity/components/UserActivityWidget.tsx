@@ -102,15 +102,10 @@ const GET_GROUPS = (userId, services: any): Array<IGroup> => {
             id: 'marked',
             label: gettext('Marked for this user'),
             precondition() {
-                return Object.values(extensions)
-                    .some(({extension}) =>
-                        extension.exposes?.getQueryMarkedForUser != null,
-                    );
+                return extensions.hasOwnProperty('markForUser');
             },
             dataSource(fetchFn) {
-                const query = Object.values(extensions)
-                    .map(({extension}) => extension.exposes?.getQueryMarkedForUser?.(userId) || {})
-                    .reduce((acc, curr) => ({...acc, ...curr}), {});
+                const query = extensions['markForUser'].extension.exposes.getQueryMarkedForUser(userId);
 
                 return fetchFn('archive', query);
             },
@@ -119,9 +114,7 @@ const GET_GROUPS = (userId, services: any): Array<IGroup> => {
             id: 'created',
             label: gettext('Created by this user'),
             dataSource(fetchFn) {
-                const markedQuery = Object.values(extensions)
-                    .map(({extension}) => extension.exposes?.getQueryNotMarkedForAnyoneOrMarkedForMe?.(userId) || {})
-                    .reduce((acc, curr) => ({...acc, ...curr}), {});
+                const markedQuery = extensions['markForUser'].extension.exposes.getQueryNotMarkedForAnyoneOrMarkedForMe(userId);
 
                 return fetchFn('archive', {
                     bool: {
