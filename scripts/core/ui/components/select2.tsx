@@ -79,7 +79,15 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
 
         this.state = {
             search: '',
-            isOpen: this.props.autoFocus != null,
+            isOpen: (() => {
+                if (this.props.autoFocus == null) {
+                    return true;
+                } else if (typeof this.props.autoFocus === 'boolean') {
+                    return this.props.autoFocus;
+                } else {
+                    return true;
+                }
+            })(),
             justInitialized: true,
         };
 

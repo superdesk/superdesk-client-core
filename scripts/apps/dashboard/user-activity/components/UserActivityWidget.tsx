@@ -389,7 +389,7 @@ export default class UserActivityWidget extends React.Component<{}, IState> {
                         <form className="search-box__content">
                             <SelectUser
                                 selectedUserId={this.state.user?._id}
-                                autoFocus={{initializeWithDropdownHidden: true}}
+                                autoFocus={false}
                                 onSelect={(user) => {
                                     this.setState(
                                         {user, groups: GET_GROUPS(user._id, this.services), loading: true},
