@@ -27,7 +27,7 @@
             id="{{field._id}}"
             ng-repeat="(key, relatedItem) in relatedItems track by key"
             class="sort-item draggable-list__item draggable-list__item--no-padding"
-            ng-class="{locked: relatedItem.lock_session != null}"
+            ng-class="{locked: isLocked(relatedItem)}"
         >
             <div class="sd-list-item sd-list-item--no-hover">
                 <div class="sd-list-item__column"><i class="type-icon" sd-filetype-icon data-item="relatedItem"></i>
