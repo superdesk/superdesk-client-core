@@ -48,6 +48,29 @@ export function MultiActionBarController(
         send.allAs(multi.getItems());
     };
 
+    this.fetch = (fetchAs = false) => {
+        const items = multi.getItems().concat();
+
+        setActioning(true, items);
+
+        (fetchAs ?
+            send.allAs(multi.getItems(), 'externalsourceTo') :
+            send.all(multi.getItems())
+        )
+        .then(() => {
+            multi.reset();
+        })
+        .finally(() => {
+            setActioning(false, items);
+        });
+    };
+
+    const setActioning = (actioning: boolean, items) => {
+        items.forEach((item) => {
+            $rootScope.$broadcast('item:actioning', {item, actioning});
+        });
+    };
+
     this.canRemoveIngestItems = function() {
         var canRemove = true;
 

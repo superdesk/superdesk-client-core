@@ -30,9 +30,12 @@ export function getSpecValue(spec, value) {
  * @return {Boolean}
  */
 export function isCheckAllowed(item) {
-    return !(item._type === 'items' || item._type === 'externalsource' ||
+    return !(
+        item._type === 'items' ||
+        (item._type === 'externalsource' && !item._fetchable) ||
         isKilled(item) ||
-        item._type === 'published' && !item.last_published_version);
+        item._type === 'published' && !item.last_published_version
+    );
 }
 
 export function menuHolderElem() {
