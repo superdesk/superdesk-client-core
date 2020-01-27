@@ -2,21 +2,17 @@
 
 <div ng-if="!loading" class="sd-list-item-group sd-list-item-group--space-between-items">
     <div class="sd-list-item sd-list-item--no-hover sd-shadow--z1"
-        ng-repeat="(key, relatedItem) in relatedItems track by key"> 
+        ng-repeat="(key, relatedItem) in relatedItems track by key">
         <div class="sd-list-item__column"><i class="type-icon" sd-filetype-icon data-item="relatedItem"></i></div>
         <div class="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border">
-            <div class="sd-list-item__row">
-                <span class="sd-list-item__slugline" ng-if="relatedItem.slugline">{{ relatedItem.slugline }}</span>
-                <span class="sd-overflow-ellipsis sd-list-item--element-grow" sd-item-container data-item="relatedItem" class="container"></span>
-            </div>
-            <div class="sd-list-item__row">
-                <span class="state-label state-{{relatedItem.state}}">{{ relatedItem.state }}</span>
-                <span class="sd-overflow-ellipsis sd-list-item--element-grow" title="{{ relatedItem.headline }}">{{ relatedItem.headline || relatedItem.description_text }}</span>
-            </div>
+            <sd-related-item-in-list-react item="relatedItem" />
         </div>
+        <figure class="sd-list-item__thumbnail" ng-if="relatedItem.associations.featuremedia">
+            <img src="{{relatedItem.associations.featuremedia.renditions.viewImage.href}}"
+                alt="{{ gettext('Thumbnail for related item') }}">
+        </figure>
         <div class="sd-list-item__action-menu--direction-row" ng-if="!preview">
             <div class="icn-btn" sd-item-actions-menu data-item="relatedItem" data-active="relatedItem"></div>
         </div>
     </div>
 </div>
-
