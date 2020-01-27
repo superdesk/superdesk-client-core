@@ -716,7 +716,7 @@ describe('authoring', () => {
         expect(authoring.getAbstractText()).toBe('item6 text');
     });
 
-    fit('Can remove an image from media gallery', () => {
+    it('Can remove an image from media gallery', () => {
         workspace.selectDesk('XEditor3 Desk'); // has media gallery in content profile
 
         el(['content-create']).click();
