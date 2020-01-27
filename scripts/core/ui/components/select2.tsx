@@ -79,7 +79,15 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
 
         this.state = {
             search: '',
-            isOpen: this.props.autoFocus != null,
+            isOpen: (() => {
+                if (this.props.autoFocus == null) {
+                    return true;
+                } else if (typeof this.props.autoFocus === 'boolean') {
+                    return this.props.autoFocus;
+                } else {
+                    return true;
+                }
+            })(),
             justInitialized: true,
         };
 
@@ -104,7 +112,7 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                 inputProps={{placeholder: this.props.placeholder}}
                 value={this.props.value}
                 items={Object.values(this.props.items)}
-                wrapperStyle={{}}
+                wrapperStyle={{width: '100%'}}
                 wrapperProps={{'data-test-id': this.props['data-test-id']} as any}
                 renderMenu={(items, value, style) => {
                     const hideOptions =
@@ -120,8 +128,8 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                                 this.props.loading === true
                                     ? <div style={{padding: 10}}>{gettext('Loading...')}</div>
                                     : items.length < 1
-                                    ? <div style={{padding: 10}}>{gettext('No items found.')}</div>
-                                    : items
+                                        ? <div style={{padding: 10}}>{gettext('No items found.')}</div>
+                                        : items
                             }
                         </div>
                     );

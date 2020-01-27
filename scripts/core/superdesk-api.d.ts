@@ -22,7 +22,7 @@ declare module 'superdesk-api' {
 
     // EXTENSIONS
 
-    export type onSpikeMiddlewareResult= {warnings?: Array<{text: string}>};
+    export type onSpikeMiddlewareResult = {warnings?: Array<{text: string}>};
 
     /**
      * float number 0 < x < 1. Larger the number, closer the component will be rendered to its side.
@@ -91,6 +91,7 @@ declare module 'superdesk-api' {
     export type IExtension = DeepReadonly<{
         id: string;
         activate: (superdesk: ISuperdesk) => Promise<IExtensionActivationResult>;
+        exposes?: {[key: string]: any};
     }>;
 
     export type IExtensionObject = {
@@ -511,7 +512,7 @@ declare module 'superdesk-api' {
         updated_by: string;
     }
 
-    
+
 
 
     // PAGE
@@ -776,7 +777,7 @@ declare module 'superdesk-api' {
     export interface IPropsDropdownTree<T> {
         groups: Array<IDropdownTreeGroup<T>>;
         getToggleElement(isOpen: boolean, onClick: () => void): JSX.Element;
-        renderItem(key: string, item: T, closeDropdown:() => void): JSX.Element;
+        renderItem(key: string, item: T, closeDropdown: () => void): JSX.Element;
         wrapperStyles?: React.CSSProperties;
         'data-test-id'?: string;
     }
@@ -979,7 +980,7 @@ declare module 'superdesk-api' {
                     readonly [key: string]: any;
                 },
                 formFieldConfig: any,
-                options: { showAsPlainText?: boolean } = {}
+                options: {showAsPlainText?: boolean} = {}
             ): JSX.Element;
         };
         localization: {
@@ -1008,7 +1009,7 @@ declare module 'superdesk-api' {
         };
         addWebsocketMessageListener<T extends string>(
             eventName: T,
-            handler:(event: T extends keyof IPublicWebsocketMessages
+            handler: (event: T extends keyof IPublicWebsocketMessages
                 ? CustomEvent<IPublicWebsocketMessages[T]>
                 : CustomEvent<IWebsocketMessage<any>>
             ) => void

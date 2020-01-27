@@ -161,6 +161,7 @@
     "start-test-server": "cd test-server && python3 -m venv env && . env/bin/activate && pip install -Ur requirements.txt && honcho start",
     "protractor": "protractor protractor.conf.js",
     "webdriver-manager": "webdriver-manager update --gecko false --standalone false",
-    "server": "grunt server"
+    "server": "grunt server",
+    "dev": "npm run server"
   }
 }

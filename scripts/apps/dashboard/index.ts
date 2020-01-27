@@ -7,6 +7,7 @@ import './styles/widgets.scss';
 // scripts
 import './workspace-tasks/tasks';
 import './world-clock/world-clock';
+import './user-activity/user-activity';
 import './grid/grid';
 import './closed-desk';
 
@@ -36,6 +37,7 @@ angular.module('superdesk.apps.dashboard', [
     'superdesk.apps.dashboard.widgets',
     'superdesk.apps.dashboard.grid',
     'superdesk.apps.dashboard.world-clock',
+    'superdesk.apps.dashboard.user-activity',
     'superdesk.apps.workspace.tasks',
     'superdesk.core.itemList',
     'superdesk.apps.legal_archive',
