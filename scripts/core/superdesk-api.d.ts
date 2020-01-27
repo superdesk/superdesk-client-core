@@ -764,6 +764,7 @@ declare module 'superdesk-api' {
         onSelect(user: IUser): void;
         selectedUserId?: string;
         disabled?: boolean;
+        autoFocus?: boolean | {initializeWithDropdownHidden: boolean};
     }
 
 
