@@ -115,9 +115,9 @@ const GET_GROUPS = (userId, services: any): Array<IGroup> => {
             label: gettext('Created by this user'),
             dataSource(fetchFn) {
                 const markedQuery = extensions['markForUser']
-                    .extension
+                    ?.extension
                     .exposes
-                    .getQueryNotMarkedForAnyoneOrMarkedForMe(userId);
+                    .getQueryNotMarkedForAnyoneOrMarkedForMe(userId) || {};
 
                 return fetchFn('archive', {
                     bool: {
