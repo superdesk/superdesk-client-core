@@ -13,6 +13,7 @@ import {isPublished} from 'apps/archive/utils';
 import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
 import {copyJson} from 'core/helpers/utils';
 import {appConfig, extensions} from 'appConfig';
+import {mediaIdGenerator} from '../services/MediaIdGeneratorService';
 
 /**
  * @ngdoc directive
@@ -47,7 +48,6 @@ AuthoringDirective.$inject = [
     'editorResolver',
     'compareVersions',
     'embedService',
-    'mediaIdGenerator',
     'relationsService',
     '$injector',
     'functionPoints',
@@ -76,7 +76,6 @@ export function AuthoringDirective(
     editorResolver,
     compareVersions,
     embedService,
-    mediaIdGenerator,
     relationsService,
     $injector,
 
@@ -1177,7 +1176,7 @@ export function AuthoringDirective(
 
                     newIndex = fieldVersions.length ? 1 + fieldVersions[0] : 1;
                 }
-                return mediaIdGenerator.getFieldVersionName(parts[0], newIndex);
+                return mediaIdGenerator.getFieldVersionName(parts[0], newIndex == null ? '' : newIndex.toString());
             };
 
             // init

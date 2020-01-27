@@ -4,6 +4,7 @@ import {gettext} from 'core/utils';
 import {isMediaEditable} from 'core/config';
 import {isPublished} from 'apps/archive/utils';
 import {IArticle} from 'superdesk-api';
+import {mediaIdGenerator} from '../services/MediaIdGeneratorService';
 
 /**
  * @ngdoc controller
@@ -14,10 +15,8 @@ import {IArticle} from 'superdesk-api';
  *
  * @description Controller for handling adding/uploading images to association fields
  */
-AssociationController.$inject = ['content', 'superdesk',
-    'mediaIdGenerator', 'renditions', 'notify'];
-export function AssociationController(content, superdesk,
-    mediaIdGenerator, renditions, notify) {
+AssociationController.$inject = ['content', 'superdesk', 'renditions', 'notify'];
+export function AssociationController(content, superdesk, renditions, notify) {
     const self = this;
 
     this.checkRenditions = checkRenditions;
@@ -71,7 +70,7 @@ export function AssociationController(content, superdesk,
 
                     forEach(images, (image) => {
                         imagesWithIds.push({id: scope.rel, image: image});
-                        scope.rel = mediaIdGenerator.getFieldVersionName(rootField, ++index);
+                        scope.rel = mediaIdGenerator.getFieldVersionName(rootField, (++index).toString());
                     });
                     editNextFile();
                 });
