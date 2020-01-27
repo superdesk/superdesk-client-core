@@ -18,7 +18,7 @@ interface IScope extends ng.IScope {
     preview: boolean;
     loading: boolean;
     relatedItems: Array<IArticle>;
-    gettext: (text: any, params?: any) => string;
+    gettext: (text: string, params?: any) => string;
 }
 
 RelatedItemsPreview.$inject = ['relationsService'];
