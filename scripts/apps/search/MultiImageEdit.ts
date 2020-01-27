@@ -21,6 +21,10 @@ interface IScope extends ng.IScope {
     successHandler?(): void;
     cancelHandler?(): void;
     getSelectedItemsLength(): number;
+    selectAll: () => void;
+    unselectAll: () => void;
+    areAllSelected: () => boolean;
+    areSomeSelected: () => boolean;
 }
 
 MultiImageEditController.$inject = [
@@ -58,6 +62,28 @@ export function MultiImageEditController(
     $scope.placeholder = {};
 
     $scope.isDirty = () => unsavedChangesExist;
+
+    $scope.selectAll = () => {
+        if (Array.isArray($scope.images)) {
+            $scope.images.forEach((image) => {
+                image.selected = true;
+            });
+        }
+    };
+
+    $scope.unselectAll = () => {
+        if (Array.isArray($scope.images)) {
+            $scope.images.forEach((image) => {
+                image.selected = false;
+            });
+        }
+    };
+
+    $scope.areAllSelected = () =>
+        Array.isArray($scope.images) && $scope.images.every((image) => image.selected === true);
+
+    $scope.areSomeSelected = () =>
+        Array.isArray($scope.images) && $scope.images.some((image) => image.selected === true);
 
     $scope.selectImage = (image, update: boolean = true) => {
         if ($scope.images.length === 1) {

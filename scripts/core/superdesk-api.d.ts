@@ -512,7 +512,7 @@ declare module 'superdesk-api' {
         updated_by: string;
     }
 
-    
+
 
 
     // PAGE
@@ -765,7 +765,7 @@ declare module 'superdesk-api' {
         onSelect(user: IUser): void;
         selectedUserId?: string;
         disabled?: boolean;
-        focus?: boolean;
+        autoFocus?: boolean | {initializeWithDropdownHidden: boolean};
     }
 
 
