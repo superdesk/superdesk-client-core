@@ -7,7 +7,7 @@ import {workspace} from './helpers/workspace';
 import {authoring} from './helpers/authoring';
 import {dashboard} from './helpers/dashboard';
 import {desks} from './helpers/desks';
-import {el, s} from 'end-to-end-testing-helpers';
+import {el, s, els, ECE} from 'end-to-end-testing-helpers';
 import {contentProfiles} from './helpers/content_profiles';
 import {templates} from './helpers/templates';
 
@@ -394,7 +394,6 @@ describe('monitoring', () => {
         authoring.createTextItemFromTemplate('Simple');
         authoring.setHeaderSluglineText('Story1 slugline');
         authoring.getSubjectMetadataDropdownOpened();
-        browser.sleep(100);
         browser.actions().sendKeys('archaeology')
             .perform();
         browser.actions().sendKeys(protractor.Key.DOWN)
@@ -403,20 +402,24 @@ describe('monitoring', () => {
             .perform();
         authoring.save();
         authoring.close();
+        el(['content-profile-dropdown']).click();
+        var items = els(['content-profiles']);
 
-        contentProfiles.openContentProfileDropdown();
-        expect(contentProfiles.totalProfiles().count()).toBe(2);
-        contentProfiles.selectContentProfile();
-        expect(monitoring.getGroupItems(0).count()).toBe(1);
+        browser.wait(ECE.hasElementCount(items, 2));
+        items.get(1).click();
         expect(monitoring.getTextItemBySlugline(0, 0)).toBe('STORY1 SLUGLINE');
-        contentProfiles.removeFilter();
+
+        el(['remove-filter']).click();
         expect(monitoring.getTextItemBySlugline(0, 0)).toBe('STORY1 SLUGLINE');
         expect(monitoring.getTextItem(2, 0)).toBe('item3');
         expect(monitoring.getTextItem(4, 0)).toBe('item4');
-        contentProfiles.openContentProfileDropdown();
-        expect(contentProfiles.totalProfiles().count()).toBe(2);
-        contentProfiles.selectContentProfile();
-        contentProfiles.clearFilters();
+
+        el(['content-profile-dropdown']).click();
+        browser.wait(ECE.hasElementCount(items, 2));
+        items.get(1).click();
+        expect(monitoring.getTextItemBySlugline(0, 0)).toBe('STORY1 SLUGLINE');
+
+        el(['clear-filters']).click();
         expect(monitoring.getTextItemBySlugline(0, 0)).toBe('STORY1 SLUGLINE');
         expect(monitoring.getTextItem(2, 0)).toBe('item3');
         expect(monitoring.getTextItem(4, 0)).toBe('item4');
