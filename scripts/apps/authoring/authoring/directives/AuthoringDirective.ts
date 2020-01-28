@@ -1176,7 +1176,7 @@ export function AuthoringDirective(
 
                     newIndex = fieldVersions.length ? 1 + fieldVersions[0] : 1;
                 }
-                return mediaIdGenerator.getFieldVersionName(parts[0], newIndex == null ? '' : newIndex.toString());
+                return mediaIdGenerator.getFieldVersionName(parts[0], newIndex == null ? null : newIndex.toString());
             };
 
             // init

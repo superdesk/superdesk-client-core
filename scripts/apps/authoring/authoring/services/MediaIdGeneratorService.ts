@@ -2,7 +2,7 @@
 const MEDIA_FIELD_FORMAT = /(\S+)--(\d+)/i;
 
 // Generates a new identifer based on the root field and the last version
-function getFieldVersionName(rootField: string, lastVersion: string): string {
+function getFieldVersionName(rootField: string, lastVersion: string | null): string {
     return lastVersion == null ? rootField : rootField + '--' + lastVersion;
 }
 

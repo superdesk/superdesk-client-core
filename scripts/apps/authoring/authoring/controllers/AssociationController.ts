@@ -104,7 +104,10 @@ export function AssociationController(content, superdesk, renditions, notify) {
 
         const isItemBeingAdded = updated != null && scope.item.associations[associationKey] == null;
 
-        if (isItemBeingAdded && scope.field.field_type === 'media') {
+        if (
+            isItemBeingAdded
+            && scope.field?.field_type === 'media' // scope.field is not available from sdItemAssociation
+        ) {
             const mediaItemsForCurrentField = getAssociationsByField(scope.item, scope.field);
             const allowedItemsCount = scope.field.field_options.multiple_items.enabled
                 ? scope.field.field_options.multiple_items.max_items
