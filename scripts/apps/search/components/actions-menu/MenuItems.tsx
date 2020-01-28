@@ -143,7 +143,7 @@ export default class MenuItems extends React.Component<IProps, IState> {
                                 <SubmenuDropdown
                                     label={gettext(group.label)}
                                     submenu={submenu}
-                                    icon={actions[realGroupId][0].icon}
+                                    icon={group.icon ? group.icon : null} 
                                 />
                             </li>
                         ),
