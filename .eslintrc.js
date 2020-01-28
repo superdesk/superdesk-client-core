@@ -5,7 +5,7 @@ module.exports = Object.assign({}, sharedConfigs, {
         'no-nested-ternary': 0,
         'no-unused-vars': 0, // marks typescript interfaces as unused vars
         'no-undef': 0, // marks interface properties as usages of undeclared variables
-        
+
         // field names from back-end use camel-case for naming.
         // I'm not convinced it's worth using a bracket notation only to satisfy a lint rule
         'camelcase': 0,
@@ -29,6 +29,8 @@ module.exports = Object.assign({}, sharedConfigs, {
             "functions": "always-multiline"
         }],
         'newline-per-chained-call': ["error", {"ignoreChainWithDepth": 3}],
+
+        'no-prototype-builtins': 0,
     }),
     parser: 'typescript-eslint-parser',
     overrides: [
