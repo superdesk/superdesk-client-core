@@ -11,7 +11,7 @@ interface IProps<T extends IBaseRestApiResponse> {
     onSelect(item: T): void;
     selected?: string;
     disabled?: boolean;
-    onFocus?: boolean;
+    autoFocus?: boolean;
     'data-test-id'?: string;
 }
 
@@ -61,7 +61,7 @@ export class AutoComplete<T extends IBaseRestApiResponse> extends React.Componen
 
         return (
             <Select2
-                autoFocus={this.props.onFocus}
+                autoFocus={this.props.autoFocus}
                 disabled={this.props.disabled}
                 placeholder={
                     <ListItem fullWidth noBackground noShadow>
