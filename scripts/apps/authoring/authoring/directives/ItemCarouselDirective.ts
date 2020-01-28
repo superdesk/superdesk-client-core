@@ -6,7 +6,7 @@ import {getSuperdeskType} from 'core/utils';
 import {gettext, gettextPlural} from 'core/utils';
 import {addInternalEventListener} from 'core/internal-events';
 import {isAllowedMediaType, getAllowedTypeNames} from './ItemAssociationDirective';
-import {getMediaItemsForField} from '../controllers/AssociationController';
+import {getAssociationsByField} from '../controllers/AssociationController';
 
 const carouselContainerSelector = '.sd-media-carousel__content';
 
@@ -158,7 +158,7 @@ export function ItemCarouselDirective(notify) {
             };
 
             function canUploadItems(uploadsCount: number = 0): boolean {
-                const mediaItemsForCurrentField = getMediaItemsForField(scope.item, scope.field);
+                const mediaItemsForCurrentField = getAssociationsByField(scope.item, scope.field);
                 const currentUploads = mediaItemsForCurrentField.length;
 
                 // check files from external folder does not exceed the maxUploads limit
