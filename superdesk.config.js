@@ -17,6 +17,7 @@ module.exports = function(grunt) {
             },
             validatePointOfInterestForImages: true,
             hideRoutedDesks: false,
+            showCharacterLimit: 40,
         },
         auth: {google: false},
         ingest: {
