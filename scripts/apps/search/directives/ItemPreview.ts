@@ -126,9 +126,7 @@ export function ItemPreview(asset, storage, desks, _, familyService, privileges)
              */
             function fetchRelatedItems() {
                 if (scope.item && ['archive', 'archived', 'published'].includes(scope.item._type)) {
-                    familyService.fetchItems(scope.item.family_id)
-                        // filter out current item
-                        .then((res) => ({...res, _items: res._items.filter((item) => item._id !== scope.item._id)}))
+                    familyService.fetchItems(scope.item.family_id, scope.item)
                         .then(setRelatedItems);
                 } else {
                     setRelatedItems(null);
