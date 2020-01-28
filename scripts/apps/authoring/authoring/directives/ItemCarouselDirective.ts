@@ -6,7 +6,7 @@ import {getSuperdeskType} from 'core/utils';
 import {gettext, gettextPlural} from 'core/utils';
 import {addInternalEventListener} from 'core/internal-events';
 import {isAllowedMediaType, getAllowedTypeNames} from './ItemAssociationDirective';
-import {IArticle} from 'superdesk-api';
+import {getMediaItemsForField} from '../controllers/AssociationController';
 
 const carouselContainerSelector = '.sd-media-carousel__content';
 
@@ -157,39 +157,18 @@ export function ItemCarouselDirective(notify) {
                 carousel.trigger('to.owl.carousel', [index]);
             };
 
-            function canAddMediaItems(internalIds: Array<IArticle['_id']>, externalItemsCount: number = 0): boolean {
-                const mediaItemsForCurrentField = Object.keys(scope.item.associations || {})
-                    .filter((key) => key.startsWith(scope.field._id) && scope.item.associations[key] != null)
-                    .map((key) => scope.item.associations[key]);
-
+            function canUploadItems(uploadsCount: number = 0): boolean {
+                const mediaItemsForCurrentField = getMediaItemsForField(scope.item, scope.field);
                 const currentUploads = mediaItemsForCurrentField.length;
 
-                const itemAlreadyAddedAsMediaGallery = mediaItemsForCurrentField.some(
-                    (mediaItem) => internalIds.includes(mediaItem._id),
-                );
-
-                if (currentUploads >= scope.maxUploads) {
-                    notify.error(
-                        gettext(
-                            'Media item was not added, because the field reached the limit of allowed media items.',
-                        ),
-                    );
-                    return false;
-                }
-
                 // check files from external folder does not exceed the maxUploads limit
-                if (currentUploads + externalItemsCount > scope.maxUploads) {
+                if (currentUploads + uploadsCount > scope.maxUploads) {
                     notify.error(
                         gettext(
                             'Select at most {{maxUploads}} files to upload.',
                             {maxUploads: scope.maxUploads - currentUploads},
                         ),
                     );
-                    return false;
-                }
-
-                if (itemAlreadyAddedAsMediaGallery) {
-                    notify.error('This item is already added as media gallery.');
                     return false;
                 }
 
@@ -212,13 +191,9 @@ export function ItemCarouselDirective(notify) {
                     event.stopPropagation();
 
                     if (isAllowedMediaType(scope, event)) {
-                        const itemStr = event.originalEvent.dataTransfer.getData(type);
-                        const internalIds = typeof itemStr === 'string' && itemStr.length > 0
-                            ? [JSON.parse(itemStr)._id]
-                            : [];
-                        const externalItemsCount = Object.values(event.originalEvent.dataTransfer.files || []).length;
+                        const uploadsCount = Object.values(event.originalEvent.dataTransfer.files || []).length;
 
-                        if (canAddMediaItems(internalIds, externalItemsCount)) {
+                        if (canUploadItems(uploadsCount)) {
                             // add a new item at the last position in the carousel
                             scope.currentIndex = scope.carouselItems != null ? scope.carouselItems.length : 0;
                             controller.initializeUploadOnDrop(scope, event);
@@ -322,7 +297,7 @@ export function ItemCarouselDirective(notify) {
             const removeAddImageEventListener = addInternalEventListener('addImage', (event) => {
                 const {field, image} = event.detail;
 
-                if (scope.field._id === field && canAddMediaItems([image._id])) {
+                if (scope.field._id === field) {
                     controller.addAssociation(scope, image);
                 }
             });

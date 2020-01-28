@@ -1,10 +1,16 @@
 import {forEach, get, startsWith, endsWith, some} from 'lodash';
-import {getSuperdeskType} from 'core/utils';
+import {getSuperdeskType, gettextPlural} from 'core/utils';
 import {gettext} from 'core/utils';
 import {isMediaEditable} from 'core/config';
 import {isPublished} from 'apps/archive/utils';
-import {IArticle} from 'superdesk-api';
+import {IArticle, IVocabulary} from 'superdesk-api';
 import {mediaIdGenerator} from '../services/MediaIdGeneratorService';
+
+export function getMediaItemsForField(item: IArticle, field: IVocabulary) {
+    return Object.keys(item.associations || {})
+        .filter((key) => key.startsWith(field._id) && item.associations[key] != null)
+        .map((key) => item.associations[key]);
+}
 
 /**
  * @ngdoc controller
@@ -93,6 +99,32 @@ export function AssociationController(content, superdesk, renditions, notify) {
         // if the media is of type media-gallery, update same association-key not the next one
         // as the scope.rel contains the next association-key of the new item
         let associationKey = scope.carouselItem ? scope.carouselItem.fieldId : customRel || scope.rel;
+
+        const isItemBeingAdded = updated != null && scope.item.associations[associationKey] == null;
+
+        if (isItemBeingAdded && scope.field.field_type === 'media') {
+            const mediaItemsForCurrentField = getMediaItemsForField(scope.item, scope.field);
+            const allowedItemsCount = scope.field.field_options.multiple_items.enabled
+                ? scope.field.field_options.multiple_items.max_items
+                : 1;
+
+            if (mediaItemsForCurrentField.length + 1 > allowedItemsCount) {
+                notify.error(gettextPlural(
+                    allowedItemsCount,
+                    'Item was not added. Only 1 item is allowed for this field.',
+                    'Item was not added. Only {{number}} items are allowed in this field.',
+                    {number: allowedItemsCount},
+                ));
+
+                return;
+            }
+
+            if (mediaItemsForCurrentField.find((mediaItem) => mediaItem._id === updated._id) != null) {
+                notify.error('This item is already added.');
+                return;
+            }
+
+        }
 
         if (scope.field != null && scope.field.field_type === 'media' && updated != null && updated.order == null) {
             // if the field is of type media-gallery, assign order to the item being added
