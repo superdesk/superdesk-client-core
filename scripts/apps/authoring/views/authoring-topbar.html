@@ -141,7 +141,8 @@
                 ng-if="action !== 'correct' && action !== 'kill'"
                 title="{{ :: 'Close' | translate }}"
                 sd-hotkey="ctrl+shift+e"
-                sd-hotkey-options="{global: true}">
+                sd-hotkey-options="{global: true}"
+                data-test-id="close">
             <span translate>Close</span>
         </button>
 
@@ -152,7 +153,9 @@
         ng-disabled="!save_enabled() || saveDisabled"
         sd-hotkey="ctrl+shift+s"
         sd-hotkey-options="{global: true}"
-        translate>Save</button>
+        translate
+        data-test-id="save"
+      >Save</button>
 
       <button class="btn btn--primary" type="submit"
         ng-click="previewFormattedItem()"
@@ -215,10 +218,16 @@
         <div id="authoring-extra-dropdown"
              ng-if="item._type !== 'legal_archive' && item._type !== 'archived' && !highlight && item.state !== 'spiked' && buttonsToHide['article-edit--topbar--actions'] !== true"
              class="dropdown pull-left strict" dropdown>
-            <button id="more-actions" class="navbtn dropdown__toggle" title="{{ :: 'More actions' | translate }}" dropdown__toggle>
+            <button
+              id="more-actions"
+              class="navbtn dropdown__toggle"
+              title="{{ :: 'More actions' | translate }}"
+              dropdown__toggle
+              data-test-id="actions-button"
+            >
                 <i class="icon-dots-vertical"></i>
             </button>
-            <div class="dropdown__menu pull-right">
+            <div class="dropdown__menu pull-right" data-test-id="actions-list">
                 <ul ng-controller="TemplateMenu as templateMenu" ng-show="canSaveTemplate()">
                   <li>
                     <button type="button"

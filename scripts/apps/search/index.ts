@@ -10,6 +10,7 @@ import {gettext} from 'core/utils';
 import {MultiActionBarReact} from 'apps/monitoring/MultiActionBarReact';
 import {reactToAngular1} from 'superdesk-ui-framework';
 import {SearchPanelWidgets} from './components/search-panel-widgets';
+import {PreviewSubject} from './components/preview-subject';
 
 angular.module('superdesk.apps.search.react', [
     'superdesk.apps.highlights',
@@ -80,6 +81,13 @@ angular.module('superdesk.apps.search', [
         reactToAngular1(
             SearchPanelWidgets,
             ['provider', 'params', 'setParams'],
+        ),
+    )
+
+    .component('sdPreviewSubject',
+        reactToAngular1(
+            PreviewSubject,
+            ['item', 'fields', 'editor'],
         ),
     )
 

@@ -37,7 +37,7 @@ export class AutoComplete<T extends IBaseRestApiResponse> extends React.Componen
 
         this.setState({loading: true, fetchedItems: null});
 
-        this.props.query(searchString).then((res) => {
+        return this.props.query(searchString).then((res) => {
             if (this._mounted) {
                 this.setState({
                     fetchedItems: res._items,
@@ -61,7 +61,7 @@ export class AutoComplete<T extends IBaseRestApiResponse> extends React.Componen
 
         return (
             <Select2
-                onFocus={this.props.onFocus}
+                autoFocus={this.props.onFocus}
                 disabled={this.props.disabled}
                 placeholder={
                     <ListItem fullWidth noBackground noShadow>
@@ -84,7 +84,7 @@ export class AutoComplete<T extends IBaseRestApiResponse> extends React.Componen
                     </ListItem>
                 )}
                 onSearch={(search) => {
-                    this.queryItems(search);
+                    return this.queryItems(search);
                 }}
                 loading={this.state.loading}
                 data-test-id={this.props['data-test-id']}
