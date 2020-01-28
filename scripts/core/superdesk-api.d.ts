@@ -1087,6 +1087,7 @@ declare module 'superdesk-api' {
             elasticHighlight?: any;
             onlyEditor3?: any;
             nestedItemsInOutputStage?: boolean;
+            keepMetaTermsOpenedOnClick?: boolean;
         };
         auth: {
             google: boolean

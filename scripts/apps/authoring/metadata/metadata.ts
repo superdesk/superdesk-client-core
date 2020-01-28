@@ -863,7 +863,7 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                         });
                     }
 
-                    if ($event && ($event.ctrlKey || $event.metaKey)) {
+                    if ($event && ($event.ctrlKey || $event.metaKey || appConfig.features.keepMetaTermsOpenedOnClick)) {
                         $event.stopPropagation();
                         return;
                     }
