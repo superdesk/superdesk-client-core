@@ -68,7 +68,7 @@
                         <div ng-if="customDataSource == null" class="flat-searchbar monitoring-flat-searchbar" ng-class="{extended: aggregate.monitoringSearch}">
                             <div class="search-handler" ng-class="{'search-handler--left-border': !monitoring.singleGroup}">
                                 <label for="search-input" class="trigger-icon" ng-click="aggregate.monitoringSearch = !aggregate.monitoringSearch"><i class="icon-search"></i></label>
-                                <input id="search-input" type="text" placeholder="{{ gettext( 'Search') }}" ng-model="query"
+                                <input id="search-input" type="text" placeholder="{{ gettext('Search') }}" ng-model="query"
                                        ng-keyup="aggregate.searchOnEnter($event, query)">
                                 <button class="search-close" ng-click="aggregate.search(query = null)" ng-class="{visible: query}"><i class="icon-remove-sign"></i></button>
                                 <button class="search-close" ng-click="aggregate.search(query);" ng-class="{visible: query}">
@@ -81,7 +81,7 @@
                             <span class="stage-group__desk">{{ monitoring.singleGroup.header }}</span>
                             <span class="stage-group__split">/</span>
                             <div class="dropdown" dropdown>
-                                <button class="dropdown__toggle navbtn navbtn--text-only navbtn--padding-s" dropdown-toggle>{{ monitoring.singleGroup.subheader}} {{ gettext(monitoring.singleGroup.type) | splitText }}<span class="dropdown__caret"></span></button>
+                                <button class="dropdown__toggle navbtn navbtn--text-only navbtn--padding-s" dropdown-toggle>{{ monitoring.singleGroup.subheader}} {{ monitoring.singleGroup.type | splitText | translate }}<span class="dropdown__caret"></span></button>
                                 <ul class="dropdown__menu scrollable">
                                     <li><div class="dropdown__menu-label">{{gettext('Stages') }}</div></li>
                                     <li ng-repeat="card in aggregate.cards" ng-class="{active: monitoring.singleGroup}">
@@ -130,7 +130,7 @@
             
                         <!-- filtering by file type not implemented for usage with custom data source -->
                         <div ng-if="(!elementState || elementState === 'comfort') && customDataSource == null" class="button-list button-list--padded">
-                            <a href="" ng-repeat="fileType in aggregate.fileTypes" ng-click="aggregate.setFilterType('file', fileType)" class="toggle-button" ng-class="{'toggle-button--active': aggregate.hasFileType(fileType)}" title="{{ gettext(fileType) }}">
+                            <a href="" ng-repeat="fileType in aggregate.fileTypes" ng-click="aggregate.setFilterType('file', fileType)" class="toggle-button" ng-class="{'toggle-button--active': aggregate.hasFileType(fileType)}" title="{{ fileType | translate }}">
                                 <span ng-if="fileType === 'all'" class="toggle-button__text toggle-button__text--all">{{ gettext('all') }}</span>
                                 <i ng-if="fileType !== 'all' && fileType !== 'highlightsPackage'" class="toggle-button__icon filetype-icon-{{fileType}}"></i>
                                 <i ng-if="fileType === 'highlightsPackage'" class="toggle-button__icon filetype-icon-highlight-pack" title="{{ gettext('Highlight Package') }}"></i>
@@ -144,7 +144,7 @@
                                     <li ng-repeat="fileType in aggregate.fileTypes"
                                         ng-click="aggregate.setFileType(fileType)"
                                         ng-class="{'dropdown__menu-item--active': aggregate.hasFileType(fileType)}"
-                                        title="{{ gettext(fileType) }}">
+                                        title="{{ fileType | translate }}">
                                         <button>
                                             <span ng-if="fileType === 'all'" class="toggle-button__text--all">{{ gettext('all') }}</span>
                                             <span ng-if="fileType === 'highlightsPackage'"><i class="filetype-icon-highlight-pack"></i>&nbsp;{{  gettext('Highlight Package') }}</span>

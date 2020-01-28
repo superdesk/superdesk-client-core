@@ -392,7 +392,7 @@ describe('monitoring', () => {
         monitoring.openMonitoring();
         workspace.selectDesk('Sports Desk');
         authoring.createTextItemFromTemplate('Simple');
-        authoring.setHeaderSluglineText('Story1 slugline');
+        authoring.setHeaderSluglineText('STORY1 SLUGLINE');
         authoring.getSubjectMetadataDropdownOpened();
         browser.actions().sendKeys('archaeology')
             .perform();
@@ -402,24 +402,27 @@ describe('monitoring', () => {
             .perform();
         authoring.save();
         authoring.close();
+        expect(monitoring.getAllItems().count()).toBe(3);
         el(['content-profile-dropdown']).click();
-        var items = els(['content-profiles']);
-
-        browser.wait(ECE.hasElementCount(items, 2));
-        items.get(1).click();
+        browser.wait(ECE.hasElementCount(els(['content-profiles']), 2));
+        el(['content-profile-dropdown'], by.buttonText('Simple')).click();
+        expect(monitoring.getAllItems().count()).toBe(1);
         expect(monitoring.getTextItemBySlugline(0, 0)).toBe('STORY1 SLUGLINE');
 
         el(['remove-filter']).click();
+        expect(monitoring.getAllItems().count()).toBe(3);
         expect(monitoring.getTextItemBySlugline(0, 0)).toBe('STORY1 SLUGLINE');
         expect(monitoring.getTextItem(2, 0)).toBe('item3');
         expect(monitoring.getTextItem(4, 0)).toBe('item4');
 
         el(['content-profile-dropdown']).click();
-        browser.wait(ECE.hasElementCount(items, 2));
-        items.get(1).click();
+        browser.wait(ECE.hasElementCount(els(['content-profiles']), 2));
+        el(['content-profile-dropdown'], by.buttonText('Simple')).click();
+        expect(monitoring.getAllItems().count()).toBe(1);
         expect(monitoring.getTextItemBySlugline(0, 0)).toBe('STORY1 SLUGLINE');
 
         el(['clear-filters']).click();
+        expect(monitoring.getAllItems().count()).toBe(3);
         expect(monitoring.getTextItemBySlugline(0, 0)).toBe('STORY1 SLUGLINE');
         expect(monitoring.getTextItem(2, 0)).toBe('item3');
         expect(monitoring.getTextItem(4, 0)).toBe('item4');
