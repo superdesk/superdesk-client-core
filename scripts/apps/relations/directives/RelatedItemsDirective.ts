@@ -23,6 +23,7 @@ interface IScope extends IDirectiveScope<void> {
     removeRelatedItem: (key: string) => void;
     openRelatedItem: (item: IArticle) => void;
     canAddRelatedItems: () => boolean;
+    isLocked: (item: IArticle) => boolean;
 }
 
 /**
@@ -35,8 +36,8 @@ interface IScope extends IDirectiveScope<void> {
  * add related items by using drag and drop, delete related items and open related items.
  */
 
-RelatedItemsDirective.$inject = ['authoringWorkspace', 'relationsService', 'notify'];
-export function RelatedItemsDirective(authoringWorkspace: AuthoringWorkspaceService, relationsService, notify) {
+RelatedItemsDirective.$inject = ['authoringWorkspace', 'relationsService', 'notify', 'lock'];
+export function RelatedItemsDirective(authoringWorkspace: AuthoringWorkspaceService, relationsService, notify, lock) {
     return {
         scope: {
             item: '=',
@@ -53,6 +54,10 @@ export function RelatedItemsDirective(authoringWorkspace: AuthoringWorkspaceServ
             };
 
             scope.gettext = gettext;
+
+            scope.isLocked = (item) => {
+                return lock.isLocked(item) || lock.isLockedInCurrentSession(item);
+            };
 
             scope.canAddRelatedItems = () => scope.field?.field_options?.allowed_workflows?.in_progress === true;
 
