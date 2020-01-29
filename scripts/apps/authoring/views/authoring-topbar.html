@@ -2,7 +2,7 @@
   id="subnav"
   class="subnav subnav--authoring"
   ng-class="{'auth-sendto': views.send, 'subnav--locked': isLocked()}"
-  sd-media-query min-width="840"
+  sd-media-query min-width="880"
   data-test-id="authoring-topbar"
 >
 
@@ -43,26 +43,26 @@
           translate>Read-only</span>
     </div>
 
-    <div class="subnav__stretch-bar" ng-if="showCustomButtons(item)">
+    <div class="subnav__stretch-bar sd-overflow-ellipsis" ng-if="showCustomButtons(item)" style="min-width: 150px;">
       <div
-        class="subnav__button-stack subnav__button-stack--custom-buttons"
+        class="subnav__button-stack subnav__button-stack--custom-buttons sd-overflow-ellipsis"
         ng-if="$root.config.features.customAuthoringTopbar != null && ($root.config.features.customAuthoringTopbar.toDesk === true || $root.config.features.customAuthoringTopbar.publish === true || $root.config.features.customAuthoringTopbar.publishAndContinue == true)"
         ng-show="_editable && itemActions.save && action === 'edit'"
       >
         <button
                 ng-if="$root.config.features.customAuthoringTopbar.toDesk === true"
-                class="btn btn--custom"
+                class="btn sd-overflow-ellipsis btn--custom"
                 ng-click="saveAndContinue(sendToNextStage, false)"
                 title="{{ :: 'To Desk' | translate }}">
-                <span class="btn__text" translate>To Desk</span>
+                <span class="btn__text sd-overflow-ellipsis" translate>To Desk</span>
                 <span class="btn__text--short" translate>T D</span>
         </button>
         <button
                 ng-if="$root.config.features.customAuthoringTopbar.closeAndContinue === true && canRewriteArticle()"
-                class="btn btn--custom"
+                class="btn sd-overflow-ellipsis btn--custom"
                 ng-click="saveAndContinue(closeAndContinue, false)"
                 title="{{gettext('Close and Continue')}}">
-                <span class="btn__text" translate>Close and Continue</span>
+                <span class="btn__text sd-overflow-ellipsis" translate>Close & Continue</span>
                 <span class="btn__text--short" translate>C & C</span>
         </button>
         <button
@@ -71,15 +71,15 @@
                 type="submit"
                 ng-click="saveAndContinue(publish, true)"
                 title="{{ :: 'Publish' | translate }}">
-                <span class="btn__text" translate>Publish</span>
+                <span class="btn__text sd-overflow-ellipsis" translate>Publish</span>
                 <span class="btn__text--short" translate>P</span>
         </button>
         <button
                 ng-if="$root.config.features.customAuthoringTopbar.publishAndContinue === true && canPublishOnDesk() && canRewriteArticle()"
-                class="btn btn--custom btn--publish-plus"
+                class="btn sd-overflow-ellipsis btn--custom btn--publish-plus"
                 ng-click="saveAndContinue(publishAndContinue, true)"
                 title="{{ :: 'Publish and Continue' | translate }}">
-                <span class="btn__text">{{ :: 'Publish and Continue' | translate }}</span>
+                <span class="btn__text sd-overflow-ellipsis">{{ :: 'Publish & Continue' | translate }}</span>
                 <span class="btn__text--short">{{ :: 'P & C' | translate }}</span>
         </button>
       </div>
@@ -143,7 +143,8 @@
                 sd-hotkey="ctrl+shift+e"
                 sd-hotkey-options="{global: true}"
                 data-test-id="close">
-            <span translate>Close</span>
+            <span class="btn__text" translate>Close</span class="btn__text">
+            <i class="icon-close-small btn__text--short sd-margin--0"></i>
         </button>
 
       <button class="btn btn--primary" type="submit"
