@@ -5,6 +5,8 @@ import {
     IArticle,
     IContentProfile,
     IEvents,
+    IDeployConfig,
+    IProviderService,
 } from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {getGenericListPageComponent} from './ui/components/ListPage/generic-list-page';
@@ -29,6 +31,7 @@ import {ModalFooter} from './ui/components/Modal/ModalFooter';
 import {SelectUser} from './ui/components/SelectUser';
 import {logger} from './services/logger';
 import {showModal} from './services/modalService';
+import ng from './services/ng';
 import {UserAvatarFromUserId} from 'apps/users/components/UserAvatarFromUserId';
 import {ArticleItemConcise} from 'core/ui/components/article-item-concise';
 import {DropdownTree} from './ui/components/dropdown-tree';
@@ -130,6 +133,7 @@ export function getSuperdeskApiImplementation(
     session,
     authoringWorkspace: AuthoringWorkspaceService,
     metadata: MetadataService,
+    deployConfig: IDeployConfig,
 ): ISuperdesk {
     return {
         dataApi: dataApi,
@@ -197,6 +201,10 @@ export function getSuperdeskApiImplementation(
             },
         },
         state: applicationState,
+        instance: {
+            deployConfig,
+            ng: ng as IProviderService,
+        },
         ui: {
             article: {
                 view: (id: string) => {

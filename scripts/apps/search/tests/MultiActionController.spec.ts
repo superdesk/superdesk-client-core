@@ -71,6 +71,7 @@ describe('Multi Action Bar', () => {
             session,
             authoringWorkspace: AuthoringWorkspaceService,
             metadata,
+            deployConfig,
         ) => {
             const extensionDelay = 1000;
 
@@ -105,6 +106,7 @@ describe('Multi Action Bar', () => {
                 session,
                 authoringWorkspace,
                 metadata,
+                deployConfig,
             ).then(() => {
                 const ctrl = $controller(MultiActionBarController, {});
 

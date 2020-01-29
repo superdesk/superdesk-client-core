@@ -116,7 +116,8 @@ core.run([
     'session',
     'authoringWorkspace',
     'metadata',
-    (modal, privileges, lock, session, authoringWorkspace: AuthoringWorkspaceService, metadata) => {
+    'deployConfig',
+    (modal, privileges, lock, session, authoringWorkspace: AuthoringWorkspaceService, metadata, deployConfig) => {
         registerExtensions(
             _superdesk,
             modal,
@@ -125,6 +126,7 @@ core.run([
             session,
             authoringWorkspace,
             metadata,
+            deployConfig,
         );
     },
 ]);
