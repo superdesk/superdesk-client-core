@@ -293,7 +293,7 @@ describe('authoring', () => {
                     done();
                 }, 10);
             }, 10);
-        })
+        }),
     );
 
     it('confirm the associated media but do not use the associated media',
@@ -339,7 +339,7 @@ describe('authoring', () => {
                     done();
                 }, 10);
             }, 10);
-        })
+        }),
     );
 
     it('can reject publishing on error', inject((api, $q, $rootScope, authoring, lock) => {
