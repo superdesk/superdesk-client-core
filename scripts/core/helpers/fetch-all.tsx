@@ -1,6 +1,7 @@
 import {IBaseRestApiResponse, ISortOption, IRestApiResponse} from 'superdesk-api';
 import ng from 'core/services/ng';
 import {appConfig} from 'appConfig';
+import {get} from 'lodash';
 
 function fetchPage<T extends IBaseRestApiResponse>(items: Array<T>, url: string, authenticationToken: string) {
     return fetch(appConfig.server.url + '/' + url, {
@@ -15,7 +16,7 @@ function fetchPage<T extends IBaseRestApiResponse>(items: Array<T>, url: string,
         .then((resJson: IRestApiResponse<T>) => {
             const currentItems = items.concat(resJson._items);
 
-            if (resJson?._links?.next?.href == null) {
+            if (get(resJson, '_links.next.href') != null) {
                 return Promise.resolve(currentItems);
             } else {
                 return fetchPage(currentItems, resJson._links.next.href, authenticationToken);
