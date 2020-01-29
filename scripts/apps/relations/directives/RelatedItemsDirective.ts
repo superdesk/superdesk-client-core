@@ -287,10 +287,12 @@ export function RelatedItemsDirective(
             const removeEventListeners = [
                 'item:lock',
                 'item:unlock',
-            ].map((_) => $rootScope.$on(_, scope.refreshRelatedItems));
+            ].map((eventName) =>
+                $rootScope.$on(eventName, scope.refreshRelatedItems),
+            );
 
             scope.$on('$destroy', () => {
-                removeEventListeners.forEach((_) => _());
+                removeEventListeners.forEach((removeFn) => removeFn());
             });
         },
     };
