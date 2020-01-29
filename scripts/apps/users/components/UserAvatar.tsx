@@ -1,31 +1,69 @@
 import React from 'react';
+import {IUser} from 'superdesk-api';
+import {CC} from 'core/ui/configurable-ui-components';
+import {isUserLoggedIn} from '../services/UsersService';
 
-interface IProps {
-    displayName: string;
-    title?: string;
-    pictureUrl?: string;
-}
-
-export class UserAvatar extends React.PureComponent<IProps> {
+class DefaultAvatarDisplay extends React.PureComponent<{user: IUser}> {
     render() {
-        const {displayName, pictureUrl, title} = this.props;
+        const {user} = this.props;
 
         return (
-            <div
-                className="user-avatar"
-                title={title || displayName}
-                data-test-id="user-avatar"
-            >
+            <div className="user-avatar">
                 <figure
                     className={[
                         'avatar',
                         'avatar--no-margin',
-                        pictureUrl ? 'no-bg' : 'initials',
+                        user.picture_url ? 'no-bg' : 'initials',
                     ].join(' ')}
                 >
-                    {pictureUrl && <img src={pictureUrl} />}
-                    {displayName && <span>{displayName[0].toUpperCase()}</span>}
+                    {
+                        user.picture_url == null
+                            ? <span>{user.display_name[0].toUpperCase()}</span>
+                            : <img src={user.picture_url} />
+                    }
                 </figure>
+            </div>
+        );
+    }
+}
+
+interface IProps {
+    user: IUser;
+
+    // indicates whether a user is online or not
+    // should only be used when the user object is up to date
+    displayStatus?: boolean;
+}
+
+export class UserAvatar extends React.PureComponent<IProps> {
+    render() {
+        const {user, displayStatus} = this.props;
+
+        return (
+            <div
+                title={user.display_name}
+                style={{position: 'relative'}} // required for displaying status
+                data-test-id="user-avatar"
+            >
+                {
+                    CC.UserAvatar != null
+                        ? <CC.UserAvatar user={user} />
+                        : <DefaultAvatarDisplay user={user} />
+                }
+
+                {
+                    displayStatus
+                        ? (
+                            <div
+                                className={
+                                    isUserLoggedIn(user)
+                                        ? 'status-indicator--online'
+                                        : 'status-indicator--offline'
+                                }
+                            />
+                        )
+                        : null
+                }
             </div>
         );
     }

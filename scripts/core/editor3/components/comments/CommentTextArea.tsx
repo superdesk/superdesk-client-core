@@ -5,6 +5,20 @@ import {UserAvatar} from 'apps/users/components/UserAvatar';
 import mentionsStyle from './mentionsStyle';
 import ng from 'core/services/ng';
 import {gettext} from 'core/utils';
+import {IUser} from 'superdesk-api';
+
+interface IUserSuggestion {
+    type: 'user';
+    id: string;
+    display: string;
+    user: IUser;
+}
+
+interface IDeskSuggestion {
+    id: string;
+    display: string;
+    type: 'desk';
+}
 
 class CommentTextArea extends React.Component<any, any> {
     static propTypes: any;
@@ -61,6 +75,7 @@ class CommentTextArea extends React.Component<any, any> {
                     id: u._id,
                     display: u.display_name,
                     type: 'user',
+                    user: u,
                 })),
             ),
         );
@@ -73,10 +88,13 @@ class CommentTextArea extends React.Component<any, any> {
      * suggested items dropdown based on its data.
      * @returns {JSX}
      */
-    renderSuggestion({type, display}, search, highlightedDisplay) {
+    renderSuggestion(item: IUserSuggestion | IDeskSuggestion, search, highlightedDisplay) {
         return (
             <div className="entry">
-                {type === 'desk' ? <i className="icon-tasks" /> : <UserAvatar displayName={display} />}
+                {item.type === 'desk'
+                    ? <i className="icon-tasks" />
+                    : <UserAvatar user={item.user} />
+                }
                 {highlightedDisplay}
             </div>
         );

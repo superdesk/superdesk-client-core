@@ -5,7 +5,7 @@ import {keyBy} from 'lodash';
 import {gettext} from 'core/utils';
 import {dataApi} from 'core/helpers/CrudManager';
 import {ListItem, ListItemColumn, ListItemRow} from 'core/components/ListItem';
-import {CC} from '../configurable-ui-components';
+import {UserAvatar} from 'apps/users/components/UserAvatar';
 
 interface IState {
     fetchedUsers?: Array<IUser>;
@@ -84,7 +84,7 @@ export class SelectUser extends React.Component<IPropsSelectUser, IState> {
                 renderItem={(user) => (
                     <ListItem fullWidth noBackground noShadow>
                         <ListItemColumn noBorder>
-                            <CC.UserAvatar user={user} />
+                            <UserAvatar user={user} displayStatus={true} />
                         </ListItemColumn>
 
                         <ListItemColumn ellipsisAndGrow>
