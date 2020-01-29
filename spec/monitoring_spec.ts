@@ -408,8 +408,8 @@ describe('monitoring', () => {
         el(['content-profile-dropdown'], by.buttonText('Simple')).click();
         expect(monitoring.getAllItems().count()).toBe(1);
         expect(monitoring.getTextItemBySlugline(0, 0)).toBe('STORY1 SLUGLINE');
-        expect(browser.isElementPresent(monitoring.getGroupItems(2).get(0))).toBe(false);
-        expect(browser.isElementPresent(monitoring.getGroupItems(4).get(0))).toBe(false);
+        expect(monitoring.isGroupEmpty(2)).toBe(true);
+        expect(monitoring.isGroupEmpty(4)).toBe(true);
 
         el(['remove-filter']).click();
         expect(monitoring.getAllItems().count()).toBe(3);
@@ -422,8 +422,8 @@ describe('monitoring', () => {
         el(['content-profile-dropdown'], by.buttonText('Simple')).click();
         expect(monitoring.getAllItems().count()).toBe(1);
         expect(monitoring.getTextItemBySlugline(0, 0)).toBe('STORY1 SLUGLINE');
-        expect(browser.isElementPresent(monitoring.getGroupItems(2).get(0))).toBe(false);
-        expect(browser.isElementPresent(monitoring.getGroupItems(4).get(0))).toBe(false);
+        expect(monitoring.isGroupEmpty(2)).toBe(true);
+        expect(monitoring.isGroupEmpty(4)).toBe(true);
 
         el(['clear-filters']).click();
         expect(monitoring.getAllItems().count()).toBe(3);

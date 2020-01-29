@@ -124,6 +124,7 @@ class Monitoring {
     getPackageItemLabelEntry: () => ElementFinder;
     getPackageItemLabelOption: (index: any) => ElementFinder;
     getPackageItemLabel: (index: any) => ElementFinder;
+    isGroupEmpty: (group: any) => boolean;
 
     constructor() {
         this.config = element(by.className('aggregate-settings'));
@@ -205,6 +206,10 @@ class Monitoring {
 
         this.getGroupItems = function(group) {
             return this.getGroup(group).all(by.className('media-box'));
+        };
+
+        this.isGroupEmpty = function(group) {
+            return this.getGroupItems(group).count().then((count) => count === 0);
         };
 
         this.actionOnDeskSingleView = function() {
