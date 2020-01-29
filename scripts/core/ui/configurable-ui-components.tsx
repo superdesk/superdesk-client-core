@@ -1,6 +1,6 @@
 import React from 'react';
 import {IConfigurableUiComponents, IUser} from 'superdesk-api';
-import {UserAvatar} from 'apps/users/components';
+import {UserAvatar} from 'apps/users/components/UserAvatar';
 
 class UserAvatarDefault extends React.Component<{user: IUser}> {
     render() {
