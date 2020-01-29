@@ -526,13 +526,13 @@ export class Editor3Component extends React.Component<IProps, IState> {
             } : {},
         ));
 
-        const blockStyle = (contentBlock):string => {
+        const blockStyle = (contentBlock): string => {
             const type = contentBlock.getType();
 
             if (type === 'code-block' && appConfig.features.showCharacterLimit) {
                 return 'showCharacterLimit';
             }
-        }
+        };
 
         return (
             <div
