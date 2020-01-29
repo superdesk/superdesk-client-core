@@ -68,7 +68,7 @@
     "git-rev-sync": "1.10.0",
     "gridster": "0.5.6",
     "grunt": "1.0.2",
-    "grunt-angular-gettext": "2.3.9",
+    "grunt-angular-gettext": "2.5.1",
     "grunt-angular-templates": "1.1.0",
     "grunt-contrib-clean": "1.1.0",
     "grunt-contrib-copy": "1.0.0",
