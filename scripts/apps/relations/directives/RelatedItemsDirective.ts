@@ -36,8 +36,20 @@ interface IScope extends IDirectiveScope<void> {
  * add related items by using drag and drop, delete related items and open related items.
  */
 
-RelatedItemsDirective.$inject = ['authoringWorkspace', 'relationsService', 'notify', 'lock', '$rootScope'];
-export function RelatedItemsDirective(authoringWorkspace: AuthoringWorkspaceService, relationsService, notify, lock, $rootScope) {
+RelatedItemsDirective.$inject = [
+    'authoringWorkspace',
+    'relationsService',
+    'notify',
+    'lock',
+    '$rootScope',
+];
+export function RelatedItemsDirective(
+    authoringWorkspace: AuthoringWorkspaceService,
+    relationsService,
+    notify,
+    lock,
+    $rootScope,
+) {
     return {
         scope: {
             item: '=',
