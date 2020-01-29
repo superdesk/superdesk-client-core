@@ -248,7 +248,6 @@ describe('monitoring', () => {
                 terms: {type: ['text', 'picture']},
             });
         }));
-
     });
 
     describe('monitoring group directive', () => {
