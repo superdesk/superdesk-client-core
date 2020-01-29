@@ -275,7 +275,7 @@ export function RelatedItemsDirective(authoringWorkspace: AuthoringWorkspaceServ
             const removeEventListeners = [
                 'item:lock',
                 'item:unlock',
-            ].map((_) => $rootScope.$on(_, () => scope.refreshRelatedItems()));
+            ].map((_) => $rootScope.$on(_, scope.refreshRelatedItems));
 
             scope.$on('$destroy', () => {
                 removeEventListeners.forEach((_) => _());
