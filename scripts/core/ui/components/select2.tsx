@@ -89,7 +89,7 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                 } else if (typeof this.props.autoFocus === 'boolean') {
                     return this.props.autoFocus;
                 } else {
-                    return true;
+                    return false;
                 }
             })(),
             justInitialized: true,
