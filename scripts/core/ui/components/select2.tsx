@@ -241,6 +241,7 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                                     this.props.disabled || this.props.required || this.props.value == null ? null : (
                                         <div>
                                             <button
+                                                type="button"
                                                 onClick={() => {
                                                     this.props.onSelect(null);
                                                 }}
@@ -272,6 +273,7 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                         return (
                             <button
                                 key={this.props.getItemValue(item)}
+                                type="button"
                                 style={style}
                                 data-test-id="option"
                             >
