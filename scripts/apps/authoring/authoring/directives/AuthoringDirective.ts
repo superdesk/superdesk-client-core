@@ -860,7 +860,7 @@ export function AuthoringDirective(
                             (result) => next($scope.origItem._autosave ?? $scope.origItem, result),
                         );
 
-                        (
+                        return (
                             onUpdateFromExtensions.length < 1
                                 ? Promise.resolve(item)
                                 : onUpdateFromExtensions
