@@ -698,19 +698,10 @@ declare module 'superdesk-api' {
         'content:update': IWebsocketMessage<IArticleUpdateEvent>;
     }
 
-    export interface IDeployConfig {
-        config?: {
-            planning_check_for_assignment_on_publish?: boolean;
-            planning_link_updates_to_coverage?: boolean;
-        };
-    }
+    export interface IDeployConfigMain {}
 
-    export interface IProviderService {
-        register(injector: any): void;
-        get(name: string): any;
-        waitForServicesToBeAvailable(): Promise<void>;
-        getService(name: string): any;
-        getServices(names: Array<string>): Promise<Array<any>>;
+    export interface IDeployConfig {
+        config?: IDeployConfigMain;
     }
 
     // APPLICATION API
@@ -727,7 +718,6 @@ declare module 'superdesk-api' {
         };
         instance: {
             deployConfig?: IDeployConfig;
-            ng?: IProviderService;
         };
         ui: {
             article: {

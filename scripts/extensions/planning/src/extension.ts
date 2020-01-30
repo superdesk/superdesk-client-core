@@ -1,5 +1,6 @@
 import {IExtension, IArticle, ISuperdesk, onPublishMiddlewareResult} from 'superdesk-api';
-import {IPlanningAssignmentService} from './interfaces';
+import {IPlanningConfig, IPlanningAssignmentService} from './interfaces';
+import {getAngularService} from './utils';
 
 function onSpike(superdesk: ISuperdesk, item: IArticle) {
     const {gettext} = superdesk.localization;
@@ -39,10 +40,9 @@ function onPublishArticle(superdesk: ISuperdesk, item: IArticle): Promise<onPubl
         superdesk.instance &&
         superdesk.instance.deployConfig &&
         superdesk.instance.deployConfig.config &&
-        superdesk.instance.deployConfig.config.planning_check_for_assignment_on_publish &&
-        superdesk.instance.ng
+        (superdesk.instance.deployConfig as IPlanningConfig).config.planning_check_for_assignment_on_publish
     ) {
-        const assignmentService: IPlanningAssignmentService = superdesk.instance.ng.get('assignments');
+        const assignmentService: IPlanningAssignmentService = getAngularService('assignments');
 
         return assignmentService.onPublishFromAuthoring(item);
     }
@@ -55,10 +55,9 @@ function onArticleRewriteAfter(superdesk: ISuperdesk, item: IArticle): Promise<I
         superdesk.instance &&
         superdesk.instance.deployConfig &&
         superdesk.instance.deployConfig.config &&
-        superdesk.instance.deployConfig.config.planning_link_updates_to_coverage &&
-        superdesk.instance.ng
+        (superdesk.instance.deployConfig as IPlanningConfig).config.planning_link_updates_to_coverage
     ) {
-        const assignmentService: IPlanningAssignmentService = superdesk.instance.ng.get('assignments');
+        const assignmentService: IPlanningAssignmentService = getAngularService('assignments');
 
         return assignmentService.onArchiveRewrite(item);
     }
