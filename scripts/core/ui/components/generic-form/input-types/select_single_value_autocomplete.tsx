@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import {IInputType} from '../interfaces/input-types';
 import {AutoComplete} from '../../Autocomplete';
 import {IRestApiResponse} from 'superdesk-api';
+import {logger} from 'core/services/logger';
 
 type IProps = IInputType<string>;
 
@@ -50,8 +51,11 @@ export function getSelectSingleValueAutoComplete(
             }
         }
         render() {
-            if (this.props.previewOutput && this.props.value != null) {
-                if (this.state.item == null) { // loading
+            if (this.props.previewOutput) {
+                if (this.props.value == null) {
+                    logger.warn('previewOutput is enabled but the value is null', this.props.formField);
+                    return null;
+                } else if (this.state.item == null) { // loading
                     return null;
                 } else {
                     return (

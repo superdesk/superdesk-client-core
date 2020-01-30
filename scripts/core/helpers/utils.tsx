@@ -16,13 +16,38 @@ export const trimEndExact = (str: string, toTrim: string) => {
     return checkEnd === toTrim ? str.slice(0, str.length - toTrim.length) : str;
 };
 
+interface IOnlyStringKeys {
+    [key: string]: any;
+}
+
 // type-safe alternative to lodash.pick
-export function pick<T, K extends keyof T>(obj: T, ...keys: Array<K>): Pick<T, K> {
+export function pick<T extends IOnlyStringKeys, K extends keyof T>(obj: T, ...keys: Array<K>): Pick<T, K> {
     var picked: any = {};
 
     for (const key of keys) {
         picked[key] = obj[key];
     }
+
+    return picked;
+}
+
+// type-safe alternative to lodash.omit
+export function omit<T extends IOnlyStringKeys, K extends keyof T>(obj: T, ...keysToOmit: Array<K>): Omit<T, K> {
+    const keys = new Set<string>();
+
+    Object.keys(obj).forEach((key) => {
+        keys.add(key);
+    });
+
+    keysToOmit.forEach((key) => {
+        keys.delete(key as string);
+    });
+
+    var picked: any = {};
+
+    keys.forEach((key) => {
+        picked[key] = obj[key];
+    });
 
     return picked;
 }

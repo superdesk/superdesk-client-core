@@ -40,7 +40,7 @@ export class AutoComplete<T extends IBaseRestApiResponse> extends React.Componen
         return this.props.query(searchString).then((res) => {
             if (this._mounted) {
                 this.setState({
-                    fetchedItems: res._items,
+                    fetchedItems: res?._items ?? this.state.fetchedItems,
                     loading: false,
                 });
             }
