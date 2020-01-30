@@ -152,7 +152,7 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                             this.state.justInitialized
                             && typeof this.props.autoFocus === 'object'
                             && this.props.autoFocus.initializeWithDropdownHidden === true
-                                ? {opacity: 0}
+                                ? {display: 'none'}
                                 : {};
 
                         return (
