@@ -75,11 +75,13 @@
 }
 
 .subnav__authoring-topbar {
+    display: flex;
+    align-items: center;
     height: 30px;
     max-width: 100%;
     flex-grow: 1;
     flex-shrink: 1;
-    padding: 0 0 0 20px;
+    padding: 0 0 0 1.2rem;
     .assignment {
         vertical-align: sub;
     }
@@ -110,7 +112,7 @@
 .compact {
     .subnav__authoring-topbar {
         .stage {
-            max-width: 132px;
+            max-width: 90px;
         }
     }
 }
@@ -248,7 +250,7 @@
     background: rgba(0,0,0,0.85);
     z-index: $zindexFixedNavbar;
     ul > li {
-        @include border-box();
+
         padding: 0 1.6rem;
         max-width: 24rem;
         position: relative;
