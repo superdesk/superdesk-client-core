@@ -12,12 +12,22 @@ interface IState {
 }
 
 export function getSelectSingleValueAutoComplete(
-    query: (searchString: string, props: IProps) => Promise<IRestApiResponse<any>>,
-    queryById: (id: string) => Promise<any>,
-    getPlaceholder: (props: IProps) => string,
-    getLabel: (item) => string,
-    getDependentFields?: (props: IProps) => Array<string>,
+    options: {
+        query: (searchString: string, props: IProps) => Promise<IRestApiResponse<any>>;
+        queryById: (id: string) => Promise<any>;
+        getPlaceholder: (props: IProps) => string;
+        getLabel: (item) => string;
+        getDisabled?: (props: IProps) => boolean;
+        getDependentFields?: (props: IProps) => Array<string>;
+    },
 ) {
+    const {
+        query,
+        queryById,
+        getPlaceholder,
+        getLabel,
+    } = options;
+
     return class SelectSingleValueAutoComplete extends React.Component<IProps, IState> {
         dependentFields: Array<string>;
         initialValue: string | undefined;
@@ -31,9 +41,7 @@ export function getSelectSingleValueAutoComplete(
             this.initialValue = props.value;
             this.updateCount = 0;
 
-            this.dependentFields = typeof getDependentFields === 'function'
-                ? getDependentFields(props)
-                : [];
+            this.dependentFields = options.getDependentFields?.(props) ?? [];
         }
         componentDidUpdate(prevProps: IProps) {
             if (
@@ -89,7 +97,7 @@ export function getSelectSingleValueAutoComplete(
                                 this.props.onChange(item._id);
                             }
                         }}
-                        disabled={this.props.disabled}
+                        disabled={this.props.disabled || (options.getDisabled?.(this.props) ?? false)}
                         selected={this.props.value}
                         data-test-id={`gform-input--${this.props.formField.field}`}
                     />

@@ -3,8 +3,8 @@ import {getSelectSingleValueAutoComplete} from './select_single_value_autocomple
 import {gettext} from 'core/utils';
 import {dataApi} from 'core/helpers/CrudManager';
 
-export const DeskSingleValue = getSelectSingleValueAutoComplete(
-    (searchString: string) => dataApi.query<IDesk>(
+export const DeskSingleValue = getSelectSingleValueAutoComplete({
+    query: (searchString: string) => dataApi.query<IDesk>(
         'desks',
         1,
         {field: 'name', direction: 'ascending'},
@@ -24,7 +24,7 @@ export const DeskSingleValue = getSelectSingleValueAutoComplete(
         ),
         50,
     ),
-    (id) => dataApi.findOne<IDesk>('desks', id),
-    () => gettext('Select a desk'),
-    (item: IDesk) => item.name,
-);
+    queryById: (id) => dataApi.findOne<IDesk>('desks', id),
+    getPlaceholder: () => gettext('Select a desk'),
+    getLabel: (item: IDesk) => item.name,
+});

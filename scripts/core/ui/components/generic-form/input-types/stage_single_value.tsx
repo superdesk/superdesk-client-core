@@ -3,8 +3,8 @@ import {IStage} from 'superdesk-api';
 import {dataApi} from 'core/helpers/CrudManager';
 import {getSelectSingleValueAutoComplete} from './select_single_value_autocomplete';
 
-export const StageSingleValue = getSelectSingleValueAutoComplete(
-    (searchString: string, props) => {
+export const StageSingleValue = getSelectSingleValueAutoComplete({
+    query: (searchString: string, props) => {
         const deskId = props.formValues[props.formField.component_parameters['deskField']];
         const deskFilter = {desk: deskId};
 
@@ -34,8 +34,8 @@ export const StageSingleValue = getSelectSingleValueAutoComplete(
             );
         }
     },
-    (id) => dataApi.findOne<IStage>('stages', id),
-    (props) => {
+    queryById: (id) => dataApi.findOne<IStage>('stages', id),
+    getPlaceholder: (props) => {
         const deskId = props.formValues[props.formField.component_parameters['deskField']];
 
         if (deskId == null) {
@@ -44,6 +44,11 @@ export const StageSingleValue = getSelectSingleValueAutoComplete(
             return '';
         }
     },
-    (item: IStage) => item.name,
-    (props) => [props.formField.component_parameters['deskField']],
-);
+    getLabel: (item: IStage) => item.name,
+    getDisabled: (props) => {
+        const deskId = props.formValues[props.formField.component_parameters['deskField']];
+
+        return deskId == null;
+    },
+    getDependentFields: (props) => [props.formField.component_parameters['deskField']],
+});
