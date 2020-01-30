@@ -85,11 +85,11 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
             maxHeight: 200,
             isOpen: (() => {
                 if (this.props.autoFocus == null) {
-                    return true;
+                    return false;
                 } else if (typeof this.props.autoFocus === 'boolean') {
                     return this.props.autoFocus;
                 } else {
-                    return false;
+                    return true;
                 }
             })(),
             justInitialized: true,
