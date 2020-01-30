@@ -36,8 +36,20 @@ interface IScope extends IDirectiveScope<void> {
  * add related items by using drag and drop, delete related items and open related items.
  */
 
-RelatedItemsDirective.$inject = ['authoringWorkspace', 'relationsService', 'notify', 'lock'];
-export function RelatedItemsDirective(authoringWorkspace: AuthoringWorkspaceService, relationsService, notify, lock) {
+RelatedItemsDirective.$inject = [
+    'authoringWorkspace',
+    'relationsService',
+    'notify',
+    'lock',
+    '$rootScope',
+];
+export function RelatedItemsDirective(
+    authoringWorkspace: AuthoringWorkspaceService,
+    relationsService,
+    notify,
+    lock,
+    $rootScope,
+) {
     return {
         scope: {
             item: '=',
@@ -270,6 +282,40 @@ export function RelatedItemsDirective(authoringWorkspace: AuthoringWorkspaceServ
                 if (newValue !== oldValue) {
                     scope.refreshRelatedItems();
                 }
+            });
+
+            function onItemEvent(event, payload) {
+                let shouldUpdateItems = false;
+
+                const relatedItemsIds = Object.values(scope.relatedItems).map((item) => item._id);
+
+                switch (event.name) {
+                case 'content:update':
+                    var updateItemsIds = Object.keys(payload.items);
+
+                    shouldUpdateItems = updateItemsIds.some((id) => relatedItemsIds.includes(id));
+                    break;
+                case 'item:lock':
+                case 'item:unlock':
+                    shouldUpdateItems = relatedItemsIds.some((id) => payload.item === id);
+                    break;
+                }
+
+                if (shouldUpdateItems) {
+                    scope.refreshRelatedItems();
+                }
+            }
+
+            const removeEventListeners = [
+                'item:lock',
+                'item:unlock',
+                'content:update',
+            ].map((eventName) =>
+                $rootScope.$on(eventName, onItemEvent),
+            );
+
+            scope.$on('$destroy', () => {
+                removeEventListeners.forEach((removeFn) => removeFn());
             });
         },
     };
