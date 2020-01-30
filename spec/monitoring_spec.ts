@@ -411,6 +411,7 @@ describe('monitoring', () => {
         expect(monitoring.isGroupEmpty(2)).toBe(true);
         expect(monitoring.isGroupEmpty(4)).toBe(true);
 
+        browser.wait(ECE.elementToBeClickable(el(['remove-filter'])));
         el(['remove-filter']).click();
         expect(monitoring.getAllItems().count()).toBe(3);
         expect(monitoring.getTextItemBySlugline(0, 0)).toBe('STORY1 SLUGLINE');
@@ -425,6 +426,7 @@ describe('monitoring', () => {
         expect(monitoring.isGroupEmpty(2)).toBe(true);
         expect(monitoring.isGroupEmpty(4)).toBe(true);
 
+        browser.wait(ECE.elementToBeClickable(el(['clear-filters'])));
         el(['clear-filters']).click();
         expect(monitoring.getAllItems().count()).toBe(3);
         expect(monitoring.getTextItemBySlugline(0, 0)).toBe('STORY1 SLUGLINE');

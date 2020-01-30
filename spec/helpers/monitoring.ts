@@ -325,6 +325,7 @@ class Monitoring {
         };
 
         this.previewAction = function(group, item) {
+            browser.wait(ECE.elementToBeClickable(this.getItem(group, item)));
             this.getItem(group, item).click();
             var preview = element(by.id('item-preview'));
 
@@ -457,7 +458,10 @@ class Monitoring {
             var itemElem = this.getSpikedItem(item);
 
             browser.actions().mouseMove(itemElem).perform();
-            itemElem.element(by.className('icon-dots-vertical')).click();
+            var dotsElem = itemElem.element(by.className('icon-dots-vertical'));
+
+            waitFor(dotsElem, 1000);
+            dotsElem.click();
 
             var menu = element(by.css('.dropdown__menu.open'));
 
