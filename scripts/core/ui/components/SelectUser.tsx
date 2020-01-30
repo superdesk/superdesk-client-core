@@ -29,7 +29,7 @@ export class SelectUser extends React.Component<IPropsSelectUser, IState> {
 
         this.setState({loading: true, fetchedUsers: null});
 
-        dataApi.query<IUser>(
+        return dataApi.query<IUser>(
             'users',
             1,
             {field: 'display_name', direction: 'ascending'},
@@ -72,7 +72,7 @@ export class SelectUser extends React.Component<IPropsSelectUser, IState> {
 
         return (
             <Select2
-                onFocus={true}
+                autoFocus={this.props.autoFocus ?? true}
                 disabled={this.props.disabled}
                 placeholder={gettext('Select a user')}
                 value={this.props.selectedUserId == null ? undefined : this.props.selectedUserId}
@@ -94,9 +94,7 @@ export class SelectUser extends React.Component<IPropsSelectUser, IState> {
                     </ListItem>
                 )}
                 data-test-id="select-user-dropdown"
-                onSearch={(search) => {
-                    this.queryUsers(search);
-                }}
+                onSearch={(search) => this.queryUsers(search)}
                 loading={this.state.loading}
             />
         );

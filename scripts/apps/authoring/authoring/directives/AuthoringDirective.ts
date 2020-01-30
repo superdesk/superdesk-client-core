@@ -181,8 +181,12 @@ export function AuthoringDirective(
             /**
              * Start editing current item
              */
+
             $scope.edit = function edit() {
-                if (isPublished($scope.origItem)) {
+                if ($scope.origItem.state === 'unpublished') {
+                    api.update('archive', $scope.origItem, {state: 'in_progress'})
+                        .then((updated) => authoringWorkspace.edit(updated));
+                } else if (isPublished($scope.origItem)) {
                     authoringWorkspace.view($scope.origItem);
                 } else {
                     authoringWorkspace.edit($scope.origItem);
