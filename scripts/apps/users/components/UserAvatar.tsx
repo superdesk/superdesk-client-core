@@ -1,3 +1,5 @@
+/* eslint-disable react/no-multi-comp */
+
 import React from 'react';
 import {IUser} from 'superdesk-api';
 import {CC} from 'core/ui/configurable-ui-components';
