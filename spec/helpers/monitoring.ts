@@ -2,7 +2,7 @@
 
 import {element, by, browser, protractor, ElementFinder} from 'protractor';
 import {nav, waitFor, acceptConfirm} from './utils';
-import {s, ECE} from 'end-to-end-testing-helpers';
+import {s, ECE, el} from 'end-to-end-testing-helpers';
 import {multiAction} from './actions';
 
 class Monitoring {
@@ -458,11 +458,7 @@ class Monitoring {
             var itemElem = this.getSpikedItem(item);
 
             browser.actions().mouseMove(itemElem).perform();
-            var dotsElem = itemElem.element(by.className('icon-dots-vertical'));
-
-            waitFor(dotsElem, 1000);
-            dotsElem.click();
-
+            el(['context-menu-button']).click();
             var menu = element(by.css('.dropdown__menu.open'));
 
             menu.element(by.partialLinkText('Unspike')).click();
