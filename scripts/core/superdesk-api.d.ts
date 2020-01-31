@@ -548,8 +548,11 @@ declare module 'superdesk-api' {
     export interface IRestApiResponse<T> {
         _items: Array<T & IBaseRestApiResponse>;
         _links: {
+            last: IRestApiLink;
             parent: IRestApiLink;
+            next?: IRestApiLink;
             self: IRestApiLink;
+            prev?: IRestApiLink;
         };
         _meta: {
             max_results: number;
