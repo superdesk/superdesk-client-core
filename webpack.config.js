@@ -24,7 +24,7 @@ module.exports = function makeConfig(grunt) {
     // include only 'superdesk-core' and valid modules inside node_modules
     let validModules = ['superdesk-core'].concat(apps);
 
-    const jQueryPath = path.resolve(path.join(__dirname, 'node_modules/jquery'));
+    const jQueryPath = path.resolve('./node_modules/jquery');
 
     return {
         entry: {
