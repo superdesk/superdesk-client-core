@@ -1,6 +1,5 @@
 import {forEach, get, startsWith, endsWith, some} from 'lodash';
-import {getSuperdeskType, gettextPlural} from 'core/utils';
-import {gettext} from 'core/utils';
+import {getSuperdeskType, gettext, gettextPlural} from 'core/utils';
 import {isMediaEditable} from 'core/config';
 import {isPublished} from 'apps/archive/utils';
 import {IArticle, IVocabulary} from 'superdesk-api';
@@ -125,7 +124,7 @@ export function AssociationController(content, superdesk, renditions, notify) {
             }
 
             if (mediaItemsForCurrentField.find((mediaItem) => mediaItem._id === updated._id) != null) {
-                notify.error('This item is already added.');
+                notify.error(gettext('This item is already added.'));
                 return;
             }
         }
