@@ -66,7 +66,11 @@ class ToolbarComponent extends React.Component<any, any> {
 
                 if (scrollableElement != null) {
                     // prevent fousing from changing scroll position
+
+                    // eslint-disable-next-line no-self-assign
                     scrollableElement.scrollTop = scrollableElement.scrollTop;
+
+                    // eslint-disable-next-line no-self-assign
                     scrollableElement.scrollLeft = scrollableElement.scrollLeft;
                 }
             });

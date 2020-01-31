@@ -29,6 +29,8 @@ module.exports = Object.assign({}, sharedConfigs, {
             "functions": "always-multiline"
         }],
         'newline-per-chained-call': ["error", {"ignoreChainWithDepth": 3}],
+
+        'no-prototype-builtins': 0,
     }),
     parser: 'typescript-eslint-parser',
     overrides: [
