@@ -148,7 +148,7 @@ describe('authoring', () => {
         browser.sleep(300);
 
         monitoring.filterAction('text');
-        monitoring.actionOnItem('Kill item', 5, 0);
+        monitoring.actionOnItemSubmenu('Publishing actions', 'Kill item', 5, 0);
         expect(authoring.send_kill_button.isDisplayed()).toBeTruthy();
         authoring.cancel();
         browser.sleep(300);
@@ -455,7 +455,7 @@ describe('authoring', () => {
         monitoring.actionOnItem('Edit', 2, 0);
         authoring.publish();
         monitoring.filterAction('text');
-        monitoring.actionOnItem('Kill item', 5, 0);
+        monitoring.actionOnItemSubmenu('Publishing actions', 'Kill item', 5, 0);
         browser.sleep(500);
         expect(authoring.getBodyText()).toBe('This is kill template. Slugged item5 slugline one/two.');
         expect(authoring.getHeadlineText()).toBe('KILL NOTICE');
@@ -513,7 +513,7 @@ describe('authoring', () => {
         expect(authoring.multieditButton.isDisplayed()).toBe(true);
         authoring.publish();
         monitoring.filterAction('text');
-        monitoring.actionOnItem('Kill item', 5, 0);
+        monitoring.actionOnItemSubmenu('Publishing actions', 'Kill item', 5, 0);
         authoring.moreActionsButton.click();
         expect(authoring.multieditButton.isDisplayed()).toBe(false);
     });
@@ -590,7 +590,7 @@ describe('authoring', () => {
 
         authoring.publish();
         monitoring.filterAction('text');
-        monitoring.actionOnItem('Kill item', 5, 0);
+        monitoring.actionOnItemSubmenu('Publishing actions', 'Kill item', 5, 0);
 
         // Body:
         // undo without editing body text
@@ -696,7 +696,7 @@ describe('authoring', () => {
         expect(monitoring.getTextItem(2, 1)).toBe('item9');
         monitoring.actionOnItem('Edit', 2, 1);
         authoring.publish();
-        monitoring.actionOnItem('Kill item', 5, 0); // Edit for kill
+        monitoring.actionOnItemSubmenu('Publishing actions', 'Kill item', 5, 0); // Edit for kill
         authoring.minimize(); // minimize before publishing the kill
         authoring.maximize('item6');
         expect(authoring.send_correction_button.isDisplayed()).toBeTruthy();
