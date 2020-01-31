@@ -743,7 +743,7 @@ describe('monitoring', () => {
         browser.sleep(100); // from react to angular
         expect(monitoring.getMultiSelectCount()).toBe('1 Item selected');
 
-        monitoring.actionOnItem('Correct item', 0, 0);
+        monitoring.actionOnItemSubmenu('Publishing actions', 'Correct item', 0, 0);
         authoring.send_correction_button.click();
         expect(element(by.id('multi-select-count')).isPresent()).toBeFalsy();
     });

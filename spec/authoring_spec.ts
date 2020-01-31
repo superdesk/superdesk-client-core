@@ -440,7 +440,7 @@ describe('authoring', () => {
         authoring.publish(); // item9 published
 
         monitoring.filterAction('text');
-        monitoring.actionOnItem('Update', 5, 0); // duplicate item9 text published item
+        monitoring.actionOnItemSubmenu('Publishing actions', 'Update', 5, 0); // duplicate item9 text published item
         expect(monitoring.getGroupItems(0).count()).toBe(1);
         monitoring.actionOnItem('Edit', 0, 0);
 
@@ -691,7 +691,7 @@ describe('authoring', () => {
         monitoring.actionOnItem('Edit', 3, 2);
         authoring.publish();
         monitoring.filterAction('text');
-        monitoring.actionOnItem('Correct item', 5, 0); // Edit for correction
+        monitoring.actionOnItemSubmenu('Publishing actions', 'Correct item', 5, 0); // Edit for correction
         authoring.minimize(); // minimize before publishing the correction
         expect(monitoring.getTextItem(2, 1)).toBe('item9');
         monitoring.actionOnItem('Edit', 2, 1);
