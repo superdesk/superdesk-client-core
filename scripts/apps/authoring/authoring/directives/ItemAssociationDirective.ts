@@ -15,7 +15,6 @@ import {addInternalEventListener} from 'core/internal-events';
  * @requires $q
  * @requires api
  * @requires notify
- * @requires mediaIdGenerator
  *
  * @description
  *   This directive is responsible for rendering media associated with the item.

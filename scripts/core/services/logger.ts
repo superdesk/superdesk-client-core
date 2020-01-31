@@ -19,7 +19,7 @@ class Logger {
         Raven.captureException(e);
     }
 
-    warn(message, additionalData?) {
+    warn(message: string, additionalData?) {
         const data = {};
 
         data['level'] = 'warning';

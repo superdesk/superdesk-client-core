@@ -14,7 +14,7 @@
     <div class="modal__header-buttons modal__header-buttons--right">
         <button class="btn btn--ui-dark btn--hollow" ng-click="close()" ng-disabled="uploadInProgress" translate>Cancel</button>
         <div ng-transclude="select-desk"></div>
-        <button class="btn btn--primary btn--hollow" ng-click="save(true)" ng-disabled="!images.length" translate>Upload</button>
+        <button class="btn btn--primary btn--hollow" ng-click="save(true)" ng-disabled="!images.length" translate data-test-id="multi-image-edit--start-upload">Upload</button>
     </div>
 </div>
 
