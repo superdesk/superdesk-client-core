@@ -19,7 +19,7 @@
     </ul>
 
     <ul ng-if="workqueue.items.length" class="opened-articles__list list">
-        <li ng-repeat="article in workqueue.items track by article._id" ng-class="{active: article === active}">
+        <li ng-repeat="article in workqueue.items track by article._id" ng-class="{active: article === articleInEditMode}">
             <a class="title" ng-click="edit(article, $event)" ng-href="{{ :: link(article) }}">
                 <span ng-show="article.headline || article.slugline">{{ (article.headline || article.slugline) | stripHtmlTags }}</span>
                 <span ng-show="!article.headline && !article.slugline" translate>Untitled</span>
