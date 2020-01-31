@@ -1090,6 +1090,7 @@ declare module 'superdesk-api' {
             elasticHighlight?: any;
             onlyEditor3?: any;
             nestedItemsInOutputStage?: boolean;
+            showCharacterLimit?: number;
         };
         auth: {
             google: boolean
