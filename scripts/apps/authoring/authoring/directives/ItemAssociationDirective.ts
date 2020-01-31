@@ -147,6 +147,10 @@ export function ItemAssociationDirective(renditions, notify) {
                 }
             });
 
+            scope.onRenditionChange = (item, timeout) => {
+                scope.onchange({item: scope.item, timeout});
+            };
+
             scope.$on('$destroy', () => {
                 removeAddImageEventListener();
             });
