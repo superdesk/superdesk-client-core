@@ -68,7 +68,7 @@
     "git-rev-sync": "1.10.0",
     "gridster": "0.5.6",
     "grunt": "1.0.2",
-    "grunt-angular-gettext": "2.3.9",
+    "grunt-angular-gettext": "2.5.1",
     "grunt-angular-templates": "1.1.0",
     "grunt-contrib-clean": "1.1.0",
     "grunt-contrib-copy": "1.0.0",
@@ -116,7 +116,7 @@
     "sass-loader": "6.0.6",
     "shortid": "2.2.8",
     "style-loader": "0.20.2",
-    "superdesk-ui-framework": "2.1.10",
+    "superdesk-ui-framework": "2.1.11",
     "ts-loader": "3.5.0",
     "tslint": "5.11.0",
     "typescript": "3.7.2",
@@ -161,6 +161,7 @@
     "start-test-server": "cd test-server && python3 -m venv env && . env/bin/activate && pip install -Ur requirements.txt && honcho start",
     "protractor": "protractor protractor.conf.js",
     "webdriver-manager": "webdriver-manager update --gecko false --standalone false",
-    "server": "grunt server"
+    "server": "grunt server",
+    "dev": "npm run server"
   }
 }

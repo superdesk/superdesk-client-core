@@ -298,8 +298,14 @@ export class MediaBlockComponent extends React.Component<any, any> {
                     />
                     {editable && (mediaType === 'audio' || mediaType === 'video') &&
                         <div className="image-block__action-bar">
-                            <a className="btn btn--hollow btn--small"
-                                onClick={this.onClick}><span>{gettext('Edit metadata')}</span></a>
+                            <a
+                                className="btn btn--hollow btn--small"
+                                onClick={() => {
+                                    this.onClick('view');
+                                }}
+                            >
+                                <span>{gettext('Edit metadata')}</span>
+                            </a>
                         </div>
                     }
                 </div>

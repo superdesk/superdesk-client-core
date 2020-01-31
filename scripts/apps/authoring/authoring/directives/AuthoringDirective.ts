@@ -182,8 +182,12 @@ export function AuthoringDirective(
             /**
              * Start editing current item
              */
+
             $scope.edit = function edit() {
-                if (isPublished($scope.origItem)) {
+                if ($scope.origItem.state === 'unpublished') {
+                    api.update('archive', $scope.origItem, {state: 'in_progress'})
+                        .then((updated) => authoringWorkspace.edit(updated));
+                } else if (isPublished($scope.origItem)) {
                     authoringWorkspace.view($scope.origItem);
                 } else {
                     authoringWorkspace.edit($scope.origItem);
@@ -856,7 +860,7 @@ export function AuthoringDirective(
                             (result) => next($scope.origItem._autosave ?? $scope.origItem, result),
                         );
 
-                        (
+                        return (
                             onUpdateFromExtensions.length < 1
                                 ? Promise.resolve(item)
                                 : onUpdateFromExtensions
@@ -984,9 +988,17 @@ export function AuthoringDirective(
             });
 
             $scope.$on('item:lock', (_e, data) => {
-                if ($scope.item._id === data.item && !_closing &&
-                    session.sessionId !== data.lock_session) {
-                    authoring.lock($scope.item, data.user);
+                if ($scope.item._id === data.item
+                    && !_closing
+                    && session.sessionId !== data.lock_session
+                ) {
+                    const {
+                        user,
+                        lock_time,
+                        lock_session,
+                    } = data;
+
+                    authoring.lock($scope.item, {user, lock_time, lock_session});
                 }
             });
 

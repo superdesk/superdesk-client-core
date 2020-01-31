@@ -9,7 +9,7 @@ import {getUnpublishConfirmModal} from '../components/unpublish-confirm-modal';
 import {ITEM_STATE, CANCELED_STATES, READONLY_STATES} from 'apps/archive/constants';
 import {AuthoringWorkspaceService} from './AuthoringWorkspaceService';
 import {appConfig} from 'appConfig';
-import {IPublishedArticle} from 'superdesk-api';
+import {IPublishedArticle, IArticle} from 'superdesk-api';
 
 interface IPublishOptions {
     notifyErrors: boolean;
@@ -426,18 +426,21 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
 
     /**
      * Lock an item - callback for item:lock event
-     *
-     * @param {Object} item
-     * @param {string} userId
      */
-    this.lock = function(item, userId) {
+    this.lock = function(
+        item: IArticle,
+        data: {
+            user: string;
+            lock_time: string;
+            lock_session: string;
+        },
+    ) {
         autosave.stop(item);
-        api.find('users', userId).then((user) => {
+        api.find('users', data.user).then((user) => {
             item.lock_user = user;
-        }, (rejection) => {
-            item.lock_user = userId;
+            item.lock_session = data.lock_session;
+            item._locked = true;
         });
-        item._locked = true;
     };
 
     /**
@@ -471,7 +474,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         action.export = currentItem && currentItem.type && currentItem.type === 'text';
 
         // item is published state - corrected, published, scheduled, killed
-        if (isPublished(currentItem)) {
+        if (isPublished(currentItem) && item.state !== 'unpublished') {
             // if not the last published version
             if (item.last_published_version === false) {
                 return angular.extend({}, helpers.DEFAULT_ACTIONS);

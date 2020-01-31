@@ -1,4 +1,5 @@
 import {IArticle, IArticleField} from 'superdesk-api';
+import {gettext} from 'core/utils';
 
 /**
  * @ngdoc directive
@@ -17,6 +18,7 @@ interface IScope extends ng.IScope {
     preview: boolean;
     loading: boolean;
     relatedItems: Array<IArticle>;
+    gettext: (text: string, params?: any) => string;
 }
 
 RelatedItemsPreview.$inject = ['relationsService'];
@@ -31,6 +33,8 @@ export function RelatedItemsPreview(relationsService) {
         template: require('../views/related-items-preview.html'),
         link: function(scope: IScope) {
             scope.loading = true;
+            scope.gettext = gettext;
+
             relationsService.getRelatedItemsForField(scope.item, scope.field._id)
                 .then((items) => {
                     scope.relatedItems = items;
