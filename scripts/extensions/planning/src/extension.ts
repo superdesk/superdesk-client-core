@@ -55,7 +55,7 @@ function onArticleRewriteAfter(superdesk: ISuperdesk, item: IArticle): Promise<I
     if (!superdesk || !superdesk.instance || !superdesk.instance.deployConfig) {
         return Promise.resolve(item);
     }
-    
+
     const deployConfig: IPlanningConfig = superdesk.instance.deployConfig as IPlanningConfig;
 
     if (deployConfig && deployConfig.config && deployConfig.config.planning_link_updates_to_coverage) {

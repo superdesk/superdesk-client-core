@@ -1,3 +1,2 @@
 
 declare const angular: IAngularStatic;
-
