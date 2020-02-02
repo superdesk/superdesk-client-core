@@ -120,7 +120,7 @@
          data-rel="'featuremedia'"
          data-field-name="'feature_media'"
          data-editable="_editable"
-         data-onchange="autosave(item)"
+         data-onchange="autosave(item, timeout)"
          data-save="save()"
          data-show-title="editor.feature_media.imageTitle"
          data-tabindex="editor.feature_media.order">
@@ -661,11 +661,13 @@
 </div>
 
 <div class="field" ng-repeat="field in fields track by field._id"
-     ng-if="field.field_type === 'media'"
-     sd-width="{{editor[field._id].sdWidth || 'full'}}"
-     sd-validation-error="error[field._id]"
-     order="{{editor[field._id].order}}"
-     data-required="schema[field._id].required">
+    ng-if="field.field_type === 'media'"
+    sd-width="{{editor[field._id].sdWidth || 'full'}}"
+    sd-validation-error="error[field._id]"
+    order="{{editor[field._id].order}}"
+    data-required="schema[field._id].required"
+    data-test-id="{{'authoring-field--' + field._id}}"
+>
     <label class="field__label" translate>{{field.display_name}}</label>
 
     <div sd-item-carousel

@@ -25,7 +25,18 @@
                 <sd-video item="related"></sd-video>
                 <div class="item-association__metadata" sd-media-metadata-view data-item="related"></div>
                 <div class="item-association__action-bar" ng-if="related && editable">
-                    <a class="btn btn--hollow btn--small" ng-click="associations.isMediaEditable() && associations.edit(this, related); $event.stopPropagation()"><span translate>Edit metadata</span></a>
+                    <div class="flex-grid flex-grid--medium-3">
+                        <div class="flex-grid__item sd-text__left" style="text-align: left;">
+                            <sd-video-thumbnail-editor data-item="related" data-on-change="onRenditionChange"></sd-video-thumbnail-editor>
+                        </div>
+                        <div class="flex-grid__item">
+                        </div>
+                        <div class="flex-grid__item">
+                            <a class="btn btn--hollow btn--small" ng-click="associations.isMediaEditable() && associations.edit(this, related); $event.stopPropagation()">
+                                <span translate>Edit metadata</span>
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
             <!-- audio -->

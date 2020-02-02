@@ -24,6 +24,8 @@ module.exports = function makeConfig(grunt) {
     // include only 'superdesk-core' and valid modules inside node_modules
     let validModules = ['superdesk-core'].concat(apps);
 
+    const jQueryPath = path.resolve('./node_modules/jquery');
+
     return {
         entry: {
             app: [path.join(__dirname, 'scripts', 'index')],
@@ -37,10 +39,10 @@ module.exports = function makeConfig(grunt) {
 
         plugins: [
             new webpack.ProvidePlugin({
-                $: 'jquery',
-                'window.$': 'jquery',
-                jQuery: 'jquery',
-                'window.jQuery': 'jquery',
+                $: jQueryPath,
+                'window.$': jQueryPath,
+                jQuery: jQueryPath,
+                'window.jQuery': jQueryPath,
                 moment: 'moment',
                 // MediumEditor needs to be globally available, because
                 // its plugins will not be able to find it otherwise.

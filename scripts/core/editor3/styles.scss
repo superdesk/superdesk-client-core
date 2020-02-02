@@ -475,39 +475,36 @@ $editor-styleButton-size: 3rem;
 	padding: 10px 20px;
 }
 
-:root {
-	--preCharacterLimit:40ch;
-}
-
 .Editor3-editor .public-DraftStyleDefault-pre {
 	background-color: rgba(123, 123, 123, 0.1);
 	font-family: 'Roboto Mono', monospace !important;
 	padding: 0 2ch;
 	overflow-y: auto;
-	position: relative;
 
 	[data-block="true"] {
 		border-bottom: none;
 		margin: 0 0 0.5;
 	}
 	pre {
+		position: relative;
 		white-space: pre !important;
 		padding-right: 2ch;
 		.public-DraftStyleDefault-block {
 			white-space: inherit;
 		}
-	}
-	&.showCharacterLimit:after {
-		content: '';
-		display: block;
-		position: absolute;
-		left:2ch;
-		top: 0;
-		bottom: 0;
-		width: var(--preCharacterLimit);
-		border-right: 1px dotted red;
-		z-index: 1;
-		pointer-events: none;
+
+		&.showCharacterLimit:after {
+			content: '';
+			display: block;
+			position: absolute;
+			left: 0;
+			top: 0;
+			bottom: 0;
+			width: var(--preCharacterLimit);
+			border-right: 1px dotted red;
+			z-index: 1;
+			pointer-events: none;
+		}
 	}
 }
 
