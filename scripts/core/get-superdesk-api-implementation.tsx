@@ -49,7 +49,6 @@ import {TopMenuDropdownButton} from './ui/components/TopMenuDropdownButton';
 import {dispatchInternalEvent} from './internal-events';
 import {Icon} from './ui/components/Icon2';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
-import {MetadataService} from 'apps/authoring/metadata/metadata';
 
 function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
@@ -130,7 +129,7 @@ export function getSuperdeskApiImplementation(
     lock,
     session,
     authoringWorkspace: AuthoringWorkspaceService,
-    metadata: MetadataService,
+    metadata,
     deployConfig: IDeployConfig,
 ): ISuperdesk {
     return {
