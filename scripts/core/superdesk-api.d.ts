@@ -23,6 +23,7 @@ declare module 'superdesk-api' {
     // EXTENSIONS
 
     export type onSpikeMiddlewareResult= {warnings?: Array<{text: string}>};
+    export type onPublishMiddlewareResult= {warnings?: Array<{text: string}>};
 
     /**
      * float number 0 < x < 1. Larger the number, closer the component will be rendered to its side.
@@ -68,6 +69,8 @@ declare module 'superdesk-api' {
                     onUpdateAfter?(article: IArticle): void; // can't alter item, can't cancel
                     onSpike?(item: IArticle): Promise<onSpikeMiddlewareResult>;
                     onSpikeMultiple?(items: Array<IArticle>): Promise<onSpikeMiddlewareResult>;
+                    onPublish?(item: IArticle): Promise<onPublishMiddlewareResult>;
+                    onRewriteAfter?(item: IArticle): Promise<IArticle>;
                 };
             };
             iptcMapping?(data: IPTCMetadata, item: Partial<IArticle>): Promise<Partial<IArticle>>;
@@ -283,7 +286,7 @@ declare module 'superdesk-api' {
     export interface IPublishedArticle extends IArticle {
 
         /** id in published collection, different for each correction */
-        item_id: string; 
+        item_id: string;
 
         /** item copy in archive collection, always the latest version of the item */
         archive_item: IArticle;
@@ -716,6 +719,11 @@ declare module 'superdesk-api' {
         'content:update': IWebsocketMessage<IArticleUpdateEvent>;
     }
 
+    export interface IDeployConfigMain {}
+
+    export interface IDeployConfig {
+        config?: IDeployConfigMain;
+    }
 
 
     // APPLICATION API
@@ -731,7 +739,8 @@ declare module 'superdesk-api' {
             articleInEditMode?: IArticle['_id'];
         };
         instance: {
-            config: ISuperdeskGlobalConfig
+            config: ISuperdeskGlobalConfig;
+            deployConfig?: IDeployConfig;
         };
         ui: {
             article: {
