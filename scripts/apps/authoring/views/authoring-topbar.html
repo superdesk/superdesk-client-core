@@ -281,7 +281,7 @@
                     </li>
                 </ul>
 
-                <ul ng-if="item.task.desk && (itemActions.mark_item_for_desks || itemActions.mark_item_for_highlight)">
+                <ul ng-if="itemActionsHighlightsSectionDisplayed()">
                   <li class="dropdown__menu-divider"></li>
                   <li ng-if="itemActions.mark_item_for_highlight">
                     <div class="dropdown highlights-toggle" dropdown>

@@ -76,6 +76,13 @@ export function AuthoringTopbarDirective(
                 actionToTrigger.onTrigger();
             };
 
+            scope.itemActionsHighlightsSectionDisplayed = () =>
+                scope.articleActionsFromExtensions.some(({groupId}) => groupId === 'highlights')
+                || (
+                    scope.item.task.desk
+                    && (scope.itemActions.mark_item_for_desks || scope.itemActions.mark_item_for_highlight)
+                );
+
             scope.$watch('item', () => {
                 setActionsFromExtensions();
             }, true);
