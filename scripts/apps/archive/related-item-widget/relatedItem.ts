@@ -1,6 +1,9 @@
 import {gettext} from 'core/utils';
 import {isPublished} from 'apps/archive/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
+import {extensions} from 'core/extension-imports.generated';
+import {IArticle, IExtensionActivationResult} from 'superdesk-api';
+import {flatMap} from 'lodash';
 
 angular.module('superdesk.apps.dashboard.widgets.relatedItem', [
     'superdesk.apps.dashboard.widgets.base',
@@ -177,10 +180,36 @@ function RelatedItemController(
         update: {
             title: 'Associate as update',
             method: function(item) {
+                function getOnRewriteAfterMiddlewares()
+                : Array<IExtensionActivationResult['contributions']['entities']['article']['onRewriteAfter']> {
+                    return flatMap(
+                        Object.values(extensions).map(({activationResult}) => activationResult),
+                        (activationResult) =>
+                            activationResult.contributions != null
+                            && activationResult.contributions.entities != null
+                            && activationResult.contributions.entities.article != null
+                            && activationResult.contributions.entities.article.onRewriteAfter != null
+                                ? activationResult.contributions.entities.article.onRewriteAfter
+                                : [],
+                    );
+                }
+
                 api.save('archive_rewrite', {},
                     {update: angular.extend({}, $scope.origItem, $scope.item)},
                     item)
-                    .then((newItem) => {
+                    .then((newItem: IArticle) => {
+                        const onRewriteAfterMiddlewares = getOnRewriteAfterMiddlewares();
+
+                        return onRewriteAfterMiddlewares.reduce(
+                            (current, next) => {
+                                return current.then((result) => {
+                                    return next(result);
+                                });
+                            },
+                            Promise.resolve(newItem),
+                        );
+                    })
+                    .then((newItem: IArticle) => {
                         notify.success(gettext('Story is associated as update.'));
                         authoringWorkspace.edit(newItem);
                     }, (response) => {

@@ -5,6 +5,7 @@ import {
     IArticle,
     IContentProfile,
     IEvents,
+    IDeployConfig,
 } from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {getGenericListPageComponent} from './ui/components/ListPage/generic-list-page';
@@ -48,7 +49,6 @@ import {TopMenuDropdownButton} from './ui/components/TopMenuDropdownButton';
 import {dispatchInternalEvent} from './internal-events';
 import {Icon} from './ui/components/Icon2';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
-import {MetadataService} from 'apps/authoring/metadata/metadata';
 
 function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
@@ -130,6 +130,7 @@ export function getSuperdeskApiImplementation(
     session,
     authoringWorkspace: AuthoringWorkspaceService,
     metadata,
+    deployConfig: IDeployConfig,
 ): ISuperdesk {
     return {
         dataApi: dataApi,
@@ -197,6 +198,9 @@ export function getSuperdeskApiImplementation(
             },
         },
         state: applicationState,
+        instance: {
+            deployConfig,
+        },
         ui: {
             article: {
                 view: (id: string) => {

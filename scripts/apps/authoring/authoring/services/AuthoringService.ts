@@ -1,10 +1,12 @@
 import _ from 'lodash';
-import {get} from 'lodash';
+import {get, flatMap} from 'lodash';
 import * as helpers from 'apps/authoring/authoring/helpers';
 import {gettext} from 'core/utils';
 import {isPublished, isKilled} from 'apps/archive/utils';
 import {ITEM_STATE, CANCELED_STATES, READONLY_STATES} from 'apps/archive/constants';
 import {AuthoringWorkspaceService} from './AuthoringWorkspaceService';
+import {extensions} from 'core/extension-imports.generated';
+import {IArticle, IExtensionActivationResult} from 'superdesk-api';
 
 interface IPublishOptions {
     notifyErrors: boolean;
@@ -98,13 +100,39 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
     this.rewrite = function(item) {
         var authoringWorkspace: AuthoringWorkspaceService = $injector.get('authoringWorkspace');
 
+        function getOnRewriteAfterMiddlewares()
+        : Array<IExtensionActivationResult['contributions']['entities']['article']['onRewriteAfter']> {
+            return flatMap(
+                Object.values(extensions).map(({activationResult}) => activationResult),
+                (activationResult) =>
+                    activationResult.contributions != null
+                    && activationResult.contributions.entities != null
+                    && activationResult.contributions.entities.article != null
+                    && activationResult.contributions.entities.article.onRewriteAfter != null
+                        ? activationResult.contributions.entities.article.onRewriteAfter
+                        : [],
+            );
+        }
+
         session.getIdentity()
             .then((user) => {
                 var updates = {
                     desk_id: desks.getCurrentDeskId() || item.task.desk,
                 };
 
-                return api.save('archive_rewrite', {}, updates, item);
+                return api.save('archive_rewrite', {}, updates, Object.freeze(item))
+                    .then((newItem: IArticle) => {
+                        const onRewriteAfterMiddlewares = getOnRewriteAfterMiddlewares();
+
+                        return onRewriteAfterMiddlewares.reduce(
+                            (current, next) => {
+                                return current.then((result) => {
+                                    return next(result);
+                                });
+                            },
+                            Promise.resolve(newItem),
+                        );
+                    });
             })
             .then((newItem) => {
                 notify.success(gettext('Update Created.'));

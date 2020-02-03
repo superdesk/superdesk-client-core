@@ -280,20 +280,24 @@ describe('authoring', () => {
 
             scope.publish();
             $rootScope.$digest();
-            expect(api.find).toHaveBeenCalledWith('archive', 'rewriteOf');
-            expect(confirm.confirmFeatureMedia).toHaveBeenCalledWith(rewriteOf);
-            defered.resolve(rewriteOf);
-            $rootScope.$digest();
 
-            setTimeout(() => { // let applyMiddleware promise resolve
-                expect(authoring.autosave).toHaveBeenCalled();
-                expect(authoring.publish).not.toHaveBeenCalled();
-                done();
+            setTimeout(() => { // let onPublishMiddlewares promise resolve
+                expect(api.find).toHaveBeenCalledWith('archive', 'rewriteOf');
+                defered.resolve(rewriteOf);
+                $rootScope.$digest();
+                expect(confirm.confirmFeatureMedia).toHaveBeenCalledWith(rewriteOf);
+
+                setTimeout(() => { // let applyMiddleware promise resolve
+                    expect(authoring.autosave).toHaveBeenCalled();
+                    expect(authoring.publish).not.toHaveBeenCalled();
+                    done();
+                }, 10);
             }, 10);
-        }));
+        }),
+    );
 
     it('confirm the associated media but do not use the associated media',
-        inject((api, $q, $rootScope, config, confirm, authoring) => {
+        (done) => inject((api, $q, $rootScope, config, confirm, authoring) => {
             let item = {
                 _id: 'test',
                 rewrite_of: 'rewriteOf',
@@ -323,13 +327,20 @@ describe('authoring', () => {
 
             scope.publish();
             $rootScope.$digest();
-            expect(api.find).toHaveBeenCalledWith('archive', 'rewriteOf');
-            expect(confirm.confirmFeatureMedia).toHaveBeenCalledWith(rewriteOf);
-            defered.resolve({});
-            $rootScope.$digest();
-            expect(authoring.publish).toHaveBeenCalled();
-            expect(authoring.autosave).not.toHaveBeenCalled();
-        }));
+            setTimeout(() => { // let onPublishMiddlewares promise resolve
+                expect(api.find).toHaveBeenCalledWith('archive', 'rewriteOf');
+                defered.resolve({});
+                $rootScope.$digest();
+                expect(confirm.confirmFeatureMedia).toHaveBeenCalledWith(rewriteOf);
+
+                setTimeout(() => { // let applyMiddleware promise resolve
+                    expect(authoring.publish).toHaveBeenCalled();
+                    expect(authoring.autosave).not.toHaveBeenCalled();
+                    done();
+                }, 10);
+            }, 10);
+        }),
+    );
 
     it('can reject publishing on error', inject((api, $q, $rootScope, authoring, lock) => {
         let success = jasmine.createSpy('success');

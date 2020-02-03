@@ -90,9 +90,11 @@ export function validateMinRequiredField(contact: IContact): boolean {
             return contactHasEmailAddress(contact);
         case 'contact_phone':
         case 'mobile':
-            // eslint-disable-next-line no-empty-pattern
-            return _.get(contact, field, []).length > 0 &&
-                !_.some(_.map(contact[field], 'number'), (v) => _.isEmpty(v));
+            return (_.get(contact, field) || []).length > 0 &&
+                !_.some(
+                    _.map(contact[field], 'number'),
+                    (v) => _.isEmpty(v),
+                );
         default:
             return !_.isEmpty(contact[field]);
         }
