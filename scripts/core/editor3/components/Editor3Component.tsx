@@ -464,6 +464,11 @@ export class Editor3Component extends React.Component<IProps, IState> {
 
         window[EDITOR_GLOBAL_REFS][this.editorKey] = this.editor;
 
+        if (appConfig.features.showCharacterLimit) {
+            document.documentElement.style.
+                setProperty('--preCharacterLimit', appConfig.features.showCharacterLimit + 'ch');
+        }
+
         this.spellcheck();
     }
 
@@ -521,6 +526,14 @@ export class Editor3Component extends React.Component<IProps, IState> {
             } : {},
         ));
 
+        const blockStyle = (contentBlock): string => {
+            const type = contentBlock.getType();
+
+            if (type === 'code-block' && appConfig.features.showCharacterLimit) {
+                return 'showCharacterLimit';
+            }
+        };
+
         return (
             <div
                 className={cx}
@@ -565,6 +578,7 @@ export class Editor3Component extends React.Component<IProps, IState> {
                         handleBeforeInput={this.handleBeforeInput}
                         blockRenderMap={blockRenderMap}
                         blockRendererFn={blockRenderer}
+                        blockStyleFn={blockStyle}
                         customStyleMap={{...customStyleMap, ...this.props.highlightsManager.styleMap}}
                         onChange={(editorStateNext: EditorState) => {
                             // in order to position the popup component we need to know the position of editor selection

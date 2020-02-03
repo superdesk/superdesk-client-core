@@ -5,7 +5,7 @@ import {keyBy} from 'lodash';
 import {gettext} from 'core/utils';
 import {dataApi} from 'core/helpers/CrudManager';
 import {ListItem, ListItemColumn, ListItemRow} from 'core/components/ListItem';
-import {CC} from '../configurable-ui-components';
+import {UserAvatar} from 'apps/users/components/UserAvatar';
 
 interface IState {
     fetchedUsers?: Array<IUser>;
@@ -74,7 +74,13 @@ export class SelectUser extends React.Component<IPropsSelectUser, IState> {
             <Select2
                 autoFocus={this.props.autoFocus ?? true}
                 disabled={this.props.disabled}
-                placeholder={gettext('Select a user')}
+                placeholder={
+                    <ListItem fullWidth noBackground noShadow>
+                        <ListItemColumn ellipsisAndGrow>
+                            <ListItemRow>{gettext('Select a user')}</ListItemRow>
+                        </ListItemColumn>
+                    </ListItem>
+                }
                 value={this.props.selectedUserId == null ? undefined : this.props.selectedUserId}
                 items={keyedUsers}
                 getItemValue={(user) => user._id}
@@ -84,7 +90,7 @@ export class SelectUser extends React.Component<IPropsSelectUser, IState> {
                 renderItem={(user) => (
                     <ListItem fullWidth noBackground noShadow>
                         <ListItemColumn noBorder>
-                            <CC.UserAvatar user={user} />
+                            <UserAvatar user={user} displayStatus={true} />
                         </ListItemColumn>
 
                         <ListItemColumn ellipsisAndGrow>
@@ -96,6 +102,7 @@ export class SelectUser extends React.Component<IPropsSelectUser, IState> {
                 data-test-id="select-user-dropdown"
                 onSearch={(search) => this.queryUsers(search)}
                 loading={this.state.loading}
+                required
             />
         );
     }

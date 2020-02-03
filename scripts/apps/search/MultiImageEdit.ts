@@ -41,10 +41,9 @@ export function MultiImageEditController(
     lock,
 ) {
     const saveHandler = $scope.saveHandler;
-
-    $scope.images = angular.copy($scope.imagesOriginal);
-
     let unsavedChangesExist = false;
+
+    $scope.images = [];
 
     $scope.$watch('imagesOriginal', (imagesOriginal: Array<any>) => {
         // add and remove images without losing metadata of the ones which stay
@@ -85,23 +84,21 @@ export function MultiImageEditController(
     $scope.areSomeSelected = () =>
         Array.isArray($scope.images) && $scope.images.some((image) => image.selected === true);
 
-    $scope.selectImage = (image, update: boolean = true) => {
+    $scope.selectImage = (image) => {
         if ($scope.images.length === 1) {
             $scope.images[0].selected = true;
         } else {
             image.selected = !image.selected;
         }
 
-        if (update) {
-            // refresh metadata visible in the editor according to selected images
-            updateMetadata();
-        }
+        // refresh metadata visible in the editor according to selected images
+        updateMetadata();
     };
 
     // wait for images for initial load
     $scope.$watch('images', (images: Array<any>) => {
         if (images != null && images.length) {
-            images.forEach((image) => $scope.selectImage(image, false));
+            $scope.selectAll();
             updateMetadata();
         }
     });

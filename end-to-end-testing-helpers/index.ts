@@ -2,6 +2,7 @@ import {element, by, ElementFinder, ElementArrayFinder, browser, Locator, promis
 import {ECE} from './expected-conditions-extended';
 import {executeContextMenuAction} from './articlesList';
 import {navigateTo} from './workspace';
+import * as path from 'path';
 
 const WAIT_TIMEOUT = 200;
 
@@ -70,6 +71,25 @@ export function login(username?: string, password?: string) {
 
 export function hover(elem: ElementFinder) {
     browser.actions().mouseMove(elem).perform();
+}
+
+export function waitAndClick(elem: ElementFinder) {
+    browser.wait(ECE.visibilityOf(elem));
+    elem.click();
+}
+
+export function selectFilesForUpload(
+    fileInput: ElementFinder,
+    fileNames: Array<string>, // relative to spec/test-files folder
+) {
+    fileInput.sendKeys(
+        fileNames
+            .map(
+                (relativePath) =>
+                    path.resolve(__dirname, '../../../spec/test-files/' + relativePath),
+            )
+            .join('\n'),
+    );
 }
 
 export const articleList = {

@@ -1,4 +1,4 @@
-<div class="modal__header modal__header--flex">
+<div class="modal__header modal__header--flex" data-test-id="change-image">
     <h3 class="modal__heading modal__heading--no-grow" ng-if="!nav || nav === 'view'">{{ :: activity.label}}</h3>
     <h3 class="modal__heading modal__heading--no-grow" ng-if="nav === 'image-edit'">{{ :: 'Edit image' | translate }}</h3>
     <h3 class="modal__heading modal__heading--no-grow" ng-if="nav === 'crop'">{{ :: 'Edit Crops' | translate }}</h3>
@@ -10,7 +10,12 @@
     </div>
 
     <div class="modal__header-buttons modal__header-buttons--right">
-        <button class="btn btn--primary btn--hollow" ng-click="done()" ng-disabled="!isDoneEnabled() || isAoISelectionModeEnabled">{{ 'Done ' | translate }}</button>
+        <button
+            class="btn btn--primary btn--hollow"
+            ng-click="done()" ng-disabled="!isDoneEnabled() || isAoISelectionModeEnabled"
+            translate
+            data-test-id="done"
+        >Done</button>
     </div>
 </div>
 
