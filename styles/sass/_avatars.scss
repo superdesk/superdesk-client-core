@@ -34,30 +34,32 @@
 .avatar.avatar-with-info {
     overflow: visible;
     position: relative;
-    .logged-info {
-        display: block;
-        background-color: #fff;
-        height: 8px;
-        width: 8px;
-        border-radius: 50%;
-        position: absolute;
-        bottom: -1px;
-        right: -4px;
-        box-shadow: 0px 0 0 2px #fff;
-        border: 1px solid #a2c59e;
-        box-sizing: border-box;
-    }
     .user-image {
         display: block;
         @include border-radius(50%);
         overflow: hidden;
     }
-    &.user-logged {
-        .logged-info {
-            background-color: #67b461;
-            border: 1px solid #67b461;
-        }
-    }
+}
+
+.status-indicator--offline {
+    display: block;
+    background-color: #fff;
+    height: 8px;
+    width: 8px;
+    border-radius: 50%;
+    position: absolute;
+    bottom: -1px;
+    right: -4px;
+    box-shadow: 0px 0 0 2px #fff;
+    border: 1px solid #a2c59e;
+    box-sizing: border-box;
+}
+
+.status-indicator--online {
+    @extend .status-indicator--offline;
+
+    background-color: #67b461;
+    border: 1px solid #67b461;
 }
 
 

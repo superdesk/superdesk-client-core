@@ -117,36 +117,6 @@
     }
 }
 
-.lock-avatar {
-    margin: 10px 0 10px 10px;
-    .avatar-with-info {
-        margin-top: 2px;
-        cursor: pointer;
-        .logged-info {
-            background-color: #cf0000;
-            border: 1px solid #cf0000;
-            box-shadow: 0px 0 0 2px $subnav-authoring;
-        }
-    }
-    .dropdown__menu {
-        padding: 10px;
-        top: 0px;
-        text-align: center;
-        .avatar {
-            display: inline-block;
-            margin: 10px 0;
-            float: none;
-        }
-        button {
-            text-align: center;
-            margin-top: 15px;
-        }
-    }
-    .dropdown__menu-label {
-        padding-left: 0;
-    }
-}
-
 .auto-save {
     margin-right: 20px;
     line-height: 28px;

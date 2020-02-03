@@ -414,6 +414,7 @@ declare module 'superdesk-api' {
     }
 
     export interface IUser extends IBaseRestApiResponse {
+        session_preferences?: {[key: string]: any};
         _id: string;
         username: string;
         password: string;

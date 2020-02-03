@@ -6,7 +6,7 @@ import {showPopup, PopupTypes} from '../../actions';
 import {convertFromRaw} from 'draft-js';
 import ng from 'core/services/ng';
 import {HighlightsPopupPositioner} from '../HighlightsPopupPositioner';
-import {UserAvatar} from 'apps/users/components/UserAvatar';
+import {UserAvatarFromUserId} from 'apps/users/components/UserAvatarFromUserId';
 import {connectPromiseResults} from 'core/helpers/ReactRenderAsync';
 import {EditorHighlightsHeader} from '../../editorPopup/EditorHighlightsHeader';
 import {FluidRows} from '../../fluid-flex-rows/fluid-rows';
@@ -21,7 +21,7 @@ class Annotation extends React.Component<any, any> {
     render() {
         const {annotation, editorNode, highlightId, highlightsManager, annotationTypes} = this.props;
         const _showPopup = this.props.showPopup;
-        const {author, avatar, date, msg, annotationType} = annotation.data;
+        const {author, authorId, date, msg, annotationType} = annotation.data;
         const {name: type} = annotationTypes.find((t) => t.qcode === annotationType);
         const relativeDateString = moment(date).calendar();
         const absoluteDateString = moment(date).format('MMMM Do YYYY, h:mm:ss a');
@@ -53,7 +53,7 @@ class Annotation extends React.Component<any, any> {
                 <FluidRows>
                     <FluidRow scrollable={false}>
                         <EditorHighlightsHeader availableActions={availableActions}>
-                            <UserAvatar displayName={author} pictureUrl={avatar} />
+                            <UserAvatarFromUserId userId={authorId} />
                             <p className="editor-popup__author-name">{author}</p>
                             <time className="editor-popup__time" title={relativeDateString}>{absoluteDateString}</time>
                         </EditorHighlightsHeader>
