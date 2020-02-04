@@ -134,9 +134,10 @@ angular.module('superdesk.apps.ingest', [
                 }],
                 filters: [{action: 'list', type: 'externalsource'}],
                 privileges: {fetch: 1},
-                additionalCondition: ['config', 'desks', function(config, desks) {
+                additionalCondition: ['config', 'desks', 'item', function(config, desks, item) {
                     // Fetching to 'personal' desk is not allowed
-                    return config.features.editFeaturedImage && !_.isNil(desks.getCurrentDeskId());
+                    return _.get(item, 'pubstatus') !== 'withheld' && config.features.editFeaturedImage
+                    && !_.isNil(desks.getCurrentDeskId());
                 }],
             })
 
@@ -147,9 +148,10 @@ angular.module('superdesk.apps.ingest', [
                 controller: ctrl.ExternalSourceController,
                 filters: [{action: 'list', type: 'externalsource', id: 'fetch-externalsource'}],
                 privileges: {fetch: 1},
-                additionalCondition: ['config', 'desks', function(config, desks) {
+                additionalCondition: ['config', 'desks', 'item', function(config, desks, item) {
                     // Fetching to 'personal' desk is not allowed
-                    return config.features.editFeaturedImage && !_.isNil(desks.getCurrentDeskId());
+                    return _.get(item, 'pubstatus') !== 'withheld' && config.features.editFeaturedImage
+                    && !_.isNil(desks.getCurrentDeskId());
                 }],
             });
 
