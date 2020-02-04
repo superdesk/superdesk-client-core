@@ -7,7 +7,7 @@ import {mediaIdGenerator} from '../services/MediaIdGeneratorService';
 
 export function getAssociationsByField(item: IArticle, field: IVocabulary) {
     return Object.keys(item.associations || {})
-        .filter((key) => key.startsWith(field?._id) && item.associations[key] != null)
+        .filter((key) => key.startsWith(field._id) && item.associations[key] != null)
         .map((key) => item.associations[key]);
 }
 
@@ -46,7 +46,10 @@ export function AssociationController(content, superdesk, renditions, notify) {
      * @param {Array} files
      */
     this.uploadAndCropImages = function(scope, files) {
-        const maxUploadsRemaining = scope.maxUploads - getAssociationsByField(scope.item, scope.field).length;
+        // in case of feature media we dont have scope.field available as it is not a vocabulary.
+        const maxUploadsRemaining = scope.maxUploads != null && scope.field != null
+            ? scope.maxUploads - getAssociationsByField(scope.item, scope.field).length
+            : 1;
 
         let uploadData = {
             files: files,
