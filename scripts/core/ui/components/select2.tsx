@@ -139,14 +139,17 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                         // 2. for event listeners to respond when buttons are clicked outside of a focused select
 
                         const timeout = 200; // smaller values don't work for point 2 above
-                        
+
                         setTimeout(() => {
                             if (this.wrapper != null) {
                                 const remainingAtTheBottom =
                                     window.innerHeight - this.wrapper.getBoundingClientRect().bottom - 20;
                                 const oneThirdViewportHeigh = window.innerHeight / 3;
 
-                                this.setState({isOpen, maxHeight: Math.min(remainingAtTheBottom, oneThirdViewportHeigh)});
+                                this.setState({
+                                    isOpen,
+                                    maxHeight: Math.min(remainingAtTheBottom, oneThirdViewportHeigh),
+                                });
                             }
                         }, timeout);
                     }}
