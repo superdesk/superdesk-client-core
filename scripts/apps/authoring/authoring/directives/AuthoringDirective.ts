@@ -1,6 +1,6 @@
 import * as helpers from 'apps/authoring/authoring/helpers';
 import _ from 'lodash';
-import {merge} from 'lodash';
+import {merge, flatMap} from 'lodash';
 import postscribe from 'postscribe';
 import thunk from 'redux-thunk';
 import {gettext} from 'core/utils';
@@ -8,11 +8,11 @@ import {combineReducers, createStore, applyMiddleware} from 'redux';
 import {attachments, initAttachments} from '../../attachments';
 import {applyMiddleware as coreApplyMiddleware} from 'core/middleware';
 import {onChangeMiddleware, getArticleSchemaMiddleware} from '..';
-import {IFunctionPointsService} from 'apps/extension-points/services/FunctionPoints';
 import {isPublished} from 'apps/archive/utils';
 import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
 import {copyJson} from 'core/helpers/utils';
 import {appConfig, extensions} from 'appConfig';
+import {onPublishMiddlewareResult, IExtensionActivationResult} from 'superdesk-api';
 import {mediaIdGenerator} from '../services/MediaIdGeneratorService';
 
 /**
@@ -50,7 +50,6 @@ AuthoringDirective.$inject = [
     'embedService',
     'relationsService',
     '$injector',
-    'functionPoints',
 ];
 export function AuthoringDirective(
     superdesk,
@@ -78,8 +77,6 @@ export function AuthoringDirective(
     embedService,
     relationsService,
     $injector,
-
-    functionPoints: IFunctionPointsService,
 ) {
     return {
         link: function($scope, elem, attrs) {
@@ -408,18 +405,53 @@ export function AuthoringDirective(
                     });
             }
 
+            function getOnPublishMiddlewares()
+            : Array<IExtensionActivationResult['contributions']['entities']['article']['onPublish']> {
+                return flatMap(
+                    Object.values(extensions).map(({activationResult}) => activationResult),
+                    (activationResult) =>
+                        activationResult.contributions != null
+                        && activationResult.contributions.entities != null
+                        && activationResult.contributions.entities.article != null
+                        && activationResult.contributions.entities.article.onPublish != null
+                            ? activationResult.contributions.entities.article.onPublish
+                            : [],
+                );
+            }
+
             function publishItem(orig, item) {
                 var action = $scope.action === 'edit' ? 'publish' : $scope.action;
+                const onPublishMiddlewares = getOnPublishMiddlewares();
+                let warnings: Array<{text: string}> = [];
+                const initialValue: Promise<onPublishMiddlewareResult> = Promise.resolve({});
 
                 $scope.error = {};
 
-                return functionPoints.run('authoring:publish', Object.assign({
-                    _id: _.get(orig, '_id'),
-                    type: _.get(orig, 'type'),
-                }, item))
+                return onPublishMiddlewares.reduce(
+                    (current, next) => {
+                        return current.then((result) => {
+                            if (result && result.warnings && result.warnings.length > 0) {
+                                warnings = warnings.concat(result.warnings);
+                            }
+
+                            return next(Object.assign({
+                                _id: _.get(orig, '_id'),
+                                type: _.get(orig, 'type'),
+                            }, item));
+                        });
+                    },
+                    initialValue,
+                )
+                    .then((result) => {
+                        if (result && result.warnings && result.warnings.length > 0) {
+                            warnings = warnings.concat(result.warnings);
+                        }
+
+                        return result;
+                    })
                     .then(() => checkMediaAssociatedToUpdate())
                     .then((result) => {
-                        if (result) {
+                        if (result && warnings.length < 1) {
                             return authoring.publish(orig, item, action);
                         }
                         return $q.reject(false);
@@ -472,6 +504,13 @@ export function AuthoringDirective(
                             }
                         } else if (response && response.status === 412) {
                             notifyPreconditionFailed();
+                            return $q.reject(false);
+                        } else if (warnings.length > 0) {
+                            warnings.forEach(
+                                (warning) => {
+                                    notify.error(warning.text);
+                                },
+                            );
                             return $q.reject(false);
                         }
 

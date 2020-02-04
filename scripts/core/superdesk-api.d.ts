@@ -23,6 +23,7 @@ declare module 'superdesk-api' {
     // EXTENSIONS
 
     export type onSpikeMiddlewareResult = {warnings?: Array<{text: string}>};
+    export type onPublishMiddlewareResult= {warnings?: Array<{text: string}>};
 
     /**
      * float number 0 < x < 1. Larger the number, closer the component will be rendered to its side.
@@ -72,6 +73,8 @@ declare module 'superdesk-api' {
                     onPatchBefore?(id: IArticle['_id'], patch: Partial<IArticle>): Promise<Partial<IArticle>>; // can alter patch(immutably), can cancel patching
                     onSpike?(item: IArticle): Promise<onSpikeMiddlewareResult>;
                     onSpikeMultiple?(items: Array<IArticle>): Promise<onSpikeMiddlewareResult>;
+                    onPublish?(item: IArticle): Promise<onPublishMiddlewareResult>;
+                    onRewriteAfter?(item: IArticle): Promise<IArticle>;
                 };
             };
             iptcMapping?(data: IPTCMetadata, item: Partial<IArticle>): Promise<Partial<IArticle>>;
