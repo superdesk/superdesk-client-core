@@ -2,6 +2,7 @@ import {AuthoringWorkspaceService} from '../authoring/services/AuthoringWorkspac
 import _ from 'lodash';
 import {appConfig} from 'appConfig';
 import {ISuperdeskGlobalConfig} from 'superdesk-api';
+import {mediaIdGenerator} from '../authoring/services/MediaIdGeneratorService';
 
 describe('authoring', () => {
     var GUID = 'urn:tag:superdesk-1';
@@ -298,20 +299,23 @@ describe('authoring', () => {
 
             scope.publish();
             $rootScope.$digest();
-            expect(api.find).toHaveBeenCalledWith('archive', 'rewriteOf');
-            expect(confirm.confirmFeatureMedia).toHaveBeenCalledWith(rewriteOf);
-            defered.resolve(rewriteOf);
-            $rootScope.$digest();
 
-            setTimeout(() => { // let applyMiddleware promise resolve
-                expect(authoring.autosave).toHaveBeenCalled();
-                expect(authoring.publish).not.toHaveBeenCalled();
-                done();
+            setTimeout(() => { // let onPublishMiddlewares promise resolve
+                expect(api.find).toHaveBeenCalledWith('archive', 'rewriteOf');
+                defered.resolve(rewriteOf);
+                $rootScope.$digest();
+                expect(confirm.confirmFeatureMedia).toHaveBeenCalledWith(rewriteOf);
+
+                setTimeout(() => { // let applyMiddleware promise resolve
+                    expect(authoring.autosave).toHaveBeenCalled();
+                    expect(authoring.publish).not.toHaveBeenCalled();
+                    done();
+                }, 10);
             }, 10);
         }));
 
     it('confirm the associated media but do not use the associated media',
-        inject((api, $q, $rootScope, confirm, authoring) => {
+        (done) => inject((api, $q, $rootScope, confirm, authoring) => {
             let item = {
                 _id: 'test',
                 rewrite_of: 'rewriteOf',
@@ -346,12 +350,18 @@ describe('authoring', () => {
 
             scope.publish();
             $rootScope.$digest();
-            expect(api.find).toHaveBeenCalledWith('archive', 'rewriteOf');
-            expect(confirm.confirmFeatureMedia).toHaveBeenCalledWith(rewriteOf);
-            defered.resolve({});
-            $rootScope.$digest();
-            expect(authoring.publish).toHaveBeenCalled();
-            expect(authoring.autosave).not.toHaveBeenCalled();
+            setTimeout(() => { // let onPublishMiddlewares promise resolve
+                expect(api.find).toHaveBeenCalledWith('archive', 'rewriteOf');
+                defered.resolve({});
+                $rootScope.$digest();
+                expect(confirm.confirmFeatureMedia).toHaveBeenCalledWith(rewriteOf);
+
+                setTimeout(() => { // let applyMiddleware promise resolve
+                    expect(authoring.publish).toHaveBeenCalled();
+                    expect(authoring.autosave).not.toHaveBeenCalled();
+                    done();
+                }, 10);
+            }, 10);
         }));
 
     it('can reject publishing on error', inject((api, $q, $rootScope, authoring, lock) => {
@@ -633,12 +643,12 @@ describe('authoring', () => {
     });
 
     describe('media identifer generator service', () => {
-        it('generates media field identifer', inject((mediaIdGenerator) => {
-            expect(mediaIdGenerator.getFieldVersionName('media1')).toBe('media1');
-            expect(mediaIdGenerator.getFieldVersionName('media1', 1)).toBe('media1--1');
+        it('generates media field identifer', () => {
+            expect(mediaIdGenerator.getFieldVersionName('media1', null)).toBe('media1');
+            expect(mediaIdGenerator.getFieldVersionName('media1', '1')).toBe('media1--1');
             expect(mediaIdGenerator.getFieldParts('media1')).toEqual(['media1', null]);
             expect(mediaIdGenerator.getFieldParts('media1--1')).toEqual(['media1', 1]);
-        }));
+        });
     });
 
     describe('carousel directive', () => {

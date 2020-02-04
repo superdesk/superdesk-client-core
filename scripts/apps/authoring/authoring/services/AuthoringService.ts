@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import {flatMap} from 'lodash';
 import * as helpers from 'apps/authoring/authoring/helpers';
 import {gettext} from 'core/utils';
 import {logger} from 'core/services/logger';
@@ -7,8 +8,8 @@ import {showModal} from 'core/services/modalService';
 import {getUnpublishConfirmModal} from '../components/unpublish-confirm-modal';
 import {ITEM_STATE, CANCELED_STATES, READONLY_STATES} from 'apps/archive/constants';
 import {AuthoringWorkspaceService} from './AuthoringWorkspaceService';
-import {appConfig} from 'appConfig';
-import {IPublishedArticle} from 'superdesk-api';
+import {appConfig, extensions} from 'appConfig';
+import {IPublishedArticle, IArticle, IExtensionActivationResult} from 'superdesk-api';
 
 interface IPublishOptions {
     notifyErrors: boolean;
@@ -102,13 +103,39 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
     this.rewrite = function(item) {
         var authoringWorkspace: AuthoringWorkspaceService = $injector.get('authoringWorkspace');
 
+        function getOnRewriteAfterMiddlewares()
+        : Array<IExtensionActivationResult['contributions']['entities']['article']['onRewriteAfter']> {
+            return flatMap(
+                Object.values(extensions).map(({activationResult}) => activationResult),
+                (activationResult) =>
+                    activationResult.contributions != null
+                    && activationResult.contributions.entities != null
+                    && activationResult.contributions.entities.article != null
+                    && activationResult.contributions.entities.article.onRewriteAfter != null
+                        ? activationResult.contributions.entities.article.onRewriteAfter
+                        : [],
+            );
+        }
+
         session.getIdentity()
             .then((user) => {
                 var updates = {
                     desk_id: desks.getCurrentDeskId() || item.task.desk,
                 };
 
-                return api.save('archive_rewrite', {}, updates, item);
+                return api.save('archive_rewrite', {}, updates, Object.freeze(item))
+                    .then((newItem: IArticle) => {
+                        const onRewriteAfterMiddlewares = getOnRewriteAfterMiddlewares();
+
+                        return onRewriteAfterMiddlewares.reduce(
+                            (current, next) => {
+                                return current.then((result) => {
+                                    return next(result);
+                                });
+                            },
+                            Promise.resolve(newItem),
+                        );
+                    });
             })
             .then((newItem) => {
                 notify.success(gettext('Update Created.'));
@@ -439,18 +466,21 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
 
     /**
      * Lock an item - callback for item:lock event
-     *
-     * @param {Object} item
-     * @param {string} userId
      */
-    this.lock = function(item, userId) {
+    this.lock = function(
+        item: IArticle,
+        data: {
+            user: string;
+            lock_time: string;
+            lock_session: string;
+        },
+    ) {
         autosave.stop(item);
-        api.find('users', userId).then((user) => {
+        api.find('users', data.user).then((user) => {
             item.lock_user = user;
-        }, (rejection) => {
-            item.lock_user = userId;
+            item.lock_session = data.lock_session;
+            item._locked = true;
         });
-        item._locked = true;
     };
 
     /**
@@ -484,7 +514,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         action.export = currentItem && currentItem.type && currentItem.type === 'text';
 
         // item is published state - corrected, published, scheduled, killed
-        if (isPublished(currentItem)) {
+        if (isPublished(currentItem) && item.state !== 'unpublished') {
             // if not the last published version
             if (item.last_published_version === false) {
                 return angular.extend({}, helpers.DEFAULT_ACTIONS);

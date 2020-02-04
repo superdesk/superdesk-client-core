@@ -1,6 +1,6 @@
 import * as helpers from 'apps/authoring/authoring/helpers';
 import _ from 'lodash';
-import {merge} from 'lodash';
+import {merge, flatMap} from 'lodash';
 import postscribe from 'postscribe';
 import thunk from 'redux-thunk';
 import {gettext} from 'core/utils';
@@ -8,11 +8,12 @@ import {combineReducers, createStore, applyMiddleware} from 'redux';
 import {attachments, initAttachments} from '../../attachments';
 import {applyMiddleware as coreApplyMiddleware} from 'core/middleware';
 import {onChangeMiddleware, getArticleSchemaMiddleware} from '..';
-import {IFunctionPointsService} from 'apps/extension-points/services/FunctionPoints';
 import {isPublished} from 'apps/archive/utils';
 import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
 import {copyJson} from 'core/helpers/utils';
 import {appConfig, extensions} from 'appConfig';
+import {onPublishMiddlewareResult, IExtensionActivationResult} from 'superdesk-api';
+import {mediaIdGenerator} from '../services/MediaIdGeneratorService';
 
 /**
  * @ngdoc directive
@@ -47,10 +48,8 @@ AuthoringDirective.$inject = [
     'editorResolver',
     'compareVersions',
     'embedService',
-    'mediaIdGenerator',
     'relationsService',
     '$injector',
-    'functionPoints',
 ];
 export function AuthoringDirective(
     superdesk,
@@ -76,11 +75,8 @@ export function AuthoringDirective(
     editorResolver,
     compareVersions,
     embedService,
-    mediaIdGenerator,
     relationsService,
     $injector,
-
-    functionPoints: IFunctionPointsService,
 ) {
     return {
         link: function($scope, elem, attrs) {
@@ -182,8 +178,12 @@ export function AuthoringDirective(
             /**
              * Start editing current item
              */
+
             $scope.edit = function edit() {
-                if (isPublished($scope.origItem)) {
+                if ($scope.origItem.state === 'unpublished') {
+                    api.update('archive', $scope.origItem, {state: 'in_progress'})
+                        .then((updated) => authoringWorkspace.edit(updated));
+                } else if (isPublished($scope.origItem)) {
                     authoringWorkspace.view($scope.origItem);
                 } else {
                     authoringWorkspace.edit($scope.origItem);
@@ -405,18 +405,53 @@ export function AuthoringDirective(
                     });
             }
 
+            function getOnPublishMiddlewares()
+            : Array<IExtensionActivationResult['contributions']['entities']['article']['onPublish']> {
+                return flatMap(
+                    Object.values(extensions).map(({activationResult}) => activationResult),
+                    (activationResult) =>
+                        activationResult.contributions != null
+                        && activationResult.contributions.entities != null
+                        && activationResult.contributions.entities.article != null
+                        && activationResult.contributions.entities.article.onPublish != null
+                            ? activationResult.contributions.entities.article.onPublish
+                            : [],
+                );
+            }
+
             function publishItem(orig, item) {
                 var action = $scope.action === 'edit' ? 'publish' : $scope.action;
+                const onPublishMiddlewares = getOnPublishMiddlewares();
+                let warnings: Array<{text: string}> = [];
+                const initialValue: Promise<onPublishMiddlewareResult> = Promise.resolve({});
 
                 $scope.error = {};
 
-                return functionPoints.run('authoring:publish', Object.assign({
-                    _id: _.get(orig, '_id'),
-                    type: _.get(orig, 'type'),
-                }, item))
+                return onPublishMiddlewares.reduce(
+                    (current, next) => {
+                        return current.then((result) => {
+                            if (result && result.warnings && result.warnings.length > 0) {
+                                warnings = warnings.concat(result.warnings);
+                            }
+
+                            return next(Object.assign({
+                                _id: _.get(orig, '_id'),
+                                type: _.get(orig, 'type'),
+                            }, item));
+                        });
+                    },
+                    initialValue,
+                )
+                    .then((result) => {
+                        if (result && result.warnings && result.warnings.length > 0) {
+                            warnings = warnings.concat(result.warnings);
+                        }
+
+                        return result;
+                    })
                     .then(() => checkMediaAssociatedToUpdate())
                     .then((result) => {
-                        if (result) {
+                        if (result && warnings.length < 1) {
                             return authoring.publish(orig, item, action);
                         }
                         return $q.reject(false);
@@ -468,6 +503,13 @@ export function AuthoringDirective(
                             }
                         } else if (response && response.status === 412) {
                             notifyPreconditionFailed();
+                            return $q.reject(false);
+                        } else if (warnings.length > 0) {
+                            warnings.forEach(
+                                (warning) => {
+                                    notify.error(warning.text);
+                                },
+                            );
                             return $q.reject(false);
                         }
                         return $q.reject(false);
@@ -841,7 +883,7 @@ export function AuthoringDirective(
                             (result) => next($scope.origItem._autosave ?? $scope.origItem, result),
                         );
 
-                        (
+                        return (
                             onUpdateFromExtensions.length < 1
                                 ? Promise.resolve(item)
                                 : onUpdateFromExtensions
@@ -853,6 +895,9 @@ export function AuthoringDirective(
                             authoringWorkspace.addAutosave();
                             initMedia();
                             updateSchema();
+
+                            $scope.$apply();
+
                             return autosavedItem;
                         });
                     });
@@ -969,9 +1014,17 @@ export function AuthoringDirective(
             });
 
             $scope.$on('item:lock', (_e, data) => {
-                if ($scope.item._id === data.item && !_closing &&
-                    session.sessionId !== data.lock_session) {
-                    authoring.lock($scope.item, data.user);
+                if ($scope.item._id === data.item
+                    && !_closing
+                    && session.sessionId !== data.lock_session
+                ) {
+                    const {
+                        user,
+                        lock_time,
+                        lock_session,
+                    } = data;
+
+                    authoring.lock($scope.item, {user, lock_time, lock_session});
                 }
             });
 
@@ -1151,7 +1204,7 @@ export function AuthoringDirective(
 
                     newIndex = fieldVersions.length ? 1 + fieldVersions[0] : 1;
                 }
-                return mediaIdGenerator.getFieldVersionName(parts[0], newIndex);
+                return mediaIdGenerator.getFieldVersionName(parts[0], newIndex == null ? null : newIndex.toString());
             };
 
             // init

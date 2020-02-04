@@ -223,6 +223,7 @@ $split-modal-sidebar : 200px;
                     min-height: 24px;
                     overflow: hidden;
                     margin-bottom: 10px;
+                    display: flex;
                 }
             }
             & + .metadata {

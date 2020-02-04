@@ -1,5 +1,5 @@
 import React from 'react';
-import {IVocabulary} from 'superdesk-interfaces/Vocabulary';
+import {IVocabulary} from 'superdesk-api';
 import {getField} from 'apps/fields';
 
 export class CustomFieldConfigs extends React.PureComponent<{vocabulary: IVocabulary, onChange(config): void}> {

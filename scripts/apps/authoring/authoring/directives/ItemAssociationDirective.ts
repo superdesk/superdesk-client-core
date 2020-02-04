@@ -15,7 +15,6 @@ import {addInternalEventListener} from 'core/internal-events';
  * @requires $q
  * @requires api
  * @requires notify
- * @requires mediaIdGenerator
  *
  * @description
  *   This directive is responsible for rendering media associated with the item.
@@ -146,6 +145,10 @@ export function ItemAssociationDirective(renditions, notify) {
                     _ctrl.addAssociation(scope, image);
                 }
             });
+
+            scope.onRenditionChange = (item, timeout) => {
+                scope.onchange({item: scope.item, timeout});
+            };
 
             scope.$on('$destroy', () => {
                 removeAddImageEventListener();

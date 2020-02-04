@@ -12,7 +12,6 @@ export {SelectInput} from './SelectInput';
 export {FileInput} from './FileInput';
 export {LinkInput} from './LinkInput';
 export {SelectMetaTermsInput} from './SelectMetaTermsInput/index';
-export {SelectUserInput} from './SelectUserInput';
 export {SelectTagInput} from './SelectTagInput';
 export {Checkbox} from './Checkbox';
 export {ToggleInput} from './ToggleInput';

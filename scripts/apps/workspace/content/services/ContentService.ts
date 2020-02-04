@@ -2,8 +2,9 @@ import * as constant from '../constants';
 import {get, omit, isEmpty, zipObject} from 'lodash';
 import {gettext} from 'core/utils';
 import {isMediaEditable} from 'core/config';
-import {IArticle} from 'superdesk-api';
 import {appConfig} from 'appConfig';
+import {dataApi} from 'core/helpers/CrudManager';
+import {IArticle, IContentProfileEditorConfig, IArticleField} from 'superdesk-api';
 
 /**
  * @ngdoc service
@@ -46,10 +47,10 @@ export function ContentService(api, templates, desks, packages, archiveService, 
 
     const self = this;
 
-    function newItem(type) {
+    function newItem(type, initializeAsUpdated: boolean) {
         return {
             type: type || TEXT_TYPE,
-            version: 0,
+            version: initializeAsUpdated ? 1 : 0,
         };
     }
 
@@ -79,23 +80,11 @@ export function ContentService(api, templates, desks, packages, archiveService, 
      * @param {string} type
      * @return {Promise}
      */
-    this.createItem = function(type) {
-        var item = newItem(type);
+    this.createItem = function(type, initializeAsUpdated) {
+        var item = newItem(type, initializeAsUpdated);
 
         archiveService.addTaskToArticle(item);
         return save(item);
-    };
-
-    /**
-     * Create a package containing given item
-     *
-     * @param {Object} item
-     * @return {Promise}
-     */
-    this.createPackageItem = function(item) {
-        var data = item ? {items: [item]} : {};
-
-        return packages.createEmptyPackage(data);
     };
 
     /**
@@ -114,8 +103,8 @@ export function ContentService(api, templates, desks, packages, archiveService, 
      * @param {Object} template
      * @return {Promise}
      */
-    this.createItemFromTemplate = function(template) {
-        var item: any = newItem(template.data.type || null);
+    this.createItemFromTemplate = function(template, initializeAsUpdated) {
+        var item: Partial<IArticle> = newItem(template.data.type || null, initializeAsUpdated);
 
         angular.extend(item, templates.pickItemData(template.data || {}), {template: template._id});
         // set the dateline date to default utc date.
@@ -129,7 +118,8 @@ export function ContentService(api, templates, desks, packages, archiveService, 
         }
 
         archiveService.addTaskToArticle(item);
-        return save(item).then((_item) => {
+
+        return dataApi.create('archive', item).then((_item) => {
             templates.addRecentTemplate(desks.activeDeskId, template._id);
             return _item;
         });
@@ -270,6 +260,13 @@ export function ContentService(api, templates, desks, packages, archiveService, 
 
         return this._fields ? this._fields.filter((field) => !!editor[field._id]) : [];
     };
+
+    /**
+     * Get fields with preview enabled
+     */
+    this.previewFields = (editor: IContentProfileEditorConfig, fields: Array<IArticleField>): Array<IArticleField> =>
+        editor == null || fields == null ? []
+            : fields.filter((field) => editor[field._id] != null && editor[field._id].preview);
 
     /**
      * Get profiles selected for given desk

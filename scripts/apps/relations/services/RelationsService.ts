@@ -1,14 +1,13 @@
-import {pickBy, zipObject} from 'lodash';
-import {IArticle} from 'superdesk-api';
+import {zipObject} from 'lodash';
+import {IArticle, IArticleField} from 'superdesk-api';
 import {isPublished} from 'apps/archive/utils';
-import {IVocabulary} from 'superdesk-interfaces/Vocabulary';
 
 const RELATED_LINK_KEYS = 2; // links only have _id and type keys (and some old ones only _id)
 const isLink = (association) => association != null && Object.keys(association).length <= RELATED_LINK_KEYS;
 
-RelationsService.$inject = ['mediaIdGenerator', 'api', '$q'];
+RelationsService.$inject = ['api', '$q'];
 
-export function RelationsService(mediaIdGenerator, api, $q) {
+export function RelationsService(api, $q) {
     this.getRelatedKeys = function(item: IArticle, fieldId: string) {
         return Object.keys(item.associations || {})
             .filter((key) => key.startsWith(fieldId) && item.associations[key] != null)
@@ -35,7 +34,7 @@ export function RelationsService(mediaIdGenerator, api, $q) {
         };
     };
 
-    this.itemHasAllowedStatus = function(item: IArticle, field: IVocabulary) {
+    this.itemHasAllowedStatus = function(item: IArticle, field: IArticleField) {
         const ALLOWED_WORKFLOWS = field?.field_options?.allowed_workflows || this.getDefaultAllowedWorkflows();
 
         return (ALLOWED_WORKFLOWS.published === true && isPublished(item)) ||

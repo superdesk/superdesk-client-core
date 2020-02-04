@@ -72,7 +72,7 @@ describe('workqueue', () => {
 
             $controller('Workqueue', {$scope: scope});
             $rootScope.$digest();
-            expect(scope.active._id).toBe('foo');
+            expect(scope.articleInEditMode._id).toBe('foo');
         }));
 
     it('can confirm before closing autosaved or not autosaved, but dirty active item', inject(
@@ -87,23 +87,24 @@ describe('workqueue', () => {
 
             $controller('Workqueue', {$scope: scope});
             $rootScope.$digest();
-            expect(scope.active._id).toBe('foo');
+            expect(scope.articleInEditMode._id).toBe('foo');
 
             var confirmDefer;
 
             confirmDefer = $q.defer();
             // Spy On autosave.get(), testing first call would return with success and second with error.
-            spyOn(autosave, 'get').and.returnValues($q.when(scope.active), $q.reject({statusText: 'NOT FOUND'}));
+            spyOn(autosave, 'get')
+                .and.returnValues($q.when(scope.articleInEditMode), $q.reject({statusText: 'NOT FOUND'}));
             spyOn(confirm, 'reopen').and.returnValue(confirmDefer.promise);
 
             // call for success, i.e. gets autosaved.
-            scope.closeItem(scope.active);
+            scope.closeItem(scope.articleInEditMode);
             $rootScope.$digest();
             expect(confirm.reopen).toHaveBeenCalled();
 
             // call for error, i.e. not gets autosaved.
             confirm.dirty = true; // current item is dirty
-            scope.closeItem(scope.active);
+            scope.closeItem(scope.articleInEditMode);
             $rootScope.$digest();
             expect(confirm.reopen).toHaveBeenCalled();
         }));
