@@ -99,6 +99,7 @@ export const GET_LABEL_MAP = () => ({
     copyrightholder: gettext('Copyright holder'),
     copyrightnotice: gettext('Copyright notice'),
     attachments: gettext('Attachments'),
+    pubstatus: gettext('Pub Status'),
 });
 
 export const HAS_FORMAT_OPTIONS = Object.freeze({
