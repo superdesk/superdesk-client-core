@@ -142,8 +142,12 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
 
                         setTimeout(() => {
                             if (this.wrapper != null) {
+                                // if there's no spacing, it looks glued to the bottom
+                                // and it's not clear that the dropdown is scrolled independently from the rest of the page
+                                const spacing = 20;
+
                                 const remainingAtTheBottom =
-                                    window.innerHeight - this.wrapper.getBoundingClientRect().bottom - 20;
+                                    window.innerHeight - this.wrapper.getBoundingClientRect().bottom - spacing;
                                 const oneThirdViewportHeigh = window.innerHeight / 3;
 
                                 this.setState({
