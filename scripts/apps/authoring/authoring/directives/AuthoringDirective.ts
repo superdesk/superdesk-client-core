@@ -459,7 +459,6 @@ export function AuthoringDirective(
                                         $scope.item = copyJson($scope.origItem);
                                     });
                                 }
-
                                 return $q.reject(false);
                             }
 
@@ -471,8 +470,6 @@ export function AuthoringDirective(
                             notifyPreconditionFailed();
                             return $q.reject(false);
                         }
-
-                        notify.error(gettext('Unknown Error: Item not published.'));
                         return $q.reject(false);
                     });
             }
@@ -587,19 +584,7 @@ export function AuthoringDirective(
                     return Promise.reject();
                 }
 
-                // Check if there are unpublished related items without media-gallery
-                return relationsService.getRelatedItemsWithoutMediaGallery($scope.item, $scope.fields)
-                    .then((related) => {
-                        if (related.length > 0 && !appConfig.publish_associated_items) {
-                            return modal.confirm({
-                                bodyText: gettext(
-                                    'There are unpublished related items that won\'t be sent out as related items.'
-                                    + ' Do you want to publish the article anyway?',
-                                ),
-                            }).then((ok) => ok ? performPublish() : false);
-                        }
-                        return performPublish();
-                    });
+                return performPublish();
             };
 
             function performPublish() {

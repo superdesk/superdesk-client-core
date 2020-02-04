@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import {get} from 'lodash';
 import * as helpers from 'apps/authoring/authoring/helpers';
 import {gettext} from 'core/utils';
 import {logger} from 'core/services/logger';
@@ -37,10 +36,10 @@ interface IPublishOptions {
  *
  * @description Authoring Service is responsible for management of the actions on a story
  */
-AuthoringService.$inject = ['$q', '$location', 'api', 'lock', 'autosave', 'confirm', 'privileges',
-    'desks', 'superdeskFlags', 'notify', 'session', '$injector', 'moment', 'familyService'];
+AuthoringService.$inject = ['$q', '$location', 'api', 'lock', 'autosave', 'confirm', 'privileges', 'desks',
+    'superdeskFlags', 'notify', 'session', '$injector', 'moment', 'familyService', 'modal'];
 export function AuthoringService($q, $location, api, lock, autosave, confirm, privileges, desks, superdeskFlags,
-    notify, session, $injector, moment, familyService) {
+    notify, session, $injector, moment, familyService, modal) {
     var self = this;
 
     // TODO: have to trap desk update event for refereshing users desks.
@@ -237,7 +236,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         }
     };
 
-    this.publish = function publish(orig, diff, action = 'publish',
+    this.publish = function publish(orig, diff, action = 'publish', publishingWarningsConfirmed = false,
         {notifyErrors}: IPublishOptions = {notifyErrors: false},
     ) {
         let extDiff = helpers.extendItem({}, diff);
@@ -251,16 +250,30 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         helpers.filterDefaultValues(extDiff, orig);
         var endpoint = 'archive_' + action;
 
-        return api.update(endpoint, orig, extDiff)
+        return api.update(endpoint, orig, extDiff, {publishing_warnings_confirmed: publishingWarningsConfirmed})
             .then(
                 (result) => lock.unlock(result).catch(() => result), // ignore unlock err
                 (reason) => {
-                    if (notifyErrors && reason != null && get(reason, 'data._issues')) {
+                    const issues = reason?.data?._issues;
+
+                    if (notifyErrors && issues) {
                         Object.values(reason.data._issues).forEach((message) => {
                             if (message != null) {
                                 notify.error(message);
                             }
                         });
+                    } else if (issues?.['validator exception'] && issues?.fields == null) {
+                        const errorObj = JSON.parse(issues?.['validator exception']);
+
+                        if (errorObj.warnings) {
+                            return modal.confirm({
+                                bodyText: errorObj.warnings.toString(),
+                            }).then((ok) => ok ? self.publish(orig, diff, action, true) : false);
+                        }
+                    }
+
+                    if (issues == null) {
+                        notify.error(gettext('Unknown Error: Item not published.'));
                     }
 
                     return $q.reject(reason);
