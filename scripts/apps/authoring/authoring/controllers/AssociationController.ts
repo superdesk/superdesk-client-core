@@ -7,7 +7,7 @@ import {mediaIdGenerator} from '../services/MediaIdGeneratorService';
 
 export function getAssociationsByField(item: IArticle, field: IVocabulary) {
     return Object.keys(item.associations || {})
-        .filter((key) => key.startsWith(field._id) && item.associations[key] != null)
+        .filter((key) => key.startsWith(field?._id) && item.associations[key] != null)
         .map((key) => item.associations[key]);
 }
 
@@ -108,7 +108,7 @@ export function AssociationController(content, superdesk, renditions, notify) {
             && scope.field?.field_type === 'media' // scope.field is not available from sdItemAssociation
         ) {
             const mediaItemsForCurrentField = getAssociationsByField(scope.item, scope.field);
-            const allowedItemsCount = scope.field.field_options.multiple_items.enabled
+            const allowedItemsCount = scope.field.field_options.multiple_items?.enabled
                 ? scope.field.field_options.multiple_items.max_items
                 : 1;
 
