@@ -16,7 +16,7 @@ function fetchPage<T extends IBaseRestApiResponse>(items: Array<T>, url: string,
         .then((resJson: IRestApiResponse<T>) => {
             const currentItems = items.concat(resJson._items);
 
-            if (get(resJson, '_links.next.href') != null) {
+            if (get(resJson, '_links.next.href') == null) {
                 return Promise.resolve(currentItems);
             } else {
                 return fetchPage(currentItems, resJson._links.next.href, authenticationToken);
