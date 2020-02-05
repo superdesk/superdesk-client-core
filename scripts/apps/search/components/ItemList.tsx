@@ -69,18 +69,19 @@ export class ItemList extends React.Component<any, IState> {
         this.unbindActionKeyShortcuts = this.unbindActionKeyShortcuts.bind(this);
     }
 
-    multiSelect(items: Array<IArticle>, selected) {
+    multiSelect(items: Array<IArticle>, selected: boolean) {
         const {search, multi} = this.props.svc;
         const {scope} = this.props;
+        let {selected: selectedId} = this.state;
 
         const itemsById = angular.extend({}, this.state.itemsById);
-
-        let selectedId = null;
 
         items.forEach((item) => {
             const itemId = search.generateTrackByIdentifier(item);
 
-            selectedId = itemId;
+            if (selected) {
+                selectedId = itemId;
+            }
             itemsById[itemId] = angular.extend({}, item, {selected: selected});
             scope.$applyAsync(() => {
                 multi.toggle(itemsById[itemId]);
