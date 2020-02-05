@@ -7,12 +7,12 @@ SendItem.$inject = ['$q', 'api', 'search', 'desks', 'notify', 'authoringWorkspac
     'superdeskFlags', '$location', 'macros', '$rootScope', 'deployConfig',
     'authoring', 'send', 'editorResolver', 'confirm', 'archiveService',
     'preferencesService', 'multi', 'datetimeHelper', 'config', 'privileges',
-    'storage', 'modal', 'urls', 'extensionPoints', 'metadata'];
+    'storage', 'modal', 'urls', 'extensionPoints', 'metadata', 'functionPoints'];
 export function SendItem($q, api, search, desks, notify, authoringWorkspace,
     superdeskFlags, $location, macros, $rootScope, deployConfig,
     authoring, send, editorResolver, confirm, archiveService,
     preferencesService, multi, datetimeHelper, config, privileges,
-    storage, modal, urls, extensionPoints, metadata) {
+    storage, modal, urls, extensionPoints, metadata, functionPoints) {
     return {
         scope: {
             item: '=',
@@ -191,9 +191,16 @@ export function SendItem($q, api, search, desks, notify, authoringWorkspace,
             };
 
             scope.send = function(open, sendAllPackageItems) {
-                updateLastDestination();
-                return runSend(open, sendAllPackageItems);
+                return functionPoints.run('authoring:send', {
+                    toDesk: scope.selectedDesk,
+                    items: scope.config.itemIds,
+                })
+                    .then(() => {
+                        updateLastDestination();
+                        return runSend(open, sendAllPackageItems);
+                    });
             };
+
             scope.isSendToNextStage = false;
             scope.$on('item:nextStage', (_e, data) => {
                 if (!scope.item) {
