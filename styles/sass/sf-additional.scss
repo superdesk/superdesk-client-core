@@ -537,13 +537,13 @@
         min-height: 3.2rem;
         border: none;
         border-radius: 2px;
-        background-color: rgba(0, 0, 0, 0.05);
+        background-color: rgba(0, 0, 0, 0.05) !important;
         border-bottom: 1px solid rgba(0, 0, 0, 0.15);
         font-size: 1.3rem;
         color: inherit;
         &:hover {
             border-bottom-color: rgba(0, 0, 0, 0.3);
-            background-color: rgba(0, 0, 0, 0.1);
+            background-color: rgba(0, 0, 0, 0.1)  !important;
         }
         &:focus {
             box-shadow: 0 1px 0 0 $sd-blue;
@@ -564,16 +564,17 @@
 .datepicker-input--dark, .timepicker-input--dark {
     input {
         transition: border linear 0.2s, box-shadow linear 0.2s, background-color linear 0.2s;
-        background-color: rgba(255, 255, 255, 0.05);
+        background-color: rgba(255, 255, 255, 0.05) !important;
         border: none;
         border-bottom: 1px solid rgba(255, 255, 255, 0.2);
         font-size: 1.3rem;
         line-height: 1.8rem;
         color: inherit;
         min-height: 32px;
+        padding-left: $sd-base-increment * 1.5 !important;
         &:hover {
             border-bottom-color: rgba(255, 255, 255, 0.4);
-            background-color: rgba(255, 255, 255, 0.1);
+            background-color: rgba(255, 255, 255, 0.1) !important;
         }
         &:focus {
             box-shadow: 0 1px 0 0 $sd-blue;
