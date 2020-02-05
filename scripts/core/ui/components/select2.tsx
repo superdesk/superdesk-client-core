@@ -134,14 +134,29 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                 <Autocomplete.default
                     open={this.state.isOpen}
                     onMenuVisibilityChange={(isOpen) => {
-                        // wait for wrapper ref
-                        setTimeout(() => {
-                            const remainingAtTheBottom =
-                                window.innerHeight - this.wrapper.getBoundingClientRect().bottom - 20;
-                            const oneThirdViewportHeigh = window.innerHeight / 3;
+                        // setTimeout is required for the following reasons:
+                        // 1. to wait for the wrapper to be set
+                        // 2. for event listeners to respond when buttons are clicked outside of a focused select
 
-                            this.setState({isOpen, maxHeight: Math.min(remainingAtTheBottom, oneThirdViewportHeigh)});
-                        });
+                        const timeout = 200; // smaller values don't work for point 2 above
+
+                        setTimeout(() => {
+                            if (this.wrapper != null) {
+                                // if there's no spacing, it looks glued to the bottom
+                                // and it's not clear that the dropdown is scrolled independently
+                                // from the rest of the page
+                                const spacing = 20;
+
+                                const remainingAtTheBottom =
+                                    window.innerHeight - this.wrapper.getBoundingClientRect().bottom - spacing;
+                                const oneThirdViewportHeigh = window.innerHeight / 3;
+
+                                this.setState({
+                                    isOpen,
+                                    maxHeight: Math.min(remainingAtTheBottom, oneThirdViewportHeigh),
+                                });
+                            }
+                        }, timeout);
                     }}
                     value={this.props.value}
                     items={Object.values(this.props.items)}

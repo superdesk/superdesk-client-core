@@ -14,6 +14,7 @@ import {copyJson} from 'core/helpers/utils';
 import {appConfig, extensions} from 'appConfig';
 import {onPublishMiddlewareResult, IExtensionActivationResult} from 'superdesk-api';
 import {mediaIdGenerator} from '../services/MediaIdGeneratorService';
+import {addInternalEventListener} from 'core/internal-events';
 
 /**
  * @ngdoc directive
@@ -494,7 +495,6 @@ export function AuthoringDirective(
                                         $scope.item = copyJson($scope.origItem);
                                     });
                                 }
-
                                 return $q.reject(false);
                             }
 
@@ -513,8 +513,6 @@ export function AuthoringDirective(
                             );
                             return $q.reject(false);
                         }
-
-                        notify.error(gettext('Unknown Error: Item not published.'));
                         return $q.reject(false);
                     });
             }
@@ -629,19 +627,7 @@ export function AuthoringDirective(
                     return Promise.reject();
                 }
 
-                // Check if there are unpublished related items without media-gallery
-                return relationsService.getRelatedItemsWithoutMediaGallery($scope.item, $scope.fields)
-                    .then((related) => {
-                        if (related.length > 0) {
-                            return modal.confirm({
-                                bodyText: gettext(
-                                    'There are unpublished related items that won\'t be sent out as related items.'
-                                    + ' Do you want to publish the article anyway?',
-                                ),
-                            }).then((ok) => ok ? performPublish() : false);
-                        }
-                        return performPublish();
-                    });
+                return performPublish();
             };
 
             function performPublish() {
@@ -1079,7 +1065,19 @@ export function AuthoringDirective(
                 }
             });
 
-            $scope.$on('$destroy', deregisterTansa);
+            const removeListener = addInternalEventListener(
+                'dangerouslyOverwriteAuthoringData',
+                (partialItem) => {
+                    angular.extend($scope.item, partialItem.detail);
+                    angular.extend($scope.origItem, partialItem.detail);
+                    $scope.$apply();
+                },
+            );
+
+            $scope.$on('$destroy', () => {
+                deregisterTansa();
+                removeListener();
+            });
 
             var initEmbedFieldsValidation = () => {
                 $scope.isValidEmbed = {};

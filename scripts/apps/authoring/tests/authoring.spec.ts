@@ -513,7 +513,8 @@ describe('authoring', () => {
 
             spyOn(api, 'update').and.returnValue($q.when());
             authoring.publish(item);
-            expect(api.update).toHaveBeenCalledWith('archive_publish', item, {});
+            expect(api.update).toHaveBeenCalledWith('archive_publish', item, {},
+                {publishing_warnings_confirmed: false});
         }));
 
         it('confirms if an item is dirty and saves and publish',
@@ -538,7 +539,8 @@ describe('authoring', () => {
                 authoring.publish(edit);
                 $rootScope.$digest();
 
-                expect(api.update).toHaveBeenCalledWith('archive_publish', edit, {});
+                expect(api.update).toHaveBeenCalledWith('archive_publish', edit, {},
+                    {publishing_warnings_confirmed: false});
                 expect(lock.unlock).toHaveBeenCalled();
             }));
 

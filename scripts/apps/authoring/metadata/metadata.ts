@@ -863,6 +863,14 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                         });
                     }
 
+                    // make sure we run scope.change even if popup stays opened
+                    $timeout(() => {
+                        scope.$applyAsync(() => {
+                            scope.postprocessing();
+                            scope.change({item: scope.item, field: scope.field});
+                        });
+                    }, 50, false);
+
                     if ($event && ($event.ctrlKey || $event.metaKey || appConfig.features.keepMetaTermsOpenedOnClick)) {
                         $event.stopPropagation();
                         return;
@@ -878,13 +886,6 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                         scope.terms = _.without(scope.terms, term);
                         scope.activeTree = scope.terms;
                     }
-
-                    $timeout(() => {
-                        scope.$applyAsync(() => {
-                            scope.postprocessing();
-                            scope.change({item: scope.item, field: scope.field});
-                        });
-                    }, 50, false);
 
                     // retain focus and initialise activeTree on same dropdown control after selection.
                     _.defer(() => {
