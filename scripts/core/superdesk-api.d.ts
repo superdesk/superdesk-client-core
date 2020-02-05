@@ -803,7 +803,7 @@ declare module 'superdesk-api' {
     }
 
     interface IPropsBadge extends ISpacingProps {
-        type: 'primary' | 'success' | 'warning' | 'alert' | 'highlight' | 'light';
+        type: 'default' | 'primary' | 'success' | 'warning' | 'alert' | 'highlight' | 'light';
         square?: boolean;
     }
 
@@ -972,7 +972,7 @@ declare module 'superdesk-api' {
             ArticleItemConcise: React.ComponentType<{article: IArticle}>;
             GroupLabel: React.ComponentType<ISpacingProps>;
             Icon: React.ComponentType<IPropsIcon>;
-            TopMenuDropdownButton: React.ComponentType<{onClick: () => void; active: boolean; pulsate?: boolean; 'data-test-id'?: string;}>;
+            TopMenuDropdownButton: React.ComponentType<{onClick: () => void; disabled?: boolean; active: boolean; pulsate?: boolean; 'data-test-id'?: string;}>;
             getDropdownTree: <T>() => React.ComponentType<IPropsDropdownTree<T>>;
             Spacer: React.ComponentType<IPropsSpacer>;
         };
