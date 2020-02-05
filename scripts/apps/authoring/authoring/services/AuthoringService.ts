@@ -10,6 +10,7 @@ import {ITEM_STATE, CANCELED_STATES, READONLY_STATES} from 'apps/archive/constan
 import {AuthoringWorkspaceService} from './AuthoringWorkspaceService';
 import {appConfig, extensions} from 'appConfig';
 import {IPublishedArticle, IArticle, IExtensionActivationResult} from 'superdesk-api';
+import {getPublishWarningConfirmModal} from '../components/publish-warning-confirm-modal';
 
 interface IPublishOptions {
     notifyErrors: boolean;
@@ -290,12 +291,21 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
                             }
                         });
                     } else if (issues?.['validator exception'] && issues?.fields == null) {
-                        const errorObj = JSON.parse(issues?.['validator exception']);
+                        let errorObj: {[key: string]: Array<string>} = {};
+
+                        try {
+                            errorObj = JSON.parse(issues?.['validator exception']);
+                        } catch (e) {
+                            logger.error(e);
+                            return $q.reject(reason);
+                        }
+
+                        const publishingAction = () => {
+                            return self.publish(orig, diff, action, true);
+                        };
 
                         if (errorObj.warnings) {
-                            return modal.confirm({
-                                bodyText: errorObj.warnings.toString(),
-                            }).then((ok) => ok ? self.publish(orig, diff, action, true) : false);
+                            return getPublishWarningConfirmModal(errorObj.warnings, publishingAction);
                         }
                     }
 
