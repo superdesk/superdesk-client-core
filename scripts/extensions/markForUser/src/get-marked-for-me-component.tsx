@@ -123,7 +123,7 @@ export function getMarkedForMeComponent(superdesk: ISuperdesk) {
                                 }
                             }}
                             active={isOpen}
-                            pulsate={true}
+                            pulsate={articles._items.length > 0}
                             data-test-id="toggle-button"
                         >
                             <Badge type="highlight" marginRight={8}>{articles._items.length}</Badge>
