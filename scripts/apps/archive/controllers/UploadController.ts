@@ -30,26 +30,24 @@ function getExifData(file: File): Promise<IPTCMetadata> {
 }
 
 function mapIPTCExtensions(metadata: IPTCMetadata, user: IUser): Promise<Partial<IArticle>> {
-    if (metadata == null) {
-        return Promise.resolve({
-            byline: user.byline,
-        });
-    }
+    const meta: Partial<IPTCMetadata> = Object.assign({
+        'By-line': user.byline,
+    }, pickBy(metadata));
 
     const item = {
-        byline: metadata['By-line'] || user.byline,
-        headline: metadata.Headline,
-        description_text: metadata['Caption-Abstract'],
-        copyrightnotice: metadata.CopyrightNotice,
-        language: metadata.LanguageIdentifier,
-        creditline: metadata.Credit,
+        byline: meta['By-line'] || user.byline,
+        headline: meta.Headline,
+        description_text: meta['Caption-Abstract'],
+        copyrightnotice: meta.CopyrightNotice,
+        language: meta.LanguageIdentifier,
+        creditline: meta.Credit,
     };
 
     return Object.values(extensions).filter(({activationResult}) =>
-        activationResult.contributions && activationResult.contributions.iptcMapping,
+        activationResult.contributions?.iptcMapping,
     ).reduce(
         (accumulator, {activationResult}) =>
-            accumulator.then((_item) => activationResult.contributions.iptcMapping(metadata, _item)),
+            accumulator.then((_item) => activationResult.contributions.iptcMapping(meta, _item)),
         Promise.resolve(item),
     ).then((_item: Partial<IArticle>) => pickBy(_item));
 }
