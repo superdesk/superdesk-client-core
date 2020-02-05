@@ -14,6 +14,7 @@ import {copyJson} from 'core/helpers/utils';
 import {appConfig, extensions} from 'appConfig';
 import {onPublishMiddlewareResult, IExtensionActivationResult} from 'superdesk-api';
 import {mediaIdGenerator} from '../services/MediaIdGeneratorService';
+import {addInternalEventListener} from 'core/internal-events';
 
 /**
  * @ngdoc directive
@@ -1064,7 +1065,19 @@ export function AuthoringDirective(
                 }
             });
 
-            $scope.$on('$destroy', deregisterTansa);
+            const removeListener = addInternalEventListener(
+                'dangerouslyOverwriteAuthoringData',
+                (partialItem) => {
+                    angular.extend($scope.item, partialItem.detail);
+                    angular.extend($scope.origItem, partialItem.detail);
+                    $scope.$apply();
+                },
+            );
+
+            $scope.$on('$destroy', () => {
+                deregisterTansa();
+                removeListener();
+            });
 
             var initEmbedFieldsValidation = () => {
                 $scope.isValidEmbed = {};
