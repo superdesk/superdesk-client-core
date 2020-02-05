@@ -238,11 +238,20 @@ export function SendItem($q,
                     Object.values(extensions),
                     (extension) => extension.activationResult.contributions?.entities?.article?.onSend ?? [],
                 );
+                let itemIds: Array<string>;
+
+                if (scope.config && scope.config.itemIds) {
+                    itemIds = scope.config.itemIds;
+                } else if (scope.item && scope.item._id) {
+                    itemIds = [scope.item._id]
+                } else {
+                    itemIds = [];
+                }
 
                 return middlewares.reduce(
                     (current, next) => {
                         return current.then(() => {
-                            return next(scope.selectedDesk, scope.config.itemIds);
+                            return next(scope.selectedDesk, itemIds);
                         });
                     },
                     Promise.resolve(),
