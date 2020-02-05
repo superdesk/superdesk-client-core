@@ -191,9 +191,19 @@ export function SendItem($q, api, search, desks, notify, authoringWorkspace,
             };
 
             scope.send = function(open, sendAllPackageItems) {
+                let itemIds: Array<string>;
+
+                if (scope.config && scope.config.itemIds) {
+                    itemIds = scope.config.itemIds;
+                } else if (scope.item && scope.item._id) {
+                    itemIds = [scope.item._id]
+                } else {
+                    itemIds = [];
+                }
+
                 return functionPoints.run('authoring:send', {
                     toDesk: scope.selectedDesk,
-                    items: scope.config.itemIds,
+                    items: itemIds,
                 })
                     .then(() => {
                         updateLastDestination();
