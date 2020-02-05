@@ -1,5 +1,6 @@
 import {ISuperdesk, IArticle} from 'superdesk-api';
 import {getMarkForUserModal} from './get-mark-for-user-modal';
+import {updateMarkedUser} from './common';
 
 export function manageMarkedUserForSingleArticle(superdesk: ISuperdesk, article: IArticle, sendToNextStage = false) {
     const getTask = () => {
@@ -30,13 +31,7 @@ export function manageMarkedUserForSingleArticle(superdesk: ISuperdesk, article:
         superdesk,
         (selectedUserId) => {
             getTask().then((task) => {
-                superdesk.entities.article.patch(
-                    article,
-                    {
-                        marked_for_user: selectedUserId,
-                        task,
-                    },
-                );
+                updateMarkedUser(superdesk, article, {marked_for_user: selectedUserId, task});
             });
         },
         superdesk.entities.article.isLocked(article) && article._id !== superdesk.state.articleInEditMode,

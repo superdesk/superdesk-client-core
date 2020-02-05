@@ -70,7 +70,7 @@ declare module 'superdesk-api' {
                 article?: {
                     getActions?(article: IArticle): Promise<Array<IArticleAction>>;
                     getActionsBulk?(articles: Array<IArticle>): Promise<Array<IArticleActionBulk>>;
-                    onPatchBefore?(id: IArticle['_id'], patch: Partial<IArticle>): Promise<Partial<IArticle>>; // can alter patch(immutably), can cancel patching
+                    onPatchBefore?(id: IArticle['_id'], patch: Partial<IArticle>, dangerousOptions?: IDangerousArticlePatchingOptions,): Promise<Partial<IArticle>>; // can alter patch(immutably), can cancel patching
                     onSpike?(item: IArticle): Promise<onSpikeMiddlewareResult>;
                     onSpikeMultiple?(items: Array<IArticle>): Promise<onSpikeMiddlewareResult>;
                     onPublish?(item: IArticle): Promise<onPublishMiddlewareResult>;
@@ -373,6 +373,13 @@ declare module 'superdesk-api' {
             externalsource: boolean;
         };
         _locked?: boolean;
+    }
+
+    export interface IDangerousArticlePatchingOptions {
+        // when this option is set, an HTTP request will be sent and item patched immediately
+        // otherwise, the patch will get applied to authoring view
+        // and will get saved together with the rest of the article changes by the user
+        patchDirectlyAndOverwriteAuthoringValues?: boolean;
     }
 
     export interface IPublishedArticle extends IArticle {
@@ -922,7 +929,11 @@ declare module 'superdesk-api' {
                 isLockedByCurrentUser(article: IArticle): boolean;
 
                 isPersonal(article: IArticle): boolean;
-                patch(article: IArticle, patch: Partial<IArticle>): void;
+                patch(
+                    article: IArticle,
+                    patch: Partial<IArticle>,
+                    dangerousOptions?: IDangerousArticlePatchingOptions,
+                ): void;
 
                 isArchived(article: IArticle): boolean;
                 isPublished(article: IArticle): boolean;
