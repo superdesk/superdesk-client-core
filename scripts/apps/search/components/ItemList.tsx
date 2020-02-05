@@ -69,22 +69,25 @@ export class ItemList extends React.Component<any, IState> {
         this.unbindActionKeyShortcuts = this.unbindActionKeyShortcuts.bind(this);
     }
 
-    multiSelect(items, selected) {
+    multiSelect(items: Array<IArticle>, selected) {
         const {search, multi} = this.props.svc;
         const {scope} = this.props;
 
         const itemsById = angular.extend({}, this.state.itemsById);
 
+        let selectedId = null;
+
         items.forEach((item) => {
             const itemId = search.generateTrackByIdentifier(item);
 
+            selectedId = itemId;
             itemsById[itemId] = angular.extend({}, item, {selected: selected});
             scope.$applyAsync(() => {
                 multi.toggle(itemsById[itemId]);
             });
         });
 
-        this.setState({itemsById: itemsById});
+        this.setState({itemsById, selected: selectedId});
     }
 
     // Method to check the selectBox of the selected item
