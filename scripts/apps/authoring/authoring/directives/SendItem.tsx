@@ -4,8 +4,8 @@ import {PreviewModal} from '../previewModal';
 import {gettext} from 'core/utils';
 import {isPublished} from 'apps/archive/utils';
 import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
-import {appConfig} from 'appConfig';
-import {applyDefault} from 'core/helpers/typescript-helpers';
+import {appConfig, extensions} from 'appConfig';
+import {IExtensionActivationResult} from 'superdesk-api';
 
 SendItem.$inject = [
     '$q',
@@ -232,8 +232,25 @@ export function SendItem($q,
             };
 
             scope.send = function(open, sendAllPackageItems) {
-                updateLastDestination();
-                return runSend(open, sendAllPackageItems);
+                const middlewares
+                    : Array<IExtensionActivationResult['contributions']['entities']['article']['onSend']>
+                = _.flatMap(
+                    Object.values(extensions),
+                    (extension) => extension.activationResult.contributions?.entities?.article?.onSend ?? [],
+                );
+
+                return middlewares.reduce(
+                    (current, next) => {
+                        return current.then(() => {
+                            return next(scope.selectedDesk, scope.config.itemIds);
+                        });
+                    },
+                    Promise.resolve(),
+                )
+                    .then(() => {
+                        updateLastDestination();
+                        return runSend(open, sendAllPackageItems);
+                    });
             };
             scope.isSendToNextStage = false;
             scope.$on('item:nextStage', (_e, data) => {
