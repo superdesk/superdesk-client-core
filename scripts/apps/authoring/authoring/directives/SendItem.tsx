@@ -233,7 +233,7 @@ export function SendItem($q,
 
             scope.send = function(open, sendAllPackageItems) {
                 const middlewares
-                    : Array<IExtensionActivationResult['contributions']['entities']['article']['onSend']>
+                    : Array<IExtensionActivationResult['contributions']['entities']['article']['onSendBefore']>
                 = _.flatMap(
                     Object.values(extensions),
                     (extension) => extension.activationResult.contributions?.entities?.article?.onSend ?? [],
@@ -251,7 +251,7 @@ export function SendItem($q,
                 return middlewares.reduce(
                     (current, next) => {
                         return current.then(() => {
-                            return next(scope.selectedDesk, itemIds);
+                            return next(itemIds, scope.selectedDesk);
                         });
                     },
                     Promise.resolve(),
