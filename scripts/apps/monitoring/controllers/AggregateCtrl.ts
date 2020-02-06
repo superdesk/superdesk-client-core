@@ -348,19 +348,11 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
         return this.activeFilters.fileType.includes(fileType);
     };
 
-    /**
-     * Return selected file types if the 'fileType' filter(s) is selected
-     * @return [{string}] fileType
-     */
-    this.getSelectedFileTypes = function() {
+    this.getSelectedFileTypes = function(): string {
         return this.activeFilters.fileType.length === 0 ? null : JSON.stringify(this.activeFilters.fileType);
     };
 
-    /**
-     * Return selected content profiles if the 'content profile' filter(s) is selected
-     * @return [{string}] contentProfile
-     */
-    this.getSelectedContentProfiles = function() {
+    this.getSelectedContentProfiles = function(): string {
         return this.activeFilters.contentProfile.length === 0 ? null
             : JSON.stringify(this.activeFilters.contentProfile);
     };
