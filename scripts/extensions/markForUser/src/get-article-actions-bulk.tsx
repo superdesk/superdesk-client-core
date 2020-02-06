@@ -4,7 +4,7 @@ import {getMarkForUserModal} from './get-mark-for-user-modal';
 
 export function getActionsBulkInitialize(superdesk: ISuperdesk) {
     const {gettext} = superdesk.localization;
-    const {isPersonal, isLocked} = superdesk.entities.article;
+    const {isPersonal, isLocked, hasMarkForUserPrivilege} = superdesk.entities.article;
 
     return function getActionsBulk(articles: Array<IArticle>) {
         // it doesn't make sense to display the action since it wouldn't get updated in the list anyway
@@ -14,7 +14,7 @@ export function getActionsBulkInitialize(superdesk: ISuperdesk) {
 
         const someItemsSpiked = articles.some(({state}) => state === 'spiked');
 
-        if (articles.some(isPersonal) || someItemsLocked || someItemsSpiked) {
+        if (articles.some(isPersonal) || someItemsLocked || someItemsSpiked || !hasMarkForUserPrivilege()) {
             return Promise.resolve([]);
         }
 

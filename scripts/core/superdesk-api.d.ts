@@ -920,7 +920,7 @@ declare module 'superdesk-api' {
                 isLocked(article: IArticle): boolean;
 
                 isLockedByCurrentUser(article: IArticle): boolean;
-
+                hasMarkForUserPrivilege() : boolean;
                 isPersonal(article: IArticle): boolean;
                 patch(article: IArticle, patch: Partial<IArticle>): void;
 
