@@ -7,6 +7,7 @@ AggregateCtrl.$inject = ['$scope', 'desks', 'workspaces', 'preferencesService', 
     'savedSearch', 'content'];
 export function AggregateCtrl($scope, desks, workspaces, preferencesService, storage,
     savedSearch, content) {
+    const CONTENT_PROLFILE = gettext('Content profile');
     var PREFERENCES_KEY = 'agg:view';
     var defaultMaxItems = 10;
     var self = this;
@@ -347,12 +348,13 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
         return this.activeFilters.fileType.includes(fileType);
     };
 
-    /**
-     * Return selected file types if the 'fileType' filter(s) is selected
-     * @return [{string}] fileType
-     */
-    this.getSelectedFileTypes = function() {
+    this.getSelectedFileTypes = function(): string {
         return this.activeFilters.fileType.length === 0 ? null : JSON.stringify(this.activeFilters.fileType);
+    };
+
+    this.getSelectedContentProfiles = function(): string {
+        return this.activeFilters.contentProfile.length === 0 ? null
+            : JSON.stringify(this.activeFilters.contentProfile);
     };
 
     function updateFilteringCriteria() {
@@ -373,12 +375,11 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
             if (!this.activeFilters.contentProfile.includes(filterValue._id)) {
                 this.activeFilters.contentProfile.push(filterValue._id);
                 const tag = {'key': filterValue._id, 'label': gettext(filterValue.label)};
-                const type = gettext('Content profile');
 
-                if (Array.isArray(this.activeFilterTags[type])) {
-                    this.activeFilterTags[type].push(tag);
+                if (Array.isArray(this.activeFilterTags[CONTENT_PROLFILE])) {
+                    this.activeFilterTags[CONTENT_PROLFILE].push(tag);
                 } else {
-                    this.activeFilterTags[type] = [tag];
+                    this.activeFilterTags[CONTENT_PROLFILE] = [tag];
                 }
             }
         } else if (filterType === 'file') {
@@ -567,7 +568,7 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
 
             // initialize the activeFilterTags once the activeProfiles are available
             if (self.activeFilters.contentProfile.length > 0) {
-                self.activeFilterTags['Content profile'] = self.activeFilters.contentProfile.map((filter) => {
+                self.activeFilterTags[CONTENT_PROLFILE] = self.activeFilters.contentProfile.map((filter) => {
                     const profile = profiles.find((p) => p._id === filter);
 
                     return {key: profile._id, label: profile.label};

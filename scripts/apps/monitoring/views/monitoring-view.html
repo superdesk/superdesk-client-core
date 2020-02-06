@@ -255,7 +255,7 @@
                                 </div>
                             </div>
                             <div ng-if="type === 'personal'" class="list">
-                                <div sd-monitoring-group data-view="view" data-group="{'type': 'personal', 'query': query, 'fileType': aggregate.getSelectedFileTypes(), sent: personalShowSent}" view-type="'personal'">
+                                <div sd-monitoring-group data-view="view" data-group="{'type': 'personal', 'query': query, 'fileType': aggregate.getSelectedFileTypes(), sent: personalShowSent, contentProfile: aggregate.getSelectedContentProfiles()}" view-type="'personal'">
                                 </div>
                             </div>
                             <div ng-if="type === 'custom-monitoring-view'" class="list">
@@ -269,7 +269,7 @@
                             </div>
                             <div ng-if="type === 'highlights' && !monitoring.highlightsDeskChanged()" class="list">
                                 <div sd-monitoring-group class="single-group"
-                                        data-group="{'type': 'highlights', 'query': query, 'fileType': aggregate.getSelectedFileTypes()}"
+                                        data-group="{'type': 'highlights', 'query': query, 'fileType': aggregate.getSelectedFileTypes(), contentProfile: aggregate.getSelectedContentProfiles()}"
                                         data-view="view"
                                         data-view-type="'highlights'"></div>
                             </div>
