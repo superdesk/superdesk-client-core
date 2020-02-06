@@ -7,6 +7,8 @@ import {extensions} from 'appConfig';
 import {IPTCMetadata, IUser, IArticle} from 'superdesk-api';
 import {appConfig} from 'appConfig';
 
+const isNotEmptyString = (value: any) => value != null && value !== '';
+
 /* eslint-disable complexity */
 
 function getExifData(file: File): Promise<IPTCMetadata> {
@@ -32,7 +34,7 @@ function getExifData(file: File): Promise<IPTCMetadata> {
 function mapIPTCExtensions(metadata: IPTCMetadata, user: IUser): Promise<Partial<IArticle>> {
     const meta: Partial<IPTCMetadata> = Object.assign({
         'By-line': user.byline,
-    }, pickBy(metadata));
+    }, pickBy(metadata, isNotEmptyString));
 
     const item = {
         byline: meta['By-line'] || user.byline,
@@ -49,7 +51,7 @@ function mapIPTCExtensions(metadata: IPTCMetadata, user: IUser): Promise<Partial
         (accumulator, {activationResult}) =>
             accumulator.then((_item) => activationResult.contributions.iptcMapping(meta, _item)),
         Promise.resolve(item),
-    ).then((_item: Partial<IArticle>) => pickBy(_item));
+    ).then((_item: Partial<IArticle>) => pickBy(_item, isNotEmptyString));
 }
 
 function serializePromises(promiseCreators: Array<() => Promise<any>>): Promise<Array<any>> {
