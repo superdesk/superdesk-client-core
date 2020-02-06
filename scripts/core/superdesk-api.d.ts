@@ -77,7 +77,7 @@ declare module 'superdesk-api' {
                     onRewriteAfter?(item: IArticle): Promise<IArticle>;
                 };
             };
-            iptcMapping?(data: IPTCMetadata, item: Partial<IArticle>): Promise<Partial<IArticle>>;
+            iptcMapping?(data: Partial<IPTCMetadata>, item: Partial<IArticle>): Promise<Partial<IArticle>>;
             searchPanelWidgets?: Array<React.ComponentType<ISearchPanelWidgetProps>>;
             authoring?: {
                 onUpdate?(current: IArticle, next: IArticle): Promise<IArticle>;
@@ -1293,5 +1293,6 @@ declare module 'superdesk-api' {
         name: string;
         qcode: string;
         scheme?: string;
+        translations?: {};
     }
 }
