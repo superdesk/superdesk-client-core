@@ -76,10 +76,11 @@ export class ItemList extends React.Component<any, IState> {
 
         const itemsById = angular.extend({}, this.state.itemsById);
 
-        items.forEach((item) => {
+        items.forEach((item, i) => {
             const itemId = search.generateTrackByIdentifier(item);
 
-            if (selected) {
+            if (selected && i === items.length - 1) {
+                // Mark last item as selected
                 selectedId = itemId;
             }
             itemsById[itemId] = angular.extend({}, item, {selected: selected});
