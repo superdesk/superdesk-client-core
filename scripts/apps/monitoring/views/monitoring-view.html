@@ -204,7 +204,7 @@
                     <div class="search-tags" ng-if="aggregate.activeFilters.contentProfile.length > 0">
                         <ul class="search-tags__list">
                             <li ng-repeat="(type, keys) in aggregate.activeFilterTags">
-                                <span>{{ type | translate }}:</span>
+                                <span>{{ type }}:</span>
                                 <div ng-repeat="key in keys" class="tag-label tag-label--highlight2">
                                     <span>{{ key.label }}</span>
                                     <button data-test-id='remove-filter' class="tag-label__remove" ng-click="aggregate.removeFilter(key.key, type)">
