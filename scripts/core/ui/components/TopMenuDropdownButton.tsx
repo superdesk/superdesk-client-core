@@ -5,6 +5,7 @@ import classNames from 'classnames';
 
 export class TopMenuDropdownButton extends React.PureComponent<{
     onClick: () => void;
+    disabled?: boolean;
     active: boolean;
     pulsate: boolean;
     'data-test-id'?: string;
@@ -22,6 +23,7 @@ export class TopMenuDropdownButton extends React.PureComponent<{
                 onClick={onClick}
                 className={classes}
                 data-test-id={this.props['data-test-id']}
+                disabled={this.props.disabled}
             >
                 {this.props.children}
             </button>

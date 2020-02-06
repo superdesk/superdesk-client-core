@@ -1,5 +1,6 @@
 import {ISuperdesk, IArticle, IArticleAction} from 'superdesk-api';
 import {manageMarkedUserForSingleArticle} from './managed-marked-user';
+import {updateMarkedUser} from './common';
 
 export function getActionsInitialize(superdesk: ISuperdesk) {
     const {gettext} = superdesk.localization;
@@ -34,12 +35,7 @@ export function getActionsInitialize(superdesk: ISuperdesk) {
             icon: 'icon-assign',
             groupId: 'highlights',
             onTrigger: () => {
-                superdesk.entities.article.patch(
-                    articleNext,
-                    {
-                        marked_for_user: null,
-                    },
-                );
+                updateMarkedUser(superdesk, articleNext, {marked_for_user: null});
             },
         };
 

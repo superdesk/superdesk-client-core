@@ -46,7 +46,10 @@ export function AssociationController(content, superdesk, renditions, notify) {
      * @param {Array} files
      */
     this.uploadAndCropImages = function(scope, files) {
-        const maxUploadsRemaining = scope.maxUploads - getAssociationsByField(scope.item, scope.field).length;
+        // in case of feature media we dont have scope.field available as it is not a vocabulary.
+        const maxUploadsRemaining = scope.maxUploads != null && scope.field != null
+            ? scope.maxUploads - getAssociationsByField(scope.item, scope.field).length
+            : 1;
 
         let uploadData = {
             files: files,
@@ -108,7 +111,7 @@ export function AssociationController(content, superdesk, renditions, notify) {
             && scope.field?.field_type === 'media' // scope.field is not available from sdItemAssociation
         ) {
             const mediaItemsForCurrentField = getAssociationsByField(scope.item, scope.field);
-            const allowedItemsCount = scope.field.field_options.multiple_items.enabled
+            const allowedItemsCount = scope.field.field_options.multiple_items?.enabled
                 ? scope.field.field_options.multiple_items.max_items
                 : 1;
 

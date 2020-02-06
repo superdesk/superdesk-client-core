@@ -464,6 +464,10 @@ export function ItemList(
                     listComponent.unbindActionKeyShortcuts();
                     ReactDOM.unmountComponentAtNode(elem[0]);
                 });
+
+                scope.$on('item:actioning', (_e, data) => {
+                    listComponent.setActioning(data.item, data.actioning);
+                });
             });
         },
     };

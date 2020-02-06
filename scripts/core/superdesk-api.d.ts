@@ -70,14 +70,14 @@ declare module 'superdesk-api' {
                 article?: {
                     getActions?(article: IArticle): Promise<Array<IArticleAction>>;
                     getActionsBulk?(articles: Array<IArticle>): Promise<Array<IArticleActionBulk>>;
-                    onPatchBefore?(id: IArticle['_id'], patch: Partial<IArticle>): Promise<Partial<IArticle>>; // can alter patch(immutably), can cancel patching
+                    onPatchBefore?(id: IArticle['_id'], patch: Partial<IArticle>, dangerousOptions?: IDangerousArticlePatchingOptions,): Promise<Partial<IArticle>>; // can alter patch(immutably), can cancel patching
                     onSpike?(item: IArticle): Promise<onSpikeMiddlewareResult>;
                     onSpikeMultiple?(items: Array<IArticle>): Promise<onSpikeMiddlewareResult>;
                     onPublish?(item: IArticle): Promise<onPublishMiddlewareResult>;
                     onRewriteAfter?(item: IArticle): Promise<IArticle>;
                 };
             };
-            iptcMapping?(data: IPTCMetadata, item: Partial<IArticle>): Promise<Partial<IArticle>>;
+            iptcMapping?(data: Partial<IPTCMetadata>, item: Partial<IArticle>): Promise<Partial<IArticle>>;
             searchPanelWidgets?: Array<React.ComponentType<ISearchPanelWidgetProps>>;
             authoring?: {
                 onUpdate?(current: IArticle, next: IArticle): Promise<IArticle>;
@@ -373,6 +373,13 @@ declare module 'superdesk-api' {
             externalsource: boolean;
         };
         _locked?: boolean;
+    }
+
+    export interface IDangerousArticlePatchingOptions {
+        // when this option is set, an HTTP request will be sent and item patched immediately
+        // otherwise, the patch will get applied to authoring view
+        // and will get saved together with the rest of the article changes by the user
+        patchDirectlyAndOverwriteAuthoringValues?: boolean;
     }
 
     export interface IPublishedArticle extends IArticle {
@@ -803,7 +810,7 @@ declare module 'superdesk-api' {
     }
 
     interface IPropsBadge extends ISpacingProps {
-        type: 'primary' | 'success' | 'warning' | 'alert' | 'highlight' | 'light';
+        type: 'default' | 'primary' | 'success' | 'warning' | 'alert' | 'highlight' | 'light';
         square?: boolean;
     }
 
@@ -922,7 +929,11 @@ declare module 'superdesk-api' {
                 isLockedByCurrentUser(article: IArticle): boolean;
                 hasMarkForUserPrivilege() : boolean;
                 isPersonal(article: IArticle): boolean;
-                patch(article: IArticle, patch: Partial<IArticle>): void;
+                patch(
+                    article: IArticle,
+                    patch: Partial<IArticle>,
+                    dangerousOptions?: IDangerousArticlePatchingOptions,
+                ): void;
 
                 isArchived(article: IArticle): boolean;
                 isPublished(article: IArticle): boolean;
@@ -972,7 +983,7 @@ declare module 'superdesk-api' {
             ArticleItemConcise: React.ComponentType<{article: IArticle}>;
             GroupLabel: React.ComponentType<ISpacingProps>;
             Icon: React.ComponentType<IPropsIcon>;
-            TopMenuDropdownButton: React.ComponentType<{onClick: () => void; active: boolean; pulsate?: boolean; 'data-test-id'?: string;}>;
+            TopMenuDropdownButton: React.ComponentType<{onClick: () => void; disabled?: boolean; active: boolean; pulsate?: boolean; 'data-test-id'?: string;}>;
             getDropdownTree: <T>() => React.ComponentType<IPropsDropdownTree<T>>;
             Spacer: React.ComponentType<IPropsSpacer>;
         };
@@ -1094,6 +1105,7 @@ declare module 'superdesk-api' {
             elasticHighlight?: any;
             onlyEditor3?: any;
             nestedItemsInOutputStage?: boolean;
+            keepMetaTermsOpenedOnClick?: boolean;
             showCharacterLimit?: number;
         };
         auth: {
@@ -1281,5 +1293,6 @@ declare module 'superdesk-api' {
         name: string;
         qcode: string;
         scheme?: string;
+        translations?: {};
     }
 }

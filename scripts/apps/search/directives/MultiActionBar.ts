@@ -7,7 +7,7 @@ import {IArticle} from 'superdesk-api';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 
 MultiActionBar.$inject = [
-    'asset', 'multi', 'authoringWorkspace', 'superdesk', 'keyboardManager', 'desks', 'lock', 'api',
+    'asset', 'multi', 'authoringWorkspace', 'superdesk', 'keyboardManager', 'desks', 'api',
 ];
 export function MultiActionBar(
     asset,
@@ -16,7 +16,6 @@ export function MultiActionBar(
     superdesk,
     keyboardManager,
     desks,
-    lock,
     api,
 ) {
     return {
@@ -75,6 +74,24 @@ export function MultiActionBar(
                             canAutocloseMultiActionBar: false,
                         });
                     }
+                } else if (scope.type === 'externalsource') {
+                    actions.push({
+                        label: gettext('Fetch'),
+                        icon: 'icon-archive',
+                        onTrigger: () => {
+                            scope.action.fetch();
+                            scope.$apply();
+                        },
+                        canAutocloseMultiActionBar: false,
+                    }, {
+                        label: gettext('Fetch to'),
+                        icon: 'icon-fetch-as',
+                        onTrigger: () => {
+                            scope.action.fetch(true);
+                            scope.$apply();
+                        },
+                        canAutocloseMultiActionBar: false,
+                    });
                 } else if (scope.type === 'archive') {
                     if (scope.action.canEditMetadata() && scope.activity['edit.item']) {
                         actions.push({

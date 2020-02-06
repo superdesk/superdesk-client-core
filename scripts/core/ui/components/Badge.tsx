@@ -6,6 +6,8 @@ import {getSpacingProps} from 'core/helpers/utils';
 
 function getClassNameForBadgeStyle(type: IPropsBadge['type']) {
     switch (type) {
+    case 'default':
+        return null;
     case 'primary':
         return 'badge--primary';
     case 'success':
