@@ -100,6 +100,7 @@ export const GET_LABEL_MAP = () => ({
     copyrightnotice: gettext('Copyright notice'),
     attachments: gettext('Attachments'),
     publish_schedule: gettext('Scheduled Time'),
+    pubstatus: gettext('Pub Status'),
 });
 
 export const CV_ALIAS = Object.freeze({
