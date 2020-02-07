@@ -236,7 +236,7 @@ export function SendItem($q,
                     : Array<IExtensionActivationResult['contributions']['entities']['article']['onSendBefore']>
                 = _.flatMap(
                     Object.values(extensions),
-                    (extension) => extension.activationResult.contributions?.entities?.article?.onSend ?? [],
+                    (extension) => extension.activationResult.contributions?.entities?.article?.onSendBefore ?? [],
                 );
                 let itemIds: Array<string>;
 
