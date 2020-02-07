@@ -118,7 +118,6 @@ export function getSuperdeskApiImplementation(
                 isPersonal: (article) => article.task == null || article.task.desk == null,
                 isLocked: (article) => article['lock_session'] != null,
                 isLockedByCurrentUser: (article) => lock.isLockedInCurrentSession(article),
-                hasMarkForUserPrivilege: () => privileges.userHasPrivileges({mark_for_user: 1}),
                 patch: (article, patch, dangerousOptions) => {
                     const onPatchBeforeMiddlewares = Object.values(extensions)
                         .map((extension) => extension.activationResult?.contributions?.entities?.article?.onPatchBefore)
@@ -259,6 +258,7 @@ export function getSuperdeskApiImplementation(
         },
         privileges: {
             getOwnPrivileges: () => privileges.loaded.then(() => privileges.privileges),
+            hasPrivilege: (privilege: {[key: string]: number}) => privileges.userHasPrivileges(privilege),
         },
         session: {
             getToken: () => session.token,

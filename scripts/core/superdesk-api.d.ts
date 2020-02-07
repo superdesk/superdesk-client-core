@@ -927,7 +927,6 @@ declare module 'superdesk-api' {
                 isLocked(article: IArticle): boolean;
 
                 isLockedByCurrentUser(article: IArticle): boolean;
-                hasMarkForUserPrivilege() : boolean;
                 isPersonal(article: IArticle): boolean;
                 patch(
                     article: IArticle,
@@ -1009,6 +1008,7 @@ declare module 'superdesk-api' {
         };
         privileges: {
             getOwnPrivileges(): Promise<any>;
+            hasPrivilege(privilege: {[key: string]: number }): boolean;
         };
         session: {
             getToken(): string;

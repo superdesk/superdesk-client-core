@@ -4,7 +4,7 @@ import {ISuperdesk, IArticle} from 'superdesk-api';
 
 export function getDisplayMarkedUserComponent(superdesk: ISuperdesk) {
     const {UserAvatar} = superdesk.components;
-    const {hasMarkForUserPrivilege} = superdesk.entities.article;
+    const {hasPrivilege} = superdesk.privileges;
 
     return class DisplayMarkedUser extends React.PureComponent<{article: IArticle}> {
         render() {
@@ -15,7 +15,7 @@ export function getDisplayMarkedUserComponent(superdesk: ISuperdesk) {
                     <button
                         onClick={() => manageMarkedUserForSingleArticle(superdesk, this.props.article)}
                         style={{padding: 0}}
-                        disabled={!hasMarkForUserPrivilege()}
+                        disabled={!hasPrivilege({mark_for_user: 1})}
                         data-test-id="marked-for-user"
                     >
                         <UserAvatar userId={this.props.article.marked_for_user} />
