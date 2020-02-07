@@ -12,6 +12,7 @@ interface IProps<T> {
     disabled?: boolean;
     required?: boolean;
     loading?: boolean;
+    horizontalSpacing?: boolean;
     renderItem(item: T): JSX.Element;
     getItemValue(item: T): string;
     onSelect(value: string): void;
@@ -31,7 +32,8 @@ interface IState {
 
 const arrowDownStyles = {
     display: 'inline-block',
-    marginLeft: 10,
+    marginLeft: 8,
+    marginRight: 8,
     width: 0,
     height: 0,
     verticalAlign: 'middle',
@@ -128,9 +130,12 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
 
     render() {
         return (
-            <div ref={(el) => {
-                this.wrapper = el;
-            }}>
+            <div
+                ref={(el) => {
+                    this.wrapper = el;
+                }}
+                style={{width: '100%'}}
+            >
                 <Autocomplete.default
                     open={this.state.isOpen}
                     onMenuVisibilityChange={(isOpen) => {
@@ -238,17 +243,28 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                                         {
                                             this.props.value === undefined || selectedItem == null
                                                 ? (
-                                                    <div style={{marginLeft: -8}}>
+                                                    <div style={
+                                                        this.props.horizontalSpacing === true
+                                                            ? {}
+                                                            : {marginLeft: -8}
+                                                    }>
                                                         {this.props.placeholder}
                                                     </div>
                                                 )
                                                 : (
-                                                    <div style={{marginLeft: -8}}>
+                                                    <div style={
+                                                        this.props.horizontalSpacing === true
+                                                            ? {}
+                                                            : {marginLeft: -8}
+                                                    }>
                                                         {this.props.renderItem(selectedItem)}
                                                     </div>
                                                 )
                                         }
-                                        <div style={arrowDownStyles} />
+                                        <div style={{
+                                            ...arrowDownStyles,
+                                            ...(this.props.horizontalSpacing === true ? {} : {marginRight: 0}),
+                                        }} />
                                     </button>
                                 </div>
 

@@ -205,6 +205,7 @@ export default class UserActivityWidget extends React.Component<{}, IState> {
             metadata: ng.get('metadata'),
             search: ng.get('search'),
             superdesk: ng.get('superdesk'),
+            session: ng.get('session'),
         };
 
         this.state = {
@@ -216,10 +217,19 @@ export default class UserActivityWidget extends React.Component<{}, IState> {
         };
 
         this.refreshItems = this.refreshItems.bind(this);
+        this.setUser = this.setUser.bind(this);
     }
 
     componentDidMount() {
         this.addListeners();
+
+        if (this.state.user == null) {
+            this.setState({loading: true});
+
+            this.services.session.getIdentity().then((user) => {
+                this.setUser(user);
+            });
+        }
     }
 
     componentWillUnmount() {
@@ -360,6 +370,15 @@ export default class UserActivityWidget extends React.Component<{}, IState> {
         );
     }
 
+    setUser(user: IUser) {
+        this.setState(
+            {user, groups: GET_GROUPS(user._id, this.services), loading: true},
+            () => {
+                this.fetchGroupsData();
+            },
+        );
+    }
+
     render() {
         const {loading} = this.state;
 
@@ -391,13 +410,9 @@ export default class UserActivityWidget extends React.Component<{}, IState> {
                                 selectedUserId={this.state.user?._id}
                                 autoFocus={false}
                                 onSelect={(user) => {
-                                    this.setState(
-                                        {user, groups: GET_GROUPS(user._id, this.services), loading: true},
-                                        () => {
-                                            this.fetchGroupsData();
-                                        },
-                                    );
+                                    this.setUser(user);
                                 }}
+                                horizontalSpacing={true}
                             />
                         </form>
                     </div>
