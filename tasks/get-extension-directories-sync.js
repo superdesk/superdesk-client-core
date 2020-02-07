@@ -2,8 +2,6 @@
 
 var fs = require('fs');
 var path = require('path');
-var lstatSync = fs.lstatSync;
-
 var flatMap = require('lodash/flatMap');
 
 function getExtensionDirectoriesSync() {
@@ -16,7 +14,7 @@ function getExtensionDirectoriesSync() {
         return (fs.existsSync(absolutePath) ? fs.readdirSync(absolutePath) : [])
             .map((extensionName) => ({extensionName, relativePath, absolutePath}))
             .filter(
-                ({absolutePath, extensionName}) => lstatSync(absolutePath + '/' + extensionName).isDirectory()
+                ({absolutePath, extensionName}) => fs.existsSync(path.join(absolutePath, extensionName, 'package.json'))
             );
     });
 }
