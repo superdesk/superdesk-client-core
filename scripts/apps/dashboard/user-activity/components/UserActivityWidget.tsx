@@ -7,6 +7,7 @@ import {gettext} from 'core/utils';
 import {SelectUser} from 'core/ui/components/SelectUser';
 import {logger} from 'core/services/logger';
 import {extensions} from 'appConfig';
+import {Loader} from 'core/ui/components/Loader';
 
 type FetchFunction = (repo: string, criteria: any) => Promise<any>;
 
@@ -417,7 +418,7 @@ export default class UserActivityWidget extends React.Component<{}, IState> {
                         </form>
                     </div>
                     {
-                        loading ? <div className="item-group__loading" /> :
+                        loading ? <Loader /> :
                             this.state.user && this.state.groupsData && (
                                 <div className="content-list-holder">
                                     <div className="shadow-list-holder">
