@@ -5,6 +5,7 @@ import {updateMarkedUser} from './common';
 export function getActionsInitialize(superdesk: ISuperdesk) {
     const {gettext} = superdesk.localization;
     const {isPersonal, isLocked, isLockedByCurrentUser, isArchived, isPublished} = superdesk.entities.article;
+    const {hasPrivilege} = superdesk.privileges;
 
     return function getActions(articleNext: IArticle) {
         const locked = isLocked(articleNext);
@@ -12,7 +13,8 @@ export function getActionsInitialize(superdesk: ISuperdesk) {
         const lockedBySomeoneElse = locked && !lockedByCurrentUser;
 
         if (
-            isPersonal(articleNext)
+            !hasPrivilege('mark_for_user')
+            || isPersonal(articleNext)
             || lockedBySomeoneElse // marking for user is sometimes allowed for users holding the lock
             || articleNext.state === 'spiked'
         ) {
