@@ -50,7 +50,7 @@ export function getMarkForUserModal(options: {
         }
         render() {
             return (
-                <Modal data-test-id="mark-for-user-modal">
+                <Modal data-test-id="mark-for-user-modal" size="large">
                     <ModalHeader onClose={this.props.closeModal}>{gettext('Mark for user')}</ModalHeader>
                     <ModalBody>
                         {
