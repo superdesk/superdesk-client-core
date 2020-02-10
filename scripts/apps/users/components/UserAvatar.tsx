@@ -17,6 +17,7 @@ class DefaultAvatarDisplay extends React.PureComponent<{user: IUser}> {
                         'avatar--no-margin',
                         user.picture_url ? 'no-bg' : 'initials',
                     ].join(' ')}
+                    style={{float: 'none'}}
                 >
                     {
                         user.picture_url == null

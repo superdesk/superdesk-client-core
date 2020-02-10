@@ -8,21 +8,22 @@
             <h4 class="label">{{commentObj.fieldName}}</h4>
             <ul class="notification-list notification-list-fix white sd-margin-all--0 sd-margin-b--2">
                 <li ng-repeat="item in commentObj.comments" class="item">
-                    <figure class="avatar">
-                        <img sd-user-avatar data-user="users[item.data.authorId]">
-                    </figure>
-                    <div class="content">
-                        <div class="text" sd-comment-text data-name="{{users[item.data.authorId].display_name || users[item.data.authorId].username}}" data-text="{{item.data.msg}}"></div>
-                        <span class="date" sd-absdate datetime="item.data.date"></span>
+                    <div class="flex-row sibling-spacer-10">
+                        <sd-next-avatar data-user="users[item.data.authorId]"></sd-next-avatar>
+                        <div>
+                            <div class="text" sd-comment-text data-name="{{users[item.data.authorId].display_name || users[item.data.authorId].username}}" data-text="{{item.data.msg}}"></div>
+                            <span class="date" sd-absdate datetime="item.data.date"></span>
+                        </div>
                     </div>
+
                     <ul>
                         <li class="small" ng-repeat="reply in item.data.replies">
-                            <figure class="avatar">
-                                <img sd-user-avatar data-user="users[reply.authorId]">
-                            </figure>
-                            <div class="content">
-                                <div class="text" sd-comment-text data-comment="comment" data-name="{{users[reply.authorId].display_name || users[reply.authorId].username}}" data-text="{{reply.msg}}"></div>
-                                <span class="date" sd-absdate datetime="reply.date"></span>
+                            <div class="flex-row sibling-spacer-10">
+                                <sd-next-avatar data-user="users[reply.authorId]"></sd-next-avatar>
+                                <div>
+                                    <div class="text" sd-comment-text data-comment="comment" data-name="{{users[reply.authorId].display_name || users[reply.authorId].username}}" data-text="{{reply.msg}}"></div>
+                                    <span class="date" sd-absdate datetime="reply.date"></span>
+                                </div>
                             </div>
                         </li>
                     </ul>

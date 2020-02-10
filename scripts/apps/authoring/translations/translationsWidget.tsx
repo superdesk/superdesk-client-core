@@ -89,7 +89,7 @@ class TranslationsWidgetComponent extends React.Component<IProps, IState> {
                                                     </span>
                                                 )
                                                 : (
-                                                    <div className="flex-bar sibling-spacer-4">
+                                                    <div className="flex-row sibling-spacer-4">
                                                         <span>{gettext('Translated from')}</span>
                                                         <span className="label label--hollow">
                                                             {translationsLookup[translation.translated_from].language}
