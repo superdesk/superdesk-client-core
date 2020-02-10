@@ -16,7 +16,7 @@ export function getMarkForUserModal(options: {
     markForUser: (markedForUserId: string | null) => void,
     markForUserAndSend: (markedForUserId: string | null) => void,
     locked: boolean;
-    lockedBySomeoneElse: boolean,
+    lockedInOtherSession: boolean,
     markedForUserInitial?: string,
     message?: string,
 }): React.ComponentType<IProps> {
@@ -25,7 +25,7 @@ export function getMarkForUserModal(options: {
         markForUser,
         markForUserAndSend,
         locked,
-        lockedBySomeoneElse,
+        lockedInOtherSession,
         markedForUserInitial,
         message,
     } = options;
@@ -64,7 +64,7 @@ export function getMarkForUserModal(options: {
                         }
 
                         {
-                            lockedBySomeoneElse === true ? (
+                            lockedInOtherSession === true ? (
                                 <div
                                     className="sd-alert sd-alert--hollow sd-alert--primary sd-alert--small"
                                 >
@@ -74,7 +74,7 @@ export function getMarkForUserModal(options: {
                         }
 
                         <SelectUser
-                            disabled={lockedBySomeoneElse}
+                            disabled={lockedInOtherSession}
                             onSelect={(selectedUser) => this.setState({selectedUserId: selectedUser._id})}
                             selectedUserId={this.state.selectedUserId}
                             autoFocus={{initializeWithDropdownHidden: true}}
@@ -93,7 +93,7 @@ export function getMarkForUserModal(options: {
                             markedForUserInitial !== undefined ? (
                                 <button
                                     className="btn btn--warning"
-                                    disabled={lockedBySomeoneElse}
+                                    disabled={lockedInOtherSession}
                                     onClick={() => {
                                         this.props.closeModal();
                                         markForUser(null);
@@ -110,7 +110,7 @@ export function getMarkForUserModal(options: {
                             disabled={
                                 this.state.selectedUserId === undefined // no user selected
                                 || this.state.selectedUserId === markedForUserInitial // user hasn't changed
-                                || lockedBySomeoneElse
+                                || lockedInOtherSession
                             }
                             onClick={() => {
                                 this.props.closeModal();

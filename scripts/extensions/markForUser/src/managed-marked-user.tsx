@@ -3,7 +3,7 @@ import {getMarkForUserModal} from './get-mark-for-user-modal';
 import {updateMarkedUser, markForUserAndSendToNextStage} from './common';
 
 export function manageMarkedUserForSingleArticle(superdesk: ISuperdesk, article: IArticle) {
-    const {isLocked, isLockedBySomeoneElse} = superdesk.entities.article;
+    const {isLocked, isLockedInOtherSession} = superdesk.entities.article;
 
     superdesk.ui.showModal(getMarkForUserModal({
         superdesk: superdesk,
@@ -14,7 +14,7 @@ export function manageMarkedUserForSingleArticle(superdesk: ISuperdesk, article:
             markForUserAndSendToNextStage(superdesk, article, selectedUserId);
         },
         locked: isLocked(article),
-        lockedBySomeoneElse: isLockedBySomeoneElse(article),
+        lockedInOtherSession: isLockedInOtherSession(article),
         markedForUserInitial: article.marked_for_user === null ? undefined : article.marked_for_user,
     }));
 }

@@ -5,11 +5,11 @@ import {updateMarkedUser, markForUserAndSendToNextStage, canChangeMarkedUser} fr
 
 export function getActionsBulkInitialize(superdesk: ISuperdesk) {
     const {gettext} = superdesk.localization;
-    const {isLocked, isLockedBySomeoneElse} = superdesk.entities.article;
+    const {isLocked, isLockedInOtherSession} = superdesk.entities.article;
 
     return function getActionsBulk(articles: Array<IArticle>) {
         const someItemsLocked = articles.some(isLocked);
-        const someItemsLockedBySomeoneElse = articles.some(isLockedBySomeoneElse);
+        const someItemsLockedInOtherSession = articles.some(isLockedInOtherSession);
 
         if (articles.some((article) => !canChangeMarkedUser(superdesk, article))) {
             return Promise.resolve([]);
@@ -42,7 +42,7 @@ export function getActionsBulkInitialize(superdesk: ISuperdesk) {
                         });
                     },
                     locked: someItemsLocked,
-                    lockedBySomeoneElse: someItemsLockedBySomeoneElse,
+                    lockedInOtherSession: someItemsLockedInOtherSession,
                     markedForUserInitial: selectedUserIds[0] ?? undefined,
                     message: message,
                 }));

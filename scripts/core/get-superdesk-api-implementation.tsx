@@ -108,8 +108,8 @@ export function getSuperdeskApiImplementation(
     metadata,
 ): ISuperdesk {
     const isLocked = (article: IArticle) => article['lock_session'] != null;
-    const isLockedByCurrentUser = (article: IArticle) => lock.isLockedInCurrentSession(article);
-    const isLockedBySomeoneElse = (article: IArticle) => isLocked(article) && !isLockedByCurrentUser(article);
+    const isLockedInCurrentSession = (article: IArticle) => lock.isLockedInCurrentSession(article);
+    const isLockedInOtherSession = (article: IArticle) => isLocked(article) && !isLockedInCurrentSession(article);
 
     return {
         dataApi: dataApi,
@@ -121,8 +121,8 @@ export function getSuperdeskApiImplementation(
             article: {
                 isPersonal: (article) => article.task == null || article.task.desk == null,
                 isLocked: isLocked,
-                isLockedByCurrentUser,
-                isLockedBySomeoneElse: isLockedBySomeoneElse,
+                isLockedInCurrentSession,
+                isLockedInOtherSession,
                 patch: (article, patch, dangerousOptions) => {
                     const onPatchBeforeMiddlewares = Object.values(extensions)
                         .map((extension) => extension.activationResult?.contributions?.entities?.article?.onPatchBefore)
