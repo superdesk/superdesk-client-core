@@ -1273,15 +1273,33 @@
     }
 }
 
+
+.sd-mentions-item {
+    > div {
+        display: flex;
+        align-items: center;
+        padding: 4px;
+        min-height: 38px;
+    
+        * + * {
+            margin-left: 6px;
+        }
+    }
+
+    &.active {
+        > div {
+            background: lighten($sd-blue, 10%);
+            cursor: pointer;
+            color: #fff;
+        }
+    }
+}
+
 .users-list-embed {
     position:relative;
     > li {
-        height: 32px;
-        line-height: 32px;
         margin-right: -5px;
-        .avatar {
-            margin: 3px 10px 4px 4px;
-        }
+
         &:hover, &.active {
             cursor: pointer;
             color: #fff;

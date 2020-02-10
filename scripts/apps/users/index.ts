@@ -16,6 +16,8 @@ import * as directive from './directives';
 import * as config from './config';
 import {gettext} from 'core/utils';
 import {UserMentionDirective} from './directives/UserMentionDirective';
+import {reactToAngular1} from 'superdesk-ui-framework';
+import {UserAvatar} from './components/UserAvatar';
 
 /**
  * @ngdoc module
@@ -53,6 +55,10 @@ export default angular.module('superdesk.apps.users', [
     .directive('sdActivity', directive.ActivityDirective)
     .directive('sdUserMention', UserMentionDirective)
     .directive('sdUserInfo', directive.UserInfoDirective)
+    .component(
+        'sdNextAvatar',
+        reactToAngular1(UserAvatar, ['user', 'displayStatus']),
+    )
 
     .filter('username', () => (user) => user ?
         user.display_name || user.username : null)
