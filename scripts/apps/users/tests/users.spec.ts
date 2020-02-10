@@ -152,7 +152,7 @@ describe('mentio directive', () => {
 
     it('can return sorted users', inject(($rootScope, $compile) => {
         var scope = $rootScope.$new(true);
-        var elem = $compile('<div sd-user-mentio></div>')(scope);
+        var elem = $compile('<div sd-user-mention></div>')(scope);
 
         scope.$digest();
 
