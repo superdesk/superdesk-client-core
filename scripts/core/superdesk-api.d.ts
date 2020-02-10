@@ -1013,6 +1013,7 @@ declare module 'superdesk-api' {
         };
         privileges: {
             getOwnPrivileges(): Promise<any>;
+            hasPrivilege(privilege: string): boolean;
         };
         session: {
             getToken(): string;

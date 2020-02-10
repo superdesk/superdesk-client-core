@@ -2,9 +2,11 @@ import {ISuperdesk, IArticle, IUser} from 'superdesk-api';
 
 export function canChangeMarkedUser(superdesk: ISuperdesk, article: IArticle) {
     const {isPersonal, isLockedInOtherSession, isArchived, isPublished} = superdesk.entities.article;
+    const {hasPrivilege} = superdesk.privileges;
 
     if (
-        isPersonal(article)
+        !hasPrivilege('mark_for_user')
+        || isPersonal(article)
         || isArchived(article)
         || isPublished(article)
         || isLockedInOtherSession(article)
