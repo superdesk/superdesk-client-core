@@ -357,7 +357,13 @@ export default class UserActivityWidget extends React.Component<{}, IState> {
                                     item,
                                 );
                             }}
-                            select={angular.noop}
+                            select={(item: IArticle) => {
+                                this.services.superdesk.intent(
+                                    'preview',
+                                    'item',
+                                    item,
+                                );
+                            }}
                             edit={(item: IArticle) => {
                                 this.services.authoringWorkspace.edit(item);
                             }}
