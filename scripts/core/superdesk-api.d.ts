@@ -1008,7 +1008,7 @@ declare module 'superdesk-api' {
         };
         privileges: {
             getOwnPrivileges(): Promise<any>;
-            hasPrivilege(privilege: {[key: string]: number }): boolean;
+            hasPrivilege(privilege: string): boolean;
         };
         session: {
             getToken(): string;

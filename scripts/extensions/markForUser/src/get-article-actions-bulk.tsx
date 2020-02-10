@@ -15,7 +15,7 @@ export function getActionsBulkInitialize(superdesk: ISuperdesk) {
 
         const someItemsSpiked = articles.some(({state}) => state === 'spiked');
 
-        if (articles.some(isPersonal) || someItemsLocked || someItemsSpiked || !hasPrivilege({mark_for_user: 1})) {
+        if (!hasPrivilege('mark_for_user') || articles.some(isPersonal) || someItemsLocked || someItemsSpiked) {
             return Promise.resolve([]);
         }
 

@@ -258,7 +258,7 @@ export function getSuperdeskApiImplementation(
         },
         privileges: {
             getOwnPrivileges: () => privileges.loaded.then(() => privileges.privileges),
-            hasPrivilege: (privilege: {[key: string]: number}) => privileges.userHasPrivileges(privilege),
+            hasPrivilege: (privilege: string) => privileges.userHasPrivileges({[privilege]: 1}),
         },
         session: {
             getToken: () => session.token,

@@ -15,7 +15,7 @@ export function getDisplayMarkedUserComponent(superdesk: ISuperdesk) {
                     <button
                         onClick={() => manageMarkedUserForSingleArticle(superdesk, this.props.article)}
                         style={{padding: 0}}
-                        disabled={!hasPrivilege({mark_for_user: 1})}
+                        disabled={!hasPrivilege('mark_for_user')}
                         data-test-id="marked-for-user"
                     >
                         <UserAvatar userId={this.props.article.marked_for_user} />

@@ -13,8 +13,8 @@ export function getActionsInitialize(superdesk: ISuperdesk) {
         const lockedBySomeoneElse = locked && !lockedByCurrentUser;
 
         if (
-            isPersonal(articleNext)
-            || !hasPrivilege({mark_for_user: 1})
+            !hasPrivilege('mark_for_user')
+            || isPersonal(articleNext)
             || lockedBySomeoneElse // marking for user is sometimes allowed for users holding the lock
             || articleNext.state === 'spiked'
         ) {
