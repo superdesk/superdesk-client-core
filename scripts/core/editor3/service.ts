@@ -3,6 +3,7 @@ import {forEachMatch} from './helpers/find-replace';
 import {clearHighlights} from './helpers/find-replace';
 import {getTansaHtml} from './helpers/tansa';
 import {editor3StateToHtml} from './html/to-html/editor3StateToHtml';
+import {IArticle} from 'superdesk-api';
 
 /**
  * @type {Object} Redux stores
@@ -243,9 +244,14 @@ export class EditorService {
      * If the simpleReplace is true try to preserve the existing inline styles and entities
      */
     setHtmlFromTansa(html, simpleReplace = false) {
-        console.info('set', html, ok());
         if (ok()) {
             store.dispatch(action.setHtmlFromTansa(html, simpleReplace));
+        }
+    }
+
+    setEditorStateFromItem(item: IArticle, field: string) {
+        if (ok()) {
+            store.dispatch(action.setEditorStateFromItem(item, field));
         }
     }
 }
