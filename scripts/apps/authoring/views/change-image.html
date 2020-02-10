@@ -1,4 +1,4 @@
-<div class="modal__header modal__header--flex">
+<div class="modal__header modal__header--flex" data-test-id="change-image">
     <h3 class="modal__heading modal__heading--no-grow" ng-if="!nav || nav === 'view'">{{ :: activity.label}}</h3>
     <h3 class="modal__heading modal__heading--no-grow" ng-if="nav === 'image-edit'">{{ :: 'Edit image' | translate }}</h3>
     <h3 class="modal__heading modal__heading--no-grow" ng-if="nav === 'crop'">{{ :: 'Edit Crops' | translate }}</h3>
@@ -10,7 +10,12 @@
     </div>
 
     <div class="modal__header-buttons modal__header-buttons--right">
-        <button class="btn btn--primary btn--hollow" ng-click="done()" ng-disabled="!isDoneEnabled() || isAoISelectionModeEnabled">{{ 'Done ' | translate }}</button>
+        <button
+            class="btn btn--primary btn--hollow"
+            ng-click="done()" ng-disabled="!isDoneEnabled() || isAoISelectionModeEnabled"
+            translate
+            data-test-id="done"
+        >Done</button>
     </div>
 </div>
 
@@ -21,11 +26,25 @@
             <a class="sd-photo-preview__slide-in-button" ng-show="!showMetadata && nav !== 'crop'" ng-click="toggleShowMetadata(true)" data-sd-tooltip="Open metadata" data-flow="left">
                 <i class="icon-backward-thin"></i>
             </a>
-            <div class="sd-photo-preview" ng-if="!nav || nav === 'view'">
-                <div class="sd-photo-preview__image">
-                    <img ng-if="data.item.type === 'picture' || data.item.type === 'image'" ng-src="{{data.item.renditions.original.href}}">
-                    <sd-video ng-if="data.item.type === 'video'" item="data.item"></sd-video>
-                    <audio controls ng-if="data.item.type === 'audio'" ng-src="{{data.item.renditions.original.href}}"></audio>
+            <div ng-if="!nav || nav === 'view'">
+                <div class="sd-photo-preview" ng-if="data.item.type === 'picture' || data.item.type === 'image'">
+                    <div class="sd-photo-preview__image">
+                        <img ng-src="{{data.item.renditions.original.href}}">
+                    </div>
+                </div>
+                <div class="sd-photo-preview" ng-if="data.item.type === 'audio'">
+                    <div class="sd-photo-preview__image">
+                        <audio controls ng-src="{{data.item.renditions.original.href}}"></audio>
+                    </div>
+                </div>
+                <div class="sd-photo-preview sd-photo-preview--view-video" ng-if="data.item.type === 'video'">
+                    <div class="sd-photo-preview__video">
+                        <div class="sd-photo-preview__video-inner">
+                            <div class="sd-photo-preview__video-container">
+                                <sd-video item="data.item"></sd-video>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -61,7 +80,7 @@
                     <a class="btn" ng-click="cancelCrops()" translate>Cancel</a>
                     <a class="btn btn--primary" ng-click="saveCrops()" translate>Save</a>
                 </div>
-                
+
                 <div class="sd-photo-preview__image--with-strip" ng-if="!selectedRendition">
                     <sd-image-point
                         data-src="data.item.renditions.viewImage.href"

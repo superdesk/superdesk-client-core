@@ -51,8 +51,11 @@ export class AuthoringTopbarReact extends React.PureComponent<IProps, IState> {
                 contributions: {
                     entities: {
                         article: {
-                            onPatchBefore: (id, patch) => {
-                                if (this.props.article._id === id) {
+                            onPatchBefore: (id, patch, dangerousOptions) => {
+                                if (
+                                    this.props.article._id === id
+                                    && dangerousOptions?.patchDirectlyAndOverwriteAuthoringValues !== true
+                                ) {
                                     this.props.onChange({
                                         ...this.props.article,
                                         ...patch,

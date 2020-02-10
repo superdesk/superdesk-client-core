@@ -35,6 +35,8 @@ export function MonitoringView(
         link: function(scope, elem) {
             let containerElem = elem.find('.sd-column-box__main-column');
 
+            scope.gettext = gettext;
+
             /**
              * Issue here is that sd-column-box__main-column element is not visible on initializing sd-monitoring-view.
              * So I added $broadcast and listener for updating onScroll binding and containerElem for it.

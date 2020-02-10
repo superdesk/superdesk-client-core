@@ -1,28 +1,28 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-
 import {ItemUrgency, TypeIcon} from './index';
 import {gettext} from 'core/utils';
+import {IArticle} from 'superdesk-api';
+
+interface IProps {
+    item?: any;
+    selected?: boolean;
+    canEdit?: boolean;
+    customMonitoringWidget?: boolean;
+    svc: any;
+    preview: (item: IArticle) => void;
+    select: (item: IArticle) => void;
+    edit: (item: IArticle) => void;
+}
 
 /**
  * @ngdoc React
  * @module superdesk.search
  * @name WidgetItemComponent
- * @param {Object} item The current item.
- * @param {Boolean} selected The item is selected.
- * @param {Boolean} allowed The edit of item is allowed.
- * @param {Boolean} customMonitoringWidget The custom flag from config file
- * @param {Object} svc The superdesk services
- * @param {Function} preview The callback function on item preview
- * @param {Function} select The callback function on item selection
- * @param {Function} edit The callback function on item edit
  * @description This component is a row in monitoring widget item list.
  */
-export class WidgetItem extends React.Component<any, any> {
-    static propTypes: any;
-    static defaultProps: any;
-
+export class WidgetItem extends React.Component<IProps, any> {
     item: any;
 
     constructor(props) {
@@ -59,7 +59,7 @@ export class WidgetItem extends React.Component<any, any> {
             'content-item',
             {'content-item--locked': this.item.lock_user},
             {'custom-monitoring': this.props.customMonitoringWidget},
-            {shifted: this.props.allowed},
+            {shifted: this.props.canEdit},
             {active: this.props.selected},
             {gone: !!this.item.gone},
         );
@@ -82,7 +82,7 @@ export class WidgetItem extends React.Component<any, any> {
                 <div className="content-item__date">
                     <time>{this.props.svc.datetime.shortFormat(this.item.versioncreated)}</time>
                 </div>
-                { this.props.allowed && !this.item.gone ?
+                { this.props.canEdit && !this.item.gone ?
                     <div className="content-item__action">
                         { this.item.type !== 'composite' ?
                             <button className="icn-btn" onMouseDown={this.preview}
@@ -108,14 +108,3 @@ export class WidgetItem extends React.Component<any, any> {
         );
     }
 }
-
-WidgetItem.propTypes = {
-    item: PropTypes.object,
-    selected: PropTypes.bool,
-    allowed: PropTypes.bool,
-    customMonitoringWidget: PropTypes.bool,
-    svc: PropTypes.object.isRequired,
-    preview: PropTypes.func.isRequired,
-    select: PropTypes.func.isRequired,
-    edit: PropTypes.func.isRequired,
-};

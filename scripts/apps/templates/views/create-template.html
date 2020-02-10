@@ -39,8 +39,14 @@
     <button type="button" class="btn"
         ng-click="$dismiss()"
         translate>Cancel</button>
-    <button type="button" class="btn btn--primary"
+    <button
+        type="button"
+        class="btn btn--primary"
         ng-disabled="templateForm.$invalid"
         ng-click="template.save().then($close)"
-        translate>Save</button>
+        translate
+        data-test-id="create-template-modal--save"
+    >
+        Save
+    </button>
 </div>

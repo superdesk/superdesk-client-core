@@ -22,7 +22,7 @@ import {Row, Item, Column} from './ui/components/List';
 import {connectCrudManager, dataApi, dataApiByEntity} from './helpers/CrudManager';
 import {generateFilterForServer} from './ui/components/generic-form/generate-filter-for-server';
 import {assertNever, Writeable} from './helpers/typescript-helpers';
-import {flatMap, memoize} from 'lodash';
+import {memoize} from 'lodash';
 import {Modal} from './ui/components/Modal/Modal';
 import {ModalHeader} from './ui/components/Modal/ModalHeader';
 import {ModalBody} from './ui/components/Modal/ModalBody';
@@ -118,13 +118,13 @@ export function getSuperdeskApiImplementation(
                 isPersonal: (article) => article.task == null || article.task.desk == null,
                 isLocked: (article) => article['lock_session'] != null,
                 isLockedByCurrentUser: (article) => lock.isLockedInCurrentSession(article),
-                patch: (article, patch) => {
-                    const onUpdateBeforeMiddlewares = Object.values(extensions)
+                patch: (article, patch, dangerousOptions) => {
+                    const onPatchBeforeMiddlewares = Object.values(extensions)
                         .map((extension) => extension.activationResult?.contributions?.entities?.article?.onPatchBefore)
                         .filter((middleware) => middleware != null);
 
-                    onUpdateBeforeMiddlewares.reduce(
-                        (current, next) => current.then((result) => next(article._id, result)),
+                    onPatchBeforeMiddlewares.reduce(
+                        (current, next) => current.then((result) => next(article._id, result, dangerousOptions)),
                         Promise.resolve(patch),
                     ).then((patchFinal) => {
                         return dataApi.patchRaw<IArticle>(
@@ -134,7 +134,14 @@ export function getSuperdeskApiImplementation(
                             article._id,
                             article._etag,
                             patchFinal,
-                        );
+                        ).then((res) => {
+                            if (dangerousOptions?.patchDirectlyAndOverwriteAuthoringValues === true) {
+                                dispatchInternalEvent(
+                                    'dangerouslyOverwriteAuthoringData',
+                                    {...patch, _etag: res._etag},
+                                );
+                            }
+                        });
                     }).catch((err) => {
                         if (err instanceof Error) {
                             logger.error(err);
@@ -251,6 +258,7 @@ export function getSuperdeskApiImplementation(
         },
         privileges: {
             getOwnPrivileges: () => privileges.loaded.then(() => privileges.privileges),
+            hasPrivilege: (privilege: string) => privileges.userHasPrivileges({[privilege]: 1}),
         },
         session: {
             getToken: () => session.token,

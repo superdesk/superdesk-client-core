@@ -2,6 +2,7 @@ import 'angular-dynamic-locale';
 import {addLangOverride} from 'core/lang';
 import moment from 'moment';
 import {appConfig} from 'appConfig';
+import {gettext} from 'core/utils';
 
 /**
  * Translate module
@@ -56,6 +57,9 @@ export default angular.module('superdesk.core.translate', [
                 gettextCatalog.currentLanguage = params.lang;
                 gettextCatalog.debug = true;
             }
+
+            // make it available in templates
+            $rootScope.gettext = gettext;
         }])
 
     /**

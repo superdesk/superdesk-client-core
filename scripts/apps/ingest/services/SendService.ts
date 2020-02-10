@@ -92,7 +92,7 @@ export function SendService(
      * @param {Array} items
      */
     function sendAll(items) {
-        angular.forEach(items, sendOne);
+        return Promise.all(items.map(sendOne));
     }
 
     /**

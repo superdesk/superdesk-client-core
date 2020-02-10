@@ -104,6 +104,8 @@ export function getMarkedForMeComponent(superdesk: ISuperdesk) {
                 });
             }
 
+            const hasItemsMarked = articles._items.length > 0;
+
             return (
                 <DropdownTree
                     groups={desksInOrder.map((deskId) => ({
@@ -123,9 +125,16 @@ export function getMarkedForMeComponent(superdesk: ISuperdesk) {
                                 }
                             }}
                             active={isOpen}
+                            disabled={hasItemsMarked === false}
+                            pulsate={hasItemsMarked}
                             data-test-id="toggle-button"
                         >
-                            <Badge type="highlight" marginRight={6}>{articles._items.length}</Badge>
+                            <Badge
+                                type={hasItemsMarked ? 'highlight' : 'default'}
+                                marginRight={8}
+                            >
+                                {articles._items.length}
+                            </Badge>
                             {gettext('Marked for me')}
                         </TopMenuDropdownButton>
                     )}

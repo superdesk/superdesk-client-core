@@ -71,9 +71,13 @@ export class ArticleUrlFields extends React.Component<IProps, IState> {
                 {this.state.urls.map((item, i) => (
                     <div key={i}>
                         <div className="space-between">
-                            <input disabled={!editable}
-                                type="text" value={item.url}
-                                onChange={this.handleChange.bind(this, i, 'url')} />
+                            <input
+                                disabled={!editable}
+                                type="text"
+                                value={item.url}
+                                onChange={this.handleChange.bind(this, i, 'url')}
+                                className="sd-editor__default-input"
+                            />
                             <button disabled={!editable} type="button" onClick={() => this.removeUrl(i)}>
                                 <i className="icon-remove-sign" style={{display: 'block'}} />
                             </button>
