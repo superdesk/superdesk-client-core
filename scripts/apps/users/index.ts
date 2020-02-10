@@ -15,7 +15,7 @@ import * as svc from './services';
 import * as directive from './directives';
 import * as config from './config';
 import {gettext} from 'core/utils';
-import {UserMentionDirective} from './directives/UserMentioDirective';
+import {UserMentionDirective} from './directives/UserMentionDirective';
 
 /**
  * @ngdoc module
