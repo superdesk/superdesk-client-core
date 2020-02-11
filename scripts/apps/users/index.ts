@@ -57,7 +57,7 @@ export default angular.module('superdesk.apps.users', [
     .directive('sdUserInfo', directive.UserInfoDirective)
     .component(
         'sdNextAvatar',
-        reactToAngular1(UserAvatar, ['user', 'displayStatus']),
+        reactToAngular1(UserAvatar, ['user', 'displayStatus', 'displayAdministratorIndicator']),
     )
 
     .filter('username', () => (user) => user ?

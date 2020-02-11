@@ -37,11 +37,13 @@ interface IProps {
     // indicates whether a user is online or not
     // should only be used when the user object is up to date
     displayStatus?: boolean;
+
+    displayAdministratorIndicator: boolean;
 }
 
 export class UserAvatar extends React.PureComponent<IProps> {
     render() {
-        const {user, displayStatus} = this.props;
+        const {user, displayStatus, displayAdministratorIndicator} = this.props;
 
         return (
             <div
@@ -70,7 +72,7 @@ export class UserAvatar extends React.PureComponent<IProps> {
                 }
 
                 {
-                    user.user_type === 'administrator'
+                    displayAdministratorIndicator && user.user_type === 'administrator'
                         ? <i className="admin-label icon-settings" title={gettext('Administrator')} />
                         : null
                 }
