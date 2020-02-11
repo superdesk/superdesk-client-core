@@ -38,10 +38,7 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
             scope.xmppEnabled = appConfig.xmpp_auth;
 
             scope.$watch('origUser', () => {
-                scope.user = _.create(scope.origUser);
-                if (scope.user.is_author === undefined) {
-                    scope.user.is_author = true;
-                }
+                resetUser(scope.origUser);
             });
 
             resetUser(scope.origUser);
@@ -204,9 +201,13 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
                 scope.dirty = false;
                 if (angular.isDefined(user._id)) {
                     return userList.getUser(user._id, true).then((u) => {
+                        if (u.is_author === undefined) {
+                            u.user.is_author = true;
+                        }
+
                         scope.error = null;
                         scope.origUser = u;
-                        scope.user = _.create(u);
+                        scope.user = Object.assign(u);
                         scope.confirm = {password: null};
                         scope.show = {password: false};
                         scope._active = usersService.isActive(u);
