@@ -758,6 +758,11 @@ declare module 'superdesk-api' {
         fileAccept?: string;
     }
 
+    export interface IModalProps {
+        'data-test-id'?: string;
+        size?: 'large' | 'extra-large' | 'fill' | 'full-screen';
+    }
+
     export interface IPropsModalHeader {
         onClose?(): void;
     }
@@ -924,10 +929,10 @@ declare module 'superdesk-api' {
         };
         entities: {
             article: {
-                // returns true if locked by anyone, including the current user
-                isLocked(article: IArticle): boolean;
+                isLocked(article: IArticle): boolean; // returns true if locked by anyone, including the current user
+                isLockedInCurrentSession(article: IArticle): boolean;
+                isLockedInOtherSession(article: IArticle): boolean;
 
-                isLockedByCurrentUser(article: IArticle): boolean;
                 isPersonal(article: IArticle): boolean;
                 patch(
                     article: IArticle,
@@ -973,7 +978,7 @@ declare module 'superdesk-api' {
             Alert: React.ComponentType<IAlertComponentProps>;
             Figure: React.ComponentType<IFigureComponentProps>;
             DropZone: React.ComponentType<IDropZoneComponentProps>;
-            Modal: React.ComponentType<{'data-test-id'?: string}>;
+            Modal: React.ComponentType<IModalProps>;
             ModalHeader: React.ComponentType<IPropsModalHeader>;
             ModalBody: React.ComponentType;
             ModalFooter: React.ComponentType;
