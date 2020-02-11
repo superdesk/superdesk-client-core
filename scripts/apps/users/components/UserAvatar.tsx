@@ -4,6 +4,7 @@ import React from 'react';
 import {IUser} from 'superdesk-api';
 import {CC} from 'core/ui/configurable-ui-components';
 import {isUserLoggedIn} from '../services/UsersService';
+import {gettext} from 'core/utils';
 
 class DefaultAvatarDisplay extends React.PureComponent<{user: IUser}> {
     render() {
@@ -65,6 +66,12 @@ export class UserAvatar extends React.PureComponent<IProps> {
                                 }
                             />
                         )
+                        : null
+                }
+
+                {
+                    user.user_type === 'administrator'
+                        ? <i className="admin-label icon-settings" title={gettext('Administrator')} />
                         : null
                 }
             </div>

@@ -680,13 +680,13 @@ $slide-pane-width: 400px;
         background: #212121;
         @include box-shadow(inset 0 4px 4px -2px #000);
         border-bottom: 1px solid #313131;
-        .avatar {
-            margin: 12px 16px;
-        }
+        padding-left: 10px;
+        padding-right: 10px;
+
         .user-info {
-            margin-left: 60px;
             height: 40px;
-            padding: 12px 10px 2px 10px;
+            padding-top: 12px;
+            padding-bottom: 2px;
             @include box-sizing(border-box);
             .name {
                 color: #c5c5c5;
@@ -703,7 +703,6 @@ $slide-pane-width: 400px;
             }
         }
         .actions {
-            margin-left: 70px;
             height: 20px;
             @include box-sizing(border-box);
             button {
