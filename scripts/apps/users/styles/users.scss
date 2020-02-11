@@ -622,14 +622,6 @@ Profile page styles
     border:1px solid #e0e0e0;
     @include box-shadow(0 0 3px 0 rgba(0,0,0,0.15));
 
-    .avatar-holder {
-        .avatar {
-            float: none;
-            margin: 0 auto;
-        }
-        height: 64px;
-        padding: 10px 20px;
-    }
     .title {
         height: 40px;
         line-height: 40px;
