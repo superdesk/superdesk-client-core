@@ -898,7 +898,6 @@
                         li {
                             &.activity {
                                 .activity-content {
-                                    padding-left: 45px;
                                     margin-top: -3px;
                                     padding-right: 20px;
                                     color: #555;
@@ -907,7 +906,6 @@
                                     }
                                 }
                                 .activity-date {
-                                    padding-left: 45px;
                                     font-size: 11px;
                                     color: #999;
                                     margin-top: -5px;
@@ -1299,6 +1297,7 @@
     position:relative;
     > li {
         margin-right: -5px;
+        clear: both;
 
         &:hover, &.active {
             cursor: pointer;

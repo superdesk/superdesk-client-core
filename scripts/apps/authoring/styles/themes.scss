@@ -423,7 +423,7 @@ body, html {
         color: #D33C30 !important;
     }
     // images
-    figure {
+    figure:not(.avatar) {
         width: 100%;
         display: table;
         table-layout: fixed;

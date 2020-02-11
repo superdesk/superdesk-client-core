@@ -23,10 +23,6 @@ export function UserRoleItemListDirective(desks, usersService) {
                 }
             });
 
-            scope.isLoggedIn = function(user) {
-                return usersService.isLoggedIn(user);
-            };
-
             scope.openEditUser = function(user) {
                 scope.user = user;
             };
