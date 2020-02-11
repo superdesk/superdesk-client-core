@@ -780,6 +780,7 @@ declare module 'superdesk-api' {
         selectedUserId?: string;
         disabled?: boolean;
         autoFocus?: boolean | {initializeWithDropdownHidden: boolean};
+        horizontalSpacing?: boolean;
     }
 
 
