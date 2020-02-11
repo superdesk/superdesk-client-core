@@ -7,12 +7,12 @@
     <div class="profile-info editmode">
         <div class="header-info">
             <div class="profile-pic">
-                <figure class="avatar">
-                    <img sd-user-avatar data-user="user" alt="{{ user.FullName}}">
-                    <a href="" class="change-photo" ng-click="editPicture()" translate>Change Photo</a>
-                </figure>
+                <sd-next-avatar data-user="user"></sd-next-avatar>
                 <span class="disabled-label" ng-if="user._id && !user.is_enabled" translate>disabled</span>
                 <span class="disabled-label" ng-if="user._id && user.is_enabled && !user.is_active" translate>inactive</span>
+            </div>
+            <div style="text-align: center; margin-top: 5px;">
+                <button class="btn btn--small btn--default" ng-click="editPicture()" translate>Change Photo</button>
             </div>
             <h2>{{ user.display_name}}</h2>
             <h5>{{ user.username}}</h5>
