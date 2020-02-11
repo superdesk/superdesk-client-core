@@ -1,6 +1,7 @@
 import {gettext} from 'core/utils';
 import {appConfig} from 'appConfig';
 import {applyDefault} from 'core/helpers/typescript-helpers';
+import {CC} from 'core/ui/configurable-ui-components';
 
 UserEditDirective.$inject = ['api', 'notify', 'usersService', 'userList', 'session', 'lodash',
     'langmap', '$location', '$route', 'superdesk', 'features', 'asset', 'privileges',
@@ -27,6 +28,9 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
             scope.phonePattern = usersService.phonePattern;
             scope.signOffPattern = usersService.signOffPattern;
             scope.hideSignOff = appConfig.user != null && appConfig.user.sign_off_mapping;
+
+            // disallow changing an avatar if custom avatars are configured for the instance
+            scope.canChangeAvatar = CC.UserAvatar == null;
 
             scope.dirty = false;
             scope.errorMessage = null;
