@@ -2,6 +2,7 @@ import {gettext} from 'core/utils';
 import {appConfig} from 'appConfig';
 import {applyDefault} from 'core/helpers/typescript-helpers';
 import {CC} from 'core/ui/configurable-ui-components';
+import {generate} from 'json-merge-patch';
 
 UserEditDirective.$inject = ['api', 'notify', 'usersService', 'userList', 'session', 'lodash',
     'langmap', '$location', '$route', 'superdesk', 'features', 'asset', 'privileges',
@@ -56,7 +57,7 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
                         }
                     }
                 });
-                scope.dirty = !angular.equals(user, scope.origUser);
+                scope.dirty = JSON.stringify(user) !== JSON.stringify(scope.origUser);
             });
 
             api('roles').query()
@@ -139,7 +140,7 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
                     .then((reloadPage) => {
                         scope.error = null;
                         notify.info(gettext('Saving...'));
-                        return usersService.save(scope.origUser, scope.user)
+                        return usersService.save(scope.origUser, generate(scope.origUser, scope.user))
                             .then((response) => {
                                 scope.origUser = response;
                                 resetUser(scope.origUser);
@@ -207,7 +208,7 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
 
                         scope.error = null;
                         scope.origUser = u;
-                        scope.user = Object.assign(u);
+                        scope.user = Object.assign({}, u);
                         scope.confirm = {password: null};
                         scope.show = {password: false};
                         scope._active = usersService.isActive(u);
