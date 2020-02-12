@@ -17,10 +17,11 @@ import './DroppableDirective';
 import './DraggableDirective';
 import './TypeaheadDirective';
 import './SliderDirective';
-import './UserAvatarDirective';
 import './WithParamsDirective';
 
 import {PhoneHomeModalDirective} from './PhoneHomeModalDirective';
+import {reactToAngular1} from 'superdesk-ui-framework';
+import {UserAvatar} from 'apps/users/components/UserAvatar';
 
 /**
  * @ngdoc module
@@ -50,9 +51,12 @@ export default angular.module('superdesk.core.directives', [
     'superdesk.core.directives.droppable',
     'superdesk.core.directives.typeahead',
     'superdesk.core.directives.slider',
-    'superdesk.core.directives.avatar',
     'superdesk.core.directives.withParams',
 ])
 
     .directive('sdPhoneHomeModal', PhoneHomeModalDirective)
+    .component(
+        'sdNextAvatar',
+        reactToAngular1(UserAvatar, ['user', 'displayStatus', 'displayAdministratorIndicator']),
+    )
 ;
