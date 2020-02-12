@@ -1,7 +1,7 @@
 <ul style="list-style: none; padding-left: 0;">
     <li mentio-menu-item="user" ng-repeat="user in items" class="sd-mentions-item">
         <div ng-if="user.type == 'user'">
-            <sd-next-avatar user="user.item"></sd-next-avatar>
+            <sd-user-avatar user="user.item"></sd-user-avatar>
             <span>{{:: user.item.display_name }}</span>
         </div>
         <div ng-if="user.type == 'desk'">

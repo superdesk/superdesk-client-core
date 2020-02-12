@@ -22,7 +22,7 @@
                             ng-click="!allowEntireCat && openTree(t, $event)"
                             title="{{getLocaleName(t)}}"
                         >
-                            <sd-next-avatar data-user="t.user"></sd-next-avatar>
+                            <sd-user-avatar data-user="t.user"></sd-user-avatar>
                             <span>{{getLocaleName(t)}}</span>
                         </button>
                     </li>
@@ -76,7 +76,7 @@
                         title="{{getLocaleName(term)}}"
                     >
                         <span ng-if="term.user">
-                            <sd-next-avatar data-user="term.user"></sd-next-avatar>
+                            <sd-user-avatar data-user="term.user"></sd-user-avatar>
                         </span>
                         <span>{{getLocaleName(term)}}</span>
                         <i class="icon-chevron-right-thin"></i></button>

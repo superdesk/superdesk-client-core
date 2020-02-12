@@ -56,7 +56,7 @@ export default angular.module('superdesk.core.directives', [
 
     .directive('sdPhoneHomeModal', PhoneHomeModalDirective)
     .component(
-        'sdNextAvatar',
+        'sdUserAvatar',
         reactToAngular1(UserAvatar, ['user', 'displayStatus', 'displayAdministratorIndicator']),
     )
 ;

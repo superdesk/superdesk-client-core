@@ -1,7 +1,7 @@
 <div class="notification-pane" ng-class="{show: flags.notifications}">
     <div class="header" ng-if="flags.notifications">
         <div class="flex-row sibling-spacer-10">
-            <sd-next-avatar data-user="currentUser"></sd-next-avatar>
+            <sd-user-avatar data-user="currentUser"></sd-user-avatar>
             <div>
                 <div class="user-info">
                     <span class="name">{{currentUser.display_name }}</span>
@@ -23,7 +23,7 @@
                         
                         <div class="sibling-spacer-10" style="display: flex;">
                             <div style="margin-right: -40px">
-                                <sd-next-avatar data-user="notification.user"></sd-next-avatar>
+                                <sd-user-avatar data-user="notification.user"></sd-user-avatar>
                             </div>
                             <div>
                                 <div class="content" ng-if="notification.name === 'notify'">

@@ -3,7 +3,7 @@
         <li class="activity" ng-class="{'with-date': showDateHeader(activity)}" ng-repeat="activity in activities._items track by activity._id">
             <div class="date" ng-show="showDateHeader(activity)"><span sd-datetime data-date="activity._created"></span></div>
             <div style="display: flex;" class="sibling-spacer-10">
-                <sd-next-avatar data-user="activity.user"></sd-next-avatar>
+                <sd-user-avatar data-user="activity.user"></sd-user-avatar>
                 <div>
                     <span ng-if="activity.name != 'user:mention' && activity.name != 'desk:mention'">
                         <div class="activity-content">

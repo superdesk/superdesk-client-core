@@ -80,7 +80,7 @@ export function UserPopupService($compile, $timeout, userList) {
 
         box.html(
             `<div style="padding-top: 20px; text-align: center;">
-                <sd-next-avatar data-user="user"></sd-next-avatar>
+                <sd-user-avatar data-user="user"></sd-user-avatar>
             </div>
             <div class="title">{{user.display_name}}</div>
             <div class="actions">

@@ -9,7 +9,7 @@
                     <span class="label label--alert" ng-show="!item.resolutionInfo.accepted" translate>Rejected</span>
                 </div>
                 <div class="sibling-spacer-10" style="display: flex;">
-                    <sd-next-avatar data-user="users[item.suggestionInfo.author]"></sd-next-avatar>
+                    <sd-user-avatar data-user="users[item.suggestionInfo.author]"></sd-user-avatar>
                     <div>
                         <div>{{users[item.suggestionInfo.author].display_name || users[item.suggestionInfo.author].username}}</div>
                         <div class="date" sd-absdate datetime="item.suggestionInfo.date"></div>

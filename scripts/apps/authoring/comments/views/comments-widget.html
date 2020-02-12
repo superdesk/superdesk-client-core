@@ -2,7 +2,7 @@
     <ul class="widget-content__main boxed-list sd-padding-all--1">
         <li ng-repeat="comment in comments" class="boxed-list__item" ng-class="{'boxed-list__item--selcted': comment._id === active}">
             <div class="boxed-list__item-media">
-                <sd-next-avatar data-user="comment.user"></sd-next-avatar>
+                <sd-user-avatar data-user="comment.user"></sd-user-avatar>
             </div>
             <div class="boxed-list__item-content">
                 <div class="boxed-list__item-content-row boxed-list__item-content-row--fixed">

@@ -361,7 +361,7 @@
                         <ul class="pills-list">
                             <li ng-repeat="user in deskMembers| orderBy: 'display_name' track by user._id" ng-class="{'inactive' : !user.is_enabled || !user.is_active}">
                                 <span class="flex-row sibling-spacer-10">
-                                    <sd-next-avatar data-user="user"></sd-next-avatar>
+                                    <sd-user-avatar data-user="user"></sd-user-avatar>
                                     <h5>{{:: user.display_name}}</h5> <span class="user-email">{{:: user.email}}</span>
                                 </span>
                                 
