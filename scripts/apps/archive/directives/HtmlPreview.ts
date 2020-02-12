@@ -2,7 +2,7 @@ import {getAnnotationsFromItem} from 'core/editor3/helpers/editor3CustomData';
 import {META_FIELD_NAME} from 'core/editor3/helpers/fieldsMeta';
 import ng from 'core/services/ng';
 import {gettext} from 'core/utils';
-import {stringIsHtml, plainTextToHtml} from 'core/editor3/html/to-html/plainTextToHtml';
+import {isStringHtml, plainTextToHtml} from 'core/editor3/html/to-html/plainTextToHtml';
 
 function getAnnotationTypesAsync(scope) {
     ng.get('metadata').initialize()
@@ -53,7 +53,7 @@ export function HtmlPreview($sce, $timeout) {
         link: function(scope, elem, attrs) {
             scope.$watch('sdHtmlPreview', (html) => {
                 if (typeof html === 'string') {
-                    scope.html = stringIsHtml(html)
+                    scope.html = isStringHtml(html)
                         ? $sce.trustAsHtml(html)
                         : $sce.trustAsHtml(plainTextToHtml(html));
                 }
