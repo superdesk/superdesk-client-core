@@ -52,7 +52,7 @@ export function HtmlPreview($sce, $timeout) {
         templateUrl: 'scripts/apps/archive/views/html-preview.html',
         link: function(scope, elem, attrs) {
             scope.$watch('sdHtmlPreview', (html) => {
-                if (html && typeof html === 'string') {
+                if (typeof html === 'string') {
                     scope.html = stringIsHtml(html)
                         ? $sce.trustAsHtml(html)
                         : $sce.trustAsHtml(plainTextToHtml(html));
