@@ -38,7 +38,7 @@ interface IProps {
     // should only be used when the user object is up to date
     displayStatus?: boolean;
 
-    displayAdministratorIndicator: boolean;
+    displayAdministratorIndicator?: boolean;
 }
 
 export class UserAvatar extends React.PureComponent<IProps> {
