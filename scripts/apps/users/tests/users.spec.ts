@@ -196,6 +196,7 @@ describe('user edit form', () => {
                 _readonly: {first_name: true, last_name: true, email: true},
                 is_active: true,
                 need_activation: false,
+                user: {},
             };
 
             scope.user = user;
