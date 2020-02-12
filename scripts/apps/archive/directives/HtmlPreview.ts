@@ -52,9 +52,11 @@ export function HtmlPreview($sce, $timeout) {
         templateUrl: 'scripts/apps/archive/views/html-preview.html',
         link: function(scope, elem, attrs) {
             scope.$watch('sdHtmlPreview', (html) => {
-                scope.html = stringIsHtml(html)
-                    ? $sce.trustAsHtml(html)
-                    : $sce.trustAsHtml(plainTextToHtml(html));
+                if (html && typeof html === 'string') {
+                    scope.html = stringIsHtml(html)
+                        ? $sce.trustAsHtml(html)
+                        : $sce.trustAsHtml(plainTextToHtml(html));
+                }
 
                 if (window.hasOwnProperty('instgrm')) {
                     window.instgrm.Embeds.process();
