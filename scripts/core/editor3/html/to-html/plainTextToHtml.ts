@@ -1,6 +1,6 @@
 // converts linebreaks in paragraphs
 export const plainTextToHtml = (text: string) =>
-    text.replace(/.*[^\n]/g, '<p>$&</p>');
+    text.split('\n').map((line) => `<p>${line}</p>`).join('');
 
 export const isStringHtml = (text: string) => {
     const doc = (new DOMParser()).parseFromString(text, 'text/html');
