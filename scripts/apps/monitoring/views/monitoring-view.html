@@ -19,7 +19,7 @@
                                 <li>
                                     <div class="dropdown__menu-label">{{ gettext('Content Profiles') }}</div>
                                 </li>
-                                <li data-test-id="content-profiles" ng-repeat="profile in aggregate.activeProfiles">
+                                <li data-test-id="content-profiles" ng-repeat="profile in aggregate.activeProfiles | orderBy:'label'">
                                     <button class="label-group"
                                         ng-click="aggregate.setFilterType('contentProfile', profile, $event)"
                                         ng-disabled="aggregate.activeFilters.contentProfile.includes(profile._id)"
