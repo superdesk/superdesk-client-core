@@ -861,7 +861,7 @@ describe('monitoring', () => {
 
         el(['content-create']).click();
         el(['content-create-dropdown']).element(by.buttonText('More templates...')).click();
-        el(['templates-list']).element(by.buttonText(slugline)).click();
+        els(['templates-list']).get(1).element(by.buttonText(slugline)).click();
 
         browser.sleep(500); // animation
         expect(browser.isElementPresent(element(s(['authoring'])))).toBe(true);
