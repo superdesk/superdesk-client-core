@@ -378,21 +378,10 @@ describe('monitoring', () => {
     });
 
     it('can filter content by content profile', () => {
-        contentProfiles.openContentProfileSettings();
-        contentProfiles.addNew('Simple');
-        contentProfiles.toggleEnable();
-        contentProfiles.update();
-
-        templates.openTemplatesSettings();
-        templates.edit('Simple');
-        templates.selectDesk('Politic Desk');
-        templates.selectDesk('Sports Desk');
-        templates.save();
-
         monitoring.openMonitoring();
         workspace.selectDesk('Sports Desk');
-        authoring.createTextItemFromTemplate('Simple');
-        authoring.setHeaderSluglineText('STORY1 SLUGLINE');
+        authoring.createTextItemFromTemplate('testing');
+        authoring.setHeaderSluglineText('TESTING1 SLUGLINE');
         authoring.getSubjectMetadataDropdownOpened();
         browser.actions().sendKeys('archaeology')
             .perform();
@@ -405,31 +394,31 @@ describe('monitoring', () => {
         expect(monitoring.getAllItems().count()).toBe(3);
         el(['content-profile-dropdown']).click();
         browser.wait(ECE.hasElementCount(els(['content-profiles']), 2));
-        el(['content-profile-dropdown'], by.buttonText('Simple')).click();
+        el(['content-profile-dropdown'], by.buttonText('testing')).click();
         expect(monitoring.getAllItems().count()).toBe(1);
-        expect(monitoring.getTextItemBySlugline(0, 0)).toBe('STORY1 SLUGLINE');
+        expect(monitoring.getTextItemBySlugline(0, 0)).toBe('TESTING1 SLUGLINE');
         expect(monitoring.isGroupEmpty(2)).toBe(true);
         expect(monitoring.isGroupEmpty(4)).toBe(true);
 
         browser.wait(ECE.elementToBeClickable(el(['remove-filter'])));
         el(['remove-filter']).click();
         expect(monitoring.getAllItems().count()).toBe(3);
-        expect(monitoring.getTextItemBySlugline(0, 0)).toBe('STORY1 SLUGLINE');
+        expect(monitoring.getTextItemBySlugline(0, 0)).toBe('TESTING1 SLUGLINE');
         expect(monitoring.getTextItem(2, 0)).toBe('item3');
         expect(monitoring.getTextItem(4, 0)).toBe('item4');
 
         el(['content-profile-dropdown']).click();
         browser.wait(ECE.hasElementCount(els(['content-profiles']), 2));
-        el(['content-profile-dropdown'], by.buttonText('Simple')).click();
+        el(['content-profile-dropdown'], by.buttonText('testing')).click();
         expect(monitoring.getAllItems().count()).toBe(1);
-        expect(monitoring.getTextItemBySlugline(0, 0)).toBe('STORY1 SLUGLINE');
+        expect(monitoring.getTextItemBySlugline(0, 0)).toBe('TESTING1 SLUGLINE');
         expect(monitoring.isGroupEmpty(2)).toBe(true);
         expect(monitoring.isGroupEmpty(4)).toBe(true);
 
         browser.wait(ECE.elementToBeClickable(el(['clear-filters'])));
         el(['clear-filters']).click();
         expect(monitoring.getAllItems().count()).toBe(3);
-        expect(monitoring.getTextItemBySlugline(0, 0)).toBe('STORY1 SLUGLINE');
+        expect(monitoring.getTextItemBySlugline(0, 0)).toBe('TESTING1 SLUGLINE');
         expect(monitoring.getTextItem(2, 0)).toBe('item3');
         expect(monitoring.getTextItem(4, 0)).toBe('item4');
     });
@@ -872,7 +861,7 @@ describe('monitoring', () => {
 
         el(['content-create']).click();
         el(['content-create-dropdown']).element(by.buttonText('More templates...')).click();
-        el(['templates-list']).element(by.buttonText(slugline)).click();
+        els(['templates-list']).get(1).element(by.buttonText(slugline)).click();
 
         browser.sleep(500); // animation
         expect(browser.isElementPresent(element(s(['authoring'])))).toBe(true);
