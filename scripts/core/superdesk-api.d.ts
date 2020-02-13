@@ -1070,6 +1070,7 @@ declare module 'superdesk-api' {
         saml_label: any;
         archive_autocomplete: boolean;
         workflow_allow_multiple_updates: boolean;
+        allow_updating_scheduled_items: boolean;
 
         // TANSA SERVER CONFIG
         tansa?: {
