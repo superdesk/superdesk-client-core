@@ -26,26 +26,6 @@
     margin-left: 10px;
 }
 
-.admin-label {
-    @include border-radius(50%);
-    position: absolute;
-    top: -4px;
-    left: -4px;
-    z-index: 1;
-
-    &:after {
-        content: '';
-        display: block;
-        position: absolute;
-        top: 4px;
-        left: 4px;
-        background: #fff;
-        width: 8px;
-        height: 8px;
-        z-index: -1;
-    }
-}
-
 .users-table {    //main list styles
 
     border-top: 2px solid #d7d7d7;
@@ -316,18 +296,6 @@
         height: 82px;
         position: relative;
         margin: 0 auto;
-        .avatar {
-            width: 100%;
-            height: 100%;
-            @include border-radius(50%);
-            position: relative;
-            background-image: url('~images/avatar_200.png');
-            &.initials {
-                font-size: 24px;
-                line-height: 82px;
-                font-weight: 300;
-            }
-        }
         .disabled-label {
             position: absolute;
             bottom: 15%;
@@ -543,20 +511,6 @@ Profile page styles
     .profile-pic {
         width: 160px;
         height: 160px;
-        .avatar {
-            width: 160px;
-            height: 160px;
-            overflow: hidden;
-            img {
-                width: 160px;
-                max-width: 160px;
-            }
-            &.initials {
-                font-size: 48px;
-                line-height: 160px;
-                font-weight: 300;
-            }
-        }
     }
 
 

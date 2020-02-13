@@ -77,10 +77,6 @@
         @include box-shadow(none);
         background-color: rgba(0,0,0,0.25);
         transition: background-color ease-in-out 0.2s;
-        .avatar {
-            @include border-radius(50%);
-            margin: 0;
-        }
         .badge {
             position: absolute;
             top: 4px;
