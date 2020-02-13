@@ -123,19 +123,6 @@
         font-size: 11px;
         color: #888;
     }
-    .profile-pic {
-        width: 82px;
-        height: 82px;
-        position: relative;
-        margin: 0 auto;
-
-        .disabled-label {
-            position: absolute;
-            bottom: 15%;
-            left: 40%;
-            border: 1px solid #fff;
-        }
-    }
 
     .alert {
         @include border-radius(0px);

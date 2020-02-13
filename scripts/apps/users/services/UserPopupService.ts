@@ -79,8 +79,8 @@ export function UserPopupService($compile, $timeout, userList) {
         var box = popover.get();
 
         box.html(
-            `<div style="padding-top: 20px; text-align: center;">
-                <sd-user-avatar data-user="user"></sd-user-avatar>
+            `<div style="padding-top: 20px; display: flex; justify-content: center;">
+                <sd-user-avatar data-user="user" data-size="'large'"></sd-user-avatar>
             </div>
             <div class="title">{{user.display_name}}</div>
             <div class="actions">

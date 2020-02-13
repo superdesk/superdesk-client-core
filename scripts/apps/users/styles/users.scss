@@ -292,10 +292,10 @@
         color: #888;
     }
     .profile-pic {
-        width: 82px;
-        height: 82px;
+        display: flex;
         position: relative;
-        margin: 0 auto;
+        justify-content: center;
+
         .disabled-label {
             position: absolute;
             bottom: 15%;
@@ -507,12 +507,6 @@ Profile page styles
             &.show { top:-48px; }
         }
     }
-
-    .profile-pic {
-        width: 160px;
-        height: 160px;
-    }
-
 
     .other-content {
         position: absolute;
