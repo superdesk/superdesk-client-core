@@ -22,6 +22,7 @@ import './WithParamsDirective';
 import {PhoneHomeModalDirective} from './PhoneHomeModalDirective';
 import {reactToAngular1} from 'superdesk-ui-framework';
 import {UserAvatar} from 'apps/users/components/UserAvatar';
+import {UserOrganisationAvatar} from 'apps/users/components/OrganisationAvatar';
 
 /**
  * @ngdoc module
@@ -57,6 +58,10 @@ export default angular.module('superdesk.core.directives', [
     .directive('sdPhoneHomeModal', PhoneHomeModalDirective)
     .component(
         'sdUserAvatar',
-        reactToAngular1(UserAvatar, ['user', 'displayStatus', 'displayAdministratorIndicator']),
+        reactToAngular1(UserAvatar, ['user', 'size', 'displayStatus', 'displayAdministratorIndicator']),
+    )
+    .component(
+        'sdOrganisationAvatar',
+        reactToAngular1(UserOrganisationAvatar, ['size']),
     )
 ;
