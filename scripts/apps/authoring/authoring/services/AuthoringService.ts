@@ -630,7 +630,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         let userPrivileges = privileges.privileges;
 
         action.re_write = (!isReadOnlyState || appConfig.allow_updating_scheduled_items)
-            && _.includes(['text'], currentItem.type)
+            && currentItem.type === 'text'
             && !currentItem.embargo && !currentItem.rewritten_by
             && (!currentItem.broadcast || !currentItem.broadcast.master_id)
             && (
@@ -639,7 +639,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
                 ) || appConfig.workflow_allow_multiple_updates)
             );
 
-        action.resend = _.includes(['text'], currentItem.type) &&
+        action.resend = currentItem.type === 'text' &&
             isPublished(currentItem, false);
 
         // mark item for highlights
