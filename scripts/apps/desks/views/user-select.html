@@ -7,7 +7,6 @@
             ng-repeat="user in users._items"
             ng-class="{active: user === selected, 'inactive' : !user.is_enabled || !user.is_active}"
             class="flex-row sibling-spacer-10"
-            style="padding: 4px"
             ng-click="choose(user)"
         >
             <sd-user-avatar data-user="user"></sd-user-avatar>

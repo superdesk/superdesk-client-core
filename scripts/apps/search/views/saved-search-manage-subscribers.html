@@ -44,7 +44,6 @@
                                     <li
                                         ng-click="subscribeDesk(desk)"
                                         ng-repeat="desk in wrapper.desks.desks._items | filter: desksFilter"
-                                        style="padding: 2px 6px; margin-right: 0;"
                                     >
                                         <span class="flex-row sibling-spacer-10">
                                             <sd-organisation-avatar></sd-organisation-avatar>
@@ -59,7 +58,6 @@
                                     <li ng-click="subscribeUser(user)"
                                         ng-repeat="user in wrapper.users | filter: usersFilter"
                                         class="flex-row sibling-spacer-10"
-                                        style="padding: 2px 6px; margin-right: 0;"
                                     >
                                         <sd-user-avatar data-user="user"></sd-user-avatar>
                                         <div class="name">{{user.display_name}}</div>

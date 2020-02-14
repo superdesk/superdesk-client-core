@@ -1277,7 +1277,7 @@
 .users-list-embed {
     position:relative;
     > li {
-        margin-right: -5px;
+        padding: 4px 6px;
         clear: both;
 
         &:hover, &.active {
