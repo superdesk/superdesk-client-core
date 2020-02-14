@@ -146,7 +146,7 @@
                                 <ul class="dropdown__menu">
                                     <li><span class="dropdown__menu-label">{{gettext('File types') }}</span></li>
                                     <li ng-repeat="fileType in aggregate.fileTypes"
-                                        ng-click="aggregate.setFileType(fileType)"
+                                        ng-click="aggregate.setFilterType('file', fileType)"
                                         ng-class="{'dropdown__menu-item--active': aggregate.hasFileType(fileType)}"
                                         title="{{ fileType | translate }}">
                                         <button>
