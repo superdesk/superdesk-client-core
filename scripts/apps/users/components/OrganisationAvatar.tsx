@@ -12,7 +12,7 @@ export class UserOrganisationAvatar extends React.PureComponent<IProps> {
                 size={this.props.size}
             >
                 <AvatarContentImage
-                    imageUrl="/images/avatar_group_64.png"
+                    imageUrl="/images/avatar_group_64_green_bg.png"
                 />
             </AvatarWrapper>
         );
