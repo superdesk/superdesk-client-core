@@ -1584,6 +1584,7 @@ feature-image {
     padding: 1rem 1rem 0;
     background-color: rgba(150, 150, 150, 0.075);
     border: 1px solid rgba(150, 150, 150, 0.2);
+    color: $grayDark;
     .draggable-list {
         .placeholder {
             border: 2px dotted $sd-blue;
