@@ -193,7 +193,7 @@ export function MonitoringGroup(
             scope.$on('item:translate', scheduleQuery);
             scope.$on('broadcast:created', (event, args) => {
                 scope.previewingBroadcast = true;
-                queryItems();
+                queryAndUpdate();
                 preview(args.item);
             });
             scope.$on('item:unspike', scheduleIfShouldUpdate);
@@ -392,7 +392,7 @@ export function MonitoringGroup(
             function scheduleQuery(event, data) {
                 if (!queryTimeout) {
                     queryTimeout = $timeout(() => {
-                        queryItems(event, data, {auto: (data && data.force) ? 0 : 1})
+                        queryAndUpdate(event, data, {auto: (data && data.force) ? 0 : 1})
                             .finally(() => {
                                 scope.$applyAsync(() => {
                                     // ignore any updates requested in current $digest
@@ -511,7 +511,7 @@ export function MonitoringGroup(
                 return monitoring.previewItem && monitoring.previewItem.task.stage === scope.group._id;
             }
 
-            function queryItems(event?, data?, params?) {
+            function queryAndUpdate(event?, data?, params?) {
                 var originalQuery;
 
                 if (desks.changeDesk) {
@@ -613,7 +613,7 @@ export function MonitoringGroup(
                         order: 'desc',
                     };
                 }
-                queryItems();
+                queryAndUpdate();
             };
 
             scope.toggleCustomSortOrder = function() {
@@ -622,7 +622,7 @@ export function MonitoringGroup(
                 } else {
                     scope.customSortOptionActive.order = 'asc';
                 }
-                queryItems();
+                queryAndUpdate();
             };
 
             scope.fetchNext = function(from) {
