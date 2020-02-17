@@ -6,6 +6,7 @@ import {isPublished} from 'apps/archive/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {DESK_OUTPUT} from 'apps/desks/constants';
 import {appConfig} from 'appConfig';
+import {IRestApiResponse, IArticle} from 'superdesk-api';
 
 const translatedFields = GET_LABEL_MAP();
 
@@ -27,6 +28,7 @@ export type StageGroup = {
 };
 
 interface IScope extends ng.IScope {
+    queryItems: (event?, data?, params?) => Promise<IRestApiResponse<IArticle>>;
     customDataSource: {
         getItems(from: number, pageSize: number): any;
         getItem(item: any): any;
@@ -511,7 +513,7 @@ export function MonitoringGroup(
                 return monitoring.previewItem && monitoring.previewItem.task.stage === scope.group._id;
             }
 
-            function queryAndUpdate(event?, data?, params?) {
+            scope.queryItems = (event?, data?, params?) => {
                 var originalQuery;
 
                 if (desks.changeDesk) {
@@ -566,7 +568,11 @@ export function MonitoringGroup(
                                 return res;
                             });
                     }
-                })()
+                })();
+            };
+
+            function queryAndUpdate(event?, data?, params?) {
+                return scope.queryItems(event, data, params)
                     .then((items) => {
                         if (appConfig.features.autorefreshContent && data != null) {
                             data.force = true;
