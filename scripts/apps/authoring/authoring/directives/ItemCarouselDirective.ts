@@ -112,23 +112,45 @@ export function ItemCarouselDirective(notify) {
                         carousel.trigger('destroy.owl.carousel');
                     }
 
-                    const carouselImages: Array<HTMLImageElement> = Array.from(
-                        elem.get(0).querySelectorAll(`${carouselContainerSelector} img`),
-                    );
-                    const carouselAudiosAndVideos: Array<HTMLAudioElement | HTMLVideoElement> = Array.from(
-                        elem.get(0).querySelectorAll(
-                            `${carouselContainerSelector} video, ${carouselContainerSelector} audio`,
-                        ),
-                    );
+                    // React children won't load inmediately after angular
+                    // so elements like <video> from <sd-video> won't be available right away
+                    setTimeout(() => {
+                        const carouselImages: Array<HTMLImageElement> = Array.from(
+                            elem
+                                .get(0)
+                                .querySelectorAll(
+                                    `${carouselContainerSelector} img`,
+                                ),
+                        );
+                        const carouselAudiosAndVideos: Array<
+                            HTMLAudioElement | HTMLVideoElement
+                        > = Array.from(
+                            elem
+                                .get(0)
+                                .querySelectorAll(
+                                    `${carouselContainerSelector} video, ${carouselContainerSelector} audio`,
+                                ),
+                        );
 
-                    if (items.length < 1 || (carouselImages.length + carouselAudiosAndVideos.length < 1)) {
-                        return;
-                    }
+                        if (
+                            items.length < 1 ||
+                            carouselImages.length +
+                                carouselAudiosAndVideos.length <
+                                1
+                        ) {
+                            return;
+                        }
 
-                    const mediaItems: Array<HTMLAudioElement | HTMLVideoElement | HTMLImageElement> =
-                        [].concat(carouselImages).concat(carouselAudiosAndVideos);
+                        const mediaItems: Array<
+                            | HTMLAudioElement
+                            | HTMLVideoElement
+                            | HTMLImageElement
+                        > = []
+                            .concat(carouselImages)
+                            .concat(carouselAudiosAndVideos);
 
-                    waitForMediaToLoad(mediaItems).then(initCarousel);
+                        waitForMediaToLoad(mediaItems).then(initCarousel);
+                    }, 0);
                 });
             });
 
