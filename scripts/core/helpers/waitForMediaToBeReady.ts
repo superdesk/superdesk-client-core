@@ -43,7 +43,7 @@ export const waitForMediaToLoad = (
                 const source = element.getElementsByTagName('source')[0];
 
                 if (!source) {
-                    // Live videos don't have a <source> tag
+                    // Streamed videos don't have a <source> tag
                     return eventHandler();
                 }
 
