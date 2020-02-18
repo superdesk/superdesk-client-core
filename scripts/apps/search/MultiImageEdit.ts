@@ -209,6 +209,7 @@ export function MultiImageEditController(
             // subject is required to "usage terms" and other custom fields are editable
             subject: compare('subject'),
             headline: compare('headline'),
+            slugline: compare('slugline'),
             description_text: compare('description_text'),
             archive_description: compare('archive_description'),
             alt_text: compare('alt_text'),
@@ -219,6 +220,8 @@ export function MultiImageEditController(
             extra: compareExtra(),
             language: compare('language'),
             creditline: compare('creditline'),
+            source: compare('source'),
+            ednote: compare('ednote'),
         };
     }
 

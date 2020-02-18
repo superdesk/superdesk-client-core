@@ -58,6 +58,7 @@ export function AssociationController(content, superdesk, renditions, notify) {
             allowPicture: scope.allowPicture,
             allowVideo: scope.allowVideo,
             allowAudio: scope.allowAudio,
+            parent: scope.item,
         };
 
         superdesk.intent('upload', 'media', uploadData).then((images) => {
