@@ -629,16 +629,20 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         let isReadOnlyState = this._isReadOnly(currentItem);
         let userPrivileges = privileges.privileges;
 
-        action.re_write = (!isReadOnlyState || appConfig.allow_updating_scheduled_items)
-            && currentItem.type === 'text'
-            && !currentItem.embargo && !currentItem.rewritten_by
-            && (!currentItem.broadcast || !currentItem.broadcast.master_id)
-            && (
-                (!currentItem.rewrite_of || (
-                    currentItem.rewrite_of && isPublished(currentItem)
-                ) || appConfig.workflow_allow_multiple_updates)
-            );
-
+        function canRewrite() {
+            if (currentItem.state === ITEM_STATE.SCHEDULED && appConfig.allow_updating_scheduled_items === true) {
+                return true;
+            }
+            return !isReadOnlyState && currentItem.type === 'text'
+                && !currentItem.embargo && !currentItem.rewritten_by
+                && (!currentItem.broadcast || !currentItem.broadcast.master_id)
+                && (
+                    (!currentItem.rewrite_of || (
+                        currentItem.rewrite_of && isPublished(currentItem)
+                    ) || appConfig.workflow_allow_multiple_updates)
+                );
+        }
+        action.re_write = canRewrite();
         action.resend = currentItem.type === 'text' &&
             isPublished(currentItem, false);
 
