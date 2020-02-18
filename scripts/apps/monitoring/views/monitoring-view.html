@@ -30,6 +30,15 @@
                             </ul>
                         </div>
 
+                        <div>
+                            <sd-monitoring-filtering-buttons
+                                desk-id="activeDeskId"
+                                toggle-filter="aggregate.toggleCustomFilter"
+                                is-filter-active="aggregate.isCustomFilterActive"
+                                active-filters="aggregate.activeFilters.customFilters"
+                            ></sd-monitoring-filtering-buttons>
+                        </div>
+
                         <div class="dropdown sd-flex-no-shrink" dropdown ng-if="!monitoring.singleGroup && type === 'monitoring'">
                             <button class="dropdown__toggle navbtn navbtn--text-only" dropdown-toggle>{{ gettext('Monitoring') }} {{workspace.name}} <span class="dropdown__caret"></span></button>
                             <ul class="dropdown__menu scrollable">

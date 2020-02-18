@@ -54,6 +54,16 @@ const extension: IExtension = {
                         getActionsBulk: getActionsBulkInitialize(superdesk),
                     },
                 },
+                monitoring: {
+                    getFilteringButtons: () => superdesk.session.getCurrentUser().then((user) => [
+                        {
+                            label: gettext('Marked for me'),
+                            query: {
+                                marked_for_user: [user._id],
+                            },
+                        },
+                    ]),
+                },
             },
         };
 
