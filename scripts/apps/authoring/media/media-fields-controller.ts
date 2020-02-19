@@ -17,6 +17,10 @@ export default function MediaFieldsController($q, metadata) {
             return {schema_field: 'language', items: metadata.values.languages, key: 'qcode'};
         }
 
+        if (cv == null && field === 'authors' && metadata.values.authors) {
+            return {schema_field: 'authors', items: metadata.values.authors, field_type: 'authors'};
+        }
+
         return cv;
     }
 
