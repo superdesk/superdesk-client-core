@@ -52,7 +52,7 @@
             data-item="item"
             data-field="keywords"
             data-change="onChange({key: field})"
-            data-list="metadata.keywords"
+            data-list="field.cv.items"
             data-disabled="isDisabled(field)"
             data-style="sd-line-input__input"
             data-header="true"
@@ -86,6 +86,10 @@
             data-change="onChange({key: field})"
             data-key="{{ field.cv.key }}"
         ></div>
+
+        <span class="sd-line-input__hint" ng-show="field.helper_text || field.cv.helper_text" style="position: static">
+            {{ field.helper_text || field.cv.helper_text }}
+        </span>
     </div>
 
     <div ng-if="field.cv && field.cv.field_type === 'date'" class="sd-line-input sd-line-input--boxed" ng-class="{'sd-line-input--required': field.required}">
@@ -96,5 +100,25 @@
             data-format="YYYY-MM-DDT00:00:00+0000"
             data-on-change="onChange({key: 'extra'})"
         ></div>
+    </div>
+
+    <div ng-if="field.cv && field.cv.field_type === 'authors'" class="sd-line-input sd-line-input--boxed" ng-class="{'sd-line-input--required': field.required}">
+        <label class="authoring-header__item-label">{{ field.label }}</label>
+        <div class="authoring-header__input-holder">
+            <div
+                sd-meta-terms
+                class="data sd-terms--boxed"
+                data-item="item"
+                data-field="authors"
+                data-unique="_id"
+                data-list="field.cv.items"
+                data-label= "{{ :: 'Add author' | translate }}"
+                ng-disabled="isDisabled(field)"
+                data-header="true"
+                data-change="onChange({key: field})"
+                data-reload-list="true"
+                data-select-entire-category="false"
+            ></div>
+        </div>
     </div>
 </div>
