@@ -186,7 +186,7 @@ export function VocabularyEditController(
         _.extend(newVocabulary, $scope.model);
         newVocabulary.is_active = true;
 
-        $scope.vocabulary.items = $scope.vocabulary.items.concat([newVocabulary]);
+        $scope.vocabulary.items = [newVocabulary].concat($scope.vocabulary.items);
     };
 
     // try to reproduce data model of vocabulary:

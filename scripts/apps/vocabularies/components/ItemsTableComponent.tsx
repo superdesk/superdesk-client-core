@@ -5,6 +5,8 @@ import {has} from 'lodash';
 import {gettext} from 'core/utils';
 import {ISortOption} from 'superdesk-api';
 import {assertNever} from 'core/helpers/typescript-helpers';
+import {Dropdown} from 'core/ui/components';
+import {Checkbox} from 'superdesk-ui-framework';
 
 interface ISchemaField {
     key: string;
@@ -26,6 +28,8 @@ interface IState {
     caretPosition: any;
     page: number;
     searchTerm: string;
+    searchExtended: boolean;
+    sortDropdownOpen: boolean;
     sort: ISortOption | null;
 }
 
@@ -50,7 +54,9 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
             targetInput: '',
             page: 1,
             searchTerm: '',
-            sort: null,
+            searchExtended: false,
+            sortDropdownOpen: false,
+            sort: null
         };
 
         this.getIndex = (item) => this.state.items.indexOf(item);
@@ -221,26 +227,52 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
             });
 
         return (
-            <div>
-                <ReactPaginate
-                    previousLabel={gettext('prev')}
-                    nextLabel={gettext('next')}
-                    pageCount={getPageCount(filteredAndSorted)}
-                    marginPagesDisplayed={2}
-                    pageRangeDisplayed={5}
-                    onPageChange={({selected}) => {
-                        this.setState({page: selected + 1});
-                    }}
-                    forcePage={this.state.page - 1}
-                    containerClassName="bs-pagination"
-                    activeClassName="active"
-                />
+            <React.Fragment>
+                <div className="subnav">
+                    <div className={'flat-searchbar' + (this.state.searchExtended ? ' extended' : '')}>
+                        <div className="search-handler">
+                            <label className="trigger-icon" onClick={() => {this.setState({searchExtended: !this.state.searchExtended})}}>
+                                <i className="icon-search"></i>
+                            </label>
+                            <input type="text" value={this.state.searchTerm}
+                                placeholder={gettext('Search')} onChange={(event) => {
+                                    this.setState({searchTerm: event.target.value, page: 1});
+                                }} />
+                            <button className="search-close"><i className="icon-close-small"></i></button>
+                        </div>
+                    </div>
 
-                <div className="vocabulary-items__button-bar">
-                    <button
-                        id="add-new-btn"
-                        className="btn btn--primary"
-                        onClick={() => {
+                    <div className="sortbar sd-margin-l--auto">
+                        { this.state.sort ?
+                            <div className="dropdown">
+                                <button className="dropdown__toggle"
+                                    onClick={() => this.setState({sortDropdownOpen: !this.state.sortDropdownOpen})}>
+                                    {this.state.sort.field}
+                                    <span className="dropdown__caret"></span>
+                                </button>
+                                <Dropdown open={this.state.sortDropdownOpen}>
+                                    {this.sortFields.map((field) => {
+                                        return (<li key={field}><button onClick={() => {
+                                            this.setState({sort: {...this.state.sort, field}, sortDropdownOpen: false})
+                                        }}>{field}</button></li>);
+                                    })}
+                                </Dropdown>
+                            </div>
+                        : null }
+
+                        { this.state.sort ?
+                            <button className="icn-btn direction" onClick={() => {
+                                this.setState({sort: {...this.state.sort,
+                                    direction: this.state.sort.direction === 'ascending' ? 'descending' : 'ascending'}
+                                });
+                            }}>
+                                { this.state.sort.direction === 'ascending' ?
+                                    <i className="icon-descending"></i> :
+                                    <i className="icon-ascending"></i> }
+                            </button>
+                        : null }
+
+                        <button className="btn btn--primary" onClick={() => {
                             // clearing search before adding an item so it doesn't get filtered
                             this.setState({searchTerm: ''}, () => {
                                 this.props.addItem();
@@ -248,83 +280,49 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
                                 // using a timeout to wait for this.state.items to update after adding an item
                                 // in case adding an item causes page count to increase
                                 setTimeout(() => {
-                                    this.setState({page: getPageCount(this.state.items)});
+                                    this.setState({page: 1});
                                 });
                             });
-                        }}
-                    >
-                        <i className="icon-plus-sign" />
-                        <span>{gettext('Add Item')}</span>
-                    </button>
+                        }}>
+                            <i className="icon-plus-sign" />
+                            <span>{gettext('Add Item')}</span>
+                        </button>
+                    </div>
                 </div>
 
-                <input
-                    type="text"
-                    value={this.state.searchTerm}
-                    placeholder={gettext('Search')}
-                    onChange={(event) => {
-                        this.setState({searchTerm: event.target.value, page: 1});
-                    }}
-                />
+                <div className="subnav pagination--rounded">
+                    <ReactPaginate
+                        previousLabel={''}
+                        nextLabel={''}
+                        pageCount={getPageCount(filteredAndSorted)}
+                        marginPagesDisplayed={2}
+                        pageRangeDisplayed={5}
+                        onPageChange={({selected}) => {
+                            this.setState({page: selected + 1});
+                        }}
+                        forcePage={this.state.page - 1}
+                        containerClassName="bs-pagination"
+                        activeClassName="active"
+                    />
+                </div>
 
-                <br />
-
-                {
-                    this.state.sort == null ? null : (
-                        <div>
-                            <span>{gettext('sort')}</span>
-
-                            <select
-                                value={this.state.sort.field}
-                                onChange={(event) => {
-                                    this.setState({sort: {...this.state.sort, field: event.target.value}});
-                                }}
-                            >
-                                {
-                                    this.sortFields.map((field) => {
-                                        return (
-                                            <option key={field}>{field}</option>
-                                        );
-                                    })
-                                }
-                            </select>
-
-                            <select
-                                value={this.state.sort.direction}
-                                onChange={(event) => {
-                                    const direction = event.target.value;
-
-                                    if (direction === 'ascending' || direction === 'descending') {
-                                        this.setState({sort: {...this.state.sort, direction: direction}});
-                                    }
-                                }}
-                            >
-                                <option value="ascending">Ascending</option>
-                                <option value="descending">Descending</option>
-                            </select>
-                        </div>
-                    )
-                }
-
-                <table>
-                    <thead>
-                        <tr>
-                            {
-                                this.props.schemaFields.map((field) => (
+                <div className="sd-padding-x--3 table-list">
+                    <table>
+                        <thead>
+                            <tr>
+                                {this.props.schemaFields.map((field) => (
                                     <th key={field.key}>
                                         <label>{field.label || field.key}</label>
                                     </th>
-                                ))
-                            }
-                            <th>
-                                <label>{gettext('Active')}</label>
-                            </th>
-                            <th />
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {
-                            filteredAndSorted.slice(takeFrom, takeTo).map((item, i) => {
+                                ))}
+                                <th>
+                                    <label>{gettext('Active')}</label>
+                                </th>
+                                <th />
+                            </tr>
+                        </thead>
+                        <tbody>
+                            { filteredAndSorted.slice(takeFrom, takeTo).map((item, i) => {
                                 return (
                                     <tr key={this.getIndex(item)}>
                                         {this.props.schemaFields.map((field) => (
@@ -343,22 +341,20 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
                                             </span>
                                         </td>
                                         <td>
-                                            <button
-                                                className="icn-btn"
+                                            <button className="icn-btn"
                                                 onClick={() => {
                                                     this.props.remove(this.getIndex(item));
-                                                }}
-                                            >
+                                                }}>
                                                 <i className="icon-close-small" />
                                             </button>
                                         </td>
                                     </tr>
                                 );
-                            })
-                        }
-                    </tbody>
-                </table>
-            </div>
+                            }) }
+                        </tbody>
+                    </table>
+                </div>
+            </React.Fragment>
         );
     }
 }
