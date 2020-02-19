@@ -1,9 +1,9 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import {ItemUrgency, TypeIcon} from './index';
 import {gettext} from 'core/utils';
 import {IArticle} from 'superdesk-api';
+import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
 
 interface IProps {
     item?: any;
@@ -34,21 +34,21 @@ export class WidgetItem extends React.Component<IProps, any> {
         this.edit = this.edit.bind(this);
     }
 
-    preview(event) {
-        event.stopPropagation();
+    preview() {
         this.props.preview(this.item);
     }
 
     select(e) {
-        e.preventDefault();
-        e.stopPropagation();
+        if (querySelectorParent(e.target, 'button', {self: true})) {
+            return;
+        }
+
         if (!this.item.gone) {
             this.props.select(this.item);
         }
     }
 
-    edit(e) {
-        e.stopPropagation();
+    edit() {
         if (!this.item.gone) {
             this.props.edit(this.item);
         }
@@ -85,7 +85,7 @@ export class WidgetItem extends React.Component<IProps, any> {
                 { this.props.canEdit && !this.item.gone ?
                     <div className="content-item__action">
                         { this.item.type !== 'composite' ?
-                            <button className="icn-btn" onMouseDown={this.preview}
+                            <button className="icn-btn" onClick={this.preview}
                                 title={gettext('Preview')}>
                                 <i className="icon-external"/>
                             </button>
@@ -95,7 +95,7 @@ export class WidgetItem extends React.Component<IProps, any> {
                         { this.props.customMonitoringWidget ?
                             ''
                             :
-                            <button className="icn-btn" onMouseDown={this.edit}
+                            <button className="icn-btn" onClick={this.edit}
                                 title={gettext('Edit')}>
                                 <i className="icon-pencil"/>
                             </button>
