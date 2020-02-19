@@ -30,15 +30,6 @@
                             </ul>
                         </div>
 
-                        <div>
-                            <sd-monitoring-filtering-buttons
-                                desk-id="activeDeskId"
-                                toggle-filter="aggregate.toggleCustomFilter"
-                                is-filter-active="aggregate.isCustomFilterActive"
-                                active-filters="aggregate.activeFilters.customFilters"
-                            ></sd-monitoring-filtering-buttons>
-                        </div>
-
                         <div class="dropdown sd-flex-no-shrink" dropdown ng-if="!monitoring.singleGroup && type === 'monitoring'">
                             <button class="dropdown__toggle navbtn navbtn--text-only" dropdown-toggle>{{ gettext('Monitoring') }} {{workspace.name}} <span class="dropdown__caret"></span></button>
                             <ul class="dropdown__menu scrollable">
@@ -123,6 +114,15 @@
                             <button class="navbtn strict" ng-if="type === 'monitoring' && aggregate.settings.type === 'workspace'" ng-click="aggregate.edit()">
                                 <i class="icon-settings"></i>
                             </button>
+
+                            <div style="display: flex; align-items: center; padding-left: 10px; padding-right: 10px;">
+                                <sd-monitoring-filtering-buttons
+                                    desk-id="activeDeskId"
+                                    toggle-filter="aggregate.toggleCustomFilter"
+                                    is-filter-active="aggregate.isCustomFilterActive"
+                                    active-filters="aggregate.activeFilters.customFilters"
+                                ></sd-monitoring-filtering-buttons>
+                            </div>
 
                             <div ng-if="disableMonitoringCreateItem == null && (!state.opened && (type !== 'spike' && type !== 'highlights'))" class="dropdown dropdown--align-right strict" sd-tooltip="{{ gettext('Create new item') }}" flow="left" dropdown>
                                 <button
