@@ -11,6 +11,12 @@ export default function SearchProviderConfigDirective(searchProviderService, not
             $scope.newDestination = null;
             $scope.gettext = gettext;
 
+            $scope.availableListViews = {
+                '': {label: gettext('None')},
+                list: {label: gettext('List View'), icon: 'th-list'},
+                photogrid: {label: gettext('Photo Grid View'), icon: 'th'},
+            };
+
             searchProviderService.getAllowedProviderTypes().then((providerTypes) => {
                 $scope.providerTypes = providerTypes;
                 $scope.noProvidersAllowed = !$scope.providerTypes.length;
