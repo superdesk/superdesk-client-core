@@ -1,3 +1,5 @@
+/* eslint-disable react/no-multi-comp */
+
 import React from 'react';
 import ReactPaginate from 'react-paginate';
 import ObjectEditor from './ObjectEditor';
@@ -61,6 +63,100 @@ function sortItems(items: IState['items'], sort: ISortOption) {
             return assertNever(sort.direction);
         }
     });
+}
+
+class InputField extends React.PureComponent<{
+    field: ISchemaField;
+    item: IState['items'][0];
+    required: boolean;
+    valid: boolean;
+    update: IProps['update'];
+}> {
+    render() {
+        const {field, item, required, valid} = this.props;
+        const value = item[field.key] || '';
+        const disabled = !item.is_active;
+        const update = (event) => {
+            const _value = field.type === 'integer' ? parseInt(event.target.value, 10) : event.target.value;
+
+            const caretPosition = event.target.selectionStart;
+            const targetInput = event.target;
+
+            this.setState({targetInput, caretPosition});
+            this.props.update(item, field.key, _value);
+        };
+        let className = 'sd-line-input sd-line-input--no-margin sd-line-input--no-label sd-line-input--boxed';
+
+        if (required) {
+            className += ' sd-line-input--required';
+        }
+        if (!valid) {
+            className += ' sd-line-input--invalid';
+        }
+
+        switch (field.type) {
+        case 'bool':
+            return (
+                <input type="checkbox"
+                    checked={!!value}
+                    disabled={disabled}
+                    onChange={(event) => this.props.update(item, field.key, !value)}
+                />
+            );
+
+        case 'color':
+            return (
+                <input type="color"
+                    value={value}
+                    disabled={disabled}
+                    onChange={update}
+                />
+            );
+
+        case 'short':
+            return (
+                <input type="text"
+                    value={value}
+                    disabled={disabled}
+                    onChange={update}
+                />
+            );
+
+        case 'object': {
+            return (
+                <ObjectEditor
+                    value={value}
+                    disabled={disabled}
+                    onChange={(_value) => this.props.update(item, field.key, _value)}
+                />
+            );
+        }
+
+        case 'integer':
+            return (
+                <div className={className}>
+                    <input type="number"
+                        value={value}
+                        disabled={disabled}
+                        onChange={update}
+                        className={field.key === 'name' ? 'long-name sd-line-input__input' : 'sd-line-input__input'}
+                    />
+                </div>
+            );
+
+        default:
+            return (
+                <div className={className}>
+                    <input type="text"
+                        value={value}
+                        disabled={disabled}
+                        onChange={update}
+                        className={field.key === 'name' ? 'long-name sd-line-input__input' : 'sd-line-input__input'}
+                    />
+                </div>
+            );
+        }
+    }
 }
 
 export default class ItemsTableComponent extends React.Component<IProps, IState> {
@@ -134,94 +230,6 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
         this.setState(nextState as any);
 
         this.receiveStateCount++;
-    }
-
-    inputField(field: ISchemaField, item) {
-        const index = this.getIndex(item);
-        const value = item[field.key] || '';
-        const disabled = !item.is_active;
-        const update = (event) => {
-            const _value = field.type === 'integer' ? parseInt(event.target.value, 10) : event.target.value;
-
-            const caretPosition = event.target.selectionStart;
-            const targetInput = event.target;
-
-            this.setState({targetInput, caretPosition});
-            this.props.update(item, field.key, _value);
-        };
-        const required = this.state.itemsValidation.length && has(this.state.itemsValidation[index], field.key);
-        const valid = !required || this.state.itemsValidation[index][field.key];
-        let className = 'sd-line-input sd-line-input--no-margin sd-line-input--no-label sd-line-input--boxed';
-
-        if (required) {
-            className += ' sd-line-input--required';
-        }
-        if (!valid) {
-            className += ' sd-line-input--invalid';
-        }
-
-        switch (field.type) {
-        case 'bool':
-            return (
-                <input type="checkbox"
-                    checked={!!value}
-                    disabled={disabled}
-                    onChange={(event) => this.props.update(item, field.key, !value)}
-                />
-            );
-
-        case 'color':
-            return (
-                <input type="color"
-                    value={value}
-                    disabled={disabled}
-                    onChange={update}
-                />
-            );
-
-        case 'short':
-            return (
-                <input type="text"
-                    value={value}
-                    disabled={disabled}
-                    onChange={update}
-                />
-            );
-
-        case 'object': {
-            return (
-                <ObjectEditor
-                    value={value}
-                    disabled={disabled}
-                    onChange={(_value) => this.props.update(item, field.key, _value)}
-                />
-            );
-        }
-
-        case 'integer':
-            return (
-                <div className={className}>
-                    <input type="number"
-                        value={value}
-                        disabled={disabled}
-                        onChange={update}
-                        className={field.key === 'name' ? 'long-name sd-line-input__input' : 'sd-line-input__input'}
-                    />
-                </div>
-            );
-
-        default:
-            return (
-                <div className={className}>
-                    <input type="text"
-                        value={value}
-                        disabled={disabled}
-                        onChange={update}
-                        className={field.key === 'name' ? 'long-name sd-line-input__input' : 'sd-line-input__input'}
-                    />
-                </div>
-            );
-        }
     }
 
     render() {
@@ -353,14 +361,28 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
                             </tr>
                         </thead>
                         <tbody>
-                            { filteredItems.slice(takeFrom, takeTo).map((item, i) => {
+                            {filteredItems.slice(takeFrom, takeTo).map((item) => {
                                 return (
                                     <tr key={this.getIndex(item)}>
-                                        {this.props.schemaFields.map((field) => (
-                                            <td key={field.key}>
-                                                {this.inputField(field, item)}
-                                            </td>
-                                        ))}
+                                        {this.props.schemaFields.map((field) => {
+                                            const index = this.getIndex(item);
+                                            const required = this.state.itemsValidation.length
+                                                && has(this.state.itemsValidation[index], field.key);
+
+                                            return (
+                                                <td key={field.key}>
+                                                    <InputField
+                                                        field={field}
+                                                        item={item}
+                                                        required={required}
+                                                        valid={
+                                                            !required || this.state.itemsValidation[index][field.key]
+                                                        }
+                                                        update={this.props.update}
+                                                    />
+                                                </td>
+                                            );
+                                        })}
                                         <td>
                                             <span className="vocabularyStatus">
                                                 <input type="checkbox"
@@ -381,7 +403,7 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
                                         </td>
                                     </tr>
                                 );
-                            }) }
+                            })}
                         </tbody>
                     </table>
                 </div>
