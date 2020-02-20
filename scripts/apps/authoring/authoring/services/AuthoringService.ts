@@ -630,9 +630,11 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         let userPrivileges = privileges.privileges;
 
         function canRewrite() {
-            if (currentItem.state === ITEM_STATE.SCHEDULED
-                && appConfig.allow_updating_scheduled_items
-                && !currentItem.rewritten_by) {
+            if (currentItem.rewritten_by != null) {
+                return false;
+            }
+
+            if (currentItem.state === ITEM_STATE.SCHEDULED && appConfig.allow_updating_scheduled_items === true) {
                 return true;
             }
             return !isReadOnlyState && currentItem.type === 'text'
