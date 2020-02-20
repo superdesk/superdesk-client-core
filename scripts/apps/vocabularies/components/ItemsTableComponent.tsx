@@ -39,11 +39,36 @@ function getPageCount(items: IState['items']) {
     return Math.ceil(items.length / pageSize);
 }
 
+function sortItems(items: IState['items'], sort: ISortOption) {
+    return items.sort((a, b) => {
+        if (sort.direction === 'ascending') {
+            if (a[sort.field] < b[sort.field]) {
+                return -1;
+            } else if (a[sort.field] > b[sort.field]) {
+                return 1;
+            } else {
+                return 0;
+            }
+        } else if (sort.direction === 'descending') {
+            if (a[sort.field] < b[sort.field]) {
+                return 1;
+            } else if (a[sort.field] > b[sort.field]) {
+                return -1;
+            } else {
+                return 0;
+            }
+        } else {
+            return assertNever(sort.direction);
+        }
+    });
+}
+
 export default class ItemsTableComponent extends React.Component<IProps, IState> {
     static propTypes: any;
     static defaultProps: any;
     getIndex: (item: IState['items'][0]) => number;
     sortFields: Array<string>;
+    receiveStateCount: number;
 
     constructor(props) {
         super(props);
@@ -61,6 +86,7 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
 
         this.getIndex = (item) => this.state.items.indexOf(item);
         this.sortFields = [];
+        this.receiveStateCount = 0;
     }
 
     componentDidUpdate() {
@@ -68,20 +94,6 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
 
         if (caretPosition != null) {
             this.setCaretPosition(targetInput, caretPosition);
-        }
-
-        if (this.sortFields.length < 1 && this.state.items.length > 0) {
-            this.sortFields = this.state.items.length < 1 ? [] : Object.keys(this.state.items[0]);
-        }
-
-        if (this.state.sort == null && this.sortFields.length > 0) {
-            // eslint-disable-next-line react/no-did-update-set-state
-            this.setState({
-                sort: {
-                    field: this.sortFields.includes('name') ? 'name' : this.sortFields[0],
-                    direction: 'ascending',
-                },
-            });
         }
     }
 
@@ -95,13 +107,33 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
     receiveState(items: IState['items'], itemsValidation: IState['itemsValidation']) {
         const pageCount = getPageCount(items);
 
-        this.setState({
+        let nextState: Partial<IState> = {
             items: items,
             itemsValidation: itemsValidation,
 
             // if items are removed, the page needs to be updated so it doesn't point to a page that no longer exists
             page: Math.min(this.state.page, pageCount),
-        });
+        };
+
+        // sort only the first time after receiving data
+        if (this.receiveStateCount === 0) {
+            this.sortFields = Object.keys(items[0]);
+
+            const initialSortOption: ISortOption = {
+                field: this.sortFields.includes('name') ? 'name' : this.sortFields[0],
+                direction: 'ascending',
+            };
+
+            nextState = {
+                ...nextState,
+                sort: initialSortOption,
+                items: sortItems(nextState.items, initialSortOption),
+            };
+        }
+
+        this.setState(nextState as any);
+
+        this.receiveStateCount++;
     }
 
     inputField(field: ISchemaField, item) {
@@ -202,30 +234,6 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
                     || item.name?.toLocaleLowerCase().includes(this.state.searchTerm);
             });
 
-        const filteredAndSorted = this.state.sort == null
-            ? filteredItems
-            : filteredItems.sort((a, b) => {
-                if (this.state.sort.direction === 'ascending') {
-                    if (a[this.state.sort.field] < b[this.state.sort.field]) {
-                        return -1;
-                    } else if (a[this.state.sort.field] > b[this.state.sort.field]) {
-                        return 1;
-                    } else {
-                        return 0;
-                    }
-                } else if (this.state.sort.direction === 'descending') {
-                    if (a[this.state.sort.field] < b[this.state.sort.field]) {
-                        return 1;
-                    } else if (a[this.state.sort.field] > b[this.state.sort.field]) {
-                        return -1;
-                    } else {
-                        return 0;
-                    }
-                } else {
-                    return assertNever(this.state.sort.direction);
-                }
-            });
-
         return (
             <React.Fragment>
                 <div className="subnav">
@@ -276,13 +284,16 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
 
                         {this.state.sort == null ? null : (
                             <button className="icn-btn direction" onClick={() => {
+                                const nextSortOption: ISortOption = {
+                                    ...this.state.sort,
+                                    direction: this.state.sort.direction === 'ascending'
+                                        ? 'descending'
+                                        : 'ascending',
+                                };
+
                                 this.setState({
-                                    sort: {
-                                        ...this.state.sort,
-                                        direction: this.state.sort.direction === 'ascending'
-                                            ? 'descending'
-                                            : 'ascending',
-                                    },
+                                    sort: nextSortOption,
+                                    items: sortItems(this.state.items, nextSortOption),
                                 });
                             }}>
                                 {this.state.sort.direction === 'ascending'
@@ -314,7 +325,7 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
                     <ReactPaginate
                         previousLabel={''}
                         nextLabel={''}
-                        pageCount={getPageCount(filteredAndSorted)}
+                        pageCount={getPageCount(filteredItems)}
                         marginPagesDisplayed={2}
                         pageRangeDisplayed={5}
                         onPageChange={({selected}) => {
@@ -342,7 +353,7 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
                             </tr>
                         </thead>
                         <tbody>
-                            { filteredAndSorted.slice(takeFrom, takeTo).map((item, i) => {
+                            { filteredItems.slice(takeFrom, takeTo).map((item, i) => {
                                 return (
                                     <tr key={this.getIndex(item)}>
                                         {this.props.schemaFields.map((field) => (
