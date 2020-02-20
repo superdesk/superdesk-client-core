@@ -56,7 +56,7 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
             searchTerm: '',
             searchExtended: false,
             sortDropdownOpen: false,
-            sort: null
+            sort: null,
         };
 
         this.getIndex = (item) => this.state.items.indexOf(item);
@@ -231,46 +231,66 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
                 <div className="subnav">
                     <div className={'flat-searchbar' + (this.state.searchExtended ? ' extended' : '')}>
                         <div className="search-handler">
-                            <label className="trigger-icon" onClick={() => {this.setState({searchExtended: !this.state.searchExtended})}}>
-                                <i className="icon-search"></i>
+                            <label
+                                className="trigger-icon"
+                                onClick={() => {
+                                    this.setState({searchExtended: !this.state.searchExtended});
+                                }}
+                            >
+                                <i className="icon-search" />
                             </label>
                             <input type="text" value={this.state.searchTerm}
                                 placeholder={gettext('Search')} onChange={(event) => {
                                     this.setState({searchTerm: event.target.value, page: 1});
                                 }} />
-                            <button className="search-close"><i className="icon-close-small"></i></button>
+                            <button className="search-close"><i className="icon-close-small" /></button>
                         </div>
                     </div>
 
                     <div className="sortbar sd-margin-l--auto">
-                        { this.state.sort ?
+                        {this.state.sort == null ? null : (
                             <div className="dropdown">
                                 <button className="dropdown__toggle"
                                     onClick={() => this.setState({sortDropdownOpen: !this.state.sortDropdownOpen})}>
                                     {this.state.sort.field}
-                                    <span className="dropdown__caret"></span>
+                                    <span className="dropdown__caret" />
                                 </button>
                                 <Dropdown open={this.state.sortDropdownOpen}>
                                     {this.sortFields.map((field) => {
-                                        return (<li key={field}><button onClick={() => {
-                                            this.setState({sort: {...this.state.sort, field}, sortDropdownOpen: false})
-                                        }}>{field}</button></li>);
+                                        return (
+                                            <li key={field}>
+                                                <button onClick={() => {
+                                                    this.setState({
+                                                        sort: {...this.state.sort, field},
+                                                        sortDropdownOpen: false,
+                                                    });
+                                                }}>
+                                                    {field}
+                                                </button>
+                                            </li>
+                                        );
                                     })}
                                 </Dropdown>
                             </div>
-                        : null }
+                        )}
 
-                        { this.state.sort ?
+                        {this.state.sort == null ? null : (
                             <button className="icn-btn direction" onClick={() => {
-                                this.setState({sort: {...this.state.sort,
-                                    direction: this.state.sort.direction === 'ascending' ? 'descending' : 'ascending'}
+                                this.setState({
+                                    sort: {
+                                        ...this.state.sort,
+                                        direction: this.state.sort.direction === 'ascending'
+                                            ? 'descending'
+                                            : 'ascending',
+                                    },
                                 });
                             }}>
-                                { this.state.sort.direction === 'ascending' ?
-                                    <i className="icon-descending"></i> :
-                                    <i className="icon-ascending"></i> }
+                                {this.state.sort.direction === 'ascending'
+                                    ? <i className="icon-descending" />
+                                    : <i className="icon-ascending" />
+                                }
                             </button>
-                        : null }
+                        )}
 
                         <button className="btn btn--primary" onClick={() => {
                             // clearing search before adding an item so it doesn't get filtered
