@@ -465,13 +465,19 @@ declare module 'superdesk-api' {
         text: string;
     }
 
+    export interface IVocabularyItem {
+        name?: string;
+        qcode?: string;
+        is_active?: boolean;
+    }
+
     export interface IVocabulary extends IBaseRestApiResponse {
         _deleted: boolean;
         display_name: string;
         helper_text?: string;
         popup_width?: number;
         type: string;
-        items: Array<{ name: string; qcode: string; is_active: boolean }>;
+        items: Array<IVocabularyItem>;
         single_value?: boolean;
         schema_field?: string;
         dependent?: boolean;

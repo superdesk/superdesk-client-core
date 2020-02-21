@@ -4,6 +4,7 @@ import {gettext} from 'core/utils';
 import {getFields} from 'apps/fields';
 import {IVocabulary} from 'superdesk-api';
 import {IScope as IScopeConfigController} from './VocabularyConfigController';
+import {dataApi} from 'core/helpers/CrudManager';
 
 VocabularyEditController.$inject = [
     '$scope',
@@ -13,6 +14,7 @@ VocabularyEditController.$inject = [
     'metadata',
     'cvSchema',
     'relationsService',
+    '$timeout',
 ];
 
 interface IScope extends IScopeConfigController {
@@ -43,7 +45,7 @@ interface IScope extends IScopeConfigController {
 const idRegex = '^[a-zA-Z0-9-_]+$';
 
 export function VocabularyEditController(
-    $scope: IScope, notify, api, vocabularies, metadata, cvSchema, relationsService,
+    $scope: IScope, notify, api, vocabularies, metadata, cvSchema, relationsService, $timeout,
 ) {
     var origVocabulary = _.cloneDeep($scope.vocabulary);
 
@@ -56,6 +58,17 @@ export function VocabularyEditController(
     $scope.idRegex = idRegex;
     $scope.selectionTypes = VOCABULARY_SELECTION_TYPES;
 
+    function closeVocabulary(callback?) {
+        $scope.closeVocabulary();
+
+        // update items after react editing component has closed
+        // to prevent it from throwing an error due to not being able to generate a key
+        // which is generated from the position of the item in the array
+        if (callback != null) {
+            setTimeout(callback);
+        }
+    }
+
     if ($scope.matchFieldTypeToTab('related-content-fields', $scope.vocabulary.field_type)) {
         // Insert default allowed workflows
         if ($scope.vocabulary.field_options == null) {
@@ -67,10 +80,12 @@ export function VocabularyEditController(
 
     function onSuccess(result) {
         notify.success(gettext('Vocabulary saved successfully'));
-        $scope.closeVocabulary();
-        $scope.updateVocabulary(result);
-        $scope.issues = null;
-        return result;
+
+        closeVocabulary(() => {
+            $scope.updateVocabulary(result);
+            $scope.issues = null;
+            $scope.$apply();
+        });
     }
 
     function onError(response) {
@@ -143,7 +158,14 @@ export function VocabularyEditController(
         }
 
         if (_.isNil($scope.errorMessage)) {
-            api.save('vocabularies', $scope.vocabulary).then(onSuccess, onError);
+            api.save(
+                'vocabularies',
+                $scope.vocabulary,
+                undefined,
+                undefined,
+                undefined,
+                {skipPostProcessing: true},
+            ).then(onSuccess, onError);
         }
 
         // discard metadata cache:
@@ -173,8 +195,10 @@ export function VocabularyEditController(
      * Discard changes and close modal.
      */
     $scope.cancel = function() {
-        angular.copy(origVocabulary, $scope.vocabulary);
-        $scope.closeVocabulary();
+        closeVocabulary(() => {
+            $scope.updateVocabulary(origVocabulary);
+            $scope.$apply();
+        });
     };
 
     /**

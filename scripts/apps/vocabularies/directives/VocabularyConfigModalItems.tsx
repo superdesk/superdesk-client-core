@@ -39,19 +39,15 @@ export const VocabularyConfigModalItems: any = () => ({
             // sync scope
             scope.$applyAsync(() => {
                 ngForm.$setDirty();
-                let index = 0;
 
-                scope.vocabulary.items = scope.vocabulary.items.map((_item) => {
-                    index++;
+                scope.vocabulary.items.forEach((_item, index) => {
                     if (_item === item) {
-                        const updated = Object.assign({}, item, updates);
+                        const updated = Object.assign(item, updates);
 
                         itemsValidation[index - 1] = validateItem(updated);
                         scope.itemsValidation.valid = scope.itemsValidation.valid &&
                                 validItem(itemsValidation[index - 1]);
-                        return updated;
                     }
-                    return _item;
                 });
             });
         };
@@ -88,6 +84,10 @@ export const VocabularyConfigModalItems: any = () => ({
             remove={remove}
             addItem={add}
             update={update}
+            setDirty={() => {
+                ngForm.$setDirty();
+                scope.$apply();
+            }}
         />, element[0]);
 
         // destroy component with directive

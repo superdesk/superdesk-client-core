@@ -3,9 +3,9 @@
 import React from 'react';
 import ReactPaginate from 'react-paginate';
 import ObjectEditor from './ObjectEditor';
-import {has} from 'lodash';
+import {has, once} from 'lodash';
 import {gettext} from 'core/utils';
-import {ISortOption} from 'superdesk-api';
+import {ISortOption, IVocabularyItem} from 'superdesk-api';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {Dropdown} from 'core/ui/components';
 import {Checkbox} from 'superdesk-ui-framework';
@@ -21,13 +21,13 @@ interface IProps {
     update(item, key, value): void;
     remove(index): void;
     addItem(): void;
+    setDirty(): void;
 }
 
 interface IState {
-    targetInput: any;
-    items: Array<{qcode?: string; name?: string; is_active?: boolean}>;
+    items: Array<IVocabularyItem>;
+    itemsSorted: Array<IVocabularyItem>;
     itemsValidation: Array<{[key: string]: any}>;
-    caretPosition: any;
     page: number;
     searchTerm: string;
     searchExtended: boolean;
@@ -37,12 +37,12 @@ interface IState {
 
 const pageSize = 50;
 
-function getPageCount(items: IState['items']) {
+function getPageCount(items: Array<IVocabularyItem>) {
     return Math.ceil(items.length / pageSize);
 }
 
-function sortItems(items: IState['items'], sort: ISortOption) {
-    return items.sort((a, b) => {
+function sortItems(items: Array<IVocabularyItem>, sort: ISortOption): Array<IVocabularyItem> {
+    return [...items].sort((a, b) => {
         if (sort.direction === 'ascending') {
             if (a[sort.field] < b[sort.field]) {
                 return -1;
@@ -65,26 +65,43 @@ function sortItems(items: IState['items'], sort: ISortOption) {
     });
 }
 
-class InputField extends React.PureComponent<{
+interface IPropsInputField {
     field: ISchemaField;
-    item: IState['items'][0];
+    item: IVocabularyItem;
     required: boolean;
     valid: boolean;
     update: IProps['update'];
-}> {
+    setDirty: IProps['setDirty'];
+}
+
+interface IStateInputField {
+    value: string;
+}
+
+class InputField extends React.Component<IPropsInputField, IStateInputField> {
+    setDirtyOnce: () => void;
+
+    constructor(props) {
+        super(props);
+
+        const {field, item} = this.props;
+
+        this.state = {
+            value: item[field.key] || '',
+        };
+
+        this.setDirtyOnce = once(this.props.setDirty);
+    }
+    componentDidUpdate(prevProps: IPropsInputField, prevState: IStateInputField) {
+        if (prevState.value !== this.state.value) {
+            this.setDirtyOnce();
+        }
+    }
     render() {
         const {field, item, required, valid} = this.props;
-        const value = item[field.key] || '';
+        const {value} = this.state;
         const disabled = !item.is_active;
-        const update = (event) => {
-            const _value = field.type === 'integer' ? parseInt(event.target.value, 10) : event.target.value;
 
-            const caretPosition = event.target.selectionStart;
-            const targetInput = event.target;
-
-            this.setState({targetInput, caretPosition});
-            this.props.update(item, field.key, _value);
-        };
         let className = 'sd-line-input sd-line-input--no-margin sd-line-input--no-label sd-line-input--boxed';
 
         if (required) {
@@ -100,7 +117,7 @@ class InputField extends React.PureComponent<{
                 <input type="checkbox"
                     checked={!!value}
                     disabled={disabled}
-                    onChange={(event) => this.props.update(item, field.key, !value)}
+                    onChange={() => this.props.update(item, field.key, !value)}
                 />
             );
 
@@ -109,7 +126,7 @@ class InputField extends React.PureComponent<{
                 <input type="color"
                     value={value}
                     disabled={disabled}
-                    onChange={update}
+                    onChange={(event) => this.props.update(item, field.key, event.target.value)}
                 />
             );
 
@@ -118,7 +135,12 @@ class InputField extends React.PureComponent<{
                 <input type="text"
                     value={value}
                     disabled={disabled}
-                    onChange={update}
+                    onChange={(event) => {
+                        this.setState({value: event.target.value});
+                    }}
+                    onBlur={() => {
+                        this.props.update(item, field.key, value);
+                    }}
                 />
             );
 
@@ -138,8 +160,13 @@ class InputField extends React.PureComponent<{
                     <input type="number"
                         value={value}
                         disabled={disabled}
-                        onChange={update}
                         className={field.key === 'name' ? 'long-name sd-line-input__input' : 'sd-line-input__input'}
+                        onChange={(event) => {
+                            this.setState({value: event.target.value});
+                        }}
+                        onBlur={() => {
+                            this.props.update(item, field.key, parseInt(value, 10));
+                        }}
                     />
                 </div>
             );
@@ -148,10 +175,15 @@ class InputField extends React.PureComponent<{
             return (
                 <div className={className}>
                     <input type="text"
+                        className={field.key === 'name' ? 'long-name sd-line-input__input' : 'sd-line-input__input'}
                         value={value}
                         disabled={disabled}
-                        onChange={update}
-                        className={field.key === 'name' ? 'long-name sd-line-input__input' : 'sd-line-input__input'}
+                        onChange={(event) => {
+                            this.setState({value: event.target.value});
+                        }}
+                        onBlur={() => {
+                            this.props.update(item, field.key, value);
+                        }}
                     />
                 </div>
             );
@@ -162,7 +194,7 @@ class InputField extends React.PureComponent<{
 export default class ItemsTableComponent extends React.Component<IProps, IState> {
     static propTypes: any;
     static defaultProps: any;
-    getIndex: (item: IState['items'][0]) => number;
+    getIndex: (item: IVocabularyItem) => number;
     sortFields: Array<string>;
     receiveStateCount: number;
 
@@ -170,9 +202,8 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
         super(props);
         this.state = {
             items: [],
+            itemsSorted: [],
             itemsValidation: [],
-            caretPosition: '',
-            targetInput: '',
             page: 1,
             searchTerm: '',
             searchExtended: false,
@@ -185,22 +216,7 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
         this.receiveStateCount = 0;
     }
 
-    componentDidUpdate() {
-        const {targetInput, caretPosition} = this.state;
-
-        if (caretPosition != null) {
-            this.setCaretPosition(targetInput, caretPosition);
-        }
-    }
-
-    setCaretPosition(ctrl, pos) {
-        if (ctrl.setSelectionRange) {
-            ctrl.focus();
-            ctrl.setSelectionRange(pos, pos);
-        }
-    }
-
-    receiveState(items: IState['items'], itemsValidation: IState['itemsValidation']) {
+    receiveState(items: Array<IVocabularyItem>, itemsValidation: IState['itemsValidation']) {
         const pageCount = getPageCount(items);
 
         let nextState: Partial<IState> = {
@@ -223,7 +239,7 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
             nextState = {
                 ...nextState,
                 sort: initialSortOption,
-                items: sortItems(nextState.items, initialSortOption),
+                itemsSorted: sortItems(nextState.items, initialSortOption),
             };
         }
 
@@ -232,12 +248,26 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
         this.receiveStateCount++;
     }
 
+    componentDidUpdate(prevProps: IProps, prevState: IState) {
+        const sortOptionChanged = prevState.sort !== this.state.sort;
+
+        const itemCountChanged =
+            this.state.items.length !== this.state.itemsSorted.length; // when adding an item for example
+
+        if (sortOptionChanged || itemCountChanged) {
+            // eslint-disable-next-line react/no-did-update-set-state
+            this.setState({
+                itemsSorted: sortItems(this.state.items, this.state.sort),
+            });
+        }
+    }
+
     render() {
         const takeFrom = (this.state.page - 1) * pageSize;
         const takeTo = this.state.page * pageSize;
         const filteredItems = this.state.searchTerm.length < 1
-            ? this.state.items
-            : this.state.items.filter((item) => {
+            ? this.state.itemsSorted
+            : this.state.itemsSorted.filter((item) => {
                 return item.qcode?.toLocaleLowerCase().includes(this.state.searchTerm)
                     || item.name?.toLocaleLowerCase().includes(this.state.searchTerm);
             });
@@ -301,7 +331,6 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
 
                                 this.setState({
                                     sort: nextSortOption,
-                                    items: sortItems(this.state.items, nextSortOption),
                                 });
                             }}>
                                 {this.state.sort.direction === 'ascending'
@@ -379,6 +408,7 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
                                                             !required || this.state.itemsValidation[index][field.key]
                                                         }
                                                         update={this.props.update}
+                                                        setDirty={this.props.setDirty}
                                                     />
                                                 </td>
                                             );
