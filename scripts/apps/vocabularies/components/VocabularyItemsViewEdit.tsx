@@ -3,7 +3,7 @@
 import React from 'react';
 import ReactPaginate from 'react-paginate';
 import ObjectEditor from './ObjectEditor';
-import {has, once} from 'lodash';
+import {once, debounce} from 'lodash';
 import {gettext} from 'core/utils';
 import {ISortOption, IVocabularyItem} from 'superdesk-api';
 import {assertNever} from 'core/helpers/typescript-helpers';
@@ -14,33 +14,20 @@ interface ISchemaField {
     key: string;
     label?: string;
     type?: 'object' | string;
+    required?: boolean;
 }
 
-interface IProps {
-    items: Array<IVocabularyItem>;
-    schemaFields: Array<ISchemaField>;
-    newItemTemplate: any;
-    setDirty(): void;
-}
-
-interface IState {
-    items: Array<IVocabularyItem>;
-    itemsSorted: Array<IVocabularyItem>;
-    itemsValidation: Array<{[key: string]: any}>;
-    page: number;
-    searchTerm: string;
-    searchExtended: boolean;
-    sortDropdownOpen: boolean;
-    sort: ISortOption | null;
+interface IVocabularyItemWithId extends IVocabularyItem {
+    id: string;
 }
 
 const pageSize = 50;
 
-function getPageCount(items: Array<IVocabularyItem>) {
+function getPageCount(items: Array<IVocabularyItemWithId>) {
     return Math.ceil(items.length / pageSize);
 }
 
-function sortItems(items: Array<IVocabularyItem>, sort: ISortOption): Array<IVocabularyItem> {
+function sortItems(items: Array<IVocabularyItemWithId>, sort: ISortOption): Array<IVocabularyItemWithId> {
     return [...items].sort((a, b) => {
         if (sort.direction === 'ascending') {
             if (a[sort.field] < b[sort.field]) {
@@ -66,39 +53,35 @@ function sortItems(items: Array<IVocabularyItem>, sort: ISortOption): Array<IVoc
 
 interface IPropsInputField {
     field: ISchemaField;
-    item: IVocabularyItem;
+    item: IVocabularyItemWithId;
     required: boolean;
-    valid: boolean;
     update(item: any, key: string, value: any): void;
-    setDirty: IProps['setDirty'];
 }
 
-interface IStateInputField {
-    value: string;
+function isItemFieldValid(item: IVocabularyItemWithId, field: ISchemaField): boolean {
+    if (!field.required) {
+        return true;
+    } else if (typeof item[field.key] === 'string') {
+        return item[field.key].length > 0;
+    } else {
+        return item[field.key] != null;
+    }
 }
 
-class InputField extends React.Component<IPropsInputField, IStateInputField> {
-    setDirtyOnce: () => void;
+function containsInvalidItems(items: Array<IVocabularyItemWithId>, schemaFields: Array<ISchemaField>): boolean {
+    return items.some((item) => {
+        return schemaFields.some((field) => {
+            const valid = isItemFieldValid(item, field);
 
-    constructor(props) {
-        super(props);
+            return !valid;
+        });
+    });
+}
 
-        const {field, item} = this.props;
-
-        this.state = {
-            value: item[field.key] || '',
-        };
-
-        this.setDirtyOnce = once(this.props.setDirty);
-    }
-    componentDidUpdate(prevProps: IPropsInputField, prevState: IStateInputField) {
-        if (prevState.value !== this.state.value) {
-            this.setDirtyOnce();
-        }
-    }
+class InputField extends React.PureComponent<IPropsInputField> {
     render() {
-        const {field, item, required, valid} = this.props;
-        const {value} = this.state;
+        const {field, item, required} = this.props;
+        const value = item[field.key] || '';
         const disabled = !item.is_active;
 
         let className = 'sd-line-input sd-line-input--no-margin sd-line-input--no-label sd-line-input--boxed';
@@ -106,7 +89,7 @@ class InputField extends React.Component<IPropsInputField, IStateInputField> {
         if (required) {
             className += ' sd-line-input--required';
         }
-        if (!valid) {
+        if (!isItemFieldValid(item, field)) {
             className += ' sd-line-input--invalid';
         }
 
@@ -135,10 +118,7 @@ class InputField extends React.Component<IPropsInputField, IStateInputField> {
                     value={value}
                     disabled={disabled}
                     onChange={(event) => {
-                        this.setState({value: event.target.value});
-                    }}
-                    onBlur={() => {
-                        this.props.update(item, field.key, value);
+                        this.props.update(item, field.key, event.target.value);
                     }}
                 />
             );
@@ -161,10 +141,7 @@ class InputField extends React.Component<IPropsInputField, IStateInputField> {
                         disabled={disabled}
                         className={field.key === 'name' ? 'long-name sd-line-input__input' : 'sd-line-input__input'}
                         onChange={(event) => {
-                            this.setState({value: event.target.value});
-                        }}
-                        onBlur={() => {
-                            this.props.update(item, field.key, parseInt(value, 10));
+                            this.props.update(item, field.key, parseInt(event.target.value, 10));
                         }}
                     />
                 </div>
@@ -178,10 +155,7 @@ class InputField extends React.Component<IPropsInputField, IStateInputField> {
                         value={value}
                         disabled={disabled}
                         onChange={(event) => {
-                            this.setState({value: event.target.value});
-                        }}
-                        onBlur={() => {
-                            this.props.update(item, field.key, value);
+                            this.props.update(item, field.key, event.target.value);
                         }}
                     />
                 </div>
@@ -190,18 +164,38 @@ class InputField extends React.Component<IPropsInputField, IStateInputField> {
     }
 }
 
+interface IProps {
+    items: Array<IVocabularyItem>;
+    schemaFields: Array<ISchemaField>;
+    newItemTemplate: any;
+    setDirty(): void;
+    setItemsValid(valid: boolean): void;
+}
+
+interface IState {
+    items: Array<IVocabularyItemWithId>;
+    page: number;
+    searchTerm: string;
+    searchExtended: boolean;
+    sortDropdownOpen: boolean;
+    sort: ISortOption | null;
+}
+
 export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
     static propTypes: any;
     static defaultProps: any;
-    getIndex: (item: IVocabularyItem) => number;
     sortFields: Array<string>;
+    lastId: number;
+    generateId: () => string;
+    setDirtyOnce: () => void;
+    setValidItemsDebounced: () => void;
 
-    constructor(props) {
+    constructor(props: IProps) {
         super(props);
 
-        this.getIndex = (item) => this.state.items.indexOf(item);
-
-        this.sortFields = Object.keys(this.props.items[0]);
+        this.sortFields = Object.keys(props.items[0]);
+        this.lastId = 0;
+        this.generateId = () => (this.lastId++).toString();
 
         const initialSortOption: ISortOption = {
             field: this.sortFields.includes('name') ? 'name' : this.sortFields[0],
@@ -209,9 +203,10 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
         };
 
         this.state = {
-            items: this.props.items,
-            itemsSorted: sortItems(this.props.items, initialSortOption),
-            itemsValidation: [],
+            items: sortItems(
+                props.items.map((item) => ({...item, id: this.generateId()})),
+                initialSortOption,
+            ),
             page: 1,
             searchTerm: '',
             searchExtended: false,
@@ -223,6 +218,13 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
         this.removeItem = this.removeItem.bind(this);
         this.addItem = this.addItem.bind(this);
         this.getItemsForSaving = this.getItemsForSaving.bind(this);
+        this.setDirtyOnce = once(this.props.setDirty);
+        this.setValidItemsDebounced = debounce(
+            () => {
+                this.props.setItemsValid(!containsInvalidItems(this.state.items, this.props.schemaFields));
+            },
+            200,
+        );
     }
 
     private updateItem(item: any, key: string, value: any) {
@@ -235,6 +237,8 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
                 }
             }),
         });
+
+        this.setDirtyOnce();
     }
 
     private removeItem(item: any) {
@@ -245,26 +249,37 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
 
     private addItem() {
         this.setState({
-            items: [{...this.props.newItemTemplate}].concat(this.state.items),
+            items: [{...this.props.newItemTemplate, id: this.generateId()}].concat(this.state.items),
         });
     }
 
     // tslint:disable-next-line: member-access
     public getItemsForSaving(): Array<IVocabularyItem> { // will be used from a ref
-        return this.state.items;
+        return this.state.items.map((item) => {
+            const nextItem = {...item};
+
+            delete nextItem['id'];
+
+            return nextItem;
+        });
+    }
+
+    componentDidMount() {
+        this.setValidItemsDebounced();
     }
 
     componentDidUpdate(prevProps: IProps, prevState: IState) {
         const sortOptionChanged = prevState.sort !== this.state.sort;
 
-        const itemCountChanged =
-            this.state.items.length !== this.state.itemsSorted.length; // when adding an item for example
-
-        if (sortOptionChanged || itemCountChanged) {
+        if (sortOptionChanged) {
             // eslint-disable-next-line react/no-did-update-set-state
             this.setState({
-                itemsSorted: sortItems(this.state.items, this.state.sort),
+                items: sortItems(this.state.items, this.state.sort),
             });
+        }
+
+        if (this.state.items !== prevState.items) {
+            this.setValidItemsDebounced();
         }
     }
 
@@ -272,8 +287,8 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
         const takeFrom = (this.state.page - 1) * pageSize;
         const takeTo = this.state.page * pageSize;
         const filteredItems = this.state.searchTerm.length < 1
-            ? this.state.itemsSorted
-            : this.state.itemsSorted.filter((item) => {
+            ? this.state.items
+            : this.state.items.filter((item) => {
                 return item.qcode?.toLocaleLowerCase().includes(this.state.searchTerm)
                     || item.name?.toLocaleLowerCase().includes(this.state.searchTerm);
             });
@@ -398,23 +413,15 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
                         <tbody>
                             {filteredItems.slice(takeFrom, takeTo).map((item) => {
                                 return (
-                                    <tr key={this.getIndex(item)}>
+                                    <tr key={item.id}>
                                         {this.props.schemaFields.map((field) => {
-                                            const index = this.getIndex(item);
-                                            const required = this.state.itemsValidation.length
-                                                && has(this.state.itemsValidation[index], field.key);
-
                                             return (
                                                 <td key={field.key}>
                                                     <InputField
                                                         field={field}
                                                         item={item}
-                                                        required={required}
-                                                        valid={
-                                                            !required || this.state.itemsValidation[index][field.key]
-                                                        }
+                                                        required={field.required}
                                                         update={this.updateItem}
-                                                        setDirty={this.props.setDirty}
                                                     />
                                                 </td>
                                             );

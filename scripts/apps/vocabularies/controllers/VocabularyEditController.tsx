@@ -264,6 +264,10 @@ export function VocabularyEditController(
                     $scope.editForm.$setDirty();
                     $scope.$apply();
                 }}
+                setItemsValid={(valid) => {
+                    $scope.itemsValidation.valid = valid;
+                    $scope.$apply();
+                }}
             />
         ), placeholderElement);
     });
