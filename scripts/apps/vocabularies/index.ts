@@ -16,7 +16,7 @@ import {coreMenuGroups} from 'core/activity/activity';
 import {gettext} from 'core/utils';
 import {reactToAngular1} from 'superdesk-ui-framework';
 import {CustomFieldConfigs} from './custom-field-configs';
-import VocabularyItemsViewEdit from './components/ItemsTableComponent';
+import VocabularyItemsViewEdit from './components/VocabularyItemsViewEdit';
 
 /**
  * @ngdoc module
