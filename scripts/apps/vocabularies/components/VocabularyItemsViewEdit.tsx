@@ -190,7 +190,7 @@ class InputField extends React.Component<IPropsInputField, IStateInputField> {
     }
 }
 
-export default class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
+export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
     static propTypes: any;
     static defaultProps: any;
     getIndex: (item: IVocabularyItem) => number;
@@ -222,9 +222,10 @@ export default class VocabularyItemsViewEdit extends React.Component<IProps, ISt
         this.updateItem = this.updateItem.bind(this);
         this.removeItem = this.removeItem.bind(this);
         this.addItem = this.addItem.bind(this);
+        this.getItemsForSaving = this.getItemsForSaving.bind(this);
     }
 
-    updateItem(item: any, key: string, value: any) {
+    private updateItem(item: any, key: string, value: any) {
         this.setState({
             items: this.state.items.map((_item) => {
                 if (item === _item) {
@@ -236,16 +237,21 @@ export default class VocabularyItemsViewEdit extends React.Component<IProps, ISt
         });
     }
 
-    removeItem(item: any) {
+    private removeItem(item: any) {
         this.setState({
             items: this.state.items.filter((_item) => _item !== item),
         });
     }
 
-    addItem() {
+    private addItem() {
         this.setState({
             items: [{...this.props.newItemTemplate}].concat(this.state.items),
         });
+    }
+
+    // tslint:disable-next-line: member-access
+    public getItemsForSaving(): Array<IVocabularyItem> { // will be used from a ref
+        return this.state.items;
     }
 
     componentDidUpdate(prevProps: IProps, prevState: IState) {

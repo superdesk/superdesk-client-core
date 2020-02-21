@@ -1,9 +1,12 @@
+import ReactDOM from 'react-dom';
+import React from 'react';
 import _ from 'lodash';
 import {MEDIA_TYPES, MEDIA_TYPE_KEYS, VOCABULARY_SELECTION_TYPES, IVocabularySelectionTypes} from '../constants';
 import {gettext} from 'core/utils';
 import {getFields} from 'apps/fields';
 import {IVocabulary} from 'superdesk-api';
 import {IScope as IScopeConfigController} from './VocabularyConfigController';
+import {VocabularyItemsViewEdit} from '../components/VocabularyItemsViewEdit';
 
 VocabularyEditController.$inject = [
     '$scope',
@@ -47,6 +50,8 @@ const idRegex = '^[a-zA-Z0-9-_]+$';
 export function VocabularyEditController(
     $scope: IScope, notify, api, vocabularies, metadata, cvSchema, relationsService, $timeout,
 ) {
+    let componentRef: VocabularyItemsViewEdit = null;
+
     var origVocabulary = _.cloneDeep($scope.vocabulary);
 
     $scope.tab = 'general';
@@ -122,6 +127,7 @@ export function VocabularyEditController(
      * Save current edit modal contents on backend.
      */
     $scope.save = function() {
+        $scope.vocabulary.items = componentRef.getItemsForSaving();
         $scope._errorUniqueness = false;
         $scope.errorMessage = null;
         delete $scope.vocabulary['_deleted'];
@@ -225,14 +231,7 @@ export function VocabularyEditController(
             .filter((key) => key !== 'is_active')
             .map((key) => ({key: key, label: key, type: key}));
 
-    $scope.newItemTemplate = {...$scope.model, is_active: true};
-
     $scope.itemsValidation = {valid: true};
-
-    $scope.setFormDirty = () => {
-        $scope.editForm.$setDirty();
-        $scope.$apply();
-    };
 
     const fields = getFields();
 
@@ -246,4 +245,30 @@ export function VocabularyEditController(
         $scope.editForm.$setDirty();
         $scope.$apply();
     };
+
+    let placeholderElement = null;
+
+    // wait for the template to render to the placeholder element is available
+    $timeout(() => {
+        placeholderElement = document.querySelector('#vocabulary-items-view-edit-placeholder');
+
+        ReactDOM.render((
+            <VocabularyItemsViewEdit
+                ref={(ref) => {
+                    componentRef = ref;
+                }}
+                items={$scope.vocabulary.items}
+                schemaFields={$scope.schemaFields}
+                newItemTemplate={{...$scope.model, is_active: true}}
+                setDirty={() => {
+                    $scope.editForm.$setDirty();
+                    $scope.$apply();
+                }}
+            />
+        ), placeholderElement);
+    });
+
+    $scope.$on('$destroy', () => {
+        ReactDOM.unmountComponentAtNode(placeholderElement);
+    });
 }
