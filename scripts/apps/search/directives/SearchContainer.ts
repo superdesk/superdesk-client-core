@@ -21,7 +21,7 @@ export function SearchContainer() {
                             case 'list':
                                 $scope.view = 'compact';
                                 break;
-                            case 'photogrid':
+                            case 'grid':
                                 $scope.view = 'photogrid';
                                 break;
                             }
