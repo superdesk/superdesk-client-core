@@ -4,7 +4,6 @@ import {gettext} from 'core/utils';
 import {getFields} from 'apps/fields';
 import {IVocabulary} from 'superdesk-api';
 import {IScope as IScopeConfigController} from './VocabularyConfigController';
-import {dataApi} from 'core/helpers/CrudManager';
 
 VocabularyEditController.$inject = [
     '$scope',
@@ -18,6 +17,8 @@ VocabularyEditController.$inject = [
 ];
 
 interface IScope extends IScopeConfigController {
+    setFormDirty: () => void;
+    newItemTemplate: any;
     idRegex: string;
     vocabulary: IVocabulary;
     selectionTypes: IVocabularySelectionTypes;
@@ -34,7 +35,6 @@ interface IScope extends IScopeConfigController {
     schema: any;
     schemaFields: Array<any>;
     itemsValidation: { valid: boolean };
-    removeItem: (index: number) => void;
     customFieldTypes: Array<{id: string, label: string}>;
     setCustomFieldConfig: (config: any) => void;
     editForm: any;
@@ -201,18 +201,6 @@ export function VocabularyEditController(
         });
     };
 
-    /**
-     * Add new blank vocabulary item.
-     */
-    $scope.addItem = function() {
-        var newVocabulary: any = {};
-
-        _.extend(newVocabulary, $scope.model);
-        newVocabulary.is_active = true;
-
-        $scope.vocabulary.items = [newVocabulary].concat($scope.vocabulary.items);
-    };
-
     // try to reproduce data model of vocabulary:
     var model = _.mapValues(_.keyBy(
         _.uniq(_.flatten(
@@ -222,6 +210,7 @@ export function VocabularyEditController(
 
     $scope.model = model;
     $scope.schema = $scope.vocabulary.schema || cvSchema[$scope.vocabulary._id] || null;
+
     if ($scope.schema) {
         $scope.schemaFields = Object.keys($scope.schema)
             .sort()
@@ -231,14 +220,18 @@ export function VocabularyEditController(
             ));
     }
 
+    $scope.schemaFields = $scope.schemaFields
+        || Object.keys($scope.model)
+            .filter((key) => key !== 'is_active')
+            .map((key) => ({key: key, label: key, type: key}));
+
+    $scope.newItemTemplate = {...$scope.model, is_active: true};
+
     $scope.itemsValidation = {valid: true};
 
-    /**
-     * Remove item from vocabulary items
-     */
-    $scope.removeItem = (index: number) => {
-        $scope.vocabulary.items.splice(index, 1);
-        $scope.vocabulary.items = $scope.vocabulary.items.slice(); // trigger watch on items collection
+    $scope.setFormDirty = () => {
+        $scope.editForm.$setDirty();
+        $scope.$apply();
     };
 
     const fields = getFields();

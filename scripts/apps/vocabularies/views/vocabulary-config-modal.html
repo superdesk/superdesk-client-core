@@ -14,8 +14,13 @@
 
             <div class="modal__navigation--content">
                 <ng-form name="vocabularyForm" class="vocabularyForm">
-                    <div ng-show="tab === 'items' && matchFieldTypeToTab('vocabularies', vocabulary.field_type)" style="height: 100%">
-                        <div sd-vocabulary-config-modal-items style="height: 100%"></div>
+                    <div ng-show="tab === 'items' && matchFieldTypeToTab('vocabularies', vocabulary.field_type)" style="height: 100%">                        
+                        <sd-vocabulary-items-view-edit
+                            items="vocabulary.items"
+                            schema-fields="schemaFields"
+                            new-item-template="newItemTemplate"
+                            set-dirty="setFormDirty"
+                        ></sd-vocabulary-items-view-edit>
 
                         <div ng-if="errorMessage" class="sd-line-input sd-line-input--invalid">
                             <p class="sd-line-input__message">{{ errorMessage }}</p>

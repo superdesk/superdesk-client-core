@@ -17,10 +17,9 @@ interface ISchemaField {
 }
 
 interface IProps {
+    items: Array<IVocabularyItem>;
     schemaFields: Array<ISchemaField>;
-    update(item, key, value): void;
-    remove(index): void;
-    addItem(): void;
+    newItemTemplate: any;
     setDirty(): void;
 }
 
@@ -70,7 +69,7 @@ interface IPropsInputField {
     item: IVocabularyItem;
     required: boolean;
     valid: boolean;
-    update: IProps['update'];
+    update(item: any, key: string, value: any): void;
     setDirty: IProps['setDirty'];
 }
 
@@ -191,61 +190,62 @@ class InputField extends React.Component<IPropsInputField, IStateInputField> {
     }
 }
 
-export default class ItemsTableComponent extends React.Component<IProps, IState> {
+export default class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
     static propTypes: any;
     static defaultProps: any;
     getIndex: (item: IVocabularyItem) => number;
     sortFields: Array<string>;
-    receiveStateCount: number;
 
     constructor(props) {
         super(props);
+
+        this.getIndex = (item) => this.state.items.indexOf(item);
+
+        this.sortFields = Object.keys(this.props.items[0]);
+
+        const initialSortOption: ISortOption = {
+            field: this.sortFields.includes('name') ? 'name' : this.sortFields[0],
+            direction: 'ascending',
+        };
+
         this.state = {
-            items: [],
-            itemsSorted: [],
+            items: this.props.items,
+            itemsSorted: sortItems(this.props.items, initialSortOption),
             itemsValidation: [],
             page: 1,
             searchTerm: '',
             searchExtended: false,
             sortDropdownOpen: false,
-            sort: null,
+            sort: initialSortOption,
         };
 
-        this.getIndex = (item) => this.state.items.indexOf(item);
-        this.sortFields = [];
-        this.receiveStateCount = 0;
+        this.updateItem = this.updateItem.bind(this);
+        this.removeItem = this.removeItem.bind(this);
+        this.addItem = this.addItem.bind(this);
     }
 
-    receiveState(items: Array<IVocabularyItem>, itemsValidation: IState['itemsValidation']) {
-        const pageCount = getPageCount(items);
+    updateItem(item: any, key: string, value: any) {
+        this.setState({
+            items: this.state.items.map((_item) => {
+                if (item === _item) {
+                    return {..._item, [key]: value};
+                } else {
+                    return _item;
+                }
+            }),
+        });
+    }
 
-        let nextState: Partial<IState> = {
-            items: items,
-            itemsValidation: itemsValidation,
+    removeItem(item: any) {
+        this.setState({
+            items: this.state.items.filter((_item) => _item !== item),
+        });
+    }
 
-            // if items are removed, the page needs to be updated so it doesn't point to a page that no longer exists
-            page: Math.min(this.state.page, pageCount),
-        };
-
-        // sort only the first time after receiving data
-        if (this.receiveStateCount === 0) {
-            this.sortFields = Object.keys(items[0]);
-
-            const initialSortOption: ISortOption = {
-                field: this.sortFields.includes('name') ? 'name' : this.sortFields[0],
-                direction: 'ascending',
-            };
-
-            nextState = {
-                ...nextState,
-                sort: initialSortOption,
-                itemsSorted: sortItems(nextState.items, initialSortOption),
-            };
-        }
-
-        this.setState(nextState as any);
-
-        this.receiveStateCount++;
+    addItem() {
+        this.setState({
+            items: [{...this.props.newItemTemplate}].concat(this.state.items),
+        });
     }
 
     componentDidUpdate(prevProps: IProps, prevState: IState) {
@@ -343,7 +343,7 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
                         <button className="btn btn--primary" onClick={() => {
                             // clearing search before adding an item so it doesn't get filtered
                             this.setState({searchTerm: ''}, () => {
-                                this.props.addItem();
+                                this.addItem();
 
                                 // using a timeout to wait for this.state.items to update after adding an item
                                 // in case adding an item causes page count to increase
@@ -407,7 +407,7 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
                                                         valid={
                                                             !required || this.state.itemsValidation[index][field.key]
                                                         }
-                                                        update={this.props.update}
+                                                        update={this.updateItem}
                                                         setDirty={this.props.setDirty}
                                                     />
                                                 </td>
@@ -418,7 +418,7 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
                                                 <input type="checkbox"
                                                     checked={!!item.is_active}
                                                     onChange={
-                                                        () => this.props.update(item, 'is_active', !item.is_active)
+                                                        () => this.updateItem(item, 'is_active', !item.is_active)
                                                     }
                                                 />
                                             </span>
@@ -426,7 +426,7 @@ export default class ItemsTableComponent extends React.Component<IProps, IState>
                                         <td>
                                             <button className="icn-btn"
                                                 onClick={() => {
-                                                    this.props.remove(this.getIndex(item));
+                                                    this.removeItem(item);
                                                 }}>
                                                 <i className="icon-close-small" />
                                             </button>
