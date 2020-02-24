@@ -91,12 +91,6 @@ export function RenditionsService(metadata, $q, api, superdesk, _) {
                 .then((metaData) => {
                     // apply the metadata changes
                     return _.extend(item, metaData);
-                }).catch((response) => {
-                    // if new crops not generated continue with default one
-                    // see https://github.com/superdesk/superdesk-client-core/pull/3117#discussion_r328440897
-                    if (response != null && response.done === true) {
-                        return item;
-                    }
                 });
         });
     };
