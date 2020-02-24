@@ -1,7 +1,7 @@
 import React from 'react';
-import ItemsTableComponent from '../components/ItemsTableComponent';
 import {mount} from 'enzyme';
 import {noop} from 'lodash';
+import {VocabularyItemsViewEdit} from '../components/VocabularyItemsViewEdit';
 
 describe('vocabularies', () => {
     beforeEach(window.module('superdesk.apps.publish'));
@@ -25,6 +25,32 @@ describe('vocabularies', () => {
         expect(api.getAll).toHaveBeenCalledWith('vocabularies', {where: {type: 'manageable'}});
         expect(result).toBe(fixture);
         expect(vocabularies.vocabularies).toBe(fixture);
+    }));
+
+    it('convert values for qcode having integer type', inject(($compile) => {
+        const items = [{name: 'foo', qcode: '1'}];
+        const schemaFields = [{key: 'name', required: true}, {key: 'qcode', type: 'integer'}];
+
+        const wrapper = mount(
+            (
+                <VocabularyItemsViewEdit
+                    items={items}
+                    schemaFields={schemaFields}
+                    newItemTemplate={{}}
+                    setDirty={noop}
+                    setItemsValid={noop}
+                />
+            ),
+        );
+
+        const instance = wrapper.instance() as VocabularyItemsViewEdit;
+
+        wrapper.update();
+
+        const fakeEvent = {target: {value: '2'}};
+
+        wrapper.find('input[type="number"]').simulate('change', fakeEvent);
+        expect(instance.getItemsForSaving()[0].qcode).toBe(2);
     }));
 
     describe('config controller', () => {
@@ -143,40 +169,6 @@ describe('vocabularies', () => {
                 scope.vocabulary.items[0] = {name: 'foo', qcode: 'bar', is_active: true};
                 scope.$digest();
                 expect(scope.itemsValidation.valid).toBe(true);
-            }));
-
-            it('convert values for qcode having integer type', inject(($compile) => {
-                const items = [{name: 'foo', qcode: '1'}];
-                const itemsValidation = [{name: true, qcode: true}];
-                const schema = {name: {required: true}, qcode: {type: 'integer'}};
-                const schemaFields = [{key: 'name', required: true}, {key: 'qcode', type: 'integer'}];
-                let updatedValue;
-                const update = (item, key, value) => {
-                    updatedValue = value;
-                };
-
-                const wrapper = mount(
-                    (
-                        <ItemsTableComponent
-                            model={{name: null, qcode: null}}
-                            schema={schema}
-                            schemaFields={schemaFields}
-                            remove={() => null}
-                            update={update}
-                            addItem={noop}
-                        />
-                    ),
-                );
-
-                const instance = wrapper.instance();
-
-                instance.setState({items, itemsValidation});
-                wrapper.update();
-
-                const fakeEvent = {target: {value: '2'}};
-
-                wrapper.find('input[type="number"]').simulate('change', fakeEvent);
-                expect(updatedValue).toBe(2);
             }));
 
             it('can cancel editing vocabulary', inject((api, $q, $rootScope, metadata) => {
