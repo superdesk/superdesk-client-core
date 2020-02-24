@@ -7,6 +7,7 @@ import {gettext} from 'core/utils';
 import {SelectUser} from 'core/ui/components/SelectUser';
 import {logger} from 'core/services/logger';
 import {extensions} from 'appConfig';
+import {Loader} from 'core/ui/components/Loader';
 
 type FetchFunction = (repo: string, criteria: any) => Promise<any>;
 
@@ -205,6 +206,7 @@ export default class UserActivityWidget extends React.Component<{}, IState> {
             metadata: ng.get('metadata'),
             search: ng.get('search'),
             superdesk: ng.get('superdesk'),
+            session: ng.get('session'),
         };
 
         this.state = {
@@ -216,10 +218,19 @@ export default class UserActivityWidget extends React.Component<{}, IState> {
         };
 
         this.refreshItems = this.refreshItems.bind(this);
+        this.setUser = this.setUser.bind(this);
     }
 
     componentDidMount() {
         this.addListeners();
+
+        if (this.state.user == null) {
+            this.setState({loading: true});
+
+            this.services.session.getIdentity().then((user) => {
+                this.setUser(user);
+            });
+        }
     }
 
     componentWillUnmount() {
@@ -346,7 +357,13 @@ export default class UserActivityWidget extends React.Component<{}, IState> {
                                     item,
                                 );
                             }}
-                            select={angular.noop}
+                            select={(item: IArticle) => {
+                                this.services.superdesk.intent(
+                                    'preview',
+                                    'item',
+                                    item,
+                                );
+                            }}
                             edit={(item: IArticle) => {
                                 this.services.authoringWorkspace.edit(item);
                             }}
@@ -357,6 +374,15 @@ export default class UserActivityWidget extends React.Component<{}, IState> {
                     </div>
                 )}
             </div>
+        );
+    }
+
+    setUser(user: IUser) {
+        this.setState(
+            {user, groups: GET_GROUPS(user._id, this.services), loading: true},
+            () => {
+                this.fetchGroupsData();
+            },
         );
     }
 
@@ -391,18 +417,14 @@ export default class UserActivityWidget extends React.Component<{}, IState> {
                                 selectedUserId={this.state.user?._id}
                                 autoFocus={false}
                                 onSelect={(user) => {
-                                    this.setState(
-                                        {user, groups: GET_GROUPS(user._id, this.services), loading: true},
-                                        () => {
-                                            this.fetchGroupsData();
-                                        },
-                                    );
+                                    this.setUser(user);
                                 }}
+                                horizontalSpacing={true}
                             />
                         </form>
                     </div>
                     {
-                        loading ? <div className="item-group__loading" /> :
+                        loading ? <Loader /> :
                             this.state.user && this.state.groupsData && (
                                 <div className="content-list-holder">
                                     <div className="shadow-list-holder">

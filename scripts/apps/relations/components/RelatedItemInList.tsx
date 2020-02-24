@@ -3,41 +3,35 @@ import {appConfig} from 'appConfig';
 import {DEFAULT_RELATED_ITEMS_LIST_CONFIG} from 'apps/search/constants';
 import {renderArea} from 'apps/search/helpers';
 import {IArticle, IDesk, ISuperdeskGlobalConfig} from 'superdesk-api';
-import {dataApi} from 'core/helpers/CrudManager';
+import ng from 'core/services/ng';
 
 interface IProps {
     item: IArticle;
 }
 
-interface IState {
-    desk: IDesk;
-}
-
-export class RelatedItemInListComponent extends React.PureComponent<IProps, IState> {
+export class RelatedItemInListComponent extends React.PureComponent<IProps, {}> {
     listConfig: ISuperdeskGlobalConfig['list']['relatedItems'];
+    services: {[serviceId: string]: any};
 
     constructor(props: IProps) {
         super(props);
 
         this.listConfig = appConfig.list?.relatedItems || DEFAULT_RELATED_ITEMS_LIST_CONFIG;
-
-        this.state = {
-            desk: null,
+        this.services = {
+            desks: ng.get('desks'),
         };
     }
 
     render() {
+        const {listConfig} = this;
         const {item} = this.props;
-        const {desk} = this.state;
+        const deskId = item.task?.desk || null;
+        let itemProps: any = {item, listConfig};
 
-        if (!desk) {
-            dataApi.findOne<IDesk>('desks', item.task.desk).then((_desk) => {
-                this.setState({desk: _desk});
-            });
+        if (deskId !== null) {
+            itemProps = {...itemProps, desk: this.services.desks.deskLookup[deskId]};
         }
 
-        const {listConfig} = this;
-        const itemProps = {item, desk, listConfig};
         const elemProps = {className: 'line line--no-margin'};
 
         return (
