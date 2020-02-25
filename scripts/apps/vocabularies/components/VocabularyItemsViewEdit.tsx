@@ -157,6 +157,7 @@ class InputField extends React.PureComponent<IPropsInputField> {
                         onChange={(event) => {
                             this.props.update(item, field.key, event.target.value);
                         }}
+                        data-test-id={'field--' + field.key}
                     />
                 </div>
             );
@@ -193,7 +194,7 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
 
-        this.sortFields = Object.keys(props.items[0]);
+        this.sortFields = this.props.schemaFields.map((field) => field.key);
         this.lastId = 0;
         this.generateId = () => (this.lastId++).toString();
 
@@ -396,7 +397,7 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
                 </div>
 
                 <div className="sd-padding-x--3 table-list">
-                    <table>
+                    <table data-test-id="vocabulary-items-view-edit">
                         <thead>
                             <tr>
                                 {this.props.schemaFields.map((field) => (
@@ -440,7 +441,9 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
                                             <button className="icn-btn"
                                                 onClick={() => {
                                                     this.removeItem(item);
-                                                }}>
+                                                }}
+                                                data-test-id="remove"
+                                            >
                                                 <i className="icon-close-small" />
                                             </button>
                                         </td>
