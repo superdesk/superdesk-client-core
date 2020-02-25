@@ -22,15 +22,13 @@ export function DashboardController($scope, desks, dashboardWidgets, api, sessio
             $scope.$applyAsync(() => {
                 self.current = workspace;
                 self.widgets = extendWidgets(workspace.widgets || []);
-                self.availableWidgets = dashboardWidgets.map((widget) => {
-                    if (widget.descriptionHtml) {
-                        return {
-                            ...widget,
-                            descriptionHtml: $sce.trustAsHtml(widget.descriptionHtml),
-                        };
-                    }
-                    return widget;
-                });
+                self.availableWidgets = dashboardWidgets
+                    .map((widget) => ({
+                        ...widget,
+                        descriptionHtml: widget.descriptionHtml
+                            ? $sce.trustAsHtml(widget.descriptionHtml)
+                            : undefined,
+                    }));
             });
         }
     }
