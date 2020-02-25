@@ -1,10 +1,30 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
 
-DashboardController.$inject = ['$scope', 'desks', 'dashboardWidgets', 'api', 'session', 'workspaces',
-    'modal', 'privileges', 'pageTitle', '$sce'];
-export function DashboardController($scope, desks, dashboardWidgets, api, session, workspaces,
-    modal, privileges, pageTitle, $sce) {
+DashboardController.$inject = [
+    '$scope',
+    'desks',
+    'dashboardWidgets',
+    'api',
+    'session',
+    'workspaces',
+    'modal',
+    'privileges',
+    'pageTitle',
+    '$sce',
+];
+export function DashboardController(
+    $scope,
+    desks,
+    dashboardWidgets,
+    api,
+    session,
+    workspaces,
+    modal,
+    privileges,
+    pageTitle,
+    $sce,
+) {
     var self = this;
 
     $scope.edited = null;
