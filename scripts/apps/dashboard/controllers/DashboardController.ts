@@ -2,9 +2,9 @@ import _ from 'lodash';
 import {gettext} from 'core/utils';
 
 DashboardController.$inject = ['$scope', 'desks', 'dashboardWidgets', 'api', 'session', 'workspaces',
-    'modal', 'privileges', 'pageTitle'];
+    'modal', 'privileges', 'pageTitle', '$sce'];
 export function DashboardController($scope, desks, dashboardWidgets, api, session, workspaces,
-    modal, privileges, pageTitle) {
+    modal, privileges, pageTitle, $sce) {
     var self = this;
 
     $scope.edited = null;
@@ -22,7 +22,15 @@ export function DashboardController($scope, desks, dashboardWidgets, api, sessio
             $scope.$applyAsync(() => {
                 self.current = workspace;
                 self.widgets = extendWidgets(workspace.widgets || []);
-                self.availableWidgets = dashboardWidgets;
+                self.availableWidgets = dashboardWidgets.map((widget) => {
+                    if (widget.descriptionHtml) {
+                        return {
+                            ...widget,
+                            descriptionHtml: $sce.trustAsHtml(widget.descriptionHtml),
+                        };
+                    }
+                    return widget;
+                });
             });
         }
     }
@@ -33,7 +41,7 @@ export function DashboardController($scope, desks, dashboardWidgets, api, sessio
      *
      * @return {promise} list of widgets
      */
-    function getAvailableWidgets(userWidgets) {
+    function getAvailableWidgets(userWidgets): Array<any> {
         return _.filter(dashboardWidgets,
             (widget) => widget.multiple || _.isNil(_.find(userWidgets, {_id: widget._id})));
     }
@@ -80,7 +88,7 @@ export function DashboardController($scope, desks, dashboardWidgets, api, sessio
      * @returns {boolean}
      */
     this.isSelected = function(widget) {
-        return widget && !_.find(getAvailableWidgets(this.widgets), widget);
+        return widget && this.selectWidget._id === widget._id;
     };
 
     function extendWidgets(currentWidgets) {
