@@ -4,7 +4,11 @@ import UserActivityWidget from './components/UserActivityWidget';
 
 const descriptionHtml = `
 <p>
-    ${gettext('The user activity widget provides information about user activity. Using the widget, editors can search and select a user. Upon selection a list of content items is shown categorized as follows:')}
+    ${gettext(
+        'The user activity widget provides information about user activity. ' +
+        'Using the widget, editors can search and select a user. ' +
+        'Upon selection a list of content items is shown categorized as follows:',
+    )}
 </p>
 <ul class="simple-list sd-padding-l--2">
   <li class="simple-list__item">
