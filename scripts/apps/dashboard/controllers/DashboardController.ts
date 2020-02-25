@@ -39,7 +39,7 @@ export function DashboardController($scope, desks, dashboardWidgets, api, sessio
      *
      * @return {promise} list of widgets
      */
-    function getAvailableWidgets(userWidgets): Array<any> {
+    function getAvailableWidgets(userWidgets) {
         return _.filter(dashboardWidgets,
             (widget) => widget.multiple || _.isNil(_.find(userWidgets, {_id: widget._id})));
     }
