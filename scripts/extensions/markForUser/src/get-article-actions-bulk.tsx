@@ -1,20 +1,17 @@
 import {ISuperdesk, IArticle} from 'superdesk-api';
 import {uniq} from 'lodash';
 import {getMarkForUserModal} from './get-mark-for-user-modal';
+import {updateMarkedUser, markForUserAndSendToNextStage, canChangeMarkedUser} from './common';
 
 export function getActionsBulkInitialize(superdesk: ISuperdesk) {
     const {gettext} = superdesk.localization;
-    const {isPersonal, isLocked} = superdesk.entities.article;
+    const {isLocked, isLockedInOtherSession} = superdesk.entities.article;
 
     return function getActionsBulk(articles: Array<IArticle>) {
-        // it doesn't make sense to display the action since it wouldn't get updated in the list anyway
-        // when article is locked for editing all changes are temporary
-        // and aren't displayed in the list item until the article is saved
         const someItemsLocked = articles.some(isLocked);
+        const someItemsLockedInOtherSession = articles.some(isLockedInOtherSession);
 
-        const someItemsSpiked = articles.some(({state}) => state === 'spiked');
-
-        if (articles.some(isPersonal) || someItemsLocked || someItemsSpiked) {
+        if (articles.some((article) => !canChangeMarkedUser(superdesk, article))) {
             return Promise.resolve([]);
         }
 
@@ -24,11 +21,6 @@ export function getActionsBulkInitialize(superdesk: ISuperdesk) {
                 .filter((marked_for_user) => marked_for_user != null),
         );
 
-        const initialUserId = selectedUserIds[0];
-        const selectedUserIdInitial = selectedUserIds.length > 1 || initialUserId === null
-            ? undefined
-            : initialUserId;
-
         const message = selectedUserIds.length > 1
             ? gettext('Items are marked for different users')
             : undefined;
@@ -37,22 +29,23 @@ export function getActionsBulkInitialize(superdesk: ISuperdesk) {
             label: gettext('Mark for user'),
             icon: 'icon-assign',
             onTrigger: () => {
-                superdesk.ui.showModal(getMarkForUserModal(
-                    superdesk,
-                    (selectedUserId) => {
+                superdesk.ui.showModal(getMarkForUserModal({
+                    superdesk: superdesk,
+                    markForUser: (selectedUserId) => {
                         articles.forEach((article) => {
-                            superdesk.entities.article.patch(
-                                article,
-                                {
-                                    marked_for_user: selectedUserId,
-                                },
-                            );
+                            updateMarkedUser(superdesk, article, {marked_for_user: selectedUserId});
                         });
                     },
-                    false,
-                    selectedUserIdInitial,
-                    message,
-                ));
+                    markForUserAndSend: (selectedUserId) => {
+                        articles.forEach((article) => {
+                            markForUserAndSendToNextStage(superdesk, article, selectedUserId);
+                        });
+                    },
+                    locked: someItemsLocked,
+                    lockedInOtherSession: someItemsLockedInOtherSession,
+                    markedForUserInitial: selectedUserIds[0] ?? undefined,
+                    message: message,
+                }));
             },
         }]);
     };

@@ -152,7 +152,9 @@ describe('editor3', () => {
     });
 
     function getPreviewBody() {
+        browser.sleep(1000); // wait for autosave (input is debounced)
         authoring.save();
+        browser.sleep(500); // wait for saving to complete
         monitoring.previewAction(0, 0);
         return monitoring.getPreviewBody();
     }

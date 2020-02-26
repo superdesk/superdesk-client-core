@@ -48,6 +48,25 @@
                     model="provider.advanced_search"
                 ></div>
 
+                <div class="form__row">
+                    <div class="form__row-item">
+                        <label class="form-label form-label--marg-b10" translate>Default view</label>
+                        <div>
+                            <sd-check
+                                ng-repeat="(viewId, view) in availableListViews"
+                                type="radio"
+                                label-position="inside"
+                                ng-model="provider.config.default_list_view"
+                                ng-click="provider.config.default_list_view = viewId"
+                                ng-value="{{viewId}}"
+                                data-icon="{{view.icon}}"
+                                >
+                                {{ view.label }}
+                            </sd-check>
+                        </div>
+                    </div>
+                </div>
+
                 <div sd-form-select
                     id="provider-type"
                     label="{{ gettext('Provider Type') }}"

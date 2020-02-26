@@ -42,6 +42,7 @@ RelatedItemsDirective.$inject = [
     'notify',
     'lock',
     '$rootScope',
+    'content',
 ];
 export function RelatedItemsDirective(
     authoringWorkspace: AuthoringWorkspaceService,
@@ -49,6 +50,7 @@ export function RelatedItemsDirective(
     notify,
     lock,
     $rootScope,
+    content,
 ) {
     return {
         scope: {
@@ -145,7 +147,6 @@ export function RelatedItemsDirective(
                         );
                         return;
                     }
-
                     scope.addRelatedItem(item);
                 });
             }
@@ -237,21 +238,29 @@ export function RelatedItemsDirective(
              *
              * @param {Object} item
              */
-            scope.addRelatedItem = (item) => {
-                const key = getNextKey(scope.item.associations || {}, scope.field._id);
-                let data = {};
+            scope.addRelatedItem = (_item) => {
+                scope.loading = true;
+                content.dropItem(_item)
+                    .then((item) => {
+                        const key = getNextKey(scope.item.associations || {}, scope.field._id);
+                        let data = {};
 
-                if (isInArchive(item)) {
-                    data[key] = {
-                        _id: item._id,
-                        type: item.type, // used to display associated item types
-                    };
-                } else {
-                    data[key] = item; // use full item for external items, like images from external search provider
-                }
+                        if (isInArchive(item)) {
+                            data[key] = {
+                                _id: item._id,
+                                type: item.type, // used to display associated item types
+                            };
+                        } else {
+                            data[key] = item; /* use full item for external items,
+                                                like images from external search provider */
+                        }
 
-                scope.item.associations = angular.extend({}, scope.item.associations, data);
-                scope.onchange();
+                        scope.item.associations = angular.extend({}, scope.item.associations, data);
+                        scope.onchange();
+                    })
+                    .finally(() => {
+                        scope.loading = false;
+                    });
             };
 
             /**

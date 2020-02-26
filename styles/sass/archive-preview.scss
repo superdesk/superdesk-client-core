@@ -743,6 +743,10 @@ $lightbox-composite-condensed : 100px;
         .condensed-preview {
             position: absolute;
             right: 0; top: 0; bottom:0; left:0;
+
+            img {
+                max-width: 100%;
+            }
         }
         &.composite {
             .condensed-preview, .navigation.left {

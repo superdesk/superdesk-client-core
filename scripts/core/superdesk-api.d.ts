@@ -78,7 +78,7 @@ declare module 'superdesk-api' {
                     onSendBefore?(itemIds: Array<string>, desk: IDesk): Promise<void>;
                 };
             };
-            iptcMapping?(data: IPTCMetadata, item: Partial<IArticle>): Promise<Partial<IArticle>>;
+            iptcMapping?(data: Partial<IPTCMetadata>, item: Partial<IArticle>, parent?: IArticle): Promise<Partial<IArticle>>;
             searchPanelWidgets?: Array<React.ComponentType<ISearchPanelWidgetProps>>;
             authoring?: {
                 onUpdate?(current: IArticle, next: IArticle): Promise<IArticle>;
@@ -759,6 +759,11 @@ declare module 'superdesk-api' {
         fileAccept?: string;
     }
 
+    export interface IModalProps {
+        'data-test-id'?: string;
+        size?: 'large' | 'extra-large' | 'fill' | 'full-screen';
+    }
+
     export interface IPropsModalHeader {
         onClose?(): void;
     }
@@ -781,6 +786,7 @@ declare module 'superdesk-api' {
         selectedUserId?: string;
         disabled?: boolean;
         autoFocus?: boolean | {initializeWithDropdownHidden: boolean};
+        horizontalSpacing?: boolean;
     }
 
 
@@ -811,7 +817,7 @@ declare module 'superdesk-api' {
     }
 
     interface IPropsBadge extends ISpacingProps {
-        type: 'primary' | 'success' | 'warning' | 'alert' | 'highlight' | 'light';
+        type: 'default' | 'primary' | 'success' | 'warning' | 'alert' | 'highlight' | 'light';
         square?: boolean;
     }
 
@@ -924,10 +930,9 @@ declare module 'superdesk-api' {
         };
         entities: {
             article: {
-                // returns true if locked by anyone, including the current user
-                isLocked(article: IArticle): boolean;
-
-                isLockedByCurrentUser(article: IArticle): boolean;
+                isLocked(article: IArticle): boolean; // returns true if locked by anyone, including the current user
+                isLockedInCurrentSession(article: IArticle): boolean;
+                isLockedInOtherSession(article: IArticle): boolean;
 
                 isPersonal(article: IArticle): boolean;
                 patch(
@@ -974,7 +979,7 @@ declare module 'superdesk-api' {
             Alert: React.ComponentType<IAlertComponentProps>;
             Figure: React.ComponentType<IFigureComponentProps>;
             DropZone: React.ComponentType<IDropZoneComponentProps>;
-            Modal: React.ComponentType<{'data-test-id'?: string}>;
+            Modal: React.ComponentType<IModalProps>;
             ModalHeader: React.ComponentType<IPropsModalHeader>;
             ModalBody: React.ComponentType;
             ModalFooter: React.ComponentType;
@@ -984,7 +989,7 @@ declare module 'superdesk-api' {
             ArticleItemConcise: React.ComponentType<{article: IArticle}>;
             GroupLabel: React.ComponentType<ISpacingProps>;
             Icon: React.ComponentType<IPropsIcon>;
-            TopMenuDropdownButton: React.ComponentType<{onClick: () => void; active: boolean; pulsate?: boolean; 'data-test-id'?: string;}>;
+            TopMenuDropdownButton: React.ComponentType<{onClick: () => void; disabled?: boolean; active: boolean; pulsate?: boolean; 'data-test-id'?: string;}>;
             getDropdownTree: <T>() => React.ComponentType<IPropsDropdownTree<T>>;
             Spacer: React.ComponentType<IPropsSpacer>;
         };
@@ -1010,6 +1015,7 @@ declare module 'superdesk-api' {
         };
         privileges: {
             getOwnPrivileges(): Promise<any>;
+            hasPrivilege(privilege: string): boolean;
         };
         session: {
             getToken(): string;
@@ -1065,6 +1071,7 @@ declare module 'superdesk-api' {
         saml_label: any;
         archive_autocomplete: boolean;
         workflow_allow_multiple_updates: boolean;
+        allow_updating_scheduled_items: boolean;
 
         // TANSA SERVER CONFIG
         tansa?: {
@@ -1294,5 +1301,6 @@ declare module 'superdesk-api' {
         name: string;
         qcode: string;
         scheme?: string;
+        translations?: {};
     }
 }
