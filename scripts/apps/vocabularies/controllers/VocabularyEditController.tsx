@@ -12,7 +12,6 @@ VocabularyEditController.$inject = [
     '$scope',
     'notify',
     'api',
-    'vocabularies',
     'metadata',
     'cvSchema',
     'relationsService',
@@ -49,7 +48,7 @@ interface IScope extends IScopeConfigController {
 const idRegex = '^[a-zA-Z0-9-_]+$';
 
 export function VocabularyEditController(
-    $scope: IScope, notify, api, vocabularies, metadata, cvSchema, relationsService, $timeout, $element,
+    $scope: IScope, notify, api, metadata, cvSchema, relationsService, $timeout,
 ) {
     let componentRef: VocabularyItemsViewEdit = null;
 
@@ -251,7 +250,7 @@ export function VocabularyEditController(
 
     // wait for the template to render to the placeholder element is available
     $timeout(() => {
-        placeholderElement = $element[0].querySelector('#vocabulary-items-view-edit-placeholder');
+        placeholderElement = document.querySelector('#vocabulary-items-view-edit-placeholder');
 
         ReactDOM.render((
             <VocabularyItemsViewEdit
@@ -274,6 +273,8 @@ export function VocabularyEditController(
     });
 
     $scope.$on('$destroy', () => {
-        ReactDOM.unmountComponentAtNode(placeholderElement);
+        if (placeholderElement != null) {
+            ReactDOM.unmountComponentAtNode(placeholderElement);
+        }
     });
 }

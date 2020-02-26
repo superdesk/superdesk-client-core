@@ -7,38 +7,23 @@ import {s} from 'core/helpers/testUtils';
 const getPromise = () => Promise.resolve({});
 
 describe('vocabularies', () => {
+    beforeEach(window.module('superdesk.apps.vocabularies'));
+    beforeEach(window.module('superdesk.templates-cache'));
+
     beforeEach(window.module(($provide) => {
         $provide.service('metadata', () => ({
             initialize: getPromise,
         }));
         $provide.service('relationsService', () => ({}));
-        $provide.service('activity', () => ({}));
-        $provide.service('$filter', () => () => (a) => a);
-        $provide.provider('translateFilter', function() {
-            this.$get = function() {
-                return angular.identity;
-            };
-        });
-        $provide.service('notify', () => ({
-            success: noop,
-        }));
-        $provide.service('api', () => ({
-            save: getPromise,
-            getAll: getPromise,
-        }));
-        $provide.service('$route', () => ({
-            updateParams: noop,
-        }));
-        $provide.service('$routeParams', () => ({}));
         $provide.service('sortByNameFilter', () => ({}));
-        $provide.service('modal', () => ({}));
-        $provide.service('superdesk', () => ({
-            activity: getPromise,
+        $provide.service('$filter', () => () => (a) => a);
+        $provide.service('urls', () => ({
+            resource: (x: string) => Promise.resolve(x),
+            item: (x: string) => Promise.resolve(x),
+            media: (x: string) => Promise.resolve(x),
+            links: () => Promise.resolve({}),
         }));
     }));
-
-    beforeEach(window.module('superdesk.apps.vocabularies'));
-    beforeEach(window.module('superdesk.templates-cache'));
 
     it('can fetch vocabularies', inject((api, vocabularies, $q, $rootScope) => {
         var fixture = {foo: 'bar'};
