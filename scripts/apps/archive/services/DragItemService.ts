@@ -33,7 +33,7 @@ export function DragItemService() {
     this.start = function(event, item) {
         const dt = event.dataTransfer || event.originalEvent.dataTransfer;
 
-        // search providers could specify custom mimetype
+        // search providers can specify custom mimetype
         // which we use for filtering on drop
         const mimetype = item.mimetype && item.mimetype.includes('application') ?
             item.mimetype : 'application/superdesk.item.' + item.type;
