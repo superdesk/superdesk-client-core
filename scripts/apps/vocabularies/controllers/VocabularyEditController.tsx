@@ -272,6 +272,10 @@ export function VocabularyEditController(
         ), placeholderElement);
     });
 
+    $scope.$watch('errorMessage', (errorMessage: string) => {
+        componentRef?.setErrorMessage(errorMessage ?? null);
+    });
+
     $scope.$on('$destroy', () => {
         if (placeholderElement != null) {
             ReactDOM.unmountComponentAtNode(placeholderElement);

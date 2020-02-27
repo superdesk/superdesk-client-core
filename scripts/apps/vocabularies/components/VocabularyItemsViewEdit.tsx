@@ -180,6 +180,7 @@ interface IState {
     searchExtended: boolean;
     sortDropdownOpen: boolean;
     sort: ISortOption | null;
+    errorMessage: string | null;
 }
 
 export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
@@ -213,12 +214,15 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
             searchExtended: false,
             sortDropdownOpen: false,
             sort: initialSortOption,
+            errorMessage: null,
         };
 
         this.updateItem = this.updateItem.bind(this);
         this.removeItem = this.removeItem.bind(this);
         this.addItem = this.addItem.bind(this);
         this.getItemsForSaving = this.getItemsForSaving.bind(this);
+        this.setErrorMessage = this.setErrorMessage.bind(this);
+
         this.setDirtyOnce = once(this.props.setDirty);
         this.setValidItemsDebounced = debounce(
             () => {
@@ -263,6 +267,11 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
 
             return nextItem;
         });
+    }
+
+    // tslint:disable-next-line: member-access
+    public setErrorMessage(message: string | null) {
+        this.setState({errorMessage: message});
     }
 
     componentDidMount() {
@@ -452,6 +461,14 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
                             })}
                         </tbody>
                     </table>
+
+                    {
+                        this.state.errorMessage == null ? null : (
+                            <div className="sd-line-input sd-line-input--invalid">
+                                <p className="sd-line-input__message">{this.state.errorMessage}</p>
+                            </div>
+                        )
+                    }
                 </div>
             </React.Fragment>
         );

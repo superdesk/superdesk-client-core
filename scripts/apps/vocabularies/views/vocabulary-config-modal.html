@@ -16,10 +16,6 @@
                 <ng-form name="vocabularyForm" class="vocabularyForm">
                     <div ng-show="tab === 'items' && matchFieldTypeToTab('vocabularies', vocabulary.field_type)" style="height: 100%">                        
                         <div style="height: 100%" id="vocabulary-items-view-edit-placeholder"></div>
-
-                        <div ng-if="errorMessage" class="sd-line-input sd-line-input--invalid">
-                            <p class="sd-line-input__message">{{ errorMessage }}</p>
-                        </div>
                     </div>
 
                     <div class="sd-padding--3" ng-show="tab === 'general' || !matchFieldTypeToTab('vocabularies', vocabulary.field_type)">
