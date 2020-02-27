@@ -7,7 +7,8 @@ import {once, debounce} from 'lodash';
 import {gettext} from 'core/utils';
 import {ISortOption, IVocabularyItem} from 'superdesk-api';
 import {assertNever} from 'core/helpers/typescript-helpers';
-import {Dropdown} from 'core/ui/components';
+import {Dropdown} from 'core/ui/components/Dropdown/Dropdown';
+import {Menu} from 'core/ui/components/Dropdown';
 import {Checkbox} from 'superdesk-ui-framework';
 
 interface ISchemaField {
@@ -326,13 +327,17 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
 
                     <div className="sortbar sd-margin-l--auto">
                         {this.state.sort == null ? null : (
-                            <div className="dropdown">
+                            <Dropdown
+                                isOpen={this.state.sortDropdownOpen}
+                            >
                                 <button className="dropdown__toggle"
                                     onClick={() => this.setState({sortDropdownOpen: !this.state.sortDropdownOpen})}>
                                     {this.state.sort.field}
                                     <span className="dropdown__caret" />
                                 </button>
-                                <Dropdown open={this.state.sortDropdownOpen}>
+                                <Menu
+                                    isOpen={this.state.sortDropdownOpen}
+                                >
                                     {this.sortFields.map((field) => {
                                         return (
                                             <li key={field}>
@@ -347,8 +352,8 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
                                             </li>
                                         );
                                     })}
-                                </Dropdown>
-                            </div>
+                                </Menu>
+                            </Dropdown>
                         )}
 
                         {this.state.sort == null ? null : (
