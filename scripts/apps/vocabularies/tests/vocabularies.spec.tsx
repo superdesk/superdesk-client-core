@@ -17,12 +17,6 @@ describe('vocabularies', () => {
         $provide.service('relationsService', () => ({}));
         $provide.service('sortByNameFilter', () => ({}));
         $provide.service('$filter', () => () => (a) => a);
-        $provide.service('urls', () => ({
-            resource: (x: string) => Promise.resolve(x),
-            item: (x: string) => Promise.resolve(x),
-            media: (x: string) => Promise.resolve(x),
-            links: () => Promise.resolve({}),
-        }));
     }));
 
     it('can fetch vocabularies', inject((api, vocabularies, $q, $rootScope) => {

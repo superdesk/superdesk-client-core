@@ -8,9 +8,15 @@ beforeEach(window.module('superdesk.core.services.storage'));
 /**
  * Mock services that call server on init and thus would require mocking all the time
  */
-angular.module('superdesk.mocks', [])
+angular.module('superdesk.mocks', ['superdesk.core.api.urls'])
     .config(['$qProvider', ($qProvider) => $qProvider.errorOnUnhandledRejections(false)])
     .run(['$injector', ng.register])
+    .run((urls) => {
+        urls.resource = (x: string) => Promise.resolve(x);
+        urls.item = (x: string) => Promise.resolve(x);
+        urls.media = (x: string) => Promise.resolve(x);
+        urls.links = () => Promise.resolve({});
+    })
     .constant('config', {
         server: {url: ''},
         editor: {},
