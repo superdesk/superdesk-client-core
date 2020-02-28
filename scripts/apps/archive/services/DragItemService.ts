@@ -6,6 +6,11 @@
 
 const DRAG_IMAGE_HOLDER = 'drag-image-holder';
 
+/**
+ * Using div with max width/height to resize thumbnail image.
+ *
+ * link: https://stackoverflow.com/a/26347784
+ */
 const getThumbnailPlaceholder = () => {
     let div = document.getElementById(DRAG_IMAGE_HOLDER);
 
