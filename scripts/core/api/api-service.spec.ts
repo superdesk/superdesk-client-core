@@ -6,10 +6,10 @@ function collection(data) {
     return {_items: data};
 }
 
-var USER_URL = 'http://localhost/users/1',
+var USER_URL = appConfig.server.url + '/users/1',
     USER_PATH = '/users/1',
-    USERS_URL = 'http://localhost/users',
-    SERVER_URL = 'http://localhost',
+    USERS_URL = appConfig.server.url + '/users',
+    SERVER_URL = appConfig.server.url,
     ETAG = 'xyz';
 
 function testEtagHeader(headers) {
@@ -38,14 +38,7 @@ var HTTP_API = {
     },
 };
 
-function doConfig() {
-    const testConfig: Partial<ISuperdeskGlobalConfig> = {server: {url: SERVER_URL, ws: undefined}};
-
-    Object.assign(appConfig, testConfig);
-}
-
 describe('API Provider', () => {
-    beforeEach(window.module(doConfig));
     beforeEach(window.module('superdesk.core.api'));
 
     beforeEach(() => {

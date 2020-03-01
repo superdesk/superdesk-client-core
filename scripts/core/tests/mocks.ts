@@ -1,4 +1,5 @@
 import ng from 'core/services/ng';
+import {getItemPath, basejoin} from 'core/api/url-resolver-service';
 
 beforeEach(window.module(($provide) => $provide.constant('lodash', window._)));
 beforeEach(window.module('superdesk.mocks'));
@@ -11,11 +12,17 @@ beforeEach(window.module('superdesk.core.services.storage'));
 angular.module('superdesk.mocks', ['superdesk.core.api.urls'])
     .config(['$qProvider', ($qProvider) => $qProvider.errorOnUnhandledRejections(false)])
     .run(['$injector', ng.register])
-    .run((urls) => {
-        urls.resource = (x: string) => Promise.resolve(x);
-        urls.item = (x: string) => Promise.resolve(x);
-        urls.media = (x: string) => Promise.resolve(x);
-        urls.links = () => Promise.resolve({});
+    .run((urls, $q) => {
+        const links = {
+            users: basejoin('users'),
+            workspace: basejoin('/users/<regex():user_id>/workspace'),
+        };
+
+        urls.resource = (x: string) => {
+            return $q.when(links[x] ?? x);
+        };
+
+        urls.links = () => $q.when(links);
     })
     .constant('config', {
         server: {url: ''},
