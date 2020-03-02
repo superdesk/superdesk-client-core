@@ -1,7 +1,15 @@
 /* eslint-disable newline-per-chained-call */
 
 import {element, by, protractor, browser} from 'protractor';
-import {ctrlKey, commandKey, ctrlShiftKey, assertToastMsg, assertToastMsgNotDisplayed, waitForToastMsgDissapear, nav} from './helpers/utils';
+import {
+    ctrlKey,
+    commandKey,
+    ctrlShiftKey,
+    assertToastMsg,
+    assertToastMsgNotDisplayed,
+    waitForToastMsgDissapear,
+    nav,
+} from './helpers/utils';
 import {monitoring} from './helpers/monitoring';
 import {dictionaries} from './helpers/dictionaries';
 import {workspace} from './helpers/workspace';
