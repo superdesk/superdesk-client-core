@@ -170,6 +170,17 @@ export function assertToastMsg(type, msg) {
     browser.sleep(500);
 }
 
+// Don't expect message to appear
+export function assertToastMsgNotDisplayed(type, msg) {
+    expect(element.all(by.cssContainingText(`.notification-holder .alert-${type}`, msg)).isPresent()).toBe(false);
+}
+
+export function waitForToastMsgDissapear(type, msg) {
+    browser.wait(protractor.ExpectedConditions.invisibilityOf(
+        element(by.cssContainingText(`.notification-holder .alert-${type}`, msg)),
+    ));
+}
+
 /**
  * Wait for element to be displayed
  *
