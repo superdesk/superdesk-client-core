@@ -1,19 +1,10 @@
 import {appConfig} from 'appConfig';
 import _ from 'lodash';
-
-const baseUrl = appConfig.server.url;
-
-export function basejoin(path) {
-    return baseUrl + (path.indexOf('/') === 0 ? path : '/' + path);
-}
-
-export function getItemPath(item: string): string {
-    return basejoin(item);
-}
+import {basejoin} from './url-resolver-helpers';
 
 URLResolver.$inject = ['$http', '$q', '$log'];
 function URLResolver($http, $q, $log) {
-    var _links;
+    var _links, baseUrl = appConfig.server.url;
 
     /**
      * Get url for given resource
@@ -32,7 +23,15 @@ function URLResolver($http, $q, $log) {
         });
     };
 
-    this.item = getItemPath;
+    /**
+     * Get server url for given item
+     *
+     * @param {String} item
+     * @returns {String}
+     */
+    this.item = function(item) {
+        return basejoin(item);
+    };
 
     /**
      * Get resource links
