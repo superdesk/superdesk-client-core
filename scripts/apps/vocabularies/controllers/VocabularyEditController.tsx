@@ -63,17 +63,6 @@ export function VocabularyEditController(
     $scope.idRegex = idRegex;
     $scope.selectionTypes = VOCABULARY_SELECTION_TYPES;
 
-    function closeVocabulary(callback?) {
-        $scope.closeVocabulary();
-
-        // update items after react editing component has closed
-        // to prevent it from throwing an error due to not being able to generate a key
-        // which is generated from the position of the item in the array
-        if (callback != null) {
-            setTimeout(callback);
-        }
-    }
-
     if ($scope.matchFieldTypeToTab('related-content-fields', $scope.vocabulary.field_type)) {
         // Insert default allowed workflows
         if ($scope.vocabulary.field_options == null) {
@@ -86,11 +75,9 @@ export function VocabularyEditController(
     function onSuccess(result) {
         notify.success(gettext('Vocabulary saved successfully'));
 
-        closeVocabulary(() => {
-            $scope.updateVocabulary(result);
-            $scope.issues = null;
-            $scope.$apply();
-        });
+        $scope.closeVocabulary();
+        $scope.updateVocabulary(result);
+        $scope.issues = null;
     }
 
     function onError(response) {
@@ -201,10 +188,8 @@ export function VocabularyEditController(
      * Discard changes and close modal.
      */
     $scope.cancel = function() {
-        closeVocabulary(() => {
-            $scope.updateVocabulary(origVocabulary);
-            $scope.$apply();
-        });
+        $scope.closeVocabulary();
+        $scope.updateVocabulary(origVocabulary);
     };
 
     // try to reproduce data model of vocabulary:
