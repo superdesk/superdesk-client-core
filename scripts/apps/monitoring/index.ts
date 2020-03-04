@@ -20,7 +20,7 @@ import {SplitFilter} from './filters';
 import {MonitoringController} from './controllers/MonitoringController';
 import {gettext} from 'core/utils';
 import {reactToAngular1} from 'superdesk-ui-framework';
-import {MonitoringFilterinButtons} from './directives/MonitoringFilteringButtons';
+import {MonitoringFilteringButtons} from './directives/MonitoringFilteringButtons';
 
 /**
  * @ngdoc module
@@ -44,8 +44,8 @@ angular.module('superdesk.apps.monitoring', [
     .directive('sdMonitoringView', directive.MonitoringView)
     .component('sdMonitoringFilteringButtons',
         reactToAngular1(
-            MonitoringFilterinButtons,
-            ['deskId', 'toggleFilter', 'isFilterActive', 'activeFilters'],
+            MonitoringFilteringButtons,
+            ['deskId', 'toggleFilter', 'isFilterActive', 'activeFilters', 'addResourceUpdatedEventListener'],
         ),
     )
     .directive('sdMonitoringGroup', directive.MonitoringGroup)

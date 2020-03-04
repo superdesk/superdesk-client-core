@@ -23,6 +23,7 @@ interface IScope extends ng.IScope {
     togglePersonalShowSent: () => boolean;
     gettext: (text: any, params?: any) => any;
     toggleFilter: () => void;
+    addResourceUpdatedEventListener: (callback: any) => void;
 }
 
 /**
@@ -63,6 +64,12 @@ export function MonitoringView(
             scope.$watch(() => desks.active.desk, (activeDeskId) => {
                 scope.activeDeskId = activeDeskId;
             });
+
+            scope.addResourceUpdatedEventListener = (callback) => {
+                scope.$on('resource:updated', (_event, data) => {
+                    callback(data);
+                });
+            };
 
             /**
              * Issue here is that sd-column-box__main-column element is not visible on initializing sd-monitoring-view.
