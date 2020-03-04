@@ -7,6 +7,8 @@ import {extensions} from 'appConfig';
 import {IPTCMetadata, IUser, IArticle} from 'superdesk-api';
 import {appConfig} from 'appConfig';
 
+const isNotEmptyString = (value: any) => value != null && value !== '';
+
 /* eslint-disable complexity */
 
 function getExifData(file: File): Promise<IPTCMetadata> {
@@ -29,29 +31,27 @@ function getExifData(file: File): Promise<IPTCMetadata> {
     });
 }
 
-function mapIPTCExtensions(metadata: IPTCMetadata, user: IUser): Promise<Partial<IArticle>> {
-    if (metadata == null) {
-        return Promise.resolve({
-            byline: user.byline,
-        });
-    }
+function mapIPTCExtensions(metadata: IPTCMetadata, user: IUser, parent?: IArticle): Promise<Partial<IArticle>> {
+    const meta: Partial<IPTCMetadata> = Object.assign({
+        'By-line': user.byline,
+    }, pickBy(metadata, isNotEmptyString));
 
     const item = {
-        byline: metadata['By-line'] || user.byline,
-        headline: metadata.Headline,
-        description_text: metadata['Caption-Abstract'],
-        copyrightnotice: metadata.CopyrightNotice,
-        language: metadata.LanguageIdentifier,
-        creditline: metadata.Credit,
+        byline: meta['By-line'] || user.byline,
+        headline: meta.Headline,
+        description_text: meta['Caption-Abstract'],
+        copyrightnotice: meta.CopyrightNotice,
+        language: meta.LanguageIdentifier,
+        creditline: meta.Credit,
     };
 
     return Object.values(extensions).filter(({activationResult}) =>
-        activationResult.contributions && activationResult.contributions.iptcMapping,
+        activationResult.contributions?.iptcMapping,
     ).reduce(
         (accumulator, {activationResult}) =>
-            accumulator.then((_item) => activationResult.contributions.iptcMapping(metadata, _item)),
+            accumulator.then((_item) => activationResult.contributions.iptcMapping(meta, _item, parent)),
         Promise.resolve(item),
-    ).then((_item: Partial<IArticle>) => pickBy(_item));
+    ).then((_item: Partial<IArticle>) => pickBy(_item, isNotEmptyString));
 }
 
 function serializePromises(promiseCreators: Array<() => Promise<any>>): Promise<Array<any>> {
@@ -97,6 +97,7 @@ export function UploadController(
     $scope.allowVideo = !($scope.locals && $scope.locals.data && $scope.locals.data.allowVideo === false);
     $scope.allowAudio = !($scope.locals && $scope.locals.data && $scope.locals.data.allowAudio === false);
     $scope.validator = _.omit(appConfig.validator_media_metadata, ['archive_description']);
+    $scope.parent = $scope.locals?.data?.parent || null;
     $scope.deskSelectionAllowed = ($location.path() !== '/workspace/personal') && $scope.locals &&
         $scope.locals.data && $scope.locals.data.deskSelectionAllowed === true;
     if ($scope.deskSelectionAllowed === true) {
@@ -295,7 +296,7 @@ export function UploadController(
                 ({file, getThumbnail}) =>
                     getExifData(file)
                         .then(
-                            (fileMeta) => mapIPTCExtensions(fileMeta, $scope.currentUser),
+                            (fileMeta) => mapIPTCExtensions(fileMeta, $scope.currentUser, $scope.parent),
                             () => ({}), // proceed with upload on exif parsing error
                         )
                         .then((meta) => {

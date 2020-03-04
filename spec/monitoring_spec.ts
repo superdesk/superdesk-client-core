@@ -1,13 +1,15 @@
 /* eslint-disable newline-per-chained-call */
 
-import {element, browser, by} from 'protractor';
+import {element, browser, by, protractor} from 'protractor';
 
 import {monitoring} from './helpers/monitoring';
 import {workspace} from './helpers/workspace';
 import {authoring} from './helpers/authoring';
 import {dashboard} from './helpers/dashboard';
 import {desks} from './helpers/desks';
-import {el, s} from 'end-to-end-testing-helpers';
+import {el, s, els, ECE} from 'end-to-end-testing-helpers';
+import {contentProfiles} from './helpers/content_profiles';
+import {templates} from './helpers/templates';
 
 describe('monitoring', () => {
     // Opens desk settings and configure monitoring settings for the named desk
@@ -373,6 +375,52 @@ describe('monitoring', () => {
         expect(monitoring.getGroupItems(2).count()).toBe(1);
         expect(monitoring.getGroupItems(3).count()).toBe(0);
         expect(monitoring.getGroupItems(4).count()).toBe(1);
+    });
+
+    it('can filter content by content profile', () => {
+        monitoring.openMonitoring();
+        workspace.selectDesk('Sports Desk');
+        authoring.createTextItemFromTemplate('testing');
+        authoring.setHeaderSluglineText('TESTING1 SLUGLINE');
+        authoring.getSubjectMetadataDropdownOpened();
+        browser.actions().sendKeys('archaeology')
+            .perform();
+        browser.actions().sendKeys(protractor.Key.DOWN)
+            .perform();
+        browser.actions().sendKeys(protractor.Key.ENTER)
+            .perform();
+        authoring.save();
+        authoring.close();
+        expect(monitoring.getAllItems().count()).toBe(3);
+        el(['content-profile-dropdown']).click();
+        browser.wait(ECE.hasElementCount(els(['content-profiles']), 2));
+        el(['content-profile-dropdown'], by.buttonText('testing')).click();
+        expect(monitoring.getAllItems().count()).toBe(1);
+        expect(monitoring.getTextItemBySlugline(0, 0)).toBe('TESTING1 SLUGLINE');
+        expect(monitoring.isGroupEmpty(2)).toBe(true);
+        expect(monitoring.isGroupEmpty(4)).toBe(true);
+
+        browser.wait(ECE.elementToBeClickable(el(['remove-filter'])));
+        el(['remove-filter']).click();
+        expect(monitoring.getAllItems().count()).toBe(3);
+        expect(monitoring.getTextItemBySlugline(0, 0)).toBe('TESTING1 SLUGLINE');
+        expect(monitoring.getTextItem(2, 0)).toBe('item3');
+        expect(monitoring.getTextItem(4, 0)).toBe('item4');
+
+        el(['content-profile-dropdown']).click();
+        browser.wait(ECE.hasElementCount(els(['content-profiles']), 2));
+        el(['content-profile-dropdown'], by.buttonText('testing')).click();
+        expect(monitoring.getAllItems().count()).toBe(1);
+        expect(monitoring.getTextItemBySlugline(0, 0)).toBe('TESTING1 SLUGLINE');
+        expect(monitoring.isGroupEmpty(2)).toBe(true);
+        expect(monitoring.isGroupEmpty(4)).toBe(true);
+
+        browser.wait(ECE.elementToBeClickable(el(['clear-filters'])));
+        el(['clear-filters']).click();
+        expect(monitoring.getAllItems().count()).toBe(3);
+        expect(monitoring.getTextItemBySlugline(0, 0)).toBe('TESTING1 SLUGLINE');
+        expect(monitoring.getTextItem(2, 0)).toBe('item3');
+        expect(monitoring.getTextItem(4, 0)).toBe('item4');
     });
 
     it('can order content', () => {
@@ -813,7 +861,7 @@ describe('monitoring', () => {
 
         el(['content-create']).click();
         el(['content-create-dropdown']).element(by.buttonText('More templates...')).click();
-        el(['templates-list']).element(by.buttonText(slugline)).click();
+        els(['templates-list']).get(1).element(by.buttonText(slugline)).click();
 
         browser.sleep(500); // animation
         expect(browser.isElementPresent(element(s(['authoring'])))).toBe(true);

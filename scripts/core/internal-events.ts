@@ -5,6 +5,7 @@ interface IInternalEvents {
         field: string;
         image: IArticle;
     };
+    dangerouslyOverwriteAuthoringData: Partial<IArticle>;
 }
 
 export function addInternalEventListener<T extends keyof IInternalEvents>(

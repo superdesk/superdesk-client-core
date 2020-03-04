@@ -7,6 +7,8 @@ import {dictionaries} from './helpers/dictionaries';
 import {workspace} from './helpers/workspace';
 import {authoring} from './helpers/authoring';
 
+import {el, ECE, els, waitAndClick, hover, selectFilesForUpload} from 'end-to-end-testing-helpers';
+
 describe('authoring', () => {
     beforeEach(() => {
         monitoring.openMonitoring();
@@ -712,5 +714,35 @@ describe('authoring', () => {
         authoring.openMacros();
         authoring.callMacros('Populate Abstract');
         expect(authoring.getAbstractText()).toBe('item6 text');
+    });
+
+    it('Can remove an image from media gallery', () => {
+        workspace.selectDesk('XEditor3 Desk'); // has media gallery in content profile
+
+        el(['content-create']).click();
+        el(['content-create-dropdown']).element(by.buttonText('editor3 template')).click();
+
+        browser.wait(ECE.visibilityOf(el(['authoring-field--media-gallery', 'media-gallery--upload-placeholder'])));
+        expect(ECE.hasElementCount(els(['authoring-field--media-gallery', 'media-gallery-image']), 0)()).toBe(true);
+
+        el(['media-gallery--upload-placeholder']).click();
+
+        browser.wait(ECE.presenceOf(el(['image-upload-input'])));
+        selectFilesForUpload(el(['image-upload-input']), ['image-red.jpg']);
+
+        el(['media-metadata-editor', 'field--headline'], by.tagName('input')).sendKeys('image headline');
+        el(['media-metadata-editor', 'field--alt_text'], by.tagName('input')).sendKeys('image alt text');
+        el(['media-metadata-editor', 'field--description_text'], by.tagName('textarea')).sendKeys('image description');
+
+        el(['multi-image-edit--start-upload']).click();
+
+        waitAndClick(el(['change-image', 'done']));
+
+        browser.wait(ECE.hasElementCount(els(['authoring-field--media-gallery', 'media-gallery-image']), 1));
+
+        hover(el(['authoring-field--media-gallery', 'media-gallery-image']));
+        el(['authoring-field--media-gallery', 'media-gallery-image--remove']).click();
+
+        browser.wait(ECE.hasElementCount(els(['authoring-field--media-gallery', 'media-gallery-image']), 0));
     });
 });

@@ -2,7 +2,7 @@
 
 import {element, by, browser, protractor, ElementFinder} from 'protractor';
 import {nav, waitFor, acceptConfirm} from './utils';
-import {s, ECE} from 'end-to-end-testing-helpers';
+import {s, ECE, el} from 'end-to-end-testing-helpers';
 import {multiAction} from './actions';
 
 class Monitoring {
@@ -124,6 +124,7 @@ class Monitoring {
     getPackageItemLabelEntry: () => ElementFinder;
     getPackageItemLabelOption: (index: any) => ElementFinder;
     getPackageItemLabel: (index: any) => ElementFinder;
+    isGroupEmpty: (group: any) => boolean;
 
     constructor() {
         this.config = element(by.className('aggregate-settings'));
@@ -205,6 +206,10 @@ class Monitoring {
 
         this.getGroupItems = function(group) {
             return this.getGroup(group).all(by.className('media-box'));
+        };
+
+        this.isGroupEmpty = function(group) {
+            return this.getGroupItems(group).count().then((count) => count === 0);
         };
 
         this.actionOnDeskSingleView = function() {
@@ -320,6 +325,7 @@ class Monitoring {
         };
 
         this.previewAction = function(group, item) {
+            browser.wait(ECE.elementToBeClickable(this.getItem(group, item)));
             this.getItem(group, item).click();
             var preview = element(by.id('item-preview'));
 
@@ -452,8 +458,7 @@ class Monitoring {
             var itemElem = this.getSpikedItem(item);
 
             browser.actions().mouseMove(itemElem).perform();
-            itemElem.element(by.className('icon-dots-vertical')).click();
-
+            el(['context-menu-button']).click();
             var menu = element(by.css('.dropdown__menu.open'));
 
             menu.element(by.partialLinkText('Unspike')).click();

@@ -120,14 +120,14 @@
          data-rel="'featuremedia'"
          data-field-name="'feature_media'"
          data-editable="_editable"
-         data-onchange="autosave(item)"
+         data-onchange="autosave(item, timeout)"
          data-save="save()"
          data-show-title="editor.feature_media.imageTitle"
          data-tabindex="editor.feature_media.order">
     </div>
     <div sd-item-crops
          data-item="item.associations['featuremedia']"
-         ng-if="editor.feature_media.showCrops && features.editFeaturedImage &&
+         ng-if="editor.feature_media.showCrops &&
          (item.associations['featuremedia'].type == 'picture' ||
          item.associations['featuremedia'].type == 'graphic')">
     </div>
@@ -379,7 +379,16 @@
                  class="media-container__metadata"
                  data-item="item"></div>
             <div class="media-container__action-bar" ng-if="_editable">
-                <a class="btn btn--hollow btn--small" ng-click="editMedia()"><span translate>Edit metadata</span></a>
+                <div class="flex-grid flex-grid--medium-3">
+                    <div class="flex-grid__item sd-text__left" style="text-align: left;">
+                        <sd-video-thumbnail-editor data-item="item" data-on-change="autosave"></sd-video-thumbnail-editor>
+                    </div>
+                    <div class="flex-grid__item">
+                    </div>
+                    <div class="flex-grid__item">
+                        <a class="btn btn--hollow btn--small" ng-click="editMedia()"><span translate>Edit metadata</span></a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -652,11 +661,13 @@
 </div>
 
 <div class="field" ng-repeat="field in fields track by field._id"
-     ng-if="field.field_type === 'media'"
-     sd-width="{{editor[field._id].sdWidth || 'full'}}"
-     sd-validation-error="error[field._id]"
-     order="{{editor[field._id].order}}"
-     data-required="schema[field._id].required">
+    ng-if="field.field_type === 'media'"
+    sd-width="{{editor[field._id].sdWidth || 'full'}}"
+    sd-validation-error="error[field._id]"
+    order="{{editor[field._id].order}}"
+    data-required="schema[field._id].required"
+    data-test-id="{{'authoring-field--' + field._id}}"
+>
     <label class="field__label" translate>{{field.display_name}}</label>
 
     <div sd-item-carousel
@@ -694,7 +705,7 @@
     <div ng-if="!_editable">
         <label class="field__label">{{field.display_name}}</label>
 
-        <div 
+        <div
             sd-related-items-preview
             data-item="item"
             data-field="field">

@@ -22,6 +22,8 @@ interface IScope extends IDirectiveScope<void> {
     refreshRelatedItems: () => void;
     removeRelatedItem: (key: string) => void;
     openRelatedItem: (item: IArticle) => void;
+    canAddRelatedItems: () => boolean;
+    isLocked: (item: IArticle) => boolean;
 }
 
 /**
@@ -34,8 +36,22 @@ interface IScope extends IDirectiveScope<void> {
  * add related items by using drag and drop, delete related items and open related items.
  */
 
-RelatedItemsDirective.$inject = ['authoringWorkspace', 'relationsService', 'notify'];
-export function RelatedItemsDirective(authoringWorkspace: AuthoringWorkspaceService, relationsService, notify) {
+RelatedItemsDirective.$inject = [
+    'authoringWorkspace',
+    'relationsService',
+    'notify',
+    'lock',
+    '$rootScope',
+    'content',
+];
+export function RelatedItemsDirective(
+    authoringWorkspace: AuthoringWorkspaceService,
+    relationsService,
+    notify,
+    lock,
+    $rootScope,
+    content,
+) {
     return {
         scope: {
             item: '=',
@@ -52,6 +68,12 @@ export function RelatedItemsDirective(authoringWorkspace: AuthoringWorkspaceServ
             };
 
             scope.gettext = gettext;
+
+            scope.isLocked = (item) => {
+                return lock.isLocked(item) || lock.isLockedInCurrentSession(item);
+            };
+
+            scope.canAddRelatedItems = () => scope.field?.field_options?.allowed_workflows?.in_progress === true;
 
             const dragOverClass = 'dragover';
             const fieldOptions = scope.field?.field_options || {};
@@ -125,7 +147,6 @@ export function RelatedItemsDirective(authoringWorkspace: AuthoringWorkspaceServ
                         );
                         return;
                     }
-
                     scope.addRelatedItem(item);
                 });
             }
@@ -217,21 +238,29 @@ export function RelatedItemsDirective(authoringWorkspace: AuthoringWorkspaceServ
              *
              * @param {Object} item
              */
-            scope.addRelatedItem = (item) => {
-                const key = getNextKey(scope.item.associations || {}, scope.field._id);
-                let data = {};
+            scope.addRelatedItem = (_item) => {
+                scope.loading = true;
+                content.dropItem(_item)
+                    .then((item) => {
+                        const key = getNextKey(scope.item.associations || {}, scope.field._id);
+                        let data = {};
 
-                if (isInArchive(item)) {
-                    data[key] = {
-                        _id: item._id,
-                        type: item.type, // used to display associated item types
-                    };
-                } else {
-                    data[key] = item; // use full item for external items, like images from external search provider
-                }
+                        if (isInArchive(item)) {
+                            data[key] = {
+                                _id: item._id,
+                                type: item.type, // used to display associated item types
+                            };
+                        } else {
+                            data[key] = item; /* use full item for external items,
+                                                like images from external search provider */
+                        }
 
-                scope.item.associations = angular.extend({}, scope.item.associations, data);
-                scope.onchange();
+                        scope.item.associations = angular.extend({}, scope.item.associations, data);
+                        scope.onchange();
+                    })
+                    .finally(() => {
+                        scope.loading = false;
+                    });
             };
 
             /**
@@ -262,6 +291,40 @@ export function RelatedItemsDirective(authoringWorkspace: AuthoringWorkspaceServ
                 if (newValue !== oldValue) {
                     scope.refreshRelatedItems();
                 }
+            });
+
+            function onItemEvent(event, payload) {
+                let shouldUpdateItems = false;
+
+                const relatedItemsIds = Object.values(scope.relatedItems).map((item) => item._id);
+
+                switch (event.name) {
+                case 'content:update':
+                    var updateItemsIds = Object.keys(payload.items);
+
+                    shouldUpdateItems = updateItemsIds.some((id) => relatedItemsIds.includes(id));
+                    break;
+                case 'item:lock':
+                case 'item:unlock':
+                    shouldUpdateItems = relatedItemsIds.some((id) => payload.item === id);
+                    break;
+                }
+
+                if (shouldUpdateItems) {
+                    scope.refreshRelatedItems();
+                }
+            }
+
+            const removeEventListeners = [
+                'item:lock',
+                'item:unlock',
+                'content:update',
+            ].map((eventName) =>
+                $rootScope.$on(eventName, onItemEvent),
+            );
+
+            scope.$on('$destroy', () => {
+                removeEventListeners.forEach((removeFn) => removeFn());
             });
         },
     };

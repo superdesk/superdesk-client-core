@@ -41,5 +41,6 @@ angular.module('superdesk.apps.templates', [
             category: superdesk.MENU_SETTINGS,
             settings_menu_group: coreMenuGroups.CONTENT_CONFIG,
             priority: 2000,
+            privileges: {content_templates: 1},
         });
     }]);

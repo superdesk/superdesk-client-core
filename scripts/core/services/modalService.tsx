@@ -16,16 +16,7 @@ export const showModal = (Component: React.ComponentType<{closeModal(): void}>):
 
     ReactDOM.render(
         (
-            <div>
-                <div className="modal__backdrop fade in ng-scope" />
-                <div className="modal" style={{display: 'block'}}>
-                    <div className="modal__dialog">
-                        <div className="modal__content">
-                            <Component closeModal={closeModal} />
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <Component closeModal={closeModal} />
         ),
         el,
     );

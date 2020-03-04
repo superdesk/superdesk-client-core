@@ -1,3 +1,4 @@
+import 'jquery';
 import 'jquery-ui/jquery-ui';
 import 'jquery-jcrop';
 import 'jquery-gridster';

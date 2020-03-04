@@ -258,6 +258,9 @@ body, html {
                 font-size: 1.4rem;
                 line-height: 2.7rem;
                 padding-right: 2rem;
+                input {
+                    padding-left: $sd-base-increment * 1.5;
+                }
                 .term-editor {
                     flex: 1 1 auto;
                 }
@@ -355,6 +358,11 @@ body, html {
         -moz-appearance: none;
         -webkit-appearance: none;
     }
+    input {
+        border-color: rgba(150, 150, 150, 0.4) !important;
+        background: inherit;
+        color: inherit;
+    }
     .text-editor:hover, .headline:hover, .abstract:hover, .field__select:hover {
         border-bottom-color: rgba(123, 123, 123, 0.60) !important;
         cursor: text;
@@ -441,7 +449,7 @@ body, html {
     }
     // text styles
     color: rgba(51, 51, 51, 1);
-    .text-editor, .headline, .abstract, input {
+    .text-editor, .headline, .abstract {
         color: inherit;
         padding-left: 0;
         padding-right: 0;
@@ -453,6 +461,10 @@ body, html {
     .byline {
         font-size: 16px;
         text-transform: none;
+        padding-top: 2px;
+        padding-bottom: 2px;
+        padding-left: $sd-base-increment * 1.5;
+        background-color: transparent;
         line-height: 150%;
         .text-editor {
             min-height: 24px;

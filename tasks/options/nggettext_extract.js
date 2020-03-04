@@ -18,6 +18,7 @@ module.exports = {
                 // planning
                 '../superdesk-planning/index.js',
                 '../superdesk-planning/client/**/*.{html,js,jsx,tsx,ts}',
+                '!../superdesk-planning/client/planning-extension/node_modules/**/*',
             ],
         },
     },
