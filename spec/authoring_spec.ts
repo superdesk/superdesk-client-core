@@ -747,7 +747,7 @@ describe('authoring', () => {
         assertToastMsg('success', 'Item updated.');
         waitForToastMsgDissapear('success', 'Item updated.');
 
-        browser.wait(ECE.hasElementCount(els(['authoring-field--media-gallery', 'media-gallery-image']), 1), 1000);
+        browser.wait(ECE.hasElementCount(els(['authoring-field--media-gallery', 'media-gallery-image']), 1));
 
         hover(el(['authoring-field--media-gallery', 'media-gallery-image']));
         el(['media-gallery-image--edit']).click();
@@ -777,7 +777,7 @@ describe('authoring', () => {
 
         waitAndClick(el(['change-image', 'done']));
 
-        browser.wait(ECE.hasElementCount(els(['authoring-field--media-gallery', 'media-gallery-image']), 1), 1000);
+        browser.wait(ECE.hasElementCount(els(['authoring-field--media-gallery', 'media-gallery-image']), 1));
     });
 
     it('Can remove an image from media gallery', () => {
