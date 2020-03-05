@@ -6,7 +6,6 @@ import {isPublished} from 'apps/archive/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {DESK_OUTPUT} from 'apps/desks/constants';
 import {appConfig} from 'appConfig';
-import {IRestApiResponse, IArticle} from 'superdesk-api';
 
 const translatedFields = GET_LABEL_MAP();
 
@@ -28,7 +27,6 @@ export type StageGroup = {
 };
 
 interface IScope extends ng.IScope {
-    queryItems: (event?, data?, params?) => Promise<IRestApiResponse<IArticle>>;
     customDataSource: {
         getItems(from: number, pageSize: number): any;
         getItem(item: any): any;
@@ -195,7 +193,7 @@ export function MonitoringGroup(
             scope.$on('item:translate', scheduleQuery);
             scope.$on('broadcast:created', (event, args) => {
                 scope.previewingBroadcast = true;
-                queryAndUpdate();
+                queryItems();
                 preview(args.item);
             });
             scope.$on('item:unspike', scheduleIfShouldUpdate);
@@ -394,7 +392,7 @@ export function MonitoringGroup(
             function scheduleQuery(event, data) {
                 if (!queryTimeout) {
                     queryTimeout = $timeout(() => {
-                        queryAndUpdate(event, data, {auto: (data && data.force) ? 0 : 1})
+                        queryItems(event, data, {auto: (data && data.force) ? 0 : 1})
                             .finally(() => {
                                 scope.$applyAsync(() => {
                                     // ignore any updates requested in current $digest
@@ -513,7 +511,7 @@ export function MonitoringGroup(
                 return monitoring.previewItem && monitoring.previewItem.task.stage === scope.group._id;
             }
 
-            scope.queryItems = (event?, data?, params?) => {
+            function queryItems(event?, data?, params?) {
                 var originalQuery;
 
                 if (desks.changeDesk) {
@@ -568,11 +566,7 @@ export function MonitoringGroup(
                                 return res;
                             });
                     }
-                })();
-            };
-
-            function queryAndUpdate(event?, data?, params?) {
-                return scope.queryItems(event, data, params)
+                })()
                     .then((items) => {
                         if (appConfig.features.autorefreshContent && data != null) {
                             data.force = true;
@@ -619,7 +613,7 @@ export function MonitoringGroup(
                         order: 'desc',
                     };
                 }
-                queryAndUpdate();
+                queryItems();
             };
 
             scope.toggleCustomSortOrder = function() {
@@ -628,7 +622,7 @@ export function MonitoringGroup(
                 } else {
                     scope.customSortOptionActive.order = 'asc';
                 }
-                queryAndUpdate();
+                queryItems();
             };
 
             scope.fetchNext = function(from) {
