@@ -10,8 +10,7 @@ RelationsService.$inject = ['api', '$q'];
 export function RelationsService(api, $q) {
     this.getRelatedKeys = function(item: IArticle, fieldId: string) {
         return Object.keys(item.associations || {})
-            .filter((key) => key.startsWith(fieldId) && item.associations[key] != null)
-            .sort();
+            .filter((key) => key.startsWith(fieldId) && item.associations[key] != null);
     };
 
     this.getRelatedItemsForField = function(item: IArticle, fieldId: string) {
