@@ -205,13 +205,9 @@ export function CardsService(search, session, desks) {
         const terms = Object.values(JSON.parse(card.customFilters))
             .reduce((obj1, obj2) => Object.assign(obj1, obj2), {});
 
-        if (Object.keys(terms).length < 1) {
-            return; // is the case when removing the last filter
-        }
-
-        if (card.customFilters != null) {
-            query.filter({terms});
-        }
+        Object.keys(terms).forEach((key) => {
+            query.filter({terms: {[key]: terms[key]}});
+        });
     }
 
     /**

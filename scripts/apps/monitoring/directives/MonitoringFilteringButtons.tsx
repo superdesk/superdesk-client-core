@@ -93,7 +93,15 @@ class FilterButton extends React.PureComponent<IPropsFilterButton, IState> {
                     type={active ? 'primary' : 'default'}
                     style={active ? 'filled' : 'hollow'}
                     size="small"
-                    onClick={() => this.props.toggleFilter(button)}
+                    onClick={() => {
+                        this.props.toggleFilter({
+                            ...button,
+                            query: {
+                                ...button.query,
+                                'task.desk': [this.props.deskId],
+                            },
+                        });
+                    }}
                 />
             </Badge>
         );
