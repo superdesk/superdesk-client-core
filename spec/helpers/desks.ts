@@ -2,6 +2,7 @@
 
 import {element, by, browser, protractor} from 'protractor';
 import {nav} from './utils';
+import {el} from 'end-to-end-testing-helpers';
 
 class Desks {
     list: any;
@@ -306,7 +307,7 @@ class Desks {
          * @returns {ElementFinder} button
          **/
         this.getNewDeskButton = function() {
-            return element(by.id('add-new-desk'));
+            return el(['add-new-desk']);
         };
 
         /**
