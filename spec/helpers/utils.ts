@@ -163,7 +163,7 @@ export function altKey(key) {
 export function assertToastMsg(type, msg) {
     browser.sleep(500);
     expect(
-        element.all(by.cssContainingText(`.notification-holder .alert-${type}`, msg))
+        element.all(by.cssContainingText(`[data-test-id="notification--${type}"]`, msg))
             .first()
             .isDisplayed(),
     ).toBe(true);
@@ -172,12 +172,12 @@ export function assertToastMsg(type, msg) {
 
 // Don't expect message to appear
 export function assertToastMsgNotDisplayed(type, msg) {
-    expect(element.all(by.cssContainingText(`.notification-holder .alert-${type}`, msg)).isPresent()).toBe(false);
+    expect(element.all(by.cssContainingText(`[data-test-id="notification--${type}"]`, msg)).isPresent()).toBe(false);
 }
 
 export function waitForToastMsgDissapear(type, msg) {
     browser.wait(protractor.ExpectedConditions.invisibilityOf(
-        element(by.cssContainingText(`.notification-holder .alert-${type}`, msg)),
+        element(by.cssContainingText(`[data-test-id="notification--${type}"]`, msg)),
     ));
 }
 
