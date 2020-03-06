@@ -8,7 +8,7 @@ type ISelectSingleValueItems = Array<{id: string, label: string}>;
 type IProps = IInputType<string>;
 
 interface IState {
-    items: ISelectSingleValueItems;
+    items: ISelectSingleValueItems | null;
     loading: boolean;
 }
 
@@ -27,7 +27,7 @@ export function getSelectSingleValue(
 
             this.state = {
                 items: null,
-                loading: false,
+                loading: true,
             };
 
             this.initialValue = props.value;
