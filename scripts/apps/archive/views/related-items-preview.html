@@ -8,7 +8,7 @@
             <sd-related-item-in-list-react item="relatedItem" />
         </div>
         <figure class="sd-list-item__thumbnail" ng-if="relatedItem.associations.featuremedia">
-            <img src="{{relatedItem.associations.featuremedia.renditions.viewImage.href}}"
+            <img ng-src="{{relatedItem.associations.featuremedia.renditions.viewImage.href}}"
                 alt="{{ gettext('Thumbnail for related item') }}">
         </figure>
         <div class="sd-list-item__action-menu--direction-row" ng-if="!preview">

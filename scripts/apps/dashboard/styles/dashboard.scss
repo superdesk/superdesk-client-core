@@ -654,6 +654,9 @@ Add new widget modal
             width: 100%;
             margin-bottom: 20px;
             flex-grow: 1;
+            ul {
+                list-style: circle;
+            }
         }
     }
 }
