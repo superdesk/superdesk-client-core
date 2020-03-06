@@ -1,8 +1,8 @@
 import {getSelectSingleValue} from './select_single_value';
-import ng from 'core/services/ng';
+import {dataApi} from 'core/helpers/CrudManager';
+import {IVocabulary} from 'superdesk-api';
 
 export const VocabularySingleValue = getSelectSingleValue(
-    (props) => ng.getService('vocabularies')
-        .then((vocabularies) => vocabularies.getVocabulary(props.formField.component_parameters.vocabulary_id))
+    (props) => dataApi.findOne<IVocabulary>('vocabularies', props.formField.component_parameters.vocabulary_id)
         .then((vocabulary) => vocabulary.items.map(({qcode, name}) => ({id: qcode, label: name}))),
 );
