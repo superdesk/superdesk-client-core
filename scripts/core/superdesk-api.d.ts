@@ -75,7 +75,7 @@ declare module 'superdesk-api' {
                     onSpikeMultiple?(items: Array<IArticle>): Promise<onSpikeMiddlewareResult>;
                     onPublish?(item: IArticle): Promise<onPublishMiddlewareResult>;
                     onRewriteAfter?(item: IArticle): Promise<IArticle>;
-                    onSendBefore?(itemIds: Array<string>, desk: IDesk): Promise<void>;
+                    onSendBefore?(items: Array<IArticle>, desk: IDesk): Promise<void>;
                 };
             };
             iptcMapping?(data: Partial<IPTCMetadata>, item: Partial<IArticle>, parent?: IArticle): Promise<Partial<IArticle>>;

@@ -5,7 +5,7 @@ import {gettext} from 'core/utils';
 import {isPublished} from 'apps/archive/utils';
 import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
 import {appConfig, extensions} from 'appConfig';
-import {IExtensionActivationResult} from 'superdesk-api';
+import {IExtensionActivationResult, IArticle} from 'superdesk-api';
 
 SendItem.$inject = [
     '$q',
@@ -238,20 +238,25 @@ export function SendItem($q,
                     Object.values(extensions),
                     (extension) => extension.activationResult.contributions?.entities?.article?.onSendBefore ?? [],
                 );
-                let itemIds: Array<string>;
+                let itemsToSend: Array<IArticle>;
 
-                if (scope.config && scope.config.itemIds) {
-                    itemIds = scope.config.itemIds;
-                } else if (scope.item && scope.item._id) {
-                    itemIds = [scope.item._id];
+                if (scope.multiItems != null) {
+                    // scope.multiItems is populated by MultiService
+                    itemsToSend = scope.multiItems;
+                } else if (scope.item != null && scope.item._id) {
+                    // scope.item is populated by the editor
+                    itemsToSend = [scope.item];
+                } else if (scope.config && scope.config.items) {
+                    // scope.config.items is populated by SendService
+                    itemsToSend = scope.config.items;
                 } else {
-                    itemIds = [];
+                    itemsToSend = [];
                 }
 
                 return middlewares.reduce(
                     (current, next) => {
                         return current.then(() => {
-                            return next(itemIds, scope.selectedDesk);
+                            return next(itemsToSend, scope.selectedDesk);
                         });
                     },
                     Promise.resolve(),
