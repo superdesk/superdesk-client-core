@@ -77,7 +77,7 @@ declare module 'superdesk-api' {
                     onRewriteAfter?(item: IArticle): Promise<IArticle>;
                 };
             };
-            iptcMapping?(data: Partial<IPTCMetadata>, item: Partial<IArticle>): Promise<Partial<IArticle>>;
+            iptcMapping?(data: Partial<IPTCMetadata>, item: Partial<IArticle>, parent?: IArticle): Promise<Partial<IArticle>>;
             searchPanelWidgets?: Array<React.ComponentType<ISearchPanelWidgetProps>>;
             authoring?: {
                 onUpdate?(current: IArticle, next: IArticle): Promise<IArticle>;
@@ -758,6 +758,11 @@ declare module 'superdesk-api' {
         fileAccept?: string;
     }
 
+    export interface IModalProps {
+        'data-test-id'?: string;
+        size?: 'large' | 'extra-large' | 'fill' | 'full-screen';
+    }
+
     export interface IPropsModalHeader {
         onClose?(): void;
     }
@@ -780,6 +785,7 @@ declare module 'superdesk-api' {
         selectedUserId?: string;
         disabled?: boolean;
         autoFocus?: boolean | {initializeWithDropdownHidden: boolean};
+        horizontalSpacing?: boolean;
     }
 
 
@@ -923,10 +929,10 @@ declare module 'superdesk-api' {
         };
         entities: {
             article: {
-                // returns true if locked by anyone, including the current user
-                isLocked(article: IArticle): boolean;
+                isLocked(article: IArticle): boolean; // returns true if locked by anyone, including the current user
+                isLockedInCurrentSession(article: IArticle): boolean;
+                isLockedInOtherSession(article: IArticle): boolean;
 
-                isLockedByCurrentUser(article: IArticle): boolean;
                 isPersonal(article: IArticle): boolean;
                 patch(
                     article: IArticle,
@@ -972,7 +978,7 @@ declare module 'superdesk-api' {
             Alert: React.ComponentType<IAlertComponentProps>;
             Figure: React.ComponentType<IFigureComponentProps>;
             DropZone: React.ComponentType<IDropZoneComponentProps>;
-            Modal: React.ComponentType<{'data-test-id'?: string}>;
+            Modal: React.ComponentType<IModalProps>;
             ModalHeader: React.ComponentType<IPropsModalHeader>;
             ModalBody: React.ComponentType;
             ModalFooter: React.ComponentType;
@@ -1064,6 +1070,7 @@ declare module 'superdesk-api' {
         saml_label: any;
         archive_autocomplete: boolean;
         workflow_allow_multiple_updates: boolean;
+        allow_updating_scheduled_items: boolean;
 
         // TANSA SERVER CONFIG
         tansa?: {

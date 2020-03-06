@@ -24,6 +24,7 @@ export const highlightsConfig = {
         description: gettext('Add'),
         draftStyleMap: {
             color: 'rgba(101, 156, 8, 1.0)',
+            backgroundColor: 'rgba(101, 156, 8, 0.2))',
         },
     },
     DELETE_SUGGESTION: {

@@ -11,13 +11,25 @@ interface IState {
     fetchedUsers?: Array<IUser>;
 }
 
-export function getMarkForUserModal(
+export function getMarkForUserModal(options: {
     superdesk: ISuperdesk,
-    onUpdate: (markedForUserId: string | null) => void,
-    locked?: boolean,
+    markForUser: (markedForUserId: string | null) => void,
+    markForUserAndSend: (markedForUserId: string | null) => void,
+    locked: boolean;
+    lockedInOtherSession: boolean,
     markedForUserInitial?: string,
     message?: string,
-): React.ComponentType<IProps> {
+}): React.ComponentType<IProps> {
+    const {
+        superdesk,
+        markForUser,
+        markForUserAndSend,
+        locked,
+        lockedInOtherSession,
+        markedForUserInitial,
+        message,
+    } = options;
+
     const {gettext} = superdesk.localization;
     const {
         Modal,
@@ -38,7 +50,7 @@ export function getMarkForUserModal(
         }
         render() {
             return (
-                <Modal data-test-id="mark-for-user-modal">
+                <Modal data-test-id="mark-for-user-modal" size="large">
                     <ModalHeader onClose={this.props.closeModal}>{gettext('Mark for user')}</ModalHeader>
                     <ModalBody>
                         {
@@ -52,7 +64,7 @@ export function getMarkForUserModal(
                         }
 
                         {
-                            locked === true ? (
+                            lockedInOtherSession === true ? (
                                 <div
                                     className="sd-alert sd-alert--hollow sd-alert--primary sd-alert--small"
                                 >
@@ -62,7 +74,7 @@ export function getMarkForUserModal(
                         }
 
                         <SelectUser
-                            disabled={locked}
+                            disabled={lockedInOtherSession}
                             onSelect={(selectedUser) => this.setState({selectedUserId: selectedUser._id})}
                             selectedUserId={this.state.selectedUserId}
                             autoFocus={{initializeWithDropdownHidden: true}}
@@ -81,10 +93,10 @@ export function getMarkForUserModal(
                             markedForUserInitial !== undefined ? (
                                 <button
                                     className="btn btn--warning"
-                                    disabled={locked}
+                                    disabled={lockedInOtherSession}
                                     onClick={() => {
                                         this.props.closeModal();
-                                        onUpdate(null);
+                                        markForUser(null);
                                     }}
                                     data-test-id="unmark"
                                 >
@@ -98,20 +110,41 @@ export function getMarkForUserModal(
                             disabled={
                                 this.state.selectedUserId === undefined // no user selected
                                 || this.state.selectedUserId === markedForUserInitial // user hasn't changed
-                                || locked
+                                || lockedInOtherSession
                             }
                             onClick={() => {
                                 this.props.closeModal();
 
                                 if (this.state.selectedUserId !== undefined) {
-                                    onUpdate(this.state.selectedUserId);
+                                    markForUser(this.state.selectedUserId);
                                 } else {
                                     logger.error(new Error('selectedUserId can not be undefined'));
                                 }
                             }}
                             data-test-id="confirm"
                         >
-                            {gettext('Confirm')}
+                            {gettext('Mark for user')}
+                        </button>
+
+                        <button
+                            className="btn btn--primary"
+                            disabled={
+                                this.state.selectedUserId === undefined // no user selected
+                                || this.state.selectedUserId === markedForUserInitial // user hasn't changed
+                                || locked // can't send to another stage even if locked by current user
+                            }
+                            onClick={() => {
+                                this.props.closeModal();
+
+                                if (this.state.selectedUserId !== undefined) {
+                                    markForUserAndSend(this.state.selectedUserId);
+                                } else {
+                                    logger.error(new Error('selectedUserId can not be undefined'));
+                                }
+                            }}
+                            data-test-id="mark-and-send"
+                        >
+                            {gettext('Mark and send')}
                         </button>
                     </ModalFooter>
                 </Modal>

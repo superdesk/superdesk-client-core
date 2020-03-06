@@ -102,6 +102,7 @@ export class SelectUser extends React.Component<IPropsSelectUser, IState> {
                 data-test-id="select-user-dropdown"
                 onSearch={(search) => this.queryUsers(search)}
                 loading={this.state.loading}
+                horizontalSpacing={this.props.horizontalSpacing}
                 required
             />
         );

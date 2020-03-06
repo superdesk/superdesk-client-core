@@ -71,7 +71,7 @@ export class DropZone extends React.PureComponent<IDropZoneComponentProps, IStat
 
     render() {
         const className = (
-            this.props.className != null ? this.props.className : 'item-asociation'
+            this.props.className != null ? this.props.className : 'item-association'
         ) + (this.state.hover ? ' dragover' : '');
 
         return (
