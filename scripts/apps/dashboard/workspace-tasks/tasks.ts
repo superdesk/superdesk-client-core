@@ -306,7 +306,6 @@ function AssigneeViewDirective(desks) {
         scope: {
             task: '=',
             name: '=',
-            avatarSize: '@',
         },
         link: function(scope) {
             promise.then(function setItemAssigne() {
