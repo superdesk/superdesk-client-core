@@ -189,6 +189,7 @@ declare module 'superdesk-api' {
     export interface IRelatedArticle {
         _id: IArticle['_id'];
         type: IArticle['type'];
+        order: number,
     }
 
     export interface IRendition {
@@ -314,6 +315,7 @@ declare module 'superdesk-api' {
         operation: any;
         lock_time: string;
         force_unlock?: boolean;
+        order?: number;
         _status: any;
         _fetchable?: boolean;
 
