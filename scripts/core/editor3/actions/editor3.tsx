@@ -4,6 +4,8 @@ import {logger} from 'core/services/logger';
 import {SelectionState, convertFromRaw, EditorState} from 'draft-js';
 import {IArticle} from 'superdesk-api';
 import {getFieldMetadata, fieldsMetaKeys} from '../helpers/fieldsMeta';
+import {appConfig} from 'appConfig';
+import {gettext} from 'core/utils';
 
 /**
  * @ngdoc method
@@ -68,6 +70,8 @@ export function handleEditorTab(e) {
  * @description Creates the editor drop action.
  */
 export function dragDrop(transfer, mediaType, blockKey = null) {
+    const notify = ng.get('notify');
+
     if (mediaType === 'Files') {
         return insertMedia(transfer.files);
     }
@@ -81,10 +85,20 @@ export function dragDrop(transfer, mediaType, blockKey = null) {
 
         return content.dropItem(item, {fetchExternal: true})
             .then((data) => {
-                dispatch({
-                    type: 'EDITOR_DRAG_DROP',
-                    payload: {data, blockKey},
-                });
+                if (appConfig.pictureResolutions
+                    && (data.renditions.original.width < appConfig.pictureResolutions.minWidth
+                    || data.renditions.original.height < appConfig.pictureResolutions.minHeight)) {
+                    notify.error(gettext(
+                        `The image you\'re trying to fetch is smaller than {{width}} x {{height}}
+                        pixels.Please use another one.`,
+                        {width: appConfig.pictureResolutions.minWidth,
+                            height: appConfig.pictureResolutions.minHeight}));
+                } else {
+                    dispatch({
+                        type: 'EDITOR_DRAG_DROP',
+                        payload: {data, blockKey},
+                    });
+                }
             })
             .finally(() => {
                 dispatch({type: 'EDITOR_LOADING', payload: false});

@@ -4,6 +4,7 @@ import {isMediaEditable} from 'core/config';
 import {isPublished} from 'apps/archive/utils';
 import {IArticle, IVocabulary} from 'superdesk-api';
 import {mediaIdGenerator} from '../services/MediaIdGeneratorService';
+import {appConfig} from 'appConfig';
 
 export function getAssociationsByField(item: IArticle, field: IVocabulary) {
     return Object.keys(item.associations || {})
@@ -257,9 +258,19 @@ export function AssociationController(content, superdesk, renditions, notify) {
 
         const __item: IArticle = JSON.parse(event.originalEvent.dataTransfer.getData(superdeskType));
 
-        scope.loading = true;
+        if (appConfig.pictureResolutions != null
+            && (__item.renditions.original.width < appConfig.pictureResolutions.minWidth
+                || __item.renditions.original.height < appConfig.pictureResolutions.minHeight)) {
+            notify.error(gettext(
+                `The image you\'re trying to fetch is smaller than {{width}} x {{height}}
+                pixels.Please use another one.`,
+                {width: appConfig.pictureResolutions.minWidth,
+                    height: appConfig.pictureResolutions.minHeight}));
+        } else {
+            scope.loading = true;
 
-        this.addAssociation(scope, __item);
+            this.addAssociation(scope, __item);
+        }
     };
 }
 

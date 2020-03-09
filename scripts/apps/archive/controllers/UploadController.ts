@@ -17,7 +17,7 @@ function getExifData(file: File): Promise<IPTCMetadata> {
 
         reader.onloadend = () => {
             try {
-                const exif: {iptcdata: IPTCMetadata} = handleBinaryFile(reader.result);
+                const exif: { iptcdata: IPTCMetadata } = handleBinaryFile(reader.result);
 
                 resolve(exif.iptcdata);
             } catch (error) {
@@ -100,6 +100,7 @@ export function UploadController(
     $scope.parent = $scope.locals?.data?.parent || null;
     $scope.deskSelectionAllowed = ($location.path() !== '/workspace/personal') && $scope.locals &&
         $scope.locals.data && $scope.locals.data.deskSelectionAllowed === true;
+
     if ($scope.deskSelectionAllowed === true) {
         Promise.all([desks.fetchDesks(), desks.getCurrentDesk()]).then(([_desks, currentDesk]) => {
             $scope.desks = _desks._items;
@@ -245,16 +246,15 @@ export function UploadController(
             return false;
         }
 
-        let acceptedFiles: Array<{file: File, getThumbnail: (file: File) => Promise<string>}> = [];
+        let acceptedFiles: Array<{ file: File, getThumbnail: (file: File) => Promise<string> }> = [];
         let uploadOfDisallowedFileTypesAttempted: boolean = false;
+        const imageFiles = [];
+        let uploadWithInvalidResolutionAttempted: boolean = false;
 
         _.each(files, (file) => {
             if (/^image/.test(file.type)) {
                 if ($scope.allowPicture) {
-                    acceptedFiles.push({
-                        file: file,
-                        getThumbnail: (f: File) => getDataUrl(f).then((uri) => `<img src="${uri}" />`),
-                    });
+                    imageFiles.push(file);
                 } else {
                     uploadOfDisallowedFileTypesAttempted = true;
                 }
@@ -289,24 +289,61 @@ export function UploadController(
 
             notify.error(message);
         }
-
-        return acceptedFiles.length < 1
+        return acceptedFiles.length < 1 && imageFiles.length < 1
             ? Promise.resolve()
-            : Promise.all(acceptedFiles.map(
-                ({file, getThumbnail}) =>
-                    getExifData(file)
-                        .then(
-                            (fileMeta) => mapIPTCExtensions(fileMeta, $scope.currentUser, $scope.parent),
-                            () => ({}), // proceed with upload on exif parsing error
-                        )
-                        .then((meta) => {
-                            const item = initFile(file, meta, getPseudoId());
+            : Promise.all(imageFiles.map((file) => {
+                if (appConfig.pictureResolutions != null) {
+                    return getDataUrl(file).then((dataUrl) => {
+                        return new Promise((resolve) => {
+                            let img = document.createElement('img');
 
-                            return getThumbnail(file).then((htmlString) => item.thumbnailHtml = htmlString);
-                        }),
-            )).then(() => {
-                $scope.$applyAsync(() => {
-                    $scope.imagesMetadata = $scope.items.map((item) => item.meta);
+                            img.src = dataUrl;
+                            img.onload = function() {
+                                if (img.width && img.width >= appConfig.pictureResolutions.minWidth
+                                    && img.height > appConfig.pictureResolutions.minHeight) {
+                                    acceptedFiles.push({
+                                        file: file,
+                                        getThumbnail: (f: File) => getDataUrl(f).then((uri) => `<img src="${uri}" />`),
+                                    });
+                                } else {
+                                    uploadWithInvalidResolutionAttempted = true;
+                                }
+                                return resolve();
+                            };
+                        });
+                    });
+                } else {
+                    acceptedFiles.push({
+                        file: file,
+                        getThumbnail: (f: File) => getDataUrl(f).then((uri) => `<img src="${uri}" />`),
+                    });
+                    return Promise.resolve();
+                }
+            })).then(() => {
+                return Promise.all(acceptedFiles.map(
+                    ({file, getThumbnail}) =>
+                        getExifData(file)
+                            .then(
+                                (fileMeta) => mapIPTCExtensions(fileMeta, $scope.currentUser, $scope.parent),
+                                () => ({}), // proceed with upload on exif parsing error
+                            )
+                            .then((meta) => {
+                                const item = initFile(file, meta, getPseudoId());
+
+                                return getThumbnail(file).then((htmlString) => item.thumbnailHtml = htmlString);
+                            }),
+                )).then(() => {
+                    if (uploadWithInvalidResolutionAttempted) {
+                        notify.error(gettext(
+                            `The image you\'re trying to fetch is smaller than {{width}} x {{height}}
+                            pixels.Please use another one.`,
+                            {width: appConfig.pictureResolutions.minWidth,
+                                height: appConfig.pictureResolutions.minHeight}));
+                    }
+
+                    $scope.$applyAsync(() => {
+                        $scope.imagesMetadata = $scope.items.map((item) => item.meta);
+                    });
                 });
             });
     };
