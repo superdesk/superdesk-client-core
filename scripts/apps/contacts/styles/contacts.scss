@@ -123,33 +123,6 @@
         font-size: 11px;
         color: #888;
     }
-    .profile-pic {
-        width: 82px;
-        height: 82px;
-        position: relative;
-        margin: 0 auto;
-        .avatar {
-            width: 100%;
-            height: 100%;
-            @include border-radius(50%);
-            position: relative;
-            background-image: url('~images/avatar_200.png');
-            &.organisation {
-                background-image: url('~images/avatar_group_64.png');
-            }
-            &.initials {
-                font-size: 24px;
-                line-height: 82px;
-                font-weight: 300;
-            }
-        }
-        .disabled-label {
-            position: absolute;
-            bottom: 15%;
-            left: 40%;
-            border: 1px solid #fff;
-        }
-    }
 
     .alert {
         @include border-radius(0px);
