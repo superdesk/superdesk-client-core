@@ -440,7 +440,8 @@ describe('authoring', () => {
         authoring.publish(); // item9 published
 
         monitoring.filterAction('text');
-        monitoring.actionOnItemSubmenu('Publishing actions', 'Update', 5, 0, true); // duplicate item9 text published item
+        // Duplicate item9 text published item
+        monitoring.actionOnItemSubmenu('Publishing actions', 'Update', 5, 0, true);
         expect(monitoring.getGroupItems(0).count()).toBe(1);
         monitoring.actionOnItem('Edit', 0, 0);
 
