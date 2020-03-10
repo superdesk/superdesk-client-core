@@ -38,11 +38,12 @@ export const DEFAULT_EDITOR = Object.freeze({
     subject: {order: 8, sdWidth: 'full', enabled: true},
     company_codes: {order: 9, sdWidth: 'full', enabled: true},
     ednote: {order: 10, sdWidth: 'full', enabled: true},
-    headline: {order: 11, formatOptions: ['underline', 'link', 'bold'], enabled: true},
+    headline: {order: 11, formatOptions: ['underline', 'link', 'bold'], editor3: true, enabled: true},
     sms: {order: 12, enabled: true},
     abstract: {
         order: 13,
         formatOptions: ['bold', 'italic', 'underline', 'link'],
+        editor3: true,
         enabled: true,
     },
     byline: {order: 14, enabled: true},
@@ -50,6 +51,7 @@ export const DEFAULT_EDITOR = Object.freeze({
     body_html: {
         order: 16,
         formatOptions: ['h2', 'bold', 'italic', 'underline', 'quote', 'link', 'embed', 'media'],
+        editor3: true,
         enabled: true,
     },
     footer: {order: 17, enabled: true},
