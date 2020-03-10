@@ -7,8 +7,6 @@ import {DELETE_SUGGESTION} from '../highlightsConfig';
 import {moveBlockWithoutDispatching} from '../helpers/draftMoveBlockWithoutDispatching';
 import {insertEntity} from '../helpers/draftInsertEntity';
 
-const isEditorPlainText = (props) => props.singleLine || (props.editorFormat || []).length === 0;
-
 /**
  * @description Contains the list of editor related reducers.
  */
@@ -132,7 +130,7 @@ export const onChange = (
     const contentChanged = state.editorState.getCurrentContent() !== editorStateNext.getCurrentContent();
 
     if (!skipOnChange && (contentChanged || force)) {
-        const plainText = isEditorPlainText(state);
+        const plainText = state.singleLine === true;
 
         state.onChangeValue(editorStateNext.getCurrentContent(), {plainText});
     }

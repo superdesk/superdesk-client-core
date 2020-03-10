@@ -87,7 +87,12 @@ class NotifyComponent extends React.Component<any, IState> {
             <div className="notification-holder">
                 {
                     this.state.messages.map((msg, i) => (
-                        <div key={i} className={'alert alert-' + msg.type} onClick={() => this.removeMessage(i)}>
+                        <div
+                            key={i}
+                            className={'alert alert-' + msg.type}
+                            onClick={() => this.removeMessage(i)}
+                            data-test-id={`notification--${msg.type}`}
+                        >
                             {gettext(msg.msg)}
 
                             {

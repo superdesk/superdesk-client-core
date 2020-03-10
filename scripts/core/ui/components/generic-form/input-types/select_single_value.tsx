@@ -3,12 +3,12 @@ import classNames from 'classnames';
 import {IInputType} from '../interfaces/input-types';
 import {gettext} from 'core/utils';
 
-type ISelectSingleValueItems = Array<{id: string, label: string}>;
+type ISelectSingleValueItems = Array<{id: string; label: string}>;
 
 type IProps = IInputType<string>;
 
 interface IState {
-    items: ISelectSingleValueItems;
+    items: ISelectSingleValueItems | null;
     loading: boolean;
 }
 
@@ -27,7 +27,7 @@ export function getSelectSingleValue(
 
             this.state = {
                 items: null,
-                loading: false,
+                loading: true,
             };
 
             this.initialValue = props.value;
