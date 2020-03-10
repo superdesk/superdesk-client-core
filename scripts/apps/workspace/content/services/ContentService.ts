@@ -324,7 +324,7 @@ export function ContentService(api, templates, desks, packages, archiveService, 
 
         return Promise.all(keys.map((key) => {
             // there is only _id, maybe _type for related items
-            if (associations[key] && Object.keys(associations[key]).length <= 2) {
+            if (associations[key] && Object.keys(associations[key]).length <= 3) {
                 return api.find('archive', associations[key]._id);
             }
 
