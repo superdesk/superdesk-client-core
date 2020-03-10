@@ -2009,3 +2009,66 @@ sd-multi-image-edit {
         background: #eff7fa;
     }
 }
+
+// Pagination
+// ----------
+
+.pagination--rounded {
+    .bs-pagination {
+        li {
+            a {
+                border-radius: 50px;
+                border: 1px solid $inputBorder;
+                background: transparent;
+                margin: 0 1px;
+                width: 26px;
+                height: 26px;
+                line-height: 26px;
+                text-align: center;
+                padding: 0;
+                color: $grayText;
+
+                &:focus, &:active {
+                    outline: none;
+                }
+            }
+
+            &:not(.active):hover a {
+                background: $white;
+            }
+        }
+
+        .active a {
+            color: $white;
+            background: $sd-blue;
+        }
+
+        .disabled a {
+            color: $inputBorder
+        }
+
+        .previous a, .next a {
+            font-size: 14px;
+            line-height: 24px;
+            font-family: 'sd_icons';
+            font-style: normal;
+            font-weight: normal;
+            font-variant: normal;
+            text-transform: none;
+
+            margin-right: 4px;
+
+            &::before {
+                content: '\e642';
+            }
+        }
+
+        .next a {
+            margin-left: 4px;
+
+            &::before {
+                content: '\e643';
+            }
+        }
+    }
+}
