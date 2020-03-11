@@ -7,9 +7,10 @@ import {workspace} from './helpers/workspace';
 import {authoring} from './helpers/authoring';
 import {dashboard} from './helpers/dashboard';
 import {desks} from './helpers/desks';
-import {el, s, els, ECE} from 'end-to-end-testing-helpers';
+import {el, s, els, ECE, waitAndClick, articleList} from 'end-to-end-testing-helpers';
 import {contentProfiles} from './helpers/content_profiles';
 import {templates} from './helpers/templates';
+import {nav} from './helpers/utils';
 
 describe('monitoring', () => {
     // Opens desk settings and configure monitoring settings for the named desk
@@ -897,5 +898,159 @@ describe('monitoring', () => {
         monitoring.filterAction('text');
         expect(monitoring.getItem(4, 0).element(by.className('state_embargo')).isDisplayed()).toBe(true);
         expect(monitoring.getItem(4, 0).element(by.className('state_embargo')).getText()).toEqual('EMBARGO');
+    });
+});
+
+function markForAdmin(groupIndex, itemIndex) {
+    const group = els(['monitoring-group']).get(groupIndex);
+
+    articleList.executeContextMenuAction(els(['article-item'], null, group).get(itemIndex), 'Mark for user');
+
+    el(['select-user-dropdown', 'filter-input']).sendKeys('admin');
+    const firstOption = els(['select-user-dropdown', 'option']).get(0);
+
+    browser.wait(ECE.visibilityOf(firstOption));
+    firstOption.click(); // wait for dropdown to close
+
+    browser.sleep(100);
+    el(['confirm']).click();
+}
+
+describe('Filter marked for me in monitoring', () => {
+    beforeEach(() => {
+        const multipleSourcesDesk: string = 'Multiple sources';
+
+        // Creating a desk
+        // --------------------------------------------------
+
+        nav('/settings/desks');
+
+        el(['add-new-desk']).click();
+
+        el(['desk-config-modal', 'field--name']).sendKeys(multipleSourcesDesk);
+        el(['desk-config-modal', 'field--source']).sendKeys('qqq');
+
+        el(['desk-config-modal', 'field--desk-type']).click();
+        el(['desk-config-modal', 'field--desk-type'], by.cssContainingText('option', 'authoring')).click();
+
+        el(['desk-config-modal', 'field--default-content-template']).click();
+        el(['desk-config-modal', 'field--default-content-template'], by.cssContainingText('option', 'editor3 template'))
+            .click();
+
+        el(['desk-config-modal', 'save-and-continue']).click();
+
+        el(['desk-config-modal', 'wizard--People']).click();
+
+        el(['desk-config-modal', 'select-user--input']).sendKeys('first name');
+
+        browser.sleep(3000); // wait for autocomplete
+        el(['select-user--option-first name last name']).click();
+
+        el(['desk-config-modal', 'done']).click();
+
+        browser.refresh(); // to see all stages
+
+        el([`desk--${multipleSourcesDesk}`, 'desk-actions']).click();
+
+        el(['desk-actions--monitoring-settings']).click();
+
+        el([
+            'desk--monitoring-settings',
+            `desk--${multipleSourcesDesk}`,
+            'monitoring-group--Incoming Stage',
+        ]).click();
+        el([
+            'desk--monitoring-settings',
+            `desk--${multipleSourcesDesk}`,
+            'monitoring-group--Output/Published',
+        ]).click();
+
+        el(['desk--monitoring-settings', 'desk--Politic Desk', 'active-toggle']).click();
+        el(['desk--monitoring-settings', 'desk--Politic Desk', 'monitoring-group--one']).click();
+
+        el(['desk--monitoring-settings'], by.buttonText('Saved Searches')).click();
+
+        el(['desk--monitoring-settings', 'global-saved-search--global saved search item', 'toggle']).click();
+
+        el(['desk--monitoring-settings', 'done']).click();
+
+        nav('/settings/templates');
+
+        el(['content-template--testing', 'template-actions']).click();
+        el(['content-template--testing', 'template-actions--options'], by.buttonText('Edit')).click();
+        browser.sleep(1000);
+
+        el(['template-edit-view', 'desks', 'desk--Multiple sources']).click();
+        el(['template-edit-view', 'save']).click();
+
+        // Creating articles
+        // --------------------------------------------------
+
+        monitoring.openMonitoring();
+
+        el(['content-create']).click();
+        el(['content-create-dropdown'], by.buttonText('editor3 template')).click();
+        browser.wait(ECE.visibilityOf(element(s(['authoring']))));
+
+        el(['authoring', 'field--headline'], by.css('[contenteditable]')).sendKeys('alpha');
+
+        el(['authoring-topbar', 'save']).click();
+        el(['authoring-topbar', 'close']).click();
+
+        // ---
+
+        el(['content-create']).click();
+        el(['content-create-dropdown'], by.buttonText('More templates...')).click();
+        el(['templates-list'], by.buttonText('testing')).click();
+
+        browser.wait(ECE.visibilityOf(element(s(['authoring']))));
+
+        el(['authoring', 'field--headline'], by.css('[contenteditable]')).sendKeys('beta');
+
+        el(['authoring-topbar', 'save']).click();
+        el(['authoring-topbar', 'close']).click();
+
+        // ---
+
+        el(['content-create']).click();
+        el(['content-create-dropdown'], by.buttonText('editor3 template')).click();
+        browser.wait(ECE.visibilityOf(element(s(['authoring']))));
+
+        el(['authoring', 'field--headline'], by.css('[contenteditable]')).sendKeys('gamma');
+
+        el(['authoring-topbar', 'save']).click();
+        el(['authoring-topbar', 'close']).click();
+
+        markForAdmin(0, 0);
+        markForAdmin(0, 1);
+
+        // the following items are also displayed in saved search
+        markForAdmin(1, 0);
+        markForAdmin(1, 1);
+
+        browser.sleep(500); // wait for a websocket message to update marked items count
+    });
+
+    it('uses only items belonging to selected desk when calculating total items', () => {
+        // marked for me across all desks
+        expect(
+            ECE.textToBePresentInElement(el(['marked-for-me-dropdown', 'badge']), '4')(),
+        ).toBe(true);
+
+        // marked for me on this desk
+        expect(
+            ECE.textToBePresentInElement(el(['monitoring-filtering-item--Marked for me', 'badge-content']), '2')(),
+        ).toBe(true);
+    });
+
+    // if there are stages from other desks displayed, items on those stages won't be visible
+    // after filtering even if they are marked for that user.
+    it('only shows items from current desk', () => {
+        el(['monitoring-filtering-item--Marked for me', 'toggle-button']).click();
+        browser.sleep(2000); // wait for the list to update
+
+        expect(
+            ECE.hasElementCount(els(['article-item']), 2)(),
+        ).toBe(true);
     });
 });

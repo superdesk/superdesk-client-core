@@ -24,13 +24,13 @@
 
   <div class="sd-page__content">
       <div class="flex-grid box wrap-items small-1 medium-3 large-4 xlarge-6">
-          <div class="flex-item card-box template-card" ng-repeat="template in content_templates._items | filter:query | templatesBy:filters[activeFilter]" ng-if="desks">
+          <div class="flex-item card-box template-card" ng-repeat="template in content_templates._items | filter:query | templatesBy:filters[activeFilter]" ng-if="desks" data-test-id="content-template--{{template.template_name}}">
               <div class="card-box__header" ng-class="{'card-box__header--dark': !template.is_public}" >
                   <div class="dropdown" dropdown>
-                      <button class="dropdown__toggle" dropdown__toggle>
+                      <button class="dropdown__toggle" dropdown__toggle data-test-id="template-actions">
                           <i class="icon-dots-vertical"></i>
                       </button>
-                      <ul class="dropdown__menu more-activity-menu pull-right">
+                      <ul class="dropdown__menu more-activity-menu pull-right" data-test-id="template-actions--options">
                           <li><div class="dropdown__menu-label" translate>Actions</div></li>
                           <li class="dropdown__menu-divider"></li>
                           <li><button ng-click="edit(template)" title="{{:: 'Edit Template' | translate }}"><i class="icon-pencil"></i>{{:: 'Edit'| translate}}</button></li>

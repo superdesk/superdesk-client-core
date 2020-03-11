@@ -271,7 +271,7 @@ class Desks {
          * Save & Continue action on general tab
          **/
         this.actionSaveAndContinueOnGeneralTab = function() {
-            element(by.id('next-general')).click();
+            el(['save-and-continue']).click();
         };
 
         /**

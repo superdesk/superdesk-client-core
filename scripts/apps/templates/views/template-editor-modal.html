@@ -1,4 +1,4 @@
-<div sd-modal data-model="template" data-close="cancel()" class="modal--fill template-editor-modal">
+<div sd-modal data-model="template" data-close="cancel()" class="modal--fill template-editor-modal" data-test-id="'template-edit-view'">
     <div class="modal__header modal__header--flex"> 
         <h3 class="modal__heading" ng-show="template._id">{{ :: 'Edit Template'}}: <span>{{ origTemplate.template_name}}</span></h3>
         <h3 class="modal__heading" ng-hide="template._id" translate>Add New Template</h3>
@@ -79,11 +79,11 @@
                             </div>
                         </div>
     
-                        <div for="template-desks" ng-if="template.template_type === 'create'" sd-toggle-box data-title="{{:: 'Desks' | translate }}" data-open="true" data-style="circle">
+                        <div for="template-desks" ng-if="template.template_type === 'create'" sd-toggle-box data-title="{{:: 'Desks' | translate }}" data-open="true" data-style="circle" data-test-id="desks">
                             <div class="multi-select" ng-if="template.template_type === 'create'">
                                 <ul class="sd-check__group sd-check__group--grid">
                                     <li ng-repeat="desk in desks._items track by desk._id">
-                                        <sd-check ng-model="desk.selected" ng-click="onDeskToggle(desk)" label-position="inside">{{desk.name}}</sd-check>
+                                        <sd-check ng-model="desk.selected" ng-click="onDeskToggle(desk)" label-position="inside" data-test-id="desk--{{desk.name}}">{{desk.name}}</sd-check>
                                     </li>
                                 </ul>
                             </div>
@@ -206,7 +206,11 @@
         <button class="btn btn--primary"
             ng-click="save()"
             ng-disabled="templateForm.$invalid || !isScheduleValid() || !isDirty(templateForm, metadataForm)"
-            translate>Save</button>
+            translate
+            data-test-id="save"
+        >
+            Save
+        </button>
     </div>
 
 </div>

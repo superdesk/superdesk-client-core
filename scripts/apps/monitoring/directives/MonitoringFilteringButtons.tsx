@@ -87,7 +87,11 @@ class FilterButton extends React.PureComponent<IPropsFilterButton, IState> {
         const active = this.props.isFilterActive(button);
 
         return (
-            <Badge key={button.label} text={this.state.matchingItemsCount.toString()}>
+            <Badge
+                key={button.label}
+                text={this.state.matchingItemsCount.toString()}
+                data-test-id={'monitoring-filtering-item--' + button.label}
+            >
                 <Button
                     text={button.label}
                     type={active ? 'primary' : 'default'}
@@ -102,6 +106,7 @@ class FilterButton extends React.PureComponent<IPropsFilterButton, IState> {
                             },
                         });
                     }}
+                    data-test-id="toggle-button"
                 />
             </Badge>
         );
