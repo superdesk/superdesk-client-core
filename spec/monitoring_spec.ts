@@ -916,7 +916,7 @@ function markForAdmin(groupIndex, itemIndex) {
     el(['confirm']).click();
 }
 
-describe('Filter marked for me in monitoring', () => {
+describe('marked for me filter in monitoring', () => {
     beforeEach(() => {
         const multipleSourcesDesk: string = 'Multiple sources';
 
@@ -1021,6 +1021,19 @@ describe('Filter marked for me in monitoring', () => {
         el(['authoring-topbar', 'save']).click();
         el(['authoring-topbar', 'close']).click();
 
+        // ---
+
+        el(['content-create']).click();
+        el(['content-create-dropdown'], by.buttonText('More templates...')).click();
+        el(['templates-list'], by.buttonText('testing')).click();
+
+        browser.wait(ECE.visibilityOf(element(s(['authoring']))));
+
+        el(['authoring', 'field--headline'], by.css('[contenteditable]')).sendKeys('delta');
+
+        el(['authoring-topbar', 'save']).click();
+        el(['authoring-topbar', 'close']).click();
+
         markForAdmin(0, 0);
         markForAdmin(0, 1);
 
@@ -1052,5 +1065,45 @@ describe('Filter marked for me in monitoring', () => {
         expect(
             ECE.hasElementCount(els(['article-item']), 2)(),
         ).toBe(true);
+    });
+
+    it('maintains the values of other filters', () => {
+        browser.wait(
+            ECE.hasElementCount(
+                els(
+                    ['article-item'],
+                    null,
+                    els(['monitoring-group']).get(0),
+                ),
+                4,
+            ),
+        );
+
+        el(['content-profile-dropdown']).click();
+        el(['content-profiles'], by.buttonText('editor3')).click();
+
+        browser.wait(
+            ECE.hasElementCount(
+                els(
+                    ['article-item'],
+                    null,
+                    els(['monitoring-group']).get(0),
+                ),
+                2,
+            ),
+        );
+
+        el(['monitoring-filtering-item--Marked for me', 'toggle-button']).click();
+
+        browser.wait(
+            ECE.hasElementCount(
+                els(
+                    ['article-item'],
+                    null,
+                    els(['monitoring-group']).get(0),
+                ),
+                1,
+            ),
+        );
     });
 });
