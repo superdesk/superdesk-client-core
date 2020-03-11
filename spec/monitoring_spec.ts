@@ -992,7 +992,7 @@ describe('marked for me filter in monitoring', () => {
         el(['content-create-dropdown'], by.buttonText('editor3 template')).click();
         browser.wait(ECE.visibilityOf(element(s(['authoring']))));
 
-        el(['authoring', 'field--headline'], by.css('[contenteditable]')).sendKeys('alpha');
+        el(['authoring', 'field--headline'], by.css('[contenteditable]')).sendKeys('alpha item');
 
         el(['authoring-topbar', 'save']).click();
         el(['authoring-topbar', 'close']).click();
@@ -1005,7 +1005,7 @@ describe('marked for me filter in monitoring', () => {
 
         browser.wait(ECE.visibilityOf(element(s(['authoring']))));
 
-        el(['authoring', 'field--headline'], by.css('[contenteditable]')).sendKeys('beta');
+        el(['authoring', 'field--headline'], by.css('[contenteditable]')).sendKeys('beta item');
 
         el(['authoring-topbar', 'save']).click();
         el(['authoring-topbar', 'close']).click();
@@ -1016,7 +1016,7 @@ describe('marked for me filter in monitoring', () => {
         el(['content-create-dropdown'], by.buttonText('editor3 template')).click();
         browser.wait(ECE.visibilityOf(element(s(['authoring']))));
 
-        el(['authoring', 'field--headline'], by.css('[contenteditable]')).sendKeys('gamma');
+        el(['authoring', 'field--headline'], by.css('[contenteditable]')).sendKeys('gamma item');
 
         el(['authoring-topbar', 'save']).click();
         el(['authoring-topbar', 'close']).click();
@@ -1029,7 +1029,7 @@ describe('marked for me filter in monitoring', () => {
 
         browser.wait(ECE.visibilityOf(element(s(['authoring']))));
 
-        el(['authoring', 'field--headline'], by.css('[contenteditable]')).sendKeys('delta');
+        el(['authoring', 'field--headline'], by.css('[contenteditable]')).sendKeys('delta item');
 
         el(['authoring-topbar', 'save']).click();
         el(['authoring-topbar', 'close']).click();
@@ -1056,9 +1056,34 @@ describe('marked for me filter in monitoring', () => {
         ).toBe(true);
     });
 
-    // if there are stages from other desks displayed, items on those stages won't be visible
-    // after filtering even if they are marked for that user.
-    it('only shows items from current desk', () => {
+    it('only shows items in current desk stages (not in saved searches or stages of other desks)', () => {
+        expect(ECE.hasElementCount(
+            els(
+                ['article-item', 'marked-for-user'],
+                null,
+                els(['monitoring-group']).get(0), // current desk
+            ),
+            2,
+        )()).toBe(true);
+
+        expect(ECE.hasElementCount(
+            els(
+                ['article-item', 'marked-for-user'],
+                null,
+                els(['monitoring-group']).get(1), // other desk
+            ),
+            2,
+        )()).toBe(true);
+
+        expect(ECE.hasElementCount(
+            els(
+                ['article-item', 'marked-for-user'],
+                null,
+                els(['monitoring-group']).get(2), // saved search
+            ),
+            4,
+        )()).toBe(true);
+
         el(['monitoring-filtering-item--Marked for me', 'toggle-button']).click();
         browser.sleep(2000); // wait for the list to update
 
