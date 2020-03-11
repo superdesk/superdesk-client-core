@@ -7,7 +7,7 @@ import {workspace} from './helpers/workspace';
 import {authoring} from './helpers/authoring';
 import {dashboard} from './helpers/dashboard';
 import {desks} from './helpers/desks';
-import {el, s, els, ECE, waitAndClick, articleList} from 'end-to-end-testing-helpers';
+import {el, s, els, ECE, articleList} from 'end-to-end-testing-helpers';
 import {contentProfiles} from './helpers/content_profiles';
 import {templates} from './helpers/templates';
 import {nav} from './helpers/utils';
@@ -994,6 +994,7 @@ describe('marked for me filter in monitoring', () => {
 
         el(['authoring', 'field--headline'], by.css('[contenteditable]')).sendKeys('alpha item');
 
+        browser.sleep(300); // wait for debouncing
         el(['authoring-topbar', 'save']).click();
         el(['authoring-topbar', 'close']).click();
 
@@ -1007,6 +1008,7 @@ describe('marked for me filter in monitoring', () => {
 
         el(['authoring', 'field--headline'], by.css('[contenteditable]')).sendKeys('beta item');
 
+        browser.sleep(300); // wait for debouncing
         el(['authoring-topbar', 'save']).click();
         el(['authoring-topbar', 'close']).click();
 
@@ -1018,6 +1020,7 @@ describe('marked for me filter in monitoring', () => {
 
         el(['authoring', 'field--headline'], by.css('[contenteditable]')).sendKeys('gamma item');
 
+        browser.sleep(300); // wait for debouncing
         el(['authoring-topbar', 'save']).click();
         el(['authoring-topbar', 'close']).click();
 
@@ -1130,5 +1133,56 @@ describe('marked for me filter in monitoring', () => {
                 1,
             ),
         );
+    });
+
+    describe('matching items count', () => {
+        it('is updated when switching desks', () => {
+            expect(
+                ECE.textToBePresentInElement(el(['monitoring-filtering-item--Marked for me', 'badge-content']), '2')(),
+            ).toBe(true);
+
+            el(['monitoring--selected-desk']).click();
+            el(['monitoring--select-desk-options'], by.buttonText('Sports Desk')).click();
+
+            browser.wait(
+                ECE.textToBePresentInElement(el(['monitoring-filtering-item--Marked for me', 'badge-content']), '0'),
+            );
+        });
+
+        it('is updated when unmarking an item', () => {
+            expect(
+                ECE.textToBePresentInElement(el(['monitoring-filtering-item--Marked for me', 'badge-content']), '2')(),
+            ).toBe(true);
+
+            articleList.executeContextMenuAction(
+                els(['article-item'], null, els(['monitoring-group']).get(0)).get(1),
+                'Unmark user',
+            );
+
+            browser.wait(
+                ECE.textToBePresentInElement(el(['monitoring-filtering-item--Marked for me', 'badge-content']), '1'),
+            );
+        });
+
+        it('is updated when sending item to another stage', () => {
+            expect(
+                ECE.textToBePresentInElement(el(['monitoring-filtering-item--Marked for me', 'badge-content']), '2')(),
+            ).toBe(true);
+
+            browser.sleep(5000);
+
+            articleList.executeContextMenuAction(
+                els(['article-item'], null, els(['monitoring-group']).get(0)).get(1),
+                'Send to',
+            );
+
+            el(['view--send-to', 'desk-select--handle']).click();
+            el(['view--send-to', 'desk-select--options'], by.buttonText('Sports Desk')).click();
+            el(['action--send']).click();
+
+            browser.wait(
+                ECE.textToBePresentInElement(el(['monitoring-filtering-item--Marked for me', 'badge-content']), '1'),
+            );
+        });
     });
 });
