@@ -383,7 +383,7 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
         if (Object.keys(this.activeFilters.customFilters).includes(filter.label)) {
             delete this.activeFilters.customFilters[filter.label];
         } else {
-            this.activeFilters.customFilters[filter.label] = filter.query;
+            this.activeFilters.customFilters[filter.label] = filter;
         }
 
         updateFilterInStore();

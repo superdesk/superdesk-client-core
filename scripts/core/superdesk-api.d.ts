@@ -52,6 +52,9 @@ declare module 'superdesk-api' {
     export interface IMonitoringFilter {
         label: string;
         query: {[key: string]: any};
+        displayOptions?: {
+            ignoreMatchesInSavedSearchMonitoringGroups?: boolean;
+        };
     }
 
     export interface IExtensionActivationResult {
@@ -567,7 +570,7 @@ declare module 'superdesk-api' {
     export interface IRestApiResponse<T> {
         _items: Array<T & IBaseRestApiResponse>;
         _links: {
-            last: IRestApiLink;
+            last?: IRestApiLink;
             parent: IRestApiLink;
             next?: IRestApiLink;
             self: IRestApiLink;

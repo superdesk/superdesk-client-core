@@ -1,4 +1,4 @@
-import {ISuperdesk, IExtension, IExtensionActivationResult, IArticle} from 'superdesk-api';
+import {ISuperdesk, IExtension, IExtensionActivationResult, IArticle, IMonitoringFilter} from 'superdesk-api';
 import {getDisplayMarkedUserComponent} from './show-marked-user';
 import {getActionsInitialize} from './get-article-actions';
 import {getActionsBulkInitialize} from './get-article-actions-bulk';
@@ -55,14 +55,21 @@ const extension: IExtension = {
                     },
                 },
                 monitoring: {
-                    getFilteringButtons: () => superdesk.session.getCurrentUser().then((user) => [
-                        {
-                            label: gettext('Marked for me'),
-                            query: {
-                                marked_for_user: [user._id],
+                    getFilteringButtons: () => superdesk.session.getCurrentUser().then((user) => {
+                        const items: Array<IMonitoringFilter> = [
+                            {
+                                label: gettext('Marked for me'),
+                                query: {
+                                    marked_for_user: [user._id],
+                                },
+                                displayOptions: {
+                                    ignoreMatchesInSavedSearchMonitoringGroups: true,
+                                },
                             },
-                        },
-                    ]),
+                        ];
+
+                        return items;
+                    }),
                 },
             },
         };

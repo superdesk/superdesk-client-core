@@ -8,6 +8,7 @@ import {
     SCHEDULED_OUTPUT,
 } from 'apps/desks/constants';
 import {appConfig} from 'appConfig';
+import {IMonitoringFilter} from 'superdesk-api';
 
 interface ICard {
     _id: string;
@@ -202,8 +203,10 @@ export function CardsService(search, session, desks) {
             return;
         }
 
-        const terms = Object.values(JSON.parse(card.customFilters))
-            .reduce((obj1, obj2) => Object.assign(obj1, obj2), {});
+        var items: {[key: string]: IMonitoringFilter} = JSON.parse(card.customFilters);
+
+        const terms = Object.values(items)
+            .reduce((obj1, obj2) => Object.assign(obj1, obj2.query), {});
 
         Object.keys(terms).forEach((key) => {
             query.filter({terms: {[key]: terms[key]}});
