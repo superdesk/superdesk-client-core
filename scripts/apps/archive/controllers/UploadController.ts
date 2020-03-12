@@ -247,80 +247,104 @@ export function UploadController(
         }
 
         let acceptedFiles: Array<{ file: File, getThumbnail: (file: File) => Promise<string> }> = [];
-        let uploadOfDisallowedFileTypesAttempted: boolean = false;
-        const imageFiles = [];
-        let uploadWithInvalidResolutionAttempted: boolean = false;
+        let invalidFiles = [];
 
-        _.each(files, (file) => {
-            if (/^image/.test(file.type)) {
-                if ($scope.allowPicture) {
-                    imageFiles.push(file);
-                } else {
-                    uploadOfDisallowedFileTypesAttempted = true;
-                }
-            } else if (/^video/.test(file.type)) {
-                if ($scope.allowVideo) {
-                    acceptedFiles.push({
-                        file: file,
-                        getThumbnail: () => Promise.resolve('<i class="icon--2x icon-video"></i>'),
+        const fileDimensionsValid = (file: File) => {
+            if (appConfig.pictures) {
+                return getDataUrl(file).then((dataUrl) => {
+                    return new Promise((resolve) => {
+                        let img = document.createElement('img');
+
+                        img.src = dataUrl;
+                        img.onload = function() {
+                            if (img.width && img.width >= appConfig.pictures.minWidth
+                                && img.height > appConfig.pictures.minHeight) {
+                                return resolve({valid: true, filename: file.name});
+                            } else {
+                                return resolve({valid: false, filename: file.name});
+                            }
+                        };
                     });
-                } else {
-                    uploadOfDisallowedFileTypesAttempted = true;
-                }
-            } else if (/^audio/.test(file.type)) {
-                if ($scope.allowAudio) {
-                    acceptedFiles.push({
-                        file: file,
-                        getThumbnail: () => Promise.resolve('<i class="icon--2x icon-audio"></i>'),
-                    });
-                } else {
-                    uploadOfDisallowedFileTypesAttempted = true;
-                }
+                });
             } else {
-                uploadOfDisallowedFileTypesAttempted = true;
+                return Promise.resolve({valid: true});
             }
-        });
+        };
 
-        if (uploadOfDisallowedFileTypesAttempted) {
-            const message = gettext('Only the following files are allowed: ')
-                + ($scope.allowPicture ? gettext('image') : '')
-                + ($scope.allowVideo ? ', ' + gettext('video') : '')
-                + ($scope.allowAudio ? ', ' + gettext('audio') : '');
-
-            notify.error(message);
-        }
-        return acceptedFiles.length < 1 && imageFiles.length < 1
-            ? Promise.resolve()
-            : Promise.all(imageFiles.map((file) => {
-                if (appConfig.pictureResolutions != null) {
-                    return getDataUrl(file).then((dataUrl) => {
-                        return new Promise((resolve) => {
-                            let img = document.createElement('img');
-
-                            img.src = dataUrl;
-                            img.onload = function() {
-                                if (img.width && img.width >= appConfig.pictureResolutions.minWidth
-                                    && img.height > appConfig.pictureResolutions.minHeight) {
-                                    acceptedFiles.push({
-                                        file: file,
-                                        getThumbnail: (f: File) => getDataUrl(f).then((uri) => `<img src="${uri}" />`),
-                                    });
-                                } else {
-                                    uploadWithInvalidResolutionAttempted = true;
-                                }
-                                return resolve();
-                            };
-                        });
-                    });
-                } else {
-                    acceptedFiles.push({
-                        file: file,
-                        getThumbnail: (f: File) => getDataUrl(f).then((uri) => `<img src="${uri}" />`),
-                    });
-                    return Promise.resolve();
+        return Promise.all(_.map(files, (file): any => {
+            if (file.type.startsWith('image')) {
+                if (!$scope.allowPicture) {
+                    return Promise.resolve({error: {isAllowedFileType: false}});
                 }
-            })).then(() => {
-                return Promise.all(acceptedFiles.map(
+                return fileDimensionsValid(file).then((data: {[key: string]: string}) => {
+                    if (data.valid) {
+                        return {
+                            file: file,
+                            getThumbnail: () => getDataUrl(file).then((uri) => `<img src="${uri}" />`),
+                        };
+                    } else {
+                        return {error: {filename: file.name}};
+                    }
+                });
+            } else if (file.type.startsWith('video')) {
+                if (!$scope.allowVideo) {
+                    return Promise.resolve({error: {isAllowedFileType: false}});
+                }
+                return Promise.resolve({
+                    file: file,
+                    getThumbnail: () => Promise.resolve('<i class="icon--2x icon-video"></i>'),
+                });
+            } else if (file.type.startsWith('audio')) {
+                if (!$scope.allowAudio) {
+                    return Promise.resolve({error: {isAllowedFileType: false}});
+                }
+                return Promise.resolve({
+                    file: file,
+                    getThumbnail: () => Promise.resolve('<i class="icon--2x icon-audio"></i>'),
+                });
+            }
+        })).then((result) => {
+            let uploadOfDisallowedFileTypesAttempted: boolean = false;
+
+            result.forEach((file) => {
+                if (!file.error) {
+                    acceptedFiles.push({
+                        file: file.file,
+                        getThumbnail: file.getThumbnail,
+                    });
+                } else if (file.error.isAllowedFileType === false) {
+                    uploadOfDisallowedFileTypesAttempted = true;
+                } else {
+                    invalidFiles.push(file.error.filename);
+                }
+            });
+
+            if (uploadOfDisallowedFileTypesAttempted) {
+                const message = gettext('Only the following files are allowed: ')
+                    + ($scope.allowPicture ? gettext('image') : '')
+                    + ($scope.allowVideo ? ', ' + gettext('video') : '')
+                    + ($scope.allowAudio ? ', ' + gettext('audio') : '');
+
+                notify.error(message);
+            }
+
+            if (invalidFiles.length > 0) {
+                notify.error(
+                    gettext(
+                        `The image you\'re trying to add is smaller than
+                        {{width}} x {{height}} pixels. Please use another one. File name: {{filename}}`,
+                        {
+                            width: appConfig.pictures.minWidth,
+                            height: appConfig.pictures.minHeight,
+                            filename: invalidFiles.join(', '),
+                        },
+                    ),
+                );
+            }
+
+            return acceptedFiles.length < 1
+                ? Promise.resolve()
+                : Promise.all(acceptedFiles.map(
                     ({file, getThumbnail}) =>
                         getExifData(file)
                             .then(
@@ -333,19 +357,11 @@ export function UploadController(
                                 return getThumbnail(file).then((htmlString) => item.thumbnailHtml = htmlString);
                             }),
                 )).then(() => {
-                    if (uploadWithInvalidResolutionAttempted) {
-                        notify.error(gettext(
-                            `The image you\'re trying to fetch is smaller than {{width}} x {{height}}
-                            pixels.Please use another one.`,
-                            {width: appConfig.pictureResolutions.minWidth,
-                                height: appConfig.pictureResolutions.minHeight}));
-                    }
-
                     $scope.$applyAsync(() => {
                         $scope.imagesMetadata = $scope.items.map((item) => item.meta);
                     });
                 });
-            });
+        });
     };
 
     $scope.upload = function() {

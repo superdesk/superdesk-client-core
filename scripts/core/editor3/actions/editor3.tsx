@@ -85,20 +85,10 @@ export function dragDrop(transfer, mediaType, blockKey = null) {
 
         return content.dropItem(item, {fetchExternal: true})
             .then((data) => {
-                if (appConfig.pictureResolutions
-                    && (data.renditions.original.width < appConfig.pictureResolutions.minWidth
-                    || data.renditions.original.height < appConfig.pictureResolutions.minHeight)) {
-                    notify.error(gettext(
-                        `The image you\'re trying to fetch is smaller than {{width}} x {{height}}
-                        pixels.Please use another one.`,
-                        {width: appConfig.pictureResolutions.minWidth,
-                            height: appConfig.pictureResolutions.minHeight}));
-                } else {
-                    dispatch({
-                        type: 'EDITOR_DRAG_DROP',
-                        payload: {data, blockKey},
-                    });
-                }
+                dispatch({
+                    type: 'EDITOR_DRAG_DROP',
+                    payload: {data, blockKey},
+                });
             })
             .finally(() => {
                 dispatch({type: 'EDITOR_LOADING', payload: false});

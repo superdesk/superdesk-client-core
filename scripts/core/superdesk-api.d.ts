@@ -1218,7 +1218,7 @@ declare module 'superdesk-api' {
         editor3: {
             browserSpellCheck: boolean;
         };
-        pictureResolutions: {
+        pictures: {
             minWidth: number;
             minHeight: number;
         }
