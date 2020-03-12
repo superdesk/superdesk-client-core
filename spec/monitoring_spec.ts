@@ -916,7 +916,8 @@ function markForAdmin(groupIndex, itemIndex) {
     el(['confirm']).click();
 }
 
-describe('marked for me filter in monitoring', () => {
+// disabling tests until test instance is configured to run with markForUser extension enabled
+xdescribe('marked for me filter in monitoring', () => {
     beforeEach(() => {
         const multipleSourcesDesk: string = 'Multiple sources';
 
