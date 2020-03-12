@@ -4,8 +4,6 @@ import {logger} from 'core/services/logger';
 import {SelectionState, convertFromRaw, EditorState} from 'draft-js';
 import {IArticle} from 'superdesk-api';
 import {getFieldMetadata, fieldsMetaKeys} from '../helpers/fieldsMeta';
-import {appConfig} from 'appConfig';
-import {gettext} from 'core/utils';
 
 /**
  * @ngdoc method
@@ -70,8 +68,6 @@ export function handleEditorTab(e) {
  * @description Creates the editor drop action.
  */
 export function dragDrop(transfer, mediaType, blockKey = null) {
-    const notify = ng.get('notify');
-
     if (mediaType === 'Files') {
         return insertMedia(transfer.files);
     }
