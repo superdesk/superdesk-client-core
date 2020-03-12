@@ -128,7 +128,7 @@
     </div>
     <div sd-item-crops
          data-item="item.associations['featuremedia']"
-         ng-if="editor.feature_media.showCrops && features.editFeaturedImage &&
+         ng-if="editor.feature_media.showCrops &&
          (item.associations['featuremedia'].type == 'picture' ||
          item.associations['featuremedia'].type == 'graphic')">
     </div>
@@ -706,7 +706,7 @@
     <div ng-if="!_editable">
         <label class="field__label">{{field.display_name}}</label>
 
-        <div 
+        <div
             sd-related-items-preview
             data-item="item"
             data-field="field">

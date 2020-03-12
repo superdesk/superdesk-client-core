@@ -4,47 +4,65 @@ import React from 'react';
 import {IUser} from 'superdesk-api';
 import {CC} from 'core/ui/configurable-ui-components';
 import {isUserLoggedIn} from '../services/UsersService';
+import {gettext} from 'core/utils';
+import {AvatarWrapper, AvatarContentText, AvatarContentImage} from 'superdesk-ui-framework';
 
 class DefaultAvatarDisplay extends React.PureComponent<{user: IUser}> {
     render() {
         const {user} = this.props;
+        const tooltipText = user.display_name;
 
-        return (
-            <div className="user-avatar">
-                <figure
-                    className={[
-                        'avatar',
-                        'avatar--no-margin',
-                        user.picture_url ? 'no-bg' : 'initials',
-                    ].join(' ')}
-                >
-                    {
-                        user.picture_url == null
-                            ? <span>{user.display_name[0].toUpperCase()}</span>
-                            : <img src={user.picture_url} />
-                    }
-                </figure>
-            </div>
-        );
+        if (user.picture_url == null) {
+            const initials = (user.first_name?.[0] ?? '') + (user.last_name?.[0] ?? '');
+
+            return (
+                <AvatarContentText
+                    text={initials.length > 0 ? initials : user.display_name[0]}
+                    tooltipText={tooltipText}
+                />
+            );
+        } else {
+            return (
+                <AvatarContentImage
+                    imageUrl={user.picture_url}
+                    tooltipText={tooltipText}
+                />
+            );
+        }
     }
 }
 
 interface IProps {
     user: IUser;
 
-    // indicates whether a user is online or not
+    size?: 'small' | 'medium' | 'large'; // defaults to medium
+
+    // indicates whether to show online/offline status
     // should only be used when the user object is up to date
     displayStatus?: boolean;
+
+    displayAdministratorIndicator?: boolean;
 }
 
 export class UserAvatar extends React.PureComponent<IProps> {
     render() {
-        const {user, displayStatus} = this.props;
+        const {user, displayStatus, displayAdministratorIndicator} = this.props;
 
         return (
-            <div
-                title={user.display_name}
-                style={{position: 'relative'}} // required for displaying status
+            <AvatarWrapper
+                size={this.props.size}
+                administratorIndicator={
+                    displayAdministratorIndicator && user.user_type === 'administrator'
+                        ? {enabled: true, tooltipText: gettext('Administrator')}
+                        : undefined
+                }
+                statusIndicator={
+                    !displayStatus
+                        ? undefined
+                        : isUserLoggedIn(user)
+                            ? {status: 'online', tooltipText: gettext('Online')}
+                            : {status: 'offline', tooltipText: gettext('Offline')}
+                }
                 data-test-id="user-avatar"
             >
                 {
@@ -52,21 +70,7 @@ export class UserAvatar extends React.PureComponent<IProps> {
                         ? <CC.UserAvatar user={user} />
                         : <DefaultAvatarDisplay user={user} />
                 }
-
-                {
-                    displayStatus
-                        ? (
-                            <div
-                                className={
-                                    isUserLoggedIn(user)
-                                        ? 'status-indicator--online'
-                                        : 'status-indicator--offline'
-                                }
-                            />
-                        )
-                        : null
-                }
-            </div>
+            </AvatarWrapper>
         );
     }
 }

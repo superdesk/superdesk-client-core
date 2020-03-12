@@ -20,7 +20,19 @@
     <input type="text" id="ftp_path" placeholder="{{ :: 'FTP Server Path'|translate }}" ng-model="destination.config.path" ng-change="$parent.setConfig(destination)">
 </div>
 <div class="field">
-    <label for="ftp_path" translate>File Extension</label>
+    <label for="ftp_file_extension" translate>File Extension</label>
     <i class="field-info pull-right"><span translate>example</span>: txt</i>
     <input type="text" id="ftp_file_extension" placeholder="{{ :: 'FTP File Extension'|translate }}" ng-model="destination.config.file_extension" ng-change="$parent.setConfig(destination)">
+</div>
+<div class="field">
+    <label for="ftp_push_associated" translate>Push associated/feature media items</label>
+    <input type="checkbox" id="ftp_push_associated" ng-model="destination.config.push_associated" ng-change="$parent.setConfig(destination)">
+</div>
+<div class="field" ng-show="destination.config.push_associated">
+    <label for="ftp_inlude_original" translate>Push the original rendition</label>
+    <input type="checkbox" id="ftp_inlude_original" ng-model="destination.config.include_original" ng-change="$parent.setConfig(destination)">
+</div>
+<div class="field" ng-show="destination.config.push_associated">
+    <label for="ftp_associated_path" translate>Associated/featuremedia path</label>
+    <input type="text" id="ftp_associated_path" placeholder="{{ :: 'FTP Server Path for Associated media items'|translate }}" ng-model="destination.config.associated_path" ng-change="$parent.setConfig(destination)">
 </div>

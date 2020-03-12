@@ -42,6 +42,7 @@ RelatedItemsDirective.$inject = [
     'notify',
     'lock',
     '$rootScope',
+    'content',
 ];
 export function RelatedItemsDirective(
     authoringWorkspace: AuthoringWorkspaceService,
@@ -49,6 +50,7 @@ export function RelatedItemsDirective(
     notify,
     lock,
     $rootScope,
+    content,
 ) {
     return {
         scope: {
@@ -145,7 +147,6 @@ export function RelatedItemsDirective(
                         );
                         return;
                     }
-
                     scope.addRelatedItem(item);
                 });
             }
@@ -195,6 +196,7 @@ export function RelatedItemsDirective(
 
                 const updated = related.reduce((obj, key, index) => {
                     obj[key] = scope.item.associations[newRelated[index]];
+                    obj[key].order = parseInt(key.split('--')[1], 10);
                     return obj;
                 }, {});
 
@@ -222,12 +224,12 @@ export function RelatedItemsDirective(
              * @param {String} fieldId
              * @return {int} nextKey
              */
-            function getNextKey(associations, fieldId) {
+            function getNextKeyAndOrder(associations, fieldId) {
                 for (let i = 1; ; i++) {
                     const key = fieldId + '--' + i;
 
                     if (associations[key] == null) {
-                        return key;
+                        return {key, order: i};
                     }
                 }
             }
@@ -237,21 +239,31 @@ export function RelatedItemsDirective(
              *
              * @param {Object} item
              */
-            scope.addRelatedItem = (item) => {
-                const key = getNextKey(scope.item.associations || {}, scope.field._id);
-                let data = {};
+            scope.addRelatedItem = (_item) => {
+                scope.loading = true;
+                content.dropItem(_item)
+                    .then((item) => {
+                        let data = {};
+                        const {key, order} = getNextKeyAndOrder(scope.item.associations || {}, scope.field._id);
 
-                if (isInArchive(item)) {
-                    data[key] = {
-                        _id: item._id,
-                        type: item.type, // used to display associated item types
-                    };
-                } else {
-                    data[key] = item; // use full item for external items, like images from external search provider
-                }
+                        item.order = order;
+                        if (isInArchive(item)) {
+                            data[key] = {
+                                _id: item._id,
+                                type: item.type, // used to display associated item types
+                                order: item.order,
+                            };
+                        } else {
+                            data[key] = item; /* use full item for external items,
+                                                like images from external search provider */
+                        }
 
-                scope.item.associations = angular.extend({}, scope.item.associations, data);
-                scope.onchange();
+                        scope.item.associations = angular.extend({}, scope.item.associations, data);
+                        scope.onchange();
+                    })
+                    .finally(() => {
+                        scope.loading = false;
+                    });
             };
 
             /**

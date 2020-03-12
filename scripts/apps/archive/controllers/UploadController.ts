@@ -31,7 +31,7 @@ function getExifData(file: File): Promise<IPTCMetadata> {
     });
 }
 
-function mapIPTCExtensions(metadata: IPTCMetadata, user: IUser): Promise<Partial<IArticle>> {
+function mapIPTCExtensions(metadata: IPTCMetadata, user: IUser, parent?: IArticle): Promise<Partial<IArticle>> {
     const meta: Partial<IPTCMetadata> = Object.assign({
         'By-line': user.byline,
     }, pickBy(metadata, isNotEmptyString));
@@ -49,7 +49,7 @@ function mapIPTCExtensions(metadata: IPTCMetadata, user: IUser): Promise<Partial
         activationResult.contributions?.iptcMapping,
     ).reduce(
         (accumulator, {activationResult}) =>
-            accumulator.then((_item) => activationResult.contributions.iptcMapping(meta, _item)),
+            accumulator.then((_item) => activationResult.contributions.iptcMapping(meta, _item, parent)),
         Promise.resolve(item),
     ).then((_item: Partial<IArticle>) => pickBy(_item, isNotEmptyString));
 }
@@ -97,6 +97,7 @@ export function UploadController(
     $scope.allowVideo = !($scope.locals && $scope.locals.data && $scope.locals.data.allowVideo === false);
     $scope.allowAudio = !($scope.locals && $scope.locals.data && $scope.locals.data.allowAudio === false);
     $scope.validator = _.omit(appConfig.validator_media_metadata, ['archive_description']);
+    $scope.parent = $scope.locals?.data?.parent || null;
     $scope.deskSelectionAllowed = ($location.path() !== '/workspace/personal') && $scope.locals &&
         $scope.locals.data && $scope.locals.data.deskSelectionAllowed === true;
     if ($scope.deskSelectionAllowed === true) {
@@ -295,7 +296,7 @@ export function UploadController(
                 ({file, getThumbnail}) =>
                     getExifData(file)
                         .then(
-                            (fileMeta) => mapIPTCExtensions(fileMeta, $scope.currentUser),
+                            (fileMeta) => mapIPTCExtensions(fileMeta, $scope.currentUser, $scope.parent),
                             () => ({}), // proceed with upload on exif parsing error
                         )
                         .then((meta) => {

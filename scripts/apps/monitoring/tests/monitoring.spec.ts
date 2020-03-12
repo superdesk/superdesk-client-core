@@ -4,9 +4,21 @@ import {appConfig} from 'appConfig';
 
 describe('monitoring', () => {
     beforeEach(window.module('superdesk.apps.monitoring'));
-    beforeEach(window.module('superdesk.mocks'));
     beforeEach(window.module('superdesk.apps.vocabularies'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
+    beforeEach(window.module('superdesk.core.services.pageTitle'));
+    beforeEach(window.module('superdesk.templates-cache'));
+    beforeEach(window.module('superdesk.mocks'));
+
+    beforeEach(inject(($templateCache) => {
+        // change template not to require aggregate config but rather render single group
+        $templateCache.put('scripts/apps/monitoring/views/monitoring-view.html',
+            '<div id="group" sd-monitoring-group data-group="{type: \'stage\', _id: \'foo\'}"></div>');
+    }));
+
+    beforeEach(inject(($httpBackend) => {
+        $httpBackend.whenGET(/api$/).respond({_links: {child: []}});
+    }));
 
     it('can switch between list and swimlane view',
         inject(($controller, $rootScope, $q, preferencesService) => {
@@ -251,16 +263,6 @@ describe('monitoring', () => {
     });
 
     describe('monitoring group directive', () => {
-        beforeEach(window.module('superdesk.templates-cache'));
-        beforeEach(window.module('superdesk.apps.searchProviders'));
-        beforeEach(window.module('superdesk.core.services.pageTitle'));
-
-        beforeEach(inject(($templateCache) => {
-            // change template not to require aggregate config but rather render single group
-            $templateCache.put('scripts/apps/monitoring/views/monitoring-view.html',
-                '<div id="group" sd-monitoring-group data-group="{type: \'stage\', _id: \'foo\'}"></div>');
-        }));
-
         it('can update items on item:move event',
             inject(($rootScope, $compile, $q, api, $timeout, session) => {
                 session.identity = {_id: 'foo'};
@@ -334,8 +336,6 @@ describe('monitoring', () => {
     });
 
     describe('desk notification directive', () => {
-        beforeEach(window.module('superdesk.templates-cache'));
-
         beforeEach(inject((desks, api, $q) => {
             desks.stageLookup = {1: {desk: 'desk1', default_incoming: true}};
             desks.userLookup = {1: {display_name: 'user1'}};

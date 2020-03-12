@@ -265,6 +265,17 @@ export function MonitoringGroup(
                     scheduleQuery(event, data);
                 } else if (data && cards.shouldUpdate(scope.group, data)) {
                     scheduleQuery(event, data);
+                } else if (data.items) {
+                    for (const updatedItemGuid in data.items) {
+                        // check if stage contains updated items
+                        if (
+                            !!data.items[updatedItemGuid] &&
+                            scope.items._items.find((item) => item.guid === updatedItemGuid)
+                        ) {
+                            scheduleQuery(event, data);
+                            break;
+                        }
+                    }
                 }
             }
 

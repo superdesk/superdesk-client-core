@@ -12,8 +12,20 @@ export function SearchContainer() {
                 pageTitle.setUrl(gettext('Search'));
 
                 $scope.$watch('search.activeProvider', (activeProvider) => {
-                    if (activeProvider && activeProvider.advanced_search !== undefined) {
-                        this.flags.facets = !!activeProvider.advanced_search;
+                    if (activeProvider) {
+                        if (activeProvider.advanced_search !== undefined) {
+                            this.flags.facets = !!activeProvider.advanced_search;
+                        }
+                        if (activeProvider.config?.default_list_view) {
+                            switch (activeProvider.config.default_list_view) {
+                            case 'list':
+                                $scope.view = 'compact';
+                                break;
+                            case 'grid':
+                                $scope.view = 'photogrid';
+                                break;
+                            }
+                        }
                     }
                 });
             }],

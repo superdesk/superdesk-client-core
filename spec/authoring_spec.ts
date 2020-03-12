@@ -1,7 +1,15 @@
 /* eslint-disable newline-per-chained-call */
 
 import {element, by, protractor, browser} from 'protractor';
-import {ctrlKey, commandKey, ctrlShiftKey, assertToastMsg, nav} from './helpers/utils';
+import {
+    ctrlKey,
+    commandKey,
+    ctrlShiftKey,
+    assertToastMsg,
+    assertToastMsgNotDisplayed,
+    waitForToastMsgDissapear,
+    nav,
+} from './helpers/utils';
 import {monitoring} from './helpers/monitoring';
 import {dictionaries} from './helpers/dictionaries';
 import {workspace} from './helpers/workspace';
@@ -148,7 +156,7 @@ describe('authoring', () => {
         browser.sleep(300);
 
         monitoring.filterAction('text');
-        monitoring.actionOnItem('Kill item', 5, 0);
+        monitoring.actionOnItemSubmenu('Publishing actions', 'Kill item', 5, 0, true);
         expect(authoring.send_kill_button.isDisplayed()).toBeTruthy();
         authoring.cancel();
         browser.sleep(300);
@@ -162,7 +170,7 @@ describe('authoring', () => {
         browser.sleep(300);
 
         monitoring.filterAction('text');
-        monitoring.actionOnItem('Correct item', 5, 0);
+        monitoring.actionOnItemSubmenu('Publishing actions', 'Correct item', 5, 0, true);
         expect(authoring.send_correction_button.isDisplayed()).toBeTruthy();
         authoring.cancel();
 
@@ -440,7 +448,8 @@ describe('authoring', () => {
         authoring.publish(); // item9 published
 
         monitoring.filterAction('text');
-        monitoring.actionOnItem('Update', 5, 0); // duplicate item9 text published item
+        // Duplicate item9 text published item
+        monitoring.actionOnItemSubmenu('Publishing actions', 'Update', 5, 0, true);
         expect(monitoring.getGroupItems(0).count()).toBe(1);
         monitoring.actionOnItem('Edit', 0, 0);
 
@@ -455,7 +464,7 @@ describe('authoring', () => {
         monitoring.actionOnItem('Edit', 2, 0);
         authoring.publish();
         monitoring.filterAction('text');
-        monitoring.actionOnItem('Kill item', 5, 0);
+        monitoring.actionOnItemSubmenu('Publishing actions', 'Kill item', 5, 0, true);
         browser.sleep(500);
         expect(authoring.getBodyText()).toBe('This is kill template. Slugged item5 slugline one/two.');
         expect(authoring.getHeadlineText()).toBe('KILL NOTICE');
@@ -513,7 +522,7 @@ describe('authoring', () => {
         expect(authoring.multieditButton.isDisplayed()).toBe(true);
         authoring.publish();
         monitoring.filterAction('text');
-        monitoring.actionOnItem('Kill item', 5, 0);
+        monitoring.actionOnItemSubmenu('Publishing actions', 'Kill item', 5, 0, true);
         authoring.moreActionsButton.click();
         expect(authoring.multieditButton.isDisplayed()).toBe(false);
     });
@@ -590,7 +599,7 @@ describe('authoring', () => {
 
         authoring.publish();
         monitoring.filterAction('text');
-        monitoring.actionOnItem('Kill item', 5, 0);
+        monitoring.actionOnItemSubmenu('Publishing actions', 'Kill item', 5, 0, true);
 
         // Body:
         // undo without editing body text
@@ -691,12 +700,12 @@ describe('authoring', () => {
         monitoring.actionOnItem('Edit', 3, 2);
         authoring.publish();
         monitoring.filterAction('text');
-        monitoring.actionOnItem('Correct item', 5, 0); // Edit for correction
+        monitoring.actionOnItemSubmenu('Publishing actions', 'Correct item', 5, 0, true); // Edit for correction
         authoring.minimize(); // minimize before publishing the correction
         expect(monitoring.getTextItem(2, 1)).toBe('item9');
         monitoring.actionOnItem('Edit', 2, 1);
         authoring.publish();
-        monitoring.actionOnItem('Kill item', 5, 0); // Edit for kill
+        monitoring.actionOnItemSubmenu('Publishing actions', 'Kill item', 5, 0, true); // Edit for kill
         authoring.minimize(); // minimize before publishing the kill
         authoring.maximize('item6');
         expect(authoring.send_correction_button.isDisplayed()).toBeTruthy();
@@ -714,6 +723,62 @@ describe('authoring', () => {
         authoring.openMacros();
         authoring.callMacros('Populate Abstract');
         expect(authoring.getAbstractText()).toBe('item6 text');
+    });
+
+    it('Not modifying crops will not trigger an article change', () => {
+        workspace.selectDesk('XEditor3 Desk'); // has media gallery in content profile
+        el(['content-create']).click();
+        el(['content-create-dropdown']).element(by.buttonText('editor3 template')).click();
+        browser.wait(ECE.visibilityOf(el(['authoring-field--media-gallery', 'media-gallery--upload-placeholder'])));
+        expect(ECE.hasElementCount(els(['authoring-field--media-gallery', 'media-gallery-image']), 0)()).toBe(true);
+
+        el(['media-gallery--upload-placeholder']).click();
+
+        browser.wait(ECE.presenceOf(el(['image-upload-input'])));
+        selectFilesForUpload(el(['image-upload-input']), ['image-big.jpg']);
+
+        el(['media-metadata-editor', 'field--headline'], by.tagName('input')).sendKeys('image headline');
+        el(['media-metadata-editor', 'field--alt_text'], by.tagName('input')).sendKeys('image alt text');
+        el(['media-metadata-editor', 'field--description_text'], by.tagName('textarea')).sendKeys('image description');
+
+        el(['multi-image-edit--start-upload']).click();
+
+        waitAndClick(el(['change-image', 'done']));
+
+        assertToastMsg('success', 'Item updated.');
+        waitForToastMsgDissapear('success', 'Item updated.');
+
+        browser.wait(ECE.hasElementCount(els(['authoring-field--media-gallery', 'media-gallery-image']), 1));
+
+        hover(el(['authoring-field--media-gallery', 'media-gallery-image']));
+        el(['media-gallery-image--edit']).click();
+        el(['done']).click(); // click done without making any changes
+
+        assertToastMsgNotDisplayed('success', 'Item updated.');
+        expect(authoring.save_button.isEnabled()).toBe(false);
+    });
+
+    it('Can add an image with default crops to media gallery', () => {
+        workspace.selectDesk('XEditor3 Desk'); // has media gallery in content profile
+        el(['content-create']).click();
+        el(['content-create-dropdown']).element(by.buttonText('editor3 template')).click();
+        browser.wait(ECE.visibilityOf(el(['authoring-field--media-gallery', 'media-gallery--upload-placeholder'])));
+        expect(ECE.hasElementCount(els(['authoring-field--media-gallery', 'media-gallery-image']), 0)()).toBe(true);
+
+        el(['media-gallery--upload-placeholder']).click();
+
+        browser.wait(ECE.presenceOf(el(['image-upload-input'])));
+        selectFilesForUpload(el(['image-upload-input']), ['image-big.jpg']);
+
+        el(['media-metadata-editor', 'field--headline'], by.tagName('input')).sendKeys('image headline');
+        el(['media-metadata-editor', 'field--alt_text'], by.tagName('input')).sendKeys('image alt text');
+        el(['media-metadata-editor', 'field--description_text'], by.tagName('textarea')).sendKeys('image description');
+
+        el(['multi-image-edit--start-upload']).click();
+
+        waitAndClick(el(['change-image', 'done']));
+
+        browser.wait(ECE.hasElementCount(els(['authoring-field--media-gallery', 'media-gallery-image']), 1));
     });
 
     it('Can remove an image from media gallery', () => {

@@ -15,10 +15,11 @@
         <li
             ng-repeat="user in users._items"
             ng-class="{active: user === selected, 'inactive' : !user.is_enabled || !user.is_active}"
+            class="flex-row sibling-spacer-10"
             ng-click="choose(user)"
             data-test-id="select-user--option-{{getUserDisplay(user)}}"
         >
-            <figure class="avatar small"><img sd-user-avatar data-user="user"></figure>
+            <sd-user-avatar data-user="user"></sd-user-avatar>
             <div class="name">{{ getUserDisplay(user) }}</div>
         </li>
     </ul>

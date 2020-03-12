@@ -1,21 +1,27 @@
+import ReactDOM from 'react-dom';
+import React from 'react';
 import _ from 'lodash';
 import {MEDIA_TYPES, MEDIA_TYPE_KEYS, VOCABULARY_SELECTION_TYPES, IVocabularySelectionTypes} from '../constants';
 import {gettext} from 'core/utils';
 import {getFields} from 'apps/fields';
 import {IVocabulary} from 'superdesk-api';
 import {IScope as IScopeConfigController} from './VocabularyConfigController';
+import {VocabularyItemsViewEdit} from '../components/VocabularyItemsViewEdit';
 
 VocabularyEditController.$inject = [
     '$scope',
     'notify',
     'api',
-    'vocabularies',
     'metadata',
     'cvSchema',
     'relationsService',
+    '$timeout',
+    '$element',
 ];
 
 interface IScope extends IScopeConfigController {
+    setFormDirty: () => void;
+    newItemTemplate: any;
     idRegex: string;
     vocabulary: IVocabulary;
     selectionTypes: IVocabularySelectionTypes;
@@ -32,18 +38,27 @@ interface IScope extends IScopeConfigController {
     schema: any;
     schemaFields: Array<any>;
     itemsValidation: { valid: boolean };
-    removeItem: (index: number) => void;
     customFieldTypes: Array<{id: string, label: string}>;
     setCustomFieldConfig: (config: any) => void;
     editForm: any;
+    tab: 'general' | 'items';
+    setTab: (tab: IScope['tab']) => void;
 }
 
 const idRegex = '^[a-zA-Z0-9-_]+$';
 
 export function VocabularyEditController(
-    $scope: IScope, notify, api, vocabularies, metadata, cvSchema, relationsService,
+    $scope: IScope, notify, api, metadata, cvSchema, relationsService, $timeout,
 ) {
+    let componentRef: VocabularyItemsViewEdit = null;
+
     var origVocabulary = _.cloneDeep($scope.vocabulary);
+
+    $scope.tab = 'general';
+
+    $scope.setTab = function(tab: IScope['tab']) {
+        $scope.tab = tab;
+    };
 
     $scope.idRegex = idRegex;
     $scope.selectionTypes = VOCABULARY_SELECTION_TYPES;
@@ -59,10 +74,10 @@ export function VocabularyEditController(
 
     function onSuccess(result) {
         notify.success(gettext('Vocabulary saved successfully'));
+
         $scope.closeVocabulary();
         $scope.updateVocabulary(result);
         $scope.issues = null;
-        return result;
     }
 
     function onError(response) {
@@ -99,6 +114,7 @@ export function VocabularyEditController(
      * Save current edit modal contents on backend.
      */
     $scope.save = function() {
+        $scope.vocabulary.items = componentRef.getItemsForSaving();
         $scope._errorUniqueness = false;
         $scope.errorMessage = null;
         delete $scope.vocabulary['_deleted'];
@@ -135,7 +151,14 @@ export function VocabularyEditController(
         }
 
         if (_.isNil($scope.errorMessage)) {
-            api.save('vocabularies', $scope.vocabulary).then(onSuccess, onError);
+            api.save(
+                'vocabularies',
+                $scope.vocabulary,
+                undefined,
+                undefined,
+                undefined,
+                {skipPostProcessing: true},
+            ).then(onSuccess, onError);
         }
 
         // discard metadata cache:
@@ -165,20 +188,8 @@ export function VocabularyEditController(
      * Discard changes and close modal.
      */
     $scope.cancel = function() {
-        angular.copy(origVocabulary, $scope.vocabulary);
         $scope.closeVocabulary();
-    };
-
-    /**
-     * Add new blank vocabulary item.
-     */
-    $scope.addItem = function() {
-        var newVocabulary: any = {};
-
-        _.extend(newVocabulary, $scope.model);
-        newVocabulary.is_active = true;
-
-        $scope.vocabulary.items = $scope.vocabulary.items.concat([newVocabulary]);
+        $scope.updateVocabulary(origVocabulary);
     };
 
     // try to reproduce data model of vocabulary:
@@ -190,6 +201,7 @@ export function VocabularyEditController(
 
     $scope.model = model;
     $scope.schema = $scope.vocabulary.schema || cvSchema[$scope.vocabulary._id] || null;
+
     if ($scope.schema) {
         $scope.schemaFields = Object.keys($scope.schema)
             .sort()
@@ -199,15 +211,12 @@ export function VocabularyEditController(
             ));
     }
 
-    $scope.itemsValidation = {valid: true};
+    $scope.schemaFields = $scope.schemaFields
+        || Object.keys($scope.model)
+            .filter((key) => key !== 'is_active')
+            .map((key) => ({key: key, label: key, type: key}));
 
-    /**
-     * Remove item from vocabulary items
-     */
-    $scope.removeItem = (index: number) => {
-        $scope.vocabulary.items.splice(index, 1);
-        $scope.vocabulary.items = $scope.vocabulary.items.slice(); // trigger watch on items collection
-    };
+    $scope.itemsValidation = {valid: true};
 
     const fields = getFields();
 
@@ -221,4 +230,40 @@ export function VocabularyEditController(
         $scope.editForm.$setDirty();
         $scope.$apply();
     };
+
+    let placeholderElement = null;
+
+    // wait for the template to render to the placeholder element is available
+    $timeout(() => {
+        placeholderElement = document.querySelector('#vocabulary-items-view-edit-placeholder');
+
+        ReactDOM.render((
+            <VocabularyItemsViewEdit
+                ref={(ref) => {
+                    componentRef = ref;
+                }}
+                items={$scope.vocabulary.items}
+                schemaFields={$scope.schemaFields}
+                newItemTemplate={{...$scope.model, is_active: true}}
+                setDirty={() => {
+                    $scope.editForm.$setDirty();
+                    $scope.$apply();
+                }}
+                setItemsValid={(valid) => {
+                    $scope.itemsValidation.valid = valid;
+                    $scope.$apply();
+                }}
+            />
+        ), placeholderElement);
+    });
+
+    $scope.$watch('errorMessage', (errorMessage: string) => {
+        componentRef?.setErrorMessage(errorMessage ?? null);
+    });
+
+    $scope.$on('$destroy', () => {
+        if (placeholderElement != null) {
+            ReactDOM.unmountComponentAtNode(placeholderElement);
+        }
+    });
 }

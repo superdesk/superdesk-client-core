@@ -1,10 +1,11 @@
 import React from 'react';
-import {render} from 'enzyme';
+import {mount} from 'enzyme';
 import {noop} from 'lodash';
 import {getFormFieldComponent} from '../form-field';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {IFormField} from 'superdesk-api';
 import {FormFieldType} from '../interfaces/form';
+import {mockDataApi} from 'core/tests/mockDataApi';
 
 function getAllInputTypes(): Array<FormFieldType> {
     return Object.keys(FormFieldType).map((key) => FormFieldType[key]);
@@ -14,7 +15,6 @@ function getTestFieldConfig(type: FormFieldType): IFormField {
     switch (type) {
     case FormFieldType.textSingleLine:
     case FormFieldType.textEditor3:
-    case FormFieldType.vocabularySingleValue:
     case FormFieldType.checkbox:
     case FormFieldType.contentFilterSingleValue:
     case FormFieldType.deskSingleValue:
@@ -22,6 +22,14 @@ function getTestFieldConfig(type: FormFieldType): IFormField {
         return {
             type: type,
             field: 'test-field',
+        };
+    case FormFieldType.vocabularySingleValue:
+        return {
+            type: type,
+            field: 'test-field',
+            component_parameters: {
+                vocabulary_id: 'test_vocabulary_id',
+            },
         };
     case FormFieldType.stageSingleValue:
     case FormFieldType.macroSingleValue:
@@ -40,12 +48,14 @@ function getTestFieldConfig(type: FormFieldType): IFormField {
 describe('generic form', () => {
     const message = 'error-q7w8e9r';
 
+    beforeEach(mockDataApi);
+
     getAllInputTypes()
         .forEach((type: FormFieldType) => {
-            it(`${type} should render error messages`, () => {
+            it(`${type} should render error messages`, (done) => {
                 const Component = getFormFieldComponent(type);
 
-                const wrapper = render(
+                const wrapper = mount(
                     <div>
                         <Component
                             formField={getTestFieldConfig(type)}
@@ -59,17 +69,22 @@ describe('generic form', () => {
                     </div>,
                 );
 
-                expect(wrapper.find('.sd-line-input--invalid').length).toBe(1);
-                expect(wrapper.html()).toContain(message);
+                setTimeout(() => { // wait for data fetching (only used by some input types)
+                    wrapper.update();
+                    expect(wrapper.find('.sd-line-input--invalid').length).toBe(1);
+                    expect(wrapper.html()).toContain(message);
+
+                    done();
+                });
             });
         });
 
     getAllInputTypes()
         .forEach((type: FormFieldType) => {
-            it(`${type} should add a classname for required fields`, () => {
+            it(`${type} should add a classname for required fields`, (done) => {
                 const Component = getFormFieldComponent(type);
 
-                const wrapper = render(
+                const wrapper = mount(
                     <div>
                         <Component
                             formField={{...getTestFieldConfig(type), required: true}}
@@ -83,7 +98,12 @@ describe('generic form', () => {
                     </div>,
                 );
 
-                expect(wrapper.find('.sd-line-input--required').length).toBe(1);
+                setTimeout(() => { // wait for data fetching (only used by some input types)
+                    wrapper.update();
+                    expect(wrapper.find('.sd-line-input--required').length).toBe(1);
+
+                    done();
+                });
             });
         });
 });
