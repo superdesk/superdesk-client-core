@@ -226,7 +226,7 @@ $bottom-bar-item-border-color-active: transparent;
     white-space: nowrap;
     max-width: 100vw;
     display: grid;
-    grid-template-rows: 1;
+    grid-template-rows: 32px;
     grid-template-columns: 48px 1fr auto auto;
     .opened-articles-bar__list {
         display: flex;
