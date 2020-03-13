@@ -40,9 +40,10 @@ ContentService.$inject = [
     'session',
     'send',
     'renditions',
+    'modal',
 ];
 export function ContentService(api, templates, desks, packages, archiveService, notify,
-    $filter, $q, $rootScope, session, send, renditions) {
+    $filter, $q, $rootScope, session, send, renditions, modal) {
     const TEXT_TYPE = 'text';
 
     const self = this;
@@ -347,17 +348,23 @@ export function ContentService(api, templates, desks, packages, archiveService, 
         if (appConfig.pictures != null
             && (item.renditions.original.width < appConfig.pictures.minWidth
                 || item.renditions.original.height < appConfig.pictures.minHeight)) {
-            notify.error(
-                gettext(
+            modal.alert({
+                headerText: gettext(
                     `The image you\'re trying to add is smaller than
-                    {{width}} x {{height}} pixels. Please use another one. File names are: {{filename}}`,
+                    {{minWidth}}x{{minHeight}} pixels. Please use another one.`,
                     {
-                        width: appConfig.pictures.minWidth,
-                        height: appConfig.pictures.minHeight,
-                        filename: item.headline,
+                        minWidth: appConfig.pictures.minWidth,
+                        minHeight: appConfig.pictures.minHeight,
                     },
                 ),
-            );
+                bodyText: gettext('<li>The size of {{name}} is {{width}}x{{height}}</li>',
+                    {
+                        name: item.headline,
+                        width: item.renditions.original.width,
+                        height: item.renditions.original.height,
+                    },
+                ),
+            });
             return $q.reject();
         } else {
             if (item._type !== 'externalsource') {

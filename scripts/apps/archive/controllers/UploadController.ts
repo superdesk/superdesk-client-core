@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import {getDataUrl} from 'core/upload/image-preview-directive';
-import {gettext} from 'core/utils';
+import {gettext, gettextPlural} from 'core/utils';
 import {isEmpty, pickBy} from 'lodash';
 import {handleBinaryFile} from '@metadata/exif';
 import {extensions} from 'appConfig';
@@ -73,6 +73,7 @@ UploadController.$inject = [
     'desks',
     'notify',
     '$location',
+    'modal',
 ];
 export function UploadController(
     $scope,
@@ -84,6 +85,7 @@ export function UploadController(
     desks,
     notify,
     $location,
+    modal,
 ) {
     $scope.items = [];
     $scope.saving = false;
@@ -247,7 +249,7 @@ export function UploadController(
         }
 
         let acceptedFiles: Array<{ file: File, getThumbnail: (file: File) => Promise<string> }> = [];
-        let invalidFiles = [];
+        let invalidImages = [];
 
         const fileDimensionsValid = (file: File) => {
             if (appConfig.pictures) {
@@ -259,9 +261,14 @@ export function UploadController(
                         img.onload = function() {
                             if (img.width && img.width >= appConfig.pictures.minWidth
                                 && img.height > appConfig.pictures.minHeight) {
-                                return resolve({valid: true, filename: file.name});
+                                return resolve({valid: true, name: file.name});
                             } else {
-                                return resolve({valid: false, filename: file.name});
+                                return resolve({
+                                    valid: false,
+                                    name: file.name,
+                                    width: img.width,
+                                    height: img.height,
+                                });
                             }
                         };
                     });
@@ -283,7 +290,7 @@ export function UploadController(
                             getThumbnail: () => getDataUrl(file).then((uri) => `<img src="${uri}" />`),
                         };
                     } else {
-                        return {error: {filename: file.name}};
+                        return {error: data};
                     }
                 });
             } else if (file.type.startsWith('video')) {
@@ -315,7 +322,7 @@ export function UploadController(
                 } else if (file.error.isAllowedFileType === false) {
                     uploadOfDisallowedFileTypesAttempted = true;
                 } else {
-                    invalidFiles.push(file.error.filename);
+                    invalidImages.push(file.error);
                 }
             });
 
@@ -328,18 +335,32 @@ export function UploadController(
                 notify.error(message);
             }
 
-            if (invalidFiles.length > 0) {
-                notify.error(
-                    gettext(
-                        `The image you\'re trying to add is smaller than
-                        {{width}} x {{height}} pixels. Please use another one. File name: {{filename}}`,
+            if (invalidImages.length > 0) {
+                const images = invalidImages.map((image) => {
+                    return gettext(
+                        '<li>The size of {{name}} is {{width}}x{{height}}</li>',
                         {
-                            width: appConfig.pictures.minWidth,
-                            height: appConfig.pictures.minHeight,
-                            filename: invalidFiles.join(', '),
+                            name: image.name,
+                            width: image.width,
+                            height: image.height,
+                        },
+                    );
+                });
+
+                modal.alert({
+                    headerText: gettextPlural(
+                        images.length,
+                        `The image you\'re trying to add is smaller than {{minWidth}}x{{minHeight}}
+                        pixels. Please use another one.`,
+                        `The images you\'re trying to add is smaller than {{minWidth}}x{{minHeight}}
+                        pixels. Please use another one.`,
+                        {
+                            minWidth: appConfig.pictures.minWidth,
+                            minHeight: appConfig.pictures.minHeight,
                         },
                     ),
-                );
+                    bodyText: '<ol>' + images.join('') + '</ol>',
+                });
             }
 
             return acceptedFiles.length < 1
