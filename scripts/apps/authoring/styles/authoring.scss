@@ -274,14 +274,19 @@ $bottom-bar-item-border-color-active: transparent;
             }
         }
         .opened-articles-bar__item-title {
+            display: flex;
             flex: 1 1;
             overflow: hidden;
             text-overflow: ellipsis;
+            align-items: center;
             white-space: nowrap;
             color: #8bcaf7;
             font-size: 1.2rem;
             transition: color 0.2s ease-in-out;
             @include text-light();
+            i {
+                margin-right: 0.4rem;
+            }
             &:hover {
                 color: $white;
                 text-decoration: none;
