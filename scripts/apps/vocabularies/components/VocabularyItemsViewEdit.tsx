@@ -8,7 +8,7 @@ import {gettext} from 'core/utils';
 import {ISortOption, IVocabularyItem} from 'superdesk-api';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {Dropdown} from 'core/ui/components/Dropdown/Dropdown';
-import {Menu} from 'core/ui/components/Dropdown';
+import {Menu} from 'core/ui/components/Dropdown/Menu';
 import {Checkbox} from 'superdesk-ui-framework';
 
 interface ISchemaField {
