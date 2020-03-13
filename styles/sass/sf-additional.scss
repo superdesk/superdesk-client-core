@@ -1834,7 +1834,6 @@
     }
 }
 
-
 .nav-button-bar {
     display: flex;
     flex-direction: row;
@@ -1844,23 +1843,6 @@
     .btn {
         flex-grow: 0;
         flex-shrink: 0;
-    }
-}
-
-.modal__header--flex {
-    .icn-btn {
-        &.close, &.close-modal, &.modal__close {
-            margin: 0 -0.6rem 0;
-            border: 0;
-            padding: .6rem;
-            opacity: 0.5;
-            &:hover {
-                opacity: 0.8;
-            }
-            &:active {
-                opacity: 1;
-            }
-        }
     }
 }
 
@@ -2010,65 +1992,19 @@ sd-multi-image-edit {
     }
 }
 
-// Pagination
-// ----------
-
-.pagination--rounded {
-    .bs-pagination {
-        li {
-            a {
-                border-radius: 50px;
-                border: 1px solid $inputBorder;
-                background: transparent;
-                margin: 0 1px;
-                width: 26px;
-                height: 26px;
-                line-height: 26px;
-                text-align: center;
-                padding: 0;
-                color: $grayText;
-
-                &:focus, &:active {
-                    outline: none;
-                }
-            }
-
-            &:not(.active):hover a {
-                background: $white;
-            }
-        }
-
-        .active a {
-            color: $white;
-            background: $sd-blue;
-        }
-
-        .disabled a {
-            color: $inputBorder
-        }
-
-        .previous a, .next a {
-            font-size: 14px;
-            line-height: 24px;
-            font-family: 'sd_icons';
-            font-style: normal;
-            font-weight: normal;
-            font-variant: normal;
-            text-transform: none;
-
-            margin-right: 4px;
-
-            &::before {
-                content: '\e642';
-            }
-        }
-
-        .next a {
-            margin-left: 4px;
-
-            &::before {
-                content: '\e643';
-            }
-        }
+.sd-alert {
+    [class^="icon-"],
+    [class*=" icon-"] {
+        color: inherit;
+    }
+}
+.sd-content-box {
+    border-radius: 4px;
+    &--light {
+        background-color: $white;
+    }
+    &--emphasise {
+        background-color: $white;
+        border: 1px solid rgba(94, 169, 200, 0.6);
     }
 }
