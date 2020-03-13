@@ -75,6 +75,7 @@ declare module 'superdesk-api' {
                     onSpikeMultiple?(items: Array<IArticle>): Promise<onSpikeMiddlewareResult>;
                     onPublish?(item: IArticle): Promise<onPublishMiddlewareResult>;
                     onRewriteAfter?(item: IArticle): Promise<IArticle>;
+                    onSendBefore?(items: Array<IArticle>, desk: IDesk): Promise<void>;
                 };
             };
             iptcMapping?(data: Partial<IPTCMetadata>, item: Partial<IArticle>, parent?: IArticle): Promise<Partial<IArticle>>;
@@ -189,6 +190,7 @@ declare module 'superdesk-api' {
     export interface IRelatedArticle {
         _id: IArticle['_id'];
         type: IArticle['type'];
+        order: number,
     }
 
     export interface IRendition {
@@ -314,6 +316,7 @@ declare module 'superdesk-api' {
         operation: any;
         lock_time: string;
         force_unlock?: boolean;
+        order?: number;
         _status: any;
         _fetchable?: boolean;
 
