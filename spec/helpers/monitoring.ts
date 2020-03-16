@@ -824,7 +824,7 @@ class Monitoring {
          * @param {string} desk Desk or workspace name.
          */
         this.selectDesk = function(desk) {
-            var dropdownBtn = element(by.id('selected-desk')),
+            var dropdownBtn = el(['monitoring--selected-desk']),
                 dropdownMenu = element(by.id('select-desk-menu'));
 
             // open dropdown

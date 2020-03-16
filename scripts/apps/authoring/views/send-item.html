@@ -30,7 +30,7 @@
         </div>
 
         <!-- Content Send To-->
-        <div class="side-panel__content" ng-if="currentUserAction === vm.userActions.send_to || currentUserAction === vm.userActions.duplicate_to || currentUserAction === vm.userActions.externalsource_to">
+        <div class="side-panel__content" ng-if="currentUserAction === vm.userActions.send_to || currentUserAction === vm.userActions.duplicate_to || currentUserAction === vm.userActions.externalsource_to" data-test-id="view--send-to">
             <div class="side-panel__content-block">
 
                 <div sd-toggle-box
@@ -42,7 +42,8 @@
                         <div sd-desk-select
                             data-desks="desks"
                             data-selected-desk="selectedDesk"
-                            on-change="selectDesk(desk)"></div>
+                            on-change="selectDesk(desk)"
+                        ></div>
                     </div>
 
                    <ul class="btn-list" ng-if="stages && !(vm.userActions.publish === currentUserAction)">
@@ -218,7 +219,8 @@
             <button class="btn btn--large btn--primary btn--expanded"
                     ng-show="showSendButtonAndDestination()"
                     ng-click="send()"
-                    ng-disabled="disableSendButton()">
+                    ng-disabled="disableSendButton()"
+                    data-test-id="action--send">
                     {{!canSendItem() ? 'fetch' : 'send' | translate}}
             </button>
 

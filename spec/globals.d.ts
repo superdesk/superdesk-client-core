@@ -1,5 +1,6 @@
 // testing
 declare const describe: any;
+declare const xdescribe: any;
 declare const fdescribe: any;
 declare const beforeEach: any;
 declare const afterEach: any;

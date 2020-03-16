@@ -7,7 +7,7 @@ import {isCheckAllowed, closeActionsMenu, bindMarkItemShortcut} from '../helpers
 import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
 import {isMediaEditable} from 'core/config';
 import {gettext} from 'core/utils';
-import {IArticle} from 'superdesk-api';
+import {IArticle, IMonitoringFilter} from 'superdesk-api';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {CHECKBOX_PARENT_CLASS} from './constants';
 
@@ -520,24 +520,28 @@ export class ItemList extends React.Component<any, IState> {
             });
         };
         const isEmpty = !this.state.itemsList.length;
+        const displayEmptyList = isEmpty && !scope.loading;
 
-        return React.createElement(
-            'ul',
-            {
-                className: classNames(
+        return (
+            <ul
+                className={classNames(
                     this.state.view === 'photogrid' ?
                         'sd-grid-list sd-grid-list--no-margin' :
                         (this.state.view || 'compact') + '-view list-view',
-                    {'list-without-items': isEmpty},
-                ),
-                onClick: this.closeActionsMenu,
-            },
-            isEmpty && !scope.loading ?
-                React.createElement(
-                    'li',
-                    {onClick: this.closeActionsMenu},
-                    gettext('There are currently no items'),
-                ) : this.state.itemsList.map(createItem),
+                    {'list-without-items': displayEmptyList},
+                )}
+                onClick={this.closeActionsMenu}
+            >
+                {
+                    displayEmptyList
+                        ? (
+                            <li onClick={this.closeActionsMenu}>
+                                {gettext('There are currently no items')}
+                            </li>
+                        )
+                        : this.state.itemsList.map(createItem)
+                }
+            </ul>
         );
     }
 }
