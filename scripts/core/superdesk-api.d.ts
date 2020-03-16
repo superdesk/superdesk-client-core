@@ -49,6 +49,14 @@ declare module 'superdesk-api' {
         onTrigger(): void;
     }
 
+    export interface IMonitoringFilter {
+        label: string;
+        query: {[key: string]: any};
+        displayOptions?: {
+            ignoreMatchesInSavedSearchMonitoringGroups?: boolean;
+        };
+    }
+
     export interface IExtensionActivationResult {
         contributions?: {
             globalMenuHorizontal?: Array<React.ComponentType>;
@@ -82,6 +90,9 @@ declare module 'superdesk-api' {
             searchPanelWidgets?: Array<React.ComponentType<ISearchPanelWidgetProps>>;
             authoring?: {
                 onUpdate?(current: IArticle, next: IArticle): Promise<IArticle>;
+            };
+            monitoring?: {
+                getFilteringButtons?(): Promise<Array<IMonitoringFilter>>;
             };
         }
     }
@@ -568,7 +579,7 @@ declare module 'superdesk-api' {
     export interface IRestApiResponse<T> {
         _items: Array<T & IBaseRestApiResponse>;
         _links: {
-            last: IRestApiLink;
+            last?: IRestApiLink;
             parent: IRestApiLink;
             next?: IRestApiLink;
             self: IRestApiLink;

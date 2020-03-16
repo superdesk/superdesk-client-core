@@ -115,6 +115,16 @@
                                 <i class="icon-settings"></i>
                             </button>
 
+                            <div style="display: flex; align-items: center; padding-left: 10px; padding-right: 10px;">
+                                <sd-monitoring-filtering-buttons
+                                    desk-id="activeDeskId"
+                                    toggle-filter="aggregate.toggleCustomFilter"
+                                    is-filter-active="aggregate.isCustomFilterActive"
+                                    active-filters="aggregate.activeFilters.customFilters"
+                                    add-resource-updated-event-listener="addResourceUpdatedEventListener"
+                                ></sd-monitoring-filtering-buttons>
+                            </div>
+
                             <div ng-if="disableMonitoringCreateItem == null && (!state.opened && (type !== 'spike' && type !== 'highlights'))" class="dropdown dropdown--align-right strict" sd-tooltip="{{ gettext('Create new item') }}" flow="left" dropdown>
                                 <button
                                     class="navbtn dropdown__toggle sd-create-btn"

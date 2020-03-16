@@ -2,6 +2,7 @@ import _ from 'lodash';
 import {gettext} from 'core/utils';
 import {SCHEDULED_OUTPUT, DESK_OUTPUT} from 'apps/desks/constants';
 import {appConfig} from 'appConfig';
+import {IMonitoringFilter} from 'superdesk-api';
 
 AggregateCtrl.$inject = ['$scope', 'desks', 'workspaces', 'preferencesService', 'storage',
     'savedSearch', 'content'];
@@ -370,6 +371,26 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
         });
     }
 
+    this.isCustomFilterActive = (filter: IMonitoringFilter) => {
+        return Object.keys(this.activeFilters.customFilters ?? {}).includes(filter.label);
+    };
+
+    this.toggleCustomFilter = (filter: IMonitoringFilter) => {
+        if (typeof this.activeFilters.customFilters === 'undefined') {
+            this.activeFilters.customFilters = {};
+        }
+
+        if (Object.keys(this.activeFilters.customFilters).includes(filter.label)) {
+            delete this.activeFilters.customFilters[filter.label];
+        } else {
+            this.activeFilters.customFilters[filter.label] = filter;
+        }
+
+        updateFilterInStore();
+        updateFilteringCriteria();
+        $scope.$apply();
+    };
+
     this.setFilterType = function(filterType, filterValue, $event?) {
         if (filterType === 'contentProfile') {
             if (!this.activeFilters.contentProfile.includes(filterValue._id)) {
@@ -395,6 +416,7 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
                 }
             }
         }
+
         updateFilterInStore();
         updateFilteringCriteria();
 

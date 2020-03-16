@@ -6,6 +6,7 @@ import {isPublished} from 'apps/archive/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {DESK_OUTPUT} from 'apps/desks/constants';
 import {appConfig} from 'appConfig';
+import {IMonitoringFilter, IRestApiResponse, IArticle} from 'superdesk-api';
 
 const translatedFields = GET_LABEL_MAP();
 
@@ -21,9 +22,10 @@ function translateCustomSorts(customSorts: GroupSortOptions) {
 
 export type StageGroup = {
     _id?: any;
-    type?: string;
+    type?: 'search' | string;
     search?: 'ingest';
     max_items?: any;
+    customFilters?: string; // JSON string for {[key: string]: IMonitoringFilter}
 };
 
 interface IScope extends ng.IScope {
@@ -532,8 +534,35 @@ export function MonitoringGroup(
                 }
 
                 return (function() {
-                    if (scope.customDataSource != null && typeof scope.customDataSource.getItems === 'function') {
+                    const customFilters: {[key: string]: IMonitoringFilter} = JSON.parse(
+                        scope?.group?.customFilters ?? '{}',
+                    );
+
+                    if (
+                        scope.customDataSource != null
+                        && typeof scope.customDataSource.getItems === 'function'
+                    ) {
                         return scope.customDataSource.getItems(0, PAGE_SIZE);
+                    } else if (
+                        scope?.group?.type === 'search'
+                        && Object.values(customFilters).some(
+                            (filter) => filter?.displayOptions?.ignoreMatchesInSavedSearchMonitoringGroups,
+                        )
+                    ) {
+                        var emptyResponse: IRestApiResponse<IArticle> = {
+                            _items: [],
+                            _meta: {
+                                max_results: 0,
+                                page: 1,
+                                total: 0,
+                            },
+                            _links: {
+                                self: {href: '', title: ''},
+                                parent: {href: '', title: ''},
+                            },
+                        };
+
+                        return Promise.resolve(emptyResponse);
                     } else {
                         criteria = cards.criteria(scope.group, null, monitoring.queryParam);
                         criteria.source.from = 0;
