@@ -227,7 +227,7 @@ $bottom-bar-item-border-color-active: transparent;
     max-width: 100vw;
     display: grid;
     grid-template-rows: 32px;
-    grid-template-columns: 48px 1fr auto auto;
+    grid-template-columns: $sidebar-width 1fr auto auto;
     .opened-articles-bar__list {
         display: flex;
         flex-grow: 1;
@@ -240,7 +240,6 @@ $bottom-bar-item-border-color-active: transparent;
         flex: 0 1 24rem;
         border-right: 1px solid $bottom-bar-item-border-color;
         padding: 0 0.4rem 0 1.2rem;
-        //max-width: 20rem;
         position: relative;
         line-height: 3.2rem;
         display: flex;
