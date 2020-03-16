@@ -1,11 +1,13 @@
 import _ from 'lodash';
 import {getDataUrl} from 'core/upload/image-preview-directive';
-import {gettext, gettextPlural} from 'core/utils';
+import {gettext} from 'core/utils';
 import {isEmpty, pickBy} from 'lodash';
 import {handleBinaryFile} from '@metadata/exif';
 import {extensions} from 'appConfig';
 import {IPTCMetadata, IUser, IArticle} from 'superdesk-api';
 import {appConfig} from 'appConfig';
+import {fileUploadErrorModal} from './file-upload-error-modal';
+import {showModal} from 'core/services/modalService';
 
 const isNotEmptyString = (value: any) => value != null && value !== '';
 
@@ -249,7 +251,7 @@ export function UploadController(
         }
 
         let acceptedFiles: Array<{ file: File, getThumbnail: (file: File) => Promise<string> }> = [];
-        let invalidImages = [];
+        let invalidFiles = [];
 
         const fileDimensionsValid = (file: File) => {
             if (appConfig.pictures) {
@@ -268,6 +270,7 @@ export function UploadController(
                                     name: file.name,
                                     width: img.width,
                                     height: img.height,
+                                    type: file.type,
                                 });
                             }
                         };
@@ -322,7 +325,7 @@ export function UploadController(
                 } else if (file.error.isAllowedFileType === false) {
                     uploadOfDisallowedFileTypesAttempted = true;
                 } else {
-                    invalidImages.push(file.error);
+                    invalidFiles.push(file.error);
                 }
             });
 
@@ -335,33 +338,7 @@ export function UploadController(
                 notify.error(message);
             }
 
-            if (invalidImages.length > 0) {
-                const images = invalidImages.map((image) => {
-                    return gettext(
-                        '<li>The size of {{name}} is {{width}}x{{height}}</li>',
-                        {
-                            name: image.name,
-                            width: image.width,
-                            height: image.height,
-                        },
-                    );
-                });
-
-                modal.alert({
-                    headerText: gettextPlural(
-                        images.length,
-                        `The image you\'re trying to add is smaller than {{minWidth}}x{{minHeight}}
-                        pixels. Please use another one.`,
-                        `The images you\'re trying to add is smaller than {{minWidth}}x{{minHeight}}
-                        pixels. Please use another one.`,
-                        {
-                            minWidth: appConfig.pictures.minWidth,
-                            minHeight: appConfig.pictures.minHeight,
-                        },
-                    ),
-                    bodyText: '<ol>' + images.join('') + '</ol>',
-                });
-            }
+            showModal(fileUploadErrorModal(invalidFiles));
 
             return acceptedFiles.length < 1
                 ? Promise.resolve()

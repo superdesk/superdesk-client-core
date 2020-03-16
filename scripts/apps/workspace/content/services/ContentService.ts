@@ -5,6 +5,8 @@ import {isMediaEditable} from 'core/config';
 import {appConfig} from 'appConfig';
 import {dataApi} from 'core/helpers/CrudManager';
 import {IArticle, IContentProfileEditorConfig, IArticleField} from 'superdesk-api';
+import {showModal} from 'core/services/modalService';
+import {fileUploadErrorModal} from 'apps/archive/controllers/file-upload-error-modal';
 
 /**
  * @ngdoc service
@@ -345,26 +347,19 @@ export function ContentService(api, templates, desks, packages, archiveService, 
      * Handle drop event transfer data and convert it to an item
      */
     this.dropItem = (item: IArticle, {fetchExternal} = {fetchExternal: true}) => {
+        const invalidFiles = [];
+
         if (appConfig.pictures != null
             && (item.renditions.original.width < appConfig.pictures.minWidth
                 || item.renditions.original.height < appConfig.pictures.minHeight)) {
-            modal.alert({
-                headerText: gettext(
-                    `The image you\'re trying to add is smaller than
-                    {{minWidth}}x{{minHeight}} pixels. Please use another one.`,
-                    {
-                        minWidth: appConfig.pictures.minWidth,
-                        minHeight: appConfig.pictures.minHeight,
-                    },
-                ),
-                bodyText: gettext('<li>The size of {{name}} is {{width}}x{{height}}</li>',
-                    {
-                        name: item.headline,
-                        width: item.renditions.original.width,
-                        height: item.renditions.original.height,
-                    },
-                ),
+            invalidFiles.push({
+                valid: false,
+                name: item.headline,
+                width: item.renditions.original.width,
+                height: item.renditions.original.height,
+                type: 'image',
             });
+            showModal(fileUploadErrorModal(invalidFiles));
             return $q.reject();
         } else {
             if (item._type !== 'externalsource') {
