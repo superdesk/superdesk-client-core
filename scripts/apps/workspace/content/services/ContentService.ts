@@ -5,6 +5,8 @@ import {isMediaEditable} from 'core/config';
 import {appConfig} from 'appConfig';
 import {dataApi} from 'core/helpers/CrudManager';
 import {IArticle, IContentProfileEditorConfig, IArticleField} from 'superdesk-api';
+import {showModal} from 'core/services/modalService';
+import {fileUploadErrorModal} from 'apps/archive/controllers/file-upload-error-modal';
 
 /**
  * @ngdoc service
@@ -40,9 +42,10 @@ ContentService.$inject = [
     'session',
     'send',
     'renditions',
+    'modal',
 ];
 export function ContentService(api, templates, desks, packages, archiveService, notify,
-    $filter, $q, $rootScope, session, send, renditions) {
+    $filter, $q, $rootScope, session, send, renditions, modal) {
     const TEXT_TYPE = 'text';
 
     const self = this;
@@ -344,21 +347,37 @@ export function ContentService(api, templates, desks, packages, archiveService, 
      * Handle drop event transfer data and convert it to an item
      */
     this.dropItem = (item: IArticle, {fetchExternal} = {fetchExternal: true}) => {
-        if (item._type !== 'externalsource') {
-            if (item._type === 'ingest') {
-                return send.one(item);
+        const invalidFiles = [];
+
+        if (appConfig.pictures != null
+            && (item?.renditions?.original.width < appConfig.pictures.minWidth
+                || item?.renditions?.original.height < appConfig.pictures.minHeight)) {
+            invalidFiles.push({
+                valid: false,
+                name: item.headline,
+                width: item.renditions.original.width,
+                height: item.renditions.original.height,
+                type: 'image',
+            });
+            showModal(fileUploadErrorModal(invalidFiles));
+            return $q.reject();
+        } else {
+            if (item._type !== 'externalsource') {
+                if (item._type === 'ingest') {
+                    return send.one(item);
+                }
+
+                if (item.archive_item != null) {
+                    return $q.when(item.archive_item);
+                }
+
+                return api.find(item._type, item._id);
+            } else if (isMediaEditable(item) && fetchExternal) {
+                return renditions.ingest(item);
             }
 
-            if (item.archive_item != null) {
-                return $q.when(item.archive_item);
-            }
-
-            return api.find(item._type, item._id);
-        } else if (isMediaEditable(item) && fetchExternal) {
-            return renditions.ingest(item);
+            return $q.when(item);
         }
-
-        return $q.when(item);
     };
 
     /**

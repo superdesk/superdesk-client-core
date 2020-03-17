@@ -1238,6 +1238,10 @@ declare module 'superdesk-api' {
         editor3: {
             browserSpellCheck: boolean;
         };
+        pictures?: {
+            minWidth?: number;
+            minHeight?: number;
+        }
     }
 
 
