@@ -1,5 +1,47 @@
 # Superdesk Client Changelog
 
+## [1.33.0] 2020-03-18
+
+Listing some changes below, for full list go to [github](https://github.com/superdesk/superdesk-client-core/milestone/73?closed=1).
+
+### Fixed
+
+- Hide image editing controls for not editable images in carousel.
+- Generate html for editor3 fields which are multi line.
+- Sync order of related items in editor and ninjs output.
+- Fix editor3 sticky toolbar.
+- Fix tabs on edit product page.
+- Make footer buttons in attachments dialog always visible.
+- Fix saving media changes when multi editing.
+- Disable embeds editing in readonly mode.
+- Fix drag&drop in editor3 scrolling issues.
+- Fix author value is not retained in templates.
+- Fix left sidebar config issues.
+- Fix moving media inside editor3.
+
+### Changed
+
+- Let user skip ingest config test if needed.
+- Get tansa configuration from server.
+- Allow creating multiple updates if enabled on server.
+- Mark for user should not be available for spiked items.
+- Navigate to monitoring before opening an item.
+- Lock media items edited via edit metadata action.
+
+### Added
+
+- Add background color to add suggestions in editor3.
+- Add URL config to search provider settings.
+- Show number of associated items to a story.
+- Add mark for user action to preview.
+- Add setting to prevent special characters in sluglines.
+- Implement custom datetime field.
+- Implement autocomplete for sluglines.
+- Allow thumbnails for video items.
+- Allow custom avatars for users.
+- Allow search by username when adding authors to the story.
+- Display mark for user action notifications.
+
 ## [1.32.2] 2019-12-13
 
 ### Added
