@@ -1,7 +1,7 @@
 import React from 'react';
 
-import {gettext, gettextPlural} from 'core/utils';
 import Button from 'core/ui/components/Button';
+import {gettext, gettextPlural} from 'core/utils';
 import {Modal} from 'core/ui/components/Modal/Modal';
 import {ModalHeader} from 'core/ui/components/Modal/ModalHeader';
 import {ModalBody} from 'core/ui/components/Modal/ModalBody';
@@ -12,7 +12,7 @@ interface IProps {
     closeModal(): void;
 }
 
-interface IFile {
+interface IFileError {
     valid: boolean;
     name: string;
     width: number;
@@ -21,7 +21,7 @@ interface IFile {
 }
 
 export function fileUploadErrorModal(
-    invalidFiles: Array<IFile>,
+    invalidFiles: Array<IFileError>,
 ) {
     return class FileUploadErrorModal extends React.PureComponent<IProps> {
         render() {
@@ -38,17 +38,19 @@ export function fileUploadErrorModal(
                             }
                         </ModalHeader>
                         <ModalBody>
-                            <h4>
-                                {
-                                    gettext(
-                                        'Minimum allowed image size is {{minWidth}}x{{minHeight}}',
-                                        {
-                                            minWidth: appConfig.pictures.minWidth,
-                                            minHeight: appConfig.pictures.minHeight,
-                                        },
-                                    )
-                                }
-                            </h4>
+                            {invalidFiles.some((file) => file.type.startsWith('image')) &&
+                                <h4>
+                                    {
+                                        gettext(
+                                            'Minimum allowed image size is {{minWidth}}x{{minHeight}}',
+                                            {
+                                                minWidth: appConfig.pictures.minWidth,
+                                                minHeight: appConfig.pictures.minHeight,
+                                            },
+                                        )
+                                    }
+                                </h4>
+                            }
                             <ol>
                                 {
                                     invalidFiles.map((file, index) => {
@@ -56,9 +58,9 @@ export function fileUploadErrorModal(
                                             if (file.type.startsWith('image')) {
                                                 return (
                                                     <li key={index}>
-                                                        {gettext('The size of {{name}} is {{width}}x{{height}}',
+                                                        {gettext('The size of {{filename}} is {{width}}x{{height}}',
                                                             {
-                                                                name: file.name,
+                                                                filename: file.name,
                                                                 width: file.width,
                                                                 height: file.height,
                                                             },

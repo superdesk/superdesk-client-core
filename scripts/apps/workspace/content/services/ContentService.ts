@@ -350,8 +350,8 @@ export function ContentService(api, templates, desks, packages, archiveService, 
         const invalidFiles = [];
 
         if (appConfig.pictures != null
-            && (item.renditions.original.width < appConfig.pictures.minWidth
-                || item.renditions.original.height < appConfig.pictures.minHeight)) {
+            && (item?.renditions?.original.width < appConfig.pictures.minWidth
+                || item?.renditions?.original.height < appConfig.pictures.minHeight)) {
             invalidFiles.push({
                 valid: false,
                 name: item.headline,
