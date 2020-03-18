@@ -258,7 +258,6 @@ export function AssociationController(content, superdesk, renditions, notify) {
         const __item: IArticle = JSON.parse(event.originalEvent.dataTransfer.getData(superdeskType));
 
         scope.loading = true;
-
         this.addAssociation(scope, __item);
     };
 }

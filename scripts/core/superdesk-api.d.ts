@@ -49,6 +49,14 @@ declare module 'superdesk-api' {
         onTrigger(): void;
     }
 
+    export interface IMonitoringFilter {
+        label: string;
+        query: {[key: string]: any};
+        displayOptions?: {
+            ignoreMatchesInSavedSearchMonitoringGroups?: boolean;
+        };
+    }
+
     export interface IExtensionActivationResult {
         contributions?: {
             globalMenuHorizontal?: Array<React.ComponentType>;
@@ -75,12 +83,16 @@ declare module 'superdesk-api' {
                     onSpikeMultiple?(items: Array<IArticle>): Promise<onSpikeMiddlewareResult>;
                     onPublish?(item: IArticle): Promise<onPublishMiddlewareResult>;
                     onRewriteAfter?(item: IArticle): Promise<IArticle>;
+                    onSendBefore?(items: Array<IArticle>, desk: IDesk): Promise<void>;
                 };
             };
             iptcMapping?(data: Partial<IPTCMetadata>, item: Partial<IArticle>, parent?: IArticle): Promise<Partial<IArticle>>;
             searchPanelWidgets?: Array<React.ComponentType<ISearchPanelWidgetProps>>;
             authoring?: {
                 onUpdate?(current: IArticle, next: IArticle): Promise<IArticle>;
+            };
+            monitoring?: {
+                getFilteringButtons?(): Promise<Array<IMonitoringFilter>>;
             };
         }
     }
@@ -189,6 +201,7 @@ declare module 'superdesk-api' {
     export interface IRelatedArticle {
         _id: IArticle['_id'];
         type: IArticle['type'];
+        order: number,
     }
 
     export interface IRendition {
@@ -314,6 +327,7 @@ declare module 'superdesk-api' {
         operation: any;
         lock_time: string;
         force_unlock?: boolean;
+        order?: number;
         _status: any;
         _fetchable?: boolean;
 
@@ -465,13 +479,19 @@ declare module 'superdesk-api' {
         text: string;
     }
 
+    export interface IVocabularyItem {
+        name?: string;
+        qcode?: string;
+        is_active?: boolean;
+    }
+
     export interface IVocabulary extends IBaseRestApiResponse {
         _deleted: boolean;
         display_name: string;
         helper_text?: string;
         popup_width?: number;
         type: string;
-        items: Array<{ name: string; qcode: string; is_active: boolean }>;
+        items: Array<IVocabularyItem>;
         single_value?: boolean;
         schema_field?: string;
         dependent?: boolean;
@@ -559,7 +579,7 @@ declare module 'superdesk-api' {
     export interface IRestApiResponse<T> {
         _items: Array<T & IBaseRestApiResponse>;
         _links: {
-            last: IRestApiLink;
+            last?: IRestApiLink;
             parent: IRestApiLink;
             next?: IRestApiLink;
             self: IRestApiLink;
@@ -1218,6 +1238,10 @@ declare module 'superdesk-api' {
         editor3: {
             browserSpellCheck: boolean;
         };
+        pictures?: {
+            minWidth?: number;
+            minHeight?: number;
+        }
     }
 
 

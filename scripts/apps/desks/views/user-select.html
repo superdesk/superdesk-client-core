@@ -1,10 +1,25 @@
 <form>
-    <input type="text" ng-model="search" sd-focus-element data-append-element=".field" data-append-class="active" tabindex="{{tabindex}}" class="searchbar searchbar-large">
+    <input
+        type="text"
+        ng-model="search"
+        sd-focus-element
+        data-append-element=".field"
+        data-append-class="active"
+        tabindex="{{tabindex}}"
+        class="searchbar searchbar-large"
+        data-test-id="select-user--input"
+    >
 </form>
 <div class="search-result" ng-show="search">
     <ul class="users-list-embed">
-        <li ng-repeat="user in users._items" ng-class="{active: user === selected, 'inactive' : !user.is_enabled || !user.is_active}" ng-click="choose(user)">
-            <figure class="avatar small"><img sd-user-avatar data-user="user"></figure>
+        <li
+            ng-repeat="user in users._items"
+            ng-class="{active: user === selected, 'inactive' : !user.is_enabled || !user.is_active}"
+            class="flex-row sibling-spacer-10"
+            ng-click="choose(user)"
+            data-test-id="select-user--option-{{getUserDisplay(user)}}"
+        >
+            <sd-user-avatar data-user="user"></sd-user-avatar>
             <div class="name">{{ getUserDisplay(user) }}</div>
         </li>
     </ul>

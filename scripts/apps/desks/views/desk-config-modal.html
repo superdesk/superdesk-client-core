@@ -1,4 +1,4 @@
-<div sd-modal data-model="modalActive" class="modal--tabs modal--large sd-wizard">
+<div sd-modal data-model="modalActive" class="modal--tabs modal--large sd-wizard" data-test-id="'desk-config-modal'">
 
     <div class="modal__header modal__header--flex">
         <h3 class="modal__heading" ng-show="!desk.edit._id" translate>Add New Desk</h3>
@@ -14,7 +14,14 @@
                         <div class="form__row-item">
                             <div class="sd-line-input sd-line-input--required">
                                 <label class="sd-line-input__label" translate>Desk name</label>
-                                <input class="sd-line-input__input" type="text" ng-model="desk.edit.name" ng-keyup="handleEdit($event);" required>
+                                <input
+                                    class="sd-line-input__input"
+                                    type="text"
+                                    ng-model="desk.edit.name"
+                                    ng-keyup="handleEdit($event);"
+                                    required
+                                    data-test-id="field--name"
+                                >
                                 <div class="sd-line-input__char-count" sd-character-count data-item="desk.edit.name" data-limit="limits.desk"></div>
                             </div>
                         </div>
@@ -23,7 +30,11 @@
                         <div class="form__row-item">
                             <div class="sd-line-input">
                                 <label class="sd-line-input__label" translate>Desk description</label>
-                                <textarea class="sd-line-input__input" ng-model="desk.edit.description"></textarea>
+                                <textarea
+                                    class="sd-line-input__input"
+                                    ng-model="desk.edit.description"
+                                    data-test-id="field--description"
+                                ></textarea>
                             </div>
                         </div>
                     </div>
@@ -31,7 +42,14 @@
                         <div class="form__row-item">
                             <div class="sd-line-input  sd-line-input--required">
                                 <label class="sd-line-input__label" translate>Source for User Created Articles</label>
-                                <input class="sd-line-input__input" type="text" ng-model="desk.edit.source" ng-keyup="handleEdit($event);" required>
+                                <input
+                                    class="sd-line-input__input"
+                                    type="text"
+                                    ng-model="desk.edit.source"
+                                    ng-keyup="handleEdit($event);"
+                                    required
+                                    data-test-id="field--source"
+                                />
                             </div>
                         </div>
                     </div>
@@ -64,7 +82,13 @@
                         <div class="form__row-item">
                             <div class="sd-line-input sd-line-input--is-select sd-line-input--required">
                                 <label class="sd-line-input__label" translate>Desk Type</label>
-                                <select class="sd-line-input__select" id="deskType" ng-model="desk.edit.desk_type" required>
+                                <select
+                                    class="sd-line-input__select"
+                                    id="deskType"
+                                    ng-model="desk.edit.desk_type"
+                                    required
+                                    data-test-id="field--desk-type"
+                                >
                                     <option value=""></option>
                                     <option id="{{type.qcode}}" ng-repeat="type in deskTypes" value="{{type.qcode}}" ng-selected="desk.edit.desk_type === type.qcode"
                                         >{{ type.name | translate}}</option>
@@ -79,7 +103,12 @@
                         <div class="form__row-item">
                             <div class="sd-line-input sd-line-input--is-select">
                                 <label class="sd-line-input__label" translate>Desk language</label>
-                                <select class="sd-line-input__select" id="deskLanguage" ng-model="desk.edit.desk_language">
+                                <select
+                                    class="sd-line-input__select"
+                                    id="deskLanguage"
+                                    ng-model="desk.edit.desk_language"
+                                    data-test-id="field--desk-language"
+                                >
                                     <option value=""></option>
                                     <option ng-repeat="language in languages" value="{{language.language}}" ng-selected="desk.edit.desk_language === language.language">
                                         {{ language.label | translate}}
@@ -124,8 +153,12 @@
                     <div class="form__row">
                         <div class="sd-line-input sd-line-input--is-select">
                             <label class="sd-line-input__label" translate>Default Content Template</label>
-                            <select ng-model="desk.edit.default_content_template"
-                                    ng-options="template._id as template.template_name for template in templates" class="sd-line-input__select">
+                            <select
+                                ng-model="desk.edit.default_content_template"
+                                ng-options="template._id as template.template_name for template in templates"
+                                class="sd-line-input__select"
+                                data-test-id="field--default-content-template"
+                            >
                                 <option value=""></option>
                             </select>
                         </div>
@@ -149,15 +182,24 @@
                 <span class="alert-danger" ng-show="_error">{{ _errorMessage}}</span>
             </form>
             <div class="modal__footer" ng-if="step.current === 'general'">
-                <button id="next-general"
-                        class="btn btn--primary"
-                        ng-click="save(desk.edit)"
-                        ng-disabled="!generalStep.$valid || _errorLimits || saving || !saveEnabled">
-                    {{ 'Save & Continue' | translate }}</button>
-                <button id="done-general"
-                        class="btn btn--primary"
-                        ng-click="save(desk.edit, true)"
-                        ng-disabled="!generalStep.$valid || _errorLimits || saving || !saveEnabled" translate>Done</button>
+                <button
+                    class="btn btn--primary"
+                    ng-click="save(desk.edit)"
+                    ng-disabled="!generalStep.$valid || _errorLimits || saving || !saveEnabled"
+                    data-test-id="save-and-continue"
+                >
+                    {{ 'Save & Continue' | translate }}
+                </button>
+                <button
+                    id="done-general"
+                    class="btn btn--primary"
+                    ng-click="save(desk.edit, true)"
+                    ng-disabled="!generalStep.$valid || _errorLimits || saving || !saveEnabled"
+                    translate
+                    data-test-id="done"
+                >
+                    Done
+                </button>
             </div>
         </div>
         <div sd-wizard-step data-title="{{ :: 'Stages' | translate }}" data-code="stages">
@@ -360,8 +402,11 @@
                     <div class="members-list">
                         <ul class="pills-list">
                             <li ng-repeat="user in deskMembers| orderBy: 'display_name' track by user._id" ng-class="{'inactive' : !user.is_enabled || !user.is_active}">
-                                <figure class="avatar"><img sd-user-avatar data-user="user"></figure>
-                                <h5>{{:: user.display_name}}</h5> <span class="user-email">{{:: user.email}}</span>
+                                <span class="flex-row sibling-spacer-10">
+                                    <sd-user-avatar data-user="user"></sd-user-avatar>
+                                    <h5>{{:: user.display_name}}</h5> <span class="user-email">{{:: user.email}}</span>
+                                </span>
+                                
                                 <div class="actions">
                                     <button ng-click="remove(user)"><i class="icon-close-small"></i></button>
                                 </div>
@@ -375,12 +420,18 @@
                 <button id="next-people"
                         class="btn btn--primary"
                         ng-click="save()"
-                        ng-disabled="message != null || saving || !saveEnabled">{{ 'Save & Continue' | translate }}</button>
+                        ng-disabled="message != null || saving || !saveEnabled"
+                        data-test-id="save-and-continue">{{ 'Save & Continue' | translate }}</button>
                 <button
                     id="done-people"
                     class="btn btn--primary"
                     ng-click="save(true)"
-                    ng-disabled="message != null || saving || !saveEnabled" translate>Done</button>
+                    ng-disabled="message != null || saving || !saveEnabled"
+                    translate
+                    data-test-id="done"
+                >
+                    Done
+                </button>
             </div>
         </div>
 

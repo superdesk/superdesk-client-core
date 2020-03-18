@@ -4,8 +4,8 @@ import {PreviewModal} from '../previewModal';
 import {gettext} from 'core/utils';
 import {isPublished} from 'apps/archive/utils';
 import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
-import {appConfig} from 'appConfig';
-import {applyDefault} from 'core/helpers/typescript-helpers';
+import {appConfig, extensions} from 'appConfig';
+import {IExtensionActivationResult, IArticle} from 'superdesk-api';
 
 SendItem.$inject = [
     '$q',
@@ -232,8 +232,39 @@ export function SendItem($q,
             };
 
             scope.send = function(open, sendAllPackageItems) {
-                updateLastDestination();
-                return runSend(open, sendAllPackageItems);
+                const middlewares
+                    : Array<IExtensionActivationResult['contributions']['entities']['article']['onSendBefore']>
+                = _.flatMap(
+                    Object.values(extensions),
+                    (extension) => extension.activationResult.contributions?.entities?.article?.onSendBefore ?? [],
+                );
+                let itemsToSend: Array<IArticle>;
+
+                if (scope.multiItems != null) {
+                    // scope.multiItems is populated by MultiService
+                    itemsToSend = scope.multiItems;
+                } else if (scope.item != null && scope.item._id) {
+                    // scope.item is populated by the editor
+                    itemsToSend = [scope.item];
+                } else if (scope.config && scope.config.items) {
+                    // scope.config.items is populated by SendService
+                    itemsToSend = scope.config.items;
+                } else {
+                    itemsToSend = [];
+                }
+
+                return middlewares.reduce(
+                    (current, next) => {
+                        return current.then(() => {
+                            return next(itemsToSend, scope.selectedDesk);
+                        });
+                    },
+                    Promise.resolve(),
+                )
+                    .then(() => {
+                        updateLastDestination();
+                        return runSend(open, sendAllPackageItems);
+                    });
             };
             scope.isSendToNextStage = false;
             scope.$on('item:nextStage', (_e, data) => {

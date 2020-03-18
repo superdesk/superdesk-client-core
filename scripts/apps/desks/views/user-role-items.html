@@ -1,11 +1,11 @@
 <ul ng-if="!loading && items.length" class="inline-content-items content-tasks" >
-    <li ng-repeat="item in items track by item._id" class="content-item content-item--no-border shifted" ng-if="!online || isLoggedIn(item)">
-        <figure class="avatar avatar-with-info small" title="{{item.display_name}}">
-            <div ng-class="{'status-indicator--offline': !isLoggedIn(item), 'status-indicator--online': isLoggedIn(item)}"></div>
-            <div class="user-image">
-                <img sd-user-avatar data-user="item">
-            </div>
-        </figure>
+    <li
+        ng-repeat="item in items track by item._id"
+        ng-if="!online || isLoggedIn(item)"
+        class="content-item content-item--no-border shifted sibling-spacer-10"
+        style="height: 40px; padding: 4px;"
+    >
+        <sd-user-avatar data-user="item" data-display-status="true"></sd-user-avatar>
         <div class="content-item__text">
             {{item.display_name}}
         </div>

@@ -898,7 +898,6 @@
                         li {
                             &.activity {
                                 .activity-content {
-                                    padding-left: 45px;
                                     margin-top: -3px;
                                     padding-right: 20px;
                                     color: #555;
@@ -907,7 +906,6 @@
                                     }
                                 }
                                 .activity-date {
-                                    padding-left: 45px;
                                     font-size: 11px;
                                     color: #999;
                                     margin-top: -5px;
@@ -1145,14 +1143,6 @@
                         height: 32px;
                         margin-bottom: 3px;
 
-                        .avatar-small {
-                            width: 24px;
-                            height: 24px;
-                            border: 0;
-                            padding: 0;
-                            margin:0;
-                            background-size: 24px 24px;
-                        }
                         span {
                             font-size: 13px;
                             color: #4f4f4f;
@@ -1256,10 +1246,6 @@
 
 .users-list {
     > li {
-        .avatar {
-            margin-top: 5px;
-            margin-right: 15px;
-        }
         .name {
             font-size: 13px;
             color: $sd-blue-text;
@@ -1267,21 +1253,33 @@
     }
 }
 
-.plain-small.users-list {
-    > li .avatar {
-        margin-top: 3px;
+.sd-mentions-item {
+    > div {
+        display: flex;
+        align-items: center;
+        padding: 4px;
+        min-height: 38px;
+    
+        * + * {
+            margin-left: 6px;
+        }
+    }
+
+    &.active {
+        > div {
+            background: lighten($sd-blue, 10%);
+            cursor: pointer;
+            color: #fff;
+        }
     }
 }
 
 .users-list-embed {
     position:relative;
     > li {
-        height: 32px;
-        line-height: 32px;
-        margin-right: -5px;
-        .avatar {
-            margin: 3px 10px 4px 4px;
-        }
+        padding: 4px 6px;
+        clear: both;
+
         &:hover, &.active {
             cursor: pointer;
             color: #fff;
@@ -1485,10 +1483,6 @@
             h6 {
                 max-width: 550px;
             }
-        }
-        .avatar {
-            display: inline-block;
-            float: none;
         }
         h5 {
             display: inline-block;
@@ -1840,7 +1834,6 @@
     }
 }
 
-
 .nav-button-bar {
     display: flex;
     flex-direction: row;
@@ -1850,23 +1843,6 @@
     .btn {
         flex-grow: 0;
         flex-shrink: 0;
-    }
-}
-
-.modal__header--flex {
-    .icn-btn {
-        &.close, &.close-modal, &.modal__close {
-            margin: 0 -0.6rem 0;
-            border: 0;
-            padding: .6rem;
-            opacity: 0.5;
-            &:hover {
-                opacity: 0.8;
-            }
-            &:active {
-                opacity: 1;
-            }
-        }
     }
 }
 
@@ -1962,7 +1938,6 @@ sd-multi-image-edit {
     color: $white;
     padding: 0.4rem;
     padding-right: 0;
-    margin-left: 1rem;
     height: 3.2rem;
     border-radius: 1.6rem;
     font-size: 1.2rem;
@@ -1996,6 +1971,12 @@ sd-multi-image-edit {
     }
 }
 
+.locked-info__avatar {
+    margin-right: 4px;
+    margin-left: -2px;
+    transform: scale(0.9);
+}
+
 .sd-dropdown-item {
     display: block;
     width: 100%;
@@ -2008,5 +1989,22 @@ sd-multi-image-edit {
 
     &:hover {
         background: #eff7fa;
+    }
+}
+
+.sd-alert {
+    [class^="icon-"],
+    [class*=" icon-"] {
+        color: inherit;
+    }
+}
+.sd-content-box {
+    border-radius: 4px;
+    &--light {
+        background-color: $white;
+    }
+    &--emphasise {
+        background-color: $white;
+        border: 1px solid rgba(94, 169, 200, 0.6);
     }
 }

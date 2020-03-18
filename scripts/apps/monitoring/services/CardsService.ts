@@ -8,15 +8,26 @@ import {
     SCHEDULED_OUTPUT,
 } from 'apps/desks/constants';
 import {appConfig} from 'appConfig';
+import {IMonitoringFilter} from 'superdesk-api';
 
 interface ICard {
     _id: string;
     deskId: string;
     fileType: string; // contains JSON array
     contentProfile: string;
+    customFilters: string;
     header: string; // example: "Politic Desk"
     subheader: string; // example: "Working Stage"
-    type: 'stage' | string;
+    type: 'search'
+        | 'spike-personal'
+        | 'personal'
+        | 'stage'
+        | 'spike'
+        | 'highlights'
+        | 'deskOutput'
+        | 'sentDeskOutput'
+        | 'scheduledDeskOutput'
+        | string;
     search?: {
         filter?: {
             query?: {
@@ -187,6 +198,21 @@ export function CardsService(search, session, desks) {
         }
     }
 
+    function filterQueryByCustomQuery(query, card: ICard) {
+        if (card.customFilters == null) {
+            return;
+        }
+
+        var items: {[key: string]: IMonitoringFilter} = JSON.parse(card.customFilters);
+
+        const terms = Object.values(items)
+            .reduce((obj1, obj2) => Object.assign(obj1, obj2.query), {});
+
+        Object.keys(terms).forEach((key) => {
+            query.filter({terms: {[key]: terms[key]}});
+        });
+    }
+
     /**
      * Get items criteria for given card
      *
@@ -196,7 +222,7 @@ export function CardsService(search, session, desks) {
      * @param {Object} card
      * @param {string} queryString
      */
-    function getCriteria(card: ICard, queryString, queryParam) {
+    function getCriteria(card: ICard, queryString?: any, queryParam?: any) {
         var params = getCriteriaParams(card);
         var query = search.query(setFilters(params));
         var criteria: any = {es_highlight: card.query ? search.getElasticHighlight() : 0};
@@ -204,6 +230,7 @@ export function CardsService(search, session, desks) {
         filterQueryByCardType(query, queryParam, card);
         filterQueryByContentProfile(query, card);
         filterQueryByCardFileType(query, card);
+        filterQueryByCustomQuery(query, card);
 
         if (queryString) {
             query.filter({query: {query_string: {query: queryString, lenient: false}}});
