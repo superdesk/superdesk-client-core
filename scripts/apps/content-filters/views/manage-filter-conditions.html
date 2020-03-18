@@ -32,7 +32,7 @@
         </div>
         <div class="modal__body">
             <form name="editForm">
-                <fieldset>
+                <fieldset ng-init="setNgForm(editForm)">
                     <div class="form__row">
                         <div class="sd-line-input sd-line-input--required" ng-class="{'sd-line-input--invalid': editForm.label.$error.maxlength}">
                             <label class="sd-line-input__label" translate>Name</label>
