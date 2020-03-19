@@ -214,7 +214,10 @@ export function MultiActionBar(
                     actions.push({
                         label: gettext('Duplicate To'),
                         icon: 'icon-copy',
-                        group: 'Duplicate',
+                        group: {
+                            label: 'Duplicate',
+                            icon: 'icon-copy',
+                        },
                         onTrigger: () => {
                             scope.action.duplicateTo();
                             scope.$apply();
@@ -227,7 +230,10 @@ export function MultiActionBar(
                     actions.push({
                         label: gettext('Duplicate In Place'),
                         icon: 'icon-copy',
-                        group: 'Duplicate',
+                        group: {
+                            label: 'Duplicate',
+                            icon: 'icon-copy',
+                        },
                         onTrigger: () => {
                             scope.action.duplicateInPlace();
                             scope.$apply();

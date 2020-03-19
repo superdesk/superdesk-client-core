@@ -46,7 +46,7 @@ declare module 'superdesk-api' {
         priority?: IDisplayPriority;
         label: string;
         icon: string;
-        group?: string;
+        group?: {label: string, icon: string};
         onTrigger(): void;
     }
 
