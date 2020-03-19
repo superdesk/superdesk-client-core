@@ -210,6 +210,32 @@ export function MultiActionBar(
                     }
                 }
 
+                if (scope.activity['duplicateTo']) {
+                    actions.push({
+                        label: gettext('Duplicate To'),
+                        icon: 'icon-copy',
+                        group: 'Duplicate',
+                        onTrigger: () => {
+                            scope.action.duplicateTo();
+                            scope.$apply();
+                        },
+                        canAutocloseMultiActionBar: false,
+                    });
+                }
+
+                if (scope.activity['duplicateInPlace']) {
+                    actions.push({
+                        label: gettext('Duplicate In Place'),
+                        icon: 'icon-copy',
+                        group: 'Duplicate',
+                        onTrigger: () => {
+                            scope.action.duplicateInPlace();
+                            scope.$apply();
+                        },
+                        canAutocloseMultiActionBar: false,
+                    });
+                }
+
                 return actions;
             };
 
