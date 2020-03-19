@@ -159,9 +159,10 @@ export class MultiActionBarReact extends React.Component<IProps, IState> {
                                     <button
                                         onClick={onClick}
                                         className="navbtn"
+                                        title={groups[group][0].group.label}
                                         data-test-id="dropdown-toggle"
                                     >
-                                        <Icon className={groups[group][0].icon} size={22} />
+                                        <Icon className={groups[group][0].group.icon} size={22} />
                                     </button>
                                 )}
                                 inline={true}

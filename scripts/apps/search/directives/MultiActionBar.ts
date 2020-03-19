@@ -215,7 +215,7 @@ export function MultiActionBar(
                         label: gettext('Duplicate To'),
                         icon: 'icon-copy',
                         group: {
-                            label: 'Duplicate',
+                            label: gettext('Duplicate'),
                             icon: 'icon-copy',
                         },
                         onTrigger: () => {
@@ -231,7 +231,7 @@ export function MultiActionBar(
                         label: gettext('Duplicate In Place'),
                         icon: 'icon-copy',
                         group: {
-                            label: 'Duplicate',
+                            label: gettext('Duplicate'),
                             icon: 'icon-copy',
                         },
                         onTrigger: () => {
