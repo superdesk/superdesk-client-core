@@ -155,7 +155,6 @@ export class MultiActionBarReact extends React.Component<IProps, IState> {
                                 </button>
                             )) :
                             <DropdownTree
-                                className="dropdown navbtn strict"
                                 getToggleElement={(isOpen, onClick) => (
                                     <button
                                         onClick={onClick}
@@ -165,10 +164,7 @@ export class MultiActionBarReact extends React.Component<IProps, IState> {
                                         <Icon className={groups[group][0].icon} size={22} />
                                     </button>
                                 )}
-                                style={{
-                                    display: 'inline-flex',
-                                    lineHeight: 'initial',
-                                }}
+                                inline={true}
                                 key={i}
                                 groups={[{render: () => null, items: groups[group]}]}
                                 renderItem={(key, item, closeDropdown) => (

@@ -819,8 +819,7 @@ declare module 'superdesk-api' {
         groups: Array<IDropdownTreeGroup<T>>;
         getToggleElement(isOpen: boolean, onClick: () => void): JSX.Element;
         renderItem(key: string, item: T, closeDropdown: () => void): JSX.Element;
-        className?: React.className;
-        style?: React.CSSProperties;
+        inline?: boolean;
         wrapperStyles?: React.CSSProperties;
         'data-test-id'?: string;
     }
