@@ -136,8 +136,6 @@ export class MultiActionBarReact extends React.Component<IProps, IState> {
             const groups = groupBy(this.state.actions, (item) => item.group && item.group.label);
             const groupNames = Object.keys(groups);
 
-            console.log(groupNames);
-
             return (
                 <div data-test-id="multi-actions-inline">
                     {
