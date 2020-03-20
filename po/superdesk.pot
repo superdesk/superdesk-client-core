@@ -8824,6 +8824,10 @@ msgstr ""
 msgid "Sending"
 msgstr ""
 
+#: scripts/apps/monitoring/views/monitoring-view.html:55
+msgid "Sent Items"
+msgstr ""
+
 #: scripts/apps/authoring/versioning/history/views/publish_queue.html:16
 msgid "Sent/Queued as"
 msgstr ""
@@ -12569,10 +12573,6 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/MultiSelectActions.jsx:48
 msgid "{{ count }} {{ type }} selected"
-msgstr ""
-
-#: scripts/apps/monitoring/views/monitoring-view.html:55
-msgid "{{ gettext('Sent Items') }}"
 msgstr ""
 
 #: ../superdesk-planning/client/actions/main.js:230
