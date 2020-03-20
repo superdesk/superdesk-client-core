@@ -55,7 +55,7 @@
                                 <button class="sd-checkbox sd-checkbox--button-style"
                                     ng-class="{checked: personalShowSent}"
                                     ng-click="togglePersonalShowSent()"
-                                    translate>{gettext('Sent Items')}</button>
+                                    translate>{{ gettext('Sent Items') }}</button>
                             </span>
                             <span ng-if="type === 'highlights'" sd-highlight-label data-highlight="monitoring.queryParam.highlight" data-total="monitoring.totalItems"></span>
                             <span ng-if="monitoring.singleGroup.subheader && monitoring.singleGroup.singleViewType == null">
