@@ -1,4 +1,4 @@
-# 
+#
 # Translators:
 # AlbertFR <albert.bruc.ab@gmail.com>, 2015
 # ducseb <ducseb@gmail.com>, 2017
@@ -1673,7 +1673,7 @@ msgstr "Type d'horloge"
 #: scripts/apps/search/views/multi-image-edit.html:8
 #: scripts/core/menu/views/about.html:38 scripts/core/menu/views/about.html:5
 msgid "Close"
-msgstr "Fermeture"
+msgstr "Fermer"
 
 #: scripts/apps/authoring/authoring/index.ts:291
 msgid "Close current item"
@@ -2612,7 +2612,7 @@ msgstr "Gestion de bureau"
 #: scripts/apps/monitoring/views/aggregate-settings.html:118
 #: scripts/apps/monitoring/views/aggregate-settings.html:94
 msgid "Desk Output"
-msgstr "Sortie de bureau"
+msgstr "Sortie"
 
 #: scripts/apps/dashboard/closed-desk/index.js:145
 msgid "Desk Router"
@@ -2689,7 +2689,7 @@ msgstr "Bureau:"
 #: scripts/apps/search/views/search-filters.html:31
 #: scripts/apps/templates/views/template-editor-modal.html:81
 msgid "Desks"
-msgstr "Bureaus"
+msgstr "Bureaux"
 
 #: scripts/apps/publish/views/publish-queue.html:111
 msgid "Destination"
@@ -3040,7 +3040,7 @@ msgstr "Note de l'éditeur"
 #: scripts/core/editor3/components/comments/Comment.tsx:56
 #: scripts/core/editor3/components/links/LinkToolbar.tsx:50
 msgid "Edit"
-msgstr "Édition"
+msgstr "Modifier"
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:4
 msgid "Edit \"{{configEdit.name}}\" highlight"
@@ -4636,7 +4636,7 @@ msgstr "Règle entrante:"
 #: scripts/apps/desks/views/desk-config-modal.html:230
 #: scripts/apps/desks/views/desk-config-modal.html:283
 msgid "Incoming Stage"
-msgstr "Étape entrante"
+msgstr "Entrant"
 
 #: scripts/core/editor3/components/media/MediaBlock.tsx:16
 msgid "Indefinite Usage"
@@ -5463,7 +5463,7 @@ msgstr "Moniteur"
 #: scripts/apps/monitoring/views/monitoring-view.html:27
 #: scripts/core/lang/missing-translations-strings.js:39
 msgid "Monitoring"
-msgstr "surveillance"
+msgstr "Suivi"
 
 #: scripts/apps/desks/views/settings.html:28
 #: scripts/apps/monitoring/views/aggregate-settings.html:2
@@ -6407,7 +6407,7 @@ msgstr "Préférences personnelles"
 #: scripts/apps/monitoring/views/monitoring-view.html:141
 #: scripts/apps/users/directives/UserPreferencesDirective.ts:23
 msgid "Photo Grid View"
-msgstr "Photo Grid View"
+msgstr "Mosaïque photos"
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:106
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:88
@@ -6914,7 +6914,7 @@ msgstr "Publique"
 #: scripts/apps/search/views/multi-action-bar.html:105
 #: scripts/apps/search/views/multi-action-bar.html:46
 msgid "Publish"
-msgstr "Publié le"
+msgstr "Publier"
 
 #: scripts/apps/publish/index.ts:51
 msgid "Publish Queue"
@@ -8471,7 +8471,7 @@ msgstr "Retenir {{event}}"
 #: ../superdesk-planning/client/utils/index.js:411
 #: scripts/apps/dashboard/workspace-tasks/views/desk-stages.html:17
 msgid "Spiked"
-msgstr "Retenue"
+msgstr "Retenu"
 
 #: scripts/apps/search/views/search-parameters.html:137
 msgid "Spiked Content"
@@ -8479,7 +8479,7 @@ msgstr ""
 
 #: scripts/apps/monitoring/views/monitoring-view.html:57
 msgid "Spiked Items"
-msgstr ""
+msgstr "Articles retenus"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:63
 msgid "Spiked by"
@@ -8717,7 +8717,7 @@ msgstr "En exposant"
 #: scripts/apps/monitoring/views/monitoring-view.html:136
 #: scripts/apps/users/directives/UserPreferencesDirective.ts:25
 msgid "Swimlane View"
-msgstr ""
+msgstr "Colonnes"
 
 #: scripts/apps/monitoring/index.ts:58
 msgid "Switch between grouped/single desk view"
@@ -9408,7 +9408,7 @@ msgstr "À"
 #: scripts/apps/authoring/views/authoring-topbar.html:47
 #: scripts/apps/search/views/search-parameters.html:106
 msgid "To Desk"
-msgstr "Au bureau"
+msgstr "Au pupitre"
 
 #: ../superdesk-planning/client/constants/assignments.js:69
 #: scripts/apps/dashboard/workspace-tasks/tasks.js:7
@@ -10219,7 +10219,7 @@ msgstr "Flux de travail"
 #: scripts/apps/desks/views/desk-config-modal.html:228
 #: scripts/apps/desks/views/desk-config-modal.html:279
 msgid "Working Stage"
-msgstr "Stage de travail"
+msgstr "En cours"
 
 #: scripts/apps/archive/index.js:81 scripts/apps/dashboard/index.js:45
 #: scripts/apps/dashboard/views/workspace.html:24
@@ -10392,7 +10392,7 @@ msgstr "ordres du jour"
 #: scripts/apps/monitoring/views/monitoring-view.html:98
 #: scripts/apps/users/views/user-preferences.html:96
 msgid "all"
-msgstr "toute"
+msgstr "tout"
 
 #: scripts/apps/desks/views/desk-config-modal.html:212
 #: scripts/apps/highlights/views/highlights_config_modal.html:15
@@ -11286,7 +11286,7 @@ msgstr "prévue"
 
 #: scripts/core/lang/missing-translations-strings.js:21
 msgid "scheduled Desk Output"
-msgstr "Sortie de bureau programmée"
+msgstr "Sortie programmée"
 
 #: scripts/core/lang/missing-translations-strings.js:20
 msgid "search"
@@ -11358,7 +11358,7 @@ msgstr "source du moteur de recherche"
 
 #: scripts/core/lang/missing-translations-strings.js:7
 msgid "spiked"
-msgstr ""
+msgstr "retenu"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.jsx:87
 msgid "spiked and unlinked"
