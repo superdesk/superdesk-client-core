@@ -224,7 +224,7 @@ export function MultiActionBar(
                             scope.action.duplicateTo();
                             scope.$apply();
                         },
-                        canAutocloseMultiActionBar: false,
+                        canAutocloseMultiActionBar: true,
                     });
                 }
 
@@ -240,7 +240,7 @@ export function MultiActionBar(
                             scope.action.duplicateInPlace();
                             scope.$apply();
                         },
-                        canAutocloseMultiActionBar: false,
+                        canAutocloseMultiActionBar: true,
                     });
                 }
 
