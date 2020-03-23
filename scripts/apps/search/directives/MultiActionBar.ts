@@ -7,7 +7,8 @@ import {IArticle} from 'superdesk-api';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 
 MultiActionBar.$inject = [
-    'asset', 'multi', 'authoringWorkspace', 'superdesk', 'keyboardManager', 'desks', 'api',
+    'asset', 'multi', 'authoringWorkspace', 'superdesk',
+    'keyboardManager', 'desks', 'api', 'archiveService',
 ];
 export function MultiActionBar(
     asset,
@@ -17,6 +18,7 @@ export function MultiActionBar(
     keyboardManager,
     desks,
     api,
+    archiveService,
 ) {
     return {
         controller: 'MultiActionBar',
@@ -295,10 +297,12 @@ export function MultiActionBar(
                 var activities = {};
 
                 angular.forEach(items, (item) => {
-                    types[item._type] = 1;
+                    const type = archiveService.getType(item);
+
+                    types[type] = 1;
                     states.push(item.state);
 
-                    var _activities = superdesk.findActivities({action: 'list', type: item._type}, item) || [];
+                    var _activities = superdesk.findActivities({action: 'list', type: type}, item) || [];
                     let allowOnSessionOwnerLock = ['spike', 'export'];
 
                     _activities.forEach((activity) => {
