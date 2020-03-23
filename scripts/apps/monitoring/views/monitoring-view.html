@@ -23,7 +23,8 @@
                                     <button class="label-group"
                                         ng-click="aggregate.setFilterType('contentProfile', profile, $event)"
                                         ng-disabled="aggregate.activeFilters.contentProfile.includes(profile._id)"
-                                        translate>{{ profile.label }}
+                                    >
+                                        <span translate>{{ profile.label }}</span>
                                         <i ng-show="aggregate.activeFilters.contentProfile.includes(profile._id)" class="icon-ok"></i>
                                     </button>
                                 </li>
