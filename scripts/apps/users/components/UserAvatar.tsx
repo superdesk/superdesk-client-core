@@ -7,17 +7,17 @@ import {isUserLoggedIn} from '../services/UsersService';
 import {gettext} from 'core/utils';
 import {AvatarWrapper, AvatarContentText, AvatarContentImage} from 'superdesk-ui-framework';
 
-class DefaultAvatarDisplay extends React.PureComponent<{user: IUser}> {
+class DefaultAvatarDisplay extends React.PureComponent<{user: Partial<IUser>}> {
     render() {
         const {user} = this.props;
-        const tooltipText = user.display_name;
+        const tooltipText = user?.display_name ?? null;
 
         if (user.picture_url == null) {
             const initials = (user.first_name?.[0] ?? '') + (user.last_name?.[0] ?? '');
 
             return (
                 <AvatarContentText
-                    text={initials.length > 0 ? initials : user.display_name[0]}
+                    text={initials.length > 0 ? initials : user.display_name?.[0] ?? ''}
                     tooltipText={tooltipText}
                 />
             );
