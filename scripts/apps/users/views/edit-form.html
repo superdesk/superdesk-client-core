@@ -8,10 +8,20 @@
         <div class="profile-info editmode">
             <div class="header-info">
                 <div class="profile-pic">
+                    <sd-user-avatar data-user="userImmutable" data-size="'large'"></sd-user-avatar>
                     <span class="disabled-label" ng-if="user._id && !user.is_enabled" translate>disabled</span>
                     <span class="disabled-label" ng-if="user._id && user.is_enabled && !user.is_active" translate>inactive</span>
                 </div>
-                
+                <div style="text-align: center; margin-top: 5px;">
+                    <button
+                        ng-if="canChangeAvatar"
+                        class="btn btn--small btn--default"
+                        ng-click="editPicture()"
+                        translate
+                    >
+                        change avatar
+                    </button>
+                </div>
                 <h2>{{ user.display_name}}</h2>
                 <h5>{{ user.username}}</h5>
                 <div class="active"
