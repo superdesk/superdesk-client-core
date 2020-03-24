@@ -183,7 +183,7 @@ describe('internal destinations & generic-page-list', () => {
 
         var activeFilter = els(['list-page--filters-active', 'tag-label']).get(0);
 
-        expect(activeFilter.getAttribute('textContent')).toBe('desk: Sports Desk');
+        browser.wait(ECE.attributeEquals(activeFilter, 'textContent', 'desk: Sports Desk'));
 
         el(['tag-label--remove'], null, activeFilter).click();
 
