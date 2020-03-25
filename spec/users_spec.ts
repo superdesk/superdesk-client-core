@@ -67,6 +67,7 @@ describe('users', () => {
         });
 
         it('can create a new user', () => {
+            el(['user-filter'], by.cssContainingText('option', 'All')).click();
             el(['create-user-button']).click();
 
             el(['user-details-form', 'field--first_name']).sendKeys('John');
