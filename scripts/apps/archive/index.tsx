@@ -160,7 +160,6 @@ angular.module('superdesk.apps.archive', [
                 controller: ctrl.DuplicateController,
                 filters: [
                     {action: 'list', type: 'archive'},
-                    {action: 'list', type: 'archived'},
                 ],
                 keyboardShortcut: 'ctrl+alt+d',
                 privileges: {duplicate: 1},
