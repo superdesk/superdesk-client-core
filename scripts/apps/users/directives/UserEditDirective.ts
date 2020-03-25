@@ -38,10 +38,6 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
 
             scope.xmppEnabled = appConfig.xmpp_auth;
 
-            scope.$watch('origUser', () => {
-                resetUser(scope.origUser);
-            });
-
             resetUser(scope.origUser);
 
             // user avatar component expects immutable data and won't update if object reference hasn't changed
@@ -206,7 +202,7 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
             function resetUser(user) {
                 scope.dirty = false;
                 if (angular.isDefined(user._id)) {
-                    return userList.getUser(user._id, true).then((u) => {
+                    userList.getUser(user._id, true).then((u) => {
                         if (u.is_author === undefined) {
                             u.user.is_author = true;
                         }
