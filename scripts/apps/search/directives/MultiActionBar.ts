@@ -7,7 +7,8 @@ import {IArticle} from 'superdesk-api';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 
 MultiActionBar.$inject = [
-    'asset', 'multi', 'authoringWorkspace', 'superdesk', 'keyboardManager', 'desks', 'api',
+    'asset', 'multi', 'authoringWorkspace', 'superdesk',
+    'keyboardManager', 'desks', 'api', 'archiveService',
 ];
 export function MultiActionBar(
     asset,
@@ -17,6 +18,7 @@ export function MultiActionBar(
     keyboardManager,
     desks,
     api,
+    archiveService,
 ) {
     return {
         controller: 'MultiActionBar',
@@ -137,17 +139,6 @@ export function MultiActionBar(
                             canAutocloseMultiActionBar: false,
                         });
                     }
-                    if (scope.state === 'spiked') {
-                        actions.push({
-                            label: gettext('Unspike'),
-                            icon: 'icon-unspike',
-                            onTrigger: () => {
-                                scope.action.unspikeItems();
-                                scope.$apply();
-                            },
-                            canAutocloseMultiActionBar: false,
-                        });
-                    }
                     if (scope.activity['edit.item']) {
                         actions.push({
                             label: gettext('Send to'),
@@ -170,6 +161,16 @@ export function MultiActionBar(
                             canAutocloseMultiActionBar: false,
                         });
                     }
+                } else if (scope.type === 'spike') {
+                    actions.push({
+                        label: gettext('Unspike'),
+                        icon: 'icon-unspike',
+                        onTrigger: () => {
+                            scope.action.unspikeItems();
+                            scope.$apply();
+                        },
+                        canAutocloseMultiActionBar: false,
+                    });
                 }
 
                 if (scope.action.canPackageItems()) {
@@ -222,7 +223,7 @@ export function MultiActionBar(
                             scope.action.duplicateTo();
                             scope.$apply();
                         },
-                        canAutocloseMultiActionBar: false,
+                        canAutocloseMultiActionBar: true,
                     });
                 }
 
@@ -238,7 +239,7 @@ export function MultiActionBar(
                             scope.action.duplicateInPlace();
                             scope.$apply();
                         },
-                        canAutocloseMultiActionBar: false,
+                        canAutocloseMultiActionBar: true,
                     });
                 }
 
@@ -295,10 +296,12 @@ export function MultiActionBar(
                 var activities = {};
 
                 angular.forEach(items, (item) => {
-                    types[item._type] = 1;
+                    const type = archiveService.getType(item);
+
+                    types[type] = 1;
                     states.push(item.state);
 
-                    var _activities = superdesk.findActivities({action: 'list', type: item._type}, item) || [];
+                    var _activities = superdesk.findActivities({action: 'list', type: type}, item) || [];
                     let allowOnSessionOwnerLock = ['spike', 'export'];
 
                     _activities.forEach((activity) => {
