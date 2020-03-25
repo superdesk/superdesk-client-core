@@ -139,17 +139,6 @@ export function MultiActionBar(
                             canAutocloseMultiActionBar: false,
                         });
                     }
-                    if (scope.state === 'spiked') {
-                        actions.push({
-                            label: gettext('Unspike'),
-                            icon: 'icon-unspike',
-                            onTrigger: () => {
-                                scope.action.unspikeItems();
-                                scope.$apply();
-                            },
-                            canAutocloseMultiActionBar: false,
-                        });
-                    }
                     if (scope.activity['edit.item']) {
                         actions.push({
                             label: gettext('Send to'),
@@ -172,6 +161,16 @@ export function MultiActionBar(
                             canAutocloseMultiActionBar: false,
                         });
                     }
+                } else if (scope.type === 'spike') {
+                    actions.push({
+                        label: gettext('Unspike'),
+                        icon: 'icon-unspike',
+                        onTrigger: () => {
+                            scope.action.unspikeItems();
+                            scope.$apply();
+                        },
+                        canAutocloseMultiActionBar: false,
+                    });
                 }
 
                 if (scope.action.canPackageItems()) {
