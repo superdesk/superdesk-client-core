@@ -223,7 +223,7 @@ export function MultiActionBar(
                             scope.action.duplicateTo();
                             scope.$apply();
                         },
-                        canAutocloseMultiActionBar: true,
+                        canAutocloseMultiActionBar: false,
                     });
                 }
 
@@ -239,7 +239,7 @@ export function MultiActionBar(
                             scope.action.duplicateInPlace();
                             scope.$apply();
                         },
-                        canAutocloseMultiActionBar: true,
+                        canAutocloseMultiActionBar: false,
                     });
                 }
 
