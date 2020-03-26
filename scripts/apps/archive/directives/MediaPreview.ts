@@ -105,9 +105,10 @@ export function MediaPreview(api, $rootScope, desks, superdesk, content, storage
             };
 
             scope.getAssociatedItems = function(associations, fieldId) {
-                var result = _.filter(associations, (association, key) => key.indexOf(fieldId) !== -1);
-
-                return result;
+                return Object.keys(associations)
+                    .filter((key) => key.includes(fieldId))
+                    .sort((key1, key2) => associations[key1].order - associations[key2].order)
+                    .map((key) => associations[key]);
             };
 
             desks.initialize().then(() => {
