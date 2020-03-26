@@ -104,6 +104,7 @@ export function AssociationController(content, superdesk, renditions, notify) {
         // if the media is of type media-gallery, update same association-key not the next one
         // as the scope.rel contains the next association-key of the new item
         let associationKey = scope.carouselItem ? scope.carouselItem.fieldId : customRel || scope.rel;
+        const field = associationKey.split('--')[0];
 
         const isItemBeingAdded = updated != null && scope.item.associations[associationKey] == null;
 
@@ -134,8 +135,15 @@ export function AssociationController(content, superdesk, renditions, notify) {
         }
 
         if (scope.field != null && scope.field.field_type === 'media' && updated != null && updated.order == null) {
-            // if the field is of type media-gallery, assign order to the item being added
-            updated['order'] = scope.currentIndex;
+            // get greatest order from current items(or -1 if there aren't any items) and add one
+            const nextOrder = (
+                Object.keys(scope.item.associations)
+                    .filter((key) => key.startsWith(field + '--'))
+                    .map((key) => scope.item.associations[key].order)
+                    .sort((a, b) => b - a)[0] ?? -1
+            ) + 1;
+
+            updated['order'] = nextOrder;
         }
         data[associationKey] = updated;
         scope.item.associations = angular.extend({}, scope.item.associations, data);
