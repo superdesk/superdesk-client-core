@@ -33,12 +33,12 @@ import {showSpikeDialog} from 'apps/archive/show-spike-dialog';
 
 MultiActionBarController.$inject = [
     '$rootScope', 'multi', 'multiEdit', 'multiImageEdit', 'send', 'remove', 'modal', 'lock',
-    'packages', 'superdesk', 'notify', 'spike', 'authoring', '$location',
+    'packages', 'superdesk', 'notify', 'spike', 'authoring', '$location', 'api', 'desks',
 ];
 
 export function MultiActionBarController(
     $rootScope, multi, multiEdit, multiImageEdit, send, remove, modal, lock,
-    packages, superdesk, notify, spike, authoring, $location,
+    packages, superdesk, notify, spike, authoring, $location, api, desks,
 ) {
     this.send = function() {
         send.all(multi.getItems());
@@ -185,6 +185,37 @@ export function MultiActionBarController(
                 !_.includes(['ingested', 'spiked', 'killed', 'recalled', 'unpublished', 'draft'], item.state);
         });
         return canPackage;
+    };
+
+    /**
+     * Multiple items duplicate
+     */
+    this.duplicateTo = function() {
+        return send.allAs(multi.getItems(), 'duplicateTo');
+    };
+
+    this.duplicateInPlace = function() {
+        const items = multi.getItems();
+
+        items.forEach((item) => {
+            api.save('duplicate', {}, {
+                desk: desks.getCurrentDeskId(),
+                type: item._type,
+                item_id: item._id,
+            }, item).then(() => {
+                $rootScope.$broadcast('item:duplicate');
+                notify.success(gettext('Item Duplicated'));
+            }, (response) => {
+                var message = gettext('Failed to duplicate the item');
+
+                if (angular.isDefined(response.data._message)) {
+                    message = message + ': ' + response.data._message;
+                }
+
+                notify.error(message);
+                item.error = response;
+            });
+        });
     };
 
     /**

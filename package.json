@@ -61,7 +61,7 @@
     "docs-soap": "github:tomaskikutis/docs-soap#convert-tables",
     "draft-js": "github:tomaskikutis/draft-js#add-subscript-superscript",
     "draft-js-export-html": "1.3.3",
-    "end-to-end-testing-helpers": "^1.0.3",
+    "end-to-end-testing-helpers": "^1.0.5",
     "eslint": "6.6.0",
     "eslint-plugin-react": "7.16.0",
     "file-loader": "1.1.11",

@@ -23,7 +23,8 @@
                                     <button class="label-group"
                                         ng-click="aggregate.setFilterType('contentProfile', profile, $event)"
                                         ng-disabled="aggregate.activeFilters.contentProfile.includes(profile._id)"
-                                        translate>{{ profile.label }}
+                                    >
+                                        <span translate>{{ profile.label }}</span>
                                         <i ng-show="aggregate.activeFilters.contentProfile.includes(profile._id)" class="icon-ok"></i>
                                     </button>
                                 </li>
@@ -41,7 +42,7 @@
                                 </li>
                             </ul>
                         </div>
-                                        
+
                         <h3 class="subnav__page-title sd-flex-no-grow sd-empty">
                             <span ng-if="type === 'spike'">
                                 <span translate>Spiked Items</span>
@@ -80,7 +81,7 @@
                                 </button>
                             </div>
                         </div>
-                
+
                         <div class="subnav__stage-group" ng-if="monitoring.singleGroup.singleViewType === 'stage' || monitoring.singleGroup && !monitoring.singleGroup.subheader" ng-class="{'subnav__stage-group--ui-responsive': aggregate.monitoringSearch}">
                             <span class="stage-group__desk">{{ monitoring.singleGroup.header }}</span>
                             <span class="stage-group__split">/</span>
@@ -141,7 +142,7 @@
                     </div>
 
                     <div ng-hide="hideMonitoringToolbar2 === true" sd-media-query min-width="700" class="subnav">
-            
+
                         <!-- filtering by file type not implemented for usage with custom data source -->
                         <div ng-if="(!elementState || elementState === 'comfort') && customDataSource == null" class="button-list button-list--padded">
                             <a href="" ng-repeat="fileType in aggregate.fileTypes" ng-click="aggregate.setFilterType('file', fileType)" class="toggle-button" ng-class="{'toggle-button--active': aggregate.hasFileType(fileType)}" title="{{ fileType | translate }}">
@@ -168,10 +169,10 @@
                                 </ul>
                             </div>
                         <div class="subnav__stretch-bar"></div>
-            
+
                         <!-- sorting not implemented for usage with custom data source -->
                         <div sd-item-sortbar class="sortbar-container"></div>
-            
+
                         <div class="dropdown dropdown--align-right" dropdown ng-if="type === 'monitoring'">
                             <button class="navbtn dropdown__toggle" dropdown__toggle><i ng-class="{'icon-list-view': !monitoring.viewColumn && (!view || view === 'compact'), 'icon-grid-view': view === 'photogrid', 'icon-kanban-view': monitoring.viewColumn}"></i></button>
                             <ul class="dropdown__menu">
