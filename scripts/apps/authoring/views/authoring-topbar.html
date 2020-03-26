@@ -12,7 +12,7 @@
       on-change="handleArticleChange"
     ></sd-authoring-topbar-react>
 
-    <div ng-show="isLocked()" class="locked-info">
+    <div ng-if="isLocked()" class="locked-info">
 
       <div class="locked-info__avatar">
         <sd-user-avatar data-user="item.lock_user"></sd-user-avatar>
