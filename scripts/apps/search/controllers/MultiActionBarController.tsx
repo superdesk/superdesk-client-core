@@ -216,6 +216,8 @@ export function MultiActionBarController(
                 item.error = response;
             });
         });
+
+        multi.reset();
     };
 
     /**
