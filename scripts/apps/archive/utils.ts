@@ -7,6 +7,9 @@ import {PUBLISHED_STATES, KILLED_STATES, ITEM_STATE} from './constants';
 export const isPublished = (item: IArticle, includeScheduled = true) =>
     PUBLISHED_STATES.includes(item.state) && (includeScheduled || item.state !== ITEM_STATE.SCHEDULED);
 
+export const isFetched = (item: IArticle) =>
+    item.state === ITEM_STATE.FETCHED;
+
 /**
  * Test if an item was published, but is not published anymore.
  */
