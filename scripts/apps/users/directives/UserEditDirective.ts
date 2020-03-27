@@ -64,7 +64,7 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
                     scope.userImmutable = {...user};
 
                     _.each(user, (value, key) => {
-                        if (value === '') {
+                        if (value === '' && key !== 'dateline_source') {
                             if (key !== 'phone' || key !== 'byline') {
                                 user[key] = null;
                             } else {
