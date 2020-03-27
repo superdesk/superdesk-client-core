@@ -3,19 +3,13 @@ import {appConfig} from 'appConfig';
 import {applyDefault} from 'core/helpers/typescript-helpers';
 import {CC} from 'core/ui/configurable-ui-components';
 import {generate} from 'json-merge-patch';
-import {noop} from 'lodash';
-
-// origUser is set by parent scope when selecting users from GUI
-// but it also needs to be updated before editing so dirtiness can be computed correctly
-// according to the latest data on the server
-let clearOrigUserWatcher = noop;
 
 UserEditDirective.$inject = ['api', 'notify', 'usersService', 'userList', 'session', 'lodash',
     'langmap', '$location', '$route', 'superdesk', 'features', 'asset', 'privileges',
-    'desks', 'keyboardManager', 'gettextCatalog', 'metadata', 'modal', '$q'];
+    'desks', 'keyboardManager', 'gettextCatalog', 'metadata', 'modal'];
 export function UserEditDirective(api, notify, usersService, userList, session, _,
     langmap, $location, $route, superdesk, features, asset, privileges, desks, keyboardManager,
-    gettextCatalog, metadata, modal, $q) {
+    gettextCatalog, metadata, modal) {
     return {
         templateUrl: asset.templateUrl('apps/users/views/edit-form.html'),
         scope: {
@@ -42,40 +36,33 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
             scope.dirty = false;
             scope.errorMessage = null;
 
-            // hiding the edit form until user hasn't loaded
-            // not doing so causes issues when switching users quickly
-            // UserUniqueDirective was computing results based on data of a previously selected user
-            scope.loading = true;
-
             scope.xmppEnabled = appConfig.xmpp_auth;
 
-            resetUser();
+            scope.$watch('origUser', () => {
+                resetUser(scope.origUser);
+            });
+
+            resetUser(scope.origUser);
 
             // user avatar component expects immutable data and won't update if object reference hasn't changed
-            scope.userImmutable = {};
+            scope.userImmutable = scope.user;
 
             scope.isNetworkSubscription = () =>
                 ['solo', 'team'].indexOf(appConfig.subscriptionLevel) === -1;
 
-            let userWatchInitialized = false;
-
             scope.$watchCollection('user', (user) => {
-                if (userWatchInitialized) { // avoid incorrect dirty check when user is undefined and not initialized
-                    scope.userImmutable = {...user};
+                scope.userImmutable = {...user};
 
-                    _.each(user, (value, key) => {
-                        if (value === '') {
-                            if (key !== 'phone' || key !== 'byline') {
-                                user[key] = null;
-                            } else {
-                                delete user[key];
-                            }
+                _.each(user, (value, key) => {
+                    if (value === '') {
+                        if (key !== 'phone' || key !== 'byline') {
+                            user[key] = null;
+                        } else {
+                            delete user[key];
                         }
-                    });
-                    scope.dirty = JSON.stringify(user) !== JSON.stringify(scope.origUser);
-                } else {
-                    userWatchInitialized = true;
-                }
+                    }
+                });
+                scope.dirty = JSON.stringify(user) !== JSON.stringify(scope.origUser);
             });
 
             api('roles').query()
@@ -108,7 +95,7 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
             }
 
             scope.cancel = function() {
-                resetUser();
+                resetUser(scope.origUser);
                 if (!scope.origUser.Id) {
                     scope.oncancel();
                 }
@@ -161,7 +148,7 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
                         return usersService.save(scope.origUser, generate(scope.origUser, scope.user))
                             .then((response) => {
                                 scope.origUser = response;
-                                resetUser();
+                                resetUser(scope.origUser);
                                 notify.pop();
                                 notify.success(gettext('user saved.'));
                                 scope.onsave({user: scope.origUser});
@@ -211,63 +198,41 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
 
             scope.toggleStatus = function(active) {
                 usersService.toggleStatus(scope.origUser, active).then(() => {
-                    resetUser();
+                    resetUser(scope.origUser);
                     scope.onupdate({user: scope.origUser});
                 });
             };
 
-            function resetUser() {
-                clearOrigUserWatcher();
-
+            function resetUser(user) {
                 scope.dirty = false;
-                scope.loading = true;
-
-                const user = scope.origUser;
-
-                return $q.when()
-                    .then(() => {
-                        if (angular.isDefined(user._id)) {
-                            return userList.getUser(user._id, true)
-                                .then((u) => {
-                                    if (u.is_author === undefined) {
-                                        u.user.is_author = true;
-                                    }
-
-                                    scope.error = null;
-                                    scope.origUser = u;
-                                    scope.user = Object.assign({}, u);
-                                    scope.confirm = {password: null};
-                                    scope.show = {password: false};
-                                    scope._active = usersService.isActive(u);
-                                    scope._pending = usersService.isPending(u);
-                                    scope.profile = scope.user._id === session.identity._id;
-                                    scope.userDesks = [];
-                                    if (angular.isDefined(u) && angular.isDefined(u._links)) {
-                                        desks.fetchUserDesks(u).then((response) => {
-                                            scope.userDesks = response;
-                                        });
-                                    }
-                                });
-                        } else {
-                            scope.user = {};
-
-                            return $q.when();
+                if (angular.isDefined(user._id)) {
+                    return userList.getUser(user._id, true).then((u) => {
+                        if (u.is_author === undefined) {
+                            u.user.is_author = true;
                         }
-                    })
-                    .then(() => {
-                        clearOrigUserWatcher = scope.$watch('origUser', (newVal, oldVal) => {
-                            if (newVal !== oldVal) {
-                                resetUser();
-                            }
-                        });
 
-                        scope.loading = false;
+                        scope.error = null;
+                        scope.origUser = u;
+                        scope.user = Object.assign({}, u);
+                        scope.confirm = {password: null};
+                        scope.show = {password: false};
+                        scope._active = usersService.isActive(u);
+                        scope._pending = usersService.isPending(u);
+                        scope.profile = scope.user._id === session.identity._id;
+                        scope.userDesks = [];
+                        if (angular.isDefined(u) && angular.isDefined(u._links)) {
+                            desks.fetchUserDesks(u).then((response) => {
+                                scope.userDesks = response;
+                            });
+                        }
                     });
+                } else {
+                    scope.user = {};
+                }
             }
 
             scope.$on('user:updated', (event, user) => {
-                scope.origUser = user;
-                resetUser();
+                resetUser(user);
             });
 
             scope.profileConfig = applyDefault(appConfig.profile, {});

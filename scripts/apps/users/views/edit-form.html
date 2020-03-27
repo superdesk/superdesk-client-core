@@ -1,4 +1,4 @@
-<form ng-if="!loading" name="userForm" data-test-id="user-details-form">
+<form name="userForm" data-test-id="user-details-form">
     <div>
         <div class="action-bar clearfix" ng-class="{show:dirty}">
             <button id="save-edit-btn" type="submit" class="btn btn--primary pull-right" ng-click="userForm.$valid && save()" ng-disabled="userForm.$invalid || !dirty" translate>Save</button>
