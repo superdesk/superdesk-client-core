@@ -44,15 +44,10 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
 
             resetUser(scope.origUser);
 
-            // user avatar component expects immutable data and won't update if object reference hasn't changed
-            scope.userImmutable = scope.user;
-
             scope.isNetworkSubscription = () =>
                 ['solo', 'team'].indexOf(appConfig.subscriptionLevel) === -1;
 
             scope.$watchCollection('user', (user) => {
-                scope.userImmutable = {...user};
-
                 _.each(user, (value, key) => {
                     if (value === '') {
                         if (key !== 'phone' || key !== 'byline') {
@@ -226,8 +221,6 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
                             });
                         }
                     });
-                } else {
-                    scope.user = {};
                 }
             }
 
