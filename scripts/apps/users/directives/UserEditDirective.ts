@@ -1,8 +1,6 @@
 import {gettext} from 'core/utils';
 import {appConfig} from 'appConfig';
 import {applyDefault} from 'core/helpers/typescript-helpers';
-import {CC} from 'core/ui/configurable-ui-components';
-import {generate} from 'json-merge-patch';
 
 UserEditDirective.$inject = ['api', 'notify', 'usersService', 'userList', 'session', 'lodash',
     'langmap', '$location', '$route', 'superdesk', 'features', 'asset', 'privileges',
@@ -30,16 +28,16 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
             scope.signOffPattern = usersService.signOffPattern;
             scope.hideSignOff = appConfig.user != null && appConfig.user.sign_off_mapping;
 
-            // disallow changing an avatar if custom avatars are configured for the instance
-            scope.canChangeAvatar = CC.UserAvatar == null;
-
             scope.dirty = false;
             scope.errorMessage = null;
 
             scope.xmppEnabled = appConfig.xmpp_auth;
 
             scope.$watch('origUser', () => {
-                resetUser(scope.origUser);
+                scope.user = _.create(scope.origUser);
+                if (scope.user.is_author === undefined) {
+                    scope.user.is_author = true;
+                }
             });
 
             resetUser(scope.origUser);
@@ -57,7 +55,7 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
                         }
                     }
                 });
-                scope.dirty = JSON.stringify(user) !== JSON.stringify(scope.origUser);
+                scope.dirty = !angular.equals(user, scope.origUser);
             });
 
             api('roles').query()
@@ -140,7 +138,7 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
                     .then((reloadPage) => {
                         scope.error = null;
                         notify.info(gettext('Saving...'));
-                        return usersService.save(scope.origUser, generate(scope.origUser, scope.user))
+                        return usersService.save(scope.origUser, scope.user)
                             .then((response) => {
                                 scope.origUser = response;
                                 resetUser(scope.origUser);
@@ -202,13 +200,9 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
                 scope.dirty = false;
                 if (angular.isDefined(user._id)) {
                     return userList.getUser(user._id, true).then((u) => {
-                        if (u.is_author === undefined) {
-                            u.user.is_author = true;
-                        }
-
                         scope.error = null;
                         scope.origUser = u;
-                        scope.user = Object.assign({}, u);
+                        scope.user = _.create(u);
                         scope.confirm = {password: null};
                         scope.show = {password: false};
                         scope._active = usersService.isActive(u);

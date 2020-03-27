@@ -8,31 +8,26 @@
                     <span class="label label--success" ng-show="item.resolutionInfo.accepted" translate>Accepted</span>
                     <span class="label label--alert" ng-show="!item.resolutionInfo.accepted" translate>Rejected</span>
                 </div>
-                <div class="sibling-spacer-10" style="display: flex;">
-                    <sd-user-avatar data-user="users[item.suggestionInfo.author]"></sd-user-avatar>
-                    <div>
-                        <div>{{users[item.suggestionInfo.author].display_name || users[item.suggestionInfo.author].username}}</div>
-                        <div class="date" sd-absdate datetime="item.suggestionInfo.date"></div>
-                        <div ng-show="item.suggestionInfo.type!=='REPLACE_SUGGESTION'">
-                            <div class="text">
-                                <strong>{{getLocalizedTypeText(item.suggestionInfo.type, item.suggestionInfo.blockType)}}:</strong>
-                                <strong><em>"{{item.suggestionText}}"</em></strong>
-                                <strong ng-show="item.suggestionInfo.type=='ADD_LINK_SUGGESTION'"><em>({{item.suggestionInfo.link.href}})</em></strong>
-                            </div>
-                        </div>
-                        <div ng-show="item.suggestionInfo.type==='REPLACE_SUGGESTION'">
-                            <div class="text">
-                                <strong translate>Replace: </strong>
-                                <strong><em>"{{item.oldText}}"</em></strong>
-                                <strong translate>with: </strong>
-                                <strong><em>"{{item.suggestionText}}"</em></strong>
-                            </div>
-                        </div>
+                <figure class="avatar">
+                    <img sd-user-avatar data-user="users[item.suggestionInfo.author]">
+                </figure>
+                <div>{{users[item.suggestionInfo.author].display_name || users[item.suggestionInfo.author].username}}</div>
+                <div class="date" sd-absdate datetime="item.suggestionInfo.date"></div>
+                <div class="content" ng-show="item.suggestionInfo.type!=='REPLACE_SUGGESTION'">
+                    <div class="text">
+                        <strong>{{getLocalizedTypeText(item.suggestionInfo.type, item.suggestionInfo.blockType)}}:</strong>
+                        <strong><em>"{{item.suggestionText}}"</em></strong>
+                        <strong ng-show="item.suggestionInfo.type=='ADD_LINK_SUGGESTION'"><em>({{item.suggestionInfo.link.href}})</em></strong>
                     </div>
                 </div>
-
-                <br />
-                
+                <div class="content" ng-show="item.suggestionInfo.type==='REPLACE_SUGGESTION'">
+                    <div class="text">
+                        <strong translate>Replace: </strong>
+                        <strong><em>"{{item.oldText}}"</em></strong>
+                        <strong translate>with: </strong>
+                        <strong><em>"{{item.suggestionText}}"</em></strong>
+                    </div>
+                </div>
                 <div class="resolution">
                     <span ng-show="item.resolutionInfo.accepted" translate>Accepted by</span>
                     <span ng-show="!item.resolutionInfo.accepted" translate>Rejected by</span>

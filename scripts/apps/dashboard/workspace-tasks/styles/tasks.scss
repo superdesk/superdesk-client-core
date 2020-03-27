@@ -49,6 +49,9 @@ TASK PAGE
         .header {
             min-height: 24px;
         }
+        .avatar {
+            margin-right: 10px;
+        }
         .title {
             padding: 3px 0;
             line-height: 18px;
@@ -260,6 +263,9 @@ TASK PAGE
             @include border-radius(3px);
             margin-bottom: 10px;
             @include clearfix();
+            .avatar {
+                margin-right: 10px;
+            }
             .assignee-name {
                 margin: 0;
                 line-height: 30px;

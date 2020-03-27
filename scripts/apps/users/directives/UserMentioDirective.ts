@@ -1,7 +1,7 @@
 import _ from 'lodash';
 
-UserMentionDirective.$inject = ['userList', 'desks', 'asset', '$q'];
-export function UserMentionDirective(userList, desks, asset, $q) {
+UserMentioDirective.$inject = ['userList', 'desks', 'asset', '$q'];
+export function UserMentioDirective(userList, desks, asset, $q) {
     return {
         templateUrl: asset.templateUrl('apps/users/views/mentions.html'),
         link: function(scope, elem) {

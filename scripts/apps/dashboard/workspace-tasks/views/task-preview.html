@@ -41,9 +41,9 @@
         </div>
 
         <div class="assignee-container" ng-if="!editmode">
-            <div style="float: left; margin-right: 10px;">
-                <sd-user-avatar data-user="users[task_details.user]"></sd-user-avatar>
-            </div>
+            <figure ng-if="!editmode" class="avatar">
+                <img sd-user-avatar data-user="users[task_details.user]">
+            </figure>
             <div class="assignee-name">
                 <span ng-show="task_details.desk">{{desks[task_details.desk].name}} / </span>
                 <span ng-show="task_details.user">{{users[task_details.user].display_name}}</span>

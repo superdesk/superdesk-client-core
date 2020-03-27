@@ -1,7 +1,5 @@
 <div>
-    <div style="float: left;">
-        <sd-user-avatar data-user="user"></sd-user-avatar>
-    </div>
+    <figure class="avatar {{avatarSize}}"><img sd-user-avatar data-user="user"></figure>
     <div class="assignee-name" ng-if="name">
         <span ng-show="task.desk">{{deskName}} / </span>
         <span ng-show="task.user">{{userName}}</span>

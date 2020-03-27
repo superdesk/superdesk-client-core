@@ -679,6 +679,14 @@ $editor-styleButton-size: 3rem;
 	}
 
 	.entry {
+		.avatar.initials {
+			width: 21px;
+			height: 21px;
+			margin: 0 5px 0 0;
+			line-height: 21px;
+			font-size: 10px;
+		}
+
 		.icon-tasks {
 			margin: 0 5px 0 2px;
 			position: relative;

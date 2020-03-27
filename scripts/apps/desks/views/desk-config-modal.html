@@ -402,11 +402,8 @@
                     <div class="members-list">
                         <ul class="pills-list">
                             <li ng-repeat="user in deskMembers| orderBy: 'display_name' track by user._id" ng-class="{'inactive' : !user.is_enabled || !user.is_active}">
-                                <span class="flex-row sibling-spacer-10">
-                                    <sd-user-avatar data-user="user"></sd-user-avatar>
-                                    <h5>{{:: user.display_name}}</h5> <span class="user-email">{{:: user.email}}</span>
-                                </span>
-                                
+                                <figure class="avatar"><img sd-user-avatar data-user="user"></figure>
+                                <h5>{{:: user.display_name}}</h5> <span class="user-email">{{:: user.email}}</span>
                                 <div class="actions">
                                     <button ng-click="remove(user)"><i class="icon-close-small"></i></button>
                                 </div>

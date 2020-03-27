@@ -4,7 +4,7 @@
         <li ng-repeat="item in items"
             ng-class="{selected: item === selected.preview}"
             ng-click="preview(item)">
-            <div sd-assignee-view data-task="item.task"></div>
+            <div sd-assignee-view data-task="item.task" data-avatar-size="small"></div>
             <div class="title">{{ item.slugline || item.headline }}</div>
             <div class="info">
                 <ul class="task-labels clearfix">

@@ -98,13 +98,12 @@ export class AuthoringTopbarReact extends React.PureComponent<IProps, IState> {
             <div style={{paddingLeft: 10}}>
                 {articleDisplayWidgets.map(
                     (Component, i) =>
-                        <span key={i} style={{marginRight: 10}}>
-                            <Component
-                                article={
-                                    this.props.action === 'view' ? this.state.articleOriginal : articleUpdatedReference
-                                }
-                            />
-                        </span>,
+                        <Component
+                            key={i}
+                            article={
+                                this.props.action === 'view' ? this.state.articleOriginal : articleUpdatedReference
+                            }
+                        />,
                 )}
             </div>
         );
