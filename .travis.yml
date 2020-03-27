@@ -1,17 +1,31 @@
 language: node_js
-node_js: "10"
+
+node_js: "lts/*"
+
+dist: bionic
+
+services:
+    - docker
 
 addons:
-  apt:
-    packages:
-        - google-chrome-stable
+    chrome: stable
 
-cache:
-    directories:
-        - $HOME/.cache/yarn
+cache: yarn
 
-script:
-    - git checkout -b travis-save-branch
-    - git fetch origin develop:develop
-    - npm run test
-    - npm run build
+before_script:
+    - |
+      if [ "$SKIP_SERVER_INSTALL" != "true" ]; then
+        npm run webdriver-manager
+        npm run start-test-server
+      fi
+
+jobs:
+    include:
+        - script: npm run test
+          name: "unit"
+          env: SKIP_SERVER_INSTALL=true
+        - script: npm run build && npm run start-client-server && npm run protractor -- --suite=a
+          name: "e2e vol. 1"
+        - script: npm run build && npm run start-client-server && npm run protractor -- --suite=b
+          name: "e2e vol. 2"
+
