@@ -65,28 +65,6 @@ describe('users', () => {
             nav('/users');
         });
 
-        it('can create a new user', () => {
-            el(['create-user-button']).click();
-
-            el(['user-details-form', 'field--first_name']).sendKeys('John');
-            el(['user-details-form', 'field--last_name']).sendKeys('Doe');
-            el(['user-details-form', 'field--username']).sendKeys('johndoe');
-            el(['user-details-form', 'field--email']).sendKeys('johndoe@example.com');
-
-            el(['user-details-form', 'save']).click();
-
-            browser.wait(
-                ECE.textToBePresentInElement(
-                    el(
-                        ['username'],
-                        null,
-                        els(['users-list-item']).get(0),
-                    ),
-                    'johndoe',
-                ),
-            );
-        });
-
         it('can list users', () => {
             expect(
                 element.all(by.css('[data-test-id="users-list-item"]'))
