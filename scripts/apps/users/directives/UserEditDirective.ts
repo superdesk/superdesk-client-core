@@ -10,6 +10,10 @@ import {noop} from 'lodash';
 // according to the latest data on the server
 let clearOrigUserWatcher = noop;
 
+// only initialize after selecting a user for editing/creation
+// having it running when switcing between users can cause fields to be modified or produce an incorrect dirtiness value
+let clearUserWatcher = noop;
+
 UserEditDirective.$inject = ['api', 'notify', 'usersService', 'userList', 'session', 'lodash',
     'langmap', '$location', '$route', 'superdesk', 'features', 'asset', 'privileges',
     'desks', 'keyboardManager', 'gettextCatalog', 'metadata', 'modal', '$q'];
@@ -56,27 +60,6 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
 
             scope.isNetworkSubscription = () =>
                 ['solo', 'team'].indexOf(appConfig.subscriptionLevel) === -1;
-
-            let userWatchInitialized = false;
-
-            scope.$watchCollection('user', (user) => {
-                if (userWatchInitialized) { // avoid incorrect dirty check when user is undefined and not initialized
-                    scope.userImmutable = {...user};
-
-                    _.each(user, (value, key) => {
-                        if (value === '') {
-                            if (key !== 'phone' || key !== 'byline') {
-                                user[key] = null;
-                            } else {
-                                delete user[key];
-                            }
-                        }
-                    });
-                    scope.dirty = JSON.stringify(user) !== JSON.stringify(scope.origUser);
-                } else {
-                    userWatchInitialized = true;
-                }
-            });
 
             api('roles').query()
                 .then((result) => {
@@ -218,14 +201,15 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
 
             function resetUser() {
                 clearOrigUserWatcher();
+                clearUserWatcher();
 
                 scope.dirty = false;
                 scope.loading = true;
 
-                const user = scope.origUser;
-
                 return $q.when()
                     .then(() => {
+                        const user = scope.origUser;
+
                         if (angular.isDefined(user._id)) {
                             return userList.getUser(user._id, true)
                                 .then((u) => {
@@ -258,6 +242,28 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
                         clearOrigUserWatcher = scope.$watch('origUser', (newVal, oldVal) => {
                             if (newVal !== oldVal) {
                                 resetUser();
+                            }
+                        });
+
+                        let userWatchInitialized = false;
+
+                        clearUserWatcher = scope.$watchCollection('user', (user) => {
+                            // avoid incorrect dirty check when user is undefined and not initialized
+                            if (userWatchInitialized) {
+                                scope.userImmutable = {...user};
+
+                                _.each(user, (value, key) => {
+                                    if (scope.origUser[key] !== '' && value === '') {
+                                        if (key !== 'phone' || key !== 'byline') {
+                                            user[key] = null;
+                                        } else {
+                                            delete user[key];
+                                        }
+                                    }
+                                });
+                                scope.dirty = JSON.stringify(user) !== JSON.stringify(scope.origUser);
+                            } else {
+                                userWatchInitialized = true;
                             }
                         });
 
