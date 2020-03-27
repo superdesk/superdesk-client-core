@@ -4,9 +4,14 @@
     ng-class="{selected: user._id === selected._id, 'inactive' : !user.is_enabled || !user.is_active}"
     data-test-id="users-list-item"
 >
-    <div style="height: auto">
-        <sd-user-avatar data-user="user" data-display-status="true" display-administrator-indicator="true"></sd-user-avatar>
-    </div>
+    <figure class="avatar avatar-with-info">
+        <div ng-class="{'status-indicator--offline': !isLoggedIn(user), 'status-indicator--online': isLoggedIn(user)}"></div>
+        <div class="user-image">
+            <img sd-user-avatar data-user="user">
+        </div>
+    </figure>
+
+    <i class="admin-label icon-settings" ng-if="user.user_type == 'administrator'" tooltip="{{ :: 'admin'|translate}}" tooltip-placement="top"></i>
 
     <div class="row-wrapper" sd-col-width>
         <div class="name">

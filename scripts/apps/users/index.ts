@@ -15,7 +15,6 @@ import * as svc from './services';
 import * as directive from './directives';
 import * as config from './config';
 import {gettext} from 'core/utils';
-import {UserMentionDirective} from './directives/UserMentionDirective';
 
 /**
  * @ngdoc module
@@ -51,7 +50,7 @@ export default angular.module('superdesk.apps.users', [
     .directive('sdUserList', directive.UserListDirective)
     .directive('sdUserListItem', directive.UserListItemDirective)
     .directive('sdActivity', directive.ActivityDirective)
-    .directive('sdUserMention', UserMentionDirective)
+    .directive('sdUserMentio', directive.UserMentioDirective)
     .directive('sdUserInfo', directive.UserInfoDirective)
 
     .filter('username', () => (user) => user ?

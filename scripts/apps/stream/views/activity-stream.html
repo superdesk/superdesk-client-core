@@ -2,27 +2,27 @@
     <ul class="activity-list card-list">
         <li class="activity" ng-class="{'with-date': showDateHeader(activity)}" ng-repeat="activity in activities._items track by activity._id">
             <div class="date" ng-show="showDateHeader(activity)"><span sd-datetime data-date="activity._created"></span></div>
-            <div style="display: flex;" class="sibling-spacer-10">
-                <sd-user-avatar data-user="activity.user"></sd-user-avatar>
-                <div>
-                    <span ng-if="activity.name != 'user:mention' && activity.name != 'desk:mention'">
-                        <div class="activity-content">
-                            <p><b>{{ :: activity.user_name || 'System' }}</b> <span sd-activity-message data-activity="activity"></span></p>
-                        </div>
-                        <div class="activity-date"><time sd-datetime data-date="activity._created"></time></div>
-                    </span>
-                    <span ng-if="activity.name == 'user:mention' || activity.name == 'desk:mention'">
-                        <div class="activity-content">
-                            <p><b>{{ :: activity.user_name || 'System' }}</b>
-                                <span>{{activity.name == 'user:mention'? 'mentioned you' : 'commented on' | translate}}</span>
-                                <i>
-                                    <a ng-click="openArticle(activity)"
-                                    title="{{ :: activity.item_slugline }}">{{ :: activity.item_slugline }}</a>
-                                </i>:<br>{{ :: activity.data.comment }}</p>
-                        </div>
-                        <div class="activity-date"><time sd-datetime date-date="activity._created"></time></div>
-                    </span>
-                </div>
+            <div>
+                <figure class="avatar">
+                    <img sd-user-avatar data-user="activity.user">
+                </figure>
+                <span ng-if="activity.name != 'user:mention' && activity.name != 'desk:mention'">
+                       <div class="activity-content">
+                        <p><b>{{ :: activity.user_name || 'System' }}</b> <span sd-activity-message data-activity="activity"></span></p>
+                    </div>
+                    <div class="activity-date"><time sd-datetime data-date="activity._created"></time></div>
+                </span>
+                <span ng-if="activity.name == 'user:mention' || activity.name == 'desk:mention'">
+                    <div class="activity-content">
+                        <p><b>{{ :: activity.user_name || 'System' }}</b>
+                            <span>{{activity.name == 'user:mention'? 'mentioned you' : 'commented on' | translate}}</span>
+                            <i>
+                                <a ng-click="openArticle(activity)"
+                                   title="{{ :: activity.item_slugline }}">{{ :: activity.item_slugline }}</a>
+                            </i>:<br>{{ :: activity.data.comment }}</p>
+                    </div>
+                    <div class="activity-date"><time sd-datetime date-date="activity._created"></time></div>
+                </span>
             </div>
         </li>
     </ul>

@@ -68,19 +68,9 @@ export class Comment extends React.Component<any, any> {
             <FluidRows onClick={this.props.onClick} className={isReply ? 'comment-box__reply-item' : null}>
                 <FluidRow scrollable={false}>
                     <EditorHighlightsHeader availableActions={availableActions}>
-                        <div className="flex-row sibling-spacer-10">
-                            <UserAvatarFromUserId userId={authorId} />
-                            <div>
-                                <p className="editor-popup__author-name">{author}</p>
-                                <time
-                                    className="editor-popup__time"
-                                    title={relativeDateString}
-                                    style={{display: 'block'}}
-                                >
-                                    {absoluteDateString}
-                                </time>
-                            </div>
-                        </div>
+                        <UserAvatarFromUserId userId={authorId} />
+                        <p className="editor-popup__author-name">{author}</p>
+                        <time className="editor-popup__time" title={relativeDateString}>{absoluteDateString}</time>
                     </EditorHighlightsHeader>
 
                     {
