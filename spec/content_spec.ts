@@ -184,7 +184,7 @@ describe('content', () => {
         storyNameEl.sendKeys('package1');
 
         element(by.id('searchItemByNameBtn')).click();
-        browser.sleep(500);
+        browser.sleep(1000);
 
         expect(content.getItemType('composite').isDisplayed()).toBe(true);
         expect(content.getWidgets().count()).toBeGreaterThanOrEqual(5);
