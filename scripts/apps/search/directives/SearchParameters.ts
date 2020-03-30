@@ -262,7 +262,7 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                 metadata
                     .initialize()
                     .then(() => {
-                        scope.keywords = metadata.values.keywords;
+                        scope.keywords = metadata.cvs.find((cv) => cv._id === 'keywords');
                         return metadata.fetchSubjectcodes();
                     })
                     .then(() => {
