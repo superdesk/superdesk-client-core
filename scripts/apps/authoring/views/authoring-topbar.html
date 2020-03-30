@@ -13,11 +13,10 @@
     ></sd-authoring-topbar-react>
 
     <div ng-show="isLocked()" class="locked-info">
-      <figure class="avatar small">
-          <div class="user-image">
-              <img sd-user-avatar data-user="item.lock_user">
-          </div>
-      </figure>
+
+      <div class="locked-info__avatar">
+        <sd-user-avatar data-user="item.lock_user"></sd-user-avatar>
+      </div>
       <span class="locked-info__label" translate>Locked by</span>
       <span class="locked-info__name">{{ item.lock_user | username }}</span>
       <button

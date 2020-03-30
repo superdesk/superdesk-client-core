@@ -2,9 +2,7 @@
     <ul class="widget-content__main boxed-list sd-padding-all--1">
         <li ng-repeat="comment in comments" class="boxed-list__item" ng-class="{'boxed-list__item--selcted': comment._id === active}">
             <div class="boxed-list__item-media">
-                <figure class="avatar sd-margin-all--0">
-                    <img sd-user-avatar data-user="comment.user">
-                </figure>
+                <sd-user-avatar data-user="comment.user"></sd-user-avatar>
             </div>
             <div class="boxed-list__item-content">
                 <div class="boxed-list__item-content-row boxed-list__item-content-row--fixed">
@@ -33,7 +31,7 @@
     </ul>
     <div class="widget-content__footer add-comment">
         <form name="commentsForm">
-            <div sd-user-mentio></div>
+            <div sd-user-mention></div>
             <textarea class="new-comment" sd-auto-height ng-model="text" mentio id="mentio-users" ng-keyup="saveOnEnter($event)"></textarea>
             <div class="actions">
                 <div class="pull-left post"><input type="checkbox" ng-model="saveEnterFlag"> <span translate>Post on 'Enter'</span></div>
