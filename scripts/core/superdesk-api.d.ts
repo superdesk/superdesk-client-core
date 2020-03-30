@@ -724,7 +724,7 @@ declare module 'superdesk-api' {
     // REACT COMPONENTS
 
     export interface IConfigurableUiComponents {
-        UserAvatar?: React.ComponentType<{user: IUser}>;
+        UserAvatar?: React.ComponentType<{user: Partial<IUser>}>;
     }
 
     export interface IListItemProps {
