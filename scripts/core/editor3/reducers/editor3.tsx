@@ -1,4 +1,4 @@
-import {RichUtils, EditorState, ContentState} from 'draft-js';
+import {RichUtils, EditorState, ContentState, Modifier} from 'draft-js';
 import {setTansaHtml} from '../helpers/tansa';
 import {addMedia} from './toolbar';
 import {getCustomDecorator, IEditorStore} from '../store';
@@ -271,7 +271,25 @@ function escapeRegExp(string) {
  */
 const onTab = (state, e) => {
     const {editorState} = state;
-    const newState = RichUtils.onTab(e, editorState, 4);
+    const selection = editorState.getSelection();
+    const blockType = editorState
+        .getCurrentContent()
+        .getBlockForKey(selection.getStartKey())
+        .getType();
+    let newState = editorState;
+
+    if ([
+        'unordered-list-item',
+        'ordered-list-item',
+    ].includes(blockType)) { // let draft-js handle the Tab event
+        newState = RichUtils.onTab(e, editorState, 4);
+    } else if (!e.shiftKey) {
+        const tabCharacter = '\t';
+        const newContent = Modifier.replaceText(editorState.getCurrentContent(), selection, tabCharacter);
+
+        newState = EditorState.push(editorState, newContent, 'insert-characters');
+    }
+
 
     return onChange(state, newState);
 };
