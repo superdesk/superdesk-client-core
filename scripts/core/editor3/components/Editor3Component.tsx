@@ -506,7 +506,6 @@ export class Editor3Component extends React.Component<IProps, IState> {
             showToolbar,
             editorState,
             onChange,
-            onTab,
             tabindex,
             scrollContainer,
             cleanPastedHtml,
