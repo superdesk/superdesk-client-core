@@ -333,7 +333,8 @@ describe('editor3.reducers', () => {
         expect(nextState.editorState.getCurrentContent().getPlainText()).toBe(nextContentState.getPlainText());
     });
 
-    it('EDITOR_TAB insert tab character', () => {
+    // eslint-disable-next-line jasmine/no-focused-tests
+    fit('EDITOR_TAB insert tab character', () => {
         const contentState = ContentState.createFromText('foo');
         let editorState = EditorState.createWithContent(contentState);
 
@@ -348,5 +349,22 @@ describe('editor3.reducers', () => {
         });
 
         expect(nextState.editorState.getCurrentContent().getPlainText()).toBe('foo	');
+    });
+
+    it('EDITOR_TAB shift should not insert tab', () => {
+        const contentState = ContentState.createFromText('foo');
+        let editorState = EditorState.createWithContent(contentState);
+
+        editorState = EditorState.moveFocusToEnd(editorState);
+
+        const nextState = reducer({
+            editorState: editorState,
+            onChangeValue: jasmine.createSpy('onChangeValue'),
+        }, {
+            type: 'EDITOR_TAB',
+            payload: {shiftKey: true},
+        });
+
+        expect(nextState.editorState.getCurrentContent().getPlainText()).toBe('foo');
     });
 });
