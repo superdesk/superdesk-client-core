@@ -290,7 +290,6 @@ const onTab = (state, e) => {
         newState = EditorState.push(editorState, newContent, 'insert-characters');
     }
 
-
     return onChange(state, newState);
 };
 

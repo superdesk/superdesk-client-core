@@ -132,7 +132,7 @@ interface IProps {
     onCreateChangeStyleSuggestion?(style, active): void;
     onChange?(editorState: EditorState): void;
     unlock?(): void;
-    onTab?(): void;
+    onTab?(event): void;
     dragDrop?(): void;
     dispatch?(action: any): void;
 }
@@ -270,7 +270,8 @@ export class Editor3Component extends React.Component<IProps, IState> {
         }
 
         if (key === 'Tab') {
-            return this.props.onTab(e);
+            this.props.onTab(e);
+            return '';
         }
 
         // ctrl + X
