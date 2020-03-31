@@ -8,10 +8,10 @@ import {DESK_OUTPUT} from 'apps/desks/constants';
 import {appConfig} from 'appConfig';
 import {IMonitoringFilter, IRestApiResponse, IArticle} from 'superdesk-api';
 
-const translatedFields = GET_LABEL_MAP();
-
 function translateCustomSorts(customSorts: GroupSortOptions) {
     const translated = {};
+
+    const translatedFields = GET_LABEL_MAP();
 
     for (let field of customSorts) {
         translated[field] = {label: translatedFields[field]};
