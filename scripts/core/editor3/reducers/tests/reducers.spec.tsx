@@ -1,4 +1,4 @@
-import {EditorState, ContentState, SelectionState} from 'draft-js';
+import {EditorState, ContentState, SelectionState, RichUtils} from 'draft-js';
 import reducer from '..';
 import {applyLink} from '../../actions/toolbar';
 
@@ -15,6 +15,13 @@ function withSearchTerm(txt, searchTerm) {
     };
 
     return {editorState, searchTerm, onChangeValue};
+}
+
+function fakeTabEvent({shift = false} = {}) {
+    return new KeyboardEvent('keydown', {
+        key: 'Tab',
+        shiftKey: shift,
+    });
 }
 
 describe('editor3.reducers', () => {
@@ -333,8 +340,7 @@ describe('editor3.reducers', () => {
         expect(nextState.editorState.getCurrentContent().getPlainText()).toBe(nextContentState.getPlainText());
     });
 
-    // eslint-disable-next-line jasmine/no-focused-tests
-    fit('EDITOR_TAB insert tab character', () => {
+    it('EDITOR_TAB insert tab character', () => {
         const contentState = ContentState.createFromText('foo');
         let editorState = EditorState.createWithContent(contentState);
 
@@ -345,7 +351,7 @@ describe('editor3.reducers', () => {
             onChangeValue: jasmine.createSpy('onChangeValue'),
         }, {
             type: 'EDITOR_TAB',
-            payload: {shiftKey: false},
+            payload: fakeTabEvent({shift: false}),
         });
 
         expect(nextState.editorState.getCurrentContent().getPlainText()).toBe('foo	');
@@ -362,9 +368,42 @@ describe('editor3.reducers', () => {
             onChangeValue: jasmine.createSpy('onChangeValue'),
         }, {
             type: 'EDITOR_TAB',
-            payload: {shiftKey: true},
+            payload: fakeTabEvent({shift: true}),
         });
 
         expect(nextState.editorState.getCurrentContent().getPlainText()).toBe('foo');
+    });
+
+    it('EDITOR_TAB on lists moves indentation', () => {
+        const contentState = ContentState.createFromText('list item');
+        let editorState = EditorState.createWithContent(contentState);
+
+        editorState = RichUtils.toggleBlockType(editorState, 'ordered-list-item');
+
+        // indent right
+        let nextState = reducer({
+            editorState,
+            onChangeValue: jasmine.createSpy('onChangeValue'),
+        }, {
+            type: 'EDITOR_TAB',
+            payload: fakeTabEvent(),
+        });
+
+        editorState = nextState.editorState as EditorState;
+
+        expect(editorState.getCurrentContent().getFirstBlock().getDepth()).toBe(1);
+
+        // indent left
+        nextState = reducer({
+            editorState,
+            onChangeValue: jasmine.createSpy('onChangeValue'),
+        }, {
+            type: 'EDITOR_TAB',
+            payload: fakeTabEvent({shift: true}),
+        });
+
+        editorState = nextState.editorState as EditorState;
+
+        expect(editorState.getCurrentContent().getFirstBlock().getDepth()).toBe(0);
     });
 });
