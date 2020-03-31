@@ -5,8 +5,6 @@ import {isMediaEditable} from 'core/config';
 import {appConfig} from 'appConfig';
 import {dataApi} from 'core/helpers/CrudManager';
 import {IArticle, IContentProfileEditorConfig, IArticleField} from 'superdesk-api';
-import {showModal} from 'core/services/modalService';
-import {fileUploadErrorModal} from 'apps/archive/controllers/file-upload-error-modal';
 
 /**
  * @ngdoc service
@@ -343,57 +341,24 @@ export function ContentService(api, templates, desks, packages, archiveService, 
         self._fieldsPromise = null;
     }
 
-    function validateArticle(item: IArticle) {
-        if (appConfig.pictures && item.type === 'picture') {
-            return new Promise((resolve) => {
-                let img = document.createElement('img');
-
-                img.src = item.renditions.original.href;
-                img.onload = () => {
-                    if (appConfig.pictures.minWidth > img.width
-                            || appConfig.pictures.minHeight > img.height) {
-                        return resolve({
-                            valid: false,
-                            name: item.headline,
-                            width: img.width,
-                            height: img.height,
-                            type: 'image',
-                        });
-                    }
-                    return resolve({valid: true});
-                };
-            });
-        } else {
-            return $q.when({valid: true});
-        }
-    }
-
     /**
      * Handle drop event transfer data and convert it to an item
      */
     this.dropItem = (item: IArticle, {fetchExternal} = {fetchExternal: true}) => {
-        return validateArticle(item)
-            .then((res: any) => {
-                if (!res.valid) {
-                    showModal(fileUploadErrorModal([res]));
-                    return $q.reject();
-                }
+        if (item._type !== 'externalsource') {
+            if (item._type === 'ingest') {
+                return send.validate(item);
+            }
 
-                if (item._type !== 'externalsource') {
-                    if (item._type === 'ingest') {
-                        return send.one(item);
-                    }
+            if (item.archive_item != null) {
+                return $q.when(item.archive_item);
+            }
 
-                    if (item.archive_item != null) {
-                        return $q.when(item.archive_item);
-                    }
-
-                    return api.find(item._type, item._id);
-                } else if (isMediaEditable(item) && fetchExternal) {
-                    return renditions.ingest(item);
-                }
-                return $q.when(item);
-            });
+            return api.find(item._type, item._id);
+        } else if (isMediaEditable(item) && fetchExternal) {
+            return renditions.ingest(item);
+        }
+        return $q.when(item);
     };
 
     /**
