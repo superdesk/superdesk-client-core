@@ -20,5 +20,6 @@ if (appConfig.ui == null) {
 }
 
 export const dashboardRoute = '/workspace';
+export const IDENTITY_KEY = 'sess:user';
 
 export const extensions: IExtensions = {};

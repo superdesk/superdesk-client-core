@@ -1244,6 +1244,7 @@ declare module 'superdesk-api' {
             minWidth?: number;
             minHeight?: number;
         }
+        langOverride: {[langCode: string]: {[originalString: string]: string}};
     }
 
 

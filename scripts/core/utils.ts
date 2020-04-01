@@ -33,6 +33,9 @@ export const getSuperdeskType = (event, supportExternalFiles = true) =>
         name.includes('application/superdesk') || supportExternalFiles && name === 'Files',
     );
 
+// {fr_CA: {"Add Field": "Ajouter un champ"}}
+export const allTranslations = {};
+
 /**
  * @ngdoc method
  * @name gettext
