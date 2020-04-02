@@ -1,4 +1,5 @@
 import gettextjs from 'gettext.js';
+import {debugInfo} from 'appConfig';
 
 export const i18n = gettextjs();
 
@@ -49,6 +50,10 @@ export const gettext = (
         return '';
     }
 
+    if (debugInfo.translationsLoaded !== true) {
+        console.error(`Invalid translation attempt for string "${text}": translation strings haven't been loaded yet.`);
+    }
+
     let translated = i18n.gettext(text);
 
     Object.keys(params).forEach((param) => {
@@ -76,6 +81,10 @@ export const gettextPlural = (
 ) => {
     if (!text) {
         return '';
+    }
+
+    if (debugInfo.translationsLoaded !== true) {
+        console.error(`Invalid translation attempt for string "${text}": translation strings haven't been loaded yet.`);
     }
 
     let translated = i18n.ngettext(text, pluralText, count);

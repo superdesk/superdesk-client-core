@@ -33,4 +33,8 @@ export function getUserInterfaceLanguage() {
     }
 }
 
+export const debugInfo = {
+    translationsLoaded: false,
+};
+
 export const extensions: IExtensions = {};
