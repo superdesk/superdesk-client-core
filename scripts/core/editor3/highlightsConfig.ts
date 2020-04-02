@@ -139,19 +139,6 @@ export function getHighlightsConfig() {
     };
 }
 
-export const blockStylesDescription = {
-    'header-one': 'H1',
-    'header-two': 'H2',
-    'header-three': 'H3',
-    'header-four': 'H4',
-    'header-five': 'H5',
-    'header-six': 'H6',
-    blockquote: gettext('quote'),
-    'unordered-list-item': gettext('unordered list'),
-    'ordered-list-item': gettext('ordered list'),
-    'code-block': gettext('preformatted'),
-};
-
 export const DELETE_SUGGESTION = 'DELETE_SUGGESTION';
 export const ADD_SUGGESTION = 'ADD_SUGGESTION';
 export const changeSuggestionsTypes = [DELETE_SUGGESTION, ADD_SUGGESTION];

@@ -5,8 +5,9 @@ import {getDraftCharacterListForSelection} from './getDraftCharacterListForSelec
 import {getDraftSelectionForEntireContent} from './getDraftSelectionForEntireContent';
 import {resizeDraftSelection} from './resizeDraftSelection';
 import {clearInlineStyles} from './clearInlineStyles';
-import {changeSuggestionsTypes, blockStylesDescription, paragraphSuggestionTypes} from '../highlightsConfig';
+import {changeSuggestionsTypes, paragraphSuggestionTypes} from '../highlightsConfig';
 import {has} from 'lodash';
+import {gettext} from 'core/utils';
 
 export const paragraphSeparator = '¶';
 
@@ -54,6 +55,19 @@ export function getHighlightDescription(suggestionsType) {
 }
 
 export function getBlockStylesDescription(blockStyle) {
+    const blockStylesDescription = {
+        'header-one': 'H1',
+        'header-two': 'H2',
+        'header-three': 'H3',
+        'header-four': 'H4',
+        'header-five': 'H5',
+        'header-six': 'H6',
+        blockquote: gettext('quote'),
+        'unordered-list-item': gettext('unordered list'),
+        'ordered-list-item': gettext('ordered list'),
+        'code-block': gettext('preformatted'),
+    };
+
     if (blockStyle == null || !(blockStyle in blockStylesDescription)) {
         return '';
     }
