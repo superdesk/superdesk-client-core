@@ -278,7 +278,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.jsx:162
 #: scripts/apps/content-filters/views/production-test-view.html:23
 #: scripts/apps/search/services/SearchService.ts:84
-#: scripts/apps/workspace/content/constants.ts:62
+#: scripts/apps/workspace/content/constants.ts:65
 msgid "ANPA Category"
 msgstr ""
 
@@ -313,7 +313,7 @@ msgstr ""
 
 #: scripts/apps/authoring/views/theme-select.html:45
 #: scripts/apps/authoring/views/theme-select.html:96
-#: scripts/apps/workspace/content/constants.ts:60
+#: scripts/apps/workspace/content/constants.ts:63
 #: scripts/apps/workspace/content/views/schema-editor.html:111
 msgid "Abstract"
 msgstr ""
@@ -803,7 +803,7 @@ msgstr ""
 msgid "Alt Text"
 msgstr ""
 
-#: scripts/apps/workspace/content/constants.ts:61
+#: scripts/apps/workspace/content/constants.ts:64
 msgid "Alt text"
 msgstr ""
 
@@ -889,7 +889,7 @@ msgstr ""
 msgid "Archive"
 msgstr ""
 
-#: scripts/apps/workspace/content/constants.ts:64
+#: scripts/apps/workspace/content/constants.ts:67
 msgid "Archive description"
 msgstr ""
 
@@ -1196,7 +1196,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/EventPreview.jsx:114
 #: scripts/apps/authoring/attachments/attachments.ts:146
 #: scripts/apps/authoring/views/article-edit.html:761
-#: scripts/apps/workspace/content/constants.ts:65
+#: scripts/apps/workspace/content/constants.ts:68
 msgid "Attachments"
 msgstr ""
 
@@ -1322,12 +1322,12 @@ msgstr ""
 msgid "Body"
 msgstr ""
 
-#: scripts/apps/workspace/content/constants.ts:67
+#: scripts/apps/workspace/content/constants.ts:70
 #: scripts/core/lang/missing-translations-strings.ts:31
 msgid "Body HTML"
 msgstr ""
 
-#: scripts/apps/workspace/content/constants.ts:66
+#: scripts/apps/workspace/content/constants.ts:69
 msgid "Body footer"
 msgstr ""
 
@@ -1377,7 +1377,7 @@ msgstr ""
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:155
 #: scripts/apps/search/views/search-parameters.html:39
 #: scripts/apps/users/views/edit-form.html:217
-#: scripts/apps/workspace/content/constants.ts:68
+#: scripts/apps/workspace/content/constants.ts:71
 msgid "Byline"
 msgstr ""
 
@@ -1641,7 +1641,7 @@ msgstr ""
 msgid "Case Sensitive"
 msgstr ""
 
-#: scripts/apps/workspace/content/constants.ts:69
+#: scripts/apps/workspace/content/constants.ts:72
 msgid "Categories"
 msgstr ""
 
@@ -1866,7 +1866,7 @@ msgstr ""
 msgid "Comments"
 msgstr ""
 
-#: scripts/apps/workspace/content/constants.ts:70
+#: scripts/apps/workspace/content/constants.ts:73
 msgid "Company Codes"
 msgstr ""
 
@@ -2100,7 +2100,7 @@ msgstr ""
 msgid "Content locked"
 msgstr ""
 
-#: scripts/apps/monitoring/controllers/AggregateCtrl.ts:11
+#: scripts/apps/monitoring/controllers/AggregateCtrl.ts:12
 msgid "Content profile"
 msgstr ""
 
@@ -2160,7 +2160,7 @@ msgstr ""
 
 #: scripts/apps/archive/views/metadata-associateditem-view.html:32
 #: scripts/apps/archive/views/metadata-view.html:172
-#: scripts/apps/workspace/content/constants.ts:71
+#: scripts/apps/workspace/content/constants.ts:74
 msgid "Copyright holder"
 msgstr ""
 
@@ -2177,7 +2177,7 @@ msgstr ""
 #: scripts/apps/archive/views/metadata-associateditem-view.html:36
 #: scripts/apps/archive/views/metadata-view.html:176
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:68
-#: scripts/apps/workspace/content/constants.ts:72
+#: scripts/apps/workspace/content/constants.ts:75
 msgid "Copyright notice"
 msgstr ""
 
@@ -2669,7 +2669,7 @@ msgstr ""
 #: scripts/apps/archive/views/metadata-view.html:69
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:151
 #: scripts/apps/users/views/user-preferences.html:54
-#: scripts/apps/workspace/content/constants.ts:73
+#: scripts/apps/workspace/content/constants.ts:76
 msgid "Dateline"
 msgstr ""
 
@@ -2828,7 +2828,7 @@ msgstr ""
 #: scripts/apps/search/views/save-search-dialog.html:10
 #: scripts/apps/search/views/search-parameters.html:200
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:65
-#: scripts/apps/workspace/content/constants.ts:74
+#: scripts/apps/workspace/content/constants.ts:77
 #: scripts/apps/workspace/content/views/profile-settings.html:103
 #: scripts/apps/workspace/content/views/profile-settings.html:73
 #: scripts/core/editor2/views/block-embed.html:30
@@ -2849,7 +2849,7 @@ msgstr ""
 #: scripts/apps/internal-destinations/InternalDestinations.tsx:32
 #: scripts/apps/templates/views/create-template.html:29
 #: scripts/apps/templates/views/template-editor-modal.html:71
-#: scripts/apps/workspace/content/constants.ts:75
+#: scripts/apps/workspace/content/constants.ts:78
 msgid "Desk"
 msgstr ""
 
@@ -2862,7 +2862,7 @@ msgid "Desk Management"
 msgstr ""
 
 #: scripts/apps/monitoring/directives/AggregateSettings.ts:56
-#: scripts/apps/workspace/content/constants.ts:108
+#: scripts/apps/workspace/content/constants.ts:122
 msgid "Desk Output"
 msgstr ""
 
@@ -3308,7 +3308,7 @@ msgid "Ed Note"
 msgstr ""
 
 #: scripts/apps/authoring/views/full-preview.html:74
-#: scripts/apps/workspace/content/constants.ts:76
+#: scripts/apps/workspace/content/constants.ts:79
 msgid "Ed. Note"
 msgstr ""
 
@@ -3584,7 +3584,7 @@ msgstr ""
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.ts:349
 #: scripts/apps/authoring/views/send-item.html:127
 #: scripts/apps/authoring/views/send-item.html:65
-#: scripts/apps/workspace/content/constants.ts:77
+#: scripts/apps/workspace/content/constants.ts:80
 msgid "Embargo"
 msgstr ""
 
@@ -4329,12 +4329,12 @@ msgstr ""
 msgid "Failed to updated location!"
 msgstr ""
 
-#: scripts/apps/workspace/content/constants.ts:78
+#: scripts/apps/workspace/content/constants.ts:81
 msgid "Feature Image"
 msgstr ""
 
 #: scripts/apps/search/views/search-parameters.html:168
-#: scripts/apps/workspace/content/constants.ts:79
+#: scripts/apps/workspace/content/constants.ts:82
 msgid "Feature Media"
 msgstr ""
 
@@ -4562,11 +4562,11 @@ msgstr ""
 msgid "Font"
 msgstr ""
 
-#: scripts/apps/workspace/content/constants.ts:80
+#: scripts/apps/workspace/content/constants.ts:83
 msgid "Footer"
 msgstr ""
 
-#: scripts/apps/workspace/content/constants.ts:81
+#: scripts/apps/workspace/content/constants.ts:84
 msgid "Footers"
 msgstr ""
 
@@ -4686,7 +4686,7 @@ msgstr ""
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:139
 #: scripts/apps/authoring/views/full-preview.html:43
 #: scripts/apps/search/services/SearchService.ts:87
-#: scripts/apps/workspace/content/constants.ts:82
+#: scripts/apps/workspace/content/constants.ts:85
 msgid "Genre"
 msgstr ""
 
@@ -4807,7 +4807,7 @@ msgstr ""
 #: scripts/apps/packaging/views/sd-package-edit.html:4
 #: scripts/apps/publish/views/publish-queue.html:106
 #: scripts/apps/search/views/search-parameters.html:13
-#: scripts/apps/workspace/content/constants.ts:83
+#: scripts/apps/workspace/content/constants.ts:86
 #: scripts/apps/workspace/content/views/schema-editor.html:112
 msgid "Headline"
 msgstr ""
@@ -5060,7 +5060,7 @@ msgstr ""
 
 #: scripts/apps/desks/views/desk-config-modal.html:280
 #: scripts/apps/desks/views/desk-config-modal.html:333
-#: scripts/apps/workspace/content/constants.ts:107
+#: scripts/apps/workspace/content/constants.ts:113
 msgid "Incoming Stage"
 msgstr ""
 
@@ -5096,7 +5096,7 @@ msgstr ""
 #: scripts/apps/archive/views/metadata-view.html:26
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:84
 #: scripts/apps/publish/views/publish-queue.html:110
-#: scripts/apps/workspace/content/constants.ts:84
+#: scripts/apps/workspace/content/constants.ts:87
 msgid "Ingest Provider"
 msgstr ""
 
@@ -5408,7 +5408,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageForm.jsx:394
 #: scripts/apps/archive/views/metadata-view.html:21
 #: scripts/apps/content-filters/views/production-test-view.html:21
-#: scripts/apps/workspace/content/constants.ts:85
+#: scripts/apps/workspace/content/constants.ts:88
 msgid "Keywords"
 msgstr ""
 
@@ -5441,7 +5441,7 @@ msgstr ""
 #: scripts/apps/desks/views/settings.html:91
 #: scripts/apps/templates/views/template-editor-modal.html:110
 #: scripts/apps/users/views/edit-form.html:145
-#: scripts/apps/workspace/content/constants.ts:86
+#: scripts/apps/workspace/content/constants.ts:89
 #: scripts/extensions/annotationsLibrary/dist/GetFields.js:13
 #: scripts/extensions/annotationsLibrary/dist/src/GetFields.js:13
 #: scripts/extensions/annotationsLibrary/src/GetFields.ts:14
@@ -5892,7 +5892,7 @@ msgid "Maximum 80 characters."
 msgstr ""
 
 #: scripts/apps/publish/views/subscribers.html:111
-#: scripts/apps/workspace/content/constants.ts:87
+#: scripts/apps/workspace/content/constants.ts:90
 #: scripts/core/editor3/components/toolbar/index.tsx:187
 msgid "Media"
 msgstr ""
@@ -5901,7 +5901,7 @@ msgstr ""
 msgid "Media Contacts"
 msgstr ""
 
-#: scripts/apps/workspace/content/constants.ts:88
+#: scripts/apps/workspace/content/constants.ts:91
 msgid "Media Description"
 msgstr ""
 
@@ -6898,7 +6898,7 @@ msgstr ""
 msgid "Package preview"
 msgstr ""
 
-#: scripts/apps/workspace/content/constants.ts:59
+#: scripts/apps/workspace/content/constants.ts:62
 msgid "Package story labels"
 msgstr ""
 
@@ -6993,7 +6993,7 @@ msgid "Person Contact"
 msgstr ""
 
 #: scripts/apps/dictionaries/views/settings.html:48
-#: scripts/apps/monitoring/controllers/AggregateCtrl.ts:479
+#: scripts/apps/monitoring/controllers/AggregateCtrl.ts:480
 #: scripts/apps/monitoring/views/aggregate-settings.html:120
 #: scripts/apps/monitoring/views/aggregate-settings.html:141
 #: scripts/apps/monitoring/views/aggregate-settings.html:55
@@ -7049,7 +7049,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.jsx:146
 #: scripts/apps/archive/views/metadata-view.html:61
 #: scripts/apps/authoring/views/full-preview.html:64
-#: scripts/apps/workspace/content/constants.ts:89
+#: scripts/apps/workspace/content/constants.ts:92
 msgid "Place"
 msgstr ""
 
@@ -7371,7 +7371,7 @@ msgstr ""
 #: scripts/apps/search/components/ItemPriority.tsx:37
 #: scripts/apps/search/services/SearchService.ts:86
 #: scripts/apps/search/views/search-filters.html:106
-#: scripts/apps/workspace/content/constants.ts:90
+#: scripts/apps/workspace/content/constants.ts:93
 msgid "Priority"
 msgstr ""
 
@@ -7804,7 +7804,7 @@ msgstr ""
 
 #: scripts/apps/archive/related-item-widget/relatedItem.ts:109
 #: scripts/apps/archive/related-item-widget/relatedItem.ts:13
-#: scripts/apps/workspace/content/constants.ts:92
+#: scripts/apps/workspace/content/constants.ts:95
 msgid "Related Items"
 msgstr ""
 
@@ -8248,11 +8248,11 @@ msgstr ""
 msgid "SLUGLINE is too long"
 msgstr ""
 
-#: scripts/apps/workspace/content/constants.ts:95
+#: scripts/apps/workspace/content/constants.ts:98
 msgid "SMS"
 msgstr ""
 
-#: scripts/apps/workspace/content/constants.ts:96
+#: scripts/apps/workspace/content/constants.ts:99
 msgid "SMS Message"
 msgstr ""
 
@@ -8536,11 +8536,11 @@ msgstr ""
 msgid "Scheduled"
 msgstr ""
 
-#: scripts/apps/workspace/content/constants.ts:109
+#: scripts/apps/workspace/content/constants.ts:126
 msgid "Scheduled Desk Output"
 msgstr ""
 
-#: scripts/apps/workspace/content/constants.ts:91
+#: scripts/apps/workspace/content/constants.ts:94
 msgid "Scheduled Time"
 msgstr ""
 
@@ -8893,6 +8893,10 @@ msgstr ""
 msgid "Sending"
 msgstr ""
 
+#: scripts/apps/workspace/content/constants.ts:124
+msgid "Sent Desk Output"
+msgstr ""
+
 #: scripts/apps/monitoring/views/monitoring-view.html:56
 msgid "Sent Items"
 msgstr ""
@@ -9024,7 +9028,7 @@ msgstr ""
 msgid "Show/hide crops"
 msgstr ""
 
-#: scripts/apps/workspace/content/constants.ts:93
+#: scripts/apps/workspace/content/constants.ts:96
 #: scripts/core/lang/missing-translations-strings.ts:18
 msgid "Sign Off"
 msgstr ""
@@ -9101,7 +9105,7 @@ msgstr ""
 #: scripts/apps/legal-archive/views/legal_archive.html:67
 #: scripts/apps/search/services/SearchService.ts:85
 #: scripts/apps/search/views/search-parameters.html:6
-#: scripts/apps/workspace/content/constants.ts:94
+#: scripts/apps/workspace/content/constants.ts:97
 msgid "Slugline"
 msgstr ""
 
@@ -9189,7 +9193,7 @@ msgstr ""
 #: scripts/apps/archive/views/metadata-view.html:36
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:116
 #: scripts/apps/content-filters/views/production-test-view.html:22
-#: scripts/apps/workspace/content/constants.ts:97
+#: scripts/apps/workspace/content/constants.ts:100
 msgid "Source"
 msgstr ""
 
@@ -9300,7 +9304,7 @@ msgstr ""
 
 #: scripts/apps/desks/views/actionpicker.html:15
 #: scripts/apps/internal-destinations/InternalDestinations.tsx:39
-#: scripts/apps/workspace/content/constants.ts:98
+#: scripts/apps/workspace/content/constants.ts:101
 msgid "Stage"
 msgstr ""
 
@@ -9435,7 +9439,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:618
 #: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.jsx:168
 #: scripts/apps/authoring/views/full-preview.html:54
-#: scripts/apps/workspace/content/constants.ts:99
+#: scripts/apps/workspace/content/constants.ts:102
 msgid "Subject"
 msgstr ""
 
@@ -9572,7 +9576,7 @@ msgstr ""
 msgid "Tags"
 msgstr ""
 
-#: scripts/apps/workspace/content/constants.ts:63
+#: scripts/apps/workspace/content/constants.ts:66
 msgid "Take Key"
 msgstr ""
 
@@ -10502,7 +10506,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/Coverages/CoveragePreview/index.jsx:138
 #: scripts/apps/archive/views/metadata-view.html:205
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:201
-#: scripts/apps/workspace/content/constants.ts:100
+#: scripts/apps/workspace/content/constants.ts:103
 msgid "Type"
 msgstr ""
 
@@ -10895,7 +10899,7 @@ msgstr ""
 #: scripts/apps/search/services/SearchService.ts:83
 #: scripts/apps/search/tests/search.spec.ts:437
 #: scripts/apps/search/views/search-filters.html:93
-#: scripts/apps/workspace/content/constants.ts:101
+#: scripts/apps/workspace/content/constants.ts:104
 msgid "Urgency"
 msgstr ""
 
@@ -10903,7 +10907,7 @@ msgstr ""
 msgid "Urgency stats"
 msgstr ""
 
-#: scripts/apps/workspace/content/constants.ts:102
+#: scripts/apps/workspace/content/constants.ts:105
 msgid "Usage Terms"
 msgstr ""
 
@@ -11253,7 +11257,7 @@ msgstr ""
 
 #: scripts/apps/desks/views/desk-config-modal.html:278
 #: scripts/apps/desks/views/desk-config-modal.html:329
-#: scripts/apps/workspace/content/constants.ts:106
+#: scripts/apps/workspace/content/constants.ts:111
 msgid "Working Stage"
 msgstr ""
 
