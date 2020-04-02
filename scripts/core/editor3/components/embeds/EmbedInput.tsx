@@ -8,7 +8,6 @@ import {appConfig} from 'appConfig';
 import {OverlayTrigger, Tooltip} from 'react-bootstrap';
 
 const fallbackAPIKey = '1d1728bf82b2ac8139453f'; // register to author's personal account
-const GenericError = gettext('This URL could not be embedded.');
 
 export const getEmbedObject = (url) => {
     const apiKey = appConfig.iframely.key || fallbackAPIKey;
@@ -83,7 +82,7 @@ export class EmbedInputComponent extends React.Component<any, any> {
         const hasMessage = responseJSON && responseJSON.error;
         const is404 = !hasMessage && data.status === 404;
 
-        let error = hasMessage ? responseJSON.error : GenericError;
+        let error = hasMessage ? responseJSON.error : gettext('This URL could not be embedded.');
 
         if (is404) {
             error = gettext('URL not found.');
