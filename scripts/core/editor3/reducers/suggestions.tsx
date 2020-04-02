@@ -2,7 +2,7 @@ import {EditorState, Modifier, RichUtils} from 'draft-js';
 import {onChange} from './editor3';
 import {acceptedInlineStyles, sanitizeContent} from '../helpers/inlineStyles';
 import {
-    changeSuggestionsTypes, styleSuggestionsTypes,
+    changeSuggestionsTypes, getStyleSuggestionsTypes,
     blockSuggestionTypes, paragraphSuggestionTypes,
 } from '../highlightsConfig';
 import * as Highlights from '../helpers/highlights';
@@ -634,7 +634,7 @@ const processSuggestion = (state, {data, suggestion}, accepted) => {
         return saveEditorStatus(state, editorState, 'change-inline-style', true);
     }
 
-    if (styleSuggestionsTypes.indexOf(suggestion.type) !== -1) {
+    if (getStyleSuggestionsTypes().indexOf(suggestion.type) !== -1) {
         editorState = moveToSuggestionsHistory(editorState, data, suggestion, accepted);
         if (!accepted) {
             style = Highlights.getInlineStyleByType(suggestion.type);
@@ -1120,7 +1120,7 @@ const applyStyleForSuggestion = (editorState, inlineStyle) => {
         });
 
     const nextInlineStyle = Highlights.getHighlightStyleAtCurrentPosition(
-        newState, styleSuggestionsTypes, true, false);
+        newState, getStyleSuggestionsTypes(), true, false);
 
     if (nextInlineStyle == null) {
         return newState;
@@ -1129,7 +1129,7 @@ const applyStyleForSuggestion = (editorState, inlineStyle) => {
     inlineStyle.forEach((style) => {
         const type = Highlights.isHighlightStyle(style) ? Highlights.getHighlightTypeFromStyleName(style) : null;
 
-        if (type != null && styleSuggestionsTypes.indexOf(type) !== -1 && nextInlineStyle.indexOf(style) !== -1 ||
+        if (type != null && getStyleSuggestionsTypes().indexOf(type) !== -1 && nextInlineStyle.indexOf(style) !== -1 ||
             blockSuggestionTypes.indexOf(type) !== -1) {
             newState = RichUtils.toggleInlineStyle(newState, style);
         }
