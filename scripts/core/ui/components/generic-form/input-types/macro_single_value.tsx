@@ -28,4 +28,3 @@ export function getMacroSingleValue() {
         (props) => [props.formField.component_parameters['deskField']],
     );
 }
-
