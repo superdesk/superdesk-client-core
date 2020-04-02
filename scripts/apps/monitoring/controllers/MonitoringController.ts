@@ -1,6 +1,5 @@
 import _ from 'lodash';
 import {appConfig} from 'appConfig';
-import {getLabelForStageIfExists} from 'apps/workspace/content/constants';
 
 /**
  * @ngdoc controller
