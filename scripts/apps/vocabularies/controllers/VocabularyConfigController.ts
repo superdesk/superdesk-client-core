@@ -1,4 +1,4 @@
-import {MEDIA_TYPES, MEDIA_TYPE_KEYS, DEFAULT_SCHEMA, VOCABULARY_SELECTION_TYPES} from '../constants';
+import {MEDIA_TYPES, MEDIA_TYPE_KEYS, DEFAULT_SCHEMA, getVocabularySelectionTypes} from '../constants';
 import {IVocabulary, IVocabularyTag} from 'superdesk-api';
 import {IDirectiveScope} from 'types/Angular/DirectiveScope';
 import {remove, reduce} from 'lodash';
@@ -207,7 +207,7 @@ export function VocabularyConfigController($scope: IScope, $route, $routeParams,
             };
 
             if ($routeParams.type == null) {
-                $scope.vocabulary.selection_type = VOCABULARY_SELECTION_TYPES.MULTIPLE_SELECTION.id;
+                $scope.vocabulary.selection_type = getVocabularySelectionTypes().MULTIPLE_SELECTION.id;
             }
         }
 

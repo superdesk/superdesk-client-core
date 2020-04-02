@@ -1,7 +1,7 @@
 import ReactDOM from 'react-dom';
 import React from 'react';
 import _ from 'lodash';
-import {MEDIA_TYPES, MEDIA_TYPE_KEYS, VOCABULARY_SELECTION_TYPES, IVocabularySelectionTypes} from '../constants';
+import {MEDIA_TYPES, MEDIA_TYPE_KEYS, IVocabularySelectionTypes, getVocabularySelectionTypes} from '../constants';
 import {gettext} from 'core/utils';
 import {getFields} from 'apps/fields';
 import {IVocabulary} from 'superdesk-api';
@@ -61,7 +61,7 @@ export function VocabularyEditController(
     };
 
     $scope.idRegex = idRegex;
-    $scope.selectionTypes = VOCABULARY_SELECTION_TYPES;
+    $scope.selectionTypes = getVocabularySelectionTypes();
 
     if ($scope.matchFieldTypeToTab('related-content-fields', $scope.vocabulary.field_type)) {
         // Insert default allowed workflows

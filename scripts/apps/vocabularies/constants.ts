@@ -1,4 +1,3 @@
-import {get} from 'lodash';
 import {gettext} from 'core/utils';
 
 export const MEDIA_TYPES = {
@@ -25,20 +24,22 @@ export interface IVocabularySelectionTypes {
     DO_NOT_SHOW: IVocabularySelectionType;
 }
 
-export const VOCABULARY_SELECTION_TYPES = {
-    SINGLE_SELECTION: {
-        id: 'single selection',
-        label: gettext('Single selection'),
-    },
-    MULTIPLE_SELECTION: {
-        id: 'multi selection',
-        label: gettext('Multi selection'),
-    },
-    DO_NOT_SHOW: {
-        id: 'do not show',
-        label: gettext('Do not show'),
-    },
-};
+export function getVocabularySelectionTypes() {
+    return {
+        SINGLE_SELECTION: {
+            id: 'single selection',
+            label: gettext('Single selection'),
+        },
+        MULTIPLE_SELECTION: {
+            id: 'multi selection',
+            label: gettext('Multi selection'),
+        },
+        DO_NOT_SHOW: {
+            id: 'do not show',
+            label: gettext('Do not show'),
+        },
+    };
+}
 
 export const DEFAULT_SCHEMA = {
     name: {},
