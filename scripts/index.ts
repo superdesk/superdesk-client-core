@@ -9,7 +9,7 @@ import {IConfigurableUiComponents, IExtension, IUser} from 'superdesk-api';
 import {CC} from 'core/ui/configurable-ui-components';
 import {registerExtensions} from 'core/register-extensions';
 import {setupTansa} from 'apps/tansa';
-import {allTranslations} from 'core/utils';
+import {translationsForAngular, i18n} from 'core/utils';
 
 let body = angular.element('body');
 
@@ -30,7 +30,7 @@ function loadTranslations() {
     fetch(`/languages/${user.language}.json`)
         .then((response) => response.json())
         .then((translations) => {
-            Object.assign(allTranslations, translations);
+            const allTranslations = Object.assign({}, translations);
 
             const langOverride = appConfig.langOverride ?? {};
 
@@ -39,6 +39,14 @@ function loadTranslations() {
                     Object.assign(allTranslations[languageCode], langOverride[languageCode]);
                 }
             });
+
+            Object.keys(allTranslations).forEach((languageCode) => {
+                i18n.setMessages('messages', languageCode, allTranslations[languageCode], 'nplurals=2; plural=n>1;');
+            });
+
+            i18n.setLocale(user.language);
+
+            Object.assign(translationsForAngular, allTranslations);
         });
 }
 

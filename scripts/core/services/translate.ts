@@ -1,7 +1,7 @@
 import 'angular-dynamic-locale';
 import moment from 'moment';
 import {appConfig} from 'appConfig';
-import {gettext, allTranslations} from 'core/utils';
+import {gettext, translationsForAngular} from 'core/utils';
 
 /**
  * Translate module
@@ -38,8 +38,8 @@ export default angular.module('superdesk.core.translate', [
 
                 // load translations synchronously(blocking) in order to prevent caching of default strings
                 if (gettextCatalog.currentLanguage !== 'en') {
-                    Object.keys(allTranslations).forEach((langCode) => {
-                        gettextCatalog.setStrings(langCode, allTranslations[langCode]);
+                    Object.keys(translationsForAngular).forEach((langCode) => {
+                        gettextCatalog.setStrings(langCode, translationsForAngular[langCode]);
                     });
                 }
 
