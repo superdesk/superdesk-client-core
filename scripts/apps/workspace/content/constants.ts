@@ -105,7 +105,7 @@ export const GET_LABEL_MAP = () => ({
     usageterms: gettext('Usage Terms'),
 });
 
-function getLabelForStageName(stageName: IStage['name']) : string | null {
+function getLabelForStageName(stageName: IStage['name']): string | null {
     switch (stageName.toLowerCase()) {
     case 'working stage':
         return gettext('Working Stage');
@@ -129,16 +129,16 @@ function getLabelForStageType(stageType: ICard['type']): string | null {
     }
 }
 
-function isStage(x: any) : x is IStage {
+function isStage(x: any): x is IStage {
     return x.name != null;
 }
 
-function isCard(x: any) : x is ICard {
+function isCard(x: any): x is ICard {
     return x.type != null;
 }
 
 // will return the provided name if the label doesn't exist
-export function getLabelForStage(stage: IStage | ICard) : string {
+export function getLabelForStage(stage: IStage | ICard): string {
     if (isStage(stage)) {
         return getLabelForStageName(stage.name) ?? stage.name;
     }
