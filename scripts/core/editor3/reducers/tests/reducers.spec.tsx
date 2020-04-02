@@ -374,7 +374,7 @@ describe('editor3.reducers', () => {
         expect(nextState.editorState.getCurrentContent().getPlainText()).toBe('foo');
     });
 
-    it('EDITOR_TAB on lists moves indentation', () => {
+    it('EDITOR_TAB on lists does not change text', () => {
         const contentState = ContentState.createFromText('list item');
         let editorState = EditorState.createWithContent(contentState);
 
@@ -391,7 +391,7 @@ describe('editor3.reducers', () => {
 
         editorState = nextState.editorState as EditorState;
 
-        expect(editorState.getCurrentContent().getFirstBlock().getDepth()).toBe(1);
+        expect(editorState.getCurrentContent().getFirstBlock().getText()).toBe('list item');
 
         // indent left
         nextState = reducer({
@@ -404,6 +404,6 @@ describe('editor3.reducers', () => {
 
         editorState = nextState.editorState as EditorState;
 
-        expect(editorState.getCurrentContent().getFirstBlock().getDepth()).toBe(0);
+        expect(editorState.getCurrentContent().getFirstBlock().getText()).toBe('list item');
     });
 });
