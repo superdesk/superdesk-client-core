@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import {PARAMETERS, EXCLUDE_FACETS} from 'apps/search/constants';
-import {getDateFilters, dateRangesByKey} from '../directives/DateFilters';
+import {getDateFilters, getDateRangesByKey} from '../directives/DateFilters';
 import {gettext} from 'core/utils';
 
 /**
@@ -366,7 +366,7 @@ export function TagService($location, desks, userList, metadata, search,
                 } else if (dateFilters.some(({fieldname}) => fieldname === key)) {
                     const dateFilter = dateFilters.find(({fieldname}) => fieldname === key);
 
-                    tags.selectedFacets[dateFilter.labelBlock] = [dateRangesByKey[type].label];
+                    tags.selectedFacets[dateFilter.labelBlock] = [getDateRangesByKey()[type].label];
                 } else if (key === 'creditqcode') {
                     tags.selectedFacets.credit = JSON.parse(type);
                 } else {
