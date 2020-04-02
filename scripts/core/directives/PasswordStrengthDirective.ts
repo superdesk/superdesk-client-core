@@ -45,7 +45,8 @@ function PasswordStrength() {
     // informational icon.
     var helpText = gettext(
         'Must be {{MIN_LENGTH}} characters long and contain {{MIN_STRENGTH}} out of 4 of the following:',
-        config) +
+        {MIN_LENGTH: config.MIN_LENGTH, MIN_STRENGTH: config.MIN_STRENGTH},
+    ) +
         '<ul>' +
             '<li>' + gettext('a lower case letter (a-z)') + '</li>' +
             '<li>' + gettext('an upper case letter (A-Z)') + '</li>' +
