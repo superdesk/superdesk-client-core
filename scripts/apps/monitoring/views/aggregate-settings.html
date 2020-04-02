@@ -34,7 +34,7 @@
                                 label-position="inside"
                                 data-test-id="monitoring-group--{{stage.name}}"
                             >
-                                {{labelForStage(stage.name)}}
+                                {{labelForStage(stage)}}
                             </span>
                         </li>
                         <li ng-repeat="output in deskOutputs track by output.id">
@@ -109,7 +109,7 @@
                 <li class="sort-item draggable-list__item draggable-list__item--small" ng-class="{'active': item.order < columnsLimit}"
                  ng-repeat="item in getValues() track by item.order">
                     <div class="group-title" ng-if="item.type === 'stage'">
-                        {{deskLookup[stageLookup[item._id].desk].name}} : <span>{{stageLookup[item._id].name}}</span>
+                        {{deskLookup[stageLookup[item._id].desk].name}} : <span>{{labelForStage(stageLookup[item._id])}}</span>
                     </div>
                     <div class="group-title" ng-repeat="output in deskOutputs" ng-if="item.type === output.type">
                         {{item.name}} : <span translate>{{ output.listLabel }}</span>
@@ -130,7 +130,7 @@
             <div class="groups">
                 <div ng-repeat="max in getValues()" class="desk desk--item-count" >
                     <div class="desk-title" ng-if="max.type === 'stage'">
-                        {{deskLookup[stageLookup[max._id].desk].name}} : <span>{{stageLookup[max._id].name}}</span>
+                        {{deskLookup[stageLookup[max._id].desk].name}} : <span>{{labelForStage(stageLookup[max._id])}}</span>
                     </div>
                     <div class="desk-title" ng-repeat="output in deskOutputs" ng-if="max.type === output.type">
                         {{max.name}} : <span translate>{{ output.listLabel }}</span>

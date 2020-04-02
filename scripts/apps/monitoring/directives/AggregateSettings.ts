@@ -85,6 +85,8 @@ export function AggregateSettings(desks, workspaces, session, preferencesService
                 }
             });
 
+            scope.labelForStage = getLabelForStage;
+
             scope.closeModal = function() {
                 scope.step.current = 'desks';
                 scope.modalActive = false;

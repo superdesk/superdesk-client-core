@@ -146,14 +146,8 @@ export function MonitoringController($rootScope, $scope, $location, desks, super
         let groupLabel;
 
         if (group.subheader) {
-            const stageLabelObject = getLabelForStageIfExists(group.subheader);
-
-            if (stageLabelObject != null) {
-                groupLabel = stageLabelObject.label;
-            } else {
-                groupLabel = activeWorkspace === 'workspace' ?
-                    group.header + ' ' + group.subheader : group.subheader;
-            }
+            groupLabel = activeWorkspace === 'workspace' ?
+                group.header + ' ' + group.subheader : group.subheader;
         } else {
             groupLabel = group.header + ' ' + $filter('splitText')(group.type);
         }

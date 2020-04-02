@@ -1,4 +1,7 @@
 import {gettext} from 'core/utils';
+import {IStage} from 'superdesk-api';
+import {ICard} from 'apps/monitoring/services/CardsService';
+import {SplitFilter} from 'apps/monitoring/filters';
 
 // http://docs.python-cerberus.org/en/stable/usage.html
 export const DEFAULT_SCHEMA = Object.freeze({
@@ -102,21 +105,47 @@ export const GET_LABEL_MAP = () => ({
     usageterms: gettext('Usage Terms'),
 });
 
-const DEFAULT_STAGES_LABELS = [
-    {name: 'working stage', label: gettext('Working Stage')},
-    {name: 'incoming stage', label: gettext('Incoming Stage')},
-    {name: 'desk output', label: gettext('Desk Output')},
-    {name: 'scheduled desk output', label: gettext('Scheduled Desk Output')},
-];
-
-export function getLabelForStageIfExists(stageName: string) : {name:string, label:string} | null {
-    return DEFAULT_STAGES_LABELS
-        .find(({name}) => name === stageName.toLowerCase());
+function getLabelForStageName(stageName: IStage['name']) : string | null {
+    switch (stageName.toLowerCase()) {
+    case 'working stage':
+        return gettext('Working Stage');
+    case 'incoming stage':
+        return gettext('Incoming Stage');
+    default:
+        return null;
+    }
 }
 
-// will return stageName if the label doesn't exist
-export function getLabelForStage(stageName: string) : string {
-    return getLabelForStageIfExists(stageName)?.label || stageName;
+function getLabelForStageType(stageType: ICard['type']): string | null {
+    switch (stageType) {
+    case 'deskOutput':
+        return gettext('Desk Output');
+    case 'sentDeskOutput':
+        return gettext('Sent Desk Output');
+    case 'scheduledDeskOutput':
+        return gettext('Scheduled Desk Output');
+    default:
+        return null;
+    }
+}
+
+function isStage(x: any) : x is IStage {
+    return x.name != null;
+}
+
+function isCard(x: any) : x is ICard {
+    return x.type != null;
+}
+
+// will return the provided name if the label doesn't exist
+export function getLabelForStage(stage: IStage | ICard) : string {
+    if (isStage(stage)) {
+        return getLabelForStageName(stage.name) ?? stage.name;
+    }
+
+    if (isCard(stage)) {
+        return getLabelForStageType(stage.type) ?? SplitFilter()(stage.type);
+    }
 }
 
 export const CV_ALIAS = Object.freeze({

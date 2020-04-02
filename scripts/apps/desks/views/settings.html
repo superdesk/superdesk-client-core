@@ -66,7 +66,7 @@
                         <ul class="card-box__content-list">
                             <li>
                                 <h4>{{ :: 'Stages' | translate }}<span class="label">{{getDeskStages(desk).length}}</span></h4>
-                                <span ng-repeat="stage in getDeskStages(desk) track by stage._id" class="card-box__content-list-inline-span">{{labelForStage(stage.name)}}<span ng-if="$index < getDeskStages(desk).length-1">,&nbsp;</span></span>
+                                <span ng-repeat="stage in getDeskStages(desk) track by stage._id" class="card-box__content-list-inline-span">{{labelForStage(stage)}}<span ng-if="$index < getDeskStages(desk).length-1">,&nbsp;</span></span>
                             </li>
                             <li>
                                 <h4>{{ :: 'People' | translate }}<span class="label">{{getDeskUsers(desk).length}}</span></h4>
