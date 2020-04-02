@@ -102,6 +102,23 @@ export const GET_LABEL_MAP = () => ({
     usageterms: gettext('Usage Terms'),
 });
 
+const DEFAULT_STAGES_LABELS = [
+    {name: 'working stage', label: gettext('Working Stage')},
+    {name: 'incoming stage', label: gettext('Incoming Stage')},
+    {name: 'desk output', label: gettext('Desk Output')},
+    {name: 'scheduled desk output', label: gettext('Scheduled Desk Output')},
+];
+
+export function getLabelForStageIfExists(stageName: string) : {name:string, label:string} | null {
+    return DEFAULT_STAGES_LABELS
+        .find(({name}) => name === stageName.toLowerCase());
+}
+
+// will return stageName if the label doesn't exist
+export function getLabelForStage(stageName: string) : string {
+    return getLabelForStageIfExists(stageName)?.label || stageName;
+}
+
 export const CV_ALIAS = Object.freeze({
     locators: 'place',
     categories: 'anpa_category',

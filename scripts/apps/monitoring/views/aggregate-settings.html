@@ -34,8 +34,8 @@
                                 label-position="inside"
                                 data-test-id="monitoring-group--{{stage.name}}"
                             >
-                                {{stage.name}}
-                            </span> 
+                                {{labelForStage(stage.name)}}
+                            </span>
                         </li>
                         <li ng-repeat="output in deskOutputs track by output.id">
                             <span
