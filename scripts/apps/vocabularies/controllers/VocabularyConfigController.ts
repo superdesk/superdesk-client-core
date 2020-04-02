@@ -4,7 +4,9 @@ import {IDirectiveScope} from 'types/Angular/DirectiveScope';
 import {remove, reduce} from 'lodash';
 import {gettext} from 'core/utils';
 
-const OTHER = gettext('Other');
+function getOther() {
+    return gettext('Other');
+}
 
 export interface IScope extends IDirectiveScope<void> {
     vocabularies: Array<IVocabulary>;
@@ -28,7 +30,7 @@ export interface IScope extends IDirectiveScope<void> {
 function getTags(_vocabularies: Array<IVocabulary>): IVocabulary['tags'] {
     const wordSet = (_vocabularies || []).reduce((_wordSet, vocabulary) => {
         (vocabulary.tags || []).forEach((tag) => {
-            if (tag.text !== OTHER) {
+            if (tag.text !== getOther()) {
                 _wordSet.add(tag.text);
             }
         });
@@ -37,7 +39,7 @@ function getTags(_vocabularies: Array<IVocabulary>): IVocabulary['tags'] {
 
     const wordList = Array.from(wordSet).sort((a, b) => a.localeCompare(b));
 
-    wordList.push(OTHER);
+    wordList.push(getOther());
 
     return wordList.map((word) => ({text: word}));
 }
@@ -108,7 +110,7 @@ export function VocabularyConfigController($scope: IScope, $route, $routeParams,
 
     function checkTag(vocabulary: IVocabulary, currentTag: IVocabularyTag, tab: string) {
         return $scope.matchFieldTypeToTab(tab, vocabulary.field_type) &&
-        (currentTag.text === OTHER && (vocabulary.tags == null || vocabulary.tags.length === 0) ||
+        (currentTag.text === getOther() && (vocabulary.tags == null || vocabulary.tags.length === 0) ||
         (vocabulary.tags || []).some((tag) => tag.text === currentTag.text));
     }
 
@@ -122,10 +124,10 @@ export function VocabularyConfigController($scope: IScope, $route, $routeParams,
      * Don't show OTHER tag if it is the only tag available for current tab
      */
     $scope.canShowTag = (currentTag: IVocabularyTag, tab: string) =>
-        currentTag.text !== OTHER ||
+        currentTag.text !== getOther() ||
         ($scope.vocabularies || []).some((vocabulary) =>
             $scope.matchFieldTypeToTab(tab, vocabulary.field_type) &&
-            (vocabulary.tags || []).some((tag) => tag.text !== OTHER),
+            (vocabulary.tags || []).some((tag) => tag.text !== getOther()),
         );
 
     /**
