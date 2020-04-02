@@ -1,7 +1,8 @@
 import 'angular-dynamic-locale';
 import moment from 'moment';
-import {appConfig} from 'appConfig';
+import {getUserInterfaceLanguage} from 'appConfig';
 import {gettext, translationsForAngular} from 'core/utils';
+import {loadTranslations} from 'index';
 
 /**
  * Translate module
@@ -22,31 +23,21 @@ export default angular.module('superdesk.core.translate', [
     .run(['gettextCatalog', '$location', '$rootScope', 'SESSION_EVENTS', 'tmhDynamicLocale',
         function(gettextCatalog, $location, $rootScope, SESSION_EVENTS, tmhDynamicLocale) {
             $rootScope.$on(SESSION_EVENTS.IDENTITY_LOADED, (event) => {
-                if ($rootScope.$root.currentUser
-                    && appConfig.profileLanguages.includes($rootScope.$root.currentUser.language)) {
-                    // if the current logged in user has a saved language preference that is available
-                    gettextCatalog.setCurrentLanguage($rootScope.$root.currentUser.language);
-                } else if (appConfig.language) {
-                    gettextCatalog.setCurrentLanguage(appConfig.language);
-                } else if (appConfig.profileLanguages.includes(window.navigator.language)) {
-                    // no saved preference but browser language is available
-                    gettextCatalog.setCurrentLanguage(window.navigator.language);
-                } else {
-                    // no other options available go with baseLanguage
-                    gettextCatalog.setCurrentLanguage(gettextCatalog.baseLanguage);
-                }
+                loadTranslations().then(() => {
+                    gettextCatalog.setCurrentLanguage(getUserInterfaceLanguage());
 
-                // load translations synchronously(blocking) in order to prevent caching of default strings
-                if (gettextCatalog.currentLanguage !== 'en') {
-                    Object.keys(translationsForAngular).forEach((langCode) => {
-                        gettextCatalog.setStrings(langCode, translationsForAngular[langCode]);
-                    });
-                }
+                    // load translations synchronously(blocking) in order to prevent caching of default strings
+                    if (gettextCatalog.currentLanguage !== 'en') {
+                        Object.keys(translationsForAngular).forEach((langCode) => {
+                            gettextCatalog.setStrings(langCode, translationsForAngular[langCode]);
+                        });
+                    }
 
-                // set locale for date/time management
-                moment.locale(gettextCatalog.currentLanguage);
-                // set locale for angular-i18n
-                tmhDynamicLocale.set(gettextCatalog.currentLanguage.replace('_', '-').toLowerCase());
+                    // set locale for date/time management
+                    moment.locale(gettextCatalog.currentLanguage);
+                    // set locale for angular-i18n
+                    tmhDynamicLocale.set(gettextCatalog.currentLanguage.replace('_', '-').toLowerCase());
+                });
             });
 
             var params = $location.search();
