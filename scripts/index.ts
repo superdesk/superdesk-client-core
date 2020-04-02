@@ -27,7 +27,7 @@ function loadConfigs() {
 function loadTranslations() {
     const user: IUser = JSON.parse(localStorage.getItem(IDENTITY_KEY));
 
-    fetch(`/languages/${user.language}.json`)
+    return fetch(`/languages/${user.language}.json`)
         .then((response) => response.json())
         .then((translations) => {
             const allTranslations = Object.assign({}, translations);
