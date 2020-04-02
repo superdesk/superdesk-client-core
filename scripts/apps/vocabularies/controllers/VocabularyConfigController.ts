@@ -1,4 +1,4 @@
-import {MEDIA_TYPES, MEDIA_TYPE_KEYS, DEFAULT_SCHEMA, getVocabularySelectionTypes} from '../constants';
+import {DEFAULT_SCHEMA, getVocabularySelectionTypes, getMediaTypeKeys, getMediaTypes} from '../constants';
 import {IVocabulary, IVocabularyTag} from 'superdesk-api';
 import {IDirectiveScope} from 'types/Angular/DirectiveScope';
 import {remove, reduce} from 'lodash';
@@ -47,7 +47,7 @@ VocabularyConfigController.$inject = ['$scope', '$route', '$routeParams', 'vocab
 export function VocabularyConfigController($scope: IScope, $route, $routeParams, vocabularies, $rootScope,
     api, notify, modal, session) {
     $scope.loading = true;
-    $scope.mediaTypes = MEDIA_TYPES;
+    $scope.mediaTypes = getMediaTypes();
 
     /**
      * Open vocabulary in the edit modal.
@@ -88,7 +88,7 @@ export function VocabularyConfigController($scope: IScope, $route, $routeParams,
         (tab === 'text-fields' && fieldType === 'text' ||
             tab === 'date-fields' && fieldType === 'date' ||
             tab === 'urls-fields' && fieldType === 'urls' ||
-            tab === 'related-content-fields' && MEDIA_TYPE_KEYS.includes(fieldType) ||
+            tab === 'related-content-fields' && getMediaTypeKeys().includes(fieldType) ||
             tab === 'embed-fields' && fieldType === 'embed' ||
             tab === 'custom-fields' && fieldType === 'custom'
         );

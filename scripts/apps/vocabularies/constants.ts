@@ -1,17 +1,23 @@
 import {gettext} from 'core/utils';
 
-export const MEDIA_TYPES = {
-    GALLERY: {
-        id: 'media',
-        label: gettext('Media gallery'),
-    },
-    RELATED_CONTENT: {
-        id: 'related_content',
-        label: gettext('Related items'),
-    },
-};
+export function getMediaTypes() {
+    return {
+        GALLERY: {
+            id: 'media',
+            label: gettext('Media gallery'),
+        },
+        RELATED_CONTENT: {
+            id: 'related_content',
+            label: gettext('Related items'),
+        },
+    };
+}
 
-export const MEDIA_TYPE_KEYS = Object.keys(MEDIA_TYPES).map((type) => MEDIA_TYPES[type].id);
+export function getMediaTypeKeys() {
+    const mediaTypes = getMediaTypes();
+
+    return Object.keys(mediaTypes).map((type) => mediaTypes[type].id);
+}
 
 export interface IVocabularySelectionType {
     id: string;
