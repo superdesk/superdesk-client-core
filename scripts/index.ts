@@ -25,29 +25,39 @@ function loadConfigs() {
 }
 
 function loadTranslations() {
-    const user: IUser = JSON.parse(localStorage.getItem(IDENTITY_KEY));
+    const user: IUser | null = JSON.parse(localStorage.getItem(IDENTITY_KEY));
+    const userLanguage = user == null ? 'en' : user.language;
 
-    return fetch(`/languages/${user.language}.json`)
-        .then((response) => response.json())
-        .then((translations) => {
-            const allTranslations = Object.assign({}, translations);
+    if (userLanguage === 'en') {
+        return Promise.resolve();
+    } else {
+        return fetch(`/languages/${userLanguage}.json`)
+            .then((response) => response.json())
+            .then((translations) => {
+                const allTranslations = Object.assign({}, translations);
 
-            const langOverride = appConfig.langOverride ?? {};
+                const langOverride = appConfig.langOverride ?? {};
 
-            Object.keys(langOverride).forEach((languageCode) => {
-                if (allTranslations[languageCode] != null) {
-                    Object.assign(allTranslations[languageCode], langOverride[languageCode]);
-                }
+                Object.keys(langOverride).forEach((languageCode) => {
+                    if (allTranslations[languageCode] != null) {
+                        Object.assign(allTranslations[languageCode], langOverride[languageCode]);
+                    }
+                });
+
+                Object.keys(allTranslations).forEach((languageCode) => {
+                    i18n.setMessages(
+                        'messages',
+                        languageCode,
+                        allTranslations[languageCode],
+                        'nplurals=2; plural=n>1;',
+                    );
+                });
+
+                i18n.setLocale(user.language);
+
+                Object.assign(translationsForAngular, allTranslations);
             });
-
-            Object.keys(allTranslations).forEach((languageCode) => {
-                i18n.setMessages('messages', languageCode, allTranslations[languageCode], 'nplurals=2; plural=n>1;');
-            });
-
-            i18n.setLocale(user.language);
-
-            Object.assign(translationsForAngular, allTranslations);
-        });
+    }
 }
 
 let started = false;
