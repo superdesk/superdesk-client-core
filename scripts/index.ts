@@ -9,7 +9,7 @@ import {IConfigurableUiComponents, IExtension, IUser} from 'superdesk-api';
 import {CC} from 'core/ui/configurable-ui-components';
 import {registerExtensions} from 'core/register-extensions';
 import {setupTansa} from 'apps/tansa';
-import {translationsForAngular, i18n} from 'core/utils';
+import {i18n} from 'core/utils';
 
 let body = angular.element('body');
 
@@ -25,36 +25,45 @@ function loadConfigs() {
 }
 
 export function loadTranslations() {
-    const uiLanguage = getUserInterfaceLanguage();
+    const language = getUserInterfaceLanguage();
 
-    if (uiLanguage === 'en') {
-        return Promise.resolve();
+    if (language === 'en') {
+        return Promise.resolve(null);
     } else {
-        return fetch(`/languages/${uiLanguage}.json`)
+        const filename = `/languages/${language}.json`;
+
+        return fetch(filename)
             .then((response) => response.json())
             .then((translations) => {
-                const allTranslations = Object.assign({}, translations);
+                if (
+                    translations[''] == null
+                    || translations['']['language'] == null
+                    || translations['']['plural-forms'] == null
+                ) {
+                    throw new Error(`Language metadata not found in "${filename}"`);
+                }
 
                 const langOverride = appConfig.langOverride ?? {};
+                const pluralForms = translations['']['plural-forms'];
 
-                Object.keys(langOverride).forEach((languageCode) => {
-                    if (allTranslations[languageCode] != null) {
-                        Object.assign(allTranslations[languageCode], langOverride[languageCode]);
-                    }
-                });
+                if (langOverride[language] != null) {
+                    Object.assign(translations, langOverride[language]);
+                }
 
-                Object.keys(allTranslations).forEach((languageCode) => {
-                    i18n.setMessages(
-                        'messages',
-                        languageCode,
-                        allTranslations[languageCode],
-                        'nplurals=2; plural=n>1;',
-                    );
-                });
+                i18n.setMessages(
+                    'messages',
+                    language,
+                    translations,
+                    pluralForms,
+                );
 
-                i18n.setLocale(uiLanguage);
+                i18n.setLocale(language);
 
-                Object.assign(translationsForAngular, allTranslations);
+                return {
+                    translations,
+                    language,
+                    pluralForms,
+                };
             });
     }
 }

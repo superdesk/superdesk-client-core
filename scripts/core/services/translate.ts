@@ -1,7 +1,6 @@
 import 'angular-dynamic-locale';
 import moment from 'moment';
-import {getUserInterfaceLanguage} from 'appConfig';
-import {gettext, translationsForAngular} from 'core/utils';
+import {gettext} from 'core/utils';
 import {loadTranslations} from 'index';
 
 /**
@@ -23,21 +22,13 @@ export default angular.module('superdesk.core.translate', [
     .run(['gettextCatalog', '$location', '$rootScope', 'SESSION_EVENTS', 'tmhDynamicLocale',
         function(gettextCatalog, $location, $rootScope, SESSION_EVENTS, tmhDynamicLocale) {
             $rootScope.$on(SESSION_EVENTS.IDENTITY_LOADED, (event) => {
-                loadTranslations().then(() => {
-                    gettextCatalog.setCurrentLanguage(getUserInterfaceLanguage());
-
-                    // load translations synchronously(blocking) in order to prevent caching of default strings
-                    if (gettextCatalog.currentLanguage !== 'en') {
-                        Object.keys(translationsForAngular).forEach((langCode) => {
-                            gettextCatalog.setStrings(langCode, translationsForAngular[langCode]);
-                        });
-                    }
-
-                    // set locale for date/time management
-                    moment.locale(gettextCatalog.currentLanguage);
-                    // set locale for angular-i18n
-                    tmhDynamicLocale.set(gettextCatalog.currentLanguage.replace('_', '-').toLowerCase());
-                });
+                loadTranslations()
+                    .then(({translations, language}) => {
+                        gettextCatalog.setCurrentLanguage(language);
+                        gettextCatalog.setStrings(language, translations);
+                        moment.locale(language); // set locale for date/time management
+                        tmhDynamicLocale.set(language.replace('_', '-').toLowerCase()); // set locale for angular-i18n
+                    });
             });
 
             var params = $location.search();

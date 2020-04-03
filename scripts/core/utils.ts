@@ -38,9 +38,6 @@ export const getSuperdeskType = (event, supportExternalFiles = true) =>
         name.includes('application/superdesk') || supportExternalFiles && name === 'Files',
     );
 
-// {fr_CA: {"Add Field": "Ajouter un champ"}}
-export const translationsForAngular = {};
-
 // example: gettext('Item was locked by {{user}}.', {user: 'John Doe'});
 export const gettext = (
     text: string,
