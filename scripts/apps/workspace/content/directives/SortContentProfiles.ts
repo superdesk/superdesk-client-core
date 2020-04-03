@@ -6,6 +6,7 @@ export function SortContentProfiles() {
             element.sortable({
                 items: '.schema-item:not(.schema-item__disabled)',
                 cursor: 'move',
+                distance: 20,
                 containment: element,
                 tolerance: 'pointer',
                 placeholder: {

@@ -4,7 +4,10 @@ var path = require('path');
 
 function getChromeOptions() {
     var chromeOptions = {
-        args: ['--no-sandbox'],
+        args: [
+            '--headless',
+            '--no-sandbox',
+        ],
     };
 
     if (process.env.CHROME_BIN) {
@@ -24,9 +27,8 @@ var config = {
     },
 
     suites: {
-        a: path.join(__dirname, '/spec/**/[a-f]*[Ss]pec.js'),
-        b: path.join(__dirname, '/spec/**/[g-m]*[Ss]pec.js'),
-        c: path.join(__dirname, '/spec/**/[n-z]*[Ss]pec.js'),
+        a: path.join(__dirname, '/spec/**/[a-k]*[Ss]pec.js'),
+        b: path.join(__dirname, '/spec/**/[l-z]*[Ss]pec.js'),
 
         // disable running e2e tests from extensions until testing environment is reconfigured
         // to run start client from the main repo with all extensions enabled

@@ -67,6 +67,7 @@ describe('users', () => {
         });
 
         it('can create a new user', () => {
+            el(['user-filter'], by.cssContainingText('option', 'All')).click();
             el(['create-user-button']).click();
 
             el(['user-details-form', 'field--first_name']).sendKeys('John');
@@ -98,10 +99,8 @@ describe('users', () => {
         });
 
         it('list online users', () => {
-            var online = element(by.id('user-filter')).all(by.tagName('option')).get(1);
+            el(['user-filter'], by.cssContainingText('option', 'Online')).click();
 
-            expect(online.getText()).toBe('Online');
-            online.click();
             expect(element.all(by.repeater('user in users')).count()).toBe(3);
 
             const row1: any = by.repeater('user in users').row(0);
@@ -114,6 +113,7 @@ describe('users', () => {
         });
 
         it('can disable user', () => {
+            el(['user-filter'], by.cssContainingText('option', 'All')).click();
             var user = element.all(by.repeater('users')).first(),
                 activity = user.element(by.className('icon-trash'));
 
