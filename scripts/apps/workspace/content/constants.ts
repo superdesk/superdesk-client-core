@@ -59,7 +59,6 @@ export const GET_LABEL_MAP = () => ({
     'package-story-labels': gettext('Package story labels'),
     abstract: gettext('Abstract'),
     alt_text: gettext('Alt text'),
-    anpa_category: gettext('Categories'),
     anpa_take_key: gettext('Take Key'),
     archive_description: gettext('Archive description'),
     attachments: gettext('Attachments'),
