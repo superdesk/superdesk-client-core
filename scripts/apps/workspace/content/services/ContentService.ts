@@ -347,7 +347,7 @@ export function ContentService(api, templates, desks, packages, archiveService, 
     this.dropItem = (item: IArticle, {fetchExternal} = {fetchExternal: true}) => {
         if (item._type !== 'externalsource') {
             if (item._type === 'ingest') {
-                return send.validate(item);
+                return send.validateAndSend(item);
             }
 
             if (item.archive_item != null) {

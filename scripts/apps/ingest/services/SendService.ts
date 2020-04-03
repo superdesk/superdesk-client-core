@@ -122,9 +122,9 @@ export function SendService(
     }
 
     function validateAndSend(item) {
-        const validItem = getValidItems([item]);
+        const validItems = getValidItems([item]);
 
-        if (validItem.length > 0) {
+        if (validItems.length > 0) {
             return sendOne(item);
         } else {
             return $q.reject();
