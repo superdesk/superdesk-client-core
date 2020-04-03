@@ -62,7 +62,7 @@ function pasteContentFromOpenEditor(
 // preserve line breaks when pasting or forcing plain text
 // \r are important for draft convertFromHTML to preserve initial spaces on each line
 export const createHtmlFromText = (text: string): string =>
-    '\r<p>\r' + text.split('\n').join('</p>\n<p>\r') + '</p>';
+    text.split('\n').map((line) => `<p>${line}</p>`).join('');
 
 /**
  * @ngdoc method
