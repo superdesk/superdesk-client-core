@@ -217,7 +217,7 @@
                                 </li>
                                 <li ng-repeat="stage in stages track by stage._id" ng-click="select(stage)" ng-class="{active: selected === stage, editable: isActive(stage)}">
                                     <div ng-if="!isActive(stage)">
-                                        <span data-test-id="stage.name">{{ labelForStage(stage) }}</span>
+                                        <span data-test-id="stage-name">{{ labelForStage(stage) }}</span>
                                         <label class="global-label" ng-if="!stage.is_visible">
                                             <span translate>Global Read</span><span translate>: OFF</span>
                                         </label>
