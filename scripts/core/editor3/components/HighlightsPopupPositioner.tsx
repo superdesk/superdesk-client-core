@@ -50,7 +50,6 @@ export class HighlightsPopupPositioner extends React.Component<IProps> {
         // reset calculated values so new calculation can be performed
         element.style.top = '';
         element.style.bottom = '';
-        mainFlexElement.style['max-height'] = '';
 
         element.style.left = (this.props.editorNode.getBoundingClientRect().left - 360) + 'px';
 
