@@ -17,6 +17,7 @@ interface IScope extends ng.IScope {
     item?: IArticle;
     open: any;
     active: any;
+    isRelatedItem: boolean;
     menuGroups: Array<IAuthoringMenuGroup>;
     toggleActions(open: boolean): void;
     stopEvent(event: any): void;
@@ -29,9 +30,12 @@ export function ItemActionsMenu(superdesk, activityService, workflowService, arc
         scope: {
             item: '=',
             active: '=',
+            isRelatedItem: '=',
         },
         templateUrl: 'scripts/apps/monitoring/views/item-actions-menu.html',
         link: function(scope: IScope) {
+            const relatedItemActions = ['edit.item', 'edit.item.popup', 'view.item', 'view.item.popup'];
+
             /**
              * Populate scope actions when dropdown is opened.
              *
@@ -100,8 +104,13 @@ export function ItemActionsMenu(superdesk, activityService, workflowService, arc
                                 if (activitiesByGroupName[group] == null) {
                                     activitiesByGroupName[group] = [];
                                 }
-
-                                activitiesByGroupName[group].push(activity);
+                                if (scope.isRelatedItem) {
+                                    if (relatedItemActions.includes(activity._id)) {
+                                        activitiesByGroupName[group].push(activity);
+                                    }
+                                } else {
+                                    activitiesByGroupName[group].push(activity);
+                                }
                             }
                         });
 
@@ -109,7 +118,7 @@ export function ItemActionsMenu(superdesk, activityService, workflowService, arc
 
                         // take default menu groups, add activities and push to `menuGroups`
                         AUTHORING_MENU_GROUPS.forEach((group) => {
-                            if (activitiesByGroupName[group._id]) {
+                            if (activitiesByGroupName[group._id] && activitiesByGroupName[group._id].length > 0) {
                                 menuGroups.push({
                                     _id: group._id,
                                     label: group.label,
@@ -136,7 +145,7 @@ export function ItemActionsMenu(superdesk, activityService, workflowService, arc
                         });
 
                         // actions(except viewing an item) are not allowed for items in legal archive
-                        if (item._type !== 'legal_archive') {
+                        if (item._type !== 'legal_archive' && !scope.isRelatedItem) {
                             // handle actions from extensions
                             let extensionActionsByGroupName: {[groupName: string]: Array<IArticleAction>} = {};
 
