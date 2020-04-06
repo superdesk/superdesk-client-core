@@ -721,7 +721,7 @@ describe('authoring', () => {
         expect(authoring.getBodyText()).toBe('item6 text');
         expect(authoring.getAbstractText()).toBe('');
         authoring.openMacros();
-        el(['authoring', 'group-macros-toggle']).click();
+        waitAndClick(el(['authoring', 'group-macros-toggle']));
         authoring.callMacros('Populate Abstract');
         expect(authoring.getAbstractText()).toBe('item6 text');
     });
