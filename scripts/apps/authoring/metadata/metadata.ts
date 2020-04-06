@@ -752,7 +752,13 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                 scope.activeList = false;
             };
 
-            scope.isSelected = (term) => !!_.find(scope.item[scope.field], term);
+            scope.isSelected = (term) => {
+                if (scope.cv) {
+                    term.scheme = scope.cv._id;
+                }
+
+                return !!_.find(scope.item[scope.field], term)
+            };
 
             scope.activeList = false;
             scope.selectedTerm = '';
@@ -808,7 +814,7 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                 var selected = {};
 
                 angular.forEach(scope.item[scope.field], (term) => {
-                    if (term) {
+                    if (term && scope.cv && scope.cv._id == term.scheme) {
                         selected[term[scope.uniqueField]] = 1;
                     }
                 });
