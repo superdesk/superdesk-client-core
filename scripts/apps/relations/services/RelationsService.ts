@@ -41,10 +41,18 @@ export function RelationsService(api, $q) {
             ...field?.field_options?.allowed_workflows || {},
         };
 
-        const isPublishedAndItsAllowed = ALLOWED_WORKFLOWS.published === true && isPublished(item);
-        const isInProgressAndItsAllowed = ALLOWED_WORKFLOWS.in_progress === true && !isPublished(item);
-        const isFetchedAndItsNotAllowed = ALLOWED_WORKFLOWS.fetched === false && isFetched(item);
+        if (ALLOWED_WORKFLOWS.published !== true && isPublished(item)) {
+            return false;
+        }
 
-        return (isPublishedAndItsAllowed || isInProgressAndItsAllowed) && !isFetchedAndItsNotAllowed;
+        if (ALLOWED_WORKFLOWS.in_progress !== true && !isPublished(item)) {
+            return false;
+        }
+
+        if (ALLOWED_WORKFLOWS.fetched !== true && isFetched(item)) {
+            return false;
+        }
+
+        return true;
     };
 }
