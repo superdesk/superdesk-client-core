@@ -33,7 +33,7 @@ export function SearchController($location, searchProviderService) {
             this.providers = providers;
 
             // init selected/default provider
-            if (this.providers.length && $location.search().repo != null) {
+            if (this.providers.length && $location.search().internal == null) {
                 const selectedProvider = this.providers.find((provider) =>
                     provider.search_provider === $location.search().repo || provider._id === $location.search().repo,
                 );
