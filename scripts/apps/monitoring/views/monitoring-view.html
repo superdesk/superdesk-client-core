@@ -5,15 +5,36 @@
                 <div class="monitoring__toolbar-container">
                     <div class="subnav" ng-if="hideMonitoringToolbar1 !== true">
                         <div class="flat-searchbar monitoring-backlink" ng-if="monitoring.singleGroup">
-                            <button sd-tooltip="{{ :: 'Back to original view' | translate }}" flow="right" class="navbtn navbtn--left" ng-click="monitoring.viewMonitoringHome()">
+                            <button sd-tooltip="{{ gettext('Back to original view') }}" flow="right" class="navbtn navbtn--left" ng-click="monitoring.viewMonitoringHome()">
                                 <i class="icon-arrow-left"></i>
                             </button>
                         </div>
-                                        
+
+                        <!-- Filter content using content profile -->
+                        <div data-test-id="content-profile-dropdown" class="dropdown sd-flex-no-shrink" dropdown >
+                            <button class="filter-trigger dropdown__toggle navbtn navbtn--text-only" dropdown-toggle title="{{ gettext('Filters') }}">
+                                <i class="icon-filter-large"></i>
+                            </button>
+                            <ul class="dropdown__menu dropdown__menu--scrollable">
+                                <li>
+                                    <div class="dropdown__menu-label">{{ gettext('Content Profiles') }}</div>
+                                </li>
+                                <li data-test-id="content-profiles" ng-repeat="profile in aggregate.activeProfiles | orderBy:'label'">
+                                    <button class="label-group"
+                                        ng-click="aggregate.setFilterType('contentProfile', profile, $event)"
+                                        ng-disabled="aggregate.activeFilters.contentProfile.includes(profile._id)"
+                                    >
+                                        <span translate>{{ profile.label }}</span>
+                                        <i ng-show="aggregate.activeFilters.contentProfile.includes(profile._id)" class="icon-ok"></i>
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+
                         <div class="dropdown sd-flex-no-shrink" dropdown ng-if="!monitoring.singleGroup && type === 'monitoring'">
-                            <button class="dropdown__toggle navbtn navbtn--text-only" dropdown-toggle>{{ :: 'Monitoring' | translate }} {{workspace.name}} <span class="dropdown__caret"></span></button>
+                            <button class="dropdown__toggle navbtn navbtn--text-only" dropdown-toggle>{{ gettext('Monitoring') }} {{workspace.name}} <span class="dropdown__caret"></span></button>
                             <ul class="dropdown__menu scrollable">
-                                <li><div class="dropdown__menu-label">{{ :: 'Stages' | translate }}</div></li>
+                                <li><div class="dropdown__menu-label">{{ gettext('Stages') }}</div></li>
                                 <li ng-repeat="card in aggregate.cards">
                                     <button class="label-group"
                                         ng-click="monitoring.viewSingleGroup(card, card.type === 'stage' ? card.type : 'single-stage')"
@@ -21,7 +42,7 @@
                                 </li>
                             </ul>
                         </div>
-                                        
+
                         <h3 class="subnav__page-title sd-flex-no-grow sd-empty">
                             <span ng-if="type === 'spike'">
                                 <span translate>Spiked Items</span>
@@ -52,7 +73,7 @@
                         <div ng-if="customDataSource == null" class="flat-searchbar monitoring-flat-searchbar" ng-class="{extended: aggregate.monitoringSearch}">
                             <div class="search-handler" ng-class="{'search-handler--left-border': !monitoring.singleGroup}">
                                 <label for="search-input" class="trigger-icon" ng-click="aggregate.monitoringSearch = !aggregate.monitoringSearch"><i class="icon-search"></i></label>
-                                <input id="search-input" type="text" placeholder="{{ :: 'Search' | translate }}" ng-model="query"
+                                <input id="search-input" type="text" placeholder="{{ gettext('Search') }}" ng-model="query"
                                        ng-keyup="aggregate.searchOnEnter($event, query)">
                                 <button class="search-close" ng-click="aggregate.search(query = null)" ng-class="{visible: query}"><i class="icon-remove-sign"></i></button>
                                 <button class="search-close" ng-click="aggregate.search(query);" ng-class="{visible: query}">
@@ -60,14 +81,14 @@
                                 </button>
                             </div>
                         </div>
-                
+
                         <div class="subnav__stage-group" ng-if="monitoring.singleGroup.singleViewType === 'stage' || monitoring.singleGroup && !monitoring.singleGroup.subheader" ng-class="{'subnav__stage-group--ui-responsive': aggregate.monitoringSearch}">
                             <span class="stage-group__desk">{{ monitoring.singleGroup.header }}</span>
                             <span class="stage-group__split">/</span>
                             <div class="dropdown" dropdown>
                                 <button class="dropdown__toggle navbtn navbtn--text-only navbtn--padding-s" dropdown-toggle>{{ monitoring.singleGroup.subheader}} {{ monitoring.singleGroup.type | splitText | translate }}<span class="dropdown__caret"></span></button>
                                 <ul class="dropdown__menu scrollable">
-                                    <li><div class="dropdown__menu-label">{{ :: 'Stages' | translate }}</div></li>
+                                    <li><div class="dropdown__menu-label">{{gettext('Stages') }}</div></li>
                                     <li ng-repeat="card in aggregate.cards" ng-class="{active: monitoring.singleGroup}">
                                         <button class="label-group"
                                                 ng-click="monitoring.viewSingleGroup(card, card.type === 'stage' ? card.type : 'single-stage')"
@@ -86,7 +107,7 @@
                                                         (monitoring.singleGroup || type === 'spike' || type === 'highlights' || monitoring.viewColumn)"
                                         ng-click="refreshGroup(monitoring.singleGroup)"
                                         class="btn btn--primary btn--icon-only-circle btn--small"
-                                        sd-tooltip="{{:: 'Refresh' | translate}}" flow="left" class="navbtn">
+                                        sd-tooltip="{{ gettext('Refresh') }}" flow="left" class="navbtn">
                                     <i class="icon-repeat"></i>
                                 </button>
                             </div>
@@ -94,63 +115,80 @@
                             <button class="navbtn strict" ng-if="type === 'monitoring' && aggregate.settings.type === 'workspace'" ng-click="aggregate.edit()">
                                 <i class="icon-settings"></i>
                             </button>
-                
-                            <div ng-if="disableMonitoringCreateItem == null && (!state.opened && (type !== 'spike' && type !== 'highlights'))" class="dropdown dropdown--align-right strict" sd-tooltip="{{ :: 'Create new item' | translate }}" flow="left" dropdown>
-                                <button class="navbtn dropdown__toggle sd-create-btn" dropdown__toggle></button>
-                                <div class="dropdown__menu dropdown__menu--has-head-foot pull-right" sd-content-create></div>
+
+                            <div style="display: flex; align-items: center; padding-left: 10px; padding-right: 10px;">
+                                <sd-monitoring-filtering-buttons
+                                    desk-id="activeDeskId"
+                                    toggle-filter="aggregate.toggleCustomFilter"
+                                    is-filter-active="aggregate.isCustomFilterActive"
+                                    active-filters="aggregate.activeFilters.customFilters"
+                                    add-resource-updated-event-listener="addResourceUpdatedEventListener"
+                                ></sd-monitoring-filtering-buttons>
+                            </div>
+
+                            <div ng-if="disableMonitoringCreateItem == null && (!state.opened && (type !== 'spike' && type !== 'highlights'))" class="dropdown dropdown--align-right strict" sd-tooltip="{{ gettext('Create new item') }}" flow="left" dropdown>
+                                <button
+                                    class="navbtn dropdown__toggle sd-create-btn"
+                                    dropdown__toggle
+                                    data-test-id="content-create"
+                                ></button>
+                                <div
+                                    sd-content-create
+                                    class="dropdown__menu dropdown__menu--has-head-foot pull-right"
+                                    data-test-id="content-create-dropdown"
+                                ></div>
                             </div>
                         </div>
                     </div>
-    
+
                     <div ng-hide="hideMonitoringToolbar2 === true" sd-media-query min-width="700" class="subnav">
-            
+
                         <!-- filtering by file type not implemented for usage with custom data source -->
                         <div ng-if="(!elementState || elementState === 'comfort') && customDataSource == null" class="button-list button-list--padded">
-                            <a href="" ng-repeat="fileType in aggregate.fileTypes" ng-click="aggregate.setFileType(fileType)" class="toggle-button" ng-class="{'toggle-button--active': aggregate.hasFileType(fileType)}" title="{{fileType| translate}}">
-                                <span ng-if="fileType === 'all'" class="toggle-button__text toggle-button__text--all">{{:: 'all' | translate}}</span>
+                            <a href="" ng-repeat="fileType in aggregate.fileTypes" ng-click="aggregate.setFilterType('file', fileType)" class="toggle-button" ng-class="{'toggle-button--active': aggregate.hasFileType(fileType)}" title="{{ fileType | translate }}">
+                                <span ng-if="fileType === 'all'" class="toggle-button__text toggle-button__text--all">{{ gettext('all') }}</span>
                                 <i ng-if="fileType !== 'all' && fileType !== 'highlightsPackage'" class="toggle-button__icon filetype-icon-{{fileType}}"></i>
-                                <i ng-if="fileType === 'highlightsPackage'" class="toggle-button__icon filetype-icon-highlight-pack" title="{{ :: 'Highlight Package' | translate }}"></i>
+                                <i ng-if="fileType === 'highlightsPackage'" class="toggle-button__icon filetype-icon-highlight-pack" title="{{ gettext('Highlight Package') }}"></i>
                             </a>
                         </div>
 
-                        <div class="dropdown dropdown--align-left dropdown--compact-state" dropdown  ng-if="elementState === 'compact'" sd-tooltip="{{:: 'Filter file types' | translate}}" flow="right">
+                        <div class="dropdown dropdown--align-left dropdown--compact-state" dropdown  ng-if="elementState === 'compact'" sd-tooltip="{{ gettext('Filter file types') }}" flow="right">
                                 <button class="navbtn dropdown__toggle" dropdown__toggle><i class="icon-dots"></i></button>
                                 <ul class="dropdown__menu">
-                                    <li><span class="dropdown__menu-label">{{:: 'File types' | translate}}</span></li>
+                                    <li><span class="dropdown__menu-label">{{gettext('File types') }}</span></li>
                                     <li ng-repeat="fileType in aggregate.fileTypes"
-                                        ng-click="aggregate.setFileType(fileType)"
+                                        ng-click="aggregate.setFilterType('file', fileType)"
                                         ng-class="{'dropdown__menu-item--active': aggregate.hasFileType(fileType)}"
-                                        title="{{fileType| translate}}">
+                                        title="{{ fileType | translate }}">
                                         <button>
-                                            <span ng-if="fileType === 'all'" class="toggle-button__text--all">{{:: 'all' | translate}}</span>
-                                            <span ng-if="fileType === 'highlightsPackage'"><i class="filetype-icon-highlight-pack"></i>&nbsp;{{ :: 'Highlight Package' | translate }}</span>
+                                            <span ng-if="fileType === 'all'" class="toggle-button__text--all">{{ gettext('all') }}</span>
+                                            <span ng-if="fileType === 'highlightsPackage'"><i class="filetype-icon-highlight-pack"></i>&nbsp;{{  gettext('Highlight Package') }}</span>
                                             <span ng-if="fileType !== 'all' && fileType !== 'highlightsPackage'"><i class="filetype-icon-{{fileType}}"></i>&nbsp;{{fileType}}</span>
                                         </button>
                                     </li>
                                 </ul>
                             </div>
-            
                         <div class="subnav__stretch-bar"></div>
-            
+
                         <!-- sorting not implemented for usage with custom data source -->
                         <div sd-item-sortbar class="sortbar-container"></div>
-            
+
                         <div class="dropdown dropdown--align-right" dropdown ng-if="type === 'monitoring'">
                             <button class="navbtn dropdown__toggle" dropdown__toggle><i ng-class="{'icon-list-view': !monitoring.viewColumn && (!view || view === 'compact'), 'icon-grid-view': view === 'photogrid', 'icon-kanban-view': monitoring.viewColumn}"></i></button>
                             <ul class="dropdown__menu">
                                 <li>
                                     <button ng-click="switchView('compact')">
-                                        <i class="icon-list-view"></i>{{'List View' | translate}}
+                                        <i class="icon-list-view"></i>{{ gettext('List View') }}
                                     </button>
                                 </li>
                                 <li ng-if="!monitoring.singleGroup && type === 'monitoring' && monitoring.hasSwimlaneView">
                                     <button ng-click="switchView('swimlane2', true)">
-                                        <i class="icon-kanban-view"></i>{{'Swimlane View' | translate}}
+                                        <i class="icon-kanban-view"></i>{{ gettext('Swimlane View') }}
                                     </button>
                                 </li>
                                 <li>
                                     <button ng-if="type !== 'spike'" ng-click="switchView('photogrid')">
-                                        <i class="icon-grid-view"></i>{{'Photo Grid View' | translate}}
+                                        <i class="icon-grid-view"></i>{{ gettext('Photo Grid View') }}
                                     </button>
                                 </li>
                             </ul>
@@ -167,12 +205,28 @@
                                 <li ng-if="type === 'monitoring'">
                                     <button ng-click="aggregate.edit('reorder', true)">
                                         <i class="icon-switches"></i>
-                                        &nbsp;<span>{{:: 'Rearrange Groups' | translate}}</span>
+                                        &nbsp;<span>{{ gettext('Rearrange Groups') }}</span>
                                     </button>
                                 </li>
                             </ul>
                         </div>
-            
+                    </div>
+                    <!-- Active filter tags -->
+                    <div class="search-tags" ng-if="aggregate.activeFilters.contentProfile.length > 0">
+                        <ul class="search-tags__list">
+                            <li ng-repeat="(type, keys) in aggregate.activeFilterTags">
+                                <span>{{ type }}:</span>
+                                <div ng-repeat="key in keys" class="tag-label tag-label--highlight2">
+                                    <span>{{ key.label }}</span>
+                                    <button data-test-id='remove-filter' class="tag-label__remove" ng-click="aggregate.removeFilter(key.key, type)">
+                                        <i class="icon-close-small"></i>
+                                    </button>
+                                </div>
+                            </li>
+                            <li>
+                                <button data-test-id='clear-filters' class="label--active" ng-click="aggregate.removeFilter(null)" translate>Clear filters</button>
+                            </li>
+                        </ul>
                     </div>
                 </div>
                 <div class="monitoring__main-content">
@@ -212,7 +266,7 @@
                                 </div>
                             </div>
                             <div ng-if="type === 'personal'" class="list">
-                                <div sd-monitoring-group data-view="view" data-group="{'type': 'personal', 'query': query, 'fileType': aggregate.getSelectedFileTypes(), sent: personalShowSent}" view-type="'personal'">
+                                <div sd-monitoring-group data-view="view" data-group="{'type': 'personal', 'query': query, 'fileType': aggregate.getSelectedFileTypes(), sent: personalShowSent, contentProfile: aggregate.getSelectedContentProfiles()}" view-type="'personal'">
                                 </div>
                             </div>
                             <div ng-if="type === 'custom-monitoring-view'" class="list">
@@ -226,7 +280,7 @@
                             </div>
                             <div ng-if="type === 'highlights' && !monitoring.highlightsDeskChanged()" class="list">
                                 <div sd-monitoring-group class="single-group"
-                                        data-group="{'type': 'highlights', 'query': query, 'fileType': aggregate.getSelectedFileTypes()}"
+                                        data-group="{'type': 'highlights', 'query': query, 'fileType': aggregate.getSelectedFileTypes(), contentProfile: aggregate.getSelectedContentProfiles()}"
                                         data-view="view"
                                         data-view-type="'highlights'"></div>
                             </div>

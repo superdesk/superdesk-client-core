@@ -19,20 +19,15 @@ interface IVideoRenditionItem {
 export class VideoComponent extends React.PureComponent<IProps> {
     render() {
         const {item} = this.props;
-        let poster = null;
+        const poster = item.renditions?.thumbnail?.href;
+        const videoRenditions: Array<IVideoRenditionItem> = [];
 
         if (item.renditions == null) {
             return null;
         }
 
-        if (item.renditions.viewImage != null) {
-            poster = item.renditions.viewImage.href;
-        }
-
-        let videoRenditions: Array<IVideoRenditionItem> = [];
-
         for (const rend of Object.values(item.renditions)) {
-            if (rend.mimetype == null) {
+            if (rend == null || rend.mimetype == null) {
                 continue;
             } else if (rend.mimetype.toLowerCase() === 'application/x-mpegurl') {
                 // HLSVideoComponent can handle only one stream url

@@ -1,0 +1,42 @@
+version: "2.4"
+services:
+    redis:
+        image: redis:alpine
+        ports:
+            - "6379:6379"
+
+    mongo:
+        image: mongo:3.6
+        ports:
+            - "27017:27017"
+        tmpfs:
+            - /data/db
+
+    elastic:
+        image: elasticsearch:2.4-alpine
+        ports:
+            - "9200:9200"
+        environment:
+            - discovery.type=single-node
+        tmpfs:
+            - /usr/share/elasticsearch/data
+
+    superdesk:
+        build: .
+        ports:
+            - "5000:5000"
+            - "5100:5100"
+        links:
+            - redis
+            - mongo
+            - elastic
+        environment:
+            - REDIS_URL=redis://redis:6379/1
+            - ELASTICSEARCH_URL=http://elastic:9200
+            - MONGO_URI=mongodb://mongo/test_sd
+            - ARCHIVED_URI=mongodb://mongo/test_ar
+            - LEGAL_ARCHIVE_URI=mongodb://mongo/test_la
+            - PUBLICAPI_MONGO_URI=mongodb://mongo/test_pa
+            - CONTENTAPI_MONGO_URI=mongodb://mongo/test_pa
+            - WEB_WORKERS=2
+            - WEB_LOG_LEVEL=error

@@ -44,9 +44,11 @@
                                     <li
                                         ng-click="subscribeDesk(desk)"
                                         ng-repeat="desk in wrapper.desks.desks._items | filter: desksFilter"
-                                        style="padding-left: 6px;padding-right: 6px; margin-right: 0;">
-                                        <figure class="avatar organisation small"></figure>
-                                        <div class="name">{{desk.name}}</div>
+                                    >
+                                        <span class="flex-row sibling-spacer-10">
+                                            <sd-organisation-avatar></sd-organisation-avatar>
+                                            <div class="name">{{desk.name}}</div>
+                                        </span>
                                     </li>
                                 </ul>
                             </div>
@@ -54,10 +56,11 @@
                             <div ng-if="wrapper.newSubscriptionFilterText.length > 0" class="search-result">
                                 <ul class="users-list-embed">
                                     <li ng-click="subscribeUser(user)"
-                                    ng-repeat="user in wrapper.users | filter: usersFilter"
-                                    style="padding-left: 6px;padding-right: 6px; margin-right: 0;">
-                                        <figure class="avatar small"><img sd-user-avatar data-user="user"></figure>
-                                        <div class="name">{{user.first_name}} {{user.last_name}}</div>
+                                        ng-repeat="user in wrapper.users | filter: usersFilter"
+                                        class="flex-row sibling-spacer-10"
+                                    >
+                                        <sd-user-avatar data-user="user"></sd-user-avatar>
+                                        <div class="name">{{user.display_name}}</div>
                                     </li>
                                 </ul>
                             </div>
@@ -75,7 +78,7 @@
                 ng-class="{&quot;sd-list-item--activated&quot;:itemActive2}"
                 style="margin-bottom: 6px">
                 <div class="sd-list-item__column">
-                    <figure class="avatar organisation" style="margin:0"></figure>
+                    <sd-organisation-avatar></sd-organisation-avatar>
                 </div>
                 <div class="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border">
                     <div class="sd-list-item__row">
@@ -99,13 +102,11 @@
                 ng-class="{&quot;sd-list-item--activated&quot;:itemActive2}"
                 style="margin-bottom: 6px">
                 <div class="sd-list-item__column">
-                    <figure class="avatar" style="margin:0">
-                        <img sd-user-avatar data-user="user">
-                    </figure>
+                    <sd-user-avatar data-user="user"></sd-user-avatar>
                 </div>
                 <div class="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border">
                     <div class="sd-list-item__row">
-                        <strong class="sd-overflow-ellipsis">{{user.first_name}} {{user.last_name}}</strong>
+                        <strong class="sd-overflow-ellipsis">{{user.display_name}}</strong>
                     </div>
                     <div class="sd-list-item__row">
                         {{user.username}}
@@ -134,15 +135,12 @@
                     ng-class="{&quot;sd-list-item--activated&quot;:itemActive2}"
                     style="margin-bottom: 6px; padding: 0 10px; background-color: #E6EDEF!important; cursor: default;">
                     <div class="sd-list-item__column">
-                        <figure class="avatar" style="margin:0">
-                            <img sd-user-avatar data-user="wrapper.userLookup[wrapper.subscriptionInCreateOrEditMode.user]">
-                        </figure>
+                        <sd-user-avatar data-user="wrapper.userLookup[wrapper.subscriptionInCreateOrEditMode.user]"></sd-user-avatar>
                     </div>
                     <div class="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border">
                         <div class="sd-list-item__row">
                             <strong class="sd-overflow-ellipsis">
-                                {{wrapper.userLookup[wrapper.subscriptionInCreateOrEditMode.user].first_name}}
-                                {{wrapper.userLookup[wrapper.subscriptionInCreateOrEditMode.user].last_name}}
+                                {{wrapper.userLookup[wrapper.subscriptionInCreateOrEditMode.user].display_name}}
                             </strong>
                         </div>
                         <div class="sd-list-item__row">
@@ -157,7 +155,7 @@
                     ng-class="{&quot;sd-list-item--activated&quot;:itemActive2}"
                     style="margin-bottom: 6px; padding: 0 10px; background-color: #E6EDEF!important; cursor: default;">
                     <div class="sd-list-item__column">
-                        <figure class="avatar organisation" style="margin:0"></figure>
+                        <sd-organisation-avatar></sd-organisation-avatar>
                     </div>
                     <div class="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border">
                         <div class="sd-list-item__row">

@@ -1,14 +1,17 @@
 import {includes} from 'lodash';
 import {getLabelForFieldId} from '../../helpers/getLabelForFieldId';
+import {appConfig} from 'appConfig';
+import {IArticleField} from 'superdesk-api';
 
 interface IScope extends ng.IScope {
     getEditor3FormattingOptions: (fieldName: string) => Array<string>;
     model: any;
-    fields: any;
+    fields: {[key: string]: IArticleField};
     form: any;
     formattingOptions: Array<string>;
     schemaKeysOrdering: any;
     schemaKeysDisabled: any;
+    characterValidationEnabled: boolean;
     hasFormatOptions(field): boolean;
     hasImageSelected(field): boolean;
     label(id): string;
@@ -21,6 +24,7 @@ interface IScope extends ng.IScope {
     onOrderUpdate(locals: { key: string; }): any;
     onDrag(locals: { start: number; end: number; key: string; }): any;
     onToggle(locals: { key: string; dest: string; position: string; }): any;
+    showPreviewConfig(field: IArticleField): boolean;
 }
 
 const HAS_PLAINTEXT_FORMATTING_OPTIONS = Object.freeze({
@@ -123,6 +127,7 @@ export function ContentProfileSchemaEditor(vocabularies) {
         },
         link: function(scope: IScope, elem, attr, form) {
             scope.formattingOptions = FORMATTING_OPTIONS;
+            scope.characterValidationEnabled = appConfig?.disallowed_characters != null;
 
             scope.getEditor3FormattingOptions = (fieldName) => {
                 const isCustomPlainTextField = typeof scope.fields[fieldName] === 'object'
@@ -194,6 +199,10 @@ export function ContentProfileSchemaEditor(vocabularies) {
             vocabularies.getVocabularies().then((vocabulariesCollection) => {
                 scope.label = (id) => getLabelForFieldId(id, vocabulariesCollection);
             });
+
+            // enable preview config for CVs
+            // we display other fields by default already
+            scope.showPreviewConfig = (field) => field != null && field.field_type == null;
         },
     };
 }

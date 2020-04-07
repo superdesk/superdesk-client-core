@@ -9,6 +9,7 @@ import {DatePickerISO, TimePicker, Button, Switch} from 'superdesk-ui-framework'
 export function getDateTimeField(superdesk: ISuperdesk) {
     const {gettext, gettextPlural} = superdesk.localization;
     const {Spacer} = superdesk.components;
+    const {dateToServerString} = superdesk.utilities;
 
     return class DateTimeField extends React.PureComponent<IEditorComponentProps<string | null, IDateTimeFieldConfig>> {
         render() {
@@ -17,7 +18,9 @@ export function getDateTimeField(superdesk: ISuperdesk) {
                     value={this.props.value != null}
                     onChange={(value) => {
                         if (value) {
-                            this.props.setValue(new Date().toISOString());
+                            this.props.setValue(
+                                dateToServerString(addMinutes(new Date(), this.props.config.initial_offset_minutes)),
+                            );
                         } else {
                             this.props.setValue(null);
                         }
@@ -32,10 +35,10 @@ export function getDateTimeField(superdesk: ISuperdesk) {
                     </div>
                 );
             } else {
-                const date = addMinutes(new Date(this.props.value), this.props.config.initial_offset_minutes);
+                const date = new Date(this.props.value);
 
-                const day = date == null ? '' : format(date, 'yyyy-MM-dd'); // ISO8601
-                const hour = date == null ? '' : format(date, 'HH:mm'); // ISO8601
+                const day = format(date, 'yyyy-MM-dd'); // ISO8601
+                const hour = format(date, 'HH:mm'); // ISO8601
 
                 const steps = this.props.config?.increment_steps ?? [];
 
@@ -45,6 +48,7 @@ export function getDateTimeField(superdesk: ISuperdesk) {
 
                         <Spacer type="horizontal" align="stretch" spacing="medium">
                             <DatePickerISO
+                                dateFormat={superdesk.instance.config.view.dateformat}
                                 value={day}
                                 onChange={(dateString) => {
                                     if (dateString === '') {
@@ -53,17 +57,18 @@ export function getDateTimeField(superdesk: ISuperdesk) {
                                     }
 
                                     const [yearStr, monthStr, dayStr] = dateString.split('-');
-                                    const nextDate = date ?? new Date();
 
                                     this.props.setValue(
-                                        set(
-                                            nextDate,
-                                            {
-                                                year: parseInt(yearStr, 10),
-                                                month: parseInt(monthStr, 10) - 1,
-                                                date: parseInt(dayStr, 10),
-                                            },
-                                        ).toISOString(),
+                                        dateToServerString(
+                                            set(
+                                                date,
+                                                {
+                                                    year: parseInt(yearStr, 10),
+                                                    month: parseInt(monthStr, 10) - 1,
+                                                    date: parseInt(dayStr, 10),
+                                                },
+                                            ),
+                                        ),
                                     );
                                 }}
                             />
@@ -77,13 +82,15 @@ export function getDateTimeField(superdesk: ISuperdesk) {
                                     const [hours, minutes] = value.split(':');
 
                                     this.props.setValue(
-                                        set(
-                                            date,
-                                            {
-                                                hours: parseInt(hours, 10),
-                                                minutes: parseInt(minutes, 10),
-                                            },
-                                        ).toISOString(),
+                                        dateToServerString(
+                                            set(
+                                                date,
+                                                {
+                                                    hours: parseInt(hours, 10),
+                                                    minutes: parseInt(minutes, 10),
+                                                },
+                                            ),
+                                        ),
                                     );
                                 }}
                             />
@@ -128,7 +135,7 @@ export function getDateTimeField(superdesk: ISuperdesk) {
                                                         onClick={() => {
                                                             if (date != null) {
                                                                 this.props.setValue(
-                                                                    addMinutes(date, step).toISOString(),
+                                                                    dateToServerString(addMinutes(date, step)),
                                                                 );
                                                             }
                                                         }}

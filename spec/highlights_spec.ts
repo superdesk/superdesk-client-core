@@ -113,7 +113,7 @@ describe('highlights', () => {
 
         it('keyboard shortcuts', () => {
             expect(workspace.getCurrentDesk()).toEqual('POLITIC DESK');
-            monitoring.selectItem(2, 0);
+            monitoring.getItem(2, 0).click();
 
             browser.sleep(1000);
             // trigger keyoard shortcut(ctrl+shift+^) for 'Mark for highlight'
@@ -132,6 +132,9 @@ describe('highlights', () => {
 
             // expect 'Highlight three' is marked
             monitoring.checkMarkedForHighlight('Highlight three', 2, 0);
+
+            monitoring.getItem(2, 1).click();
+            monitoring.getItem(2, 0).click();
 
             // again trigger keyoard shortcut for multimark
             ctrlShiftKey('^');

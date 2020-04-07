@@ -79,16 +79,13 @@ export function UserPopupService($compile, $timeout, userList) {
         var box = popover.get();
 
         box.html(
-            '<div class="avatar-holder">' +
-                '<figure class="avatar big">' +
-                    '<img sd-user-avatar data-user="user">' +
-                '</figure>' +
-            '</div>' +
-            '<div class="title">{{user.display_name}}</div>' +
-            '<div class="actions">' +
-                '<a href="#/users/{{user._id}}">go to profile</a>' +
-            '</div>',
-        );
+            `<div style="padding-top: 20px; display: flex; justify-content: center;">
+                <sd-user-avatar data-user="user" data-size="'large'"></sd-user-avatar>
+            </div>
+            <div class="title">{{user.display_name}}</div>
+            <div class="actions">
+                <a href="#/users/{{user._id}}">go to profile</a>
+            </div>`);
         var popupScope = scope.$new(true);
 
         popupScope.user = user;

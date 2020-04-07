@@ -96,8 +96,13 @@
                         ng-disabled="!_editable"
                         ng-trim="false"
                         tabindex="{{editor.slugline.order}}"
+                        data-test-id="field-slugline"
                     >
                     <span ng-if="schema.slugline.maxlength" sd-character-count data-item="item.slugline" data-html="true" data-limit="schema.slugline.maxlength"></span>
+                    <sd-validate-characters ng-if="schema.slugline.validate_characters"
+                        class="disallowed-char-error"
+                        item="item.slugline"
+                        field="'slugline'"></sd-validate-characters>
                 </div>
             </div>
 
@@ -299,7 +304,7 @@
                         data-list="availableCategories"
                         data-header="true"
                         data-change="autosave(item)"
-                        data-reload-list="false"
+                        data-reload-list="true"
                         data-cv="{popup_width: popup_width.categories}"
                         data-set-language="true"
                         tabindex="{{editor.anpa_category.order}}">
@@ -389,6 +394,8 @@
                 <label class="authoring-header__item-label">{{field.display_name}}</label>
                 <span ng-if="schema[field._id].maxlength || schema[field._id].minlength" sd-character-count
                     data-item="item.extra[field._id]" data-html="true" data-limit="schema[field._id].maxlength"></span>
+                <sd-validate-characters ng-if="schema[field._id].validate_characters"
+                    class="disallowed-char-error" item="item.extra[field._id]" field="field.display_name"></sd-validate-characters>
                 <div class="authoring-header__input-holder">
                     <div sd-editor3
                         class="authoring-header__input-editor3"
@@ -491,8 +498,9 @@
                               ng-model="item.ednote"
                               ng-disabled="!_editable"
                               ng-change="autosave(item)"
-                              tabindex="{{editor.ednote.order}}">
-                    </textarea>
+                              tabindex="{{editor.ednote.order}}"
+                              data-test-id="field-editors-note"
+                    ></textarea>
                 </div>
 
             </div>

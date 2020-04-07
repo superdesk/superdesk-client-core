@@ -1,21 +1,12 @@
 import {ISuperdesk, IArticle, IArticleAction} from 'superdesk-api';
 import {manageMarkedUserForSingleArticle} from './managed-marked-user';
+import {updateMarkedUser, canChangeMarkedUser} from './common';
 
 export function getActionsInitialize(superdesk: ISuperdesk) {
     const {gettext} = superdesk.localization;
-    const {isPersonal, isLocked} = superdesk.entities.article;
 
-    return function getActions(articleNext: IArticle) {
-        // it doesn't make sense to display the action since it wouldn't get updated in the list anyway
-        // when article is locked for editing all changes are temporary
-        // and aren't displayed in the list item until the article is saved
-        const locked = isLocked(articleNext);
-
-        if (
-            isPersonal(articleNext)
-            || locked
-            || articleNext.state === 'spiked'
-        ) {
+    return function getActions(article: IArticle): Promise<Array<IArticleAction>> {
+        if (!canChangeMarkedUser(superdesk, article)) {
             return Promise.resolve([]);
         }
 
@@ -24,15 +15,8 @@ export function getActionsInitialize(superdesk: ISuperdesk) {
             icon: 'icon-assign',
             groupId: 'highlights',
             onTrigger: () => {
-                manageMarkedUserForSingleArticle(superdesk, articleNext);
+                manageMarkedUserForSingleArticle(superdesk, article);
             },
-        };
-
-        const markForUserAndSend: IArticleAction = {
-            label: gettext('Mark and send'),
-            icon: 'icon-assign',
-            groupId: 'highlights',
-            onTrigger: () => manageMarkedUserForSingleArticle(superdesk, articleNext, true),
         };
 
         const unmark: IArticleAction = {
@@ -40,10 +24,7 @@ export function getActionsInitialize(superdesk: ISuperdesk) {
             icon: 'icon-assign',
             groupId: 'highlights',
             onTrigger: () => {
-                superdesk.entities.article.update({
-                    ...articleNext,
-                    marked_for_user: null,
-                });
+                updateMarkedUser(superdesk, article, {marked_for_user: null});
             },
         };
 
@@ -52,38 +33,14 @@ export function getActionsInitialize(superdesk: ISuperdesk) {
             groupId: 'highlights',
             icon: 'icon-assign',
             onTrigger: () => {
-                manageMarkedUserForSingleArticle(superdesk, articleNext);
+                manageMarkedUserForSingleArticle(superdesk, article);
             },
         };
 
-        const markForOtherUserAndSend: IArticleAction = {
-            label: gettext('Mark for other and send'),
-            groupId: 'highlights',
-            icon: 'icon-assign',
-            onTrigger: () => {
-                manageMarkedUserForSingleArticle(superdesk, articleNext, true);
-            },
-        };
-
-        const assigned = articleNext.marked_for_user != null;
-        const hasDesk = articleNext.task != null && articleNext.task.desk != null;
-
-        if (assigned) {
-            const actions = [unmark, markForOtherUser];
-
-            if (hasDesk) {
-                actions.push(markForOtherUserAndSend);
-            }
-
-            return Promise.resolve(actions);
+        if (article.marked_for_user == null) {
+            return Promise.resolve([markForUser]);
         } else {
-            const actions = [markForUser];
-
-            if (hasDesk) {
-                actions.push(markForUserAndSend);
-            }
-
-            return Promise.resolve(actions);
+            return Promise.resolve([unmark, markForOtherUser]);
         }
     };
 }

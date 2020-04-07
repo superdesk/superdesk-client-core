@@ -17,17 +17,35 @@
             </div>
             <div class="legend" translate>Select desks for view</div>
             <div class="desk-container">
-                <div class="desk" ng-repeat="desk in desks | orderBy: 'name' track by desk._id">
+                <div class="desk" ng-repeat="desk in desks | orderBy: 'name' track by desk._id" data-test-id="desk--{{desk.name}}">
                     <div class="desk-title">
-                        <span sd-switch ng-model="editGroups[desk._id].selected" ng-click="setDeskInfo(desk._id)"></span>
+                        <span
+                            sd-switch ng-model="editGroups[desk._id].selected"
+                            ng-click="setDeskInfo(desk._id)"
+                            data-test-id="active-toggle"
+                        ></span>
                         <span class="desk-title__text">{{desk.name}}</span>
                     </div>
                     <ul class="stages" ng-if="editGroups[desk._id].selected">
                         <li ng-repeat="stage in deskStages[desk._id]">
-                            <span sd-check ng-model="editGroups[stage._id].selected" ng-click="setStageInfo(stage._id)" label-position="inside">{{stage.name}}</span> 
+                            <span
+                                sd-check ng-model="editGroups[stage._id].selected"
+                                ng-click="setStageInfo(stage._id)"
+                                label-position="inside"
+                                data-test-id="monitoring-group--{{stage.name}}"
+                            >
+                                {{stage.name}}
+                            </span> 
                         </li>
                         <li ng-repeat="output in deskOutputs track by output.id">
-                            <span sd-check ng-model="editGroups[desk._id + output.id].selected" ng-click="setDeskOutputInfo(desk._id + output.id, output.type)" label-position="inside">{{ output.label }}</span>
+                            <span
+                                sd-check ng-model="editGroups[desk._id + output.id].selected"
+                                ng-click="setDeskOutputInfo(desk._id + output.id, output.type)"
+                                label-position="inside"
+                                data-test-id="monitoring-group--{{output.label}}"
+                            >
+                                {{ output.label }}
+                            </span>
                         </li>
                     </ul>
                 </div>
@@ -46,10 +64,19 @@
         <div class="content">
             <div class="legend" translate>Select saved searches for view</div>
             <div sd-toggle-box data-title="{{ :: 'Global saved searches' | translate}}" data-style="circle" data-open="true">
-                <div class="desk" ng-repeat="search in globalSavedSearches track by search._id | orderBy: 'name'">
+                <div
+                    class="desk"
+                    ng-repeat="search in globalSavedSearches track by search._id | orderBy: 'name'"
+                    data-test-id="global-saved-search--{{search.name}}"
+                >
                     <div class="desk-title desk-title--saved-search">
                         <div class="switch">
-                            <span sd-switch  ng-model="editGroups[search._id].selected" ng-click="setSearchInfo(search._id)"></span>
+                            <span
+                                sd-switch
+                                ng-model="editGroups[search._id].selected"
+                                ng-click="setSearchInfo(search._id)"
+                                data-test-id="toggle"
+                            ></span>
                         </div>
                         <div class="desk-title__text">
                             {{:: search.name}} <i>by {{:: userLookup[search.user].display_name}}</i>
@@ -125,6 +152,6 @@
 <div class="modal__footer">
     <button id="previousBtn" class="btn btn--hollow pull-left" ng-if="step.current !== 'desks' && !displayOnlyCurrentStep" ng-click="previous()" translate>Previous</button>
     <button class="btn" ng-click="cancel()" translate>Cancel</button>
-    <button class="btn btn--primary" ng-click="save()" translate>Done</button>
+    <button class="btn btn--primary" ng-click="save()" translate data-test-id="done">Done</button>
     <button id="nextBtn" class="btn btn--hollow" ng-if="step.current !== 'maxitems' && !displayOnlyCurrentStep" ng-click="next()" translate>Next</button>
 </div>

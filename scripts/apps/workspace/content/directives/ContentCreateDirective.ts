@@ -1,7 +1,42 @@
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
+import {IArticle} from 'superdesk-api';
+import {IContentTemplate} from 'superdesk-interfaces/ContentTemplate';
+import {assertNever, isArray} from 'core/helpers/typescript-helpers';
 
-ContentCreateDirective.$inject = ['desks', 'templates', 'content', 'authoringWorkspace',
-    'superdesk', 'keyboardManager', '$location'];
+type IItemCreationAction =
+    { kind: 'plain-text'}
+    | {kind: 'from-template'; template: IContentTemplate}
+    | {kind: 'create-package'}
+    | {kind: 'upload-media'}
+;
+
+ContentCreateDirective.$inject = [
+    'desks',
+    'templates',
+    'content',
+    'authoringWorkspace',
+    'superdesk',
+    'keyboardManager',
+    '$location',
+    'packages',
+];
+
+interface IScope extends ng.IScope {
+    createFromTemplate: (template: IContentTemplate) => Promise<IArticle>;
+    create: (action: IItemCreationAction) => Promise<IArticle>;
+    onCreated?: (item: Array<IArticle>) => void;
+    defaultTemplate: any;
+    openUpload: () => void;
+    canCreatePackage: () => boolean;
+    createPackage: () => void;
+    contentTemplates: any;
+
+    // If an item is created, but closed without changes, it gets removed
+    // it doesn't work well when creating item and adding as related immediately
+    // user might want to go back and update the item later.
+    // To avoid the item getting removed it is initialized with a higher version
+    initializeAsUpdated: boolean;
+}
 
 export function ContentCreateDirective(
     desks,
@@ -11,42 +46,56 @@ export function ContentCreateDirective(
     superdesk,
     keyboardManager,
     $location,
+    packages,
 ) {
     return {
-        scope: true,
+        scope: {
+            onCreated: '=',
+            initializeAsUpdated: '=',
+        },
         templateUrl: 'scripts/apps/workspace/content/views/sd-content-create.html',
-        link: function(scope) {
-            /**
-             * Start editing given item in sidebar editor
-             *
-             * @param {Object} item
-             */
-            function edit(item) {
-                authoringWorkspace.edit(item);
-            }
-
+        link: function(scope: IScope) {
             function getRecentTemplates(deskId) {
                 var NUM_ITEMS = 5;
 
-                return templates.getRecentTemplates(desks.activeDeskId, NUM_ITEMS).then((result) => {
+                return templates.getRecentTemplates(deskId, NUM_ITEMS).then((result) => {
                     scope.contentTemplates = result._items;
                 });
             }
 
-            /**
-             * Create and start editing item of given type
-             *
-             * @param {string} type
-             */
-            scope.create = function(type) {
-                content.createItem(type).then(edit);
+            scope.create = function(action: IItemCreationAction) {
+                return (() => {
+                    if (action.kind === 'plain-text') {
+                        return content.createItem('text', scope.initializeAsUpdated);
+                    } else if (action.kind === 'from-template') {
+                        return content.createItemFromTemplate(action.template, scope.initializeAsUpdated)
+                            .then((item: IArticle) => {
+                                getRecentTemplates(desks.activeDeskId);
+
+                                return item;
+                            });
+                    } else if (action.kind === 'create-package') {
+                        return packages.createEmptyPackage(undefined, scope.initializeAsUpdated);
+                    } else if (action.kind === 'upload-media') {
+                        return superdesk.intent('upload', 'media', {deskSelectionAllowed: true});
+                    } else {
+                        assertNever(action);
+                    }
+                })().then((result: IArticle | Array<IArticle>) => {
+                    if (typeof scope.onCreated === 'function') {
+                        scope.onCreated(
+                            isArray(result) ? result : [result],
+                        );
+                    }
+
+                    if (action.kind !== 'upload-media' && !isArray(result)) {
+                        authoringWorkspace.edit(result);
+                    }
+                });
             };
 
-            /**
-             * Create and start editing a package
-             */
-            scope.createPackage = function() {
-                content.createPackageItem().then(edit);
+            scope.createFromTemplate = function(template: IContentTemplate) {
+                return scope.create({kind: 'from-template', template});
             };
 
             /**
@@ -56,25 +105,10 @@ export function ContentCreateDirective(
                 return $location.path() !== '/workspace/personal';
             };
 
-            /**
-             * Create and start editing an item based on given package
-             *
-             * @param {Object} template
-             */
-            scope.createFromTemplate = function(template) {
-                content.createItemFromTemplate(template)
-                    .then(edit)
-                    .then(() => {
-                        getRecentTemplates(desks.activeDeskId);
-                    });
-            };
-
-            /**
-             * Start content upload modal
-             */
-            scope.openUpload = function openUpload() {
-                superdesk.intent('upload', 'media', {deskSelectionAllowed: true});
-            };
+            scope.$on('template:update', (e, data) => {
+                getRecentTemplates(desks.activeDeskId);
+                getDefaultTemplate();
+            });
 
             scope.contentTemplates = null;
 
@@ -90,7 +124,11 @@ export function ContentCreateDirective(
                     e.preventDefault();
                 }
 
-                scope.defaultTemplate ? scope.createFromTemplate(scope.defaultTemplate) : scope.create();
+                if (scope.defaultTemplate) {
+                    scope.create({kind: 'from-template', template: scope.defaultTemplate});
+                } else {
+                    scope.create({kind: 'plain-text'});
+                }
             });
 
             scope.$on('$destroy', () => {
@@ -107,15 +145,6 @@ export function ContentCreateDirective(
                     });
                 }
             }
-
-            /**
-             * Create a new item using given type and start editing
-             *
-             * @param {Object} contentType
-             */
-            scope.createFromTemplate = function(template) {
-                content.createItemFromTemplate(template).then(edit);
-            };
         },
     };
 }

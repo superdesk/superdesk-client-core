@@ -121,7 +121,7 @@ describe('content filters', () => {
         contentFilters.addFilterCondition();
         contentFilters.addTestStory('item5');
         contentFilters.test();
-        expect(contentFilters.testResultField.getText()).toEqual('Does Match');
+        expect(contentFilters.testResultField.getText()).toEqual('Does match');
         contentFilters.close();
 
         contentFilters.addNew();
@@ -129,7 +129,7 @@ describe('content filters', () => {
         contentFilters.addFilterCondition();
         contentFilters.addTestStory('item5');
         contentFilters.test();
-        expect(contentFilters.testResultField.getText()).toEqual('Does Match');
+        expect(contentFilters.testResultField.getText()).toEqual('Does match');
         contentFilters.close();
 
         contentFilters.addNew();
@@ -137,7 +137,7 @@ describe('content filters', () => {
         contentFilters.addFilterCondition();
         contentFilters.addTestStory('item9');
         contentFilters.test();
-        expect(contentFilters.testResultField.getText()).toEqual('Doesn\'t Match');
+        expect(contentFilters.testResultField.getText()).toEqual('Doesn\'t match');
         contentFilters.close();
 
         contentFilters.addNew();
@@ -145,7 +145,7 @@ describe('content filters', () => {
         contentFilters.addFilterCondition();
         contentFilters.addTestStory('item9');
         contentFilters.test();
-        expect(contentFilters.testResultField.getText()).toEqual('Doesn\'t Match');
+        expect(contentFilters.testResultField.getText()).toEqual('Doesn\'t match');
         contentFilters.close();
 
         contentFilters.addNew();
@@ -153,7 +153,7 @@ describe('content filters', () => {
         contentFilters.addFilterCondition();
         contentFilters.addTestStory('item5');
         contentFilters.test();
-        expect(contentFilters.testResultField.getText()).toEqual('Does Match');
+        expect(contentFilters.testResultField.getText()).toEqual('Does match');
         contentFilters.close();
 
         contentFilters.addNew();
@@ -161,7 +161,7 @@ describe('content filters', () => {
         contentFilters.addFilterCondition();
         contentFilters.addTestStory('item5');
         contentFilters.test();
-        expect(contentFilters.testResultField.getText()).toEqual('Doesn\'t Match');
+        expect(contentFilters.testResultField.getText()).toEqual('Doesn\'t match');
         contentFilters.close();
 
         contentFilters.addNew();
@@ -169,7 +169,7 @@ describe('content filters', () => {
         contentFilters.addFilterCondition();
         contentFilters.addTestStory('item7');
         contentFilters.test();
-        expect(contentFilters.testResultField.getText()).toEqual('Does Match');
+        expect(contentFilters.testResultField.getText()).toEqual('Does match');
         contentFilters.close();
 
         contentFilters.addNew();
@@ -177,7 +177,7 @@ describe('content filters', () => {
         contentFilters.addFilterCondition();
         contentFilters.addTestStory('item7');
         contentFilters.test();
-        expect(contentFilters.testResultField.getText()).toEqual('Doesn\'t Match');
+        expect(contentFilters.testResultField.getText()).toEqual('Doesn\'t match');
         contentFilters.close();
 
         contentFilters.addNew();
@@ -185,7 +185,7 @@ describe('content filters', () => {
         contentFilters.addFilterCondition();
         contentFilters.addTestStory('item8');
         contentFilters.test();
-        expect(contentFilters.testResultField.getText()).toEqual('Does Match');
+        expect(contentFilters.testResultField.getText()).toEqual('Does match');
         contentFilters.close();
     });
 

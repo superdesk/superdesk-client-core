@@ -193,10 +193,10 @@ class Authoring {
         this.save_publish_button = element(by.buttonText('Save and publish'));
         this.save_button = element(by.buttonText('Save'));
         this.edit_button = element(by.id('Edit'));
-        this.update_button = element(by.buttonText('Update'));
-        this.edit_correct_button = element(by.buttonText('Correct'));
-        this.edit_kill_button = element(by.buttonText('Kill'));
-        this.edit_takedown_button = element(by.buttonText('Takedown'));
+        this.update_button = element(by.css('[title="Update"]'));
+        this.edit_correct_button = element(by.css('[title="Correct"]'));
+        this.edit_kill_button = element(by.css('[title="Kill"]'));
+        this.edit_takedown_button = element(by.css('[title="Takedown"]'));
 
         this.navbarMenuBtn = element(by.css('.dropdown__toggle.sd-create-btn'));
         this.newPlainArticleLink = element(by.id('create_text_article'));
@@ -741,7 +741,9 @@ class Authoring {
             });
         };
 
-        var bodyHtml = element(by.model('item.body_html')).all(by.className('editor-type-html')).first();
+        var getBodyHtml = () => browser.wait(ECE.presenceOf(element(by.model('item.body_html'))))
+            .then(() => element(by.model('item.body_html')).all(by.className('editor-type-html')).first());
+
         var abstract = element(by.model('item.abstract')).all(by.className('editor-type-html')).first();
         var bodyFooter = element(by.id('body_footer')).all(by.className('editor-type-html')).first();
         var bodyFooterPreview = element(by.id('body_footer_preview')).all(by.css('[ng-bind-html="html"]')).first();
@@ -749,7 +751,9 @@ class Authoring {
         var byline = element(by.model('item.byline')).all(by.className('editor-type-html')).first();
 
         this.writeText = function(text) {
-            bodyHtml.sendKeys(text);
+            getBodyHtml().then((bodyHtml) => {
+                bodyHtml.sendKeys(text);
+            });
         };
 
         this.writeTextToHeadline = function(text) {
@@ -797,7 +801,9 @@ class Authoring {
         this.getEditorWordCount = () => element.all(by.className('char-count words')).last().getText();
 
         this.getBodyText = function() {
-            return bodyHtml.getText();
+            return getBodyHtml().then((bodyHtml) => {
+                return bodyHtml.getText();
+            });
         };
 
         this.getBodyInnerHtml = function() {
@@ -806,12 +812,16 @@ class Authoring {
         };
 
         this.focusBodyHtmlElement = function() {
-            bodyHtml.click();
+            getBodyHtml().then((bodyHtml) => {
+                bodyHtml.click();
+            });
         };
 
         this.cleanBodyHtmlElement = function() {
-            bodyHtml.clear();
-            this.backspaceBodyHtml();
+            getBodyHtml().then((bodyHtml) => {
+                bodyHtml.clear();
+                this.backspaceBodyHtml();
+            });
         };
 
         this.backspaceBodyHtml = function(count) {
@@ -821,7 +831,9 @@ class Authoring {
                 sequence += protractor.Key.BACK_SPACE;
             }
 
-            bodyHtml.sendKeys(sequence);
+            getBodyHtml().then((bodyHtml) => {
+                bodyHtml.sendKeys(sequence);
+            });
         };
 
         this.getHeadlineText = function() {
@@ -973,6 +985,8 @@ class Authoring {
 
         this.setHeaderSluglineText = function(text) {
             var headerDetails = element(by.className('authoring-header__detailed'));
+
+            browser.wait(ECE.presenceOf(headerDetails));
 
             return headerDetails.all(by.model('item.slugline')).sendKeys(text);
         };

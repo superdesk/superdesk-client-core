@@ -1,7 +1,3 @@
-
-import {waitUntil} from 'core/helpers/waitUtil';
-import {appConfig} from 'appConfig';
-
 describe('superdesk.apps.workspace.content', () => {
     beforeEach(window.module('superdesk.mocks'));
     beforeEach(window.module('superdesk.apps.desks'));
@@ -22,20 +18,20 @@ describe('superdesk.apps.workspace.content', () => {
         }));
 
         it('can create plain text items', inject((api, content, $rootScope) => {
-            content.createItem().then(done);
+            content.createItem('text').then(done);
             $rootScope.$digest();
             expect(api.save).toHaveBeenCalledWith('archive', {type: 'text', version: 0});
             expect(done).toHaveBeenCalledWith(ITEM);
         }));
 
-        it('can create packages', inject((api, content, desks, session, $rootScope) => {
+        it('can create packages', inject((api, packages, desks, session, $rootScope) => {
             session.identity = {_id: '1'};
             desks.userDesks = {_items: []};
             spyOn(desks, 'getCurrentDesk')
                 .and
                 .returnValue({_id: '1', name: 'sport', working_stage: '2', incoming_stage: '3'});
 
-            content.createPackageItem().then(done);
+            packages.createEmptyPackage().then(done);
             $rootScope.$digest();
             expect(api.save).toHaveBeenCalledWith('archive', {headline: '', slugline: '',
                 description_text: '', type: 'composite',
@@ -66,35 +62,6 @@ describe('superdesk.apps.workspace.content', () => {
                     {refs: [{headline: '', residRef: undefined, location: 'archive',
                         slugline: '', renditions: {}, itemClass: '', type: ''}],
                     id: 'main', role: 'grpRole:main'}]});
-        }));
-
-        it('can create items from template', inject((api, content, desks, session, $rootScope) => {
-            session.identity = {_id: 'user:1', byline: 'user1'};
-
-            spyOn(desks, 'getCurrentDesk')
-                .and
-                .returnValue({_id: '2', name: 'news', working_stage: '4', incoming_stage: '5'});
-
-            content.createItemFromTemplate({
-                _id: 'template1',
-                data: {
-                    slugline: 'test_slugline',
-                    body_html: 'test_body_html',
-                    irrelevantData: 'yes',
-                },
-            }).then(done);
-
-            $rootScope.$digest();
-            expect(done).toHaveBeenCalledWith(ITEM);
-            expect(api.save).toHaveBeenCalledWith('archive', {
-                slugline: 'test_slugline',
-                body_html: 'test_body_html',
-                task: {desk: '2', stage: '4', user: 'user:1'},
-                template: 'template1',
-                type: 'text',
-                version: 0,
-                byline: 'user1',
-            });
         }));
 
         it('can fetch content types', inject((api, content, $rootScope, $q) => {
@@ -152,21 +119,6 @@ describe('superdesk.apps.workspace.content', () => {
             $rootScope.$digest();
             expect(api.find).toHaveBeenCalledWith('content_types', 'foo');
             expect(success).toHaveBeenCalledWith(type);
-        }));
-
-        it('can create item using content type', inject((api, content, desks, session) => {
-            var type = {_id: 'test'};
-            var success = jasmine.createSpy('ok');
-
-            spyOn(desks, 'getCurrentDesk').and.returnValue({_id: 'sports', working_stage: 'inbox'});
-            session.identity = {_id: 'foo'};
-            content.createItemFromContentType(type).then(success);
-            expect(api.save).toHaveBeenCalledWith('archive', {
-                profile: type._id,
-                type: 'text',
-                version: 0,
-                task: {desk: 'sports', stage: 'inbox', user: 'foo'},
-            });
         }));
 
         it('can get schema for content type', inject((content) => {

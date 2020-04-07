@@ -88,7 +88,6 @@ export const PUBLISHED_STATES = [
 export const KILLED_STATES = [
     ITEM_STATE.KILLED,
     ITEM_STATE.RECALLED,
-    ITEM_STATE.UNPUBLISHED,
 ];
 
 /**

@@ -51,15 +51,21 @@ export class AuthoringTopbarReact extends React.PureComponent<IProps, IState> {
                 contributions: {
                     entities: {
                         article: {
-                            onUpdateBefore: (article) => {
-                                if (this.props.article._id === article._id) {
-                                    this.props.onChange(article);
+                            onPatchBefore: (id, patch, dangerousOptions) => {
+                                if (
+                                    this.props.article._id === id
+                                    && dangerousOptions?.patchDirectlyAndOverwriteAuthoringValues !== true
+                                ) {
+                                    this.props.onChange({
+                                        ...this.props.article,
+                                        ...patch,
+                                    });
                                     console.info('Article is locked and can\'t be updated via HTTP directly.'
                                     + 'The updates will be added to existing diff in article-edit view instead.');
 
                                     return Promise.reject();
                                 } else {
-                                    return Promise.resolve(article);
+                                    return Promise.resolve(patch);
                                 }
                             },
                         },
@@ -92,12 +98,13 @@ export class AuthoringTopbarReact extends React.PureComponent<IProps, IState> {
             <div style={{paddingLeft: 10}}>
                 {articleDisplayWidgets.map(
                     (Component, i) =>
-                        <Component
-                            key={i}
-                            article={
-                                this.props.action === 'view' ? this.state.articleOriginal : articleUpdatedReference
-                            }
-                        />,
+                        <span key={i} style={{marginRight: 10}}>
+                            <Component
+                                article={
+                                    this.props.action === 'view' ? this.state.articleOriginal : articleUpdatedReference
+                                }
+                            />
+                        </span>,
                 )}
             </div>
         );

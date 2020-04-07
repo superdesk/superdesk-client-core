@@ -8,11 +8,7 @@ import {appConfig} from 'appConfig';
 import {IConfigurableUiComponents, IExtension} from 'superdesk-api';
 import {CC} from 'core/ui/configurable-ui-components';
 import {registerExtensions} from 'core/register-extensions';
-
-if (appConfig.features.useTansaProofing) {
-    // tslint:disable-next-line:no-var-requires
-    require('apps/tansa');
-}
+import {setupTansa} from 'apps/tansa';
 
 let body = angular.element('body');
 
@@ -28,6 +24,29 @@ function loadConfigs() {
 }
 
 let started = false;
+
+function isDateFormatValid() {
+    const {dateformat} = appConfig.view;
+
+    if (
+        dateformat.includes('YYYY') !== true
+        || dateformat.includes('MM') !== true
+        || dateformat.includes('DD') !== true
+    ) {
+        return false;
+    }
+
+    const separators = dateformat
+        .replace('YYYY', '')
+        .replace('MM', '')
+        .replace('DD', '');
+
+    if (separators.length !== 2 || separators[0] !== separators[1]) {
+        return false;
+    }
+
+    return true;
+}
 
 export function startApp(
     extensions: Array<IExtension>,
@@ -93,6 +112,10 @@ export function startApp(
         ]);
 
     loadConfigs().then(() => {
+        if (isDateFormatValid() !== true) {
+            document.write('Invalid date format specified in config.view.dateFormat');
+            return;
+        }
         /**
          * @ngdoc module
          * @name superdesk-client
@@ -107,6 +130,10 @@ export function startApp(
         ].concat(appConfig.apps || []), {strictDi: true});
 
         window['superdeskIsReady'] = true;
+
+        if (appConfig.features.useTansaProofing) {
+            setupTansa();
+        }
     });
 }
 

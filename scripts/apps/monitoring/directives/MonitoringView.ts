@@ -1,6 +1,30 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
+import {IDesk} from 'superdesk-api';
+
+interface IScope extends ng.IScope {
+    monitoringItemsLoading: boolean;
+    activeDeskId: IDesk['_id'] | null;
+    swimlane: any;
+    monitoring: any;
+    numberOfColumns: number;
+    desks: any;
+    workspaces: any;
+    personalShowSent: boolean;
+    view: string;
+    workspace: any;
+    shouldRefresh: boolean;
+    type: any;
+    group: any;
+    refreshGroup(group?: any);
+    isActiveGroup: (group: any) => boolean;
+    switchView: (value: any, swimlane?: any) => void;
+    togglePersonalShowSent: () => boolean;
+    gettext: (text: any, params?: any) => any;
+    toggleFilter: () => void;
+    addResourceUpdatedEventListener: (callback: any) => void;
+}
 
 /**
  * Main monitoring view - list + preview
@@ -32,8 +56,20 @@ export function MonitoringView(
             hideMonitoringToolbar1: '=?',
             hideMonitoringToolbar2: '=?',
         },
-        link: function(scope, elem) {
+        link: function(scope: IScope, elem) {
             let containerElem = elem.find('.sd-column-box__main-column');
+
+            scope.gettext = gettext;
+
+            scope.$watch(() => desks.active.desk, (activeDeskId) => {
+                scope.activeDeskId = activeDeskId;
+            });
+
+            scope.addResourceUpdatedEventListener = (callback) => {
+                scope.$on('resource:updated', (_event, data) => {
+                    callback(data);
+                });
+            };
 
             /**
              * Issue here is that sd-column-box__main-column element is not visible on initializing sd-monitoring-view.
@@ -59,7 +95,7 @@ export function MonitoringView(
             workspaces.getActive();
 
             scope.desks = desks;
-            scope.$watch(desks.getCurrentDesk.bind(desks), (currentDesk) => {
+            scope.$watch(desks.getCurrentDesk.bind(desks), (currentDesk: any) => {
                 if (currentDesk && currentDesk.monitoring_default_view) {
                     switch (currentDesk.monitoring_default_view) {
                     case 'list':

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {IPropsItemListInfo} from '../ListItemInfo';
 
 export const profile: React.StatelessComponent<IPropsItemListInfo> = (props) => {
-    if (props.item.profile) {
+    if (props.item.profile && props.profilesById?.[props.item.profile]) {
         return React.createElement(
             'div',
             {className: 'profile-label profile-label--' + props.item.profile, key: 'profile'},

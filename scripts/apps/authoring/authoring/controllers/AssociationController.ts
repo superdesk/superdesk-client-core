@@ -1,9 +1,15 @@
 import {forEach, get, startsWith, endsWith, some} from 'lodash';
-import {getSuperdeskType} from 'core/utils';
-import {gettext} from 'core/utils';
+import {getSuperdeskType, gettext, gettextPlural} from 'core/utils';
 import {isMediaEditable} from 'core/config';
 import {isPublished} from 'apps/archive/utils';
-import {IArticle} from 'superdesk-api';
+import {IArticle, IVocabulary} from 'superdesk-api';
+import {mediaIdGenerator} from '../services/MediaIdGeneratorService';
+
+export function getAssociationsByField(item: IArticle, field: IVocabulary) {
+    return Object.keys(item.associations || {})
+        .filter((key) => key.startsWith(field._id) && item.associations[key] != null)
+        .map((key) => item.associations[key]);
+}
 
 /**
  * @ngdoc controller
@@ -14,10 +20,8 @@ import {IArticle} from 'superdesk-api';
  *
  * @description Controller for handling adding/uploading images to association fields
  */
-AssociationController.$inject = ['content', 'superdesk',
-    'mediaIdGenerator', 'renditions', 'notify'];
-export function AssociationController(content, superdesk,
-    mediaIdGenerator, renditions, notify) {
+AssociationController.$inject = ['content', 'superdesk', 'renditions', 'notify'];
+export function AssociationController(content, superdesk, renditions, notify) {
     const self = this;
 
     this.checkRenditions = checkRenditions;
@@ -42,13 +46,19 @@ export function AssociationController(content, superdesk,
      * @param {Array} files
      */
     this.uploadAndCropImages = function(scope, files) {
+        // in case of feature media we dont have scope.field available as it is not a vocabulary.
+        const maxUploadsRemaining = scope.maxUploads != null && scope.field != null
+            ? scope.maxUploads - getAssociationsByField(scope.item, scope.field).length
+            : 1;
+
         let uploadData = {
             files: files,
-            uniqueUpload: scope.maxUploads === undefined || scope.maxUploads === 1,
-            maxUploads: scope.maxUploads,
+            uniqueUpload: maxUploadsRemaining === 1,
+            maxUploads: maxUploadsRemaining,
             allowPicture: scope.allowPicture,
             allowVideo: scope.allowVideo,
             allowAudio: scope.allowAudio,
+            parent: scope.item,
         };
 
         superdesk.intent('upload', 'media', uploadData).then((images) => {
@@ -71,7 +81,7 @@ export function AssociationController(content, superdesk,
 
                     forEach(images, (image) => {
                         imagesWithIds.push({id: scope.rel, image: image});
-                        scope.rel = mediaIdGenerator.getFieldVersionName(rootField, ++index);
+                        scope.rel = mediaIdGenerator.getFieldVersionName(rootField, (++index).toString());
                     });
                     editNextFile();
                 });
@@ -94,6 +104,34 @@ export function AssociationController(content, superdesk,
         // if the media is of type media-gallery, update same association-key not the next one
         // as the scope.rel contains the next association-key of the new item
         let associationKey = scope.carouselItem ? scope.carouselItem.fieldId : customRel || scope.rel;
+
+        const isItemBeingAdded = updated != null && scope.item.associations[associationKey] == null;
+
+        if (
+            isItemBeingAdded
+            && scope.field?.field_type === 'media' // scope.field is not available from sdItemAssociation
+        ) {
+            const mediaItemsForCurrentField = getAssociationsByField(scope.item, scope.field);
+            const allowedItemsCount = scope.field.field_options.multiple_items?.enabled
+                ? scope.field.field_options.multiple_items.max_items
+                : 1;
+
+            if (mediaItemsForCurrentField.length + 1 > allowedItemsCount) {
+                notify.error(gettextPlural(
+                    allowedItemsCount,
+                    'Item was not added. Only 1 item is allowed for this field.',
+                    'Item was not added. Only {{number}} items are allowed in this field.',
+                    {number: allowedItemsCount},
+                ));
+
+                return;
+            }
+
+            if (mediaItemsForCurrentField.find((mediaItem) => mediaItem._id === updated._id) != null) {
+                notify.error(gettext('This item is already added.'));
+                return;
+            }
+        }
 
         if (scope.field != null && scope.field.field_type === 'media' && updated != null && updated.order == null) {
             // if the field is of type media-gallery, assign order to the item being added
@@ -220,7 +258,6 @@ export function AssociationController(content, superdesk,
         const __item: IArticle = JSON.parse(event.originalEvent.dataTransfer.getData(superdeskType));
 
         scope.loading = true;
-
         this.addAssociation(scope, __item);
     };
 }

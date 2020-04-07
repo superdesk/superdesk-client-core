@@ -15,6 +15,7 @@ import {
     IQueryElasticParameters,
     IArticleQueryResult,
     IArticleQuery,
+    IArticle,
 } from 'superdesk-api';
 import {httpRequestJsonLocal, httpRequestVoidLocal} from './network';
 import {connectServices} from './ReactRenderAsync';
@@ -123,6 +124,14 @@ export function generatePatch<T extends IBaseRestApiResponse>(item1: T, item2: T
     return patch;
 }
 
+export function generatePatchIArticle(a: IArticle, b: IArticle) {
+    const patch = generatePatch(a, b);
+
+    delete patch['es_highlight'];
+
+    return patch;
+}
+
 export const dataApi: IDataApi = {
     findOne: (endpoint, id) => httpRequestJsonLocal({
         method: 'GET',
@@ -176,6 +185,16 @@ export const dataApi: IDataApi = {
             payload: patch,
             headers: {
                 'If-Match': item1._etag,
+            },
+        });
+    },
+    patchRaw: (endpoint, id, etag, patch) => {
+        return httpRequestJsonLocal({
+            'method': 'PATCH',
+            path: '/' + endpoint + '/' + id,
+            payload: patch,
+            headers: {
+                'If-Match': etag,
             },
         });
     },

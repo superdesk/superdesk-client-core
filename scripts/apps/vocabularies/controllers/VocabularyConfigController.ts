@@ -1,12 +1,12 @@
 import {MEDIA_TYPES, MEDIA_TYPE_KEYS, DEFAULT_SCHEMA, VOCABULARY_SELECTION_TYPES} from '../constants';
-import {IVocabulary, IVocabularyTag} from 'superdesk-interfaces/Vocabulary';
+import {IVocabulary, IVocabularyTag} from 'superdesk-api';
 import {IDirectiveScope} from 'types/Angular/DirectiveScope';
 import {remove, reduce} from 'lodash';
 import {gettext} from 'core/utils';
 
 const OTHER = gettext('Other');
 
-interface IScope extends IDirectiveScope<void> {
+export interface IScope extends IDirectiveScope<void> {
     vocabularies: Array<IVocabulary>;
     vocabulary: any;
     tags: IVocabulary['tags'];

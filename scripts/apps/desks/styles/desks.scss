@@ -264,12 +264,6 @@ $desk-width: 270px;
         .item {
             border-left: none;
         }
-        .avatar {
-            margin: 4px 10px 0 4px;
-        }
-        .text {
-
-        }
     }
 }
 .slugline-content {
@@ -512,59 +506,6 @@ $desk-width: 270px;
         width: 100%;
         animation: dropOut2 .3s cubic-bezier(.695,.105,.285,1.275) 1;
         box-shadow: 0 1px 4px 0 rgba(0,0,0,.2), 0 1px 0 0 rgba(0,0,0,.1);
-    }
-}
-
-
-.members-grid {
-    ul {
-        > li {
-            position: relative;
-            float: left;
-            margin: 5px;
-            border: 1px solid rgba(0,0,0,0);
-            @include border-radius(3px);
-            padding: 15px 10px;
-            width: 135px;
-            .avatar {
-                display: block;
-                width: 84px;
-                height: 84px;
-                float: none;
-                margin: 0 auto 10px;
-                &.initials {
-                    font-size: 34px;
-                    line-height: 84px;
-                }
-            }
-            .name {
-                text-align: center;
-                width: 115px;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-            }
-            i {
-                position: absolute;
-                right: 10px; top: 10px;
-                display: none;
-                @include opacity(60);
-                &:hover {
-                    @include opacity(100);
-                    cursor: pointer;
-                }
-            }
-            &:hover {
-                i {
-                    display: block;
-                }
-                border-color: rgba(0,0,0,0.12);
-                @include box-shadow(0 1px 3px 0 rgba(0,0,0,30%));
-            }
-            &.inactive {
-                color: #ccc;
-            }
-        }
     }
 }
 

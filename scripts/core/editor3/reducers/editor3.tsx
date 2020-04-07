@@ -1,4 +1,4 @@
-import {RichUtils, EditorState} from 'draft-js';
+import {RichUtils, EditorState, ContentState} from 'draft-js';
 import {setTansaHtml} from '../helpers/tansa';
 import {addMedia} from './toolbar';
 import {getCustomDecorator, IEditorStore} from '../store';
@@ -7,8 +7,6 @@ import {DELETE_SUGGESTION} from '../highlightsConfig';
 import {moveBlockWithoutDispatching} from '../helpers/draftMoveBlockWithoutDispatching';
 import {insertEntity} from '../helpers/draftInsertEntity';
 
-const isEditorPlainText = (props) => props.singleLine || (props.editorFormat || []).length === 0;
-
 /**
  * @description Contains the list of editor related reducers.
  */
@@ -16,6 +14,8 @@ const editor3 = (state: IEditorStore, action) => {
     switch (action.type) {
     case 'EDITOR_CHANGE_STATE':
         return onChange(state, action.payload.editorState, action.payload.force, false, action.payload.skipOnChange);
+    case 'EDITOR_PUSH_STATE':
+        return pushState(state, action.payload.contentState);
     case 'EDITOR_SET_LOCKED':
         return setLocked(state, action.payload);
     case 'EDITOR_SET_READONLY':
@@ -46,6 +46,8 @@ const editor3 = (state: IEditorStore, action) => {
         return state;
     }
 };
+
+export default editor3;
 
 /**
  * @ngdoc method
@@ -128,7 +130,7 @@ export const onChange = (
     const contentChanged = state.editorState.getCurrentContent() !== editorStateNext.getCurrentContent();
 
     if (!skipOnChange && (contentChanged || force)) {
-        const plainText = isEditorPlainText(state);
+        const plainText = state.singleLine === true;
 
         state.onChangeValue(editorStateNext.getCurrentContent(), {plainText});
     }
@@ -435,6 +437,10 @@ const applyEmbed = (state, {code, targetBlockKey}) => {
     return onChange(state, nextEditorState);
 };
 
-export default editor3;
-
 const setLoading = (state, loading) => ({...state, loading});
+
+const pushState = (state: IEditorStore, contentState: ContentState) => {
+    const editorState = EditorState.push(state.editorState, contentState, 'insert-characters');
+
+    return onChange(state, editorState, true, false, false);
+};

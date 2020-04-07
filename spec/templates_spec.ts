@@ -8,7 +8,7 @@
  * at https://www.sourcefabric.org/superdesk/license
  */
 
-import {by} from 'protractor';
+import {by, browser} from 'protractor';
 
 import {templates} from './helpers/templates';
 import {monitoring} from './helpers/monitoring';

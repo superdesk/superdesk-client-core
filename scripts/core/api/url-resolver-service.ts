@@ -1,13 +1,10 @@
 import {appConfig} from 'appConfig';
 import _ from 'lodash';
+import {basejoin} from './url-resolver-helpers';
 
 URLResolver.$inject = ['$http', '$q', '$log'];
 function URLResolver($http, $q, $log) {
     var _links, baseUrl = appConfig.server.url;
-
-    function basejoin(path) {
-        return baseUrl + (path.indexOf('/') === 0 ? path : '/' + path);
-    }
 
     /**
      * Get url for given resource

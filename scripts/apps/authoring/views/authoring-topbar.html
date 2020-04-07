@@ -2,7 +2,7 @@
   id="subnav"
   class="subnav subnav--authoring"
   ng-class="{'auth-sendto': views.send, 'subnav--locked': isLocked()}"
-  sd-media-query min-width="900"
+  sd-media-query min-width="880"
   data-test-id="authoring-topbar"
 >
 
@@ -13,11 +13,10 @@
     ></sd-authoring-topbar-react>
 
     <div ng-show="isLocked()" class="locked-info">
-      <figure class="avatar small">
-          <div class="user-image">
-              <img sd-user-avatar data-user="item.lock_user">
-          </div>
-      </figure>
+
+      <div class="locked-info__avatar">
+        <sd-user-avatar data-user="item.lock_user"></sd-user-avatar>
+      </div>
       <span class="locked-info__label" translate>Locked by</span>
       <span class="locked-info__name">{{ item.lock_user | username }}</span>
       <button
@@ -43,26 +42,26 @@
           translate>Read-only</span>
     </div>
 
-    <div class="subnav__stretch-bar" ng-if="showCustomButtons(item)">
+    <div class="subnav__stretch-bar sd-overflow-ellipsis" ng-if="showCustomButtons(item)" style="min-width: 150px;">
       <div
-        class="subnav__button-stack subnav__button-stack--custom-buttons"
+        class="subnav__button-stack subnav__button-stack--custom-buttons sd-overflow-ellipsis"
         ng-if="$root.config.features.customAuthoringTopbar != null && ($root.config.features.customAuthoringTopbar.toDesk === true || $root.config.features.customAuthoringTopbar.publish === true || $root.config.features.customAuthoringTopbar.publishAndContinue == true)"
         ng-show="_editable && itemActions.save && action === 'edit'"
       >
         <button
                 ng-if="$root.config.features.customAuthoringTopbar.toDesk === true"
-                class="btn btn--custom"
+                class="btn sd-overflow-ellipsis btn--custom"
                 ng-click="saveAndContinue(sendToNextStage, false)"
                 title="{{ :: 'To Desk' | translate }}">
-                <span class="btn__text" translate>To Desk</span>
+                <span class="btn__text sd-overflow-ellipsis" translate>To Desk</span>
                 <span class="btn__text--short" translate>T D</span>
         </button>
         <button
                 ng-if="$root.config.features.customAuthoringTopbar.closeAndContinue === true && canRewriteArticle()"
-                class="btn btn--custom"
+                class="btn sd-overflow-ellipsis btn--custom"
                 ng-click="saveAndContinue(closeAndContinue, false)"
                 title="{{gettext('Close and Continue')}}">
-                <span class="btn__text" translate>Close and Continue</span>
+                <span class="btn__text sd-overflow-ellipsis" translate>Close & Continue</span>
                 <span class="btn__text--short" translate>C & C</span>
         </button>
         <button
@@ -71,20 +70,20 @@
                 type="submit"
                 ng-click="saveAndContinue(publish, true)"
                 title="{{ :: 'Publish' | translate }}">
-                <span class="btn__text" translate>Publish</span>
+                <span class="btn__text sd-overflow-ellipsis" translate>Publish</span>
                 <span class="btn__text--short" translate>P</span>
         </button>
         <button
                 ng-if="$root.config.features.customAuthoringTopbar.publishAndContinue === true && canPublishOnDesk() && canRewriteArticle()"
-                class="btn btn--custom btn--publish-plus"
+                class="btn sd-overflow-ellipsis btn--custom btn--publish-plus"
                 ng-click="saveAndContinue(publishAndContinue, true)"
                 title="{{ :: 'Publish and Continue' | translate }}">
-                <span class="btn__text">{{ :: 'Publish and Continue' | translate }}</span>
+                <span class="btn__text sd-overflow-ellipsis">{{ :: 'Publish & Continue' | translate }}</span>
                 <span class="btn__text--short">{{ :: 'P & C' | translate }}</span>
         </button>
       </div>
     </div>
-    <div class="subnav__button-stack subnav__button-stack--default" sd-media-query min-width="180">
+    <div class="subnav__button-stack subnav__button-stack--default">
       <button id="Edit" class="btn btn--medium btn--primary" ng-if="item._type !== 'legal_archive'"
         ng-show="action === 'view' && !item._editable && itemActions.edit"
         ng-click="edit()"
@@ -98,22 +97,42 @@
       <button class="btn btn--primary" ng-if="item._type !== 'legal_archive' && !isLocked() && userHasPrivileges({rewrite: 1}) === true"
         ng-show="(action === 'view' || !item._editable) && itemActions.re_write"
         ng-click="openAction('rewrite')"
-        translate>Update</button>
+        title="{{gettext('Update')}}">
+            <span class="btn__text" translate>Update</span>
+            <span class="btn__text--short" translate>U</span>
+      </button>
 
       <button class="btn btn--primary" ng-if="item._type !== 'legal_archive' && userHasPrivileges({correct: 1}) === true"
         ng-show="(action === 'view' || !item._editable) && itemActions.correct"
         ng-click="openAction('correct')"
-        translate>Correct</button>
+        title="{{gettext('Correct')}}">
+            <span class="btn__text" translate>Correct</span>
+            <span class="btn__text--short" translate>C</span>
+      </button>
 
       <button class="btn btn--primary" ng-if="item._type !== 'legal_archive' && userHasPrivileges({takedown: 1}) === true"
         ng-show="(action === 'view' || !item._editable) && itemActions.takedown"
         ng-click="openAction('takedown')"
-        translate>Takedown</button>
+        title="{{gettext('Takedown')}}">
+            <span class="btn__text" translate>Takedown</span>
+            <span class="btn__text--short" translate>T</span>
+      </button>
+
+      <button class="btn btn--primary" ng-if="item._type !== 'legal_archive' && userHasPrivileges({unpublish: 1}) === true"
+        ng-show="(action === 'view' || !item._editable) && itemActions.unpublish"
+        ng-click="openAction('unpublish')"
+        title="{{gettext('Unpublish')}}">
+            <span class="btn__text" translate>Unpublish</span>
+            <span class="btn__text--short" translate>UP</span>
+      </button>
 
       <button class="btn btn--primary" ng-if="item._type !== 'legal_archive' && userHasPrivileges({kill: 1}) === true"
         ng-show="(action === 'view' || !item._editable) && itemActions.kill"
         ng-click="openAction('kill')"
-        translate>Kill</button>
+        title="{{gettext('Kill')}}">
+            <span class="btn__text" translate>Kill</span>
+            <span class="btn__text--short" translate>K</span>
+      </button>
 
         <button class="btn btn--hollow"
                 id="closeAuthoringBtn"
@@ -121,8 +140,10 @@
                 ng-if="action !== 'correct' && action !== 'kill'"
                 title="{{ :: 'Close' | translate }}"
                 sd-hotkey="ctrl+shift+e"
-                sd-hotkey-options="{global: true}">
-            <span translate>Close</span>
+                sd-hotkey-options="{global: true}"
+                data-test-id="close">
+            <span class="btn__text" translate>Close</span class="btn__text">
+            <i class="icon-close-small btn__text--short sd-margin--0"></i>
         </button>
 
       <button class="btn btn--primary" type="submit"
@@ -132,7 +153,9 @@
         ng-disabled="!save_enabled() || saveDisabled"
         sd-hotkey="ctrl+shift+s"
         sd-hotkey-options="{global: true}"
-        translate>Save</button>
+        translate
+        data-test-id="save"
+      >Save</button>
 
       <button class="btn btn--primary" type="submit"
         ng-click="previewFormattedItem()"
@@ -195,10 +218,16 @@
         <div id="authoring-extra-dropdown"
              ng-if="item._type !== 'legal_archive' && item._type !== 'archived' && !highlight && item.state !== 'spiked' && buttonsToHide['article-edit--topbar--actions'] !== true"
              class="dropdown pull-left strict" dropdown>
-            <button id="more-actions" class="navbtn dropdown__toggle" title="{{ :: 'More actions' | translate }}" dropdown__toggle>
+            <button
+              id="more-actions"
+              class="navbtn dropdown__toggle"
+              title="{{ :: 'More actions' | translate }}"
+              dropdown__toggle
+              data-test-id="actions-button"
+            >
                 <i class="icon-dots-vertical"></i>
             </button>
-            <div class="dropdown__menu pull-right">
+            <div class="dropdown__menu pull-right" data-test-id="actions-list">
                 <ul ng-controller="TemplateMenu as templateMenu" ng-show="canSaveTemplate()">
                   <li>
                     <button type="button"
@@ -245,34 +274,27 @@
                   </li>
                 </ul>
 
-                <ul ng-if="authoringActionsFromExtensions">
-                    <!-- Extra actions from extensions without a group id -->
-                    <li ng-repeat="action in authoringActionsFromExtensions" ng-if="!action.groupId">
+                <ul ng-if="articleActionsFromExtensions">
+                    <li ng-repeat="action in articleActionsFromExtensions" ng-if="action.groupId !== 'highlights'">
                         <button  ng-click="triggerActionFromExtension(action)">{{action.label}}</button>
                     </li>
                 </ul>
 
-                <ul ng-if="item.task.desk && (itemActions.mark_item_for_desks || itemActions.mark_item_for_highlight)">
+                <ul ng-if="itemActionsHighlightsSectionDisplayed()">
                   <li class="dropdown__menu-divider"></li>
-                  <li><span class="dropdown__menu-label" translate>Mark item for</span></li>
                   <li ng-if="itemActions.mark_item_for_highlight">
                     <div class="dropdown highlights-toggle" dropdown>
-                      <button class="dropdown__toggle" dropdown__toggle>
-                        {{ :: 'Highlights' | translate }}
-                      </button>
+                      <button class="dropdown__toggle" dropdown__toggle translate>Highlights</button>
                       <ul class="dropdown__menu dropdown__menu--submenu-left" sd-mark-highlights-dropdown></ul>
                     </div>
                   </li>
                   <li ng-if="itemActions.mark_item_for_desks">
                     <div class="dropdown marks-toggle" dropdown>
-                      <button class="dropdown__toggle" dropdown__toggle>
-                        {{ :: 'Desks' | translate }}
-                      </button>
+                      <button class="dropdown__toggle" dropdown__toggle translate>Marked for desks</button>
                       <ul class="dropdown__menu dropdown__menu--submenu-left" sd-mark-desks-dropdown></ul>
-
                     </div>
                   </li>
-                  <li ng-repeat="action in authoringActionsFromExtensions">
+                  <li ng-repeat="action in articleActionsFromExtensions">
                       <button ng-if="action.groupId === 'highlights'" ng-click="triggerActionFromExtension(action)">{{action.label}}</button>
                   </li>
                 </ul>

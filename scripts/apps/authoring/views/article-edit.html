@@ -7,6 +7,10 @@
 
     <label class="field__label">{{label('headline')}}</label>
     <span ng-if="schema.headline.maxlength" sd-character-count data-item="item.headline" data-html="true" data-limit="schema.headline.maxlength"></span>
+    <sd-validate-characters ng-if="schema.headline.validate_characters"
+        class="disallowed-char-error"
+        item="item.headline"
+        field="'headline'"></sd-validate-characters>
     <div id="title" class="headline"
          sd-text-editor
          data-config="{toolbar: false, imageDragging: false, disableReturn: true, disableEditing: isPublished(item), tabindex: editor.headline.order, paste: {cleanPastedHTML: editor.headline.cleanPastedHTML}}"
@@ -28,6 +32,10 @@
 
     <label class="field__label">{{label('headline')}}</label>
     <span ng-if="schema.headline.maxlength" sd-character-count data-item="item.headline" data-html="true" data-limit="schema.headline.maxlength"></span>
+    <sd-validate-characters ng-if="schema.headline.validate_characters"
+        class="disallowed-char-error"
+        item="item.headline"
+        field="'headline'"></sd-validate-characters>
     <div id="title" class="headline"
          sd-editor3
          data-path-to-value="'headline'"
@@ -43,6 +51,7 @@
          data-refresh-trigger="refreshTrigger"
          data-tabindex="editor.headline.order"
          data-clean-pasted-html="editor.headline.cleanPastedHTML"
+         data-test-id="field--headline"
     ></div>
 </div>
 
@@ -112,14 +121,14 @@
          data-rel="'featuremedia'"
          data-field-name="'feature_media'"
          data-editable="_editable"
-         data-onchange="autosave(item)"
+         data-onchange="autosave(item, timeout)"
          data-save="save()"
          data-show-title="editor.feature_media.imageTitle"
          data-tabindex="editor.feature_media.order">
     </div>
     <div sd-item-crops
          data-item="item.associations['featuremedia']"
-         ng-if="editor.feature_media.showCrops && features.editFeaturedImage &&
+         ng-if="editor.feature_media.showCrops &&
          (item.associations['featuremedia'].type == 'picture' ||
          item.associations['featuremedia'].type == 'graphic')">
     </div>
@@ -371,7 +380,16 @@
                  class="media-container__metadata"
                  data-item="item"></div>
             <div class="media-container__action-bar" ng-if="_editable">
-                <a class="btn btn--hollow btn--small" ng-click="editMedia()"><span translate>Edit metadata</span></a>
+                <div class="flex-grid flex-grid--medium-3">
+                    <div class="flex-grid__item sd-text__left" style="text-align: left;">
+                        <sd-video-thumbnail-editor data-item="item" data-on-change="autosave"></sd-video-thumbnail-editor>
+                    </div>
+                    <div class="flex-grid__item">
+                    </div>
+                    <div class="flex-grid__item">
+                        <a class="btn btn--hollow btn--small" ng-click="editMedia()"><span translate>Edit metadata</span></a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -562,6 +580,8 @@
     <label class="field__label">{{field.display_name}}</label>
     <span ng-if="schema[field._id].maxlength || schema[field._id].minlength" sd-character-count
         data-item="item.extra[field._id]" data-html="true" data-limit="schema[field._id].maxlength"></span>
+    <sd-validate-characters ng-if="schema[field._id].validate_characters"
+        class="disallowed-char-error" item="item.extra[field._id]" field="field.display_name"></sd-validate-characters>
     <div sd-editor3
         data-path-to-value="'extra' + FIELD_KEY_SEPARATOR + field._id"
         data-single-line="field.field_options.single"
@@ -625,7 +645,10 @@
         sd-auto-height
         sd-validation-error="error.extra[field._id].embed"
         tabindex="{{editor[field._id].order}}"></textarea>
-    <input type="text" class="sd-line-input__input" style="margin-bottom: 6px;"
+    <input
+        type="text"
+        class="sd-editor__default-input"
+        style="margin-bottom: 6px;"
         ng-model="item.extra[field._id].description"
         ng-disabled="!_editable"
         sd-remove-tags ng-change="autosave(item)"
@@ -639,11 +662,13 @@
 </div>
 
 <div class="field" ng-repeat="field in fields track by field._id"
-     ng-if="field.field_type === 'media'"
-     sd-width="{{editor[field._id].sdWidth || 'full'}}"
-     sd-validation-error="error[field._id]"
-     order="{{editor[field._id].order}}"
-     data-required="schema[field._id].required">
+    ng-if="field.field_type === 'media'"
+    sd-width="{{editor[field._id].sdWidth || 'full'}}"
+    sd-validation-error="error[field._id]"
+    order="{{editor[field._id].order}}"
+    data-required="schema[field._id].required"
+    data-test-id="{{'authoring-field--' + field._id}}"
+>
     <label class="field__label" translate>{{field.display_name}}</label>
 
     <div sd-item-carousel
@@ -669,7 +694,6 @@
      sd-validation-error="error[field._id]"
      order="{{editor[field._id].order}}"
      data-required="schema[field._id].required">
-    <label class="field__label" translate>{{field.display_name}}</label>
 
     <div ng-if="_editable"
         sd-related_items
@@ -679,10 +703,14 @@
         data-onchange="autosave(item, 0)">
     </div>
 
-    <div ng-if="!_editable"
-        sd-related-items-preview
-        data-item="item"
-        data-field="field">
+    <div ng-if="!_editable">
+        <label class="field__label">{{field.display_name}}</label>
+
+        <div
+            sd-related-items-preview
+            data-item="item"
+            data-field="field">
+        </div>
     </div>
 
     <div class="sd-editor__info-text" ng-if="helper_text[field._id]">{{field.helper_text}}</div>
@@ -744,6 +772,10 @@
      order="{{editor.slugline.order}}">
     <label class="field__label">{{label('slugline')}}</label>
     <span ng-if="schema.slugline.maxlength" sd-character-count data-item="item.slugline" data-html="true" data-limit="schema.slugline.maxlength"></span>
+    <sd-validate-characters ng-if="schema.slugline.validate_characters"
+        class="disallowed-char-error"
+        item="item.slugline"
+        field="'slugline'"></sd-validate-characters>
     <input type="text" class="slugline"
        id="slugline"
        data-language="item.language"
@@ -762,6 +794,10 @@
      data-required="schema.slugline.required">
     <label class="field__label">{{label('slugline')}}</label>
     <span ng-if="schema.slugline.maxlength" sd-character-count data-item="item.slugline" data-html="true" data-limit="schema.slugline.maxlength"></span>
+    <sd-validate-characters ng-if="schema.slugline.validate_characters"
+        class="disallowed-char-error"
+        item="item.slugline"
+        field="'slugline'"></sd-validate-characters>
     <div id="title" class="slugline"
          sd-editor3
          data-path-to-value="'slugline'"

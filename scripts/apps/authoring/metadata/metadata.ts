@@ -368,7 +368,7 @@ function MetaDropdownDirective($filter) {
                     if (!scope.multiInputFields.includes(scope.field)) {
                         // single input field
                         // we use 'name' attribute for string fields and the whole object for other fields
-                        fieldObject[scope.field] = item.name || item;
+                        fieldObject[scope.field] = scope.key ? item[scope.key] : (item.name || item);
                     } else if (scope.cv && scope.cv._id != null) {
                         // if there is cv as well as field, store cv._id as scheme
                         // so that it can be differentiated from another cv inside same parent field(subject).
@@ -863,7 +863,15 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                         });
                     }
 
-                    if ($event && ($event.ctrlKey || $event.metaKey)) {
+                    // make sure we run scope.change even if popup stays opened
+                    $timeout(() => {
+                        scope.$applyAsync(() => {
+                            scope.postprocessing();
+                            scope.change({item: scope.item, field: scope.field});
+                        });
+                    }, 50, false);
+
+                    if ($event && ($event.ctrlKey || $event.metaKey || appConfig.features.keepMetaTermsOpenedOnClick)) {
                         $event.stopPropagation();
                         return;
                     }
@@ -878,13 +886,6 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                         scope.terms = _.without(scope.terms, term);
                         scope.activeTree = scope.terms;
                     }
-
-                    $timeout(() => {
-                        scope.$applyAsync(() => {
-                            scope.postprocessing();
-                            scope.change({item: scope.item, field: scope.field});
-                        });
-                    }, 50, false);
 
                     // retain focus and initialise activeTree on same dropdown control after selection.
                     _.defer(() => {
