@@ -12,7 +12,12 @@
                 alt="{{ gettext('Thumbnail for related item') }}">
         </figure>
         <div class="sd-list-item__action-menu--direction-row" ng-if="!preview">
-            <div class="icn-btn" sd-item-actions-menu data-item="relatedItem" data-active="relatedItem" data-is-related-item="true"></div>
+            <div class="icn-btn"
+                sd-item-actions-menu
+                data-item="relatedItem"
+                data-active="relatedItem"
+                data-allowed-actions="['edit.item', 'edit.item.popup', 'view.item', 'view.item.popup']">
+            </div>
         </div>
     </div>
 </div>

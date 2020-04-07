@@ -17,7 +17,7 @@ interface IScope extends ng.IScope {
     item?: IArticle;
     open: any;
     active: any;
-    isRelatedItem: boolean;
+    allowedActions?: Array<string>;
     menuGroups: Array<IAuthoringMenuGroup>;
     toggleActions(open: boolean): void;
     stopEvent(event: any): void;
@@ -30,12 +30,10 @@ export function ItemActionsMenu(superdesk, activityService, workflowService, arc
         scope: {
             item: '=',
             active: '=',
-            isRelatedItem: '=',
+            allowedActions: '=?',
         },
         templateUrl: 'scripts/apps/monitoring/views/item-actions-menu.html',
         link: function(scope: IScope) {
-            const relatedItemActions = ['edit.item', 'edit.item.popup', 'view.item', 'view.item.popup'];
-
             /**
              * Populate scope actions when dropdown is opened.
              *
@@ -104,8 +102,8 @@ export function ItemActionsMenu(superdesk, activityService, workflowService, arc
                                 if (activitiesByGroupName[group] == null) {
                                     activitiesByGroupName[group] = [];
                                 }
-                                if (scope.isRelatedItem) {
-                                    if (relatedItemActions.includes(activity._id)) {
+                                if (scope.allowedActions) {
+                                    if (scope.allowedActions.includes(activity._id)) {
                                         activitiesByGroupName[group].push(activity);
                                     }
                                 } else {
@@ -145,7 +143,7 @@ export function ItemActionsMenu(superdesk, activityService, workflowService, arc
                         });
 
                         // actions(except viewing an item) are not allowed for items in legal archive
-                        if (item._type !== 'legal_archive' && !scope.isRelatedItem) {
+                        if (item._type !== 'legal_archive' && !scope.allowedActions) {
                             // handle actions from extensions
                             let extensionActionsByGroupName: {[groupName: string]: Array<IArticleAction>} = {};
 
