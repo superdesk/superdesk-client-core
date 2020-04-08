@@ -102,7 +102,7 @@ export function ItemActionsMenu(superdesk, activityService, workflowService, arc
                                 if (activitiesByGroupName[group] == null) {
                                     activitiesByGroupName[group] = [];
                                 }
-                                if (scope.allowedActions) {
+                                if (scope.allowedActions?.length > 0) {
                                     if (scope.allowedActions.includes(activity._id)) {
                                         activitiesByGroupName[group].push(activity);
                                     }
@@ -143,7 +143,7 @@ export function ItemActionsMenu(superdesk, activityService, workflowService, arc
                         });
 
                         // actions(except viewing an item) are not allowed for items in legal archive
-                        if (item._type !== 'legal_archive' && !scope.allowedActions) {
+                        if (item._type !== 'legal_archive' && scope.allowedActions == null) {
                             // handle actions from extensions
                             let extensionActionsByGroupName: {[groupName: string]: Array<IArticleAction>} = {};
 
