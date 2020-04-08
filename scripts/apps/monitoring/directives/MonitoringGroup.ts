@@ -1,7 +1,7 @@
 /* eslint-disable complexity */
 import _ from 'lodash';
 import getCustomSortForGroup, {GroupSortOptions} from '../helpers/CustomSortOfGroups';
-import {GET_LABEL_MAP} from '../../workspace/content/constants';
+import {GET_LABEL_MAP, getLabelForStage} from '../../workspace/content/constants';
 import {isPublished} from 'apps/archive/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {DESK_OUTPUT} from 'apps/desks/constants';
@@ -40,6 +40,7 @@ interface IScope extends ng.IScope {
     cacheNextItems: Array<any>;
     cachePreviousItems: Array<any>;
     viewColumn: any;
+    labelForStage: typeof getLabelForStage;
     style: any;
     edit: any;
     select: any;
@@ -174,6 +175,8 @@ export function MonitoringGroup(
                     scope.viewColumn = data.viewColumn;
                 });
             });
+
+            scope.labelForStage = getLabelForStage;
 
             scope.style = {};
 
