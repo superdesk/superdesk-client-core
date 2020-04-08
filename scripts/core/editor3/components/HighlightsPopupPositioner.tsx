@@ -6,7 +6,7 @@ interface IProps {
 }
 
 // do calculations on a cloned element to avoid scroll position jumping to the top on chrome
-// when setting resetting `max-height` to an empty value
+// when resetting `max-height` to an empty value
 function getNextPosition(originalElement, editorNode) {
     const element = originalElement.cloneNode(true) as HTMLElement;
     const mainFlexElement = element.firstElementChild as HTMLElement;
