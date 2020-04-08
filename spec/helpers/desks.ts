@@ -187,7 +187,7 @@ class Desks {
          **/
         this.getStage = function(name) {
             return this.stages.filter((elem, index) =>
-                elem.element(by.binding('stage.name'))
+                elem.element(by.css('[data-test-id="stage-name"]'))
                     .getText()
                     .then((text) => text.toUpperCase() === name.toUpperCase()),
             );
