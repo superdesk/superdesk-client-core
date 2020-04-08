@@ -656,6 +656,13 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                 scope.uniqueField = value || 'qcode';
             });
 
+            // add scheme to terms
+            if (scope.list && scope.cv) {
+                angular.forEach(scope.list, (listItem) => {
+                    listItem.scheme = scope.cv._id
+                })
+            }
+
             scope.$watch('list', (items) => {
                 if (!items || items.length === 0) {
                     return;
@@ -753,10 +760,6 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
             };
 
             scope.isSelected = (term) => {
-                if (scope.cv) {
-                    term.scheme = scope.cv._id;
-                }
-
                 return !!_.find(scope.item[scope.field], term)
             };
 
