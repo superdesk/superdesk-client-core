@@ -9,7 +9,7 @@
         <!-- Desk output stages-->
         <div class="stage-header__name" ng-if="group.header && !group.subheader && viewType !== 'single_monitoring'">
             <span class="group-header">
-                <a href="" ng-click="viewSingleGroup(group, 'single-stage')">{{ :: group.header }} {{ :: group.type|splitText | translate }}</a>
+                <a href="" ng-click="viewSingleGroup(group, 'single-stage')">{{ :: group.header }} {{ :: labelForStage(group) }}</a>
             </span>
         </div>
         <span class="stage-header__number label-total">{{ total || '0' }}</span>
