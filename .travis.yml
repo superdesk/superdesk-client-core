@@ -10,8 +10,6 @@ services:
 addons:
     chrome: stable
 
-cache: yarn
-
 before_script:
     - |
       if [ "$SKIP_SERVER_INSTALL" != "true" ]; then
