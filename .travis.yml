@@ -6,12 +6,6 @@ addons:
     packages:
         - google-chrome-stable
 
-cache:
-    directories:
-        - $HOME/.cache/yarn
-
 script:
-    - git checkout -b travis-save-branch
-    - git fetch origin develop:develop
     - npm run test
     - npm run build

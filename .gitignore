@@ -16,6 +16,7 @@ spec/**/*.js
 npm-debug.log
 index.html
 yarn-error.log
+yarn.lock
 
 # VIM related files
 *.swo
