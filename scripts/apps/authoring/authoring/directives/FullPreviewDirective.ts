@@ -1,8 +1,10 @@
 import _ from 'lodash';
 import {checkRenditions} from '../controllers/AssociationController';
+import {appConfig} from 'appConfig';
+import {gettext} from 'core/utils';
 
-FullPreviewDirective.$inject = ['$timeout', 'config', 'content', '$sce'];
-export function FullPreviewDirective($timeout, config, content, $sce) {
+FullPreviewDirective.$inject = ['$timeout', 'content', '$sce'];
+export function FullPreviewDirective($timeout, content, $sce) {
     return {
         scope: {
             item: '=',
@@ -13,7 +15,8 @@ export function FullPreviewDirective($timeout, config, content, $sce) {
             scope.hide_media = false;
             scope.checkRenditions = checkRenditions;
 
-            scope.filterKey = config.previewSubjectFilterKey || '';
+            scope.filterKey = appConfig.previewSubjectFilterKey || '';
+            scope.gettext = gettext;
 
             if (scope.item.profile) {
                 content.getType(scope.item.profile)

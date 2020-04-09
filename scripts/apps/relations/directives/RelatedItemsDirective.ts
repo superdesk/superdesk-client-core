@@ -1,11 +1,30 @@
-import {get} from 'lodash';
 import {getSuperdeskType} from 'core/utils';
 import {gettext} from 'core/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
-import {IArticle} from 'superdesk-api';
+import {IArticle, IArticleField} from 'superdesk-api';
+import {IDirectiveScope} from 'types/Angular/DirectiveScope';
 
 const ARCHIVE_TYPES = ['archive', 'published'];
 const isInArchive = (item: IArticle) => item._type != null && ARCHIVE_TYPES.includes(item._type);
+
+interface IScope extends IDirectiveScope<void> {
+    onCreated: (items: Array<IArticle>) => void;
+    gettext: (text: any, params?: any) => string;
+    field: IArticleField;
+    editable: boolean;
+    item: IArticle;
+    loading: boolean;
+    reorder: (start: {index: number}, end: {index: number}) => void;
+    relatedItems: Array<IArticle>;
+    onchange: () => void;
+    addRelatedItem: (item: IArticle) => void;
+    isEmptyRelatedItems: (fieldId: string) => void;
+    refreshRelatedItems: () => void;
+    removeRelatedItem: (key: string) => void;
+    openRelatedItem: (item: IArticle) => void;
+    canAddRelatedItems: () => boolean;
+    isLocked: (item: IArticle) => boolean;
+}
 
 /**
  * @ngdoc directive
@@ -17,8 +36,22 @@ const isInArchive = (item: IArticle) => item._type != null && ARCHIVE_TYPES.incl
  * add related items by using drag and drop, delete related items and open related items.
  */
 
-RelatedItemsDirective.$inject = ['authoringWorkspace', 'relationsService', 'notify'];
-export function RelatedItemsDirective(authoringWorkspace: AuthoringWorkspaceService, relationsService, notify) {
+RelatedItemsDirective.$inject = [
+    'authoringWorkspace',
+    'relationsService',
+    'notify',
+    'lock',
+    '$rootScope',
+    'content',
+];
+export function RelatedItemsDirective(
+    authoringWorkspace: AuthoringWorkspaceService,
+    relationsService,
+    notify,
+    lock,
+    $rootScope,
+    content,
+) {
     return {
         scope: {
             item: '=',
@@ -27,9 +60,24 @@ export function RelatedItemsDirective(authoringWorkspace: AuthoringWorkspaceServ
             onchange: '&onchange',
         },
         templateUrl: 'scripts/apps/relations/views/related-items.html',
-        link: function(scope, elem, attr) {
+        link: function(scope: IScope, elem, attr) {
+            scope.onCreated = (items: Array<IArticle>) => {
+                items.forEach((item) => {
+                    scope.addRelatedItem(item);
+                });
+            };
+
+            scope.gettext = gettext;
+
+            scope.isLocked = (item) => {
+                return lock.isLocked(item) || lock.isLockedInCurrentSession(item);
+            };
+
+            scope.canAddRelatedItems = () => scope.field?.field_options?.allowed_workflows?.in_progress === true;
+
             const dragOverClass = 'dragover';
-            const allowed = ((scope.field || {}).field_options || {}).allowed_types || {};
+            const fieldOptions = scope.field?.field_options || {};
+            const allowed = fieldOptions.allowed_types || {};
             const ALLOWED_TYPES = Object.keys(allowed)
                 .filter((key) => allowed[key] === true)
                 .map((key) => 'application/superdesk.item.' + key);
@@ -59,24 +107,34 @@ export function RelatedItemsDirective(authoringWorkspace: AuthoringWorkspaceServ
                         .map((key) => scope.item.associations[key]);
 
                     const currentCount = relatedItemsForCurrentField.length;
-                    const maxCount = get(scope, 'field.field_options.multiple_items.enabled') === true
-                        ? get(scope, 'field.field_options.multiple_items.max_items')
+                    const maxCount = scope.field?.field_options?.multiple_items?.enabled === true
+                        ? scope.field.field_options.multiple_items.max_items
                         : 1;
 
                     const type = getSuperdeskType(event, false);
-                    const item = angular.fromJson(event.originalEvent.dataTransfer.getData(type));
+                    const item: IArticle = angular.fromJson(event.originalEvent.dataTransfer.getData(type));
 
                     const itemAlreadyAddedAsRelated = relatedItemsForCurrentField.some(
                         (relatedItem) => relatedItem._id === item._id,
                     );
 
+                    const isWorkflowAllowed = relationsService.itemHasAllowedStatus(item, scope.field);
+
+                    if (!isWorkflowAllowed) {
+                        notify.error(gettext(
+                            'The following status is not allowed in this field: {{status}}',
+                            {status: item.state},
+                        ));
+                        return;
+                    }
+
                     if (scope.item._id === item._id) {
-                        notify.error('Cannot add self as related item.');
+                        notify.error(gettext('Cannot add self as related item.'));
                         return;
                     }
 
                     if (itemAlreadyAddedAsRelated) {
-                        notify.error('This item is already added as related.');
+                        notify.error(gettext('This item is already added as related.'));
                         return;
                     }
 
@@ -89,7 +147,6 @@ export function RelatedItemsDirective(authoringWorkspace: AuthoringWorkspaceServ
                         );
                         return;
                     }
-
                     scope.addRelatedItem(item);
                 });
             }
@@ -128,11 +185,27 @@ export function RelatedItemsDirective(authoringWorkspace: AuthoringWorkspaceServ
                 return keys.length === 0;
             };
 
+            scope.reorder = (start, end) => {
+                if (!scope.editable) {
+                    return;
+                }
+                const related = getRelatedKeys(scope.item, scope.field._id);
+                const newRelated = related.slice(0);
+
+                newRelated.splice(end.index, 0, newRelated.splice(start.index, 1)[0]);
+
+                const updated = related.reduce((obj, key, index) => {
+                    obj[key] = scope.item.associations[newRelated[index]];
+                    obj[key].order = parseInt(key.split('--')[1], 10);
+                    return obj;
+                }, {});
+
+                scope.item.associations = angular.extend({}, scope.item.associations, updated);
+                scope.onchange();
+            };
+
             /**
             * Get related items for fieldId
-            *
-            * @param {String} fieldId
-            * @return {[Object]}
             */
             scope.refreshRelatedItems = () => {
                 scope.loading = true;
@@ -145,42 +218,18 @@ export function RelatedItemsDirective(authoringWorkspace: AuthoringWorkspaceServ
             scope.refreshRelatedItems();
 
             /**
-             * Reorder related items on related items list
-             *
-             * @param {int} start
-             * @param {int} end
-             */
-            scope.reorder = (start, end) => {
-                if (!scope.editable) {
-                    return;
-                }
-                const related = getRelatedKeys(scope.item, scope.field._id);
-                const newRelated = related.slice(0);
-
-                newRelated.splice(end.index, 0, newRelated.splice(start.index, 1)[0]);
-
-                const updated = related.reduce((obj, key, index) => {
-                    obj[key] = scope.item.associations[newRelated[index]];
-                    return obj;
-                }, {});
-
-                scope.item.associations = angular.extend({}, scope.item.associations, updated);
-                scope.onchange();
-            };
-
-            /**
              * Return the next key for related item associated to current field
              *
              * @param {Object} associations
              * @param {String} fieldId
              * @return {int} nextKey
              */
-            function getNextKey(associations, fieldId) {
+            function getNextKeyAndOrder(associations, fieldId) {
                 for (let i = 1; ; i++) {
                     const key = fieldId + '--' + i;
 
                     if (associations[key] == null) {
-                        return key;
+                        return {key, order: i};
                     }
                 }
             }
@@ -190,21 +239,31 @@ export function RelatedItemsDirective(authoringWorkspace: AuthoringWorkspaceServ
              *
              * @param {Object} item
              */
-            scope.addRelatedItem = (item) => {
-                const key = getNextKey(scope.item.associations || {}, scope.field._id);
-                let data = {};
+            scope.addRelatedItem = (_item) => {
+                scope.loading = true;
+                content.dropItem(_item)
+                    .then((item) => {
+                        let data = {};
+                        const {key, order} = getNextKeyAndOrder(scope.item.associations || {}, scope.field._id);
 
-                if (isInArchive(item)) {
-                    data[key] = {
-                        _id: item._id,
-                        type: item.type, // used to display associated item types
-                    };
-                } else {
-                    data[key] = item; // use full item for external items, like images from external search provider
-                }
+                        item.order = order;
+                        if (isInArchive(item)) {
+                            data[key] = {
+                                _id: item._id,
+                                type: item.type, // used to display associated item types
+                                order: item.order,
+                            };
+                        } else {
+                            data[key] = item; /* use full item for external items,
+                                                like images from external search provider */
+                        }
 
-                scope.item.associations = angular.extend({}, scope.item.associations, data);
-                scope.onchange();
+                        scope.item.associations = angular.extend({}, scope.item.associations, data);
+                        scope.onchange();
+                    })
+                    .finally(() => {
+                        scope.loading = false;
+                    });
             };
 
             /**
@@ -235,6 +294,40 @@ export function RelatedItemsDirective(authoringWorkspace: AuthoringWorkspaceServ
                 if (newValue !== oldValue) {
                     scope.refreshRelatedItems();
                 }
+            });
+
+            function onItemEvent(event, payload) {
+                let shouldUpdateItems = false;
+
+                const relatedItemsIds = Object.values(scope.relatedItems).map((item) => item._id);
+
+                switch (event.name) {
+                case 'content:update':
+                    var updateItemsIds = Object.keys(payload.items);
+
+                    shouldUpdateItems = updateItemsIds.some((id) => relatedItemsIds.includes(id));
+                    break;
+                case 'item:lock':
+                case 'item:unlock':
+                    shouldUpdateItems = relatedItemsIds.some((id) => payload.item === id);
+                    break;
+                }
+
+                if (shouldUpdateItems) {
+                    scope.refreshRelatedItems();
+                }
+            }
+
+            const removeEventListeners = [
+                'item:lock',
+                'item:unlock',
+                'content:update',
+            ].map((eventName) =>
+                $rootScope.$on(eventName, onItemEvent),
+            );
+
+            scope.$on('$destroy', () => {
+                removeEventListeners.forEach((removeFn) => removeFn());
             });
         },
     };

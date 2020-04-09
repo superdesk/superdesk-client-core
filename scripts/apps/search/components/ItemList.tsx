@@ -5,8 +5,9 @@ import classNames from 'classnames';
 import {Item} from './index';
 import {isCheckAllowed, closeActionsMenu, bindMarkItemShortcut} from '../helpers';
 import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
+import {isMediaEditable} from 'core/config';
 import {gettext} from 'core/utils';
-import {IArticle} from 'superdesk-api';
+import {IArticle, IMonitoringFilter} from 'superdesk-api';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {CHECKBOX_PARENT_CLASS} from './constants';
 
@@ -68,22 +69,27 @@ export class ItemList extends React.Component<any, IState> {
         this.unbindActionKeyShortcuts = this.unbindActionKeyShortcuts.bind(this);
     }
 
-    multiSelect(items, selected) {
+    multiSelect(items: Array<IArticle>, selected: boolean) {
         const {search, multi} = this.props.svc;
         const {scope} = this.props;
+        let {selected: selectedId} = this.state;
 
         const itemsById = angular.extend({}, this.state.itemsById);
 
-        items.forEach((item) => {
+        items.forEach((item, i) => {
             const itemId = search.generateTrackByIdentifier(item);
 
+            if (selected && i === items.length - 1) {
+                // Mark last item as selected
+                selectedId = itemId;
+            }
             itemsById[itemId] = angular.extend({}, item, {selected: selected});
             scope.$applyAsync(() => {
                 multi.toggle(itemsById[itemId]);
             });
         });
 
-        this.setState({itemsById: itemsById});
+        this.setState({itemsById, selected: selectedId});
     }
 
     // Method to check the selectBox of the selected item
@@ -241,6 +247,9 @@ export class ItemList extends React.Component<any, IState> {
         }
 
         if (item._type === 'externalsource') {
+            if (!isMediaEditable(item)) {
+                return;
+            }
             this.setActioning(item, true);
             superdesk.intent('list', 'externalsource', {item: item}, 'fetch-externalsource')
                 .then((archiveItem) => {
@@ -511,24 +520,28 @@ export class ItemList extends React.Component<any, IState> {
             });
         };
         const isEmpty = !this.state.itemsList.length;
+        const displayEmptyList = isEmpty && !scope.loading;
 
-        return React.createElement(
-            'ul',
-            {
-                className: classNames(
+        return (
+            <ul
+                className={classNames(
                     this.state.view === 'photogrid' ?
                         'sd-grid-list sd-grid-list--no-margin' :
                         (this.state.view || 'compact') + '-view list-view',
-                    {'list-without-items': isEmpty},
-                ),
-                onClick: this.closeActionsMenu,
-            },
-            isEmpty && !scope.loading ?
-                React.createElement(
-                    'li',
-                    {onClick: this.closeActionsMenu},
-                    gettext('There are currently no items'),
-                ) : this.state.itemsList.map(createItem),
+                    {'list-without-items': displayEmptyList},
+                )}
+                onClick={this.closeActionsMenu}
+            >
+                {
+                    displayEmptyList
+                        ? (
+                            <li onClick={this.closeActionsMenu}>
+                                {gettext('There are currently no items')}
+                            </li>
+                        )
+                        : this.state.itemsList.map(createItem)
+                }
+            </ul>
         );
     }
 }

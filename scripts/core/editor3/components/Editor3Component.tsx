@@ -16,7 +16,7 @@ import {getVisibleSelectionRect} from 'draft-js';
 
 import {Map} from 'immutable';
 import Toolbar from './toolbar';
-import {getBlockRenderer} from './blockRenderer';
+import {blockRenderer} from './blockRenderer';
 import {customStyleMap} from './customStyleMap';
 import classNames from 'classnames';
 import {handlePastedText} from './handlePastedText';
@@ -32,7 +32,7 @@ import {noop} from 'lodash';
 import {getSpellcheckWarningsByBlock} from './spellchecker/SpellcheckerDecorator';
 import {getSpellchecker} from './spellchecker/default-spellcheckers';
 import {IEditorStore} from '../store';
-import {appConfig} from 'core/config';
+import {appConfig} from 'appConfig';
 
 const MEDIA_TYPES_TRIGGER_DROP_ZONE = [
     'application/superdesk.item.picture',
@@ -137,6 +137,10 @@ interface IProps {
     dispatch?(action: any): void;
 }
 
+interface IState {
+    draggingInProgress: boolean;
+}
+
 /**
  * @ngdoc React
  * @module superdesk.core.editor3
@@ -149,7 +153,7 @@ interface IProps {
  * @description Editor3 is a draft.js based editor that support customizable
  *  formatting, spellchecker and media files.
  */
-export class Editor3Component extends React.Component<IProps> {
+export class Editor3Component extends React.Component<IProps, IState> {
     static propTypes: any;
     static defaultProps: any;
 
@@ -158,6 +162,7 @@ export class Editor3Component extends React.Component<IProps> {
     div: any;
     editor: any;
     spellcheckCancelFn: () => void;
+    onDragEnd: () => void;
 
     constructor(props) {
         super(props);
@@ -173,6 +178,16 @@ export class Editor3Component extends React.Component<IProps> {
         this.handleDropOnEditor = this.handleDropOnEditor.bind(this);
         this.spellcheck = this.spellcheck.bind(this);
         this.spellcheckCancelFn = noop;
+
+        this.onDragEnd = () => {
+            if (this.state.draggingInProgress !== false) {
+                this.setState({draggingInProgress: false});
+            }
+        };
+
+        this.state = {
+            draggingInProgress: false,
+        };
     }
 
     /**
@@ -231,6 +246,8 @@ export class Editor3Component extends React.Component<IProps> {
     }
 
     handleDropOnEditor(selection: SelectionState, dataTransfer: any, isInternal: DraftDragType): DraftHandleValue {
+        this.onDragEnd();
+
         if (isInternal) {
             const {editorState} = this.props;
             const targetBlockKey = selection.getStartKey();
@@ -447,6 +464,11 @@ export class Editor3Component extends React.Component<IProps> {
 
         window[EDITOR_GLOBAL_REFS][this.editorKey] = this.editor;
 
+        if (appConfig.features.showCharacterLimit) {
+            document.documentElement.style.
+                setProperty('--preCharacterLimit', appConfig.features.showCharacterLimit + 'ch');
+        }
+
         this.spellcheck();
     }
 
@@ -504,16 +526,43 @@ export class Editor3Component extends React.Component<IProps> {
             } : {},
         ));
 
+        const blockStyle = (contentBlock): string => {
+            const type = contentBlock.getType();
+
+            if (type === 'code-block' && appConfig.features.showCharacterLimit) {
+                return 'showCharacterLimit';
+            }
+        };
+
         return (
-            <div className={cx} ref={(div) => this.div = div}>
-                {showToolbar &&
-                    <Toolbar
-                        disabled={locked || readOnly}
-                        scrollContainer={scrollContainer}
-                        editorNode={this.editorNode}
-                        highlightsManager={this.props.highlightsManager}
-                        editorWrapperElement={this.div}
-                    />
+            <div
+                className={cx}
+                ref={(div) => this.div = div}
+                onDragStart={() => {
+                    // known issue: dragging text doesn't work when the top of the editor is in the viewport
+                    // https://github.com/facebook/draft-js/issues/2218
+
+                    if (this.state.draggingInProgress !== true) {
+                        this.setState({draggingInProgress: true});
+                    }
+                }}
+
+                // "dragend" event won't fire if an item is dropped inside draft-js field
+                // it's handled there separately
+                onDragEnd={this.onDragEnd}
+            >
+                {
+                    showToolbar && this.state.draggingInProgress !== true
+                        ? (
+                            <Toolbar
+                                disabled={locked || readOnly}
+                                scrollContainer={scrollContainer}
+                                editorNode={this.editorNode}
+                                highlightsManager={this.props.highlightsManager}
+                                editorWrapperElement={this.div}
+                            />
+                        )
+                        : null
                 }
                 <HighlightsPopup
                     editorNode={this.editorNode}
@@ -528,7 +577,8 @@ export class Editor3Component extends React.Component<IProps> {
                         keyBindingFn={this.keyBindingFn}
                         handleBeforeInput={this.handleBeforeInput}
                         blockRenderMap={blockRenderMap}
-                        blockRendererFn={getBlockRenderer({svc: this.props.svc})}
+                        blockRendererFn={blockRenderer}
+                        blockStyleFn={blockStyle}
                         customStyleMap={{...customStyleMap, ...this.props.highlightsManager.styleMap}}
                         onChange={(editorStateNext: EditorState) => {
                             // in order to position the popup component we need to know the position of editor selection

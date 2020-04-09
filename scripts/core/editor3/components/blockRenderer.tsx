@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {MediaBlock} from './media';
 import {EmbedBlock} from './embeds';
 import {TableBlock} from './tables';
+import {ContentBlock} from 'draft-js';
 
 /**
  * @ngdoc React
@@ -38,12 +39,9 @@ MediaComponent.propTypes = {
     contentState: PropTypes.object.isRequired,
 };
 
-export function getBlockRenderer(props) {
-    return function blockRenderer(block) {
-        return block.getType() !== 'atomic' ? null : {
-            component: MediaComponent,
-            editable: false,
-            props: props,
-        };
+export function blockRenderer(contentBlock: ContentBlock) {
+    return contentBlock.getType() !== 'atomic' ? null : {
+        component: MediaComponent,
+        editable: false,
     };
 }

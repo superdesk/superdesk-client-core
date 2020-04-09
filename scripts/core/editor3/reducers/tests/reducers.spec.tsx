@@ -317,4 +317,19 @@ describe('editor3.reducers', () => {
         expect(entity.data.link.link).toBe('http://foo.com');
         expect(nextState.onChangeValue).toHaveBeenCalled();
     });
+
+    it('EDITOR_PUSH_STATE', () => {
+        const contentState = ContentState.createFromText('some text');
+        const nextContentState = ContentState.createFromText('some other text');
+
+        const nextState = reducer({
+            editorState: EditorState.createWithContent(contentState),
+            onChangeValue: jasmine.createSpy('onChangeValue'),
+        }, {
+            type: 'EDITOR_PUSH_STATE',
+            payload: {contentState: nextContentState},
+        });
+
+        expect(nextState.editorState.getCurrentContent().getPlainText()).toBe(nextContentState.getPlainText());
+    });
 });

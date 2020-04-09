@@ -1,8 +1,8 @@
 import React from 'react';
 
 import {IExtensionActivationResult, IArticleActionBulk, IArticle} from 'superdesk-api';
-import {flatMap} from 'lodash';
-import {extensions} from 'core/extension-imports.generated';
+import {flatMap, groupBy} from 'lodash';
+import {extensions} from 'appConfig';
 import {DropdownTree} from 'core/ui/components/dropdown-tree';
 import {Icon} from 'core/ui/components/Icon2';
 import {sortByDisplayPriority} from 'core/helpers/sortByDisplayPriority';
@@ -133,22 +133,72 @@ export class MultiActionBarReact extends React.Component<IProps, IState> {
                 </div>
             );
         } else {
+            const groups = groupBy(this.state.actions, (item) => item.group && item.group.label);
+            const groupNames = Object.keys(groups);
+
             return (
                 <div data-test-id="multi-actions-inline">
                     {
-                        this.state.actions.map((action, i) => (
-                            <button
-                                onClick={() => {
-                                    this.onTrigger(action);
-                                }}
-                                className="navbtn strict"
-                                title={action.label}
+                        groupNames.map((group, i) => (
+                            group === 'undefined') ?
+                            groups[group].map((action, key) => (
+                                <button
+                                    onClick={() => {
+                                        this.onTrigger(action);
+                                    }}
+                                    className="navbtn strict"
+                                    title={action.label}
+                                    key={key}
+                                    data-test-id={action.label}
+                                >
+                                    <Icon className={action.icon} size={22} />
+                                </button>
+                            )) :
+                            <DropdownTree
+                                getToggleElement={(isOpen, onClick) => (
+                                    <button
+                                        onClick={onClick}
+                                        className="navbtn"
+                                        title={groups[group][0].group.label}
+                                        data-test-id="dropdown-toggle"
+                                    >
+                                        <Icon className={groups[group][0].group.icon} size={22} />
+                                    </button>
+                                )}
+                                inline={true}
                                 key={i}
-                                data-test-id={action.label}
-                            >
-                                <Icon className={action.icon} size={22} />
-                            </button>
-                        ))
+                                groups={[{render: () => null, items: groups[group]}]}
+                                renderItem={(key, item, closeDropdown) => (
+                                    <button
+                                        key={key}
+                                        style={{
+                                            display: 'block',
+                                            width: '100%',
+                                            padding: 0,
+                                            textAlign: 'left',
+                                            whiteSpace: 'nowrap',
+                                        }}
+                                        onClick={() => {
+                                            closeDropdown();
+                                            this.onTrigger(item);
+                                        }}
+                                        data-test-id={item.label}
+                                    >
+                                        <span
+                                            style={{
+                                                display: 'flex',
+                                                justifyContent: 'flex-start',
+                                                alignItems: 'center',
+                                                padding: '10px',
+                                            }}
+                                        >
+                                            <i className={item.icon} style={{marginRight: 10}} />
+                                            <span>{item.label}</span>
+                                        </span>
+                                    </button>
+                                )}
+                            />,
+                        )
                     }
                 </div>
             );

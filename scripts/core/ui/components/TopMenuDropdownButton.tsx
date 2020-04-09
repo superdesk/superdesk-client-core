@@ -1,17 +1,30 @@
-import React from 'react';
+/* eslint-disable indent */
 
-export class TopMenuDropdownButton extends React.PureComponent<{onClick: () => void; active: boolean}> {
+import React from 'react';
+import classNames from 'classnames';
+
+export class TopMenuDropdownButton extends React.PureComponent<{
+    onClick: () => void;
+    disabled?: boolean;
+    active: boolean;
+    pulsate: boolean;
+    'data-test-id'?: string;
+}> {
     render() {
-        const {onClick, active} = this.props;
+        const {onClick, active, pulsate} = this.props;
+
+        let classes = classNames('top-menu-dropdown-button', {
+            'top-menu-dropdown-button--active': active,
+            'top-menu-dropdown-button--pulsate': pulsate,
+        });
 
         return (
-            <button onClick={onClick} style={{
-                background: active ? '#F8F8F8' : '#3C3C3C',
-                color: active ? '#000' : '#fff',
-                paddingLeft: 10,
-                paddingRight: 10,
-                zIndex: 2, // so button is on top of dropdown top shadow
-            }}>
+            <button
+                onClick={onClick}
+                className={classes}
+                data-test-id={this.props['data-test-id']}
+                disabled={this.props.disabled}
+            >
                 {this.props.children}
             </button>
         );

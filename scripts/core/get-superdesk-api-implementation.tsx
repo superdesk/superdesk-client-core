@@ -1,12 +1,13 @@
+import moment from 'moment-timezone';
 import {
     ISuperdesk,
     IExtensions,
-    IExtensionActivationResult,
     IArticle,
     IContentProfile,
     IEvents,
+    IStage,
 } from 'superdesk-api';
-import {gettext} from 'core/utils';
+import {gettext, gettextPlural} from 'core/utils';
 import {getGenericListPageComponent} from './ui/components/ListPage/generic-list-page';
 import {ListItem, ListItemColumn, ListItemActionsMenu} from './components/ListItem';
 import {getFormFieldPreviewComponent} from './ui/components/generic-form/form-field';
@@ -21,7 +22,7 @@ import {Row, Item, Column} from './ui/components/List';
 import {connectCrudManager, dataApi, dataApiByEntity} from './helpers/CrudManager';
 import {generateFilterForServer} from './ui/components/generic-form/generate-filter-for-server';
 import {assertNever, Writeable} from './helpers/typescript-helpers';
-import {flatMap, memoize} from 'lodash';
+import {memoize} from 'lodash';
 import {Modal} from './ui/components/Modal/Modal';
 import {ModalHeader} from './ui/components/Modal/ModalHeader';
 import {ModalBody} from './ui/components/Modal/ModalBody';
@@ -48,6 +49,9 @@ import {TopMenuDropdownButton} from './ui/components/TopMenuDropdownButton';
 import {dispatchInternalEvent} from './internal-events';
 import {Icon} from './ui/components/Icon2';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
+import ng from 'core/services/ng';
+import {Spacer} from './ui/components/Spacer';
+import {appConfig} from 'appConfig';
 
 function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
@@ -56,35 +60,7 @@ function getContentType(id): Promise<IContentProfile> {
 const getContentTypeMemoized = memoize(getContentType);
 let getContentTypeMemoizedLastCall: number = 0; // unix time
 
-function getOnUpdateBeforeMiddlewares(
-    extensions: IExtensions,
-): Array<IExtensionActivationResult['contributions']['entities']['article']['onUpdateBefore']> {
-    return flatMap(
-        Object.values(extensions).map(({activationResult}) => activationResult),
-        (activationResult) =>
-            activationResult.contributions != null
-            && activationResult.contributions.entities != null
-            && activationResult.contributions.entities.article != null
-            && activationResult.contributions.entities.article.onUpdateBefore != null
-                ? activationResult.contributions.entities.article.onUpdateBefore
-                : [],
-    );
-}
-
-function getOnUpdateAfterFunctions(
-    extensions: IExtensions,
-): Array<IExtensionActivationResult['contributions']['entities']['article']['onUpdateAfter']> {
-    return flatMap(
-        Object.values(extensions).map(({activationResult}) => activationResult),
-        (activationResult) =>
-            activationResult.contributions != null
-            && activationResult.contributions.entities != null
-            && activationResult.contributions.entities.article != null
-            && activationResult.contributions.entities.article.onUpdateAfter != null
-                ? activationResult.contributions.entities.article.onUpdateAfter
-                : [],
-    );
-}
+const isPublished = (article) => article.item_id != null;
 
 // stores a map between custom callback & callback passed to DOM
 // so the original event listener can be removed later
@@ -141,36 +117,44 @@ export function getSuperdeskApiImplementation(
             article: {
                 isPersonal: (article) => article.task == null || article.task.desk == null,
                 isLocked: (article) => article['lock_session'] != null,
-                isLockedByCurrentUser: (article) => lock.isLocked(article),
-                update: (_articleNext) => {
-                    const __articleNext = {..._articleNext};
+                isLockedByCurrentUser: (article) => lock.isLockedInCurrentSession(article),
+                patch: (article, patch, dangerousOptions) => {
+                    const onPatchBeforeMiddlewares = Object.values(extensions)
+                        .map((extension) => extension.activationResult?.contributions?.entities?.article?.onPatchBefore)
+                        .filter((middleware) => middleware != null);
 
-                    // remove UI state property. It shoudln't be here in the first place,
-                    // but can't be removed easily. The line below should be removed when SDESK-4343 is done.
-                    delete __articleNext.selected;
-
-                    const onUpdateBeforeMiddlewares = getOnUpdateBeforeMiddlewares(extensions);
-
-                    onUpdateBeforeMiddlewares.reduce(
-                        (current, next) => current.then((result) => next(result)),
-                        Promise.resolve(__articleNext),
-                    ).then((articleNext) => {
-                        dataApi.findOne<IArticle>('archive', articleNext._id)
-                            .then((articleCurrent) => {
-                                dataApi.patch('archive', articleCurrent, articleNext).then((articleNextFromServer) => {
-                                    const onUpdateAfterFunctions = getOnUpdateAfterFunctions(extensions);
-
-                                    onUpdateAfterFunctions.forEach((fn) => {
-                                        fn(articleNextFromServer);
-                                    });
-                                });
-                            });
+                    onPatchBeforeMiddlewares.reduce(
+                        (current, next) => current.then((result) => next(article._id, result, dangerousOptions)),
+                        Promise.resolve(patch),
+                    ).then((patchFinal) => {
+                        return dataApi.patchRaw<IArticle>(
+                            // distinction between handling published and non-published items
+                            // should be removed: SDESK-4687
+                            (isPublished(article) ? 'published' : 'archive'),
+                            article._id,
+                            article._etag,
+                            patchFinal,
+                        ).then((res) => {
+                            if (dangerousOptions?.patchDirectlyAndOverwriteAuthoringValues === true) {
+                                dispatchInternalEvent(
+                                    'dangerouslyOverwriteAuthoringData',
+                                    {...patch, _etag: res._etag},
+                                );
+                            }
+                        });
                     }).catch((err) => {
                         if (err instanceof Error) {
                             logger.error(err);
                         }
                     });
                 },
+                isArchived: (article) => article._type === 'archived',
+                isPublished: (article) => isPublished(article),
+            },
+            desk: {
+                getStagesOrdered: (deskId: string) =>
+                    dataApi.query<IStage>('stages', 1, {field: '_id', direction: 'ascending'}, {desk: deskId}, 200)
+                        .then((response) => response._items),
             },
             contentProfile: {
                 get: (id) => {
@@ -203,7 +187,10 @@ export function getSuperdeskApiImplementation(
         ui: {
             article: {
                 view: (id: string) => {
-                    authoringWorkspace.edit({_id: id}, 'view');
+                    ng.getService('$location').then(($location) => {
+                        $location.url('/workspace/monitoring');
+                        authoringWorkspace.edit({_id: id}, 'view');
+                    });
                 },
                 addImage: (field: string, image: IArticle) => {
                     dispatchInternalEvent('addImage', {field, image});
@@ -249,6 +236,7 @@ export function getSuperdeskApiImplementation(
             TopMenuDropdownButton,
             Icon,
             getDropdownTree: () => DropdownTree,
+            Spacer,
         },
         forms: {
             FormFieldType,
@@ -259,37 +247,21 @@ export function getSuperdeskApiImplementation(
             getFormFieldPreviewComponent,
         },
         localization: {
-            gettext: (message) => gettext(message),
-        },
-        extensions: {
-            getExtension: (id: string) => {
-                const extension = extensions[id].extension;
-
-                if (extension == null) {
-                    return Promise.reject('Extension not found.');
-                }
-
-                const {manifest} = extensions[requestingExtensionId];
-
-                if (
-                    manifest.superdeskExtension != null
-                    && Array.isArray(manifest.superdeskExtension.dependencies)
-                    && manifest.superdeskExtension.dependencies.includes(id)
-                ) {
-                    const extensionShallowCopy = {...extension};
-
-                    delete extensionShallowCopy['activate'];
-
-                    return Promise.resolve(extensionShallowCopy);
-                } else {
-                    return Promise.reject('Not authorized.');
-                }
+            gettext: (message, params) => gettext(message, params),
+            gettextPlural: (count, singular, plural, params) => gettextPlural(count, singular, plural, params),
+            formatDate: (date: Date) => moment(date).tz(appConfig.defaultTimezone).format(appConfig.view.dateformat),
+            formatDateTime: (date: Date) => {
+                return moment(date)
+                    .tz(appConfig.defaultTimezone)
+                    .format(appConfig.view.dateformat + ' ' + appConfig.view.timeformat);
             },
         },
         privileges: {
             getOwnPrivileges: () => privileges.loaded.then(() => privileges.privileges),
+            hasPrivilege: (privilege: string) => privileges.userHasPrivileges({[privilege]: 1}),
         },
         session: {
+            getToken: () => session.token,
             getCurrentUser: () => session.getIdentity(),
         },
         utilities: {
@@ -297,6 +269,9 @@ export function getSuperdeskApiImplementation(
             CSS: {
                 getClass: (originalName: string) => getCssNameForExtension(originalName, requestingExtensionId),
                 getId: (originalName: string) => getCssNameForExtension(originalName, requestingExtensionId),
+            },
+            dateToServerString: (date: Date) => {
+                return date.toISOString().slice(0, 19) + '+0000';
             },
         },
         addWebsocketMessageListener: (eventName, handler) => {

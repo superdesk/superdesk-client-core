@@ -1,18 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {loadIframelyEmbedJs} from './loadIframely';
-import ng from 'core/services/ng';
 import {connect} from 'react-redux';
 import {embed, hidePopups} from '../../actions';
 import {gettext} from 'core/utils';
+import {appConfig} from 'appConfig';
 import {OverlayTrigger, Tooltip} from 'react-bootstrap';
 
 const fallbackAPIKey = '1d1728bf82b2ac8139453f'; // register to author's personal account
 const GenericError = gettext('This URL could not be embedded.');
 
 export const getEmbedObject = (url) => {
-    const config = ng.get('config');
-    const apiKey = config.iframely.key || fallbackAPIKey;
+    const apiKey = appConfig.iframely.key || fallbackAPIKey;
 
     return $.ajax({
         url: `//iframe.ly/api/oembed?callback=?&url=${url}&api_key=${apiKey}&omit_script=true&iframe=true`,

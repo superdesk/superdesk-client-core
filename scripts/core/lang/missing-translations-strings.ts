@@ -1,6 +1,8 @@
 /* tslint:disable:max-line-length */
 /* eslint-disable max-len */
 
+import {gettext} from 'core/utils';
+
 /**
  * Expose strings for translation that aren't visible in regular js or template files.
  */

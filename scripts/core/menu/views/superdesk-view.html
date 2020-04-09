@@ -1,4 +1,4 @@
-<div ng-if="session.identity != null">
+<div ng-if="!loading">
     <!--
         Render top menu only after a user is logged in.
         Otherwise, the extensions will initialize too soon and will be unable to access HTTP API.

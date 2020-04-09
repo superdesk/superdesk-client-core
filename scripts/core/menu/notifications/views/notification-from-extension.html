@@ -1,0 +1,12 @@
+<div>
+    {{label}}
+    <div style="margin-top: 10px">
+        <button
+            ng-repeat="action in actions track by action.label"
+            ng-click="executeAction(action)"
+            class="btn btn--small btn--hollow btn--ui-dark"
+        >
+            {{action.label}}
+        </button>
+    </div>
+</div>

@@ -1,9 +1,10 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
+import {appConfig} from 'appConfig';
 
-IngestDashboardController.$inject = ['$scope', 'api', 'ingestSources', 'preferencesService',
-    'notify', 'config'];
-export function IngestDashboardController($scope, $api, ingestSources, preferencesService, notify, config) {
+IngestDashboardController.$inject = ['$scope', 'ingestSources', 'preferencesService',
+    'notify'];
+export function IngestDashboardController($scope, ingestSources, preferencesService, notify) {
     $scope.items = [];
     $scope.dashboard_items = [];
 
@@ -20,7 +21,9 @@ export function IngestDashboardController($scope, $api, ingestSources, preferenc
 
         _.forEach(_.filter($scope.items, {dashboard_enabled: true}),
             (item) => {
-                preferences.push(_.pick(item, _.union(['_id'], _.keys(config.ingest.PROVIDER_DASHBOARD_DEFAULTS))));
+                preferences.push(
+                    _.pick(item, _.union(['_id'], _.keys(appConfig.ingest.PROVIDER_DASHBOARD_DEFAULTS))),
+                );
             },
         );
 

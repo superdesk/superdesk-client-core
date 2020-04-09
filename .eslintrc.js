@@ -23,7 +23,7 @@ module.exports = Object.assign({}, sharedConfigs, {
 
         'newline-per-chained-call': ["error", {"ignoreChainWithDepth": 3}],
     }),
-    parser: 'typescript-eslint-parser',
+    parser: '@typescript-eslint/parser',
     overrides: [
         {
             files: ['*.ts', '*.tsx'],
@@ -47,6 +47,10 @@ module.exports = Object.assign({}, sharedConfigs, {
                     "exports": "always-multiline",
                     "functions": "always-multiline"
                 }],
+
+
+                // allow calling hasOwnProperty
+                "no-prototype-builtins": 0,
             },
         },
     ],

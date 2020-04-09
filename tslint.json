@@ -57,8 +57,10 @@
     "rulesDirectory": [],
     "linterOptions": {
         "exclude": [
-            "**/dist/**",
-            "**/node_modules/**"
+            "node_modules/**",
+            "scripts/extensions/**/node_modules/**",
+            "end-to-end-testing-helpers/dist/**",
+            "end-to-end-testing-helpers/node_modules/**"
         ]
     }
 }

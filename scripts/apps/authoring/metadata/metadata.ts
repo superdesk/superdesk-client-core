@@ -4,20 +4,21 @@ import MetaPlaceDirective from './MetaPlaceDirective';
 import {VOCABULARY_SELECTION_TYPES} from '../../vocabularies/constants';
 import {gettext} from 'core/utils';
 import PlacesServiceFactory from './PlacesService';
+import {appConfig} from 'appConfig';
 
 const SINGLE_SELECTION = VOCABULARY_SELECTION_TYPES.SINGLE_SELECTION.id;
 
 MetadataCtrl.$inject = [
     '$scope', 'desks', 'metadata', 'privileges', 'datetimeHelper', 'userList',
-    'preferencesService', 'archiveService', 'config', 'moment', 'content',
+    'preferencesService', 'archiveService', 'moment', 'content',
 ];
 
 function MetadataCtrl(
     $scope, desks, metadata, privileges, datetimeHelper, userList,
-    preferencesService, archiveService, config, moment, content) {
+    preferencesService, archiveService, moment, content) {
     desks.initialize();
 
-    $scope.change_profile = config.item_profile && config.item_profile.change_profile === 1 &&
+    $scope.change_profile = appConfig.item_profile != null && appConfig.item_profile.change_profile === 1 &&
                             _.get($scope, 'origItem.type') === 'text';
 
     metadata.initialize().then(() => {
@@ -151,7 +152,7 @@ function MetadataCtrl(
         // set embargo time default on initial date selection
         if (newValue && oldValue === undefined) {
             $scope.item.embargo_time = moment('00:01', 'HH:mm')
-                .format(config.model.timeformat);
+                .format(appConfig.model.timeformat);
         }
 
         setEmbargoTS(newValue, oldValue);
@@ -771,16 +772,32 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
 
                     scope.terms = $filter('sortByName')(_.filter(filterSelected(searchList), (t) => {
                         var searchObj = {};
+                        const termLower = term.toLowerCase();
+                        // if there are translations available search term from the translations
+                        const searchFromTranslations = t.translations != null && t.translations.name != null
+                            && t.translations.name[scope.item.language] != null;
 
                         searchObj[scope.uniqueField] = t[scope.uniqueField];
-                        if (searchUnique) {
-                            return (t.name.toLowerCase().indexOf(term.toLowerCase()) !== -1 ||
-                                    t[scope.uniqueField].toLowerCase().indexOf(term.toLowerCase()) !== -1) &&
-                                !_.find(scope.item[scope.field], searchObj);
+
+                        if (searchFromTranslations) {
+                            return t.translations.name[scope.item.language].toLowerCase().includes(termLower)
+                                && !_.find(scope.item[scope.field], searchObj);
                         }
 
-                        return t.name.toLowerCase().indexOf(term.toLowerCase()) !== -1 &&
-                            !_.find(scope.item[scope.field], searchObj);
+                        if (searchUnique) {
+                            // In case we want to search by some unique field like qcode as well as name
+                            // see SD-4829
+                            return t.name.toLowerCase().includes(termLower)
+                                || t[scope.uniqueField].toLowerCase().includes(termLower)
+                                && !_.find(scope.item[scope.field], searchObj);
+                        }
+
+                        return t.name.toLowerCase().includes(termLower)
+                            || (t.user != null && t.user.username.toLowerCase().includes(termLower))
+                            // make sure to skip the terms which are already added for ex:
+                            // {qcode: "1", name: "Arbeidsliv", scheme: "subject_custom"}  is already added
+                            // and if user search for "Arbeidsliv" again he shouln't get any search results
+                            && !_.find(scope.item[scope.field], searchObj);
                     }));
                     scope.activeList = true;
                 }
@@ -846,7 +863,15 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                         });
                     }
 
-                    if ($event && ($event.ctrlKey || $event.metaKey)) {
+                    // make sure we run scope.change even if popup stays opened
+                    $timeout(() => {
+                        scope.$applyAsync(() => {
+                            scope.postprocessing();
+                            scope.change({item: scope.item, field: scope.field});
+                        });
+                    }, 50, false);
+
+                    if ($event && ($event.ctrlKey || $event.metaKey || appConfig.features.keepMetaTermsOpenedOnClick)) {
                         $event.stopPropagation();
                         return;
                     }
@@ -861,13 +886,6 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                         scope.terms = _.without(scope.terms, term);
                         scope.activeTree = scope.terms;
                     }
-
-                    $timeout(() => {
-                        scope.$applyAsync(() => {
-                            scope.postprocessing();
-                            scope.change({item: scope.item, field: scope.field});
-                        });
-                    }, 50, false);
 
                     // retain focus and initialise activeTree on same dropdown control after selection.
                     _.defer(() => {
@@ -1083,19 +1101,19 @@ function MetaLocatorsDirective(places) {
     };
 }
 
-MetadataService.$inject = ['api', 'subscribersService', 'config', 'vocabularies', '$rootScope', 'session', '$filter'];
-export function MetadataService(api, subscribersService, config, vocabularies, $rootScope, session, $filter) {
+MetadataService.$inject = ['api', 'subscribersService', 'vocabularies', '$rootScope', 'session', '$filter'];
+export function MetadataService(api, subscribersService, vocabularies, $rootScope, session, $filter) {
     var service = {
         values: {},
         helper_text: {},
         popup_width: {},
         single_value: {},
         cvs: [],
-        search_cvs: config.search_cvs || [
+        search_cvs: appConfig.search_cvs || [
             {id: 'subject', name: 'Subject', field: 'subject', list: 'subjectcodes'},
             {id: 'companycodes', name: 'Company Codes', field: 'company_codes', list: 'company_codes'},
         ],
-        search_config: config.search || {
+        search_config: appConfig.search || {
             slugline: 1, headline: 1, unique_name: 1, story_text: 1, byline: 1,
             keywords: 1, creator: 1, from_desk: 1, to_desk: 1, spike: 1,
             scheduled: 1, company_codes: 1, ingest_provider: 1, marked_desks: 1,

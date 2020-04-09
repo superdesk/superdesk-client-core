@@ -92,7 +92,7 @@ export function SendService(
      * @param {Array} items
      */
     function sendAll(items) {
-        angular.forEach(items, sendOne);
+        return Promise.all(items.map(sendOne));
     }
 
     /**
@@ -210,6 +210,7 @@ export function SendService(
         self.config = $q.defer();
         self.config.action = action;
         self.config.itemIds = _.map(items, '_id');
+        self.config.items = items;
         self.config.isPackage = items.some((item) => item.type === 'composite');
 
         if (self.config.isPackage) {

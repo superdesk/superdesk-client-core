@@ -6,7 +6,10 @@ import {IArticleActionBulkExtended} from 'apps/monitoring/MultiActionBarReact';
 import {IArticle} from 'superdesk-api';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 
-MultiActionBar.$inject = ['asset', 'multi', 'authoringWorkspace', 'superdesk', 'keyboardManager', 'desks'];
+MultiActionBar.$inject = [
+    'asset', 'multi', 'authoringWorkspace', 'superdesk',
+    'keyboardManager', 'desks', 'api', 'archiveService',
+];
 export function MultiActionBar(
     asset,
     multi,
@@ -14,6 +17,8 @@ export function MultiActionBar(
     superdesk,
     keyboardManager,
     desks,
+    api,
+    archiveService,
 ) {
     return {
         controller: 'MultiActionBar',
@@ -71,6 +76,24 @@ export function MultiActionBar(
                             canAutocloseMultiActionBar: false,
                         });
                     }
+                } else if (scope.type === 'externalsource') {
+                    actions.push({
+                        label: gettext('Fetch'),
+                        icon: 'icon-archive',
+                        onTrigger: () => {
+                            scope.action.fetch();
+                            scope.$apply();
+                        },
+                        canAutocloseMultiActionBar: false,
+                    }, {
+                        label: gettext('Fetch to'),
+                        icon: 'icon-fetch-as',
+                        onTrigger: () => {
+                            scope.action.fetch(true);
+                            scope.$apply();
+                        },
+                        canAutocloseMultiActionBar: false,
+                    });
                 } else if (scope.type === 'archive') {
                     if (scope.action.canEditMetadata() && scope.activity['edit.item']) {
                         actions.push({
@@ -116,17 +139,6 @@ export function MultiActionBar(
                             canAutocloseMultiActionBar: false,
                         });
                     }
-                    if (scope.state === 'spiked') {
-                        actions.push({
-                            label: gettext('Unspike'),
-                            icon: 'icon-unspike',
-                            onTrigger: () => {
-                                scope.action.unspikeItems();
-                                scope.$apply();
-                            },
-                            canAutocloseMultiActionBar: false,
-                        });
-                    }
                     if (scope.activity['edit.item']) {
                         actions.push({
                             label: gettext('Send to'),
@@ -149,6 +161,16 @@ export function MultiActionBar(
                             canAutocloseMultiActionBar: false,
                         });
                     }
+                } else if (scope.type === 'spike') {
+                    actions.push({
+                        label: gettext('Unspike'),
+                        icon: 'icon-unspike',
+                        onTrigger: () => {
+                            scope.action.unspikeItems();
+                            scope.$apply();
+                        },
+                        canAutocloseMultiActionBar: false,
+                    });
                 }
 
                 if (scope.action.canPackageItems()) {
@@ -189,6 +211,38 @@ export function MultiActionBar(
                     }
                 }
 
+                if (scope.activity['duplicateTo']) {
+                    actions.push({
+                        label: gettext('Duplicate To'),
+                        icon: 'icon-copy',
+                        group: {
+                            label: gettext('Duplicate'),
+                            icon: 'icon-copy',
+                        },
+                        onTrigger: () => {
+                            scope.action.duplicateTo();
+                            scope.$apply();
+                        },
+                        canAutocloseMultiActionBar: false,
+                    });
+                }
+
+                if (scope.activity['duplicateInPlace']) {
+                    actions.push({
+                        label: gettext('Duplicate In Place'),
+                        icon: 'icon-copy',
+                        group: {
+                            label: gettext('Duplicate'),
+                            icon: 'icon-copy',
+                        },
+                        onTrigger: () => {
+                            scope.action.duplicateInPlace();
+                            scope.$apply();
+                        },
+                        canAutocloseMultiActionBar: false,
+                    });
+                }
+
                 return actions;
             };
 
@@ -199,6 +253,20 @@ export function MultiActionBar(
 
                     _.find(selectedItems, (_item) => _item._id === data.item).lock_user = data.user;
                     detectType(selectedItems);
+                }
+            });
+
+            scope.$on('item:unlock', (_e, data) => {
+                if (multi.getIds().includes(data.item)) {
+                    const selectedItems = multi.getItems();
+
+                    // When selected items are unlocked update their lock info and allowed actions
+                    api.find('archive', data.item).then((_item) => {
+                        const index = selectedItems.findIndex((item) => item._id === _item._id);
+
+                        selectedItems[index] = _.extend(selectedItems[index], _item);
+                        detectType(selectedItems);
+                    });
                 }
             });
 
@@ -228,10 +296,12 @@ export function MultiActionBar(
                 var activities = {};
 
                 angular.forEach(items, (item) => {
-                    types[item._type] = 1;
+                    const type = archiveService.getType(item);
+
+                    types[type] = 1;
                     states.push(item.state);
 
-                    var _activities = superdesk.findActivities({action: 'list', type: item._type}, item) || [];
+                    var _activities = superdesk.findActivities({action: 'list', type: type}, item) || [];
                     let allowOnSessionOwnerLock = ['spike', 'export'];
 
                     _activities.forEach((activity) => {

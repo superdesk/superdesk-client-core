@@ -1,8 +1,9 @@
 import _ from 'lodash';
 import moment from 'moment';
+import {appConfig} from 'appConfig';
 
-ArchiveService.$inject = ['desks', 'session', 'api', '$q', 'search', '$location', 'config'];
-export function ArchiveService(desks, session, api, $q, search, $location, config) {
+ArchiveService.$inject = ['desks', 'session', 'api', '$q', 'search', '$location'];
+export function ArchiveService(desks, session, api, $q, search, $location) {
     /**
      * Adds 'task' property to the article represented by item.
      *
@@ -81,7 +82,7 @@ export function ArchiveService(desks, session, api, $q, search, $location, confi
      */
     this.getRelatedItems = function(item, fromDateTime) {
         var beforeDateTime = fromDateTime || moment().subtract(1, 'days')
-            .format(config.view.dateformat);
+            .format(appConfig.view.dateformat);
         var params: any = {};
 
         params.q = 'slugline.phrase:"' + _.trim(item.slugline) + '"'; // exact match

@@ -12,6 +12,7 @@
         overflow-y: auto;
         overflow-x: hidden;
         background: #fff;
+        color: $sd-text;
         border: 1px #bbb;
         box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.2);
         position: absolute;
@@ -22,11 +23,12 @@
             width: 100%;
             font-size: 1.3rem;
             margin-bottom: 0.4rem;
+            font-family: $baseFontFamily;
             &:hover {
                 cursor: pointer;
                 background-color: rgba(94, 169, 200, 0.1);
             }
-            &.active button {
+            &.active {
                 background-color: rgba(94, 169, 200, 0.4) !important;
             }
             .country_state_info {

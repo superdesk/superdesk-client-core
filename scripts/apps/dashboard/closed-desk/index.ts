@@ -2,6 +2,7 @@ import {get, debounce} from 'lodash';
 import {gettext} from 'core/utils';
 
 import './styles.scss';
+import {appConfig} from 'appConfig';
 
 RoutingWidgetController.$inject = ['desks', 'privileges', 'api', 'notify', '$scope'];
 function RoutingWidgetController(desks, privileges, api, notify, $scope) {
@@ -79,7 +80,7 @@ function TopMenuInfoDirective(desks, $timeout, config) {
                     selected.classList.remove('desk--closed');
                 }
                 scope.routingFrom = scope.routingTo = null;
-                scope.hideRoutedDesks = config.features.hideRoutedDesks;
+                scope.hideRoutedDesks = appConfig.features.hideRoutedDesks;
 
                 if (!desk) {
                     return;

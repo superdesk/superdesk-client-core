@@ -57,9 +57,19 @@
                         </select>
                     </div>
 
+                    <div class="field" ng-if="showPreviewConfig(fields[id])">
+                        <label translate>Show in preview</label>
+                        <div sd-check ng-model="model.editor[id].preview"></div>
+                    </div>
+
                     <div class="field" ng-if="model.schema[id].type === 'string'">
                         <label translate>Clean Pasted HTML</label>
                         <div sd-check ng-model="model.editor[id].cleanPastedHTML"></div>
+                    </div>
+
+                    <div class="field" ng-if="characterValidationEnabled && (model.schema[id].type === 'string' || fields[id].field_type === 'text')">
+                        <label translate>Validate Characters</label>
+                        <div sd-check ng-model="model.schema[id].validate_characters" ng-click="model.editor[id].validate_characters = model.schema[id].validate_characters"></div>
                     </div>
 
                     <!-- IF EDITOR3 -->

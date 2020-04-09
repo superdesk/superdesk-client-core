@@ -1,6 +1,3 @@
-
-import {waitUntil} from 'core/helpers/waitUtil';
-
 describe('superdesk.apps.workspace.content', () => {
     beforeEach(window.module('superdesk.mocks'));
     beforeEach(window.module('superdesk.apps.desks'));
@@ -21,20 +18,20 @@ describe('superdesk.apps.workspace.content', () => {
         }));
 
         it('can create plain text items', inject((api, content, $rootScope) => {
-            content.createItem().then(done);
+            content.createItem('text').then(done);
             $rootScope.$digest();
             expect(api.save).toHaveBeenCalledWith('archive', {type: 'text', version: 0});
             expect(done).toHaveBeenCalledWith(ITEM);
         }));
 
-        it('can create packages', inject((api, content, desks, session, $rootScope) => {
+        it('can create packages', inject((api, packages, desks, session, $rootScope) => {
             session.identity = {_id: '1'};
             desks.userDesks = {_items: []};
             spyOn(desks, 'getCurrentDesk')
                 .and
                 .returnValue({_id: '1', name: 'sport', working_stage: '2', incoming_stage: '3'});
 
-            content.createPackageItem().then(done);
+            packages.createEmptyPackage().then(done);
             $rootScope.$digest();
             expect(api.save).toHaveBeenCalledWith('archive', {headline: '', slugline: '',
                 description_text: '', type: 'composite',
@@ -65,35 +62,6 @@ describe('superdesk.apps.workspace.content', () => {
                     {refs: [{headline: '', residRef: undefined, location: 'archive',
                         slugline: '', renditions: {}, itemClass: '', type: ''}],
                     id: 'main', role: 'grpRole:main'}]});
-        }));
-
-        it('can create items from template', inject((api, content, desks, session, $rootScope) => {
-            session.identity = {_id: 'user:1', byline: 'user1'};
-
-            spyOn(desks, 'getCurrentDesk')
-                .and
-                .returnValue({_id: '2', name: 'news', working_stage: '4', incoming_stage: '5'});
-
-            content.createItemFromTemplate({
-                _id: 'template1',
-                data: {
-                    slugline: 'test_slugline',
-                    body_html: 'test_body_html',
-                    irrelevantData: 'yes',
-                },
-            }).then(done);
-
-            $rootScope.$digest();
-            expect(done).toHaveBeenCalledWith(ITEM);
-            expect(api.save).toHaveBeenCalledWith('archive', {
-                slugline: 'test_slugline',
-                body_html: 'test_body_html',
-                task: {desk: '2', stage: '4', user: 'user:1'},
-                template: 'template1',
-                type: 'text',
-                version: 0,
-                byline: 'user1',
-            });
         }));
 
         it('can fetch content types', inject((api, content, $rootScope, $q) => {
@@ -178,28 +146,6 @@ describe('superdesk.apps.workspace.content', () => {
             editor = content.editor(contentType);
             expect(editor.foo).toBe(2);
             expect(editor.slugline).toBeFalsy();
-        }));
-
-        it('can get custom package schema', inject((content, deployConfig) => {
-            const packageSchema = {headline: {}};
-
-            spyOn(deployConfig, 'getSync').and.returnValue({composite: packageSchema});
-
-            const schema = content.schema(null, 'composite');
-
-            expect(deployConfig.getSync).toHaveBeenCalledWith('schema');
-            expect(schema).toEqual(packageSchema);
-        }));
-
-        it('can get custom package editor', inject((content, deployConfig) => {
-            const packageEditor = {headline: {}};
-
-            spyOn(deployConfig, 'getSync').and.returnValue({composite: packageEditor});
-
-            const editor = content.editor(null, 'composite');
-
-            expect(deployConfig.getSync).toHaveBeenCalledWith('editor');
-            expect(editor).toEqual(packageEditor);
         }));
 
         it('can filter custom fields per profile', inject((content) => {

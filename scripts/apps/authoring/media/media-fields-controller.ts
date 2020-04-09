@@ -1,8 +1,9 @@
 import {max, sortBy, get} from 'lodash';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
+import {appConfig} from 'appConfig';
 
-MediaFieldsController.$inject = ['$q', 'deployConfig', 'metadata'];
-export default function MediaFieldsController($q, deployConfig, metadata) {
+MediaFieldsController.$inject = ['$q', 'metadata'];
+export default function MediaFieldsController($q, metadata) {
     function getCV(field) {
         const cv = metadata.cvs.find((_cv) => _cv._id === field || _cv.schema_field === field);
 
@@ -16,6 +17,10 @@ export default function MediaFieldsController($q, deployConfig, metadata) {
             return {schema_field: 'language', items: metadata.values.languages, key: 'qcode'};
         }
 
+        if (cv == null && field === 'authors' && metadata.values.authors) {
+            return {schema_field: 'authors', items: metadata.values.authors, field_type: 'authors'};
+        }
+
         return cv;
     }
 
@@ -23,9 +28,9 @@ export default function MediaFieldsController($q, deployConfig, metadata) {
         getLabelForFieldId: getLabelNameResolver(),
         metadataInit: metadata.initialize(),
     }).then(({getLabelForFieldId}) => {
-        const editor = get(deployConfig.getSync('editor'), 'picture', {});
-        const schema = get(deployConfig.getSync('schema'), 'picture', {});
-        const validator = deployConfig.getSync('validator_media_metadata');
+        const editor = get(appConfig.editor, 'picture', {});
+        const schema = get(appConfig.schema, 'picture', {});
+        const validator = appConfig.validator_media_metadata;
 
         // get last order
         let nextOrder = max(Object.keys(editor).map((field) => get(editor, `${field}.order`, 0))) + 1;

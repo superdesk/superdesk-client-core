@@ -20,24 +20,30 @@ interface IScope extends ng.IScope {
     saveHandler(images): Promise<void>;
     successHandler?(): void;
     cancelHandler?(): void;
+    getSelectedItemsLength(): number;
+    selectAll: () => void;
+    unselectAll: () => void;
+    areAllSelected: () => boolean;
+    areSomeSelected: () => boolean;
 }
 
 MultiImageEditController.$inject = [
     '$scope',
     'modal',
     'notify',
+    'lock',
 ];
 
 export function MultiImageEditController(
     $scope: IScope,
     modal,
     notify,
+    lock,
 ) {
     const saveHandler = $scope.saveHandler;
-
-    $scope.images = angular.copy($scope.imagesOriginal);
-
     let unsavedChangesExist = false;
+
+    $scope.images = [];
 
     $scope.$watch('imagesOriginal', (imagesOriginal: Array<any>) => {
         // add and remove images without losing metadata of the ones which stay
@@ -56,23 +62,43 @@ export function MultiImageEditController(
 
     $scope.isDirty = () => unsavedChangesExist;
 
-    $scope.selectImage = (image, update: boolean = true) => {
+    $scope.selectAll = () => {
+        if (Array.isArray($scope.images)) {
+            $scope.images.forEach((image) => {
+                image.selected = true;
+            });
+        }
+    };
+
+    $scope.unselectAll = () => {
+        if (Array.isArray($scope.images)) {
+            $scope.images.forEach((image) => {
+                image.selected = false;
+            });
+        }
+    };
+
+    $scope.areAllSelected = () =>
+        Array.isArray($scope.images) && $scope.images.every((image) => image.selected === true);
+
+    $scope.areSomeSelected = () =>
+        Array.isArray($scope.images) && $scope.images.some((image) => image.selected === true);
+
+    $scope.selectImage = (image) => {
         if ($scope.images.length === 1) {
             $scope.images[0].selected = true;
         } else {
             image.selected = !image.selected;
         }
 
-        if (update) {
-            // refresh metadata visible in the editor according to selected images
-            updateMetadata();
-        }
+        // refresh metadata visible in the editor according to selected images
+        updateMetadata();
     };
 
     // wait for images for initial load
     $scope.$watch('images', (images: Array<any>) => {
         if (images != null && images.length) {
-            images.forEach((image) => $scope.selectImage(image, false));
+            $scope.selectAll();
             updateMetadata();
         }
     });
@@ -121,7 +147,7 @@ export function MultiImageEditController(
                 unsavedChangesExist = false;
 
                 if (close && typeof $scope.successHandler === 'function') {
-                    $scope.successHandler();
+                    unlockAndCloseModal($scope.successHandler);
                 }
             });
     };
@@ -134,21 +160,56 @@ export function MultiImageEditController(
             )
                 .then(() => {
                     if (typeof $scope.cancelHandler === 'function') {
-                        $scope.cancelHandler();
+                        unlockAndCloseModal($scope.cancelHandler);
                     }
                 });
         } else if (typeof $scope.cancelHandler === 'function') {
-            $scope.cancelHandler();
+            unlockAndCloseModal($scope.cancelHandler);
         }
     };
 
+    $scope.$on('item:lock', (_e, data) => {
+        const {imagesOriginal} = $scope;
+
+        // while editing metadata if any selected item is unlocked by another user remove that item from selected items
+        if (Array.isArray(imagesOriginal) && data != null && data.item != null) {
+            const unlockedItem = imagesOriginal.find((image) => image._id === data.item);
+
+            notify.error(
+                gettext(
+                    'Item {{headline}} unlocked by another user.',
+                    {headline: unlockedItem.headline || unlockedItem.slugline},
+                ),
+            );
+            $scope.imagesOriginal = angular.copy(imagesOriginal.filter((image) => image._id !== data.item));
+            $scope.metadata = {};
+        }
+    });
+
     $scope.getSelectedImages = () => ($scope.images || []).filter((item) => item.selected);
+
+    $scope.getSelectedItemsLength = () => $scope.getSelectedImages().length || 0;
+
+    function unlockAndCloseModal(callback) {
+        // Before closing the modal unlock all the selected items
+        const unlockItems = $scope.images.map((item) => {
+            // In case of new upload there will be no lock on item
+            // so make sure to unlock only those items which are locked
+            if (item._locked === true) {
+                return lock.unlock(item);
+            }
+            return item;
+        });
+
+        Promise.all(unlockItems).then(callback);
+    }
 
     function updateMetadata() {
         $scope.metadata = {
             // subject is required to "usage terms" and other custom fields are editable
             subject: compare('subject'),
             headline: compare('headline'),
+            slugline: compare('slugline'),
             description_text: compare('description_text'),
             archive_description: compare('archive_description'),
             alt_text: compare('alt_text'),
@@ -159,6 +220,8 @@ export function MultiImageEditController(
             extra: compareExtra(),
             language: compare('language'),
             creditline: compare('creditline'),
+            source: compare('source'),
+            ednote: compare('ednote'),
         };
     }
 

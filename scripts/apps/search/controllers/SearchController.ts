@@ -1,8 +1,8 @@
 import {intersection} from 'lodash';
-import {appConfig} from 'core/config';
+import {appConfig} from 'appConfig';
 
-SearchController.$inject = ['$location', 'searchProviderService', 'config'];
-export function SearchController($location, searchProviderService, config) {
+SearchController.$inject = ['$location', 'searchProviderService'];
+export function SearchController($location, searchProviderService) {
     const SUPERDESK = 'local';
     const INTERNAL = ['archive', 'published', 'ingest', 'archived'];
     const DEFAULT_CONFIG = Object.assign({}, {
@@ -11,7 +11,9 @@ export function SearchController($location, searchProviderService, config) {
         published: true,
         archived: true,
         search: SUPERDESK,
-    }, config.defaultSearch);
+    }, appConfig.defaultSearch);
+
+    this.hideNested = appConfig.features.nestedItemsInOutputStage;
 
     this.hideNested = appConfig.features.nestedItemsInOutputStage;
 

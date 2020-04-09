@@ -1,13 +1,26 @@
 import React from 'react';
-import {shallow, mount} from 'enzyme';
+import {Provider} from 'react-redux';
+import {mount} from 'enzyme';
 import mockStore, {embedBlockAndContent} from './utils';
-import {EmbedBlockComponent as EmbedBlock} from '../embeds/EmbedBlock';
+import {EmbedBlock} from '../embeds/EmbedBlock';
 import {EmbedInputComponent as EmbedInput} from '../embeds/EmbedInput';
+import {ISuperdeskGlobalConfig} from 'superdesk-api';
+import {appConfig} from 'appConfig';
+import {createStore} from 'redux';
 
 describe('editor3.components.embed-block', () => {
     it('should render entity html', () => {
+        const noop = () => ({});
         const {block, contentState} = embedBlockAndContent();
-        const wrapper = shallow(<EmbedBlock block={block} contentState={contentState} />);
+        const wrapper = mount(
+            <Provider store={createStore(() => ({}), {})}>
+                <EmbedBlock
+                    block={block}
+                    contentState={contentState}
+                    blockProps={{readOnly: false, dispatch: noop}}
+                />
+            </Provider>,
+        );
 
         expect(wrapper.find('.embed-block__wrapper').html())
             .toBe('<div class="embed-block__wrapper"><h1>Embed Title</h1></div>');
@@ -16,7 +29,9 @@ describe('editor3.components.embed-block', () => {
 
 describe('editor3.components.embed-input', () => {
     beforeEach(window.module(($provide) => {
-        $provide.constant('config', {iframely: {key: 'key'}});
+        const testConfig: Partial<ISuperdeskGlobalConfig> = {iframely: {key: 'key'}};
+
+        Object.assign(appConfig, testConfig);
     }));
 
     it('should render', () => {

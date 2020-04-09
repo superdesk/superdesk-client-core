@@ -3,7 +3,7 @@
         <button class="widget-header__search-button" ng-click="searchOpen = !searchOpen; agg.search(); query = ''" ng-class="{'widget-header__search-button--active': searchOpen}"><i class="icon-search"></i></button>
         <div class="widget-title" translate>{{ widget.configuration.label || widget.label }}</div>
     </div>
-    <div class="main-list" 
+    <div class="main-list"
         ng-class="{wrap: agg.selected && !$root.config.features.customMonitoringWidget, 'custom-widget': $root.config.features.customMonitoringWidget}">
         <div class="search-box" ng-class="{'search-box--hidden': !searchOpen}">
             <form class="search-box__content">
@@ -26,7 +26,7 @@
                                  sd-widget-group
                                  data-stage="group"
                                  data-total="total"
-                                 data-allowed="true"
+                                 data-can-edit="true"
                                  data-show-empty="false"
                                  data-max-items="group.max_items"
                                  data-action="agg.preview(item)"
@@ -45,7 +45,7 @@
                                  sd-widget-group
                                  data-stage="group"
                                  data-total="total"
-                                 data-allowed="true"
+                                 data-can-edit="true"
                                  data-show-empty="false"
                                  data-max-items="100"
                                  data-action="agg.preview(item)"
@@ -58,7 +58,7 @@
             </div>
         </div>
     </div>
-    <div class="preview preview-widget" ng-init="contenttab = true" 
+    <div class="preview preview-widget" ng-init="contenttab = true"
         ng-if="agg.selected"
         ng-class="{wrap: !agg.selected && !$root.config.features.customMonitoringWidget, 'custom-widget': $root.config.features.customMonitoringWidget}">
         <div class="nav">

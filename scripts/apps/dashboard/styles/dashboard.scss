@@ -516,6 +516,11 @@ Add new widget modal
                     background-color: $widget_world-clock;
                 }
             }
+            &.user-activity {
+                .thumbnail {
+                    background-color: $widget_user-activity;
+                }
+            }
             &.ingest-stats {
                 .thumbnail {
                     background-color: $widget_ingest-stats;

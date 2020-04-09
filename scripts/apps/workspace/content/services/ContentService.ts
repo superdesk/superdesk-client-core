@@ -2,7 +2,9 @@ import * as constant from '../constants';
 import {get, omit, isEmpty, zipObject} from 'lodash';
 import {gettext} from 'core/utils';
 import {isMediaEditable} from 'core/config';
-import {IArticle} from 'superdesk-api';
+import {appConfig} from 'appConfig';
+import {dataApi} from 'core/helpers/CrudManager';
+import {IArticle, IContentProfileEditorConfig, IArticleField} from 'superdesk-api';
 
 /**
  * @ngdoc service
@@ -20,7 +22,6 @@ import {IArticle} from 'superdesk-api';
  * @requires $q
  * @requires $rootScope
  * @requires session
- * @requires deployConfig
  *
  * @description Content Service is responsible for creating packages or content items based
  * on templates or content types.
@@ -28,7 +29,6 @@ import {IArticle} from 'superdesk-api';
  */
 ContentService.$inject = [
     'api',
-    'superdesk',
     'templates',
     'desks',
     'packages',
@@ -38,21 +38,19 @@ ContentService.$inject = [
     '$q',
     '$rootScope',
     'session',
-    'deployConfig',
     'send',
-    'config',
     'renditions',
 ];
-export function ContentService(api, superdesk, templates, desks, packages, archiveService, notify,
-    $filter, $q, $rootScope, session, deployConfig, send, config, renditions) {
+export function ContentService(api, templates, desks, packages, archiveService, notify,
+    $filter, $q, $rootScope, session, send, renditions) {
     const TEXT_TYPE = 'text';
 
     const self = this;
 
-    function newItem(type) {
+    function newItem(type, initializeAsUpdated: boolean) {
         return {
             type: type || TEXT_TYPE,
-            version: 0,
+            version: initializeAsUpdated ? 1 : 0,
         };
     }
 
@@ -82,23 +80,11 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
      * @param {string} type
      * @return {Promise}
      */
-    this.createItem = function(type) {
-        var item = newItem(type);
+    this.createItem = function(type, initializeAsUpdated) {
+        var item = newItem(type, initializeAsUpdated);
 
         archiveService.addTaskToArticle(item);
         return save(item);
-    };
-
-    /**
-     * Create a package containing given item
-     *
-     * @param {Object} item
-     * @return {Promise}
-     */
-    this.createPackageItem = function(item) {
-        var data = item ? {items: [item]} : {};
-
-        return packages.createEmptyPackage(data);
     };
 
     /**
@@ -117,8 +103,8 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
      * @param {Object} template
      * @return {Promise}
      */
-    this.createItemFromTemplate = function(template) {
-        var item: any = newItem(template.data.type || null);
+    this.createItemFromTemplate = function(template, initializeAsUpdated) {
+        var item: Partial<IArticle> = newItem(template.data.type || null, initializeAsUpdated);
 
         angular.extend(item, templates.pickItemData(template.data || {}), {template: template._id});
         // set the dateline date to default utc date.
@@ -132,7 +118,8 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
         }
 
         archiveService.addTaskToArticle(item);
-        return save(item).then((_item) => {
+
+        return dataApi.create('archive', item).then((_item) => {
             templates.addRecentTemplate(desks.activeDeskId, template._id);
             return _item;
         });
@@ -243,7 +230,7 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
      */
     this.schema = function(profile, contentType) {
         const schema = get(profile, 'schema',
-            get(deployConfig.getSync('schema'), contentType, constant.DEFAULT_SCHEMA));
+            get(appConfig.schema, contentType, constant.DEFAULT_SCHEMA));
 
         return angular.extend({}, schema);
     };
@@ -257,7 +244,7 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
      */
     this.editor = function(profile, contentType) {
         const editor = get(profile, 'editor',
-            get(deployConfig.getSync('editor'), contentType, constant.DEFAULT_EDITOR));
+            get(appConfig.editor, contentType, constant.DEFAULT_EDITOR));
 
         return angular.extend({}, editor);
     };
@@ -273,6 +260,13 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
 
         return this._fields ? this._fields.filter((field) => !!editor[field._id]) : [];
     };
+
+    /**
+     * Get fields with preview enabled
+     */
+    this.previewFields = (editor: IContentProfileEditorConfig, fields: Array<IArticleField>): Array<IArticleField> =>
+        editor == null || fields == null ? []
+            : fields.filter((field) => editor[field._id] != null && editor[field._id].preview);
 
     /**
      * Get profiles selected for given desk
@@ -330,7 +324,7 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
 
         return Promise.all(keys.map((key) => {
             // there is only _id, maybe _type for related items
-            if (associations[key] && Object.keys(associations[key]).length <= 2) {
+            if (associations[key] && Object.keys(associations[key]).length <= 3) {
                 return api.find('archive', associations[key]._id);
             }
 
@@ -360,7 +354,7 @@ export function ContentService(api, superdesk, templates, desks, packages, archi
             }
 
             return api.find(item._type, item._id);
-        } else if (isMediaEditable(config) && fetchExternal) {
+        } else if (isMediaEditable(item) && fetchExternal) {
             return renditions.ingest(item);
         }
 

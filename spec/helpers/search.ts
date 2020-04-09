@@ -2,8 +2,7 @@
 
 import {element, by, browser} from 'protractor';
 import {nav, waitFor, scrollToView, scrollRelative} from './utils';
-import {el} from './e2e-helpers';
-import {ECE} from './expected-conditions-extended';
+import {el, ECE} from 'end-to-end-testing-helpers';
 
 class GlobalSearch {
     ingestRepo: any;

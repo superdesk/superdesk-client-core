@@ -18,20 +18,10 @@ import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/Autho
 import {httpRequestJsonLocal} from 'core/helpers/network';
 
 function isButtonClicked(event): boolean {
-    const selector = 'button';
-
     // don't trigger the action if a button inside a list view is clicked
     // if an extension registers a button, it should be able to totally control it.
-    if (
-        event.target.matches(selector)
-
-        // target can be an image or an icon inside a button, so parents need to be checked too
-        || querySelectorParent(event.target, selector) != null
-    ) {
-        return true;
-    } else {
-        return false;
-    }
+    // target can be an image or an icon inside a button, so parents need to be checked too
+    return querySelectorParent(event.target, 'button', {self: true}) != null;
 }
 
 const CLICK_TIMEOUT = 300;
@@ -45,6 +35,7 @@ const actionsMenuDefaultTemplate = (toggle, stopEvent) => (
             onClick={toggle}
             onDoubleClick={stopEvent}
             className="more-activity-toggle-ref icn-btn dropdown__toggle dropdown-toggle"
+            data-test-id="context-menu-button"
         >
             <i className="icon-dots-vertical" />
         </button>
@@ -423,14 +414,17 @@ export class Item extends React.Component<IProps, IState> {
                 draggable: !this.props.isNested,
             },
             (
-                <div className={classNames(classes, {
-                    active: this.props.flags.selected,
-                    locked: isLocked,
-                    selected: this.props.item.selected || this.props.flags.selected,
-                    archived: item.archived || item.created,
-                    gone: item.gone,
-                    actioning: this.state.actioning || this.props.actioning,
-                })}>
+                <div
+                    className={classNames(classes, {
+                        active: this.props.flags.selected,
+                        locked: isLocked,
+                        selected: this.props.item.selected || this.props.flags.selected,
+                        archived: item.archived || item.created,
+                        gone: item.gone,
+                        actioning: this.state.actioning || this.props.actioning,
+                    })}
+                    data-test-id="article-item"
+                >
                     {getTemplate()}
                 </div>
             ),

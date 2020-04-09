@@ -1,7 +1,7 @@
 import React from 'react';
 import {get} from 'lodash';
 import {stripHtmlTags, gettextPlural} from 'core/utils';
-import {appConfig} from 'core/config';
+import {appConfig} from 'appConfig';
 
 interface IProps {
     html: string;

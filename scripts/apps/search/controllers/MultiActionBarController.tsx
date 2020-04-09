@@ -6,7 +6,7 @@ import {IArticle} from 'superdesk-api';
 import {gettext} from 'core/utils';
 
 import {IExtensionActivationResult} from 'superdesk-api';
-import {extensions} from 'core/extension-imports.generated';
+import {extensions} from 'appConfig';
 import {showSpikeDialog} from 'apps/archive/show-spike-dialog';
 
 /**
@@ -32,13 +32,13 @@ import {showSpikeDialog} from 'apps/archive/show-spike-dialog';
  */
 
 MultiActionBarController.$inject = [
-    '$rootScope', 'multi', 'multiEdit', 'multiImageEdit', 'send', 'remove', 'modal', '$q',
-    'packages', 'superdesk', 'notify', 'spike', 'authoring', 'privileges', '$location', 'config', 'api',
+    '$rootScope', 'multi', 'multiEdit', 'multiImageEdit', 'send', 'remove', 'modal', 'lock',
+    'packages', 'superdesk', 'notify', 'spike', 'authoring', '$location', 'api', 'desks',
 ];
 
 export function MultiActionBarController(
-    $rootScope, multi, multiEdit, multiImageEdit, send, remove, modal, $q,
-    packages, superdesk, notify, spike, authoring, privileges, $location, config, api,
+    $rootScope, multi, multiEdit, multiImageEdit, send, remove, modal, lock,
+    packages, superdesk, notify, spike, authoring, $location, api, desks,
 ) {
     this.send = function() {
         send.all(multi.getItems());
@@ -46,6 +46,29 @@ export function MultiActionBarController(
 
     this.sendAs = function() {
         send.allAs(multi.getItems());
+    };
+
+    this.fetch = (fetchAs = false) => {
+        const items = multi.getItems().concat();
+
+        setActioning(true, items);
+
+        (fetchAs ?
+            send.allAs(multi.getItems(), 'externalsourceTo') :
+            send.all(multi.getItems())
+        )
+        .then(() => {
+            multi.reset();
+        })
+        .finally(() => {
+            setActioning(false, items);
+        });
+    };
+
+    const setActioning = (actioning: boolean, items) => {
+        items.forEach((item) => {
+            $rootScope.$broadcast('item:actioning', {item, actioning});
+        });
     };
 
     this.canRemoveIngestItems = function() {
@@ -73,29 +96,13 @@ export function MultiActionBarController(
     };
 
     this.multiImageEdit = function() {
-        const originalImages = multi.getItems();
-        // load images fully. Using multi.getItems() doesn't work
-        // since it doesn't contain "subject" required for "usage terms"
-
-        Promise.all(multi.getIds().map((id) => api.find('archive', id)))
-            .then((imagesFromDatabase) => {
-                // SDESK-4343
-                // UI state(`selected` property of the article) is stored on a database/API entity
-                // because of that, it's not possible to use the latest data from the API
-                // and it has to be patched on top of old data in order for UI state related properties to be preserved
-                imagesFromDatabase.forEach((imageFromDb: IArticle) => {
-                    const originalImage = originalImages.find((i) => i._id === imageFromDb._id);
-
-                    // attaching missing properties to originalImages
-                    for (const prop in imageFromDb) {
-                        originalImage[prop] = imageFromDb[prop];
-                    }
-                });
-
-                multiImageEdit.edit(originalImages, (editedImages) => Promise.all(
-                    originalImages.map((image: IArticle) => authoring.save(
+        // before opening the edit modal make sure all the items are locked
+        Promise.all(multi.getItems().map((item) => lock.lock(item, true, 'edit')))
+            .then((selectedImages) => {
+                multiImageEdit.edit(selectedImages, (editedImages: Array<IArticle>) => Promise.all(
+                        editedImages.map((image: IArticle) => authoring.save(
+                        _.find(selectedImages, (_item: IArticle) => _item._id === image._id),
                         image,
-                        _.find(editedImages, (item) => item._id === image._id),
                     )),
                 ));
             });
@@ -149,7 +156,6 @@ export function MultiActionBarController(
         const items: Array<IArticle> = multi.getItems();
 
         showSpikeDialog(
-            config,
             modal,
             () => spikeMultiple(),
             gettext('Are you sure you want to spike the items?'),
@@ -179,6 +185,39 @@ export function MultiActionBarController(
                 !_.includes(['ingested', 'spiked', 'killed', 'recalled', 'unpublished', 'draft'], item.state);
         });
         return canPackage;
+    };
+
+    /**
+     * Multiple items duplicate
+     */
+    this.duplicateTo = function() {
+        return send.allAs(multi.getItems(), 'duplicateTo');
+    };
+
+    this.duplicateInPlace = function() {
+        const items = multi.getItems();
+
+        items.forEach((item) => {
+            api.save('duplicate', {}, {
+                desk: desks.getCurrentDeskId(),
+                type: item._type,
+                item_id: item._id,
+            }, item).then(() => {
+                $rootScope.$broadcast('item:duplicate');
+                notify.success(gettext('Item Duplicated'));
+            }, (response) => {
+                var message = gettext('Failed to duplicate the item');
+
+                if (angular.isDefined(response.data._message)) {
+                    message = message + ': ' + response.data._message;
+                }
+
+                notify.error(message);
+                item.error = response;
+            });
+        });
+
+        multi.reset();
     };
 
     /**

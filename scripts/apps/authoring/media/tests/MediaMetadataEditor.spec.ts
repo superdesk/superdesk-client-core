@@ -1,6 +1,18 @@
 import * as helper from 'apps/workspace/helpers/getLabelForFieldId';
+import {appConfig} from 'appConfig';
+import {ISuperdeskGlobalConfig} from 'superdesk-api';
 
 describe('media metadata editor', () => {
+    beforeEach(() => {
+        const testConfig: Partial<ISuperdeskGlobalConfig> = {
+            server: {
+                url: '',
+                ws: undefined,
+            },
+        };
+
+        Object.assign(appConfig, testConfig);
+    });
     beforeEach(window.module(($provide) => {
         $provide.service('metadata', ($q) => ({
             initialize: () => $q.when({}),
@@ -16,16 +28,8 @@ describe('media metadata editor', () => {
         spyOn(metadata, 'initialize').and.returnValue($q.when({}));
     }));
 
-    it('displays all fields', inject(($rootScope, $controller, deployConfig) => {
-        deployConfig.config = {
-            schema: {
-                picture: {
-                    slugline: {type: 'string'},
-                    headline: {type: 'string'},
-                    genre: {type: 'list'},
-                    category: {type: 'list'},
-                },
-            },
+    it('displays all fields', inject(($rootScope, $controller) => {
+        const testConfig: Partial<ISuperdeskGlobalConfig> = {
             editor: {
                 picture: {
                     slugline: {
@@ -46,7 +50,18 @@ describe('media metadata editor', () => {
                     },
                 },
             },
+            schema: {
+                picture: {
+                    slugline: {type: 'string'},
+                    headline: {type: 'string'},
+                    genre: {type: 'list'},
+                    category: {type: 'list'},
+                },
+            },
+            validator_media_metadata: {},
         };
+
+        Object.assign(appConfig, testConfig);
 
         const ctrl = $controller('MediaFieldsController');
 
@@ -57,8 +72,8 @@ describe('media metadata editor', () => {
         expect(ctrl.fields.map((f) => f.field)).toEqual(['slugline', 'headline', 'category', 'genre']);
     }));
 
-    it('displays fields with displayOnMediaEditor set', inject(($rootScope, $controller, deployConfig) => {
-        deployConfig.config = {
+    it('displays fields with dislayOnMediaEditor set', inject(($rootScope, $controller) => {
+        const testConfig: Partial<ISuperdeskGlobalConfig> = {
             schema: {
                 picture: {
                     slugline: {type: 'string'},
@@ -92,6 +107,8 @@ describe('media metadata editor', () => {
                 },
             },
         };
+
+        Object.assign(appConfig, testConfig);
 
         const ctrl = $controller('MediaFieldsController');
 

@@ -11,6 +11,8 @@ import {reactToAngular1} from 'superdesk-ui-framework';
 import {ArticleUrlFields} from './article-url-fields';
 import {AuthoringCustomField} from './authoring-custom-field';
 import {PreviewCustomField} from './preview-custom-field';
+import {ValidateCharacters} from './ValidateCharacters';
+
 import {LineCount} from './components/line-count';
 import {PopulateAuthorsController} from './controllers/PopulateAuthorsController';
 
@@ -19,6 +21,8 @@ import {IArticle} from 'superdesk-api';
 import {IArticleSchema} from 'superdesk-interfaces/ArticleSchema';
 import {AuthoringTopbarReact} from './authoring-topbar-react';
 import {AuthoringWorkspaceService} from './services';
+import {sdStaticAutocompleteDirective} from './directives/sd-static-autocomplete';
+import {VideoThumbnailEditor} from './components/video-thumbnail-editor';
 
 export interface IOnChangeParams {
     item: IArticle;
@@ -81,7 +85,6 @@ angular.module('superdesk.apps.authoring', [
     .service('authThemes', svc.AuthoringThemesService)
     .service('authoringWorkspace', svc.AuthoringWorkspaceService)
     .service('renditions', svc.RenditionsService)
-    .service('mediaIdGenerator', svc.MediaIdGeneratorService)
 
     .factory('history', svc.HistoryFactory)
 
@@ -95,7 +98,8 @@ angular.module('superdesk.apps.authoring', [
     .directive('sdArticleEdit', directive.ArticleEditDirective)
     .directive('sdAuthoring', directive.AuthoringDirective)
     .directive('sdAuthoringTopbar', directive.AuthoringTopbarDirective)
-    .component('sdAuthoringTopbarReact', reactToAngular1(AuthoringTopbarReact, ['article', 'onChange']))
+    .component('sdAuthoringTopbarReact', reactToAngular1(AuthoringTopbarReact, ['article', 'action', 'onChange']))
+    .component('sdVideoThumbnailEditor', reactToAngular1(VideoThumbnailEditor, ['item', 'onChange']))
     .directive('sdPreviewFormatted', directive.PreviewFormattedDirective)
     .directive('sdAuthoringContainer', directive.AuthoringContainerDirective)
     .directive('sdAuthoringEmbedded', directive.AuthoringEmbeddedDirective)
@@ -106,6 +110,7 @@ angular.module('superdesk.apps.authoring', [
     .directive('sdRemoveTags', directive.RemoveTagsDirective)
     .directive('tansaScopeSync', directive.TansaScopeSyncDirective)
     .directive('sdItemActionByIntent', directive.ItemActionsByIntentDirective)
+    .directive('sdStaticAutocomplete', sdStaticAutocompleteDirective)
 
     .component('sdLineCount',
         reactToAngular1(
@@ -133,6 +138,13 @@ angular.module('superdesk.apps.authoring', [
     .component('sdPreviewCustomField',
         reactToAngular1(
             PreviewCustomField,
+            ['item', 'field'],
+        ),
+    )
+
+    .component('sdValidateCharacters',
+        reactToAngular1(
+            ValidateCharacters,
             ['item', 'field'],
         ),
     )
@@ -191,7 +203,7 @@ angular.module('superdesk.apps.authoring', [
                     authoringWorkspace.popup(data.item, 'edit');
                 }],
                 filters: [{action: 'list', type: 'archive'}],
-                additionalCondition: ['authoring', 'item', 'config', 'lock', function(authoring, item, config, lock) {
+                additionalCondition: ['authoring', 'item', 'lock', function(authoring, item, lock) {
                     return authoring.itemActions(item).edit && !lock.isLockedByMe(item);
                 }],
             })
@@ -200,9 +212,9 @@ angular.module('superdesk.apps.authoring', [
                 priority: 3,
                 icon: 'edit-line',
                 keyboardShortcut: 'ctrl+alt+m',
-                controller: ['data', 'multiImageEdit', 'authoring', 'api',
-                    function(data, multiImageEdit, authoring, api) {
-                        api.find('archive', data.item._id).then((item) => {
+                controller: ['data', 'multiImageEdit', 'authoring', 'lock',
+                    function(data, multiImageEdit, authoring, lock) {
+                        lock.lock(data.item, true, 'edit').then((item) => {
                             multiImageEdit.edit([item], (response) => authoring.save(item, response[0]));
                         });
                     }],
@@ -223,7 +235,7 @@ angular.module('superdesk.apps.authoring', [
                     send.allAs([data.item], 'send_to');
                 }],
                 filters: [{action: 'list', type: 'archive'}],
-                additionalCondition: ['authoring', 'item', 'config', (authoring, item, config) =>
+                additionalCondition: ['authoring', 'item', (authoring, item) =>
                     authoring.itemActions(item).send && item.type !== 'composite',
                 ],
             })
@@ -326,7 +338,7 @@ angular.module('superdesk.apps.authoring', [
                     {action: 'list', type: 'archived'},
                     {action: 'list', type: 'legal_archive'},
                 ],
-                additionalCondition: ['authoring', 'item', 'config', function(authoring, item, config) {
+                additionalCondition: ['authoring', 'item', function(authoring, item) {
                     return authoring.itemActions(item).view;
                 }],
             })

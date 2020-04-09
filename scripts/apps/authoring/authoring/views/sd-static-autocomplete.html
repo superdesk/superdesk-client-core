@@ -1,0 +1,8 @@
+<div class="sd-typeahead">
+    <div ng-transclude></div>
+    <ul class="item-list" ng-if="suggestions.length">
+        <li ng-repeat="suggestion in suggestions track by suggestion"
+            ng-class="{active: $index === activeSuggestion}"
+            ng-click="select(suggestion)">{{ :: suggestion }}</li>
+    </ul>
+</div>

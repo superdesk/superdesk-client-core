@@ -104,7 +104,7 @@ function WorkqueueCtrl(
     notify,
     $timeout,
 ) {
-    $scope.active = null;
+    $scope.articleInEditMode = null;
     $scope.workqueue = workqueue;
     $scope.multiEdit = multiEdit;
 
@@ -131,7 +131,10 @@ function WorkqueueCtrl(
     $scope.$on('item:unlock', (_e, data) => {
         var item: IArticle = workqueue.items.find((_item) => _item._id === data.item);
 
-        if (item && lock.isLocked(item) && session.sessionId !== data.lock_session && $scope.active !== item) {
+        if (item && lock.isLocked(item)
+            && session.sessionId !== data.lock_session
+            && $scope.articleInEditMode !== item
+        ) {
             authoring.unlock(item, data.user, item.headline);
         }
 
@@ -168,12 +171,12 @@ function WorkqueueCtrl(
             var route = $route.current || {_id: null, params: {}};
 
             $scope.isMultiedit = route._id === 'multiedit';
-            $scope.active = null;
+            $scope.articleInEditMode = null;
 
             let currentItemId = data && data.item ? data.item : route.params.item;
 
             if (currentItemId) {
-                $scope.active = find(workqueue.items, {_id: currentItemId});
+                $scope.articleInEditMode = find(workqueue.items, {_id: currentItemId});
             }
         });
     }
@@ -200,7 +203,7 @@ function WorkqueueCtrl(
             }, (err) => {
                 if (angular.isDefined(err)) {
                     // confirm dirty checking for current item just incase if it's before autosaved.
-                    if (confirm.dirty && $scope.active && $scope.active._id === item._id) {
+                    if (confirm.dirty && $scope.articleInEditMode && $scope.articleInEditMode._id === item._id) {
                         return confirm.reopen().then((reopen) => {
                             _reOpenItem(item);
                         });
@@ -211,9 +214,12 @@ function WorkqueueCtrl(
     };
 
     function _reOpenItem(item) {
-        if ($scope.active && $scope.active._id !== item._id || !$scope.active && item) {
+        if (
+            $scope.articleInEditMode
+            && $scope.articleInEditMode._id !== item._id || !$scope.articleInEditMode && item
+        ) {
             authoringWorkspace.edit(item);
-            $scope.active = item;
+            $scope.articleInEditMode = item;
         }
         $scope.dashboardActive = false;
     }
@@ -266,7 +272,7 @@ function WorkqueueCtrl(
      */
     $scope.edit = function(item, event) {
         if (!event.ctrlKey) {
-            $scope.active = item;
+            $scope.articleInEditMode = item;
             authoringWorkspace.edit(item, item.lock_action);
             $scope.redirectOnCloseMulti();
             $scope.dashboardActive = false;
@@ -283,6 +289,13 @@ function WorkqueueCtrl(
             return $rootScope.link('authoring', item);
         }
     };
+
+    $scope.$on('$locationChangeSuccess', () => {
+        $scope.isMultiedit = $route.current && $route.current._id === 'multiedit';
+        if ($scope.isMultiedit) {
+            $scope.articleInEditMode = null;
+        }
+    });
 }
 
 function WorkqueueListDirective() {

@@ -10,19 +10,20 @@ test-server/env
 test-server/__pycache__
 e2e-test-results
 templates-cache.generated.js
-scripts/core/extension-imports.generated.ts
 styles/extension-styles.generated.css
 spec/**/*.js
 .env
 npm-debug.log
 index.html
 yarn-error.log
+yarn.lock
 
 # VIM related files
 *.swo
 *.swp
 *.swn
 *.swm
+.vim/
 
 .vscode
 .idea

@@ -1,5 +1,7 @@
-MediaMetadataViewDirective.$inject = ['deployConfig'];
-export default function MediaMetadataViewDirective(deployConfig) {
+import {appConfig} from 'appConfig';
+
+MediaMetadataViewDirective.$inject = [];
+export default function MediaMetadataViewDirective() {
     return {
         scope: {
             item: '=',
@@ -7,7 +9,7 @@ export default function MediaMetadataViewDirective(deployConfig) {
         },
         template: require('./views/media-metadata-view-directive.html'),
         link: (scope) => {
-            scope.validator = deployConfig.getSync('validator_media_metadata');
+            scope.validator = appConfig.validator_media_metadata;
         },
     };
 }

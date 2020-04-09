@@ -1,7 +1,9 @@
 <button tabindex="{{tabindex}}" class="item-association" ng-if="!carouselItems.length"
     ng-class="{'item-association--preview': item[item.fieldId], 'item-association--loading': loading}"
-    ng-click="editable && associations.isMediaEditable() && !item[item.fieldId] && upload()">
-    <span class="item-association__text-label">{{'Drop items here or click to upload' | translate}}</span>
+    ng-click="editable && associations.isMediaEditable() && !item[item.fieldId] && upload()"
+    data-test-id="media-gallery--upload-placeholder"
+>
+    <span class="item-association__text-label" translate>Drop items here or click to upload</span>
 </button>
 
 <div class="sd-media-carousel" ng-if="carouselItems.length">
@@ -11,21 +13,23 @@
         <a ng-click="navNext()" class="sd-media-carousel__nav-button sd-media-carousel__nav-button--next-inner"></a>
 
         <div class="sd-media-carousel__content owl-carousel">
-            <div class="sd-media-carousel__page" ng-repeat="carouselItem in carouselItems">
-                <figure class="item-association"
-                        ng-class="{'item-association--preview': carouselItem[carouselItem.fieldId], 'item-association--loading': loading}"
-                        ng-click="editable && associations.isMediaEditable() && !carouselItem[carouselItem.fieldId] && upload()">
-
-                    <a ng-if="carouselItem[carouselItem.fieldId] && editable" class="item-association__remove-item" ng-click="remove(carouselItem); $event.stopPropagation()">
+            <div class="sd-media-carousel__page" ng-repeat="carouselItem in carouselItems" data-test-id="media-gallery-image">
+                <figure
+                    class="item-association"
+                    ng-class="{'item-association--preview': carouselItem[carouselItem.fieldId], 'item-association--loading': loading}"
+                    ng-click="editable && associations.isMediaEditable() && !carouselItem[carouselItem.fieldId] && upload()"
+                >
+                    <a
+                        ng-if="carouselItem[carouselItem.fieldId] && editable"
+                        class="item-association__remove-item"
+                        ng-click="remove(carouselItem); $event.stopPropagation()"
+                        data-test-id="media-gallery-image--remove"
+                    >
                         <i class="icon-close-small"></i>
                     </a>
                     <!-- video -->
                     <div class="item-association__video-container" ng-if="carouselItem[carouselItem.fieldId] && carouselItem[carouselItem.fieldId].type === 'video'">
-                        <video controls="controls">
-                            <source vsrc="{{rendition.href}}"
-                                    ng-repeat="(key, rendition) in carouselItem[carouselItem.fieldId].renditions"
-                                    ng-if="associations.checkRenditions.isVideo(rendition)" html5vfix>
-                        </video>
+                        <sd-video item="carouselItem[carouselItem.fieldId]"></sd-video>
                         <div class="item-association__metadata item-association__metadata--plain">
                             <span>
                                 <em>{{:: 'Credit:' | translate}}</em>
@@ -86,10 +90,10 @@
                                     {{carouselItem[carouselItem.fieldId].headline || ('[No Value]' | translate)}}
                                 </span>
                             </div>
-                            <div class="item-association__icons-block">
-                                <a class="item-association__image-action" ng-if="carouselItem[carouselItem.fieldId] && editable" ng-click="associations.isMediaEditable() && associations.edit(this, carouselItem[carouselItem.fieldId], {defaultTab: 'view'}); $event.stopPropagation()" sd-tooltip="Edit metadata"><i class="icon-pencil"></i></a>
-                                <a class="item-association__image-action" ng-if="carouselItem[carouselItem.fieldId] && editable" ng-click="associations.isMediaEditable() && associations.edit(this, carouselItem[carouselItem.fieldId], {defaultTab: 'image-edit'}); $event.stopPropagation()" sd-tooltip="Edit image"><i class="icon-switches"></i></a>
-                                <a class="item-association__image-action" ng-if="carouselItem[carouselItem.fieldId] && editable" ng-click="associations.isMediaEditable() && associations.edit(this, carouselItem[carouselItem.fieldId], {defaultTab: 'crop', showMetadata: false}); $event.stopPropagation()" sd-tooltip="Edit crops"><i class="icon-crop"></i></a>
+                            <div class="item-association__icons-block" ng-if="associations.isMediaEditable(carouselItem[carouselItem.fieldId])">
+                                <a class="item-association__image-action" ng-if="carouselItem[carouselItem.fieldId] && editable" ng-click="associations.edit(this, carouselItem[carouselItem.fieldId], {defaultTab: 'view'}); $event.stopPropagation()" sd-tooltip="Edit metadata"><i class="icon-pencil"></i></a>
+                                <a class="item-association__image-action" ng-if="carouselItem[carouselItem.fieldId] && editable" ng-click="associations.edit(this, carouselItem[carouselItem.fieldId], {defaultTab: 'image-edit'}); $event.stopPropagation()" sd-tooltip="Edit image"><i class="icon-switches"></i></a>
+                                <a class="item-association__image-action" ng-if="carouselItem[carouselItem.fieldId] && editable" ng-click="associations.edit(this, carouselItem[carouselItem.fieldId], {defaultTab: 'crop', showMetadata: false}); $event.stopPropagation()" sd-tooltip="Edit crops"><i class="icon-crop"></i></a>
                             </div>
                             <div class="item-association__metadata item-association__metadata--bottom-overlay">
                                 <span>
@@ -151,6 +155,18 @@
             </div>
         </div>
 
+        <div style="margin-top: 20px">
+            <button
+                ng-disabled="carouselItems.length >= maxUploads"
+                ng-attr-title="{{getUploadButtonTitle()}}"
+                ng-click="upload()"
+                class="btn btn--small btn--hollow btn--primary"
+                translate
+            >
+                Upload an image
+            </button>
+        </div>
+
         <div class="sd-media-carousel__thumb-strip">
             <div class="sd-media-carousel__thumb-strip-item" ng-repeat="carouselItem in carouselItems">
                 <div class="sd-media-carousel__thumb" ng-click="goTo($index)" ng-if="carouselItem[carouselItem.fieldId] && carouselItem[carouselItem.fieldId].type === 'picture'">
@@ -163,9 +179,6 @@
                     <i class="icon--2x icon-video" ng-if="!carouselItem[carouselItem.fieldId].renditions.thumbnail"></i>
                     <img ng-if="carouselItem[carouselItem.fieldId] && carouselItem[carouselItem.fieldId].renditions.thumbnail" ng-src="{{carouselItem[carouselItem.fieldId].renditions.thumbnail.href}}">
                 </div>
-            </div>
-            <div class="sd-media-carousel__thumb sd-media-carousel__thumb--add" ng-click="upload()" data-rel="{{carouselItem.fieldId}}" ng-if="carouselItems.length < maxUploads">
-                <i class="icon-plus-sign"></i>
             </div>
         </div>
     </div>

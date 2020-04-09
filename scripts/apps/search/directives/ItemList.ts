@@ -7,6 +7,7 @@ import _ from 'lodash';
 
 import {ItemList as ItemListComponent} from 'apps/search/components';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
+import {appConfig} from 'appConfig';
 
 ItemList.$inject = [
     '$location',
@@ -29,7 +30,6 @@ ItemList.$inject = [
     'monitoringState',
     'authoringWorkspace',
     '$rootScope',
-    'config',
     '$interpolate',
     'metadata',
     'storage',
@@ -95,7 +95,6 @@ export function ItemList(
     monitoringState,
     authoringWorkspace: AuthoringWorkspaceService,
     $rootScope,
-    config,
     $interpolate,
     metadata,
     storage,
@@ -126,7 +125,7 @@ export function ItemList(
         monitoringState: monitoringState,
         authoringWorkspace: authoringWorkspace,
         $rootScope: $rootScope,
-        config: config,
+        config: appConfig,
         $interpolate: $interpolate,
         metadata: metadata,
         storage: storage,
@@ -464,6 +463,10 @@ export function ItemList(
                     elem.off();
                     listComponent.unbindActionKeyShortcuts();
                     ReactDOM.unmountComponentAtNode(elem[0]);
+                });
+
+                scope.$on('item:actioning', (_e, data) => {
+                    listComponent.setActioning(data.item, data.actioning);
                 });
             });
         },

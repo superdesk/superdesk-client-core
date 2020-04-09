@@ -1,4 +1,5 @@
 import {getSpellchecker} from 'core/editor3/components/spellchecker/default-spellcheckers';
+import {gettext} from 'core/utils';
 
 /**
  * Spellcheck module

@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
+import {appConfig} from 'appConfig';
 import {ISearchOptions} from '../services/SearchService';
 
 SearchResults.$inject = [
@@ -12,7 +13,6 @@ SearchResults.$inject = [
     'search',
     'session',
     '$rootScope',
-    'config',
     'superdeskFlags',
     'notify',
 ];
@@ -37,7 +37,6 @@ function isObjectId(value) {
  * @requires search
  * @requires session
  * @requires $rootScope
- * @requires config
  *
  * @description Item list with sidebar preview
  */
@@ -51,7 +50,6 @@ export function SearchResults(
     search,
     session,
     $rootScope,
-    config,
     superdeskFlags,
     notify,
 ) { // uff - should it use injector instead?
@@ -229,7 +227,7 @@ export function SearchResults(
                 }
 
                 return api.query(getProvider(criteria), criteria).then((items) => {
-                    if (config.features.autorefreshContent && data != null) {
+                    if (appConfig.features.autorefreshContent && data != null) {
                         data.force = true;
                     }
 
@@ -443,8 +441,11 @@ export function SearchResults(
              * then, sends rowview event
              */
             function sendRowViewEvents(item?) {
-                let sendEvent = scope.singleLine && superdeskFlags.flags.authoring && config.list
-                    && config.list.narrowView;
+                let sendEvent = scope.singleLine
+                    && superdeskFlags.flags.authoring
+                    && appConfig.list != null
+                    && appConfig.list.narrowView;
+
                 let evnt = item ? 'rowview:narrow' : 'rowview:default';
 
                 if (sendEvent) {

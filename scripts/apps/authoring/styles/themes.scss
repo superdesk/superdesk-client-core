@@ -258,6 +258,9 @@ body, html {
                 font-size: 1.4rem;
                 line-height: 2.7rem;
                 padding-right: 2rem;
+                input {
+                    padding-left: $sd-base-increment * 1.5;
+                }
                 .term-editor {
                     flex: 1 1 auto;
                 }
@@ -283,7 +286,7 @@ body, html {
             display: block;
         }
     }
-    
+
     //labels
     .field {
         .field__label {
@@ -311,6 +314,10 @@ body, html {
             }
         }
     }
+    .field__label--with-actions {
+        display: flex;
+        .field__label { margin-right: auto; }
+    }
     
     .main-article__fieldset {
         display: flex;
@@ -332,7 +339,7 @@ body, html {
         word-break: break-all;
     }
     // inputs
-    .text-editor, input, .field__select {
+    .text-editor, .field__select {
         border: 1px solid rgba(123, 123, 123, 0) !important;
         border-bottom-color: rgba(123, 123, 123, 0.30) !important;
         padding: 0;
@@ -351,7 +358,12 @@ body, html {
         -moz-appearance: none;
         -webkit-appearance: none;
     }
-    .text-editor:hover, .headline:hover, .abstract:hover, input:hover, .field__select:hover {
+    input {
+        border-color: rgba(150, 150, 150, 0.4) !important;
+        background: inherit;
+        color: inherit;
+    }
+    .text-editor:hover, .headline:hover, .abstract:hover, .field__select:hover {
         border-bottom-color: rgba(123, 123, 123, 0.60) !important;
         cursor: text;
     }
@@ -419,6 +431,11 @@ body, html {
         &.item-association {
             margin: 0;
         }
+        &.sd-list-item__thumbnail {
+            width: 6.4rem;
+            margin: auto 0.8rem;
+            display: flex;
+        }
     }
     figure img {
         display: block;
@@ -432,7 +449,7 @@ body, html {
     }
     // text styles
     color: rgba(51, 51, 51, 1);
-    .text-editor, .headline, .abstract, input {
+    .text-editor, .headline, .abstract {
         color: inherit;
         padding-left: 0;
         padding-right: 0;
@@ -444,6 +461,10 @@ body, html {
     .byline {
         font-size: 16px;
         text-transform: none;
+        padding-top: 2px;
+        padding-bottom: 2px;
+        padding-left: $sd-base-increment * 1.5;
+        background-color: transparent;
         line-height: 150%;
         .text-editor {
             min-height: 24px;

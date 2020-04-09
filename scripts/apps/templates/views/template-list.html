@@ -1,4 +1,4 @@
-<li ng-repeat="template in templates track by template._id">
+<li ng-repeat="template in templates track by template._id" data-test-id="templates-list">
     <button class="btn btn--text-only" ng-click="select({template: template})" ng-keypress="selectOnEnter($event, template)">
         <span class="pull-left">{{ :: template.template_name }}</span>
     </button>

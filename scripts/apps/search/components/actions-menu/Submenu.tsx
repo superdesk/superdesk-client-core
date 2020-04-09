@@ -29,7 +29,7 @@ export default class Submenu extends React.Component<any, any> {
 
     render() {
         return (
-            <ul className={'dropdown__menu foo dropdown__menu--submenu-' + this.state.position}
+            <ul className={'dropdown__menu upward dropdown__menu--submenu-' + this.state.position}
                 ref={(ref) => this.element = ref}>
                 {this.props.children}
             </ul>

@@ -5,6 +5,7 @@ import {getMarkForUserModal} from './get-mark-for-user-modal';
 export function getActionsBulkInitialize(superdesk: ISuperdesk) {
     const {gettext} = superdesk.localization;
     const {isPersonal, isLocked} = superdesk.entities.article;
+    const {hasPrivilege} = superdesk.privileges;
 
     return function getActionsBulk(articles: Array<IArticle>) {
         // it doesn't make sense to display the action since it wouldn't get updated in the list anyway
@@ -12,7 +13,9 @@ export function getActionsBulkInitialize(superdesk: ISuperdesk) {
         // and aren't displayed in the list item until the article is saved
         const someItemsLocked = articles.some(isLocked);
 
-        if (articles.some(isPersonal) || someItemsLocked) {
+        const someItemsSpiked = articles.some(({state}) => state === 'spiked');
+
+        if (!hasPrivilege('mark_for_user') || articles.some(isPersonal) || someItemsLocked || someItemsSpiked) {
             return Promise.resolve([]);
         }
 
@@ -39,10 +42,12 @@ export function getActionsBulkInitialize(superdesk: ISuperdesk) {
                     superdesk,
                     (selectedUserId) => {
                         articles.forEach((article) => {
-                            superdesk.entities.article.update({
-                                ...article,
-                                marked_for_user: selectedUserId,
-                            });
+                            superdesk.entities.article.patch(
+                                article,
+                                {
+                                    marked_for_user: selectedUserId,
+                                },
+                            );
                         });
                     },
                     false,

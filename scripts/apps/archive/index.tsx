@@ -15,7 +15,7 @@ import * as ctrl from './controllers';
 
 import {gettext} from 'core/utils';
 
-import {extensions} from 'core/extension-imports.generated';
+import {extensions} from 'appConfig';
 
 import {IExtensionActivationResult, IArticle} from 'superdesk-api';
 import {showSpikeDialog} from './show-spike-dialog';
@@ -160,7 +160,6 @@ angular.module('superdesk.apps.archive', [
                 controller: ctrl.DuplicateController,
                 filters: [
                     {action: 'list', type: 'archive'},
-                    {action: 'list', type: 'archived'},
                 ],
                 keyboardShortcut: 'ctrl+alt+d',
                 privileges: {duplicate: 1},
@@ -327,8 +326,8 @@ angular.module('superdesk.apps.archive', [
                 templateUrl: 'scripts/apps/archive/views/export-dropdown.html',
                 filters: [{action: 'list', type: 'archive'}],
                 privileges: {content_export: 1},
-                additionalCondition: ['config', 'session', 'authoring', 'item',
-                    function(config, session, authoring, item) {
+                additionalCondition: ['session', 'authoring', 'item',
+                    function(session, authoring, item) {
                         let lockCond = item.lock_user === null || angular.isUndefined(item.lock_user) ||
                             item.lock_user === session.identity._id;
 
@@ -394,17 +393,14 @@ spikeActivity.$inject = [
     'data',
     'modal',
     '$location',
-    '$q',
     'multi',
-    'privileges',
     'authoringWorkspace',
     'confirm',
     'autosave',
-    'config',
 ];
 
-function spikeActivity(spike, data, modal, $location, $q, multi, privileges,
-    authoringWorkspace: AuthoringWorkspaceService, confirm, autosave, config) {
+function spikeActivity(spike, data, modal, $location, multi,
+    authoringWorkspace: AuthoringWorkspaceService, confirm, autosave) {
     // For the sake of keyboard shortcut to work consistently,
     // if the item is multi-selected, let multibar controller handle its spike
     if (!data.item || multi.count > 0 && includes(multi.getIds(), data.item._id)) {
@@ -442,7 +438,6 @@ function spikeActivity(spike, data, modal, $location, $q, multi, privileges,
         const item: IArticle = data.item;
 
         showSpikeDialog(
-            config,
             modal,
             () => spike.spike(data.item),
             gettext('Are you sure you want to spike the item?'),

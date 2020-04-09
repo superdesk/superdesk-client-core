@@ -49,7 +49,7 @@ class Editor3Directive {
     constructor() {
         this.scope = {};
         this.controllerAs = 'vm';
-        this.controller = ['config', '$element', 'editor3', '$scope', '$rootScope', this.initialize];
+        this.controller = ['$element', 'editor3', '$scope', '$rootScope', this.initialize];
 
         this.bindToController = {
             /**
@@ -163,7 +163,7 @@ class Editor3Directive {
         };
     }
 
-    initialize(config, $element, editor3, $scope, $rootScope) {
+    initialize($element, editor3, $scope, $rootScope) {
         if (this.item == null) {
             throw new Error('Item must be provided in order to be able to save editor_state on it');
         }
@@ -218,13 +218,14 @@ class Editor3Directive {
 
         // this is triggered from MacrosController.call
         // if the current editor is for 'field' replace the current content with 'value'
-        $scope.$on('macro:refreshField', (evt, field, value) => {
+        $scope.$on('macro:refreshField', (evt, field, value, options) => {
             if (field === this.pathToValue) {
+                const _options = Object.assign({skipOnChange: true}, options);
                 const content = getContentStateFromHtml(value);
                 const state = store.getState();
                 const editorState = EditorState.push(state.editorState, content, 'spellcheck-change');
 
-                store.dispatch(changeEditorState(editorState, true, true));
+                store.dispatch(changeEditorState(editorState, true, _options.skipOnChange));
             }
         });
 

@@ -15,6 +15,7 @@ import {
     IQueryElasticParameters,
     IArticleQueryResult,
     IArticleQuery,
+    IArticle,
 } from 'superdesk-api';
 import {httpRequestJsonLocal, httpRequestVoidLocal} from './network';
 import {connectServices} from './ReactRenderAsync';
@@ -22,11 +23,11 @@ import {connectServices} from './ReactRenderAsync';
 export function queryElastic(
     parameters: IQueryElasticParameters,
 ) {
-    const {endpoint, page, sort, filterValues} = parameters;
+    const {endpoint, page, sort, filterValues, aggregations} = parameters;
 
-    return ng.getServices(['config', 'session', 'api'])
+    return ng.getServices(['session', 'api'])
         .then((res: any) => {
-            const [config, session] = res;
+            const [session] = res;
 
             const source = {
                 query: {
@@ -66,7 +67,7 @@ export function queryElastic(
             };
 
             const query = {
-                aggregations: 0,
+                aggregations: aggregations === true ? 1 : 0,
                 es_highlight: 0,
                 // projections: [],
                 source,
@@ -79,7 +80,7 @@ export function queryElastic(
             return new Promise((resolve) => {
                 const xhr = new XMLHttpRequest();
 
-                xhr.open('GET', config.server.url + '/' + endpoint + queryString, true);
+                xhr.open('GET', appConfig.server.url + '/' + endpoint + queryString, true);
 
                 xhr.setRequestHeader('Content-Type', 'application/json');
                 xhr.setRequestHeader('Authorization', session.token);
@@ -100,6 +101,37 @@ export const dataApiByEntity = {
     },
 };
 
+export function generatePatch<T extends IBaseRestApiResponse>(item1: T, item2: T): Partial<T> {
+    const patch: Partial<T> = generate(item1, item2);
+
+    // due to the use of "projections"(partial entities) item2 is sometimes missing fields which item1 has
+    // which is triggering patching algorithm to think we want to set those missing fields to null
+    // the below code enforces that in order to patch to contain null,
+    // item2 must explicitly send nulls instead of missing fields
+    for (const key in patch) {
+        if (patch[key] === null && item2[key] !== null) {
+            delete patch[key];
+        }
+    }
+
+    // remove IBaseRestApiResponse fields
+    delete patch['_created'];
+    delete patch['_updated'];
+    delete patch['_id'];
+    delete patch['_etag'];
+    delete patch['_links'];
+
+    return patch;
+}
+
+export function generatePatchIArticle(a: IArticle, b: IArticle) {
+    const patch = generatePatch(a, b);
+
+    delete patch['es_highlight'];
+
+    return patch;
+}
+
 export const dataApi: IDataApi = {
     findOne: (endpoint, id) => httpRequestJsonLocal({
         method: 'GET',
@@ -115,6 +147,7 @@ export const dataApi: IDataApi = {
         page: number,
         sortOption: ISortOption,
         filterValues: ICrudManagerFilters = {},
+        max_results?: number,
         formatFiltersForServer?: (filters: ICrudManagerFilters) => ICrudManagerFilters,
     ) => {
         let query = {
@@ -131,6 +164,10 @@ export const dataApi: IDataApi = {
                 : filterValues;
         }
 
+        if (typeof max_results === 'number') {
+            query['max_results'] = max_results;
+        }
+
         const queryString = '?' + Object.keys(query).map((key) =>
             `${key}=${isObject(query[key]) ? JSON.stringify(query[key]) : encodeURIComponent(query[key])}`).join('&');
 
@@ -140,24 +177,7 @@ export const dataApi: IDataApi = {
         });
     },
     patch: (endpoint, item1, item2) => {
-        const patch = generate(item1, item2);
-
-        // due to the use of "projections"(partial entities) item2 is sometimes missing fields which item1 has
-        // which is triggering patching algorithm to think we want to set those missing fields to null
-        // the below code enforces that in order to patch to contain null,
-        // item2 must explicitly send nulls instead of missing fields
-        for (const key in patch) {
-            if (patch[key] === null && item2[key] !== null) {
-                delete patch[key];
-            }
-        }
-
-        // remove IBaseRestApiResponse fields
-        delete patch['_created'];
-        delete patch['_updated'];
-        delete patch['_id'];
-        delete patch['_etag'];
-        delete patch['_links'];
+        const patch = generatePatch(item1, item2);
 
         return httpRequestJsonLocal({
             'method': 'PATCH',
@@ -165,6 +185,16 @@ export const dataApi: IDataApi = {
             payload: patch,
             headers: {
                 'If-Match': item1._etag,
+            },
+        });
+    },
+    patchRaw: (endpoint, id, etag, patch) => {
+        return httpRequestJsonLocal({
+            'method': 'PATCH',
+            path: '/' + endpoint + '/' + id,
+            payload: patch,
+            headers: {
+                'If-Match': etag,
             },
         });
     },
@@ -226,6 +256,7 @@ export function connectCrudManager<Props, PropsToConnect, Entity extends IBaseRe
                 page,
                 sortOption,
                 filterValues,
+                undefined,
                 formatFiltersForServer,
             )
                 .then((res: IRestApiResponse<Entity>) => new Promise((resolve) => {

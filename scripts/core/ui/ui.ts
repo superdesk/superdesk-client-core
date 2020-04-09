@@ -1,10 +1,13 @@
 /* eslint-disable max-len */
 /* tslint:disable:max-line-length */
 
-import _, {mapValues, isEmpty} from 'lodash';
+import _, {mapValues} from 'lodash';
 import moment from 'moment-timezone';
 import {gettext} from 'core/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
+import {appConfig} from 'appConfig';
+import {reactToAngular1} from 'superdesk-ui-framework';
+import {VideoComponent} from './components/video';
 
 /**
  * Gives top shadow for scroll elements
@@ -323,10 +326,10 @@ function DatepickerDirective($document) {
     };
 }
 
-DatepickerInnerDirective.$inject = ['$compile', '$document', 'popupService', 'datetimeHelper', 'config'];
-function DatepickerInnerDirective($compile, $document, popupService, datetimeHelper, config) {
+DatepickerInnerDirective.$inject = ['$compile', '$document', 'popupService', 'datetimeHelper'];
+function DatepickerInnerDirective($compile, $document, popupService, datetimeHelper) {
     var popupTpl = '<div sd-datepicker-wrapper ng-model="date">' +
-        '<div datepicker format-day="d" starting-day="' + config.startingDay + '" show-weeks="false"></div>' +
+        '<div datepicker format-day="d" starting-day="' + appConfig.startingDay + '" show-weeks="false"></div>' +
     '</div>';
 
     return {
@@ -337,8 +340,8 @@ function DatepickerInnerDirective($compile, $document, popupService, datetimeHel
             shortcuts: '=?',
         },
         link: function(scope, element, attrs, ctrl) {
-            var VIEW_DATE_FORMAT = config.view.dateformat;
-            var MODEL_DATE_FORMAT = scope.dtFormat || config.model.dateformat;
+            var VIEW_DATE_FORMAT = appConfig.view.dateformat;
+            var MODEL_DATE_FORMAT = scope.dtFormat || appConfig.model.dateformat;
             var ESC = 27;
             var DOWN_ARROW = 40;
             var popup = angular.element(popupTpl);
@@ -390,7 +393,7 @@ function DatepickerInnerDirective($compile, $document, popupService, datetimeHel
 
             ctrl.$render = function() {
                 element.val(ctrl.$viewValue.viewdate); // set the view
-                scope.date = ctrl.$viewValue.dpdate || moment().tz(config.defaultTimezone); // set datepicker model
+                scope.date = ctrl.$viewValue.dpdate || moment().tz(appConfig.defaultTimezone); // set datepicker model
             };
 
             // handle model changes
@@ -489,8 +492,8 @@ function TimepickerDirective($document) {
     };
 }
 
-TimepickerInnerDirective.$inject = ['$compile', '$document', 'popupService', 'datetimeHelper', 'config'];
-function TimepickerInnerDirective($compile, $document, popupService, datetimeHelper, config) {
+TimepickerInnerDirective.$inject = ['$compile', '$document', 'popupService', 'datetimeHelper'];
+function TimepickerInnerDirective($compile, $document, popupService, datetimeHelper) {
     var popupTpl = '<div sd-timepicker-popup ' +
         'data-open="open" data-time="time" data-select="timeSelection({time: time})" data-keydown="keydown(e)">' +
         '</div>';
@@ -501,8 +504,8 @@ function TimepickerInnerDirective($compile, $document, popupService, datetimeHel
         },
         require: 'ngModel',
         link: function(scope, element, attrs, ctrl) {
-            var MODEL_TIME_FORMAT = config.model.timeformat;
-            var VIEW_TIME_FORMAT = config.view.timeformat || MODEL_TIME_FORMAT;
+            var MODEL_TIME_FORMAT = appConfig.model.timeformat;
+            var VIEW_TIME_FORMAT = appConfig.view.timeformat || MODEL_TIME_FORMAT;
             var ESC = 27;
             var DOWN_ARROW = 40;
             var popup = angular.element(popupTpl);
@@ -605,8 +608,8 @@ function TimepickerInnerDirective($compile, $document, popupService, datetimeHel
     };
 }
 
-TimezoneDirective.$inject = ['tzdata', 'config', '$timeout'];
-function TimezoneDirective(tzdata, config, $timeout) {
+TimezoneDirective.$inject = ['tzdata', '$timeout'];
+function TimezoneDirective(tzdata, $timeout) {
     return {
         templateUrl: 'scripts/core/ui/views/sd-timezone.html',
         scope: {
@@ -623,8 +626,8 @@ function TimezoneDirective(tzdata, config, $timeout) {
 
             tzdata.$promise.then(() => {
                 scope.timeZones = tzdata.getTzNames();
-                if (!scope.timezone && config.defaultTimezone) {
-                    scope.selectTimeZone(config.defaultTimezone);
+                if (!scope.timezone && appConfig.defaultTimezone) {
+                    scope.selectTimeZone(appConfig.defaultTimezone);
                 }
             });
 
@@ -681,8 +684,8 @@ function TimezoneDirective(tzdata, config, $timeout) {
     };
 }
 
-TimepickerPopupDirective.$inject = ['$timeout', 'config'];
-function TimepickerPopupDirective($timeout, config) {
+TimepickerPopupDirective.$inject = ['$timeout'];
+function TimepickerPopupDirective($timeout) {
     return {
         templateUrl: 'scripts/core/ui/views/sd-timepicker-popup.html',
         scope: {
@@ -692,7 +695,7 @@ function TimepickerPopupDirective($timeout, config) {
             time: '=',
         },
         link: function(scope, element) {
-            var MODEL_TIME_FORMAT = config.model.timeformat;
+            var MODEL_TIME_FORMAT = appConfig.model.timeformat;
 
             var POPUP = '.timepicker-popup';
 
@@ -1200,11 +1203,6 @@ export default angular.module('superdesk.core.ui', [
     'superdesk.core.datetime',
     'superdesk.core.ui.autoheight',
 ])
-
-    .config(['defaultConfigProvider', function(defaultConfig) {
-        defaultConfig.set('ui.italicAbstract', true);
-    }])
-
     .run(['$rootScope', '$location', ($rootScope, $location) => {
         $rootScope.popup = $location.search().popup || false;
     }])
@@ -1233,4 +1231,12 @@ export default angular.module('superdesk.core.ui', [
     .directive('sdValidationError', validationDirective)
     .directive('sdLoading', LoadingDirective)
     .directive('sdMultipleEmails', MultipleEmailsValidation)
-    .directive('sdMultiSelect', multiSelectDirective);
+    .directive('sdMultiSelect', multiSelectDirective)
+
+    .component('sdVideo',
+        reactToAngular1(
+            VideoComponent,
+            ['item'],
+        ),
+    )
+;

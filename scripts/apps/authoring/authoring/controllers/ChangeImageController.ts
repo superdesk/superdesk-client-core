@@ -1,5 +1,6 @@
 import {get} from 'lodash';
 import {gettext} from 'core/utils';
+import {appConfig} from 'appConfig';
 
 /**
  * @ngdoc controller
@@ -12,7 +13,6 @@ import {gettext} from 'core/utils';
  * @requires lodash
  * @requires api
  * @requires $rootScope
- * @requires deployConfig
  *
  * @description Controller is responsible for cropping pictures and setting Point of Interest for an image.
  */
@@ -28,12 +28,11 @@ export function validateMediaFieldsThrows(validator, metadata) {
     }
 }
 
-ChangeImageController.$inject = ['$scope', 'notify', 'lodash', 'api', '$rootScope',
-    'deployConfig', '$q', 'config'];
-export function ChangeImageController($scope, notify, _, api, $rootScope, deployConfig, $q, config) {
+ChangeImageController.$inject = ['$scope', 'notify', 'lodash', 'api', '$rootScope', '$q'];
+export function ChangeImageController($scope, notify, _, api, $rootScope, $q) {
     $scope.data = $scope.locals.data;
     $scope.data.cropData = {};
-    $scope.validator = deployConfig.getSync('validator_media_metadata');
+    $scope.validator = appConfig.validator_media_metadata;
     const sizes = {};
 
     const DEFAULT_CONTROLS = {
@@ -59,7 +58,7 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, deploy
         'place',
         'keywords',
         'extra',
-    ].concat(Object.keys(get(deployConfig.getSync('schema'), 'picture', {})));
+    ].concat(Object.keys(get(appConfig.schema, 'picture', {})));
 
     $scope.controls = angular.copy(DEFAULT_CONTROLS);
 
@@ -73,6 +72,9 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, deploy
 
     $scope.crops = {
         isDirty: false,
+    };
+    $scope.toggleShowMetadata = (value) => {
+        $scope.showMetadata = value;
     };
 
     if ($scope.data.renditions) {
@@ -161,7 +163,7 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, deploy
 
         // check if data are valid
         try {
-            if (config.features.validatePointOfInterestForImages === true) {
+            if (appConfig.features != null && appConfig.features.validatePointOfInterestForImages === true) {
                 poiIsInsideEachCrop();
             }
         } catch (e) {
@@ -232,12 +234,16 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, deploy
     */
     $scope.done = () => {
         if ($scope.data.isDirty) {
-            if ($scope.data.item.type === 'picture' && config.features.validatePointOfInterestForImages === true) {
+            if (
+                $scope.data.item.type === 'picture'
+                && appConfig.features != null
+                && appConfig.features.validatePointOfInterestForImages === true
+            ) {
                 if (!$scope.saveCrops() || !$scope.applyMetadataChanges()) {
                     return;
                 }
             }
-            $scope.resolve({
+            const data = {
                 cropData: $scope.data.cropData,
                 metadata: _.pick($scope.data.metadata, [
                     ...EDITABLE_METADATA,
@@ -245,7 +251,9 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, deploy
                     'renditions',
                     '_etag',
                 ]),
-            });
+            };
+
+            generateCrops(data);
         } else {
             $scope.reject({done: true});
         }
@@ -297,6 +305,72 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, deploy
         return _.pick(metadata, EDITABLE_METADATA);
     }
 
+    function generateCrops(data) {
+        const item = _.cloneDeep($scope.data.item);
+        const renditions = _.cloneDeep($scope.data.renditions);
+        const renditionNames = [];
+        const savingImagePromises = [];
+
+        $scope.loading = true;
+
+        _.forEach(data.cropData, (croppingData, renditionName) => {
+            const keys = ['CropLeft', 'CropTop', 'CropBottom', 'CropRight'];
+            const canAdd = !keys.every((key) => {
+                // if there a change in the crop co-ordinates
+                const isSameCoords = item.renditions?.[renditionName]?.[key] === croppingData[key];
+
+                return isSameCoords;
+            });
+
+            if (canAdd) {
+                renditionNames.push(renditionName);
+            }
+        });
+
+        // perform the request to make the cropped images
+        renditionNames.forEach((renditionName) => {
+            if (data.cropData?.[renditionName] !== item.renditions[renditionName]) {
+                const rendition = renditions.find((_rendition) => renditionName === _rendition.name);
+                const crop = {
+                    ...data.cropData[renditionName],
+                    // it should send the size we need, not the one we have
+                    width: rendition.width,
+                    height: rendition.height,
+                };
+
+                savingImagePromises.push(
+                    api.save('picture_crop', {item: item, crop: crop}),
+                );
+            }
+        });
+
+        $q.all(savingImagePromises)
+            .then((croppedImages) => {
+                croppedImages.forEach((image, index) => {
+                    const url = image.href;
+
+                    // update association renditions
+                    data.metadata.renditions[renditionNames[index]] = _.extend(
+                        image.crop,
+                        {
+                            href: url,
+                            width: image.width,
+                            height: image.height,
+                            media: image._id,
+                            mimetype: image.item.mimetype,
+                        },
+                    );
+                });
+
+                $scope.resolve(data.metadata);
+            })
+            .catch(() => {
+                notify.error(gettext('Failed to generate picture crops.'));
+                $scope.reject({done: true});
+            }).finally(() => {
+                $scope.loading = false;
+            });
+    }
     /**
     * @ngdoc method
     * @name ChangeImageController#saveAreaOfInterest
@@ -508,7 +582,7 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, deploy
     // init poi if not set
     if (!$scope.data.poi || !Object.keys($scope.data.poi).length) {
         $scope.data.poi = {x: 0.5, y: 0.5};
-        if (!config.features.validatePointOfInterestForImages) {
+        if (!(appConfig.features != null && appConfig.features.validatePointOfInterestForImages)) {
             $scope.saveCrops(); // save it as defaults
         }
     }

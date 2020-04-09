@@ -1,6 +1,8 @@
 import 'angular-dynamic-locale';
 import {addLangOverride} from 'core/lang';
 import moment from 'moment';
+import {appConfig} from 'appConfig';
+import {gettext} from 'core/utils';
 
 /**
  * Translate module
@@ -18,16 +20,16 @@ export default angular.module('superdesk.core.translate', [
         tmhDynamicLocaleProvider.localeLocationPattern('locales/angular-locale_{{locale}}.js');
     }])
 
-    .run(['gettextCatalog', 'config', '$location', '$rootScope', 'SESSION_EVENTS', 'tmhDynamicLocale',
-        function(gettextCatalog, config, $location, $rootScope, SESSION_EVENTS, tmhDynamicLocale) {
+    .run(['gettextCatalog', '$location', '$rootScope', 'SESSION_EVENTS', 'tmhDynamicLocale',
+        function(gettextCatalog, $location, $rootScope, SESSION_EVENTS, tmhDynamicLocale) {
             $rootScope.$on(SESSION_EVENTS.IDENTITY_LOADED, (event) => {
                 if ($rootScope.$root.currentUser
-                    && config.profileLanguages.includes($rootScope.$root.currentUser.language)) {
+                    && appConfig.profileLanguages.includes($rootScope.$root.currentUser.language)) {
                     // if the current logged in user has a saved language preference that is available
                     gettextCatalog.setCurrentLanguage($rootScope.$root.currentUser.language);
-                } else if (config.language) {
-                    gettextCatalog.setCurrentLanguage(config.language);
-                } else if (config.profileLanguages.includes(window.navigator.language)) {
+                } else if (appConfig.language) {
+                    gettextCatalog.setCurrentLanguage(appConfig.language);
+                } else if (appConfig.profileLanguages.includes(window.navigator.language)) {
                     // no saved preference but browser language is available
                     gettextCatalog.setCurrentLanguage(window.navigator.language);
                 } else {
@@ -55,6 +57,9 @@ export default angular.module('superdesk.core.translate', [
                 gettextCatalog.currentLanguage = params.lang;
                 gettextCatalog.debug = true;
             }
+
+            // make it available in templates
+            $rootScope.gettext = gettext;
         }])
 
     /**

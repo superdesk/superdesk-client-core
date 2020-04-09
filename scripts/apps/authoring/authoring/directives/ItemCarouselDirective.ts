@@ -1,14 +1,12 @@
-/* global _ */
-
 import 'owl.carousel';
 import _ from 'lodash';
 import * as ctrl from '../controllers';
 import {waitForMediaToLoad} from 'core/helpers/waitForMediaToBeReady';
 import {getSuperdeskType} from 'core/utils';
-import {gettext} from 'core/utils';
+import {gettext, gettextPlural} from 'core/utils';
 import {addInternalEventListener} from 'core/internal-events';
 import {isAllowedMediaType, getAllowedTypeNames} from './ItemAssociationDirective';
-import {IArticle} from 'superdesk-api';
+import {getAssociationsByField} from '../controllers/AssociationController';
 
 const carouselContainerSelector = '.sd-media-carousel__content';
 
@@ -30,6 +28,7 @@ interface IScope extends ng.IScope {
     onchange(): void;
     remove(item: any): void;
     upload(): void;
+    getUploadButtonTitle: () => string;
 }
 
 function getItemsCount(items: Array<any>): number {
@@ -78,6 +77,15 @@ export function ItemCarouselDirective(notify) {
 
             scope.currentIndex = 0;
 
+            scope.getUploadButtonTitle = () => scope.carouselItems.length < scope.maxUploads
+                ? ''
+                : gettextPlural(
+                    scope.maxUploads,
+                    'Only 1 image is allowed in this field',
+                    'Only {{number}} images are allowed in this field',
+                    {number: scope.maxUploads},
+                );
+
             /*
              * Initialize carousel after all content is loaded
              * otherwise carousel height is messed up
@@ -104,23 +112,45 @@ export function ItemCarouselDirective(notify) {
                         carousel.trigger('destroy.owl.carousel');
                     }
 
-                    const carouselImages: Array<HTMLImageElement> = Array.from(
-                        elem.get(0).querySelectorAll(`${carouselContainerSelector} img`),
-                    );
-                    const carouselAudiosAndVideos: Array<HTMLAudioElement | HTMLVideoElement> = Array.from(
-                        elem.get(0).querySelectorAll(
-                            `${carouselContainerSelector} video, ${carouselContainerSelector} audio`,
-                        ),
-                    );
+                    // React children won't load inmediately after angular
+                    // so elements like <video> from <sd-video> won't be available right away
+                    setTimeout(() => {
+                        const carouselImages: Array<HTMLImageElement> = Array.from(
+                            elem
+                                .get(0)
+                                .querySelectorAll(
+                                    `${carouselContainerSelector} img`,
+                                ),
+                        );
+                        const carouselAudiosAndVideos: Array<
+                            HTMLAudioElement | HTMLVideoElement
+                        > = Array.from(
+                            elem
+                                .get(0)
+                                .querySelectorAll(
+                                    `${carouselContainerSelector} video, ${carouselContainerSelector} audio`,
+                                ),
+                        );
 
-                    if (items.length < 1 || (carouselImages.length + carouselAudiosAndVideos.length < 1)) {
-                        return;
-                    }
+                        if (
+                            items.length < 1 ||
+                            carouselImages.length +
+                                carouselAudiosAndVideos.length <
+                                1
+                        ) {
+                            return;
+                        }
 
-                    const mediaItems: Array<HTMLAudioElement | HTMLVideoElement | HTMLImageElement> =
-                        [].concat(carouselImages).concat(carouselAudiosAndVideos);
+                        const mediaItems: Array<
+                            | HTMLAudioElement
+                            | HTMLVideoElement
+                            | HTMLImageElement
+                        > = []
+                            .concat(carouselImages)
+                            .concat(carouselAudiosAndVideos);
 
-                    waitForMediaToLoad(mediaItems).then(initCarousel);
+                        waitForMediaToLoad(mediaItems).then(initCarousel);
+                    }, 0);
                 });
             });
 
@@ -149,39 +179,18 @@ export function ItemCarouselDirective(notify) {
                 carousel.trigger('to.owl.carousel', [index]);
             };
 
-            function canAddMediaItems(internalIds: Array<IArticle['_id']>, externalItemsCount: number = 0): boolean {
-                const mediaItemsForCurrentField = Object.keys(scope.item.associations || {})
-                    .filter((key) => key.startsWith(scope.field._id) && scope.item.associations[key] != null)
-                    .map((key) => scope.item.associations[key]);
-
+            function canUploadItems(uploadsCount: number = 0): boolean {
+                const mediaItemsForCurrentField = getAssociationsByField(scope.item, scope.field);
                 const currentUploads = mediaItemsForCurrentField.length;
 
-                const itemAlreadyAddedAsMediaGallery = mediaItemsForCurrentField.some(
-                    (mediaItem) => internalIds.includes(mediaItem._id),
-                );
-
-                if (currentUploads >= scope.maxUploads) {
-                    notify.error(
-                        gettext(
-                            'Media item was not added, because the field reached the limit of allowed media items.',
-                        ),
-                    );
-                    return false;
-                }
-
                 // check files from external folder does not exceed the maxUploads limit
-                if (currentUploads + externalItemsCount > scope.maxUploads) {
+                if (currentUploads + uploadsCount > scope.maxUploads) {
                     notify.error(
                         gettext(
                             'Select at most {{maxUploads}} files to upload.',
                             {maxUploads: scope.maxUploads - currentUploads},
                         ),
                     );
-                    return false;
-                }
-
-                if (itemAlreadyAddedAsMediaGallery) {
-                    notify.error('This item is already added as media gallery.');
                     return false;
                 }
 
@@ -204,13 +213,9 @@ export function ItemCarouselDirective(notify) {
                     event.stopPropagation();
 
                     if (isAllowedMediaType(scope, event)) {
-                        const itemStr = event.originalEvent.dataTransfer.getData(type);
-                        const internalIds = typeof itemStr === 'string' && itemStr.length > 0
-                            ? [JSON.parse(itemStr)._id]
-                            : [];
-                        const externalItemsCount = Object.values(event.originalEvent.dataTransfer.files || []).length;
+                        const uploadsCount = Object.values(event.originalEvent.dataTransfer.files || []).length;
 
-                        if (canAddMediaItems(internalIds, externalItemsCount)) {
+                        if (canUploadItems(uploadsCount)) {
                             // add a new item at the last position in the carousel
                             scope.currentIndex = scope.carouselItems != null ? scope.carouselItems.length : 0;
                             controller.initializeUploadOnDrop(scope, event);
@@ -314,7 +319,7 @@ export function ItemCarouselDirective(notify) {
             const removeAddImageEventListener = addInternalEventListener('addImage', (event) => {
                 const {field, image} = event.detail;
 
-                if (scope.field._id === field && canAddMediaItems([image._id])) {
+                if (scope.field._id === field) {
                     controller.addAssociation(scope, image);
                 }
             });

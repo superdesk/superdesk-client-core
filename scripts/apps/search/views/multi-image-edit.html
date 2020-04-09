@@ -14,17 +14,35 @@
     <div class="modal__header-buttons modal__header-buttons--right">
         <button class="btn btn--ui-dark btn--hollow" ng-click="close()" ng-disabled="uploadInProgress" translate>Cancel</button>
         <div ng-transclude="select-desk"></div>
-        <button class="btn btn--primary btn--hollow" ng-click="save(true)" ng-disabled="!images.length" translate>Upload</button>
+        <button class="btn btn--primary btn--hollow" ng-click="save(true)" ng-disabled="!images.length" translate data-test-id="multi-image-edit--start-upload">Upload</button>
     </div>
 </div>
 
 <div class="modal__body modal__body--no-padding">
     <div class="sd-column-box--2">
         <div class="sd-column-box__main-column sd-column-box__main-column--photo-preview">
+            <div ng-if="images.length > 0" style="margin: 1.2rem 2.4rem">
+                <button
+                    ng-click="selectAll()"
+                    ng-disabled="areAllSelected()"
+                    class="btn btn--hollow btn--primary"
+                    translate
+                >
+                    Select All
+                </button>
+                <button
+                    ng-click="unselectAll()"
+                    ng-disabled="!areSomeSelected()"
+                    class="btn btn--hollow btn--primary"
+                    translate
+                >
+                    Deselect All
+                </button>
+            </div>
+
             <div class="sd-photo-preview sd-photo-preview--grid-only">
                 <div class="sd-photo-preview__thumb-strip">
                     <div class="sd-grid-list dark-ui">
-
                         <div class="sd-grid-item sd-grid-item--with-click"
                              ng-click="handleItemClick($event, image)"
                              ng-repeat="image in images track by image._id"
@@ -72,12 +90,12 @@
                 <div class="sd-slide-in-panel__content">
                     <div class="sd-slide-in-panel__content-block sd-slide-in-panel__content-block--first">
                         <div class="sd-alert sd-alert--hollow sd-alert--primary sd-alert--small" style="margin: -1rem 0 3rem;">
-                            <span translate>Currently editing: {{getSelectedImages().length}} items</span>
+                            <span translate>Currently editing: {{getSelectedItemsLength()}} items</span>
                         </div>
                         <div sd-media-metadata-editor
                             data-item="metadata"
                             data-validator="validator"
-                            data-disabled="!getSelectedImages().length"
+                            data-disabled="getSelectedItemsLength() === 0"
                             data-dark="true"
                             data-boxed="true"
                             data-on-change="onChange(key)"
