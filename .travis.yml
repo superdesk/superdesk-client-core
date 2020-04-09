@@ -7,7 +7,5 @@ addons:
         - google-chrome-stable
 
 script:
-    - git checkout -b travis-save-branch
-    - git fetch origin develop:develop
     - npm run test
     - npm run build
