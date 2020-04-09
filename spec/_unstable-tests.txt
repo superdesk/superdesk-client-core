@@ -1,0 +1,1 @@
+content can open package using hotkey ctrl+0

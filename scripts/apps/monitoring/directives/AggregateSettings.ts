@@ -6,6 +6,7 @@ import {
     SENT_OUTPUT,
     SCHEDULED_OUTPUT,
 } from 'apps/desks/constants';
+import {getLabelForStage} from 'apps/workspace/content/constants';
 
 AggregateSettings.$inject = ['desks', 'workspaces', 'session', 'preferencesService', 'WizardHandler', '$filter'];
 export function AggregateSettings(desks, workspaces, session, preferencesService, WizardHandler, $filter) {
@@ -84,6 +85,8 @@ export function AggregateSettings(desks, workspaces, session, preferencesService
                 }
             });
 
+            scope.labelForStage = getLabelForStage;
+
             scope.closeModal = function() {
                 scope.step.current = 'desks';
                 scope.modalActive = false;
@@ -142,6 +145,8 @@ export function AggregateSettings(desks, workspaces, session, preferencesService
                     scheduledDeskOutput.selected = item.selected;
                 }
             };
+
+            scope.labelForStage = getLabelForStage;
 
             scope.setStageInfo = function(_id) {
                 var item = scope.editGroups[_id];
