@@ -1,1 +1,2 @@
 content can open package using hotkey ctrl+0
+editor3 ctrl+z on tables mantains cursor position in the middle
