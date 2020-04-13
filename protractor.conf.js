@@ -5,13 +5,16 @@ var path = require('path');
 function getChromeOptions() {
     var chromeOptions = {
         args: [
-            '--headless',
             '--no-sandbox',
         ],
     };
 
     if (process.env.CHROME_BIN) {
         chromeOptions.binary = process.env.CHROME_BIN;
+    }
+
+    if (process.env.TRAVIS) {
+        chromeOptions.args.push('--headless');
     }
 
     return chromeOptions;
