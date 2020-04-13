@@ -3,6 +3,7 @@ import {gettext} from 'core/utils';
 import {SCHEDULED_OUTPUT, DESK_OUTPUT} from 'apps/desks/constants';
 import {appConfig} from 'appConfig';
 import {IMonitoringFilter} from 'superdesk-api';
+import {getLabelForStage} from 'apps/workspace/content/constants';
 
 AggregateCtrl.$inject = ['$scope', 'desks', 'workspaces', 'preferencesService', 'storage',
     'savedSearch', 'content'];
@@ -467,7 +468,7 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
 
                 card.deskId = stage.desk;
                 card.header = desk.name;
-                card.subheader = stage.name;
+                card.subheader = getLabelForStage(stage);
             } else if (desks.isOutputType(card.type)) {
                 var deskId = card._id.substring(0, card._id.indexOf(':'));
 

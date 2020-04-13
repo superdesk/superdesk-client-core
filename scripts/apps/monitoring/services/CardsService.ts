@@ -10,7 +10,7 @@ import {
 import {appConfig} from 'appConfig';
 import {IMonitoringFilter} from 'superdesk-api';
 
-interface ICard {
+export interface ICard {
     _id: string;
     deskId: string;
     fileType: string; // contains JSON array

@@ -1,5 +1,6 @@
 import {gettext} from 'core/utils';
 import {appConfig} from '../../../appConfig';
+import {getLabelForStage} from 'apps/workspace/content/constants';
 
 /**
  * @ngdoc directive
@@ -39,6 +40,8 @@ export function DeskConfigModal(metadata, content, templates, api) {
             views['photogrid'] = {label: gettext('Photo Grid View'), icon: 'grid-view'};
 
             scope.monitoringViews = views;
+
+            scope.labelForStage = getLabelForStage;
 
             /*
              * Initialize metadata
