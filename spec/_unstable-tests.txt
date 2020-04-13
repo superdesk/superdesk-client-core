@@ -1,3 +1,4 @@
 content can open package using hotkey ctrl+0
 authoring can send and publish
 monitoring can close already opened preview on an item action
+editor3 can edit body with toolbar
