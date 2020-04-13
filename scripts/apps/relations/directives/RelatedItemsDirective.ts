@@ -73,7 +73,18 @@ export function RelatedItemsDirective(
                 return lock.isLocked(item) || lock.isLockedInCurrentSession(item);
             };
 
-            scope.canAddRelatedItems = () => scope.field?.field_options?.allowed_workflows?.in_progress === true;
+            scope.canAddRelatedItems = () => {
+                const currentItemsLength = Object.keys(scope.item.associations || {})
+                    .filter((key) => key.startsWith(scope.field._id) && scope.item.associations[key] != null)
+                    .map((key) => scope.item.associations[key]).length;
+
+                const maxCount = scope.field?.field_options?.multiple_items?.enabled === true
+                    ? scope.field.field_options.multiple_items.max_items
+                    : 1;
+
+                return scope.field?.field_options?.allowed_workflows?.in_progress === true
+                    && currentItemsLength < maxCount;
+            };
 
             const dragOverClass = 'dragover';
             const fieldOptions = scope.field?.field_options || {};
