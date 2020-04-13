@@ -1,1 +1,2 @@
 content can open package using hotkey ctrl+0
+authoring can send and publish
