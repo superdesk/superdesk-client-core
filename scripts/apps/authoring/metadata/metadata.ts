@@ -656,7 +656,7 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                 scope.uniqueField = value || 'qcode';
             });
 
-            scope.$watch('list', (items) => {
+            scope.$watchCollection('list', (items) => {
                 if (!items || items.length === 0) {
                     return;
                 }
