@@ -348,16 +348,35 @@ describe('editor3.reducers', () => {
 
         const nextState = reducer({
             editorState: editorState,
+            editorFormat: ['tab', 'tab as spaces'],
             onChangeValue: jasmine.createSpy('onChangeValue'),
         }, {
             type: 'EDITOR_TAB',
             payload: fakeTabEvent({shift: false}),
         });
 
-        expect(nextState.editorState.getCurrentContent().getPlainText()).toBe('foo	');
+        expect(nextState.editorState.getCurrentContent().getPlainText()).toBe('foo\t');
     });
 
-    it('EDITOR_TAB shift should not insert tab', () => {
+    it('EDITOR_TAB insert tab as spaces when pressing shift', () => {
+        const contentState = ContentState.createFromText('foo');
+        let editorState = EditorState.createWithContent(contentState);
+
+        editorState = EditorState.moveFocusToEnd(editorState);
+
+        const nextState = reducer({
+            editorState: editorState,
+            editorFormat: ['tab', 'tab as spaces'],
+            onChangeValue: jasmine.createSpy('onChangeValue'),
+        }, {
+            type: 'EDITOR_TAB',
+            payload: fakeTabEvent({shift: true}),
+        });
+
+        expect(nextState.editorState.getCurrentContent().getPlainText()).toBe('foo        ');
+    });
+
+    it('EDITOR_TAB does not insert anything without formatting options', () => {
         const contentState = ContentState.createFromText('foo');
         let editorState = EditorState.createWithContent(contentState);
 
@@ -368,7 +387,7 @@ describe('editor3.reducers', () => {
             onChangeValue: jasmine.createSpy('onChangeValue'),
         }, {
             type: 'EDITOR_TAB',
-            payload: fakeTabEvent({shift: true}),
+            payload: fakeTabEvent({shift: false}),
         });
 
         expect(nextState.editorState.getCurrentContent().getPlainText()).toBe('foo');
@@ -383,6 +402,7 @@ describe('editor3.reducers', () => {
         // indent right
         let nextState = reducer({
             editorState,
+            editorFormat: ['tab', 'tab as spaces'],
             onChangeValue: jasmine.createSpy('onChangeValue'),
         }, {
             type: 'EDITOR_TAB',
@@ -396,6 +416,7 @@ describe('editor3.reducers', () => {
         // indent left
         nextState = reducer({
             editorState,
+            editorFormat: ['tab', 'tab as spaces'],
             onChangeValue: jasmine.createSpy('onChangeValue'),
         }, {
             type: 'EDITOR_TAB',

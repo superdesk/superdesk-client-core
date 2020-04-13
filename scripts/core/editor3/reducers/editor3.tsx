@@ -1,4 +1,4 @@
-import {RichUtils, EditorState, ContentState, Modifier} from 'draft-js';
+import {RichUtils, EditorState, ContentState, Modifier, SelectionState} from 'draft-js';
 import {setTansaHtml} from '../helpers/tansa';
 import {addMedia} from './toolbar';
 import {getCustomDecorator, IEditorStore} from '../store';
@@ -262,6 +262,12 @@ function escapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
+function insertTab(editorState: EditorState, selection: SelectionState, tabCharacter: string) {
+    const newContent = Modifier.replaceText(editorState.getCurrentContent(), selection, tabCharacter);
+
+    return EditorState.push(editorState, newContent, 'insert-characters');
+}
+
 /**
  * @ngdoc method
  * @name onTab
@@ -270,7 +276,7 @@ function escapeRegExp(string) {
  * @description Handle the editor tab key pressed event
  */
 const onTab = (state, e) => {
-    const {editorState} = state;
+    const {editorState, editorFormat = []} = state;
     const selection = editorState.getSelection();
     const blockType = editorState
         .getCurrentContent()
@@ -283,11 +289,17 @@ const onTab = (state, e) => {
         'ordered-list-item',
     ].includes(blockType)) { // let draft-js handle the Tab event
         newState = RichUtils.onTab(e, editorState, 4);
-    } else if (!e.shiftKey) {
-        const tabCharacter = '\t';
-        const newContent = Modifier.replaceText(editorState.getCurrentContent(), selection, tabCharacter);
+    } else {
+        const tabOption = editorFormat.includes('tab');
+        const spacesOption = editorFormat.includes('tab as spaces');
 
-        newState = EditorState.push(editorState, newContent, 'insert-characters');
+        if (tabOption && !e.shiftKey) {
+            newState = insertTab(editorState, selection, '\t');
+            e.preventDefault();
+        } else if (spacesOption && e.shiftKey) {
+            newState = insertTab(editorState, selection, '        ');
+            e.preventDefault();
+        }
     }
 
     return onChange(state, newState);
