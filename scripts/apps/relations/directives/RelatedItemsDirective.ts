@@ -3,6 +3,7 @@ import {gettext} from 'core/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {IArticle, IArticleField} from 'superdesk-api';
 import {IDirectiveScope} from 'types/Angular/DirectiveScope';
+import {getAssociationsByField} from '../../authoring/authoring/controllers/AssociationController';
 
 const ARCHIVE_TYPES = ['archive', 'published'];
 const isInArchive = (item: IArticle) => item._type != null && ARCHIVE_TYPES.includes(item._type);
@@ -74,9 +75,7 @@ export function RelatedItemsDirective(
             };
 
             scope.canAddRelatedItems = () => {
-                const currentItemsLength = Object.keys(scope.item.associations || {})
-                    .filter((key) => key.startsWith(scope.field._id) && scope.item.associations[key] != null)
-                    .map((key) => scope.item.associations[key]).length;
+                const currentItemsLength = getAssociationsByField(scope.item, scope.field).length;
 
                 const maxCount = scope.field?.field_options?.multiple_items?.enabled === true
                     ? scope.field.field_options.multiple_items.max_items
