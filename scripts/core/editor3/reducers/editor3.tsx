@@ -262,8 +262,8 @@ function escapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-function insertTab(editorState: EditorState, selection: SelectionState, tabCharacter: string) {
-    const newContent = Modifier.replaceText(editorState.getCurrentContent(), selection, tabCharacter);
+function insertText(editorState: EditorState, selection: SelectionState, character: string) {
+    const newContent = Modifier.insertText(editorState.getCurrentContent(), selection, character);
 
     return EditorState.push(editorState, newContent, 'insert-characters');
 }
@@ -294,10 +294,10 @@ const onTab = (state, e) => {
         const spacesOption = editorFormat.includes('tab as spaces');
 
         if (tabOption && !e.shiftKey) {
-            newState = insertTab(editorState, selection, '\t');
+            newState = insertText(editorState, selection, '\t');
             e.preventDefault();
         } else if (spacesOption && e.shiftKey) {
-            newState = insertTab(editorState, selection, '        ');
+            newState = insertText(editorState, selection, '        ');
             e.preventDefault();
         }
     }
