@@ -817,7 +817,7 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                 var selected = {};
 
                 angular.forEach(scope.item[scope.field], (term) => {
-                    if (term && scope.cv && scope.cv._id == term.scheme) {
+                    if (term && scope.cv && scope.cv._id === term.scheme) {
                         selected[term[scope.uniqueField]] = 1;
                     }
                 });
