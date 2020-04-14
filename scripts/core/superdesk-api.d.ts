@@ -1236,7 +1236,6 @@ declare module 'superdesk-api' {
         paths: {
             superdesk: any;
         };
-        language: string; // default client language
         editor3: {
             browserSpellCheck: boolean;
         };
