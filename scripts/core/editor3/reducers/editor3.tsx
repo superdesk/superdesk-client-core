@@ -1,4 +1,11 @@
-import {RichUtils, EditorState, ContentState, Modifier, SelectionState} from 'draft-js';
+import {
+    RichUtils,
+    EditorState,
+    ContentState,
+    Modifier,
+    SelectionState,
+    ContentBlock,
+} from 'draft-js';
 import {setTansaHtml} from '../helpers/tansa';
 import {addMedia} from './toolbar';
 import {getCustomDecorator, IEditorStore} from '../store';
@@ -262,10 +269,44 @@ function escapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-function replaceText(editorState: EditorState, selection: SelectionState, text: string) {
-    const newContent = Modifier.replaceText(editorState.getCurrentContent(), selection, text);
+function replaceText(
+    editorState: EditorState,
+    selection: SelectionState,
+    text: string,
+) {
+    const newContent = Modifier.replaceText(
+        editorState.getCurrentContent(),
+        selection,
+        text,
+    );
 
     return EditorState.push(editorState, newContent, 'insert-characters');
+}
+
+function insertTab(state: EditorState, selection: SelectionState, block: ContentBlock, tabString: string) {
+    const indentInsteadOfInsert = !selection.isCollapsed();
+    const selectionForInsert = indentInsteadOfInsert
+        ? (selection.merge({
+            focusOffset: 0,
+            anchorOffset: 0,
+        }) as SelectionState)
+        : selection;
+
+    let newState = replaceText(state, selectionForInsert, tabString);
+
+    if (indentInsteadOfInsert) {
+        const restoreSelection = selectionForInsert.merge({
+            focusOffset: block.getLength() + tabString.length,
+            anchorOffset: 0,
+        }) as SelectionState;
+
+        newState = EditorState.forceSelection(
+            newState,
+            restoreSelection,
+        );
+    }
+
+    return newState;
 }
 
 /**
@@ -277,27 +318,26 @@ function replaceText(editorState: EditorState, selection: SelectionState, text: 
  */
 const onTab = (state, e) => {
     const {editorState, editorFormat = []} = state;
-    const selection = editorState.getSelection();
-    const blockType = editorState
+    const selection = editorState.getSelection() as SelectionState;
+    const moreThanOneBlockSelected =
+        selection.getStartKey() !== selection.getEndKey();
+    const block = editorState
         .getCurrentContent()
-        .getBlockForKey(selection.getStartKey())
-        .getType();
+        .getBlockForKey(selection.getStartKey()) as ContentBlock;
+    const blockType = block.getType();
     let newState = editorState;
 
-    if ([
-        'unordered-list-item',
-        'ordered-list-item',
-    ].includes(blockType)) { // let draft-js handle the Tab event
+    if (['unordered-list-item', 'ordered-list-item'].includes(blockType)) {
+        // let draft-js handle the Tab event
         newState = RichUtils.onTab(e, editorState, 4);
-    } else {
-        const tabOption = editorFormat.includes('tab');
-        const spacesOption = editorFormat.includes('tab as spaces');
+    } else if (!moreThanOneBlockSelected) {
+        const tabOption = editorFormat.includes('tab') && !e.shiftKey;
+        const spacesOption =
+            editorFormat.includes('tab as spaces') && e.shiftKey;
+        let tabString = tabOption ? '\t' : spacesOption ? '        ' : null;
 
-        if (tabOption && !e.shiftKey) {
-            newState = replaceText(editorState, selection, '\t');
-            e.preventDefault();
-        } else if (spacesOption && e.shiftKey) {
-            newState = replaceText(editorState, selection, '        ');
+        if (tabString) {
+            newState = insertTab(newState, selection, block, tabString);
             e.preventDefault();
         }
     }
