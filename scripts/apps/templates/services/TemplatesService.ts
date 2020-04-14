@@ -83,8 +83,11 @@ export function TemplatesService(api, session, $q, preferencesService, privilege
 
         var criteria: any = {};
         // in template management only see the templates that are create by the user
+        // unless the user is an admin
 
-        criteria.$or = [{user: session.identity._id}];
+        if (!self.isAdmin(true)) {
+            criteria.$or = [{user: session.identity._id}];
+        }
 
         if (type !== undefined) {
             criteria.template_type = type;
@@ -94,10 +97,8 @@ export function TemplatesService(api, session, $q, preferencesService, privilege
             criteria.template_name = {$regex: templateName, $options: '-i'};
         }
 
-        // if you are admin then you can edit public templates
-        if (self.isAdmin(true)) {
-            criteria.$or.push({is_public: true});
-        } else if (self.isAdmin()) {
+        // Not an admin but has management rights for templates
+        if (!self.isAdmin(true) && self.isAdmin()) {
             var _criteria = criteria;
 
             criteria = desks.fetchCurrentUserDesks().then((_desks) => {
@@ -112,9 +113,11 @@ export function TemplatesService(api, session, $q, preferencesService, privilege
 
         return $q.when(criteria)
             .then((criteriaReady) => {
-                params.where = JSON.stringify({
-                    $and: [criteriaReady],
-                });
+                if (!_.isEmpty(criteriaReady)) {
+                    params.where = JSON.stringify({
+                        $and: [criteriaReady],
+                    });
+                }
                 return params;
             })
             .then((_params) => api.query('content_templates', _params));

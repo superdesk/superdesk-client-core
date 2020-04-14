@@ -214,7 +214,6 @@ describe('templates', () => {
                     page: 1,
                     max_results: 50,
                     sort: 'template_name',
-                    where: '{"$and":[{"$or":[{"user":"foo"},{"is_public":true}]}]}',
                 });
             }));
 
@@ -227,7 +226,7 @@ describe('templates', () => {
                     page: 1,
                     max_results: 50,
                     sort: 'template_name',
-                    where: '{"$and":[{"$or":[{"user":"foo"},{"is_public":true}],"template_type":"create"}]}',
+                    where: '{"$and":[{"template_type":"create"}]}',
                 });
             }));
 

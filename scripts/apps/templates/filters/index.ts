@@ -7,30 +7,37 @@ import _ from 'lodash';
  * @description Returns a function that allows filtering an array of
  * templates by various criteria.
  */
-FilterTemplatesFilter.$inject = [];
-export function FilterTemplatesFilter() {
+FilterTemplatesFilter.$inject = ['session', 'desks'];
+export function FilterTemplatesFilter(session, desks) {
     /**
      * @description Returns a new array based on the passed filter.
      * @param {Array<Object>} all - Array of templates to filter.
      * @param {Object} f - The filter. Contains keys 'label' and 'value'.
-     * If the 'value' is 'All', the entire array is returned. For 'None',
+     * If the 'value' is 'All', all public templates and those owned by the current user are returned. For 'None',
      * only the items without a desk are returned. For 'Personal', only
-     * non-public items are returned, and every other value is a hash that
-     * represents the desk to filter by.
+     * non-public items are returned, 'Private' returns all none public templates belonging to other users and every
+     * other value is a hash that represents the desk to filter by.
      * @returns {Array<Object>} The filtered array.
      */
     return function(all, f) {
-        return (all || []).filter((item) => {
+        let template_list = (all || []).filter((item) => {
             switch (f.value) {
             case 'All':
-                return all;
+                return item.is_public || (session.identity._id === item.user);
             case 'None':
                 return item.is_public && !(item.template_desks && item.template_desks.length);
             case 'Personal':
-                return !item.is_public;
+                return !item.is_public && (session.identity._id === item.user);
+            case 'Private':
+                return !item.is_public && (session.identity._id !== item.user);
             default:
                 return _.find(item.template_desks, (desk) => desk === f.value);
             }
         });
+
+        if (f.value === 'Private') {
+            return _.sortBy(template_list, [((t) => desks.userLookup[t.user].display_name), 'template_name']);
+        }
+        return template_list;
     };
 }

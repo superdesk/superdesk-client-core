@@ -2,8 +2,8 @@ import notifySaveError from '../helpers';
 import {gettext} from 'core/utils';
 
 TemplatesDirective.$inject = ['notify', 'api', 'templates', 'modal', 'desks', 'weekdays',
-    'content', '$filter', 'lodash'];
-export function TemplatesDirective(notify, api, templates, modal, desks, weekdays, content, $filter, _) {
+    'content', '$filter', 'session', 'lodash'];
+export function TemplatesDirective(notify, api, templates, modal, desks, weekdays, content, $filter, session, _) {
     return {
         templateUrl: 'scripts/apps/templates/views/templates.html',
         link: function($scope) {
@@ -194,6 +194,22 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
                 return null;
             };
 
+            /*
+             * Returns true if the template is not public and does not belong to the current user
+            */
+            $scope.isPrivate = function(template) {
+                return !template.is_public && (session.identity._id !== template.user);
+            };
+
+            /*
+             * Returns the display name of the user that owns the template
+            */
+            $scope.getTemplateOwner = function(template) {
+                var owner = desks.userLookup[template.user];
+
+                return owner.display_name;
+            };
+
             $scope.types = templates.types;
 
             function validate(orig, item) {
@@ -347,6 +363,10 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
                 {label: gettext('Personal'), value: 'Personal'},
                 {label: gettext('No Desk'), value: 'None'},
             ];
+
+            if (templates.isAdmin(true)) {
+                $scope.filters.splice(2, 0, {label: gettext('Private'), value: 'Private'});
+            }
 
             // holds the index of the active filter.
             $scope.activeFilter = 0;
