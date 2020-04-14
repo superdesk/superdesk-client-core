@@ -138,9 +138,8 @@ export function AssociationController(content, superdesk, renditions, notify) {
         if (scope.field != null && scope.field.field_type === 'media' && updated != null && updated.order == null) {
             // get greatest order from current items(or -1 if there aren't any items) and add one
             const nextOrder = (
-                Object.keys(scope.item.associations)
-                    .filter((key) => key.startsWith(field + '--'))
-                    .map((key) => scope.item.associations[key].order)
+                getAssociationsByFieldId(scope.item.associations, field)
+                    .map(({order}) => order)
                     .sort((a, b) => b - a)[0] ?? -1
             ) + 1;
 
