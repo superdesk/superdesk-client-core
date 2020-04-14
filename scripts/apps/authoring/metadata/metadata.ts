@@ -1066,8 +1066,9 @@ function MetaLocatorsDirective(places) {
                 let loc = locator;
 
                 if (!loc && scope.$ctrl.selectedTerm) {
-                    var previousLocator = scope.fieldprefix ? scope.item[scope.fieldprefix][scope.field] :
-                        scope.item[scope.field];
+                    var previousLocator = scope.fieldprefix && scope.item[scope.fieldprefix] != null
+                        ? scope.item[scope.fieldprefix][scope.field]
+                        : scope.item[scope.field];
 
                     if (previousLocator && scope.$ctrl.selectedTerm === previousLocator.city) {
                         loc = previousLocator;
@@ -1091,7 +1092,9 @@ function MetaLocatorsDirective(places) {
                     scope.$ctrl.selectedTerm = loc.city;
                     _.extend(scope.item, updates);
                 }
-
+                if (scope.item[scope.fieldprefix] != null && loc === null) {
+                    scope.item[scope.fieldprefix][scope.field] = null;
+                }
                 var selectedLocator = {item: scope.item, city: scope.$ctrl.selectedTerm};
 
                 scope.postprocessing(selectedLocator);
