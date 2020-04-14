@@ -9718,8 +9718,8 @@ msgstr ""
 msgid "The Agenda you were viewing was deleted!"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/assignments/notifications.js:15
-msgid "The Assignment you were viewing was removed."
+#: ../superdesk-planning/client/actions/eventsPlanning/ui.js:213
+msgid "The Events and Planning view filter is deleted."
 msgstr ""
 
 #: ../superdesk-planning/client/actions/eventsPlanning/notifications.js:39

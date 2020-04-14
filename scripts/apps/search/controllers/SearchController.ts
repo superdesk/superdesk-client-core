@@ -15,6 +15,8 @@ export function SearchController($location, searchProviderService) {
 
     this.hideNested = appConfig.features.nestedItemsInOutputStage;
 
+    this.hideNested = appConfig.features.nestedItemsInOutputStage;
+
     const getActiveRepos = () => INTERNAL.filter((name) => this.repo[name]);
     const resetInternalRepo = () => this.repo = Object.assign({}, DEFAULT_CONFIG);
 
