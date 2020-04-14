@@ -1,6 +1,7 @@
 /* eslint-disable newline-per-chained-call */
 
 import {element, browser, protractor, by, $} from 'protractor';
+import {el, els, ECE} from 'end-to-end-testing-helpers';
 
 import {monitoring} from './helpers/monitoring';
 import {workspace} from './helpers/workspace';
@@ -8,7 +9,6 @@ import {authoring} from './helpers/authoring';
 import {nav} from './helpers/utils';
 import {userPreferences} from './helpers/user_prefs';
 import {post} from './helpers/fixtures';
-import {el, els, ECE} from 'end-to-end-testing-helpers';
 
 describe('users', () => {
     beforeEach((done) => {
