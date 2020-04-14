@@ -8,4 +8,8 @@ module.exports = {
         src: '<%= distDir %>/*.js',
         dest: '<%= distDir %>/',
     },
+    css: {
+        src: '<%= distDir %>/*.css',
+        dest: '<%= distDir %>/',
+    },
 };
