@@ -178,7 +178,7 @@ msgstr ""
 msgid "2 weeks"
 msgstr ""
 
-#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:77
+#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:92
 msgid "200 minimum"
 msgstr ""
 
@@ -238,11 +238,11 @@ msgstr ""
 msgid "9th update"
 msgstr ""
 
-#: scripts/apps/desks/views/desk-config-modal.html:180
+#: scripts/apps/desks/views/desk-config-modal.html:222
 msgid ": OFF"
 msgstr ""
 
-#: scripts/apps/desks/views/desk-config-modal.html:183
+#: scripts/apps/desks/views/desk-config-modal.html:225
 msgid ": ON"
 msgstr ""
 
@@ -278,7 +278,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.jsx:162
 #: scripts/apps/content-filters/views/production-test-view.html:23
 #: scripts/apps/search/services/SearchService.ts:84
-#: scripts/apps/workspace/content/constants.ts:62
+#: scripts/apps/workspace/content/constants.ts:65
 msgid "ANPA Category"
 msgstr ""
 
@@ -313,7 +313,7 @@ msgstr ""
 
 #: scripts/apps/authoring/views/theme-select.html:45
 #: scripts/apps/authoring/views/theme-select.html:96
-#: scripts/apps/workspace/content/constants.ts:60
+#: scripts/apps/workspace/content/constants.ts:63
 #: scripts/apps/workspace/content/views/schema-editor.html:111
 msgid "Abstract"
 msgstr ""
@@ -350,8 +350,8 @@ msgstr ""
 #: ../superdesk-planning/client/components/Main/ActionsSubnavDropdown.jsx:46
 #: ../superdesk-planning/client/components/Main/ActionsSubnavDropdown.jsx:49
 #: ../superdesk-planning/client/constants/tooltips.js:15
-#: scripts/apps/authoring/authoring/constants.ts:13
-#: scripts/apps/desks/views/settings.html:25
+#: scripts/apps/authoring/authoring/constants.ts:14
+#: scripts/apps/desks/views/settings.html:29
 #: scripts/apps/ingest/views/settings/ingest-routing-action.html:2
 #: scripts/apps/monitoring/views/item-actions-menu.html:15
 #: scripts/apps/search/components/actions-menu/MenuItems.tsx:235
@@ -368,7 +368,7 @@ msgstr ""
 #: scripts/apps/internal-destinations/InternalDestinations.tsx:20
 #: scripts/apps/publish/directives/SubscribersDirective.ts:59
 #: scripts/apps/users/controllers/UserListController.ts:148
-#: scripts/apps/vocabularies/components/ItemsTableComponent.tsx:50
+#: scripts/apps/vocabularies/components/VocabularyItemsViewEdit.tsx:423
 #: scripts/apps/workspace/content/views/profile-settings.html:108
 #: scripts/apps/workspace/content/views/profile-settings.html:41
 msgid "Active"
@@ -388,8 +388,8 @@ msgid "Activity stream widget"
 msgstr ""
 
 #: scripts/apps/authoring/metadata/views/metadata-target-publishing.html:14
-#: scripts/apps/content-filters/views/manage-filters.html:80
-#: scripts/apps/content-filters/views/manage-filters.html:92
+#: scripts/apps/content-filters/views/manage-filters.html:81
+#: scripts/apps/content-filters/views/manage-filters.html:93
 #: scripts/apps/ingest/views/settings/ingest-routing-action.html:27
 #: scripts/apps/ingest/views/settings/ingest-routing-action.html:75
 #: scripts/apps/templates/views/template-editor-modal.html:163
@@ -418,7 +418,7 @@ msgstr ""
 msgid "Add Field"
 msgstr ""
 
-#: scripts/apps/content-filters/views/manage-filters.html:115
+#: scripts/apps/content-filters/views/manage-filters.html:116
 msgid "Add Filter Statement"
 msgstr ""
 
@@ -426,13 +426,13 @@ msgstr ""
 msgid "Add Ingest Sources"
 msgstr ""
 
-#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:205
+#: scripts/apps/vocabularies/components/VocabularyItemsViewEdit.tsx:392
 msgid "Add Item"
 msgstr ""
 
 #: scripts/apps/content-filters/views/manage-filter-conditions.html:7
 #: scripts/apps/content-filters/views/manage-filters.html:6
-#: scripts/apps/desks/views/settings.html:11
+#: scripts/apps/desks/views/settings.html:15
 #: scripts/apps/ingest/views/settings/ingest-routing-content.html:6
 #: scripts/apps/ingest/views/settings/ingest-rules-content.html:6
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:25
@@ -617,7 +617,7 @@ msgstr ""
 msgid "Add title"
 msgstr ""
 
-#: scripts/apps/search/directives/MultiActionBar.ts:188
+#: scripts/apps/search/directives/MultiActionBar.ts:189
 msgid "Add to Current Package"
 msgstr ""
 
@@ -642,7 +642,7 @@ msgstr ""
 msgid "Add to featured stories"
 msgstr ""
 
-#: scripts/apps/search/directives/MultiActionBar.ts:202
+#: scripts/apps/search/directives/MultiActionBar.ts:203
 msgid "Add to highlight"
 msgstr ""
 
@@ -783,7 +783,7 @@ msgstr ""
 msgid "All good so far."
 msgstr ""
 
-#: scripts/apps/search/controllers/MultiActionBarController.tsx:244
+#: scripts/apps/search/controllers/MultiActionBarController.tsx:277
 msgid "All items were published successfully."
 msgstr ""
 
@@ -791,7 +791,7 @@ msgstr ""
 msgid "All user types"
 msgstr ""
 
-#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:166
+#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:208
 msgid "Allow Multiple Items"
 msgstr ""
 
@@ -803,7 +803,7 @@ msgstr ""
 msgid "Alt Text"
 msgstr ""
 
-#: scripts/apps/workspace/content/constants.ts:61
+#: scripts/apps/workspace/content/constants.ts:64
 msgid "Alt text"
 msgstr ""
 
@@ -889,7 +889,7 @@ msgstr ""
 msgid "Archive"
 msgstr ""
 
-#: scripts/apps/workspace/content/constants.ts:64
+#: scripts/apps/workspace/content/constants.ts:67
 msgid "Archive description"
 msgstr ""
 
@@ -897,7 +897,7 @@ msgstr ""
 msgid "Archived"
 msgstr ""
 
-#: scripts/apps/content-filters/views/manage-filters.html:53
+#: scripts/apps/content-filters/views/manage-filters.html:54
 msgid "Archived Block"
 msgstr ""
 
@@ -943,7 +943,7 @@ msgstr ""
 msgid "Are you sure you want to delete current workspace?"
 msgstr ""
 
-#: scripts/apps/content-filters/controllers/FilterConditionsController.ts:100
+#: scripts/apps/content-filters/controllers/FilterConditionsController.ts:116
 msgid "Are you sure you want to delete filter condition?"
 msgstr ""
 
@@ -984,7 +984,7 @@ msgstr ""
 msgid "Are you sure you want to mark this event as complete?"
 msgstr ""
 
-#: scripts/apps/archive/index.tsx:444
+#: scripts/apps/archive/index.tsx:443
 msgid "Are you sure you want to spike the item?"
 msgstr ""
 
@@ -1195,13 +1195,13 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/EventPreview.jsx:114
 #: scripts/apps/authoring/attachments/attachments.ts:146
-#: scripts/apps/authoring/views/article-edit.html:760
-#: scripts/apps/workspace/content/constants.ts:65
+#: scripts/apps/authoring/views/article-edit.html:761
+#: scripts/apps/workspace/content/constants.ts:68
 msgid "Attachments"
 msgstr ""
 
 #: ../superdesk-planning/client/utils/index.js:661
-#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:151
+#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:182
 msgid "Audio"
 msgstr ""
 
@@ -1227,7 +1227,7 @@ msgstr ""
 msgid "Authoring"
 msgstr ""
 
-#: scripts/apps/desks/views/desk-config-modal.html:73
+#: scripts/apps/desks/views/desk-config-modal.html:97
 msgid "Authoring desks are for content creation, and items within it are protected from accidental publication. Publishing is only permitted  from production desks."
 msgstr ""
 
@@ -1251,7 +1251,7 @@ msgstr ""
 msgid "Available clock"
 msgstr ""
 
-#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:131
+#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:152
 msgid "Available in user/desk preferences"
 msgstr ""
 
@@ -1296,7 +1296,7 @@ msgstr ""
 msgid "Better"
 msgstr ""
 
-#: scripts/apps/users/views/edit-form.html:229
+#: scripts/apps/users/views/edit-form.html:231
 msgid "Biography"
 msgstr ""
 
@@ -1309,7 +1309,7 @@ msgstr ""
 msgid "Blank headline received"
 msgstr ""
 
-#: scripts/apps/content-filters/views/manage-filters.html:57
+#: scripts/apps/content-filters/views/manage-filters.html:58
 msgid "Block API"
 msgstr ""
 
@@ -1322,12 +1322,12 @@ msgstr ""
 msgid "Body"
 msgstr ""
 
-#: scripts/apps/workspace/content/constants.ts:67
+#: scripts/apps/workspace/content/constants.ts:70
 #: scripts/core/lang/missing-translations-strings.ts:31
 msgid "Body HTML"
 msgstr ""
 
-#: scripts/apps/workspace/content/constants.ts:66
+#: scripts/apps/workspace/content/constants.ts:69
 msgid "Body footer"
 msgstr ""
 
@@ -1376,8 +1376,8 @@ msgstr ""
 #: scripts/apps/archive/views/metadata-view.html:73
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:155
 #: scripts/apps/search/views/search-parameters.html:39
-#: scripts/apps/users/views/edit-form.html:215
-#: scripts/apps/workspace/content/constants.ts:68
+#: scripts/apps/users/views/edit-form.html:217
+#: scripts/apps/workspace/content/constants.ts:71
 msgid "Byline"
 msgstr ""
 
@@ -1505,11 +1505,11 @@ msgstr ""
 #: scripts/apps/contacts/components/Form/ActionBar.tsx:9
 #: scripts/apps/contacts/components/Form/ContactFormContainer.tsx:228
 #: scripts/apps/content-filters/views/manage-filter-conditions.html:91
-#: scripts/apps/content-filters/views/manage-filters.html:140
+#: scripts/apps/content-filters/views/manage-filters.html:155
 #: scripts/apps/dashboard/workspace-tasks/views/task-preview.html:12
 #: scripts/apps/dashboard/workspace-tasks/views/workspace-tasks.html:87
-#: scripts/apps/desks/views/desk-config-modal.html:203
-#: scripts/apps/desks/views/desk-config-modal.html:212
+#: scripts/apps/desks/views/desk-config-modal.html:245
+#: scripts/apps/desks/views/desk-config-modal.html:254
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:131
 #: scripts/apps/highlights/components/SetHighlightsForMultipleArticlesModal.tsx:107
 #: scripts/apps/highlights/views/highlights_config_modal.html:54
@@ -1519,7 +1519,7 @@ msgstr ""
 #: scripts/apps/ingest/views/settings/ingest-routing-filter.html:32
 #: scripts/apps/ingest/views/settings/ingest-rules-content.html:69
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:257
-#: scripts/apps/monitoring/views/aggregate-settings.html:127
+#: scripts/apps/monitoring/views/aggregate-settings.html:154
 #: scripts/apps/products/views/products-config-modal.html:90
 #: scripts/apps/publish/views/publish-queue.html:139
 #: scripts/apps/publish/views/publish-queue.html:91
@@ -1531,12 +1531,12 @@ msgstr ""
 #: scripts/apps/search/views/saved-search-subscribe.html:31
 #: scripts/apps/templates/views/create-template.html:39
 #: scripts/apps/templates/views/template-editor-modal.html:205
-#: scripts/apps/users/views/edit-form.html:329
+#: scripts/apps/users/views/edit-form.html:331
 #: scripts/apps/users/views/edit-form.html:5
 #: scripts/apps/users/views/settings-roles.html:86
 #: scripts/apps/users/views/user-preferences.html:5
 #: scripts/apps/users/views/user-privileges.html:6
-#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:222
+#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:272
 #: scripts/apps/workspace/content/views/profile-settings.html:150
 #: scripts/apps/workspace/content/views/profile-settings.html:82
 #: scripts/apps/workspace/views/edit-workspace-modal.html:19
@@ -1631,8 +1631,8 @@ msgid "Cannot search as filter type is not selected."
 msgstr ""
 
 #: scripts/apps/archive/views/metadata-associateditem-view.html:7
-#: scripts/apps/authoring/views/article-edit.html:403
-#: scripts/apps/authoring/views/article-edit.html:424
+#: scripts/apps/authoring/views/article-edit.html:404
+#: scripts/apps/authoring/views/article-edit.html:425
 #: scripts/core/editor3/components/media/MediaBlock.tsx:283
 msgid "Caption"
 msgstr ""
@@ -1641,7 +1641,7 @@ msgstr ""
 msgid "Case Sensitive"
 msgstr ""
 
-#: scripts/apps/workspace/content/constants.ts:69
+#: scripts/apps/workspace/content/constants.ts:72
 msgid "Categories"
 msgstr ""
 
@@ -1667,7 +1667,7 @@ msgstr ""
 msgid "Channel has gone strangely quiet."
 msgstr ""
 
-#: scripts/apps/desks/views/desk-config-modal.html:148
+#: scripts/apps/desks/views/desk-config-modal.html:181
 msgid "Character limit exceeded, desk can not be created/updated."
 msgstr ""
 
@@ -1679,7 +1679,7 @@ msgstr ""
 msgid "Character limit exceeded, highlight can not be created/updated."
 msgstr ""
 
-#: scripts/apps/desks/views/desk-config-modal.html:221
+#: scripts/apps/desks/views/desk-config-modal.html:263
 msgid "Character limit exceeded, stage can not be created/updated."
 msgstr ""
 
@@ -1696,8 +1696,12 @@ msgstr ""
 msgid "Choose entire category"
 msgstr ""
 
-#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:67
-msgid "Choose existing labels or create new ones by typing. The labels are only used to organize the controlled vocabularies in the list. The CVs are grouped under each label. You can choose only one label."
+#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:79
+msgid ""
+"Choose existing labels or create new\n"
+"                                    ones by typing. The labels are only used to organize the controlled vocabularies\n"
+"                                    in the list. The CVs are grouped under each label. You can choose only one\n"
+"                                    label."
 msgstr ""
 
 #: scripts/apps/highlights/views/package_highlights_dropdown_directive.html:7
@@ -1730,7 +1734,7 @@ msgstr ""
 msgid "Clear Edge"
 msgstr ""
 
-#: scripts/apps/authoring/views/article-edit.html:623
+#: scripts/apps/authoring/views/article-edit.html:624
 msgid "Clear Embed"
 msgstr ""
 
@@ -1747,14 +1751,14 @@ msgstr ""
 msgid "Clear date and time"
 msgstr ""
 
-#: scripts/apps/authoring/views/send-item.html:138
-#: scripts/apps/authoring/views/send-item.html:76
+#: scripts/apps/authoring/views/send-item.html:139
+#: scripts/apps/authoring/views/send-item.html:77
 msgid "Clear embargo"
 msgstr ""
 
 #: scripts/apps/contacts/views/search-panel.html:88
 #: scripts/apps/content-api/views/search-panel.html:22
-#: scripts/apps/monitoring/views/monitoring-view.html:216
+#: scripts/apps/monitoring/views/monitoring-view.html:227
 #: scripts/apps/search/views/save-search.html:9
 msgid "Clear filters"
 msgstr ""
@@ -1763,8 +1767,8 @@ msgstr ""
 msgid "Clear saved metadata"
 msgstr ""
 
-#: scripts/apps/authoring/views/send-item.html:157
-#: scripts/apps/authoring/views/send-item.html:95
+#: scripts/apps/authoring/views/send-item.html:158
+#: scripts/apps/authoring/views/send-item.html:96
 msgid "Clear schedule"
 msgstr ""
 
@@ -1836,7 +1840,7 @@ msgstr ""
 msgid "Color"
 msgstr ""
 
-#: scripts/apps/monitoring/views/monitoring-view.html:187
+#: scripts/apps/monitoring/views/monitoring-view.html:198
 msgid "Columns:"
 msgstr ""
 
@@ -1862,7 +1866,7 @@ msgstr ""
 msgid "Comments"
 msgstr ""
 
-#: scripts/apps/workspace/content/constants.ts:70
+#: scripts/apps/workspace/content/constants.ts:73
 msgid "Company Codes"
 msgstr ""
 
@@ -1889,7 +1893,7 @@ msgid "Completed"
 msgstr ""
 
 #: ../superdesk-planning/client/utils/index.js:659
-#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:157
+#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:197
 msgid "Composite"
 msgstr ""
 
@@ -1914,7 +1918,7 @@ msgid "Configure Editor themes"
 msgstr ""
 
 #: ../superdesk-planning/client/components/UI/Form/TimeInput/TimeInputPopup.jsx:150
-#: scripts/apps/archive/index.tsx:422
+#: scripts/apps/archive/index.tsx:421
 #: scripts/apps/archive/show-spike-dialog.tsx:50
 #: scripts/apps/authoring/authoring/components/publish-warning-confirm-modal.tsx:42
 #: scripts/apps/authoring/authoring/components/unpublish-confirm-modal.tsx:75
@@ -1984,13 +1988,19 @@ msgstr ""
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.jsx:87
 #: ../superdesk-planning/client/components/Main/ItemEditor/Editor.jsx:50
 #: ../superdesk-planning/client/components/Main/ItemPreview/PreviewPanel.jsx:34
-#: scripts/apps/archive/index.tsx:352
+#: scripts/apps/archive/index.tsx:351
 #: scripts/apps/content-filters/views/production-test-view.html:52
 #: scripts/apps/legal-archive/views/legal_archive.html:114
 #: scripts/apps/monitoring/aggregate-widget/aggregate-widget.html:69
 #: scripts/apps/packaging/views/search-widget-preview.html:5
 #: scripts/apps/search/views/item-preview.html:8
 msgid "Content"
+msgstr ""
+
+#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:162
+msgid ""
+"Content\n"
+"                                Type"
 msgstr ""
 
 #: scripts/apps/publish/views/subscribers.html:218
@@ -2006,7 +2016,7 @@ msgstr ""
 msgid "Content Expiry"
 msgstr ""
 
-#: scripts/apps/content-filters/views/manage-filters.html:106
+#: scripts/apps/content-filters/views/manage-filters.html:107
 #: scripts/apps/ingest/views/settings/ingest-routing-filter.html:2
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:3
 #: scripts/apps/products/views/products-config-modal.html:57
@@ -2035,7 +2045,6 @@ msgid "Content Profiles"
 msgstr ""
 
 #: scripts/apps/publish/views/publish-queue.html:107
-#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:139
 msgid "Content Type"
 msgstr ""
 
@@ -2059,7 +2068,7 @@ msgstr ""
 msgid "Content editing"
 msgstr ""
 
-#: scripts/apps/desks/views/desk-config-modal.html:253
+#: scripts/apps/desks/views/desk-config-modal.html:295
 msgid "Content expiry:"
 msgstr ""
 
@@ -2091,7 +2100,7 @@ msgstr ""
 msgid "Content locked"
 msgstr ""
 
-#: scripts/apps/monitoring/controllers/AggregateCtrl.ts:10
+#: scripts/apps/monitoring/controllers/AggregateCtrl.ts:12
 msgid "Content profile"
 msgstr ""
 
@@ -2105,7 +2114,7 @@ msgid "Content unlinked"
 msgstr ""
 
 #: scripts/apps/authoring/authoring/directives/SendItem.tsx:646
-#: scripts/apps/desks/views/desk-config-modal.html:350
+#: scripts/apps/desks/views/desk-config-modal.html:392
 msgid "Continue"
 msgstr ""
 
@@ -2137,7 +2146,7 @@ msgstr ""
 msgid "Converted to recurring event"
 msgstr ""
 
-#: scripts/apps/archive/index.tsx:252
+#: scripts/apps/archive/index.tsx:251
 msgid "Copy"
 msgstr ""
 
@@ -2151,7 +2160,7 @@ msgstr ""
 
 #: scripts/apps/archive/views/metadata-associateditem-view.html:32
 #: scripts/apps/archive/views/metadata-view.html:172
-#: scripts/apps/workspace/content/constants.ts:71
+#: scripts/apps/workspace/content/constants.ts:74
 msgid "Copyright holder"
 msgstr ""
 
@@ -2168,7 +2177,7 @@ msgstr ""
 #: scripts/apps/archive/views/metadata-associateditem-view.html:36
 #: scripts/apps/archive/views/metadata-view.html:176
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:68
-#: scripts/apps/workspace/content/constants.ts:72
+#: scripts/apps/workspace/content/constants.ts:75
 msgid "Copyright notice"
 msgstr ""
 
@@ -2350,7 +2359,7 @@ msgstr ""
 #: scripts/apps/archive/views/list.html:8
 #: scripts/apps/highlights/views/create_highlights_button_directive.html:2
 #: scripts/apps/templates/services/TemplatesService.ts:69
-#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:5
+#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:6
 msgid "Create"
 msgstr ""
 
@@ -2358,7 +2367,7 @@ msgstr ""
 msgid "Create & Post"
 msgstr ""
 
-#: scripts/apps/archive/index.tsx:230
+#: scripts/apps/archive/index.tsx:229
 msgid "Create Broadcast"
 msgstr ""
 
@@ -2366,8 +2375,8 @@ msgstr ""
 msgid "Create New Task"
 msgstr ""
 
-#: scripts/apps/monitoring/index.ts:75
-#: scripts/apps/search/directives/MultiActionBar.ts:177
+#: scripts/apps/monitoring/index.ts:83
+#: scripts/apps/search/directives/MultiActionBar.ts:178
 #: scripts/apps/workspace/content/views/sd-content-create.html:46
 msgid "Create Package"
 msgstr ""
@@ -2376,7 +2385,7 @@ msgstr ""
 msgid "Create Planning Item"
 msgstr ""
 
-#: scripts/apps/monitoring/index.ts:73
+#: scripts/apps/monitoring/index.ts:81
 msgid "Create a broadcast"
 msgstr ""
 
@@ -2408,7 +2417,7 @@ msgstr ""
 msgid "Create new"
 msgstr ""
 
-#: scripts/apps/desks/views/desk-config-modal.html:223
+#: scripts/apps/desks/views/desk-config-modal.html:265
 msgid "Create new Stage"
 msgstr ""
 
@@ -2660,7 +2669,7 @@ msgstr ""
 #: scripts/apps/archive/views/metadata-view.html:69
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:151
 #: scripts/apps/users/views/user-preferences.html:54
-#: scripts/apps/workspace/content/constants.ts:73
+#: scripts/apps/workspace/content/constants.ts:76
 msgid "Dateline"
 msgstr ""
 
@@ -2691,15 +2700,15 @@ msgstr ""
 msgid "Default Calendar"
 msgstr ""
 
-#: scripts/apps/desks/views/desk-config-modal.html:135
+#: scripts/apps/desks/views/desk-config-modal.html:168
 msgid "Default Content Profile"
 msgstr ""
 
-#: scripts/apps/desks/views/desk-config-modal.html:126
+#: scripts/apps/desks/views/desk-config-modal.html:155
 msgid "Default Content Template"
 msgstr ""
 
-#: scripts/apps/users/views/edit-form.html:167
+#: scripts/apps/users/views/edit-form.html:169
 msgid "Default Desk"
 msgstr ""
 
@@ -2719,7 +2728,7 @@ msgstr ""
 msgid "Default author roles"
 msgstr ""
 
-#: scripts/apps/desks/views/desk-config-modal.html:93
+#: scripts/apps/desks/views/desk-config-modal.html:122
 msgid "Default monitoring view"
 msgstr ""
 
@@ -2727,8 +2736,10 @@ msgstr ""
 msgid "Default view"
 msgstr ""
 
-#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:79
-msgid "Defines the width of the pop-up in the artcle header. A minimal value of 200 is required."
+#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:93
+msgid ""
+"Defines the width of the pop-up in the\n"
+"                                    artcle header. A minimal value of 200 is required."
 msgstr ""
 
 #: scripts/extensions/annotationsLibrary/dist/GetFields.js:22
@@ -2813,11 +2824,11 @@ msgstr ""
 #: scripts/apps/authoring/attachments/AttachmentsEditorModal.tsx:61
 #: scripts/apps/authoring/authoring/article-url-fields.tsx:89
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:209
-#: scripts/apps/authoring/views/article-edit.html:657
+#: scripts/apps/authoring/views/article-edit.html:658
 #: scripts/apps/search/views/save-search-dialog.html:10
 #: scripts/apps/search/views/search-parameters.html:200
-#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:49
-#: scripts/apps/workspace/content/constants.ts:74
+#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:65
+#: scripts/apps/workspace/content/constants.ts:77
 #: scripts/apps/workspace/content/views/profile-settings.html:103
 #: scripts/apps/workspace/content/views/profile-settings.html:73
 #: scripts/core/editor2/views/block-embed.html:30
@@ -2838,7 +2849,7 @@ msgstr ""
 #: scripts/apps/internal-destinations/InternalDestinations.tsx:32
 #: scripts/apps/templates/views/create-template.html:29
 #: scripts/apps/templates/views/template-editor-modal.html:71
-#: scripts/apps/workspace/content/constants.ts:75
+#: scripts/apps/workspace/content/constants.ts:78
 msgid "Desk"
 msgstr ""
 
@@ -2850,7 +2861,8 @@ msgstr ""
 msgid "Desk Management"
 msgstr ""
 
-#: scripts/apps/monitoring/directives/AggregateSettings.ts:55
+#: scripts/apps/monitoring/directives/AggregateSettings.ts:56
+#: scripts/apps/workspace/content/constants.ts:122
 msgid "Desk Output"
 msgstr ""
 
@@ -2858,11 +2870,11 @@ msgstr ""
 msgid "Desk Router"
 msgstr ""
 
-#: scripts/apps/monitoring/directives/AggregateSettings.ts:49
+#: scripts/apps/monitoring/directives/AggregateSettings.ts:50
 msgid "Desk Schedule Output"
 msgstr ""
 
-#: scripts/apps/monitoring/directives/AggregateSettings.ts:61
+#: scripts/apps/monitoring/directives/AggregateSettings.ts:62
 msgid "Desk Sent Output"
 msgstr ""
 
@@ -2871,8 +2883,8 @@ msgstr ""
 msgid "Desk Templates"
 msgstr ""
 
-#: scripts/apps/desks/views/desk-config-modal.html:66
-#: scripts/apps/desks/views/settings.html:52
+#: scripts/apps/desks/views/desk-config-modal.html:84
+#: scripts/apps/desks/views/settings.html:83
 msgid "Desk Type"
 msgstr ""
 
@@ -2880,7 +2892,7 @@ msgstr ""
 msgid "Desk deleted."
 msgstr ""
 
-#: scripts/apps/desks/views/desk-config-modal.html:25
+#: scripts/apps/desks/views/desk-config-modal.html:32
 msgid "Desk description"
 msgstr ""
 
@@ -2888,7 +2900,7 @@ msgstr ""
 msgid "Desk has been modified elsewhere. Please reload the desks."
 msgstr ""
 
-#: scripts/apps/desks/views/desk-config-modal.html:81
+#: scripts/apps/desks/views/desk-config-modal.html:105
 msgid "Desk language"
 msgstr ""
 
@@ -3053,7 +3065,7 @@ msgstr ""
 msgid "Do you want to add an image to this update?"
 msgstr ""
 
-#: scripts/apps/archive/index.tsx:422
+#: scripts/apps/archive/index.tsx:421
 msgid "Do you want to delete the item permanently?"
 msgstr ""
 
@@ -3073,7 +3085,7 @@ msgstr ""
 msgid "Do you want to publish the article?"
 msgstr ""
 
-#: scripts/apps/users/directives/UserEditDirective.ts:132
+#: scripts/apps/users/directives/UserEditDirective.ts:134
 msgid "Do you want to reload the page now?"
 msgstr ""
 
@@ -3081,7 +3093,7 @@ msgstr ""
 msgid "Do you want to remove Abbreviation?"
 msgstr ""
 
-#: scripts/apps/users/views/edit-form.html:290
+#: scripts/apps/users/views/edit-form.html:292
 msgid "Do you want to reset the password for user {{user.full_name}} ?"
 msgstr ""
 
@@ -3091,6 +3103,14 @@ msgstr ""
 
 #: ../superdesk-planning/client/actions/multiSelect.js:138
 msgid "Do you want to unspike  item(s) ?"
+msgstr ""
+
+#: scripts/apps/content-filters/views/manage-filters.html:147
+msgid "Does match"
+msgstr ""
+
+#: scripts/apps/content-filters/views/manage-filters.html:148
+msgid "Doesn't match"
 msgstr ""
 
 #: ../superdesk-planning/client/services/AssignmentsService.js:281
@@ -3105,12 +3125,12 @@ msgstr ""
 #: scripts/apps/authoring/views/change-image.html:13
 #: scripts/apps/dashboard/views/workspace.html:75
 #: scripts/apps/dashboard/workspace-tasks/tasks.ts:11
-#: scripts/apps/desks/views/desk-config-modal.html:157
-#: scripts/apps/desks/views/desk-config-modal.html:351
-#: scripts/apps/desks/views/desk-config-modal.html:382
-#: scripts/apps/desks/views/desk-config-modal.html:402
+#: scripts/apps/desks/views/desk-config-modal.html:193
+#: scripts/apps/desks/views/desk-config-modal.html:393
+#: scripts/apps/desks/views/desk-config-modal.html:425
+#: scripts/apps/desks/views/desk-config-modal.html:450
 #: scripts/apps/ingest/views/settings/ingest-routing-content.html:108
-#: scripts/apps/monitoring/views/aggregate-settings.html:128
+#: scripts/apps/monitoring/views/aggregate-settings.html:155
 #: scripts/apps/users/views/change-avatar.html:73
 msgid "Done"
 msgstr ""
@@ -3186,9 +3206,11 @@ msgstr ""
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/index.jsx:63
 #: ../superdesk-planning/client/constants/events.js:41
 #: ../superdesk-planning/client/constants/planning.js:35
-#: scripts/apps/archive/index.tsx:175
-#: scripts/apps/archive/index.tsx:199
-#: scripts/apps/authoring/authoring/constants.ts:14
+#: scripts/apps/archive/index.tsx:174
+#: scripts/apps/archive/index.tsx:198
+#: scripts/apps/authoring/authoring/constants.ts:15
+#: scripts/apps/search/directives/MultiActionBar.ts:219
+#: scripts/apps/search/directives/MultiActionBar.ts:235
 msgid "Duplicate"
 msgstr ""
 
@@ -3200,12 +3222,17 @@ msgstr ""
 msgid "Duplicate Content within a Desk"
 msgstr ""
 
-#: scripts/apps/archive/index.tsx:179
+#: scripts/apps/search/directives/MultiActionBar.ts:232
+msgid "Duplicate In Place"
+msgstr ""
+
+#: scripts/apps/archive/index.tsx:178
 #: scripts/apps/authoring/views/send-item.html:21
+#: scripts/apps/search/directives/MultiActionBar.ts:216
 msgid "Duplicate To"
 msgstr ""
 
-#: scripts/apps/monitoring/index.ts:72
+#: scripts/apps/monitoring/index.ts:80
 msgid "Duplicate an item"
 msgstr ""
 
@@ -3281,7 +3308,7 @@ msgid "Ed Note"
 msgstr ""
 
 #: scripts/apps/authoring/views/full-preview.html:74
-#: scripts/apps/workspace/content/constants.ts:76
+#: scripts/apps/workspace/content/constants.ts:79
 msgid "Ed. Note"
 msgstr ""
 
@@ -3295,7 +3322,7 @@ msgstr ""
 #: scripts/apps/authoring/authoring/index.ts:179
 #: scripts/apps/authoring/authoring/index.ts:381
 #: scripts/apps/authoring/views/authoring-topbar.html:87
-#: scripts/apps/desks/views/settings.html:27
+#: scripts/apps/desks/views/settings.html:38
 #: scripts/apps/internal-destinations/InternalDestinations.tsx:108
 #: scripts/apps/search/components/WidgetItem.tsx:99
 #: scripts/apps/templates/views/templates.html:36
@@ -3414,11 +3441,11 @@ msgstr ""
 msgid "Edit Unique Name"
 msgstr ""
 
-#: scripts/apps/monitoring/index.ts:68
+#: scripts/apps/monitoring/index.ts:76
 msgid "Edit an item"
 msgstr ""
 
-#: scripts/apps/monitoring/index.ts:71
+#: scripts/apps/monitoring/index.ts:79
 msgid "Edit an item in a new Window"
 msgstr ""
 
@@ -3434,7 +3461,7 @@ msgstr ""
 #: scripts/apps/desks/views/desk-tasks.html:8
 #: scripts/apps/desks/views/desk.html:8
 #: scripts/apps/desks/views/desk_users.html:8
-#: scripts/apps/desks/views/settings.html:27
+#: scripts/apps/desks/views/settings.html:34
 #: scripts/apps/desks/views/slugline.html:8
 msgid "Edit desk"
 msgstr ""
@@ -3469,13 +3496,13 @@ msgid "Edit link"
 msgstr ""
 
 #: scripts/apps/archive/views/media-view.html:51
-#: scripts/apps/authoring/views/article-edit.html:371
-#: scripts/apps/authoring/views/article-edit.html:389
+#: scripts/apps/authoring/views/article-edit.html:372
+#: scripts/apps/authoring/views/article-edit.html:390
 #: scripts/apps/authoring/views/item-association.html:36
 #: scripts/apps/authoring/views/item-association.html:51
 #: scripts/apps/authoring/views/item-carousel.html:52
 #: scripts/apps/authoring/views/item-carousel.html:81
-#: scripts/apps/search/directives/MultiActionBar.ts:98
+#: scripts/apps/search/directives/MultiActionBar.ts:100
 #: scripts/apps/search/views/multi-image-edit.html:2
 #: scripts/core/editor3/components/media/MediaBlock.tsx:153
 #: scripts/core/editor3/components/media/MediaBlock.tsx:299
@@ -3517,7 +3544,7 @@ msgstr ""
 msgid "Edit user"
 msgstr ""
 
-#: scripts/apps/vocabularies/views/vocabulary-config.html:66
+#: scripts/apps/vocabularies/views/vocabulary-config.html:77
 msgid "Edit vocabulary"
 msgstr ""
 
@@ -3555,9 +3582,9 @@ msgid "Email Address"
 msgstr ""
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.ts:349
-#: scripts/apps/authoring/views/send-item.html:126
-#: scripts/apps/authoring/views/send-item.html:64
-#: scripts/apps/workspace/content/constants.ts:77
+#: scripts/apps/authoring/views/send-item.html:127
+#: scripts/apps/authoring/views/send-item.html:65
+#: scripts/apps/workspace/content/constants.ts:80
 msgid "Embargo"
 msgstr ""
 
@@ -3623,7 +3650,7 @@ msgstr ""
 msgid "Error creating highlight."
 msgstr ""
 
-#: scripts/apps/search/controllers/MultiActionBarController.tsx:251
+#: scripts/apps/search/controllers/MultiActionBarController.tsx:284
 msgid "Error on item:"
 msgstr ""
 
@@ -3667,16 +3694,16 @@ msgstr ""
 msgid "Error. User Profile cannot be enabled."
 msgstr ""
 
-#: scripts/apps/vocabularies/controllers/VocabularyEditController.ts:81
+#: scripts/apps/vocabularies/controllers/VocabularyEditController.tsx:96
 msgid "Error. Vocabulary not saved."
 msgstr ""
 
 #: scripts/apps/contacts/components/Form/ContactFormContainer.tsx:172
+#: scripts/apps/content-filters/controllers/FilterConditionsController.ts:103
 #: scripts/apps/content-filters/controllers/FilterConditionsController.ts:106
-#: scripts/apps/content-filters/controllers/FilterConditionsController.ts:87
-#: scripts/apps/content-filters/controllers/FilterConditionsController.ts:90
-#: scripts/apps/content-filters/controllers/ManageContentFiltersController.ts:132
-#: scripts/apps/content-filters/controllers/ManageContentFiltersController.ts:134
+#: scripts/apps/content-filters/controllers/FilterConditionsController.ts:122
+#: scripts/apps/content-filters/controllers/ManageContentFiltersController.ts:137
+#: scripts/apps/content-filters/controllers/ManageContentFiltersController.ts:140
 #: scripts/apps/content-filters/controllers/ManageContentFiltersController.ts:56
 #: scripts/apps/content-filters/controllers/ManageContentFiltersController.ts:61
 #: scripts/apps/content-filters/controllers/ManageContentFiltersController.ts:64
@@ -3706,7 +3733,7 @@ msgstr ""
 #: scripts/apps/users/controllers/UserEnableCommand.ts:17
 #: scripts/apps/users/controllers/UserEnableCommand.ts:19
 #: scripts/apps/users/directives/UserRolesDirective.ts:66
-#: scripts/apps/vocabularies/controllers/VocabularyEditController.ts:71
+#: scripts/apps/vocabularies/controllers/VocabularyEditController.tsx:86
 msgid "Error:"
 msgstr ""
 
@@ -3734,11 +3761,11 @@ msgstr ""
 msgid "Error: Failed to save Subscriber."
 msgstr ""
 
-#: scripts/apps/content-filters/controllers/ManageContentFiltersController.ts:136
+#: scripts/apps/content-filters/controllers/ManageContentFiltersController.ts:143
 msgid "Error: Failed to save content filter."
 msgstr ""
 
-#: scripts/apps/content-filters/controllers/FilterConditionsController.ts:92
+#: scripts/apps/content-filters/controllers/FilterConditionsController.ts:108
 msgid "Error: Failed to save filter condition."
 msgstr ""
 
@@ -3754,7 +3781,7 @@ msgstr ""
 msgid "Error: Internal error in Filter testing"
 msgstr ""
 
-#: scripts/apps/content-filters/controllers/FilterConditionsController.ts:85
+#: scripts/apps/content-filters/controllers/FilterConditionsController.ts:101
 #: scripts/apps/content-filters/controllers/ManageContentFiltersController.ts:59
 #: scripts/apps/products/controllers/ProductsConfigController.ts:178
 msgid "Error: Name needs to be unique"
@@ -3792,7 +3819,7 @@ msgstr ""
 msgid "Error: Unique Name is not unique."
 msgstr ""
 
-#: scripts/apps/users/directives/UserEditDirective.ts:174
+#: scripts/apps/users/directives/UserEditDirective.ts:176
 msgid "Error: {{error}}"
 msgstr ""
 
@@ -3993,12 +4020,12 @@ msgstr ""
 #: ../superdesk-planning/client/components/ExportAsArticleModal.jsx:205
 #: ../superdesk-planning/client/components/MultiSelectActions.jsx:148
 #: ../superdesk-planning/client/components/MultiSelectActions.jsx:96
-#: scripts/apps/archive/index.tsx:325
+#: scripts/apps/archive/index.tsx:324
 #: scripts/apps/archive/views/export.html:32
 #: scripts/apps/archive/views/export.html:4
 #: scripts/apps/authoring/views/authoring-topbar.html:171
 #: scripts/apps/authoring/views/authoring-topbar.html:270
-#: scripts/apps/search/directives/MultiActionBar.ts:109
+#: scripts/apps/search/directives/MultiActionBar.ts:111
 msgid "Export"
 msgstr ""
 
@@ -4036,7 +4063,7 @@ msgstr ""
 msgid "FTP Server URL"
 msgstr ""
 
-#: scripts/apps/users/views/edit-form.html:236
+#: scripts/apps/users/views/edit-form.html:238
 msgid "Facebook"
 msgstr ""
 
@@ -4080,6 +4107,10 @@ msgstr ""
 
 #: ../superdesk-planning/client/actions/eventsPlanning/ui.js:196
 msgid "Failed to create/update Events and Planning view filter"
+msgstr ""
+
+#: scripts/apps/search/controllers/MultiActionBarController.tsx:209
+msgid "Failed to duplicate the item"
 msgstr ""
 
 #: ../superdesk-planning/client/actions/eventsPlanning/ui.js:238
@@ -4298,12 +4329,12 @@ msgstr ""
 msgid "Failed to updated location!"
 msgstr ""
 
-#: scripts/apps/workspace/content/constants.ts:78
+#: scripts/apps/workspace/content/constants.ts:81
 msgid "Feature Image"
 msgstr ""
 
 #: scripts/apps/search/views/search-parameters.html:168
-#: scripts/apps/workspace/content/constants.ts:79
+#: scripts/apps/workspace/content/constants.ts:82
 msgid "Feature Media"
 msgstr ""
 
@@ -4356,8 +4387,8 @@ msgstr ""
 #: scripts/apps/ingest/index.ts:147
 #: scripts/apps/ingest/views/settings/ingest-routing-action.html:4
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:25
-#: scripts/apps/search/directives/MultiActionBar.ts:48
-#: scripts/apps/search/directives/MultiActionBar.ts:79
+#: scripts/apps/search/directives/MultiActionBar.ts:50
+#: scripts/apps/search/directives/MultiActionBar.ts:81
 msgid "Fetch"
 msgstr ""
 
@@ -4372,12 +4403,12 @@ msgstr ""
 msgid "Fetch To"
 msgstr ""
 
-#: scripts/apps/monitoring/index.ts:69
+#: scripts/apps/monitoring/index.ts:77
 msgid "Fetch an item"
 msgstr ""
 
-#: scripts/apps/search/directives/MultiActionBar.ts:57
-#: scripts/apps/search/directives/MultiActionBar.ts:87
+#: scripts/apps/search/directives/MultiActionBar.ts:59
+#: scripts/apps/search/directives/MultiActionBar.ts:89
 msgid "Fetch to"
 msgstr ""
 
@@ -4390,12 +4421,14 @@ msgstr ""
 msgid "Field"
 msgstr ""
 
-#: scripts/core/ui/components/ListPage/generic-list-page-item-view-edit.tsx:113
-msgid "Field is required"
+#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:53
+msgid ""
+"Field\n"
+"                                    type"
 msgstr ""
 
-#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:40
-msgid "Field type"
+#: scripts/core/ui/components/ListPage/generic-list-page-item-view-edit.tsx:113
+msgid "Field is required"
 msgstr ""
 
 #: scripts/apps/publish/views/file-config.html:11
@@ -4426,7 +4459,7 @@ msgstr ""
 msgid "Filter"
 msgstr ""
 
-#: scripts/apps/content-filters/views/manage-filters.html:101
+#: scripts/apps/content-filters/views/manage-filters.html:102
 msgid "Filter Condition"
 msgstr ""
 
@@ -4439,15 +4472,19 @@ msgstr ""
 msgid "Filter Search"
 msgstr ""
 
-#: scripts/apps/content-filters/views/manage-filters.html:65
+#: scripts/apps/content-filters/views/manage-filters.html:66
 msgid "Filter Statement"
+msgstr ""
+
+#: scripts/apps/content-filters/views/manage-filters.html:133
+msgid "Filter Test"
 msgstr ""
 
 #: scripts/apps/content-filters/views/production-test.html:4
 msgid "Filter Test Results"
 msgstr ""
 
-#: scripts/apps/content-filters/controllers/FilterConditionsController.ts:79
+#: scripts/apps/content-filters/controllers/FilterConditionsController.ts:95
 msgid "Filter condition saved."
 msgstr ""
 
@@ -4470,7 +4507,7 @@ msgstr ""
 #: scripts/apps/content-filters/views/settings.html:9
 #: scripts/apps/search/views/search-panel.html:57
 #: scripts/apps/search/views/search.html:3
-#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:186
+#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:233
 msgid "Filters"
 msgstr ""
 
@@ -4525,11 +4562,11 @@ msgstr ""
 msgid "Font"
 msgstr ""
 
-#: scripts/apps/workspace/content/constants.ts:80
+#: scripts/apps/workspace/content/constants.ts:83
 msgid "Footer"
 msgstr ""
 
-#: scripts/apps/workspace/content/constants.ts:81
+#: scripts/apps/workspace/content/constants.ts:84
 msgid "Footers"
 msgstr ""
 
@@ -4622,6 +4659,7 @@ msgstr ""
 #: scripts/apps/desks/views/desk-config-modal.html:10
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:70
 #: scripts/apps/publish/views/subscribers.html:66
+#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:11
 #: scripts/core/keyboard/keyboard.ts:414
 #: scripts/core/keyboard/keyboard.ts:423
 msgid "General"
@@ -4631,7 +4669,7 @@ msgstr ""
 msgid "General info"
 msgstr ""
 
-#: scripts/apps/authoring/views/article-edit.html:626
+#: scripts/apps/authoring/views/article-edit.html:627
 msgid "Generate From URL"
 msgstr ""
 
@@ -4648,7 +4686,7 @@ msgstr ""
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:139
 #: scripts/apps/authoring/views/full-preview.html:43
 #: scripts/apps/search/services/SearchService.ts:87
-#: scripts/apps/workspace/content/constants.ts:82
+#: scripts/apps/workspace/content/constants.ts:85
 msgid "Genre"
 msgstr ""
 
@@ -4665,16 +4703,16 @@ msgstr ""
 msgid "Get token"
 msgstr ""
 
-#: scripts/apps/content-filters/views/manage-filters.html:50
+#: scripts/apps/content-filters/views/manage-filters.html:51
 msgid "Global Block"
 msgstr ""
 
-#: scripts/apps/desks/views/desk-config-modal.html:180
-#: scripts/apps/desks/views/desk-config-modal.html:279
+#: scripts/apps/desks/views/desk-config-modal.html:222
+#: scripts/apps/desks/views/desk-config-modal.html:321
 msgid "Global Read"
 msgstr ""
 
-#: scripts/apps/desks/views/desk-config-modal.html:241
+#: scripts/apps/desks/views/desk-config-modal.html:283
 msgid "Global Read:"
 msgstr ""
 
@@ -4682,7 +4720,7 @@ msgstr ""
 msgid "Global Saved Searches"
 msgstr ""
 
-#: scripts/apps/monitoring/views/aggregate-settings.html:48
+#: scripts/apps/monitoring/views/aggregate-settings.html:66
 msgid "Global saved searches"
 msgstr ""
 
@@ -4701,7 +4739,7 @@ msgid "Go-To"
 msgstr ""
 
 #: ../superdesk-planning/client/utils/index.js:657
-#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:156
+#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:194
 msgid "Graphic"
 msgstr ""
 
@@ -4769,7 +4807,7 @@ msgstr ""
 #: scripts/apps/packaging/views/sd-package-edit.html:4
 #: scripts/apps/publish/views/publish-queue.html:106
 #: scripts/apps/search/views/search-parameters.html:13
-#: scripts/apps/workspace/content/constants.ts:83
+#: scripts/apps/workspace/content/constants.ts:86
 #: scripts/apps/workspace/content/views/schema-editor.html:112
 msgid "Headline"
 msgstr ""
@@ -4780,15 +4818,17 @@ msgstr ""
 msgid "Hello world"
 msgstr ""
 
-#: scripts/apps/users/views/edit-form.html:146
+#: scripts/apps/users/views/edit-form.html:148
 msgid "Help us translate Superdesk"
 msgstr ""
 
-#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:85
-msgid "Helper text"
+#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:101
+msgid ""
+"Helper\n"
+"                                    text"
 msgstr ""
 
-#: scripts/apps/authoring/views/article-edit.html:449
+#: scripts/apps/authoring/views/article-edit.html:450
 msgid "Helplines/Contact Information"
 msgstr ""
 
@@ -4804,7 +4844,7 @@ msgstr ""
 msgid "Hide Date"
 msgstr ""
 
-#: scripts/apps/authoring/views/article-edit.html:632
+#: scripts/apps/authoring/views/article-edit.html:633
 msgid "Hide Preview"
 msgstr ""
 
@@ -4882,20 +4922,24 @@ msgstr ""
 msgid "I'm sorry but there was an error when saving the rule set."
 msgstr ""
 
-#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:13
+#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:25
 msgid "ID"
 msgstr ""
 
-#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:22
-msgid "ID conflicts with system field."
+#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:32
+msgid ""
+"ID\n"
+"                                must contain only letters, digits and characters -, _."
 msgstr ""
 
-#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:20
+#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:30
+msgid ""
+"ID conflicts\n"
+"                                with system field."
+msgstr ""
+
+#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:28
 msgid "ID must be unique."
-msgstr ""
-
-#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:24
-msgid "ID must contain only letters, digits and characters -, _."
 msgstr ""
 
 #: scripts/apps/publish/views/email-config.html:26
@@ -4910,7 +4954,7 @@ msgstr ""
 msgid "If not set, the UTC+0 time zone is assumed."
 msgstr ""
 
-#: scripts/apps/desks/views/desk-config-modal.html:57
+#: scripts/apps/desks/views/desk-config-modal.html:75
 msgid "If selected, content published from this desk will be not be expired"
 msgstr ""
 
@@ -4940,7 +4984,7 @@ msgstr ""
 msgid "Ignore word"
 msgstr ""
 
-#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:149
+#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:176
 msgid "Image"
 msgstr ""
 
@@ -4972,7 +5016,7 @@ msgstr ""
 #: ../superdesk-planning/client/constants/assignments.js:84
 #: ../superdesk-planning/client/utils/index.js:459
 #: scripts/apps/dashboard/workspace-tasks/tasks.ts:10
-#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:191
+#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:239
 msgid "In Progress"
 msgstr ""
 
@@ -5006,16 +5050,17 @@ msgstr ""
 msgid "Include spiked content"
 msgstr ""
 
-#: scripts/apps/desks/views/desk-config-modal.html:315
+#: scripts/apps/desks/views/desk-config-modal.html:357
 msgid "Incoming Rule"
 msgstr ""
 
-#: scripts/apps/desks/views/desk-config-modal.html:263
+#: scripts/apps/desks/views/desk-config-modal.html:305
 msgid "Incoming Rule:"
 msgstr ""
 
-#: scripts/apps/desks/views/desk-config-modal.html:238
-#: scripts/apps/desks/views/desk-config-modal.html:291
+#: scripts/apps/desks/views/desk-config-modal.html:280
+#: scripts/apps/desks/views/desk-config-modal.html:333
+#: scripts/apps/workspace/content/constants.ts:113
 msgid "Incoming Stage"
 msgstr ""
 
@@ -5051,7 +5096,7 @@ msgstr ""
 #: scripts/apps/archive/views/metadata-view.html:26
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:84
 #: scripts/apps/publish/views/publish-queue.html:110
-#: scripts/apps/workspace/content/constants.ts:84
+#: scripts/apps/workspace/content/constants.ts:87
 msgid "Ingest Provider"
 msgstr ""
 
@@ -5107,7 +5152,7 @@ msgstr ""
 msgid "Insert URL"
 msgstr ""
 
-#: scripts/apps/users/views/edit-form.html:249
+#: scripts/apps/users/views/edit-form.html:251
 msgid "Instagram"
 msgstr ""
 
@@ -5145,7 +5190,11 @@ msgstr ""
 msgid "Invalid Date"
 msgstr ""
 
-#: scripts/apps/users/views/edit-form.html:208
+#: scripts/apps/archive/controllers/file-upload-error-modal.tsx:73
+msgid "Invalid File : {{name}}"
+msgstr ""
+
+#: scripts/apps/users/views/edit-form.html:210
 msgid "Invalid format. Only Alphanumerics are allowed."
 msgstr ""
 
@@ -5175,6 +5224,7 @@ msgstr ""
 
 #: scripts/apps/archive/controllers/DuplicateController.ts:20
 #: scripts/apps/ingest/services/SendService.ts:127
+#: scripts/apps/search/controllers/MultiActionBarController.tsx:207
 msgid "Item Duplicated"
 msgstr ""
 
@@ -5297,12 +5347,12 @@ msgstr ""
 msgid "Item {{headline}} was unlocked by {{username}}."
 msgstr ""
 
-#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:201
+#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:12
 #: scripts/core/views/sdSearchList.html:36
 msgid "Items"
 msgstr ""
 
-#: scripts/apps/monitoring/views/aggregate-settings.html:99
+#: scripts/apps/monitoring/views/aggregate-settings.html:126
 msgid "Items Count"
 msgstr ""
 
@@ -5328,13 +5378,13 @@ msgstr ""
 msgid "Items moved to a working stage by the user"
 msgstr ""
 
-#: scripts/apps/users/views/edit-form.html:183
+#: scripts/apps/users/views/edit-form.html:185
 msgid "Jabber Identifier (JID)"
 msgstr ""
 
 #: scripts/apps/contacts/constants.ts:71
 #: scripts/apps/contacts/views/search-panel.html:41
-#: scripts/apps/users/views/edit-form.html:222
+#: scripts/apps/users/views/edit-form.html:224
 msgid "Job Title"
 msgstr ""
 
@@ -5358,8 +5408,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageForm.jsx:394
 #: scripts/apps/archive/views/metadata-view.html:21
 #: scripts/apps/content-filters/views/production-test-view.html:21
-#: scripts/apps/search/views/search-parameters.html:78
-#: scripts/apps/workspace/content/constants.ts:85
+#: scripts/apps/workspace/content/constants.ts:88
 msgid "Keywords"
 msgstr ""
 
@@ -5380,8 +5429,8 @@ msgstr ""
 msgid "Killed by"
 msgstr ""
 
-#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:110
-#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:60
+#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:129
+#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:74
 #: scripts/apps/workspace/content/views/profile-settings.html:66
 #: scripts/apps/workspace/content/views/profile-settings.html:96
 msgid "Label"
@@ -5389,10 +5438,10 @@ msgstr ""
 
 #: scripts/apps/archive/views/metadata-view.html:117
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:44
-#: scripts/apps/desks/views/settings.html:60
+#: scripts/apps/desks/views/settings.html:91
 #: scripts/apps/templates/views/template-editor-modal.html:110
-#: scripts/apps/users/views/edit-form.html:143
-#: scripts/apps/workspace/content/constants.ts:86
+#: scripts/apps/users/views/edit-form.html:145
+#: scripts/apps/workspace/content/constants.ts:89
 #: scripts/extensions/annotationsLibrary/dist/GetFields.js:13
 #: scripts/extensions/annotationsLibrary/dist/src/GetFields.js:13
 #: scripts/extensions/annotationsLibrary/src/GetFields.ts:14
@@ -5542,7 +5591,7 @@ msgstr ""
 msgid "List Name"
 msgstr ""
 
-#: scripts/apps/desks/directives/DeskConfigModal.ts:33
+#: scripts/apps/desks/directives/DeskConfigModal.ts:34
 #: scripts/apps/search-providers/directive.ts:16
 #: scripts/apps/users/directives/UserPreferencesDirective.ts:26
 #: scripts/apps/users/directives/UserPreferencesDirective.ts:28
@@ -5574,15 +5623,15 @@ msgstr ""
 msgid "Loading..."
 msgstr ""
 
-#: scripts/apps/desks/views/desk-config-modal.html:283
+#: scripts/apps/desks/views/desk-config-modal.html:325
 msgid "Local Read Only"
 msgstr ""
 
-#: scripts/apps/desks/views/desk-config-modal.html:245
+#: scripts/apps/desks/views/desk-config-modal.html:287
 msgid "Local Read Only:"
 msgstr ""
 
-#: scripts/apps/desks/views/desk-config-modal.html:183
+#: scripts/apps/desks/views/desk-config-modal.html:225
 msgid "Local Readonly"
 msgstr ""
 
@@ -5657,7 +5706,7 @@ msgid "Macro"
 msgstr ""
 
 #: scripts/apps/authoring/macros/macros.ts:378
-#: scripts/apps/desks/views/desk-config-modal.html:390
+#: scripts/apps/desks/views/desk-config-modal.html:438
 msgid "Macros"
 msgstr ""
 
@@ -5751,12 +5800,12 @@ msgid "Mark as completed"
 msgstr ""
 
 #: scripts/apps/desks/index.ts:78
-#: scripts/apps/monitoring/index.ts:77
+#: scripts/apps/monitoring/index.ts:85
 msgid "Mark for desk"
 msgstr ""
 
 #: scripts/apps/highlights/index.ts:47
-#: scripts/apps/monitoring/index.ts:76
+#: scripts/apps/monitoring/index.ts:84
 msgid "Mark for highlight"
 msgstr ""
 
@@ -5803,7 +5852,9 @@ msgid "Marked for desks"
 msgstr ""
 
 #: scripts/extensions/markForUser/dist/get-marked-for-me-component.js:87
+#: scripts/extensions/markForUser/dist/src/extension.js:55
 #: scripts/extensions/markForUser/dist/src/get-marked-for-me-component.js:89
+#: scripts/extensions/markForUser/src/extension.tsx:61
 #: scripts/extensions/markForUser/src/get-marked-for-me-component.tsx:138
 msgid "Marked for me"
 msgstr ""
@@ -5828,7 +5879,7 @@ msgstr ""
 msgid "Max length should be bigger than 0 or empty."
 msgstr ""
 
-#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:170
+#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:213
 msgid "Max. number of items"
 msgstr ""
 
@@ -5836,12 +5887,12 @@ msgstr ""
 msgid "Maximum"
 msgstr ""
 
-#: scripts/apps/content-filters/views/manage-filters.html:43
+#: scripts/apps/content-filters/views/manage-filters.html:44
 msgid "Maximum 80 characters."
 msgstr ""
 
 #: scripts/apps/publish/views/subscribers.html:111
-#: scripts/apps/workspace/content/constants.ts:87
+#: scripts/apps/workspace/content/constants.ts:90
 #: scripts/core/editor3/components/toolbar/index.tsx:187
 msgid "Media"
 msgstr ""
@@ -5850,7 +5901,7 @@ msgstr ""
 msgid "Media Contacts"
 msgstr ""
 
-#: scripts/apps/workspace/content/constants.ts:88
+#: scripts/apps/workspace/content/constants.ts:91
 msgid "Media Description"
 msgstr ""
 
@@ -5879,7 +5930,7 @@ msgstr ""
 #: scripts/apps/search/views/item-preview.html:11
 #: scripts/apps/search/views/multi-image-edit.html:88
 #: scripts/apps/templates/views/template-editor-modal.html:93
-#: scripts/apps/vocabularies/index.ts:45
+#: scripts/apps/vocabularies/index.ts:44
 msgid "Metadata"
 msgstr ""
 
@@ -5904,7 +5955,11 @@ msgstr ""
 msgid "Minimum"
 msgstr ""
 
-#: scripts/apps/vocabularies/controllers/VocabularyEditController.ts:111
+#: scripts/apps/archive/controllers/file-upload-error-modal.tsx:44
+msgid "Minimum allowed image size is {{minWidth}}x{{minHeight}}"
+msgstr ""
+
+#: scripts/apps/vocabularies/controllers/VocabularyEditController.tsx:127
 msgid "Minimum height and width should be greater than or equal to 200"
 msgstr ""
 
@@ -5953,7 +6008,8 @@ msgstr ""
 msgid "Monitoring"
 msgstr ""
 
-#: scripts/apps/desks/views/settings.html:28
+#: scripts/apps/desks/views/settings.html:44
+#: scripts/apps/desks/views/settings.html:48
 #: scripts/apps/monitoring/views/aggregate-settings.html:2
 msgid "Monitoring settings"
 msgstr ""
@@ -5974,11 +6030,11 @@ msgstr ""
 msgid "Move Content to another desk"
 msgstr ""
 
-#: scripts/apps/monitoring/index.ts:60
+#: scripts/apps/monitoring/index.ts:68
 msgid "Move focus to next stage or group"
 msgstr ""
 
-#: scripts/apps/monitoring/index.ts:62
+#: scripts/apps/monitoring/index.ts:70
 msgid "Move focus to previous stage or group"
 msgstr ""
 
@@ -5986,11 +6042,11 @@ msgstr ""
 msgid "Moved by"
 msgstr ""
 
-#: scripts/apps/desks/views/desk-config-modal.html:326
+#: scripts/apps/desks/views/desk-config-modal.html:368
 msgid "Moved onto stage Rule"
 msgstr ""
 
-#: scripts/apps/desks/views/desk-config-modal.html:267
+#: scripts/apps/desks/views/desk-config-modal.html:309
 msgid "Moved onto stage Rule:"
 msgstr ""
 
@@ -6008,8 +6064,8 @@ msgstr ""
 
 #: scripts/apps/authoring/multiedit/views/multiedit.html:2
 #: scripts/apps/authoring/views/authoring-topbar.html:259
-#: scripts/apps/authoring/views/opened-articles.html:15
-#: scripts/apps/search/directives/MultiActionBar.ts:120
+#: scripts/apps/authoring/views/opened-articles.html:17
+#: scripts/apps/search/directives/MultiActionBar.ts:122
 msgid "Multiedit"
 msgstr ""
 
@@ -6088,21 +6144,21 @@ msgstr ""
 #: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:521
 #: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.jsx:126
 #: scripts/apps/content-filters/views/manage-filter-conditions.html:38
-#: scripts/apps/content-filters/views/manage-filters.html:41
+#: scripts/apps/content-filters/views/manage-filters.html:42
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:6
 #: scripts/apps/publish/views/destination.html:4
 #: scripts/apps/publish/views/subscribers.html:76
 #: scripts/apps/search/views/save-search-dialog.html:7
 #: scripts/apps/templates/views/create-template.html:11
 #: scripts/apps/vocabularies/services/SchemaFactory.ts:6
-#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:30
+#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:39
 #: scripts/extensions/annotationsLibrary/dist/GetFields.js:7
 #: scripts/extensions/annotationsLibrary/dist/src/GetFields.js:7
 #: scripts/extensions/annotationsLibrary/src/GetFields.ts:8
 msgid "Name"
 msgstr ""
 
-#: scripts/apps/vocabularies/controllers/VocabularyEditController.ts:116
+#: scripts/apps/vocabularies/controllers/VocabularyEditController.tsx:132
 msgid "Name field should only have alphanumeric characters, dashes and underscores"
 msgstr ""
 
@@ -6143,7 +6199,7 @@ msgstr ""
 msgid "New annotation"
 msgstr ""
 
-#: scripts/apps/desks/views/desk-config-modal.html:172
+#: scripts/apps/desks/views/desk-config-modal.html:214
 msgid "New stage"
 msgstr ""
 
@@ -6151,7 +6207,7 @@ msgstr ""
 msgid "New subscription"
 msgstr ""
 
-#: scripts/apps/monitoring/views/aggregate-settings.html:129
+#: scripts/apps/monitoring/views/aggregate-settings.html:156
 msgid "Next"
 msgstr ""
 
@@ -6284,7 +6340,7 @@ msgstr ""
 msgid "No content filter defined"
 msgstr ""
 
-#: scripts/apps/users/views/edit-form.html:169
+#: scripts/apps/users/views/edit-form.html:171
 msgid "No desk selected"
 msgstr ""
 
@@ -6433,7 +6489,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/UI/Form/ColouredValueInput/index.jsx:98
 #: scripts/apps/archive/views/marked_item_title.html:22
 #: scripts/apps/authoring/metadata/views/metadata-dropdown.html:24
-#: scripts/apps/desks/directives/DeskConfigModal.ts:32
+#: scripts/apps/desks/directives/DeskConfigModal.ts:33
 #: scripts/apps/publish/views/publish-queue.html:23
 #: scripts/apps/publish/views/publish-queue.html:39
 #: scripts/apps/publish/views/publish-queue.html:54
@@ -6459,7 +6515,7 @@ msgstr ""
 msgid "Not Active"
 msgstr ""
 
-#: scripts/apps/desks/views/settings.html:57
+#: scripts/apps/desks/views/settings.html:88
 msgid "Not Expired"
 msgstr ""
 
@@ -6573,6 +6629,7 @@ msgid "Offline"
 msgstr ""
 
 #: ../superdesk-planning/client/components/ConfirmationModal.jsx:84
+#: scripts/apps/archive/controllers/file-upload-error-modal.tsx:90
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.ts:623
 #: scripts/apps/authoring/compare-versions/views/sd-compare-versions-dropdown.html:21
 #: scripts/apps/authoring/multiedit/views/sd-multiedit-dropdown.html:14
@@ -6604,15 +6661,17 @@ msgstr ""
 msgid "Only Posted"
 msgstr ""
 
-#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:187
-msgid "Only allow content with the following status:"
+#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:234
+msgid ""
+"Only allow content with the\n"
+"                                following status:"
 msgstr ""
 
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageForm.jsx:176
 msgid "Only one XMP files are accepted"
 msgstr ""
 
-#: scripts/apps/archive/controllers/UploadController.ts:240
+#: scripts/apps/archive/controllers/UploadController.ts:245
 msgid "Only one file can be uploaded"
 msgstr ""
 
@@ -6620,7 +6679,7 @@ msgstr ""
 msgid "Only the following content item types are allowed:"
 msgstr ""
 
-#: scripts/apps/archive/controllers/UploadController.ts:285
+#: scripts/apps/archive/controllers/UploadController.ts:333
 msgid "Only the following files are allowed:"
 msgstr ""
 
@@ -6745,7 +6804,7 @@ msgstr ""
 msgid "Original"
 msgstr ""
 
-#: scripts/apps/authoring/views/article-edit.html:355
+#: scripts/apps/authoring/views/article-edit.html:356
 msgid "Original ({{item.renditions.original.width}} x {{item.renditions.original.height}} px)"
 msgstr ""
 
@@ -6785,11 +6844,11 @@ msgstr ""
 msgid "Other fields"
 msgstr ""
 
-#: scripts/apps/desks/views/desk-config-modal.html:337
+#: scripts/apps/desks/views/desk-config-modal.html:379
 msgid "Outgoing Rule"
 msgstr ""
 
-#: scripts/apps/desks/views/desk-config-modal.html:271
+#: scripts/apps/desks/views/desk-config-modal.html:313
 msgid "Outgoing Rule:"
 msgstr ""
 
@@ -6798,15 +6857,15 @@ msgstr ""
 msgid "Output file path"
 msgstr ""
 
-#: scripts/apps/monitoring/directives/AggregateSettings.ts:54
+#: scripts/apps/monitoring/directives/AggregateSettings.ts:55
 msgid "Output/Published"
 msgstr ""
 
-#: scripts/apps/monitoring/directives/AggregateSettings.ts:48
+#: scripts/apps/monitoring/directives/AggregateSettings.ts:49
 msgid "Output/Scheduled"
 msgstr ""
 
-#: scripts/apps/monitoring/directives/AggregateSettings.ts:60
+#: scripts/apps/monitoring/directives/AggregateSettings.ts:61
 msgid "Output/Sent"
 msgstr ""
 
@@ -6839,7 +6898,7 @@ msgstr ""
 msgid "Package preview"
 msgstr ""
 
-#: scripts/apps/workspace/content/constants.ts:59
+#: scripts/apps/workspace/content/constants.ts:62
 msgid "Package story labels"
 msgstr ""
 
@@ -6915,8 +6974,8 @@ msgstr ""
 msgid "Pending"
 msgstr ""
 
-#: scripts/apps/desks/views/desk-config-modal.html:355
-#: scripts/apps/desks/views/settings.html:41
+#: scripts/apps/desks/views/desk-config-modal.html:397
+#: scripts/apps/desks/views/settings.html:72
 msgid "People"
 msgstr ""
 
@@ -6934,10 +6993,10 @@ msgid "Person Contact"
 msgstr ""
 
 #: scripts/apps/dictionaries/views/settings.html:48
-#: scripts/apps/monitoring/controllers/AggregateCtrl.ts:457
-#: scripts/apps/monitoring/views/aggregate-settings.html:114
-#: scripts/apps/monitoring/views/aggregate-settings.html:37
-#: scripts/apps/monitoring/views/aggregate-settings.html:93
+#: scripts/apps/monitoring/controllers/AggregateCtrl.ts:480
+#: scripts/apps/monitoring/views/aggregate-settings.html:120
+#: scripts/apps/monitoring/views/aggregate-settings.html:141
+#: scripts/apps/monitoring/views/aggregate-settings.html:55
 #: scripts/apps/templates/directives/TemplatesDirective.ts:347
 msgid "Personal"
 msgstr ""
@@ -6946,7 +7005,7 @@ msgstr ""
 msgid "Personal Dictionary"
 msgstr ""
 
-#: scripts/apps/monitoring/views/monitoring-view.html:51
+#: scripts/apps/monitoring/views/monitoring-view.html:52
 msgid "Personal Items"
 msgstr ""
 
@@ -6963,7 +7022,7 @@ msgstr ""
 msgid "Personal space"
 msgstr ""
 
-#: scripts/apps/desks/directives/DeskConfigModal.ts:39
+#: scripts/apps/desks/directives/DeskConfigModal.ts:40
 #: scripts/apps/search-providers/directive.ts:17
 #: scripts/apps/users/directives/UserPreferencesDirective.ts:27
 msgid "Photo Grid View"
@@ -6990,7 +7049,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.jsx:146
 #: scripts/apps/archive/views/metadata-view.html:61
 #: scripts/apps/authoring/views/full-preview.html:64
-#: scripts/apps/workspace/content/constants.ts:89
+#: scripts/apps/workspace/content/constants.ts:92
 msgid "Place"
 msgstr ""
 
@@ -7129,11 +7188,12 @@ msgid "Please provide a valid email address"
 msgstr ""
 
 #: scripts/apps/contacts/components/Form/ContactFormContainer.tsx:93
-#: scripts/apps/users/views/edit-form.html:273
+#: scripts/apps/users/views/edit-form.html:275
 msgid "Please provide a valid twitter account"
 msgstr ""
 
 #: scripts/apps/content-filters/controllers/ManageContentFiltersController.ts:121
+#: scripts/apps/content-filters/controllers/ManageContentFiltersController.ts:122
 msgid "Please provide an article GUID"
 msgstr ""
 
@@ -7152,7 +7212,7 @@ msgstr ""
 msgid "Please use less than 40 characters"
 msgstr ""
 
-#: scripts/apps/content-filters/views/manage-filters.html:44
+#: scripts/apps/content-filters/views/manage-filters.html:45
 msgid "Please use less than 80 characters"
 msgstr ""
 
@@ -7233,7 +7293,7 @@ msgstr ""
 msgid "Preferred Categories"
 msgstr ""
 
-#: scripts/apps/desks/views/desk-config-modal.html:143
+#: scripts/apps/desks/views/desk-config-modal.html:176
 #: scripts/apps/users/views/user-preferences.html:189
 msgid "Preferred values for vocabularies"
 msgstr ""
@@ -7242,7 +7302,7 @@ msgstr ""
 msgid "Prefill the field with text from:"
 msgstr ""
 
-#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:155
+#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:191
 msgid "Preformatted"
 msgstr ""
 
@@ -7254,15 +7314,15 @@ msgstr ""
 msgid "Preserve Desk"
 msgstr ""
 
-#: scripts/apps/desks/views/desk-config-modal.html:59
+#: scripts/apps/desks/views/desk-config-modal.html:77
 msgid "Preserve Published Content"
 msgstr ""
 
 #: scripts/apps/authoring/authoring/directives/SendItem.tsx:177
-#: scripts/apps/authoring/views/article-edit.html:629
+#: scripts/apps/authoring/views/article-edit.html:630
 #: scripts/apps/authoring/views/authoring-topbar.html:160
 #: scripts/apps/authoring/views/authoring.html:23
-#: scripts/apps/authoring/views/send-item.html:276
+#: scripts/apps/authoring/views/send-item.html:278
 #: scripts/apps/search/components/WidgetItem.tsx:89
 msgid "Preview"
 msgstr ""
@@ -7283,7 +7343,7 @@ msgstr ""
 msgid "Preview master story"
 msgstr ""
 
-#: scripts/apps/monitoring/views/aggregate-settings.html:126
+#: scripts/apps/monitoring/views/aggregate-settings.html:153
 msgid "Previous"
 msgstr ""
 
@@ -7311,7 +7371,7 @@ msgstr ""
 #: scripts/apps/search/components/ItemPriority.tsx:37
 #: scripts/apps/search/services/SearchService.ts:86
 #: scripts/apps/search/views/search-filters.html:106
-#: scripts/apps/workspace/content/constants.ts:90
+#: scripts/apps/workspace/content/constants.ts:93
 msgid "Priority"
 msgstr ""
 
@@ -7327,7 +7387,7 @@ msgstr ""
 msgid "Private"
 msgstr ""
 
-#: scripts/apps/monitoring/views/aggregate-settings.html:61
+#: scripts/apps/monitoring/views/aggregate-settings.html:88
 msgid "Private saved searches"
 msgstr ""
 
@@ -7476,7 +7536,7 @@ msgstr ""
 #: scripts/apps/authoring/views/send-item.html:13
 #: scripts/apps/ingest/views/settings/ingest-routing-action.html:37
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:32
-#: scripts/apps/search/directives/MultiActionBar.ts:164
+#: scripts/apps/search/directives/MultiActionBar.ts:155
 msgid "Publish"
 msgstr ""
 
@@ -7490,7 +7550,7 @@ msgstr ""
 
 #: scripts/apps/archive/views/metadata-view.html:136
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.ts:360
-#: scripts/apps/authoring/views/send-item.html:145
+#: scripts/apps/authoring/views/send-item.html:146
 msgid "Publish Schedule"
 msgstr ""
 
@@ -7504,11 +7564,11 @@ msgstr ""
 
 #: scripts/apps/dashboard/workspace-tasks/views/desk-stages.html:22
 #: scripts/apps/search/views/item-repo.html:5
-#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:194
+#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:242
 msgid "Published"
 msgstr ""
 
-#: scripts/apps/desks/views/settings.html:56
+#: scripts/apps/desks/views/settings.html:87
 msgid "Published Content"
 msgstr ""
 
@@ -7540,8 +7600,12 @@ msgstr ""
 msgid "Publishing Action"
 msgstr ""
 
-#: scripts/apps/authoring/views/send-item.html:83
+#: scripts/apps/authoring/views/send-item.html:84
 msgid "Publishing Schedule"
+msgstr ""
+
+#: scripts/apps/authoring/authoring/constants.ts:18
+msgid "Publishing actions"
 msgstr ""
 
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:56
@@ -7740,7 +7804,7 @@ msgstr ""
 
 #: scripts/apps/archive/related-item-widget/relatedItem.ts:109
 #: scripts/apps/archive/related-item-widget/relatedItem.ts:13
-#: scripts/apps/workspace/content/constants.ts:92
+#: scripts/apps/workspace/content/constants.ts:95
 msgid "Related Items"
 msgstr ""
 
@@ -7774,10 +7838,10 @@ msgstr ""
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageFormHeader.jsx:156
 #: scripts/apps/archive/views/marked_item_title.html:20
 #: scripts/apps/authoring/attachments/AttachmentsList.tsx:71
-#: scripts/apps/desks/views/settings.html:29
+#: scripts/apps/desks/views/settings.html:58
 #: scripts/apps/ingest/index.ts:91
 #: scripts/apps/internal-destinations/InternalDestinations.tsx:119
-#: scripts/apps/search/directives/MultiActionBar.ts:68
+#: scripts/apps/search/directives/MultiActionBar.ts:70
 #: scripts/apps/templates/views/templates.html:37
 #: scripts/apps/workspace/content/views/profile-settings.html:32
 #: scripts/core/editor3/highlightsConfig.ts:32
@@ -7827,7 +7891,7 @@ msgstr ""
 msgid "Remove coverage"
 msgstr ""
 
-#: scripts/apps/desks/views/settings.html:29
+#: scripts/apps/desks/views/settings.html:54
 msgid "Remove desk"
 msgstr ""
 
@@ -7887,7 +7951,7 @@ msgstr ""
 msgid "Remove source"
 msgstr ""
 
-#: scripts/apps/vocabularies/views/vocabulary-config.html:69
+#: scripts/apps/vocabularies/views/vocabulary-config.html:82
 msgid "Remove vocabulary"
 msgstr ""
 
@@ -7915,11 +7979,11 @@ msgstr ""
 msgid "Reopened by"
 msgstr ""
 
-#: scripts/apps/monitoring/views/aggregate-settings.html:77
+#: scripts/apps/monitoring/views/aggregate-settings.html:104
 msgid "Reorder Sections"
 msgstr ""
 
-#: scripts/apps/monitoring/views/aggregate-settings.html:80
+#: scripts/apps/monitoring/views/aggregate-settings.html:107
 msgid "Reorder stages and saved searches for view"
 msgstr ""
 
@@ -7987,7 +8051,7 @@ msgstr ""
 msgid "Required field(s) missing"
 msgstr ""
 
-#: scripts/apps/vocabularies/controllers/VocabularyEditController.ts:77
+#: scripts/apps/vocabularies/controllers/VocabularyEditController.tsx:92
 msgid "Required {{field}} in item {{item}}"
 msgstr ""
 
@@ -8022,7 +8086,7 @@ msgstr ""
 msgid "Resend To"
 msgstr ""
 
-#: scripts/apps/archive/index.tsx:279
+#: scripts/apps/archive/index.tsx:278
 msgid "Resend item"
 msgstr ""
 
@@ -8092,7 +8156,7 @@ msgid "Rewritten link is removed"
 msgstr ""
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:192
-#: scripts/apps/users/views/edit-form.html:153
+#: scripts/apps/users/views/edit-form.html:155
 #: scripts/apps/users/views/list.html:35
 #: scripts/apps/users/views/user-privileges.html:17
 msgid "Role"
@@ -8184,11 +8248,11 @@ msgstr ""
 msgid "SLUGLINE is too long"
 msgstr ""
 
-#: scripts/apps/workspace/content/constants.ts:95
+#: scripts/apps/workspace/content/constants.ts:98
 msgid "SMS"
 msgstr ""
 
-#: scripts/apps/workspace/content/constants.ts:96
+#: scripts/apps/workspace/content/constants.ts:99
 msgid "SMS Message"
 msgstr ""
 
@@ -8246,13 +8310,13 @@ msgstr ""
 #: scripts/apps/contacts/components/Form/ActionBar.tsx:13
 #: scripts/apps/contacts/components/Form/ContactFormContainer.tsx:235
 #: scripts/apps/content-filters/views/manage-filter-conditions.html:92
-#: scripts/apps/content-filters/views/manage-filters.html:141
+#: scripts/apps/content-filters/views/manage-filters.html:156
 #: scripts/apps/dashboard/views/configuration.html:9
 #: scripts/apps/dashboard/workspace-tasks/views/task-preview.html:11
 #: scripts/apps/dashboard/workspace-tasks/views/workspace-tasks.html:88
 #: scripts/apps/desks/controllers/DeskConfigController.ts:94
-#: scripts/apps/desks/views/desk-config-modal.html:206
-#: scripts/apps/desks/views/desk-config-modal.html:214
+#: scripts/apps/desks/views/desk-config-modal.html:248
+#: scripts/apps/desks/views/desk-config-modal.html:256
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:128
 #: scripts/apps/highlights/views/highlights_config_modal.html:55
 #: scripts/apps/ingest/views/settings/ingest-routing-content.html:82
@@ -8268,7 +8332,7 @@ msgstr ""
 #: scripts/apps/users/views/settings-privileges.html:4
 #: scripts/apps/users/views/user-preferences.html:4
 #: scripts/apps/users/views/user-privileges.html:5
-#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:219
+#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:262
 #: scripts/apps/workspace/content/views/profile-settings.html:149
 #: scripts/apps/workspace/views/edit-workspace-modal.html:20
 #: scripts/core/editor2/views/block-embed.html:4
@@ -8280,8 +8344,8 @@ msgstr ""
 msgid "Save & Close"
 msgstr ""
 
-#: scripts/apps/desks/views/desk-config-modal.html:156
-#: scripts/apps/desks/views/desk-config-modal.html:381
+#: scripts/apps/desks/views/desk-config-modal.html:191
+#: scripts/apps/desks/views/desk-config-modal.html:424
 msgid "Save & Continue"
 msgstr ""
 
@@ -8405,7 +8469,7 @@ msgstr ""
 msgid "Save event as a template"
 msgstr ""
 
-#: scripts/apps/users/views/edit-form.html:330
+#: scripts/apps/users/views/edit-form.html:332
 msgid "Save password"
 msgstr ""
 
@@ -8421,7 +8485,7 @@ msgstr ""
 msgid "Saved Featured Stories record"
 msgstr ""
 
-#: scripts/apps/monitoring/views/aggregate-settings.html:44
+#: scripts/apps/monitoring/views/aggregate-settings.html:62
 msgid "Saved Searches"
 msgstr ""
 
@@ -8433,7 +8497,7 @@ msgstr ""
 #: scripts/apps/desks/directives/DeskeditBasic.ts:31
 #: scripts/apps/desks/directives/DeskeditPeople.ts:50
 #: scripts/apps/desks/directives/DeskeditStages.ts:111
-#: scripts/apps/users/directives/UserEditDirective.ts:142
+#: scripts/apps/users/directives/UserEditDirective.ts:144
 #: scripts/core/notify/notify.tsx:44
 msgid "Saving..."
 msgstr ""
@@ -8472,7 +8536,11 @@ msgstr ""
 msgid "Scheduled"
 msgstr ""
 
-#: scripts/apps/workspace/content/constants.ts:91
+#: scripts/apps/workspace/content/constants.ts:126
+msgid "Scheduled Desk Output"
+msgstr ""
+
+#: scripts/apps/workspace/content/constants.ts:94
 msgid "Scheduled Time"
 msgstr ""
 
@@ -8540,6 +8608,7 @@ msgstr ""
 #: scripts/apps/search/views/save-search.html:5
 #: scripts/apps/search/views/saved-search-manage-subscribers.html:34
 #: scripts/apps/search/views/search-parameters.html:234
+#: scripts/apps/vocabularies/components/VocabularyItemsViewEdit.tsx:321
 #: scripts/core/itemList/views/relatedItem-list-widget.html:5
 #: scripts/core/itemList/views/relatedItem-list-widget.html:7
 #: scripts/core/lang/missing-translations-strings.ts:26
@@ -8687,7 +8756,7 @@ msgstr ""
 msgid "Select at most 1 file to upload."
 msgstr ""
 
-#: scripts/apps/archive/controllers/UploadController.ts:244
+#: scripts/apps/archive/controllers/UploadController.ts:249
 #: scripts/apps/authoring/authoring/directives/ItemCarouselDirective.ts:189
 msgid "Select at most {{maxUploads}} files to upload."
 msgstr ""
@@ -8729,7 +8798,7 @@ msgstr ""
 msgid "Select item"
 msgstr ""
 
-#: scripts/apps/monitoring/index.ts:64
+#: scripts/apps/monitoring/index.ts:72
 msgid "Select next item on focused stage or group"
 msgstr ""
 
@@ -8737,11 +8806,11 @@ msgstr ""
 msgid "Select preview target"
 msgstr ""
 
-#: scripts/apps/monitoring/index.ts:66
+#: scripts/apps/monitoring/index.ts:74
 msgid "Select previous item on focused stage or group"
 msgstr ""
 
-#: scripts/apps/monitoring/views/aggregate-settings.html:47
+#: scripts/apps/monitoring/views/aggregate-settings.html:65
 msgid "Select saved searches for view"
 msgstr ""
 
@@ -8812,7 +8881,7 @@ msgstr ""
 
 #: scripts/apps/authoring/authoring/index.ts:232
 #: scripts/apps/authoring/views/send-item.html:9
-#: scripts/apps/search/directives/MultiActionBar.ts:153
+#: scripts/apps/search/directives/MultiActionBar.ts:144
 msgid "Send to"
 msgstr ""
 
@@ -8824,7 +8893,11 @@ msgstr ""
 msgid "Sending"
 msgstr ""
 
-#: scripts/apps/monitoring/views/monitoring-view.html:55
+#: scripts/apps/workspace/content/constants.ts:124
+msgid "Sent Desk Output"
+msgstr ""
+
+#: scripts/apps/monitoring/views/monitoring-view.html:56
 msgid "Sent Items"
 msgstr ""
 
@@ -8848,7 +8921,7 @@ msgstr ""
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:128
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:143
 #: scripts/apps/authoring/views/full-preview.html:32
-#: scripts/apps/desks/views/desk-config-modal.html:114
+#: scripts/apps/desks/views/desk-config-modal.html:143
 msgid "Service"
 msgstr ""
 
@@ -8868,11 +8941,11 @@ msgstr ""
 msgid "Set highlights"
 msgstr ""
 
-#: scripts/apps/archive/index.tsx:203
+#: scripts/apps/archive/index.tsx:202
 msgid "Set label in current package"
 msgstr ""
 
-#: scripts/apps/monitoring/views/aggregate-settings.html:102
+#: scripts/apps/monitoring/views/aggregate-settings.html:129
 msgid "Set maximum items per stages and saved searches for view"
 msgstr ""
 
@@ -8886,7 +8959,7 @@ msgstr ""
 msgid "Short"
 msgstr ""
 
-#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:105
+#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:124
 msgid "Shortcuts"
 msgstr ""
 
@@ -8945,15 +9018,17 @@ msgstr ""
 msgid "Show sent/queued items"
 msgstr ""
 
-#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:98
-msgid "Show to users as"
+#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:114
+msgid ""
+"Show to users\n"
+"                                as"
 msgstr ""
 
 #: scripts/apps/archive/views/item-crops.html:1
 msgid "Show/hide crops"
 msgstr ""
 
-#: scripts/apps/workspace/content/constants.ts:93
+#: scripts/apps/workspace/content/constants.ts:96
 #: scripts/core/lang/missing-translations-strings.ts:18
 msgid "Sign Off"
 msgstr ""
@@ -8964,7 +9039,7 @@ msgstr ""
 
 #: scripts/apps/archive/views/metadata-view.html:77
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:159
-#: scripts/apps/users/views/edit-form.html:204
+#: scripts/apps/users/views/edit-form.html:206
 msgid "Sign-Off"
 msgstr ""
 
@@ -8977,7 +9052,7 @@ msgstr ""
 msgid "Single Usage"
 msgstr ""
 
-#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:135
+#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:157
 msgid "Single line"
 msgstr ""
 
@@ -8993,7 +9068,7 @@ msgstr ""
 msgid "Skip config test"
 msgstr ""
 
-#: scripts/apps/desks/views/desk-config-modal.html:41
+#: scripts/apps/desks/views/desk-config-modal.html:59
 msgid "Slack Channel Name"
 msgstr ""
 
@@ -9030,7 +9105,7 @@ msgstr ""
 #: scripts/apps/legal-archive/views/legal_archive.html:67
 #: scripts/apps/search/services/SearchService.ts:85
 #: scripts/apps/search/views/search-parameters.html:6
-#: scripts/apps/workspace/content/constants.ts:94
+#: scripts/apps/workspace/content/constants.ts:97
 msgid "Slugline"
 msgstr ""
 
@@ -9118,7 +9193,7 @@ msgstr ""
 #: scripts/apps/archive/views/metadata-view.html:36
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:116
 #: scripts/apps/content-filters/views/production-test-view.html:22
-#: scripts/apps/workspace/content/constants.ts:97
+#: scripts/apps/workspace/content/constants.ts:100
 msgid "Source"
 msgstr ""
 
@@ -9130,7 +9205,7 @@ msgstr ""
 msgid "Source Type:"
 msgstr ""
 
-#: scripts/apps/desks/views/desk-config-modal.html:33
+#: scripts/apps/desks/views/desk-config-modal.html:44
 msgid "Source for User Created Articles"
 msgstr ""
 
@@ -9153,7 +9228,7 @@ msgstr ""
 #: ../superdesk-planning/client/constants/events.js:31
 #: scripts/apps/archive/show-spike-dialog.tsx:72
 #: scripts/apps/monitoring/config.ts:40
-#: scripts/apps/search/directives/MultiActionBar.ts:131
+#: scripts/apps/search/directives/MultiActionBar.ts:133
 msgid "Spike"
 msgstr ""
 
@@ -9181,7 +9256,7 @@ msgstr ""
 msgid "Spike event"
 msgstr ""
 
-#: scripts/apps/monitoring/index.ts:74
+#: scripts/apps/monitoring/index.ts:82
 msgid "Spike item(s)"
 msgstr ""
 
@@ -9207,7 +9282,7 @@ msgstr ""
 msgid "Spiked Content"
 msgstr ""
 
-#: scripts/apps/monitoring/views/monitoring-view.html:47
+#: scripts/apps/monitoring/views/monitoring-view.html:48
 msgid "Spiked Items"
 msgstr ""
 
@@ -9229,19 +9304,19 @@ msgstr ""
 
 #: scripts/apps/desks/views/actionpicker.html:15
 #: scripts/apps/internal-destinations/InternalDestinations.tsx:39
-#: scripts/apps/workspace/content/constants.ts:98
+#: scripts/apps/workspace/content/constants.ts:101
 msgid "Stage"
 msgstr ""
 
-#: scripts/apps/desks/views/desk-config-modal.html:230
+#: scripts/apps/desks/views/desk-config-modal.html:272
 msgid "Stage Details"
 msgstr ""
 
-#: scripts/apps/desks/views/desk-config-modal.html:298
+#: scripts/apps/desks/views/desk-config-modal.html:340
 msgid "Stage description"
 msgstr ""
 
-#: scripts/apps/desks/views/desk-config-modal.html:249
+#: scripts/apps/desks/views/desk-config-modal.html:291
 msgid "Stage description:"
 msgstr ""
 
@@ -9249,12 +9324,12 @@ msgstr ""
 msgid "Stage has been modified elsewhere. Please reload the desks"
 msgstr ""
 
-#: scripts/apps/desks/views/desk-config-modal.html:220
+#: scripts/apps/desks/views/desk-config-modal.html:262
 msgid "Stage with name"
 msgstr ""
 
-#: scripts/apps/desks/views/desk-config-modal.html:163
-#: scripts/apps/desks/views/settings.html:37
+#: scripts/apps/desks/views/desk-config-modal.html:205
+#: scripts/apps/desks/views/settings.html:68
 msgid "Stages"
 msgstr ""
 
@@ -9364,7 +9439,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:618
 #: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.jsx:168
 #: scripts/apps/authoring/views/full-preview.html:54
-#: scripts/apps/workspace/content/constants.ts:99
+#: scripts/apps/workspace/content/constants.ts:102
 msgid "Subject"
 msgstr ""
 
@@ -9446,16 +9521,16 @@ msgstr ""
 msgid "Superscript"
 msgstr ""
 
-#: scripts/apps/desks/directives/DeskConfigModal.ts:36
+#: scripts/apps/desks/directives/DeskConfigModal.ts:37
 #: scripts/apps/users/directives/UserPreferencesDirective.ts:29
 msgid "Swimlane View"
 msgstr ""
 
-#: scripts/apps/monitoring/index.ts:58
+#: scripts/apps/monitoring/index.ts:66
 msgid "Switch between grouped/single desk view"
 msgstr ""
 
-#: scripts/apps/monitoring/index.ts:56
+#: scripts/apps/monitoring/index.ts:64
 msgid "Switch between grouped/single stage view"
 msgstr ""
 
@@ -9501,7 +9576,7 @@ msgstr ""
 msgid "Tags"
 msgstr ""
 
-#: scripts/apps/workspace/content/constants.ts:63
+#: scripts/apps/workspace/content/constants.ts:66
 msgid "Take Key"
 msgstr ""
 
@@ -9539,7 +9614,7 @@ msgid "Tansa is not responding. You can continue editing or publish the story."
 msgstr ""
 
 #: scripts/apps/archive/views/metadata-view.html:150
-#: scripts/apps/authoring/views/send-item.html:182
+#: scripts/apps/authoring/views/send-item.html:183
 #: scripts/apps/products/views/products-config-modal.html:73
 #: scripts/apps/templates/views/template-editor-modal.html:129
 msgid "Target Regions"
@@ -9550,7 +9625,7 @@ msgid "Target Subscriber Types"
 msgstr ""
 
 #: scripts/apps/archive/views/metadata-view.html:145
-#: scripts/apps/authoring/views/send-item.html:167
+#: scripts/apps/authoring/views/send-item.html:168
 #: scripts/apps/templates/views/template-editor-modal.html:116
 msgid "Target Subscribers"
 msgstr ""
@@ -9563,7 +9638,7 @@ msgstr ""
 msgid "Target Type:"
 msgstr ""
 
-#: scripts/apps/authoring/views/send-item.html:192
+#: scripts/apps/authoring/views/send-item.html:193
 #: scripts/apps/ingest/views/settings/ingest-routing-action.html:67
 #: scripts/apps/templates/views/template-editor-modal.html:137
 msgid "Target Types"
@@ -9617,7 +9692,7 @@ msgstr ""
 msgid "Templates"
 msgstr ""
 
-#: scripts/apps/content-filters/views/manage-filters.html:132
+#: scripts/apps/content-filters/views/manage-filters.html:138
 msgid "Test"
 msgstr ""
 
@@ -9631,7 +9706,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Coverages/CoverageItem.jsx:101
 #: ../superdesk-planning/client/utils/index.js:651
-#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:154
+#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:188
 msgid "Text"
 msgstr ""
 
@@ -9744,7 +9819,7 @@ msgstr ""
 msgid "The following status is not allowed in this field: {{status}}"
 msgstr ""
 
-#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:92
+#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:107
 msgid "The helper text must not exceed 120 characters."
 msgstr ""
 
@@ -9781,7 +9856,7 @@ msgstr ""
 msgid "The minimum image resolution is 200x200 pixels."
 msgstr ""
 
-#: scripts/apps/desks/views/desk-config-modal.html:43
+#: scripts/apps/desks/views/desk-config-modal.html:61
 msgid "The name of a Slack channel associated with this desk, the # is not required"
 msgstr ""
 
@@ -9789,7 +9864,7 @@ msgstr ""
 msgid "The package contains published items which can't be moved."
 msgstr ""
 
-#: scripts/apps/users/directives/UserEditDirective.ts:133
+#: scripts/apps/users/directives/UserEditDirective.ts:135
 msgid "The page needs to be reloaded to change the language"
 msgstr ""
 
@@ -9810,11 +9885,15 @@ msgstr ""
 msgid "The reply will be deleted. Are you sure?"
 msgstr ""
 
+#: scripts/apps/archive/controllers/file-upload-error-modal.tsx:61
+msgid "The size of {{filename}} is {{width}}x{{height}}"
+msgstr ""
+
 #: scripts/apps/dashboard/user-activity/user-activity.ts:7
 msgid "The user activity widget provides information about user activity. Using the widget, editors can search and select a user. Upon selection a list of content items is shown categorized as follows:"
 msgstr ""
 
-#: scripts/apps/vocabularies/controllers/VocabularyEditController.ts:124
+#: scripts/apps/vocabularies/controllers/VocabularyEditController.tsx:140
 msgid "The values should be unique for {{uniqueField}}"
 msgstr ""
 
@@ -9977,7 +10056,7 @@ msgstr ""
 msgid "There was a problem, members not saved. Refresh Desks."
 msgstr ""
 
-#: scripts/apps/desks/views/desk-config-modal.html:222
+#: scripts/apps/desks/views/desk-config-modal.html:264
 msgid "There was a problem, stage not created/updated."
 msgstr ""
 
@@ -9997,7 +10076,7 @@ msgstr ""
 msgid "There was an error when saving the contact."
 msgstr ""
 
-#: scripts/apps/users/directives/UserEditDirective.ts:170
+#: scripts/apps/users/directives/UserEditDirective.ts:172
 msgid "There was an error when saving the user account."
 msgstr ""
 
@@ -10021,7 +10100,7 @@ msgstr ""
 msgid "There was an error. Failed to save the area of interest."
 msgstr ""
 
-#: scripts/apps/content-filters/controllers/FilterConditionsController.ts:108
+#: scripts/apps/content-filters/controllers/FilterConditionsController.ts:124
 msgid "There was an error. Filter condition cannot be deleted."
 msgstr ""
 
@@ -10088,10 +10167,10 @@ msgstr ""
 #: scripts/apps/contacts/components/Form/ContactNumberInput.tsx:54
 #: scripts/apps/contacts/components/Form/MultiTextInput.tsx:34
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:194
-#: scripts/apps/users/views/edit-form.html:128
+#: scripts/apps/users/views/edit-form.html:130
 #: scripts/apps/users/views/edit-form.html:69
 #: scripts/apps/users/views/edit-form.html:77
-#: scripts/apps/users/views/edit-form.html:93
+#: scripts/apps/users/views/edit-form.html:94
 msgid "This field is required."
 msgstr ""
 
@@ -10156,8 +10235,10 @@ msgstr ""
 msgid "This will also {{action}} the following planning items"
 msgstr ""
 
-#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:91
-msgid "This will appear below the field in the Editor."
+#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:105
+msgid ""
+"This will appear below the field in the\n"
+"                                    Editor."
 msgstr ""
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/convertToRecurringEventForm.jsx:146
@@ -10418,18 +10499,18 @@ msgstr ""
 msgid "Turn off feature preview"
 msgstr ""
 
-#: scripts/apps/users/views/edit-form.html:262
+#: scripts/apps/users/views/edit-form.html:264
 msgid "Twitter"
 msgstr ""
 
 #: ../superdesk-planning/client/components/Coverages/CoveragePreview/index.jsx:138
 #: scripts/apps/archive/views/metadata-view.html:205
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:201
-#: scripts/apps/workspace/content/constants.ts:100
+#: scripts/apps/workspace/content/constants.ts:103
 msgid "Type"
 msgstr ""
 
-#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:64
+#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:76
 msgid "Type to search or create a new label"
 msgstr ""
 
@@ -10530,7 +10611,7 @@ msgstr ""
 msgid "Unknown Error: There was a problem, desk was not deleted."
 msgstr ""
 
-#: scripts/apps/search/controllers/MultiActionBarController.tsx:222
+#: scripts/apps/search/controllers/MultiActionBarController.tsx:255
 msgid "Unknown error occured. Try publishing the item from the article edit view."
 msgstr ""
 
@@ -10538,7 +10619,7 @@ msgstr ""
 msgid "Unlink as Coverage"
 msgstr ""
 
-#: scripts/apps/archive/index.tsx:309
+#: scripts/apps/archive/index.tsx:308
 msgid "Unlink update"
 msgstr ""
 
@@ -10614,7 +10695,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/MultiSelectActions.jsx:114
 #: ../superdesk-planning/client/components/MultiSelectActions.jsx:177
 #: ../superdesk-planning/client/constants/events.js:36
-#: scripts/apps/search/directives/MultiActionBar.ts:142
+#: scripts/apps/search/directives/MultiActionBar.ts:166
 msgid "Unspike"
 msgstr ""
 
@@ -10671,7 +10752,7 @@ msgstr ""
 #: scripts/apps/authoring/multiedit/views/sd-multiedit-dropdown.html:6
 #: scripts/apps/authoring/multiedit/views/sd-multiedit-inner-dropdown.html:7
 #: scripts/apps/authoring/views/dashboard-articles.html:21
-#: scripts/apps/authoring/views/opened-articles.html:25
+#: scripts/apps/authoring/views/opened-articles.html:8
 #: scripts/apps/workspace/views/workspace-dropdown.html:24
 #: scripts/apps/workspace/views/workspace-dropdown.html:5
 msgid "Untitled"
@@ -10680,7 +10761,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/IgnoreCancelSaveModal.jsx:121
 #: ../superdesk-planning/client/components/Main/ItemEditor/EditorHeader.jsx:330
 #: ../superdesk-planning/client/components/Planning/FeaturedPlanning/FeaturedPlanningModal.jsx:363
-#: scripts/apps/archive/index.tsx:293
+#: scripts/apps/archive/index.tsx:292
 #: scripts/apps/authoring/attachments/AttachmentsEditorModal.tsx:74
 #: scripts/apps/authoring/views/authoring-topbar.html:101
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:228
@@ -10781,7 +10862,7 @@ msgstr ""
 msgid "Upload"
 msgstr ""
 
-#: scripts/apps/archive/controllers/UploadController.ts:176
+#: scripts/apps/archive/controllers/UploadController.ts:181
 msgid "Upload Error:"
 msgstr ""
 
@@ -10818,7 +10899,7 @@ msgstr ""
 #: scripts/apps/search/services/SearchService.ts:83
 #: scripts/apps/search/tests/search.spec.ts:437
 #: scripts/apps/search/views/search-filters.html:93
-#: scripts/apps/workspace/content/constants.ts:101
+#: scripts/apps/workspace/content/constants.ts:104
 msgid "Urgency"
 msgstr ""
 
@@ -10826,7 +10907,7 @@ msgstr ""
 msgid "Urgency stats"
 msgstr ""
 
-#: scripts/apps/workspace/content/constants.ts:102
+#: scripts/apps/workspace/content/constants.ts:105
 msgid "Usage Terms"
 msgstr ""
 
@@ -10849,7 +10930,7 @@ msgstr ""
 msgid "Use priority queue for transmission."
 msgstr ""
 
-#: scripts/apps/content-filters/views/manage-filters.html:130
+#: scripts/apps/content-filters/views/manage-filters.html:135
 msgid "Use the article GUID for testing."
 msgstr ""
 
@@ -10919,7 +11000,7 @@ msgstr ""
 msgid "User was not found, sorry."
 msgstr ""
 
-#: scripts/apps/users/directives/UserEditDirective.ts:168
+#: scripts/apps/users/directives/UserEditDirective.ts:170
 msgid "User was not found. The account might have been deleted."
 msgstr ""
 
@@ -10957,15 +11038,15 @@ msgstr ""
 msgid "Validate Characters"
 msgstr ""
 
-#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:114
+#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:133
 msgid "Value"
 msgstr ""
 
-#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:179
+#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:223
 msgid "Value must be greater than or equal to 2."
 msgstr ""
 
-#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:180
+#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:225
 msgid "Value must be less than or equal to 99."
 msgstr ""
 
@@ -10997,11 +11078,11 @@ msgid "Versions"
 msgstr ""
 
 #: ../superdesk-planning/client/utils/index.js:655
-#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:150
+#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:179
 msgid "Video"
 msgstr ""
 
-#: scripts/apps/monitoring/index.ts:67
+#: scripts/apps/monitoring/index.ts:75
 msgid "View an item"
 msgstr ""
 
@@ -11056,7 +11137,7 @@ msgstr ""
 msgid "Vocabularies Management"
 msgstr ""
 
-#: scripts/apps/vocabularies/controllers/VocabularyEditController.ts:61
+#: scripts/apps/vocabularies/controllers/VocabularyEditController.tsx:76
 msgid "Vocabulary saved successfully"
 msgstr ""
 
@@ -11138,8 +11219,10 @@ msgstr ""
 msgid "Width"
 msgstr ""
 
-#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:73
-msgid "Width of the popup window (in pixels)"
+#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:89
+msgid ""
+"Width of the\n"
+"                                    popup window (in pixels)"
 msgstr ""
 
 #: ../superdesk-planning/client/components/AdvancedSearch/index.jsx:219
@@ -11152,7 +11235,7 @@ msgstr ""
 msgid "Word Count"
 msgstr ""
 
-#: scripts/apps/desks/views/desk-config-modal.html:167
+#: scripts/apps/desks/views/desk-config-modal.html:209
 msgid "Work stages"
 msgstr ""
 
@@ -11172,8 +11255,9 @@ msgstr ""
 msgid "Workflow State"
 msgstr ""
 
-#: scripts/apps/desks/views/desk-config-modal.html:236
-#: scripts/apps/desks/views/desk-config-modal.html:287
+#: scripts/apps/desks/views/desk-config-modal.html:278
+#: scripts/apps/desks/views/desk-config-modal.html:329
+#: scripts/apps/workspace/content/constants.ts:111
 msgid "Working Stage"
 msgstr ""
 
@@ -11221,11 +11305,11 @@ msgstr ""
 msgid "You are currently managing featured story in another session"
 msgstr ""
 
-#: scripts/apps/workspace/content/services/ContentService.ts:69
+#: scripts/apps/workspace/content/services/ContentService.ts:72
 msgid "You are not allowed to create an article there."
 msgstr ""
 
-#: scripts/apps/workspace/content/services/ContentService.ts:67
+#: scripts/apps/workspace/content/services/ContentService.ts:70
 msgid "You are not allowed to create article on readonly stage."
 msgstr ""
 
@@ -11233,7 +11317,7 @@ msgstr ""
 msgid "You can associate only one XMP file"
 msgstr ""
 
-#: scripts/apps/desks/views/desk-config-modal.html:96
+#: scripts/apps/desks/views/desk-config-modal.html:125
 msgid "You can choose the default content view of your desk. Use only if you want to override individual users' monitoring view preferences. Select \"none\" if you want to let users decide."
 msgstr ""
 
@@ -11258,7 +11342,7 @@ msgstr ""
 msgid "Your Credentials"
 msgstr ""
 
-#: scripts/apps/users/views/edit-form.html:192
+#: scripts/apps/users/views/edit-form.html:194
 msgid "Your Slack user name without the leading @"
 msgstr ""
 
@@ -11356,7 +11440,7 @@ msgstr ""
 msgid "all"
 msgstr ""
 
-#: scripts/apps/desks/views/desk-config-modal.html:220
+#: scripts/apps/desks/views/desk-config-modal.html:262
 #: scripts/apps/highlights/views/highlights_config_modal.html:15
 msgid "already exists"
 msgstr ""
@@ -11401,7 +11485,7 @@ msgid "at"
 msgstr ""
 
 #: ../superdesk-planning/client/constants/planning.js:104
-#: scripts/apps/archive/controllers/UploadController.ts:288
+#: scripts/apps/archive/controllers/UploadController.ts:336
 #: scripts/apps/authoring/authoring/directives/ItemAssociationDirective.ts:197
 #: scripts/core/lang/missing-translations-strings.ts:9
 msgid "audio"
@@ -11484,7 +11568,7 @@ msgstr ""
 msgid "composite"
 msgstr ""
 
-#: scripts/apps/users/views/edit-form.html:320
+#: scripts/apps/users/views/edit-form.html:322
 msgid "confirm"
 msgstr ""
 
@@ -11541,7 +11625,7 @@ msgstr ""
 msgid "created user {{user}}"
 msgstr ""
 
-#: scripts/apps/users/views/edit-form.html:309
+#: scripts/apps/users/views/edit-form.html:311
 msgid "current"
 msgstr ""
 
@@ -11558,7 +11642,7 @@ msgid "day"
 msgstr ""
 
 #: scripts/apps/desks/views/content-expiry.html:32
-#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:119
+#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:139
 msgid "days"
 msgstr ""
 
@@ -11602,11 +11686,11 @@ msgstr ""
 msgid "draft"
 msgstr ""
 
-#: scripts/apps/authoring/views/send-item.html:244
+#: scripts/apps/authoring/views/send-item.html:246
 msgid "duplicate"
 msgstr ""
 
-#: scripts/apps/authoring/views/send-item.html:235
+#: scripts/apps/authoring/views/send-item.html:237
 msgid "duplicate and open"
 msgstr ""
 
@@ -11618,7 +11702,7 @@ msgstr ""
 msgid "e.g. @cityofsydney"
 msgstr ""
 
-#: scripts/apps/users/views/edit-form.html:270
+#: scripts/apps/users/views/edit-form.html:272
 msgid "e.g. @superdeskman"
 msgstr ""
 
@@ -11642,16 +11726,16 @@ msgstr ""
 msgid "e.g. professor, commissioner"
 msgstr ""
 
-#: scripts/apps/users/views/edit-form.html:243
+#: scripts/apps/users/views/edit-form.html:245
 msgid "e.g. superdeskman from https://www.facebook.com/superdeskman"
 msgstr ""
 
-#: scripts/apps/users/views/edit-form.html:256
+#: scripts/apps/users/views/edit-form.html:258
 msgid "e.g. superdeskman from https://www.instagram.com/superdeskman"
 msgstr ""
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:352
-#: scripts/apps/users/views/edit-form.html:122
+#: scripts/apps/users/views/edit-form.html:123
 msgid "email"
 msgstr ""
 
@@ -11712,11 +11796,11 @@ msgstr ""
 msgid "feature"
 msgstr ""
 
-#: scripts/apps/authoring/views/send-item.html:264
+#: scripts/apps/authoring/views/send-item.html:266
 msgid "fetch"
 msgstr ""
 
-#: scripts/apps/authoring/views/send-item.html:255
+#: scripts/apps/authoring/views/send-item.html:257
 msgid "fetch and open"
 msgstr ""
 
@@ -11829,7 +11913,7 @@ msgstr ""
 msgid "hrs"
 msgstr ""
 
-#: scripts/apps/archive/controllers/UploadController.ts:286
+#: scripts/apps/archive/controllers/UploadController.ts:334
 #: scripts/apps/authoring/authoring/directives/ItemAssociationDirective.ts:195
 msgid "image"
 msgstr ""
@@ -12005,7 +12089,7 @@ msgstr ""
 msgid "mobile"
 msgstr ""
 
-#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:121
+#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:141
 msgid "months"
 msgstr ""
 
@@ -12013,7 +12097,7 @@ msgstr ""
 msgid "never"
 msgstr ""
 
-#: scripts/apps/users/views/edit-form.html:315
+#: scripts/apps/users/views/edit-form.html:317
 msgid "new"
 msgstr ""
 
@@ -12100,8 +12184,8 @@ msgstr ""
 
 #: scripts/apps/ingest/views/settings/searchConfig.html:7
 #: scripts/apps/users/import/views/import-user.html:19
-#: scripts/apps/users/views/edit-form.html:104
-#: scripts/apps/users/views/edit-form.html:113
+#: scripts/apps/users/views/edit-form.html:105
+#: scripts/apps/users/views/edit-form.html:114
 #: scripts/core/auth/login-modal.html:14
 msgid "password"
 msgstr ""
@@ -12123,7 +12207,7 @@ msgstr ""
 msgid "phone"
 msgstr ""
 
-#: scripts/apps/users/views/edit-form.html:176
+#: scripts/apps/users/views/edit-form.html:178
 msgid "phone number"
 msgstr ""
 
@@ -12140,11 +12224,11 @@ msgstr ""
 msgid "planning items"
 msgstr ""
 
-#: scripts/apps/users/views/edit-form.html:131
+#: scripts/apps/users/views/edit-form.html:133
 msgid "please provide a valid email address"
 msgstr ""
 
-#: scripts/apps/users/views/edit-form.html:97
+#: scripts/apps/users/views/edit-form.html:98
 msgid "please use only letters (a-z), numbers (0-9), dashes (&mdash;), underscores (_), apostrophes (') and periods (.)"
 msgstr ""
 
@@ -12194,7 +12278,7 @@ msgstr ""
 msgid "publish"
 msgstr ""
 
-#: scripts/apps/authoring/views/send-item.html:284
+#: scripts/apps/authoring/views/send-item.html:286
 msgid "publish from"
 msgstr ""
 
@@ -12292,7 +12376,7 @@ msgstr ""
 msgid "send"
 msgstr ""
 
-#: scripts/apps/authoring/views/send-item.html:225
+#: scripts/apps/authoring/views/send-item.html:227
 msgid "send package and items"
 msgstr ""
 
@@ -12320,11 +12404,11 @@ msgstr ""
 msgid "sluglines"
 msgstr ""
 
-#: scripts/apps/users/views/edit-form.html:137
+#: scripts/apps/users/views/edit-form.html:139
 msgid "sorry, a user with this email already exists"
 msgstr ""
 
-#: scripts/apps/users/views/edit-form.html:94
+#: scripts/apps/users/views/edit-form.html:95
 msgid "sorry, this username is already taken."
 msgstr ""
 
@@ -12463,7 +12547,7 @@ msgstr ""
 msgid "usage"
 msgstr ""
 
-#: scripts/apps/users/directives/UserEditDirective.ts:148
+#: scripts/apps/users/directives/UserEditDirective.ts:150
 msgid "user saved."
 msgstr ""
 
@@ -12512,13 +12596,13 @@ msgid "version"
 msgstr ""
 
 #: ../superdesk-planning/client/constants/planning.js:102
-#: scripts/apps/archive/controllers/UploadController.ts:287
+#: scripts/apps/archive/controllers/UploadController.ts:335
 #: scripts/apps/authoring/authoring/directives/ItemAssociationDirective.ts:196
 #: scripts/core/lang/missing-translations-strings.ts:9
 msgid "video"
 msgstr ""
 
-#: scripts/apps/desks/views/settings.html:47
+#: scripts/apps/desks/views/settings.html:78
 msgid "view all"
 msgstr ""
 
@@ -12530,7 +12614,7 @@ msgstr ""
 msgid "website"
 msgstr ""
 
-#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:120
+#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:140
 msgid "weeks"
 msgstr ""
 
@@ -12547,7 +12631,7 @@ msgstr ""
 msgid "workspace"
 msgstr ""
 
-#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:122
+#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:142
 msgid "years"
 msgstr ""
 
@@ -12555,7 +12639,7 @@ msgstr ""
 msgid "{{ 'Configuration' }}"
 msgstr ""
 
-#: scripts/apps/authoring/views/article-edit.html:760
+#: scripts/apps/authoring/views/article-edit.html:761
 msgid "{{ :: 'Attachments' | translate }}"
 msgstr ""
 
@@ -12609,15 +12693,13 @@ msgstr ""
 msgid "{{ name }} is too short"
 msgstr ""
 
-#: scripts/apps/monitoring/views/aggregate-settings.html:109
-#: scripts/apps/monitoring/views/aggregate-settings.html:88
+#: scripts/apps/monitoring/views/aggregate-settings.html:115
+#: scripts/apps/monitoring/views/aggregate-settings.html:136
 msgid "{{ output.listLabel }}"
 msgstr ""
 
-#: scripts/apps/monitoring/views/monitoring-view.html:23
-msgid ""
-"{{ profile.label }}\n"
-"                                        <i ng-show=\"aggregate.activeFilters.contentProfile.includes(profile._id)\" class=\"icon-ok\"></i>"
+#: scripts/apps/monitoring/views/monitoring-view.html:27
+msgid "{{ profile.label }}"
 msgstr ""
 
 #: ../superdesk-planning/client/actions/assignments/notifications.js:335
@@ -12638,8 +12720,8 @@ msgid_plural "{{ $count}} words"
 msgstr[0] ""
 msgstr[1] ""
 
-#: scripts/apps/monitoring/views/monitoring-view.html:38
-#: scripts/apps/monitoring/views/monitoring-view.html:92
+#: scripts/apps/monitoring/views/monitoring-view.html:39
+#: scripts/apps/monitoring/views/monitoring-view.html:93
 msgid "{{:: monitoring.getGroupLabel(card, aggregate.settings.type)}}"
 msgstr ""
 
@@ -12655,7 +12737,7 @@ msgstr ""
 msgid "{{action}} {{type}}"
 msgstr ""
 
-#: scripts/apps/users/views/edit-form.html:135
+#: scripts/apps/users/views/edit-form.html:137
 msgid "{{error.email}}"
 msgstr ""
 
@@ -12664,9 +12746,9 @@ msgid "{{errorMessage|translate}}"
 msgstr ""
 
 #: scripts/apps/archive/views/preview.html:166
-#: scripts/apps/authoring/views/article-edit.html:621
-#: scripts/apps/authoring/views/article-edit.html:671
-#: scripts/apps/authoring/views/article-edit.html:744
+#: scripts/apps/authoring/views/article-edit.html:622
+#: scripts/apps/authoring/views/article-edit.html:672
+#: scripts/apps/authoring/views/article-edit.html:745
 #: scripts/apps/authoring/views/full-preview.html:113
 #: scripts/apps/authoring/views/full-preview.html:126
 #: scripts/apps/authoring/views/full-preview.html:85
@@ -12712,11 +12794,11 @@ msgstr[1] ""
 msgid "{{numWords}} words"
 msgstr ""
 
-#: scripts/apps/desks/views/desk-config-modal.html:242
+#: scripts/apps/desks/views/desk-config-modal.html:284
 msgid "{{selected.is_visible ? 'ON' : 'OFF'}}"
 msgstr ""
 
-#: scripts/apps/desks/views/desk-config-modal.html:246
+#: scripts/apps/desks/views/desk-config-modal.html:288
 msgid "{{selected.local_readonly ? 'ON' : 'OFF'}}"
 msgstr ""
 
@@ -12728,8 +12810,8 @@ msgstr ""
 msgid "{{title}}"
 msgstr ""
 
-#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:100
-#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:42
+#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:118
+#: scripts/apps/vocabularies/views/vocabulary-config-modal.html:57
 msgid "{{type.label}}"
 msgstr ""
 
