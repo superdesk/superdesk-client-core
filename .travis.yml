@@ -17,6 +17,9 @@ before_script:
         npm run start-test-server
       fi
 
+after_failure:
+    - cd test-server && docker-compose logs superdesk
+
 jobs:
     include:
         - script: npm run test
