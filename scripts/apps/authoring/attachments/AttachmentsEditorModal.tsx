@@ -62,15 +62,14 @@ class AttachmentsEditorModalComponent extends React.Component<IProps, IState> {
                         <TextArea
                             field="description"
                             value={this.state.description}
-                            onChange={this.update}
-                            required />
+                            onChange={this.update} />
                     </div>
                 </ModalBody>
 
                 <ModalFooter>
                     <button className="btn btn--primary pull-right"
                         onClick={() => this.props.saveFile(this.props.file, this.state)}
-                        disabled={!this.state.title || !this.state.description}
+                        disabled={!this.state.title}
                     >{gettext('Update')}</button>
                     <button className="btn pull-right"
                         onClick={this.props.closeEdit}

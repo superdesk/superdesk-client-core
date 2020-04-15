@@ -30,9 +30,10 @@ export default function SearchMenuController(
     const getSearchParams = (provider) => {
         if (provider.filter) {
             return provider.filter.query;
+        } else if (provider === SUPERDESK_PROVIDER) {
+            return {internal: true};
         } else {
-            const repo = provider === SUPERDESK_PROVIDER ?
-                null : (provider._id || provider.search_provider || provider.source);
+            const repo = provider._id || provider.search_provider || provider.source;
 
             return {repo};
         }
