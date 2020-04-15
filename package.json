@@ -126,7 +126,7 @@
   },
   "devDependencies": {
     "@types/moment": "^2.13.0",
-    "@types/moment-timezone": "^0.5.12",
+    "@types/moment-timezone": "^0.5.13",
     "@types/webpack-env": "^1.13.9",
     "btoa": "^1.1.2",
     "enzyme": "3.9.0",
@@ -143,8 +143,8 @@
     "karma-webpack": "^2.0.13",
     "protractor": "5.4.2",
     "react-addons-test-utils": "^15.6.0",
-    "react-test-renderer": "^16.2.0",
-    "request": "^2.83.0",
+    "react-test-renderer": "^16.13.1",
+    "request": "^2.88.2",
     "superdesk-code-style": "^1.1.1",
     "typescript-eslint-parser": "^18.0.0"
   },
