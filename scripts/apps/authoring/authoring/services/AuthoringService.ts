@@ -17,10 +17,6 @@ function isReadOnly(item: IArticle) {
 }
 
 export function canRewrite(item: IArticle) {
-    if (item.rewritten_by != null) {
-        return false;
-    }
-
     if (item.state === ITEM_STATE.SCHEDULED && appConfig.allow_updating_scheduled_items === true) {
         return true;
     }
