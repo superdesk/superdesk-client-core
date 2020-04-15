@@ -179,17 +179,17 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
                     desk_id: desks.getCurrentDeskId() || item.task.desk,
                 };
 
-                return api.save('archive_rewrite', {}, updates, Object.freeze(item))
+                return api.save('archive_rewrite', {}, updates, item)
                     .then((newItem: IArticle) => {
                         const onRewriteAfterMiddlewares = getOnRewriteAfterMiddlewares();
 
                         return onRewriteAfterMiddlewares.reduce(
                             (current, next) => {
                                 return current.then((result) => {
-                                    return next(result);
+                                    return next(Object.freeze(result));
                                 });
                             },
-                            Promise.resolve(newItem),
+                            Promise.resolve(Object.freeze(newItem)),
                         );
                     });
             })
