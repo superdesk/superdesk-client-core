@@ -5,6 +5,10 @@ export const getLabelForFieldId = (fieldId, vocabularies) => {
     const labelMap = GET_LABEL_MAP();
     const field = vocabularies.find((obj) => obj._id === fieldId);
 
+    if (fieldId === 'anpa_category') {
+        return vocabularies.find((v) => v._id === 'categories').display_name;
+    }
+
     if (
         field != null
         && field.hasOwnProperty('display_name')

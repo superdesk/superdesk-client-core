@@ -1,0 +1,6 @@
+content can open package using hotkey ctrl+0
+authoring can send and publish
+editor3 ctrl+z on tables mantains cursor position in the middle
+monitoring can close already opened preview on an item action
+editor3 can edit body with toolbar
+monitoring can display the item in Desk Output when it's published in a production desk

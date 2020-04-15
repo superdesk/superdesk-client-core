@@ -145,6 +145,10 @@ describe('metadata terms directive', () => {
         $compile = _$compile_;
     }));
 
+    beforeEach(inject(($httpBackend) => {
+        $httpBackend.whenGET(/api$/).respond({_links: {child: []}});
+    }));
+
     function compileDirective(html, scopeValues) {
         var scope = $rootScope.$new();
 

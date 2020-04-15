@@ -406,6 +406,15 @@ declare module 'superdesk-api' {
         archive_item: IArticle;
     }
 
+    export interface IPublishedArticle extends IArticle {
+
+        /** id in published collection, different for each correction */
+        item_id: string; 
+
+        /** item copy in archive collection, always the latest version of the item */
+        archive_item: IArticle;
+    }
+
     export interface IUserRole extends IBaseRestApiResponse {
         _id: string;
         name: string;
@@ -1236,7 +1245,6 @@ declare module 'superdesk-api' {
         paths: {
             superdesk: any;
         };
-        language: string; // default client language
         editor3: {
             browserSpellCheck: boolean;
         };

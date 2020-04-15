@@ -2022,10 +2022,10 @@ describe('authoring workspace', () => {
 
         var archived = {_id: 'bar'};
 
-        spyOn(send, 'one').and.returnValue($q.when(archived));
+        spyOn(send, 'validateAndSend').and.returnValue($q.when(archived));
         item._type = 'ingest';
         authoringWorkspace.open(item);
-        expect(send.one).toHaveBeenCalledWith(item);
+        expect(send.validateAndSend).toHaveBeenCalledWith(item);
         $rootScope.$digest();
         expect(authoring.open).toHaveBeenCalledWith(archived._id, false, null, 'edit');
     }));

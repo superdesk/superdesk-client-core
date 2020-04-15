@@ -658,7 +658,14 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                 scope.uniqueField = value || 'qcode';
             });
 
-            scope.$watch('list', (items) => {
+            // add scheme to terms
+            if (scope.list && scope.cv) {
+                scope.list.forEach((listItem) => {
+                    listItem.scheme = scope.cv._id;
+                });
+            }
+
+            scope.$watchCollection('list', (items) => {
                 if (!items || items.length === 0) {
                     return;
                 }
@@ -669,7 +676,7 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                     updates[scope.field] = [];
                 }
 
-                angular.forEach(items, (item) => {
+                items.forEach((item) => {
                     var parent = item.parent || null;
 
                     if (!tree.hasOwnProperty(parent)) {
@@ -677,7 +684,6 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                     } else {
                         tree[parent].push(item);
                     }
-
                     // checks for dependent dropdowns to remain selected items if new list has them (not to reset)
                     angular.forEach(scope.item[scope.field], (selectedItem) => {
                         if (scope.cv && scope.cv.dependent) {
@@ -685,7 +691,7 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                                 if (item.name === selectedItem.name) {
                                     updates[scope.field].push(selectedItem);
                                 }
-                            // this is for subject (which is not dependent)
+                                // this is for subject (which is not dependent)
                             } else if (updates[scope.field].indexOf(selectedItem) === -1) {
                                 updates[scope.field].push(selectedItem);
                             }
@@ -754,7 +760,9 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                 scope.activeList = false;
             };
 
-            scope.isSelected = (term) => !!_.find(scope.item[scope.field], term);
+            scope.isSelected = (term) => {
+                return !!_.find(scope.item[scope.field], term);
+            };
 
             scope.activeList = false;
             scope.selectedTerm = '';
@@ -811,6 +819,9 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
 
                 angular.forEach(scope.item[scope.field], (term) => {
                     if (term) {
+                        if (scope.cv && scope.cv._id !== term.scheme) {
+                            return;
+                        }
                         selected[term[scope.uniqueField]] = 1;
                     }
                 });

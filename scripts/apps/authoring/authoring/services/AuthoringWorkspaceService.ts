@@ -151,7 +151,7 @@ export class AuthoringWorkspaceService {
         }
 
         if (includes(['ingest', 'externalsource'], item._type) || item.state === 'ingested') {
-            this.send.one(item).then(_open);
+            this.send.validateAndSend(item).then(_open);
         } else {
             _open(item);
         }

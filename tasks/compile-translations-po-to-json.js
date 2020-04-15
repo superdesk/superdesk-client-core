@@ -65,7 +65,7 @@ function compileTranslationsPoToJson(grunt) {
     const currentDir = process.cwd();
     const clientCoreRoot = path.join(__dirname, '../');
     const translationsPoDir = path.join(clientCoreRoot, 'po');
-    const translationsJsonDir = path.join(currentDir, 'dist', 'translations');
+    const translationsJsonDir = path.join(currentDir, 'dist', 'languages');
     const nodeModulesPath = path.join(currentDir, 'node_modules');
 
     if (fs.existsSync(translationsJsonDir) !== true) {
