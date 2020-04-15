@@ -12,7 +12,7 @@ import {LinkToolbar} from '../links';
 import classNames from 'classnames';
 import * as actions from '../../actions';
 import {PopupTypes, changeCase} from '../../actions';
-import {highlightsConfig} from '../../highlightsConfig';
+import {getHighlightsConfig} from '../../highlightsConfig';
 import {gettext} from 'core/utils';
 
 interface IState {
@@ -208,7 +208,7 @@ class ToolbarComponent extends React.Component<any, IState> {
                     <SelectionButton
                         onClick={showPopup(PopupTypes.Comment)}
                         precondition={
-                            this.props.highlightsManager.canAddHighlight(highlightsConfig.COMMENT.type)
+                            this.props.highlightsManager.canAddHighlight(getHighlightsConfig().COMMENT.type)
                         }
                         key="comment-button"
                         iconName="comment"
@@ -219,7 +219,7 @@ class ToolbarComponent extends React.Component<any, IState> {
                     <SelectionButton
                         onClick={showPopup(PopupTypes.Annotation)}
                         precondition={
-                            this.props.highlightsManager.canAddHighlight(highlightsConfig.ANNOTATION.type)
+                            this.props.highlightsManager.canAddHighlight(getHighlightsConfig().ANNOTATION.type)
                         }
                         key="annotation-button"
                         iconName="edit-line"

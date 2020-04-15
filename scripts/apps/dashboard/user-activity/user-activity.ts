@@ -2,7 +2,14 @@ import {gettext} from 'core/utils';
 import {reactToAngular1} from 'superdesk-ui-framework';
 import UserActivityWidget from './components/UserActivityWidget';
 
-const descriptionHtml = `
+angular
+    .module('superdesk.apps.dashboard.user-activity', [
+        'superdesk.apps.dashboard',
+    ])
+    .config([
+        'dashboardWidgetsProvider',
+        function(dashboardWidgets) {
+            const descriptionHtml = `
 <p>
     ${gettext(
         'The user activity widget provides information about user activity. ' +
@@ -26,13 +33,6 @@ const descriptionHtml = `
 </ul>
 `;
 
-angular
-    .module('superdesk.apps.dashboard.user-activity', [
-        'superdesk.apps.dashboard',
-    ])
-    .config([
-        'dashboardWidgetsProvider',
-        function(dashboardWidgets) {
             dashboardWidgets.addWidget('user-activity', {
                 label: gettext('User Activity'),
                 multiple: true,

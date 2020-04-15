@@ -1,17 +1,19 @@
 import _ from 'lodash';
 import PreferedCvItemsConfigDirective from './PreferedCvItemsConfigDirective';
 import MetaPlaceDirective from './MetaPlaceDirective';
-import {VOCABULARY_SELECTION_TYPES} from '../../vocabularies/constants';
+import {getVocabularySelectionTypes} from '../../vocabularies/constants';
 import {gettext} from 'core/utils';
 import PlacesServiceFactory from './PlacesService';
 import {appConfig} from 'appConfig';
-
-const SINGLE_SELECTION = VOCABULARY_SELECTION_TYPES.SINGLE_SELECTION.id;
 
 MetadataCtrl.$inject = [
     '$scope', 'desks', 'metadata', 'privileges', 'datetimeHelper', 'userList',
     'preferencesService', 'archiveService', 'moment', 'content',
 ];
+
+function getSingleSelection() {
+    return getVocabularySelectionTypes().SINGLE_SELECTION.id;
+}
 
 function MetadataCtrl(
     $scope, desks, metadata, privileges, datetimeHelper, userList,
@@ -839,11 +841,11 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                     // instead of simple push, extend the item[field] in order to trigger dirty $watch
                     var t = [];
 
-                    if (term.selection_type !== SINGLE_SELECTION) {
+                    if (term.selection_type !== getSingleSelection()) {
                         t = _.clone(scope.item[scope.field]) || [];
                     }
 
-                    if (scope.cv && scope.cv.selection_type === SINGLE_SELECTION) {
+                    if (scope.cv && scope.cv.selection_type === getSingleSelection()) {
                         t = _.filter(t, (_term) => _term.scheme !== scope.cv._id);
                     }
 
@@ -1147,7 +1149,7 @@ export function MetadataService(api, subscribersService, vocabularies, $rootScop
                         self.popup_width[vocabulary._id] = vocabulary.popup_width;
                     }
                     if (_.has(vocabulary, 'selection_type')) {
-                        self.single_value[vocabulary._id] = vocabulary.selection_type === SINGLE_SELECTION;
+                        self.single_value[vocabulary._id] = vocabulary.selection_type === getSingleSelection();
                     }
                 });
                 self.cvs = result;

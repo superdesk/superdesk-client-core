@@ -20,7 +20,7 @@ import {
 import {
     getUniqueStyleNamesInDraftSelection,
 } from './getUniqueStyleNamesInDraftSelection';
-import {highlightsConfig} from '../highlightsConfig';
+import {getHighlightsConfig} from '../highlightsConfig';
 import {editor3StateToHtml} from '../html/to-html/editor3StateToHtml';
 
 function getCustomMetadataFromContentState(contentState, highlightType): Array<{styleName: string, obj: any}> {
@@ -142,13 +142,13 @@ export function getCustomDataFromEditorRawState(rawState, key) {
 }
 
 export function getAnnotationsFromItem(item, field) {
-    const highlights = getCustomMetadata(item, field, highlightsConfig.ANNOTATION.type);
+    const highlights = getCustomMetadata(item, field, getHighlightsConfig().ANNOTATION.type);
 
     return getAnnotationsFromHighlights(highlights);
 }
 
 export function getAnnotationsFromContentState(contentState) {
-    const highlights = getCustomMetadataFromContentState(contentState, highlightsConfig.ANNOTATION.type);
+    const highlights = getCustomMetadataFromContentState(contentState, getHighlightsConfig().ANNOTATION.type);
 
     return getAnnotationsFromHighlights(highlights);
 }

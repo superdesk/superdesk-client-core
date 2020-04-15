@@ -1,24 +1,6 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
 
-export const DEFAULT_DATEFIELD_SHORTCUTS = [
-    {
-        label: gettext('Today'),
-        value: 0,
-        term: 'days',
-    },
-    {
-        label: gettext('Tomorrow'),
-        value: 1,
-        term: 'days',
-    },
-    {
-        label: gettext('In 3 days'),
-        value: 3,
-        term: 'days',
-    },
-];
-
 /**
  * @ngdoc service
  * @module superdesk.apps.vocabularies
@@ -127,7 +109,23 @@ export function VocabularyService(api, $q, $filter, $rootScope) {
     };
 
     this.getDefaultDatefieldShortcuts = function() {
-        return DEFAULT_DATEFIELD_SHORTCUTS;
+        return [
+            {
+                label: gettext('Today'),
+                value: 0,
+                term: 'days',
+            },
+            {
+                label: gettext('Tomorrow'),
+                value: 1,
+                term: 'days',
+            },
+            {
+                label: gettext('In 3 days'),
+                value: 3,
+                term: 'days',
+            },
+        ];
     };
 
     // reset cache on update

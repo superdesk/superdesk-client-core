@@ -24,28 +24,6 @@ const StyleIcons = {
     superscript: 'icon-superscript',
 };
 
-const StyleTooltips = {
-    bold: gettext('Bold (Ctrl+B)'),
-    italic: gettext('Italic (Ctrl+I)'),
-    underline: gettext('Underline (Ctrl+U)'),
-    strikethrough: gettext('Strikethrough'),
-    h1: gettext('H1'),
-    h2: gettext('H2'),
-    h3: gettext('H3'),
-    h4: gettext('H4'),
-    h5: gettext('H5'),
-    h6: gettext('H6'),
-    quote: gettext('Quote'),
-    'unordered list': gettext('Unordered list'),
-    'ordered list': gettext('Ordered list'),
-    TH: gettext('Toggle Header'),
-    suggestions: gettext('Toggle Suggestions Mode'),
-    invisibles: gettext('Toggle formatting marks'),
-    pre: gettext('Preformatted text'),
-    subscript: gettext('Subscript'),
-    superscript: gettext('Superscript'),
-};
-
 /**
  * @ngdoc React
  * @module superdesk.core.editor3
@@ -75,8 +53,30 @@ export default class StyleButton extends React.Component<any, any> {
             'Editor3-activeButton': active,
         });
 
+        const styleTooltips = {
+            bold: gettext('Bold (Ctrl+B)'),
+            italic: gettext('Italic (Ctrl+I)'),
+            underline: gettext('Underline (Ctrl+U)'),
+            strikethrough: gettext('Strikethrough'),
+            h1: gettext('H1'),
+            h2: gettext('H2'),
+            h3: gettext('H3'),
+            h4: gettext('H4'),
+            h5: gettext('H5'),
+            h6: gettext('H6'),
+            quote: gettext('Quote'),
+            'unordered list': gettext('Unordered list'),
+            'ordered list': gettext('Ordered list'),
+            TH: gettext('Toggle Header'),
+            suggestions: gettext('Toggle Suggestions Mode'),
+            invisibles: gettext('Toggle formatting marks'),
+            pre: gettext('Preformatted text'),
+            subscript: gettext('Subscript'),
+            superscript: gettext('Superscript'),
+        };
+
         return (
-            <span className={cx} data-sd-tooltip={StyleTooltips[label]} data-flow={'down'} onMouseDown={this.onToggle}>
+            <span className={cx} data-sd-tooltip={styleTooltips[label]} data-flow={'down'} onMouseDown={this.onToggle}>
                 {iconClass ? <i className={iconClass} /> : <b>{label}</b>}
             </span>
         );
