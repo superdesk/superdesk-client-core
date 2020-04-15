@@ -12,9 +12,10 @@ import {isPublished} from 'apps/archive/utils';
 import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
 import {copyJson} from 'core/helpers/utils';
 import {appConfig, extensions} from 'appConfig';
-import {onPublishMiddlewareResult, IExtensionActivationResult} from 'superdesk-api';
+import {onPublishMiddlewareResult, IExtensionActivationResult, IArticle} from 'superdesk-api';
 import {mediaIdGenerator} from '../services/MediaIdGeneratorService';
 import {addInternalEventListener} from 'core/internal-events';
+import {canRewrite} from '../services/AuthoringService';
 
 /**
  * @ngdoc directive
@@ -457,7 +458,7 @@ export function AuthoringDirective(
                         }
                         return $q.reject(false);
                     })
-                    .then((response) => {
+                    .then((response: IArticle) => {
                         notify.success(gettext('Item published.'));
                         $scope.item = response;
                         $scope.dirty = false;
@@ -681,8 +682,8 @@ export function AuthoringDirective(
             };
 
             $scope.publishAndContinue = function() {
-                $scope.publish(true).then((published) => {
-                    if (published) {
+                $scope.publish(true).then((published: boolean) => {
+                    if (published && canRewrite($scope.item)) {
                         authoring.rewrite($scope.item);
                     }
                 }, (err) => {
@@ -693,10 +694,12 @@ export function AuthoringDirective(
 
             // Close the current article, create an update of the article and open it in the edit mode.
             $scope.closeAndContinue = function() {
-                $scope.close().then(authoring.rewrite($scope.item));
+                $scope.close().then(() => {
+                    if (canRewrite($scope.item)) {
+                        authoring.rewrite($scope.item);
+                    }
+                });
             };
-
-            $scope.canRewriteArticle = () => authoring.itemActions($scope.item).re_write;
 
             $scope.deschedule = function() {
                 $scope.item.publish_schedule = null;

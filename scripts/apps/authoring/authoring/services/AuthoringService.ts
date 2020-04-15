@@ -12,6 +12,30 @@ import {appConfig, extensions} from 'appConfig';
 import {IPublishedArticle, IArticle, IExtensionActivationResult} from 'superdesk-api';
 import {getPublishWarningConfirmModal} from '../components/publish-warning-confirm-modal';
 
+function isReadOnly(item: IArticle) {
+    return READONLY_STATES.includes(item.state);
+}
+
+export function canRewrite(item: IArticle) {
+    if (item.rewritten_by != null) {
+        return false;
+    }
+
+    if (item.state === ITEM_STATE.SCHEDULED && appConfig.allow_updating_scheduled_items === true) {
+        return true;
+    }
+    return !isReadOnly(item)
+        && item.type === 'text'
+        && !item.embargo
+        && !item.rewritten_by
+        && (!item.broadcast || !item.broadcast.master_id)
+        && (
+            (!item.rewrite_of || (
+                item.rewrite_of && isPublished(item)
+            ) || appConfig.workflow_allow_multiple_updates)
+        );
+}
+
 interface IPublishOptions {
     notifyErrors: boolean;
 }
@@ -629,24 +653,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         let isReadOnlyState = this._isReadOnly(currentItem);
         let userPrivileges = privileges.privileges;
 
-        function canRewrite() {
-            if (currentItem.rewritten_by != null) {
-                return false;
-            }
-
-            if (currentItem.state === ITEM_STATE.SCHEDULED && appConfig.allow_updating_scheduled_items === true) {
-                return true;
-            }
-            return !isReadOnlyState && currentItem.type === 'text'
-                && !currentItem.embargo && !currentItem.rewritten_by
-                && (!currentItem.broadcast || !currentItem.broadcast.master_id)
-                && (
-                    (!currentItem.rewrite_of || (
-                        currentItem.rewrite_of && isPublished(currentItem)
-                    ) || appConfig.workflow_allow_multiple_updates)
-                );
-        }
-        action.re_write = canRewrite();
+        action.re_write = canRewrite(currentItem);
         action.resend = currentItem.type === 'text' &&
             isPublished(currentItem, false);
 

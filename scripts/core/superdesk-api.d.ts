@@ -276,6 +276,7 @@ declare module 'superdesk-api' {
         lock_user: any;
         lock_session: any;
         rewritten_by?: string;
+        rewrite_of?: any;
         profile: string;
         word_count?: number;
         version_creator: string;
