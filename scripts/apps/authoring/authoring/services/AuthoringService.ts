@@ -173,25 +173,22 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             return;
         }
 
-        session.getIdentity()
-            .then((user) => {
-                var updates = {
-                    desk_id: desks.getCurrentDeskId() || item.task.desk,
-                };
+        var updates = {
+            desk_id: desks.getCurrentDeskId() || item.task.desk,
+        };
 
-                return api.save('archive_rewrite', {}, updates, item)
-                    .then((newItem: IArticle) => {
-                        const onRewriteAfterMiddlewares = getOnRewriteAfterMiddlewares();
+        return api.save('archive_rewrite', {}, updates, item)
+            .then((newItem: IArticle) => {
+                const onRewriteAfterMiddlewares = getOnRewriteAfterMiddlewares();
 
-                        return onRewriteAfterMiddlewares.reduce(
-                            (current, next) => {
-                                return current.then((result) => {
-                                    return next(Object.freeze(result));
-                                });
-                            },
-                            Promise.resolve(Object.freeze(newItem)),
-                        );
-                    });
+                return onRewriteAfterMiddlewares.reduce(
+                    (current, next) => {
+                        return current.then((result) => {
+                            return next(Object.freeze(result));
+                        });
+                    },
+                    Promise.resolve(Object.freeze(newItem)),
+                );
             })
             .then((newItem) => {
                 notify.success(gettext('Update Created.'));
