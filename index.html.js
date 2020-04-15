@@ -10,6 +10,7 @@ module.exports = function buildIndex(o) {
             <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
             ${o.qumu ? '<script src="https://video.fidelity.tv/widgets/1/application.js"></script>' : ''}
             <link rel="icon" type="image/x-icon" href="images/favicon.ico" />
+            <link rel="stylesheet" type="text/css" href="app.bundle.css">
           </head>
           <body ng-class="config.bodyClass">
             <div sd-superdesk-view></div>

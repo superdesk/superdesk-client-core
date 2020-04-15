@@ -2,11 +2,11 @@ import {reactToAngular1} from 'superdesk-ui-framework';
 
 import {ContentService} from './services';
 import * as directive from './directives';
-import * as ctrl from './controllers';
 import {coreMenuGroups} from 'core/activity/activity';
 import {WidgetsConfig} from './components/WidgetsConfig';
 import {gettext} from 'core/utils';
 import ContentProfileFields from './controllers/ContentProfileFields';
+import {ContentProfilesController} from './controllers/ContentProfilesController';
 
 /**
  * @ngdoc module
@@ -40,14 +40,14 @@ angular.module('superdesk.apps.workspace.content', [
         },
     })
 
-    .controller('ContentProfilesController', ctrl.ContentProfilesController)
+    .controller('ContentProfilesController', ContentProfilesController)
     .controller('ContentProfileFields', ContentProfileFields)
 
     .config(['superdeskProvider', function(superdesk) {
         superdesk
             .activity('/settings/content-profiles', {
                 label: gettext('Content Profiles'),
-                controller: ctrl.ContentProfilesController,
+                controller: ContentProfilesController,
                 controllerAs: 'ctrl',
                 templateUrl: 'scripts/apps/workspace/content/views/profile-settings.html',
                 category: superdesk.MENU_SETTINGS,

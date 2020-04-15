@@ -1,6 +1,7 @@
 var path = require('path');
 var webpack = require('webpack');
 var lodash = require('lodash');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 function countOccurences(_string, substring) {
     return _string.split(substring).length - 1;
@@ -50,6 +51,9 @@ module.exports = function makeConfig(grunt) {
             }),
             new webpack.DefinePlugin({
                 __SUPERDESK_CONFIG__: JSON.stringify(sdConfig),
+            }),
+            new ExtractTextPlugin({
+                filename: '[name].bundle.css',
             }),
         ],
 
@@ -107,19 +111,29 @@ module.exports = function makeConfig(grunt) {
                     loader: 'html-loader',
                 },
                 {
-                    test: /\.css$/,
-                    use: [
-                        'style-loader',
-                        'css-loader',
-                    ],
-                },
-                {
-                    test: /\.scss$/,
-                    use: [
-                        'style-loader',
-                        'css-loader',
-                        'sass-loader',
-                    ],
+                    test: /\.(css|scss)$/i,
+                    use: ExtractTextPlugin.extract({
+                        fallback: [{
+                            loader: 'style-loader',
+                            options: {
+                                sourceMap: true,
+                            },
+                        }],
+                        use: [
+                            {
+                                loader: 'css-loader',
+                                options: {
+                                    sourceMap: true,
+                                },
+                            },
+                            {
+                                loader: 'sass-loader',
+                                options: {
+                                    sourceMap: true,
+                                },
+                            },
+                        ],
+                    }),
                 },
                 {
                     test: /\.json$/,

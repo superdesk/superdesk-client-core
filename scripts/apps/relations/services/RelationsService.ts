@@ -1,9 +1,10 @@
 import {zipObject} from 'lodash';
 import {IArticle, IArticleField} from 'superdesk-api';
-import {isPublished, isFetched} from 'apps/archive/utils';
+import {isPublished, isIngested} from 'apps/archive/utils';
 
 const RELATED_LINK_KEYS = 3; // links only have _id, type keys and order (and some old ones only _id)
-const isLink = (association) => association != null && Object.keys(association).length <= RELATED_LINK_KEYS;
+const isLink = (association) =>
+    association != null && Object.keys(association).length <= RELATED_LINK_KEYS;
 
 RelationsService.$inject = ['api', '$q'];
 
@@ -31,14 +32,14 @@ export function RelationsService(api, $q) {
         return {
             in_progress: true,
             published: true,
-            fetched: false,
+            ingested: false,
         };
     };
 
     this.itemHasAllowedStatus = function(item: IArticle, field: IArticleField) {
         const ALLOWED_WORKFLOWS = {
             ...this.getDefaultAllowedWorkflows(),
-            ...field?.field_options?.allowed_workflows || {},
+            ...(field?.field_options?.allowed_workflows || {}),
         };
 
         if (ALLOWED_WORKFLOWS.published !== true && isPublished(item)) {
@@ -49,7 +50,7 @@ export function RelationsService(api, $q) {
             return false;
         }
 
-        if (ALLOWED_WORKFLOWS.fetched !== true && isFetched(item)) {
+        if (ALLOWED_WORKFLOWS.ingested !== true && isIngested(item)) {
             return false;
         }
 
