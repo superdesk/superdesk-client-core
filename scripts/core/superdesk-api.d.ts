@@ -283,7 +283,10 @@ declare module 'superdesk-api' {
         state: ITEM_STATE;
         embargo?: any;
         signal?: any;
-        broadcast?: any;
+        broadcast?: {
+            master_id?: any;
+            status?: any;
+        };
         flags: any;
         source: string;
         /** correction counter, is reset on rewrite */
@@ -1101,7 +1104,10 @@ declare module 'superdesk-api' {
         google_auth: any;
         saml_label: any;
         archive_autocomplete: boolean;
+
+        // allow updates for items which aren't published yet
         workflow_allow_multiple_updates: boolean;
+
         allow_updating_scheduled_items: boolean;
 
         // TANSA SERVER CONFIG
