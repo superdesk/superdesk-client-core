@@ -659,7 +659,7 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
             // add scheme to terms
             if (scope.list && scope.cv) {
                 scope.list.forEach((listItem) => {
-                    listItem.scheme = scope.cv._id
+                    listItem.scheme = scope.cv._id;
                 });
             }
 
@@ -682,7 +682,6 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                     } else {
                         tree[parent].push(item);
                     }
-                    
                     // checks for dependent dropdowns to remain selected items if new list has them (not to reset)
                     angular.forEach(scope.item[scope.field], (selectedItem) => {
                         if (scope.cv && scope.cv.dependent) {
@@ -760,7 +759,7 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
             };
 
             scope.isSelected = (term) => {
-                return !!_.find(scope.item[scope.field], term)
+                return !!_.find(scope.item[scope.field], term);
             };
 
             scope.activeList = false;
@@ -817,7 +816,10 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                 var selected = {};
 
                 angular.forEach(scope.item[scope.field], (term) => {
-                    if (term && scope.cv && scope.cv._id === term.scheme) {
+                    if (term) {
+                        if (scope.cv && scope.cv._id !== term.scheme) {
+                            return;
+                        }
                         selected[term[scope.uniqueField]] = 1;
                     }
                 });
