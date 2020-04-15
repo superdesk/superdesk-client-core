@@ -4,7 +4,7 @@ import * as helpers from 'apps/authoring/authoring/helpers';
 import {gettext} from 'core/utils';
 import {logger} from 'core/services/logger';
 import {isPublished, isKilled} from 'apps/archive/utils';
-import {showModal} from 'core/services/modalService';
+import {showModal, showErrorsModal} from 'core/services/modalService';
 import {getUnpublishConfirmModal} from '../components/unpublish-confirm-modal';
 import {ITEM_STATE, CANCELED_STATES, READONLY_STATES} from 'apps/archive/constants';
 import {AuthoringWorkspaceService} from './AuthoringWorkspaceService';
@@ -16,20 +16,47 @@ function isReadOnly(item: IArticle) {
     return READONLY_STATES.includes(item.state);
 }
 
-export function canRewrite(item: IArticle) {
-    if (item.state === ITEM_STATE.SCHEDULED && appConfig.allow_updating_scheduled_items === true) {
-        return true;
+function canRewrite(item: IArticle): true | Array<string> {
+    const errors = [];
+
+    if (
+        isReadOnly(item)
+        && !(item.state === ITEM_STATE.SCHEDULED && appConfig.allow_updating_scheduled_items === true)
+    ) {
+        errors.push(gettext('The item is read-only.'));
     }
-    return !isReadOnly(item)
-        && item.type === 'text'
-        && !item.embargo
-        && !item.rewritten_by
-        && (!item.broadcast || !item.broadcast.master_id)
-        && (
-            (!item.rewrite_of || (
-                item.rewrite_of && isPublished(item)
-            ) || appConfig.workflow_allow_multiple_updates)
-        );
+
+    if (item.type !== 'text') {
+        errors.push(gettext(
+            'Updates can only be created for text items. The type of this item is {{type}}',
+            {type: item.type},
+        ));
+    }
+
+    if (item.embargo != null) {
+        errors.push(gettext('The item is embargoed.'));
+    }
+
+    if (item.rewritten_by != null) {
+        errors.push(gettext(
+            'An update for this version of the item already exists. '
+            + 'To create another update, find the latest version of the item.',
+        ));
+    }
+
+    if (item.broadcast?.master_id != null) {
+        errors.push('Unknown error occured'); // TODO: figure out the reason
+    }
+
+    if (item.rewrite_of != null && !(isPublished(item) || appConfig.workflow_allow_multiple_updates)) {
+        errors.push(gettext('An update can not be created for an item which is not published yet.'));
+    }
+
+    if (errors.length < 1) {
+        return true;
+    } else {
+        return errors;
+    }
 }
 
 interface IPublishOptions {
@@ -121,7 +148,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             .then((item) => autosave.open(item).then(null, (err) => item));
     };
 
-    this.rewrite = function(item) {
+    this.rewrite = function(item): void {
         var authoringWorkspace: AuthoringWorkspaceService = $injector.get('authoringWorkspace');
 
         function getOnRewriteAfterMiddlewares()
@@ -136,6 +163,14 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
                         ? activationResult.contributions.entities.article.onRewriteAfter
                         : [],
             );
+        }
+
+        const errors = canRewrite(item);
+
+        if (Array.isArray(errors)) {
+            showErrorsModal(gettext('An update can not be created'), errors);
+
+            return;
         }
 
         session.getIdentity()
@@ -649,7 +684,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         let isReadOnlyState = this._isReadOnly(currentItem);
         let userPrivileges = privileges.privileges;
 
-        action.re_write = canRewrite(currentItem);
+        action.re_write = canRewrite(currentItem) === true;
         action.resend = currentItem.type === 'text' &&
             isPublished(currentItem, false);
 

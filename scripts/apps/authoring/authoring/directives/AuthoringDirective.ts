@@ -15,7 +15,6 @@ import {appConfig, extensions} from 'appConfig';
 import {onPublishMiddlewareResult, IExtensionActivationResult, IArticle} from 'superdesk-api';
 import {mediaIdGenerator} from '../services/MediaIdGeneratorService';
 import {addInternalEventListener} from 'core/internal-events';
-import {canRewrite} from '../services/AuthoringService';
 
 /**
  * @ngdoc directive
@@ -683,7 +682,7 @@ export function AuthoringDirective(
 
             $scope.publishAndContinue = function() {
                 $scope.publish(true).then((published: boolean) => {
-                    if (published && canRewrite($scope.item)) {
+                    if (published) {
                         authoring.rewrite($scope.item);
                     }
                 }, (err) => {
@@ -695,9 +694,7 @@ export function AuthoringDirective(
             // Close the current article, create an update of the article and open it in the edit mode.
             $scope.closeAndContinue = function() {
                 $scope.close().then(() => {
-                    if (canRewrite($scope.item)) {
-                        authoring.rewrite($scope.item);
-                    }
+                    authoring.rewrite($scope.item);
                 });
             };
 
