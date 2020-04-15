@@ -18,7 +18,7 @@ before_script:
       fi
 
 after_failure:
-    - cd test-server && docker-compose logs superdesk
+    - cd test-server && docker-compose logs superdesk | grep -i error
 
 jobs:
     include:
