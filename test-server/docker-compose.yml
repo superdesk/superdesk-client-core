@@ -38,5 +38,5 @@ services:
             - LEGAL_ARCHIVE_URI=mongodb://mongo/test_la
             - PUBLICAPI_MONGO_URI=mongodb://mongo/test_pa
             - CONTENTAPI_MONGO_URI=mongodb://mongo/test_pa
-            - WEB_WORKERS=2
+            - WEB_WORKERS=1
             - WEB_LOG_LEVEL=error
