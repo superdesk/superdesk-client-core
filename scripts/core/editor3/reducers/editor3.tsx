@@ -283,32 +283,6 @@ function replaceText(
     return EditorState.push(editorState, newContent, 'insert-characters');
 }
 
-function insertTab(state: EditorState, selection: SelectionState, block: ContentBlock, tabString: string) {
-    const indentInsteadOfInsert = !selection.isCollapsed();
-    const selectionForInsert = indentInsteadOfInsert
-        ? (selection.merge({
-            focusOffset: 0,
-            anchorOffset: 0,
-        }) as SelectionState)
-        : selection;
-
-    let newState = replaceText(state, selectionForInsert, tabString);
-
-    if (indentInsteadOfInsert) {
-        const restoreSelection = selectionForInsert.merge({
-            focusOffset: block.getLength() + tabString.length,
-            anchorOffset: 0,
-        }) as SelectionState;
-
-        newState = EditorState.forceSelection(
-            newState,
-            restoreSelection,
-        );
-    }
-
-    return newState;
-}
-
 /**
  * @ngdoc method
  * @name onTab
@@ -337,7 +311,7 @@ const onTab = (state, e) => {
         let tabString = tabOption ? '\t' : spacesOption ? '        ' : null;
 
         if (tabString) {
-            newState = insertTab(newState, selection, block, tabString);
+            newState = replaceText(newState, selection, tabString);
             e.preventDefault();
         }
     }
