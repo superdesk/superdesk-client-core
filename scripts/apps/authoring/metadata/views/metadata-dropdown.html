@@ -23,12 +23,12 @@
         <li ng-if="label"><div class="dropdown__menu-label">{{ label }}</div></li>
         <li ng-click="select()"><button ng-disabled="disabled" translate>None</button></li>
 
-        <li ng-repeat="i in list" ng-click="select(i)" ng-if="field !== 'place'">
+        <li ng-repeat="term in list" ng-click="select(term)" ng-if="field !== 'place'">
             <button ng-disabled="disabled">
                 <span ng-if="icon"
-                    class="{{icon}}-{{i.name}}"
-                    ng-style="{backgroundColor: i.color}">{{i.short || i.name}}</span>
-                {{getLocaleName(i, item)}}
+                    class="{{icon}}-{{term.name}}"
+                    ng-style="{backgroundColor: term.color}">{{term.short || term.name}}</span>
+                {{getLocaleName(term, item)}}
             </button>
         </li>
 
