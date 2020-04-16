@@ -1,7 +1,7 @@
 <div class="dropdown dropdown--noarrow" dropdown sd-metadropdown-focus>
     <!-- if field is single input field-->
     <button ng-disabled="disabled" class="dropdown__toggle line-input" tabindex="{{tabindex}}" dropdown__toggle ng-if="!multiInputFields.includes(field) && !icon">
-        {{ key && values[item[field]]  && values[item[field]].name ? values[item[field]].name: (item[field].name || item[field] ? item[field].name || item[field] : '') | translate }}
+        {{ key && values[item[field]]  && values[item[field]].name ? getLocaleName(values[item[field]], item) : (item[field].name || item[field] ? getLocaleName(item[field], item) || item[field] : '') }}
         <b class="dropdown__caret"></b>
     </button>
     <!-- if field is multi input field and the data source is not a custom vocabulary-->
@@ -11,24 +11,24 @@
     </button>
     <!-- if cv stored inside other parent field ex: subject:[{name: "a", qcode: "a", scheme: cv._id}]-->
     <button ng-disabled="disabled" class="dropdown__toggle line-input" tabindex="{{tabindex}}" dropdown__toggle ng-if="multiInputFields.includes(field) && !icon && cv">
-        {{ item[field].length > 0 ? findItemByScheme(item[field], cv._id).name : '' | translate }}
+        {{ item[field].length > 0 ? findItemByScheme(item[field], cv._id) : '' }}
         <b class="dropdown__caret"></b>
     </button>
     <button ng-disabled="disabled" class="dropdown__toggle line-input" tabindex="{{tabindex}}" dropdown__toggle ng-if="icon">
         <span class="{{icon}}-{{item[field]}}"
             ng-style="{backgroundColor: values[item[field]].color}">{{ values[item[field]].short || item[field] || 0 }}</span>
-        {{ values[item[field]].name }} <b class="dropdown__caret"></b>
+        {{ getLocaleName(values[item[field]], item) }} <b class="dropdown__caret"></b>
     </button>
     <ul class="dropdown__menu">
         <li ng-if="label"><div class="dropdown__menu-label">{{ label }}</div></li>
         <li ng-click="select()"><button ng-disabled="disabled" translate>None</button></li>
 
-        <li ng-repeat="item in list" ng-click="select(item)" ng-if="field !== 'place'">
+        <li ng-repeat="i in list" ng-click="select(i)" ng-if="field !== 'place'">
             <button ng-disabled="disabled">
                 <span ng-if="icon"
-                    class="{{icon}}-{{item.name}}"
-                    ng-style="{backgroundColor: item.color}">{{item.short || item.name}}</span>
-                {{::item.name}}
+                    class="{{icon}}-{{i.name}}"
+                    ng-style="{backgroundColor: i.color}">{{i.short || i.name}}</span>
+                {{getLocaleName(i, item)}}
             </button>
         </li>
 
