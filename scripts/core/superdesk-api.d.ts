@@ -275,14 +275,18 @@ declare module 'superdesk-api' {
         lock_action: any;
         lock_user: any;
         lock_session: any;
-        rewritten_by?: string;
+        rewritten_by?: IArticle['_id'];
+        rewrite_of?: IArticle['_id'];
         profile: string;
         word_count?: number;
         version_creator: string;
         state: ITEM_STATE;
         embargo?: any;
         signal?: any;
-        broadcast?: any;
+        broadcast?: {
+            master_id?: any;
+            status?: any;
+        };
         flags: any;
         source: string;
         /** correction counter, is reset on rewrite */
@@ -1088,7 +1092,10 @@ declare module 'superdesk-api' {
         google_auth: any;
         saml_label: any;
         archive_autocomplete: boolean;
+
+        // allow updates for items which aren't published yet
         workflow_allow_multiple_updates: boolean;
+
         allow_updating_scheduled_items: boolean;
 
         // TANSA SERVER CONFIG

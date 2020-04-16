@@ -3,6 +3,11 @@ import ReactDOM from 'react-dom';
 
 import {ModalPrompt} from 'core/ui/components/Modal/ModalPrompt';
 import {gettext} from 'core/utils';
+import Button from 'core/ui/components/Button';
+import {ModalHeader} from 'core/ui/components/Modal/ModalHeader';
+import {Modal} from 'core/ui/components/Modal/Modal';
+import {ModalBody} from 'core/ui/components/Modal/ModalBody';
+import {ModalFooter} from 'core/ui/components/Modal/ModalFooter';
 
 export const showModal = (Component: React.ComponentType<{closeModal(): void}>): Promise<void> => {
     const el = document.createElement('div');
@@ -32,6 +37,47 @@ export const showModal = (Component: React.ComponentType<{closeModal(): void}>):
 
     return Promise.resolve();
 };
+
+function getErrorsModal(
+    title: string,
+    errors: Array<string>,
+    description?: string,
+) {
+    return class ErrorsModal extends React.PureComponent<{closeModal(): void}> {
+        render() {
+            return (
+                <Modal>
+                    <ModalHeader onClose={this.props.closeModal}>{title}</ModalHeader>
+                    <ModalBody>
+                        {
+                            description == null ? null : (
+                                <h3>{description}</h3>
+                            )
+                        }
+
+                        {
+                            errors.map((message, i) => (
+                                <p key={i}>{message}</p>
+                            ))
+                        }
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button color="primary" onClick={this.props.closeModal}>
+                            {gettext('Ok')}
+                        </Button>
+                    </ModalFooter>
+                </Modal>
+            );
+        }
+    };
+}
+
+export function showErrorsModal(
+    title: string,
+    errors: Array<string>,
+) {
+    showModal(getErrorsModal(title, errors));
+}
 
 export default angular.module('superdesk.core.services.modal', [
     'superdesk-ui',
