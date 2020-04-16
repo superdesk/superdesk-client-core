@@ -34,10 +34,15 @@ services:
             - REDIS_URL=redis://redis:6379/1
             - ELASTICSEARCH_URL=http://elastic:9200
             - MONGO_URI=mongodb://mongo/test_sd
+            - MONGO_DBNAME=test_sd
             - ARCHIVED_URI=mongodb://mongo/test_ar
+            - ARCHIVED_DBNAME=test_ar
             - LEGAL_ARCHIVE_URI=mongodb://mongo/test_la
+            - LEGAL_ARCHIVE_DBNAME=test_la
             - PUBLICAPI_MONGO_URI=mongodb://mongo/test_pa
-            - CONTENTAPI_MONGO_URI=mongodb://mongo/test_pa
+            - PUBLICAPI_MONGO_DBNAME=test_pa
+            - CONTENTAPI_MONGO_URI=mongodb://mongo/test_ca
+            - CONTENTAPI_MONGO_DBNAME=test_ca
             - WEB_WORKERS=2
             - WEB_LOGLEVEL=error
             - SENTRY_DSN
