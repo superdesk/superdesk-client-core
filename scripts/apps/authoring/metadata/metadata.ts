@@ -5,6 +5,7 @@ import {getVocabularySelectionTypes} from '../../vocabularies/constants';
 import {gettext} from 'core/utils';
 import PlacesServiceFactory from './PlacesService';
 import {appConfig} from 'appConfig';
+import {ISubject} from 'superdesk-api';
 
 MetadataCtrl.$inject = [
     '$scope', 'desks', 'metadata', 'privileges', 'datetimeHelper', 'userList',

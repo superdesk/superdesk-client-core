@@ -1331,7 +1331,7 @@ declare module 'superdesk-api' {
         LanguageIdentifier: string;
     }
 
-    interface ISubject {
+    export interface ISubject {
         name: string;
         qcode: string;
         scheme?: string;
