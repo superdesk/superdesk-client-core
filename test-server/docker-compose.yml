@@ -40,3 +40,4 @@ services:
             - CONTENTAPI_MONGO_URI=mongodb://mongo/test_pa
             - WEB_WORKERS=2
             - WEB_LOGLEVEL=error
+            - SENTRY_DSN
