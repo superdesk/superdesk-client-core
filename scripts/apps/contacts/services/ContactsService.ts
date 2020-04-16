@@ -1,6 +1,6 @@
 import {get, find} from 'lodash';
 
-import {FILTER_FIELDS, URL_PARAMETERS} from '../constants';
+import {FILTER_FIELDS, getUrlParameters} from '../constants';
 import {gettext} from 'core/utils';
 
 import {replaceUrls} from '../helpers';
@@ -83,7 +83,7 @@ export class ContactsService implements IContactsService {
 
         let queryParams = params.q ? [params.q] : [];
 
-        angular.forEach(URL_PARAMETERS, (val, key) => {
+        angular.forEach(getUrlParameters(), (val, key) => {
             if (params[key]) {
                 queryParams.push(`${key}:(${params[key]})`);
             }

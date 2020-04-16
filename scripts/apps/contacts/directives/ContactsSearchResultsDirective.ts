@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import {URL_PARAMETERS} from '../constants';
+import {getUrlParameters} from '../constants';
 import {gettext} from 'core/utils';
 
 class LinkFunction {
@@ -43,7 +43,7 @@ class LinkFunction {
 
         this.scope.$on('contacts:update', this.scope.refreshList);
         this.scope.$on('contacts:create', this.scope.refreshList);
-        this.scope.urlParams = URL_PARAMETERS;
+        this.scope.urlParams = getUrlParameters();
     }
 
     /**

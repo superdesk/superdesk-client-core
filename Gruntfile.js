@@ -1,4 +1,5 @@
 var path = require('path');
+var compileTranslationsPoToJson = require('./tasks/compile-translations-po-to-json');
 
 module.exports = function(grunt) {
     var config = {
@@ -39,6 +40,10 @@ module.exports = function(grunt) {
     grunt.registerTask('ci:travis', ['ngtemplates:dev', 'karma:travis']);
     grunt.registerTask('bamboo', ['karma:bamboo']);
 
+    grunt.registerTask('gettext:compile', 'Compile .po translation files to .json', () => {
+        compileTranslationsPoToJson(grunt);
+    });
+
     // UI styling documentation
     grunt.registerTask('ui-guide', [
         'clean',
@@ -55,7 +60,7 @@ module.exports = function(grunt) {
         'copy:index',
         'copy:config',
         'copy:locales',
-        'nggettext_compile',
+        'gettext:compile',
         'ngtemplates:gen-apps',
         'ngtemplates:dev',
         'webpack-dev-server:start',
@@ -63,7 +68,6 @@ module.exports = function(grunt) {
 
     // gettext
     grunt.registerTask('gettext:extract', ['nggettext_extract']);
-    grunt.registerTask('gettext:compile', ['nggettext_compile']);
 
     // Production build
     grunt.registerTask('build', '', () => {
@@ -74,7 +78,7 @@ module.exports = function(grunt) {
             'copy:config',
             'copy:assets',
             'copy:locales',
-            'nggettext_compile',
+            'gettext:compile',
             'ngtemplates:gen-apps',
             'ngtemplates:core',
         ]);
@@ -87,7 +91,7 @@ module.exports = function(grunt) {
         if (grunt.file.expand('po/*.po').length && pkgName != 'superdesk-core') {
             grunt.task.run([
                 'nggettext_extract',
-                'nggettext_compile',
+                'gettext:compile',
             ]);
         }
 

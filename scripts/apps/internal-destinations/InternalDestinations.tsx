@@ -9,72 +9,69 @@ import {IFormField, IFormGroup} from 'superdesk-api';
 import {FormFieldType} from 'core/ui/components/generic-form/interfaces/form';
 import {gettext} from 'core/utils';
 
-const nameField: IFormField = {
-    label: gettext('Destination name'),
-    type: FormFieldType.textSingleLine,
-    field: 'name',
-    required: true,
-};
+function getNameField(): IFormField {
+    return {
+        label: gettext('Destination name'),
+        type: FormFieldType.textSingleLine,
+        field: 'name',
+        required: true,
+    };
+}
 
-const isActiveField: IFormField = {
-    label: gettext('Active'),
-    type: FormFieldType.checkbox,
-    field: 'is_active',
-};
+function getIsActiveField(): IFormField {
+    return {
+        label: gettext('Active'),
+        type: FormFieldType.checkbox,
+        field: 'is_active',
+    };
+}
 
-const contentFilterField: IFormField = {
-    label: gettext('Content filter'),
-    type: FormFieldType.contentFilterSingleValue,
-    field: 'filter',
-};
+function getContentFilterField(): IFormField {
+    return {
+        label: gettext('Content filter'),
+        type: FormFieldType.contentFilterSingleValue,
+        field: 'filter',
+    };
+}
 
-const deskField: IFormField = {
-    label: gettext('Desk'),
-    type: FormFieldType.deskSingleValue,
-    field: 'desk',
-    required: true,
-};
+function getDeskField(): IFormField {
+    return {
+        label: gettext('Desk'),
+        type: FormFieldType.deskSingleValue,
+        field: 'desk',
+        required: true,
+    };
+}
 
-const stageField: IFormField = {
-    label: gettext('Stage'),
-    type: FormFieldType.stageSingleValue,
-    field: 'stage',
-    component_parameters: {
-        deskField: 'desk',
-    },
-};
+function getStageField(): IFormField {
+    return {
+        label: gettext('Stage'),
+        type: FormFieldType.stageSingleValue,
+        field: 'stage',
+        component_parameters: {
+            deskField: 'desk',
+        },
+    };
+}
 
-const macroField: IFormField = {
-    label: gettext('Macro'),
-    type: FormFieldType.macroSingleValue,
-    field: 'macro',
-    component_parameters: {
-        deskField: 'desk',
-    },
-};
+function getMacroField(): IFormField {
+    return {
+        label: gettext('Macro'),
+        type: FormFieldType.macroSingleValue,
+        field: 'macro',
+        component_parameters: {
+            deskField: 'desk',
+        },
+    };
+}
 
-const sendAfterSchedule: IFormField = {
-    label: gettext('Send only after publish schedule'),
-    type: FormFieldType.checkbox,
-    field: 'send_after_schedule',
-};
-
-const formConfig: IFormGroup = {
-    direction: 'vertical',
-    type: 'inline',
-    form: [
-        isActiveField,
-        sendAfterSchedule,
-        nameField,
-        contentFilterField,
-        deskField,
-        stageField,
-        macroField,
-    ],
-};
-
-const InternalDestinationsPageComponent =
-    getGenericListPageComponent<IInternalDestination>('internal_destinations', formConfig);
+function getSendAfterScheduleField(): IFormField {
+    return {
+        label: gettext('Send only after publish schedule'),
+        type: FormFieldType.checkbox,
+        field: 'send_after_schedule',
+    };
+}
 
 const renderRow = (
     key: string,
@@ -88,7 +85,7 @@ const renderRow = (
         data-test-id="internal-destinations-item"
     >
         <ListItemColumn ellipsisAndGrow noBorder>
-            {getFormFieldPreviewComponent(item, nameField)}
+            {getFormFieldPreviewComponent(item, getNameField())}
         </ListItemColumn>
         {
             item.is_active ? null : (
@@ -128,12 +125,29 @@ const renderRow = (
 
 export class InternalDestinations extends React.Component {
     render() {
+        const formConfig: IFormGroup = {
+            direction: 'vertical',
+            type: 'inline',
+            form: [
+                getIsActiveField(),
+                getSendAfterScheduleField(),
+                getNameField(),
+                getContentFilterField(),
+                getDeskField(),
+                getStageField(),
+                getMacroField(),
+            ],
+        };
+
+        const InternalDestinationsPageComponent =
+            getGenericListPageComponent<IInternalDestination>('internal_destinations', formConfig);
+
         return (
             <InternalDestinationsPageComponent
                 renderRow={renderRow}
                 formConfig={formConfig}
                 defaultSortOption={{field: 'name', direction: 'ascending'}}
-                fieldForSearch={nameField}
+                fieldForSearch={getNameField()}
             />
         );
     }
