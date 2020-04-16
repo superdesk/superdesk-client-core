@@ -413,8 +413,8 @@ function MetaDropdownDirective($filter, metadata) {
                 scope.item[scope.field] = scope.item.default;
             }
 
-            scope.findItemByScheme = (item, scheme) => {
-                const term = item.find((o) => o.scheme === scheme);
+            scope.findItemByScheme = (items: Array<ISubject>, scheme: string) => {
+                const term = items.find((item) => item.scheme === scheme);
 
                 return metadata.getLocaleName(term, scope.item);
             };
