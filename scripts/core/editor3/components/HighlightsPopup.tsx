@@ -8,7 +8,7 @@ import {List} from 'immutable';
 import {CommentPopup} from './comments';
 import {SuggestionPopup} from './suggestions/SuggestionPopup';
 import {AnnotationPopup} from './annotations';
-import {suggestionsTypes} from '../highlightsConfig';
+import {getSuggestionsTypes} from '../highlightsConfig';
 import * as Highlights from '../helpers/highlights';
 
 /**
@@ -51,7 +51,7 @@ export class HighlightsPopup extends React.Component<any, any> {
                 .forEach((styleName) => {
                     const highlightType = this.props.highlightsManager.getHighlightTypeFromStyleName(styleName);
 
-                    if (suggestionsTypes.indexOf(highlightType) !== -1) {
+                    if (getSuggestionsTypes().indexOf(highlightType) !== -1) {
                         data = Highlights.getSuggestionData(this.props.editorState, styleName);
                     } else {
                         data = this.props.highlightsManager.getHighlightData(styleName);
@@ -113,7 +113,7 @@ export class HighlightsPopup extends React.Component<any, any> {
                     editorNode={this.props.editorNode}
                 />
             );
-        } else if (suggestionsTypes.indexOf(type) !== -1) {
+        } else if (getSuggestionsTypes().indexOf(type) !== -1) {
             return (
                 <SuggestionPopup
                     suggestion={h}

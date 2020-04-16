@@ -1,17 +1,19 @@
 import _ from 'lodash';
 import PreferedCvItemsConfigDirective from './PreferedCvItemsConfigDirective';
 import MetaPlaceDirective from './MetaPlaceDirective';
-import {VOCABULARY_SELECTION_TYPES} from '../../vocabularies/constants';
+import {getVocabularySelectionTypes} from '../../vocabularies/constants';
 import {gettext} from 'core/utils';
 import PlacesServiceFactory from './PlacesService';
 import {appConfig} from 'appConfig';
-
-const SINGLE_SELECTION = VOCABULARY_SELECTION_TYPES.SINGLE_SELECTION.id;
 
 MetadataCtrl.$inject = [
     '$scope', 'desks', 'metadata', 'privileges', 'datetimeHelper', 'userList',
     'preferencesService', 'archiveService', 'moment', 'content',
 ];
+
+function getSingleSelection() {
+    return getVocabularySelectionTypes().SINGLE_SELECTION.id;
+}
 
 function MetadataCtrl(
     $scope, desks, metadata, privileges, datetimeHelper, userList,
@@ -656,6 +658,13 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                 scope.uniqueField = value || 'qcode';
             });
 
+            // add scheme to terms
+            if (scope.list && scope.cv) {
+                scope.list.forEach((listItem) => {
+                    listItem.scheme = scope.cv._id;
+                });
+            }
+
             scope.$watchCollection('list', (items) => {
                 if (!items || items.length === 0) {
                     return;
@@ -667,7 +676,7 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                     updates[scope.field] = [];
                 }
 
-                angular.forEach(items, (item) => {
+                items.forEach((item) => {
                     var parent = item.parent || null;
 
                     if (!tree.hasOwnProperty(parent)) {
@@ -675,7 +684,6 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                     } else {
                         tree[parent].push(item);
                     }
-
                     // checks for dependent dropdowns to remain selected items if new list has them (not to reset)
                     angular.forEach(scope.item[scope.field], (selectedItem) => {
                         if (scope.cv && scope.cv.dependent) {
@@ -683,7 +691,7 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                                 if (item.name === selectedItem.name) {
                                     updates[scope.field].push(selectedItem);
                                 }
-                            // this is for subject (which is not dependent)
+                                // this is for subject (which is not dependent)
                             } else if (updates[scope.field].indexOf(selectedItem) === -1) {
                                 updates[scope.field].push(selectedItem);
                             }
@@ -752,7 +760,9 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                 scope.activeList = false;
             };
 
-            scope.isSelected = (term) => !!_.find(scope.item[scope.field], term);
+            scope.isSelected = (term) => {
+                return !!_.find(scope.item[scope.field], term);
+            };
 
             scope.activeList = false;
             scope.selectedTerm = '';
@@ -809,6 +819,9 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
 
                 angular.forEach(scope.item[scope.field], (term) => {
                     if (term) {
+                        if (scope.cv && scope.cv._id !== term.scheme) {
+                            return;
+                        }
                         selected[term[scope.uniqueField]] = 1;
                     }
                 });
@@ -828,11 +841,11 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                     // instead of simple push, extend the item[field] in order to trigger dirty $watch
                     var t = [];
 
-                    if (term.selection_type !== SINGLE_SELECTION) {
+                    if (term.selection_type !== getSingleSelection()) {
                         t = _.clone(scope.item[scope.field]) || [];
                     }
 
-                    if (scope.cv && scope.cv.selection_type === SINGLE_SELECTION) {
+                    if (scope.cv && scope.cv.selection_type === getSingleSelection()) {
                         t = _.filter(t, (_term) => _term.scheme !== scope.cv._id);
                     }
 
@@ -1136,7 +1149,7 @@ export function MetadataService(api, subscribersService, vocabularies, $rootScop
                         self.popup_width[vocabulary._id] = vocabulary.popup_width;
                     }
                     if (_.has(vocabulary, 'selection_type')) {
-                        self.single_value[vocabulary._id] = vocabulary.selection_type === SINGLE_SELECTION;
+                        self.single_value[vocabulary._id] = vocabulary.selection_type === getSingleSelection();
                     }
                 });
                 self.cvs = result;

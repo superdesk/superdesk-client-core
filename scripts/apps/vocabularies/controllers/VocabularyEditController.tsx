@@ -1,7 +1,7 @@
 import ReactDOM from 'react-dom';
 import React from 'react';
 import _ from 'lodash';
-import {MEDIA_TYPES, MEDIA_TYPE_KEYS, VOCABULARY_SELECTION_TYPES, IVocabularySelectionTypes} from '../constants';
+import {IVocabularySelectionTypes, getVocabularySelectionTypes, getMediaTypeKeys, getMediaTypes} from '../constants';
 import {gettext} from 'core/utils';
 import {getFields} from 'apps/fields';
 import {IVocabulary} from 'superdesk-api';
@@ -61,7 +61,7 @@ export function VocabularyEditController(
     };
 
     $scope.idRegex = idRegex;
-    $scope.selectionTypes = VOCABULARY_SELECTION_TYPES;
+    $scope.selectionTypes = getVocabularySelectionTypes();
 
     if ($scope.matchFieldTypeToTab('related-content-fields', $scope.vocabulary.field_type)) {
         // Insert default allowed workflows
@@ -140,7 +140,7 @@ export function VocabularyEditController(
             $scope.errorMessage = gettext('The values should be unique for {{uniqueField}}', {uniqueField});
         }
 
-        if ($scope.vocabulary.field_type === MEDIA_TYPES.GALLERY.id) {
+        if ($scope.vocabulary.field_type === getMediaTypes().GALLERY.id) {
             const allowedTypes = $scope.vocabulary.field_options.allowed_types;
 
             Object.keys(allowedTypes).forEach((key) => {
@@ -170,7 +170,7 @@ export function VocabularyEditController(
      * Return true if at least one content type should be selected
      */
     $scope.requireAllowedTypesSelection = function() {
-        if (!MEDIA_TYPE_KEYS.includes($scope.vocabulary.field_type)) {
+        if (!getMediaTypeKeys().includes($scope.vocabulary.field_type)) {
             return false;
         }
 

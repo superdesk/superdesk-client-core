@@ -1,6 +1,6 @@
 import {EditorState} from 'draft-js';
 import * as Highlights from './highlights';
-import {suggestionsTypes} from '../highlightsConfig';
+import {getSuggestionsTypes} from '../highlightsConfig';
 import {initSelectionIterator, hasNextSelection} from '../helpers/selection';
 
 /**
@@ -69,7 +69,7 @@ const allowEditSuggestion = (editorState, author, isBackward) => {
         newEditorState = initSelectionIterator(editorState);
         while (hasNextSelection(newEditorState, selection)) {
             const data = Highlights.getHighlightDataAtCurrentPosition(
-                newEditorState, suggestionsTypes);
+                newEditorState, getSuggestionsTypes());
 
             if (!allowEditForData(data, author, false)) {
                 return false;
@@ -82,8 +82,8 @@ const allowEditSuggestion = (editorState, author, isBackward) => {
             newEditorState = tmpEditorState;
         }
 
-        const styleBefore = Highlights.getHighlightStyleAtOffset(editorState, suggestionsTypes, selection, -1);
-        const styleAfter = Highlights.getHighlightStyleAtOffset(editorState, suggestionsTypes, selection, 0, true);
+        const styleBefore = Highlights.getHighlightStyleAtOffset(editorState, getSuggestionsTypes(), selection, -1);
+        const styleAfter = Highlights.getHighlightStyleAtOffset(editorState, getSuggestionsTypes(), selection, 0, true);
 
         if (styleBefore != null && styleAfter != null && styleBefore === styleAfter) {
             return false;
@@ -91,12 +91,12 @@ const allowEditSuggestion = (editorState, author, isBackward) => {
     }
 
     if (isBackward) {
-        const dataBefore = Highlights.getHighlightDataAtOffset(editorState, suggestionsTypes, selection, -1);
+        const dataBefore = Highlights.getHighlightDataAtOffset(editorState, getSuggestionsTypes(), selection, -1);
 
         return allowEditForData(dataBefore, author);
     }
 
-    const dataAfter = Highlights.getHighlightDataAtOffset(editorState, suggestionsTypes, selection, 0, true);
+    const dataAfter = Highlights.getHighlightDataAtOffset(editorState, getSuggestionsTypes(), selection, 0, true);
 
     return allowEditForData(dataAfter, author);
 };

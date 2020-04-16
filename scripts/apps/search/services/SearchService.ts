@@ -7,7 +7,7 @@ import {
 } from 'apps/search/constants';
 
 import _ from 'lodash';
-import {getDateFilters, dateRangesByKey} from '../directives/DateFilters';
+import {getDateFilters, getDateRangesByKey} from '../directives/DateFilters';
 import {gettext} from 'core/utils';
 import {KILLED_STATES} from 'apps/archive/constants';
 import {appConfig} from 'appConfig';
@@ -370,6 +370,8 @@ export function SearchService($location, session, multi,
         function buildFilters(paramsObject: any, query) {
             // date filters start
             var facetrange = {};
+
+            const dateRangesByKey = getDateRangesByKey();
 
             // inject custom date field filters { fieldname: 'string(IDateRange)' }
             if (typeof paramsObject.customFields !== 'undefined') {

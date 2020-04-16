@@ -1,7 +1,10 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
+import {showModal} from 'core/services/modalService';
 import {IArticle} from 'superdesk-api';
+import {appConfig} from 'appConfig';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
+import {fileUploadErrorModal} from '../../archive/controllers/file-upload-error-modal';
 
 SendService.$inject = ['desks', 'api', '$q', 'notify', 'multi', '$rootScope', '$injector'];
 export function SendService(
@@ -14,6 +17,7 @@ export function SendService(
     $injector,
 ) {
     this.one = sendOne;
+    this.validateAndSend = validateAndSend;
     this.all = sendAll;
 
     this.oneAs = sendOneAs;
@@ -23,12 +27,44 @@ export function SendService(
     this.getConfig = getConfig;
     this.startConfig = startConfig;
     this.getItemsFromPackages = getItemsFromPackages;
+    this.getValidItems = getValidItems;
 
     var self = this;
 
     // workaround for circular dependencies
     function getAuthoringWorkspace(): AuthoringWorkspaceService {
         return $injector.get('authoringWorkspace');
+    }
+
+    function getValidItems(items: Array<IArticle>) {
+        const validItems = [];
+        const invalidItems = [];
+
+        items.forEach((item) => {
+            if (appConfig.pictures && item.type === 'picture' && item._type === 'ingest') {
+                const pictureWidth = item?.renditions.original.width;
+                const pictureHeight = item?.renditions.original.height;
+
+                if (appConfig.pictures.minWidth > pictureWidth || appConfig.pictures.minHeight > pictureHeight) {
+                    invalidItems.push({
+                        valid: false,
+                        name: item.headline || item.slugline || 'image',
+                        width: item.renditions.original.width,
+                        height: item.renditions.original.height,
+                        type: 'image',
+                    });
+                } else {
+                    validItems.push(item);
+                }
+            } else {
+                validItems.push(item);
+            }
+        });
+
+        if (invalidItems.length > 0) {
+            showModal(fileUploadErrorModal(invalidItems));
+        }
+        return validItems;
     }
 
     /**
@@ -86,13 +122,27 @@ export function SendService(
         }
     }
 
+    function validateAndSend(item) {
+        const validItems = getValidItems([item]);
+
+        if (validItems.length > 0) {
+            return sendOne(item);
+        } else {
+            return $q.reject();
+        }
+    }
+
     /**
      * Send all given items to current user desk
      *
      * @param {Array} items
      */
     function sendAll(items) {
-        return Promise.all(items.map(sendOne));
+        const validItems = getValidItems(items);
+
+        if (validItems.length > 0) {
+            return Promise.all(validItems.map(sendOne));
+        }
     }
 
     /**
@@ -207,24 +257,28 @@ export function SendService(
      * @return {Promise}
      */
     function sendAllAs(items, action) {
-        self.config = $q.defer();
-        self.config.action = action;
-        self.config.itemIds = _.map(items, '_id');
-        self.config.items = items;
-        self.config.isPackage = items.some((item) => item.type === 'composite');
+        const validItems = getValidItems(items);
 
-        if (self.config.isPackage) {
-            self.config.packageItemIds = getItemsFromPackages(items);
+        if (validItems.length > 0) {
+            self.config = $q.defer();
+            self.config.action = action;
+            self.config.itemIds = _.map(validItems, '_id');
+            self.config.items = validItems;
+            self.config.isPackage = validItems.some((_item) => _item.type === 'composite');
+
+            if (self.config.isPackage) {
+                self.config.packageItemIds = getItemsFromPackages(validItems);
+            }
+
+            return self.config.promise.then((config) => {
+                self.config = null;
+                multi.reset();
+                return $q.all(validItems.map((_item) => sendOneAs(_item, config, action)));
+            }, () => {
+                self.config = null;
+                multi.reset();
+            });
         }
-
-        return self.config.promise.then((config) => {
-            self.config = null;
-            multi.reset();
-            return $q.all(items.map((item) => sendOneAs(item, config, action)));
-        }, () => {
-            self.config = null;
-            multi.reset();
-        });
     }
 
     /**
