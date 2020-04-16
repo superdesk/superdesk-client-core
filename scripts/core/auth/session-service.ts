@@ -1,3 +1,6 @@
+import _ from 'lodash';
+import {IDENTITY_KEY} from 'appConfig';
+
 /**
  * Session Service stores current user data
  */
@@ -9,7 +12,6 @@ angular.module('superdesk.core.auth.session').service('session', [
     function($q, $rootScope, storage, SESSION_EVENTS) {
         var TOKEN_KEY = 'sess:token';
         var TOKEN_HREF = 'sess:href';
-        var IDENTITY_KEY = 'sess:user';
         var SESSION_ID = 'sess:id';
         var IDENTITY_BLACKLIST = [
             'session_preferences',
