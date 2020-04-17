@@ -109,7 +109,7 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
             };
 
             function validateField(response, field) {
-                if (scope.userForm[field]) {
+                if (scope.userForm?.[field]) {
                     if (scope.error[field]) {
                         scope.error.message = null;
                     }
