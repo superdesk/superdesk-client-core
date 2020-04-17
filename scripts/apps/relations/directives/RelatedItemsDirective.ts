@@ -3,6 +3,7 @@ import {gettext} from 'core/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {IArticle, IArticleField} from 'superdesk-api';
 import {IDirectiveScope} from 'types/Angular/DirectiveScope';
+import {getAssociationsByFieldId} from '../../authoring/authoring/controllers/AssociationController';
 
 const ARCHIVE_TYPES = ['archive', 'published'];
 const isInArchive = (item: IArticle) => item._type != null && ARCHIVE_TYPES.includes(item._type);
@@ -73,7 +74,16 @@ export function RelatedItemsDirective(
                 return lock.isLocked(item) || lock.isLockedInCurrentSession(item);
             };
 
-            scope.canAddRelatedItems = () => scope.field?.field_options?.allowed_workflows?.in_progress === true;
+            scope.canAddRelatedItems = () => {
+                const currentItemsLength = getAssociationsByFieldId(scope.item.associations, scope.field._id).length;
+
+                const maxCount = scope.field?.field_options?.multiple_items?.enabled === true
+                    ? scope.field.field_options.multiple_items.max_items
+                    : 1;
+
+                return scope.field?.field_options?.allowed_workflows?.in_progress === true
+                    && currentItemsLength < maxCount;
+            };
 
             const dragOverClass = 'dragover';
             const fieldOptions = scope.field?.field_options || {};

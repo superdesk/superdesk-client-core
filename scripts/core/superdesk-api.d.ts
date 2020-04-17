@@ -284,7 +284,7 @@ declare module 'superdesk-api' {
         embargo?: any;
         signal?: any;
         broadcast?: {
-            master_id?: any;
+            master_id?: any; // original story this broadcast version was created from
             status?: any;
         };
         flags: any;
