@@ -23,11 +23,17 @@ export default angular.module('superdesk.core.translate', [
         function(gettextCatalog, $location, $rootScope, SESSION_EVENTS, tmhDynamicLocale) {
             $rootScope.$on(SESSION_EVENTS.IDENTITY_LOADED, (event) => {
                 loadTranslations()
-                    .then(({translations, language}) => {
-                        gettextCatalog.setCurrentLanguage(language);
-                        gettextCatalog.setStrings(language, translations);
-                        moment.locale(language); // set locale for date/time management
-                        tmhDynamicLocale.set(language.replace('_', '-').toLowerCase()); // set locale for angular-i18n
+                    .then((res) => {
+                        if (res != null) { // null when default language is selected
+                            const {translations, language} = res;
+
+                            gettextCatalog.setCurrentLanguage(language);
+                            gettextCatalog.setStrings(language, translations);
+                            moment.locale(language); // set locale for date/time management
+
+                            // set locale for angular-i18n
+                            tmhDynamicLocale.set(language.replace('_', '-').toLowerCase());
+                        }
                     });
             });
 
