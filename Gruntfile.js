@@ -37,7 +37,7 @@ module.exports = function(grunt) {
     grunt.registerTask('test', ['ngtemplates:dev', 'karma:unit']);
     grunt.registerTask('ci', ['test']);
     grunt.registerTask('unit', ['test']);
-    grunt.registerTask('ci:travis', ['ngtemplates:dev', 'karma:travis']);
+    grunt.registerTask('ci:travis', ['ngtemplates:gen-apps', 'ngtemplates:dev', 'karma:travis']);
     grunt.registerTask('bamboo', ['karma:bamboo']);
 
     grunt.registerTask('gettext:compile', 'Compile .po translation files to .json', () => {

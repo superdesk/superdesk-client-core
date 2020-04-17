@@ -5,10 +5,11 @@ import {isPublished} from 'apps/archive/utils';
 import {IArticle, IVocabulary} from 'superdesk-api';
 import {mediaIdGenerator} from '../services/MediaIdGeneratorService';
 
-export function getAssociationsByField(item: IArticle, field: IVocabulary) {
-    return Object.keys(item.associations || {})
-        .filter((key) => key.startsWith(field._id) && item.associations[key] != null)
-        .map((key) => item.associations[key]);
+export function getAssociationsByFieldId(associations: IArticle['associations'], fieldId: IVocabulary['_id']) {
+    return Object.keys(associations ?? {})
+        .filter((key) => key.startsWith(fieldId + '--') && associations[key] != null)
+        .sort((key1, key2) => associations[key1].order - associations[key2].order)
+        .map((key) => associations[key]);
 }
 
 /**
@@ -48,7 +49,7 @@ export function AssociationController(content, superdesk, renditions, notify) {
     this.uploadAndCropImages = function(scope, files) {
         // in case of feature media we dont have scope.field available as it is not a vocabulary.
         const maxUploadsRemaining = scope.maxUploads != null && scope.field != null
-            ? scope.maxUploads - getAssociationsByField(scope.item, scope.field).length
+            ? scope.maxUploads - getAssociationsByFieldId(scope.item.associations, scope.field._id).length
             : 1;
 
         let uploadData = {
@@ -104,6 +105,7 @@ export function AssociationController(content, superdesk, renditions, notify) {
         // if the media is of type media-gallery, update same association-key not the next one
         // as the scope.rel contains the next association-key of the new item
         let associationKey = scope.carouselItem ? scope.carouselItem.fieldId : customRel || scope.rel;
+        const field = associationKey.split('--')[0];
 
         const isItemBeingAdded = updated != null && scope.item.associations[associationKey] == null;
 
@@ -111,7 +113,7 @@ export function AssociationController(content, superdesk, renditions, notify) {
             isItemBeingAdded
             && scope.field?.field_type === 'media' // scope.field is not available from sdItemAssociation
         ) {
-            const mediaItemsForCurrentField = getAssociationsByField(scope.item, scope.field);
+            const mediaItemsForCurrentField = getAssociationsByFieldId(scope.item.associations, scope.field._id);
             const allowedItemsCount = scope.field.field_options.multiple_items?.enabled
                 ? scope.field.field_options.multiple_items.max_items
                 : 1;
@@ -134,8 +136,14 @@ export function AssociationController(content, superdesk, renditions, notify) {
         }
 
         if (scope.field != null && scope.field.field_type === 'media' && updated != null && updated.order == null) {
-            // if the field is of type media-gallery, assign order to the item being added
-            updated['order'] = scope.currentIndex;
+            // get greatest order from current items(or -1 if there aren't any items) and add one
+            const nextOrder = (
+                getAssociationsByFieldId(scope.item.associations, field)
+                    .map(({order}) => order)
+                    .sort((a, b) => b - a)[0] ?? -1
+            ) + 1;
+
+            updated['order'] = nextOrder;
         }
         data[associationKey] = updated;
         scope.item.associations = angular.extend({}, scope.item.associations, data);
