@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import {checkRenditions} from 'apps/authoring/authoring/controllers/AssociationController';
+import {checkRenditions, getAssociationsByFieldId} from 'apps/authoring/authoring/controllers/AssociationController';
 import {IArticleField} from 'superdesk-api';
 
 /**
@@ -104,11 +104,7 @@ export function MediaPreview(api, $rootScope, desks, superdesk, content, storage
                 return _.size(scope.getAssociatedItems(associations, fieldId));
             };
 
-            scope.getAssociatedItems = function(associations, fieldId) {
-                var result = _.filter(associations, (association, key) => key.indexOf(fieldId) !== -1);
-
-                return result;
-            };
+            scope.getAssociatedItems = getAssociationsByFieldId;
 
             desks.initialize().then(() => {
                 scope.userLookup = desks.userLookup;

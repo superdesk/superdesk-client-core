@@ -4,7 +4,7 @@ import {Dropdown, NavTabs} from 'core/ui/components';
 import {connect} from 'react-redux';
 
 import {convertToRaw, ContentState, SelectionState, EditorState, RawDraftContentState, convertFromRaw} from 'draft-js';
-import {highlightsConfig} from '../../highlightsConfig';
+import {getHighlightsConfig} from '../../highlightsConfig';
 import {getAuthorInfo} from '../../actions';
 import {connectPromiseResults} from 'core/helpers/ReactRenderAsync';
 import {hidePopups} from '../../actions';
@@ -138,7 +138,7 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
                 });
 
                 this.props.highlightsManager.addHighlight(
-                    highlightsConfig.ANNOTATION.type,
+                    getHighlightsConfig().ANNOTATION.type,
                     {
                         data: {
                             msg,
