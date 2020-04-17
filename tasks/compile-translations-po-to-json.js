@@ -2,6 +2,7 @@ var fs = require('fs');
 var path = require('path');
 var execSync = require('child_process').execSync;
 var _ = require('lodash');
+var getModuleDir = require('./get-module-directory').getModuleDir;
 
 function isDirectory(path) {
     try {
@@ -82,7 +83,7 @@ function compileTranslationsPoToJson(grunt) {
             return;
         }
 
-        var po2json = path.join(clientCoreRoot, 'node_modules/gettext.js/bin/po2json');
+        var po2json = `${getModuleDir('gettext.js')}/bin/po2json`;
         var poFile = `${translationsPoDir}/${filename}`;
         var jsonFile = `${translationsJsonDir}/${filename.replace('.po', '.json')}`;
 
