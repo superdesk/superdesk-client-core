@@ -66,7 +66,6 @@ function compileTranslationsPoToJson(grunt) {
     const clientCoreRoot = path.join(__dirname, '../');
     const translationsPoDir = path.join(clientCoreRoot, 'po');
     const translationsJsonDir = path.join(currentDir, 'dist', 'languages');
-    const nodeModulesPath = path.join(currentDir, 'node_modules');
 
     if (fs.existsSync(translationsJsonDir) !== true) {
         fs.mkdirSync(translationsJsonDir);
@@ -83,7 +82,7 @@ function compileTranslationsPoToJson(grunt) {
             return;
         }
 
-        var po2json = `${nodeModulesPath}/gettext.js/bin/po2json`;
+        var po2json = path.join(clientCoreRoot, 'node_modules/gettext.js/bin/po2json');
         var poFile = `${translationsPoDir}/${filename}`;
         var jsonFile = `${translationsJsonDir}/${filename.replace('.po', '.json')}`;
 
