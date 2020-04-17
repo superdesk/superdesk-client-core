@@ -1,7 +1,7 @@
 <div class="sd-padding-all--2 widget-content__main" ng-controller="Macros">
     <div class="macro-option" ng-show="groupedMacros">
         <span translate>Group Macros</span>
-        <span class="pull-right" sd-switch ng-model="groupedList"></span>
+        <span class="pull-right" sd-switch ng-model="groupedList" data-test-id="group-macros-toggle"></span>
     </div>
     <div ng-show="!groupedList">
         <ul class="link-list" sd-loading="loading">

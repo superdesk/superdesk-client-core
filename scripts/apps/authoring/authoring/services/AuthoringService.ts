@@ -45,7 +45,7 @@ function canRewrite(item: IArticle): true | Array<string> {
     }
 
     if (item.broadcast?.master_id != null) {
-        errors.push('Unknown error occured'); // TODO: figure out the reason
+        errors.push(gettext('Can not update a broadcast version of the story.'));
     }
 
     if (item.rewrite_of != null && !(isPublished(item) || appConfig.workflow_allow_multiple_updates)) {
