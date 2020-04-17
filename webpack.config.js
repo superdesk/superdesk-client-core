@@ -2,7 +2,7 @@ var path = require('path');
 var webpack = require('webpack');
 var lodash = require('lodash');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-var getModuleDir = require('./tasks/get-module-directory').getModuleDir;
+var {getModuleDir} = require('./tasks/get-module-directory');
 
 function countOccurences(_string, substring) {
     return _string.split(substring).length - 1;
