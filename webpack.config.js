@@ -1,6 +1,7 @@
 var path = require('path');
 var webpack = require('webpack');
 var lodash = require('lodash');
+var {getModuleDir} = require('./tasks/get-module-directory');
 
 function countOccurences(_string, substring) {
     return _string.split(substring).length - 1;
@@ -24,7 +25,7 @@ module.exports = function makeConfig(grunt) {
     // include only 'superdesk-core' and valid modules inside node_modules
     let validModules = ['superdesk-core'].concat(apps);
 
-    const jQueryModule = `${__dirname}/node_modules/jquery`;
+    const jQueryModule = getModuleDir('jquery');
 
     return {
         entry: {
