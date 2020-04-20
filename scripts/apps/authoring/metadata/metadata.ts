@@ -5,6 +5,7 @@ import {getVocabularySelectionTypes} from '../../vocabularies/constants';
 import {gettext} from 'core/utils';
 import PlacesServiceFactory from './PlacesService';
 import {appConfig} from 'appConfig';
+import {ISubject} from 'superdesk-api';
 
 MetadataCtrl.$inject = [
     '$scope', 'desks', 'metadata', 'privileges', 'datetimeHelper', 'userList',
@@ -343,8 +344,8 @@ function MetadropdownFocusDirective(keyboardManager) {
     };
 }
 
-MetaDropdownDirective.$inject = ['$filter'];
-function MetaDropdownDirective($filter) {
+MetaDropdownDirective.$inject = ['$filter', 'metadata'];
+function MetaDropdownDirective($filter, metadata) {
     return {
         scope: {
             list: '=',
@@ -362,6 +363,7 @@ function MetaDropdownDirective($filter) {
         templateUrl: 'scripts/apps/authoring/metadata/views/metadata-dropdown.html',
         link: function(scope, elem) {
             scope.multiInputFields = ['place', 'genre', 'anpa_category', 'subject', 'authors'];
+            scope.getLocaleName = metadata.getLocaleName;
 
             scope.select = function(item) {
                 var fieldObject: {[fieldId: string]: any} = {};
@@ -412,7 +414,11 @@ function MetaDropdownDirective($filter) {
                 scope.item[scope.field] = scope.item.default;
             }
 
-            scope.findItemByScheme = (item, scheme) => item.find((o) => o.scheme === scheme);
+            scope.findItemByScheme = (items: Array<ISubject>, scheme: string) => {
+                const term = items.find((item) => item.scheme === scheme);
+
+                return metadata.getLocaleName(term, scope.item);
+            };
 
             scope.$applyAsync(() => {
                 if (scope.list) {
@@ -642,6 +648,7 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
         templateUrl: 'scripts/apps/authoring/metadata/views/metadata-terms.html',
         link: function(scope, elem, attrs) {
             metadata.subjectScope = scope;
+            scope.getLocaleName = metadata.getLocaleName;
             var reloadList = scope.reloadList === 'true';
             var includeParent = scope.includeParent === 'true';
             var searchUnique = scope.searchUnique === 'true';
@@ -938,18 +945,6 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                 scope.terms = $filter('sortByName')(scope.terms);
                 scope.change({item: scope.item, field: scope.field});
                 elem.find('.dropdown__toggle').focus(); // retain focus
-            };
-
-            scope.getLocaleName = function(term) {
-                if (!term) {
-                    return 'None';
-                }
-                if (term.translations && scope.item.language
-                    && term.translations.name[scope.item.language]) {
-                    return term.translations.name[scope.item.language];
-                }
-
-                return term.name;
             };
 
             scope.setPreferredView = (view, $event) => {
@@ -1355,6 +1350,17 @@ export function MetadataService(api, subscribersService, vocabularies, $rootScop
         },
         priorityByValue: function(value) {
             return this._priorityByValue[value] || null;
+        },
+        getLocaleName: function(term, item) {
+            if (!term) {
+                return 'None';
+            }
+            if (term.translations && item.language
+                && term.translations.name[item.language]) {
+                return term.translations.name[item.language];
+            }
+
+            return term.name;
         },
     };
 
