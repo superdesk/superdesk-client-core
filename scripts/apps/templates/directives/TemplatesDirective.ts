@@ -1,5 +1,6 @@
 import notifySaveError from '../helpers';
 import {gettext} from 'core/utils';
+import {TEMPLATEFILTERS} from '../constants';
 
 TemplatesDirective.$inject = ['notify', 'api', 'templates', 'modal', 'desks', 'weekdays',
     'content', '$filter', 'session', 'lodash'];
@@ -359,14 +360,13 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
                     $scope.template.schedule_stage : true;
 
             $scope.filters = [
-                {label: gettext('All'), value: 'All'},
-                {label: gettext('Personal'), value: 'Personal'},
-                {label: gettext('No Desk'), value: 'None'},
+                TEMPLATEFILTERS.All,
+                TEMPLATEFILTERS.Personal,
             ];
-
             if (templates.isAdmin(true)) {
-                $scope.filters.splice(2, 0, {label: gettext('Private'), value: 'Private'});
+                $scope.filters.push(TEMPLATEFILTERS.Private);
             }
+            $scope.filters.push(TEMPLATEFILTERS.NoDesk);
 
             // holds the index of the active filter.
             $scope.activeFilter = 0;
