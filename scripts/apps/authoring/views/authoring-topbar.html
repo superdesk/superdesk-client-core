@@ -56,11 +56,11 @@
                 <span class="btn__text--short" translate>T D</span>
         </button>
         <button
-                ng-if="$root.config.features.customAuthoringTopbar.closeAndContinue === true && canRewriteArticle()"
-                class="btn btn--custom"
+                ng-if="$root.config.features.customAuthoringTopbar.closeAndContinue === true"
+                class="btn sd-overflow-ellipsis btn--custom"
                 ng-click="saveAndContinue(closeAndContinue, false)"
                 title="{{gettext('Close and Continue')}}">
-                <span class="btn__text" translate>Close and Continue</span>
+                <span class="btn__text sd-overflow-ellipsis" translate>Close & Continue</span>
                 <span class="btn__text--short" translate>C & C</span>
         </button>
         <button
@@ -73,7 +73,7 @@
                 <span class="btn__text--short" translate>P</span>
         </button>
         <button
-                ng-if="$root.config.features.customAuthoringTopbar.publishAndContinue === true && canPublishOnDesk() && canRewriteArticle()"
+                ng-if="$root.config.features.customAuthoringTopbar.publishAndContinue === true && canPublishOnDesk()"
                 class="btn btn--custom btn--publish-plus"
                 ng-click="saveAndContinue(publishAndContinue, true)"
                 title="{{ :: 'Publish and Continue' | translate }}">

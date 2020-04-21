@@ -230,14 +230,18 @@ declare module 'superdesk-api' {
         lock_action: any;
         lock_user: any;
         lock_session: any;
-        rewritten_by?: string;
+        rewritten_by?: IArticle['_id'];
+        rewrite_of?: IArticle['_id'];
         profile: string;
         word_count: number;
         version_creator: string;
         state: ITEM_STATE;
-        embargo: any;
-        signal: any;
-        broadcast: any;
+        embargo?: any;
+        signal?: any;
+        broadcast?: {
+            master_id?: any;
+            status?: any;
+        };
         flags: any;
         source: string;
         /** correction counter, is reset on rewrite */
@@ -857,6 +861,54 @@ declare module 'superdesk-api' {
 
 
     export interface ISuperdeskGlobalConfig {
+        // FROM SERVER
+        default_language: string;
+        disallowed_characters: Array<string>; // applies to slugline
+        schema: any;
+        editor: {
+            vidible?: any;
+            picture?: any;
+        };
+        feedback_url: any;
+        override_ednote_for_corrections: any;
+        override_ednote_template: any;
+        default_genre: any;
+        japanese_characters_per_minute: any;
+        validator_media_metadata: any;
+        publish_content_expiry_minutes: any;
+        high_priority_queue_enabled: any;
+        attachments_max_size: any;
+        attachments_max_files: any;
+        ingest_expiry_minutes: any;
+        content_expiry_minutes: any;
+        xmpp_auth: any;
+        saml_auth: any;
+        google_auth: any;
+        saml_label: any;
+        archive_autocomplete: boolean;
+
+        // allow updates for items which aren't published yet
+        workflow_allow_multiple_updates: boolean;
+
+        allow_updating_scheduled_items: boolean;
+
+        // TANSA SERVER CONFIG
+        tansa?: {
+            base_url: string;
+            app_id: string;
+            app_version: string;
+            user_id: string;
+            profile_id: number;
+            license_key: string;
+            profiles: {[language: string]: number};
+        },
+
+        // FROM CLIENT
+        server: {
+            url: string;
+            ws: any;
+        };
+        apps: any;
         defaultRoute: string;
         features: {
             swimlane: {

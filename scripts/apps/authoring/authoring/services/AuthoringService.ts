@@ -10,6 +10,55 @@ import {ITEM_STATE, CANCELED_STATES, READONLY_STATES} from 'apps/archive/constan
 import {AuthoringWorkspaceService} from './AuthoringWorkspaceService';
 import {extensions} from 'core/extension-imports.generated';
 import {IPublishedArticle, IArticle, IExtensionActivationResult} from 'superdesk-api';
+import {appConfig} from 'appConfig';
+import {showErrorsModal} from 'core/services/modalService';
+
+function isReadOnly(item: IArticle) {
+    return READONLY_STATES.includes(item.state);
+}
+
+function canRewrite(item: IArticle): true | Array<string> {
+    const errors = [];
+
+    if (
+        isReadOnly(item)
+        && !(item.state === ITEM_STATE.SCHEDULED && appConfig.allow_updating_scheduled_items === true)
+    ) {
+        errors.push(gettext('The item is read-only.'));
+    }
+
+    if (item.type !== 'text') {
+        errors.push(gettext(
+            'Updates can only be created for text items. The type of this item is {{type}}',
+            {type: item.type},
+        ));
+    }
+
+    if (item.embargo != null) {
+        errors.push(gettext('The item is embargoed.'));
+    }
+
+    if (item.rewritten_by != null) {
+        errors.push(gettext(
+            'An update for this version of the item already exists. '
+            + 'To create another update, find the latest version of the item.',
+        ));
+    }
+
+    if (item.broadcast != null && item.broadcast.master_id != null) {
+        errors.push(gettext('Can not update a broadcast version of the story.'));
+    }
+
+    if (item.rewrite_of != null && !(isPublished(item) || appConfig.workflow_allow_multiple_updates)) {
+        errors.push(gettext('An update can not be created for an item which is not published yet.'));
+    }
+
+    if (errors.length < 1) {
+        return true;
+    } else {
+        return errors;
+    }
+}
 
 interface IPublishOptions {
     notifyErrors: boolean;
@@ -100,7 +149,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             .then((item) => autosave.open(item).then(null, (err) => item));
     };
 
-    this.rewrite = function(item) {
+    this.rewrite = function(item): void {
         var authoringWorkspace: AuthoringWorkspaceService = $injector.get('authoringWorkspace');
 
         function getOnRewriteAfterMiddlewares()
@@ -117,25 +166,30 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             );
         }
 
-        session.getIdentity()
-            .then((user) => {
-                var updates = {
-                    desk_id: desks.getCurrentDeskId() || item.task.desk,
-                };
+        const errors = canRewrite(item);
 
-                return api.save('archive_rewrite', {}, updates, Object.freeze(item))
-                    .then((newItem: IArticle) => {
-                        const onRewriteAfterMiddlewares = getOnRewriteAfterMiddlewares();
+        if (Array.isArray(errors)) {
+            showErrorsModal(gettext('An update can not be created'), errors);
 
-                        return onRewriteAfterMiddlewares.reduce(
-                            (current, next) => {
-                                return current.then((result) => {
-                                    return next(result);
-                                });
-                            },
-                            Promise.resolve(newItem),
-                        );
-                    });
+            return;
+        }
+
+        var updates = {
+            desk_id: desks.getCurrentDeskId() || item.task.desk,
+        };
+
+        api.save('archive_rewrite', {}, updates, Object.freeze(item))
+            .then((newItem: IArticle) => {
+                const onRewriteAfterMiddlewares = getOnRewriteAfterMiddlewares();
+
+                return onRewriteAfterMiddlewares.reduce(
+                    (current, next) => {
+                        return current.then((result) => {
+                            return next(result);
+                        });
+                    },
+                    Promise.resolve(newItem),
+                );
             })
             .then((newItem) => {
                 notify.success(gettext('Update Created.'));
@@ -602,13 +656,8 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         let isReadOnlyState = this._isReadOnly(currentItem);
         let userPrivileges = privileges.privileges;
 
-        action.re_write = !isReadOnlyState && _.includes(['text'], currentItem.type) &&
-            !currentItem.embargo && !currentItem.rewritten_by &&
-            (!currentItem.broadcast || !currentItem.broadcast.master_id) &&
-            (!currentItem.rewrite_of || currentItem.rewrite_of && isPublished(currentItem));
-
-        action.resend = _.includes(['text'], currentItem.type) &&
-            isPublished(currentItem, false);
+        action.re_write = canRewrite(currentItem) === true;
+        action.resend = currentItem.type === 'text' && isPublished(currentItem, false);
 
         // mark item for highlights
         action.mark_item_for_highlight = currentItem.task && currentItem.task.desk &&
