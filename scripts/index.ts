@@ -39,45 +39,48 @@ function loadConfigs() {
 export function loadTranslations() {
     const language = getUserInterfaceLanguage();
 
-    if (language === 'en') {
-        return Promise.resolve(null);
-    } else {
-        const filename = `/languages/${language}.json`;
+    return (() => {
+        if (language === 'en') {
+            return Promise.resolve({'': {'language': 'en', 'plural-forms': 'nplurals=2; plural=(n != 1);'}});
+        } else {
+            const filename = `/languages/${language}.json`;
 
-        return fetch(filename)
-            .then((response) => response.json())
-            .then((translations) => {
-                if (
-                    translations[''] == null
-                    || translations['']['language'] == null
-                    || translations['']['plural-forms'] == null
-                ) {
-                    throw new Error(`Language metadata not found in "${filename}"`);
-                }
+            return fetch(filename)
+                .then((response) => response.json())
+                .then((translations) => {
+                    if (
+                        translations[''] == null
+                        || translations['']['language'] == null
+                        || translations['']['plural-forms'] == null
+                    ) {
+                        throw new Error(`Language metadata not found in "${filename}"`);
+                    }
 
-                const langOverride = appConfig.langOverride ?? {};
-                const pluralForms = translations['']['plural-forms'];
+                    return translations;
+                });
+        }
+    })().then((translations) => {
+            const langOverride = appConfig.langOverride ?? {};
+            const pluralForms = translations['']['plural-forms'];
 
-                if (langOverride[language] != null) {
-                    Object.assign(translations, langOverride[language]);
-                }
+            if (langOverride[language] != null) {
+                Object.assign(translations, langOverride[language]);
+            }
 
-                i18n.setMessages(
-                    'messages',
-                    language,
-                    translations,
-                    pluralForms,
-                );
+            i18n.setMessages(
+                'messages',
+                language,
+                translations,
+                pluralForms,
+            );
 
-                i18n.setLocale(language);
+            i18n.setLocale(language);
 
-                return {
-                    translations,
-                    language,
-                    pluralForms,
-                };
-            });
-    }
+            return {
+                translations,
+                language,
+            };
+        });
 }
 
 let started = false;
