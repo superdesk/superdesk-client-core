@@ -60,27 +60,27 @@ export function loadTranslations() {
                 });
         }
     })().then((translations) => {
-            const langOverride = appConfig.langOverride ?? {};
-            const pluralForms = translations['']['plural-forms'];
+        const langOverride = appConfig.langOverride ?? {};
+        const pluralForms = translations['']['plural-forms'];
 
-            if (langOverride[language] != null) {
-                Object.assign(translations, langOverride[language]);
-            }
+        if (langOverride[language] != null) {
+            Object.assign(translations, langOverride[language]);
+        }
 
-            i18n.setMessages(
-                'messages',
-                language,
-                translations,
-                pluralForms,
-            );
+        i18n.setMessages(
+            'messages',
+            language,
+            translations,
+            pluralForms,
+        );
 
-            i18n.setLocale(language);
+        i18n.setLocale(language);
 
-            return {
-                translations,
-                language,
-            };
-        });
+        return {
+            translations,
+            language,
+        };
+    });
 }
 
 let started = false;
