@@ -113,7 +113,7 @@ export function TemplatesService(api, session, $q, preferencesService, privilege
 
         return $q.when(criteria)
             .then((criteriaReady) => {
-                if (!_.isEmpty(criteriaReady)) {
+                if (Object.keys(criteriaReady || {}).length > 0) {
                     params.where = JSON.stringify({
                         $and: [criteriaReady],
                     });
