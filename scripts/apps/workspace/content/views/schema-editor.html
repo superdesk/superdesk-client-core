@@ -94,7 +94,7 @@
                     </div>
                     <!-- END IF -->
 
-                    <div class="field" ng-if="model.schema[id].type === 'media'">
+                    <div class="field" ng-if="id === 'feature_media' && model.schema[id].type === 'media'">
                         <label translate>Show Crops</label>
                         <div sd-check ng-model="model.editor[id].showCrops"></div>
                     </div>

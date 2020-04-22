@@ -74,38 +74,34 @@ export function dragEventShouldShowDropZone(event) {
     return intersection.length > 0;
 }
 
-/**
-    * @ngdoc method
-    * @name Editor3#canDropMedia
-    * @param {Object} e Event
-    * @param {Array} editorConfig
-    * @returns {Boolean} Returns true if the item is permitted.
-    * @description Check if the editor accept images and if current item is valid media.
-*/
-export function canDropMedia(e, editorConfig) {
-    const {editorFormat, readOnly, singleLine} = editorConfig;
-    const supportsMedia = !readOnly && !singleLine && editorFormat.includes('media');
+// caret position isn't displayed if a boolean is returned while dragging text
+export function canDropMedia(e, editorConfig): undefined | boolean {
+    // apply restrictions only if it is something other than text(IArticle object, image file) being dragged
+    if ((e?.originalEvent?.dataTransfer?.types ?? []).some((type) => type !== 'text/plain' && type !== 'text/html')) {
+        const {editorFormat, readOnly, singleLine} = editorConfig;
+        const supportsMedia = !readOnly && !singleLine && editorFormat.includes('media');
 
-    if (!supportsMedia) {
-        return false;
-    }
-
-    const mediaType = getValidMediaType(e.originalEvent);
-    const dataTransfer = e.originalEvent.dataTransfer;
-    let isValidMedia = !!mediaType;
-
-    if (mediaType === 'Files' && dataTransfer.files.length > 0) {
-        // checks if files dropped from external folder are valid or not
-        const isValidFileType = Object.values(dataTransfer.files).every(
-            (file: File) => file.type.startsWith('audio/')
-            || file.type.startsWith('image/') || file.type.startsWith('video/'));
-
-        if (!isValidFileType) {
+        if (!supportsMedia) {
             return false;
         }
-    }
 
-    return isValidMedia;
+        const mediaType = getValidMediaType(e.originalEvent);
+        const dataTransfer = e.originalEvent.dataTransfer;
+        let isValidMedia = !!mediaType;
+
+        if (mediaType === 'Files' && dataTransfer.files.length > 0) {
+            // checks if files dropped from external folder are valid or not
+            const isValidFileType = Object.values(dataTransfer.files).every(
+                (file: File) => file.type.startsWith('audio/')
+                || file.type.startsWith('image/') || file.type.startsWith('video/'));
+
+            if (!isValidFileType) {
+                return false;
+            }
+        }
+
+        return isValidMedia;
+    }
 }
 
 interface IProps {
