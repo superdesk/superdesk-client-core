@@ -126,11 +126,13 @@
                             </div>
 
                             <div ng-if="disableMonitoringCreateItem == null && (!state.opened && (type !== 'spike' && type !== 'highlights'))" class="dropdown dropdown--align-right strict" sd-tooltip="{{ gettext('Create new item') }}" flow="left" dropdown>
-                                <button
-                                    class="navbtn dropdown__toggle sd-create-btn"
-                                    dropdown__toggle
-                                    data-test-id="content-create"
-                                ></button>
+                                <div ngf-drop="openUpload($files)" ngf-multiple="true">
+                                    <button
+                                        class="navbtn dropdown__toggle sd-create-btn"
+                                        dropdown__toggle
+                                        data-test-id="content-create"
+                                    ></button>
+                                </div>
                                 <div
                                     sd-content-create
                                     class="dropdown__menu dropdown__menu--has-head-foot pull-right"

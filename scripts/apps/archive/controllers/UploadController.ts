@@ -312,6 +312,8 @@ export function UploadController(
                     file: file,
                     getThumbnail: () => Promise.resolve('<i class="icon--2x icon-audio"></i>'),
                 });
+            } else {
+                return Promise.resolve({error: {isAllowedFileType: false}});
             }
         })).then((result) => {
             let uploadOfDisallowedFileTypesAttempted: boolean = false;
