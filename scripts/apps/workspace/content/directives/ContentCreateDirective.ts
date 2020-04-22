@@ -26,7 +26,6 @@ interface IScope extends ng.IScope {
     create: (action: IItemCreationAction) => Promise<IArticle>;
     onCreated?: (item: Array<IArticle>) => void;
     defaultTemplate: any;
-    openUpload: () => void;
     canCreatePackage: () => boolean;
     createPackage: () => void;
     contentTemplates: any;
