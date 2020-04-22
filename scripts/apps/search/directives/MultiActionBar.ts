@@ -7,7 +7,8 @@ import {IArticle} from 'superdesk-api';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 
 MultiActionBar.$inject = [
-    'asset', 'multi', 'authoringWorkspace', 'superdesk', 'keyboardManager', 'desks', 'lock', 'api',
+    'asset', 'multi', 'authoringWorkspace', 'superdesk',
+    'keyboardManager', 'desks', 'api', 'archiveService',
 ];
 export function MultiActionBar(
     asset,
@@ -16,8 +17,8 @@ export function MultiActionBar(
     superdesk,
     keyboardManager,
     desks,
-    lock,
     api,
+    archiveService,
 ) {
     return {
         controller: 'MultiActionBar',
@@ -75,6 +76,24 @@ export function MultiActionBar(
                             canAutocloseMultiActionBar: false,
                         });
                     }
+                } else if (scope.type === 'externalsource') {
+                    actions.push({
+                        label: gettext('Fetch'),
+                        icon: 'icon-archive',
+                        onTrigger: () => {
+                            scope.action.fetch();
+                            scope.$apply();
+                        },
+                        canAutocloseMultiActionBar: false,
+                    }, {
+                        label: gettext('Fetch to'),
+                        icon: 'icon-fetch-as',
+                        onTrigger: () => {
+                            scope.action.fetch(true);
+                            scope.$apply();
+                        },
+                        canAutocloseMultiActionBar: false,
+                    });
                 } else if (scope.type === 'archive') {
                     if (scope.action.canEditMetadata() && scope.activity['edit.item']) {
                         actions.push({
@@ -120,17 +139,6 @@ export function MultiActionBar(
                             canAutocloseMultiActionBar: false,
                         });
                     }
-                    if (scope.state === 'spiked') {
-                        actions.push({
-                            label: gettext('Unspike'),
-                            icon: 'icon-unspike',
-                            onTrigger: () => {
-                                scope.action.unspikeItems();
-                                scope.$apply();
-                            },
-                            canAutocloseMultiActionBar: false,
-                        });
-                    }
                     if (scope.activity['edit.item']) {
                         actions.push({
                             label: gettext('Send to'),
@@ -153,6 +161,16 @@ export function MultiActionBar(
                             canAutocloseMultiActionBar: false,
                         });
                     }
+                } else if (scope.type === 'spike') {
+                    actions.push({
+                        label: gettext('Unspike'),
+                        icon: 'icon-unspike',
+                        onTrigger: () => {
+                            scope.action.unspikeItems();
+                            scope.$apply();
+                        },
+                        canAutocloseMultiActionBar: false,
+                    });
                 }
 
                 if (scope.action.canPackageItems()) {
@@ -191,6 +209,38 @@ export function MultiActionBar(
                             canAutocloseMultiActionBar: true,
                         });
                     }
+                }
+
+                if (scope.activity['duplicateTo']) {
+                    actions.push({
+                        label: gettext('Duplicate To'),
+                        icon: 'icon-copy',
+                        group: {
+                            label: gettext('Duplicate'),
+                            icon: 'icon-copy',
+                        },
+                        onTrigger: () => {
+                            scope.action.duplicateTo();
+                            scope.$apply();
+                        },
+                        canAutocloseMultiActionBar: false,
+                    });
+                }
+
+                if (scope.activity['duplicateInPlace']) {
+                    actions.push({
+                        label: gettext('Duplicate In Place'),
+                        icon: 'icon-copy',
+                        group: {
+                            label: gettext('Duplicate'),
+                            icon: 'icon-copy',
+                        },
+                        onTrigger: () => {
+                            scope.action.duplicateInPlace();
+                            scope.$apply();
+                        },
+                        canAutocloseMultiActionBar: false,
+                    });
                 }
 
                 return actions;
@@ -246,10 +296,12 @@ export function MultiActionBar(
                 var activities = {};
 
                 angular.forEach(items, (item) => {
-                    types[item._type] = 1;
+                    const type = archiveService.getType(item);
+
+                    types[type] = 1;
                     states.push(item.state);
 
-                    var _activities = superdesk.findActivities({action: 'list', type: item._type}, item) || [];
+                    var _activities = superdesk.findActivities({action: 'list', type: type}, item) || [];
                     let allowOnSessionOwnerLock = ['spike', 'export'];
 
                     _activities.forEach((activity) => {

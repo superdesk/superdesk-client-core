@@ -6,12 +6,12 @@ import Label from './Label';
 import Divider from './Divider';
 import Item from './Item';
 import SubmenuDropdown from './SubmenuDropdown';
-import {AUTHORING_MENU_GROUPS} from '../../../authoring/authoring/constants';
+import {getAuthoringMenuGroups} from '../../../authoring/authoring/constants';
 import {closeActionsMenu, menuHolderElem, positionPopup} from '../../helpers';
 import {gettext} from 'core/utils';
 import {IArticle, IArticleAction, IDisplayPriority} from 'superdesk-api';
 import {sortByDisplayPriority} from 'core/helpers/sortByDisplayPriority';
-import {getActionsFromExtensions} from 'core/superdesk-api-helpers';
+import {getArticleActionsFromExtensions} from 'core/superdesk-api-helpers';
 
 interface IProps {
     item: IArticle;
@@ -46,7 +46,7 @@ export default class MenuItems extends React.Component<IProps, IState> {
 
         // actions(except viewing an item) are not allowed for items in legal archive
         if (this.props.item._type !== 'legal_archive') {
-            getActionsFromExtensions(this.props.item).then((actions) => {
+            getArticleActionsFromExtensions(this.props.item).then((actions) => {
                 this.setState({
                     actionsFromExtensions: actions,
                 });
@@ -124,7 +124,7 @@ export default class MenuItems extends React.Component<IProps, IState> {
 
         const moveActionsToDefaultGroup = ['Planning', 'duplicate'];
 
-        AUTHORING_MENU_GROUPS.forEach((group) => {
+        getAuthoringMenuGroups().forEach((group) => {
             const realGroupId = group._id;
             const stackGroupId = moveActionsToDefaultGroup.includes(group._id) ? 'default' : group._id;
 
@@ -143,7 +143,7 @@ export default class MenuItems extends React.Component<IProps, IState> {
                                 <SubmenuDropdown
                                     label={gettext(group.label)}
                                     submenu={submenu}
-                                    icon={actions[realGroupId][0].icon}
+                                    icon={group.icon ? group.icon : null}
                                 />
                             </li>
                         ),
@@ -162,7 +162,7 @@ export default class MenuItems extends React.Component<IProps, IState> {
 
         // adding menu items for the groups that are not defined above
         Object.keys(actions).forEach((groupId) => {
-            const existingGroup = AUTHORING_MENU_GROUPS.find((g) => g._id === groupId);
+            const existingGroup = getAuthoringMenuGroups().find((g) => g._id === groupId);
 
             if (!existingGroup) {
                 const finalGroupId = moveActionsToDefaultGroup.includes(groupId) ? 'default' : groupId;

@@ -3,7 +3,7 @@ import moment from 'moment';
 import {TextWithMentions} from 'apps/users/components';
 import CommentTextArea from './CommentTextArea';
 import PropTypes from 'prop-types';
-import {UserAvatar} from 'apps/users/components/UserAvatar';
+import {UserAvatarFromUserId} from 'apps/users/components/UserAvatarFromUserId';
 import {EditorHighlightsHeader} from 'core/editor3/editorPopup/EditorHighlightsHeader';
 import {FluidRows} from '../../fluid-flex-rows/fluid-rows';
 import {FluidRow} from '../../fluid-flex-rows/fluid-row';
@@ -44,7 +44,7 @@ export class Comment extends React.Component<any, any> {
     render() {
         const {onRemove, isAuthor, isReply} = this.props;
 
-        const {author, avatar, date} = this.props.data;
+        const {author, authorId, date} = this.props.data;
 
         const absoluteDateString = moment(date).format('MMMM Do YYYY, h:mm:ss a');
         const relativeDateString = moment(date).calendar();
@@ -68,9 +68,19 @@ export class Comment extends React.Component<any, any> {
             <FluidRows onClick={this.props.onClick} className={isReply ? 'comment-box__reply-item' : null}>
                 <FluidRow scrollable={false}>
                     <EditorHighlightsHeader availableActions={availableActions}>
-                        <UserAvatar displayName={author} pictureUrl={avatar} />
-                        <p className="editor-popup__author-name">{author}</p>
-                        <time className="editor-popup__time" title={relativeDateString}>{absoluteDateString}</time>
+                        <div className="flex-row sibling-spacer-10">
+                            <UserAvatarFromUserId userId={authorId} />
+                            <div>
+                                <p className="editor-popup__author-name">{author}</p>
+                                <time
+                                    className="editor-popup__time"
+                                    title={relativeDateString}
+                                    style={{display: 'block'}}
+                                >
+                                    {absoluteDateString}
+                                </time>
+                            </div>
+                        </div>
                     </EditorHighlightsHeader>
 
                     {

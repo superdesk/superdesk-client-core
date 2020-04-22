@@ -1,16 +1,17 @@
-import {get} from 'lodash';
 import {getSuperdeskType} from 'core/utils';
 import {gettext} from 'core/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
-import {IArticle} from 'superdesk-api';
-import {IVocabulary} from 'superdesk-interfaces/Vocabulary';
+import {IArticle, IArticleField} from 'superdesk-api';
 import {IDirectiveScope} from 'types/Angular/DirectiveScope';
+import {getAssociationsByFieldId} from '../../authoring/authoring/controllers/AssociationController';
 
 const ARCHIVE_TYPES = ['archive', 'published'];
 const isInArchive = (item: IArticle) => item._type != null && ARCHIVE_TYPES.includes(item._type);
 
 interface IScope extends IDirectiveScope<void> {
-    field: IVocabulary;
+    onCreated: (items: Array<IArticle>) => void;
+    gettext: (text: any, params?: any) => string;
+    field: IArticleField;
     editable: boolean;
     item: IArticle;
     loading: boolean;
@@ -22,6 +23,8 @@ interface IScope extends IDirectiveScope<void> {
     refreshRelatedItems: () => void;
     removeRelatedItem: (key: string) => void;
     openRelatedItem: (item: IArticle) => void;
+    canAddRelatedItems: () => boolean;
+    isLocked: (item: IArticle) => boolean;
 }
 
 /**
@@ -34,8 +37,22 @@ interface IScope extends IDirectiveScope<void> {
  * add related items by using drag and drop, delete related items and open related items.
  */
 
-RelatedItemsDirective.$inject = ['authoringWorkspace', 'relationsService', 'notify'];
-export function RelatedItemsDirective(authoringWorkspace: AuthoringWorkspaceService, relationsService, notify) {
+RelatedItemsDirective.$inject = [
+    'authoringWorkspace',
+    'relationsService',
+    'notify',
+    'lock',
+    '$rootScope',
+    'content',
+];
+export function RelatedItemsDirective(
+    authoringWorkspace: AuthoringWorkspaceService,
+    relationsService,
+    notify,
+    lock,
+    $rootScope,
+    content,
+) {
     return {
         scope: {
             item: '=',
@@ -45,6 +62,29 @@ export function RelatedItemsDirective(authoringWorkspace: AuthoringWorkspaceServ
         },
         templateUrl: 'scripts/apps/relations/views/related-items.html',
         link: function(scope: IScope, elem, attr) {
+            scope.onCreated = (items: Array<IArticle>) => {
+                items.forEach((item) => {
+                    scope.addRelatedItem(item);
+                });
+            };
+
+            scope.gettext = gettext;
+
+            scope.isLocked = (item) => {
+                return lock.isLocked(item) || lock.isLockedInCurrentSession(item);
+            };
+
+            scope.canAddRelatedItems = () => {
+                const currentItemsLength = getAssociationsByFieldId(scope.item.associations, scope.field._id).length;
+
+                const maxCount = scope.field?.field_options?.multiple_items?.enabled === true
+                    ? scope.field.field_options.multiple_items.max_items
+                    : 1;
+
+                return scope.field?.field_options?.allowed_workflows?.in_progress === true
+                    && currentItemsLength < maxCount;
+            };
+
             const dragOverClass = 'dragover';
             const fieldOptions = scope.field?.field_options || {};
             const allowed = fieldOptions.allowed_types || {};
@@ -117,7 +157,6 @@ export function RelatedItemsDirective(authoringWorkspace: AuthoringWorkspaceServ
                         );
                         return;
                     }
-
                     scope.addRelatedItem(item);
                 });
             }
@@ -167,6 +206,7 @@ export function RelatedItemsDirective(authoringWorkspace: AuthoringWorkspaceServ
 
                 const updated = related.reduce((obj, key, index) => {
                     obj[key] = scope.item.associations[newRelated[index]];
+                    obj[key].order = parseInt(key.split('--')[1], 10);
                     return obj;
                 }, {});
 
@@ -194,12 +234,12 @@ export function RelatedItemsDirective(authoringWorkspace: AuthoringWorkspaceServ
              * @param {String} fieldId
              * @return {int} nextKey
              */
-            function getNextKey(associations, fieldId) {
+            function getNextKeyAndOrder(associations, fieldId) {
                 for (let i = 1; ; i++) {
                     const key = fieldId + '--' + i;
 
                     if (associations[key] == null) {
-                        return key;
+                        return {key, order: i};
                     }
                 }
             }
@@ -209,21 +249,31 @@ export function RelatedItemsDirective(authoringWorkspace: AuthoringWorkspaceServ
              *
              * @param {Object} item
              */
-            scope.addRelatedItem = (item) => {
-                const key = getNextKey(scope.item.associations || {}, scope.field._id);
-                let data = {};
+            scope.addRelatedItem = (_item) => {
+                scope.loading = true;
+                content.dropItem(_item)
+                    .then((item) => {
+                        let data = {};
+                        const {key, order} = getNextKeyAndOrder(scope.item.associations || {}, scope.field._id);
 
-                if (isInArchive(item)) {
-                    data[key] = {
-                        _id: item._id,
-                        type: item.type, // used to display associated item types
-                    };
-                } else {
-                    data[key] = item; // use full item for external items, like images from external search provider
-                }
+                        item.order = order;
+                        if (isInArchive(item)) {
+                            data[key] = {
+                                _id: item._id,
+                                type: item.type, // used to display associated item types
+                                order: item.order,
+                            };
+                        } else {
+                            data[key] = item; /* use full item for external items,
+                                                like images from external search provider */
+                        }
 
-                scope.item.associations = angular.extend({}, scope.item.associations, data);
-                scope.onchange();
+                        scope.item.associations = angular.extend({}, scope.item.associations, data);
+                        scope.onchange();
+                    })
+                    .finally(() => {
+                        scope.loading = false;
+                    });
             };
 
             /**
@@ -254,6 +304,40 @@ export function RelatedItemsDirective(authoringWorkspace: AuthoringWorkspaceServ
                 if (newValue !== oldValue) {
                     scope.refreshRelatedItems();
                 }
+            });
+
+            function onItemEvent(event, payload) {
+                let shouldUpdateItems = false;
+
+                const relatedItemsIds = Object.values(scope.relatedItems).map((item) => item._id);
+
+                switch (event.name) {
+                case 'content:update':
+                    var updateItemsIds = Object.keys(payload.items);
+
+                    shouldUpdateItems = updateItemsIds.some((id) => relatedItemsIds.includes(id));
+                    break;
+                case 'item:lock':
+                case 'item:unlock':
+                    shouldUpdateItems = relatedItemsIds.some((id) => payload.item === id);
+                    break;
+                }
+
+                if (shouldUpdateItems) {
+                    scope.refreshRelatedItems();
+                }
+            }
+
+            const removeEventListeners = [
+                'item:lock',
+                'item:unlock',
+                'content:update',
+            ].map((eventName) =>
+                $rootScope.$on(eventName, onItemEvent),
+            );
+
+            scope.$on('$destroy', () => {
+                removeEventListeners.forEach((removeFn) => removeFn());
             });
         },
     };

@@ -31,7 +31,6 @@ import {
     IBaseRestApiResponse,
     IPropsGenericForm,
     IGenericListPageComponent,
-    ICrudManagerFilters,
     ICrudManager,
     IFormGroup,
 } from 'superdesk-api';
@@ -179,12 +178,26 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
         });
     }
     handleFilterFieldChange(field, nextValue, callback = noop) {
-        this.setState((prevState) => ({
-            filterValues: {
-                ...prevState.filterValues,
-                [field]: nextValue,
-            },
-        }), callback);
+        this.setState((prevState) => {
+            if (nextValue == null) {
+                return {
+                    filterValues: Object.keys(prevState.filterValues)
+                        .filter((k) => k !== field)
+                        .reduce((accumulator, nextKey) => {
+                            accumulator[nextKey] = prevState.filterValues[nextKey];
+
+                            return accumulator;
+                        }, {}),
+                };
+            } else {
+                return {
+                    filterValues: {
+                        ...prevState.filterValues,
+                        [field]: nextValue,
+                    },
+                };
+            }
+        }, callback);
     }
     validateFilters(filterValues) {
         return Object.keys(filterValues).reduce((accumulator, key) => {

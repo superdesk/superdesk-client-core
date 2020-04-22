@@ -3,12 +3,13 @@ import classNames from 'classnames';
 import {IInputType} from '../interfaces/input-types';
 import {gettext} from 'core/utils';
 
-type ISelectSingleValueItems = Array<{id: string, label: string}>;
+type ISelectSingleValueItems = Array<{id: string; label: string}>;
 
 type IProps = IInputType<string>;
 
 interface IState {
-    items: ISelectSingleValueItems;
+    items: ISelectSingleValueItems | null;
+    loading: boolean;
 }
 
 export function getSelectSingleValue(
@@ -19,12 +20,14 @@ export function getSelectSingleValue(
     return class SelectSingleValue extends React.Component<IProps, IState> {
         dependentFields: Array<string>;
         initialValue: string | undefined;
+        private _mounted: boolean;
 
         constructor(props: IProps) {
             super(props);
 
             this.state = {
                 items: null,
+                loading: true,
             };
 
             this.initialValue = props.value;
@@ -36,13 +39,22 @@ export function getSelectSingleValue(
             this.fetchData = this.fetchData.bind(this);
         }
         fetchData() {
+            this.setState({loading: true});
+
             getItems(this.props)
                 .then((items) => {
-                    this.setState({items});
+                    if (this._mounted) {
+                        this.setState({items, loading: false});
+                    }
                 });
         }
         componentDidMount() {
+            this._mounted = true;
+
             this.fetchData();
+        }
+        componentWillUnmount() {
+            this._mounted = false;
         }
         componentDidUpdate(prevProps: IProps) {
             if (
@@ -53,14 +65,14 @@ export function getSelectSingleValue(
             }
         }
         render() {
-            if (this.props.previewOutput) {
-                if (this.state.items == null) {
-                    return null; // loading
-                } else {
-                    let item = this.state.items.find(({id}) => id === this.props.value);
+            if (this.state.loading) {
+                return null;
+            }
 
-                    return item == null ? <div>{this.props.value}</div> : <div>{item.label}</div>;
-                }
+            if (this.props.previewOutput) {
+                let item = this.state.items.find(({id}) => id === this.props.value);
+
+                return item == null ? <div>{this.props.value}</div> : <div>{item.label}</div>;
             }
 
             const getFirstItemMessage = () => {

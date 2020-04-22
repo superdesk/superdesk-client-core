@@ -2,6 +2,7 @@
 
 import {element, by, browser, protractor} from 'protractor';
 import {nav} from './utils';
+import {el} from 'end-to-end-testing-helpers';
 
 class Desks {
     list: any;
@@ -186,7 +187,7 @@ class Desks {
          **/
         this.getStage = function(name) {
             return this.stages.filter((elem, index) =>
-                elem.element(by.binding('stage.name'))
+                elem.element(by.css('[data-test-id="stage-name"]'))
                     .getText()
                     .then((text) => text.toUpperCase() === name.toUpperCase()),
             );
@@ -270,7 +271,7 @@ class Desks {
          * Save & Continue action on general tab
          **/
         this.actionSaveAndContinueOnGeneralTab = function() {
-            element(by.id('next-general')).click();
+            el(['save-and-continue']).click();
         };
 
         /**
@@ -306,7 +307,7 @@ class Desks {
          * @returns {ElementFinder} button
          **/
         this.getNewDeskButton = function() {
-            return element(by.id('add-new-desk'));
+            return el(['add-new-desk']);
         };
 
         /**

@@ -1,15 +1,17 @@
 <div class="notification-pane" ng-class="{show: flags.notifications}">
     <div class="header" ng-if="flags.notifications">
-        <figure class="avatar medium">
-            <img sd-user-avatar data-user="currentUser">
-        </figure>
-        <div class="user-info">
-            <span class="name">{{currentUser.display_name }}</span>
-            <span class="displayname">{{currentUser.username }}</span>
-        </div>
-        <div class="actions">
-            <a href="#/profile/" ng-click="flags.notifications = false" translate>Profile</a>
-            <button ng-click="logout()" translate>SIGN OUT</button>
+        <div class="flex-row sibling-spacer-10">
+            <sd-user-avatar data-user="currentUser"></sd-user-avatar>
+            <div>
+                <div class="user-info">
+                    <span class="name">{{currentUser.display_name }}</span>
+                    <span class="displayname">{{currentUser.username }}</span>
+                </div>
+                <div class="actions">
+                    <a href="#/profile/" ng-click="flags.notifications = false" translate>Profile</a>
+                    <button ng-click="logout()" translate>SIGN OUT</button>
+                </div>
+            </div>
         </div>
     </div>
     <div class="content" ng-if="flags.notifications">
@@ -18,42 +20,47 @@
             <div class="notification-list">
                 <ul>
                     <li ng-repeat="notification in notifications._items track by notification._id" ng-class="{unread: notification._unread}" sd-mark-as-read>
-                        <figure class="avatar">
-                            <img sd-user-avatar data-user="notification.user">
-                        </figure>
-                        <div class="content" ng-if="notification.name === 'notify'">
-                            <time sd-datetime data-date="notification._created"></time>
-                            <p class="text"><b>{{:: notification.user_name }}</b> <span translate>commented on</span> <i><a ng-href="#/authoring/{{ notification.item }}?_id={{ notification.item }}&comments={{ notification.data.comment_id }}" title="{{ notification.item_slugline }}">{{ :: notification.item_slugline }}</a></i>:<br>{{:: notification.data.comment }}</p>
-                        </div>
-                        <div class="content" ng-if="notification.name === 'user:mention'">
-                            <time sd-datetime data-date="notification._created"></time>
-                            <p class="text"><b>{{:: notification.user_name }}</b> <span translate>mentioned you</span> <i>
-                                <a title="{{ notification.item_slugline }}" ng-click="openArticle(notification)">
-                                    {{:: notification.item_slugline}}
-                                </a></i>:<br>{{:: notification.data.comment }}</p>
-                        </div>
-                        <div class="content" ng-if="notification.name === 'translated:changed'">
-                            <time sd-datetime data-date="notification._created"></time>
-                            <p class="text"><b>{{:: notification.user_name }}</b> <span translate>changed the following original item. Please make sure to update the corresponding translated item accordingly</span> <i>
-                                <a title="{{ notification.item_slugline }}" ng-click="openArticle(notification)">{{ :: notification.item_slugline }}</a></i>
-                            </p>
-                        </div>
-                        <div
-                            ng-if="notificationsKeyed.hasOwnProperty(notification.name) === true"
-                            class="content"
-                        >
-                            <time sd-datetime data-date="notification._created"></time>
-                            <p class="text">
-                                <sd-notification-from-extension data-notification="notification" handlers="notificationsKeyed"></sd-notification-from-extension>
-                            </p>
-                        </div>
-                        <div
-                            class="content" ng-if="notification.name !== 'notify' && notification.name !== 'user:mention' && notification.name !== 'translated:changed' && notificationsKeyed.hasOwnProperty(notification.name) !== true"
-                            ng-click="onNotificationClick(notification)"
-                        >
-                            <time sd-datetime data-date="notification._created"></time>
-                            <a class="text" ng-if="notification.data.is_link"><b>{{:: notification.user_name || "System" }}</b>: <span sd-activity-message data-activity="notification"></span></a>
-                            <p class="text" ng-if="!notification.data.is_link"><b>{{:: notification.user_name || "System" }}</b>: <span sd-activity-message data-activity="notification"></span></p>
+                        
+                        <div class="sibling-spacer-10" style="display: flex;">
+                            <div style="margin-right: -40px">
+                                <sd-user-avatar data-user="notification.user"></sd-user-avatar>
+                            </div>
+                            <div>
+                                <div class="content" ng-if="notification.name === 'notify'">
+                                    <time sd-datetime data-date="notification._created"></time>
+                                    <p class="text"><b>{{:: notification.user_name }}</b> <span translate>commented on</span> <i><a ng-href="#/authoring/{{ notification.item }}?_id={{ notification.item }}&comments={{ notification.data.comment_id }}" title="{{ notification.item_slugline }}">{{ :: notification.item_slugline }}</a></i>:<br>{{:: notification.data.comment }}</p>
+                                </div>
+                                <div class="content" ng-if="notification.name === 'user:mention'">
+                                    <time sd-datetime data-date="notification._created"></time>
+                                    <p class="text"><b>{{:: notification.user_name }}</b> <span translate>mentioned you</span> <i>
+                                        <a title="{{ notification.item_slugline }}" ng-click="openArticle(notification)">
+                                            {{:: notification.item_slugline}}
+                                        </a></i>:<br>{{:: notification.data.comment }}</p>
+                                </div>
+                                <div class="content" ng-if="notification.name === 'translated:changed'">
+                                    <time sd-datetime data-date="notification._created"></time>
+                                    <p class="text"><b>{{:: notification.user_name }}</b> <span translate>changed the following original item. Please make sure to update the corresponding translated item accordingly</span> <i>
+                                        <a title="{{ notification.item_slugline }}" ng-click="openArticle(notification)">{{ :: notification.item_slugline }}</a></i>
+                                    </p>
+                                </div>
+                                <div
+                                    ng-if="notificationsKeyed.hasOwnProperty(notification.name) === true"
+                                    class="content"
+                                >
+                                    <time sd-datetime data-date="notification._created"></time>
+                                    <p class="text">
+                                        <sd-notification-from-extension data-notification="notification" handlers="notificationsKeyed"></sd-notification-from-extension>
+                                    </p>
+                                </div>
+                                <div
+                                    class="content" ng-if="notification.name !== 'notify' && notification.name !== 'user:mention' && notification.name !== 'translated:changed' && notificationsKeyed.hasOwnProperty(notification.name) !== true"
+                                    ng-click="onNotificationClick(notification)"
+                                >
+                                    <time sd-datetime data-date="notification._created"></time>
+                                    <a class="text" ng-if="notification.data.is_link"><b>{{:: notification.user_name || "System" }}</b>: <span sd-activity-message data-activity="notification"></span></a>
+                                    <p class="text" ng-if="!notification.data.is_link"><b>{{:: notification.user_name || "System" }}</b>: <span sd-activity-message data-activity="notification"></span></p>
+                                </div>
+                            </div>
                         </div>
                     </li>
                     <div class="info" ng-show="notifications._items.length === 0" translate>All good so far.</div>

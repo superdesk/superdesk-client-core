@@ -1,4 +1,9 @@
 import _ from 'lodash';
+import {IUser} from 'superdesk-api';
+
+export function isUserLoggedIn(user: IUser) {
+    return user?.session_preferences != null && Object.keys(user.session_preferences).length > 0;
+}
 
 /**
  * Bussiness logic layer, should be used instead of resource
@@ -84,7 +89,7 @@ export function UsersService(api, $q, notify) {
      * Checks if the user is logged-in or not
      */
     usersService.isLoggedIn = function(user) {
-        return user && _.size(user.session_preferences) > 0;
+        return isUserLoggedIn(user);
     };
 
     return usersService;

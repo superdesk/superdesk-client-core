@@ -542,3 +542,17 @@
         }
     }
 }
+
+
+// used to resize thumbnail of item while dragging it
+#drag-image-holder {
+    position: absolute;
+    left: -2000px;
+    max-width: 200px;
+    max-height: 200px;
+
+    img {
+        max-width: 200px;
+        max-height: 200px;
+    }
+}

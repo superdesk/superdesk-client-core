@@ -12,7 +12,7 @@ import {LinkToolbar} from '../links';
 import classNames from 'classnames';
 import * as actions from '../../actions';
 import {PopupTypes, changeCase} from '../../actions';
-import {highlightsConfig} from '../../highlightsConfig';
+import {getHighlightsConfig} from '../../highlightsConfig';
 import {gettext} from 'core/utils';
 
 interface IState {
@@ -36,6 +36,7 @@ class ToolbarComponent extends React.Component<any, IState> {
     static defaultProps: any;
 
     scrollContainer: any;
+    toolbarNode: any;
 
     constructor(props) {
         super(props);
@@ -46,6 +47,8 @@ class ToolbarComponent extends React.Component<any, IState> {
         this.computeState = this.computeState.bind(this);
 
         this.state = this.computeState();
+
+        this.toolbarNode = React.createRef();
     }
 
     computeState(): IState {
@@ -54,7 +57,7 @@ class ToolbarComponent extends React.Component<any, IState> {
             width: 'auto',
         };
 
-        if (!this.props.editorNode) {
+        if (!this.props.editorNode || !this.toolbarNode) {
             return defaultState;
         }
 
@@ -65,9 +68,12 @@ class ToolbarComponent extends React.Component<any, IState> {
             return defaultState;
         }
 
-        const isToolbarOut = editorRect.top < pageRect.top + 50;
-        const isBottomOut = editorRect.bottom < pageRect.top + 60;
-        const floating = isToolbarOut && !isBottomOut;
+        const isToolbarOut = editorRect.top < pageRect.top + 80;
+        const isBottomOut = editorRect.bottom < pageRect.top + 70;
+
+        const isContentLarger = this.props.editorNode.clientHeight < this.toolbarNode.current.clientHeight;
+
+        const floating = !isContentLarger && isToolbarOut && !isBottomOut;
         const width = floating ? editorRect.width : 'auto';
 
         return {floating, width};
@@ -155,7 +161,7 @@ class ToolbarComponent extends React.Component<any, IState> {
         });
 
         return activeCell !== null ? <TableControls className={cx} /> :
-            <div className={cx} style={{width: this.state.width}}>
+            <div className={cx} style={{width: this.state.width}} ref={this.toolbarNode}>
                 {/* Styles */}
                 <BlockStyleButtons />
                 <InlineStyleButtons />
@@ -202,7 +208,7 @@ class ToolbarComponent extends React.Component<any, IState> {
                     <SelectionButton
                         onClick={showPopup(PopupTypes.Comment)}
                         precondition={
-                            this.props.highlightsManager.canAddHighlight(highlightsConfig.COMMENT.type)
+                            this.props.highlightsManager.canAddHighlight(getHighlightsConfig().COMMENT.type)
                         }
                         key="comment-button"
                         iconName="comment"
@@ -213,7 +219,7 @@ class ToolbarComponent extends React.Component<any, IState> {
                     <SelectionButton
                         onClick={showPopup(PopupTypes.Annotation)}
                         precondition={
-                            this.props.highlightsManager.canAddHighlight(highlightsConfig.ANNOTATION.type)
+                            this.props.highlightsManager.canAddHighlight(getHighlightsConfig().ANNOTATION.type)
                         }
                         key="annotation-button"
                         iconName="edit-line"

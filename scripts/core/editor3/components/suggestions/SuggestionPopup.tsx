@@ -128,7 +128,7 @@ class Suggestion extends React.Component<any, any> {
                 <FluidRows>
                     <FluidRow scrollable={false}>
                         <EditorHighlightsHeader availableActions={[]}>
-                            <UserAvatar displayName={author.display_name} pictureUrl={author.picture_url} />
+                            <UserAvatar user={author} />
                             <p className="editor-popup__author-name">{author.display_name}</p>
                             <time className="editor-popup__time" title={relativeDateString}>{absoluteDateString}</time>
                         </EditorHighlightsHeader>

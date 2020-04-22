@@ -1,6 +1,8 @@
 var path = require('path');
 var webpack = require('webpack');
 var lodash = require('lodash');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+var {getModuleDir} = require('./tasks/get-module-directory');
 
 function countOccurences(_string, substring) {
     return _string.split(substring).length - 1;
@@ -24,6 +26,8 @@ module.exports = function makeConfig(grunt) {
     // include only 'superdesk-core' and valid modules inside node_modules
     let validModules = ['superdesk-core'].concat(apps);
 
+    const jQueryModule = getModuleDir('jquery');
+
     return {
         entry: {
             app: [path.join(__dirname, 'scripts', 'index')],
@@ -37,10 +41,10 @@ module.exports = function makeConfig(grunt) {
 
         plugins: [
             new webpack.ProvidePlugin({
-                $: 'jquery',
-                'window.$': 'jquery',
-                jQuery: 'jquery',
-                'window.jQuery': 'jquery',
+                $: jQueryModule,
+                'window.$': jQueryModule,
+                jQuery: jQueryModule,
+                'window.jQuery': jQueryModule,
                 moment: 'moment',
                 // MediumEditor needs to be globally available, because
                 // its plugins will not be able to find it otherwise.
@@ -48,6 +52,9 @@ module.exports = function makeConfig(grunt) {
             }),
             new webpack.DefinePlugin({
                 __SUPERDESK_CONFIG__: JSON.stringify(sdConfig),
+            }),
+            new ExtractTextPlugin({
+                filename: '[name].bundle.css',
             }),
         ],
 
@@ -105,19 +112,29 @@ module.exports = function makeConfig(grunt) {
                     loader: 'html-loader',
                 },
                 {
-                    test: /\.css$/,
-                    use: [
-                        'style-loader',
-                        'css-loader',
-                    ],
-                },
-                {
-                    test: /\.scss$/,
-                    use: [
-                        'style-loader',
-                        'css-loader',
-                        'sass-loader',
-                    ],
+                    test: /\.(css|scss)$/i,
+                    use: ExtractTextPlugin.extract({
+                        fallback: [{
+                            loader: 'style-loader',
+                            options: {
+                                sourceMap: true,
+                            },
+                        }],
+                        use: [
+                            {
+                                loader: 'css-loader',
+                                options: {
+                                    sourceMap: true,
+                                },
+                            },
+                            {
+                                loader: 'sass-loader',
+                                options: {
+                                    sourceMap: true,
+                                },
+                            },
+                        ],
+                    }),
                 },
                 {
                     test: /\.json$/,

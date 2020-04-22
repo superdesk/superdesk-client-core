@@ -43,6 +43,22 @@ export function FilterConditionsController($scope, contentFilters, notify, modal
             }
         };
 
+        $scope.setNgForm = (ngForm) => {
+            $scope.ngForm = ngForm;
+        };
+
+        let watchInitialized = false;
+
+        $scope.$watch('filterCondition.values', () => {
+            if (watchInitialized) {
+                if ($scope.ngForm != null) {
+                    $scope.ngForm.$dirty = true;
+                }
+            } else {
+                watchInitialized = true;
+            }
+        });
+
         $scope.isListValue = function() {
             return _.includes(['in', 'nin'], $scope.filterCondition.operator)
                 && $scope.valueLookup[$scope.filterCondition.field];

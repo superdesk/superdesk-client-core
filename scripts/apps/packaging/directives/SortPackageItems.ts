@@ -55,7 +55,9 @@ export function SortPackageItems() {
                                 .data('group'),
                         };
 
-                        ui.item.remove();
+                        if (start.group !== end.group) {
+                            ui.item.remove();
+                        }
                         scope.reorder(start, end);
                         scope.$apply();
                     }

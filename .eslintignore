@@ -6,3 +6,4 @@ scripts/extensions/*/node_modules
 scripts/extensions/**/dist
 end-to-end-testing-helpers/dist
 end-to-end-testing-helpers/node_modules
+spec/**/*.js

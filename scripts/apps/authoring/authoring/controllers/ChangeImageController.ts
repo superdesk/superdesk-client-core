@@ -73,6 +73,9 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, $q) {
     $scope.crops = {
         isDirty: false,
     };
+    $scope.toggleShowMetadata = (value) => {
+        $scope.showMetadata = value;
+    };
 
     if ($scope.data.renditions) {
         $scope.data.renditions.forEach((rendition) => {
@@ -230,7 +233,7 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, $q) {
     * modified crop information, point of interest and metadata changes.
     */
     $scope.done = () => {
-        if ($scope.data.isDirty) {
+        if ($scope.data.isDirty || $scope.data.isNew) {
             if (
                 $scope.data.item.type === 'picture'
                 && appConfig.features != null

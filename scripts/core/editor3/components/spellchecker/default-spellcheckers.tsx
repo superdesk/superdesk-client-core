@@ -3,21 +3,6 @@ import {ISpellchecker, ISpellcheckerAction, ISpellcheckWarning, ISpellcheckerSug
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {gettext} from 'core/utils';
 
-const actions: {[key: string]: ISpellcheckerAction} = {
-    addToDictionary: {
-        label: gettext('Add to dictionary'),
-        perform: (warning: ISpellcheckWarning) => ng.getService('spellcheck').then((spellcheck) => {
-            return spellcheck.addWord(warning.text, false);
-        }),
-    },
-    ignoreWord: {
-        label: gettext('Ignore word'),
-        perform: (warning: ISpellcheckWarning) => ng.getService('spellcheck').then((spellcheck) => {
-            return spellcheck.addWord(warning.text, true);
-        }),
-    },
-};
-
 function getSuggestions(text: string): Promise<Array<ISpellcheckerSuggestion>> {
     return ng.getService('spellcheck')
         .then((spellcheck) => spellcheck.suggest(text))
@@ -62,6 +47,21 @@ export function getSpellchecker(language: string): ISpellchecker {
         nl: 'leuven_dutch',
     })[language];
     const ignore = spellcheck.getIgnoredWords();
+
+    const actions: {[key: string]: ISpellcheckerAction} = {
+        addToDictionary: {
+            label: gettext('Add to dictionary'),
+            perform: (warning: ISpellcheckWarning) => ng.getService('spellcheck').then((_spellcheck) => {
+                return _spellcheck.addWord(warning.text, false);
+            }),
+        },
+        ignoreWord: {
+            label: gettext('Ignore word'),
+            perform: (warning: ISpellcheckWarning) => ng.getService('spellcheck').then((_spellcheck) => {
+                return _spellcheck.addWord(warning.text, true);
+            }),
+        },
+    };
 
     if (spellcheckerName == null && spellcheck.isActiveDictionary === false) {
         return null;

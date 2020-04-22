@@ -75,13 +75,13 @@
 
         <div class="field keywords" ng-if="search_config.keywords">
             <label for="search-keywords">
-                {{:: 'Keywords' | translate}}
+                {{keywords.display_name}}
             </label>
             <div id="search-keywords"
                  sd-meta-words-list
                  data-field="keywords"
                  data-header="true"
-                 data-list="keywords"
+                 data-list="keywords.items"
                  data-item="meta"
                  class="line-input--boxed"
             ></div>
@@ -107,7 +107,7 @@
                 </label>
                 <select
                     id="to-desk"
-                    class="sd-line-input__select" 
+                    class="sd-line-input__select"
                     name="to-desk"
                     ng-options="d._id as d.name for d in desks._items"
                     ng-model="fields.to_desk">
@@ -136,7 +136,7 @@
                     {{:: 'Spiked Content' | translate}}
                 </label>
                 <select id="spike-options"
-                        class="sd-line-input__select" 
+                        class="sd-line-input__select"
                         name="spike-options"
                         ng-model="fields.spike">
                         <option value="exclude" label="{{:: 'Exclude spiked content' | translate }}"></option>

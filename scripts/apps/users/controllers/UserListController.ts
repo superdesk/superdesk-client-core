@@ -156,4 +156,10 @@ export function UserListController($scope, $location, api, _, session, usersServ
     $scope.userFilter = null;
 
     $scope.$watchCollection(getCriteria, fetchUsers);
+
+    $scope.$on('resource:updated', (event, data) => {
+        if (data.resource === 'users') {
+            fetchUsers(getCriteria());
+        }
+    });
 }

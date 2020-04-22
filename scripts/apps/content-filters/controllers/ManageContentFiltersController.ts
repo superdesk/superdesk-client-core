@@ -119,19 +119,26 @@ export function ManageContentFiltersController($scope, contentFilters, notify, m
         $scope.test = function() {
             if (!$scope.test.article_id) {
                 notify.error(gettext('Please provide an article GUID'));
+                $scope.test.error_response = gettext('Please provide an article GUID');
                 return;
             }
+
+            $scope.test.content_tested = false;
 
             contentFilters.testContentFilter({filter: $scope.contentFilter, article_id: $scope.test.article_id})
                 .then(
                     (result) => {
-                        $scope.test.test_result = result.match_results ? 'Does Match' : 'Doesn\'t Match';
+                        $scope.test.content_tested = true;
+                        $scope.test.match_results = result.match_results;
+                        $scope.test.error_response = null;
                     },
                     (response) => {
                         if (angular.isDefined(response.data._issues)) {
                             notify.error(gettext('Error: ' + response.data._issues));
+                            $scope.test.error_response = response.data._issues;
                         } else if (angular.isDefined(response.data._message)) {
                             notify.error(gettext('Error: ' + response.data._message));
+                            $scope.test.error_response = response.data._message;
                         } else {
                             notify.error(gettext('Error: Failed to save content filter.'));
                         }

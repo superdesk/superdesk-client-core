@@ -2,12 +2,14 @@ import _ from 'lodash';
 import {gettext} from 'core/utils';
 import {SCHEDULED_OUTPUT, DESK_OUTPUT} from 'apps/desks/constants';
 import {appConfig} from 'appConfig';
+import {IMonitoringFilter} from 'superdesk-api';
+import {getLabelForStage} from 'apps/workspace/content/constants';
 
 AggregateCtrl.$inject = ['$scope', 'desks', 'workspaces', 'preferencesService', 'storage',
-    'savedSearch'];
-
+    'savedSearch', 'content'];
 export function AggregateCtrl($scope, desks, workspaces, preferencesService, storage,
-    savedSearch) {
+    savedSearch, content) {
+    const CONTENT_PROLFILE = gettext('Content profile');
     var PREFERENCES_KEY = 'agg:view';
     var defaultMaxItems = 10;
     var self = this;
@@ -25,11 +27,16 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
     this.stageLookup = {};
     this.fileTypes = ['all', 'text', 'picture', 'graphic', 'composite',
         'highlightsPackage', 'video', 'audio'];
-    this.selectedFileType = $scope.type === 'monitoring' ? storage.getItem('selectedFileType') || [] : [];
     this.monitoringSearch = false;
     this.searchQuery = null;
-
     this.isOutputType = desks.isOutputType;
+
+    this.activeProfiles = [];
+    this.activeFilters = {
+        contentProfile: $scope.type === 'monitoring' ? storage.getItem('contentProfile') || [] : [],
+        fileType: $scope.type === 'monitoring' ? storage.getItem('fileType') || [] : [],
+    };
+    this.activeFilterTags = {};
 
     desks.initialize()
         .then(angular.bind(this, function() {
@@ -55,8 +62,8 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
                 .then(angular.bind(this, function(settings) {
                     initGroups(settings);
                     setupCards();
-                    this.loading = false;
                     this.settings = settings;
+                    getActiveProfiles();
                 }));
         }));
 
@@ -258,7 +265,7 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
             }
         }
         initSpikeGroups(settings.type === 'desk');
-        updateFileTypeCriteria();
+        updateFilteringCriteria();
         self.search(self.searchQuery);
     }
 
@@ -338,54 +345,109 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
      */
     this.hasFileType = function(fileType) {
         if (fileType === 'all') {
-            return this.selectedFileType.length === 0;
+            return this.activeFilters.fileType.length === 0;
         }
-        return this.selectedFileType.indexOf(fileType) > -1;
+        return this.activeFilters.fileType.includes(fileType);
     };
 
-    /**
-     * Return selected file types if the 'fileType' filter(s) is selected
-     * @return [{string}] fileType
-     */
-    this.getSelectedFileTypes = function() {
-        return this.selectedFileType.length === 0 ? null : JSON.stringify(this.selectedFileType);
+    this.getSelectedFileTypes = function(): string {
+        return this.activeFilters.fileType.length === 0 ? null : JSON.stringify(this.activeFilters.fileType);
     };
 
-    /**
-     * Update the type filter criteria
-     */
-    function updateFileTypeCriteria() {
-        var value = self.selectedFileType.length === 0 ? null : JSON.stringify(self.selectedFileType);
+    this.getSelectedContentProfiles = function(): string {
+        return this.activeFilters.contentProfile.length === 0 ? null
+            : JSON.stringify(this.activeFilters.contentProfile);
+    };
 
-        _.each(self.groups, (item) => {
-            item.fileType = value;
-        });
-        _.each(self.spikeGroups, (item) => {
-            item.fileType = value;
+    function updateFilteringCriteria() {
+        _.forEach(self.activeFilters, (filterValue, filterType) => {
+            var value = filterValue.length === 0 ? null : JSON.stringify(filterValue);
+
+            _.each(self.groups, (item) => {
+                item[filterType] = value;
+            });
+            _.each(self.spikeGroups, (item) => {
+                item[filterType] = value;
+            });
         });
     }
 
-    /**
-     * Set the current 'fileType' filter
-     * param {string} fileType
-     */
-    this.setFileType = function(fileType) {
-        if (fileType === 'all') {
-            this.selectedFileType = [];
-        } else {
-            var index = this.selectedFileType.indexOf(fileType);
+    this.isCustomFilterActive = (filter: IMonitoringFilter) => {
+        return Object.keys(this.activeFilters.customFilters ?? {}).includes(filter.label);
+    };
 
-            if (index > -1) {
-                this.selectedFileType.splice(index, 1);
+    this.toggleCustomFilter = (filter: IMonitoringFilter) => {
+        if (typeof this.activeFilters.customFilters === 'undefined') {
+            this.activeFilters.customFilters = {};
+        }
+
+        if (Object.keys(this.activeFilters.customFilters).includes(filter.label)) {
+            delete this.activeFilters.customFilters[filter.label];
+        } else {
+            this.activeFilters.customFilters[filter.label] = filter;
+        }
+
+        updateFilterInStore();
+        updateFilteringCriteria();
+        $scope.$apply();
+    };
+
+    this.setFilterType = function(filterType, filterValue, $event?) {
+        if (filterType === 'contentProfile') {
+            if (!this.activeFilters.contentProfile.includes(filterValue._id)) {
+                this.activeFilters.contentProfile.push(filterValue._id);
+                const tag = {'key': filterValue._id, 'label': gettext(filterValue.label)};
+
+                if (Array.isArray(this.activeFilterTags[CONTENT_PROLFILE])) {
+                    this.activeFilterTags[CONTENT_PROLFILE].push(tag);
+                } else {
+                    this.activeFilterTags[CONTENT_PROLFILE] = [tag];
+                }
+            }
+        } else if (filterType === 'file') {
+            if (filterValue === 'all') {
+                this.activeFilters.fileType = [];
             } else {
-                this.selectedFileType.push(fileType);
+                let filterIndex = this.activeFilters.fileType.indexOf(filterValue);
+
+                if (filterIndex > -1) {
+                    this.activeFilters.fileType.splice(filterIndex, 1);
+                } else {
+                    this.activeFilters.fileType.push(filterValue);
+                }
             }
         }
-        if ($scope.type === 'monitoring') {
-            storage.setItem('selectedFileType', this.selectedFileType);
+
+        updateFilterInStore();
+        updateFilteringCriteria();
+
+        if ($event?.ctrlKey) {
+            $event.stopPropagation();
+            return null;
         }
-        updateFileTypeCriteria();
     };
+
+    this.removeFilter = (filter, type?) => {
+        if (filter == null) {
+            this.activeFilters.contentProfile = [];
+            this.activeFilterTags = {};
+        } else {
+            this.activeFilters.contentProfile = this.activeFilters.contentProfile
+                .filter((profile) => profile !== filter);
+            this.activeFilterTags[type] = this.activeFilterTags[type].filter((tags) => tags.key !== filter);
+        }
+
+        updateFilterInStore();
+        updateFilteringCriteria();
+    };
+
+    // Save filters in the store
+    function updateFilterInStore() {
+        if ($scope.type === 'monitoring') {
+            storage.setItem('fileType', self.activeFilters.fileType);
+            storage.setItem('contentProfile', self.activeFilters.contentProfile);
+        }
+    }
 
     /**
      * Add card metadata into current groups
@@ -406,7 +468,7 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
 
                 card.deskId = stage.desk;
                 card.header = desk.name;
-                card.subheader = stage.name;
+                card.subheader = getLabelForStage(stage);
             } else if (desks.isOutputType(card.type)) {
                 var deskId = card._id.substring(0, card._id.indexOf(':'));
 
@@ -521,4 +583,20 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
     $scope.$on('open:resend', (evt, item) => {
         $scope.resend = item;
     });
+
+    function getActiveProfiles() {
+        content.getTypes(false).then((profiles) => {
+            self.loading = false;
+            self.activeProfiles = profiles;
+
+            // initialize the activeFilterTags once the activeProfiles are available
+            if (self.activeFilters.contentProfile.length > 0) {
+                self.activeFilterTags[CONTENT_PROLFILE] = self.activeFilters.contentProfile.map((filter) => {
+                    const profile = profiles.find((p) => p._id === filter);
+
+                    return {key: profile._id, label: profile.label};
+                });
+            }
+        });
+    }
 }

@@ -1,6 +1,7 @@
 import _ from 'lodash';
-import {checkRenditions} from '../controllers/AssociationController';
+import {checkRenditions, getAssociationsByFieldId} from '../controllers/AssociationController';
 import {appConfig} from 'appConfig';
+import {gettext} from 'core/utils';
 
 FullPreviewDirective.$inject = ['$timeout', 'content', '$sce'];
 export function FullPreviewDirective($timeout, content, $sce) {
@@ -15,6 +16,7 @@ export function FullPreviewDirective($timeout, content, $sce) {
             scope.checkRenditions = checkRenditions;
 
             scope.filterKey = appConfig.previewSubjectFilterKey || '';
+            scope.gettext = gettext;
 
             if (scope.item.profile) {
                 content.getType(scope.item.profile)
@@ -63,11 +65,7 @@ export function FullPreviewDirective($timeout, content, $sce) {
                 return _.size(scope.getAssociationItems(associations, fieldId));
             };
 
-            scope.getAssociationItems = function(associations, fieldId) {
-                var result = _.filter(associations, (association, key) => key.indexOf(fieldId) !== -1);
-
-                return result;
-            };
+            scope.getAssociationItems = getAssociationsByFieldId;
 
             scope.getLocaleName = function(term) {
                 if (!term) {

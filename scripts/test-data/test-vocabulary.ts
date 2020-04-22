@@ -1,4 +1,4 @@
-import {IVocabulary} from 'superdesk-interfaces/Vocabulary';
+import {IVocabulary} from 'superdesk-api';
 
 export const testVocabulary: IVocabulary = {
     _id: 'vocabulary_id',
