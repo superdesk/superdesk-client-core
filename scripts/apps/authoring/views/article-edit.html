@@ -695,12 +695,17 @@
      order="{{editor[field._id].order}}"
      data-required="schema[field._id].required">
 
-    <div ng-if="_editable"
-        sd-related_items
-        data-item="item"
-        data-field="field"
-        data-editable="_editable"
-        data-onchange="autosave(item, 0)">
+
+    <div ng-if="_editable">
+        <label class="field__label">{{field.display_name}}</label>
+
+        <div style="display: inline"
+            sd-related_items
+            data-item="item"
+            data-field="field"
+            data-editable="_editable"
+            data-onchange="autosave(item, 0)">
+        </div>
     </div>
 
     <div ng-if="!_editable">
