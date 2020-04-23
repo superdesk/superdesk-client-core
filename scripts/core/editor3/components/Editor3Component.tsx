@@ -128,7 +128,7 @@ interface IProps {
     onCreateChangeStyleSuggestion?(style, active): void;
     onChange?(editorState: EditorState): void;
     unlock?(): void;
-    onTab?(): void;
+    onTab?(event): void;
     dragDrop?(): void;
     dispatch?(action: any): void;
 }
@@ -259,14 +259,19 @@ export class Editor3Component extends React.Component<IProps, IState> {
     }
 
     keyBindingFn(e) {
-        const {keyCode, shiftKey} = e;
+        const {key, shiftKey} = e;
 
-        if (keyCode === 13 && shiftKey) {
+        if (key === 'Enter' && shiftKey) {
             return 'soft-newline';
         }
 
+        if (key === 'Tab') {
+            this.props.onTab(e);
+            return '';
+        }
+
         // ctrl + X
-        if (keyCode === 88 && KeyBindingUtil.hasCommandModifier(e)) {
+        if (key === 'x' && KeyBindingUtil.hasCommandModifier(e)) {
             const {editorState} = this.props;
             const selection = editorState.getSelection();
 
@@ -278,9 +283,9 @@ export class Editor3Component extends React.Component<IProps, IState> {
 
         if (KeyBindingUtil.hasCommandModifier(e)) {
             const {editorFormat} = this.props;
-            const notAllowBold = keyCode === 66 && editorFormat.indexOf('bold') === -1;
-            const notAllowItalic = keyCode === 73 && editorFormat.indexOf('italic') === -1;
-            const notAllowUnderline = keyCode === 85 && editorFormat.indexOf('underline') === -1;
+            const notAllowBold = key === 'b' && editorFormat.indexOf('bold') === -1;
+            const notAllowItalic = key === 'i' && editorFormat.indexOf('italic') === -1;
+            const notAllowUnderline = key === 'u' && editorFormat.indexOf('underline') === -1;
 
             if (notAllowBold || notAllowItalic || notAllowUnderline) {
                 e.preventDefault();
@@ -490,6 +495,7 @@ export class Editor3Component extends React.Component<IProps, IState> {
             this.spellcheck();
         }
     }
+
     render() {
         const {
             readOnly,
@@ -497,7 +503,6 @@ export class Editor3Component extends React.Component<IProps, IState> {
             showToolbar,
             editorState,
             onChange,
-            onTab,
             tabindex,
             scrollContainer,
             cleanPastedHtml,
@@ -588,7 +593,6 @@ export class Editor3Component extends React.Component<IProps, IState> {
 
                             onChange(editorStateNext);
                         }}
-                        onTab={onTab}
                         tabIndex={tabindex}
                         handlePastedText={handlePastedText.bind(this)}
                         readOnly={locked || readOnly}

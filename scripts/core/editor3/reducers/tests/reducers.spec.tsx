@@ -1,4 +1,4 @@
-import {EditorState, ContentState, SelectionState} from 'draft-js';
+import {EditorState, ContentState, SelectionState, RichUtils} from 'draft-js';
 import reducer from '..';
 import {applyLink} from '../../actions/toolbar';
 
@@ -15,6 +15,13 @@ function withSearchTerm(txt, searchTerm) {
     };
 
     return {editorState, searchTerm, onChangeValue};
+}
+
+function fakeTabEvent({shift = false} = {}) {
+    return new KeyboardEvent('keydown', {
+        key: 'Tab',
+        shiftKey: shift,
+    });
 }
 
 describe('editor3.reducers', () => {
@@ -331,5 +338,93 @@ describe('editor3.reducers', () => {
         });
 
         expect(nextState.editorState.getCurrentContent().getPlainText()).toBe(nextContentState.getPlainText());
+    });
+
+    it('EDITOR_TAB insert tab character', () => {
+        const contentState = ContentState.createFromText('foo');
+        let editorState = EditorState.createWithContent(contentState);
+
+        editorState = EditorState.moveFocusToEnd(editorState);
+
+        const nextState = reducer({
+            editorState: editorState,
+            editorFormat: ['tab', 'tab as spaces'],
+            onChangeValue: jasmine.createSpy('onChangeValue'),
+        }, {
+            type: 'EDITOR_TAB',
+            payload: fakeTabEvent({shift: false}),
+        });
+
+        expect(nextState.editorState.getCurrentContent().getPlainText()).toBe('foo\t');
+    });
+
+    it('EDITOR_TAB insert tab as spaces when pressing shift', () => {
+        const contentState = ContentState.createFromText('foo');
+        let editorState = EditorState.createWithContent(contentState);
+
+        editorState = EditorState.moveFocusToEnd(editorState);
+
+        const nextState = reducer({
+            editorState: editorState,
+            editorFormat: ['tab', 'tab as spaces'],
+            onChangeValue: jasmine.createSpy('onChangeValue'),
+        }, {
+            type: 'EDITOR_TAB',
+            payload: fakeTabEvent({shift: true}),
+        });
+
+        expect(nextState.editorState.getCurrentContent().getPlainText()).toBe('foo        ');
+    });
+
+    it('EDITOR_TAB does not insert anything without formatting options', () => {
+        const contentState = ContentState.createFromText('foo');
+        let editorState = EditorState.createWithContent(contentState);
+
+        editorState = EditorState.moveFocusToEnd(editorState);
+
+        const nextState = reducer({
+            editorState: editorState,
+            onChangeValue: jasmine.createSpy('onChangeValue'),
+        }, {
+            type: 'EDITOR_TAB',
+            payload: fakeTabEvent({shift: false}),
+        });
+
+        expect(nextState.editorState.getCurrentContent().getPlainText()).toBe('foo');
+    });
+
+    it('EDITOR_TAB on lists does not change text', () => {
+        const contentState = ContentState.createFromText('list item');
+        let editorState = EditorState.createWithContent(contentState);
+
+        editorState = RichUtils.toggleBlockType(editorState, 'ordered-list-item');
+
+        // indent right
+        let nextState = reducer({
+            editorState,
+            editorFormat: ['tab', 'tab as spaces'],
+            onChangeValue: jasmine.createSpy('onChangeValue'),
+        }, {
+            type: 'EDITOR_TAB',
+            payload: fakeTabEvent(),
+        });
+
+        editorState = nextState.editorState as EditorState;
+
+        expect(editorState.getCurrentContent().getFirstBlock().getText()).toBe('list item');
+
+        // indent left
+        nextState = reducer({
+            editorState,
+            editorFormat: ['tab', 'tab as spaces'],
+            onChangeValue: jasmine.createSpy('onChangeValue'),
+        }, {
+            type: 'EDITOR_TAB',
+            payload: fakeTabEvent({shift: true}),
+        });
+
+        editorState = nextState.editorState as EditorState;
+
+        expect(editorState.getCurrentContent().getFirstBlock().getText()).toBe('list item');
     });
 });
