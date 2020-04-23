@@ -15,7 +15,7 @@ interface IProps {
     article: IArticle;
     superdesk: ISuperdesk;
     onClose: () => void;
-    onArticleUpdate: (articleUpdate: IArticle) => void;
+    onArticleUpdate: (article: IArticle, articleUpdate: IArticle) => void;
 }
 
 interface IState {
@@ -140,7 +140,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
 
     handleClose() {
         this.props.onClose();
-        this.props.onArticleUpdate(this.state.article);
+        this.props.onArticleUpdate(this.props.article, this.state.article);
     }
 
     handleCheckingVideo(resetState: boolean = true, callback?: () => void) {
