@@ -183,8 +183,9 @@ const applyAbbreviations = (state) => {
     const content = editorState.getCurrentContent();
     const block = content.getBlockForKey(selection.getStartKey());
     const word = getAbbreviationText(block, selection.getStartOffset());
+    const lastChangeType = editorState.getLastChangeType();
 
-    if (word == null) {
+    if (word == null || lastChangeType === 'undo') {
         return state;
     }
 
