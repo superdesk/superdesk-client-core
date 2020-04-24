@@ -128,14 +128,15 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
     }
 
     handleSave() {
-        const {dataApi} = this.context;
         const {gettext} = this.context.localization;
+        const {session, instance} = this.context;
+        const host = instance.config.server.url;
 
         if (this.state.type === 'capture' && typeof this.state.value === 'number') {
             const crop = this.props.getCropRotate(pick(this.props.crop, ['x', 'y', 'width', 'height']));
             const body = {
                 // Captured thumbnail from server and from canvas have small difference in time (position)
-                position: (this.state.value) - 0.04,
+                position: this.state.value - 0.04,
                 crop: Object.values(crop).join(','),
                 rotate: this.state.rotateDegree,
             };
@@ -146,17 +147,23 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
             if (body.rotate === 0) {
                 delete body.rotate;
             }
-
-            dataApi
-                .create<IArticle>('video_edit', {
-                    // TODO: Allow params type differ from response type
-                    // @ts-ignore
+            // dataApi.create requires both body and response is the same type
+            fetch(`${host}/video_edit`, {
+                method: 'POST',
+                headers: {
+                    Authorization: session.getToken(),
+                    'Content-Type': 'application/json',
+                    'If-Match': this.props.article._etag,
+                },
+                body: JSON.stringify({
                     capture: body,
                     item: {
                         _id: this.props.article._id,
                         renditions: this.props.article.renditions,
                     },
-                })
+                }),
+            })
+                .then((res) => res.json())
                 .then((_: IArticle) => {
                     // reuse thumbnail from canvas so we don't have to display the old one,
                     // new thumbnail will be loaded when user reset changes
@@ -173,9 +180,6 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
             const form = new FormData();
 
             form.append('file', this.state.value);
-
-            const {session, instance} = this.context;
-            const host = instance.config.server.url;
 
             fetch(`${host}/video_edit/${this.props.article._id}`, {
                 method: 'PUT',
@@ -205,7 +209,6 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
             ...initialState,
             scale: this.state.scale,
         });
-
     }
 
     setThumbnail(src: string) {
