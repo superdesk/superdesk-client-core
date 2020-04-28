@@ -418,11 +418,10 @@ export class VideoEditor extends React.Component<IProps, IState> {
                 .catch((err: IErrorMessage) => {
                     // conflict happens when user trigger another video edit right after finished one
                     // error should not be showed as this is not caused by user intentionally
-                    if (err.internal_error === 409) {
-                        return;
+                    if (err.internal_error !== 409) {
+                        this.showErrorMessage(err);
                     }
                     clearInterval(this.intervalThumbnails);
-                    this.showErrorMessage(err);
                 });
         }, 3000);
     }
