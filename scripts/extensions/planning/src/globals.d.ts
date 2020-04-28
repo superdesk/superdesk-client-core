@@ -1,2 +1,0 @@
-
-declare const angular: IAngularStatic;

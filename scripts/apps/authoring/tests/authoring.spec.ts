@@ -280,22 +280,20 @@ describe('authoring', () => {
 
             scope.publish();
             $rootScope.$digest();
-            setTimeout(() => { // let onPublishMiddlewares promise resolve
-                expect(api.find).toHaveBeenCalledWith('archive', 'rewriteOf');
-                defered.resolve(rewriteOf);
-                $rootScope.$digest();
-                expect(confirm.confirmFeatureMedia).toHaveBeenCalledWith(rewriteOf);
+            expect(api.find).toHaveBeenCalledWith('archive', 'rewriteOf');
+            expect(confirm.confirmFeatureMedia).toHaveBeenCalledWith(rewriteOf);
+            defered.resolve(rewriteOf);
+            $rootScope.$digest();
 
-                setTimeout(() => { // let applyMiddleware promise resolve
-                    expect(authoring.autosave).toHaveBeenCalled();
-                    expect(authoring.publish).not.toHaveBeenCalled();
-                    done();
-                }, 10);
+            setTimeout(() => { // let applyMiddleware promise resolve
+                expect(authoring.autosave).toHaveBeenCalled();
+                expect(authoring.publish).not.toHaveBeenCalled();
+                done();
             }, 10);
         }));
 
     it('confirm the associated media but do not use the associated media',
-        (done) => inject((api, $q, $rootScope, config, confirm, authoring) => {
+        inject((api, $q, $rootScope, config, confirm, authoring) => {
             let item = {
                 _id: 'test',
                 rewrite_of: 'rewriteOf',
@@ -325,18 +323,12 @@ describe('authoring', () => {
 
             scope.publish();
             $rootScope.$digest();
-            setTimeout(() => { // let onPublishMiddlewares promise resolve
-                expect(api.find).toHaveBeenCalledWith('archive', 'rewriteOf');
-                defered.resolve({});
-                $rootScope.$digest();
-                expect(confirm.confirmFeatureMedia).toHaveBeenCalledWith(rewriteOf);
-
-                setTimeout(() => { // let applyMiddleware promise resolve
-                    expect(authoring.publish).toHaveBeenCalled();
-                    expect(authoring.autosave).not.toHaveBeenCalled();
-                    done();
-                }, 10);
-            }, 10);
+            expect(api.find).toHaveBeenCalledWith('archive', 'rewriteOf');
+            expect(confirm.confirmFeatureMedia).toHaveBeenCalledWith(rewriteOf);
+            defered.resolve({});
+            $rootScope.$digest();
+            expect(authoring.publish).toHaveBeenCalled();
+            expect(authoring.autosave).not.toHaveBeenCalled();
         }));
 
     it('can reject publishing on error', inject((api, $q, $rootScope, authoring, lock) => {

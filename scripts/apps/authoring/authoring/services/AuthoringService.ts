@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import {get, flatMap} from 'lodash';
+import {get} from 'lodash';
 import * as helpers from 'apps/authoring/authoring/helpers';
 import {gettext} from 'core/utils';
 import {logger} from 'core/services/logger';
@@ -8,8 +8,7 @@ import {showModal} from 'core/services/modalService';
 import {getUnpublishConfirmModal} from '../components/unpublish-confirm-modal';
 import {ITEM_STATE, CANCELED_STATES, READONLY_STATES} from 'apps/archive/constants';
 import {AuthoringWorkspaceService} from './AuthoringWorkspaceService';
-import {extensions} from 'core/extension-imports.generated';
-import {IPublishedArticle, IArticle, IExtensionActivationResult} from 'superdesk-api';
+import {IPublishedArticle, IArticle} from 'superdesk-api';
 import {appConfig} from 'appConfig';
 import {showErrorsModal} from 'core/services/modalService';
 
@@ -152,20 +151,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
     this.rewrite = function(item): void {
         var authoringWorkspace: AuthoringWorkspaceService = $injector.get('authoringWorkspace');
 
-        function getOnRewriteAfterMiddlewares()
-        : Array<IExtensionActivationResult['contributions']['entities']['article']['onRewriteAfter']> {
-            return flatMap(
-                Object.values(extensions).map(({activationResult}) => activationResult),
-                (activationResult) =>
-                    activationResult.contributions != null
-                    && activationResult.contributions.entities != null
-                    && activationResult.contributions.entities.article != null
-                    && activationResult.contributions.entities.article.onRewriteAfter != null
-                        ? activationResult.contributions.entities.article.onRewriteAfter
-                        : [],
-            );
-        }
-
+//
         const errors = canRewrite(item);
 
         if (Array.isArray(errors)) {
@@ -178,19 +164,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             desk_id: desks.getCurrentDeskId() || item.task.desk,
         };
 
-        api.save('archive_rewrite', {}, updates, Object.freeze(item))
-            .then((newItem: IArticle) => {
-                const onRewriteAfterMiddlewares = getOnRewriteAfterMiddlewares();
-
-                return onRewriteAfterMiddlewares.reduce(
-                    (current, next) => {
-                        return current.then((result) => {
-                            return next(result);
-                        });
-                    },
-                    Promise.resolve(newItem),
-                );
-            })
+        api.save('archive_rewrite', {}, updates, item)
             .then((newItem) => {
                 notify.success(gettext('Update Created.'));
                 authoringWorkspace.edit(newItem);
