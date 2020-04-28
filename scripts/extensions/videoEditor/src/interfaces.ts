@@ -5,8 +5,6 @@ export interface ICrop {
     height: number;
     unit?: 'px' | '%';
     aspect?: number;
-    scale?: number;
-    value?: number;
 }
 
 export interface IThumbnail {

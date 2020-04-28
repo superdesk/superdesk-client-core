@@ -39,10 +39,11 @@ interface IState {
     article: IArticle;
     cropEnabled: boolean;
     playing: boolean;
+    prevVideoHeight: number;
 }
 
 const initTransformations: IState['transformations'] = {
-    crop: {aspect: 16 / 9, unit: 'px', scale: 1, width: 0, height: 0, x: 0, y: 0, value: 0},
+    crop: {aspect: 16 / 9, unit: 'px', width: 0, height: 0, x: 0, y: 0},
     degree: 0,
     trim: {start: 0, end: 0},
     quality: 0,
@@ -75,6 +76,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
             },
             loadingText: '',
             scale: 1,
+            prevVideoHeight: 1,
             thumbnails: [],
             videoSrc: '',
             article: cloneDeep(this.props.article),
@@ -207,12 +209,17 @@ export class VideoEditor extends React.Component<IProps, IState> {
         if (cropRef) {
             cropRef.style.visibility = 'hidden';
         }
+
+        const refValue = this.videoRef?.current?.getBoundingClientRect();
+        const videoHeight = this.state.transformations.degree % 180 === -90 ? refValue?.width : refValue?.height;
+
         this.setState((prevState) => ({
             transformations: {
                 ...this.state.transformations,
                 degree: prevState.transformations.degree - 90,
             },
             scale: 1,
+            prevVideoHeight: this.getScale() * (videoHeight ?? 1),
         }));
     }
 
@@ -235,20 +242,20 @@ export class VideoEditor extends React.Component<IProps, IState> {
 
         if (this.state.cropEnabled) {
             const refValue = this.videoRef.current.getBoundingClientRect();
-            const currentValue = this.state.transformations.degree % 180 === -90 ? refValue.width : refValue.height;
-            // @ts-ignore
-            // TODO: reduce complexity
-            const delta = (scale / (crop.scale)) * (currentValue / crop.value);
+            const videoHeight = this.state.transformations.degree % 180 === 0 ? refValue.height : refValue.width;
+            // Crop is scaled along with video when it is first toggled
+            // so we need to calculate ratio between video size before and after rotated
+            // to scale crop appropriately
+            const currentVideoHeight = scale * videoHeight;
+            const delta = currentVideoHeight / this.state.prevVideoHeight;
 
             crop = {
                 ...crop,
                 aspect: 1 / (crop.aspect ?? 1),
                 x: crop.y * delta,
-                y: currentValue - (crop.x + crop.width) * delta,
+                y: videoHeight - (crop.x + crop.width) * delta,
                 height: crop.width * delta,
                 width: crop.height * delta,
-                scale: scale,
-                value: currentValue,
             };
 
             const cropRef = this.reactCropRef.current?.['componentRef'];
@@ -278,21 +285,14 @@ export class VideoEditor extends React.Component<IProps, IState> {
             newCrop.aspect = this.state.transformations.crop.aspect;
         }
 
-        const refValue = this.videoRef.current.getBoundingClientRect();
-        const crop = {
-            ...newCrop,
-            scale: this.getScale(),
-            value: this.state.transformations.degree % 180 === -90 ? refValue.width : refValue.height,
-        };
-
         // when first draw crop area, ReactImageCrop trigger a bulk of change event with the same
         // newCrop value, using throttle with value about 50 did not help much but increase interval
         // may result in lagging
-        if (Object.values(this.state.transformations.crop).toString() === Object.values(crop).toString()) {
+        if (Object.values(this.state.transformations.crop).toString() === Object.values(newCrop).toString()) {
             return;
         }
 
-        this.setState({transformations: {...this.state.transformations, crop: crop}});
+        this.setState({transformations: {...this.state.transformations, crop: newCrop}});
     }
 
     handleToggleVideo() {
@@ -454,11 +454,12 @@ export class VideoEditor extends React.Component<IProps, IState> {
         const scaleX = video.videoWidth / width;
         const scaleY = video.videoHeight / height;
 
-        crop.x = Math.floor(crop.x * scaleX);
-        crop.y = Math.floor(crop.y * scaleY);
-        crop.width = Math.floor(crop.width * scaleX);
-        crop.height = Math.floor(crop.height * scaleY);
-        return crop;
+        return {
+            ...crop,
+            x: Math.floor(crop.x * scaleX),
+            y: Math.floor(crop.y * scaleY),
+            width: Math.floor(crop.width * scaleX),
+            height: Math.floor(crop.height * scaleY)};
     }
 
     // Set initial crop size to 80% of full video size to make the UX more user-friendly.
