@@ -2,7 +2,6 @@ import * as React from 'react';
 import {debounce} from 'lodash';
 import {BarIcon} from './BarIcon';
 import {ListThumbnails} from './ListThumbnails';
-import VideoEditorContext from '../VideoEditorContext';
 import {IThumbnail} from '../interfaces';
 
 interface IProps {
@@ -13,6 +12,7 @@ interface IProps {
         end: number;
     };
     onTrim: (start: number, end: number) => void;
+    getClass: (text: string) => string;
 }
 interface IState {
     currentTime: number;
@@ -41,8 +41,6 @@ function getStrTime(secondsTotal: number) {
 }
 
 export class VideoTimeline extends React.Component<IProps, IState> {
-    static contextType = VideoEditorContext;
-    declare context: React.ContextType<typeof VideoEditorContext>;
     private controlbar: React.RefObject<HTMLDivElement>;
     private intervalTimer: number;
     private positionX: number;
@@ -207,7 +205,7 @@ export class VideoTimeline extends React.Component<IProps, IState> {
     }
 
     render() {
-        const {getClass} = this.context.utilities.CSS;
+        const {getClass} = this.props;
         const video = this.props.video;
         const left = video ? `${(this.state.trim.start / video.duration) * 100}%` : '0%';
         const right = video ? `${(1 - this.state.trim.end / video.duration) * 100}%` : '0%';

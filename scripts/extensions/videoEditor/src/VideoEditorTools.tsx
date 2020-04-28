@@ -1,5 +1,4 @@
 import * as React from 'react';
-import VideoEditorContext from './VideoEditorContext';
 import {Dropdown} from './Dropdown/Dropdown';
 import {CropLabel} from './Dropdown/CropLabel';
 import {QualityLabel} from './Dropdown/QualityLabel';
@@ -10,6 +9,8 @@ interface IProps {
     onRotate: () => void;
     onCrop: (aspect: number) => void;
     onQualityChange: (quality: number) => void;
+    gettext: (text: string) => string;
+    getClass: (text: string) => string;
     cropEnabled: boolean;
     videoPlaying: boolean;
     videoDegree: number;
@@ -19,9 +20,6 @@ interface IProps {
 }
 
 class VideoEditorController extends React.PureComponent<IProps> {
-    static contextType = VideoEditorContext;
-    declare context: React.ContextType<typeof VideoEditorContext>;
-
     render() {
         const resolutions = [{label: 'Same', value: 0}].concat(
             [480, 720, 1080]
@@ -35,8 +33,7 @@ class VideoEditorController extends React.PureComponent<IProps> {
             return {label: x + ':' + y, value: x / y};
         });
 
-        const {getClass} = this.context.utilities.CSS;
-        const {gettext} = this.context.localization;
+        const {getClass, gettext} = this.props;
 
         return (
             <div className="sd-photo-preview__video-tools" ref={this.props.wrapperRef}>
@@ -53,6 +50,7 @@ class VideoEditorController extends React.PureComponent<IProps> {
                     disabled={this.props.cropEnabled === false}
                     isButton={true}
                     className={getClass('dropdown__crop')}
+                    gettext={gettext}
                 />
                 <button
                     className={`
@@ -71,7 +69,8 @@ class VideoEditorController extends React.PureComponent<IProps> {
                     <Dropdown
                         label={
                             <QualityLabel
-                                getText={gettext}
+                                gettext={gettext}
+                                getClass={getClass}
                                 title={
                                     qualityDisabled
                                         ? gettext(
@@ -85,6 +84,7 @@ class VideoEditorController extends React.PureComponent<IProps> {
                         onSelect={this.props.onQualityChange}
                         disabled={this.props.videoQuality === 0}
                         className={qualityDisabled ? getClass('dropdown__quality--disable') : ''}
+                        gettext={gettext}
                     />
                 </div>
             </div>

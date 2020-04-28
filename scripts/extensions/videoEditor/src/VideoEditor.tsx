@@ -641,6 +641,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                 onSave={this.handleSave}
                                 isDirty={this.checkIsDirty()}
                                 isVideoLoading={this.state.loading.video}
+                                gettext={gettext}
                             />
                         </div>
                         <div className="modal__body modal__body--no-padding">
@@ -709,6 +710,8 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                                 videoRef?.videoWidth ?? 0,
                                                 videoRef?.videoHeight ?? 0,
                                             )}
+                                            gettext={gettext}
+                                            getClass={getClass}
                                         />
                                     </div>
                                 </div>
@@ -726,12 +729,14 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                                 crop={this.state.transformations.crop}
                                                 rotate={this.state.transformations.degree}
                                                 getCropRotate={this.getCropRotate}
+                                                superdesk={this.props.superdesk}
                                             />
                                             <VideoTimeline
                                                 video={videoRef}
                                                 trim={this.state.transformations.trim}
                                                 onTrim={this.handleTrim}
                                                 thumbnails={this.state.thumbnails}
+                                                getClass={getClass}
                                             />
                                         </>
                                     )}

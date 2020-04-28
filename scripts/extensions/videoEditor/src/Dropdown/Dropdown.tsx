@@ -1,5 +1,4 @@
 import * as React from 'react';
-import VideoEditorContext from '../VideoEditorContext';
 import {IDropdownLabel} from '../interfaces';
 
 interface IDropdownItem {
@@ -14,6 +13,7 @@ interface IProps {
     isButton?: boolean;
     className?: string;
     disabled?: boolean; // force close dropdown
+    gettext: (text: string) => string;
 }
 interface IState {
     open: boolean;
@@ -21,9 +21,6 @@ interface IState {
 }
 
 export class Dropdown extends React.Component<IProps, IState> {
-    static contextType = VideoEditorContext;
-    declare context: React.ContextType<typeof VideoEditorContext>;
-
     constructor(props: IProps) {
         super(props);
         this.state = {
@@ -68,7 +65,7 @@ export class Dropdown extends React.Component<IProps, IState> {
     }
 
     render() {
-        const {gettext} = this.context.localization;
+        const {gettext} = this.props;
 
         return (
             <div className={`dropdown ${this.state.open ? 'open' : ''} ${this.props.className || ''}`}>

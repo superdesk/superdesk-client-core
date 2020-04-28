@@ -1,6 +1,5 @@
 import * as React from 'react';
-import {IArticle} from 'superdesk-api';
-import VideoEditorContext from './VideoEditorContext';
+import {IArticle, ISuperdesk} from 'superdesk-api';
 import {IErrorMessage, ICrop} from './interfaces';
 import {pick} from 'lodash';
 
@@ -9,6 +8,7 @@ interface IProps {
     article: IArticle;
     crop: ICrop;
     rotate: number;
+    superdesk: ISuperdesk;
     onToggleLoading: (isLoading: boolean, loadingText?: string, type?: 'video' | 'thumbnail') => void;
     onSave: (article: IArticle) => void;
     onError: (err: IErrorMessage) => void;
@@ -26,9 +26,6 @@ interface IState {
 const initialState: IState = {dirty: false, type: '', value: 0, rotateDegree: 0, scale: 1};
 
 export class VideoEditorThumbnail extends React.Component<IProps, IState> {
-    static contextType = VideoEditorContext;
-    declare context: React.ContextType<typeof VideoEditorContext>;
-
     private ref: React.RefObject<HTMLCanvasElement>;
     private maxCanvasSize: { width: number; height: number };
     private interval: number;
@@ -128,8 +125,8 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
     }
 
     handleSave() {
-        const {gettext} = this.context.localization;
-        const {session, instance} = this.context;
+        const {gettext} = this.props.superdesk.localization;
+        const {session, instance} = this.props.superdesk;
         const host = instance.config.server.url;
 
         if (this.state.type === 'capture' && typeof this.state.value === 'number') {
@@ -221,7 +218,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
     }
 
     getThumbnail() {
-        const {dataApi} = this.context;
+        const {dataApi} = this.props.superdesk;
 
         this.interval = window.setInterval(() => {
             dataApi
@@ -306,8 +303,8 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
     }
 
     render() {
-        const {getClass} = this.context.utilities.CSS;
-        const {gettext} = this.context.localization;
+        const {getClass} = this.props.superdesk.utilities.CSS;
+        const {gettext} = this.props.superdesk.localization;
 
         return (
             <div className={`sd-photo-preview__thumbnail-edit ${getClass('thumbnail__container')}`}>

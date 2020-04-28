@@ -20,7 +20,8 @@ export interface ITimelineThumbnail {
 
 export interface IDropdownLabel {
     onClick?: () => void;
-    getText?: (text: string) => string;
+    gettext?: (text: string) => string;
+    getClass?: (text: string) => string;
     title?: string | null;
     disabled?: boolean;
     selectedItem?: {

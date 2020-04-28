@@ -1,20 +1,17 @@
 import * as React from 'react';
-import VideoEditorContext from './VideoEditorContext';
 
 interface IProps {
     isDirty: boolean;
     onClose: () => void;
     onReset: () => void;
     onSave: () => void;
+    gettext: (text: string) => string;
     isVideoLoading: boolean;
 }
 
 export class VideoEditorHeader extends React.PureComponent<IProps> {
-    static contextType = VideoEditorContext;
-    declare context: React.ContextType<typeof VideoEditorContext>;
-
     render() {
-        const {gettext} = this.context.localization;
+        const {gettext} = this.props;
 
         return (
             <>
