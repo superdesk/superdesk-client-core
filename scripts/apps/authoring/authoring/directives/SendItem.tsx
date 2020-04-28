@@ -255,7 +255,7 @@ export function SendItem($q,
 
                 // save these here, it might get changed on scope while middlewares run
                 const deskId = scope.selectedDesk._id;
-                const stageId = scope.selectedStage._id;
+                const stageId = scope.selectedStage._id || scope.selectedDesk.incoming_stage;
                 const selectedDesk = scope.selectedDesk;
 
                 return middlewares.reduce(
@@ -424,12 +424,9 @@ export function SendItem($q,
              * @param {Boolean} sendAllPackageItems - True to include all contained items for packages
              * @return {Object} promise
              */
-            function runSend(open, sendAllPackageItems, _deskId, _stageId) {
+            function runSend(open, sendAllPackageItems, deskId, stageId) {
                 scope.loading = true;
                 scope.item.sendTo = true;
-
-                const deskId = _deskId || scope.selectedDesk._id;
-                const stageId = _stageId || scope.selectedStage._id || scope.selectedDesk.incoming_stage;
 
                 if (scope.mode === 'authoring') {
                     return sendAuthoring(deskId, stageId, scope.selectedMacro, sendAllPackageItems);
