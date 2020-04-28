@@ -164,6 +164,9 @@
 .dropdown__quality--disable:active {
   pointer-events: none;
 }
+.dropdown__caret:hover::after {
+  max-width: none;
+}
 
 .loading {
   position: absolute;
