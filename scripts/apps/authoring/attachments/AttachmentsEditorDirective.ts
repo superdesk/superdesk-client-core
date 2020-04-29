@@ -4,7 +4,7 @@ export default function AttachmentsEditorDirective() {
         templateUrl: 'scripts/apps/authoring/attachments/attachments.html',
         link: function(scope, elem, attrs, controllers) {
             if (attrs.readOnly != null) {
-                scope.$watch(() => scope.$eval(attrs.readOnly), (value) => {
+                scope.$watch(attrs.readOnly, (value) => {
                     // can't use bindings since creating an isolate scope would make some variables inaccessible
                     scope.readOnly = value;
                 });
