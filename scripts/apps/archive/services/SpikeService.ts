@@ -1,6 +1,6 @@
 import {gettext} from 'core/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
-
+import {IArticle} from 'superdesk-api';
 /**
  * @ngdoc service
  * @module superdesk.apps.archive
@@ -95,7 +95,7 @@ export function SpikeService($location, api, notify, send,
      */
     this.unspike = function(item) {
         return setStageDeskForUnpublishItems([item]).then((items) => {
-            items.map((_item: any) => {
+            items.map((_item: {item: IArticle, desk: string, stage: string}) => {
                 if (_item.desk != null && _item.stage != null) {
                     var data = {
                         stage: _item.stage,
@@ -140,11 +140,13 @@ export function SpikeService($location, api, notify, send,
      */
     this.unspikeMultiple = function unspikeMultiple(items) {
         return setStageDeskForUnpublishItems(items).then((_items) => {
-            const unpublishItemLength = _items.filter((item: any) => item.desk != null && item.stage != null).length;
+            const unpublishItems = _items.filter((item: {item: IArticle, desk: string, stage: string}) => {
+                return item.desk != null && item.stage != null;
+            });
 
-            if (unpublishItemLength !== _items.length) {
+            if (unpublishItems.length !== _items.length) {
                 getUnspikeDestination().then((config) => {
-                    _items.forEach((item: any) => {
+                    _items.forEach((item: {item: IArticle, desk: string, stage: string}) => {
                         if (item.desk != null && item.stage != null) {
                             var data = {desk: item.desk, stage: item.stage};
 
@@ -155,7 +157,7 @@ export function SpikeService($location, api, notify, send,
                     });
                 });
             } else {
-                _items.forEach((item: any) => {
+                _items.forEach((item: {item: IArticle, desk: string, stage: string}) => {
                     var data = {desk: item.desk, stage: item.stage};
 
                     unspike(item.item, data);
