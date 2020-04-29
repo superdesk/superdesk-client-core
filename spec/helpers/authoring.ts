@@ -1104,7 +1104,10 @@ class Authoring {
         };
 
         this.getArticleHeadlineOfBoard = function(index) {
-            return this.getBoardArticle(index).all(by.className('headline')).first().getText();
+            return this.getBoardArticle(index)
+                .all(by.css('.headline .medium-editor-element:not(.clone)'))
+                .first()
+                .getText();
         };
 
         this.getHtmlArticleHeadlineOfBoard = function(index) {
