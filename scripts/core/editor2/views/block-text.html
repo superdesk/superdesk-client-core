@@ -15,7 +15,7 @@
         ng-show="!readOnly && type=='text' || !type"
         spellcheck="false">
     </div>
-    <code ng-if="!readOnly" class="text-editor-info" ng-if="cursor.line && type == 'preformatted'">
+    <code class="text-editor-info" ng-if="!readOnly && cursor.line && type == 'preformatted'">
         <small translate>Line: {{cursor.line}}, Column: {{cursor.column}}</small>
     </code>
 
