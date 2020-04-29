@@ -20,7 +20,6 @@
          ng-change="autosave(item)"
          data-read-only="!_editable || schema.headline.readonly === true"
          ng-trim="false"></div>
-    <div class="headline" ng-if="!_editable" sd-html-preview="item.headline"></div>
 </div>
 
 <div class="field"
@@ -155,7 +154,6 @@
          data-read-only="!_editable || schema.abstract.readonly === true"
          ng-trim="false">
     </div>
-    <div class="abstract" ng-if="!_editable" sd-html-preview="item.abstract"></div>
 </div>
 
 <div class="field abstract"
@@ -205,7 +203,6 @@
            data-append-element=".field"
            data-append-class="active"
            tabindex="{{editor.byline.order}}">
-    <div class="byline" ng-if="!_editable" sd-html-preview="item.byline"></div>
 </div>
 
 <!--This article-edit view is used by templates as well.
@@ -292,7 +289,6 @@
          data-type="item.type"
          class="body-text">
     </div>
-    <div class="text-editor" sd-html-preview="item.body_html" ng-if="!_editable"></div>
 </div>
 
 <div contenteditable="true" id="editor3Tansa" tansa-proofing="true"  style="position: fixed; top: -1000px; left: -1000px; height: 150px; width: 500px; display: block;"></div>
@@ -482,7 +478,6 @@
          data-append-element=".field"
          data-append-class="active">
     </div>
-    <div id="body_footer_preview" class="abstract" ng-if="!_editable"  sd-html-preview="item.body_footer"></div>
 </div>
 
 <div class="field"
@@ -566,7 +561,6 @@
          sd-focus-element
          data-append-class="active"
          tabindex="{{editor.usageterms.order}}">
-  <div class="usageterms" ng-if="!_editable" sd-html-preview="item.usageterms"></div>
 </div>
 
 <!-- custom text editor fields -->
