@@ -1,4 +1,4 @@
-# 
+#
 # Translators:
 # AlbertFR <albert.bruc.ab@gmail.com>, 2015
 # Amy Logan <Amy.logan@thecanadianpress.com>, 2020
@@ -2606,7 +2606,7 @@ msgstr "Actuellement sélectionné"
 
 #: scripts/core/upload/image-crop-directive.ts:307
 msgid "Currently the image size is {{width}}x{{height}})."
-msgstr "Actuellement, la taille de l'image est {{largeur}} x {{hauteur}})."
+msgstr "Actuellement, la taille de l'image est {{width}} x {{height}})."
 
 #: scripts/apps/authoring/views/dashboard-articles.html:5
 msgid "Currently working on"
@@ -2960,7 +2960,7 @@ msgstr "Bureau:"
 #: scripts/apps/search/views/search-filters.html:31
 #: scripts/apps/templates/views/template-editor-modal.html:82
 msgid "Desks"
-msgstr "Bureaus"
+msgstr "Bureaux"
 
 #: scripts/apps/publish/views/publish-queue.html:111
 msgid "Destination"
@@ -3297,11 +3297,11 @@ msgstr "FIN HEURE devrait être après START TIME"
 
 #: ../superdesk-planning/client/validators/events.js:282
 msgid "EXTERNAL LINK {{ index }} cannot end with \".\""
-msgstr "LIEN EXTERNE {{index}} ne peut pas se terminer par \".\""
+msgstr "LIEN EXTERNE {{ index }} ne peut pas se terminer par \".\""
 
 #: ../superdesk-planning/client/validators/events.js:276
 msgid "EXTERNAL LINK {{ index }} must start with \"http://\", \"https://\" or \"www.\""
-msgstr "EXTERNAL LINK {{index}} doit commencer par \"http: //\", \"https: //\" ou \"www.\""
+msgstr "EXTERNAL LINK {{ index }} doit commencer par \"http: //\", \"https: //\" ou \"www.\""
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreview.jsx:89
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/EventPreview.jsx:103
@@ -3343,7 +3343,7 @@ msgstr "Note de l'éditeur"
 #: scripts/extensions/annotationsLibrary/dist/src/annotations-library-page.js:30
 #: scripts/extensions/annotationsLibrary/src/annotations-library-page.tsx:60
 msgid "Edit"
-msgstr "Édition"
+msgstr "Modifier"
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:4
 msgid "Edit \"{{configEdit.name}}\" highlight"
@@ -3987,7 +3987,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/utils/events.js:947
 msgid "Every {{interval}} week(s)"
-msgstr "Chaque {{interval}}} semaine(s)"
+msgstr "Chaque {{interval}} semaine(s)"
 
 #: ../superdesk-planning/client/utils/events.js:930
 msgid "Every {{interval}} year(s) on {{date}}"
@@ -4291,9 +4291,9 @@ msgstr "Échec de l'enregistrement de l'affectation."
 msgid "Failed to save the event template"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/main.js:258
-msgid "Failed to save the {{itemType}}!"
-msgstr ""
+#: ../superdesk-planning/client/actions/main.js:252
+msgid "Failed to save the {{ itemType }}"
+msgstr "Échec d'enregistrement du {{ itemType}}"
 
 #: ../superdesk-planning/client/actions/main.js:200
 msgid "Failed to save, could not find the item {{itemType}}!"
@@ -5336,7 +5336,7 @@ msgstr ""
 
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:121
 msgid "Item {{headline}} was unlocked by {{username}}."
-msgstr "L'élément {{titre}} a été déverrouillé par {{nom d'utilisateur}}."
+msgstr "L'élément {{headline}} a été déverrouillé par {{username}}."
 
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:201
 #: scripts/core/views/sdSearchList.html:36
@@ -5974,7 +5974,7 @@ msgstr "Moniteur"
 #: scripts/apps/monitoring/config.ts:19 scripts/apps/monitoring/config.ts:7
 #: scripts/core/lang/missing-translations-strings.ts:44
 msgid "Monitoring"
-msgstr "Supervision"
+msgstr "Suivi"
 
 #: scripts/apps/desks/views/settings.html:44
 #: scripts/apps/desks/views/settings.html:48
@@ -6999,7 +6999,7 @@ msgstr "Espace personnel"
 #: scripts/apps/search-providers/directive.ts:17
 #: scripts/apps/users/directives/UserPreferencesDirective.ts:27
 msgid "Photo Grid View"
-msgstr "Photo Grid View"
+msgstr "Mosaïque photos"
 
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:106
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:88
@@ -7257,7 +7257,7 @@ msgstr "Remettre à plus tard"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:99
 msgid "Postpone {{event}}"
-msgstr "Reporter {{événement}}"
+msgstr "Reporter {{event}}"
 
 #: ../superdesk-planning/client/utils/index.js:449
 msgid "Postponed"
@@ -7517,10 +7517,6 @@ msgstr "Publique"
 msgid "Publish"
 msgstr "Publier"
 
-#: scripts/apps/authoring/views/authoring-topbar.html:81
-msgid "Publish & Continue"
-msgstr ""
-
 #: scripts/apps/publish/index.ts:51
 msgid "Publish Queue"
 msgstr "File d'attente de publication"
@@ -7627,7 +7623,7 @@ msgstr "Le nombre de répétitions récurrentes doit être supérieur à 1"
 
 #: ../superdesk-planning/client/validators/events.js:117
 msgid "RECURRING REPEAT COUNT must be less than {{ maximum }}"
-msgstr "Le nombre de répétitions récurrentes doit être inférieur à {{maximum}}."
+msgstr "Le nombre de répétitions récurrentes doit être inférieur à {{ maximum }}."
 
 #: ../superdesk-planning/client/validators/events.js:98
 msgid "RECURRING REPEAT ON is a required field"
@@ -8008,7 +8004,7 @@ msgstr "Requis"
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.ts:535
 msgid "Required field {{key}} is missing. ..."
-msgstr "Le champ obligatoire {{clé}} est manquant. ..."
+msgstr "Le champ obligatoire {{key}} est manquant. ..."
 
 #: scripts/apps/authoring/authoring/controllers/ChangeImageController.ts:26
 msgid "Required field(s) missing"
@@ -9241,7 +9237,7 @@ msgstr "Retenir {{event}}"
 #: ../superdesk-planning/client/utils/index.js:416
 #: scripts/apps/dashboard/workspace-tasks/views/desk-stages.html:17
 msgid "Spiked"
-msgstr "Retenue"
+msgstr "Retenu"
 
 #: scripts/apps/search/views/search-parameters.html:136
 msgid "Spiked Content"
@@ -9249,7 +9245,7 @@ msgstr ""
 
 #: scripts/apps/monitoring/views/monitoring-view.html:48
 msgid "Spiked Items"
-msgstr ""
+msgstr "Articles retenus"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:63
 msgid "Spiked by"
@@ -9353,7 +9349,7 @@ msgstr "Statut: non attribué"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:11
 msgid "Status: {{filter}}"
-msgstr "Statut: {{filtre}}"
+msgstr "Statut: {{filter}}"
 
 #: scripts/apps/dashboard/closed-desk/views/close-desk-widget.html:37
 msgid "Stop routing"
@@ -9488,7 +9484,7 @@ msgstr "En exposant"
 #: scripts/apps/desks/directives/DeskConfigModal.ts:36
 #: scripts/apps/users/directives/UserPreferencesDirective.ts:29
 msgid "Swimlane View"
-msgstr ""
+msgstr "Colonnes"
 
 #: scripts/apps/monitoring/index.ts:66
 msgid "Switch between grouped/single desk view"
@@ -9870,7 +9866,7 @@ msgstr "Le vocabulaire est utilisé dans les types de contenu suivants:"
 
 #: ../superdesk-planning/client/actions/main.js:366
 msgid "The {{ itemType }} has been posted"
-msgstr "Le {{itemType}} a été posté."
+msgstr "Le {{ itemType }} a été posté."
 
 #: ../superdesk-planning/client/actions/main.js:225
 msgid "The {{ itemType }} has been saved"
@@ -9878,7 +9874,7 @@ msgstr "Le {{ itemType }} a été enregistré."
 
 #: ../superdesk-planning/client/actions/main.js:303
 msgid "The {{ itemType }} has been unposted"
-msgstr "Le {{itemType}} a été désaffecté"
+msgstr "Le {{ itemType }} a été désaffecté"
 
 #: scripts/apps/contacts/components/ItemList.tsx:178
 #: scripts/apps/search/components/ItemList.tsx:539
@@ -10317,7 +10313,7 @@ msgstr ""
 #: scripts/apps/authoring/views/authoring-topbar.html:56
 #: scripts/apps/search/views/search-parameters.html:106
 msgid "To Desk"
-msgstr "Au bureau"
+msgstr "Au pupitre"
 
 #: ../superdesk-planning/client/constants/assignments.js:78
 #: scripts/apps/dashboard/workspace-tasks/tasks.ts:9
@@ -11375,7 +11371,7 @@ msgstr "'[Titre de rappel] est un champ obligatoire'"
 
 #: ../superdesk-planning/client/controllers/AddToPlanningController.js:200
 msgid "[{{ field }}] is a required field"
-msgstr "'[{{ champ }}] est un champ obligatoire'"
+msgstr "'[{{ field }}] est un champ obligatoire'"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:100
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:94
@@ -11428,7 +11424,7 @@ msgstr "ordres du jour"
 
 #: scripts/apps/users/views/user-preferences.html:95
 msgid "all"
-msgstr "toute"
+msgstr "tout"
 
 #: scripts/apps/desks/views/desk-config-modal.html:262
 #: scripts/apps/highlights/views/highlights_config_modal.html:15
@@ -11611,7 +11607,7 @@ msgstr "créé par"
 
 #: scripts/core/lang/missing-translations-strings.ts:36
 msgid "created new version {{version}} for item {{type}} about \"{{subject}}\""
-msgstr "créé la nouvelle version {{version}} pour l'élément {{type}} à propos de \"{{sujet}}\""
+msgstr "créé la nouvelle version {{version}} pour l'élément {{type}} à propos de \"{{subject}}\""
 
 #: scripts/core/lang/missing-translations-strings.ts:42
 msgid "created user {{user}}"
@@ -12360,7 +12356,7 @@ msgstr "prévue"
 
 #: scripts/core/lang/missing-translations-strings.ts:26
 msgid "scheduled Desk Output"
-msgstr "Sortie de bureau programmée"
+msgstr "Sortie programmée"
 
 #: scripts/core/lang/missing-translations-strings.ts:25
 msgid "search"
@@ -12420,7 +12416,7 @@ msgstr "la source"
 
 #: scripts/core/lang/missing-translations-strings.ts:12
 msgid "spiked"
-msgstr ""
+msgstr "retenu"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.jsx:87
 msgid "spiked and unlinked"
@@ -12665,11 +12661,11 @@ msgstr "Les éléments {{ count }} n'étaient pas inclus dans l'exportation."
 
 #: ../superdesk-planning/client/components/MultiSelectActions.jsx:48
 msgid "{{ count }} {{ type }} selected"
-msgstr "{{count}} {{type}} sélectionné"
+msgstr "{{ count }} {{ type }} sélectionné"
 
 #: ../superdesk-planning/client/actions/main.js:232
 msgid "{{ itemType }} created"
-msgstr "{{itemType}} créé"
+msgstr "{{ itemType }} créé"
 
 #: ../superdesk-planning/client/validators/index.js:80
 msgid "{{ key }} is a required field"
@@ -12691,15 +12687,15 @@ msgstr[1] "{{multi.count}} Articles sélectionnés"
 #: ../superdesk-planning/client/validators/assignments.jsx:7
 #: ../superdesk-planning/client/validators/profile.js:40
 msgid "{{ name }} is a required field"
-msgstr "'{{ nom }} est un champ obligatoire'"
+msgstr "'{{ name }} est un champ obligatoire'"
 
 #: ../superdesk-planning/client/validators/profile.js:36
 msgid "{{ name }} is too long"
-msgstr "{{name}} est trop long"
+msgstr "{{ name }} est trop long"
 
 #: ../superdesk-planning/client/validators/profile.js:47
 msgid "{{ name }} is too short"
-msgstr "{{ Le nom }} est trop court"
+msgstr "{{ name }} est trop court"
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:115
 #: scripts/apps/monitoring/views/aggregate-settings.html:136
@@ -12725,8 +12721,8 @@ msgstr ""
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:51
 msgid "{{ wordsCount}} word"
 msgid_plural "{{ $count}} words"
-msgstr[0] "{{$count}} mots"
-msgstr[1] "{{$count}} mots"
+msgstr[0] "{{ $count }} mots"
+msgstr[1] "{{ $count }} mots"
 
 #: scripts/apps/monitoring/views/monitoring-view.html:39
 #: scripts/apps/monitoring/views/monitoring-view.html:93
