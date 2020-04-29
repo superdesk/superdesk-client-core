@@ -307,8 +307,8 @@ export function SendService(
      */
     function startConfig() {
         resetConfig();
+
         self.config = $q.defer();
-        $rootScope.$digest();
         return self.config.promise.then((val) => {
             self.config = null;
             return val;

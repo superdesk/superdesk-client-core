@@ -1,6 +1,6 @@
 import {gettext} from 'core/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
-import {IArticle} from 'superdesk-api';
+
 /**
  * @ngdoc service
  * @module superdesk.apps.archive
@@ -18,9 +18,8 @@ import {IArticle} from 'superdesk-api';
  * @description Spike Service is responsible for proving item (single and multiple) spike/un-spike functionality
  */
 
-SpikeService.$inject = ['$location', 'api', 'notify', 'send', '$q', 'authoringWorkspace', 'lock', 'desks'];
-export function SpikeService($location, api, notify, send,
-    $q, authoringWorkspace: AuthoringWorkspaceService, lock, desks) {
+SpikeService.$inject = ['$location', 'api', 'notify', 'send', '$q', 'authoringWorkspace', 'lock'];
+export function SpikeService($location, api, notify, send, $q, authoringWorkspace: AuthoringWorkspaceService, lock) {
     var SPIKE_RESOURCE = 'archive_spike',
         UNSPIKE_RESOURCE = 'archive_unspike';
 
@@ -31,29 +30,20 @@ export function SpikeService($location, api, notify, send,
      * @returns {Promise}
      */
     this.spike = function(item) {
-        return (
-            item.state !== 'unpublished'
-                ? Promise.resolve(item)
-                : api.find('archive', item._id)
-                    .then((updateItem) => {
-                        return Promise.resolve(updateItem);
-                    })
-        ).then((result) => {
-            return api.update(SPIKE_RESOURCE, result, {state: 'spiked'})
-                .then(() => {
-                    if ($location.search()._id === result._id) {
-                        $location.search('_id', null);
-                    }
-                    closeAuthoring(result);
-                    return result;
-                }, (response) => {
-                    result.error = response;
-                    if (angular.isDefined(response.data._issues) &&
-                        angular.isDefined(response.data._issues['validator exception'])) {
-                        notify.error(gettext(response.data._issues['validator exception']));
-                    }
-                });
-        });
+        return api.update(SPIKE_RESOURCE, item, {state: 'spiked'})
+            .then(() => {
+                if ($location.search()._id === item._id) {
+                    $location.search('_id', null);
+                }
+                closeAuthoring(item);
+                return item;
+            }, (response) => {
+                item.error = response;
+                if (angular.isDefined(response.data._issues) &&
+                    angular.isDefined(response.data._issues['validator exception'])) {
+                    notify.error(gettext(response.data._issues['validator exception']));
+                }
+            });
     };
 
     /**
@@ -66,47 +56,13 @@ export function SpikeService($location, api, notify, send,
         return $q.all(items.map(this.spike));
     };
 
-    function setStageDeskForUnpublishItems(items) {
-        return Promise.all(items.map((item) => {
-            return api.find('archive', item._id).then((result) => {
-                if (result.revert_state === 'unpublished') {
-                    const currentDesk = desks.getCurrentDesk();
-
-                    return Promise.resolve({
-                        item: item,
-                        desk: currentDesk._id,
-                        stage: currentDesk.working_stage,
-                    });
-                } else {
-                    return Promise.resolve({
-                        item: item,
-                        desk: null,
-                        stage: null,
-                    });
-                }
-            });
-        }));
-    }
-
     /**
      * Unspike given item.
      *
      * @param {Object} item
      */
     this.unspike = function(item) {
-        return setStageDeskForUnpublishItems([item]).then((items) => {
-            items.map((_item: {item: IArticle, desk: string, stage: string}) => {
-                if (_item.desk != null && _item.stage != null) {
-                    var data = {
-                        stage: _item.stage,
-                        desk: _item.desk,
-                    };
-
-                    return unspike(_item.item, data);
-                }
-                return getUnspikeDestination().then((config) => unspike(_item.item, config));
-            });
-        });
+        return getUnspikeDestination().then((config) => unspike(item, config));
     };
 
     function getUnspikeDestination() {
@@ -139,30 +95,10 @@ export function SpikeService($location, api, notify, send,
      * @param {Object} items
      */
     this.unspikeMultiple = function unspikeMultiple(items) {
-        return setStageDeskForUnpublishItems(items).then((_items) => {
-            const unpublishItems = _items.filter((item: {item: IArticle, desk: string, stage: string}) => {
-                return item.desk != null && item.stage != null;
+        getUnspikeDestination().then((config) => {
+            items.forEach((item) => {
+                unspike(item, config);
             });
-
-            if (unpublishItems.length !== _items.length) {
-                getUnspikeDestination().then((config) => {
-                    _items.forEach((item: {item: IArticle, desk: string, stage: string}) => {
-                        if (item.desk != null && item.stage != null) {
-                            var data = {desk: item.desk, stage: item.stage};
-
-                            unspike(item.item, data);
-                        } else {
-                            unspike(item.item, config);
-                        }
-                    });
-                });
-            } else {
-                _items.forEach((item: {item: IArticle, desk: string, stage: string}) => {
-                    var data = {desk: item.desk, stage: item.stage};
-
-                    unspike(item.item, data);
-                });
-            }
         });
     };
 
