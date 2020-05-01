@@ -175,17 +175,21 @@ const setAbbreviations = (state, abbreviations) => ({
 const applyAbbreviations = (state) => {
     const {editorState, abbreviations} = state;
     const selection = editorState.getSelection();
+    const lastChangeType = editorState.getLastChangeType();
 
-    if (!selection.isCollapsed() || abbreviations == null || Object.keys(abbreviations).length === 0) {
+    if (!selection.isCollapsed()
+        || abbreviations == null
+        || Object.keys(abbreviations).length === 0
+        || lastChangeType === 'undo'
+        || lastChangeType === 'redo') {
         return state;
     }
 
     const content = editorState.getCurrentContent();
     const block = content.getBlockForKey(selection.getStartKey());
     const word = getAbbreviationText(block, selection.getStartOffset());
-    const lastChangeType = editorState.getLastChangeType();
 
-    if (word == null || lastChangeType === 'undo') {
+    if (word == null) {
         return state;
     }
 
