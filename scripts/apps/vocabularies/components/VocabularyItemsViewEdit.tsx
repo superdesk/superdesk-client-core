@@ -396,8 +396,8 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
 
                 <div className="subnav pagination--rounded">
                     <ReactPaginate
-                        previousLabel={''}
-                        nextLabel={''}
+                        previousLabel={gettext('prev')}
+                        nextLabel={gettext('next')}
                         pageCount={getPageCount(filteredItems)}
                         marginPagesDisplayed={2}
                         pageRangeDisplayed={5}
