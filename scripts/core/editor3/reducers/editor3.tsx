@@ -1,4 +1,11 @@
-import {RichUtils, EditorState, ContentState} from 'draft-js';
+import {
+    RichUtils,
+    EditorState,
+    ContentState,
+    Modifier,
+    SelectionState,
+    ContentBlock,
+} from 'draft-js';
 import {setTansaHtml} from '../helpers/tansa';
 import {addMedia} from './toolbar';
 import {getCustomDecorator, IEditorStore} from '../store';
@@ -267,6 +274,20 @@ function escapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
+function replaceText(
+    editorState: EditorState,
+    selection: SelectionState,
+    text: string,
+) {
+    const newContent = Modifier.replaceText(
+        editorState.getCurrentContent(),
+        selection,
+        text,
+    );
+
+    return EditorState.push(editorState, newContent, 'insert-characters');
+}
+
 /**
  * @ngdoc method
  * @name onTab
@@ -275,8 +296,30 @@ function escapeRegExp(string) {
  * @description Handle the editor tab key pressed event
  */
 const onTab = (state, e) => {
-    const {editorState} = state;
-    const newState = RichUtils.onTab(e, editorState, 4);
+    const {editorState, editorFormat = []} = state;
+    const selection = editorState.getSelection() as SelectionState;
+    const moreThanOneBlockSelected =
+        selection.getStartKey() !== selection.getEndKey();
+    const block = editorState
+        .getCurrentContent()
+        .getBlockForKey(selection.getStartKey()) as ContentBlock;
+    const blockType = block.getType();
+    let newState = editorState;
+
+    if (['unordered-list-item', 'ordered-list-item'].includes(blockType)) {
+        // let draft-js handle the Tab event
+        newState = RichUtils.onTab(e, editorState, 4);
+    } else if (!moreThanOneBlockSelected) {
+        const tabOption = editorFormat.includes('tab') && !e.shiftKey;
+        const spacesOption =
+            editorFormat.includes('tab as spaces') && e.shiftKey;
+        let tabString = tabOption ? '\t' : spacesOption ? '        ' : null;
+
+        if (tabString) {
+            newState = replaceText(newState, selection, tabString);
+            e.preventDefault();
+        }
+    }
 
     return onChange(state, newState);
 };
