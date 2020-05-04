@@ -258,11 +258,15 @@ export function MonitoringGroup(
                     scheduleQuery(event, data);
                 } else if (data && data.item && _.includes(['item:spike', 'item:unspike'], event.name)) {
                     // item was spiked/unspiked from the list
-                    extendItem(data.item, {
-                        gone: true,
-                        _etag: data.item,
-                    });
-                    scheduleQuery(event, data);
+                    if (scope.group.type === DESK_OUTPUT) {
+                        scheduleQuery(event, data);
+                    } else {
+                        extendItem(data.item, {
+                            gone: true,
+                            _etag: data.item,
+                        });
+                        scheduleQuery(event, data);
+                    }
                 } else if (data && data.to_stage && data.to_stage === scope.group._id) {
                     // new item in current stage
                     scheduleQuery(event, data);
