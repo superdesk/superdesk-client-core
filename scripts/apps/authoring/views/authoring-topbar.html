@@ -353,9 +353,13 @@
 
         <button id="send-to-btn" ng-show="_editable"
             ng-if="action !== 'correct' && action !== 'kill' && buttonsToHide['article-edit--topbar--sendto-publish'] !== true"
-            class="navbtn navbtn--highlighted" sd-tooltip="{{ :: 'Send to / Publish' | translate }}" flow="left"
+            class="navbtn navbtn--highlighted"
+            sd-tooltip="{{ :: 'Send to / Publish' | translate }}"
+            flow="left"
             ng-click="views.send = !views.send"
-            ng-class="{'active': views.send}">
+            ng-class="{'active': views.send}"
+            data-test-id="open-send-publish-pane"
+          >
             <i class="big-icon--send-to big-icon--white"></i>
         </button>
     </div>
