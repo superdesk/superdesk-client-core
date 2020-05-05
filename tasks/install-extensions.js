@@ -9,7 +9,7 @@ directories.forEach(({extensionName, absolutePath}) => {
 
     execSync(
         `cd ${extensionPath} && yarn && npm run compile --if-present`,
-        {stdio: 'inherit', stderr: 'inherit'}
+        {stdio: 'inherit'}
     );
 });
 
