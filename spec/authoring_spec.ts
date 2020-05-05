@@ -657,43 +657,6 @@ describe('authoring', () => {
         expect(authoring.getBodyText()).toBe('one\ntwo\nthree');
     });
 
-    it('can send and publish', () => {
-        workspace.selectDesk('Sports Desk');
-        expect(monitoring.getGroupItems(0).count()).toBe(0);
-        expect(monitoring.getGroupItems(1).count()).toBe(0);
-        expect(monitoring.getGroupItems(2).count()).toBe(1);
-        expect(monitoring.getGroupItems(3).count()).toBe(0);
-        expect(monitoring.getGroupItems(4).count()).toBe(1);
-        expect(monitoring.getGroupItems(5).count()).toBe(0); // no published content.
-        workspace.selectDesk('Politic Desk');
-        expect(monitoring.getGroupItems(5).count()).toBe(0); // desk output
-        expect(monitoring.getTextItem(3, 2)).toBe('item6');
-        monitoring.actionOnItem('Edit', 3, 2);
-        authoring.writeTextToHeadline('testing send and publish');
-        authoring.save();
-        authoring.writeText(protractor.Key.HOME);
-        ctrlShiftKey(protractor.Key.END);
-        ctrlKey('x');
-        authoring.sendAndpublish('Sports Desk');
-        authoring.confirmSendTo(); // confirm unsaved changes
-
-        browser.sleep(3000); // wait for alert message to go away
-
-        authoring.publishFrom('Sports Desk');
-
-        assertToastMsg('error', 'BODY_HTML empty values not allowed'); // validation takes place
-        authoring.closeSendAndPublish();
-        authoring.writeText('Testing');
-        authoring.save();
-
-        authoring.sendToButton.click();
-        authoring.publishFrom('Sports Desk');
-        // desk output count zero as content publish from sport desk
-        expect(monitoring.getGroupItems(5).count()).toBe(0);
-        workspace.selectDesk('Sports Desk');
-        expect(monitoring.getGroupItems(5).count()).toBe(1);
-    });
-
     it('can minimize story while a correction and kill is being written', () => {
         workspace.selectDesk('Politic Desk');
         expect(monitoring.getTextItem(3, 2)).toBe('item6');

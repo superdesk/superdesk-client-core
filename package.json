@@ -149,6 +149,9 @@
     "superdesk-code-style": "^1.1.1",
     "typescript-eslint-parser": "^18.0.0"
   },
+  "resolutions": {
+    "moment": "2.20.1"
+  },
   "scripts": {
     "setup-extensions": "node ./tasks/namespace-css-from-extensions.js && node ./tasks/install-extensions.js",
     "compile-end-to-end-tests": "find spec/ -name '*.js' -type f -delete && tsc -p spec",
