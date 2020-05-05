@@ -1105,8 +1105,11 @@ declare module 'superdesk-api' {
         saml_label: any;
         archive_autocomplete: boolean;
 
-        // allow updates for items which aren't published yet
+        /** allow updates for items which aren't published yet */
         workflow_allow_multiple_updates: boolean;
+
+        /** allow users who are not members of a desk to duplicate its content */
+        workflow_allow_duplicate_non_members: boolean;
 
         allow_updating_scheduled_items: boolean;
 
