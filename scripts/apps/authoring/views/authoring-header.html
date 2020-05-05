@@ -93,7 +93,7 @@
                         ng-model="item.slugline"
                         ng-model-options="{debounce: 500}"
                         ng-change="autosave(item)"
-                        ng-disabled="!_editable"
+                        ng-disabled="!_editable || schema.slugline.readonly === true"
                         ng-trim="false"
                         tabindex="{{editor.slugline.order}}"
                         data-test-id="field-slugline"
@@ -121,7 +121,7 @@
                         data-change="autosave(item)"
                         data-header="_editable"
                         data-list="metadata.keywords"
-                        data-disabled="!_editable"
+                        data-disabled="!_editable || schema.keywords.readonly === true"
                         data-style="line-input"
                         tabindex="{{editor.keywords.order}}">
                     </div>
@@ -143,7 +143,7 @@
                          data-item="item"
                          data-field="genre"
                          data-list="metadata.genre"
-                         ng-disabled="!_editable || item.broadcast.master_id"
+                         ng-disabled="!_editable || item.broadcast.master_id || schema.genre.readonly === true"
                          data-change="autosave(item)"
                          tabindex="{{editor.genre.order}}">
                     </div>
@@ -165,7 +165,7 @@
                            id="anpa_take_key"
                            ng-model="item.anpa_take_key"
                            ng-change="autosave(item)"
-                           ng-disabled="!_editable"
+                           ng-disabled="!_editable || schema.anpa_take_key.readonly === true"
                            ng-trim="false"
                            tabindex="{{editor.anpa_take_key.order}}">
                 </div>
@@ -187,7 +187,7 @@
                          data-unique="qcode"
                          data-header="true"
                          data-list="metadata.locators"
-                         ng-disabled="!_editable"
+                         ng-disabled="!_editable || schema.place.readonly === true"
                          data-change="autosave(item)">
                     </div>
 
@@ -199,7 +199,7 @@
                          data-unique="qcode"
                          data-list="metadata.locators"
                          data-group="region"
-                         ng-disabled="!_editable"
+                         ng-disabled="!_editable || schema.place.readonly === true"
                          data-change="autosave(item)">
                     </div>
 
@@ -208,7 +208,7 @@
                         data-tabindex="editor.place.order"
                         data-item="item"
                         data-field="place"
-                        ng-disabled="!_editable"
+                        ng-disabled="!_editable || schema.place.readonly === true"
                         data-change="autosave(item)">
                     </div>
 
@@ -232,7 +232,7 @@
                          data-field="language"
                          data-key="qcode"
                          data-list="metadata.languages"
-                         ng-disabled="!_editable"
+                         ng-disabled="!_editable || schema.language.readonly === true"
                          data-change="autosave(item)"
                          tabindex="{{editor.language.order}}">
                     </div>
@@ -254,7 +254,7 @@
                          data-list="metadata.priority"
                          data-icon="priority-label priority-label-"
                          data-label="Priority"
-                         ng-disabled="!_editable"
+                         ng-disabled="!_editable || schema.priority.readonly === true"
                          data-key="qcode"
                          data-change="autosave(item)"
                          tabindex="{{editor.priority.order}}">
@@ -277,7 +277,7 @@
                          data-list="metadata.urgency"
                          data-icon="urgency-label urgency-label-"
                          data-label= "{{ :: 'Urgency' | translate }}"
-                         ng-disabled="!_editable"
+                         ng-disabled="!_editable || schema.urgency.readonly === true"
                          data-key="qcode"
                          data-change="autosave(item)"
                          tabindex="{{editor.urgency.order}}">
@@ -297,7 +297,7 @@
                     <div sd-meta-terms
                         class="data"
                         data-tabindex="editor.anpa_category.order"
-                        ng-disabled="!_editable"
+                        ng-disabled="!_editable || schema.anpa_category.readonly === true"
                         data-item="item"
                         data-field="anpa_category"
                         data-unique="qcode"
@@ -329,7 +329,7 @@
                         data-field="subject"
                         data-unique="qcode"
                         data-list="metadata.subjectcodes"
-                        ng-disabled="!_editable"
+                        ng-disabled="!_editable || schema.subject.readonly === true"
                         data-header="true"
                         data-change="autosave(item)"
                         data-reload-list="true"
@@ -357,7 +357,7 @@
                         data-unique="qcode"
                         data-list="cv.terms"
                         data-cv="cv"
-                        ng-disabled="!_editable"
+                        ng-disabled="!_editable || editor[cv._id].readonly === true"
                         data-header="true"
                         data-change="autosave(item)"
                         data-reload-list="true"
@@ -371,7 +371,7 @@
                         data-field="{{cv.schema_field || 'subject'}}"
                         data-list="cv.terms"
                         data-cv="cv"
-                        ng-disabled="!_editable"
+                        ng-disabled="!_editable || editor[cv._id].readonly === true"
                         data-header="true"
                         data-change="autosave(item)"
                         tabindex="{{editor[cv._id].order}}"
@@ -406,7 +406,7 @@
                         data-scroll-container=".page-content-container"
                         data-language="item.language"
                         data-on-change="autosave(item)"
-                        data-read-only="!_editable"
+                        data-read-only="!_editable || schema[field._id].readonly === true"
                         data-editor-format="editor[field._id].formatOptions"
                         data-item="item"
                         data-refresh-trigger="refreshTrigger"
@@ -427,7 +427,7 @@
                 <label class="authoring-header__item-label">{{field.display_name}}</label>
                 <div class="authoring-header__input-holder">
                     <div sd-datepicker
-                        ng-disabled="!_editable"
+                        ng-disabled="!_editable || schema[field._id].readonly === true"
                         data-tabindex="editor[field._id].order"
                         ng-model="item.extra[field._id]"
                         data-format="YYYY-MM-DDT00:00:00+0000"
@@ -453,7 +453,7 @@
                         item="item"
                         field="field"
                         on-change="setCustomValue"
-                        editable="_editable"
+                        editable="_editable && schema[field._id].readonly !== true"
                     ></sd-authoring-custom-field>
                 </div>
             </div>
@@ -473,7 +473,7 @@
                         data-field="company_codes"
                         data-unique="qcode"
                         data-list="availableCompanyCodes"
-                        ng-disabled="!_editable"
+                        ng-disabled="!_editable || schema.company_codes.readonly === true"
                         data-header="true"
                         data-change="autosave(item)"
                         data-reload-list="false"
@@ -496,7 +496,7 @@
                               tansa-scope-sync
                               tabindex="{{editor.ednote.order}}"
                               ng-model="item.ednote"
-                              ng-disabled="!_editable"
+                              ng-disabled="!_editable || schema.ednote.readonly === true"
                               ng-change="autosave(item)"
                               tabindex="{{editor.ednote.order}}"
                               data-test-id="field-editors-note"
@@ -524,7 +524,7 @@
                         data-unique="_id"
                         data-list="metadata.authors"
                         data-label= "{{ :: 'Add author' | translate }}"
-                        ng-disabled="!_editable"
+                        ng-disabled="!_editable || schema.authors.readonly === true"
                         data-header="true"
                         data-change="autosave(item)"
                         data-reload-list="true"

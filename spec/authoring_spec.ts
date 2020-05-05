@@ -573,7 +573,7 @@ describe('authoring', () => {
         authoring.publish();
         monitoring.filterAction('text');
         monitoring.actionOnItem('Open', 5, 0);
-        expect(authoring.getBodyFooterPreview()).not.toContain('<br>');
+        expect(element(by.css('#body_footer .medium-editor-element:not(.clone)')).getText()).not.toContain('<br>');
     });
 
     it('maintains helpline first option always selected', () => {
