@@ -8,7 +8,7 @@ directories.forEach(({extensionName, absolutePath}) => {
     const extensionPath = path.resolve(`${absolutePath}/${extensionName}`);
 
     execSync(
-        `cd ${extensionPath} && yarn && npm run compile --if-present`,
+        `cd ${extensionPath} && npm install && npm run compile --if-present`,
         {stdio: 'inherit'}
     );
 });
