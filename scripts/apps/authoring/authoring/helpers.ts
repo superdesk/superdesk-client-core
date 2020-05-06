@@ -66,6 +66,7 @@ export const DEFAULT_ACTIONS = Object.freeze({
     edit: false,
     mark_item: false,
     duplicate: false,
+    duplicateTo: false,
     copy: false,
     view: true,
     spike: false,
