@@ -33,6 +33,7 @@ import {getSpellcheckWarningsByBlock} from './spellchecker/SpellcheckerDecorator
 import {getSpellchecker} from './spellchecker/default-spellcheckers';
 import {IEditorStore} from '../store';
 import {appConfig} from 'appConfig';
+import {EDITOR_BLOCK_TYPE} from '../constants';
 
 const MEDIA_TYPES_TRIGGER_DROP_ZONE = [
     'application/superdesk.item.picture',
@@ -43,7 +44,7 @@ const MEDIA_TYPES_TRIGGER_DROP_ZONE = [
 
 const EVENT_TYPES_TRIGGER_DROP_ZONE = [
     ...MEDIA_TYPES_TRIGGER_DROP_ZONE,
-    'superdesk/editor3-block',
+    EDITOR_BLOCK_TYPE,
     'Files',
 ];
 

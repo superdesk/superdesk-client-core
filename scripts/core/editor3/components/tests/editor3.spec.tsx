@@ -173,6 +173,6 @@ describe('editor3.blockRenderer', () => {
         const {options} = mockStore();
 
         expect(component).not.toBe(null);
-        expect(mount(component, options).name()).toBe('Connect(EmbedBlockComponent)');
+        expect(mount(component, options).name()).toBe('Connect(DragableEditor3BlockComponent)');
     });
 });
