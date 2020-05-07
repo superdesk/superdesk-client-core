@@ -51,7 +51,7 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                 }
             };
 
-            scope.toggleButton = function(predefinedFilters) {
+            scope.toggleDateFilter = function(predefinedFilters) {
                 predefinedFilters.forEach((filters) => {
                     if (filters.key === scope.fields.firstpublished) {
                         filters.active = !filters.active;
@@ -119,7 +119,7 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                 }
 
                 if (!$location.search().firstpublished) {
-                    scope.dateFilters.forEach((dateFilter) => scope.toggleButton(dateFilter.predefinedFilters));
+                    scope.dateFilters.forEach((dateFilter) => scope.toggleDateFilter(dateFilter.predefinedFilters));
                 }
 
                 if ($location.search().featuremedia) {

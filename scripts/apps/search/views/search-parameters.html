@@ -177,7 +177,7 @@
             <form class="date-filter">
                 <div class="predefined-dates sd-margin-b--2">
                     <button ng-repeat="predefinedFilter in dateFilter.predefinedFilters track by predefinedFilter.key"
-                        ng-click='togglePredefinedDateFilter(dateFilter, predefinedFilter.key); toggleButton(dateFilter.predefinedFilters)'
+                        ng-click='togglePredefinedDateFilter(dateFilter, predefinedFilter.key); toggleDateFilter(dateFilter.predefinedFilters)'
                         class="toggle-button"
                         title="{{predefinedFilter.label}}"
                         ng-class="{'toggle-button--active': predefinedFilter.active}"
