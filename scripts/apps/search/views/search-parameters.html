@@ -3,23 +3,32 @@
         <div class="form__row form__row--flex sd-margin-t--2">
             <div class="sd-line-input sd-line-input--boxed sd-line-input--no-margin" ng-if="search_config.slugline">
                 <label class="sd-line-input__label" for="search-slugline">
-                    {{:: 'Slugline' | translate}}
+                    {{gettext('Slugline')}}
                 </label>
                 <input class="sd-line-input__input" type="text" ng-keypress="keyPressed($event)" id="search-slugline" ng-model="meta.slugline">
             </div>
 
             <div class="sd-line-input sd-line-input--boxed  sd-line-input--no-margin" ng-if="search_config.headline">
                 <label class="sd-line-input__label" for="search-headline">
-                    {{:: 'Headline' | translate}}
+                    {{gettext('Headline')}}
                 </label>
                 <input class="sd-line-input__input" type="text" ng-keypress="keyPressed($event)" id="search-headline" ng-model="meta.headline">
+            </div>
+        </div>
+
+        <div class="form__row" ng-if="search_config.sign_off">
+            <div class="sd-line-input sd-line-input--boxed sd-line-input--no-margin">
+                <label class="sd-line-input__label" for="search-sign_off">
+                    {{gettext('Sign_off')}}
+                </label>
+                <input class="sd-line-input__input" type="text" ng-keypress="keyPressed($event)" id="search-sign_off" ng-model="meta.sign_off">
             </div>
         </div>
 
         <div class="form__row" ng-if="search_config.story_text">
             <div class="sd-line-input sd-line-input--boxed sd-line-input--no-margin">
                 <label class="sd-line-input__label" for="search-storytext">
-                    {{:: 'Story Text' | translate}}
+                    {{gettext('Story Text')}}
                 </label>
                 <span class="control">
                     <input class="sd-line-input__input" type="text" ng-keypress="keyPressed($event)" id="search-storytext" ng-model="meta.body_html">
@@ -30,13 +39,13 @@
         <div class="form__row form__row--flex">
             <div class="sd-line-input sd-line-input--boxed sd-line-input--no-margin" ng-if="search_config.unique_name">
                 <label class="sd-line-input__label" for="search-storyname">
-                    {{:: 'Unique Name' | translate}}
+                    {{gettext('Unique Name')}}
                 </label>
                 <input class="sd-line-input__input" type="text" ng-keypress="keyPressed($event)" id="search-storyname" ng-model="fields.unique_name">
             </div>
             <div class="sd-line-input sd-line-input--boxed sd-line-input--no-margin" ng-if="search_config.byline">
                 <label class="sd-line-input__label" for="search-byline">
-                    {{:: 'Byline' | translate}}
+                    {{gettext('Byline')}}
                 </label>
                 <input class="sd-line-input__input" type="text" ng-keypress="keyPressed($event)" id="search-byline" ng-model="meta.byline">
             </div>
@@ -59,7 +68,7 @@
         </div>
         <div class="form__row" ng-if="search_config.marked_desks">
             <label class="form-label form__row-label" for="search-marked-desks">
-                {{:: 'Marked Desks' | translate}}
+                {{gettext('Marked Desks')}}
             </label>
             <div id="search-marked-desks">
                 <div id="marked-desks" sd-meta-terms
@@ -90,7 +99,7 @@
         <div class="form__row form__row--flex">
             <div class="sd-line-input sd-line-input--is-select sd-line-input--boxed sd-line-input--no-margin" ng-if="search_config.from_desk">
                 <label class="sd-line-input__label" for="from-desk">
-                    {{:: 'From Desk' | translate}}
+                    {{gettext('From Desk')}}
                 </label>
                 <select
                     id="from-desk"
@@ -103,7 +112,7 @@
             </div>
             <div class="sd-line-input sd-line-input--is-select sd-line-input--boxed sd-line-input--no-margin" ng-if="search_config.to_desk">
                 <label class="sd-line-input__label" for="to-desk">
-                    {{:: 'To Desk' | translate}}
+                    {{gettext('To Desk')}}
                 </label>
                 <select
                     id="to-desk"
@@ -119,7 +128,7 @@
         <div class="form__row" ng-if="repo.archive && search_config.creator">
             <div class="sd-line-input sd-line-input--is-select sd-line-input--boxed sd-line-input--no-margin">
                 <label class="sd-line-input__label" for="search-creator">
-                    {{:: 'Creator' | translate}}
+                    {{gettext('Creator')}}
                 </label>
                 <select id="search-creator"
                         class="sd-line-input__select"
@@ -133,25 +142,23 @@
         <div class="form__row" ng-if="search_config.spike">
             <div class="sd-line-input sd-line-input--is-select sd-line-input--boxed sd-line-input--no-margin">
                 <label class="sd-line-input__label" for="spike-options">
-                    {{:: 'Spiked Content' | translate}}
+                    {{gettext('Spiked Content')}}
                 </label>
                 <select id="spike-options"
                         class="sd-line-input__select"
                         name="spike-options"
                         ng-model="fields.spike">
-                        <option value="exclude" label="{{:: 'Exclude spiked content' | translate }}"></option>
-                        <option value="include" label="{{:: 'Include spiked content' | translate }}"></option>
-                        <option value="only" label="{{:: 'Spiked only content' | translate }}"></option>
+                        <option value="exclude" label="{{gettext('Exclude spiked content') }}"></option>
+                        <option value="include" label="{{gettext('Include spiked content') }}"></option>
+                        <option value="only" label="{{gettext('Spiked only content') }}"></option>
                 </select>
             </div>
-
-
         </div>
 
         <div class="form__row form__row--flex" ng-if="search_config.ingest_provider">
             <div class="sd-line-input sd-line-input--is-select sd-line-input--boxed sd-line-input--no-margin">
                 <label class="sd-line-input__label" for="search-ingest-provider">
-                    {{:: 'Provider' | translate}}
+                    {{gettext('Provider')}}
                 </label>
                 <select id="search-ingest-provider"
                         class="sd-line-input__select"
@@ -162,16 +169,46 @@
             </div>
         </div>
 
+        <div ng-if="search_config.date_published"
+            ng-repeat="dateFilter in dateFilters track by dateFilter.fieldname"
+            sd-toggle-box data-style="circle" data-title="{{:: dateFilter.labelBlock }}"
+            data-open="false"
+            id="filter-{{dateFilter.fieldname}}">
+            <form class="date-filter">
+                <div class="predefined-dates sd-margin-b--2">
+                    <button ng-repeat="predefinedFilter in dateFilter.predefinedFilters track by predefinedFilter.key"
+                        ng-click='togglePredefinedDateFilter(dateFilter, predefinedFilter.key); toggleButton(dateFilter.predefinedFilters)'
+                        class="toggle-button"
+                        title="{{predefinedFilter.label}}"
+                        ng-class="{'toggle-button--active': predefinedFilter.active}"
+                        id="filter-{{dateFilter.fieldname}}-{{predefinedFilter.key}}">{{predefinedFilter.label}}</button>
+                </div>
+
+                <fieldset ng-show="(dateFilter.labelFrom != null && dateFilter.labelTo != null) && (repo.search === 'local' || providerType.startsWith('scanpix') || repo.search === 'content-api' || providerType === 'aapmm')">
+                    <div class="form__row form__row--no-padding form__row--flex">
+                        <div class="form__row-item">
+                            <label class="form-label">{{dateFilter.labelFrom}}</label>
+                            <div sd-datepicker ng-model="fields.firstpublishedfrom"></div>
+                        </div>
+                        <div class="form__row-item">
+                            <label class="form-label">{{dateFilter.labelTo}}</label>
+                            <div sd-datepicker ng-model="fields.firstpublishedto"></div>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+
         <div class="form__row" ng-if="search_config.featuremedia">
             <span sd-switch ng-model="fields.featuremedia"></span>
             <label for="search-featuremedia">
-            {{:: 'Feature Media' | translate}}
+            {{gettext('Feature Media')}}
             </label>
         </div>
 
         <div class="sd-line-input sd-line-input--is-select sd-line-input--boxed sd-line-input--no-margin" ng-if="isContentApi() && search_config.subscribers">
             <label class="sd-line-input__label" for="search-subscriber">
-                {{:: 'Subscriber' | translate}}
+                {{gettext('Subscriber')}}
             </label>
             <select id="search-subscriber"
                     class="sd-line-input__select"
@@ -186,7 +223,7 @@
         <div class="form__row">
             <div class="sd-line-input sd-line-input--boxed sd-line-input--no-margin">
                 <label class="sd-line-input__label" for="search-objectname">
-                    {{:: 'Object Name (Slugline)' | translate}}
+                    {{gettext('Object Name (Slugline)')}}
                 </label>
                 <span class="control">
                     <input class="sd-line-input__input" type="text" ng-keypress="keyPressed($event)" id="search-objectname" ng-model="meta.objectname">
@@ -197,7 +234,7 @@
         <div class="form__row">
             <div class="sd-line-input sd-line-input--boxed sd-line-input--no-margin">
                 <label class="sd-line-input__label" for="search-description">
-                    {{:: 'Description' | translate}}
+                    {{gettext('Description')}}
                 </label>
                 <span class="control">
                     <input class="sd-line-input__input" type="text" ng-keypress="keyPressed($event)" id="search-description" ng-model="meta.description_text">
@@ -208,7 +245,7 @@
         <div class="form__row">
             <div class="sd-line-input sd-line-input--boxed sd-line-input--no-margin">
                 <label class="sd-line-input__label" for="search-aapkeyword">
-                    {{:: 'AAP Image Keyword' | translate}}
+                    {{gettext('AAP Image Keyword')}}
                 </label>
                 <span class="control">
                     <input class="sd-line-input__input" type="text" ng-keypress="keyPressed($event)" id="search-aapkeyword" ng-model="meta.aapkeyword">
@@ -219,7 +256,7 @@
         <div class="form__row">
             <div class="sd-line-input sd-line-input--boxed sd-line-input--no-margin">
                 <label class="sd-line-input__label" for="search-keywords">
-                    {{:: 'Keywords'}}
+                    {{gettext('Keywords')}}
                 </label>
                 <span class="control">
                     <input class="sd-line-input__input" type="text" ng-keypress="keyPressed($event)" id="search-keywords" ng-model="meta.keywords">
@@ -248,10 +285,10 @@
 
         <div>
             <div class="form__row form__row--s-padding">
-                <sd-check id="search-bw" ng-model="meta.bw">{{:: 'Black&White' | translate}}</sd-check>
+                <sd-check id="search-bw" ng-model="meta.bw">{{gettext('Black&White')}}</sd-check>
             </div>
             <div class="form__row form__row--s-padding">
-                <sd-check id="search-clear_edge" ng-model="meta.clear_edge">{{:: 'Clear Edge' | translate}}</sd-check>
+                <sd-check id="search-clear_edge" ng-model="meta.clear_edge">{{gettext('Clear Edge')}}</sd-check>
             </div>
         </div>
 

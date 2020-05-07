@@ -1,4 +1,6 @@
 import {PARAMETERS} from 'apps/search/constants';
+import {getDateFilters} from './DateFilters';
+import {gettext} from 'core/utils';
 import _ from 'lodash';
 
 /**
@@ -23,11 +25,11 @@ SearchParameters.$inject = [
     '$location', 'asset', 'tags', 'metadata',
     'searchCommon', 'desks', 'userList',
     'ingestSources', 'subscribersService',
-    '$templateCache',
+    '$templateCache', 'search',
 ];
 
 export function SearchParameters($location, asset, tags, metadata, common, desks,
-    userList, ingestSources, subscribersService, $templateCache) {
+    userList, ingestSources, subscribersService, $templateCache, search) {
     return {
         scope: {
             repo: '=',
@@ -38,6 +40,10 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
         link: function(scope, elem) {
             var ENTER = 13;
 
+            scope.gettext = gettext;
+
+            scope.dateFilters = getDateFilters().filter((dateFilter) => dateFilter.fieldname === 'firstpublished');
+
             scope.keyPressed = function(event) {
                 if (event.keyCode === ENTER) {
                     searchParameters();
@@ -45,10 +51,24 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                 }
             };
 
+            scope.toggleButton = function(predefinedFilters) {
+                predefinedFilters.forEach((filters) => {
+                    if (filters.key === scope.fields.firstpublished) {
+                        filters.active = !filters.active;
+                    } else {
+                        filters.active = false;
+                    }
+                });
+            };
+
+            scope.togglePredefinedDateFilter = function(fieldname, predefinedFilter) {
+                scope.fields.firstpublished = predefinedFilter;
+            };
+
             const getSearchConfig = () => {
                 if (scope.isContentApi()) {
                     let searchConfig: any = _.pick(metadata.search_config, ['slugline', 'headline',
-                        'byline', 'story_text']);
+                        'byline', 'story_text', 'sign_off', 'date_published']);
 
                     searchConfig.subscribers = 1;
                     return searchConfig;
@@ -96,6 +116,10 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                     scope.fields.spike = $location.search().spike;
                 } else if (!scope.isContentApi()) {
                     scope.fields.spike = 'exclude';
+                }
+
+                if (!$location.search().firstpublished) {
+                    scope.dateFilters.forEach((dateFilter) => scope.toggleButton(dateFilter.predefinedFilters));
                 }
 
                 if ($location.search().featuremedia) {
