@@ -4,15 +4,9 @@ import {MediaBlock} from './media';
 import {EmbedBlock} from './embeds';
 import {TableBlock} from './tables';
 import {ContentBlock} from 'draft-js';
+import {DragableEditor3Block} from './media/dragable-editor3-block';
 
-/**
- * @ngdoc React
- * @module superdesk.core.editor3
- * @name MediaComponent
- * @param {Object} block The block being rendered.
- * @description Media block renderer component.
- */
-const MediaComponent: React.StatelessComponent<any> = (props) => {
+const BlockRendererComponent: React.StatelessComponent<any> = (props) => {
     const {block, contentState} = props;
     const entityKey = block.getEntityAt(0);
 
@@ -22,26 +16,39 @@ const MediaComponent: React.StatelessComponent<any> = (props) => {
 
     const type = contentState.getEntity(entityKey).getType();
 
-    switch (type) {
-    case 'MEDIA':
-        return <MediaBlock {...props} />;
-    case 'EMBED':
-        return <EmbedBlock {...props} />;
-    case 'TABLE':
-        return <TableBlock {...props} />;
-    default:
+    function getComponent() {
+        if (type === 'MEDIA') {
+            return <MediaBlock {...props} />;
+        } else if (type === 'EMBED') {
+            return <EmbedBlock {...props} />;
+        } else if (type === 'TABLE') {
+            return <TableBlock {...props} />;
+        } else {
+            return null;
+        }
+    }
+
+    const component = getComponent();
+
+    if (component == null) {
         return null;
+    } else {
+        return (
+            <DragableEditor3Block block={block}>
+                {component}
+            </DragableEditor3Block>
+        );
     }
 };
 
-MediaComponent.propTypes = {
+BlockRendererComponent.propTypes = {
     block: PropTypes.object.isRequired,
     contentState: PropTypes.object.isRequired,
 };
 
 export function blockRenderer(contentBlock: ContentBlock) {
     return contentBlock.getType() !== 'atomic' ? null : {
-        component: MediaComponent,
+        component: BlockRendererComponent,
         editable: false,
     };
 }
