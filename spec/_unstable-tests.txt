@@ -5,5 +5,4 @@ editor3 can edit body with toolbar
 monitoring can display the item in Desk Output when it's published in a production desk
 authoring related item widget can open published item
 send warns that there are spelling mistakes
-Not modifying crops will not trigger an article change
 master_desk show content view - edit item
