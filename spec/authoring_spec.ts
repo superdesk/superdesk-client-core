@@ -15,7 +15,7 @@ import {dictionaries} from './helpers/dictionaries';
 import {workspace} from './helpers/workspace';
 import {authoring} from './helpers/authoring';
 
-import {el, ECE, els, waitAndClick, hover, selectFilesForUpload} from 'end-to-end-testing-helpers';
+import {el, ECE, els, hover, selectFilesForUpload} from 'end-to-end-testing-helpers';
 
 describe('authoring', () => {
     beforeEach(() => {
@@ -706,7 +706,7 @@ describe('authoring', () => {
 
         el(['multi-image-edit--start-upload']).click();
 
-        waitAndClick(el(['change-image', 'done']));
+        el(['change-image', 'done']).click();
 
         assertToastMsg('success', 'Item updated.');
         waitForToastMsgDissapear('success', 'Item updated.');
@@ -739,7 +739,7 @@ describe('authoring', () => {
 
         el(['multi-image-edit--start-upload']).click();
 
-        waitAndClick(el(['change-image', 'done']));
+        el(['change-image', 'done']).click();
 
         browser.wait(ECE.hasElementCount(els(['authoring-field--media-gallery', 'media-gallery-image']), 1));
     });
@@ -764,7 +764,7 @@ describe('authoring', () => {
 
         el(['multi-image-edit--start-upload']).click();
 
-        waitAndClick(el(['change-image', 'done']));
+        el(['change-image', 'done']).click();
 
         browser.wait(ECE.hasElementCount(els(['authoring-field--media-gallery', 'media-gallery-image']), 1));
 
