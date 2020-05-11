@@ -24,6 +24,7 @@ interface IScope extends ng.IScope {
     gettext: (text: any, params?: any) => any;
     toggleFilter: () => void;
     addResourceUpdatedEventListener: (callback: any) => void;
+    openUpload: (files: Array<File>) => void;
 }
 
 /**
@@ -31,7 +32,16 @@ interface IScope extends ng.IScope {
  *
  * it's a directive so that it can be put together with authoring into some container directive
  */
-MonitoringView.$inject = ['$rootScope', 'authoringWorkspace', 'pageTitle', '$timeout', 'workspaces', 'desks'];
+MonitoringView.$inject = [
+    '$rootScope',
+    'authoringWorkspace',
+    'pageTitle',
+    '$timeout',
+    'workspaces',
+    'desks',
+    'superdesk',
+];
+
 export function MonitoringView(
     $rootScope,
     authoringWorkspace: AuthoringWorkspaceService,
@@ -39,6 +49,7 @@ export function MonitoringView(
     $timeout,
     workspaces,
     desks,
+    superdesk,
 ) {
     return {
         templateUrl: 'scripts/apps/monitoring/views/monitoring-view.html',
@@ -68,6 +79,13 @@ export function MonitoringView(
             scope.addResourceUpdatedEventListener = (callback) => {
                 scope.$on('resource:updated', (_event, data) => {
                     callback(data);
+                });
+            };
+
+            scope.openUpload = (files: Array<File>) => {
+                superdesk.intent('upload', 'media', {
+                    files: files,
+                    deskSelectionAllowed: true,
                 });
             };
 

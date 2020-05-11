@@ -42,14 +42,6 @@ angular.module('superdesk.core.menu', [
             $scope.session = session;
 
             this.flags = superdeskFlags.flags;
-            this.openUpload = function openUpload(files) {
-                let uploadData = {
-                    files: files,
-                    deskSelectionAllowed: true,
-                };
-
-                superdesk.intent('upload', 'media', uploadData);
-            };
 
             $scope.$watch(function currentRoute() {
                 return $route.current;
