@@ -413,7 +413,7 @@ declare module 'superdesk-api' {
     export interface IPublishedArticle extends IArticle {
 
         /** id in published collection, different for each correction */
-        item_id: string; 
+        item_id: string;
 
         /** item copy in archive collection, always the latest version of the item */
         archive_item: IArticle;
@@ -1184,7 +1184,7 @@ declare module 'superdesk-api' {
         search_cvs: any;
         view: {
             dateformat: string; // a combination of YYYY, MM, and DD with a custom separator e.g. 'MM/DD/YYYY'
-            timeformat: any;
+            timeformat: string;
         };
         user: {
             sign_off_mapping: any;
