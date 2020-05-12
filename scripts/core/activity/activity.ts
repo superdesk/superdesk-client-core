@@ -352,8 +352,11 @@ function SuperdeskProvider($routeProvider, _) {
                         var menu = [];
 
                         angular.forEach(activities, (activity) => {
-                            if (activity.category === category && isAllowed(activity) &&
-                                (activity.beta === false || $rootScope.beta)) {
+                            if (activity.category === category &&
+                                isAllowed(activity) &&
+                                (activity.beta === false || $rootScope.beta) &&
+                                (activity.additionalCondition == null || $injector.invoke(activity.additionalCondition))
+                            ) {
                                 menu.push(activity);
                             }
                         });
