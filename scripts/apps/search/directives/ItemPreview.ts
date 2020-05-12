@@ -62,22 +62,27 @@ export function ItemPreview(asset, storage, desks, _, familyService, privileges)
 
             scope.$watch('item', (newItem, oldItem) => {
                 scope.selected = {preview: newItem || null};
+                scope.links = [];
 
                 if (newItem !== oldItem) {
+                    const isMedia = ['audio', 'video', 'picture', 'graphic'].includes(scope.item.type);
+
                     fetchRelatedItems();
 
                     // Set the desk and stage names
                     if (newItem && newItem.task && newItem.task.stage) {
                         scope.deskName = desks.deskLookup[newItem.task.desk].name;
                         scope.stage = desks.stageLookup[newItem.task.stage].name;
-                        scope.isMediaUsed = _.includes(['audio', 'video', 'picture', 'graphic'], scope.item.type) &&
-                            scope.item.used;
                     } else {
                         scope.deskName = scope.stage = null;
                     }
 
                     // item is associated to an assignment
                     scope.isAssigned = _.get(scope, 'item.assignment_id') && _.get(privileges, 'privileges.planning');
+
+                    if (isMedia) {
+                        familyService.fetchLinks(newItem).then((links) => scope.links = links);
+                    }
 
                     if (scope.vm.current_tab === 'assignment' && !scope.isAssigned) {
                         scope.vm.current_tab = 'content';

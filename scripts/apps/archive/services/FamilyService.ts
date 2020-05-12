@@ -53,6 +53,19 @@ export function FamilyService(api, desks) {
         return query(filter, 'versioncreated', 'desc');
     };
 
+    this.fetchLinks = (item: IArticle) => api.query('links', {
+        uri: item.uri,
+        guid: item.guid || item._id,
+    })
+        .then((resp) => {
+            if (resp._items.length === 0 && item.used) {
+                // fallback
+                return this.fetchMediaUsedItems(item.unique_id);
+            } else {
+                return resp;
+            }
+        }).then((resp) => resp._items);
+
     /**
      * @ngdoc method
      * @name family#query

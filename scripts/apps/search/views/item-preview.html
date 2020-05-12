@@ -3,7 +3,7 @@
         <i class="icon-chevron-left-thin"></i>
     </button>
     <header>
-        <ul class="nav-tabs" ng-class="{'nav-tabs--small': (showRelatedTab && showHistoryTab) || (showRelatedTab && isMediaUsed) || (showHistoryTab && isMediaUsed)}">
+        <ul class="nav-tabs" ng-class="{'nav-tabs--small': (showRelatedTab && showHistoryTab) || (showRelatedTab && links.length) || (showHistoryTab && links.length)}">
             <li class="nav-tabs__tab" ng-class="{'nav-tabs__tab--active': vm.current_tab === 'content'}">
                 <button class="nav-tabs__link" ng-click="vm.current_tab = 'content'" title="{{ 'Content' | translate }}"><span translate>Content</span></button>
             </li>
@@ -16,8 +16,8 @@
             <li class="nav-tabs__tab" ng-show="showHistoryTab" ng-class="{'nav-tabs__tab--active': vm.current_tab === 'history'}">
                 <button class="nav-tabs__link" ng-click="vm.current_tab = 'history'" title="{{ 'Item history' | translate }}" translate>Item history</button>
             </li>
-            <li class="nav-tabs__tab" ng-show="isMediaUsed" ng-class="{'nav-tabs__tab--active': vm.current_tab === 'used'}">
-                <button class="nav-tabs__link" ng-click="vm.current_tab = 'used'"  title="{{ 'Used' | translate }}" translate>Used</button>
+            <li class="nav-tabs__tab" ng-show="links.length" ng-class="{'nav-tabs__tab--active': vm.current_tab === 'used'}">
+                <button class="nav-tabs__link" ng-click="vm.current_tab = 'used'"  title="{{ 'Used' | translate }}" translate>Used <span class="badge">{{ links.length }}</span></button>
             </li>
             <li class="nav-tabs__tab" ng-show="isAssigned" ng-class="{'nav-tabs__tab--active': vm.current_tab === 'assignment'}">
                 <button class="nav-tabs__link" ng-click="vm.current_tab = 'assignment'"  title="{{ 'Assignment' | translate }}" translate>Assignment</button>
@@ -35,7 +35,7 @@
              data-related-items="relatedItems" class="sd-wrap-helper">
         </div>
         <div ng-if="vm.current_tab === 'history' && showHistoryTab" sd-versioning-history data-item="item" class="sd-wrap-helper"></div>
-        <div ng-if="vm.current_tab === 'used' && isMediaUsed" sd-media-used data-item="item" class="sd-wrap-helper"></div>
+        <div ng-if="vm.current_tab === 'used' && links.length" sd-media-used data-item="item" class="sd-wrap-helper" data-links="links"></div>
         <div ng-if="vm.current_tab === 'assignment' && isAssigned" sd-assignment-preview data-item="item" class="sd-wrap-helper"></div>
     </div>
 </div>
