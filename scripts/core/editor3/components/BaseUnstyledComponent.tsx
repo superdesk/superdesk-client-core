@@ -1,13 +1,11 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import {getValidMediaType, canDropMedia, dragEventShouldShowDropZone} from './Editor3Component';
 import {moveBlock, dragDrop, embed} from '../actions/editor3';
 import {getEmbedObject} from './embeds/EmbedInput';
 import {htmlComesFromDraftjsEditor} from 'core/editor3/helpers/htmlComesFromDraftjsEditor';
 import {htmlIsPlainTextDragged} from 'core/editor3/helpers/htmlIsPlainTextDragged';
-
-const EDITOR_BLOCK_TYPE = 'superdesk/editor3-block';
+import {EDITOR_BLOCK_TYPE} from '../constants';
 
 export function isEditorBlockEvent(event) {
     return event.originalEvent.dataTransfer.types.indexOf(EDITOR_BLOCK_TYPE) > -1;

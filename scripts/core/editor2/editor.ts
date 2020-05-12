@@ -830,7 +830,7 @@ angular.module('superdesk.apps.editor2', [
         }])
     .directive('sdTextEditor', ['$timeout', function($timeout) {
         return {
-            scope: {type: '=', config: '=', editorformat: '=', language: '=', associations: '=?'},
+            scope: {type: '=', config: '=', editorformat: '=', language: '=', associations: '=?', readOnly: '=?'},
             require: ['sdTextEditor', 'ngModel'],
             templateUrl: 'scripts/core/editor2/views/editor.html',
             controllerAs: 'vm',
@@ -1087,7 +1087,7 @@ angular.module('superdesk.apps.editor2', [
             }
 
             return {
-                scope: {type: '=', config: '=', language: '=', sdTextEditorBlockText: '='},
+                scope: {type: '=', config: '=', language: '=', sdTextEditorBlockText: '=', readOnly: '=?'},
                 require: ['ngModel', '^sdTextEditor', 'sdTextEditorBlockText'],
                 templateUrl: 'scripts/core/editor2/views/block-text.html',
                 link: function(scope, elem, attrs, controllers) {
@@ -1110,7 +1110,11 @@ angular.module('superdesk.apps.editor2', [
                     ngModel.$viewChangeListeners.push(changeListener);
                     ngModel.$render = function() {
                         editor.registerScope(scope);
-                        var editorConfig = angular.merge({}, EDITOR_CONFIG, scope.config || {});
+                        var editorConfig = angular.merge(
+                            {},
+                            EDITOR_CONFIG, scope.config || {},
+                            {disableEditing: scope.readOnly},
+                        );
 
                         if (editorConfig.toolbar) {
                             editorConfig.toolbar.buttons = [];

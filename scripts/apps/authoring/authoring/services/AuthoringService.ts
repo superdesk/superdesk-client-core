@@ -45,7 +45,7 @@ function canRewrite(item: IArticle): true | Array<string> {
     }
 
     if (item.broadcast?.master_id != null) {
-        errors.push('Unknown error occured'); // TODO: figure out the reason
+        errors.push(gettext('Can not update a broadcast version of the story.'));
     }
 
     if (item.rewrite_of != null && !(isPublished(item) || appConfig.workflow_allow_multiple_updates)) {
@@ -565,7 +565,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
 
         // Archived items can be duplicated
         if (_.get(currentItem, '_type') === 'archived' && currentItem.type === 'text') {
-            action.duplicate = true;
+            action.duplicate = action.duplicateTo = true;
             return action;
         }
 
@@ -716,6 +716,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
 
             action.duplicate = userPrivileges.duplicate &&
                 !CANCELED_STATES.includes(currentItem.state);
+            const duplicateTo = action.duplicateTo = action.duplicate;
 
             action.add_to_current = !READONLY_STATES.includes(currentItem.state);
 
@@ -725,6 +726,9 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
                 action = angular.extend({}, helpers.DEFAULT_ACTIONS);
                 // user can action `update` even if the user is not a member.
                 action.re_write = reWrite;
+                if (appConfig.workflow_allow_duplicate_non_members) {
+                    action.duplicateTo = duplicateTo;
+                }
             }
         } else {
             // personal

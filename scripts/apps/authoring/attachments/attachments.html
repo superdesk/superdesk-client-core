@@ -2,7 +2,7 @@
     ngf-drop="ctrl.selectFiles($files)"
     ngf-stop-propagation="true"
     ngf-multiple="true">
-    <sd-attachments-list store="store"></sd-attachments-list>
+    <sd-attachments-list store="store" read-only="readOnly"></sd-attachments-list>
 
     <div class="attach-indicator"
         ng-if="widget"
@@ -17,7 +17,7 @@
         <div class="subtext" translate>Drag one or more files here to upload them, or just click the button below.</div>
 
         <a class="btn btn--hollow"
-            ng-disabled="!ctrl.editable"
+            ng-disabled="readOnly || !ctrl.editable"
             ngf-select="ctrl.selectFiles($files)"
             ngf-multiple="true">
             {{ :: 'Attach files' | translate }}
@@ -25,7 +25,7 @@
     </div>
 
     <button ng-if="!widget" class="item-association"
-        ng-disabled="!ctrl.editable"
+        ng-disabled="readOnly || !ctrl.editable"
         ngf-select="ctrl.selectFiles($files)"
         ngf-multiple="true">
         <div class="subtext">

@@ -284,7 +284,7 @@ declare module 'superdesk-api' {
         embargo?: any;
         signal?: any;
         broadcast?: {
-            master_id?: any;
+            master_id?: any; // original story this broadcast version was created from
             status?: any;
         };
         flags: any;
@@ -413,7 +413,7 @@ declare module 'superdesk-api' {
     export interface IPublishedArticle extends IArticle {
 
         /** id in published collection, different for each correction */
-        item_id: string; 
+        item_id: string;
 
         /** item copy in archive collection, always the latest version of the item */
         archive_item: IArticle;
@@ -1105,8 +1105,11 @@ declare module 'superdesk-api' {
         saml_label: any;
         archive_autocomplete: boolean;
 
-        // allow updates for items which aren't published yet
+        /** allow updates for items which aren't published yet */
         workflow_allow_multiple_updates: boolean;
+
+        /** allow users who are not members of a desk to duplicate its content */
+        workflow_allow_duplicate_non_members: boolean;
 
         allow_updating_scheduled_items: boolean;
 
@@ -1181,7 +1184,7 @@ declare module 'superdesk-api' {
         search_cvs: any;
         view: {
             dateformat: string; // a combination of YYYY, MM, and DD with a custom separator e.g. 'MM/DD/YYYY'
-            timeformat: any;
+            timeformat: string;
         };
         user: {
             sign_off_mapping: any;
@@ -1338,7 +1341,7 @@ declare module 'superdesk-api' {
         LanguageIdentifier: string;
     }
 
-    interface ISubject {
+    export interface ISubject {
         name: string;
         qcode: string;
         scheme?: string;

@@ -171,5 +171,5 @@ angular.module('superdesk.apps.authoring.attachments', [
     .config(['authoringWidgetsProvider', config])
     .directive('sdAttachmentsEditor', AttachmentsEditorDirective)
     .component('sdAttachmentsEditorModal', reactToAngular1(AttachmentsEditorModal, ['store']))
-    .component('sdAttachmentsList', reactToAngular1(AttachmentsList, ['store']))
+    .component('sdAttachmentsList', reactToAngular1(AttachmentsList, ['store', 'readOnly']))
 ;

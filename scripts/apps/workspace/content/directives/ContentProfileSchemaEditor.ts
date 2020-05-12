@@ -64,6 +64,8 @@ const FORMATTING_OPTIONS = [
     'italic',
     'bold',
     'table',
+    'tab',
+    'tab as spaces',
 ];
 
 const EDITOR3_PLAINTEXT_FORMATTING_OPTIONS = [
@@ -98,6 +100,8 @@ const EDITOR3_RICH_FORMATTING_OPTIONS = [
     'superscript',
     'subscript',
     'strikethrough',
+    'tab',
+    'tab as spaces',
 ];
 
 /**

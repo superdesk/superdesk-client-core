@@ -1,7 +1,7 @@
 
 import os
 
-DEBUG = True
+DEBUG = bool(os.environ.get('SUPERDESK_DEBUG'))
 SUPERDESK_TESTING = True
 
 SERVER_NAME = 'localhost:5000'
@@ -10,17 +10,16 @@ URL_PREFIX = 'api'
 
 CLIENT_URL = 'http://localhost:9000'
 
-MONGO_DBNAME = os.environ.get('MONGO_DBNAME', 'superdesk_e2e')
-MONGO_URI = os.environ.get('MONGO_URI', 'mongodb://localhost/{}'.format(MONGO_DBNAME))
-
-LEGAL_ARCHIVE_DBNAME = os.environ.get('LEGAL_ARCHIVE_DBNAME', 'superdesk_e2e_legal_archive')
-LEGAL_ARCHIVE_URI = os.environ.get('LEGAL_ARCHIVE_URI', 'mongodb://localhost/{}'.format(LEGAL_ARCHIVE_DBNAME))
-
-CONTENTAPI_MONGO_DBNAME = os.environ.get('CONTENTAPI_MONGO_DBNAME', 'contentapi_e2e')
-CONTENTAPI_MONGO_URI = os.environ.get('CONTENTAPI_MONGO_URI', 'mongodb://localhost/{}'.format(CONTENTAPI_MONGO_DBNAME))
-
-ARCHIVED_DBNAME = os.environ.get('ARCHIVED_DBNAME', 'superdesk_e2e_archived')
-ARCHIVED_URI = os.environ.get('ARCHIVED_URI', 'mongodb://localhost/{}'.format(ARCHIVED_DBNAME))
+MONGO_DBNAME = 'superdesk_e2e'
+MONGO_URI = os.environ.get('MONGO_URI', 'mongodb://localhost/%s' % MONGO_DBNAME)
+ARCHIVED_DBNAME = 'superdesk_e2e_archived'
+ARCHIVED_URI = os.environ.get('ARCHIVED_URI', 'mongodb://localhost/%s' % ARCHIVED_DBNAME)
+LEGAL_ARCHIVE_DBNAME = 'superdesk_e2e_legal_archive'
+LEGAL_ARCHIVE_URI = os.environ.get('LEGAL_ARCHIVE_URI', 'mongodb://localhost/%s' % LEGAL_ARCHIVE_DBNAME)
+CONTENTAPI_MONGO_DBNAME = 'contentapi_e2e'
+CONTENTAPI_MONGO_URI = os.environ.get('CONTENTAPI_MONGO_URI', 'mongodb://localhost/%s' % CONTENTAPI_MONGO_DBNAME)
+PUBLICAPI_MONGO_DBNAME = 'publicapi_e2e'
+PUBLICAPI_MONGO_URI = os.environ.get('PUBLICAPI_MONGO_URI', 'mongodb://localhost/%s' % PUBLICAPI_MONGO_DBNAME)
 
 ELASTICSEARCH_INDEX = MONGO_DBNAME
 CONTENTAPI_ELASTICSEARCH_INDEX = CONTENTAPI_MONGO_DBNAME

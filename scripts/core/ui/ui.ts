@@ -695,11 +695,12 @@ function TimepickerPopupDirective($timeout) {
             time: '=',
         },
         link: function(scope, element) {
-            var MODEL_TIME_FORMAT = appConfig.model.timeformat;
+            const MODEL_TIME_FORMAT = appConfig.model.timeformat;
+            const VIEW_TIME_FORMAT = appConfig.view.timeformat;
 
-            var POPUP = '.timepicker-popup';
+            const POPUP = '.timepicker-popup';
 
-            var focusEl = function() {
+            const focusEl = function() {
                 $timeout(() => {
                     element.find(POPUP).focus();
                 }, 0, false);
@@ -714,6 +715,9 @@ function TimepickerPopupDirective($timeout) {
 
             scope.hours = _.range(24);
             scope.minutes = _.range(0, 60, 5);
+            if (VIEW_TIME_FORMAT.includes('ss')) {
+                scope.seconds = _.range(0, 60, 10);
+            }
 
             scope.$watch('time', (newVal, oldVal) => {
                 var local;
