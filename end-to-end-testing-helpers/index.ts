@@ -4,8 +4,6 @@ import {executeContextMenuAction} from './articlesList';
 import {navigateTo} from './workspace';
 import * as path from 'path';
 
-const WAIT_TIMEOUT = 200;
-
 const getTestSelector = (testIds: Array<string> | null = null, text: string | null = null): Locator => {
     const selector = (testIds == null ? [] : testIds)
         .map((testId) => `[data-test-id="${testId}"]`)
@@ -29,7 +27,34 @@ export function el(
 
     const elem = byLocator == null ? locator : locator.element(byLocator);
 
-    browser.wait(() => elem.isPresent(), WAIT_TIMEOUT);
+    [
+        'click',
+        'sendKeys',
+        'getTagName',
+        'getCssValue',
+        'getAttribute',
+        'getText',
+        'getSize',
+        'getLocation',
+        'isEnabled',
+        'isSelected',
+        'submit',
+        'clear',
+        'isDisplayed',
+        'getId',
+        'takeScreenshot',
+    ].forEach((methodName) => {
+        const originalHandler = elem[methodName];
+
+        // override methods to wait for an element to be visible
+        // if the element is already visible, the action will be executed immediately
+        elem[methodName] = (...args: Array<any>) => {
+            return browser.wait(ECE.presenceOf(elem), 5000).then(() => {
+                return originalHandler(...args); // forward arguments
+            });
+        };
+    });
+
     return elem;
 }
 
@@ -71,11 +96,6 @@ export function login(username?: string, password?: string) {
 
 export function hover(elem: ElementFinder) {
     browser.actions().mouseMove(elem).perform();
-}
-
-export function waitAndClick(elem: ElementFinder) {
-    browser.wait(ECE.visibilityOf(elem));
-    elem.click();
 }
 
 export function selectFilesForUpload(
