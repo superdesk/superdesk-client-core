@@ -157,6 +157,9 @@ export function SearchService($location, session, multi,
 
         // set the filters for parameters defined in the parameters panel.
         _.each(PARAMETERS, (value, key) => {
+            var facetrange = {};
+            const dateRangesByKey = getDateRangesByKey();
+
             if (!params[key]) {
                 return;
             }
@@ -185,6 +188,17 @@ export function SearchService($location, session, multi,
                 break;
             case 'marked_desks':
                 filters.push({terms: {'marked_desks.desk_id': JSON.parse(params[key])}});
+                break;
+            case 'firstpublished':
+                getDateFilters().forEach((dateFilter) => {
+                    const dateRangeKey = params[key];
+
+                    if (params[key] != null && dateRangesByKey[dateRangeKey] != null) {
+                        // handle predefined ranges
+                        facetrange[key] = dateRangesByKey[dateRangeKey].elasticSearchDateRange;
+                    }
+                });
+                filters.push({range: {'firstpublished': facetrange[key]}});
                 break;
             default:
                 var filter = {term: {}};

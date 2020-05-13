@@ -148,6 +148,22 @@ export function TagService($location, desks, userList, metadata, search,
         });
     }
 
+    function getDatePublishedFilter(index, value, key) {
+        let label;
+        let labelValue;
+        const datePublishedParameter = getDateFilters().filter((dateFilter) => dateFilter.fieldname === key);
+
+        datePublishedParameter.forEach((item) => {
+            label = item.labelBlock;
+            item.predefinedFilters.forEach((predefinedFilter) => {
+                if (predefinedFilter.key === index) {
+                    labelValue = predefinedFilter.label;
+                }
+            });
+        });
+        return tag(label + ': ' + labelValue);
+    }
+
     /**
      * @ngdoc object
      * @name tags#fieldProcessors
@@ -179,6 +195,11 @@ export function TagService($location, desks, userList, metadata, search,
             let subscriberName = _.get(subscribersService, 'subscribersLookup.' + index + '.name', ':Unknown');
 
             tags.selectedParameters.push(tag(value + ':' + subscriberName, value));
+        },
+        firstpublished: (index, value, key) => {
+            if (metadata.search_config[key]) {
+                tags.selectedParameters.push(getDatePublishedFilter(index, value, key));
+            }
         },
     };
 
@@ -321,6 +342,7 @@ export function TagService($location, desks, userList, metadata, search,
             tags.selectedKeywords = [];
             tags.removedFacets = {};
             tags.currentSearch = $location.search();
+            tags.commonTags = [];
 
             var parameters = tags.currentSearch.q;
 
@@ -334,6 +356,14 @@ export function TagService($location, desks, userList, metadata, search,
             initExcludedFacets(tags.currentSearch);
 
             const dateFilters = getDateFilters();
+
+            dateFilters.forEach((dateFilter) => {
+                if (metadata.search_config[dateFilter.fieldname]) {
+                    tags.commonTags.push(dateFilter.labelBlock);
+                    tags.commonTags.push(dateFilter.labelFrom);
+                    tags.commonTags.push(dateFilter.labelTo);
+                }
+            });
 
             /* eslint-disable complexity */
             _.forEach(tags.currentSearch, (type, key) => {
@@ -363,13 +393,16 @@ export function TagService($location, desks, userList, metadata, search,
                             value: code,
                         });
                     });
-                } else if (dateFilters.some(({fieldname}) => fieldname === key)) {
+                } else if (dateFilters.some(({fieldname}) => fieldname === key
+                && !tags.selectedParameters
+                    .some((datefilter) => tags.commonTags.includes(datefilter.label.split(':')[0])))) {
                     const dateFilter = dateFilters.find(({fieldname}) => fieldname === key);
 
                     tags.selectedFacets[dateFilter.labelBlock] = [getDateRangesByKey()[type].label];
                 } else if (key === 'creditqcode') {
                     tags.selectedFacets.credit = JSON.parse(type);
-                } else {
+                } else if (!tags.selectedParameters
+                    .some((datefilter) => tags.commonTags.includes(datefilter.label.split(':')[0]))) {
                     const dateFilter = dateFilters.find(
                         ({fieldname}) => key === fieldname + 'from' || key === fieldname + 'to',
                     );

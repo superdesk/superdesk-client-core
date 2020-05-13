@@ -15,6 +15,9 @@ export const PARAMETERS = Object.freeze({
     ingest_provider: 'Provider',
     featuremedia: 'Associated Feature Media',
     subscriber: 'Subscriber',
+    firstpublished: 'Date published',
+    firstpublishedfrom: 'Published from',
+    firstpublishedto: 'Published to',
 });
 
 /**

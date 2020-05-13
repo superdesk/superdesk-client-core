@@ -7,7 +7,6 @@ interface IDateRange {
         lte?: string,
         gte?: string,
     };
-    active?: boolean;
 }
 
 export function getDateRangesByKey(): Dictionary<string, IDateRange> {
@@ -17,7 +16,6 @@ export function getDateRangesByKey(): Dictionary<string, IDateRange> {
         elasticSearchDateRange: {
             lte: 'now+1M/d',
         },
-        active: false,
     };
 
     const before_3_months_ahead: IDateRange = {
@@ -26,7 +24,6 @@ export function getDateRangesByKey(): Dictionary<string, IDateRange> {
         elasticSearchDateRange: {
             lte: 'now+3M/d',
         },
-        active: false,
     };
 
     const last_30_days: IDateRange = {
@@ -35,7 +32,6 @@ export function getDateRangesByKey(): Dictionary<string, IDateRange> {
         elasticSearchDateRange: {
             gte: 'now-30d',
         },
-        active: false,
     };
 
     const last_7_days: IDateRange = {
@@ -44,7 +40,6 @@ export function getDateRangesByKey(): Dictionary<string, IDateRange> {
         elasticSearchDateRange: {
             gte: 'now-7d',
         },
-        active: false,
     };
 
     const last_24_hours: IDateRange = {
@@ -53,7 +48,6 @@ export function getDateRangesByKey(): Dictionary<string, IDateRange> {
         elasticSearchDateRange: {
             gte: 'now-24H',
         },
-        active: false,
     };
 
     const last_8_hours: IDateRange = {
@@ -62,7 +56,6 @@ export function getDateRangesByKey(): Dictionary<string, IDateRange> {
         elasticSearchDateRange: {
             gte: 'now-8H',
         },
-        active: false,
     };
 
     return {

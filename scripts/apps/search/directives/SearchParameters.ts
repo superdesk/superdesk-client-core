@@ -1,6 +1,5 @@
 import {PARAMETERS} from 'apps/search/constants';
 import {getDateFilters} from './DateFilters';
-import {gettext} from 'core/utils';
 import _ from 'lodash';
 
 /**
@@ -40,9 +39,12 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
         link: function(scope, elem) {
             var ENTER = 13;
 
-            scope.gettext = gettext;
-
-            scope.dateFilters = getDateFilters().filter((dateFilter) => dateFilter.fieldname === 'firstpublished');
+            scope.dateFilters = getDateFilters().filter((dateFilter) => {
+                if (metadata.search_config && metadata.search_config[dateFilter.fieldname]) {
+                    return dateFilter;
+                }
+                return false;
+            });
 
             scope.keyPressed = function(event) {
                 if (event.keyCode === ENTER) {
@@ -51,24 +53,27 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                 }
             };
 
-            scope.toggleDateFilter = function(predefinedFilters) {
+            scope.toggleDateFilter = function(fieldname, predefinedFilters) {
                 predefinedFilters.forEach((filters) => {
-                    if (filters.key === scope.fields.firstpublished) {
+                    if (filters.key === scope.fields[fieldname]) {
                         filters.active = !filters.active;
+                        if (!filters.active) {
+                            scope.fields[fieldname] = null;
+                        }
                     } else {
                         filters.active = false;
                     }
                 });
             };
 
-            scope.togglePredefinedDateFilter = function(fieldname, predefinedFilter) {
-                scope.fields.firstpublished = predefinedFilter;
+            scope.togglePredefinedDateFilter = function(dateFilter, predefinedFilter) {
+                scope.fields[dateFilter.fieldname] = predefinedFilter;
             };
 
             const getSearchConfig = () => {
                 if (scope.isContentApi()) {
                     let searchConfig: any = _.pick(metadata.search_config, ['slugline', 'headline',
-                        'byline', 'story_text', 'sign_off', 'date_published']);
+                        'byline', 'story_text', 'sign_off', 'firstpublished']);
 
                     searchConfig.subscribers = 1;
                     return searchConfig;
@@ -118,9 +123,20 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                     scope.fields.spike = 'exclude';
                 }
 
-                if (!$location.search().firstpublished) {
-                    scope.dateFilters.forEach((dateFilter) => scope.toggleDateFilter(dateFilter.predefinedFilters));
-                }
+                scope.dateFilters.forEach((dateFilter) => {
+                    if ($location.search()[dateFilter.fieldname] == null) {
+                        dateFilter.predefinedFilters.forEach((predefinedFilter) => predefinedFilter.active = false);
+                    } else if ($location.search()[dateFilter.fieldname]) {
+                        dateFilter.predefinedFilters.forEach((predefinedFilter) => {
+                            if ($location.search()[dateFilter.fieldname] === predefinedFilter.key) {
+                                scope.fields[dateFilter.fieldname] = predefinedFilter.key;
+                                predefinedFilter.active = true;
+                            } else {
+                                predefinedFilter.active = false;
+                            }
+                        });
+                    }
+                });
 
                 if ($location.search().featuremedia) {
                     scope.fields.featuremedia = true;
