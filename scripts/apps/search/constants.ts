@@ -1,39 +1,40 @@
 import {IArticle} from 'superdesk-api';
+import {gettext} from 'core/utils';
 
 /**
   * Global search parameters and label mapping.
  */
 export const PARAMETERS = Object.freeze({
-    unique_name: 'Unique Name',
-    original_creator: 'Creator',
-    from_desk: 'From Desk',
-    to_desk: 'To Desk',
-    spike: 'Spiked',
-    subject: 'Subject',
-    company_codes: 'Company Codes',
-    marked_desks: 'Marked Desks',
-    ingest_provider: 'Provider',
-    featuremedia: 'Associated Feature Media',
-    subscriber: 'Subscriber',
-    firstpublished: 'Date published',
-    firstpublishedfrom: 'Published from',
-    firstpublishedto: 'Published to',
+    unique_name: gettext('Unique Name'),
+    original_creator: gettext('Creator'),
+    from_desk: gettext('From Desk'),
+    to_desk: gettext('To Desk'),
+    spike: gettext('Spiked'),
+    subject: gettext('Subject'),
+    company_codes: gettext('Company Codes'),
+    marked_desks: gettext('Marked Desks'),
+    ingest_provider: gettext('Provider'),
+    featuremedia: gettext('Associated Feature Media'),
+    subscriber: gettext('Subscriber'),
+    firstpublished: gettext('Date published'),
+    firstpublishedfrom: gettext('Published from'),
+    firstpublishedto: gettext('Published to')
 });
 
 /**
  * Facet field and label mapping and used when facets are removed.
  */
 export const EXCLUDE_FACETS = Object.freeze({
-    notdesk: 'Not Desk',
-    nottype: 'Not Type',
-    notgenre: 'Not Genre',
-    notcategory: 'Not Category',
-    noturgency: 'Not Urgency',
-    notsource: 'Not Source',
-    notpriority: 'Not Priority',
-    notlegal: 'Not Legal',
-    notsms: 'Not Sms',
-    notlanguage: 'Not Language',
+    notdesk: gettext('Not Desk'),
+    nottype: gettext('Not Type'),
+    notgenre: gettext('Not Genre'),
+    notcategory: gettext('Not Category'),
+    noturgency: gettext('Not Urgency'),
+    notsource: gettext('Not Source'),
+    notpriority: gettext('Not Priority'),
+    notlegal: gettext('Not Legal'),
+    notsms: gettext('Not Sms'),
+    notlanguage: gettext('Not Language'),
 });
 
 /**
