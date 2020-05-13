@@ -20,21 +20,20 @@ export class RelatedItemInListComponent extends React.PureComponent<IProps, {}> 
         this.listConfig = appConfig.list?.relatedItems || DEFAULT_RELATED_ITEMS_LIST_CONFIG;
         this.services = {
             desks: ng.get('desks'),
-            authoringWorkspace: ng.get('authoringWorkspace')
+            authoringWorkspace: ng.get('authoringWorkspace'),
         };
-        this.onItemDoubleClick = this.onItemDoubleClick.bind(this)
+        this.onItemDoubleClick = this.onItemDoubleClick.bind(this);
     }
 
     onItemDoubleClick() {
-        const {authoringWorkspace} = this.services
-        const {item} = this.props
+        const {authoringWorkspace} = this.services;
+        const {item} = this.props;
 
         if (isPublished(item)) {
-            authoringWorkspace.view(item)
+            authoringWorkspace.view(item);
         } else {
-            authoringWorkspace.edit(item)
+            authoringWorkspace.edit(item);
         }
-
     }
 
     render() {
