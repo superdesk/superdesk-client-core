@@ -731,7 +731,7 @@
     @include box-shadow(0 0 5px 0 rgba(0,0,0,0.45));
     @include border-radius(3px);
     width: 200px;
-    height: 310px;
+    min-height: 310px;
     @include border-box();
     .timepicker-additional {
         margin-bottom: 5px;
@@ -1259,7 +1259,7 @@
         align-items: center;
         padding: 4px;
         min-height: 38px;
-    
+
         * + * {
             margin-left: 6px;
         }

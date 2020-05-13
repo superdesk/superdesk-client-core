@@ -182,8 +182,13 @@ const setAbbreviations = (state, abbreviations) => ({
 const applyAbbreviations = (state) => {
     const {editorState, abbreviations} = state;
     const selection = editorState.getSelection();
+    const lastChangeType = editorState.getLastChangeType();
 
-    if (!selection.isCollapsed() || abbreviations == null || Object.keys(abbreviations).length === 0) {
+    if (!selection.isCollapsed()
+        || abbreviations == null
+        || Object.keys(abbreviations).length === 0
+        || lastChangeType === 'undo'
+        || lastChangeType === 'redo') {
         return state;
     }
 

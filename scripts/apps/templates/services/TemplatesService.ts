@@ -48,6 +48,7 @@ export function TemplatesService(api, session, $q, preferencesService, privilege
         'company_codes',
         'extra',
         'authors',
+        'fields_meta',
     ];
 
     /**

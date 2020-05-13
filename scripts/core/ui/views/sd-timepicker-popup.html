@@ -23,6 +23,12 @@
                 <li ng-repeat="m in minutes" ng-click="$parent.minute = m" ng-class="{active: minute === m}">{{m | leadingZero}}</li>
             </ul>
         </div>
+        <div class="select-area" ng-show="seconds">
+            <div class="header" translate>Seconds</div>
+            <ul>
+                <li ng-repeat="s in seconds" ng-click="$parent.second = s" ng-class="{active: second === s}">{{s | leadingZero}}</li>
+            </ul>
+        </div>
         <button class="btn btn--primary btn--small pull-right" ng-click="submit()" translate>Confirm</button>
         <button class="btn btn--small pull-right" ng-click="cancel()" translate>Cancel</button>
     </div>

@@ -15,10 +15,15 @@ module.exports = {
                 'scripts/**/*.{html,js,jsx,tsx,ts}',
                 '!scripts/extensions/*/node_modules/**/*',
                 '!scripts/**/*.d.ts',
+
                 // planning
                 '../superdesk-planning/index.js',
                 '../superdesk-planning/client/**/*.{html,js,jsx,tsx,ts}',
                 '!../superdesk-planning/client/planning-extension/node_modules/**/*',
+
+                // analytics
+                '../superdesk-analytics/index.js',
+                '../superdesk-analytics/client/**/*.{html,js,jsx,tsx,ts}',
             ],
         },
     },

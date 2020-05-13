@@ -33,6 +33,7 @@ import {getSpellcheckWarningsByBlock} from './spellchecker/SpellcheckerDecorator
 import {getSpellchecker} from './spellchecker/default-spellcheckers';
 import {IEditorStore} from '../store';
 import {appConfig} from 'appConfig';
+import {EDITOR_BLOCK_TYPE} from '../constants';
 
 const MEDIA_TYPES_TRIGGER_DROP_ZONE = [
     'application/superdesk.item.picture',
@@ -43,7 +44,7 @@ const MEDIA_TYPES_TRIGGER_DROP_ZONE = [
 
 const EVENT_TYPES_TRIGGER_DROP_ZONE = [
     ...MEDIA_TYPES_TRIGGER_DROP_ZONE,
-    'superdesk/editor3-block',
+    EDITOR_BLOCK_TYPE,
     'Files',
 ];
 
@@ -540,11 +541,14 @@ export class Editor3Component extends React.Component<IProps, IState> {
                 className={cx}
                 ref={(div) => this.div = div}
                 onDragStart={() => {
-                    // known issue: dragging text doesn't work when the top of the editor is in the viewport
-                    // https://github.com/facebook/draft-js/issues/2218
-
                     if (this.state.draggingInProgress !== true) {
-                        this.setState({draggingInProgress: true});
+                        setTimeout(() => {
+                            // known issue: dragging text doesn't work when the top of the editor is in the viewport
+                            // https://github.com/facebook/draft-js/issues/2218
+                            // it's not clear why, but using setTimeout seems to work around the issue
+
+                            this.setState({draggingInProgress: true});
+                        });
                     }
                 }}
 
