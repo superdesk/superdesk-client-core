@@ -18,7 +18,7 @@ export const PARAMETERS = Object.freeze({
     subscriber: gettext('Subscriber'),
     firstpublished: gettext('Date published'),
     firstpublishedfrom: gettext('Published from'),
-    firstpublishedto: gettext('Published to')
+    firstpublishedto: gettext('Published to'),
 });
 
 /**
