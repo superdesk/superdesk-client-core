@@ -358,7 +358,7 @@ export function TagService($location, desks, userList, metadata, search,
             const dateFilters = getDateFilters();
 
             dateFilters.forEach((dateFilter) => {
-                if (metadata.search_config[dateFilter.fieldname]) {
+                if (metadata.search_config && metadata.search_config[dateFilter.fieldname]) {
                     tags.commonTags.push(dateFilter.labelBlock);
                     tags.commonTags.push(dateFilter.labelFrom);
                     tags.commonTags.push(dateFilter.labelTo);
