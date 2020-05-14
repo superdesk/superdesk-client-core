@@ -188,12 +188,7 @@ export function MultiActionBarController(
     };
 
     this.canPublishItem = function() {
-        var canPublish = true;
-
-        multi.getItems().every((item) => {
-            canPublish = item.state !== 'draft' && $location.path() !== '/workspace/personal';
-        });
-        return canPublish;
+        return multi.getItems().every((item) => item.state !== 'draft' && $location.path() !== '/workspace/personal');
     };
 
     /**
