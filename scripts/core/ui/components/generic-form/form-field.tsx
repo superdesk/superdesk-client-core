@@ -14,6 +14,7 @@ import {getMacroSingleValue} from './input-types/macro_single_value';
 import {YesNo} from './input-types/yes-no';
 import {IFormField, IFormGroup} from 'superdesk-api';
 import {SelectMultipleValues} from './input-types/select_multiple_values';
+import {SelectSingleValue} from './input-types/select_single_value_static';
 
 export function getFormFieldComponent(type: FormFieldType): React.ComponentType<IInputType<any>> {
     switch (type) {
@@ -35,6 +36,8 @@ export function getFormFieldComponent(type: FormFieldType): React.ComponentType<
         return getMacroSingleValue();
     case FormFieldType.yesNo:
         return YesNo;
+    case FormFieldType.select:
+        return SelectSingleValue;
     case FormFieldType.selectMultiple:
         return SelectMultipleValues;
     default:

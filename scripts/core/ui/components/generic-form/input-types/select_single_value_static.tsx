@@ -2,9 +2,9 @@ import React from 'react';
 import classNames from 'classnames';
 import {IInputType} from '../interfaces/input-types';
 
-type IProps = IInputType<Array<string>>;
+type IProps = IInputType<string>;
 
-export class SelectMultipleValues extends React.Component<IProps> {
+export class SelectSingleValue extends React.Component<IProps> {
     render() {
         const items: Array<{id: string; label: string}> = this.props.formField.component_parameters.items;
 
@@ -13,17 +13,11 @@ export class SelectMultipleValues extends React.Component<IProps> {
                 return null;
             }
 
-            const itemsWithLabels = this.props.value.map((id) => items.find((item) => item.id === id));
+            const itemWithLabel = items.find((item) => item.id === this.props.value);
 
-            if (itemsWithLabels.some((item) => item == null)) {
-                return (
-                    <span>{this.props.value.join(', ')}</span>
-                );
-            } else {
-                return (
-                    <span>{itemsWithLabels.map((item) => item.label).join(', ')}</span>
-                );
-            }
+            return (
+                <span>{itemWithLabel?.label ?? this.props.value}</span>
+            );
         }
 
         return (
@@ -39,13 +33,13 @@ export class SelectMultipleValues extends React.Component<IProps> {
                 <label className="sd-line-input__label">{this.props.formField.label}</label>
                 <select
                     disabled={this.props.disabled || items == null || items.length < 1}
-                    value={this.props.value || []}
+                    value={this.props.value ?? ''}
                     onChange={(event) => {
-                        this.props.onChange(Array.from(event.target.selectedOptions).map((option) => option.value));
+                        this.props.onChange(event.target.value);
                     }}
                     data-test-id={`gform-input--${this.props.formField.field}`}
-                    multiple
                 >
+                    <option value="" />
                     {
                         items == null
                             ? null

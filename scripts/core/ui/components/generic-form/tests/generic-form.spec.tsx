@@ -19,6 +19,7 @@ function getTestFieldConfig(type: FormFieldType): IFormField {
     case FormFieldType.contentFilterSingleValue:
     case FormFieldType.deskSingleValue:
     case FormFieldType.yesNo:
+    case FormFieldType.select:
     case FormFieldType.selectMultiple:
         return {
             type: type,

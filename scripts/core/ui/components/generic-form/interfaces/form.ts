@@ -10,6 +10,7 @@ export enum FormFieldType {
     stageSingleValue = 'stage_singstageSingleValuele_value',
     macroSingleValue = 'macroSingleValue',
     yesNo = 'yesNo',
+    select = 'select',
     selectMultiple = 'selectMultiple',
 }
 
