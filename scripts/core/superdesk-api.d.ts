@@ -672,6 +672,7 @@ declare module 'superdesk-api' {
         stageSingleValue = 'stage_singstageSingleValuele_value',
         macroSingleValue = 'macroSingleValue',
         yesNo = 'yesNo',
+        selectMultiple = 'selectMultiple',
     }
 
     export interface IFormField { // don't forget to update runtime type checks

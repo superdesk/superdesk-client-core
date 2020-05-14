@@ -17,6 +17,7 @@ function getInitialValueForFieldType(fieldConfig: IFormField): {readonly [field:
     case FormFieldType.stageSingleValue:
     case FormFieldType.macroSingleValue:
     case FormFieldType.yesNo:
+    case FormFieldType.selectMultiple:
         return {[field]: undefined};
     case FormFieldType.checkbox:
         return {[field]: false};

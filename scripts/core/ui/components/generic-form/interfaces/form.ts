@@ -10,6 +10,7 @@ export enum FormFieldType {
     stageSingleValue = 'stage_singstageSingleValuele_value',
     macroSingleValue = 'macroSingleValue',
     yesNo = 'yesNo',
+    selectMultiple = 'selectMultiple',
 }
 
 export function isIFormField(x: IFormGroup['form'][0]): x is IFormField { // don't forget to update runtime type checks
