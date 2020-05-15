@@ -15,6 +15,7 @@ function getTestFieldConfig(type: FormFieldType): IFormField {
     switch (type) {
     case FormFieldType.textSingleLine:
     case FormFieldType.textEditor3:
+    case FormFieldType.number:
     case FormFieldType.checkbox:
     case FormFieldType.contentFilterSingleValue:
     case FormFieldType.deskSingleValue:
