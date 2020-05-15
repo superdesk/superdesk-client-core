@@ -80,7 +80,7 @@ export function ItemPreview(asset, storage, desks, _, familyService, privileges)
                     // item is associated to an assignment
                     scope.isAssigned = _.get(scope, 'item.assignment_id') && _.get(privileges, 'privileges.planning');
 
-                    if (isMedia) {
+                    if (isMedia && (newItem.used || newItem._type === 'ingest')) {
                         familyService.fetchLinks(newItem).then((links) => scope.links = links);
                     }
 
