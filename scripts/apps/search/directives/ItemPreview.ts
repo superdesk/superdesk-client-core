@@ -65,7 +65,8 @@ export function ItemPreview(asset, storage, desks, _, familyService, privileges)
                 scope.links = [];
 
                 if (newItem !== oldItem) {
-                    const isMedia = ['audio', 'video', 'picture', 'graphic'].includes(scope.item.type);
+                    const isMedia = newItem?.type != null &&
+                        ['audio', 'video', 'picture', 'graphic'].includes(newItem.type);
 
                     fetchRelatedItems();
 
@@ -130,7 +131,8 @@ export function ItemPreview(asset, storage, desks, _, familyService, privileges)
              * double up with this api call
              */
             function fetchRelatedItems() {
-                if (scope.item && ['archive', 'archived', 'published'].includes(scope.item._type)) {
+                if (scope.item && ['archive', 'archived', 'published'].includes(scope.item._type)
+                    && scope.item.family_id) {
                     familyService.fetchItems(scope.item.family_id, scope.item)
                         .then(setRelatedItems);
                 } else {
