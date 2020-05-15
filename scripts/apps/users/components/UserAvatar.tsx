@@ -10,6 +10,11 @@ import {AvatarWrapper, AvatarContentText, AvatarContentImage} from 'superdesk-ui
 class DefaultAvatarDisplay extends React.PureComponent<{user: Partial<IUser>}> {
     render() {
         const {user} = this.props;
+
+        if (user == null) {
+            return null;
+        }
+
         const tooltipText = user?.display_name ?? null;
 
         if (user.picture_url == null) {
