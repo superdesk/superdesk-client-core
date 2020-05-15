@@ -221,6 +221,7 @@ declare module 'superdesk-api' {
         _id: string;
         _current_version: number;
         _type?: 'ingest' | 'archive' | 'published' | 'archived' | 'legal_archive' | string;
+        uri?: string;
         guid: string;
         family_id: string;
         translated_from?: string;
