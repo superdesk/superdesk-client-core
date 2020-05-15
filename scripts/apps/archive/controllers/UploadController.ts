@@ -21,6 +21,8 @@ function getExifData(file: File): Promise<IPTCMetadata> {
             try {
                 const exif: { iptcdata: IPTCMetadata } = handleBinaryFile(reader.result);
 
+                exif.iptcdata.TransmissionReference = file.name;
+
                 resolve(exif.iptcdata);
             } catch (error) {
                 console.error(error);
