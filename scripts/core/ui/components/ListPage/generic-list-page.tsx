@@ -512,22 +512,24 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
                                         data-test-id="list-page--filters-active"
                                     >
                                         {
-                                            Object.keys(activeFilters).map((fieldName, i) => {
+                                            Object.keys(activeFilters).map((field_id, i) => {
+                                                const currentField = getFormFieldsFlat(formConfigForFilters).find(
+                                                    ({field}) => field === field_id,
+                                                );
+
                                                 const filterValuePreview = getFormFieldPreviewComponent(
                                                     this.props.items.activeFilters,
-                                                    getFormFieldsFlat(formConfigForFilters).find(
-                                                        ({field}) => field === fieldName,
-                                                    ),
+                                                    currentField,
                                                 );
 
                                                 return (
                                                     <TagLabel
                                                         key={i}
                                                         onRemove={() => {
-                                                            this.removeFilter(fieldName);
+                                                            this.removeFilter(field_id);
                                                         }}
                                                     >
-                                                        {fieldName}:{' '}
+                                                        {currentField.label}:&nbsp;
                                                         <strong>{filterValuePreview}</strong>
                                                     </TagLabel>
                                                 );
