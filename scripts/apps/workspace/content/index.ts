@@ -7,6 +7,7 @@ import {WidgetsConfig} from './components/WidgetsConfig';
 import {gettext} from 'core/utils';
 import ContentProfileFields from './controllers/ContentProfileFields';
 import {ContentProfilesController} from './controllers/ContentProfilesController';
+import {ContentProfileConfigNonText} from './components/ContentProfileConfigNonText';
 
 /**
  * @ngdoc module
@@ -31,6 +32,7 @@ angular.module('superdesk.apps.workspace.content', [
     .directive('sdSortContentProfiles', directive.SortContentProfiles)
 
     .component('sdWidgetsConfig', reactToAngular1(WidgetsConfig, ['initialWidgetsConfig', 'onUpdate']))
+    .component('sdContentProfileConfigNonText', reactToAngular1(ContentProfileConfigNonText, ['profile']))
     .component('sdSchemaEditorFieldsDropdown', {
         template: require('./views/schema-editor-fields-dropdown.html'),
         bindings: {

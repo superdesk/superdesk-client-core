@@ -18,6 +18,8 @@ declare module 'superdesk-api' {
 
     export type Omit<K, V> = Pick<K, Exclude<keyof K, V>>;
 
+    export type IArrayKeyed<T> = Array<{key: string; value: T}>;
+
 
 
     // EXTENSIONS
@@ -545,6 +547,7 @@ declare module 'superdesk-api' {
 
     export interface IContentProfile {
         _id: string;
+        type: 'text';
         label: string;
         description: string;
         schema: Object;
@@ -553,8 +556,24 @@ declare module 'superdesk-api' {
         priority: number;
         enabled: boolean;
         is_used: boolean;
-        created_by: string;
-        updated_by: string;
+        created_by: IUser['_id'];
+        updated_by: IUser['_id'];
+    }
+
+    export interface IContentProfileField {
+        id: string;
+        label: string;
+        required: boolean;
+    }
+
+    export enum IContentProfileTypeNonText {
+        image = 'image',
+        video = 'video',
+    }
+
+    export interface IContentProfileNonText {
+        type: keyof typeof IContentProfileTypeNonText;
+        fields: Array<IContentProfileField>;
     }
 
 

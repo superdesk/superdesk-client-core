@@ -2,6 +2,16 @@ import {cloneDeep, get, isEqual} from 'lodash';
 import {gettext} from 'core/utils';
 import {IContentProfile} from 'superdesk-api';
 import {appConfig} from 'appConfig';
+import {assertNever} from 'core/helpers/typescript-helpers';
+
+export enum IContentProfileTypeNonText {
+    image = 'image',
+    video = 'video',
+}
+
+function getAllContentProfileTypes(): Array<IContentProfileTypeNonText> {
+    return Object.keys(IContentProfileTypeNonText).map((key) => IContentProfileTypeNonText[key]);
+}
 
 ContentProfilesController.$inject = ['$scope', '$location', 'notify', 'content', 'modal', '$q'];
 export function ContentProfilesController($scope, $location, notify, content, modal, $q) {
@@ -32,6 +42,17 @@ export function ContentProfilesController($scope, $location, notify, content, mo
             $scope.ngForm.$dirty = true;
         });
     };
+
+    $scope.contentProfileTypes = getAllContentProfileTypes().map((type) => {
+        switch (type) {
+        case IContentProfileTypeNonText.image:
+            return {label: gettext('Image'), value: IContentProfileTypeNonText.image};
+        case IContentProfileTypeNonText.video:
+            return {label: gettext('Video'), value: IContentProfileTypeNonText.video};
+        default:
+            return assertNever(type);
+        }
+    });
 
     $scope.withEditor3 = appConfig.features != null && appConfig.features.editor3;
 

@@ -62,6 +62,15 @@
         <form name="createForm">
             <fieldset>
                 <div class="form__row">
+                    <div class="sd-line-input">
+                        <label class="sd-line-input__label" translate>Type</label>
+                        <select ng-model="new.type" class="sd-line-input__select" selected="new.type">
+                            <option value="text" selected translate>Text</option>
+                            <option ng-repeat="type in contentProfileTypes track by type.value" value="type.value">{{type.label}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form__row">
                     <div class="sd-line-input" ng-class="{'sd-line-input--invalid': createForm.label.$error.maxlength}">
                         <label class="sd-line-input__label" translate>Label</label>
                         <input type="text" name="label" class="sd-line-input__input" ng-model="new.label" required ng-maxlength="40"/>
@@ -111,7 +120,7 @@
                     <span ng-model="editing.form.editor.body_html.editor3" sd-switch></span><label>{{:: 'Editor3' | translate }}</label>
                 </div>
 
-                <div class="field" ng-if="editing" ng-controller="ContentProfileFields as fields">
+                <div ng-if="editing.form.type === 'text'" class="field" ng-if="editing" ng-controller="ContentProfileFields as fields">
                     <div sd-wizard data-name="profile-settings-content-profiles" data-current-step="'header'" ng-if="fields.sections">
                         <div sd-wizard-step data-title="{{ 'Header fields' | translate }}" data-code="header">
                             <sd-content-schema-editor
@@ -141,6 +150,10 @@
                             <sd-widgets-config initial-widgets-config="editing.form.widgets_config" on-update="saveContentProfileWidgetsConfig"></sd-widgets-config>
                         </div>
                     </div>
+                </div>
+
+                <div ng-if="editing.form.type !== 'text'">
+                    <sd-content-profile-config-non-text profile="editing.form"></sd-content-profile-config-non-text>
                 </div>
             </fieldset>
         </form>
