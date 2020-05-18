@@ -811,11 +811,15 @@ export function SearchService($location, session, multi,
         var uiConfig = appConfig.list || DEFAULT_LIST_CONFIG;
         var uiFields: any = _.union(uiConfig.priority, uiConfig.firstLine, uiConfig.secondLine);
 
-        let projectedFields: any = [];
+        let projectedFields: Array<string> = [];
 
         uiFields.forEach((uiField) => {
             if (uiField in UI_PROJECTED_FIELD_MAPPINGS) {
-                projectedFields.push(UI_PROJECTED_FIELD_MAPPINGS[uiField]);
+                if (Array.isArray(UI_PROJECTED_FIELD_MAPPINGS[uiField])) {
+                    projectedFields.push(...UI_PROJECTED_FIELD_MAPPINGS[uiField]);
+                } else {
+                    projectedFields.push(UI_PROJECTED_FIELD_MAPPINGS[uiField]);
+                }
             }
         });
         return _.union(CORE_PROJECTED_FIELDS.fields, projectedFields);
