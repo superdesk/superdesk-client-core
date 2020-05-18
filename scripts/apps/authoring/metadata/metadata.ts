@@ -635,7 +635,7 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
             searchUnique: '@',
             setLanguage: '@',
             helperText: '@',
-            selectEntireCategory: '@',
+            disableEntireCategory: '@',
         },
         templateUrl: 'scripts/apps/authoring/metadata/views/metadata-terms.html',
         link: function(scope, elem, attrs) {
@@ -644,8 +644,7 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
             var includeParent = scope.includeParent === 'true';
             var searchUnique = scope.searchUnique === 'true';
 
-            // we want true as default value to keep legacy behaviour
-            scope.allowEntireCat = scope.selectEntireCategory !== 'false';
+            scope.allowEntireCat = scope.disableEntireCategory !== 'true';
 
             scope.combinedList = [];
 

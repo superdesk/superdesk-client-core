@@ -127,6 +127,13 @@
                     </ul>
                 </div>
 
+                <div class="sd-line-input"
+                    ng-if="matchFieldTypeToTab('vocabularies', vocabulary.field_type)">
+                    <sd-check ng-model="vocabulary.disable_entire_category_selection">
+                        <span translate>Disable selection of an entire category</span>
+                    </sd-check>
+                </div>
+
                 <div class="sd-line-input" ng-if="matchFieldTypeToTab('vocabularies', vocabulary.field_type)">
                     <sd-check ng-model="vocabulary.preffered_items">{{ :: 'Available in user/desk preferences' | translate }}</sd-check>
                 </div>

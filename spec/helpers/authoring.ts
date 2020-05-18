@@ -1063,7 +1063,7 @@ class Authoring {
 
         this.getNextLevelSelectedCategory = function() {
             return this.subject.all(by.className('levelup')).all(
-                by.css('[ng-click="allowEntireCat && selectTerm(activeTerm, $event)"]'));
+                by.css('[data-test-id="choose-entire-category"]'));
         };
 
         this.getItemSource = function() {
