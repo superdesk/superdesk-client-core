@@ -32,7 +32,7 @@
 
         <li class="levelup" ng-if="activeTerm && !preferredView">
             <i class="backlink" ng-click="openParent(activeTerm, $event)"></i>
-            <button ng-click="selectTerm(activeTerm, $event)" ng-if="allowEntireCat">
+            <button ng-click="selectTerm(activeTerm, $event)" ng-if="allowEntireCat" data-test-id="choose-entire-category">
                 <b class="category">{{getLocaleName(activeTerm, item)}}</b>
                 <b class="category-hover">{{ :: "Choose entire category" | translate }}</b>
             </button>
