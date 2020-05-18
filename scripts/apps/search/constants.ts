@@ -4,38 +4,43 @@ import {gettext} from 'core/utils';
 /**
   * Global search parameters and label mapping.
  */
-export const PARAMETERS = Object.freeze({
-    unique_name: gettext('Unique Name'),
-    original_creator: gettext('Creator'),
-    from_desk: gettext('From Desk'),
-    to_desk: gettext('To Desk'),
-    spike: gettext('Spiked'),
-    subject: gettext('Subject'),
-    company_codes: gettext('Company Codes'),
-    marked_desks: gettext('Marked Desks'),
-    ingest_provider: gettext('Provider'),
-    featuremedia: gettext('Associated Feature Media'),
-    subscriber: gettext('Subscriber'),
-    firstpublished: gettext('Date published'),
-    firstpublishedfrom: gettext('Published from'),
-    firstpublishedto: gettext('Published to'),
-});
+
+export function getParameters() {
+    return Object.freeze({
+        unique_name: gettext('Unique Name'),
+        original_creator: gettext('Creator'),
+        from_desk: gettext('From Desk'),
+        to_desk: gettext('To Desk'),
+        spike: gettext('Spiked'),
+        subject: gettext('Subject'),
+        company_codes: gettext('Company Codes'),
+        marked_desks: gettext('Marked Desks'),
+        ingest_provider: gettext('Provider'),
+        featuremedia: gettext('Associated Feature Media'),
+        subscriber: gettext('Subscriber'),
+        firstpublished: gettext('Date published'),
+        firstpublishedfrom: gettext('Published from'),
+        firstpublishedto: gettext('Published to'),
+    });
+}
 
 /**
  * Facet field and label mapping and used when facets are removed.
  */
-export const EXCLUDE_FACETS = Object.freeze({
-    notdesk: gettext('Not Desk'),
-    nottype: gettext('Not Type'),
-    notgenre: gettext('Not Genre'),
-    notcategory: gettext('Not Category'),
-    noturgency: gettext('Not Urgency'),
-    notsource: gettext('Not Source'),
-    notpriority: gettext('Not Priority'),
-    notlegal: gettext('Not Legal'),
-    notsms: gettext('Not Sms'),
-    notlanguage: gettext('Not Language'),
-});
+export function getExcludeFacets() {
+    return Object.freeze({
+        notdesk: gettext('Not Desk'),
+        nottype: gettext('Not Type'),
+        notgenre: gettext('Not Genre'),
+        notcategory: gettext('Not Category'),
+        noturgency: gettext('Not Urgency'),
+        notsource: gettext('Not Source'),
+        notpriority: gettext('Not Priority'),
+        notlegal: gettext('Not Legal'),
+        notsms: gettext('Not Sms'),
+        notlanguage: gettext('Not Language'),
+    });
+}
 
 /**
  * Default list of fields

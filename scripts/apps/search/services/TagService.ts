@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import {PARAMETERS, EXCLUDE_FACETS} from 'apps/search/constants';
+import {getParameters, getExcludeFacets} from 'apps/search/constants';
 import {getDateFilters, getDateRangesByKey} from '../directives/DateFilters';
 import {gettext} from 'core/utils';
 
@@ -23,6 +23,8 @@ TagService.$inject = ['$location', 'desks', 'userList', 'metadata', 'search',
     'ingestSources', 'subscribersService', '$q'];
 export function TagService($location, desks, userList, metadata, search,
     ingestSources, subscribersService, $q) {
+    const PARAMETERS = getParameters();
+    const EXCLUDE_FACETS = getExcludeFacets();
     var tags: any = {};
 
     tags.selectedFacets = {};
@@ -148,20 +150,13 @@ export function TagService($location, desks, userList, metadata, search,
         });
     }
 
-    function getDatePublishedFilter(index, value, key) {
-        let label;
-        let labelValue;
-        const datePublishedParameter = getDateFilters().filter((dateFilter) => dateFilter.fieldname === key);
+    function getDatePublishedFilter(index, key) {
+        let label = Object.keys(PARAMETERS).includes(key) ? PARAMETERS[key] : null;
+        let dateFilterLabel = getDateFilters().find((dateFilter) => dateFilter.labelBlock === label);
+        let predefinedLabel = dateFilterLabel?.predefinedFilters
+            .find((predefinedFilter) => predefinedFilter.key === index);
 
-        datePublishedParameter.forEach((item) => {
-            label = item.labelBlock;
-            item.predefinedFilters.forEach((predefinedFilter) => {
-                if (predefinedFilter.key === index) {
-                    labelValue = predefinedFilter.label;
-                }
-            });
-        });
-        return tag(label + ': ' + labelValue);
+        return label && predefinedLabel ? tag(label + ': ' + predefinedLabel.label) : tag(label + ': ' + index);
     }
 
     /**
@@ -196,11 +191,6 @@ export function TagService($location, desks, userList, metadata, search,
 
             tags.selectedParameters.push(tag(value + ':' + subscriberName, value));
         },
-        firstpublished: (index, value, key) => {
-            if (metadata.search_config[key]) {
-                tags.selectedParameters.push(getDatePublishedFilter(index, value, key));
-            }
-        },
     };
 
     /**
@@ -221,8 +211,15 @@ export function TagService($location, desks, userList, metadata, search,
      * Parse $location.search and initialise tags for fields defined in the PARAMETERS.
      * @param {object} params - $location.search
      */
-    function initParameters(params, urlParams) {
+    function initParameters(params, urlParams, dateFilters) {
         const parameters = urlParams || PARAMETERS;
+        let dateFilterTags = [];
+
+        dateFilters.forEach((dateFilter) => {
+            dateFilterTags.push(dateFilter.fieldname);
+            dateFilterTags.push(dateFilter.fieldname + 'to');
+            dateFilterTags.push(dateFilter.fieldname + 'from');
+        });
 
         _.each(parameters, (value, key) => {
             if (!angular.isDefined(params[key])) {
@@ -231,6 +228,12 @@ export function TagService($location, desks, userList, metadata, search,
 
             if (key in fieldProcessors) {
                 fieldProcessors[key](params[key], value, key);
+            } else if (dateFilterTags.includes(key)) {
+                if (metadata.search_config[key]
+                    || metadata.search_config[key.split('from')[0]]
+                    || metadata.search_config[key.split('to')[0]]) {
+                    tags.selectedParameters.push(getDatePublishedFilter(params[key], key));
+                }
             } else {
                 tags.selectedParameters.push(tag(value + ':' + params[key]));
             }
@@ -352,16 +355,22 @@ export function TagService($location, desks, userList, metadata, search,
                 initSelectedKeywords(keywords);
             }
 
-            initParameters(tags.currentSearch, urlParams);
-            initExcludedFacets(tags.currentSearch);
-
             const dateFilters = getDateFilters();
+
+            initParameters(tags.currentSearch, urlParams, dateFilters);
+            initExcludedFacets(tags.currentSearch);
 
             dateFilters.forEach((dateFilter) => {
                 if (metadata.search_config && metadata.search_config[dateFilter.fieldname]) {
-                    tags.commonTags.push(dateFilter.labelBlock);
-                    tags.commonTags.push(dateFilter.labelFrom);
-                    tags.commonTags.push(dateFilter.labelTo);
+                    if (!tags.commonTags.includes(dateFilter.labelBlock)) {
+                        tags.commonTags.push(dateFilter.fieldname);
+                    }
+                    if (!tags.commonTags.includes(dateFilter.labelFrom)) {
+                        tags.commonTags.push(dateFilter.fieldname + 'from');
+                    }
+                    if (!tags.commonTags.includes(dateFilter.labelTo)) {
+                        tags.commonTags.push(dateFilter.fieldname + 'to');
+                    }
                 }
             });
 
@@ -393,21 +402,20 @@ export function TagService($location, desks, userList, metadata, search,
                             value: code,
                         });
                     });
-                } else if (dateFilters.some(({fieldname}) => fieldname === key
-                && !tags.selectedParameters
-                    .some((datefilter) => tags.commonTags.includes(datefilter.label.split(':')[0])))) {
+                } else if (dateFilters.some(({fieldname}) => fieldname === key)) {
                     const dateFilter = dateFilters.find(({fieldname}) => fieldname === key);
 
-                    tags.selectedFacets[dateFilter.labelBlock] = [getDateRangesByKey()[type].label];
+                    if (!tags.commonTags.includes(key)) {
+                        tags.selectedFacets[dateFilter.labelBlock] = [getDateRangesByKey()[type].label];
+                    }
                 } else if (key === 'creditqcode') {
                     tags.selectedFacets.credit = JSON.parse(type);
-                } else if (!tags.selectedParameters
-                    .some((datefilter) => tags.commonTags.includes(datefilter.label.split(':')[0]))) {
+                } else {
                     const dateFilter = dateFilters.find(
                         ({fieldname}) => key === fieldname + 'from' || key === fieldname + 'to',
                     );
 
-                    if (dateFilter != null) {
+                    if (dateFilter != null && !tags.commonTags.includes(key)) {
                         // remove predefined filters like 'last day', 'last week'
                         $location.search(dateFilter.fieldname, null);
 

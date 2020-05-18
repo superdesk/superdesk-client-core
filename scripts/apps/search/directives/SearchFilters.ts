@@ -34,12 +34,8 @@ class LinkFunction {
             desk: this._deskMapper.bind(this),
             defaultMapper: this._defaultMapper.bind(this),
         };
-        this.scope.dateFilters = getDateFilters().filter((dateFilter) => {
-            if (metadata.search_config && !metadata.search_config[dateFilter.fieldname]) {
-                return dateFilter;
-            }
-            return false;
-        });
+        this.scope.dateFilters = getDateFilters()
+            .filter((dateFilter) => metadata.search_config?.[dateFilter.fieldname] == null);
         this.init();
         // fetch available languages
         metadata.initialize()

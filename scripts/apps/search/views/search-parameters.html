@@ -19,7 +19,7 @@
         <div class="form__row" ng-if="search_config.sign_off">
             <div class="sd-line-input sd-line-input--boxed sd-line-input--no-margin">
                 <label class="sd-line-input__label" for="search-sign_off">
-                    {{:: 'Sign_off' | translate}}
+                    {{:: 'Sign-off' | translate}}
                 </label>
                 <input class="sd-line-input__input" type="text" ng-keypress="keyPressed($event)" id="search-sign_off" ng-model="meta.sign_off">
             </div>
@@ -173,26 +173,27 @@
             ng-repeat="dateFilter in dateFilters track by dateFilter.fieldname"
             sd-toggle-box data-style="circle" data-title="{{:: dateFilter.labelBlock }}"
             data-open="false"
-            id="filter-{{dateFilter.fieldname}}">
+            id="filter-{{dateFilter.fieldname}}"
+            ng-if="dateFilter.isEnabled(search_config)">
             <form class="date-filter">
                 <div class="predefined-dates sd-margin-b--2">
                     <button ng-repeat="predefinedFilter in dateFilter.predefinedFilters track by predefinedFilter.key"
                         ng-click='togglePredefinedDateFilter(dateFilter, predefinedFilter.key); toggleDateFilter(dateFilter.fieldname, dateFilter.predefinedFilters)'
-                        class="toggle-button"
+                        class="toggle-button toggle-button--parameters"
                         title="{{predefinedFilter.label}}"
                         ng-class="{'toggle-button--active': predefinedFilter.active}"
                         id="filter-{{dateFilter.fieldname}}-{{predefinedFilter.key}}">{{predefinedFilter.label}}</button>
                 </div>
 
                 <fieldset ng-show="(dateFilter.labelFrom != null && dateFilter.labelTo != null) && (repo.search === 'local' || providerType.startsWith('scanpix') || repo.search === 'content-api' || providerType === 'aapmm')">
-                    <div class="form__row form__row--no-padding form__row--flex">
+                    <div class="form__row form__row-item form__row--no-padding form__row--flex">
                         <div class="form__row-item">
                             <label class="form-label">{{dateFilter.labelFrom}}</label>
-                            <div sd-datepicker ng-model="fields[dateFilter.fieldname + 'from']"></div>
+                            <div sd-datepicker on-change="clearPredefinedFilters(dateFilter.fieldname)" ng-model="fields[dateFilter.fieldname + 'from']"></div>
                         </div>
-                        <div class="form__row-item">
+                        <div>
                             <label class="form-label">{{dateFilter.labelTo}}</label>
-                            <div sd-datepicker ng-model="fields[dateFilter.fieldname + 'to']"></div>
+                            <div sd-datepicker on-change="clearPredefinedFilters(dateFilter.fieldname)" ng-model="fields[dateFilter.fieldname + 'to']"></div>
                         </div>
                     </div>
                 </fieldset>
