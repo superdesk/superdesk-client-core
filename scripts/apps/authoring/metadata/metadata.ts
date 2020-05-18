@@ -653,7 +653,7 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
             var includeParent = scope.includeParent === 'true';
             var searchUnique = scope.searchUnique === 'true';
 
-            scope.allowEntireCat = scope.disableEntireCategory === 'false';
+            scope.allowEntireCat = scope.disableEntireCategory !== 'true';
 
             scope.combinedList = [];
 
