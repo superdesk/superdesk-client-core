@@ -6,49 +6,107 @@ import {FormViewEdit} from 'core/ui/components/generic-form/from-group';
 import {gettext} from 'core/utils';
 import {FormFieldType} from 'core/ui/components/generic-form/interfaces/form';
 import {Button} from 'superdesk-ui-framework';
+import {IContentProfileTypeNonText} from '../controllers/ContentProfilesController';
+import {assertNever} from 'core/helpers/typescript-helpers';
 
 interface IProps {
     profile: IContentProfileNonText;
+    profileType: keyof typeof IContentProfileTypeNonText;
 }
 
 interface IState {
     fields: IArrayKeyed<IContentProfileField>;
 }
 
+function getImageFormConfig(): IFormGroup {
+    const idField: IFormField = {
+        label: gettext('ID'),
+        type: FormFieldType.textSingleLine,
+        field: 'id',
+        required: true,
+    };
+
+    const labelField: IFormField = {
+        label: gettext('Label'),
+        type: FormFieldType.textSingleLine,
+        field: 'label',
+        required: true,
+    };
+
+    const requiredField: IFormField = {
+        label: gettext('Required'),
+        type: FormFieldType.checkbox,
+        field: 'required',
+        required: false,
+    };
+
+    const displayInMediaEditor: IFormField = {
+        label: gettext('Display in media editor'),
+        type: FormFieldType.checkbox,
+        field: 'displayOnMediaEditor',
+        required: false,
+    };
+
+    const formConfig: IFormGroup = {
+        direction: 'vertical',
+        type: 'inline',
+        form: [labelField, idField, requiredField, displayInMediaEditor],
+    };
+
+    return formConfig;
+}
+
+function getVideoFormConfig(): IFormGroup {
+    const idField: IFormField = {
+        label: gettext('ID'),
+        type: FormFieldType.textSingleLine,
+        field: 'id',
+        required: true,
+    };
+
+    const labelField: IFormField = {
+        label: gettext('Label'),
+        type: FormFieldType.textSingleLine,
+        field: 'label',
+        required: true,
+    };
+
+    const requiredField: IFormField = {
+        label: gettext('Required'),
+        type: FormFieldType.checkbox,
+        field: 'required',
+        required: false,
+    };
+
+    const formConfig: IFormGroup = {
+        direction: 'vertical',
+        type: 'inline',
+        form: [labelField, idField, requiredField],
+    };
+
+    return formConfig;
+}
+
+function getFormConfig(type: IContentProfileTypeNonText): IFormGroup {
+    switch (type) {
+    case IContentProfileTypeNonText.image:
+        return getImageFormConfig();
+    case IContentProfileTypeNonText.video:
+        return getVideoFormConfig();
+    default:
+        return assertNever(type);
+    }
+}
+
 class FieldComponent extends React.PureComponent<{
-    field: IArrayKeyed<IContentProfileField>[0],
+    field: IArrayKeyed<IContentProfileField>[0];
+    profileType: IContentProfileTypeNonText;
     onChange(field: IArrayKeyed<IContentProfileField>[0]): void;
     onRemove(): void}
 > {
     render() {
         const {field} = this.props;
-
-        const idField: IFormField = {
-            label: gettext('ID'),
-            type: FormFieldType.textSingleLine,
-            field: 'id',
-            required: true,
-        };
-
-        const labelField: IFormField = {
-            label: gettext('Label'),
-            type: FormFieldType.textSingleLine,
-            field: 'label',
-            required: true,
-        };
-
-        const requiredField: IFormField = {
-            label: gettext('Required'),
-            type: FormFieldType.checkbox,
-            field: 'required',
-            required: false,
-        };
-
-        const formConfig: IFormGroup = {
-            direction: 'vertical',
-            type: 'inline',
-            form: [labelField, idField, requiredField],
-        };
+        const formConfig = getFormConfig(this.props.profileType);
 
         return (
             <div style={{
@@ -78,6 +136,7 @@ const FieldSortable = SortableElement(FieldComponent);
 
 class FieldsComponent extends React.Component<{
     fields: IArrayKeyed<IContentProfileField>;
+    profileType: IContentProfileTypeNonText;
     onChange(fields: IArrayKeyed<IContentProfileField>): void;
 }> {
     render() {
@@ -91,6 +150,7 @@ class FieldsComponent extends React.Component<{
                             key={field.key}
                             index={index}
                             field={field}
+                            profileType={this.props.profileType}
                             onChange={(_field) => {
                                 const fieldsNext = this.props.fields.map((f) => f.key === _field.key ? _field : f);
 
@@ -149,6 +209,7 @@ export class ContentProfileConfigNonText extends React.Component<IProps, IState>
 
                 <FieldsSortable
                     fields={fields}
+                    profileType={IContentProfileTypeNonText[this.props.profileType]}
                     onChange={(_fields) => {
                         this.setState({fields: _fields});
                     }}

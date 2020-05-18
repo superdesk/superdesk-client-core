@@ -9,7 +9,7 @@ export enum IContentProfileTypeNonText {
     video = 'video',
 }
 
-function getAllContentProfileTypes(): Array<IContentProfileTypeNonText> {
+export function getAllContentProfileTypes(): Array<IContentProfileTypeNonText> {
     return Object.keys(IContentProfileTypeNonText).map((key) => IContentProfileTypeNonText[key]);
 }
 
