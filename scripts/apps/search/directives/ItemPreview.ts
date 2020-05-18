@@ -82,7 +82,11 @@ export function ItemPreview(asset, storage, desks, _, familyService, privileges)
                     scope.isAssigned = _.get(scope, 'item.assignment_id') && _.get(privileges, 'privileges.planning');
 
                     if (isMedia && (newItem.used || newItem._type === 'ingest')) {
-                        familyService.fetchLinks(newItem).then((links) => scope.links = links);
+                        familyService.fetchLinks(newItem).then((links) => {
+                            scope.$applyAsync(() => {
+                                scope.links = links;
+                            });
+                        });
                     }
 
                     if (scope.vm.current_tab === 'assignment' && !scope.isAssigned) {

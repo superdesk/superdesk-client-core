@@ -1,14 +1,9 @@
 import React from 'react';
 import {gettext} from 'core/utils';
-import {IArticle} from 'superdesk-api';
 import {longFormat} from 'core/datetime/datetime';
+import {IPropsItemListInfo} from '../ListItemInfo';
 
-interface IProps {
-    item: IArticle;
-    svc: any;
-}
-
-export class Used extends React.PureComponent<IProps> {
+export class Used extends React.PureComponent<IPropsItemListInfo> {
     label: boolean = false;
     render() {
         const item = this.props.item;
