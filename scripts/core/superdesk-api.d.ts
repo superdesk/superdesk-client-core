@@ -539,6 +539,7 @@ declare module 'superdesk-api' {
         init_version?: number;
         preffered_items?: boolean;
         tags?: Array<IVocabularyTag>;
+        disable_entire_category_selection?: boolean;
     }
 
     export interface IArticleField extends IVocabulary {
