@@ -560,9 +560,16 @@ declare module 'superdesk-api' {
         updated_by: IUser['_id'];
     }
 
+    // subset of FormFieldType
+    export enum IContentProfileFieldTypes {
+        textSingleLine = 'textSingleLine',
+        number = 'number',
+    }
+
     export interface IContentProfileField {
         id: string;
         label: string;
+        type: keyof typeof IContentProfileFieldTypes;
         required: boolean;
     }
 

@@ -18,6 +18,16 @@ interface IState {
     fields: IArrayKeyed<IContentProfileField>;
 }
 
+// subset of FormFieldType
+enum IContentProfileFieldTypes {
+    textSingleLine = 'textSingleLine',
+    number = 'number',
+}
+
+function getAllContentProfileFieldTypes(): Array<IContentProfileFieldTypes> {
+    return Object.keys(IContentProfileFieldTypes).map((key) => IContentProfileFieldTypes[key]);
+}
+
 function getImageFormConfig(): IFormGroup {
     const idField: IFormField = {
         label: gettext('ID'),
@@ -30,6 +40,31 @@ function getImageFormConfig(): IFormGroup {
         label: gettext('Label'),
         type: FormFieldType.textSingleLine,
         field: 'label',
+        required: true,
+    };
+
+    const fieldType: IFormField = {
+        label: gettext('Field type'),
+        type: FormFieldType.select,
+        component_parameters: {
+            items: getAllContentProfileFieldTypes().map((type) => {
+                switch (type) {
+                case IContentProfileFieldTypes.textSingleLine:
+                    return {
+                        id: IContentProfileFieldTypes.textSingleLine,
+                        label: gettext('Plain text (single line)'),
+                    };
+                case IContentProfileFieldTypes.number:
+                    return {
+                        id: IContentProfileFieldTypes.number,
+                        label: gettext('Number'),
+                    };
+                default:
+                    return assertNever(type);
+                }
+            }),
+        },
+        field: 'type',
         required: true,
     };
 
@@ -50,7 +85,7 @@ function getImageFormConfig(): IFormGroup {
     const formConfig: IFormGroup = {
         direction: 'vertical',
         type: 'inline',
-        form: [labelField, idField, requiredField, displayInMediaEditor],
+        form: [labelField, idField, fieldType, requiredField, displayInMediaEditor],
     };
 
     return formConfig;
@@ -98,6 +133,35 @@ function getFormConfig(type: IContentProfileTypeNonText): IFormGroup {
     }
 }
 
+function getAttributesForTextSingleLine(): Array<IFormField> {
+    const minLengthField: IFormField = {
+        label: gettext('Minimum length'),
+        type: FormFieldType.number,
+        field: 'minlength',
+        required: false,
+    };
+
+    const maxLengthField: IFormField = {
+        label: gettext('Maximum length'),
+        type: FormFieldType.number,
+        field: 'maxlength',
+        required: false,
+    };
+
+    return [minLengthField, maxLengthField];
+}
+
+export function getAttributesForFormFieldType(type: IContentProfileFieldTypes): Array<IFormField> {
+    switch (type) {
+    case IContentProfileFieldTypes.textSingleLine:
+        return getAttributesForTextSingleLine();
+    case IContentProfileFieldTypes.number:
+        return [];
+    default:
+        assertNever(type);
+    }
+}
+
 class FieldComponent extends React.PureComponent<{
     field: IArrayKeyed<IContentProfileField>[0];
     profileType: IContentProfileTypeNonText;
@@ -107,6 +171,20 @@ class FieldComponent extends React.PureComponent<{
     render() {
         const {field} = this.props;
         const formConfig = getFormConfig(this.props.profileType);
+
+        if (field.value.type != null) {
+            const fieldAttributes = getAttributesForFormFieldType(IContentProfileFieldTypes[field.value.type]);
+
+            if (fieldAttributes.length > 0) {
+                const attributesFormGroup: IFormGroup = {
+                    direction: 'vertical',
+                    type: 'inline',
+                    form: fieldAttributes,
+                };
+
+                formConfig.form.push(attributesFormGroup);
+            }
+        }
 
         return (
             <div style={{
@@ -200,7 +278,10 @@ export class ContentProfileConfigNonText extends React.Component<IProps, IState>
                     onClick={() => {
                         this.setState({
                             fields: [
-                                {key: this.generateKey(), value: {id: '', label: '', required: false}},
+                                {
+                                    key: this.generateKey(),
+                                    value: {id: '', label: '', type: 'textSingleLine', required: false},
+                                },
                                 ...fields,
                             ],
                         });

@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import {IInputType} from '../interfaces/input-types';
 
-type IProps = IInputType<string>;
+type IProps = IInputType<string | null>;
 
 export class SelectSingleValue extends React.Component<IProps> {
     render() {
@@ -35,7 +35,7 @@ export class SelectSingleValue extends React.Component<IProps> {
                     disabled={this.props.disabled || items == null || items.length < 1}
                     value={this.props.value ?? ''}
                     onChange={(event) => {
-                        this.props.onChange(event.target.value);
+                        this.props.onChange(event.target.value === '' ? null : event.target.value);
                     }}
                     data-test-id={`gform-input--${this.props.formField.field}`}
                 >
@@ -43,8 +43,8 @@ export class SelectSingleValue extends React.Component<IProps> {
                     {
                         items == null
                             ? null
-                            : items.map(({id, label}, i) => (
-                                <option key={i} value={id}>{label}</option>
+                            : items.map(({id, label}) => (
+                                <option key={id} value={id}>{label}</option>
                             ))
                     }
                 </select>
