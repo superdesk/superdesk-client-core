@@ -43,6 +43,20 @@ function getImageFormConfig(): IFormGroup {
         required: true,
     };
 
+    const sdWidth: IFormField = {
+        label: gettext('Width'),
+        type: FormFieldType.select,
+        component_parameters: {
+            items: [
+                {id: 'full', label: gettext('Full')},
+                {id: 'half', label: gettext('Half')},
+                {id: 'quarter', label: gettext('Quarter')},
+            ],
+        },
+        field: 'sdWidth',
+        required: true,
+    };
+
     const fieldType: IFormField = {
         label: gettext('Field type'),
         type: FormFieldType.select,
@@ -85,7 +99,7 @@ function getImageFormConfig(): IFormGroup {
     const formConfig: IFormGroup = {
         direction: 'vertical',
         type: 'inline',
-        form: [labelField, idField, fieldType, requiredField, displayInMediaEditor],
+        form: [labelField, idField, sdWidth, fieldType, requiredField, displayInMediaEditor],
     };
 
     return formConfig;
