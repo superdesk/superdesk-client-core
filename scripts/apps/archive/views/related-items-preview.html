@@ -7,7 +7,7 @@
         <div class="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border">
             <sd-related-item-in-list-react item="relatedItem" />
         </div>
-        <figure class="sd-list-item__thumbnail" ng-if="relatedItem.associations.featuremedia">
+        <figure class="sd-list-item__thumbnail" ng-if="relatedItem.associations.featuremedia.renditions.viewImage.href">
             <img ng-src="{{relatedItem.associations.featuremedia.renditions.viewImage.href}}"
                 alt="{{ gettext('Thumbnail for related item') }}">
         </figure>
