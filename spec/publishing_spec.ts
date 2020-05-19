@@ -7,7 +7,7 @@ import {
 import {monitoring} from './helpers/monitoring';
 import {workspace} from './helpers/workspace';
 import {authoring} from './helpers/authoring';
-import {el, els, waitAndClick, ECE, s} from 'end-to-end-testing-helpers';
+import {el, els, ECE} from 'end-to-end-testing-helpers';
 import {executeContextMenuAction} from 'end-to-end-testing-helpers/dist/articlesList';
 
 describe('publishing', () => {
@@ -88,7 +88,7 @@ describe('publishing', () => {
         const slugline = 'testing-send-and-publish';
 
         el(['authoring', 'field-slugline']).sendKeys(slugline);
-        waitAndClick(el(['authoring', 'save']));
+        el(['authoring', 'save']).click();
 
         el(['authoring', 'open-send-publish-pane']).click();
         el(['authoring', 'send-publish-pane', 'tab--publish']).click();
