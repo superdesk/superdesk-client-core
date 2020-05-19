@@ -150,7 +150,7 @@ export function MultiActionBar(
                             canAutocloseMultiActionBar: false,
                         });
                     }
-                    if (scope.activity['edit.item'] && scope.state !== 'draft') {
+                    if (scope.activity['edit.item'] && scope.action.canPublishItem()) {
                         actions.push({
                             label: gettext('Publish'),
                             icon: 'icon-ok',
