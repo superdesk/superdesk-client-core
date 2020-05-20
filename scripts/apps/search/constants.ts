@@ -203,4 +203,5 @@ export const UI_PROJECTED_FIELD_MAPPINGS = {
     versioncreated: 'versioncreated',
     markedDesks: 'marked_desks',
     queueError: 'error_message',
+    used: ['used', 'used_updated', 'used_count'],
 };
