@@ -13,10 +13,11 @@
     </button>
 
     <!-- else -->
-    <figure
+    <button
         ng-if="!(editable && associations.isMediaEditable() && !related)"
         class="item-association"
-        ng-class="{'item-association--preview': related, 'item-association--loading': loading}">
+        ng-class="{'item-association--preview': related, 'item-association--loading': loading}"\
+        ng-disabled="!editable">
             <a ng-if="related && editable" class="item-association__remove-item" ng-click="remove(related); $event.stopPropagation()">
                 <i class="icon-close-small"></i>
             </a>
@@ -73,7 +74,7 @@
                     ng-class="{'not-editable': !associations.isMediaEditable() || !editable}"
                     ng-click="associations.isMediaEditable() && associations.edit(this, related); $event.stopPropagation()">
             </div>
-    </figure>
+    </button>
     <!-- if/else end -->
 
     <textarea

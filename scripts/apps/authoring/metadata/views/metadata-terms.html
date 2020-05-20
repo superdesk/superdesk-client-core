@@ -103,7 +103,7 @@
         <li class="pull-left" ng-if="disabled && t.sub_label"
             ng-repeat="t in selectedItems track by t[uniqueField]">
             <label>{{getLocaleName(t, item)}}:</label>{{t.sub_label}}</li>
-        <li ng-if="disabled && !t.sub_label" class="pull-left disabled"
+        <li ng-if="disabled && !t.sub_label" data-disabled class="pull-left disabled"
             ng-repeat="t in selectedItems track by t[uniqueField]">{{getLocaleName(t, item)}}</li>
     </ul>
 </div>

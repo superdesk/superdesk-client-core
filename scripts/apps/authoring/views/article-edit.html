@@ -63,7 +63,7 @@
 
     <label class="field__label" ng-if="_editable">{{label('sms')}}</label>
     <div ng-if="_editable">
-        <span ng-if="_editable" sd-switch ng-model="item.flags.marked_for_sms" class="sms-switch" tabindex="{{editor.sms.order}}" ng-change="toggleSMS()"></span>
+        <span ng-if="_editable" sd-switch ng-model="item.flags.marked_for_sms" ng-attr-data-disabled="schema.sms.readonly === true" class="sms-switch" tabindex="{{editor.sms.order}}" ng-change="toggleSMS()"></span>
     </div>
 
     <div ng-if="item.flags.marked_for_sms" style="margin-top: 27px;">
@@ -516,7 +516,14 @@
      data-required="schema.sign_off.required"
      sd-width="{{editor.sign_off.sdWidth|| 'full'}}">
     <label class="field__label">{{label('sign_off')}}</label>
-    <button id="sign-off-unlock" class="icn-btn btn-signOff" ng-click="changeSignOffEdit()" tabindex="{{editor.sign_off.order}}" title="Unlock edit Sign-Off" ng-if="_editable">
+    <button
+        id="sign-off-unlock"
+        class="icn-btn btn-signOff"
+        ng-click="changeSignOffEdit()"
+        tabindex="{{editor.sign_off.order}}"
+        title="Unlock edit Sign-Off"
+        ng-if="_editable && schema.sign_off.readonly !== true"
+    >
         <i class="icon-lock" ng-hide="editSignOff"></i>
         <i class="icon-unlocked" ng-show="editSignOff"></i>
     </button>
