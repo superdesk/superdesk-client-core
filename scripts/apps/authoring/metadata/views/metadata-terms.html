@@ -1,4 +1,4 @@
-<div class="term-editor data visible" ng-if="!header" title="{{helperText}}">
+<div class="term-editor data visible" ng-if="!header" ng-attr-title="{{helperText}}">
     <div sd-typeahead items="terms" term="selectedTerm" search="searchTerms(term)" select="selectTerm(item)" data-disabled="disabled">
         <ul ng-if="activeTerm || activeList">
             <li typeahead-item="t" ng-repeat="t in terms track by t[uniqueField]">{{getLocaleName(t, item)}}</li>
@@ -7,7 +7,7 @@
 </div>
 
 <div class="dropdown dropdown-terms" dropdown sd-dropdown-focus sd-dropdown-position
-    title="{{ allSelected ? 'All items selected' : helperText  | translate }}">
+    ng-attr-title="{{ allSelected ? 'All items selected' : helperText  | translate }}">
     <button class="dropdown__toggle" dropdown__toggle tabindex="{{tabindex}}" ng-disabled="disabled" ng-if="header && !disabled">
         <i class="icon--white icon-plus-large"></i>
     </button>
@@ -20,7 +20,6 @@
                             class="nested-toggle flex-row sibling-spacer-10"
                             style="display: flex;"
                             ng-click="!allowEntireCat && openTree(t, $event)"
-                            title="{{getLocaleName(t, item)}}"
                         >
                             <sd-user-avatar data-user="t.user"></sd-user-avatar>
                             <span>{{getLocaleName(t, item)}}</span>
@@ -92,7 +91,7 @@
     </ul>
 </div>
 
-<div class="terms-list" ng-if="selectedItems.length" title="{{helperText}}">
+<div class="terms-list" ng-if="selectedItems.length" ng-attr-title="{{helperText}}">
     <ul>
         <li ng-if="!disabled && !t.sub_label" class="pull-left"
             ng-repeat="t in selectedItems track by t[uniqueField]"
