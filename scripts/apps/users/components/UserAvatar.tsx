@@ -5,7 +5,7 @@ import {IUser} from 'superdesk-api';
 import {CC} from 'core/ui/configurable-ui-components';
 import {isUserLoggedIn} from '../services/UsersService';
 import {gettext} from 'core/utils';
-import {AvatarWrapper, AvatarContentText, AvatarContentImage} from 'superdesk-ui-framework';
+import {AvatarWrapper, AvatarContentText, AvatarContentImage} from 'superdesk-ui-framework/react';
 
 class DefaultAvatarDisplay extends React.PureComponent<{user: Partial<IUser>}> {
     render() {
