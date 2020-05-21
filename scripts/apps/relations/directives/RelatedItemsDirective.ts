@@ -4,7 +4,7 @@ import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/Autho
 import {IArticle, IArticleField, IRendition} from 'superdesk-api';
 import {IDirectiveScope} from 'types/Angular/DirectiveScope';
 import {getAssociationsByFieldId} from '../../authoring/authoring/controllers/AssociationController';
-import {getViewImage, getThumbnailForItem} from 'core/helpers/item';
+import {getThumbnailForItem} from 'core/helpers/item';
 
 const ARCHIVE_TYPES = ['archive', 'published'];
 const isInArchive = (item: IArticle) => item._type != null && ARCHIVE_TYPES.includes(item._type);
