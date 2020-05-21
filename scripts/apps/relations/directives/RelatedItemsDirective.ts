@@ -4,7 +4,7 @@ import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/Autho
 import {IArticle, IArticleField, IRendition} from 'superdesk-api';
 import {IDirectiveScope} from 'types/Angular/DirectiveScope';
 import {getAssociationsByFieldId} from '../../authoring/authoring/controllers/AssociationController';
-import {getViewImage} from 'core/helpers/item';
+import {getViewImage, getThumbnailForItem} from 'core/helpers/item';
 
 const ARCHIVE_TYPES = ['archive', 'published'];
 const isInArchive = (item: IArticle) => item._type != null && ARCHIVE_TYPES.includes(item._type);
@@ -229,13 +229,7 @@ export function RelatedItemsDirective(
             };
             scope.loadRelatedItems();
 
-            scope.getThumbnailForItem = (item) => {
-                if (!item.associations?.featuremedia) {
-                    return null;
-                }
-
-                return getViewImage(item.associations?.featuremedia as IArticle);
-            };
+            scope.getThumbnailForItem = getThumbnailForItem;
 
             /**
              * Return the next key for related item associated to current field
