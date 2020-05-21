@@ -672,7 +672,7 @@ declare module 'superdesk-api' {
 
     // GENERIC FORM
 
-    export interface IPropsGenericForm<T extends IBaseRestApiResponse, TBase = Omit<T, keyof IBaseRestApiResponse>> {
+    export interface IPropsGenericForm<T extends IItemWithId, TBase = Omit<T, keyof IItemWithId>> {
         formConfig: IFormGroup;
         defaultSortOption: ISortOption;
         defaultFilters?: Partial<TBase>;
@@ -741,29 +741,41 @@ declare module 'superdesk-api' {
         direction: 'ascending' | 'descending';
     }
 
+    export interface IItemWithId {
+        _id: string;
+    }
 
-    export interface ICrudManagerState<Entity extends IBaseRestApiResponse> extends IRestApiResponse<Entity> {
+    export interface ICrudManagerResponse<T extends IItemWithId> {
+        _items: Array<T>;
+        _meta: {
+            max_results: number;
+            page: number;
+            total: number;
+        };
+    }
+
+    export interface ICrudManagerState<Entity extends IItemWithId> extends ICrudManagerResponse<Entity> {
         activeFilters: ICrudManagerFilters;
         activeSortOption?: ISortOption;
     }
 
-    export interface ICrudManagerMethods<Entity extends IBaseRestApiResponse> {
+    export interface ICrudManagerMethods<Entity extends IItemWithId> {
         read(
             page: number,
             sort: ISortOption,
             filterValues?: ICrudManagerFilters,
-        ): Promise<IRestApiResponse<Entity>>;
+        ): Promise<ICrudManagerResponse<Entity>>;
         update(item: Entity): Promise<Entity>;
         create(item: Entity): Promise<Entity>;
         delete(item: Entity): Promise<void>;
-        refresh(): Promise<IRestApiResponse<Entity>>;
-        sort(nextSortOption: ISortOption): Promise<IRestApiResponse<Entity>>;
-        removeFilter(fieldName: string): Promise<IRestApiResponse<Entity>>;
-        goToPage(nextPage: number): Promise<IRestApiResponse<Entity>>;
+        refresh(): Promise<ICrudManagerResponse<Entity>>;
+        sort(nextSortOption: ISortOption): Promise<ICrudManagerResponse<Entity>>;
+        removeFilter(fieldName: string): Promise<ICrudManagerResponse<Entity>>;
+        goToPage(nextPage: number): Promise<ICrudManagerResponse<Entity>>;
     }
 
 
-    export interface ICrudManager<Entity extends IBaseRestApiResponse> extends ICrudManagerState<Entity>, ICrudManagerMethods<Entity> {
+    export interface ICrudManager<Entity extends IItemWithId> extends ICrudManagerState<Entity>, ICrudManagerMethods<Entity> {
         // allow exposing it as one interface for consumer components
     }
 
@@ -830,7 +842,7 @@ declare module 'superdesk-api' {
         onClose?(): void;
     }
 
-    export interface IGenericListPageComponent<T extends IBaseRestApiResponse, TBase = Omit<T, keyof IBaseRestApiResponse>> {
+    export interface IGenericListPageComponent<T extends IItemWithId, TBase = Omit<T, keyof IItemWithId>> {
         openPreview(id: string): void;
         startEditing(id: string): void;
         closePreview(): void;

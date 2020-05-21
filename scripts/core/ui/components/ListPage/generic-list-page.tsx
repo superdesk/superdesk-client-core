@@ -28,15 +28,16 @@ import {getInitialValues} from '../generic-form/get-initial-values';
 import {generateFilterForServer} from '../generic-form/generate-filter-for-server';
 import {getFormFieldsFlat} from '../generic-form/get-form-fields-flat';
 import {
-    IBaseRestApiResponse,
+    IItemWithId,
     IPropsGenericForm,
     IGenericListPageComponent,
     ICrudManager,
     IFormGroup,
+    IBaseRestApiResponse,
 } from 'superdesk-api';
 import {gettext} from 'core/utils';
 
-interface IState<T extends IBaseRestApiResponse, TBase = Omit<T, keyof IBaseRestApiResponse>> {
+interface IState<T extends IItemWithId, TBase = Omit<T, keyof IItemWithId>> {
     previewItemId: string | null;
     editItemId: string | null;
     newItem: {[key: string]: any} | null;
@@ -46,14 +47,14 @@ interface IState<T extends IBaseRestApiResponse, TBase = Omit<T, keyof IBaseRest
     refetchDataScheduled: boolean;
 }
 
-interface IPropsConnected<T extends IBaseRestApiResponse> {
+interface IPropsConnected<T extends IItemWithId> {
     items?: ICrudManager<T>;
     modal: any;
     notify: any;
     $rootScope: any;
 }
 
-export class GenericListPageComponent<T extends IBaseRestApiResponse>
+export class GenericListPageComponent<T extends IItemWithId>
     extends React.Component<IPropsGenericForm<T> & IPropsConnected<T>, IState<T>>
     implements IGenericListPageComponent<T>
 {

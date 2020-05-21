@@ -226,7 +226,6 @@ export function connectCrudManager<Props, PropsToConnect, Entity extends IBaseRe
             this.state = {
                 _items: null,
                 _meta: null,
-                _links: null,
                 activeSortOption: null,
                 activeFilters: {},
             };
