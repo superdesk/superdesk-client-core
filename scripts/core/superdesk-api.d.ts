@@ -680,7 +680,7 @@ declare module 'superdesk-api' {
 
     export interface IPropsGenericForm<T extends IItemWithId, TBase = Omit<T, keyof IItemWithId>> {
         formConfig: IFormGroup;
-        defaultSortOption: ISortOption;
+        defaultSortOption?: ISortOption;
         additionalSortOptions?: Array<{label: string; field: string;}>;
         defaultFilters?: Partial<TBase>;
         ItemComponent: React.ComponentType<IPropsGenericFormItemComponent<T>>;

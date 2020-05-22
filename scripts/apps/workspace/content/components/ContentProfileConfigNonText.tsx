@@ -290,7 +290,6 @@ export class ContentProfileConfigNonText extends React.Component<IProps, IState>
 
         const crudManagerForContentProfileFields: ICrudManager<IContentProfileFieldWithSystemId> = {
             activeFilters: {},
-            activeSortOption: {field: 'label', direction: 'ascending'},
             read: () => Promise.resolve(fieldsResponse),
             update: (item) => {
                 return new Promise((resolve) => {
@@ -357,11 +356,11 @@ export class ContentProfileConfigNonText extends React.Component<IProps, IState>
             <div>
                 <GenericListPageComponent
                     formConfig={formConfig}
-                    defaultSortOption={{field: 'name', direction: 'ascending'}}
                     ItemComponent={ItemComponent}
                     ItemsContainerComponent={this.ItemsContainerComponent}
-                    disallowFiltering
                     items={crudManagerForContentProfileFields}
+                    disallowFiltering
+                    disallowCreatingNewItem
                 />
             </div>
         );

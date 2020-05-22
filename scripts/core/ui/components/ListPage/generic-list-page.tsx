@@ -37,6 +37,7 @@ import {
 } from 'superdesk-api';
 import {gettext} from 'core/utils';
 import ng from 'core/services/ng';
+import {OnlyWithChildren} from '../only-with-children';
 
 interface IState<T extends IItemWithId, TBase = Omit<T, keyof IItemWithId>> {
     previewItemId: string | null;
@@ -64,6 +65,21 @@ class DefaultItemsContainerComponent extends React.PureComponent {
         );
     }
 }
+
+const subNavWrapper: React.ComponentType = (props) => (
+    <div style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
+        <div className="subnav">
+            <div style={{
+                display: 'flex',
+                width: '100%',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+            }}>
+                {props.children}
+            </div>
+        </div>
+    </div>
+);
 
 export class GenericListPageComponent<T extends IItemWithId>
     extends React.Component<IPropsGenericForm<T> & IPropsConnected<T>, IState<T>>
@@ -383,73 +399,70 @@ export class GenericListPageComponent<T extends IItemWithId>
 
         return (
             <div style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
-                <div className="subnav">
-                    <div style={{
-                        display: 'flex',
-                        width: '100%',
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                    }}>
+                <OnlyWithChildren wrapper={subNavWrapper}>
+                    {
+                        this.props.disallowFiltering ? null : (
+                            <div>
+                                <Button
+                                    icon="icon-filter-large"
+                                    onClick={() => this.setFiltersVisibility(!this.state.filtersOpen)}
+                                    active={this.state.filtersOpen}
+                                    darker={true}
+                                    data-test-id="toggle-filters"
+                                />
+                            </div>
+                        )
+                    }
+
+                    {
+                        this.props.fieldForSearch == null ? null : (
+                            <div style={{flexGrow: 1}}>
+                                <SearchBar
+                                    ref={(instance) => {
+                                        this.searchBarRef = instance;
+                                    }}
+                                    value=""
+                                    allowCollapsed={false}
+                                    onSearch={(value) => {
+                                        this.handleFilterFieldChange(
+                                            this.props.fieldForSearch.field,
+                                            value,
+                                            this.filter,
+                                        );
+                                    }}
+                                />
+                            </div>
+                        )
+                    }
+
+                    <OnlyWithChildren style={{display: 'flex', marginLeft: 'auto'}}>
                         {
-                            this.props.disallowFiltering ? null : (
+                            items.activeSortOption == null ? null : (
+                                <SortBar
+                                    sortOptions={sortOptions}
+                                    selected={items.activeSortOption}
+                                    itemsCount={items._meta.total}
+                                    onSortOptionChange={items.sort}
+                                />
+                            )
+                        }
+
+                        {
+                            this.props.disallowCreatingNewItem === true ? null : (
                                 <div>
                                     <Button
-                                        icon="icon-filter-large"
-                                        onClick={() => this.setFiltersVisibility(!this.state.filtersOpen)}
-                                        active={this.state.filtersOpen}
-                                        darker={true}
-                                        data-test-id="toggle-filters"
-                                    />
+                                        onClick={this.openNewItemForm}
+                                        className="sd-create-btn dropdown-toggle"
+                                        icon="icon-plus-large"
+                                        data-test-id="list-page--add-item"
+                                    >
+                                        <span className="circle" />
+                                    </Button>
                                 </div>
                             )
                         }
-
-                        {
-                            this.props.fieldForSearch == null ? null : (
-                                <div style={{flexGrow: 1}}>
-                                    <SearchBar
-                                        ref={(instance) => {
-                                            this.searchBarRef = instance;
-                                        }}
-                                        value=""
-                                        allowCollapsed={false}
-                                        onSearch={(value) => {
-                                            this.handleFilterFieldChange(
-                                                this.props.fieldForSearch.field,
-                                                value,
-                                                this.filter,
-                                            );
-                                        }}
-                                    />
-                                </div>
-                            )
-                        }
-
-                        <div style={{display: 'flex', marginLeft: 'auto'}}>
-                            <SortBar
-                                sortOptions={sortOptions}
-                                selected={items.activeSortOption}
-                                itemsCount={items._meta.total}
-                                onSortOptionChange={items.sort}
-                            />
-
-                            {
-                                this.props.disallowCreatingNewItem === true ? null : (
-                                    <div>
-                                        <Button
-                                            onClick={this.openNewItemForm}
-                                            className="sd-create-btn dropdown-toggle"
-                                            icon="icon-plus-large"
-                                            data-test-id="list-page--add-item"
-                                        >
-                                            <span className="circle" />
-                                        </Button>
-                                    </div>
-                                )
-                            }
-                        </div>
-                    </div>
-                </div>
+                    </OnlyWithChildren>
+                </OnlyWithChildren>
                 <PageContainer>
                     {
                         this.state.filtersOpen ? (
