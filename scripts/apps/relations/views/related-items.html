@@ -31,8 +31,8 @@
                 <div class="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border">
                     <sd-related-item-in-list-react item="relatedItem" />
                 </div>
-                <figure class="sd-list-item__thumbnail" ng-if="relatedItem.associations.featuremedia">
-                    <img ng-src="{{relatedItem.associations.featuremedia.renditions.viewImage.href}}" alt="{{gettext('Thumbnail for related item')}}">
+                <figure class="sd-list-item__thumbnail" ng-if="getThumbnailForItem(relatedItem)">
+                    <img ng-src="{{getThumbnailForItem(relatedItem).href}}" alt="{{gettext('Thumbnail for related item')}}">
                 </figure>
                 <div class="sd-list-item__action-menu sd-list-item__action-menu--direction-row">
                     <button class="icn-btn" ng-click="removeRelatedItem(key)"><i class="icon-close-small"></i></button>
