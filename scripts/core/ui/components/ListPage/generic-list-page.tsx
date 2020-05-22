@@ -20,7 +20,6 @@ import {Button} from 'core/ui/components/Nav';
 import {SortBar, ISortFields} from 'core/ui/components/SortBar';
 import {connectCrudManager} from 'core/helpers/CrudManager';
 import {TagLabel} from 'core/ui/components/TagLabel';
-import {connectServices} from 'core/helpers/ReactRenderAsync';
 import {getFormGroupForFiltering} from 'core/ui/components/generic-form/get-form-group-for-filtering';
 import {getFormFieldsRecursive, getFormFieldPreviewComponent} from 'core/ui/components/generic-form/form-field';
 import {FormViewEdit} from 'core/ui/components/generic-form/from-group';
@@ -36,6 +35,7 @@ import {
     IBaseRestApiResponse,
 } from 'superdesk-api';
 import {gettext} from 'core/utils';
+import ng from 'core/services/ng';
 
 interface IState<T extends IItemWithId, TBase = Omit<T, keyof IItemWithId>> {
     previewItemId: string | null;
@@ -47,11 +47,8 @@ interface IState<T extends IItemWithId, TBase = Omit<T, keyof IItemWithId>> {
     refetchDataScheduled: boolean;
 }
 
-interface IPropsConnected<T extends IItemWithId> {
+export interface IPropsConnected<T extends IItemWithId> {
     items?: ICrudManager<T>;
-    modal: any;
-    notify: any;
-    $rootScope: any;
 }
 
 export class GenericListPageComponent<T extends IItemWithId>
@@ -59,6 +56,9 @@ export class GenericListPageComponent<T extends IItemWithId>
     implements IGenericListPageComponent<T>
 {
     searchBarRef: SearchBar | null;
+    modal: any;
+    notify: any;
+    $rootScope: any;
 
     constructor(props: IPropsGenericForm<T> & IPropsConnected<T>) {
         super(props);
@@ -89,17 +89,21 @@ export class GenericListPageComponent<T extends IItemWithId>
         this.removeFilter = this.removeFilter.bind(this);
         this.refetchDataUsingCurrentFilters = this.refetchDataUsingCurrentFilters.bind(this);
         this.filter = this.filter.bind(this);
+
+        this.modal = ng.get('modal');
+        this.notify = ng.get('notify');
+        this.$rootScope = ng.get('$rootScope');
     }
     openPreview(id) {
         if (this.state.editItemId != null) {
-            this.props.modal.alert({
+            this.modal.alert({
                 headerText: gettext('Warning'),
                 bodyText: gettext(
                     'Can\'t open a preview while in edit mode',
                 ),
             });
         } else if (this.state.newItem != null) {
-            this.props.modal.alert({
+            this.modal.alert({
                 headerText: gettext('Warning'),
                 bodyText: gettext(
                     'Can\'t open a preview while in create mode',
@@ -135,13 +139,13 @@ export class GenericListPageComponent<T extends IItemWithId>
     }
     deleteItem(item: T) {
         const deleteNow = () => this.props.items.delete(item).then(() => {
-            this.props.notify.success(gettext('The item has been deleted.'));
+            this.notify.success(gettext('The item has been deleted.'));
         });
 
-        this.props.modal.confirm(gettext('Are you sure you want to delete this item?'))
+        this.modal.confirm(gettext('Are you sure you want to delete this item?'))
             .then(() => {
                 if (this.state.editItemId != null) {
-                    this.props.modal.alert({
+                    this.modal.alert({
                         headerText: gettext('Warning'),
                         bodyText: gettext(
                             'Edit mode must closed before you can delete an item.',
@@ -158,7 +162,7 @@ export class GenericListPageComponent<T extends IItemWithId>
     }
     startEditing(id: string) {
         if (this.state.editItemId != null) {
-            this.props.modal.alert({
+            this.modal.alert({
                 headerText: gettext('Warning'),
                 bodyText: gettext(
                     'Can\'t edit this item, because another item is in edit mode.',
@@ -223,7 +227,7 @@ export class GenericListPageComponent<T extends IItemWithId>
     }
     filter() {
         if (this.state.editItemId != null) {
-            this.props.modal.alert({
+            this.modal.alert({
                 headerText: gettext('Warning'),
                 bodyText: gettext(
                     'The item in edit mode must be closed before you can filter.',
@@ -272,7 +276,7 @@ export class GenericListPageComponent<T extends IItemWithId>
     }
     openNewItemForm() {
         if (this.state.editItemId != null) {
-            this.props.modal.alert({
+            this.modal.alert({
                 headerText: gettext('Warning'),
                 bodyText: gettext(
                     'Can\'t add a new item, because another item is in edit mode.',
@@ -295,7 +299,7 @@ export class GenericListPageComponent<T extends IItemWithId>
 
         if (this.props.refreshOnEvents != null) {
             this.props.refreshOnEvents.forEach((eventName) => {
-                this.props.$rootScope.$on(eventName, () => {
+                this.$rootScope.$on(eventName, () => {
                     // will update the list using selected filtering / sort options
                     this.refetchDataUsingCurrentFilters();
                 });
@@ -559,7 +563,7 @@ export class GenericListPageComponent<T extends IItemWithId>
                                     }}
                                     item={this.state.newItem}
                                     onSave={(item: T) => this.props.items.create(item).then((res) => {
-                                        this.props.notify.success(gettext('The item has been created.'));
+                                        this.notify.success(gettext('The item has been created.'));
                                         this.closeNewItemForm();
                                         this.openPreview(res._id);
                                     })}
@@ -584,7 +588,7 @@ export class GenericListPageComponent<T extends IItemWithId>
                                         this.props.items._items.find(({_id}) => _id === this.state.editItemId)
                                     }
                                     onSave={(nextItem) => this.props.items.update(nextItem).then(() => {
-                                        this.props.notify.success(gettext('The item has been updated.'));
+                                        this.notify.success(gettext('The item has been updated.'));
                                     })}
                                     onClose={this.closePreview}
                                 />
@@ -619,27 +623,24 @@ export class GenericListPageComponent<T extends IItemWithId>
 
 export const getGenericListPageComponent =
     <T extends IBaseRestApiResponse>(resource: string, formConfig: IFormGroup) =>
-        connectServices<IPropsGenericForm<T>>(
-            connectCrudManager<IPropsGenericForm<T>, IPropsConnected<T>, T>(
-                GenericListPageComponent,
-                'items',
-                resource,
-                (filters: IFormGroup) => {
-                    const formConfigForFilters = getFormGroupForFiltering(formConfig);
-                    const fieldTypesLookup = getFormFieldsFlat(formConfigForFilters)
-                        .reduce((accumulator, item) => ({...accumulator, ...{[item.field]: item.type}}), {});
+        connectCrudManager<IPropsGenericForm<T>, IPropsConnected<T>, T>(
+            GenericListPageComponent,
+            'items',
+            resource,
+            (filters: IFormGroup) => {
+                const formConfigForFilters = getFormGroupForFiltering(formConfig);
+                const fieldTypesLookup = getFormFieldsFlat(formConfigForFilters)
+                    .reduce((accumulator, item) => ({...accumulator, ...{[item.field]: item.type}}), {});
 
-                    let filtersFormatted = {};
+                let filtersFormatted = {};
 
-                    for (let fieldName in filters) {
-                        filtersFormatted[fieldName] = generateFilterForServer(
-                            fieldTypesLookup[fieldName],
-                            filters[fieldName],
-                        );
-                    }
+                for (let fieldName in filters) {
+                    filtersFormatted[fieldName] = generateFilterForServer(
+                        fieldTypesLookup[fieldName],
+                        filters[fieldName],
+                    );
+                }
 
-                    return filtersFormatted;
-                },
-            )
-            , ['modal', '$rootScope', 'notify'],
+                return filtersFormatted;
+            },
         );
