@@ -1,3 +1,4 @@
+/* eslint-disable react/no-multi-comp */
 /* eslint-disable brace-style */
 
 import React from 'react';
@@ -329,14 +330,7 @@ export class GenericListPageComponent<T extends IItemWithId>
 
         const sortOptions: Array<ISortFields> = [
             ...fieldsList.map(({label, field}) => ({label, field})),
-            {
-                label: gettext('Last updated'),
-                field: '_updated',
-            },
-            {
-                label: gettext('First created'),
-                field: '_created',
-            },
+            ...(this.props.additionalSortOptions ?? []),
         ];
 
         const getContents = () => {
@@ -621,26 +615,52 @@ export class GenericListPageComponent<T extends IItemWithId>
     }
 }
 
-export const getGenericListPageComponent =
-    <T extends IBaseRestApiResponse>(resource: string, formConfig: IFormGroup) =>
-        connectCrudManager<IPropsGenericForm<T>, IPropsConnected<T>, T>(
-            GenericListPageComponent,
-            'items',
-            resource,
-            (filters: IFormGroup) => {
-                const formConfigForFilters = getFormGroupForFiltering(formConfig);
-                const fieldTypesLookup = getFormFieldsFlat(formConfigForFilters)
-                    .reduce((accumulator, item) => ({...accumulator, ...{[item.field]: item.type}}), {});
+export const getGenericListPageComponent = <T extends IBaseRestApiResponse>(
+    resource: string,
+    formConfig: IFormGroup,
+) => {
+    var Component = connectCrudManager<IPropsGenericForm<T>, IPropsConnected<T>, T>(
+        GenericListPageComponent,
+        'items',
+        resource,
+        (filters: IFormGroup) => {
+            const formConfigForFilters = getFormGroupForFiltering(formConfig);
+            const fieldTypesLookup = getFormFieldsFlat(formConfigForFilters)
+                .reduce((accumulator, item) => ({...accumulator, ...{[item.field]: item.type}}), {});
 
-                let filtersFormatted = {};
+            let filtersFormatted = {};
 
-                for (let fieldName in filters) {
-                    filtersFormatted[fieldName] = generateFilterForServer(
-                        fieldTypesLookup[fieldName],
-                        filters[fieldName],
-                    );
-                }
+            for (let fieldName in filters) {
+                filtersFormatted[fieldName] = generateFilterForServer(
+                    fieldTypesLookup[fieldName],
+                    filters[fieldName],
+                );
+            }
 
-                return filtersFormatted;
-            },
-        );
+            return filtersFormatted;
+        },
+    );
+
+    return class WithAdditionalSortOptions extends React.PureComponent<IPropsGenericForm<T>> {
+        render() {
+            return (
+                <Component
+                    {...this.props}
+                    additionalSortOptions={[
+                        ...(this.props.additionalSortOptions ?? []),
+                        ...[
+                            {
+                                label: gettext('Last updated'),
+                                field: '_updated',
+                            },
+                            {
+                                label: gettext('First created'),
+                                field: '_created',
+                            },
+                        ],
+                    ]}
+                />
+            );
+        }
+    };
+};

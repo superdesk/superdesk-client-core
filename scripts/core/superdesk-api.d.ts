@@ -675,6 +675,7 @@ declare module 'superdesk-api' {
     export interface IPropsGenericForm<T extends IItemWithId, TBase = Omit<T, keyof IItemWithId>> {
         formConfig: IFormGroup;
         defaultSortOption: ISortOption;
+        additionalSortOptions?: Array<{label: string; field: string;}>;
         defaultFilters?: Partial<TBase>;
         renderRow(key: string, item: T, page: IGenericListPageComponent<T>): JSX.Element;
 
