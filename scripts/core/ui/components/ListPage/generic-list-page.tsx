@@ -326,14 +326,16 @@ export class GenericListPageComponent<T extends IItemWithId>
         }
     }
     render() {
-        if (this.props.items._items == null) {
+        const {items} = this.props;
+
+        if (items._items == null) {
             // loading
             return null;
         }
 
-        const {activeFilters} = this.props.items;
-        const totalResults = this.props.items._meta.total;
-        const pageSize = this.props.items._meta.max_results;
+        const {activeFilters} = items;
+        const totalResults = items._meta.total;
+        const pageSize = items._meta.max_results;
         const pageCount = Math.ceil(totalResults / pageSize);
 
         const {formConfig, ItemComponent} = this.props;
@@ -348,7 +350,7 @@ export class GenericListPageComponent<T extends IItemWithId>
         ];
 
         const getContents = () => {
-            if (this.props.items._items.length === 0) {
+            if (items._items.length === 0) {
                 if (Object.keys(activeFilters).length > 0) {
                     return (
                         <ListItem noHover>
@@ -370,7 +372,7 @@ export class GenericListPageComponent<T extends IItemWithId>
                 return (
                     <ItemsContainerComponent>
                         {
-                            this.props.items._items.map(
+                            items._items.map(
                                 (item, i) => <ItemComponent key={item._id} item={item} page={this} index={i} />,
                             )
                         }
@@ -426,9 +428,9 @@ export class GenericListPageComponent<T extends IItemWithId>
                         <div style={{display: 'flex', marginLeft: 'auto'}}>
                             <SortBar
                                 sortOptions={sortOptions}
-                                selected={this.props.items.activeSortOption}
-                                itemsCount={this.props.items._meta.total}
-                                onSortOptionChange={this.props.items.sort}
+                                selected={items.activeSortOption}
+                                itemsCount={items._meta.total}
+                                onSortOptionChange={items.sort}
                             />
 
                             {
@@ -494,7 +496,7 @@ export class GenericListPageComponent<T extends IItemWithId>
                     <PageContainerItem shrink>
                         <div style={{margin: 20}}>
                             {
-                                this.props.items._items.length === 0 ? null : (
+                                items._meta.max_results === items._meta.total || items._items.length === 0 ? null : (
                                     <div style={{textAlign: 'center', marginTop: -20}}>
                                         <ReactPaginate
                                             previousLabel={gettext('prev')}
@@ -503,11 +505,11 @@ export class GenericListPageComponent<T extends IItemWithId>
                                             marginPagesDisplayed={2}
                                             pageRangeDisplayed={5}
                                             onPageChange={({selected}) => {
-                                                if (this.props.items._meta.page !== (selected + 1)) {
-                                                    this.props.items.goToPage(selected + 1);
+                                                if (items._meta.page !== (selected + 1)) {
+                                                    items.goToPage(selected + 1);
                                                 }
                                             }}
-                                            initialPage={this.props.items._meta.page - 1}
+                                            initialPage={items._meta.page - 1}
                                             containerClassName={'bs-pagination'}
                                             activeClassName="active"
                                         />
@@ -528,7 +530,7 @@ export class GenericListPageComponent<T extends IItemWithId>
                                                 );
 
                                                 const filterValuePreview = getFormFieldPreviewComponent(
-                                                    this.props.items.activeFilters,
+                                                    items.activeFilters,
                                                     currentField,
                                                 );
 
@@ -567,7 +569,7 @@ export class GenericListPageComponent<T extends IItemWithId>
                                         }));
                                     }}
                                     item={this.state.newItem}
-                                    onSave={(item: T) => this.props.items.create(item).then((res) => {
+                                    onSave={(item: T) => items.create(item).then((res) => {
                                         this.notify.success(gettext('The item has been created.'));
                                         this.closeNewItemForm();
                                         this.openPreview(res._id);
@@ -590,9 +592,9 @@ export class GenericListPageComponent<T extends IItemWithId>
                                     operation="editing"
                                     formConfig={formConfig}
                                     item={
-                                        this.props.items._items.find(({_id}) => _id === this.state.editItemId)
+                                        items._items.find(({_id}) => _id === this.state.editItemId)
                                     }
-                                    onSave={(nextItem) => this.props.items.update(nextItem).then(() => {
+                                    onSave={(nextItem) => items.update(nextItem).then(() => {
                                         this.notify.success(gettext('The item has been updated.'));
                                     })}
                                     onClose={this.closePreview}
@@ -612,9 +614,9 @@ export class GenericListPageComponent<T extends IItemWithId>
                                     operation="editing"
                                     formConfig={formConfig}
                                     item={
-                                        this.props.items._items.find(({_id}) => _id === this.state.previewItemId)
+                                        items._items.find(({_id}) => _id === this.state.previewItemId)
                                     }
-                                    onSave={(nextItem) => this.props.items.update(nextItem)}
+                                    onSave={(nextItem) => items.update(nextItem)}
                                     onClose={this.closePreview}
                                 />
                             </PageContainerItem>
