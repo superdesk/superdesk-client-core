@@ -1,13 +1,21 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
-import {IContentProfileNonText, IFormGroup, IFormField, IContentProfileField, IArrayKeyed} from 'superdesk-api';
-import {SortableContainer, SortableElement, arrayMove} from 'react-sortable-hoc';
-import {FormViewEdit} from 'core/ui/components/generic-form/from-group';
+import {
+    IContentProfileNonText,
+    IFormGroup,
+    IFormField,
+    IContentProfileField,
+    IArrayKeyed,
+    ICrudManager,
+    ICrudManagerResponse,
+    IItemWithId,
+} from 'superdesk-api';
+
 import {gettext} from 'core/utils';
 import {FormFieldType} from 'core/ui/components/generic-form/interfaces/form';
-import {Button} from 'superdesk-ui-framework';
 import {IContentProfileTypeNonText} from '../controllers/ContentProfilesController';
 import {assertNever} from 'core/helpers/typescript-helpers';
+import {GenericListPageComponent} from 'core/ui/components/ListPage/generic-list-page';
 
 interface IProps {
     profile: IContentProfileNonText;
@@ -176,90 +184,26 @@ export function getAttributesForFormFieldType(type: IContentProfileFieldTypes): 
     }
 }
 
-class FieldComponent extends React.PureComponent<{
-    field: IArrayKeyed<IContentProfileField>[0];
-    profileType: IContentProfileTypeNonText;
-    onChange(field: IArrayKeyed<IContentProfileField>[0]): void;
-    onRemove(): void}
-> {
-    render() {
-        const {field} = this.props;
-        const formConfig = getFormConfig(this.props.profileType);
+const renderRow = (
+    key: string,
+    item: IContentProfileFieldWithSystemId,
+    page: GenericListPageComponent<IContentProfileFieldWithSystemId>,
+) => (
+    <div key={item._id}>
+        {item.label}
+        <button onClick={() => page.startEditing(item._id)}>{gettext('Edit')}</button>
+    </div>
+);
 
-        if (field.value.type != null) {
-            const fieldAttributes = getAttributesForFormFieldType(IContentProfileFieldTypes[field.value.type]);
+type IContentProfileFieldWithSystemId = IContentProfileField & IItemWithId;
 
-            if (fieldAttributes.length > 0) {
-                const attributesFormGroup: IFormGroup = {
-                    direction: 'vertical',
-                    type: 'inline',
-                    form: fieldAttributes,
-                };
+function stripSystemId(item: IContentProfileFieldWithSystemId): IContentProfileField {
+    const copy = {...item};
 
-                formConfig.form.push(attributesFormGroup);
-            }
-        }
+    delete copy['_id'];
 
-        return (
-            <div style={{
-                border: '1px solid green',
-                marginBottom: 10,
-                marginTop: 10,
-                zIndex: 1051,
-                padding: 10,
-                background: '#fff',
-            }}>
-                <FormViewEdit
-                    formConfig={formConfig}
-                    item={field.value}
-                    editMode
-                    handleFieldChange={(key, value) => {
-                        this.props.onChange({...field, value: {...field.value, [key]: value}});
-                    }}
-                    issues={{}}
-                />
-                <Button text={gettext('Remove')} onClick={() => this.props.onRemove()} />
-            </div>
-        );
-    }
+    return copy;
 }
-
-const FieldSortable = SortableElement(FieldComponent);
-
-class FieldsComponent extends React.Component<{
-    fields: IArrayKeyed<IContentProfileField>;
-    profileType: IContentProfileTypeNonText;
-    onChange(fields: IArrayKeyed<IContentProfileField>): void;
-}> {
-    render() {
-        const {fields} = this.props;
-
-        return (
-            <div>
-                {
-                    fields.map((field, index) => (
-                        <FieldSortable
-                            key={field.key}
-                            index={index}
-                            field={field}
-                            profileType={this.props.profileType}
-                            onChange={(_field) => {
-                                const fieldsNext = this.props.fields.map((f) => f.key === _field.key ? _field : f);
-
-                                this.props.onChange(fieldsNext);
-                            }}
-                            onRemove={() => {
-                                this.props.onChange(fields.filter((f) => f.key !== field.key));
-                            }}
-                        />
-                    ))
-                }
-            </div>
-        );
-    }
-}
-
-const FieldsSortable = SortableContainer(FieldsComponent);
 
 export class ContentProfileConfigNonText extends React.Component<IProps, IState> {
     private generateKey: () => string;
@@ -285,34 +229,86 @@ export class ContentProfileConfigNonText extends React.Component<IProps, IState>
     render() {
         const {fields} = this.state;
 
-        return (
-            <div>
-                <Button
-                    text={gettext('Add')}
-                    onClick={() => {
-                        this.setState({
+        const formConfig = getFormConfig(IContentProfileTypeNonText[this.props.profileType]);
+
+        const fieldsResponse: ICrudManagerResponse<IContentProfileFieldWithSystemId> = {
+            _items: fields.map(({key, value}) => ({...value, _id: key})),
+            _meta: {total: fields.length, page: 1, max_results: fields.length},
+        };
+
+        const crudManagerForContentProfileFields: ICrudManager<IContentProfileFieldWithSystemId> = {
+            activeFilters: {},
+            activeSortOption: {field: 'label', direction: 'ascending'},
+            read: () => Promise.resolve(fieldsResponse),
+            update: (item) => {
+                return new Promise((resolve) => {
+                    this.setState(
+                        {
+                            fields: this.state.fields.map((field) => {
+                                if (field.key === item._id) {
+                                    return {...field, value: stripSystemId(item)};
+                                } else {
+                                    return field;
+                                }
+                            }),
+                        },
+                        () => {
+                            resolve(item);
+                        },
+                    );
+                });
+            },
+            create: (item) => {
+                return new Promise((resolve) => {
+                    const itemWithId: IContentProfileFieldWithSystemId = {
+                        ...item,
+                        _id: this.generateKey(),
+                    };
+
+                    this.setState(
+                        {
                             fields: [
                                 {
                                     key: this.generateKey(),
-                                    value: {id: '', label: '', type: 'textSingleLine', required: false},
+                                    value: item,
                                 },
                                 ...fields,
                             ],
-                        });
-                    }}
-                />
+                        },
+                        () => {
+                            resolve(itemWithId);
+                        },
+                    );
+                });
+            },
+            delete: (item) => {
+                return new Promise((resolve) => {
+                    this.setState(
+                        {
+                            fields: this.state.fields.filter(({key}) => key !== item._id),
+                        },
+                        () => {
+                            resolve();
+                        },
+                    );
+                });
+            },
+            refresh: () => Promise.resolve(fieldsResponse),
+            sort: () => Promise.resolve(fieldsResponse),
+            removeFilter: () => Promise.resolve(fieldsResponse),
+            goToPage: () => Promise.resolve(fieldsResponse),
+            _items: fieldsResponse._items,
+            _meta: fieldsResponse._meta,
+        };
 
-                <FieldsSortable
-                    fields={fields}
-                    profileType={IContentProfileTypeNonText[this.props.profileType]}
-                    onChange={(_fields) => {
-                        this.setState({fields: _fields});
-                    }}
-                    onSortEnd={({oldIndex, newIndex}) => {
-                        this.setState({
-                            fields: arrayMove(fields, oldIndex, newIndex),
-                        });
-                    }}
+        return (
+            <div>
+                <GenericListPageComponent
+                    formConfig={formConfig}
+                    defaultSortOption={{field: 'name', direction: 'ascending'}}
+                    renderRow={renderRow}
+                    disallowFiltering
+                    items={crudManagerForContentProfileFields}
                 />
             </div>
         );
