@@ -323,7 +323,7 @@ export class GenericListPageComponent<T extends IItemWithId>
         const pageSize = this.props.items._meta.max_results;
         const pageCount = Math.ceil(totalResults / pageSize);
 
-        const {formConfig, renderRow} = this.props;
+        const {formConfig, ItemComponent} = this.props;
 
         const formConfigForFilters = getFormGroupForFiltering(formConfig);
         const fieldsList = getFormFieldsRecursive(formConfig.form);
@@ -360,7 +360,7 @@ export class GenericListPageComponent<T extends IItemWithId>
                     >
                         {
                             this.props.items._items.map(
-                                (item) => renderRow(item._id, item, this),
+                                (item) => <ItemComponent key={item._id} item={item} page={this} />,
                             )
                         }
                     </div>

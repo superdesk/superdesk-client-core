@@ -672,12 +672,17 @@ declare module 'superdesk-api' {
 
     // GENERIC FORM
 
+    export interface IGenericFormItemComponent<T> {
+        item: T;
+        page: IGenericListPageComponent<T>;
+    }
+
     export interface IPropsGenericForm<T extends IItemWithId, TBase = Omit<T, keyof IItemWithId>> {
         formConfig: IFormGroup;
         defaultSortOption: ISortOption;
         additionalSortOptions?: Array<{label: string; field: string;}>;
         defaultFilters?: Partial<TBase>;
-        renderRow(key: string, item: T, page: IGenericListPageComponent<T>): JSX.Element;
+        ItemComponent: React.ComponentType<IGenericFormItemComponent>;
 
         // Allows initializing a new item with some fields already filled.
         getNewItemTemplate?(page: IGenericListPageComponent<T>): Partial<TBase>;

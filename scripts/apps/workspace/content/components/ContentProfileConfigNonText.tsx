@@ -9,6 +9,7 @@ import {
     ICrudManager,
     ICrudManagerResponse,
     IItemWithId,
+    IGenericFormItemComponent,
 } from 'superdesk-api';
 
 import {gettext} from 'core/utils';
@@ -184,16 +185,18 @@ export function getAttributesForFormFieldType(type: IContentProfileFieldTypes): 
     }
 }
 
-const renderRow = (
-    key: string,
-    item: IContentProfileFieldWithSystemId,
-    page: GenericListPageComponent<IContentProfileFieldWithSystemId>,
-) => (
-    <div key={item._id}>
-        {item.label}
-        <button onClick={() => page.startEditing(item._id)}>{gettext('Edit')}</button>
-    </div>
-);
+class ItemComponent extends React.PureComponent<IGenericFormItemComponent<IContentProfileFieldWithSystemId>> {
+    render() {
+        const {item, page} = this.props;
+
+        return (
+            <div>
+                {item.label}
+                <button onClick={() => page.startEditing(item._id)}>{gettext('Edit')}</button>
+            </div>
+        );
+    }
+}
 
 type IContentProfileFieldWithSystemId = IContentProfileField & IItemWithId;
 
@@ -306,7 +309,7 @@ export class ContentProfileConfigNonText extends React.Component<IProps, IState>
                 <GenericListPageComponent
                     formConfig={formConfig}
                     defaultSortOption={{field: 'name', direction: 'ascending'}}
-                    renderRow={renderRow}
+                    ItemComponent={ItemComponent}
                     disallowFiltering
                     items={crudManagerForContentProfileFields}
                 />
