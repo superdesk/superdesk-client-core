@@ -4,7 +4,7 @@ import * as React from 'react';
 import {
     IFormGroup,
     ISuperdesk,
-    IGenericFormItemComponent,
+    IPropsGenericFormItemComponent,
 } from 'superdesk-api';
 import {IKnowledgeBaseItem, IKnowledgeBaseItemBase} from './interfaces';
 import {getFields} from './GetFields';
@@ -40,7 +40,7 @@ export function getAnnotationsLibraryPage(superdesk: ISuperdesk) {
             const AnnotationsLibraryPageComponent =
                 getGenericListPageComponent<IKnowledgeBaseItem>('concept_items', formConfig);
 
-            class ItemComponent extends React.PureComponent<IGenericFormItemComponent<IKnowledgeBaseItem>> {
+            class ItemComponent extends React.PureComponent<IPropsGenericFormItemComponent<IKnowledgeBaseItem>> {
                 render() {
                     const {item, page} = this.props;
 

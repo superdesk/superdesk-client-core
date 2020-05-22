@@ -5,7 +5,7 @@ import {getGenericListPageComponent} from 'core/ui/components/ListPage/generic-l
 import {ListItemColumn, ListItemActionsMenu, ListItem} from 'core/components/ListItem';
 import {getFormFieldPreviewComponent} from 'core/ui/components/generic-form/form-field';
 import {IInternalDestination} from 'superdesk-interfaces/InternalDestination';
-import {IFormField, IFormGroup, IGenericFormItemComponent} from 'superdesk-api';
+import {IFormField, IFormGroup, IPropsGenericFormItemComponent} from 'superdesk-api';
 import {FormFieldType} from 'core/ui/components/generic-form/interfaces/form';
 import {gettext} from 'core/utils';
 
@@ -73,7 +73,7 @@ function getSendAfterScheduleField(): IFormField {
     };
 }
 
-class ItemComponent extends React.PureComponent<IGenericFormItemComponent<IInternalDestination>> {
+class ItemComponent extends React.PureComponent<IPropsGenericFormItemComponent<IInternalDestination>> {
     render() {
         const {item, page} = this.props;
 

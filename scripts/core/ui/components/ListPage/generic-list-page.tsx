@@ -52,6 +52,19 @@ export interface IPropsConnected<T extends IItemWithId> {
     items?: ICrudManager<T>;
 }
 
+class DefaultItemsContainerComponent extends React.PureComponent {
+    render() {
+        return (
+            <div
+                data-test-id="list-page--items"
+                className="sd-list-item-group sd-list-item-group--space-between-items"
+            >
+                {this.props.children}
+            </div>
+        );
+    }
+}
+
 export class GenericListPageComponent<T extends IItemWithId>
     extends React.Component<IPropsGenericForm<T> & IPropsConnected<T>, IState<T>>
     implements IGenericListPageComponent<T>
@@ -324,6 +337,7 @@ export class GenericListPageComponent<T extends IItemWithId>
         const pageCount = Math.ceil(totalResults / pageSize);
 
         const {formConfig, ItemComponent} = this.props;
+        const ItemsContainerComponent = this.props.ItemsContainerComponent ?? DefaultItemsContainerComponent;
 
         const formConfigForFilters = getFormGroupForFiltering(formConfig);
         const fieldsList = getFormFieldsRecursive(formConfig.form);
@@ -354,16 +368,13 @@ export class GenericListPageComponent<T extends IItemWithId>
                 }
             } else {
                 return (
-                    <div
-                        data-test-id="list-page--items"
-                        className="sd-list-item-group sd-list-item-group--space-between-items"
-                    >
+                    <ItemsContainerComponent>
                         {
                             this.props.items._items.map(
-                                (item) => <ItemComponent key={item._id} item={item} page={this} />,
+                                (item, i) => <ItemComponent key={item._id} item={item} page={this} index={i} />,
                             )
                         }
-                    </div>
+                    </ItemsContainerComponent>
                 );
             }
         };

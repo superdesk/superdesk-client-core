@@ -9,7 +9,7 @@ import {
     ICrudManager,
     ICrudManagerResponse,
     IItemWithId,
-    IGenericFormItemComponent,
+    IPropsGenericFormItemComponent,
 } from 'superdesk-api';
 
 import {gettext} from 'core/utils';
@@ -17,6 +17,8 @@ import {FormFieldType} from 'core/ui/components/generic-form/interfaces/form';
 import {IContentProfileTypeNonText} from '../controllers/ContentProfilesController';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {GenericListPageComponent} from 'core/ui/components/ListPage/generic-list-page';
+import {SortableContainer, SortableElement} from 'react-sortable-hoc';
+import arrayMove from 'array-move';
 
 interface IProps {
     profile: IContentProfileNonText;
@@ -185,18 +187,46 @@ export function getAttributesForFormFieldType(type: IContentProfileFieldTypes): 
     }
 }
 
-class ItemComponent extends React.PureComponent<IGenericFormItemComponent<IContentProfileFieldWithSystemId>> {
+class ItemBase extends React.PureComponent<IPropsGenericFormItemComponent<IContentProfileFieldWithSystemId>> {
     render() {
         const {item, page} = this.props;
 
         return (
-            <div>
+            <div style={{border: '1px solid blue', marginTop: 10, marginBottom: 10, zIndex: 1051}}>
                 {item.label}
                 <button onClick={() => page.startEditing(item._id)}>{gettext('Edit')}</button>
             </div>
         );
     }
 }
+
+const ItemBaseSortable = SortableElement(ItemBase);
+
+class ItemComponent extends React.PureComponent<IPropsGenericFormItemComponent<IContentProfileFieldWithSystemId>> {
+    render() {
+        const {item, page, index} = this.props;
+
+        return (
+            <ItemBaseSortable
+                item={item}
+                page={page}
+                index={index}
+            />
+        );
+    }
+}
+
+class ItemsContainerBase extends React.PureComponent {
+    render() {
+        return (
+            <div style={{background: 'beige', marginLeft: -20, marginRight: -20}}>
+                {this.props.children}
+            </div>
+        );
+    }
+}
+
+const ItemsContainerBaseSortable = SortableContainer(ItemsContainerBase);
 
 type IContentProfileFieldWithSystemId = IContentProfileField & IItemWithId;
 
@@ -211,6 +241,7 @@ function stripSystemId(item: IContentProfileFieldWithSystemId): IContentProfileF
 export class ContentProfileConfigNonText extends React.Component<IProps, IState> {
     private generateKey: () => string;
     private lastKey: number;
+    private ItemsContainerComponent: React.ComponentType;
 
     constructor(props: IProps) {
         super(props);
@@ -223,6 +254,24 @@ export class ContentProfileConfigNonText extends React.Component<IProps, IState>
                 (field) => ({key: this.generateKey(), value: field}),
             ),
         };
+
+        const onSortEnd = ({oldIndex, newIndex}) => {
+            this.setState({
+                fields: arrayMove(this.state.fields, oldIndex, newIndex),
+            });
+        };
+
+        class ItemsContainerComponent extends React.PureComponent {
+            render() {
+                return (
+                    <ItemsContainerBaseSortable onSortEnd={onSortEnd}>
+                        {this.props.children}
+                    </ItemsContainerBaseSortable>
+                );
+            }
+        }
+
+        this.ItemsContainerComponent = ItemsContainerComponent;
     }
 
     componentDidUpdate() {
@@ -310,6 +359,7 @@ export class ContentProfileConfigNonText extends React.Component<IProps, IState>
                     formConfig={formConfig}
                     defaultSortOption={{field: 'name', direction: 'ascending'}}
                     ItemComponent={ItemComponent}
+                    ItemsContainerComponent={this.ItemsContainerComponent}
                     disallowFiltering
                     items={crudManagerForContentProfileFields}
                 />
