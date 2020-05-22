@@ -34,6 +34,7 @@ import {
     ICrudManager,
     IFormGroup,
     IBaseRestApiResponse,
+    ISortOption,
 } from 'superdesk-api';
 import {gettext} from 'core/utils';
 import ng from 'core/services/ng';
@@ -325,7 +326,7 @@ export class GenericListPageComponent<T extends IItemWithId>
     componentDidMount() {
         const filters = this.props.defaultFilters ? this.validateFilters(this.props.defaultFilters) : {};
 
-        this.props.items.read(1, this.props.defaultSortOption, filters);
+        this.props.items.read(1, this.props.items.activeSortOption, filters);
 
         if (this.props.refreshOnEvents != null) {
             this.props.refreshOnEvents.forEach((eventName) => {
@@ -644,11 +645,13 @@ export class GenericListPageComponent<T extends IItemWithId>
 export const getGenericListPageComponent = <T extends IBaseRestApiResponse>(
     resource: string,
     formConfig: IFormGroup,
+    defaultSortOption?: ISortOption,
 ) => {
     var Component = connectCrudManager<IPropsGenericForm<T>, IPropsConnected<T>, T>(
         GenericListPageComponent,
         'items',
         resource,
+        defaultSortOption,
         (filters: IFormGroup) => {
             const formConfigForFilters = getFormGroupForFiltering(formConfig);
             const fieldTypesLookup = getFormFieldsFlat(formConfigForFilters)

@@ -212,6 +212,7 @@ export function connectCrudManager<Props, PropsToConnect, Entity extends IBaseRe
     WrappedComponent, // : React.ComponentType<Props & PropsToConnect>
     name: string,
     endpoint: string,
+    defaultSortOption?: ISortOption,
     formatFiltersForServer?: (filters: ICrudManagerFilters) => ICrudManagerFilters,
 ): React.ComponentType<Props> {
     const component = class extends React.Component<Props, ICrudManagerState<Entity>>
@@ -226,7 +227,7 @@ export function connectCrudManager<Props, PropsToConnect, Entity extends IBaseRe
             this.state = {
                 _items: null,
                 _meta: null,
-                activeSortOption: null,
+                activeSortOption: defaultSortOption ?? null,
                 activeFilters: {},
             };
 

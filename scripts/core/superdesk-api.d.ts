@@ -680,7 +680,6 @@ declare module 'superdesk-api' {
 
     export interface IPropsGenericForm<T extends IItemWithId, TBase = Omit<T, keyof IItemWithId>> {
         formConfig: IFormGroup;
-        defaultSortOption?: ISortOption;
         additionalSortOptions?: Array<{label: string; field: string;}>;
         defaultFilters?: Partial<TBase>;
         ItemComponent: React.ComponentType<IPropsGenericFormItemComponent<T>>;
@@ -1048,6 +1047,7 @@ declare module 'superdesk-api' {
                 WrappedComponent: React.ComponentType<Props & PropsToConnect>,
                 name: string,
                 endpoint: string,
+                defaultSortOption?: ISortOption,
                 formatFiltersForServer?: (filters: ICrudManagerFilters) => ICrudManagerFilters,
             ): React.ComponentType<Props>;
             ListItem: React.ComponentType<IListItemProps>;
