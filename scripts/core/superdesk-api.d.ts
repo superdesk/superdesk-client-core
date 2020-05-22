@@ -766,7 +766,7 @@ declare module 'superdesk-api' {
             filterValues?: ICrudManagerFilters,
         ): Promise<ICrudManagerResponse<Entity>>;
         update(item: Entity): Promise<Entity>;
-        create(item: Entity): Promise<Entity>;
+        create(item: Omit<Entity, '_id'>): Promise<Entity>;
         delete(item: Entity): Promise<void>;
         refresh(): Promise<ICrudManagerResponse<Entity>>;
         sort(nextSortOption: ISortOption): Promise<ICrudManagerResponse<Entity>>;
