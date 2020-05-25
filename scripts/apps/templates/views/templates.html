@@ -44,6 +44,10 @@
                       <li>
                           <h4 class="with-value">{{ :: 'Template type' | translate }} <span class="value-label">{{ template.template_type | translate }}</span></h4>
                       </li>
+                      <li ng-if="isPrivate(template)">
+                          <h4>{{ :: 'Owner' | translate }}</h4>
+                          <span>{{ getTemplateOwner(template) }}</span>
+                      </li>
                       <li ng-if="getTemplateDesks(template)">
                           <h4>{{ :: 'Desk(s)' | translate }}</h4>
                           <span>{{getTemplateDesks(template)}}</span>
