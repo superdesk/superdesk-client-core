@@ -9,41 +9,43 @@ import {
     SidePanelContent,
     SidePanelContentBlock,
 } from 'core/components/SidePanel';
-import {connectServices} from 'core/helpers/ReactRenderAsync';
 import {FormViewEdit} from 'core/ui/components/generic-form/from-group';
 import {IFormGroup} from 'superdesk-api';
 import {isHttpApiError} from 'core/helpers/network';
 import {gettext} from 'core/utils';
+import ng from 'core/services/ng';
 
-interface IProps {
+interface IProps<T> {
     operation: 'editing' | 'creation';
     editMode: boolean;
     formConfig: IFormGroup;
-    item: {[key: string]: any};
+    item: Partial<T>;
     onEditModeChange(nextValue: boolean): void;
     onClose: () => void;
     onCancel?: () => void;
     onSave: (nextItem) => Promise<any>;
-
-    // connected services
-    modal?: any;
 }
 
-interface IState {
-    nextItem: IProps['item'];
+interface IState<T> {
+    nextItem: IProps<T>['item'];
     issues: {[field: string]: Array<string>};
 }
 
-const getInitialState = (props: IProps) => ({
-    nextItem: props.item,
-    issues: {},
-});
+function getInitialState<T>(props: IProps<T>) {
+    return {
+        nextItem: props.item,
+        issues: {},
+    };
+}
 
-class GenericListPageItemViewEditComponent extends React.Component<IProps, IState> {
+export class GenericListPageItemViewEdit<T> extends React.Component<IProps<T>, IState<T>> {
     _mounted: boolean;
+    modal: any;
 
     constructor(props) {
         super(props);
+
+        this.modal = ng.get('modal');
 
         this.state = getInitialState(props);
 
@@ -66,7 +68,7 @@ class GenericListPageItemViewEditComponent extends React.Component<IProps, IStat
             this.props.onEditModeChange(true);
         });
     }
-    handleFieldChange(field: keyof IProps['item'], nextValue: valueof<IProps['item']>) {
+    handleFieldChange(field: string, nextValue: valueof<IProps<T>['item']>) {
         // using updater function to avoid race conditions
         this.setState((prevState) => ({
             ...prevState,
@@ -88,7 +90,7 @@ class GenericListPageItemViewEditComponent extends React.Component<IProps, IStat
         (
             this.isFormDirty() === false
                 ? Promise.resolve()
-                : this.props.modal.confirm(gettext('There are unsaved changes which will be discarded. Continue?'))
+                : this.modal.confirm(gettext('There are unsaved changes which will be discarded. Continue?'))
         ).then(cancelFn)
             .catch(() => {
             // do nothing
@@ -206,8 +208,3 @@ class GenericListPageItemViewEditComponent extends React.Component<IProps, IStat
         );
     }
 }
-
-export const GenericListPageItemViewEdit = connectServices<IProps>(
-    GenericListPageItemViewEditComponent,
-    ['modal'],
-);
