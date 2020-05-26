@@ -952,6 +952,7 @@ $bottom-bar-item-border-color-active: transparent;
         .item-list { position: static; max-height: 215px; }
     }
 }
+
 .terms-list {
     width: calc(100% - 30px);
     display: inline-block;
@@ -966,7 +967,6 @@ $bottom-bar-item-border-color-active: transparent;
         margin-right: 3px;
         margin-bottom: 3px;
         padding: 3px 12px;
-        cursor: pointer;
         border-radius: 12px;
         @include transition(color .2s);
         i {
@@ -978,14 +978,19 @@ $bottom-bar-item-border-color-active: transparent;
             @include opacity(0);
             @include transition(opacity .2s);
         }
-        &:hover {
-            text-align: center;
-            background-color: rgba(123,123,123,0.3);
-            color: rgba(123,123,123,0.5);
-            i {
-                @include opacity(85);
+        &:not([disabled]):not([data-disabled]) {
+            cursor: pointer;
+
+            &:hover {
+                text-align: center;
+                background-color: rgba(123,123,123,0.3);
+                color: rgba(123,123,123,0.5);
+                i {
+                    @include opacity(85);
+                }
             }
         }
+        
         label {
             display: inline;
             min-width: auto;
@@ -1449,7 +1454,7 @@ $bottom-bar-item-border-color-active: transparent;
         min-height: 18px;
     }
 
-    &:not(&--preview) {
+    &:not([disabled]):not(&--preview):not(.not-editable):not(&--no-click) {
         cursor: pointer;
     }
 
@@ -1466,17 +1471,6 @@ $bottom-bar-item-border-color-active: transparent;
         max-width: 100%;
         &:hover {
             cursor: pointer;
-        }
-    }
-
-    .not-editable {
-        &:hover {
-            cursor: auto;
-        }
-    }
-    &--no-click {
-        &:hover {
-            cursor: auto;
         }
     }
 
