@@ -1048,7 +1048,11 @@ declare module 'superdesk-api' {
         },
         components: {
             UserHtmlSingleLine: React.ComponentType<{html: string}>;
-            getGenericListPageComponent<T extends IBaseRestApiResponse>(resource: string, formConfig: IFormGroup): React.ComponentType<IPropsGenericForm<T>>;
+            getGenericListPageComponent<T extends IBaseRestApiResponse>(
+                resource: string,
+                formConfig: IFormGroup,
+                defaultSortOption?: ISortOption,
+            ): React.ComponentType<IPropsGenericForm<T>>;
             connectCrudManager<Props, PropsToConnect, Entity extends IBaseRestApiResponse>(
                 WrappedComponent: React.ComponentType<Props & PropsToConnect>,
                 name: string,

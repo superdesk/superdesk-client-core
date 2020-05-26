@@ -141,13 +141,16 @@ export class InternalDestinations extends React.Component {
         };
 
         const InternalDestinationsPageComponent =
-            getGenericListPageComponent<IInternalDestination>('internal_destinations', formConfig);
+            getGenericListPageComponent<IInternalDestination>(
+                'internal_destinations',
+                formConfig,
+                {field: 'name', direction: 'ascending'},
+            );
 
         return (
             <InternalDestinationsPageComponent
                 ItemComponent={ItemComponent}
                 formConfig={formConfig}
-                defaultSortOption={{field: 'name', direction: 'ascending'}}
                 fieldForSearch={getNameField()}
             />
         );

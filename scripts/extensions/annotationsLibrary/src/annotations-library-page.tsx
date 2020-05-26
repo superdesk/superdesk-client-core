@@ -38,7 +38,11 @@ export function getAnnotationsLibraryPage(superdesk: ISuperdesk) {
             };
 
             const AnnotationsLibraryPageComponent =
-                getGenericListPageComponent<IKnowledgeBaseItem>('concept_items', formConfig);
+                getGenericListPageComponent<IKnowledgeBaseItem>(
+                    'concept_items',
+                    formConfig,
+                    {field: 'name', direction: 'ascending'},
+                );
 
             class ItemComponent extends React.PureComponent<IPropsGenericFormItemComponent<IKnowledgeBaseItem>> {
                 render() {
@@ -82,7 +86,6 @@ export function getAnnotationsLibraryPage(superdesk: ISuperdesk) {
 
             return (
                 <AnnotationsLibraryPageComponent
-                    defaultSortOption={{field: 'name', direction: 'ascending'}}
                     formConfig={formConfig}
                     ItemComponent={ItemComponent}
                     getNewItemTemplate={(page) => {
