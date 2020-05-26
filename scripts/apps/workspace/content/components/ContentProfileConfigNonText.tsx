@@ -420,7 +420,7 @@ export class ContentProfileConfigNonText extends React.Component<IProps, IState>
                 }
 
                 <GenericListPageComponent
-                    formConfig={formConfig}
+                    getFormConfig={() => formConfig}
                     ItemComponent={ItemComponent}
                     ItemsContainerComponent={this.ItemsContainerComponent}
                     items={crudManagerForContentProfileFields}

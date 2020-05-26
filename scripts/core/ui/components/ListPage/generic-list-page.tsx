@@ -40,12 +40,12 @@ import {gettext} from 'core/utils';
 import ng from 'core/services/ng';
 import {OnlyWithChildren} from '../only-with-children';
 
-interface IState<T extends IItemWithId, TBase = Omit<T, keyof IItemWithId>> {
+interface IState<T extends IItemWithId> {
     previewItemId: string | null;
     editItemId: string | null;
-    newItem: {[key: string]: any} | null;
+    newItem: Partial<T> | null;
     filtersOpen: boolean;
-    filterValues: Partial<TBase>;
+    filterValues: Partial<T>;
     loading: boolean;
     refetchDataScheduled: boolean;
 }
@@ -316,7 +316,7 @@ export class GenericListPageComponent<T extends IItemWithId>
         } else {
             this.setState({
                 newItem: {
-                    ...getInitialValues(this.props.formConfig),
+                    ...getInitialValues(this.props.getFormConfig()),
                     ...this.props.getNewItemTemplate == null ? {} : this.props.getNewItemTemplate(this),
                 },
                 previewItemId: null,
@@ -355,11 +355,11 @@ export class GenericListPageComponent<T extends IItemWithId>
         const pageSize = items._meta.max_results;
         const pageCount = Math.ceil(totalResults / pageSize);
 
-        const {formConfig, ItemComponent} = this.props;
+        const {getFormConfig, ItemComponent} = this.props;
         const ItemsContainerComponent = this.props.ItemsContainerComponent ?? DefaultItemsContainerComponent;
 
-        const formConfigForFilters = getFormGroupForFiltering(formConfig);
-        const fieldsList = getFormFieldsRecursive(formConfig.form);
+        const formConfigForFilters = getFormGroupForFiltering(getFormConfig(this.state.filterValues));
+        const fieldsList = getFormFieldsRecursive(getFormConfig().form);
 
         const sortOptions: Array<ISortFields> = [
             ...fieldsList.map(({label, field}) => ({label, field})),
@@ -574,7 +574,8 @@ export class GenericListPageComponent<T extends IItemWithId>
                                 <GenericListPageItemViewEdit
                                     key="new-item"
                                     operation="creation"
-                                    formConfig={formConfig}
+                                    item={this.state.newItem}
+                                    formConfig={getFormConfig(this.state.newItem)}
                                     editMode={true}
                                     onEditModeChange={() => {
                                         this.setState((prevState) => ({
@@ -582,7 +583,6 @@ export class GenericListPageComponent<T extends IItemWithId>
                                             newItem: null,
                                         }));
                                     }}
-                                    item={this.state.newItem}
                                     onSave={(item: T) => items.create(item).then((res) => {
                                         this.notify.success(gettext('The item has been created.'));
                                         this.closeNewItemForm();
@@ -592,49 +592,53 @@ export class GenericListPageComponent<T extends IItemWithId>
                                     onCancel={this.closeNewItemForm}
                                 />
                             </PageContainerItem>
-                        ) : this.state.editItemId != null ? (
-                            <PageContainerItem data-test-id="list-page--view-edit">
-                                <GenericListPageItemViewEdit
-                                    key={'edit' + this.state.editItemId}
-                                    editMode={true}
-                                    onEditModeChange={() => {
-                                        this.setState((prevState) => ({
-                                            ...prevState,
-                                            editItemId: null,
-                                        }));
-                                    }}
-                                    operation="editing"
-                                    formConfig={formConfig}
-                                    item={
-                                        items._items.find(({_id}) => _id === this.state.editItemId)
-                                    }
-                                    onSave={(nextItem) => items.update(nextItem).then(() => {
-                                        this.notify.success(gettext('The item has been updated.'));
-                                    })}
-                                    onClose={this.closePreview}
-                                />
-                            </PageContainerItem>
-                        ) : this.state.previewItemId != null ? (
-                            <PageContainerItem data-test-id="list-page--view-edit">
-                                <GenericListPageItemViewEdit
-                                    key={'preview' + this.state.previewItemId}
-                                    editMode={false}
-                                    onEditModeChange={() => {
-                                        this.setState((prevState) => ({
-                                            ...prevState,
-                                            editItemId: prevState.previewItemId,
-                                        }));
-                                    }}
-                                    operation="editing"
-                                    formConfig={formConfig}
-                                    item={
-                                        items._items.find(({_id}) => _id === this.state.previewItemId)
-                                    }
-                                    onSave={(nextItem) => items.update(nextItem)}
-                                    onClose={this.closePreview}
-                                />
-                            </PageContainerItem>
-                        ) : null
+                        ) : this.state.editItemId != null ? (() => {
+                            const item = items._items.find(({_id}) => _id === this.state.editItemId);
+
+                            return (
+                                <PageContainerItem data-test-id="list-page--view-edit">
+                                    <GenericListPageItemViewEdit
+                                        key={'edit' + this.state.editItemId}
+                                        operation="editing"
+                                        editMode={true}
+                                        onEditModeChange={() => {
+                                            this.setState((prevState) => ({
+                                                ...prevState,
+                                                editItemId: null,
+                                            }));
+                                        }}
+                                        item={item}
+                                        formConfig={getFormConfig(item)}
+                                        onSave={(nextItem) => items.update(nextItem).then(() => {
+                                            this.notify.success(gettext('The item has been updated.'));
+                                        })}
+                                        onClose={this.closePreview}
+                                    />
+                                </PageContainerItem>
+                            );
+                        })() : this.state.previewItemId != null ? (() => {
+                            const item = items._items.find(({_id}) => _id === this.state.previewItemId);
+
+                            return (
+                                <PageContainerItem data-test-id="list-page--view-edit">
+                                    <GenericListPageItemViewEdit
+                                        key={'preview' + this.state.previewItemId}
+                                        operation="editing"
+                                        editMode={false}
+                                        onEditModeChange={() => {
+                                            this.setState((prevState) => ({
+                                                ...prevState,
+                                                editItemId: prevState.previewItemId,
+                                            }));
+                                        }}
+                                        item={item}
+                                        formConfig={getFormConfig(item)}
+                                        onSave={(nextItem) => items.update(nextItem)}
+                                        onClose={this.closePreview}
+                                    />
+                                </PageContainerItem>
+                            );
+                        })() : null
                     }
                 </PageContainer>
             </div>

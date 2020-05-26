@@ -150,7 +150,7 @@ export class InternalDestinations extends React.Component {
         return (
             <InternalDestinationsPageComponent
                 ItemComponent={ItemComponent}
-                formConfig={formConfig}
+                getFormConfig={() => formConfig}
                 fieldForSearch={getNameField()}
             />
         );

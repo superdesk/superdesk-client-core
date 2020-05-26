@@ -86,7 +86,7 @@ export function getAnnotationsLibraryPage(superdesk: ISuperdesk) {
 
             return (
                 <AnnotationsLibraryPageComponent
-                    formConfig={formConfig}
+                    getFormConfig={() => formConfig}
                     ItemComponent={ItemComponent}
                     getNewItemTemplate={(page) => {
                         const baseTemplate: Partial<IKnowledgeBaseItemBase> = {
