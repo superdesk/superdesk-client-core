@@ -61,7 +61,9 @@ function getLabelForSection(section: IContentProfileSection) {
     }
 }
 
-function getCommonContentProfileConfig(): Array<IFormField> {
+function getCommonContentProfileConfig(
+    field: Partial<IContentProfileFieldWithSystemId> | undefined,
+): Array<IFormField | IFormGroup> {
     const idField: IFormField = {
         label: gettext('ID'),
         type: FormFieldType.textSingleLine,
@@ -133,10 +135,26 @@ function getCommonContentProfileConfig(): Array<IFormField> {
         required: false,
     };
 
-    return [idField, labelField, sectionField, sdWidth, fieldType, requiredField];
+    const fieldTypeGroup: IFormGroup = {
+        type: 'inline',
+        direction: 'vertical',
+        form: [
+            fieldType,
+            ...(field?.type == null ? [] : getAttributesForFormFieldType(IContentProfileFieldTypes[field.type])),
+        ],
+    };
+
+    return [
+        idField,
+        labelField,
+        sectionField,
+        sdWidth,
+        fieldTypeGroup,
+        requiredField,
+    ];
 }
 
-function getImageFormConfig(): IFormGroup {
+function getImageFormConfig(field: Partial<IContentProfileFieldWithSystemId> | undefined): IFormGroup {
     const displayInMediaEditor: IFormField = {
         label: gettext('Display in media editor'),
         type: FormFieldType.checkbox,
@@ -147,28 +165,31 @@ function getImageFormConfig(): IFormGroup {
     const formConfig: IFormGroup = {
         direction: 'vertical',
         type: 'inline',
-        form: [...getCommonContentProfileConfig(), displayInMediaEditor],
+        form: [...getCommonContentProfileConfig(field), displayInMediaEditor],
     };
 
     return formConfig;
 }
 
-function getVideoFormConfig(): IFormGroup {
+function getVideoFormConfig(field: Partial<IContentProfileFieldWithSystemId>): IFormGroup {
     const formConfig: IFormGroup = {
         direction: 'vertical',
         type: 'inline',
-        form: [...getCommonContentProfileConfig()],
+        form: [...getCommonContentProfileConfig(field)],
     };
 
     return formConfig;
 }
 
-function getFormConfig(type: IContentProfileTypeNonText): IFormGroup {
+function getFormConfig(
+    type: IContentProfileTypeNonText,
+    field: Partial<IContentProfileFieldWithSystemId> | undefined,
+): IFormGroup {
     switch (type) {
     case IContentProfileTypeNonText.image:
-        return getImageFormConfig();
+        return getImageFormConfig(field);
     case IContentProfileTypeNonText.video:
-        return getVideoFormConfig();
+        return getVideoFormConfig(field);
     default:
         return assertNever(type);
     }
@@ -192,7 +213,7 @@ function getAttributesForTextSingleLine(): Array<IFormField> {
     return [minLengthField, maxLengthField];
 }
 
-export function getAttributesForFormFieldType(type: IContentProfileFieldTypes): Array<IFormField> {
+function getAttributesForFormFieldType(type: IContentProfileFieldTypes): Array<IFormField> {
     switch (type) {
     case IContentProfileFieldTypes.textSingleLine:
         return getAttributesForTextSingleLine();
@@ -333,8 +354,6 @@ export class ContentProfileConfigNonText extends React.Component<IProps, IState>
         const {activeTab} = this.state;
         const fields = this.state.fields[this.state.activeTab];
 
-        const formConfig = getFormConfig(IContentProfileTypeNonText[this.props.profileType]);
-
         const fieldsResponse: ICrudManagerResponse<IContentProfileFieldWithSystemId> = {
             _items: fields.map(({key, value}) => ({...value, _id: key})),
             _meta: {total: fields.length, page: 1, max_results: fields.length},
@@ -420,7 +439,7 @@ export class ContentProfileConfigNonText extends React.Component<IProps, IState>
                 }
 
                 <GenericListPageComponent
-                    getFormConfig={() => formConfig}
+                    getFormConfig={(item) => getFormConfig(IContentProfileTypeNonText[this.props.profileType], item)}
                     ItemComponent={ItemComponent}
                     ItemsContainerComponent={this.ItemsContainerComponent}
                     items={crudManagerForContentProfileFields}
