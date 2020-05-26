@@ -384,7 +384,7 @@ angular.module('superdesk.apps.authoring', [
                 group: 'corrections',
                 controller: ['data', 'authoringWorkspace', 'api',
                     (data, authoringWorkspace: AuthoringWorkspaceService, api) => {
-                        api.update('archive', data.item.archive_item, {state: 'in_progress'})
+                        api.update('archive', data.item.archive_item || data.item, {state: 'in_progress'})
                             .then((updated) =>
                                 authoringWorkspace.edit(updated));
                     },
