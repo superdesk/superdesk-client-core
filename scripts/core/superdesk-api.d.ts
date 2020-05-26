@@ -566,10 +566,16 @@ declare module 'superdesk-api' {
         number = 'number',
     }
 
+    export enum IContentProfileSection {
+        header = 'header',
+        content = 'content',
+    }
+
     export interface IContentProfileField {
         id: string;
         label: string;
         type: keyof typeof IContentProfileFieldTypes;
+        section: keyof typeof IContentProfileSection;
         required: boolean;
     }
 

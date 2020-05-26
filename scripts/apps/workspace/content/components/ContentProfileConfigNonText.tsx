@@ -19,6 +19,8 @@ import {assertNever} from 'core/helpers/typescript-helpers';
 import {GenericListPageComponent} from 'core/ui/components/ListPage/generic-list-page';
 import {SortableContainer, SortableElement} from 'react-sortable-hoc';
 import arrayMove from 'array-move';
+import {Button} from 'superdesk-ui-framework';
+import {groupBy} from 'lodash';
 
 interface IProps {
     profile: IContentProfileNonText;
@@ -26,7 +28,8 @@ interface IProps {
 }
 
 interface IState {
-    fields: IArrayKeyed<IContentProfileField>;
+    fields: {[key in IContentProfileSection]: IArrayKeyed<IContentProfileField>};
+    activeTab: keyof typeof IContentProfileSection;
 }
 
 // subset of FormFieldType
@@ -35,11 +38,30 @@ enum IContentProfileFieldTypes {
     number = 'number',
 }
 
+enum IContentProfileSection {
+    header = 'header',
+    content = 'content',
+}
+
 function getAllContentProfileFieldTypes(): Array<IContentProfileFieldTypes> {
     return Object.keys(IContentProfileFieldTypes).map((key) => IContentProfileFieldTypes[key]);
 }
 
-function getImageFormConfig(): IFormGroup {
+function getAllContentProfileSections(): Array<IContentProfileSection> {
+    return Object.keys(IContentProfileSection).map((key) => IContentProfileSection[key]);
+}
+
+function getLabelForSection(section: IContentProfileSection) {
+    if (section === IContentProfileSection.header) {
+        return gettext('Header');
+    } else if (section === IContentProfileSection.content) {
+        return gettext('Content');
+    } else {
+        return assertNever(section);
+    }
+}
+
+function getCommonContentProfileConfig(): Array<IFormField> {
     const idField: IFormField = {
         label: gettext('ID'),
         type: FormFieldType.textSingleLine,
@@ -51,6 +73,17 @@ function getImageFormConfig(): IFormGroup {
         label: gettext('Label'),
         type: FormFieldType.textSingleLine,
         field: 'label',
+        required: true,
+    };
+
+    const sectionField: IFormField = {
+        label: gettext('Section'),
+        type: FormFieldType.select,
+        component_parameters: {
+            items: getAllContentProfileSections()
+                .map((section) => ({id: section, label: getLabelForSection(section)})),
+        },
+        field: 'section',
         required: true,
     };
 
@@ -100,6 +133,10 @@ function getImageFormConfig(): IFormGroup {
         required: false,
     };
 
+    return [idField, labelField, sectionField, sdWidth, fieldType, requiredField];
+}
+
+function getImageFormConfig(): IFormGroup {
     const displayInMediaEditor: IFormField = {
         label: gettext('Display in media editor'),
         type: FormFieldType.checkbox,
@@ -110,38 +147,17 @@ function getImageFormConfig(): IFormGroup {
     const formConfig: IFormGroup = {
         direction: 'vertical',
         type: 'inline',
-        form: [labelField, idField, sdWidth, fieldType, requiredField, displayInMediaEditor],
+        form: [...getCommonContentProfileConfig(), displayInMediaEditor],
     };
 
     return formConfig;
 }
 
 function getVideoFormConfig(): IFormGroup {
-    const idField: IFormField = {
-        label: gettext('ID'),
-        type: FormFieldType.textSingleLine,
-        field: 'id',
-        required: true,
-    };
-
-    const labelField: IFormField = {
-        label: gettext('Label'),
-        type: FormFieldType.textSingleLine,
-        field: 'label',
-        required: true,
-    };
-
-    const requiredField: IFormField = {
-        label: gettext('Required'),
-        type: FormFieldType.checkbox,
-        field: 'required',
-        required: false,
-    };
-
     const formConfig: IFormGroup = {
         direction: 'vertical',
         type: 'inline',
-        form: [labelField, idField, requiredField],
+        form: [...getCommonContentProfileConfig()],
     };
 
     return formConfig;
@@ -195,6 +211,7 @@ class ItemBase extends React.PureComponent<IPropsGenericFormItemComponent<IConte
             <div style={{border: '1px solid blue', marginTop: 10, marginBottom: 10, zIndex: 1051}}>
                 {item.label}
                 <button onClick={() => page.startEditing(item._id)}>{gettext('Edit')}</button>
+                <button onClick={() => page.deleteItem(item)}>{gettext('Delete')}</button>
             </div>
         );
     }
@@ -249,16 +266,23 @@ export class ContentProfileConfigNonText extends React.Component<IProps, IState>
         this.lastKey = 0;
         this.generateKey = () => (++this.lastKey).toString();
 
+        // adding keys to items because they will be reordered and they don't have static IDs to be used as react keys
+        const fieldsKeyed = (props.profile.fields ?? []).map(
+            (field) => ({key: this.generateKey(), value: field}),
+        );
+
+        var grouped = groupBy(fieldsKeyed, (item) => item.value.section);
+
         this.state = {
-            fields: (props.profile.fields ?? []).map(
-                (field) => ({key: this.generateKey(), value: field}),
-            ),
+            fields: {
+                header: grouped[IContentProfileSection.header] ?? [],
+                content: grouped[IContentProfileSection.content] ?? [],
+            },
+            activeTab: getAllContentProfileSections()[0],
         };
 
         const onSortEnd = ({oldIndex, newIndex}) => {
-            this.setState({
-                fields: arrayMove(this.state.fields, oldIndex, newIndex),
-            });
+            this.updateCurrentFields((_fields) => arrayMove(_fields, oldIndex, newIndex));
         };
 
         class ItemsContainerComponent extends React.PureComponent {
@@ -272,14 +296,42 @@ export class ContentProfileConfigNonText extends React.Component<IProps, IState>
         }
 
         this.ItemsContainerComponent = ItemsContainerComponent;
+
+        this.updateCurrentFields = this.updateCurrentFields.bind(this);
+    }
+
+    updateCurrentFields(
+        fn: (items: IArrayKeyed<IContentProfileField>) => IArrayKeyed<IContentProfileField>,
+        callback?: () => void,
+    ) {
+        this.setState(
+            {
+                fields: {
+                    ...this.state.fields,
+                    [this.state.activeTab]: fn(this.state.fields[this.state.activeTab]),
+                },
+            },
+            () => {
+                if (callback != null) {
+                    callback();
+                }
+            },
+        );
     }
 
     componentDidUpdate() {
-        this.props.profile.fields = this.state.fields.map(({value}) => value);
+        const initialArray: Array<IContentProfileField> = [];
+
+        this.props.profile.fields = getAllContentProfileSections()
+            .reduce<Array<IContentProfileField>>(
+                (acc, key) => [...acc, ...this.state.fields[key].map(({value}) => value)],
+                initialArray,
+            );
     }
 
     render() {
-        const {fields} = this.state;
+        const {activeTab} = this.state;
+        const fields = this.state.fields[this.state.activeTab];
 
         const formConfig = getFormConfig(IContentProfileTypeNonText[this.props.profileType]);
 
@@ -293,15 +345,15 @@ export class ContentProfileConfigNonText extends React.Component<IProps, IState>
             read: () => Promise.resolve(fieldsResponse),
             update: (item) => {
                 return new Promise((resolve) => {
-                    this.setState(
-                        {
-                            fields: this.state.fields.map((field) => {
+                    this.updateCurrentFields(
+                        (_fields) => {
+                            return _fields.map((field) => {
                                 if (field.key === item._id) {
                                     return {...field, value: stripSystemId(item)};
                                 } else {
                                     return field;
                                 }
-                            }),
+                            });
                         },
                         () => {
                             resolve(item);
@@ -316,16 +368,14 @@ export class ContentProfileConfigNonText extends React.Component<IProps, IState>
                         _id: this.generateKey(),
                     };
 
-                    this.setState(
-                        {
-                            fields: [
-                                {
-                                    key: this.generateKey(),
-                                    value: item,
-                                },
-                                ...fields,
-                            ],
-                        },
+                    this.updateCurrentFields(
+                        (_fields) => [
+                            {
+                                key: this.generateKey(),
+                                value: item,
+                            },
+                            ..._fields,
+                        ],
                         () => {
                             resolve(itemWithId);
                         },
@@ -334,10 +384,10 @@ export class ContentProfileConfigNonText extends React.Component<IProps, IState>
             },
             delete: (item) => {
                 return new Promise((resolve) => {
-                    this.setState(
-                        {
-                            fields: this.state.fields.filter(({key}) => key !== item._id),
-                        },
+                    this.updateCurrentFields(
+                        (_fields) => _fields.filter(
+                            ({key}) => key !== item._id,
+                        ),
                         () => {
                             resolve();
                         },
@@ -354,6 +404,21 @@ export class ContentProfileConfigNonText extends React.Component<IProps, IState>
 
         return (
             <div>
+                {
+                    getAllContentProfileSections().map((section) => {
+                        return (
+                            <Button
+                                key={section}
+                                text={getLabelForSection(section)}
+                                onClick={() => {
+                                    this.setState({activeTab: section});
+                                }}
+                                type={activeTab === section ? 'primary' : 'default'}
+                            />
+                        );
+                    })
+                }
+
                 <GenericListPageComponent
                     formConfig={formConfig}
                     ItemComponent={ItemComponent}
