@@ -51,7 +51,7 @@ interface IScope extends ng.IScope {
 }
 
 export function getReadOnlyLabel() {
-    return gettext('The field is read-only');
+    return gettext('This field is read-only');
 }
 
 /**
