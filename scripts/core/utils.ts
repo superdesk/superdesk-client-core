@@ -42,7 +42,7 @@ export const getSuperdeskType = (event, supportExternalFiles = true) =>
 export const gettext = (
     text: string,
     params: {[key: string]: string | number} = {},
-) => {
+): string => {
     if (!text) {
         return '';
     }
@@ -75,7 +75,7 @@ export const gettextPlural = (
     text: string,
     pluralText: string,
     params: {[key: string]: string | number} = {},
-) => {
+): string => {
     if (!text) {
         return '';
     }
