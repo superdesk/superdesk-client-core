@@ -18,7 +18,7 @@ import ng from 'core/services/ng';
 interface IProps<T> {
     operation: 'editing' | 'creation';
     editMode: boolean;
-    formConfig: IFormGroup;
+    getFormConfig(item?: Partial<T>): IFormGroup;
     item: Partial<T>;
     onEditModeChange(nextValue: boolean): void;
     onClose: () => void;
@@ -197,7 +197,7 @@ export class GenericListPageItemViewEdit<T> extends React.Component<IProps<T>, I
                     <SidePanelContentBlock>
                         <FormViewEdit
                             item={this.state.nextItem}
-                            formConfig={this.props.formConfig}
+                            formConfig={this.props.getFormConfig(this.state.nextItem)}
                             editMode={this.props.editMode}
                             issues={this.state.issues}
                             handleFieldChange={this.handleFieldChange}
