@@ -59,7 +59,7 @@ export class TextArea extends React.Component<any, any> {
         const {nativeOnChange, onChange, field, autoHeight, multiLine} = this.props;
 
         if (nativeOnChange) {
-            onChange(event);
+            onChange(event, field);
         } else {
             onChange(
                 field,
@@ -91,6 +91,7 @@ export class TextArea extends React.Component<any, any> {
 
         return (
             <textarea
+                style={{minHeight: '32px'}}
                 ref={(node) => this.dom.input = node}
                 className={classNames(
                     'sd-line-input__input',

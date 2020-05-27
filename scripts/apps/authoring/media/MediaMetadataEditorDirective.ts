@@ -21,6 +21,13 @@ export default function MediaMetadataEditorDirective(metadata, features, session
             scope.features = features;
             scope.metadata = metadata;
 
+            scope.handleInputChange = (event, field) => {
+                if (scope.item.hasOwnProperty(field)) {
+                    scope.item[field] = event.target.value;
+                    scope.$apply();
+                }
+            };
+
             // set default values
             scope.$watch('item', (item) => {
                 if (!item) {

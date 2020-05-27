@@ -3,20 +3,18 @@
     ng-repeat="field in fields track by field.field"
     data-test-id="media-metadata-editor"
 >
-    <sd-line-input
+    <sd-text-area-input
         ng-if="(!field.type && !field.cv) || (field.type === 'string' && !field.cv)"
-        ng-model="item[field.field]"
-        data-sync="true"
-        data-dark="dark"
-        data-boxed="boxed"
-        data-label="{{ field.label }}"
-        data-required="field.required"
-        data-disabled="isDisabled(field)"
-        data-onchange="onChange({key: field.field})"
-        data-onblur="onBlur()"
-        data-maxlength="field.maxlength"
-        data-placeholder="{{ placeholder[field.field] }}"
-        data-textarea="field.textarea"
+        field="field.field"
+        value="item[field.field]"
+        label="field.label"
+        on-change="handleInputChange"
+        native-on-change="true"
+        read-only=false
+        placeholder="placeholder[field.field]"
+        required="field.required"
+        boxed="true"
+        auto-height="true"
         data-test-id="{{'field--' + field.field}}"
     />
 

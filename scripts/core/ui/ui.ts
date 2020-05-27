@@ -8,6 +8,7 @@ import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/Autho
 import {appConfig} from 'appConfig';
 import {reactToAngular1} from 'superdesk-ui-framework';
 import {VideoComponent} from './components/video';
+import {TextAreaInput} from './components/Form';
 
 /**
  * Gives top shadow for scroll elements
@@ -1241,6 +1242,26 @@ export default angular.module('superdesk.core.ui', [
         reactToAngular1(
             VideoComponent,
             ['item'],
+        ),
+    )
+    .component('sdTextAreaInput',
+        reactToAngular1(
+            TextAreaInput,
+            [
+                'field',
+                'value',
+                'label',
+                'onChange',
+                'autoHeight',
+                'autoHeightTimeout',
+                'nativeOnChange',
+                'placeholder',
+                'readOnly',
+                'maxLength',
+                'onFocus',
+                'boxed',
+                'required',
+            ],
         ),
     )
 ;
