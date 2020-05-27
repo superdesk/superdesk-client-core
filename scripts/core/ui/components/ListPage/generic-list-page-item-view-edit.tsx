@@ -14,6 +14,7 @@ import {IFormGroup} from 'superdesk-api';
 import {isHttpApiError} from 'core/helpers/network';
 import {gettext} from 'core/utils';
 import ng from 'core/services/ng';
+import {getFormFieldsFlat} from '../generic-form/get-form-fields-flat';
 
 interface IProps<T> {
     operation: 'editing' | 'creation';
@@ -100,7 +101,28 @@ export class GenericListPageItemViewEdit<T> extends React.Component<IProps<T>, I
         return JSON.stringify(this.props.item) !== JSON.stringify(this.state.nextItem);
     }
     handleSave() {
-        this.props.onSave(this.state.nextItem).then(() => {
+        const formConfig = this.props.getFormConfig(this.state.nextItem);
+        const currentFieldsIds = getFormFieldsFlat(formConfig).map(({field}) => field).concat('_id');
+
+        /*
+            Form config is dynamic and can change during editing.
+            For example users can select a dropdown value
+            which would cause more fields specific to that option to appear or others to disappear.
+
+            There might be data in the state for fields which no longer exist in form config.
+            Only fields in form config at the time of saving will be sent.
+        */
+        const nextItemCleaned: Partial<T> = currentFieldsIds.reduce<Partial<T>>((acc, field) => {
+            const value = this.state.nextItem[field];
+
+            if (value != null) {
+                acc[field] = value;
+            }
+
+            return acc;
+        }, {});
+
+        this.props.onSave(nextItemCleaned).then(() => {
             if (this._mounted) {
                 this.setState({
                     issues: {},
