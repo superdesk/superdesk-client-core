@@ -249,6 +249,9 @@ class ItemBase extends React.PureComponent<IPropsGenericFormItemComponent<IConte
                 {item.label}
                 <button onClick={() => page.startEditing(item._id)}>{gettext('Edit')}</button>
                 <button onClick={() => page.deleteItem(item)}>{gettext('Delete')}</button>
+                {
+                    item.required === true ? (<strong>{gettext('required')}</strong>) : null
+                }
             </div>
         );
     }
