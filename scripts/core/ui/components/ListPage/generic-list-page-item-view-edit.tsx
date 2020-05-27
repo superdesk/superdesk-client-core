@@ -15,6 +15,7 @@ import {isHttpApiError} from 'core/helpers/network';
 import {gettext} from 'core/utils';
 import ng from 'core/services/ng';
 import {getFormFieldsFlat} from '../generic-form/get-form-fields-flat';
+import {hasValue} from '../generic-form/has-value';
 
 interface IProps<T> {
     operation: 'editing' | 'creation';
@@ -27,9 +28,13 @@ interface IProps<T> {
     onSave: (nextItem) => Promise<any>;
 }
 
+interface IIssues {
+    [field: string]: Array<string>;
+}
+
 interface IState<T> {
     nextItem: IProps<T>['item'];
-    issues: {[field: string]: Array<string>};
+    issues: IIssues;
 }
 
 function getInitialState<T>(props: IProps<T>) {
@@ -102,7 +107,8 @@ export class GenericListPageItemViewEdit<T> extends React.Component<IProps<T>, I
     }
     handleSave() {
         const formConfig = this.props.getFormConfig(this.state.nextItem);
-        const currentFieldsIds = getFormFieldsFlat(formConfig).map(({field}) => field).concat('_id');
+        const currentFields = getFormFieldsFlat(formConfig);
+        const currentFieldsIds = currentFields.map(({field}) => field).concat('_id');
 
         /*
             Form config is dynamic and can change during editing.
@@ -122,6 +128,24 @@ export class GenericListPageItemViewEdit<T> extends React.Component<IProps<T>, I
             return acc;
         }, {});
 
+        const issues = currentFields
+            .filter(
+                (fieldConfig) => hasValue(fieldConfig, nextItemCleaned[fieldConfig.field]) !== true,
+            )
+            .reduce<IIssues>((acc, fieldConfig) => {
+                acc[fieldConfig.field] = [gettext('Field is required')];
+
+                return acc;
+            }, {});
+
+        if (Object.keys(issues).length > 0) {
+            this.setState({
+                issues,
+            });
+
+            return;
+        }
+
         this.props.onSave(nextItemCleaned).then(() => {
             if (this._mounted) {
                 this.setState({
@@ -133,7 +157,7 @@ export class GenericListPageItemViewEdit<T> extends React.Component<IProps<T>, I
         })
             .catch((res) => {
                 if (isHttpApiError(res)) {
-                    let issues = {};
+                    let issues: IIssues = {};
 
                     for (let fieldName in res._issues) {
                         let issuesForField = [];
