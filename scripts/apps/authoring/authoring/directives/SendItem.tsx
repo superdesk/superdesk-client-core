@@ -92,10 +92,8 @@ export function SendItem($q,
             scope.destination_last = {send_to: null, publish: null, duplicate_to: null};
             scope.origItem = angular.extend({}, scope.item);
             scope.subscribersWithPreviewConfigured = [];
-            scope.sendPublishSchedule = appConfig.ui && appConfig.ui.sendPublishSchedule === false
-                ? appConfig.ui.sendPublishSchedule
-                : true;
-            scope.sendEmbargo = appConfig.ui && appConfig.ui.sendEmbargo === false ? appConfig.ui.sendEmbargo : true;
+            scope.sendPublishSchedule = appConfig?.ui?.sendPublishSchedule ?? true;
+            scope.sendEmbargo = appConfig?.ui?.sendEmbargo ?? true;
 
             // if authoring:publish extension point is not defined
             // then publish pane is single column
@@ -913,7 +911,11 @@ export function SendItem($q,
                     scope.currentUserAction === ctrl.userActions.duplicate_to) {
                     var lastDestination = scope.destination_last[scope.currentUserAction];
 
-                    if (lastDestination) {
+                    if (appConfig.ui && appConfig.ui.defaultStage != null) {
+                        stage = scope.stages
+                            .find((stg) => (stg.name.toLowerCase() === appConfig.ui.defaultStage.toLowerCase())
+                                && stg._id !== scope.item.task.stage) || stage;
+                    } else if (lastDestination) {
                         stage = _.find(scope.stages, {_id: lastDestination.stage});
                     } else if (scope.item.task && scope.item.task.stage) {
                         stage = _.find(scope.stages, {_id: scope.item.task.stage});
@@ -922,12 +924,6 @@ export function SendItem($q,
 
                 if (!stage) {
                     stage = _.find(scope.stages, {_id: scope.selectedDesk.incoming_stage});
-                }
-
-                if (appConfig.ui && appConfig.ui.defaultStage != null) {
-                    stage = scope.stages
-                        .find((stg) => (stg.name.toLowerCase() === appConfig.ui.defaultStage.toLowerCase())
-                        && stg._id !== scope.item.task.stage) || stage;
                 }
 
                 scope.selectedStage = stage;
