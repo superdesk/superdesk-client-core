@@ -92,6 +92,10 @@ export function SendItem($q,
             scope.destination_last = {send_to: null, publish: null, duplicate_to: null};
             scope.origItem = angular.extend({}, scope.item);
             scope.subscribersWithPreviewConfigured = [];
+            scope.sendPublishSchedule = appConfig.ui && appConfig.ui.sendPublishSchedule === false
+                ? appConfig.ui.sendPublishSchedule
+                : true;
+            scope.sendEmbargo = appConfig.ui && appConfig.ui.sendEmbargo === false ? appConfig.ui.sendEmbargo : true;
 
             // if authoring:publish extension point is not defined
             // then publish pane is single column
@@ -918,6 +922,12 @@ export function SendItem($q,
 
                 if (!stage) {
                     stage = _.find(scope.stages, {_id: scope.selectedDesk.incoming_stage});
+                }
+
+                if (appConfig.ui && appConfig.ui.defaultStage != null) {
+                    stage = scope.stages
+                        .find((stg) => (stg.name.toLowerCase() === appConfig.ui.defaultStage.toLowerCase())
+                        && stg._id !== scope.item.task.stage) || stage;
                 }
 
                 scope.selectedStage = stage;
