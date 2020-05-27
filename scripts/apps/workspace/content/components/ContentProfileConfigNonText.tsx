@@ -10,6 +10,7 @@ import {
     ICrudManagerResponse,
     IItemWithId,
     IPropsGenericFormItemComponent,
+    IFormGroupCollapsible,
 } from 'superdesk-api';
 
 import {gettext} from 'core/utils';
@@ -140,9 +141,24 @@ function getCommonContentProfileConfig(
         direction: 'vertical',
         form: [
             fieldType,
-            ...(field?.type == null ? [] : getAttributesForFormFieldType(IContentProfileFieldTypes[field.type])),
         ],
     };
+
+    const fieldOptionsGroupType: IFormGroupCollapsible = {label: gettext('Field options'), openByDefault: true};
+
+    const fieldOptions = field?.type == null
+        ? []
+        : getAttributesForFormFieldType(IContentProfileFieldTypes[field.type]);
+
+    if (fieldOptions.length > 0) {
+        const optionsGroup: IFormGroup = {
+            type: fieldOptionsGroupType,
+            direction: 'vertical',
+            form: fieldOptions,
+        };
+
+        fieldTypeGroup.form.push(optionsGroup);
+    }
 
     return [
         idField,
