@@ -25,6 +25,7 @@ import {Dropdown} from './dropdown';
 import {DropdownMenuDivider} from './dropdown-menu-divider';
 import {NavTabs} from './nav-tabs';
 import {DropZone} from './drop-zone';
+import {SimpleEditorComponent} from './SimpleEditor/SimpleEditorComponent';
 
 export {
     List,
@@ -54,4 +55,5 @@ export {
     DropdownMenuDivider,
     NavTabs,
     DropZone,
+    SimpleEditorComponent,
 };

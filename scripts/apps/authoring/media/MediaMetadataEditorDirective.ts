@@ -1,4 +1,5 @@
 import {get, isEmpty} from 'lodash';
+import {IProps as ISimpleEditorProps} from 'core/ui/components/SimpleEditor/SimpleEditorComponent';
 
 MediaMetadataEditorDirective.$inject = ['metadata', 'features', 'session'];
 export default function MediaMetadataEditorDirective(metadata, features, session) {
@@ -21,12 +22,16 @@ export default function MediaMetadataEditorDirective(metadata, features, session
             scope.features = features;
             scope.metadata = metadata;
 
-            scope.handleInputChange = (event, field) => {
+            scope.handleInputChange = (newValue: string, props: ISimpleEditorProps) => {
+                const {field} = props;
+
                 if (scope.item.hasOwnProperty(field)) {
-                    scope.item[field] = event.target.value;
-                    scope.$apply();
+                    scope.item[field] = newValue;
+                    scope.onChange(); // set parent dirty=true
+                    scope.$applyAsync(); // apply changes to scope
                 }
             };
+            scope.inputClasses = 'sd-line-input__input';
 
             // set default values
             scope.$watch('item', (item) => {
