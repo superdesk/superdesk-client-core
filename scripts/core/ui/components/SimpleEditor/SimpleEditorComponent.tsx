@@ -1,17 +1,23 @@
 import React from 'react';
-import {Editor, EditorState, ContentState, Modifier, SelectionState} from 'draft-js';
+import {
+    Editor,
+    EditorState,
+    ContentState,
+    Modifier,
+    SelectionState,
+} from 'draft-js';
 import './styles.scss';
 
 export interface IProps {
-    value: string
-    onChange: (newValue: string, props: IProps) => void
-    classes: string
-    field: string
+    value: string;
+    onChange: (newValue: string, props: IProps) => void;
+    classes: string;
+    field: string;
 }
 
 interface IState {
     editorState: EditorState;
-    hasFocus: boolean
+    hasFocus: boolean;
 }
 
 export class SimpleEditorComponent extends React.Component<IProps, IState> {
@@ -29,7 +35,9 @@ export class SimpleEditorComponent extends React.Component<IProps, IState> {
     }
 
     createStateFromValue(value: string) {
-        return EditorState.createWithContent(ContentState.createFromText(value || ''));
+        return EditorState.createWithContent(
+            ContentState.createFromText(value || ''),
+        );
     }
 
     updateStateWithValue(value: string) {
@@ -43,7 +51,11 @@ export class SimpleEditorComponent extends React.Component<IProps, IState> {
             focusKey: lastBlock.getKey(),
             focusOffset: lastBlock.getLength(),
         });
-        const newContent = Modifier.replaceText(currentContent, selectionAll, value);
+        const newContent = Modifier.replaceText(
+            currentContent,
+            selectionAll,
+            value,
+        );
 
         return EditorState.push(editorState, newContent, 'insert-characters');
     }
@@ -55,7 +67,10 @@ export class SimpleEditorComponent extends React.Component<IProps, IState> {
     }
 
     handleEditorChange(editorState: EditorState) {
-        if (this.state.editorState.getCurrentContent() !== editorState.getCurrentContent()) {
+        if (
+            this.state.editorState.getCurrentContent() !==
+            editorState.getCurrentContent()
+        ) {
             const value = editorState.getCurrentContent().getPlainText();
 
             this.props.onChange(value, this.props);
@@ -72,11 +87,19 @@ export class SimpleEditorComponent extends React.Component<IProps, IState> {
         this.setState({hasFocus: false});
     }
     render() {
-        const classes = `${this.props.classes} ${this.state.hasFocus ? 'focus' : ''}`;
+        const classes = `${this.props.classes} ${
+            this.state.hasFocus ? 'focus' : ''
+        }`;
 
-        return <div className={classes}>
-            <Editor onFocus={this.onFocus} onBlur={this.onBlur} editorState={this.state.editorState} onChange={this.handleEditorChange} />
-        </div>;
+        return (
+            <div className={classes}>
+                <Editor
+                    onFocus={this.onFocus}
+                    onBlur={this.onBlur}
+                    editorState={this.state.editorState}
+                    onChange={this.handleEditorChange}
+                />
+            </div>
+        );
     }
 }
-
