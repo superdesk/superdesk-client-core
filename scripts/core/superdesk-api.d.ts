@@ -678,6 +678,10 @@ declare module 'superdesk-api' {
 
     // GENERIC FORM
 
+    export interface IPropsGenericFormContainer<T> {
+        page: IGenericListPageComponent<T>;
+    }
+
     export interface IPropsGenericFormItemComponent<T> {
         item: T;
         page: IGenericListPageComponent<T>;
@@ -689,7 +693,7 @@ declare module 'superdesk-api' {
         additionalSortOptions?: Array<{label: string; field: string;}>;
         defaultFilters?: Partial<T>;
         ItemComponent: React.ComponentType<IPropsGenericFormItemComponent<T>>;
-        ItemsContainerComponent?: React.ComponentType;
+        ItemsContainerComponent?: React.ComponentType<IPropsGenericFormContainer<T>>;
 
         // Allows initializing a new item with some fields already filled.
         getNewItemTemplate?(page: IGenericListPageComponent<T>): Partial<T>;
@@ -855,7 +859,7 @@ declare module 'superdesk-api' {
         onClose?(): void;
     }
 
-    export interface IGenericListPageComponent<T extends IItemWithId, TBase = Omit<T, keyof IItemWithId>> {
+    export interface IGenericListPageComponent<T extends IItemWithId> {
         openPreview(id: string): void;
         startEditing(id: string): void;
         closePreview(): void;
@@ -864,7 +868,7 @@ declare module 'superdesk-api' {
         openNewItemForm(): void;
         closeNewItemForm(): void;
         deleteItem(item: T): void;
-        getActiveFilters(): Partial<TBase>;
+        getActiveFilters(): Partial<T>;
         removeFilter(fieldName: string): void;
     }
 

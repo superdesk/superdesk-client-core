@@ -110,6 +110,7 @@ export class GenericListPageComponent<T extends IItemWithId>
         };
 
         this.openPreview = this.openPreview.bind(this);
+        this.startEditing = this.startEditing.bind(this);
         this.closePreview = this.closePreview.bind(this);
         this.setFiltersVisibility = this.setFiltersVisibility.bind(this);
         this.handleFilterFieldChange = this.handleFilterFieldChange.bind(this);
@@ -118,6 +119,7 @@ export class GenericListPageComponent<T extends IItemWithId>
         this.deleteItem = this.deleteItem.bind(this);
         this.getActiveFilters = this.getActiveFilters.bind(this);
         this.removeFilter = this.removeFilter.bind(this);
+
         this.refetchDataUsingCurrentFilters = this.refetchDataUsingCurrentFilters.bind(this);
         this.filter = this.filter.bind(this);
 
@@ -366,6 +368,19 @@ export class GenericListPageComponent<T extends IItemWithId>
             ...(this.props.additionalSortOptions ?? []),
         ];
 
+        var page: IGenericListPageComponent<T> = {
+            openPreview: this.openPreview,
+            startEditing: this.startEditing,
+            closePreview: this.closePreview,
+            setFiltersVisibility: this.setFiltersVisibility,
+            handleFilterFieldChange: this.handleFilterFieldChange,
+            openNewItemForm: this.openNewItemForm,
+            closeNewItemForm: this.closeNewItemForm,
+            deleteItem: this.deleteItem,
+            getActiveFilters: this.getActiveFilters,
+            removeFilter: this.removeFilter,
+        };
+
         const getContents = () => {
             if (items._items.length === 0) {
                 if (Object.keys(activeFilters).length > 0) {
@@ -387,10 +402,10 @@ export class GenericListPageComponent<T extends IItemWithId>
                 }
             } else {
                 return (
-                    <ItemsContainerComponent>
+                    <ItemsContainerComponent page={page}>
                         {
                             items._items.map(
-                                (item, i) => <ItemComponent key={item._id} item={item} page={this} index={i} />,
+                                (item, i) => <ItemComponent key={item._id} item={item} page={page} index={i} />,
                             )
                         }
                     </ItemsContainerComponent>
