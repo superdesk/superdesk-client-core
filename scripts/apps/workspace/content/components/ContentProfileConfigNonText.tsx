@@ -11,6 +11,7 @@ import {
     IItemWithId,
     IPropsGenericFormItemComponent,
     IFormGroupCollapsible,
+    IPropsGenericFormContainer,
 } from 'superdesk-api';
 
 import {gettext} from 'core/utils';
@@ -298,7 +299,7 @@ function stripSystemId(item: IContentProfileFieldWithSystemId): IContentProfileF
 export class ContentProfileConfigNonText extends React.Component<IProps, IState> {
     private generateKey: () => string;
     private lastKey: number;
-    private ItemsContainerComponent: React.ComponentType;
+    private ItemsContainerComponent: React.ComponentType<IPropsGenericFormContainer<IContentProfileFieldWithSystemId>>;
 
     constructor(props: IProps) {
         super(props);
@@ -325,7 +326,8 @@ export class ContentProfileConfigNonText extends React.Component<IProps, IState>
             this.updateCurrentFields((_fields) => arrayMove(_fields, oldIndex, newIndex));
         };
 
-        class ItemsContainerComponent extends React.PureComponent {
+        class ItemsContainerComponent
+            extends React.PureComponent<IPropsGenericFormContainer<IContentProfileFieldWithSystemId>> {
             render() {
                 return (
                     <ItemsContainerBaseSortable onSortEnd={onSortEnd}>
