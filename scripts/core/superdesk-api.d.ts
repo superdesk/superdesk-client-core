@@ -577,6 +577,8 @@ declare module 'superdesk-api' {
         type: keyof typeof IContentProfileFieldTypes;
         section: keyof typeof IContentProfileSection;
         required: boolean;
+        
+        // it will also contain more fields specific to field type
     }
 
     export enum IContentProfileTypeNonText {
