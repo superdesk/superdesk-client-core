@@ -30,6 +30,7 @@ export const PhotoDeskInfo: React.StatelessComponent<any> = (props) => {
                 item={item}
                 svc={svc}
                 itemClassName="sd-grid-item__content-block"
+                labelMode="never-with-custom-renderer"
             />
             {
                 articleDisplayWidgets.length < 1 ? null : (

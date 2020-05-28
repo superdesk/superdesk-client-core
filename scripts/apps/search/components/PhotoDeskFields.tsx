@@ -24,7 +24,7 @@ export const PhotoDeskFieldsComponent: React.StatelessComponent<IProps> = (props
                 ? <Component item={item} svc={props.svc} />
                 : item[fieldId];
 
-            if (value == null) {
+            if (value == null || item[fieldId] == null) {
                 return null;
             }
 

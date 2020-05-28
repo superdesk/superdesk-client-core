@@ -11,6 +11,14 @@ form {
     margin: 0;
 }
 
+input[disabled],
+textarea[disabled],
+button[disabled],
+[disabled],
+[data-disabled] {
+    cursor: not-allowed;
+}
+
 fieldset {
     padding: 0;
     margin: 0;

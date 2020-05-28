@@ -377,22 +377,6 @@ angular.module('superdesk.apps.authoring', [
                 additionalCondition: ['authoring', 'item', (authoring, item) => authoring.itemActions(item).unpublish],
                 privileges: {unpublish: 1},
             })
-            .activity('edit.unpublished', {
-                label: gettext('Edit'),
-                priority: 100,
-                icon: 'edit-line',
-                group: 'corrections',
-                controller: ['data', 'authoringWorkspace', 'api',
-                    (data, authoringWorkspace: AuthoringWorkspaceService, api) => {
-                        api.update('archive', data.item.archive_item, {state: 'in_progress'})
-                            .then((updated) =>
-                                authoringWorkspace.edit(updated));
-                    },
-                ],
-                filters: [{action: 'list', type: 'archive'}],
-                additionalCondition: ['item', (item) => item.state === 'unpublished'],
-                privileges: {unpublish: 1},
-            })
         ;
     }])
     .config(['apiProvider', function(apiProvider) {

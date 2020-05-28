@@ -3,6 +3,7 @@
      ng-if="schema.headline && !(features.onlyEditor3 || editor.body_html.editor3)"
      order="{{editor.headline.order}}"
      sd-validation-error="error.headline"
+     ng-attr-title="{{schema.headline.readonly === true ? readOnlyLabel : ''}}"
      data-required="schema.headline.required">
 
     <label class="field__label">{{label('headline')}}</label>
@@ -27,6 +28,7 @@
      ng-if="schema.headline && (features.onlyEditor3 || editor.body_html.editor3)"
      order="{{editor.headline.order}}"
      sd-validation-error="error.headline"
+     ng-attr-title="{{schema.headline.readonly === true ? readOnlyLabel : ''}}"
      data-required="schema.headline.required">
 
     <label class="field__label">{{label('headline')}}</label>
@@ -59,11 +61,12 @@
      sd-width="{{editor.sms.sdWidth|| 'full'}}"
      order="{{editor.sms.order}}"
      sd-validation-error="error.sms"
+     ng-attr-title="{{schema.sms.readonly === true ? readOnlyLabel : ''}}"
      data-required="schema.sms.required">
 
     <label class="field__label" ng-if="_editable">{{label('sms')}}</label>
     <div ng-if="_editable">
-        <span ng-if="_editable" sd-switch ng-model="item.flags.marked_for_sms" class="sms-switch" tabindex="{{editor.sms.order}}" ng-change="toggleSMS()"></span>
+        <span ng-if="_editable" sd-switch ng-model="item.flags.marked_for_sms" ng-attr-data-disabled="schema.sms.readonly === true" class="sms-switch" tabindex="{{editor.sms.order}}" ng-change="toggleSMS()"></span>
     </div>
 
     <div ng-if="item.flags.marked_for_sms" style="margin-top: 27px;">
@@ -91,6 +94,7 @@
      sd-width="{{editor.feature_image.sdWidth|| 'full'}}"
      sd-validation-error="error.feature_image"
      order="{{editor.feature_image.order}}"
+     ng-attr-title="{{schema.feature_image.readonly === true ? readOnlyLabel : ''}}"
      data-required="schema.feature_image.required">
 
     <label class="field__label">{{label('feature_image')}}</label>
@@ -109,6 +113,7 @@
      sd-width="{{editor.feature_media.sdWidth|| 'full'}}"
      sd-validation-error="error.feature_media"
      order="{{editor.feature_media.order}}"
+     ng-attr-title="{{schema.feature_media.readonly === true ? readOnlyLabel : ''}}"
      data-required="schema.feature_media.required">
     <label class="field__label">{{label('feature_media')}}</label>
     <div sd-item-association
@@ -138,6 +143,7 @@
      ng-if="schema.abstract && !(features.onlyEditor3 || editor.body_html.editor3) && !isMediaType"
      order="{{editor.abstract.order}}"
      sd-validation-error="error.abstract"
+     ng-attr-title="{{schema.abstract.readonly === true ? readOnlyLabel : ''}}"
      data-required="schema.abstract.required">
 
     <label class="field__label">{{label('abstract')}}</label>
@@ -161,6 +167,7 @@
      ng-if="schema.abstract && (features.onlyEditor3 || editor.body_html.editor3)"
      order="{{editor.abstract.order}}"
      sd-validation-error="error.abstract"
+     ng-attr-title="{{schema.abstract.readonly === true ? readOnlyLabel : ''}}"
      data-required="schema.abstract.required">
 
     <label class="field__label">{{label('abstract')}}</label>
@@ -188,6 +195,7 @@
      sd-width="{{editor.byline.sdWidth|| 'full'}}"
      order="{{editor.byline.order}}"
      sd-validation-error="error.byline"
+     ng-attr-title="{{schema.byline.readonly === true ? readOnlyLabel : ''}}"
      data-required="schema.byline.required">
 
     <label class="field__label">{{label('byline')}}</label>
@@ -212,6 +220,7 @@
      order="{{editor.dateline.order}}"
      sd-validation-error="error.dateline"
      data-required="schema.dateline.required"
+     ng-attr-title="{{schema.dateline.readonly === true ? readOnlyLabel : ''}}"
      sd-width="{{editor.dateline.sdWidth|| 'full'}}">
 
     <label class="field__label">{{label('dateline')}}</label>
@@ -270,6 +279,7 @@
      order="{{editor.body_html.order}}"
      sd-validation-error="error.body_html"
      data-required="schema.body_html.required"
+     ng-attr-title="{{schema.body_html.readonly === true ? readOnlyLabel : ''}}"
      sd-width="{{editor.body_html.sdWidth|| 'full'}}">
     <label class="field__label">{{label('body_html')}}</label>
     <span sd-reading-time data-item="item.body_html" data-html="true" data-language="item.language"></span>
@@ -299,6 +309,7 @@
      sd-validation-error="error.body_html"
      data-required="schema.body_html.required"
      sd-width="{{editor.body_html.sdWidth|| 'full'}}"
+     ng-attr-title="{{schema.body_html.readonly === true ? readOnlyLabel : ''}}"
      tansa-proofing="false">
 
     <label class="field__label">{{label('body_html')}}</label>
@@ -396,6 +407,7 @@
      order="{{editor.media_description.order}}"
      sd-validation-error="error.description_text"
      sd-width="{{editor.media_description.sdWidth|| 'full'}}"
+     ng-attr-title="{{schema.media_description.readonly === true ? readOnlyLabel : ''}}"
      data-required="schema.media_description.required">
     <label class="field__label" translate>Caption</label>
     <span ng-if="validator.description_text.maxlength" sd-character-count data-item="item.description_text" data-html="true" data-limit="validator.description_text.maxlength"></span>
@@ -417,6 +429,7 @@
      order="{{editor.media_description.order}}"
      sd-validation-error="error.description_text"
      sd-width="{{editor.media_description.sdWidth|| 'full'}}"
+     ng-attr-title="{{schema.media_description.readonly === true ? readOnlyLabel : ''}}"
      data-required="schema.media_description.required">
     <label class="field__label" translate>Caption</label>
     <span ng-if="validator.description_text.maxlength" sd-character-count data-item="item.description_text" data-html="true" data-limit="validator.description_text.maxlength"></span>
@@ -442,6 +455,7 @@
      sd-validation-error="error.body_footer_value"
      data-required="schema.footer.required"
      order="{{editor.footer.order}}"
+     ng-attr-title="{{schema.footer.readonly === true ? readOnlyLabel : ''}}"
      sd-width="{{editor.media_description.sdWidth|| 'full'}}">
     <label class="field__label"translate>Helplines/Contact Information</label>
     <select class="field__select" id="helplines"
@@ -463,6 +477,7 @@
      order="{{editor.body_footer.order}}"
      sd-validation-error="error.body_footer"
      data-required="schema.body_footer.required"
+     ng-attr-title="{{schema.body_footer.readonly === true ? readOnlyLabel : ''}}"
      sd-width="{{editor.body_footer.sdWidth|| 'full'}}">
     <label class="field__label">{{label('body_footer')}}</label>
     <div id="body_footer" class="body"
@@ -485,6 +500,7 @@
      order="{{editor.body_footer.order}}"
      sd-validation-error="error.body_footer"
      data-required="schema.body_footer.required"
+     ng-attr-title="{{schema.body_footer.readonly === true ? readOnlyLabel : ''}}"
      sd-width="{{editor.body_footer.sdWidth|| 'full'}}">
     <label class="field__label">{{label('body_footer')}}</label>
     <div id="body_footer" class="body"
@@ -514,9 +530,17 @@
      order="{{editor.sign_off.order}}"
      sd-validation-error="error.sign_off"
      data-required="schema.sign_off.required"
+     ng-attr-title="{{schema.sign_off.readonly === true ? readOnlyLabel : ''}}"
      sd-width="{{editor.sign_off.sdWidth|| 'full'}}">
     <label class="field__label">{{label('sign_off')}}</label>
-    <button id="sign-off-unlock" class="icn-btn btn-signOff" ng-click="changeSignOffEdit()" tabindex="{{editor.sign_off.order}}" title="Unlock edit Sign-Off" ng-if="_editable">
+    <button
+        id="sign-off-unlock"
+        class="icn-btn btn-signOff"
+        ng-click="changeSignOffEdit()"
+        tabindex="{{editor.sign_off.order}}"
+        title="Unlock edit Sign-Off"
+        ng-if="_editable && schema.sign_off.readonly !== true"
+    >
         <i class="icon-lock" ng-hide="editSignOff"></i>
         <i class="icon-unlocked" ng-show="editSignOff"></i>
     </button>
@@ -548,6 +572,7 @@
     sd-width="{{editor.usageterms.sdWidth || 'full'}}"
     order="{{editor.usageterms.order}}"
     sd-validation-error="error.usageterms"
+    ng-attr-title="{{schema.usageterms.readonly === true ? readOnlyLabel : ''}}"
     data-required="schema.usageterms.required">
   <label class="field__label">{{label('usageterms')}}</label>
   <input type="text"
@@ -569,6 +594,7 @@
     sd-width="{{ editor[field._id].sdWidth || 'full' }}"
     data-required="schema[field._id].required"
     order="{{ editor[field._id].order }}"
+    ng-attr-title="{{schema[field._id].readonly === true ? readOnlyLabel : ''}}"
     sd-validation-error="error[field.display_name.toLowerCase()] || error.extra[field._id]">
 
     <label class="field__label">{{field.display_name}}</label>
@@ -600,6 +626,7 @@
     sd-width="{{ editor[field._id].sdWidth || 'full' }}"
     data-required="schema[field._id].required"
     order="{{ editor[field._id].order }}"
+    ng-attr-title="{{schema[field._id].readonly === true ? readOnlyLabel : ''}}"
     sd-validation-error="error[field._id] || error.extra[field._id]">
 
     <label class="field__label">{{field.display_name}}</label>
@@ -621,6 +648,7 @@
     sd-width="{{ editor[field._id].sdWidth || 'full' }}"
     order="{{ editor[field._id].order }}"
     sd-validation-error="error[field.display_name.toLowerCase()] || error.extra[field_id]"
+    ng-attr-title="{{schema[field._id].readonly === true ? readOnlyLabel : ''}}"
     data-required="schema[field._id].required">
     <label class="field__label" translate>{{field.display_name}}</label>
     <span>
@@ -670,6 +698,7 @@
     sd-validation-error="error[field._id]"
     order="{{editor[field._id].order}}"
     data-required="schema[field._id].required"
+    ng-attr-title="{{schema[field._id].readonly === true ? readOnlyLabel : ''}}"
     data-test-id="{{'authoring-field--' + field._id}}"
 >
     <label class="field__label" translate>{{field.display_name}}</label>
@@ -696,6 +725,7 @@
      sd-width="{{editor[field._id].sdWidth || 'full'}}"
      sd-validation-error="error[field._id]"
      order="{{editor[field._id].order}}"
+     ng-attr-title="{{schema[field._id].readonly === true ? readOnlyLabel : ''}}"
      data-required="schema[field._id].required">
 
 
@@ -730,6 +760,7 @@
     sd-width="{{editor[field._id].sdWidth || 'full'}}"
     sd-validation-error="error[field.display_name.toLowerCase()] || error.extra[field._id]"
     order="{{editor[field._id].order}}"
+    ng-attr-title="{{schema[field._id].readonly === true ? readOnlyLabel : ''}}"
     data-required="schema[field._id].required">
     <sd-article-url-fields
         editable="_editable && schema[field._id].readonly !== true"
@@ -748,6 +779,7 @@
     sd-width="{{editor[field._id].sdWidth || 'full'}}"
     sd-validation-error="error[field.display_name.toLowerCase()]"
     order="{{editor[field._id].order}}"
+    ng-attr-title="{{schema[field._id].readonly === true ? readOnlyLabel : ''}}"
     data-required="schema[field._id].required">
 
     <label class="field__label" translate>{{field.display_name}}</label>
@@ -765,6 +797,7 @@
     sd-width="{{ editor.attachments.sdWidth || 'full'}}"
     sd-validation-error="error.attachments"
     order="{{ editor.attachments.order }}"
+    ng-attr-title="{{schema.attachments.readonly === true ? readOnlyLabel : ''}}"
     data-required="schema.attachments.required">
     <label class="field__label" translate>{{ :: 'Attachments' | translate }}</label>
     <div sd-attachments-editor data-read-only="!_editable || schema.attachments.readonly === true"></div>
@@ -776,6 +809,7 @@
      data-required="schema.slugline.required"
      ng-if="schema.slugline && editor['slugline'].section === 'content' && !(features.onlyEditor3 || editor.body_html.editor3)"
      sd-width="{{editor.slugline.sdWidth}}"
+     ng-attr-title="{{schema.slugline.readonly === true ? readOnlyLabel : ''}}"
      order="{{editor.slugline.order}}">
     <label class="field__label">{{label('slugline')}}</label>
     <span ng-if="schema.slugline.maxlength" sd-character-count data-item="item.slugline" data-html="true" data-limit="schema.slugline.maxlength"></span>
@@ -798,6 +832,7 @@
      ng-if="schema.slugline && editor['slugline'].section === 'content' && (features.onlyEditor3 || editor.body_html.editor3)"
      order="{{editor.slugline.order}}"
      sd-validation-error="error.slugline"
+     ng-attr-title="{{schema.slugline.readonly === true ? readOnlyLabel : ''}}"
      data-required="schema.slugline.required">
     <label class="field__label">{{label('slugline')}}</label>
     <span ng-if="schema.slugline.maxlength" sd-character-count data-item="item.slugline" data-html="true" data-limit="schema.slugline.maxlength"></span>

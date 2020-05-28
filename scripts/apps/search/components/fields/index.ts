@@ -35,6 +35,7 @@ import {usageterms} from './usageterms';
 import {nestedlink} from './nested-link';
 import {associatedItems} from './associatedItems';
 import {Translations} from './translations';
+import {Used} from './used';
 
 interface IFieldProps extends Partial<IPropsItemListInfo> {
     item: IPropsItemListInfo['item']; // this one not nullable
@@ -76,4 +77,5 @@ export const fields: {[key: string]: React.ComponentType<IFieldProps>} = {
     nestedlink,
     associatedItems,
     translations: Translations,
+    used: Used,
 };
