@@ -7,14 +7,16 @@
     <div
         ng-if="(!field.type && !field.cv) || (field.type === 'string' && !field.cv)"
         class="sd-line-input sd-line-input--boxed"
-        ng-class="{'sd-line-input--required': field.required}">
-            <label class="sd-line-input__label">{{field.label}}</label>
-            <sd-simple-editor
-                on-change="handleInputChange"
-                value="item[field.field]"
-                classes="inputClasses"
-                field="field.field"
-            />
+        ng-class="{'sd-line-input--required': field.required}"
+        data-test-id="{{'field--' + field.field}}"
+    >
+        <label class="sd-line-input__label">{{field.label}}</label>
+        <sd-simple-editor
+            on-change="handleInputChange"
+            value="item[field.field]"
+            classes="inputClasses"
+            field="field.field"
+        />
     </div>
 
     <sd-line-input

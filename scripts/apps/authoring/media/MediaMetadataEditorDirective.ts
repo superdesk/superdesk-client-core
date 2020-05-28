@@ -27,7 +27,7 @@ export default function MediaMetadataEditorDirective(metadata, features, session
 
                 if (scope.item.hasOwnProperty(field)) {
                     scope.item[field] = newValue;
-                    scope.onChange(); // set parent dirty=true
+                    scope.onChange({key: field}); // set parent dirty=true
                     scope.$applyAsync(); // apply changes to scope
                 }
             };

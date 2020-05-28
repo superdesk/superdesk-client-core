@@ -700,9 +700,9 @@ describe('authoring', () => {
         browser.wait(ECE.presenceOf(el(['image-upload-input'])));
         selectFilesForUpload(el(['image-upload-input']), ['image-big.jpg']);
 
-        el(['media-metadata-editor', 'field--headline'], by.tagName('input')).sendKeys('image headline');
-        el(['media-metadata-editor', 'field--alt_text'], by.tagName('input')).sendKeys('image alt text');
-        el(['media-metadata-editor', 'field--description_text'], by.tagName('textarea')).sendKeys('image description');
+        el(['media-metadata-editor', 'field--headline'], by.tagName('[contenteditable]')).sendKeys('image headline');
+        el(['media-metadata-editor', 'field--alt_text'], by.tagName('[contenteditable]')).sendKeys('image alt text');
+        el(['media-metadata-editor', 'field--description_text'], by.tagName('[contenteditable]')).sendKeys('image description');
 
         el(['multi-image-edit--start-upload']).click();
 
@@ -733,9 +733,9 @@ describe('authoring', () => {
         browser.wait(ECE.presenceOf(el(['image-upload-input'])));
         selectFilesForUpload(el(['image-upload-input']), ['image-big.jpg']);
 
-        el(['media-metadata-editor', 'field--headline'], by.tagName('input')).sendKeys('image headline');
-        el(['media-metadata-editor', 'field--alt_text'], by.tagName('input')).sendKeys('image alt text');
-        el(['media-metadata-editor', 'field--description_text'], by.tagName('textarea')).sendKeys('image description');
+        el(['media-metadata-editor', 'field--headline'], by.tagName('[contenteditable]')).sendKeys('image headline');
+        el(['media-metadata-editor', 'field--alt_text'], by.tagName('[contenteditable]')).sendKeys('image alt text');
+        el(['media-metadata-editor', 'field--description_text'], by.tagName('[contenteditable]')).sendKeys('image description');
 
         el(['multi-image-edit--start-upload']).click();
 
@@ -758,9 +758,9 @@ describe('authoring', () => {
         browser.wait(ECE.presenceOf(el(['image-upload-input'])));
         selectFilesForUpload(el(['image-upload-input']), ['image-red.jpg']);
 
-        el(['media-metadata-editor', 'field--headline'], by.tagName('input')).sendKeys('image headline');
-        el(['media-metadata-editor', 'field--alt_text'], by.tagName('input')).sendKeys('image alt text');
-        el(['media-metadata-editor', 'field--description_text'], by.tagName('textarea')).sendKeys('image description');
+        el(['media-metadata-editor', 'field--headline'], by.tagName('[contenteditable]')).sendKeys('image headline');
+        el(['media-metadata-editor', 'field--alt_text'], by.tagName('[contenteditable]')).sendKeys('image alt text');
+        el(['media-metadata-editor', 'field--description_text'], by.tagName('[contenteditable]')).sendKeys('image description');
 
         el(['multi-image-edit--start-upload']).click();
 
