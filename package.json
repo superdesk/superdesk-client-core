@@ -168,7 +168,8 @@
     "stop-test-server": "cd test-server && docker-compose stop",
     "start-client-server": "http-server dist -p 9000 -s &",
     "stop-client-server": "fuser -k 9000/tcp",
-    "protractor": "npm run compile-end-to-end-tests && protractor protractor.conf.js",
+    "protractor": "protractor protractor.conf.js",
+    "e2e": "npm run compile-end-to-end-tests && npm run protractor",
     "webdriver-manager": "webdriver-manager update --gecko false --standalone false",
     "server": "grunt server",
     "dev": "npm run server"
