@@ -14,7 +14,7 @@ import {
     IPropsGenericFormContainer,
 } from 'superdesk-api';
 
-import {gettext, insertArrayItemAtIndex} from 'core/utils';
+import {gettext, arrayInsert} from 'core/utils';
 import {FormFieldType} from 'core/ui/components/generic-form/interfaces/form';
 import {IContentProfileTypeNonText} from '../controllers/ContentProfilesController';
 import {assertNever} from 'core/helpers/typescript-helpers';
@@ -505,7 +505,7 @@ export class ContentProfileConfigNonText extends React.Component<IProps, IState>
                                         value: item,
                                     };
 
-                                    return insertArrayItemAtIndex(
+                                    return arrayInsert(
                                         _fields,
                                         nextItem,
                                         this.state.insertNewItemAtIndex ?? 0,

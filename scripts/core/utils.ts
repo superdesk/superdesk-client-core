@@ -11,7 +11,7 @@ export function stripHtmlTags(value) {
 }
 
 /** Does not mutate the original array. */
-export function insertArrayItemAtIndex<T>(array: Array<T>, item: T, index: number): Array<T> {
+export function arrayInsert<T>(array: Array<T>, item: T, index: number): Array<T> {
     return array.slice(0, index).concat(item).concat(array.slice(index, array.length));
 }
 
