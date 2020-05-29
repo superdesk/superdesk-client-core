@@ -88,7 +88,10 @@ export function CardsService(search, session, desks, $location) {
                 }});
             } else {
                 query.filter({bool: {
-                    must: {term: {original_creator: session.identity._id}},
+                    must: [
+                        {term: {original_creator: session.identity._id}},
+                        {terms: {state: [ITEM_STATE.DRAFT, ITEM_STATE.IN_PROGRESS]}}
+                    ],
                     must_not: {exists: {field: 'task.desk'}},
                 }});
             }
