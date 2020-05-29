@@ -690,12 +690,13 @@ declare module 'superdesk-api' {
         index: number;
     }
 
-    export interface IPropsGenericForm<T extends IItemWithId> {
+    export interface IPropsGenericForm<T extends IItemWithId, P> {
         getFormConfig(item?: Partial<T>): IFormGroup;
         additionalSortOptions?: Array<{label: string; field: string;}>;
+        additionalProps?: P; // allows passing props which will be available in container and item components
         defaultFilters?: Partial<T>;
-        ItemComponent: React.ComponentType<IPropsGenericFormItemComponent<T>>;
-        ItemsContainerComponent?: React.ComponentType<IPropsGenericFormContainer<T>>;
+        ItemComponent: React.ComponentType<IPropsGenericFormItemComponent<T> & {additionalProps?: P}>;
+        ItemsContainerComponent?: React.ComponentType<IPropsGenericFormContainer<T> & {additionalProps?: P}>;
 
         // Allows initializing a new item with some fields already filled.
         getNewItemTemplate?(page: IGenericListPageComponent<T>): Partial<T>;
@@ -872,6 +873,7 @@ declare module 'superdesk-api' {
         deleteItem(item: T): void;
         getActiveFilters(): Partial<T>;
         removeFilter(fieldName: string): void;
+        getItemsCount(): number;
     }
 
     export interface IPropsSelectUser {
@@ -1054,11 +1056,12 @@ declare module 'superdesk-api' {
         },
         components: {
             UserHtmlSingleLine: React.ComponentType<{html: string}>;
-            getGenericListPageComponent<T extends IBaseRestApiResponse>(
+            getGenericListPageComponent<T extends IBaseRestApiResponse, P>(
                 resource: string,
                 formConfig: IFormGroup,
                 defaultSortOption?: ISortOption,
-            ): React.ComponentType<IPropsGenericForm<T>>;
+                additionalProps?: P,
+            ): React.ComponentType<IPropsGenericForm<T, P>>;
             connectCrudManager<Props, PropsToConnect, Entity extends IBaseRestApiResponse>(
                 WrappedComponent: React.ComponentType<Props & PropsToConnect>,
                 name: string,

@@ -14,7 +14,7 @@ import {
     IPropsGenericFormContainer,
 } from 'superdesk-api';
 
-import {gettext} from 'core/utils';
+import {gettext, insertArrayItemAtIndex} from 'core/utils';
 import {FormFieldType} from 'core/ui/components/generic-form/interfaces/form';
 import {IContentProfileTypeNonText} from '../controllers/ContentProfilesController';
 import {assertNever} from 'core/helpers/typescript-helpers';
@@ -32,6 +32,8 @@ interface IProps {
 interface IState {
     fields: {[key in IContentProfileSection]: IArrayKeyed<IContentProfileField>};
     activeTab: keyof typeof IContentProfileSection;
+    sortingInProgress: boolean;
+    insertNewItemAtIndex: number | null;
 }
 
 // subset of FormFieldType
@@ -228,7 +230,7 @@ function getAttributesForPlainText(): Array<IFormField> {
     };
 
     const multilineField: IFormField = {
-        label: gettext('Multi-line'),
+        label: gettext('Allow multiple lines'),
         type: FormFieldType.checkbox,
         field: 'multiline',
         required: false,
@@ -248,17 +250,91 @@ function getAttributesForFormFieldType(type: IContentProfileFieldTypes): Array<I
     }
 }
 
-class ItemBase extends React.PureComponent<IPropsGenericFormItemComponent<IContentProfileFieldWithSystemId>> {
+interface IAdditionalProps {
+    additionalProps: {
+        sortingInProgress: boolean;
+        setIndexForNewItem(index: number): void;
+    };
+}
+
+type IPropsItem = IPropsGenericFormItemComponent<IContentProfileFieldWithSystemId> & IAdditionalProps;
+
+// wrapper is used because sortable HOC considers `index` to be its internal prop and doesn't forward it
+class ItemBase extends React.PureComponent<{wrapper: IPropsItem}> {
     render() {
-        const {item, page} = this.props;
+        const {item, page, index} = this.props.wrapper;
+        const {sortingInProgress, setIndexForNewItem} = this.props.wrapper.additionalProps;
+        const isLast = index === page.getItemsCount() - 1;
 
         return (
-            <div style={{border: '1px solid blue', marginTop: 10, marginBottom: 10, zIndex: 1051}}>
+            <div
+                style={{
+                    position: 'relative',
+
+                    // a clone of the element gets appended to the body when sorting is in progress
+                    // in order to be visible, it has to have a higher zIndex than the modal
+                    zIndex: 1051,
+
+                    border: '1px solid blue',
+                    marginTop: 10,
+                    marginBottom: 10,
+                    cursor: 'pointer',
+                }}
+                onClick={() => {
+                    page.startEditing(item._id);
+                }}
+            >
+                {
+                    !sortingInProgress
+                        ? (
+                            <div style={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                width: '100%',
+                                position: 'absolute',
+                                top: '-13px',
+                            }}>
+                                <button
+                                    onClick={() => {
+                                        setIndexForNewItem(index);
+                                        page.openNewItemForm();
+                                    }}
+                                >
+                                    add
+                                </button>
+                            </div>
+                        )
+                        : null
+                }
+
                 {item.label}
-                <button onClick={() => page.startEditing(item._id)}>{gettext('Edit')}</button>
                 <button onClick={() => page.deleteItem(item)}>{gettext('Delete')}</button>
+
                 {
                     item.required === true ? (<strong>{gettext('required')}</strong>) : null
+                }
+
+                {
+                    !sortingInProgress && isLast
+                        ? (
+                            <div style={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                width: '100%',
+                                position: 'absolute',
+                                bottom: '-13px',
+                            }}>
+                                <button
+                                    onClick={() => {
+                                        setIndexForNewItem(index + 1);
+                                        page.openNewItemForm();
+                                    }}
+                                >
+                                    add
+                                </button>
+                            </div>
+                        )
+                        : null
                 }
             </div>
         );
@@ -267,15 +343,12 @@ class ItemBase extends React.PureComponent<IPropsGenericFormItemComponent<IConte
 
 const ItemBaseSortable = SortableElement(ItemBase);
 
-class ItemComponent extends React.PureComponent<IPropsGenericFormItemComponent<IContentProfileFieldWithSystemId>> {
+class ItemComponent extends React.PureComponent<IPropsItem> {
     render() {
-        const {item, page, index} = this.props;
-
         return (
             <ItemBaseSortable
-                item={item}
-                page={page}
-                index={index}
+                wrapper={this.props}
+                index={this.props.index}
             />
         );
     }
@@ -327,17 +400,28 @@ export class ContentProfileConfigNonText extends React.Component<IProps, IState>
                 content: grouped[IContentProfileSection.content] ?? [],
             },
             activeTab: getAllContentProfileSections()[0],
+            sortingInProgress: false,
+            insertNewItemAtIndex: null,
         };
 
         const onSortEnd = ({oldIndex, newIndex}) => {
+            this.setState({sortingInProgress: false});
             this.updateCurrentFields((_fields) => arrayMove(_fields, oldIndex, newIndex));
+        };
+
+        const beforeSortStart = () => {
+            this.setState({sortingInProgress: true});
         };
 
         class ItemsContainerComponent
             extends React.PureComponent<IPropsGenericFormContainer<IContentProfileFieldWithSystemId>> {
             render() {
                 return (
-                    <ItemsContainerBaseSortable onSortEnd={onSortEnd}>
+                    <ItemsContainerBaseSortable
+                        onSortEnd={onSortEnd}
+                        updateBeforeSortStart={beforeSortStart}
+                        distance={10}
+                    >
                         {this.props.children}
                     </ItemsContainerBaseSortable>
                 );
@@ -379,7 +463,7 @@ export class ContentProfileConfigNonText extends React.Component<IProps, IState>
     }
 
     render() {
-        const {activeTab} = this.state;
+        const {activeTab, sortingInProgress} = this.state;
         const fields = this.state.fields[this.state.activeTab];
 
         const fieldsResponse: ICrudManagerResponse<IContentProfileFieldWithSystemId> = {
@@ -416,17 +500,20 @@ export class ContentProfileConfigNonText extends React.Component<IProps, IState>
                     };
 
                     this.updateCurrentFields(
-                        (_fields) => [
-                            {
+                        (_fields) => {
+                            const nextItem = {
                                 key: this.generateKey(),
                                 value: item,
-                            },
-                            ..._fields,
-                        ],
+                            };
+
+                            return insertArrayItemAtIndex(_fields, nextItem, this.state.insertNewItemAtIndex ?? 0);
+                        },
                         () => {
                             resolve(itemWithId);
                         },
                     );
+
+                    this.setState({insertNewItemAtIndex: null});
                 });
             },
             delete: (item) => {
@@ -471,6 +558,12 @@ export class ContentProfileConfigNonText extends React.Component<IProps, IState>
                     ItemComponent={ItemComponent}
                     ItemsContainerComponent={this.ItemsContainerComponent}
                     items={crudManagerForContentProfileFields}
+                    additionalProps={{
+                        sortingInProgress,
+                        setIndexForNewItem: (index) => {
+                            this.setState({insertNewItemAtIndex: index});
+                        },
+                    }}
                     disallowFiltering
                     disallowCreatingNewItem
                 />

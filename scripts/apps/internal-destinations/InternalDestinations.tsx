@@ -141,7 +141,7 @@ export class InternalDestinations extends React.Component {
         };
 
         const InternalDestinationsPageComponent =
-            getGenericListPageComponent<IInternalDestination>(
+            getGenericListPageComponent<IInternalDestination, never>(
                 'internal_destinations',
                 formConfig,
                 {field: 'name', direction: 'ascending'},

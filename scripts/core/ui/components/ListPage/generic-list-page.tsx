@@ -82,8 +82,8 @@ const subNavWrapper: React.ComponentType = (props) => (
     </div>
 );
 
-export class GenericListPageComponent<T extends IItemWithId>
-    extends React.Component<IPropsGenericForm<T> & IPropsConnected<T>, IState<T>>
+export class GenericListPageComponent<T extends IItemWithId, P>
+    extends React.Component<IPropsGenericForm<T, P> & IPropsConnected<T>, IState<T>>
     implements IGenericListPageComponent<T>
 {
     searchBarRef: SearchBar | null;
@@ -91,7 +91,7 @@ export class GenericListPageComponent<T extends IItemWithId>
     notify: any;
     $rootScope: any;
 
-    constructor(props: IPropsGenericForm<T> & IPropsConnected<T>) {
+    constructor(props: IPropsGenericForm<T, P> & IPropsConnected<T>) {
         super(props);
 
         // preview and edit mode can enabled at the same time, but only one pane will be displayed at once
@@ -119,6 +119,7 @@ export class GenericListPageComponent<T extends IItemWithId>
         this.deleteItem = this.deleteItem.bind(this);
         this.getActiveFilters = this.getActiveFilters.bind(this);
         this.removeFilter = this.removeFilter.bind(this);
+        this.getItemsCount = this.getItemsCount.bind(this);
 
         this.refetchDataUsingCurrentFilters = this.refetchDataUsingCurrentFilters.bind(this);
         this.filter = this.filter.bind(this);
@@ -170,6 +171,11 @@ export class GenericListPageComponent<T extends IItemWithId>
             this.props.items.removeFilter(fieldName);
         });
     }
+
+    getItemsCount() {
+        return this.props.items?._items?.length ?? 0;
+    }
+
     deleteItem(item: T) {
         const deleteNow = () => this.props.items.delete(item).then(() => {
             this.notify.success(gettext('The item has been deleted.'));
@@ -345,7 +351,7 @@ export class GenericListPageComponent<T extends IItemWithId>
         }
     }
     render() {
-        const {items} = this.props;
+        const {items, additionalProps} = this.props;
 
         if (items._items == null) {
             // loading
@@ -379,6 +385,7 @@ export class GenericListPageComponent<T extends IItemWithId>
             deleteItem: this.deleteItem,
             getActiveFilters: this.getActiveFilters,
             removeFilter: this.removeFilter,
+            getItemsCount: this.getItemsCount,
         };
 
         const getContents = () => {
@@ -402,10 +409,18 @@ export class GenericListPageComponent<T extends IItemWithId>
                 }
             } else {
                 return (
-                    <ItemsContainerComponent page={page}>
+                    <ItemsContainerComponent page={page} additionalProps={additionalProps}>
                         {
                             items._items.map(
-                                (item, i) => <ItemComponent key={item._id} item={item} page={page} index={i} />,
+                                (item, i) => (
+                                    <ItemComponent
+                                        key={item._id}
+                                        item={item}
+                                        page={page}
+                                        index={i}
+                                        additionalProps={additionalProps}
+                                    />
+                                ),
                             )
                         }
                     </ItemsContainerComponent>
@@ -655,12 +670,13 @@ export class GenericListPageComponent<T extends IItemWithId>
     }
 }
 
-export const getGenericListPageComponent = <T extends IBaseRestApiResponse>(
+export const getGenericListPageComponent = <T extends IBaseRestApiResponse, P>(
     resource: string,
     formConfig: IFormGroup,
     defaultSortOption?: ISortOption,
+    additionalProps?: P,
 ) => {
-    var Component = connectCrudManager<IPropsGenericForm<T>, IPropsConnected<T>, T>(
+    var Component = connectCrudManager<IPropsGenericForm<T, P>, IPropsConnected<T>, T>(
         GenericListPageComponent,
         'items',
         resource,
@@ -683,10 +699,11 @@ export const getGenericListPageComponent = <T extends IBaseRestApiResponse>(
         },
     );
 
-    return class WithAdditionalSortOptions extends React.PureComponent<IPropsGenericForm<T>> {
+    return class WithAdditionalSortOptions extends React.PureComponent<IPropsGenericForm<T, P>> {
         render() {
             return (
                 <Component
+                    {...(additionalProps ?? {})}
                     {...this.props}
                     additionalSortOptions={[
                         ...(this.props.additionalSortOptions ?? []),

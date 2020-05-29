@@ -10,6 +10,11 @@ export function stripHtmlTags(value) {
     return el.innerText;
 }
 
+/** Does not mutate the original array. */
+export function insertArrayItemAtIndex<T>(array: Array<T>, item: T, index: number): Array<T> {
+    return array.slice(0, index).concat(item).concat(array.slice(index, array.length));
+}
+
 export const promiseAllObject = (promises) => new Promise((resolve, reject) => {
     const keys = Object.keys(promises);
     const promisesArray = keys.map((key) => promises[key]);
