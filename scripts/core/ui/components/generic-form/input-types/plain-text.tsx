@@ -11,6 +11,29 @@ export class PlainText extends React.Component<IInputType<string>> {
         // default value is required so React doesn't complain that uncontrolled component is changed to controlled.
         const valueWithDefaultValue = this.props.value || '';
 
+        const fieldElement = this.props.formField?.component_parameters?.multiline === true
+            ? (
+                <textarea
+                    disabled={this.props.disabled}
+                    value={valueWithDefaultValue}
+                    onChange={(event) => this.props.onChange(event.target.value)}
+                    rows={3}
+                    style={{resize: 'vertical', height: 'auto'}}
+                    className="sd-line-input__input"
+                    data-test-id={`gform-input--${this.props.formField.field}`}
+                />
+            )
+            : (
+                <input
+                    type="text"
+                    disabled={this.props.disabled}
+                    value={valueWithDefaultValue}
+                    onChange={(event) => this.props.onChange(event.target.value)}
+                    className="sd-line-input__input"
+                    data-test-id={`gform-input--${this.props.formField.field}`}
+                />
+            );
+
         return (
             <div className={
                 classNames(
@@ -22,14 +45,7 @@ export class PlainText extends React.Component<IInputType<string>> {
                 )
             }>
                 <label className="sd-line-input__label">{this.props.formField.label}</label>
-                <input
-                    type="text"
-                    disabled={this.props.disabled}
-                    value={valueWithDefaultValue}
-                    onChange={(event) => this.props.onChange(event.target.value)}
-                    className="sd-line-input__input"
-                    data-test-id={`gform-input--${this.props.formField.field}`}
-                />
+                {fieldElement}
                 {
                     this.props.issues.map((str, i) => (
                         <div key={i} className="sd-line-input__message">{str}</div>

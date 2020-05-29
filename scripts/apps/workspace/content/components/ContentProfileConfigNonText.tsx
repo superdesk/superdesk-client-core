@@ -114,7 +114,7 @@ function getCommonContentProfileConfig(
                 case IContentProfileFieldTypes.plainText:
                     return {
                         id: IContentProfileFieldTypes.plainText,
-                        label: gettext('Plain text (single line)'),
+                        label: gettext('Plain text'),
                     };
                 case IContentProfileFieldTypes.number:
                     return {
@@ -227,7 +227,14 @@ function getAttributesForPlainText(): Array<IFormField> {
         required: false,
     };
 
-    return [minLengthField, maxLengthField];
+    const multilineField: IFormField = {
+        label: gettext('Multi-line'),
+        type: FormFieldType.checkbox,
+        field: 'multiline',
+        required: false,
+    };
+
+    return [minLengthField, maxLengthField, multilineField];
 }
 
 function getAttributesForFormFieldType(type: IContentProfileFieldTypes): Array<IFormField> {
