@@ -1,7 +1,7 @@
 import {IFormGroup, IFormField, IFormGroupCollapsible} from 'superdesk-api';
 
 export enum FormFieldType {
-    textSingleLine = 'textSingleLine',
+    plainText = 'plainText',
     textEditor3 = 'textEditor3',
     number = 'number',
     vocabularySingleValue = 'vocabularySingleValue',

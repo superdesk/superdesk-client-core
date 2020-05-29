@@ -5,11 +5,11 @@ import {IFormField, IFormGroup} from 'superdesk-api';
 // different components must be used for filtering than for entering/updating items
 function getFieldTypeForFiltering(type: FormFieldType): FormFieldType {
     switch (type) {
-    case FormFieldType.textSingleLine:
-        return FormFieldType.textSingleLine;
+    case FormFieldType.plainText:
+        return FormFieldType.plainText;
     case FormFieldType.textEditor3:
         // even though textEditor3 outputs HTML, plaintext has to be used for filtering
-        return FormFieldType.textSingleLine;
+        return FormFieldType.plainText;
     case FormFieldType.number:
         return FormFieldType.number;
     case FormFieldType.vocabularySingleValue:

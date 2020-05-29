@@ -6,7 +6,7 @@ export function hasValue(fieldConfig: IFormField, value: any): boolean {
     const type: FormFieldType = fieldConfig.type;
 
     switch (type) {
-    case FormFieldType.textSingleLine:
+    case FormFieldType.plainText:
     case FormFieldType.textEditor3:
         return typeof value === 'string' && value.trim().length > 0;
     case FormFieldType.vocabularySingleValue:

@@ -36,7 +36,7 @@ interface IState {
 
 // subset of FormFieldType
 enum IContentProfileFieldTypes {
-    textSingleLine = 'textSingleLine',
+    plainText = 'plainText',
     number = 'number',
 }
 
@@ -68,14 +68,14 @@ function getCommonContentProfileConfig(
 ): Array<IFormField | IFormGroup> {
     const idField: IFormField = {
         label: gettext('ID'),
-        type: FormFieldType.textSingleLine,
+        type: FormFieldType.plainText,
         field: 'id',
         required: true,
     };
 
     const labelField: IFormField = {
         label: gettext('Label'),
-        type: FormFieldType.textSingleLine,
+        type: FormFieldType.plainText,
         field: 'label',
         required: true,
     };
@@ -111,9 +111,9 @@ function getCommonContentProfileConfig(
         component_parameters: {
             items: getAllContentProfileFieldTypes().map((type) => {
                 switch (type) {
-                case IContentProfileFieldTypes.textSingleLine:
+                case IContentProfileFieldTypes.plainText:
                     return {
-                        id: IContentProfileFieldTypes.textSingleLine,
+                        id: IContentProfileFieldTypes.plainText,
                         label: gettext('Plain text (single line)'),
                     };
                 case IContentProfileFieldTypes.number:
@@ -212,7 +212,7 @@ function getFormConfig(
     }
 }
 
-function getAttributesForTextSingleLine(): Array<IFormField> {
+function getAttributesForPlainText(): Array<IFormField> {
     const minLengthField: IFormField = {
         label: gettext('Minimum length'),
         type: FormFieldType.number,
@@ -232,8 +232,8 @@ function getAttributesForTextSingleLine(): Array<IFormField> {
 
 function getAttributesForFormFieldType(type: IContentProfileFieldTypes): Array<IFormField> {
     switch (type) {
-    case IContentProfileFieldTypes.textSingleLine:
-        return getAttributesForTextSingleLine();
+    case IContentProfileFieldTypes.plainText:
+        return getAttributesForPlainText();
     case IContentProfileFieldTypes.number:
         return [];
     default:

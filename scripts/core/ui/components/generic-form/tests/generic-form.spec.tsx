@@ -13,7 +13,7 @@ function getAllInputTypes(): Array<FormFieldType> {
 
 function getTestFieldConfig(type: FormFieldType): IFormField {
     switch (type) {
-    case FormFieldType.textSingleLine:
+    case FormFieldType.plainText:
     case FormFieldType.textEditor3:
     case FormFieldType.number:
     case FormFieldType.checkbox:

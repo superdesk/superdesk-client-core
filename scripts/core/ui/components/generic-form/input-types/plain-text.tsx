@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import {IInputType} from '../interfaces/input-types';
 
-export class TextSingleLine extends React.Component<IInputType<string>> {
+export class PlainText extends React.Component<IInputType<string>> {
     render() {
         if (this.props.previewOutput) {
             return <div data-test-id={`gform-output--${this.props.formField.field}`}>{this.props.value}</div>;

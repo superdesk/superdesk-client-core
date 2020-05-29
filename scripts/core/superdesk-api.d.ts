@@ -562,7 +562,7 @@ declare module 'superdesk-api' {
 
     // subset of FormFieldType
     export enum IContentProfileFieldTypes {
-        textSingleLine = 'textSingleLine',
+        plainText = 'plainText',
         number = 'number',
     }
 
@@ -708,7 +708,7 @@ declare module 'superdesk-api' {
     }
 
     export enum FormFieldType {
-        textSingleLine = 'textSingleLine',
+        plainText = 'plainText',
         textEditor3 = 'textEditor3',
         number = 'number',
         vocabularySingleValue = 'vocabularySingleValue',

@@ -12,7 +12,7 @@ import {gettext} from 'core/utils';
 function getNameField(): IFormField {
     return {
         label: gettext('Destination name'),
-        type: FormFieldType.textSingleLine,
+        type: FormFieldType.plainText,
         field: 'name',
         required: true,
     };

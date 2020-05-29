@@ -1,5 +1,5 @@
 import React from 'react';
-import {TextSingleLine} from './input-types/text-single-line';
+import {PlainText} from './input-types/plain-text';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {isIFormGroup, isIFormField, FormFieldType} from './interfaces/form';
 import {VocabularySingleValue} from './input-types/vocabulary_single_value';
@@ -19,8 +19,8 @@ import {NumberComponent} from './input-types/number';
 
 export function getFormFieldComponent(type: FormFieldType): React.ComponentType<IInputType<any>> {
     switch (type) {
-    case FormFieldType.textSingleLine:
-        return TextSingleLine;
+    case FormFieldType.plainText:
+        return PlainText;
     case FormFieldType.textEditor3:
         return TextEditor3;
     case FormFieldType.number:
