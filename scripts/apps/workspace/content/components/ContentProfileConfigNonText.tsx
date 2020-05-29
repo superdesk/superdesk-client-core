@@ -405,8 +405,10 @@ export class ContentProfileConfigNonText extends React.Component<IProps, IState>
         };
 
         const onSortEnd = ({oldIndex, newIndex}) => {
-            this.setState({sortingInProgress: false});
-            this.updateCurrentFields((_fields) => arrayMove(_fields, oldIndex, newIndex));
+            this.setState({
+                sortingInProgress: false,
+                fields: this.updateCurrentFields((_fields) => arrayMove(_fields, oldIndex, newIndex)),
+            });
         };
 
         const beforeSortStart = () => {
@@ -435,21 +437,11 @@ export class ContentProfileConfigNonText extends React.Component<IProps, IState>
 
     updateCurrentFields(
         fn: (items: IArrayKeyed<IContentProfileField>) => IArrayKeyed<IContentProfileField>,
-        callback?: () => void,
-    ) {
-        this.setState(
-            {
-                fields: {
-                    ...this.state.fields,
-                    [this.state.activeTab]: fn(this.state.fields[this.state.activeTab]),
-                },
-            },
-            () => {
-                if (callback != null) {
-                    callback();
-                }
-            },
-        );
+    ): IState['fields'] {
+        return {
+            ...this.state.fields,
+            [this.state.activeTab]: fn(this.state.fields[this.state.activeTab]),
+        };
     }
 
     componentDidUpdate() {
@@ -476,15 +468,19 @@ export class ContentProfileConfigNonText extends React.Component<IProps, IState>
             read: () => Promise.resolve(fieldsResponse),
             update: (item) => {
                 return new Promise((resolve) => {
-                    this.updateCurrentFields(
-                        (_fields) => {
-                            return _fields.map((field) => {
-                                if (field.key === item._id) {
-                                    return {...field, value: stripSystemId(item)};
-                                } else {
-                                    return field;
-                                }
-                            });
+                    this.setState(
+                        {
+                            fields: this.updateCurrentFields(
+                                (_fields) => {
+                                    return _fields.map((field) => {
+                                        if (field.key === item._id) {
+                                            return {...field, value: stripSystemId(item)};
+                                        } else {
+                                            return field;
+                                        }
+                                    });
+                                },
+                            ),
                         },
                         () => {
                             resolve(item);
@@ -499,29 +495,40 @@ export class ContentProfileConfigNonText extends React.Component<IProps, IState>
                         _id: this.generateKey(),
                     };
 
-                    this.updateCurrentFields(
-                        (_fields) => {
-                            const nextItem = {
-                                key: this.generateKey(),
-                                value: item,
-                            };
+                    this.setState(
+                        {
+                            insertNewItemAtIndex: null,
+                            fields: this.updateCurrentFields(
+                                (_fields) => {
+                                    const nextItem = {
+                                        key: this.generateKey(),
+                                        value: item,
+                                    };
 
-                            return insertArrayItemAtIndex(_fields, nextItem, this.state.insertNewItemAtIndex ?? 0);
+                                    return insertArrayItemAtIndex(
+                                        _fields,
+                                        nextItem,
+                                        this.state.insertNewItemAtIndex ?? 0,
+                                    );
+                                },
+                            ),
                         },
                         () => {
                             resolve(itemWithId);
                         },
                     );
-
-                    this.setState({insertNewItemAtIndex: null});
                 });
             },
             delete: (item) => {
                 return new Promise((resolve) => {
-                    this.updateCurrentFields(
-                        (_fields) => _fields.filter(
-                            ({key}) => key !== item._id,
-                        ),
+                    this.setState(
+                        {
+                            fields: this.updateCurrentFields(
+                                (_fields) => _fields.filter(
+                                    ({key}) => key !== item._id,
+                                ),
+                            ),
+                        },
                         () => {
                             resolve();
                         },
