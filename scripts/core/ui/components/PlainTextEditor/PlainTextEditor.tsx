@@ -9,7 +9,10 @@ import {
 } from 'draft-js';
 import './styles.scss';
 import {getSpellchecker} from 'core/editor3/components/spellchecker/default-spellcheckers';
-import {getSpellcheckWarningsByBlock, getSpellcheckingDecorator} from 'core/editor3/components/spellchecker/SpellcheckerDecorator';
+import {
+    getSpellcheckWarningsByBlock,
+    getSpellcheckingDecorator,
+} from 'core/editor3/components/spellchecker/SpellcheckerDecorator';
 import {getDraftSelectionForEntireContent} from 'core/editor3/helpers/getDraftSelectionForEntireContent';
 
 export interface IProps {
@@ -27,7 +30,7 @@ interface IState {
 }
 
 export class PlainTextEditor extends React.Component<IProps, IState> {
-    spellcheckInProgress: boolean
+    spellcheckInProgress: boolean;
 
     constructor(props) {
         super(props);
@@ -78,11 +81,13 @@ export class PlainTextEditor extends React.Component<IProps, IState> {
             getSpellcheckWarningsByBlock(spellchecker, this.state.editorState)
                 .then((warningsByBlock) => {
                     this.spellcheckInProgress = false;
-                    const spellcheckerDecorator = getSpellcheckingDecorator(this.props.language, warningsByBlock, {disableContextMenu: true});
+                    const spellcheckerDecorator =
+                        getSpellcheckingDecorator(this.props.language, warningsByBlock, {disableContextMenu: true});
                     const decorator = new CompositeDecorator([spellcheckerDecorator]);
                     const editorState = this.state.editorState;
                     const editorStateDecorated = EditorState.set(this.state.editorState, {decorator});
-                    const editorStateWithSelection = EditorState.forceSelection(editorStateDecorated, editorState.getSelection());
+                    const editorStateWithSelection =
+                        EditorState.forceSelection(editorStateDecorated, editorState.getSelection());
 
                     this.setState({
                         editorState: editorStateWithSelection,
