@@ -23,6 +23,7 @@ import {SortableContainer, SortableElement} from 'react-sortable-hoc';
 import arrayMove from 'array-move';
 import {Button} from 'superdesk-ui-framework';
 import {groupBy} from 'lodash';
+import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
 
 interface IProps {
     profile: IContentProfileNonText;
@@ -280,8 +281,10 @@ class ItemBase extends React.PureComponent<{wrapper: IPropsItem}> {
                     marginBottom: 10,
                     cursor: 'pointer',
                 }}
-                onClick={() => {
-                    page.startEditing(item._id);
+                onClick={(e: any) => {
+                    if (querySelectorParent(e.target, 'button', {self: true}) == null) {
+                        page.startEditing(item._id);
+                    }
                 }}
             >
                 {
