@@ -59,7 +59,11 @@ export class PlainTextEditor extends React.Component<IProps, IState> {
             this.runSpellchecker();
         }
 
-        return EditorState.push(editorState, newContent, 'insert-characters');
+        let newState = EditorState.set(editorState, {allowUndo: false});
+
+        newState = EditorState.push(newState, newContent, 'insert-characters');
+
+        return EditorState.set(newState, {allowUndo: true});
     }
 
     runSpellchecker() {
