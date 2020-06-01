@@ -10,6 +10,7 @@ import {
 import './styles.scss';
 import {getSpellchecker} from 'core/editor3/components/spellchecker/default-spellcheckers';
 import {getSpellcheckWarningsByBlock, getSpellcheckingDecorator} from 'core/editor3/components/spellchecker/SpellcheckerDecorator';
+import {getDraftSelectionForEntireContent} from 'core/editor3/helpers/getDraftSelectionForEntireContent';
 
 export interface IProps {
     value: string;
@@ -51,19 +52,8 @@ export class PlainTextEditor extends React.Component<IProps, IState> {
     updateStateWithValue(value: string) {
         const {editorState} = this.state;
         const currentContent = editorState.getCurrentContent();
-        const firstBlock = currentContent.getBlockMap().first();
-        const lastBlock = currentContent.getBlockMap().last();
-        const selectionAll = new SelectionState({
-            anchorKey: firstBlock.getKey(),
-            anchorOffset: 0,
-            focusKey: lastBlock.getKey(),
-            focusOffset: lastBlock.getLength(),
-        });
-        const newContent = Modifier.replaceText(
-            currentContent,
-            selectionAll,
-            value,
-        );
+        const selectionAll = getDraftSelectionForEntireContent(editorState);
+        const newContent = Modifier.replaceText(currentContent, selectionAll, value);
 
         if (this.props.spellcheck) {
             this.runSpellchecker();
