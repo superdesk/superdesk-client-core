@@ -130,7 +130,8 @@ export class GenericListPageItemViewEdit<T> extends React.Component<IProps<T>, I
 
         const issues = currentFields
             .filter(
-                (fieldConfig) => hasValue(fieldConfig, nextItemCleaned[fieldConfig.field]) !== true,
+                (fieldConfig) =>
+                    fieldConfig.required === true && hasValue(fieldConfig, nextItemCleaned[fieldConfig.field]) !== true,
             )
             .reduce<IIssues>((acc, fieldConfig) => {
                 acc[fieldConfig.field] = [gettext('Field is required')];
