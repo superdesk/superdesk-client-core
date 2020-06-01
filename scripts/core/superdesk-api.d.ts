@@ -560,6 +560,10 @@ declare module 'superdesk-api' {
         updated_by: IUser['_id'];
     }
 
+
+
+    // NON-TEXT CONTENT PROFILES:
+
     // subset of FormFieldType
     export enum IContentProfileFieldTypes {
         plainText = 'plainText',
@@ -571,15 +575,28 @@ declare module 'superdesk-api' {
         content = 'content',
     }
 
-    export interface IContentProfileField {
+    interface IContentProfileFieldBase {
         id: string;
         label: string;
         type: keyof typeof IContentProfileFieldTypes;
         section: keyof typeof IContentProfileSection;
         required: boolean;
-        
-        // it will also contain more fields specific to field type
     }
+
+    export interface IContentProfileFieldPlainText extends IContentProfileFieldBase {
+        // needs to be kept in sync with `getAttributesForPlainText`
+        minlength?: number;
+        maxlength?: number;
+        multiline?: boolean;
+    }
+
+    export interface IContentProfileFieldNumber extends IContentProfileFieldBase {
+        // needs to be kept in sync with `getAttributesForNumber`
+    }
+
+    export type IContentProfileField = IContentProfileFieldPlainText | IContentProfileFieldNumber;
+
+    //
 
     export enum IContentProfileTypeNonText {
         image = 'image',

@@ -240,12 +240,16 @@ function getAttributesForPlainText(): Array<IFormField> {
     return [minLengthField, maxLengthField, multilineField];
 }
 
+function getAttributesForNumber(): Array<IFormField> {
+    return [];
+}
+
 function getAttributesForFormFieldType(type: IContentProfileFieldTypes): Array<IFormField> {
     switch (type) {
     case IContentProfileFieldTypes.plainText:
         return getAttributesForPlainText();
     case IContentProfileFieldTypes.number:
-        return [];
+        return getAttributesForNumber();
     default:
         assertNever(type);
     }
