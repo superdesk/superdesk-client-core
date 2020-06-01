@@ -9,7 +9,7 @@ import {appConfig} from 'appConfig';
 import {reactToAngular1} from 'superdesk-ui-framework';
 import {VideoComponent} from './components/video';
 import {TextAreaInput} from './components/Form';
-import {SimpleEditorComponent} from './components/SimpleEditor/SimpleEditorComponent';
+import {PlainTextEditor} from './components/PlainTextEditor/PlainTextEditor';
 
 /**
  * Gives top shadow for scroll elements
@@ -1245,10 +1245,10 @@ export default angular.module('superdesk.core.ui', [
             ['item'],
         ),
     )
-    .component('sdSimpleEditor',
+    .component('sdPlainTextEditor',
         reactToAngular1(
-            SimpleEditorComponent,
-            ['value', 'onChange', 'classes', 'field'],
+            PlainTextEditor,
+            ['value', 'onChange', 'classes', 'field', 'spellcheck', 'language'],
         ))
     .component('sdTextAreaInput',
         reactToAngular1(

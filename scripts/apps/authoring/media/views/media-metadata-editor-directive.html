@@ -11,11 +11,13 @@
         data-test-id="{{'field--' + field.field}}"
     >
         <label class="sd-line-input__label">{{field.label}}</label>
-        <sd-simple-editor
+        <sd-plain-text-editor
             on-change="handleInputChange"
             value="item[field.field]"
             classes="inputClasses"
             field="field.field"
+            spellcheck="true"
+            language="item.language"
         />
     </div>
 

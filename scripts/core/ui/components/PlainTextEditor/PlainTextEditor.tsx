@@ -5,14 +5,19 @@ import {
     ContentState,
     Modifier,
     SelectionState,
+    CompositeDecorator,
 } from 'draft-js';
 import './styles.scss';
+import {getSpellchecker} from 'core/editor3/components/spellchecker/default-spellcheckers';
+import {getSpellcheckWarningsByBlock, getSpellcheckingDecorator} from 'core/editor3/components/spellchecker/SpellcheckerDecorator';
 
 export interface IProps {
     value: string;
     onChange: (newValue: string, props: IProps) => void;
     classes: string;
     field: string;
+    spellcheck?: boolean;
+    language?: string;
 }
 
 interface IState {
@@ -20,7 +25,9 @@ interface IState {
     hasFocus: boolean;
 }
 
-export class SimpleEditorComponent extends React.Component<IProps, IState> {
+export class PlainTextEditor extends React.Component<IProps, IState> {
+    spellcheckInProgress: boolean
+
     constructor(props) {
         super(props);
 
@@ -32,6 +39,7 @@ export class SimpleEditorComponent extends React.Component<IProps, IState> {
         this.handleEditorChange = this.handleEditorChange.bind(this);
         this.onFocus = this.onFocus.bind(this);
         this.onBlur = this.onBlur.bind(this);
+        this.spellcheckInProgress = false;
     }
 
     createStateFromValue(value: string) {
@@ -57,13 +65,44 @@ export class SimpleEditorComponent extends React.Component<IProps, IState> {
             value,
         );
 
+        if (this.props.spellcheck) {
+            this.runSpellchecker();
+        }
+
         return EditorState.push(editorState, newContent, 'insert-characters');
     }
 
+    runSpellchecker() {
+        if (!this.spellcheckInProgress) {
+            const spellchecker = getSpellchecker(this.props.language);
+
+            if (spellchecker == null) {
+                return;
+            }
+
+            this.spellcheckInProgress = true;
+            getSpellcheckWarningsByBlock(spellchecker, this.state.editorState)
+                .then((warningsByBlock) => {
+                    this.spellcheckInProgress = false;
+                    const spellcheckerDecorator = getSpellcheckingDecorator(this.props.language, warningsByBlock, {disableContextMenu: true});
+                    const decorator = new CompositeDecorator([spellcheckerDecorator]);
+                    const editorState = this.state.editorState;
+                    const editorStateDecorated = EditorState.set(this.state.editorState, {decorator});
+                    const editorStateWithSelection = EditorState.forceSelection(editorStateDecorated, editorState.getSelection());
+
+                    this.setState({
+                        editorState: editorStateWithSelection,
+                    });
+                });
+        }
+    }
+
     componentWillReceiveProps(newProps: IProps) {
-        this.setState({
-            editorState: this.updateStateWithValue(newProps.value),
-        });
+        if (newProps !== this.props) {
+            this.setState({
+                editorState: this.updateStateWithValue(newProps.value),
+            });
+        }
     }
 
     handleEditorChange(editorState: EditorState) {
@@ -86,10 +125,13 @@ export class SimpleEditorComponent extends React.Component<IProps, IState> {
     onBlur() {
         this.setState({hasFocus: false});
     }
+
     render() {
         const classes = `${this.props.classes} ${
             this.state.hasFocus ? 'focus' : ''
         }`;
+
+        let editorState;
 
         return (
             <div className={classes}>

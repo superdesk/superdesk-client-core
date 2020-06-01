@@ -1,5 +1,5 @@
 import {get, isEmpty} from 'lodash';
-import {IProps as ISimpleEditorProps} from 'core/ui/components/SimpleEditor/SimpleEditorComponent';
+import {IProps as IPlainTextEditorProps} from 'core/ui/components/PlainTextEditor/PlainTextEditor';
 
 MediaMetadataEditorDirective.$inject = ['metadata', 'features', 'session'];
 export default function MediaMetadataEditorDirective(metadata, features, session) {
@@ -22,7 +22,7 @@ export default function MediaMetadataEditorDirective(metadata, features, session
             scope.features = features;
             scope.metadata = metadata;
 
-            scope.handleInputChange = (newValue: string, props: ISimpleEditorProps) => {
+            scope.handleInputChange = (newValue: string, props: IPlainTextEditorProps) => {
                 const {field} = props;
 
                 if (scope.item.hasOwnProperty(field)) {

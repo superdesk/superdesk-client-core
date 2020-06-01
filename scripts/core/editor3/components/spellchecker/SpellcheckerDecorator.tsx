@@ -85,6 +85,7 @@ interface IState {
 export function getSpellcheckingDecorator(
     language: string,
     spellcheckWarnings: ISpellcheckWarningsByBlock,
+    {disableContextMenu = false} = {},
 ) {
     const spellchecker = getSpellchecker(language);
 
@@ -171,6 +172,10 @@ export function getSpellcheckingDecorator(
                     <span
                         className={getClassname()}
                         onContextMenu={(e) => {
+                            if (disableContextMenu) {
+                                return;
+                            }
+
                             e.preventDefault();
 
                             if (Array.isArray(warningForDecoration.suggestions)) {
