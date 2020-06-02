@@ -4,7 +4,7 @@ import {gettext} from 'core/utils';
 import {isMediaEditable} from 'core/config';
 import {appConfig} from 'appConfig';
 import {dataApi} from 'core/helpers/CrudManager';
-import {IArticle, IContentProfileEditorConfig, IArticleField} from 'superdesk-api';
+import {IArticle, IContentProfileEditorConfig, IVocabulary} from 'superdesk-api';
 
 /**
  * @ngdoc service
@@ -265,7 +265,7 @@ export function ContentService(api, templates, desks, packages, archiveService, 
     /**
      * Get fields with preview enabled
      */
-    this.previewFields = (editor: IContentProfileEditorConfig, fields: Array<IArticleField>): Array<IArticleField> =>
+    this.previewFields = (editor: IContentProfileEditorConfig, fields: Array<IVocabulary>): Array<IVocabulary> =>
         editor == null || fields == null ? []
             : fields.filter((field) => editor[field._id] != null && editor[field._id].preview);
 

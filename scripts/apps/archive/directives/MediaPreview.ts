@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import {checkRenditions, getAssociationsByFieldId} from 'apps/authoring/authoring/controllers/AssociationController';
-import {IArticleField} from 'superdesk-api';
+import {IVocabulary} from 'superdesk-api';
 
 /**
  * @ngdoc directive
@@ -28,7 +28,7 @@ export function MediaPreview(api, $rootScope, desks, superdesk, content, storage
 
             const setSubjectPreviewFields = () => {
                 scope.subjectPreviewFields = content.previewFields(scope.editor, scope.fields)
-                    .filter((field: IArticleField) => field.field_type == null);
+                    .filter((field: IVocabulary) => field.field_type == null);
             };
 
             scope.checkRenditions = checkRenditions;

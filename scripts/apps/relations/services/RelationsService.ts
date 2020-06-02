@@ -1,5 +1,5 @@
 import {zipObject} from 'lodash';
-import {IArticle, IArticleField} from 'superdesk-api';
+import {IArticle, IVocabulary} from 'superdesk-api';
 import {isPublished, isIngested} from 'apps/archive/utils';
 
 const RELATED_LINK_KEYS = 3; // links only have _id, type keys and order (and some old ones only _id)
@@ -36,7 +36,7 @@ export function RelationsService(api, $q) {
         };
     };
 
-    this.itemHasAllowedStatus = function(item: IArticle, field: IArticleField) {
+    this.itemHasAllowedStatus = function(item: IArticle, field: IVocabulary) {
         const ALLOWED_WORKFLOWS = {
             ...this.getDefaultAllowedWorkflows(),
             ...(field?.field_options?.allowed_workflows || {}),

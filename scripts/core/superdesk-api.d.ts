@@ -538,12 +538,12 @@ declare module 'superdesk-api' {
         tags?: Array<IVocabularyTag>;
     }
 
-    export interface IArticleField extends IVocabulary {
-        single?: boolean;
-        preview?: boolean;
-    }
-
-    export type IContentProfileEditorConfig = {[key: string]: IArticleField};
+    export type IContentProfileEditorConfig = {
+        [key: string]: {
+            single?: boolean;
+            preview?: boolean;
+        }
+    };
 
     export interface IContentProfile {
         _id: string;

@@ -1,12 +1,12 @@
 import {includes} from 'lodash';
 import {getLabelForFieldId} from '../../helpers/getLabelForFieldId';
 import {appConfig} from 'appConfig';
-import {IArticleField} from 'superdesk-api';
+import {IVocabulary} from 'superdesk-api';
 
 interface IScope extends ng.IScope {
     getEditor3FormattingOptions: (fieldName: string) => Array<string>;
     model: any;
-    fields: {[key: string]: IArticleField};
+    fields: {[key: string]: IVocabulary};
     form: any;
     formattingOptions: Array<string>;
     schemaKeysOrdering: any;
@@ -24,7 +24,7 @@ interface IScope extends ng.IScope {
     onOrderUpdate(locals: { key: string; }): any;
     onDrag(locals: { start: number; end: number; key: string; }): any;
     onToggle(locals: { key: string; dest: string; position: string; }): any;
-    showPreviewConfig(field: IArticleField): boolean;
+    showPreviewConfig(field: IVocabulary): boolean;
 }
 
 const HAS_PLAINTEXT_FORMATTING_OPTIONS = Object.freeze({

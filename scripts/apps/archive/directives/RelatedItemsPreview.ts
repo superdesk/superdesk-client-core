@@ -1,4 +1,4 @@
-import {IArticle, IArticleField} from 'superdesk-api';
+import {IArticle, IVocabulary} from 'superdesk-api';
 import {gettext} from 'core/utils';
 
 /**
@@ -14,7 +14,7 @@ import {gettext} from 'core/utils';
 
 interface IScope extends ng.IScope {
     item: IArticle;
-    field: IArticleField;
+    field: IVocabulary;
     preview: boolean;
     loading: boolean;
     relatedItems: Array<IArticle>;
