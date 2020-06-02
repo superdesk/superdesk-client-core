@@ -150,12 +150,15 @@
                     </div>
                 </div>
 
-                <div sd-info-item class="user_role field__role form__row">
+                <div sd-info-item class="user_role field__role form__row" ng-if="user.user_type != 'administrator'">
                     <div class="sd-line-input sd-line-input--is-select">
                         <label class="sd-line-input__label" for="user_role" translate>Role</label>
                         <select class="sd-line-input__select"
                                 ng-focus="focused()"
                                 ng-disabled="!privileges.users"
+                                ng-init="user.role=roles[0]._id"
+                                ng-if="roles.length>0"
+                                ng-cloak
                                 ng-model="user.role"
                                 name="user_role"
                                 id="user_role"
