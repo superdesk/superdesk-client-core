@@ -22,16 +22,13 @@ export default function MediaMetadataEditorDirective(metadata, features, session
             scope.features = features;
             scope.metadata = metadata;
 
-            scope.handleInputChange = (newValue: string, props: IPlainTextEditorProps) => {
-                const {field} = props;
-
+            scope.handleInputChange = (newValue: string, {field}: IPlainTextEditorProps) => {
                 if (scope.item.hasOwnProperty(field)) {
                     scope.item[field] = newValue;
                     scope.onChange({key: field}); // set parent dirty=true
                     scope.$applyAsync(); // apply changes to scope
                 }
             };
-            scope.inputClasses = 'sd-line-input__input';
 
             // set default values
             scope.$watch('item', (item) => {

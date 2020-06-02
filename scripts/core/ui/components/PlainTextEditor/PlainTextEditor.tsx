@@ -18,10 +18,11 @@ import {getDraftSelectionForEntireContent} from 'core/editor3/helpers/getDraftSe
 export interface IProps {
     value: string;
     onChange: (newValue: string, props: IProps) => void;
+    onChangeData: any;
     classes: string;
-    field: string;
     spellcheck?: boolean;
     language?: string;
+    placeholder?: string;
 }
 
 interface IState {
@@ -111,7 +112,7 @@ export class PlainTextEditor extends React.Component<IProps, IState> {
         ) {
             const value = editorState.getCurrentContent().getPlainText();
 
-            this.props.onChange(value, this.props);
+            this.props.onChange(value, this.props.onChangeData);
         }
 
         this.setState({editorState});
@@ -138,6 +139,7 @@ export class PlainTextEditor extends React.Component<IProps, IState> {
                     onFocus={this.onFocus}
                     onBlur={this.onBlur}
                     editorState={this.state.editorState}
+                    placeholder={this.props.placeholder || ''}
                     onChange={this.handleEditorChange}
                 />
             </div>

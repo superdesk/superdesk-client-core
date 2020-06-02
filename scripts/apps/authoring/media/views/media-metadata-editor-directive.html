@@ -13,9 +13,9 @@
         <label class="sd-line-input__label">{{field.label}}</label>
         <sd-plain-text-editor
             on-change="handleInputChange"
+            on-change-data="{field: field.field}"
             value="item[field.field]"
-            classes="inputClasses"
-            field="field.field"
+            classes="'sd-line-input__input'"
             spellcheck="true"
             language="item.language"
         />
