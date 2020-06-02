@@ -47,6 +47,12 @@ export class PlainTextEditor extends React.Component<IProps, IState> {
         this.spellcheckInProgress = false;
     }
 
+    componentDidMount() {
+        if (this.props.spellcheck) {
+            this.runSpellchecker();
+        }
+    }
+
     createStateFromValue(value: string) {
         return EditorState.createWithContent(
             ContentState.createFromText(value || ''),

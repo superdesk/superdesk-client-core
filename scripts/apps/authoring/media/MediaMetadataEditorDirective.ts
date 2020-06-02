@@ -1,5 +1,4 @@
 import {get, isEmpty} from 'lodash';
-import {IProps as IPlainTextEditorProps} from 'core/ui/components/PlainTextEditor/PlainTextEditor';
 
 MediaMetadataEditorDirective.$inject = ['metadata', 'features', 'session'];
 export default function MediaMetadataEditorDirective(metadata, features, session) {
@@ -22,7 +21,7 @@ export default function MediaMetadataEditorDirective(metadata, features, session
             scope.features = features;
             scope.metadata = metadata;
 
-            scope.handleInputChange = (newValue: string, {field}: IPlainTextEditorProps) => {
+            scope.handleInputChange = (newValue: string, {field}) => {
                 if (scope.item.hasOwnProperty(field)) {
                     scope.item[field] = newValue;
                     scope.onChange({key: field}); // set parent dirty=true
