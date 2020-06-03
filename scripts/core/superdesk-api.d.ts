@@ -1206,7 +1206,7 @@ declare module 'superdesk-api' {
             italicAbstract?: any;
             sendPublishSchedule?: boolean;
             sendEmbargo?: boolean;
-            defaultStage?: 'working' | 'incoming';
+            sendDefaultStage?: 'working' | 'incoming';
         };
         list: {
             narrowView: any;

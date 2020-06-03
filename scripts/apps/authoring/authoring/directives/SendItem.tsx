@@ -911,8 +911,11 @@ export function SendItem($q,
                     scope.currentUserAction === ctrl.userActions.duplicate_to) {
                     var lastDestination = scope.destination_last[scope.currentUserAction];
 
-                    if (appConfig.ui && appConfig.ui.defaultStage != null && appConfig.ui.defaultStage === 'working') {
-                        stage = scope.stages.find((stg) => stg.working_stage);
+                    if (appConfig.ui
+                        && appConfig.ui.sendDefaultStage != null && appConfig.ui.sendDefaultStage === 'working') {
+                        stage = scope.stages.find((stg) => appConfig.ui.sendDefaultStage === 'working'
+                            ? stg.working_stage
+                            : stg.incoming_stage);
                     } else if (lastDestination) {
                         stage = _.find(scope.stages, {_id: lastDestination.stage});
                     } else if (scope.item.task && scope.item.task.stage) {
