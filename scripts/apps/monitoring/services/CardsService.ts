@@ -233,7 +233,7 @@ export function CardsService(search, session, desks, $location) {
         filterQueryByCustomQuery(query, card);
 
         if (queryString) {
-            query.filter({query: {query_string: {query: queryString, lenient: false}}});
+            query.filter({query: {query_string: {query: queryString, lenient: true}}});
             criteria.es_highlight = search.getElasticHighlight();
         }
 

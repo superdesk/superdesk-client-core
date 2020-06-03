@@ -4,7 +4,7 @@ import set from 'date-fns/set';
 import format from 'date-fns/format';
 import addMinutes from 'date-fns/addMinutes';
 import {IDateTimeFieldConfig} from './extension';
-import {DatePickerISO, TimePicker, Button, Switch} from 'superdesk-ui-framework';
+import {DatePickerISO, TimePicker, Button, Switch} from 'superdesk-ui-framework/react';
 
 export function getDateTimeField(superdesk: ISuperdesk) {
     const {gettext, gettextPlural} = superdesk.localization;

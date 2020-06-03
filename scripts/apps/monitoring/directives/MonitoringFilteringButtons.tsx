@@ -5,7 +5,7 @@ import {IMonitoringFilter, IDesk} from 'superdesk-api';
 import {extensions} from 'appConfig';
 import {flattenDeep, get} from 'lodash';
 import {dataApiByEntity} from 'core/helpers/CrudManager';
-import {Badge, Button} from 'superdesk-ui-framework';
+import {Badge, Button} from 'superdesk-ui-framework/react';
 
 interface IProps {
     deskId: IDesk['_id'];
