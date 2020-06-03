@@ -135,7 +135,7 @@ export class PlainTextEditor extends React.Component<IProps, IState> {
     render() {
         const classes = `${this.props.classes} ${
             this.state.hasFocus ? 'focus' : ''
-        }`;
+        } plain-text-editor`;
 
         let editorState;
 
