@@ -299,6 +299,13 @@ export class VideoEditor extends React.Component<IProps, IState> {
         if (this.state.playing) {
             this.videoRef.current?.pause();
         } else {
+            // Video will play from the beginning after finished playing, but when it reaches trim end
+            // play button will only play video a bit everytime it is clicked
+            if (this.videoRef.current !== null
+                && this.videoRef.current?.currentTime !== null
+                && this.videoRef.current.currentTime > this.state.transformations.trim.end) {
+                this.videoRef.current.currentTime = this.state.transformations.trim.start;
+            }
             this.videoRef.current?.play();
         }
     }
@@ -396,8 +403,8 @@ export class VideoEditor extends React.Component<IProps, IState> {
         if (
             this.state.transformations.trim.end !== this.videoRef.current.duration ||
             !isEqual(
-                omit(this.state.transformations, ['trim.end', 'crop.aspect', 'crop.value', 'crop.scale']),
-                omit(initTransformations, ['trim.end', 'crop.aspect', 'crop.value', 'crop.scale']),
+                omit(this.state.transformations, ['trim.end', 'crop.aspect']),
+                omit(initTransformations, ['trim.end', 'crop.aspect']),
             )
         ) {
             return true;
