@@ -912,7 +912,9 @@ export function SendItem($q,
                     var lastDestination = scope.destination_last[scope.currentUserAction];
 
                     if (appConfig.ui
-                        && appConfig.ui.sendDefaultStage != null && appConfig.ui.sendDefaultStage === 'working') {
+                        && appConfig.ui.sendDefaultStage != null
+                        && (appConfig.ui.sendDefaultStage === 'working'
+                        || appConfig.ui.sendDefaultStage === 'incoming')) {
                         stage = scope.stages.find((stg) => appConfig.ui.sendDefaultStage === 'working'
                             ? stg.working_stage
                             : stg.incoming_stage);
