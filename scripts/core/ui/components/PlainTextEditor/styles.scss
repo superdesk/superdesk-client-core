@@ -42,4 +42,11 @@
             position: relative;
         }
     }
+
+    *:not([disabled]) {
+        .plain-text-editor {
+            cursor: auto;
+        }
+    }
 }
+
