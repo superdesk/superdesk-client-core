@@ -7,6 +7,7 @@ import {assertNever} from 'core/helpers/typescript-helpers';
 export enum IContentProfileTypeNonText {
     image = 'image',
     video = 'video',
+    text = 'text',
 }
 
 export function getAllContentProfileTypes(): Array<IContentProfileTypeNonText> {
@@ -49,6 +50,8 @@ export function ContentProfilesController($scope, $location, notify, content, mo
             return {label: gettext('Image'), value: IContentProfileTypeNonText.image};
         case IContentProfileTypeNonText.video:
             return {label: gettext('Video'), value: IContentProfileTypeNonText.video};
+        case IContentProfileTypeNonText.text:
+            return {label: gettext('Text'), value: IContentProfileTypeNonText.text};
         default:
             return assertNever(type);
         }

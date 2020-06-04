@@ -150,10 +150,12 @@
                             <sd-widgets-config initial-widgets-config="editing.form.widgets_config" on-update="saveContentProfileWidgetsConfig"></sd-widgets-config>
                         </div>
                     </div>
-                </div>
 
-                <div ng-if="editing.form.type !== 'text'">
-                    <sd-content-profile-config-non-text profile="editing.form" profile-type="editing.form.type"></sd-content-profile-config-non-text>
+
+                    <sd-content-profile-config-non-text
+                        profile="editing.form"
+                        profile-type="editing.form.type"
+                    ></sd-content-profile-config-non-text>
                 </div>
             </fieldset>
         </form>

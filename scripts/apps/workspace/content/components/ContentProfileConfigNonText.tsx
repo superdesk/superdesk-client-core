@@ -1,55 +1,79 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
 import {
-    IContentProfileNonText,
-    IFormGroup,
-    IFormField,
-    IContentProfileField,
     IArrayKeyed,
     ICrudManager,
     ICrudManagerResponse,
     IItemWithId,
     IPropsGenericFormItemComponent,
-    IFormGroupCollapsible,
     IPropsGenericFormContainer,
+    IContentProfile,
+    IContentProfileEditorConfig,
+    IVocabulary,
 } from 'superdesk-api';
 
 import {gettext, arrayInsert} from 'core/utils';
-import {FormFieldType} from 'core/ui/components/generic-form/interfaces/form';
 import {IContentProfileTypeNonText} from '../controllers/ContentProfilesController';
-import {assertNever} from 'core/helpers/typescript-helpers';
+import {assertNever, Writeable} from 'core/helpers/typescript-helpers';
 import {GenericListPageComponent} from 'core/ui/components/ListPage/generic-list-page';
 import {SortableContainer, SortableElement} from 'react-sortable-hoc';
 import arrayMove from 'array-move';
 import {Button} from 'superdesk-ui-framework';
 import {groupBy} from 'lodash';
 import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
+import ng from 'core/services/ng';
+import {getLabelForFieldId} from 'apps/workspace/helpers/getLabelForFieldId';
+import {getContentProfileFormConfig} from './get-content-profiles-form-config';
+import {getEditorConfig} from './get-editor-config';
+
+// should be stored in schema rather than editor section of the content profile
+// but the fields should be editable via GUI
+enum ISchemaFields {
+    readonly = 'readonly',
+    required = 'required',
+    minlength = 'minlength',
+    maxlength = 'maxlength',
+}
+
+type ISchemaKey = keyof typeof ISchemaFields;
+
+function getAllSchemaKeys(): Array<ISchemaFields> {
+    return Object.keys(ISchemaFields).map((key) => ISchemaFields[key]);
+}
+
+// this is UI specific data structure
+// when saving, data from it will be converted and written to schema/editor sections of the content profile
+type IContentProfileField = valueof<IContentProfileEditorConfig> & {id: string} & {[key in ISchemaKey]?: any};
+
+interface IAdditionalProps {
+    additionalProps: {
+        sortingInProgress: boolean;
+        setIndexForNewItem(index: number): void;
+        getLabel(id: string): string;
+    };
+}
 
 interface IProps {
-    profile: IContentProfileNonText;
+    profile: IContentProfile;
     profileType: keyof typeof IContentProfileTypeNonText;
 }
 
 interface IState {
-    fields: {[key in IContentProfileSection]: IArrayKeyed<IContentProfileField>};
+    fields: {[key in IContentProfileSection]: IArrayKeyed<IContentProfileField>} | null;
+    allFieldIds: Array<string> | null;
     activeTab: keyof typeof IContentProfileSection;
     sortingInProgress: boolean;
     insertNewItemAtIndex: number | null;
-}
-
-// subset of FormFieldType
-enum IContentProfileFieldTypes {
-    plainText = 'plainText',
-    number = 'number',
+    vocabularies: Array<IVocabulary>;
+    editor: IContentProfileEditorConfig | null;
+    schema: any | null;
+    customFields: any | null;
+    loading: boolean;
 }
 
 enum IContentProfileSection {
     header = 'header',
     content = 'content',
-}
-
-function getAllContentProfileFieldTypes(): Array<IContentProfileFieldTypes> {
-    return Object.keys(IContentProfileFieldTypes).map((key) => IContentProfileFieldTypes[key]);
 }
 
 function getAllContentProfileSections(): Array<IContentProfileSection> {
@@ -66,209 +90,13 @@ function getLabelForSection(section: IContentProfileSection) {
     }
 }
 
-function getCommonContentProfileConfig(
-    field: Partial<IContentProfileFieldWithSystemId> | undefined,
-): Array<IFormField | IFormGroup> {
-    const idField: IFormField = {
-        label: gettext('ID'),
-        type: FormFieldType.plainText,
-        field: 'id',
-        required: true,
-    };
-
-    const labelField: IFormField = {
-        label: gettext('Label'),
-        type: FormFieldType.plainText,
-        field: 'label',
-        required: true,
-    };
-
-    const sectionField: IFormField = {
-        label: gettext('Section'),
-        type: FormFieldType.select,
-        component_parameters: {
-            items: getAllContentProfileSections()
-                .map((section) => ({id: section, label: getLabelForSection(section)})),
-        },
-        field: 'section',
-        required: true,
-    };
-
-    const sdWidth: IFormField = {
-        label: gettext('Width'),
-        type: FormFieldType.select,
-        component_parameters: {
-            items: [
-                {id: 'full', label: gettext('Full')},
-                {id: 'half', label: gettext('Half')},
-                {id: 'quarter', label: gettext('Quarter')},
-            ],
-        },
-        field: 'sdWidth',
-        required: true,
-    };
-
-    const fieldType: IFormField = {
-        label: gettext('Field type'),
-        type: FormFieldType.select,
-        component_parameters: {
-            items: getAllContentProfileFieldTypes().map((type) => {
-                switch (type) {
-                case IContentProfileFieldTypes.plainText:
-                    return {
-                        id: IContentProfileFieldTypes.plainText,
-                        label: gettext('Plain text'),
-                    };
-                case IContentProfileFieldTypes.number:
-                    return {
-                        id: IContentProfileFieldTypes.number,
-                        label: gettext('Number'),
-                    };
-                default:
-                    return assertNever(type);
-                }
-            }),
-        },
-        field: 'type',
-        required: true,
-    };
-
-    const requiredField: IFormField = {
-        label: gettext('Required'),
-        type: FormFieldType.checkbox,
-        field: 'required',
-        required: false,
-    };
-
-    const fieldTypeGroup: IFormGroup = {
-        type: 'inline',
-        direction: 'vertical',
-        form: [
-            fieldType,
-        ],
-    };
-
-    const fieldOptionsGroupType: IFormGroupCollapsible = {label: gettext('Field options'), openByDefault: true};
-
-    const fieldOptions = field?.type == null
-        ? []
-        : getAttributesForFormFieldType(IContentProfileFieldTypes[field.type]);
-
-    if (fieldOptions.length > 0) {
-        const optionsGroup: IFormGroup = {
-            type: fieldOptionsGroupType,
-            direction: 'vertical',
-            form: fieldOptions,
-        };
-
-        fieldTypeGroup.form.push(optionsGroup);
-    }
-
-    return [
-        idField,
-        labelField,
-        sectionField,
-        sdWidth,
-        fieldTypeGroup,
-        requiredField,
-    ];
-}
-
-function getImageFormConfig(field: Partial<IContentProfileFieldWithSystemId> | undefined): IFormGroup {
-    const displayInMediaEditor: IFormField = {
-        label: gettext('Display in media editor'),
-        type: FormFieldType.checkbox,
-        field: 'displayOnMediaEditor',
-        required: false,
-    };
-
-    const formConfig: IFormGroup = {
-        direction: 'vertical',
-        type: 'inline',
-        form: [...getCommonContentProfileConfig(field), displayInMediaEditor],
-    };
-
-    return formConfig;
-}
-
-function getVideoFormConfig(field: Partial<IContentProfileFieldWithSystemId>): IFormGroup {
-    const formConfig: IFormGroup = {
-        direction: 'vertical',
-        type: 'inline',
-        form: [...getCommonContentProfileConfig(field)],
-    };
-
-    return formConfig;
-}
-
-function getFormConfig(
-    type: IContentProfileTypeNonText,
-    field: Partial<IContentProfileFieldWithSystemId> | undefined,
-): IFormGroup {
-    switch (type) {
-    case IContentProfileTypeNonText.image:
-        return getImageFormConfig(field);
-    case IContentProfileTypeNonText.video:
-        return getVideoFormConfig(field);
-    default:
-        return assertNever(type);
-    }
-}
-
-function getAttributesForPlainText(): Array<IFormField> {
-    const minLengthField: IFormField = {
-        label: gettext('Minimum length'),
-        type: FormFieldType.number,
-        field: 'minlength',
-        required: false,
-    };
-
-    const maxLengthField: IFormField = {
-        label: gettext('Maximum length'),
-        type: FormFieldType.number,
-        field: 'maxlength',
-        required: false,
-    };
-
-    const multilineField: IFormField = {
-        label: gettext('Allow multiple lines'),
-        type: FormFieldType.checkbox,
-        field: 'multiline',
-        required: false,
-    };
-
-    return [minLengthField, maxLengthField, multilineField];
-}
-
-function getAttributesForNumber(): Array<IFormField> {
-    return [];
-}
-
-function getAttributesForFormFieldType(type: IContentProfileFieldTypes): Array<IFormField> {
-    switch (type) {
-    case IContentProfileFieldTypes.plainText:
-        return getAttributesForPlainText();
-    case IContentProfileFieldTypes.number:
-        return getAttributesForNumber();
-    default:
-        assertNever(type);
-    }
-}
-
-interface IAdditionalProps {
-    additionalProps: {
-        sortingInProgress: boolean;
-        setIndexForNewItem(index: number): void;
-    };
-}
-
 type IPropsItem = IPropsGenericFormItemComponent<IContentProfileFieldWithSystemId> & IAdditionalProps;
 
 // wrapper is used because sortable HOC considers `index` to be its internal prop and doesn't forward it
 class ItemBase extends React.PureComponent<{wrapper: IPropsItem}> {
     render() {
         const {item, page, index} = this.props.wrapper;
-        const {sortingInProgress, setIndexForNewItem} = this.props.wrapper.additionalProps;
+        const {sortingInProgress, setIndexForNewItem, getLabel} = this.props.wrapper.additionalProps;
         const isLast = index === page.getItemsCount() - 1;
 
         return (
@@ -314,7 +142,7 @@ class ItemBase extends React.PureComponent<{wrapper: IPropsItem}> {
                         : null
                 }
 
-                {item.label}
+                {getLabel(item.id)}
                 <button onClick={() => page.deleteItem(item)}>{gettext('Delete')}</button>
 
                 {
@@ -373,7 +201,7 @@ class ItemsContainerBase extends React.PureComponent {
 
 const ItemsContainerBaseSortable = SortableContainer(ItemsContainerBase);
 
-type IContentProfileFieldWithSystemId = IContentProfileField & IItemWithId;
+export type IContentProfileFieldWithSystemId = IContentProfileField & IItemWithId;
 
 function stripSystemId(item: IContentProfileFieldWithSystemId): IContentProfileField {
     const copy = {...item};
@@ -383,10 +211,15 @@ function stripSystemId(item: IContentProfileFieldWithSystemId): IContentProfileF
     return copy;
 }
 
+function isFieldEnabled(editor: IContentProfileEditorConfig, field: string) {
+    return editor[field]?.enabled ?? false;
+}
+
 export class ContentProfileConfigNonText extends React.Component<IProps, IState> {
     private generateKey: () => string;
     private lastKey: number;
     private ItemsContainerComponent: React.ComponentType<IPropsGenericFormContainer<IContentProfileFieldWithSystemId>>;
+    private isAllowedForSection: any;
 
     constructor(props: IProps) {
         super(props);
@@ -394,21 +227,17 @@ export class ContentProfileConfigNonText extends React.Component<IProps, IState>
         this.lastKey = 0;
         this.generateKey = () => (++this.lastKey).toString();
 
-        // adding keys to items because they will be reordered and they don't have static IDs to be used as react keys
-        const fieldsKeyed = (props.profile.fields ?? []).map(
-            (field) => ({key: this.generateKey(), value: field}),
-        );
-
-        var grouped = groupBy(fieldsKeyed, (item) => item.value.section);
-
         this.state = {
-            fields: {
-                header: grouped[IContentProfileSection.header] ?? [],
-                content: grouped[IContentProfileSection.content] ?? [],
-            },
+            fields: null,
             activeTab: getAllContentProfileSections()[0],
             sortingInProgress: false,
             insertNewItemAtIndex: null,
+            editor: null,
+            schema: null,
+            vocabularies: [],
+            allFieldIds: null,
+            customFields: null,
+            loading: true,
         };
 
         const onSortEnd = ({oldIndex, newIndex}) => {
@@ -440,6 +269,13 @@ export class ContentProfileConfigNonText extends React.Component<IProps, IState>
         this.ItemsContainerComponent = ItemsContainerComponent;
 
         this.updateCurrentFields = this.updateCurrentFields.bind(this);
+        this.existsInFields = this.existsInFields.bind(this);
+    }
+
+    /** Checks in all sections */
+    existsInFields(id: string) {
+        return getAllContentProfileSections()
+            .some((section) => this.state.fields[section].some((item) => item.value.id === id));
     }
 
     updateCurrentFields(
@@ -451,17 +287,81 @@ export class ContentProfileConfigNonText extends React.Component<IProps, IState>
         };
     }
 
-    componentDidUpdate() {
-        const initialArray: Array<IContentProfileField> = [];
+    componentDidMount() {
+        const vocabularies = ng.get('vocabularies');
+        const content = ng.get('content');
 
-        this.props.profile.fields = getAllContentProfileSections()
-            .reduce<Array<IContentProfileField>>(
-                (acc, key) => [...acc, ...this.state.fields[key].map(({value}) => value)],
-                initialArray,
+        Promise.all([
+            vocabularies.getVocabularies(),
+            getEditorConfig(this.props.profile._id),
+            content.getCustomFields(),
+        ]).then((res) => {
+            const [vocabulariesCollection, {editor, schema, isAllowedForSection}, customFields] = res;
+
+            this.isAllowedForSection = isAllowedForSection;
+
+            const getOrder = (field) => editor[field]?.order ?? 99;
+
+            const allFieldIds = Object.keys(editor);
+
+            const fields: Array<IContentProfileField> = allFieldIds
+                .filter((fieldId) => isFieldEnabled(editor, fieldId))
+                .sort((a, b) => getOrder(a) - getOrder(b))
+                .map((fieldId) => {
+                    const editorField = editor[fieldId];
+
+                    let field: IContentProfileField = {
+                        ...editorField,
+                        id: fieldId,
+                    };
+
+                    getAllSchemaKeys().forEach((_property) => {
+                        field[_property] = schema[fieldId][_property];
+                    });
+
+                    return field;
+                });
+
+            // adding keys to items because they will be reordered
+            // and they don't have static IDs to be used as react keys
+            const fieldsKeyed = fields.map(
+                (field) => ({key: this.generateKey(), value: field}),
             );
+
+            var grouped = groupBy(fieldsKeyed, (item) => item.value.section);
+
+            this.setState({
+                editor,
+                schema,
+                fields: {
+                    header: grouped[IContentProfileSection.header] ?? [],
+                    content: grouped[IContentProfileSection.content] ?? [],
+                },
+                vocabularies: vocabulariesCollection,
+                allFieldIds,
+                customFields,
+                loading: false,
+            });
+        });
+    }
+
+    componentDidUpdate() {
+        // TODO: output to editor/schema sections of the content profile
+
+        // const initialArray: Array<IContentProfileField> = [];
+
+        // this.props.profile.fields = getAllContentProfileSections()
+        //     .reduce<Array<IContentProfileField>>(
+        //         (acc, key) => [...acc, ...this.state.fields[key].map(({value}) => value)],
+        //         initialArray,
+        //     );
     }
 
     render() {
+        if (this.state.loading) {
+            return null;
+        }
+
         const {activeTab, sortingInProgress} = this.state;
         const fields = this.state.fields[this.state.activeTab];
 
@@ -550,6 +450,10 @@ export class ContentProfileConfigNonText extends React.Component<IProps, IState>
             _meta: fieldsResponse._meta,
         };
 
+        const getLabel = (id) => {
+            return this.state.editor[id]?.field_name ?? getLabelForFieldId(id, this.state.vocabularies);
+        };
+
         return (
             <div>
                 {
@@ -568,7 +472,26 @@ export class ContentProfileConfigNonText extends React.Component<IProps, IState>
                 }
 
                 <GenericListPageComponent
-                    getFormConfig={(item) => getFormConfig(IContentProfileTypeNonText[this.props.profileType], item)}
+                    getFormConfig={(item?) => {
+                        const availableIds: Array<{id: string; label: string}> = this.state.allFieldIds
+                            .filter((id) => {
+                                const isCurrentlySelected = id === item?.id;
+
+                                return (
+                                    this.isAllowedForSection(this.state.activeTab, id)
+                                    && !this.existsInFields(id)
+                                ) || isCurrentlySelected;
+                            })
+                            .map((id) => ({id, label: getLabel(id)}));
+
+                        return getContentProfileFormConfig(
+                            this.state.editor,
+                            this.state.schema,
+                            availableIds,
+                            this.state.customFields,
+                            item,
+                        );
+                    }}
                     ItemComponent={ItemComponent}
                     ItemsContainerComponent={this.ItemsContainerComponent}
                     items={crudManagerForContentProfileFields}
@@ -577,6 +500,7 @@ export class ContentProfileConfigNonText extends React.Component<IProps, IState>
                         setIndexForNewItem: (index) => {
                             this.setState({insertNewItemAtIndex: index});
                         },
+                        getLabel,
                     }}
                     disallowFiltering
                     disallowCreatingNewItem

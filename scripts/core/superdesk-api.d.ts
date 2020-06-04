@@ -541,12 +541,29 @@ declare module 'superdesk-api' {
     export type IContentProfileEditorConfig = {
         [key: string]: {
             single?: boolean;
+            enabled?: boolean;
+            field_name?: string;
+            section?: 'header' | 'content';
+            editor3?: boolean; // only for body_html
+            required?: boolean;
+            readonly?: boolean;
+            sdWidth?: 'full' | 'half' | 'quarter';
+            minlength?: number;
+            maxlength?: number;
+            hideDate?: boolean;
             preview?: boolean;
+            cleanPastedHTML?: boolean;
+            validate_characters?: boolean;
+            formatOptions?: Array<string>;
+            showCrops?: boolean;
+            imageTitle?: boolean;
+            sourceField?: string;
         }
     };
 
     export interface IContentProfile {
         _id: string;
+        type: keyof typeof IContentProfileTypeNonText;
         type: 'text';
         label: string;
         description: string;
@@ -575,41 +592,12 @@ declare module 'superdesk-api' {
         content = 'content',
     }
 
-    interface IContentProfileFieldBase {
-        id: string;
-        label: string;
-        type: keyof typeof IContentProfileFieldTypes;
-        section: keyof typeof IContentProfileSection;
-        required: boolean;
-    }
-
-    export interface IContentProfileFieldPlainText extends IContentProfileFieldBase {
-        // needs to be kept in sync with `getAttributesForPlainText`
-        minlength?: number;
-        maxlength?: number;
-        multiline?: boolean;
-    }
-
-    export interface IContentProfileFieldNumber extends IContentProfileFieldBase {
-        // needs to be kept in sync with `getAttributesForNumber`
-    }
-
-    export type IContentProfileField = IContentProfileFieldPlainText | IContentProfileFieldNumber;
-
     //
 
     export enum IContentProfileTypeNonText {
         image = 'image',
         video = 'video',
     }
-
-    export interface IContentProfileNonText {
-        type: keyof typeof IContentProfileTypeNonText;
-        fields: Array<IContentProfileField>;
-    }
-
-
-
 
     // PAGE
 
