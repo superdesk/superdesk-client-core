@@ -31,8 +31,10 @@
         transition: border linear 0.2s;
         width: 100%;
     }
+}
 
-    .sd-line-input {
+.sd-line-input {
+    .plain-text-editor {
         .spelling-error {
             border-bottom-width: 1px;
             border-bottom-style: dotted;
