@@ -37,7 +37,7 @@ export function SpikeMonitoring(superdesk, workspaceMenuProvider) {
     workspaceMenuProvider.item({
         if: 'privileges.spike_read',
         href: '/workspace/spike-monitoring',
-        label: gettext('Spike'),
+        label: gettext('Spiked Items'),
         shortcut: 'ctrl+alt+k',
         icon: 'spike',
         order: 600,

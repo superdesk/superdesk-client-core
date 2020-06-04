@@ -25,8 +25,16 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
     this.searchLookup = {};
     this.deskLookup = {};
     this.stageLookup = {};
-    this.fileTypes = ['all', 'text', 'picture', 'graphic', 'composite',
-        'highlightsPackage', 'video', 'audio'];
+    this.fileTypes = [
+        {type: 'all', label: gettext('all')},
+        {type: 'text', label: gettext('text')},
+        {type: 'picture', label: gettext('picture')},
+        {type: 'graphic', label: gettext('graphic')},
+        {type: 'composite', label: gettext('package')},
+        {type: 'highlight-pack', label: gettext('highlights')},
+        {type: 'video', label: gettext('video')},
+        {type: 'audio', label: gettext('audio')},
+    ];
     this.monitoringSearch = false;
     this.searchQuery = null;
     this.isOutputType = desks.isOutputType;

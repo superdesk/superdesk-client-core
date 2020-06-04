@@ -9,7 +9,7 @@
         </div>
         <figure class="sd-list-item__thumbnail" ng-if="getThumbnailForItem(relatedItem)">
             <img ng-src="{{getThumbnailForItem(relatedItem).href}}"
-                alt="{{ gettext('Thumbnail for related item') }}">
+                alt="{{ 'Thumbnail for related item' | translate }}">
         </figure>
         <div class="sd-list-item__action-menu--direction-row" ng-if="!preview">
             <div class="icn-btn"
