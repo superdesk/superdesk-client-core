@@ -25,6 +25,7 @@ import ng from 'core/services/ng';
 import {getLabelForFieldId} from 'apps/workspace/helpers/getLabelForFieldId';
 import {getContentProfileFormConfig} from './get-content-profiles-form-config';
 import {getEditorConfig} from './get-editor-config';
+import {WidgetsConfig} from './WidgetsConfig';
 
 // should be stored in schema rather than editor section of the content profile
 // but the fields should be editable via GUI
@@ -56,12 +57,14 @@ interface IAdditionalProps {
 interface IProps {
     profile: IContentProfile;
     profileType: keyof typeof IContentProfileTypeNonText;
+    patchContentProfile(patch: Partial<IContentProfile>): void;
 }
 
 interface IState {
     fields: {[key in IContentProfileSection]: IArrayKeyed<IContentProfileField>} | null;
     allFieldIds: Array<string> | null;
-    activeTab: keyof typeof IContentProfileSection;
+    selectedSection: keyof typeof IContentProfileSection;
+    activeTab: IState['selectedSection'] | 'widgets';
     sortingInProgress: boolean;
     insertNewItemAtIndex: number | null;
     vocabularies: Array<IVocabulary>;
@@ -78,6 +81,16 @@ enum IContentProfileSection {
 
 function getAllContentProfileSections(): Array<IContentProfileSection> {
     return Object.keys(IContentProfileSection).map((key) => IContentProfileSection[key]);
+}
+
+function getTabs(): Array<{label: string, value: IState['activeTab']}> {
+    return [
+        ...getAllContentProfileSections().map((section) => ({
+            label: getLabelForSection(section),
+            value: section,
+        })),
+        {label: gettext('Widgets'), value: 'widgets'},
+    ];
 }
 
 function getLabelForSection(section: IContentProfileSection) {
@@ -230,6 +243,7 @@ export class ContentProfileConfigNonText extends React.Component<IProps, IState>
         this.state = {
             fields: null,
             activeTab: getAllContentProfileSections()[0],
+            selectedSection: getAllContentProfileSections()[0],
             sortingInProgress: false,
             insertNewItemAtIndex: null,
             editor: null,
@@ -283,7 +297,7 @@ export class ContentProfileConfigNonText extends React.Component<IProps, IState>
     ): IState['fields'] {
         return {
             ...this.state.fields,
-            [this.state.activeTab]: fn(this.state.fields[this.state.activeTab]),
+            [this.state.selectedSection]: fn(this.state.fields[this.state.selectedSection]),
         };
     }
 
@@ -362,150 +376,180 @@ export class ContentProfileConfigNonText extends React.Component<IProps, IState>
             return null;
         }
 
-        const {activeTab, sortingInProgress} = this.state;
-        const fields = this.state.fields[this.state.activeTab];
-
-        const fieldsResponse: ICrudManagerResponse<IContentProfileFieldWithSystemId> = {
-            _items: fields.map(({key, value}) => ({...value, _id: key})),
-            _meta: {total: fields.length, page: 1, max_results: fields.length},
-        };
-
-        const crudManagerForContentProfileFields: ICrudManager<IContentProfileFieldWithSystemId> = {
-            activeFilters: {},
-            read: () => Promise.resolve(fieldsResponse),
-            update: (item) => {
-                return new Promise((resolve) => {
-                    this.setState(
-                        {
-                            fields: this.updateCurrentFields(
-                                (_fields) => {
-                                    return _fields.map((field) => {
-                                        if (field.key === item._id) {
-                                            return {...field, value: stripSystemId(item)};
-                                        } else {
-                                            return field;
-                                        }
-                                    });
-                                },
-                            ),
-                        },
-                        () => {
-                            resolve(item);
-                        },
-                    );
-                });
-            },
-            create: (item) => {
-                return new Promise((resolve) => {
-                    const itemWithId: IContentProfileFieldWithSystemId = {
-                        ...item,
-                        _id: this.generateKey(),
-                    };
-
-                    this.setState(
-                        {
-                            insertNewItemAtIndex: null,
-                            fields: this.updateCurrentFields(
-                                (_fields) => {
-                                    const nextItem = {
-                                        key: this.generateKey(),
-                                        value: item,
-                                    };
-
-                                    return arrayInsert(
-                                        _fields,
-                                        nextItem,
-                                        this.state.insertNewItemAtIndex ?? 0,
-                                    );
-                                },
-                            ),
-                        },
-                        () => {
-                            resolve(itemWithId);
-                        },
-                    );
-                });
-            },
-            delete: (item) => {
-                return new Promise((resolve) => {
-                    this.setState(
-                        {
-                            fields: this.updateCurrentFields(
-                                (_fields) => _fields.filter(
-                                    ({key}) => key !== item._id,
-                                ),
-                            ),
-                        },
-                        () => {
-                            resolve();
-                        },
-                    );
-                });
-            },
-            refresh: () => Promise.resolve(fieldsResponse),
-            sort: () => Promise.resolve(fieldsResponse),
-            removeFilter: () => Promise.resolve(fieldsResponse),
-            goToPage: () => Promise.resolve(fieldsResponse),
-            _items: fieldsResponse._items,
-            _meta: fieldsResponse._meta,
-        };
-
-        const getLabel = (id) => {
-            return this.state.editor[id]?.field_name ?? getLabelForFieldId(id, this.state.vocabularies);
-        };
-
-        return (
+        const tabs = (
             <div>
                 {
-                    getAllContentProfileSections().map((section) => {
-                        return (
-                            <Button
-                                key={section}
-                                text={getLabelForSection(section)}
-                                onClick={() => {
-                                    this.setState({activeTab: section});
-                                }}
-                                type={activeTab === section ? 'primary' : 'default'}
-                            />
-                        );
-                    })
+                    getTabs().map((tab) => (
+                        <Button
+                            key={tab.value}
+                            text={tab.label}
+                            onClick={() => {
+                                if (tab.value === 'widgets') {
+                                    this.setState({
+                                        activeTab: tab.value,
+                                    });
+                                } else {
+                                    this.setState({
+                                        selectedSection: tab.value,
+                                        activeTab: tab.value,
+                                    });
+                                }
+                            }}
+                            type={this.state.activeTab === tab.value ? 'primary' : 'default'}
+                        />
+                    ))
                 }
-
-                <GenericListPageComponent
-                    getFormConfig={(item?) => {
-                        const availableIds: Array<{id: string; label: string}> = this.state.allFieldIds
-                            .filter((id) => {
-                                const isCurrentlySelected = id === item?.id;
-
-                                return (
-                                    this.isAllowedForSection(this.state.activeTab, id)
-                                    && !this.existsInFields(id)
-                                ) || isCurrentlySelected;
-                            })
-                            .map((id) => ({id, label: getLabel(id)}));
-
-                        return getContentProfileFormConfig(
-                            this.state.editor,
-                            this.state.schema,
-                            availableIds,
-                            this.state.customFields,
-                            item,
-                        );
-                    }}
-                    ItemComponent={ItemComponent}
-                    ItemsContainerComponent={this.ItemsContainerComponent}
-                    items={crudManagerForContentProfileFields}
-                    additionalProps={{
-                        sortingInProgress,
-                        setIndexForNewItem: (index) => {
-                            this.setState({insertNewItemAtIndex: index});
-                        },
-                        getLabel,
-                    }}
-                    disallowFiltering
-                    disallowCreatingNewItem
-                />
             </div>
         );
+
+        if (this.state.activeTab === 'widgets') {
+            return (
+                <div>
+                    {tabs}
+
+                    <WidgetsConfig
+                        initialWidgetsConfig={this.props.profile.widgets_config}
+                        onUpdate={(widgets_config) => {
+                            this.props.patchContentProfile({
+                                widgets_config,
+                            });
+                        }}
+                    />
+                </div>
+            );
+        } else {
+            const {sortingInProgress} = this.state;
+            const fields = this.state.fields[this.state.selectedSection];
+
+            const fieldsResponse: ICrudManagerResponse<IContentProfileFieldWithSystemId> = {
+                _items: fields.map(({key, value}) => ({...value, _id: key})),
+                _meta: {total: fields.length, page: 1, max_results: fields.length},
+            };
+
+            const crudManagerForContentProfileFields: ICrudManager<IContentProfileFieldWithSystemId> = {
+                activeFilters: {},
+                read: () => Promise.resolve(fieldsResponse),
+                update: (item) => {
+                    return new Promise((resolve) => {
+                        this.setState(
+                            {
+                                fields: this.updateCurrentFields(
+                                    (_fields) => {
+                                        return _fields.map((field) => {
+                                            if (field.key === item._id) {
+                                                return {...field, value: stripSystemId(item)};
+                                            } else {
+                                                return field;
+                                            }
+                                        });
+                                    },
+                                ),
+                            },
+                            () => {
+                                resolve(item);
+                            },
+                        );
+                    });
+                },
+                create: (item) => {
+                    return new Promise((resolve) => {
+                        const itemWithId: IContentProfileFieldWithSystemId = {
+                            ...item,
+                            _id: this.generateKey(),
+                        };
+
+                        this.setState(
+                            {
+                                insertNewItemAtIndex: null,
+                                fields: this.updateCurrentFields(
+                                    (_fields) => {
+                                        const nextItem = {
+                                            key: this.generateKey(),
+                                            value: item,
+                                        };
+
+                                        return arrayInsert(
+                                            _fields,
+                                            nextItem,
+                                            this.state.insertNewItemAtIndex ?? 0,
+                                        );
+                                    },
+                                ),
+                            },
+                            () => {
+                                resolve(itemWithId);
+                            },
+                        );
+                    });
+                },
+                delete: (item) => {
+                    return new Promise((resolve) => {
+                        this.setState(
+                            {
+                                fields: this.updateCurrentFields(
+                                    (_fields) => _fields.filter(
+                                        ({key}) => key !== item._id,
+                                    ),
+                                ),
+                            },
+                            () => {
+                                resolve();
+                            },
+                        );
+                    });
+                },
+                refresh: () => Promise.resolve(fieldsResponse),
+                sort: () => Promise.resolve(fieldsResponse),
+                removeFilter: () => Promise.resolve(fieldsResponse),
+                goToPage: () => Promise.resolve(fieldsResponse),
+                _items: fieldsResponse._items,
+                _meta: fieldsResponse._meta,
+            };
+
+            const getLabel = (id) => {
+                return this.state.editor[id]?.field_name ?? getLabelForFieldId(id, this.state.vocabularies);
+            };
+
+            return (
+                <div>
+                    {tabs}
+
+                    <GenericListPageComponent
+                        getFormConfig={(item?) => {
+                            const availableIds: Array<{id: string; label: string}> = this.state.allFieldIds
+                                .filter((id) => {
+                                    const isCurrentlySelected = id === item?.id;
+
+                                    return (
+                                        this.isAllowedForSection(this.state.selectedSection, id)
+                                        && !this.existsInFields(id)
+                                    ) || isCurrentlySelected;
+                                })
+                                .map((id) => ({id, label: getLabel(id)}));
+
+                            return getContentProfileFormConfig(
+                                this.state.editor,
+                                this.state.schema,
+                                availableIds,
+                                this.state.customFields,
+                                item,
+                            );
+                        }}
+                        ItemComponent={ItemComponent}
+                        ItemsContainerComponent={this.ItemsContainerComponent}
+                        items={crudManagerForContentProfileFields}
+                        additionalProps={{
+                            sortingInProgress,
+                            setIndexForNewItem: (index) => {
+                                this.setState({insertNewItemAtIndex: index});
+                            },
+                            getLabel,
+                        }}
+                        disallowFiltering
+                        disallowCreatingNewItem
+                    />
+                </div>
+            );
+        }
     }
 }

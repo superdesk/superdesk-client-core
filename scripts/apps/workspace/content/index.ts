@@ -34,7 +34,7 @@ angular.module('superdesk.apps.workspace.content', [
     .component('sdWidgetsConfig', reactToAngular1(WidgetsConfig, ['initialWidgetsConfig', 'onUpdate']))
     .component(
         'sdContentProfileConfigNonText',
-        reactToAngular1(ContentProfileConfigNonText, ['profile', 'profileType']),
+        reactToAngular1(ContentProfileConfigNonText, ['profile', 'profileType', 'patchContentProfile']),
     )
     .component('sdSchemaEditorFieldsDropdown', {
         template: require('./views/schema-editor-fields-dropdown.html'),

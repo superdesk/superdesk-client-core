@@ -44,6 +44,14 @@ export function ContentProfilesController($scope, $location, notify, content, mo
         });
     };
 
+    $scope.patchContentProfile = (patch: Partial<IContentProfile>) => {
+        Object.assign($scope.editing.form, patch);
+
+        $scope.$applyAsync(() => {
+            $scope.ngForm.$dirty = true;
+        });
+    };
+
     $scope.contentProfileTypes = getAllContentProfileTypes().map((type) => {
         switch (type) {
         case IContentProfileTypeNonText.image:

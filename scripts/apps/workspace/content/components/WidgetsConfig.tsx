@@ -1,12 +1,10 @@
 import React from 'react';
-import {connectServices} from 'core/helpers/ReactRenderAsync';
 
-import {IWidget} from 'superdesk-interfaces/Widget';
 import {IContentProfile} from 'superdesk-api';
 import {gettext} from 'core/utils';
+import ng from 'core/services/ng';
 
 interface IProps {
-    authoringWidgets: Array<IWidget>;
     initialWidgetsConfig: IContentProfile['widgets_config'];
     onUpdate: (widgetsConfig: IContentProfile['widgets_config']) => void;
 }
@@ -30,7 +28,7 @@ export const isWidgetVisibleForContentProfile = (
     return widgetConfig == null ? defaultOption : widgetConfig.is_displayed;
 };
 
-export class WidgetsConfigComponent extends React.Component<IProps, IState> {
+export class WidgetsConfig extends React.Component<IProps, IState> {
     constructor(props) {
         super(props);
 
@@ -51,6 +49,8 @@ export class WidgetsConfigComponent extends React.Component<IProps, IState> {
         });
     }
     render() {
+        const authoringWidgets = ng.get('authoringWidgets');
+
         return (
             <div>
                 <div className="sd-alert sd-alert--hollow sd-alert--small" style={{marginTop: 20}}>
@@ -58,7 +58,7 @@ export class WidgetsConfigComponent extends React.Component<IProps, IState> {
                 </div>
                 <ul className="sd-list-item-group sd-shadow--z2">
                     {
-                        this.props.authoringWidgets.map((widget, i) => (
+                        authoringWidgets.map((widget, i) => (
                             <li className="sd-list-item" key={i}>
                                 <span className="sd-list-item__column">
                                     <input
@@ -78,8 +78,3 @@ export class WidgetsConfigComponent extends React.Component<IProps, IState> {
         );
     }
 }
-
-export const WidgetsConfig = connectServices<IProps>(
-    WidgetsConfigComponent,
-    ['authoringWidgets'],
-);
