@@ -35,7 +35,7 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
     this.activeFilters = {
         contentProfile: $scope.type === 'monitoring' ? storage.getItem('contentProfile') || [] : [],
         fileType: $scope.type === 'monitoring' ? storage.getItem('fileType') || [] : [],
-        customFilters: $scope.type === 'monitoring' ? storage.getItem('customFilters') || [] : [],
+        customFilters: $scope.type === 'monitoring' ? storage.getItem('customFilters') || {} : {},
     };
     this.activeFilterTags = {};
 
