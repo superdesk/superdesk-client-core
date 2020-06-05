@@ -17,7 +17,7 @@ import {getDraftSelectionForEntireContent} from 'core/editor3/helpers/getDraftSe
 
 export interface IProps {
     value: string;
-    onChange: (newValue: string, props: IProps) => void;
+    onChange: (newValue: string, data: IProps['onChangeData']) => void;
     onChangeData: any;
     classes: string;
     spellcheck?: boolean;
@@ -31,32 +31,27 @@ interface IState {
 }
 
 export class PlainTextEditor extends React.Component<IProps, IState> {
-    spellcheckInProgress: boolean;
+    spellcheckerTimeout?: number
 
     constructor(props) {
         super(props);
 
         this.state = {
-            editorState: this.createStateFromValue(props.value),
+            editorState: EditorState.createWithContent(
+                ContentState.createFromText(props.value || ''),
+            ),
             hasFocus: false,
         };
 
         this.handleEditorChange = this.handleEditorChange.bind(this);
         this.onFocus = this.onFocus.bind(this);
         this.onBlur = this.onBlur.bind(this);
-        this.spellcheckInProgress = false;
     }
 
     componentDidMount() {
         if (this.props.spellcheck) {
             this.runSpellchecker();
         }
-    }
-
-    createStateFromValue(value: string) {
-        return EditorState.createWithContent(
-            ContentState.createFromText(value || ''),
-        );
     }
 
     updateStateWithValue(value: string) {
@@ -77,17 +72,19 @@ export class PlainTextEditor extends React.Component<IProps, IState> {
     }
 
     runSpellchecker() {
-        if (!this.spellcheckInProgress) {
+        if (this.spellcheckerTimeout) {
+            window.clearTimeout(this.spellcheckerTimeout);
+        }
+
+        this.spellcheckerTimeout = window.setTimeout(() => {
             const spellchecker = getSpellchecker(this.props.language);
 
             if (spellchecker == null) {
                 return;
             }
 
-            this.spellcheckInProgress = true;
             getSpellcheckWarningsByBlock(spellchecker, this.state.editorState)
                 .then((warningsByBlock) => {
-                    this.spellcheckInProgress = false;
                     const spellcheckerDecorator =
                         getSpellcheckingDecorator(this.props.language, warningsByBlock, {disableContextMenu: true});
                     const decorator = new CompositeDecorator([spellcheckerDecorator]);
@@ -100,11 +97,11 @@ export class PlainTextEditor extends React.Component<IProps, IState> {
                         editorState: editorStateWithSelection,
                     });
                 });
-        }
+        }, 500);
     }
 
     componentWillReceiveProps(newProps: IProps) {
-        if (newProps !== this.props) {
+        if (newProps.value !== this.props.value) {
             this.setState({
                 editorState: this.updateStateWithValue(newProps.value),
             });

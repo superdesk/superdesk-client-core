@@ -91,7 +91,6 @@ export class TextArea extends React.Component<any, any> {
 
         return (
             <textarea
-                style={{minHeight: '32px'}}
                 ref={(node) => this.dom.input = node}
                 className={classNames(
                     'sd-line-input__input',
