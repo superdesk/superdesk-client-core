@@ -13530,9 +13530,12 @@ msgstr ""
 msgid "high"
 msgstr ""
 
-#: scripts/apps/monitoring/controllers/AggregateCtrl.ts:34
 #: scripts/core/lang/missing-translations-strings.ts:34
 msgid "highlights"
+msgstr ""
+
+#: scripts/apps/monitoring/controllers/AggregateCtrl.ts:34
+msgid "highlights package"
 msgstr ""
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:251
