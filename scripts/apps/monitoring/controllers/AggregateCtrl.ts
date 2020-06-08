@@ -31,7 +31,7 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
         {type: 'picture', label: gettext('picture')},
         {type: 'graphic', label: gettext('graphic')},
         {type: 'composite', label: gettext('package')},
-        {type: 'highlight-pack', label: gettext('highlights')},
+        {type: 'highlight-pack', label: gettext('highlights package')},
         {type: 'video', label: gettext('video')},
         {type: 'audio', label: gettext('audio')},
     ];

@@ -161,8 +161,8 @@
                                         ng-class="{'dropdown__menu-item--active': aggregate.hasFileType(fileType.type)}"
                                         title="{{ fileType.label }}">
                                         <button>
-                                            <span ng-if="fileType === 'all'" class="toggle-button__text--all" translate>all</span>
-                                            <span ng-if="fileType !== 'all'"><i class="filetype-icon-{{fileType.type}}"></i>&nbsp;{{fileType.label}}</span>
+                                            <span ng-if="fileType.type === 'all'" class="toggle-button__text--all" translate>all</span>
+                                            <span ng-if="fileType.type !== 'all'"><i class="filetype-icon-{{fileType.type}}"></i>&nbsp;{{fileType.label}}</span>
                                         </button>
                                     </li>
                                 </ul>
