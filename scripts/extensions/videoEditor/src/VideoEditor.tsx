@@ -351,6 +351,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
 
     handleSave() {
         const {dataApi} = this.props.superdesk;
+        const {gettext} = this.props.superdesk.localization;
         const {x, y, width, height} = this.state.transformations.crop;
         const crop = this.getCropRotate({x: x, y: y, width: width, height: height});
         const body = {
@@ -359,8 +360,6 @@ export class VideoEditor extends React.Component<IProps, IState> {
             trim: Object.values(this.state.transformations.trim).join(','),
             scale: this.state.transformations.quality,
         };
-
-        const {gettext} = this.props.superdesk.localization;
 
         if (body.crop === '0,0,0,0') {
             delete body.crop;
@@ -374,6 +373,14 @@ export class VideoEditor extends React.Component<IProps, IState> {
         if (body.scale === 0) {
             delete body.scale;
         }
+
+        // video server will crop before scaling video down
+        // calculate expected scale value based on crop width so that the result
+        // will be the same as using scale then crop
+        if (body.scale !== undefined && crop.width !== 0 && this.videoRef.current) {
+            body.scale = Math.ceil((crop.width / this.videoRef.current.videoWidth) * body.scale);
+        }
+
         if (Object.keys(body).length !== 0) {
             dataApi
                 .create('video_edit', {
