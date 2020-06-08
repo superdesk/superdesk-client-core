@@ -1,5 +1,4 @@
 import * as React from 'react';
-import {debounce} from 'lodash';
 import {BarIcon} from './BarIcon';
 import {ListThumbnails} from './ListThumbnails';
 import {IThumbnail} from '../interfaces';
@@ -40,6 +39,8 @@ function getStrTime(secondsTotal: number) {
     );
 }
 
+const VIDEO_MIN_DURATION = 2;
+
 export class VideoTimeline extends React.Component<IProps, IState> {
     private controlbar: React.RefObject<HTMLDivElement>;
     private intervalTimer: number;
@@ -58,7 +59,7 @@ export class VideoTimeline extends React.Component<IProps, IState> {
         this.controlbar = React.createRef();
         this.intervalTimer = 0;
         this.positionX = 0;
-        this.handleDrag = debounce(this.handleDrag.bind(this), 5);
+        this.handleDrag = this.handleDrag.bind(this);
         this.handleTimelineClick = this.handleTimelineClick.bind(this);
         this.handleDragOver = this.handleDragOver.bind(this);
         this.handleDragEnd = this.handleDragEnd.bind(this);
@@ -102,10 +103,10 @@ export class VideoTimeline extends React.Component<IProps, IState> {
     handleDrag(type: 'left' | 'right') {
         let time = this.getPositionInBar(this.positionX) * this.props.video.duration;
 
-        if (type === 'left') {
+        if (type === 'left' && time < this.state.trim.end - VIDEO_MIN_DURATION) {
             this.updateTrim(time, this.state.trim.end);
         }
-        if (type === 'right') {
+        if (type === 'right' && time > this.state.trim.start + VIDEO_MIN_DURATION) {
             this.updateTrim(this.state.trim.start, time);
         }
     }
@@ -116,7 +117,8 @@ export class VideoTimeline extends React.Component<IProps, IState> {
         }
     }
 
-    // calculate list of thumbnails will be rendered on the UI because of space limit
+    // select a number of thumbnails will be rendered based on screen width
+    // because there is not enough space for all of them
     setThumbnailsRender() {
         const width = this.props.thumbnails?.[0]?.width ?? 1;
         const total = Math.floor((this.controlbar.current?.offsetWidth ?? 1) / width);
