@@ -12,7 +12,7 @@ describe('package', () => {
     });
 
     it('increment package version', () => {
-        monitoring.actionOnItem('Edit', 3, 0);
+        monitoring.actionOnItem('Edit', 3, 'package3');
         // Add item to current package.
         monitoring.actionOnItemSubmenu('Add to current', 'main', 2, 0);
         // Save package
@@ -24,7 +24,7 @@ describe('package', () => {
     });
 
     it('add to current package removed', () => {
-        monitoring.actionOnItem('Edit', 3, 0);
+        monitoring.actionOnItem('Edit', 3, 'package3');
         monitoring.actionOnItemSubmenu('Add to current', 'main', 2, 0);
         // Open menu.
         var menu = monitoring.openItemMenu(2, 0);
@@ -36,7 +36,7 @@ describe('package', () => {
     });
 
     it('reorder group package items', () => {
-        monitoring.actionOnItem('Edit', 3, 0);
+        monitoring.actionOnItem('Edit', 3, 'package3');
         monitoring.actionOnItemSubmenu('Add to current', 'main', 2, 0);
         monitoring.actionOnItemSubmenu('Add to current', 'story', 3, 2);
         // Reorder item on package
@@ -55,14 +55,14 @@ describe('package', () => {
     it('create package by combining an item with open item', () => {
         monitoring.openAction(2, 1);
         browser.sleep(500);
-        monitoring.actionOnItem('Combine with current', 3, 0);
+        monitoring.actionOnItem('Combine with current', 3, 'package3');
         expect(authoring.getGroupItems('MAIN').count()).toBe(2);
     });
 
     it('add multiple items to package', () => {
-        monitoring.actionOnItem('Edit', 3, 0);
+        monitoring.actionOnItem('Edit', 3, 'package3');
         monitoring.selectItem(2, 0);
-        monitoring.selectItem(3, 1);
+        monitoring.selectItem(3, 'package2');
         browser.sleep(200);
         multiAction('Add to Current Package');
         browser.sleep(200);
@@ -88,7 +88,7 @@ describe('package', () => {
     xit('sets package item label', () => {
         workspace.selectDesk('Politic Desk');
         expect(monitoring.getTextItem(3, 1)).toBe('package2');
-        monitoring.actionOnItem('Edit', 3, 1);
+        monitoring.actionOnItem('Edit', 3, 'package2');
         monitoring.getPackageItemActionDropdown(0).click();
         browser.actions()
             .mouseMove(monitoring.getPackageItemLabelEntry())

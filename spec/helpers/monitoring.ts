@@ -188,7 +188,7 @@ class Monitoring {
          * item of that type from group
          *
          * @param {Number} group
-         * @param {Number|Object} item
+         * @param {Number|Object|String} item
          * @return {WebElement}
          */
         this.getItem = function(group, item) {
@@ -199,9 +199,16 @@ class Monitoring {
             if (item.type) {
                 return all.filter((elem) =>
                     elem.all(by.className('filetype-icon-' + item.type)).count()).get(item.index || 0);
+            } else if (Number.isInteger(item)) {
+                return all.get(item);
+            } else { // use slugline filter
+                return all.filter((elem) =>
+                    elem.element(s(['field--slugline'])).isPresent(),
+                ).filter((elem) =>
+                    elem.element(s(['field--slugline'])).getText()
+                        .then((text) => text.toLowerCase().includes(item.toLowerCase())),
+                ).first();
             }
-
-            return all.get(item);
         };
 
         this.getGroupItems = function(group) {

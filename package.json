@@ -118,7 +118,7 @@
     "sass-loader": "6.0.6",
     "shortid": "2.2.8",
     "style-loader": "0.20.2",
-    "superdesk-ui-framework": "2.1.18",
+    "superdesk-ui-framework": "2.2.2",
     "ts-loader": "3.5.0",
     "tslint": "5.11.0",
     "typescript": "3.7.2",
@@ -127,7 +127,7 @@
   },
   "devDependencies": {
     "@types/moment": "^2.13.0",
-    "@types/moment-timezone": "^0.5.12",
+    "@types/moment-timezone": "^0.5.13",
     "@types/webpack-env": "^1.13.9",
     "btoa": "^1.1.2",
     "enzyme": "3.9.0",
@@ -144,8 +144,8 @@
     "karma-webpack": "^2.0.13",
     "protractor": "5.4.2",
     "react-addons-test-utils": "^15.6.0",
-    "react-test-renderer": "^16.2.0",
-    "request": "^2.83.0",
+    "react-test-renderer": "^16.13.1",
+    "request": "^2.88.2",
     "superdesk-code-style": "^1.1.1",
     "typescript-eslint-parser": "^18.0.0"
   },
