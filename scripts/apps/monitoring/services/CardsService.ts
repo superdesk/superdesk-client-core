@@ -181,7 +181,7 @@ export function CardsService(search, session, desks, $location) {
                 ]};
             }
 
-            if (_.includes(JSON.parse(card.fileType), 'highlightsPackage')) {
+            if (_.includes(JSON.parse(card.fileType), 'highlight-pack')) {
                 query.filter({or: [
                     termsHighlightsPackage,
                     termsFileType,
