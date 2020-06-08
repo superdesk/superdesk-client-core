@@ -6,6 +6,8 @@ import {
     Modifier,
     SelectionState,
     CompositeDecorator,
+    DraftHandleValue,
+    DraftEditorCommand,
 } from 'draft-js';
 import './styles.scss';
 import {getSpellchecker} from 'core/editor3/components/spellchecker/default-spellcheckers';
@@ -32,6 +34,7 @@ interface IState {
 
 export class PlainTextEditor extends React.Component<IProps, IState> {
     spellcheckerTimeout?: number
+    selection: SelectionState
 
     constructor(props) {
         super(props);
@@ -46,6 +49,7 @@ export class PlainTextEditor extends React.Component<IProps, IState> {
         this.handleEditorChange = this.handleEditorChange.bind(this);
         this.onFocus = this.onFocus.bind(this);
         this.onBlur = this.onBlur.bind(this);
+        this.handleKeyCommand = this.handleKeyCommand.bind(this);
     }
 
     componentDidMount() {
@@ -118,6 +122,7 @@ export class PlainTextEditor extends React.Component<IProps, IState> {
             this.props.onChange(value, this.props.onChangeData);
         }
 
+        this.selection = editorState.getSelection();
         this.setState({editorState});
     }
 
@@ -129,21 +134,34 @@ export class PlainTextEditor extends React.Component<IProps, IState> {
         this.setState({hasFocus: false});
     }
 
+    handleKeyCommand(command: DraftEditorCommand): DraftHandleValue {
+        if (command === 'split-block') {
+            return 'handled'; // disable Enter
+        }
+
+        return 'not-handled';
+    }
+
     render() {
         const classes = `${this.props.classes} ${
             this.state.hasFocus ? 'focus' : ''
         } plain-text-editor`;
 
-        let editorState;
+        let editorState = this.state.editorState;
+
+        if (this.selection) {
+            editorState = EditorState.forceSelection(editorState, this.selection);
+        }
 
         return (
             <div className={classes}>
                 <Editor
                     onFocus={this.onFocus}
                     onBlur={this.onBlur}
-                    editorState={this.state.editorState}
+                    editorState={editorState}
                     placeholder={this.props.placeholder || ''}
                     onChange={this.handleEditorChange}
+                    handleKeyCommand={this.handleKeyCommand}
                 />
             </div>
         );
