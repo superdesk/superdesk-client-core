@@ -215,8 +215,8 @@
                     ng-show="showSendButtonAndDestination() && mode !== 'spike' && mode !== 'authoring'"
                     ng-click="send(true)"
                     ng-disabled="disableFetchAndOpenButton()">
-                    <span ng-show="canSendItem()" translate>send and open</span>
-                    <span ng-hide="canSendItem()" translate>fetch and open</span>
+                    <span ng-if="canSendItem()" translate>send and open</span>
+                    <span ng-if="!canSendItem()" translate>fetch and open</span>
             </button>
 
             <button class="btn btn--large btn--primary btn--expanded"
@@ -224,8 +224,8 @@
                     ng-click="send()"
                     ng-disabled="disableSendButton()"
                     data-test-id="action--send">
-                    <span ng-show="canSendItem()" translate>send</span>
-                    <span ng-hide="canSendItem()" translate>fetch</span>
+                    <span ng-if="canSendItem()" translate>send</span>
+                    <span ng-if="!canSendItem()" translate>fetch</span>
             </button>
 
             <button class="btn btn--large btn--primary btn--expanded"
