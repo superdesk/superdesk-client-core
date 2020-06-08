@@ -20,6 +20,8 @@ export default function SearchProviderConfigDirective(searchProviderService, not
             searchProviderService.getAllowedProviderTypes().then((providerTypes) => {
                 $scope.providerTypes = providerTypes;
                 $scope.noProvidersAllowed = !$scope.providerTypes.length;
+                $scope.addProviderLabel = $scope.noProvidersAllowed ?
+                    gettext('There are no providers available.') : gettext('Add New Search Provider');
                 $scope.providerLabels = searchProviderService.getProviderLabels(providerTypes);
                 $scope.providerTypesOptions = providerTypes.map((t) => ({label: t.label, value: t.search_provider}));
             });
@@ -105,6 +107,9 @@ export default function SearchProviderConfigDirective(searchProviderService, not
             };
 
             fetchSearchProviders();
+
+            $scope.getStatusLabel = (provider) => provider.is_closed ? gettext('Open') : gettext('Close');
+            $scope.getIsDefaultLabel = (provider) => provider.is_default ? gettext('Default') : '';
         },
     };
 }

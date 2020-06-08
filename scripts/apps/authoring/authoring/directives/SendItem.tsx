@@ -1007,6 +1007,8 @@ export function SendItem($q,
 
             // update actions on item save
             scope.$watch('orig._current_version', initializeItemActions);
+
+            scope.getPublishLabel = (action) => action === 'edit' ? gettext('publish') : gettext(action);
         },
     };
 }

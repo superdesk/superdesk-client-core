@@ -32,7 +32,7 @@
                     <sd-related-item-in-list-react item="relatedItem" />
                 </div>
                 <figure class="sd-list-item__thumbnail" ng-if="relatedItem.associations.featuremedia">
-                    <img src="{{relatedItem.associations.featuremedia.renditions.viewImage.href}}" alt="{{gettext('Thumbnail for related item')}}">
+                    <img src="{{relatedItem.associations.featuremedia.renditions.viewImage.href}}" alt="{{ 'Thumbnail for related item' | translate }}">
                 </figure>
                 <div class="sd-list-item__action-menu sd-list-item__action-menu--direction-row">
                     <button class="icn-btn" ng-click="removeRelatedItem(key)"><i class="icon-close-small"></i></button>

@@ -1,7 +1,7 @@
 <div class="sd-page__flex-helper" ng-hide="hideList">
     <div class="sd-page__header">
         <span class="sd-page__element-grow"></span>
-        <button id="addSearchProvider" class="btn btn--primary" ng-click="edit()" ng-disabled="noProvidersAllowed" title="{{ noProvidersAllowed ? gettext('There are no providers available.') : gettext('Add New Search Provider') }}">
+        <button id="addSearchProvider" class="btn btn--primary" ng-click="edit()" ng-disabled="noProvidersAllowed" title="{{ addProviderLabel }}">
             <i class="icon-plus-sign icon--white"></i> <span translate>Add New</span>
         </button>
     </div>
@@ -13,8 +13,8 @@
                     <h6 id="providerType">{{ providerLabels[provider.search_provider] }}</h6>
                     <span class="label offProvider" ng-if="provider.is_closed" translate>Closed</span>
                     <div class="actions">
-                        <button ng-click="edit(provider)" title="{{ gettext('Edit Search Provider') }}"><i class="icon-pencil"></i></button>
-                        <button ng-click="remove(provider)" ng-show="!provider.last_item_update" title="{{ gettext('Remove Search Provider') }}"><i class="icon-trash"></i></button>
+                        <button ng-click="edit(provider)" title="{{ 'Edit Search Provider' | translate }}"><i class="icon-pencil"></i></button>
+                        <button ng-click="remove(provider)" ng-show="!provider.last_item_update" title="{{ 'Remove Search Provider' | translate }}"><i class="icon-trash"></i></button>
                     </div>
                 </div>
             </li>
@@ -32,19 +32,19 @@
             <fieldset>
                 <div sd-form-switch-inverted
                     id="provider-status"
-                    label="{{ gettext('Status') }}"
-                    title="{{ provider.is_closed ? gettext('Open') : gettext('Close') }}"
+                    label="{{ 'Status' | translate }}"
+                    title="{{ getStatusLabel(provider) }}"
                     model="provider.is_closed">
                 ></div>
 
                 <div sd-form-checkbox
-                    label="{{ gettext('Is Default') }}"
-                    title="{{ provider.is_default ? gettext('Default') : '' }}"
+                    label="{{ 'Is Default' | translate }}"
+                    title="{{ getIsDefaultLabel(provider) }}"
                     model="provider.is_default"
                 ></div>
 
                 <div sd-form-checkbox
-                    label="{{ gettext('Open advanced search panel by default') }}"
+                    label="{{ 'Open advanced search panel by default' | translate }}"
                     model="provider.advanced_search"
                 ></div>
 
@@ -69,7 +69,7 @@
 
                 <div sd-form-select
                     id="provider-type"
-                    label="{{ gettext('Provider Type') }}"
+                    label="{{ 'Provider Type' | translate }}"
                     model="provider.search_provider"
                     options="providerTypesOptions"
                     option-label="label"
@@ -79,23 +79,23 @@
 
                 <div sd-form-input ng-if="!provider.search_provider.startsWith('scanpix')"
                     id="provider-name"
-                    label="{{ gettext('Name') }}"
+                    label="{{ 'Name' | translate }}"
                     model="provider.name"
                     required="true"
                 ></div>
 
                 <div sd-form-input ng-if="!provider.search_provider.startsWith('scanpix')"
                     id="provider-source"
-                    label="{{ gettext('Source') }}"
-                    placeholder="{{ gettext('source of the search provider') }}"
+                    label="{{ 'Source' | translate }}"
+                    placeholder="{{ 'source of the search provider' | translate }}"
                     model="provider.source"
                     required="true"
                 ></div>
 
                 <div sd-form-input ng-if="!provider.search_provider.startsWith('scanpix')"
                     id="provider-url"
-                    label="{{ gettext('URL') }}"
-                    placeholder="{{ gettext('url of the search provider') }}"
+                    label="{{ 'URL' | translate }}"
+                    placeholder="{{ 'url of the search provider' | translate }}"
                     model="provider.config.url"
                     required="true"
                 ></div>
@@ -106,16 +106,16 @@
 
                 <div sd-form-input
                     id="provider-username"
-                    label="{{ gettext('Username') }}"
-                    placeholder="{{ gettext('search provider username') }}"
+                    label="{{ 'Username' | translate }}"
+                    placeholder="{{ 'search provider username' | translate }}"
                     model="provider.config.username"
                 ></div>
 
                 <div sd-form-input
                     type="password"
                     id="provider-password"
-                    label="{{ gettext('Password') }}"
-                    placeholder="{{ gettext('search provider password') }}"
+                    label="{{ 'Password' | translate }}"
+                    placeholder="{{ 'search provider password' | translate }}"
                     model="provider.config.password"
                 ></div>
             </fieldset>

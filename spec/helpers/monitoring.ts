@@ -311,9 +311,7 @@ class Monitoring {
          * @param {string} fileType
          */
         this.filterAction = function(fileType) {
-            if (fileType === 'highlightsPackage') {
-                element(by.className('filetype-icon-highlight-pack')).click();
-            } else if (fileType === 'all') {
+            if (fileType === 'all') {
                 element(by.className('toggle-button__text--all')).click();
             } else {
                 element(by.className('filetype-icon-' + fileType)).click();
