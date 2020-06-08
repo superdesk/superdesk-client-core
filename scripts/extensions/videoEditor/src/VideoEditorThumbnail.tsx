@@ -215,6 +215,12 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
             this.drawCanvas(image, 0, 0, image.width, image.height);
         };
         image.src = src;
+
+        // file reader result
+        if (src.startsWith('data:') === false) {
+            // Firefox does not reload image even no-store cache-control header is set
+            image.src = src + `?t=${Math.random()}`;
+        }
     }
 
     getThumbnail() {
