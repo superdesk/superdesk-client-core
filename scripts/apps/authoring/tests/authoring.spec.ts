@@ -29,6 +29,7 @@ describe('authoring', () => {
     beforeEach(window.module('superdesk.core.editor3'));
     beforeEach(window.module('superdesk.apps.editor2'));
     beforeEach(window.module('superdesk.apps.extension-points'));
+    beforeEach(window.module('superdesk.apps.spellcheck'));
 
     beforeEach(inject(($window) => {
         $window.onbeforeunload = angular.noop;
@@ -124,7 +125,7 @@ describe('authoring', () => {
                 expect($scope.dirty).toBe(false);
                 expect(api.save).toHaveBeenCalled();
             })
-            .finally.catch(done.fail).catch(done.fail).catch(done.fail).catch(done.fail).catch(done.fail).catch(done.fail).catch(done.fail).catch(done.fail).catch(done.fail).catch(done.fail).catch(done.fail).catch(done.fail).catch(done.fail).catch(done.fail).catch(done.fail).catch(done.fail).catch(done.fail).catch(done.fail).catch(done.fail).catch(done.fail).catch(done.fail).catch(done.fail).catch(done.fail).catch(done.fail).catch(done.fail).catch(done.fail).catch(done.fail).catch(done.fail).catch(done.fail).catch(done.fail).catch(done.fail).catch(done.fail).catch(done.fail).catch(done.fail).catch(done.fail).catch(done.fail).catch(done.fail).catch(done.fail).catch(done.fail).catch(done.fail)(done);
+            .finally.catch(done.fail);
 
         // it must flush timeout only when the applyMiddleware promise is resolved
         setTimeout(() => $timeout.flush(5000), 10);

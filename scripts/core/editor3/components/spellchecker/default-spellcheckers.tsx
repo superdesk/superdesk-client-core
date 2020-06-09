@@ -41,14 +41,7 @@ function check(str: string): Promise<Array<ISpellcheckWarning>> {
 }
 
 export function getSpellchecker(language: string): ISpellchecker {
-    let spellcheck;
-
-    try {
-        spellcheck = ng.get('spellcheck');
-    } catch (err) {
-        return null;
-    }
-
+    const spellcheck = ng.get('spellcheck');
     const spellcheckerName = ({
         fr: 'grammalecte',
         nl: 'leuven_dutch',
