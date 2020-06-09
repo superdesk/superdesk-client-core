@@ -14,7 +14,7 @@
 
             <div class="modal__navigation--content">
                 <ng-form name="vocabularyForm" class="vocabularyForm">
-                    <div ng-show="tab === 'items' && matchFieldTypeToTab('vocabularies', vocabulary.field_type)" style="height: 100%">                        
+                    <div ng-show="tab === 'items' && matchFieldTypeToTab('vocabularies', vocabulary.field_type)" style="height: 100%">
                         <div style="height: 100%" id="vocabulary-items-view-edit-placeholder"></div>
                     </div>
 
@@ -147,6 +147,13 @@
                             </ul>
                         </div>
 
+                        <div class="sd-line-input"
+                            ng-if="matchFieldTypeToTab('vocabularies', vocabulary.field_type)">
+                            <sd-check ng-model="vocabulary.disable_entire_category_selection">
+                                <span translate>Disable selection of an entire category</span>
+                            </sd-check>
+                        </div>
+
                         <div class="sd-line-input" ng-if="matchFieldTypeToTab('vocabularies', vocabulary.field_type)">
                             <sd-check ng-model="vocabulary.preffered_items">
                                 {{ :: 'Available in user/desk preferences' | translate }}</sd-check>
@@ -194,7 +201,7 @@
                                             data-icon="graphic">{{'Graphic' | translate}}</sd-check>
                                         <sd-check name="field_type"
                                             ng-model="vocabulary.field_options.allowed_types.composite"
-                                            data-icon="composite">{{'Composite' | translate}}</sd-check>
+                                            data-icon="composite">{{'Package' | translate}}</sd-check>
                                     </div>
                                 </div>
                             </div>

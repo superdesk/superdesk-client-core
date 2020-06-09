@@ -9,7 +9,7 @@ import {ISortOption, IVocabularyItem} from 'superdesk-api';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {Dropdown} from 'core/ui/components/Dropdown/Dropdown';
 import {Menu} from 'core/ui/components/Dropdown/Menu';
-import {Checkbox} from 'superdesk-ui-framework';
+import {Checkbox} from 'superdesk-ui-framework/react';
 
 interface ISchemaField {
     key: string;
@@ -396,8 +396,8 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
 
                 <div className="subnav pagination--rounded">
                     <ReactPaginate
-                        previousLabel={''}
-                        nextLabel={''}
+                        previousLabel={gettext('prev')}
+                        nextLabel={gettext('next')}
                         pageCount={getPageCount(filteredItems)}
                         marginPagesDisplayed={2}
                         pageRangeDisplayed={5}

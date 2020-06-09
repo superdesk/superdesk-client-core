@@ -176,7 +176,7 @@ const render = (state) => {
     });
 
     if (changedContent) {
-        editorState = quietPush(editorState, newContent);
+        editorState = EditorState.push(editorState, newContent, 'insert-characters');
     }
 
     return {...state, editorState};

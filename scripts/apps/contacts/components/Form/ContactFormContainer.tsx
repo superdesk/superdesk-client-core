@@ -217,7 +217,7 @@ export class ContactFormContainer extends React.PureComponent<IProps, IState> {
                         <div className="subnav subnav--darker">
                             <StretchBar>
                                 <div className="contact__type-icon"
-                                    data-sd-tooltip="Organisation Contact"
+                                    data-sd-tooltip={gettext('Organisation Contact')}
                                     data-flow="right"
                                 >
                                     <i className={iconName} />

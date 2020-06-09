@@ -42,8 +42,8 @@ export interface ICard {
     sent?: boolean;
 }
 
-CardsService.$inject = ['search', 'session', 'desks'];
-export function CardsService(search, session, desks) {
+CardsService.$inject = ['search', 'session', 'desks', '$location'];
+export function CardsService(search, session, desks, $location) {
     this.criteria = getCriteria;
     this.shouldUpdate = shouldUpdate;
 
@@ -181,7 +181,7 @@ export function CardsService(search, session, desks) {
                 ]};
             }
 
-            if (_.includes(JSON.parse(card.fileType), 'highlightsPackage')) {
+            if (_.includes(JSON.parse(card.fileType), 'highlight-pack')) {
                 query.filter({or: [
                     termsHighlightsPackage,
                     termsFileType,
@@ -233,7 +233,7 @@ export function CardsService(search, session, desks) {
         filterQueryByCustomQuery(query, card);
 
         if (queryString) {
-            query.filter({query: {query_string: {query: queryString, lenient: false}}});
+            query.filter({query: {query_string: {query: queryString, lenient: true}}});
             criteria.es_highlight = search.getElasticHighlight();
         }
 
@@ -242,6 +242,9 @@ export function CardsService(search, session, desks) {
             criteria.repo = card.search.filter.query.repo;
         } else if (desks.isPublishType(card.type)) {
             criteria.repo = 'archive,published';
+            if (card.type === 'deskOutput') {
+                query.filter({not: {term: {state: 'unpublished'}}});
+            }
         }
 
         criteria.source.from = 0;

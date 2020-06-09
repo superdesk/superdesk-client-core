@@ -25,8 +25,16 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
     this.searchLookup = {};
     this.deskLookup = {};
     this.stageLookup = {};
-    this.fileTypes = ['all', 'text', 'picture', 'graphic', 'composite',
-        'highlightsPackage', 'video', 'audio'];
+    this.fileTypes = [
+        {type: 'all', label: gettext('all')},
+        {type: 'text', label: gettext('text')},
+        {type: 'picture', label: gettext('picture')},
+        {type: 'graphic', label: gettext('graphic')},
+        {type: 'composite', label: gettext('package')},
+        {type: 'highlight-pack', label: gettext('highlights package')},
+        {type: 'video', label: gettext('video')},
+        {type: 'audio', label: gettext('audio')},
+    ];
     this.monitoringSearch = false;
     this.searchQuery = null;
     this.isOutputType = desks.isOutputType;
@@ -35,6 +43,7 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
     this.activeFilters = {
         contentProfile: $scope.type === 'monitoring' ? storage.getItem('contentProfile') || [] : [],
         fileType: $scope.type === 'monitoring' ? storage.getItem('fileType') || [] : [],
+        customFilters: $scope.type === 'monitoring' ? storage.getItem('customFilters') || {} : {},
     };
     this.activeFilterTags = {};
 
@@ -446,6 +455,7 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
         if ($scope.type === 'monitoring') {
             storage.setItem('fileType', self.activeFilters.fileType);
             storage.setItem('contentProfile', self.activeFilters.contentProfile);
+            storage.setItem('customFilters', self.activeFilters.customFilters);
         }
     }
 

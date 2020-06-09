@@ -1,5 +1,5 @@
 <div class="opened-articles-bar">
-    <button class="opened-articles-bar__quick-actions" ng-click="openDashboard()" title="{{gettext('All opened items')}}"><i class="icon-th-large icon--white"></i></button>
+    <button class="opened-articles-bar__quick-actions" ng-click="openDashboard()" title="{{ 'All opened items' | translate }}"><i class="icon-th-large icon--white"></i></button>
 
     <ul ng-if="workqueue.items.length" class="opened-articles-bar__list">
         <li class="opened-articles-bar__item" ng-repeat="article in workqueue.items track by article._id" ng-class="{'opened-articles-bar__item--active': article === articleInEditMode}">
@@ -22,7 +22,7 @@
 
     <div class="opened-articles-bar__create-new dropdown dropdown--dropleft strict" dropdown ng-if="privileges.archive">
         <button class="btn btn--primary dropdown__toggle" dropdown__toggle>
-            <i class="icon-plus-sign"></i>{{gettext('Create new')}}
+            <i class="icon-plus-sign"></i>{{ 'Create new' | translate }}
         </button>
         <div class="dropdown__menu dropdown--dropup" sd-content-create></div>
     </div>

@@ -138,7 +138,6 @@ class Authoring {
     addHelpline: (helplineLabel: any) => void;
     getHelplineSelectedOption: (option: any) => any;
     getBodyFooter: () => any;
-    getBodyFooterPreview: () => any;
     showTransmissionDetails: (publishedHistoryItemIndex: any) => any;
     openRelatedItem: () => void;
     openMacros: () => void;
@@ -746,7 +745,6 @@ class Authoring {
 
         var abstract = element(by.model('item.abstract')).all(by.className('editor-type-html')).first();
         var bodyFooter = element(by.id('body_footer')).all(by.className('editor-type-html')).first();
-        var bodyFooterPreview = element(by.id('body_footer_preview')).all(by.css('[ng-bind-html="html"]')).first();
         var packageSlugline = element.all(by.className('keyword')).last();
         var byline = element(by.model('item.byline')).all(by.className('editor-type-html')).first();
 
@@ -881,9 +879,6 @@ class Authoring {
 
         this.getBodyFooter = function() {
             return bodyFooter.getText();
-        };
-        this.getBodyFooterPreview = function() {
-            return bodyFooterPreview.getText();
         };
 
         this.showTransmissionDetails = function(publishedHistoryItemIndex) {
@@ -1063,7 +1058,7 @@ class Authoring {
 
         this.getNextLevelSelectedCategory = function() {
             return this.subject.all(by.className('levelup')).all(
-                by.css('[ng-click="allowEntireCat && selectTerm(activeTerm, $event)"]'));
+                by.css('[data-test-id="choose-entire-category"]'));
         };
 
         this.getItemSource = function() {
@@ -1104,7 +1099,10 @@ class Authoring {
         };
 
         this.getArticleHeadlineOfBoard = function(index) {
-            return this.getBoardArticle(index).all(by.className('headline')).first().getText();
+            return this.getBoardArticle(index)
+                .all(by.css('.headline .medium-editor-element:not(.clone)'))
+                .first()
+                .getText();
         };
 
         this.getHtmlArticleHeadlineOfBoard = function(index) {

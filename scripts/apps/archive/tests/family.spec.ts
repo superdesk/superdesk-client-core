@@ -158,7 +158,7 @@ describe('family service', () => {
                                 ],
                             },
                             query: {
-                                query_string: {query: 'slugline.phrase:("test")', lenient: false},
+                                query_string: {query: 'slugline.phrase:("test")', lenient: true},
                             },
                         },
                     },

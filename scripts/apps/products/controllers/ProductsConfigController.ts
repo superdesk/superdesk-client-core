@@ -48,6 +48,7 @@ export function ProductsConfigController($scope: IScope, notify, api, products, 
     $scope.loading = false;
     $scope.resultType = 'All';
     $scope.products = [];
+    $scope.modalTab = 'details';
 
     /**
      * @ngdoc method

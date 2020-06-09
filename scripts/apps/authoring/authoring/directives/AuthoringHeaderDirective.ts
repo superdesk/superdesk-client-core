@@ -3,6 +3,7 @@ import {FIELD_KEY_SEPARATOR} from 'core/editor3/helpers/fieldsMeta';
 import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
 import {appConfig} from 'appConfig';
 import {getLabelForFieldId} from 'apps/workspace/helpers/getLabelForFieldId';
+import {getReadOnlyLabel} from './ArticleEditDirective';
 
 AuthoringHeaderDirective.$inject = [
     'api',
@@ -47,6 +48,8 @@ export function AuthoringHeaderDirective(
             scope.toggleCollapsed = () => {
                 scope.isCollapsed = !scope.isCollapsed;
             };
+
+            scope.readOnlyLabel = getReadOnlyLabel();
 
             initVocabularies().then(() => {
                 scope.getLabelForFieldId = (fieldId) => getLabelForFieldId(fieldId, scope.vocabulariesCollection);

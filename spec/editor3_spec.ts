@@ -2,6 +2,8 @@ import {element, browser, protractor, by} from 'protractor';
 
 import {monitoring} from './helpers/monitoring';
 import {authoring} from './helpers/authoring';
+import {ECE, el} from 'end-to-end-testing-helpers';
+import {assertToastMsg} from './helpers/utils';
 
 class Editor3Toolbar {
     controls: any;
@@ -56,6 +58,7 @@ describe('editor3', () => {
         monitoring.openMonitoring();
         monitoring.selectDesk('xeditor3');
         monitoring.createFromDeskTemplate();
+        browser.wait(ECE.presenceOf(editors.get(0)));
     });
 
     it('can edit headline', () => {
@@ -152,9 +155,11 @@ describe('editor3', () => {
     });
 
     function getPreviewBody() {
-        browser.sleep(1000); // wait for autosave (input is debounced)
-        authoring.save();
-        browser.sleep(500); // wait for saving to complete
+        const saveButton = el(['authoring', 'authoring-topbar', 'save']);
+
+        browser.wait(ECE.elementToBeClickable(saveButton));
+        saveButton.click();
+        assertToastMsg('success', 'Item updated.');
         monitoring.previewAction(0, 0);
         return monitoring.getPreviewBody();
     }

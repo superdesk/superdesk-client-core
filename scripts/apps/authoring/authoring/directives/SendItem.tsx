@@ -253,17 +253,22 @@ export function SendItem($q,
                     itemsToSend = [];
                 }
 
+                // save these here, it might get changed on scope while middlewares run
+                const deskId = scope.selectedDesk._id;
+                const stageId = scope.selectedStage._id || scope.selectedDesk.incoming_stage;
+                const selectedDesk = scope.selectedDesk;
+
                 return middlewares.reduce(
                     (current, next) => {
                         return current.then(() => {
-                            return next(itemsToSend, scope.selectedDesk);
+                            return next(itemsToSend, selectedDesk);
                         });
                     },
                     Promise.resolve(),
                 )
                     .then(() => {
                         updateLastDestination();
-                        return runSend(open, sendAllPackageItems);
+                        return runSend(open, sendAllPackageItems, deskId, stageId);
                     });
             };
             scope.isSendToNextStage = false;
@@ -419,11 +424,9 @@ export function SendItem($q,
              * @param {Boolean} sendAllPackageItems - True to include all contained items for packages
              * @return {Object} promise
              */
-            function runSend(open, sendAllPackageItems) {
+            function runSend(open, sendAllPackageItems, deskId, stageId) {
                 scope.loading = true;
                 scope.item.sendTo = true;
-                var deskId = scope.selectedDesk._id;
-                var stageId = scope.selectedStage._id || scope.selectedDesk.incoming_stage;
 
                 if (scope.mode === 'authoring') {
                     return sendAuthoring(deskId, stageId, scope.selectedMacro, sendAllPackageItems);
@@ -1004,6 +1007,8 @@ export function SendItem($q,
 
             // update actions on item save
             scope.$watch('orig._current_version', initializeItemActions);
+
+            scope.getPublishLabel = (action) => action === 'edit' ? gettext('publish') : gettext(action);
         },
     };
 }

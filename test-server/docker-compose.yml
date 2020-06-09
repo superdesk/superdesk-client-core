@@ -13,7 +13,7 @@ services:
             - /data/db
 
     elastic:
-        image: elasticsearch:2.4-alpine
+        image: elasticsearch:7.7.0
         ports:
             - "9200:9200"
         environment:
@@ -33,10 +33,12 @@ services:
         environment:
             - REDIS_URL=redis://redis:6379/1
             - ELASTICSEARCH_URL=http://elastic:9200
-            - MONGO_URI=mongodb://mongo/test_sd
-            - ARCHIVED_URI=mongodb://mongo/test_ar
-            - LEGAL_ARCHIVE_URI=mongodb://mongo/test_la
-            - PUBLICAPI_MONGO_URI=mongodb://mongo/test_pa
-            - CONTENTAPI_MONGO_URI=mongodb://mongo/test_pa
+            - MONGO_URI=mongodb://mongo/superdesk_e2e
+            - ARCHIVED_URI=mongodb://mongo/superdesk_e2e_archived
+            - LEGAL_ARCHIVE_URI=mongodb://mongo/superdesk_e2e_legal_archive
+            - PUBLICAPI_MONGO_URI=mongodb://mongo/publicapi_e2e
+            - CONTENTAPI_MONGO_URI=mongodb://mongo/contentapi_e2e
             - WEB_WORKERS=2
-            - WEB_LOG_LEVEL=error
+            - WEB_TIMEOUT=10
+            - WEB_LOG_LEVEL=info
+            - SENTRY_DSN

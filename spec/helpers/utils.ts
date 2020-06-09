@@ -1,5 +1,6 @@
 import {LoginModal} from './pages';
 import {browser, protractor, element, by, ElementFinder, ElementArrayFinder} from 'protractor';
+import {ECE, s} from 'end-to-end-testing-helpers';
 
 // construct url from uri and base url
 export function constructUrl(base, uri) {
@@ -152,22 +153,8 @@ export function altKey(key) {
         .perform();
 }
 
-/**
- * Asserts that a toast message of a particular type has appeared with its
- * message containing the given string.
- *
- * @param {string} type - type of the toast notificiation ("info", "success" or
- *   "error")
- * @param {string} msg - a string expected to be present in the toast message
- */
-export function assertToastMsg(type, msg) {
-    browser.sleep(500);
-    expect(
-        element.all(by.cssContainingText(`[data-test-id="notification--${type}"]`, msg))
-            .first()
-            .isDisplayed(),
-    ).toBe(true);
-    browser.sleep(500);
+export function assertToastMsg(type: 'info' | 'success' | 'error', msg: string) {
+    browser.wait(ECE.visibilityOf(element(s([`notification--${type}`], msg))));
 }
 
 // Don't expect message to appear
