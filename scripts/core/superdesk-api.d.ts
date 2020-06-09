@@ -216,6 +216,9 @@ declare module 'superdesk-api' {
         // picture and video only
         width?: number;
         height?: number;
+
+        // video id, set when item is stored in video server
+        video_editor_id?: string;
     };
 
     export interface IArticle extends IBaseRestApiResponse {
@@ -314,24 +317,8 @@ declare module 'superdesk-api' {
             user: IUser['_id'];
         };
 
-        renditions?: {
-            original: {
-                href: string;
-                media: string;
-                mimetype: string;
-                version: number;
-                video_editor_id?: string;
-            };
-            viewImage: {
-                href: string;
-                mimetype: string;
-            };
-            thumbnail: {
-                href: string;
-                mimetype: string;
-            };
-        };
-        project?: { // video editor project
+        // video editor project
+        project?: {
             url: string;
             thumbnails: {
                 preview: {
