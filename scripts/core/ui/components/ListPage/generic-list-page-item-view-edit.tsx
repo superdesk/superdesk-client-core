@@ -128,7 +128,7 @@ export class GenericListPageItemViewEdit<T> extends React.Component<IProps<T>, I
             return acc;
         }, {});
 
-        const issues = currentFields
+        const requiredValidationErrors = currentFields
             .filter(
                 (fieldConfig) =>
                     fieldConfig.required === true && hasValue(fieldConfig, nextItemCleaned[fieldConfig.field]) !== true,
@@ -139,9 +139,9 @@ export class GenericListPageItemViewEdit<T> extends React.Component<IProps<T>, I
                 return acc;
             }, {});
 
-        if (Object.keys(issues).length > 0) {
+        if (Object.keys(requiredValidationErrors).length > 0) {
             this.setState({
-                issues,
+                issues: requiredValidationErrors,
             });
 
             return;
