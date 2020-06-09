@@ -128,6 +128,7 @@ class ItemBase extends React.PureComponent<{wrapper: IPropsItem}> {
                     marginTop: 10,
                     marginBottom: 10,
                     cursor: 'pointer',
+                    ...(sortingInProgress ? {userSelect: 'none'} : {}),
                 }}
                 onClick={(e: any) => {
                     if (querySelectorParent(e.target, 'button', {self: true}) == null) {
