@@ -1,5 +1,9 @@
 # Superdesk Client Changelog
 
+## [1.33.2] 2020-06-09
+
+https://github.com/superdesk/superdesk-client-core/milestone/81?closed=1
+
 ## [1.33.1] 2020-05-11
 
 https://github.com/superdesk/superdesk-client-core/milestone/79?closed=1
