@@ -33,8 +33,8 @@ interface IState {
 }
 
 export class PlainTextEditor extends React.Component<IProps, IState> {
-    spellcheckerTimeout?: number
-    selection: SelectionState
+    spellcheckerTimeout?: number;
+    selection: SelectionState;
 
     constructor(props) {
         super(props);
