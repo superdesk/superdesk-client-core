@@ -382,6 +382,10 @@ export class VideoEditor extends React.Component<IProps, IState> {
         }
 
         if (Object.keys(body).length !== 0) {
+            // Save will trigger another polling timeline thumbnails, so current interval id
+            // will be lost, thus causing infinite loop polling interval if the current one
+            // is still in progress
+            clearInterval(this.intervalThumbnails);
             dataApi
                 .create('video_edit', {
                     edit: body,

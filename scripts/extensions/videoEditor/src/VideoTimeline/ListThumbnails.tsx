@@ -18,7 +18,7 @@ export class ListThumbnails extends React.PureComponent<IProps> {
                 `}
             >
                 {this.props.thumbnails.map((item: IThumbnail, index: number) => (
-                    <img src={item.url} width={item.width} height={item.height} key={index} />
+                    <img src={item.url + `?t=${Math.random()}`} width={item.width} height={item.height} key={index} />
                 ))}
             </div>
         );
