@@ -125,7 +125,7 @@ describe('authoring', () => {
                 expect($scope.dirty).toBe(false);
                 expect(api.save).toHaveBeenCalled();
             })
-            .finally.catch(done.fail);
+            .finally(done);
 
         // it must flush timeout only when the applyMiddleware promise is resolved
         setTimeout(() => $timeout.flush(5000), 10);
@@ -878,6 +878,7 @@ describe('authoring actions', () => {
     beforeEach(window.module('superdesk.apps.desks'));
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
+    beforeEach(window.module('superdesk.apps.spellcheck'));
 
     beforeEach(inject((desks, $q) => {
         spyOn(desks, 'fetchCurrentUserDesks').and.returnValue($q.when(userDesks));
