@@ -185,7 +185,7 @@ export class VideoTimeline extends React.Component<IProps, IState> {
         }
     }
 
-    handleTimelineClick(e: React.MouseEvent) {
+    handleTimelineClick(e: React.MouseEvent<HTMLDivElement>) {
         let time = this.setVideoCurrentTime(e.clientX);
 
         if (time < this.state.trim.start) {
