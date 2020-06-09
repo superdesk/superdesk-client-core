@@ -37,13 +37,6 @@ export function ContentProfilesController($scope, $location, notify, content, mo
         $scope.ngForm = ngForm;
     };
 
-    $scope.saveContentProfileWidgetsConfig = (nextWidgetsConfig: IContentProfile['widgets_config']) => {
-        $scope.editing.form.widgets_config = nextWidgetsConfig;
-        $scope.$applyAsync(() => {
-            $scope.ngForm.$dirty = true;
-        });
-    };
-
     $scope.patchContentProfile = (patch: Partial<IContentProfile>) => {
         Object.assign($scope.editing.form, patch);
 
