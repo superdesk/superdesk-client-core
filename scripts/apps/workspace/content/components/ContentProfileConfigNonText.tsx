@@ -398,6 +398,10 @@ export class ContentProfileConfigNonText extends React.Component<IProps, IState>
                         }
                     } else {
                         editorPatch[_property] = field.value[_property];
+
+                        if (_property === 'minlength' || _property === 'maxlenght') {
+                            schemaPatch[_property] = field.value[_property];
+                        }
                     }
                 });
 
