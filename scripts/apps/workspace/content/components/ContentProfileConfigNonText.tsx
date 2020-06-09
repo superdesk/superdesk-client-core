@@ -36,11 +36,14 @@ enum ISchemaFields {
     maxlength = 'maxlength',
 }
 
-type ISchemaKey = keyof typeof ISchemaFields;
+const allSchemaFieldKeys: Array<keyof typeof ISchemaFields> =
+    Object.keys(ISchemaFields).map((key) => ISchemaFields[key]);
 
-function getAllSchemaKeys(): Array<ISchemaFields> {
-    return Object.keys(ISchemaFields).map((key) => ISchemaFields[key]);
+function isSchemaKey(x: string): x is keyof typeof ISchemaFields {
+    return ISchemaFields[x] != null;
 }
+
+type ISchemaKey = keyof typeof ISchemaFields;
 
 // this is UI specific data structure
 // when saving, data from it will be converted and written to schema/editor sections of the content profile
@@ -329,7 +332,7 @@ export class ContentProfileConfigNonText extends React.Component<IProps, IState>
                         id: fieldId,
                     };
 
-                    getAllSchemaKeys().forEach((_property) => {
+                    allSchemaFieldKeys.forEach((_property) => {
                         field[_property] = schema[fieldId][_property];
                     });
 
@@ -359,16 +362,74 @@ export class ContentProfileConfigNonText extends React.Component<IProps, IState>
         });
     }
 
-    componentDidUpdate() {
-        // TODO: output to editor/schema sections of the content profile
+    componentDidUpdate(prevProps: IProps, prevState: IState) {
+        if (prevState.fields != null && prevState.fields !== this.state.fields) {
+            const editorCopy = {...this.state.editor};
+            const schemaCopy = {...this.state.schema};
 
-        // const initialArray: Array<IContentProfileField> = [];
+            const fieldsFlat = getAllContentProfileSections()
+                .reduce<IArrayKeyed<IContentProfileField>>(
+                    (acc, sectionId) => [...acc, ...this.state.fields[sectionId]],
+                    [],
+                );
 
-        // this.props.profile.fields = getAllContentProfileSections()
-        //     .reduce<Array<IContentProfileField>>(
-        //         (acc, key) => [...acc, ...this.state.fields[key].map(({value}) => value)],
-        //         initialArray,
-        //     );
+            const patch
+            : {[key: string]: {editor: Partial<IContentProfileEditorConfig>, schema: {}}}
+            = fieldsFlat.reduce((acc, field, index) => {
+                let schemaPatch = {};
+                let editorPatch: Partial<IContentProfileEditorConfig[0]> = {};
+
+                acc[field.value.id] = {
+                    editorPatch: {},
+                    schemaPatch: {},
+                };
+
+                Object.keys(field.value).forEach((_property) => {
+                    if (_property === 'id') {
+                        return;
+                    }
+
+                    if (isSchemaKey(_property)) {
+                        schemaPatch[_property] = field.value[_property];
+
+                        if (_property === 'readonly' || _property === 'required') {
+                            editorPatch[_property] = field.value[_property];
+                        }
+                    } else {
+                        editorPatch[_property] = field.value[_property];
+                    }
+                });
+
+                editorPatch.order = index;
+
+                acc[field.value.id] = {
+                    editor: editorPatch,
+                    schema: schemaPatch,
+                };
+
+                return acc;
+            }, {});
+
+            Object.keys(editorCopy).forEach((key) => {
+                editorCopy[key] = Object.assign(
+                    {},
+                    editorCopy[key],
+                    patch[key]?.editor ?? {},
+                    {order: patch[key]?.editor?.order ?? null, enabled: patch[key] != null},
+                );
+
+                schemaCopy[key] = Object.assign(
+                    {},
+                    schemaCopy[key],
+                    patch[key]?.schema ?? {},
+                );
+            });
+
+            this.props.patchContentProfile({
+                editor: editorCopy,
+                schema: schemaCopy,
+            });
+        }
     }
 
     render() {

@@ -542,6 +542,7 @@ declare module 'superdesk-api' {
         [key: string]: {
             single?: boolean;
             enabled?: boolean;
+            order: number;
             field_name?: string;
             section?: 'header' | 'content';
             editor3?: boolean; // only for body_html
