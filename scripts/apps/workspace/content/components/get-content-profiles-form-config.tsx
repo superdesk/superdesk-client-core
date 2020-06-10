@@ -103,21 +103,10 @@ function getEditor3FormattingOptions(fieldId, customFields: Array<any>) {
 export function getContentProfileFormConfig(
     editor: IContentProfileEditorConfig,
     schema: any,
-    availableIds: Array<{id: string; label: string}>,
     customFields: Array<any>,
     field?: Partial<IContentProfileFieldWithSystemId> | undefined,
 ): IFormGroup {
     const customField = field?.id != null ? customFields.find(({_id}) => field.id === _id) : null;
-
-    const idField: IFormField = {
-        label: gettext('Field'),
-        type: FormFieldType.select,
-        component_parameters: {
-            items: availableIds,
-        },
-        field: 'id',
-        required: true,
-    };
 
     const sdWidthField: IFormField = {
         label: gettext('Width'),
@@ -148,7 +137,6 @@ export function getContentProfileFormConfig(
     };
 
     const fields: Array<IFormField | IFormGroup> = [
-        idField,
         sdWidthField,
         requiredField,
         readonlyField,

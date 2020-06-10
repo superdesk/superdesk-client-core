@@ -792,7 +792,7 @@ declare module 'superdesk-api' {
             filterValues?: ICrudManagerFilters,
         ): Promise<ICrudManagerResponse<Entity>>;
         update(item: Entity): Promise<Entity>;
-        create(item: Omit<Entity, '_id'>): Promise<Entity>;
+        create(item: Entity): Promise<Entity>;
         delete(item: Entity): Promise<void>;
         refresh(): Promise<ICrudManagerResponse<Entity>>;
         sort(nextSortOption: ISortOption): Promise<ICrudManagerResponse<Entity>>;
@@ -874,7 +874,7 @@ declare module 'superdesk-api' {
         closePreview(): void;
         setFiltersVisibility(nextValue: boolean): void;
         handleFilterFieldChange(field: string, nextValue: any, callback): void;
-        openNewItemForm(): void;
+        openNewItemForm(initialValues?: {[key: string]: any}): void;
         closeNewItemForm(): void;
         deleteItem(item: T): void;
         getActiveFilters(): Partial<T>;

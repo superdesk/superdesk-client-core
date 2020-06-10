@@ -313,7 +313,7 @@ export class GenericListPageComponent<T extends IItemWithId, P>
     setFiltersVisibility(nextValue: boolean) {
         this.setState({filtersOpen: nextValue});
     }
-    openNewItemForm() {
+    openNewItemForm(initialValues?: {[key: string]: any}) {
         if (this.state.editItemId != null) {
             this.modal.alert({
                 headerText: gettext('Warning'),
@@ -326,6 +326,7 @@ export class GenericListPageComponent<T extends IItemWithId, P>
                 newItem: {
                     ...getInitialValues(this.props.getFormConfig()),
                     ...this.props.getNewItemTemplate == null ? {} : this.props.getNewItemTemplate(this),
+                    ...(initialValues ?? {}),
                 },
                 previewItemId: null,
             });

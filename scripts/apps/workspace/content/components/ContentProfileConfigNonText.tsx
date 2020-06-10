@@ -54,6 +54,7 @@ interface IAdditionalProps {
         sortingInProgress: boolean;
         setIndexForNewItem(index: number): void;
         getLabel(id: string): string;
+        availableIds: Array<{id: string; label: string}>;
     };
 }
 
@@ -112,8 +113,31 @@ type IPropsItem = IPropsGenericFormItemComponent<IContentProfileFieldWithSystemI
 class ItemBase extends React.PureComponent<{wrapper: IPropsItem}> {
     render() {
         const {item, page, index} = this.props.wrapper;
-        const {sortingInProgress, setIndexForNewItem, getLabel} = this.props.wrapper.additionalProps;
+        const {sortingInProgress, setIndexForNewItem, getLabel, availableIds} = this.props.wrapper.additionalProps;
         const isLast = index === page.getItemsCount() - 1;
+
+        const newFieldSelect = (newItemIndex) => (
+            <select
+                onChange={(event) => {
+                    if (event.target.value === '') {
+                        return; // placeholder selected
+                    }
+
+                    const fieldId = event.target.value;
+
+                    setIndexForNewItem(newItemIndex);
+                    page.openNewItemForm({_id: fieldId});
+                }}
+                style={{width: 100}}
+            >
+                <option value="">{gettext('Add field')}</option>
+                {
+                    availableIds.map(({id, label}) => (
+                        <option key={id} value={id}>{label}</option>
+                    ))
+                }
+            </select>
+        );
 
         return (
             <div
@@ -127,11 +151,16 @@ class ItemBase extends React.PureComponent<{wrapper: IPropsItem}> {
                     border: '1px solid blue',
                     marginTop: 10,
                     marginBottom: 10,
+                    paddingTop: 5,
+                    paddingBottom: 5,
                     cursor: 'pointer',
                     ...(sortingInProgress ? {userSelect: 'none'} : {}),
                 }}
                 onClick={(e: any) => {
-                    if (querySelectorParent(e.target, 'button', {self: true}) == null) {
+                    if (
+                        querySelectorParent(e.target, 'select', {self: true}) == null
+                        && querySelectorParent(e.target, 'button', {self: true}) == null
+                    ) {
                         page.startEditing(item._id);
                     }
                 }}
@@ -144,16 +173,9 @@ class ItemBase extends React.PureComponent<{wrapper: IPropsItem}> {
                                 justifyContent: 'center',
                                 width: '100%',
                                 position: 'absolute',
-                                top: '-13px',
+                                top: '-19px',
                             }}>
-                                <button
-                                    onClick={() => {
-                                        setIndexForNewItem(index);
-                                        page.openNewItemForm();
-                                    }}
-                                >
-                                    add
-                                </button>
+                                {newFieldSelect(index)}
                             </div>
                         )
                         : null
@@ -174,16 +196,9 @@ class ItemBase extends React.PureComponent<{wrapper: IPropsItem}> {
                                 justifyContent: 'center',
                                 width: '100%',
                                 position: 'absolute',
-                                bottom: '-13px',
+                                bottom: '-17px',
                             }}>
-                                <button
-                                    onClick={() => {
-                                        setIndexForNewItem(index + 1);
-                                        page.openNewItemForm();
-                                    }}
-                                >
-                                    add
-                                </button>
+                                {newFieldSelect(index + 1)}
                             </div>
                         )
                         : null
@@ -488,7 +503,7 @@ export class ContentProfileConfigNonText extends React.Component<IProps, IState>
             const fields = this.state.fields[this.state.selectedSection];
 
             const fieldsResponse: ICrudManagerResponse<IContentProfileFieldWithSystemId> = {
-                _items: fields.map(({key, value}) => ({...value, _id: key})),
+                _items: fields.map(({key, value}) => ({...value, _id: value.id})),
                 _meta: {total: fields.length, page: 1, max_results: fields.length},
             };
 
@@ -502,7 +517,7 @@ export class ContentProfileConfigNonText extends React.Component<IProps, IState>
                                 fields: this.updateCurrentFields(
                                     (_fields) => {
                                         return _fields.map((field) => {
-                                            if (field.key === item._id) {
+                                            if (field.value.id === item._id) {
                                                 return {...field, value: stripSystemId(item)};
                                             } else {
                                                 return field;
@@ -518,10 +533,15 @@ export class ContentProfileConfigNonText extends React.Component<IProps, IState>
                     });
                 },
                 create: (item) => {
+                    if (item._id == null) {
+                        throw new Error('id must be provided');
+                    }
+
                     return new Promise((resolve) => {
                         const itemWithId: IContentProfileFieldWithSystemId = {
                             ...item,
-                            _id: this.generateKey(),
+                            _id: item._id,
+                            id: item._id,
                         };
 
                         this.setState(
@@ -531,7 +551,7 @@ export class ContentProfileConfigNonText extends React.Component<IProps, IState>
                                     (_fields) => {
                                         const nextItem = {
                                             key: this.generateKey(),
-                                            value: item,
+                                            value: stripSystemId(itemWithId),
                                         };
 
                                         return arrayInsert(
@@ -576,27 +596,24 @@ export class ContentProfileConfigNonText extends React.Component<IProps, IState>
                 return this.state.editor[id]?.field_name ?? getLabelForFieldId(id, this.state.vocabularies);
             };
 
+            const availableIds: Array<{id: string; label: string}> = this.state.allFieldIds
+                .filter((id) => {
+                    return (
+                        this.isAllowedForSection(this.state.selectedSection, id)
+                        && !this.existsInFields(id)
+                    );
+                })
+                .map((id) => ({id, label: getLabel(id)}));
+
             return (
                 <div>
                     {tabs}
 
                     <GenericListPageComponent
                         getFormConfig={(item?) => {
-                            const availableIds: Array<{id: string; label: string}> = this.state.allFieldIds
-                                .filter((id) => {
-                                    const isCurrentlySelected = id === item?.id;
-
-                                    return (
-                                        this.isAllowedForSection(this.state.selectedSection, id)
-                                        && !this.existsInFields(id)
-                                    ) || isCurrentlySelected;
-                                })
-                                .map((id) => ({id, label: getLabel(id)}));
-
                             return getContentProfileFormConfig(
                                 this.state.editor,
                                 this.state.schema,
-                                availableIds,
                                 this.state.customFields,
                                 item,
                             );
@@ -606,6 +623,7 @@ export class ContentProfileConfigNonText extends React.Component<IProps, IState>
                         items={crudManagerForContentProfileFields}
                         additionalProps={{
                             sortingInProgress,
+                            availableIds,
                             setIndexForNewItem: (index) => {
                                 this.setState({insertNewItemAtIndex: index});
                             },
