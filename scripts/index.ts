@@ -23,8 +23,6 @@ import {registerExtensions} from 'core/register-extensions';
 import {setupTansa} from 'apps/tansa';
 import {i18n} from 'core/utils';
 
-import markForUserExtension from './extensions/markForUser/dist/src/extension';
-
 let body = angular.element('body');
 
 function loadConfigs() {
@@ -209,6 +207,6 @@ export function startApp(
 // this is a fallback for e2e tests.
 setTimeout(() => {
     if (started !== true) {
-        startApp([markForUserExtension], {});
+        startApp([], {});
     }
 }, 500);
