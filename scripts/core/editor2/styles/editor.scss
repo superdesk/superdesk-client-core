@@ -8,6 +8,7 @@
     }
     &:empty:before{
           content: attr(placeholder);
+          pointer-events: none;
           display: block; /* For Firefox */
           color: rgba(150, 150, 150, 0.5)
     }
@@ -21,16 +22,16 @@
     }
 
     span, h3 {
-        font-size: inherit; 
+        font-size: inherit;
         line-height: 150%;
     }
 
     pre {
-        font-size: inherit; 
+        font-size: inherit;
         line-height: 150%;
 
         span, h3 {
-            font-size: inherit; 
+            font-size: inherit;
             line-height: 150%;
         }
     }
