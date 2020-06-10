@@ -14,7 +14,7 @@ import {
 
 import {gettext, arrayInsert} from 'core/utils';
 import {IContentProfileTypeNonText} from '../controllers/ContentProfilesController';
-import {assertNever, Writeable} from 'core/helpers/typescript-helpers';
+import {assertNever} from 'core/helpers/typescript-helpers';
 import {GenericListPageComponent} from 'core/ui/components/ListPage/generic-list-page';
 import {SortableContainer, SortableElement} from 'react-sortable-hoc';
 import arrayMove from 'array-move';
@@ -112,7 +112,7 @@ type IPropsItem = IPropsGenericFormItemComponent<IContentProfileFieldWithSystemI
 // wrapper is used because sortable HOC considers `index` to be its internal prop and doesn't forward it
 class ItemBase extends React.PureComponent<{wrapper: IPropsItem}> {
     render() {
-        const {item, page, index} = this.props.wrapper;
+        const {item, page, index, inEditMode} = this.props.wrapper;
         const {sortingInProgress, setIndexForNewItem, getLabel, availableIds} = this.props.wrapper.additionalProps;
         const isLast = index === page.getItemsCount() - 1;
 
@@ -148,13 +148,13 @@ class ItemBase extends React.PureComponent<{wrapper: IPropsItem}> {
                     // in order to be visible, it has to have a higher zIndex than the modal
                     zIndex: 1051,
 
-                    border: '1px solid blue',
+                    border: `1px solid ${inEditMode ? 'red' : 'blue'}`,
                     marginTop: 10,
                     marginBottom: 10,
                     paddingTop: 5,
                     paddingBottom: 5,
                     cursor: 'pointer',
-                    ...(sortingInProgress ? {userSelect: 'none'} : {}),
+                    userSelect: 'none',
                 }}
                 onClick={(e: any) => {
                     if (
@@ -511,14 +511,16 @@ export class ContentProfileConfigNonText extends React.Component<IProps, IState>
                 activeFilters: {},
                 read: () => Promise.resolve(fieldsResponse),
                 update: (item) => {
+                    const itemWithId = {...item, id: item._id};
+
                     return new Promise((resolve) => {
                         this.setState(
                             {
                                 fields: this.updateCurrentFields(
                                     (_fields) => {
                                         return _fields.map((field) => {
-                                            if (field.value.id === item._id) {
-                                                return {...field, value: stripSystemId(item)};
+                                            if (field.value.id === itemWithId._id) {
+                                                return {...field, value: stripSystemId(itemWithId)};
                                             } else {
                                                 return field;
                                             }
@@ -574,7 +576,7 @@ export class ContentProfileConfigNonText extends React.Component<IProps, IState>
                             {
                                 fields: this.updateCurrentFields(
                                     (_fields) => _fields.filter(
-                                        ({key}) => key !== item._id,
+                                        ({value}) => value.id !== item._id,
                                     ),
                                 ),
                             },

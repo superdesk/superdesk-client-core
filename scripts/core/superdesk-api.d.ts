@@ -693,6 +693,7 @@ declare module 'superdesk-api' {
     export interface IPropsGenericFormItemComponent<T> {
         item: T;
         page: IGenericListPageComponent<T>;
+        inEditMode: boolean;
         index: number;
     }
 

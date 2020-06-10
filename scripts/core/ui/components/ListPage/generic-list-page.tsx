@@ -418,6 +418,7 @@ export class GenericListPageComponent<T extends IItemWithId, P>
                                         key={item._id}
                                         item={item}
                                         page={page}
+                                        inEditMode={this.state.editItemId === item._id}
                                         index={i}
                                         additionalProps={additionalProps}
                                     />
