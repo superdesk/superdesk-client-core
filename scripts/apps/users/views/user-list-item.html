@@ -21,7 +21,7 @@
         <div class="created">{{ user._created | reldate}}</div>
     </div>
 
-    <div class="action">
+    <div class="action" ng-show="user._id !== selected._id">
         <ul class="item-functions"
             sd-activity-list
             data-item="user"
