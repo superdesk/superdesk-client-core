@@ -1,9 +1,10 @@
 import {getSuperdeskType} from 'core/utils';
 import {gettext} from 'core/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
-import {IArticle, IVocabulary} from 'superdesk-api';
+import {IArticle, IVocabulary, IRendition} from 'superdesk-api';
 import {IDirectiveScope} from 'types/Angular/DirectiveScope';
 import {getAssociationsByFieldId} from '../../authoring/authoring/controllers/AssociationController';
+import {getThumbnailForItem} from 'core/helpers/item';
 
 const ARCHIVE_TYPES = ['archive', 'published'];
 const isInArchive = (item: IArticle) => item._type != null && ARCHIVE_TYPES.includes(item._type);
@@ -20,7 +21,8 @@ interface IScope extends IDirectiveScope<void> {
     onchange: () => void;
     addRelatedItem: (item: IArticle) => void;
     isEmptyRelatedItems: (fieldId: string) => void;
-    refreshRelatedItems: () => void;
+    loadRelatedItems: () => void;
+    getThumbnailForItem: (item: IArticle) => IRendition;
     removeRelatedItem: (key: string) => void;
     openRelatedItem: (item: IArticle) => void;
     canAddRelatedItems: () => boolean;
@@ -217,7 +219,7 @@ export function RelatedItemsDirective(
             /**
             * Get related items for fieldId
             */
-            scope.refreshRelatedItems = () => {
+            scope.loadRelatedItems = () => {
                 scope.loading = true;
                 relationsService.getRelatedItemsForField(scope.item, scope.field._id)
                     .then((items) => {
@@ -225,7 +227,9 @@ export function RelatedItemsDirective(
                         scope.loading = false;
                     });
             };
-            scope.refreshRelatedItems();
+            scope.loadRelatedItems();
+
+            scope.getThumbnailForItem = getThumbnailForItem;
 
             /**
              * Return the next key for related item associated to current field
@@ -302,7 +306,7 @@ export function RelatedItemsDirective(
 
             scope.$watchCollection('item.associations', (newValue, oldValue) => {
                 if (newValue !== oldValue) {
-                    scope.refreshRelatedItems();
+                    scope.loadRelatedItems();
                 }
             });
 
@@ -324,7 +328,7 @@ export function RelatedItemsDirective(
                 }
 
                 if (shouldUpdateItems) {
-                    scope.refreshRelatedItems();
+                    scope.loadRelatedItems();
                 }
             }
 

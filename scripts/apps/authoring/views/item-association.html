@@ -16,7 +16,8 @@
     <figure
         ng-if="!(editable && associations.isMediaEditable() && !related)"
         class="item-association"
-        ng-class="{'item-association--preview': related, 'item-association--loading': loading}">
+        ng-class="{'item-association--preview': related, 'item-association--loading': loading}"\
+        ng-disabled="!editable">
             <a ng-if="related && editable" class="item-association__remove-item" ng-click="remove(related); $event.stopPropagation()">
                 <i class="icon-close-small"></i>
             </a>

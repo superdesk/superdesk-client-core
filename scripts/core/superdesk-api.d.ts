@@ -223,6 +223,7 @@ declare module 'superdesk-api' {
         _id: string;
         _current_version: number;
         _type?: 'ingest' | 'archive' | 'published' | 'archived' | 'legal_archive' | string;
+        uri?: string; // uri is external id which stays when image is fetched from provider/ingest
         guid: string;
         family_id: string;
         translated_from?: string;
@@ -386,6 +387,10 @@ declare module 'superdesk-api' {
 
         es_highlight?: any;
 
+        used?: boolean;
+        used_count?: number;
+        used_updated?: string;
+
         // other fields which don't exist in the database, don't belong to this entity and should be removed
         error?: any;
         _editable?: any;
@@ -536,6 +541,7 @@ declare module 'superdesk-api' {
         init_version?: number;
         preffered_items?: boolean;
         tags?: Array<IVocabularyTag>;
+        disable_entire_category_selection?: boolean;
     }
 
     export type IContentProfileEditorConfig = {

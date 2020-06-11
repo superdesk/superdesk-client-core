@@ -204,50 +204,6 @@
         }
     }
 
-    .date-filter {
-        .predefined-dates {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 15px;
-            > div {
-                flex: 1 1 auto;
-                padding: 4px;
-                button {
-                    display: block;
-                    width: 100%;
-                }
-            }
-            .btn--mini, .toggle-button {
-                min-height: 20px;
-                height: auto;
-                margin-right: 4px;
-                flex-grow: 1;
-                &:last-child {
-                    margin-right: 0;
-                }
-            }
-            .toggle-button {
-                padding: 5px;
-                line-height: 130%;
-                font-size: 11px;
-                font-weight: 500;
-            }
-        }
-        .datepicker-input {
-            min-width: initial;
-        }
-        fieldset {
-            .multiple {
-                .field {
-                    padding-right: 10px;
-                    &:last-child {
-                        padding: 0;
-                    }
-                }
-            }
-        }
-    }
-
     .views {
         padding: 0;
         .header {
@@ -322,6 +278,49 @@
     }
 }
 
+.date-filter {
+    .predefined-dates {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+        > div {
+            flex: 1 1 auto;
+            padding: 4px;
+            button {
+                display: block;
+                width: 100%;
+            }
+        }
+        .btn--mini, .toggle-button {
+            min-height: 20px;
+            height: auto;
+            margin-right: 4px;
+            flex-grow: 1;
+            &:last-child {
+                margin-right: 0;
+            }
+        }
+        .toggle-button {
+            padding: 5px;
+            line-height: 130%;
+            font-size: 11px;
+            font-weight: 500;
+        }
+    }
+    .datepicker-input {
+        min-width: initial;
+    }
+    fieldset {
+        .multiple {
+            .field {
+                padding-right: 10px;
+                &:last-child {
+                    padding: 0;
+                }
+            }
+        }
+    }
+}
 
 .filter-box {
     .filter-box__item {

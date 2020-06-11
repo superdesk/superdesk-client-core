@@ -76,6 +76,7 @@
                  data-required="schema.slugline.required"
                  ng-if="schema.slugline && editor['slugline'].section !== 'content'"
                  sd-width="{{editor.slugline.sdWidth}}"
+                 ng-attr-title="{{schema.slugline.readonly === true ? readOnlyLabel : ''}}"
                  order="{{editor.slugline.order}}">
                 <label class="authoring-header__item-label uppercase">{{getLabelForFieldId('slugline')}}</label>
                 <div class="authoring-header__input-holder"
@@ -111,6 +112,7 @@
                  data-required="schema.keywords.required"
                  ng-if="schema.keywords"
                  sd-width="{{editor.keywords.sdWidth}}"
+                 ng-attr-title="{{schema.keywords.readonly === true ? readOnlyLabel : ''}}"
                  order="{{editor.keywords.order}}">
                 <label class="authoring-header__item-label">{{getLabelForFieldId('keywords')}}</label>
                 <div class="authoring-header__input-holder">
@@ -134,6 +136,7 @@
                  data-required="schema.genre.required"
                  ng-if="schema.genre && editor.genre && !genreInCvs"
                  sd-width="{{editor.genre.sdWidth}}"
+                 ng-attr-title="{{schema.genre.readonly === true ? readOnlyLabel : ''}}"
                  order="{{editor.genre.order}}">
                 <label class="authoring-header__item-label">{{getLabelForFieldId('genre')}}</label>
                 <div class="authoring-header__input-holder">
@@ -156,6 +159,7 @@
                  data-required="schema.anpa_take_key.required"
                  ng-if="schema.anpa_take_key"
                  sd-width="{{editor.anpa_take_key.sdWidth}}"
+                 ng-attr-title="{{schema.anpa_take_key.readonly === true ? readOnlyLabel : ''}}"
                  order="{{editor.anpa_take_key.order}}">
                 <label class="authoring-header__item-label">{{getLabelForFieldId('anpa_take_key')}}</label>
                 <div class="authoring-header__input-holder">
@@ -176,6 +180,7 @@
                  data-required="schema.place.required"
                  ng-if="metadata.locators && schema.place && editor.place && !placeInCvs"
                  sd-width="{{editor.place.sdWidth}}"
+                 ng-attr-title="{{schema.place.readonly === true ? readOnlyLabel : ''}}"
                  order="{{editor.place.order}}">
                 <label class="authoring-header__item-label">{{getLabelForFieldId('place')}}</label>
                 <div class="authoring-header__input-holder">
@@ -221,6 +226,7 @@
                  data-required="schema.language.required"
                  ng-if="metadata.languages && schema.language && editor.language"
                  sd-width="{{editor.language.sdWidth}}"
+                 ng-attr-title="{{schema.language.readonly === true ? readOnlyLabel : ''}}"
                  order="{{editor.language.order}}">
 
                 <label class="authoring-header__item-label">{{getLabelForFieldId('language')}}</label>
@@ -244,6 +250,7 @@
                  data-required="schema.priority.required"
                  ng-if="schema.priority"
                  sd-width="{{editor.priority.sdWidth}}"
+                 ng-attr-title="{{schema.priority.readonly === true ? readOnlyLabel : ''}}"
                  order="{{editor.priority.order}}">
                 <label class="authoring-header__item-label">{{getLabelForFieldId('priority')}}</label>
                 <div class="authoring-header__input-holder">
@@ -267,6 +274,7 @@
                  data-required="schema.urgency.required"
                  ng-if="schema.urgency && shouldDisplayUrgency()"
                  sd-width="{{editor.urgency.sdWidth}}"
+                 ng-attr-title="{{schema.urgency.readonly === true ? readOnlyLabel : ''}}"
                  order="{{editor.urgency.order}}">
                 <label class="authoring-header__item-label">{{getLabelForFieldId('urgency')}}</label>
                 <div class="authoring-header__input-holder">
@@ -291,6 +299,7 @@
                  data-required="schema.anpa_category.required"
                  ng-if="metadata.categories && schema.anpa_category"
                  sd-width="{{editor.anpa_category.sdWidth}}"
+                 ng-attr-title="{{schema.anpa_category.readonly === true ? readOnlyLabel : ''}}"
                  order="{{editor.anpa_category.order}}">
                 <label class="authoring-header__item-label uppercase">{{getLabelForFieldId('anpa_category')}}</label>
                 <div class="authoring-header__input-holder">
@@ -318,6 +327,7 @@
                  data-required="schema.subject.required"
                  ng-if="metadata.subjectcodes && schema.subject && editor.subject"
                  sd-width="{{editor.subject.sdWidth}}"
+                 ng-attr-title="{{schema.subject.readonly === true ? readOnlyLabel : ''}}"
                  order="{{editor.subject.order}}">
                 <label class="authoring-header__item-label">{{getLabelForFieldId('subject')}}</label>
                 <div class="authoring-header__input-holder">
@@ -343,6 +353,7 @@
                  sd-validation-error="error[cv.display_name.toLowerCase()]"
                  data-required="editor[cv._id].required"
                  sd-width="{{editor[cv._id].sdWidth}}"
+                 ng-attr-title="{{editor[cv._id].readonly === true ? readOnlyLabel : ''}}"
                  order="{{editor[cv._id].order}}">
                 <label class="authoring-header__item-label">
                     <span>{{ cv.display_name | translate }}</span>
@@ -362,6 +373,7 @@
                         data-change="autosave(item)"
                         data-reload-list="true"
                         data-include-parent="{{editor[cv._id].includeparent}}"
+                        data-disable-entire-category="{{cv.disable_entire_category_selection}}"
                         tabindex="{{editor[cv._id].order}}">
                    </div>
                    <div sd-meta-dropdown
@@ -389,6 +401,7 @@
                 sd-width="{{ editor[field._id].sdWidth || 'full' }}"
                 data-required="schema[field._id].required"
                 order="{{ editor[field._id].order }}"
+                ng-attr-title="{{schema[field._id].readonly === true ? readOnlyLabel : ''}}"
                 sd-validation-error="error[field._id.toLowerCase()]">
 
                 <label class="authoring-header__item-label">{{field.display_name}}</label>
@@ -423,6 +436,7 @@
                 sd-width="{{ editor[field._id].sdWidth || 'full' }}"
                 data-required="schema[field._id].required"
                 order="{{ editor[field._id].order }}"
+                ng-attr-title="{{schema[field._id].readonly === true ? readOnlyLabel : ''}}"
                 sd-validation-error="error[field._id.toLowerCase()]">
                 <label class="authoring-header__item-label">{{field.display_name}}</label>
                 <div class="authoring-header__input-holder">
@@ -445,6 +459,7 @@
                 sd-width="{{ editor[field._id].sdWidth || 'full' }}"
                 data-required="schema[field._id].required"
                 order="{{ editor[field._id].order }}"
+                ng-attr-title="{{schema[field._id].readonly === true ? readOnlyLabel : ''}}"
                 sd-validation-error="error[field._id.toLowerCase()]">
                 <label class="authoring-header__item-label">{{field.display_name}}</label>
                 <div class="authoring-header__input-holder">
@@ -457,12 +472,13 @@
                     ></sd-authoring-custom-field>
                 </div>
             </div>
-    
+
             <div class="authoring-header__item"
                  sd-validation-error="error.company_codes"
                  data-required="schema.company_codes.required"
                  ng-if="displayCompanyCodes && schema.company_codes"
                  sd-width="{{editor.company_codes.sdWidth}}"
+                 ng-attr-title="{{schema.company_codes.readonly === true ? readOnlyLabel : ''}}"
                  order="{{editor.company_codes.order}}">
                 <label class="authoring-header__item-label">{{getLabelForFieldId('company_codes')}}</label>
                 <div class="authoring-header__input-holder">
@@ -488,6 +504,7 @@
                  data-required="schema.ednote.required"
                  ng-if="schema.ednote"
                  sd-width="{{editor.ednote.sdWidth}}"
+                 ng-attr-title="{{schema.ednote.readonly === true ? readOnlyLabel : ''}}"
                  order="{{editor.ednote.order}}">
                 <label class="authoring-header__item-label">{{getLabelForFieldId('ednote')}}</label>
                 <div class="authoring-header__input-holder">
@@ -512,6 +529,7 @@
                  sd-width="{{editor.authors.sdWidth}}"
                  order="{{editor.authors.order}}"
                  ng-controller="PopulateAuthorsController"
+                 ng-attr-title="{{schema.authors.readonly === true ? readOnlyLabel : ''}}"
             >
             <label class="authoring-header__item-label">{{getLabelForFieldId('authors')}}</label>
                 <div class="authoring-header__input-holder">
@@ -528,12 +546,12 @@
                         data-header="true"
                         data-change="autosave(item)"
                         data-reload-list="true"
-                        data-select-entire-category="false"
+                        data-disable-entire-category="true"
                         tabindex="{{editor.authors.order}}">
                     </div>
                 </div>
             </div>
         </div>
     </div>
-        <button class="authoring-header__toggle" ng-class="{active: !isCollapsed}" ng-click="toggleCollapsed()" tabindex="-1"><i class="icon-chevron-up-thin"></i></button>
+        <button class="authoring-header__toggle" ng-class="{active: isCollapsed}" ng-click="toggleCollapsed()" tabindex="-1"><i class="icon-chevron-up-thin"></i></button>
 </div>

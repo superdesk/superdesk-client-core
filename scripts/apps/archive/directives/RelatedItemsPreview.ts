@@ -1,5 +1,6 @@
-import {IArticle, IVocabulary} from 'superdesk-api';
+import {IArticle, IVocabulary, IRendition} from 'superdesk-api';
 import {gettext} from 'core/utils';
+import {getThumbnailForItem} from 'core/helpers/item';
 
 /**
  * @ngdoc directive
@@ -19,6 +20,7 @@ interface IScope extends ng.IScope {
     loading: boolean;
     relatedItems: Array<IArticle>;
     gettext: (text: string, params?: any) => string;
+    getThumbnailForItem: (item: IArticle) => IRendition;
 }
 
 RelatedItemsPreview.$inject = ['relationsService'];
@@ -34,6 +36,7 @@ export function RelatedItemsPreview(relationsService) {
         link: function(scope: IScope) {
             scope.loading = true;
             scope.gettext = gettext;
+            scope.getThumbnailForItem = getThumbnailForItem;
 
             relationsService.getRelatedItemsForField(scope.item, scope.field._id)
                 .then((items) => {

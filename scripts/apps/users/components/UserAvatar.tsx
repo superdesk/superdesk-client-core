@@ -5,11 +5,16 @@ import {IUser} from 'superdesk-api';
 import {CC} from 'core/ui/configurable-ui-components';
 import {isUserLoggedIn} from '../services/UsersService';
 import {gettext} from 'core/utils';
-import {AvatarWrapper, AvatarContentText, AvatarContentImage} from 'superdesk-ui-framework';
+import {AvatarWrapper, AvatarContentText, AvatarContentImage} from 'superdesk-ui-framework/react';
 
 class DefaultAvatarDisplay extends React.PureComponent<{user: Partial<IUser>}> {
     render() {
         const {user} = this.props;
+
+        if (user == null) {
+            return null;
+        }
+
         const tooltipText = user?.display_name ?? null;
 
         if (user.picture_url == null) {

@@ -1,5 +1,6 @@
 import _, {get} from 'lodash';
 import {IArticle} from 'superdesk-api';
+import {dataApi} from 'core/helpers/CrudManager';
 
 /**
  * @ngdoc service
@@ -52,6 +53,16 @@ export function FamilyService(api, desks) {
 
         return query(filter, 'versioncreated', 'desc');
     };
+
+    this.fetchLinks = (item: IArticle) => dataApi.query('links', 1, null, {uri: item.uri, guid: item.guid || item._id})
+        .then((resp) => {
+            if (resp._items.length === 0 && item.used) {
+                // fallback
+                return this.fetchMediaUsedItems(item.unique_id);
+            }
+
+            return resp;
+        }).then((resp) => resp._items);
 
     /**
      * @ngdoc method
@@ -168,7 +179,7 @@ export function FamilyService(api, desks) {
                 queryString = {
                     query_string: {
                         query: queryRelatedItem.join(' '),
-                        lenient: false,
+                        lenient: true,
                         default_operator: 'OR',
                     },
                 };
@@ -187,7 +198,7 @@ export function FamilyService(api, desks) {
             queryString = {
                 query_string: {
                     query: 'slugline.phrase:("' + sanitizedKeyword + '")',
-                    lenient: false,
+                    lenient: true,
                 },
             };
         }
