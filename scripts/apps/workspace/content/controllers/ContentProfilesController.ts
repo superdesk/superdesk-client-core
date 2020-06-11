@@ -21,6 +21,7 @@ interface IScope extends ng.IScope {
     editing: {[key: string]: any};
     new: {[key: string]: any};
     active_only: boolean;
+    contentTypeFilter: string | null;
     ngForm: any;
     withEditor3: boolean;
     contentProfileTypes: Array<{
@@ -31,7 +32,8 @@ interface IScope extends ng.IScope {
     }>;
     setNgForm(ngForm): void;
     patchContentProfile(patch: Partial<IContentProfile>): void;
-    getContentProfileIcon(profile: IContentProfile): string;
+    getContentProfileIconByProfileType(type: IContentProfile['type']): string;
+    toggleContentProfileFilter(type: IContentProfile['type']): void;
 }
 
 function getContentProfileIcon(type: IContentProfileTypeNonText): string {
@@ -81,9 +83,7 @@ export function ContentProfilesController($scope: IScope, $location, notify, con
     // be null.
     $scope.editing = null;
 
-    // if true, only active Content Profiles will be shown
-    // can be changed with a button
-    $scope.active_only = true;
+    $scope.active_only = false;
 
     // required for being able to mark the form as dirty and enable the save button
     // after saving content profile widgets config
@@ -99,10 +99,18 @@ export function ContentProfilesController($scope: IScope, $location, notify, con
         });
     };
 
-    $scope.getContentProfileIcon = (profile) => {
-        const type = IContentProfileTypeNonText[profile.type];
+    $scope.getContentProfileIconByProfileType = (type: IContentProfile['type']) => {
+        return getContentProfileIcon(IContentProfileTypeNonText[type]);
+    };
 
-        return getContentProfileIcon(type);
+    $scope.contentTypeFilter = null;
+
+    $scope.toggleContentProfileFilter = (type: IContentProfile['type']) => {
+        if ($scope.contentTypeFilter === type) {
+            $scope.contentTypeFilter = null;
+        } else {
+            $scope.contentTypeFilter = type;
+        }
     };
 
     $scope.withEditor3 = appConfig.features != null && appConfig.features.editor3;
