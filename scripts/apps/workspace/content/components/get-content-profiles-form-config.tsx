@@ -1,7 +1,7 @@
 import {FormFieldType} from 'core/ui/components/generic-form/interfaces/form';
 import {IFormField, IFormGroup, IContentProfileEditorConfig} from 'superdesk-api';
 import {gettext} from 'core/utils';
-import {IContentProfileFieldWithSystemId} from './ContentProfileConfigNonText';
+import {IContentProfileFieldWithSystemId} from './ContentProfileFieldsConfig';
 import {appConfig} from 'appConfig';
 
 const HAS_PLAINTEXT_FORMATTING_OPTIONS = Object.freeze({

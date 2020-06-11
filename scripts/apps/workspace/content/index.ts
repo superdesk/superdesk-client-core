@@ -5,7 +5,7 @@ import * as directive from './directives';
 import {coreMenuGroups} from 'core/activity/activity';
 import {gettext} from 'core/utils';
 import {ContentProfilesController} from './controllers/ContentProfilesController';
-import {ContentProfileConfigNonText} from './components/ContentProfileConfigNonText';
+import {ContentProfileFieldsConfig} from './components/ContentProfileFieldsConfig';
 
 /**
  * @ngdoc module
@@ -28,8 +28,8 @@ angular.module('superdesk.apps.workspace.content', [
     .directive('sdItemProfile', directive.ItemProfileDirective)
 
     .component(
-        'sdContentProfileConfigNonText',
-        reactToAngular1(ContentProfileConfigNonText, ['profile', 'profileType', 'patchContentProfile']),
+        'sdContentProfileFieldsConfig',
+        reactToAngular1(ContentProfileFieldsConfig, ['profile', 'profileType', 'patchContentProfile']),
     )
     .controller('ContentProfilesController', ContentProfilesController)
 

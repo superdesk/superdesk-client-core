@@ -13,7 +13,7 @@ import {
 } from 'superdesk-api';
 
 import {gettext, arrayInsert} from 'core/utils';
-import {IContentProfileTypeNonText} from '../controllers/ContentProfilesController';
+import {IContentProfileType} from '../controllers/ContentProfilesController';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {GenericListPageComponent} from 'core/ui/components/ListPage/generic-list-page';
 import {SortableContainer, SortableElement} from 'react-sortable-hoc';
@@ -60,7 +60,7 @@ interface IAdditionalProps {
 
 interface IProps {
     profile: IContentProfile;
-    profileType: keyof typeof IContentProfileTypeNonText;
+    profileType: keyof typeof IContentProfileType;
     patchContentProfile(patch: Partial<IContentProfile>): void;
 }
 
@@ -247,7 +247,7 @@ function isFieldEnabled(editor: IContentProfileEditorConfig, field: string) {
     return editor[field]?.enabled ?? false;
 }
 
-export class ContentProfileConfigNonText extends React.Component<IProps, IState> {
+export class ContentProfileFieldsConfig extends React.Component<IProps, IState> {
     private generateKey: () => string;
     private lastKey: number;
     private ItemsContainerComponent: React.ComponentType<IPropsGenericFormContainer<IContentProfileFieldWithSystemId>>;

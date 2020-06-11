@@ -5,7 +5,7 @@ import {appConfig} from 'appConfig';
 import {assertNever, nameof} from 'core/helpers/typescript-helpers';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 
-export enum IContentProfileTypeNonText {
+export enum IContentProfileType {
     text = 'text',
     image = 'image',
     audio = 'audio',
@@ -13,8 +13,8 @@ export enum IContentProfileTypeNonText {
     package = 'package',
 }
 
-const allContentProfileTypes: Array<IContentProfileTypeNonText> =
-    Object.keys(IContentProfileTypeNonText).map((key) => IContentProfileTypeNonText[key]);
+const allContentProfileTypes: Array<IContentProfileType> =
+    Object.keys(IContentProfileType).map((key) => IContentProfileType[key]);
 
 interface IScope extends ng.IScope {
     creating: boolean;
@@ -36,34 +36,34 @@ interface IScope extends ng.IScope {
     toggleContentProfileFilter(type: IContentProfile['type']): void;
 }
 
-function getContentProfileIcon(type: IContentProfileTypeNonText): string {
+function getContentProfileIcon(type: IContentProfileType): string {
     switch (type) {
-    case IContentProfileTypeNonText.text:
+    case IContentProfileType.text:
         return 'icon-text';
-    case IContentProfileTypeNonText.image:
+    case IContentProfileType.image:
         return 'icon-picture';
-    case IContentProfileTypeNonText.audio:
+    case IContentProfileType.audio:
         return 'icon-audio';
-    case IContentProfileTypeNonText.video:
+    case IContentProfileType.video:
         return 'icon-video';
-    case IContentProfileTypeNonText.package:
+    case IContentProfileType.package:
         return 'icon-composite';
     default:
         return assertNever(type);
     }
 }
 
-function getLabelForContentProfileType(type: IContentProfileTypeNonText): string {
+function getLabelForContentProfileType(type: IContentProfileType): string {
     switch (type) {
-    case IContentProfileTypeNonText.text:
+    case IContentProfileType.text:
         return gettext('Text');
-    case IContentProfileTypeNonText.image:
+    case IContentProfileType.image:
         return gettext('Image');
-    case IContentProfileTypeNonText.audio:
+    case IContentProfileType.audio:
         return gettext('Audio');
-    case IContentProfileTypeNonText.video:
+    case IContentProfileType.video:
         return gettext('Video');
-    case IContentProfileTypeNonText.package:
+    case IContentProfileType.package:
         return gettext('Package');
     default:
         return assertNever(type);
@@ -100,7 +100,7 @@ export function ContentProfilesController($scope: IScope, $location, notify, con
     };
 
     $scope.getContentProfileIconByProfileType = (type: IContentProfile['type']) => {
-        return getContentProfileIcon(IContentProfileTypeNonText[type]);
+        return getContentProfileIcon(IContentProfileType[type]);
     };
 
     $scope.contentTypeFilter = null;
@@ -165,7 +165,7 @@ export function ContentProfilesController($scope: IScope, $location, notify, con
                 where: {type: {$ne: 'text'}},
             },
         }).then((res) => {
-            const existingTypes = new Set(res._items.map((profile) => IContentProfileTypeNonText[profile.type]));
+            const existingTypes = new Set(res._items.map((profile) => IContentProfileType[profile.type]));
 
             $scope.contentProfileTypes = allContentProfileTypes.map((type) => ({
                 label: getLabelForContentProfileType(type),

@@ -568,9 +568,17 @@ declare module 'superdesk-api' {
         }
     };
 
+    export enum IContentProfileType {
+        text = 'text',
+        image = 'image',
+        audio = 'audio',
+        video = 'video',
+        package = 'package',
+    }
+
     export interface IContentProfile {
         _id: string;
-        type: keyof typeof IContentProfileTypeNonText;
+        type: keyof typeof IContentProfileType;
         type: 'text';
         label: string;
         description: string;
@@ -582,31 +590,6 @@ declare module 'superdesk-api' {
         is_used: boolean;
         created_by: IUser['_id'];
         updated_by: IUser['_id'];
-    }
-
-
-
-    // NON-TEXT CONTENT PROFILES:
-
-    // subset of FormFieldType
-    export enum IContentProfileFieldTypes {
-        plainText = 'plainText',
-        number = 'number',
-    }
-
-    export enum IContentProfileSection {
-        header = 'header',
-        content = 'content',
-    }
-
-    //
-
-    export enum IContentProfileTypeNonText {
-        text = 'text',
-        image = 'image',
-        audio = 'audio',
-        video = 'video',
-        package = 'package',
     }
 
     // PAGE
