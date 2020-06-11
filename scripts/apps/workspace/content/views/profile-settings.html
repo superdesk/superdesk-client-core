@@ -63,6 +63,10 @@
     </div>
     <div class="modal__body">
         <form name="createForm">
+            <p class="sd-alert sd-alert--hollow sd-alert--primary" translate>
+                Please note that only one content profile per content type other than text is allowed. If the content type is disabled, the limit is already reached.
+            </p>
+
             <fieldset>
                 <div class="form__row">
                     <div class="sd-line-input">
@@ -106,17 +110,10 @@
         <h3 class="modal__heading">{{ :: 'Editing' | translate }} "{{ editing.form.label}}"</h3>
     </div>
     <div class="modal__body">
+
         <form name="editForm">
             <fieldset ng-init="setNgForm(editForm)">
-                <select ng-model="editing.form.type" class="sd-line-input__select" selected="editing.form.type">
-                    <option
-                        ng-repeat="type in contentProfileTypes track by type.value"
-                        ng-value="type.value"
-                        ng-disabled="type.disabled"
-                    >
-                        {{type.label}}
-                    </option>
-                </select>
+                <i class="{{getContentProfileIcon(editing.form)}}"></i>
                 <div class="form__row">
                     <div class="sd-line-input" ng-class="{'sd-line-input--invalid': editForm.label.$error.maxlength}">
                         <label class="sd-line-input__label" translate>Label</label>
