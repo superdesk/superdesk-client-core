@@ -1,21 +1,75 @@
 import {cloneDeep, get, isEqual} from 'lodash';
 import {gettext} from 'core/utils';
-import {IContentProfile} from 'superdesk-api';
+import {IContentProfile, IRestApiResponse} from 'superdesk-api';
 import {appConfig} from 'appConfig';
-import {assertNever} from 'core/helpers/typescript-helpers';
+import {assertNever, nameof} from 'core/helpers/typescript-helpers';
+import {httpRequestJsonLocal} from 'core/helpers/network';
 
 export enum IContentProfileTypeNonText {
-    image = 'image',
-    video = 'video',
     text = 'text',
+    image = 'image',
+    audio = 'audio',
+    video = 'video',
+    package = 'package',
 }
 
-export function getAllContentProfileTypes(): Array<IContentProfileTypeNonText> {
-    return Object.keys(IContentProfileTypeNonText).map((key) => IContentProfileTypeNonText[key]);
+const allContentProfileTypes: Array<IContentProfileTypeNonText> =
+    Object.keys(IContentProfileTypeNonText).map((key) => IContentProfileTypeNonText[key]);
+
+interface IScope extends ng.IScope {
+    creating: boolean;
+    editing: {[key: string]: any};
+    new: {[key: string]: any};
+    active_only: boolean;
+    ngForm: any;
+    withEditor3: boolean;
+    contentProfileTypes: Array<{
+        label: string;
+        value: string;
+        disabled: boolean;
+        icon: string;
+    }>;
+    setNgForm(ngForm): void;
+    patchContentProfile(patch: Partial<IContentProfile>): void;
+    getContentProfileIcon(profile: IContentProfile): string;
+}
+
+function getContentProfileIcon(type: IContentProfileTypeNonText): string {
+    switch (type) {
+    case IContentProfileTypeNonText.text:
+        return 'icon-text';
+    case IContentProfileTypeNonText.image:
+        return 'icon-picture';
+    case IContentProfileTypeNonText.audio:
+        return 'icon-audio';
+    case IContentProfileTypeNonText.video:
+        return 'icon-video';
+    case IContentProfileTypeNonText.package:
+        return 'icon-composite';
+    default:
+        return assertNever(type);
+    }
+}
+
+function getLabelForContentProfileType(type: IContentProfileTypeNonText): string {
+    switch (type) {
+    case IContentProfileTypeNonText.text:
+        return gettext('Text');
+    case IContentProfileTypeNonText.image:
+        return gettext('Image');
+    case IContentProfileTypeNonText.audio:
+        return gettext('Audio');
+    case IContentProfileTypeNonText.video:
+        return gettext('Video');
+    case IContentProfileTypeNonText.package:
+        return gettext('Package');
+    default:
+        return assertNever(type);
+    }
 }
 
 ContentProfilesController.$inject = ['$scope', '$location', 'notify', 'content', 'modal', '$q'];
-export function ContentProfilesController($scope, $location, notify, content, modal, $q) {
+export function ContentProfilesController($scope: IScope, $location, notify, content, modal, $q) {
     var self = this;
 
     // creating will be true while the modal for creating a new content
@@ -45,18 +99,11 @@ export function ContentProfilesController($scope, $location, notify, content, mo
         });
     };
 
-    $scope.contentProfileTypes = getAllContentProfileTypes().map((type) => {
-        switch (type) {
-        case IContentProfileTypeNonText.image:
-            return {label: gettext('Image'), value: IContentProfileTypeNonText.image};
-        case IContentProfileTypeNonText.video:
-            return {label: gettext('Video'), value: IContentProfileTypeNonText.video};
-        case IContentProfileTypeNonText.text:
-            return {label: gettext('Text'), value: IContentProfileTypeNonText.text};
-        default:
-            return assertNever(type);
-        }
-    });
+    $scope.getContentProfileIcon = (profile) => {
+        const type = IContentProfileTypeNonText[profile.type];
+
+        return getContentProfileIcon(type);
+    };
 
     $scope.withEditor3 = appConfig.features != null && appConfig.features.editor3;
 
@@ -100,6 +147,27 @@ export function ContentProfilesController($scope, $location, notify, content, mo
         }
     }
 
+    function setContentProfiles() {
+        $scope.contentProfileTypes = []; // loading
+
+        httpRequestJsonLocal<IRestApiResponse<IContentProfile>>({
+            method: 'GET',
+            path: '/content_types',
+            urlParams: {
+                where: {type: {$ne: 'text'}},
+            },
+        }).then((res) => {
+            const existingTypes = new Set(res._items.map((profile) => IContentProfileTypeNonText[profile.type]));
+
+            $scope.contentProfileTypes = allContentProfileTypes.map((type) => ({
+                label: getLabelForContentProfileType(type),
+                value: type,
+                disabled: existingTypes.has(type),
+                icon: getContentProfileIcon(type),
+            }));
+        });
+    }
+
     /**
      * @description Reports that an error has occurred.
      * @private
@@ -111,6 +179,12 @@ export function ContentProfilesController($scope, $location, notify, content, mo
         console.error(resp);
         return $q.reject(resp);
     }
+
+    $scope.$on('resource:updated', (event, data) => {
+        if (data.resource === 'content_types' && data.fields[nameof<IContentProfile>('type')] === 1) {
+            setContentProfiles();
+        }
+    });
 
     /**
      * @description Middle-ware that checks an error response to verify whether
@@ -198,4 +272,5 @@ export function ContentProfilesController($scope, $location, notify, content, mo
     };
 
     refreshList(true);
+    setContentProfiles();
 }

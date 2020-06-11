@@ -596,8 +596,11 @@ declare module 'superdesk-api' {
     //
 
     export enum IContentProfileTypeNonText {
+        text = 'text',
         image = 'image',
+        audio = 'audio',
         video = 'video',
+        package = 'package',
     }
 
     // PAGE

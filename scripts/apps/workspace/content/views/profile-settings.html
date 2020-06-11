@@ -32,7 +32,10 @@
                                 <li><button ng-click="ctrl.delete(type)" ng-disabled="type.is_used" title="{{:: type.is_used ? 'Sorry, but profile is in use.' : 'Remove Content Profile' | translate }}"><i class="icon-trash"></i>{{:: 'Remove'| translate}}</button></li>
                             </ul>
                         </div>
-                        <div class="card-box__heading">{{ type.label}}</div>
+                        <div class="card-box__heading">
+                            <i class="{{getContentProfileIcon(type)}}"></i>
+                            {{ type.label}}
+                        </div>
                     </div>
                     <div class="card-box__content">
                         <ul class="card-box__content-list">
@@ -65,8 +68,13 @@
                     <div class="sd-line-input">
                         <label class="sd-line-input__label" translate>Type</label>
                         <select ng-model="new.type" class="sd-line-input__select" selected="new.type">
-                            <option value="text" selected translate>Text</option>
-                            <option ng-repeat="type in contentProfileTypes track by type.value" value="type.value">{{type.label}}</option>
+                            <option
+                                ng-repeat="type in contentProfileTypes track by type.value"
+                                ng-value="type.value"
+                                ng-disabled="type.disabled"
+                            >
+                                {{type.label}}
+                            </option>
                         </select>
                     </div>
                 </div>
@@ -100,6 +108,15 @@
     <div class="modal__body">
         <form name="editForm">
             <fieldset ng-init="setNgForm(editForm)">
+                <select ng-model="editing.form.type" class="sd-line-input__select" selected="editing.form.type">
+                    <option
+                        ng-repeat="type in contentProfileTypes track by type.value"
+                        ng-value="type.value"
+                        ng-disabled="type.disabled"
+                    >
+                        {{type.label}}
+                    </option>
+                </select>
                 <div class="form__row">
                     <div class="sd-line-input" ng-class="{'sd-line-input--invalid': editForm.label.$error.maxlength}">
                         <label class="sd-line-input__label" translate>Label</label>
