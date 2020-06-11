@@ -39,7 +39,12 @@ function httpRequestBase(options: IHttpRequestOptions): Promise<Response> {
 
     if (options.urlParams != null) {
         Object.keys(options.urlParams).forEach((key) => {
-            _url.searchParams.append(key, options.urlParams[key]);
+            const value = options.urlParams[key];
+            const stringified = typeof value === 'string'
+                ? value
+                : JSON.stringify(value);
+
+            _url.searchParams.append(key, stringified);
         });
     }
 
