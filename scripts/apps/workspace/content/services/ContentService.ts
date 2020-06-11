@@ -4,7 +4,7 @@ import {gettext} from 'core/utils';
 import {isMediaEditable} from 'core/config';
 import {appConfig} from 'appConfig';
 import {dataApi} from 'core/helpers/CrudManager';
-import {IArticle, IContentProfileEditorConfig, IVocabulary} from 'superdesk-api';
+import {IArticle, IContentProfileEditorConfig, IVocabulary, IContentProfile} from 'superdesk-api';
 
 /**
  * @ngdoc service
@@ -229,11 +229,8 @@ export function ContentService(api, templates, desks, packages, archiveService, 
      * @param {String} contentType
      * @return {Object}
      */
-    this.schema = function(profile, contentType) {
-        const schema = get(profile, 'schema',
-            get(appConfig.schema, contentType, constant.DEFAULT_SCHEMA));
-
-        return angular.extend({}, schema);
+    this.schema = function(profile: IContentProfile, contentType) {
+        return angular.extend({}, profile.schema);
     };
 
     /**
@@ -243,11 +240,8 @@ export function ContentService(api, templates, desks, packages, archiveService, 
      * @param {String} contentType
      * @return {Object}
      */
-    this.editor = function(profile, contentType) {
-        const editor = get(profile, 'editor',
-            get(appConfig.editor, contentType, constant.DEFAULT_EDITOR));
-
-        return angular.extend({}, editor);
+    this.editor = function(profile: IContentProfile, contentType) {
+        return angular.extend({}, profile.editor);
     };
 
     /**
@@ -283,8 +277,8 @@ export function ContentService(api, templates, desks, packages, archiveService, 
         );
     };
 
-    this.contentProfileSchema = angular.extend({}, constant.DEFAULT_SCHEMA, constant.EXTRA_SCHEMA_FIELDS);
-    this.contentProfileEditor = angular.extend({}, constant.DEFAULT_EDITOR, constant.EXTRA_EDITOR_FIELDS);
+    this.contentProfileSchema = angular.extend({}, constant.EXTRA_SCHEMA_FIELDS);
+    this.contentProfileEditor = angular.extend({}, constant.EXTRA_EDITOR_FIELDS);
 
     $rootScope.$on('vocabularies:updated', resetFields);
 
@@ -365,19 +359,15 @@ export function ContentService(api, templates, desks, packages, archiveService, 
      * Setup authoring scope for item
      */
     this.setupAuthoring = (profileId, scope, item) => {
-        if (profileId) {
-            return this.getType(profileId).then((profile) => {
-                scope.schema = this.schema(profile, item.type);
-                scope.editor = this.editor(profile, item.type);
-                scope.fields = this.fields(profile);
-                return profile;
-            });
-        } else {
-            return this.getCustomFields().then(() => {
-                scope.schema = this.schema(null, get(item, 'type', 'text'));
-                scope.editor = this.editor(null, get(item, 'type', 'text'));
-                scope.fields = this.fields({editor: scope.editor});
-            });
+        if (profileId == null) {
+            throw new Error('profile ID must be provided');
         }
+
+        return this.getType(profileId).then((profile) => {
+            scope.schema = this.schema(profile, item.type);
+            scope.editor = this.editor(profile, item.type);
+            scope.fields = this.fields(profile);
+            return profile;
+        });
     };
 }
