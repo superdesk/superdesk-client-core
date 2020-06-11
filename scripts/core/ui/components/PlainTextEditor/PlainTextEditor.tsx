@@ -149,7 +149,7 @@ export class PlainTextEditor extends React.Component<IProps, IState> {
 
         let editorState = this.state.editorState;
 
-        if (this.selection) {
+        if (this.state.hasFocus && this.selection) {
             editorState = EditorState.forceSelection(editorState, this.selection);
         }
 
