@@ -21,7 +21,7 @@ export const DEFAULT_SCHEMA = Object.freeze({
     abstract: {maxlength: 160, type: 'string'},
     body_html: {required: true, type: 'string'},
     byline: {type: 'string'},
-    dateline: {type: 'dict', required: false},
+    dateline: {type: 'dict', required: true},
     sign_off: {type: 'string'},
     footer: {},
     body_footer: {type: 'string'},
