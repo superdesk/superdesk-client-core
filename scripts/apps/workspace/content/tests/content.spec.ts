@@ -74,7 +74,6 @@ describe('superdesk.apps.workspace.content', () => {
             $rootScope.$digest();
             expect(api.getAll).toHaveBeenCalledWith('content_types', {where: {enabled: true}}, false);
             expect(success).toHaveBeenCalledWith(types);
-            expect(content.types).toBe(types);
         }));
 
         it('can fetch content types and filter by desk', inject((content, $rootScope, $q) => {
@@ -144,7 +143,7 @@ describe('superdesk.apps.workspace.content', () => {
             var ctrl = $controller('ContentProfilesController', {$scope: scope});
 
             scope.$digest();
-            expect(content.getTypes).toHaveBeenCalledWith(true);
+            expect(content.getTypes).toHaveBeenCalledWith(null, true);
             expect(ctrl.items).toBe('list');
         }));
 
