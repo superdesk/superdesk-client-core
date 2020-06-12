@@ -163,24 +163,21 @@ export function ContentService(api, templates, desks, packages, archiveService, 
      * @param {Boolean} includeDisabled
      * @return {Promise}
      */
-    this.getTypes = function(includeDisabled) {
-        // eslint-disable-next-line consistent-this
-        var getTypesFnThis = this;
-        var params = {};
+    this.getTypes = function(type?: IContentProfile['type'] | null, includeDisabled?) {
+        var params: {where?: any} = {};
 
         if (!includeDisabled) {
             params = {where: {enabled: true}};
         }
 
-        // cache when fetching all types
-        return api.getAll('content_types', params, !!includeDisabled).then((result) => {
-            getTypesFnThis.types = result.sort((a, b) => b.priority - a.priority, // with higher priority goes up
-            );
-            return getTypesFnThis.types;
-        }, (reason) => {
-            getTypesFnThis.types = [];
-            return getTypesFnThis.types;
-        });
+        if (type != null) {
+            params.where = params.where ?? {};
+
+            params.where.type = type;
+        }
+
+        return api.getAll('content_types', params, !!includeDisabled)
+            .then((result) => result.sort((a, b) => b.priority - a.priority));
     };
 
     /**
@@ -189,7 +186,7 @@ export function ContentService(api, templates, desks, packages, archiveService, 
      * @return {Promise}
      */
     this.getTypesLookup = function() {
-        return this.getTypes(true).then((profiles) => {
+        return this.getTypes(null, true).then((profiles) => {
             var lookup = {};
 
             profiles.forEach((profile) => {
@@ -271,7 +268,7 @@ export function ContentService(api, templates, desks, packages, archiveService, 
      * @return {Promise}
      */
     this.getDeskProfiles = function(desk, profileId) {
-        return this.getTypes().then((profiles) => !desk || isEmpty(desk.content_profiles) ?
+        return this.getTypes('text').then((profiles) => !desk || isEmpty(desk.content_profiles) ?
             profiles :
             profiles.filter((profile) => desk.content_profiles[profile._id] || profile._id === profileId),
         );

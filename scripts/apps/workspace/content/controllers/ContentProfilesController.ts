@@ -121,7 +121,7 @@ export function ContentProfilesController($scope: IScope, $location, notify, con
      * @private
      */
     function refreshList(callEditActive) {
-        return content.getTypes(true).then((types) => {
+        return content.getTypes(null, true).then((types) => {
             self.items = types;
             if (callEditActive) {
                 editActive();
