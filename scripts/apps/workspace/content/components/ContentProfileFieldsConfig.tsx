@@ -18,7 +18,7 @@ import {assertNever} from 'core/helpers/typescript-helpers';
 import {GenericListPageComponent} from 'core/ui/components/ListPage/generic-list-page';
 import {SortableContainer, SortableElement} from 'react-sortable-hoc';
 import arrayMove from 'array-move';
-import {Button} from 'superdesk-ui-framework';
+import {Button} from 'superdesk-ui-framework/react';
 import {groupBy} from 'lodash';
 import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
 import ng from 'core/services/ng';
@@ -245,6 +245,12 @@ function stripSystemId(item: IContentProfileFieldWithSystemId): IContentProfileF
 
 function isFieldEnabled(editor: IContentProfileEditorConfig, field: string) {
     return editor[field]?.enabled ?? false;
+}
+
+export class Heelo extends React.Component<IProps, IState> {
+    render() {
+        return (<div>woo</div>);
+    }
 }
 
 export class ContentProfileFieldsConfig extends React.Component<IProps, IState> {
