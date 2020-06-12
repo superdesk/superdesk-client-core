@@ -86,11 +86,18 @@ describe('authoring', () => {
         }));
 
     it('unlocks a locked item and locks by current user',
-        inject((authoring, lock, $rootScope, $timeout, api, $q, $location) => {
+        inject((lock, $rootScope, $timeout, api, $q, $location) => {
             spyOn(api, 'save').and.returnValue($q.when({}));
             spyOn(lock, 'unlock').and.returnValue($q.when({}));
 
-            var lockedItem = {guid: GUID, _id: GUID, _locked: true, lock_user: 'user:5', task: 'desk:1'};
+            var lockedItem = {
+                guid: GUID,
+                _id: GUID,
+                _locked: true,
+                lock_user: 'user:5',
+                task: 'desk:1',
+                profile: '123',
+            };
             var $scope = startAuthoring(lockedItem, 'edit');
 
             $rootScope.$digest();
@@ -138,7 +145,7 @@ describe('authoring', () => {
     }));
 
     it('can save while item is being autosaved', inject(($rootScope, $timeout, $q, api) => {
-        var $scope = startAuthoring({headline: 'test', task: 'desk:1'}, 'edit');
+        var $scope = startAuthoring({headline: 'test', task: 'desk:1', profile: '123'}, 'edit');
 
         $scope.item.body_html = 'test';
         $rootScope.$digest();
@@ -153,7 +160,7 @@ describe('authoring', () => {
     }));
 
     it('can close item after save work confirm', inject(($rootScope, $q, $location, authoring, reloadService) => {
-        startAuthoring({headline: 'test'}, 'edit');
+        startAuthoring({headline: 'test', profile: '123'}, 'edit');
         $location.search('item', 'foo');
         $location.search('action', 'edit');
         $rootScope.$digest();
@@ -170,7 +177,7 @@ describe('authoring', () => {
     }));
 
     it('can populate content metadata for undo', inject(($rootScope) => {
-        var orig = {headline: 'foo'};
+        var orig = {headline: 'foo', profile: '123'};
         var scope = startAuthoring(orig, 'edit');
 
         expect(scope.origItem.headline).toBe('foo');
@@ -189,11 +196,13 @@ describe('authoring', () => {
             let item = {
                 _id: 'test',
                 headline: 'headline',
+                profile: '123',
             };
 
             let rewriteOf = {
                 _id: 'rewriteOf',
                 headline: 'rewrite',
+                profile: '123',
                 associations: {
                     featuremedia: {
 
@@ -227,11 +236,13 @@ describe('authoring', () => {
             let item = {
                 _id: 'test',
                 headline: 'headline',
+                profile: '123',
             };
 
             let rewriteOf = {
                 _id: 'rewriteOf',
                 headline: 'rewrite',
+                profile: '123',
                 associations: {
                     featuremedia: {
 
@@ -267,6 +278,7 @@ describe('authoring', () => {
                 _id: 'test',
                 headline: 'headline',
                 rewrite_of: 'rewriteOf',
+                profile: '123',
             };
 
             let rewriteOf = {
@@ -277,6 +289,7 @@ describe('authoring', () => {
 
                     },
                 },
+                profile: '123',
             };
 
             let defered = $q.defer();
@@ -319,6 +332,7 @@ describe('authoring', () => {
             let item = {
                 _id: 'test',
                 rewrite_of: 'rewriteOf',
+                profile: '123',
             };
 
             let rewriteOf = {
@@ -328,6 +342,7 @@ describe('authoring', () => {
                         test: 'test',
                     },
                 },
+                profile: '123',
             };
 
             let defered = $q.defer();

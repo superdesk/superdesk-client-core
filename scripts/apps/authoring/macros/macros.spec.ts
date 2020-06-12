@@ -55,7 +55,9 @@ describe('macros', () => {
 
     var $controller;
 
-    beforeEach(inject((_$controller_, macros, $q) => {
+    beforeEach(inject((_$controller_, macros, $q, $httpBackend) => {
+        $httpBackend.whenGET(/api$/).respond({_links: {child: []}});
+
         $controller = _$controller_;
         spyOn(macros, 'get').and.returnValue($q.when([]));
     }));
@@ -95,7 +97,7 @@ describe('macros', () => {
 
     it('trigger macro with diff does not update item', inject((macros, $q, autosave, $rootScope) => {
         var diff = {foo: 'bar'};
-        var item = {_id: '1'};
+        var item = {_id: '1', profile: '123'};
         var $scope = startAuthoring(item, 'edit');
 
         spyOn(macros, 'call').and.returnValue($q.when({item: item, diff: diff}));
@@ -150,6 +152,7 @@ describe('macros', () => {
             genre: [{qcode: 'foo', name: 'bar'}],
             slugline: 'slugline',
             _etag: 'foo',
+            profile: '123',
         };
         let macroItem = {
             _id: '1',
@@ -157,6 +160,7 @@ describe('macros', () => {
             abstract: 'abstract',
             genre: [{qcode: 'zoo', name: 'zoo'}],
             _etag: 'bar',
+            profile: '123',
         };
         let $scope = startAuthoring(item, 'edit');
 
@@ -187,6 +191,7 @@ describe('macros', () => {
             abstract: 'abstract',
             genre: [{qcode: 'foo', name: 'bar'}],
             slugline: 'slugline',
+            profile: '123',
         };
         let macroItem = {
             _id: '1',
@@ -194,6 +199,7 @@ describe('macros', () => {
             abstract: 'new abstract',
             slugline: 'new slugline',
             genre: [{qcode: 'zoo', name: 'zoo'}],
+            profile: '123',
         };
         let $scope = startAuthoring(item, 'edit');
 

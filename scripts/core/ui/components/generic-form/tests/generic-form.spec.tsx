@@ -20,11 +20,18 @@ function getTestFieldConfig(type: FormFieldType): IFormField {
     case FormFieldType.contentFilterSingleValue:
     case FormFieldType.deskSingleValue:
     case FormFieldType.yesNo:
+        return {
+            type: type,
+            field: 'test-field',
+        };
     case FormFieldType.select:
     case FormFieldType.selectMultiple:
         return {
             type: type,
             field: 'test-field',
+            component_parameters: {
+                items: [],
+            },
         };
     case FormFieldType.vocabularySingleValue:
         return {
