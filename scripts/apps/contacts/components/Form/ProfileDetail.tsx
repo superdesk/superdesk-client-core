@@ -193,6 +193,9 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
         const isRequired = get(this.state, 'requiredField', false);
         const MSG_REQUIRED = gettext('This field is required.');
         const isAssignable = this.state.contactType && this.state.contactType.assignable;
+        const minFieldMessage = gettext('At least one of [email, phone, mobile, twitter, ' +
+                                        'facebook, instagram] is required.');
+        const showMinFieldsWarning = !validateMinRequiredField(contact) && !readOnly;
 
         return (
             <div className="details-info">
@@ -342,12 +345,12 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                             readOnly={readOnly}/>
                     </LineInput>
                 </Row>
-
+                
                 <Row>
                     <LineInput
                         readOnly={readOnly}
                         required={isRequired || isAssignable}
-                        invalid={!!get(errors, 'contact_email')}
+                        invalid={!!get(errors, 'contact_email') || showMinFieldsWarning}
                     >
                         <Label text={gettext('email')} />
                         {get(errors, 'contact_email') && (
@@ -355,6 +358,11 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                                 {get(errors, 'contact_email')}
                             </div>
                         )}
+                        {showMinFieldsWarning && !get(errors, 'contact_email') &&
+                            <div className="sd-line-input__message">
+                                {minFieldMessage}
+                            </div>
+                        }
                         <InputArray
                             field="contact_email"
                             type="email"
@@ -368,8 +376,14 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                 </Row>
 
                 <Row>
-                    <LineInput readOnly={readOnly} required={isRequired}>
+                    <LineInput readOnly={readOnly} required={isRequired} invalid={showMinFieldsWarning}
+                    >
                         <Label text={gettext('phone')} />
+                        {showMinFieldsWarning &&
+                            <div className="sd-line-input__message">
+                                {minFieldMessage}
+                            </div>
+                        }
                         <InputArray
                             field="contact_phone"
                             value={get(contact, 'contact_phone', [])}
@@ -384,8 +398,13 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                 <ToggleBox title={gettext('MORE')} isOpen={false} style="toggle-box--circle" scrollInView={true}>
 
                     <Row>
-                        <LineInput readOnly={readOnly} required={isRequired}>
+                        <LineInput readOnly={readOnly} required={isRequired} invalid={showMinFieldsWarning}>
                             <Label text={gettext('mobile')} />
+                            {showMinFieldsWarning &&
+                                <div className="sd-line-input__message">
+                                    {minFieldMessage}
+                                </div>
+                            }
                             <InputArray
                                 field="mobile"
                                 value={get(contact, 'mobile', [])}
@@ -423,8 +442,14 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
 
                     <Row>
                         <LineInput readOnly={readOnly} required={isRequired} hint={gettext('e.g. @cityofsydney')}
-                            invalid={!isEmpty(errors.twitter)} message={get(errors, 'twitter', '')}>
+                            invalid={!isEmpty(errors.twitter) || showMinFieldsWarning}
+                            message={get(errors, 'twitter', '')}>
                             <Label text={gettext('twitter')} />
+                            {showMinFieldsWarning && isEmpty(errors.twitter) &&
+                                <div className="sd-line-input__message">
+                                    {minFieldMessage}
+                                </div>
+                            }
                             <Input
                                 field="twitter"
                                 value={get(contact, 'twitter', '')}
@@ -436,9 +461,14 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                     </Row>
 
                     <Row>
-                        <LineInput readOnly={readOnly} required={isRequired}
+                        <LineInput readOnly={readOnly} required={isRequired} invalid={showMinFieldsWarning}
                             hint={gettext('e.g. cityofsydney from https://www.facebook.com/cityofsydney')}>
                             <Label text={gettext('facebook')} />
+                            {showMinFieldsWarning &&
+                                <div className="sd-line-input__message">
+                                    {minFieldMessage}
+                                </div>
+                            }
                             <Input
                                 field="facebook"
                                 value={get(contact, 'facebook', '')}
@@ -450,9 +480,14 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                     </Row>
 
                     <Row>
-                        <LineInput readOnly={readOnly} required={isRequired}
+                        <LineInput readOnly={readOnly} required={isRequired} invalid={showMinFieldsWarning}
                             hint={gettext('e.g. cityofsydney from https://www.instagram.com/cityofsydney')}>
                             <Label text={gettext('instagram')} />
+                            {showMinFieldsWarning &&
+                                <div className="sd-line-input__message">
+                                    {minFieldMessage}
+                                </div>
+                            }
                             <Input
                                 field="instagram"
                                 value={get(contact, 'instagram', '')}
