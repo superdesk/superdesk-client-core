@@ -1,7 +1,6 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
 import {
-    IArrayKeyed,
     ICrudManager,
     ICrudManagerResponse,
     IItemWithId,
@@ -65,7 +64,7 @@ interface IProps {
 }
 
 interface IState {
-    fields: {[key in IContentProfileSection]: IArrayKeyed<IContentProfileField>} | null;
+    fields: {[key in IContentProfileSection]: Array<IContentProfileField>} | null;
     allFieldIds: Array<string> | null;
     selectedSection: keyof typeof IContentProfileSection;
     activeTab: IState['selectedSection'] | 'widgets';
@@ -314,11 +313,11 @@ export class ContentProfileFieldsConfig extends React.Component<IProps, IState> 
     /** Checks in all sections */
     existsInFields(id: string) {
         return getAllContentProfileSections()
-            .some((section) => this.state.fields[section].some((item) => item.value.id === id));
+            .some((section) => this.state.fields[section].some((item) => item.id === id));
     }
 
     updateCurrentFields(
-        fn: (items: IArrayKeyed<IContentProfileField>) => IArrayKeyed<IContentProfileField>,
+        fn: (items: Array<IContentProfileField>) => Array<IContentProfileField>,
     ): IState['fields'] {
         return {
             ...this.state.fields,
@@ -361,13 +360,7 @@ export class ContentProfileFieldsConfig extends React.Component<IProps, IState> 
                     return field;
                 });
 
-            // adding keys to items because they will be reordered
-            // and they don't have static IDs to be used as react keys
-            const fieldsKeyed = fields.map(
-                (field) => ({key: this.generateKey(), value: field}),
-            );
-
-            var grouped = groupBy(fieldsKeyed, (item) => item.value.section);
+            var grouped = groupBy(fields, (item) => item.section);
 
             this.setState({
                 editor,
@@ -390,7 +383,7 @@ export class ContentProfileFieldsConfig extends React.Component<IProps, IState> 
             const schemaCopy = {...this.state.schema};
 
             const fieldsFlat = getAllContentProfileSections()
-                .reduce<IArrayKeyed<IContentProfileField>>(
+                .reduce<Array<IContentProfileField>>(
                     (acc, sectionId) => [...acc, ...this.state.fields[sectionId]],
                     [],
                 );
@@ -401,34 +394,34 @@ export class ContentProfileFieldsConfig extends React.Component<IProps, IState> 
                 let schemaPatch = {};
                 let editorPatch: Partial<IContentProfileEditorConfig[0]> = {};
 
-                acc[field.value.id] = {
+                acc[field.id] = {
                     editorPatch: {},
                     schemaPatch: {},
                 };
 
-                Object.keys(field.value).forEach((_property) => {
+                Object.keys(field).forEach((_property) => {
                     if (_property === 'id') {
                         return;
                     }
 
                     if (isSchemaKey(_property)) {
-                        schemaPatch[_property] = field.value[_property];
+                        schemaPatch[_property] = field[_property];
 
                         if (_property === 'readonly' || _property === 'required') {
-                            editorPatch[_property] = field.value[_property];
+                            editorPatch[_property] = field[_property];
                         }
                     } else {
-                        editorPatch[_property] = field.value[_property];
+                        editorPatch[_property] = field[_property];
 
                         if (_property === 'minlength' || _property === 'maxlenght') {
-                            schemaPatch[_property] = field.value[_property];
+                            schemaPatch[_property] = field[_property];
                         }
                     }
                 });
 
                 editorPatch.order = index;
 
-                acc[field.value.id] = {
+                acc[field.id] = {
                     editor: editorPatch,
                     schema: schemaPatch,
                 };
@@ -509,7 +502,7 @@ export class ContentProfileFieldsConfig extends React.Component<IProps, IState> 
             const fields = this.state.fields[this.state.selectedSection];
 
             const fieldsResponse: ICrudManagerResponse<IContentProfileFieldWithSystemId> = {
-                _items: fields.map(({key, value}) => ({...value, _id: value.id})),
+                _items: fields.map((field) => ({...field, _id: field.id})),
                 _meta: {total: fields.length, page: 1, max_results: fields.length},
             };
 
@@ -525,8 +518,8 @@ export class ContentProfileFieldsConfig extends React.Component<IProps, IState> 
                                 fields: this.updateCurrentFields(
                                     (_fields) => {
                                         return _fields.map((field) => {
-                                            if (field.value.id === itemWithId._id) {
-                                                return {...field, value: stripSystemId(itemWithId)};
+                                            if (field.id === itemWithId._id) {
+                                                return stripSystemId(itemWithId);
                                             } else {
                                                 return field;
                                             }
@@ -557,14 +550,9 @@ export class ContentProfileFieldsConfig extends React.Component<IProps, IState> 
                                 insertNewItemAtIndex: null,
                                 fields: this.updateCurrentFields(
                                     (_fields) => {
-                                        const nextItem = {
-                                            key: this.generateKey(),
-                                            value: stripSystemId(itemWithId),
-                                        };
-
                                         return arrayInsert(
                                             _fields,
-                                            nextItem,
+                                            stripSystemId(itemWithId),
                                             this.state.insertNewItemAtIndex ?? 0,
                                         );
                                     },
@@ -582,7 +570,7 @@ export class ContentProfileFieldsConfig extends React.Component<IProps, IState> 
                             {
                                 fields: this.updateCurrentFields(
                                     (_fields) => _fields.filter(
-                                        ({value}) => value.id !== item._id,
+                                        (field) => field.id !== item._id,
                                     ),
                                 ),
                             },
