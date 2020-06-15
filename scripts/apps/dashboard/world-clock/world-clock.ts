@@ -25,10 +25,20 @@ angular.module('superdesk.apps.dashboard.world-clock', [
     .controller('WorldClockConfigController', ['$scope', 'notify', 'tzdata',
         function($scope, notify, tzdata) {
             $scope.availableZones = [];
+            $scope.zoneLabels = {};
 
             tzdata.$promise.then(() => {
                 $scope.availableZones = tzdata.getTzNames();
+                $scope.zoneLabels = tzdata.getTzLabels();
             });
+
+            $scope.searchZones = function(searchString) {
+                if (searchString) {
+                    $scope.availableZones = tzdata.getTzNames().filter((tz) => $scope.zoneLabels[tz].toLowerCase().includes(searchString.toLowerCase()));
+                } else {
+                    $scope.availableZones = tzdata.getTzNames();
+                }
+            };
 
             $scope.notify = function(action, zone) {
                 if (action === 'add') {

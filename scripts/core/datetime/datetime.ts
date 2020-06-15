@@ -2,6 +2,7 @@ import _ from 'lodash';
 import {gettext} from 'core/utils';
 import moment from 'moment-timezone';
 import {appConfig} from 'appConfig';
+import {labels as timezoneLabels} from 'apps/dashboard/world-clock/timezones-all-labels';
 
 const ISO_DATE_FORMAT = 'YYYY-MM-DD';
 const ISO_WEEK_FORMAT = 'YYYY-W';
@@ -267,8 +268,7 @@ export default angular.module('superdesk.core.datetime', [
      *   avoiding the need to fetch it again every time when needed.
      */
     .factory('tzdata', ['$resource', function($resource) {
-        var filename = 'scripts/apps/dashboard/world-clock/timezones-all.json',
-            tzResource = $resource(filename);
+        const tzResource = $resource('scripts/apps/dashboard/world-clock/timezones-all.json');
 
         /**
          * Returns a sorted list of all time zone names. If time zone data
@@ -285,6 +285,10 @@ export default angular.module('superdesk.core.datetime', [
                 _.keys(this.zones),
                 _.keys(this.links),
             ).sort();
+        };
+
+        tzResource.prototype.getTzLabels = function() {
+            return timezoneLabels;
         };
 
         // return an array that will contain the fetched data when

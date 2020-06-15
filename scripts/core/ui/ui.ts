@@ -628,6 +628,7 @@ function TimezoneDirective(tzdata, $timeout) {
 
             tzdata.$promise.then(() => {
                 scope.timeZones = tzdata.getTzNames();
+                scope.timezoneLabels = tzdata.getTzLabels();
                 if (!scope.timezone && appConfig.defaultTimezone) {
                     scope.selectTimeZone(appConfig.defaultTimezone);
                 }
@@ -654,7 +655,11 @@ function TimezoneDirective(tzdata, $timeout) {
                 termLower = searchTerm.toLowerCase();
                 scope.matchingTimeZones = _.filter(
                     scope.timeZones,
-                    (item) => item.toLowerCase().indexOf(termLower) >= 0,
+                    (item) =>
+                        item.toLowerCase().indexOf(termLower) >= 0 ||
+                        scope.timezoneLabels[item]
+                            .toLowerCase()
+                            .indexOf(termLower) >= 0,
                 );
             };
 
