@@ -11,12 +11,11 @@ import {
     IVocabulary,
 } from 'superdesk-api';
 
-import {gettext, arrayInsert} from 'core/utils';
+import {gettext, arrayInsert, arrayMove} from 'core/utils';
 import {IContentProfileType} from '../controllers/ContentProfilesController';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {GenericListPageComponent} from 'core/ui/components/ListPage/generic-list-page';
 import {SortableContainer, SortableElement} from 'react-sortable-hoc';
-import arrayMove from 'array-move';
 import {Button} from 'superdesk-ui-framework/react';
 import {groupBy} from 'lodash';
 import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
