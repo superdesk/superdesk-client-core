@@ -2,7 +2,6 @@ import _ from 'lodash';
 import {gettext} from 'core/utils';
 import moment from 'moment-timezone';
 import {appConfig} from 'appConfig';
-import {getTimezoneLabels} from 'apps/dashboard/world-clock/timezones-all-labels';
 
 const ISO_DATE_FORMAT = 'YYYY-MM-DD';
 const ISO_WEEK_FORMAT = 'YYYY-W';
@@ -286,8 +285,6 @@ export default angular.module('superdesk.core.datetime', [
                 _.keys(this.links),
             ).sort();
         };
-
-        tzResource.prototype.getTzLabels = getTimezoneLabels;
 
         // return an array that will contain the fetched data when
         // it arrives from the server

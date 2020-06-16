@@ -2,6 +2,7 @@ import _ from 'lodash';
 import './world-clock.scss';
 import d3 from 'd3';
 import {gettext} from 'core/utils';
+import {getTimezoneLabel} from './timezones-all-labels';
 
 angular.module('superdesk.apps.dashboard.world-clock', [
     'superdesk.apps.dashboard', 'superdesk.core.datetime',
@@ -25,17 +26,16 @@ angular.module('superdesk.apps.dashboard.world-clock', [
     .controller('WorldClockConfigController', ['$scope', 'notify', 'tzdata',
         function($scope, notify, tzdata) {
             $scope.availableZones = [];
-            $scope.zoneLabels = {};
+            $scope.getTimezoneLabel = getTimezoneLabel;
 
             tzdata.$promise.then(() => {
                 $scope.availableZones = tzdata.getTzNames();
-                $scope.zoneLabels = tzdata.getTzLabels();
             });
 
             $scope.searchZones = function(searchString) {
                 if (searchString) {
                     $scope.availableZones =
-                        tzdata.getTzNames().filter((tz) => $scope.zoneLabels[tz].toLowerCase().includes(searchString.toLowerCase()));
+                        tzdata.getTzNames().filter((tz) => getTimezoneLabel(tz).toLowerCase().includes(searchString.toLowerCase()));
                 } else {
                     $scope.availableZones = tzdata.getTzNames();
                 }

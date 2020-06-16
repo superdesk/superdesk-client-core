@@ -1,6 +1,16 @@
 import {gettext} from 'core/utils';
 
-export const getTimezoneLabels = () => ({
+export const getTimezoneLabel = (tz) => {
+    const labels = getTimezoneLabels();
+
+    if (labels.hasOwnProperty(tz)) {
+        return labels[tz];
+    }
+
+    return tz;
+};
+
+const getTimezoneLabels = () => ({
     'Africa/Abidjan': gettext('Africa/Abidjan'),
     'Africa/Accra': gettext('Africa/Accra'),
     'Africa/Cairo': gettext('Africa/Cairo'),

@@ -19,7 +19,7 @@
                 <div class="grid__item grid__item--col-12">
                     <ul class="list-group">
                         <li class="list-group-item" ng-repeat="zone in configuration.zones">
-                            <a href="">{{ zoneLabels[zone] }}</a>
+                            <a href="">{{ getTimezoneLabel(zone) }}</a>
                             <a href="" class="pull-right" ng-click="configuration.zones.splice($index, 1); notify('remove', zone)"><i class="icon-close-small"></i></a>
                         </li>
                     </ul>
@@ -44,7 +44,7 @@
 
                     <ul class="list-group">
                         <li class="list-group-item" ng-repeat="zone in availableZones|filter:notIn(configuration.zones)" ng-click="configuration.zones.push(zone); notify('add', zone)">
-                            <a href="">{{ zoneLabels[zone] }}</a>
+                            <a href="">{{ getTimezoneLabel(zone) }}</a>
                         </li>
                     </ul>
                 </div>
