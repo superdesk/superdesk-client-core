@@ -51,6 +51,7 @@ AuthoringDirective.$inject = [
     'embedService',
     'relationsService',
     '$injector',
+    'autosave',
 ];
 export function AuthoringDirective(
     superdesk,
@@ -78,6 +79,7 @@ export function AuthoringDirective(
     embedService,
     relationsService,
     $injector,
+    autosave,
 ) {
     return {
         link: function($scope, elem, attrs) {
@@ -874,34 +876,16 @@ export function AuthoringDirective(
             $scope.autosave = function(item, timeout) {
                 $scope.dirty = true;
                 angular.extend($scope.item, item); // make sure all changes are available
-                return coreApplyMiddleware(onChangeMiddleware, {item: $scope.item, original: $scope.origItem}, 'item')
-                    .then(() => {
-                        const onUpdateFromExtensions = Object.values(extensions).map(
-                            (extension) => extension.activationResult?.contributions?.authoring?.onUpdate,
-                        ).filter((updates) => updates != null);
 
-                        const reducerFunc = (current, next) => current.then(
-                            (result) => next($scope.origItem._autosave ?? $scope.origItem, result),
-                        );
+                var autosavedItem = authoring.autosave($scope.item, $scope.origItem, timeout);
 
-                        return (
-                            onUpdateFromExtensions.length < 1
-                                ? Promise.resolve(item)
-                                : onUpdateFromExtensions
-                                    .reduce(reducerFunc, Promise.resolve($scope.item))
-                                    .then((nextItem) => angular.extend($scope.item, nextItem))
-                        ).then(() => {
-                            var autosavedItem = authoring.autosave($scope.item, $scope.origItem, timeout);
+                authoringWorkspace.addAutosave();
+                initMedia();
+                updateSchema();
 
-                            authoringWorkspace.addAutosave();
-                            initMedia();
-                            updateSchema();
+                $scope.$apply();
 
-                            $scope.$apply();
-
-                            return autosavedItem;
-                        });
-                    });
+                return autosavedItem;
             };
 
             $scope.sendToNextStage = function() {
