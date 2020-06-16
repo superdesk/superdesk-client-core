@@ -125,6 +125,13 @@ describe('superdesk ui', () => {
             fakeTzData.getTzNames = function() {
                 return ['Australia/Sydney', 'Europe/Rome', 'Foo/Bar'];
             };
+            fakeTzData.getTzLabels = function() {
+                return {
+                    'Australia/Sydney': 'Australia/Sydney',
+                    'Europe/Rome': 'Europe/Rome',
+                    'Foo/Bar': 'Foo/Bar',
+                };
+            };
 
             isoScope.timeZones = [];
 
@@ -151,6 +158,13 @@ describe('superdesk ui', () => {
             fakeTzData.links = serverTzData.links;
             fakeTzData.getTzNames = function() {
                 return ['Australia/Sydney', 'Europe/Rome', 'Foo/Bar'];
+            };
+            fakeTzData.getTzLabels = function() {
+                return {
+                    'Australia/Sydney': 'Australia/Sydney',
+                    'Europe/Rome': 'Europe/Rome',
+                    'Foo/Bar': 'Foo/Bar',
+                };
             };
 
             isoScope.timeZones = [];
