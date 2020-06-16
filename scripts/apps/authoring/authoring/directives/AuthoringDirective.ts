@@ -7,7 +7,7 @@ import {gettext} from 'core/utils';
 import {combineReducers, createStore, applyMiddleware} from 'redux';
 import {attachments, initAttachments} from '../../attachments';
 import {applyMiddleware as coreApplyMiddleware} from 'core/middleware';
-import {onChangeMiddleware, getArticleSchemaMiddleware} from '..';
+import {getArticleSchemaMiddleware} from '..';
 import {isPublished} from 'apps/archive/utils';
 import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
 import {copyJson} from 'core/helpers/utils';
@@ -49,7 +49,6 @@ AuthoringDirective.$inject = [
     'editorResolver',
     'compareVersions',
     'embedService',
-    'relationsService',
     '$injector',
     'autosave',
 ];
@@ -77,7 +76,6 @@ export function AuthoringDirective(
     editorResolver,
     compareVersions,
     embedService,
-    relationsService,
     $injector,
     autosave,
 ) {
@@ -423,6 +421,8 @@ export function AuthoringDirective(
             }
 
             function publishItem(orig, item) {
+                autosave.stop(item);
+
                 var action = $scope.action === 'edit' ? 'publish' : $scope.action;
                 const onPublishMiddlewares = getOnPublishMiddlewares();
                 let warnings: Array<{text: string}> = [];
@@ -795,10 +795,10 @@ export function AuthoringDirective(
                 }
 
                 // populate content fields so that it can undo to initial (empty) version later
-                var autosave = $scope.origItem._autosave || {};
+                var _autosave = $scope.origItem._autosave || {};
 
                 Object.keys(helpers.CONTENT_FIELDS_DEFAULTS).forEach((key) => {
-                    var value = autosave[key] || $scope.origItem[key] || helpers.CONTENT_FIELDS_DEFAULTS[key];
+                    var value = _autosave[key] || $scope.origItem[key] || helpers.CONTENT_FIELDS_DEFAULTS[key];
 
                     $scope.item[key] = angular.copy(value);
                 });
@@ -877,15 +877,18 @@ export function AuthoringDirective(
                 $scope.dirty = true;
                 angular.extend($scope.item, item); // make sure all changes are available
 
-                var autosavedItem = authoring.autosave($scope.item, $scope.origItem, timeout);
-
-                authoringWorkspace.addAutosave();
-                initMedia();
-                updateSchema();
-
-                $scope.$apply();
-
-                return autosavedItem;
+                authoring.autosave(
+                    $scope.item,
+                    $scope.origItem,
+                    timeout,
+                    () => {
+                        $scope.$applyAsync(() => {
+                            authoringWorkspace.addAutosave();
+                            initMedia();
+                            updateSchema();
+                        });
+                    },
+                );
             };
 
             $scope.sendToNextStage = function() {

@@ -423,8 +423,8 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
      * @param {Object} item
      * @param {Object} orig
      */
-    this.autosave = function autosaveAuthoring(item, orig, timeout) {
-        return autosave.save(item, orig, timeout);
+    this.autosave = function autosaveAuthoring(item, orig, timeout, callback) {
+        return autosave.save(item, orig, timeout, callback);
     };
 
     /**

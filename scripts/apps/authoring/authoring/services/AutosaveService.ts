@@ -45,7 +45,7 @@ export class AutosaveService {
     /**
      * Auto-saves an item
      */
-    save(item: IArticle, orig: IArticle, timeout: number = AUTOSAVE_TIMEOUT) {
+    save(item: IArticle, orig: IArticle, timeout: number = AUTOSAVE_TIMEOUT, callback) {
         if (!item._editable || !item._locked) {
             return $q.reject('item not ' + item._editable ? 'locked' : 'editable');
         }
@@ -79,6 +79,11 @@ export class AutosaveService {
 
                         return api.save(RESOURCE, {}, diff).then((_autosave) => {
                             orig._autosave = _autosave;
+
+                            if (typeof callback === 'function') {
+                                callback();
+                            }
+
                             return _autosave;
                         });
                     });
