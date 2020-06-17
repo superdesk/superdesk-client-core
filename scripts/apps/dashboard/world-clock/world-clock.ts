@@ -34,8 +34,13 @@ angular.module('superdesk.apps.dashboard.world-clock', [
 
             $scope.searchZones = function(searchString) {
                 if (searchString) {
-                    $scope.availableZones =
-                        tzdata.getTzNames().filter((tz) => getTimezoneLabel(tz).toLowerCase().includes(searchString.toLowerCase()));
+                    $scope.availableZones = tzdata
+                        .getTzNames()
+                        .filter((tz) =>
+                            getTimezoneLabel(tz)
+                                .toLowerCase()
+                                .includes(searchString.toLowerCase()),
+                        );
                 } else {
                     $scope.availableZones = tzdata.getTzNames();
                 }
