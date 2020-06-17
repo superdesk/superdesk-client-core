@@ -61,7 +61,7 @@
 
                <div sd-toggle-box
                     id="embargoTimestamp"
-                    ng-if="mode === 'authoring' && showEmbargo()"
+                    ng-if="mode === 'authoring' && showEmbargo() && sendEmbargo"
                     data-title="{{ 'Embargo' | translate }}"
                     data-open="true"
                     data-style="circle">
@@ -80,7 +80,7 @@
 
                 <div sd-toggle-box
                     id="publishScheduleTimestamp"
-                    ng-if="mode === 'authoring' && showPublishSchedule()"
+                    ng-if="mode === 'authoring' && showPublishSchedule() && sendPublishSchedule"
                     data-title="{{ 'Publishing Schedule' | translate }}"
                     data-open="true"
                     data-style="circle">

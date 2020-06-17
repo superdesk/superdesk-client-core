@@ -1192,6 +1192,9 @@ declare module 'superdesk-api' {
             publishEmbargo?: any;
             sendAndPublish?: any;
             italicAbstract?: any;
+            sendPublishSchedule?: boolean;
+            sendEmbargo?: boolean;
+            sendDefaultStage?: 'working' | 'incoming';
         };
         list: {
             narrowView: any;
