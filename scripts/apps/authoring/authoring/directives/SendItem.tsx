@@ -92,6 +92,8 @@ export function SendItem($q,
             scope.destination_last = {send_to: null, publish: null, duplicate_to: null};
             scope.origItem = angular.extend({}, scope.item);
             scope.subscribersWithPreviewConfigured = [];
+            scope.sendPublishSchedule = appConfig?.ui?.sendPublishSchedule ?? true;
+            scope.sendEmbargo = appConfig?.ui?.sendEmbargo ?? true;
 
             // if authoring:publish extension point is not defined
             // then publish pane is single column
@@ -909,7 +911,14 @@ export function SendItem($q,
                     scope.currentUserAction === ctrl.userActions.duplicate_to) {
                     var lastDestination = scope.destination_last[scope.currentUserAction];
 
-                    if (lastDestination) {
+                    if (appConfig.ui
+                        && appConfig.ui.sendDefaultStage != null
+                        && (appConfig.ui.sendDefaultStage === 'working'
+                        || appConfig.ui.sendDefaultStage === 'incoming')) {
+                        stage = scope.stages.find((stg) => appConfig.ui.sendDefaultStage === 'working'
+                            ? stg.working_stage
+                            : stg.incoming_stage);
+                    } else if (lastDestination) {
                         stage = _.find(scope.stages, {_id: lastDestination.stage});
                     } else if (scope.item.task && scope.item.task.stage) {
                         stage = _.find(scope.stages, {_id: scope.item.task.stage});
