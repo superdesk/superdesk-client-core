@@ -658,7 +658,7 @@ function TimezoneDirective(tzdata, $timeout) {
                     scope.timeZones,
                     (item) =>
                         item.toLowerCase().indexOf(termLower) >= 0 ||
-                           getTimezoneLabel(item)
+                           scope.getTimezoneLabel(item)
                                .toLowerCase()
                                .indexOf(termLower) >= 0,
                 );

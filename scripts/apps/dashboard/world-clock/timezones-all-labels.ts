@@ -3,11 +3,7 @@ import {gettext} from 'core/utils';
 export const getTimezoneLabel = (tz) => {
     const labels = getTimezoneLabels();
 
-    if (labels.hasOwnProperty(tz)) {
-        return labels[tz];
-    }
-
-    return tz;
+    return labels[tz];
 };
 
 const getTimezoneLabels = () => ({

@@ -97,6 +97,7 @@ describe('superdesk ui', () => {
             element = $compile(html)(scope);
             scope.$digest();
             isoScope = element.isolateScope();
+            isoScope.getTimezoneLabel = (tz) => tz;
         }));
 
         it('initially clears the time zone search term', () => {
