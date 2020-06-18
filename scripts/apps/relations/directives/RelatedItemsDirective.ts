@@ -71,17 +71,17 @@ export function RelatedItemsDirective(
             scope.onCreated = (items: Array<IArticle>) => {
                 items.forEach((item) => {
                     scope.addRelatedItem(item);
-                    storage.setItem(item._id, scope.item._id);
+                    storage.setItem(`open-item-after-related-closed--${item._id}`, scope.item._id);
                 });
             };
 
             scope.$on('item:close', (evt, mainArticleId) => {
-                let parentItem = storage.getItem(mainArticleId) ? {_id: storage.getItem(mainArticleId)} : null;
+                const itemId = storage.getItem(`open-item-after-related-closed--${mainArticleId}`);
 
-                if (parentItem) {
-                    autosave.get(parentItem).then((result) => {
+                if (itemId != null) {
+                    autosave.get({_id: itemId}).then((result) => {
                         authoringWorkspace.open(result);
-                        storage.removeItem(mainArticleId);
+                        storage.removeItem(`open-item-after-related-closed--${mainArticleId}`);
                     });
                 }
             });
