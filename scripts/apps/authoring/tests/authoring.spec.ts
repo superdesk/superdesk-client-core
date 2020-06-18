@@ -29,6 +29,7 @@ describe('authoring', () => {
     beforeEach(window.module('superdesk.core.editor3'));
     beforeEach(window.module('superdesk.apps.editor2'));
     beforeEach(window.module('superdesk.apps.extension-points'));
+    beforeEach(window.module('superdesk.apps.spellcheck'));
 
     beforeEach(inject(($window) => {
         $window.onbeforeunload = angular.noop;
@@ -877,6 +878,7 @@ describe('authoring actions', () => {
     beforeEach(window.module('superdesk.apps.desks'));
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
+    beforeEach(window.module('superdesk.apps.spellcheck'));
 
     beforeEach(inject((desks, $q) => {
         spyOn(desks, 'fetchCurrentUserDesks').and.returnValue($q.when(userDesks));
