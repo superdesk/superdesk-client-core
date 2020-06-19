@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import {TEMPLATEFILTERS} from '../constants';
+import {getTemplateFilters} from '../constants';
 
 /**
  * @ngdoc filter
@@ -10,6 +10,8 @@ import {TEMPLATEFILTERS} from '../constants';
  */
 FilterTemplatesFilter.$inject = ['session', 'desks'];
 export function FilterTemplatesFilter(session, desks) {
+    const TEMPLATEFILTERS = getTemplateFilters();
+
     /**
      * @description Returns a new array based on the passed filter.
      * @param {Array<Object>} all - Array of templates to filter.
