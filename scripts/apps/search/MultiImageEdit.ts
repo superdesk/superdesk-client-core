@@ -32,6 +32,7 @@ MultiImageEditController.$inject = [
     'modal',
     'notify',
     'lock',
+    'session',
 ];
 
 export function MultiImageEditController(
@@ -39,6 +40,7 @@ export function MultiImageEditController(
     modal,
     notify,
     lock,
+    session,
 ) {
     const saveHandler = $scope.saveHandler;
     let unsavedChangesExist = false;
@@ -170,6 +172,10 @@ export function MultiImageEditController(
 
     $scope.$on('item:lock', (_e, data) => {
         const {imagesOriginal} = $scope;
+
+        if (data.lock_session === session.sessionId) {
+            return; // ignore locking in the session (from this modal)
+        }
 
         // while editing metadata if any selected item is unlocked by another user remove that item from selected items
         if (Array.isArray(imagesOriginal) && data != null && data.item != null) {
