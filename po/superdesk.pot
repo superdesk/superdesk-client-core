@@ -68,7 +68,7 @@ msgstr ""
 msgid "'must be of list type'\""
 msgstr ""
 
-#: ../superdesk-planning/client/components/Assignments/AssignmentItem/fields/DueDate.tsx:39
+#: ../superdesk-planning/client/components/Assignments/AssignmentItem/index.jsx:157
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreviewHeader.jsx:140
 msgid "'not scheduled yet'"
 msgstr ""
@@ -317,7 +317,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreview.jsx:68
 #: ../superdesk-planning/client/components/Events/EventEditor/index.jsx:353
 #: ../superdesk-planning/client/components/Events/EventPreviewContent.jsx:153
-#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:611
+#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:608
 #: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.jsx:161
 #: scripts/apps/content-filters/views/production-test-view.html:23
 #: scripts/apps/search/services/SearchService.ts:87
@@ -374,7 +374,7 @@ msgstr ""
 msgid "Accept"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Assignments/AssignmentItem/fields/Accepted.tsx:17
+#: ../superdesk-planning/client/components/Assignments/AssignmentItem/index.jsx:134
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreviewHeader.jsx:169
 #: scripts/apps/authoring/track-changes/views/suggestions-widget.html:8
 msgid "Accepted"
@@ -598,7 +598,7 @@ msgstr ""
 msgid "Add as coverage"
 msgstr ""
 
-#: scripts/apps/authoring/media/views/media-metadata-editor-directive.html:115
+#: scripts/apps/authoring/media/views/media-metadata-editor-directive.html:116
 #: scripts/apps/authoring/views/authoring-header.html:544
 msgid "Add author"
 msgstr ""
@@ -764,13 +764,57 @@ msgstr ""
 msgid "Advanced mode"
 msgstr ""
 
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:10
+msgid "Africa/Abidjan"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:11
+msgid "Africa/Accra"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:12
+msgid "Africa/Cairo"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:13
+msgid "Africa/Casablanca"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:14
+msgid "Africa/Dakar"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:15
+msgid "Africa/Johannesburg"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:16
+msgid "Africa/Khartoum"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:17
+msgid "Africa/Kinshasa"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:18
+msgid "Africa/Lagos"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:19
+msgid "Africa/Nairobi"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:20
+msgid "Africa/Tunis"
+msgstr ""
+
 #: ../superdesk-planning/client/components/Events/RecurringRulesInput/index.jsx:23
 msgid "After"
 msgstr ""
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/PlanningPreview.jsx:19
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/createPlanningForm.jsx:43
-#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:580
+#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:577
 #: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.jsx:150
 msgid "Agenda"
 msgstr ""
@@ -802,7 +846,7 @@ msgstr ""
 msgid "All"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/planning/ui.js:252
+#: ../superdesk-planning/client/actions/planning/ui.js:250
 msgid "All Coverage has been cancelled"
 msgstr ""
 
@@ -832,7 +876,7 @@ msgstr ""
 msgid "All Planning Items"
 msgstr ""
 
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/cancelPlanningCoveragesForm.tsx:137
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/cancelPlanningCoveragesForm.jsx:121
 msgid "All coverages cancelled:"
 msgstr ""
 
@@ -880,6 +924,98 @@ msgstr ""
 #: scripts/apps/authoring/views/item-carousel.html:101
 #: scripts/core/editor3/components/media/MediaBlock.tsx:165
 msgid "Alt text:"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:21
+msgid "America/Anchorage"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:22
+msgid "America/Argentina/Buenos Aires"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:23
+msgid "America/Bogota"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:24
+msgid "America/Caracas"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:25
+msgid "America/Chicago"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:26
+msgid "America/Guatemala"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:27
+msgid "America/Halifax"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:28
+msgid "America/Havana"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:29
+msgid "America/La Paz"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:30
+msgid "America/Lima"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:31
+msgid "America/Los Angeles"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:32
+msgid "America/Manaus"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:33
+msgid "America/Mexico City"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:34
+msgid "America/Montevideo"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:35
+msgid "America/New York"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:36
+msgid "America/Phoenix"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:37
+msgid "America/Santiago"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:38
+msgid "America/Sao Paulo"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:39
+msgid "America/Tegucigalpa"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:40
+msgid "America/Tijuana"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:41
+msgid "America/Toronto"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:42
+msgid "America/Vancouver"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:43
+msgid "America/Winnipeg"
 msgstr ""
 
 #: scripts/apps/authoring/authoring/directives/AuthoringDirective.ts:339
@@ -940,8 +1076,6 @@ msgstr ""
 msgid "Annotations"
 msgstr ""
 
-#: scripts/extensions/annotationsLibrary/dist/extension.js:47
-#: scripts/extensions/annotationsLibrary/dist/extension.js:58
 #: scripts/extensions/annotationsLibrary/dist/src/extension.js:60
 #: scripts/extensions/annotationsLibrary/dist/src/extension.js:71
 #: scripts/extensions/annotationsLibrary/src/extension.tsx:102
@@ -1128,6 +1262,126 @@ msgstr ""
 msgid "Ascending Order"
 msgstr ""
 
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:44
+msgid "Asia/Almaty"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:45
+msgid "Asia/Baghdad"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:46
+msgid "Asia/Baku"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:47
+msgid "Asia/Bangkok"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:48
+msgid "Asia/Beirut"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:49
+msgid "Asia/Colombo"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:50
+msgid "Asia/Dhaka"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:51
+msgid "Asia/Dili"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:52
+msgid "Asia/Dubai"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:53
+msgid "Asia/Irkutsk"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:54
+msgid "Asia/Jakarta"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:55
+msgid "Asia/Jerusalem"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:56
+msgid "Asia/Kabul"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:57
+msgid "Asia/Karachi"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:58
+msgid "Asia/Kathmandu"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:59
+msgid "Asia/Krasnoyarsk"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:60
+msgid "Asia/Kuala Lumpur"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:61
+msgid "Asia/Manila"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:62
+msgid "Asia/Novosibirsk"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:63
+msgid "Asia/Pyongyang"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:64
+msgid "Asia/Rangoon"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:65
+msgid "Asia/Riyadh"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:66
+msgid "Asia/Seoul"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:67
+msgid "Asia/Singapore"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:68
+msgid "Asia/Tashkent"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:69
+msgid "Asia/Tehran"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:70
+msgid "Asia/Tokyo"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:71
+msgid "Asia/Vladivostok"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:72
+msgid "Asia/Yakutsk"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:73
+msgid "Asia/Yekaterinburg"
+msgstr ""
+
 #: scripts/apps/publish/views/http-push-config.html:10
 #: scripts/apps/publish/views/http-push-config.html:9
 msgid "Assets URL"
@@ -1189,7 +1443,7 @@ msgstr ""
 msgid "Assigned:"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Assignments/AssignmentItem/index.jsx:151
+#: ../superdesk-planning/client/components/Assignments/AssignmentItem/index.jsx:195
 msgid "Assigned: {{ name }}"
 msgstr ""
 
@@ -1235,7 +1489,7 @@ msgstr ""
 msgid "Assignment removed"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/assignments/api.ts:610
+#: ../superdesk-planning/client/actions/assignments/api.js:559
 msgid "Assignment reverted."
 msgstr ""
 
@@ -1255,7 +1509,7 @@ msgstr ""
 msgid "Associated"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:708
+#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:705
 #: ../superdesk-planning/client/components/Planning/PlanningMenuPanel/index.jsx:39
 #: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.jsx:212
 msgid "Associated Event"
@@ -1285,7 +1539,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Events/EventEditor/index.jsx:410
 #: ../superdesk-planning/client/components/Events/EventMetadata/index.jsx:171
-#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:679
+#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:676
 #: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.jsx:192
 #: ../superdesk-planning/client/components/UI/FileReadOnlyList.jsx:45
 msgid "Attached Files"
@@ -1309,6 +1563,22 @@ msgstr ""
 #: ../superdesk-planning/client/utils/index.js:665
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:189
 msgid "Audio"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:74
+msgid "Australia/Adelaide"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:75
+msgid "Australia/Melbourne"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:76
+msgid "Australia/Perth"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:77
+msgid "Australia/Sydney"
 msgstr ""
 
 #: scripts/apps/publish/views/subscribers.html:233
@@ -1392,7 +1662,6 @@ msgstr ""
 msgid "Back to original view"
 msgstr ""
 
-#: scripts/extensions/annotationsLibrary/dist/AnnotationSelectSingleItem.js:12
 #: scripts/extensions/annotationsLibrary/dist/src/AnnotationSelectSingleItem.js:12
 #: scripts/extensions/annotationsLibrary/src/AnnotationSelectSingleItem.tsx:30
 msgid "Back to results"
@@ -1700,10 +1969,8 @@ msgstr ""
 #: scripts/core/ui/components/SubNav/SlidingToolBar.tsx:18
 #: scripts/core/ui/views/datepicker-wrapper.html:15
 #: scripts/core/ui/views/sd-timepicker-popup.html:33
-#: scripts/extensions/annotationsLibrary/dist/AnnotationsSelect.js:17
 #: scripts/extensions/annotationsLibrary/dist/src/AnnotationsSelect.js:17
 #: scripts/extensions/annotationsLibrary/src/AnnotationsSelect.tsx:38
-#: scripts/extensions/markForUser/dist/get-mark-for-user-modal.js:23
 #: scripts/extensions/markForUser/dist/src/get-mark-for-user-modal.js:24
 #: scripts/extensions/markForUser/src/get-mark-for-user-modal.tsx:89
 msgid "Cancel"
@@ -1913,7 +2180,7 @@ msgid "Clean Pasted HTML"
 msgstr ""
 
 #: ../superdesk-planning/client/components/Main/SearchPanel.jsx:112
-#: scripts/apps/dashboard/world-clock/configuration.html:36
+#: scripts/apps/dashboard/world-clock/configuration.html:42
 #: scripts/apps/legal-archive/views/legal_archive.html:91
 #: scripts/core/ui/views/sd-timezone.html:26
 msgid "Clear"
@@ -2128,7 +2395,6 @@ msgstr ""
 #: scripts/core/ui/components/Form/TimeInput/TimeInputPopup.tsx:138
 #: scripts/core/ui/views/datepicker-wrapper.html:14
 #: scripts/core/ui/views/sd-timepicker-popup.html:32
-#: scripts/extensions/markForUser/dist/get-mark-for-user-modal.js:38
 msgid "Confirm"
 msgstr ""
 
@@ -2297,10 +2563,6 @@ msgstr ""
 msgid "Content flow"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/assignments/api.ts:513
-msgid "Content items not found!"
-msgstr ""
-
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.jsx:73
 msgid "Content linked"
 msgstr ""
@@ -2454,7 +2716,7 @@ msgstr ""
 msgid "Could not save the item."
 msgstr ""
 
-#: ../superdesk-planning/client/actions/assignments/api.ts:613
+#: ../superdesk-planning/client/actions/assignments/api.js:562
 msgid "Could not unlock the assignment."
 msgstr ""
 
@@ -2512,7 +2774,7 @@ msgstr ""
 msgid "Coverage added to workflow"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/planning/ui.js:527
+#: ../superdesk-planning/client/actions/planning/ui.js:525
 msgid "Coverage added to workflow."
 msgstr ""
 
@@ -2537,7 +2799,7 @@ msgstr ""
 msgid "Coverage cancelled"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/planning/ui.js:616
+#: ../superdesk-planning/client/actions/planning/ui.js:614
 msgid "Coverage cancelled."
 msgstr ""
 
@@ -3050,7 +3312,6 @@ msgid ""
 "                                    artcle header. A minimal value of 200 is required."
 msgstr ""
 
-#: scripts/extensions/annotationsLibrary/dist/GetFields.js:22
 #: scripts/extensions/annotationsLibrary/dist/src/GetFields.js:22
 #: scripts/extensions/annotationsLibrary/src/GetFields.ts:23
 msgid "Definition"
@@ -3089,7 +3350,7 @@ msgstr ""
 msgid "Delete link"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/assignments/notifications.js:318
+#: ../superdesk-planning/client/actions/assignments/notifications.js:317
 msgid "Delete of {{ type }} assignment '{{ slugline }}' failed"
 msgstr ""
 
@@ -3139,7 +3400,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/Events/EventEditor/index.jsx:281
 #: ../superdesk-planning/client/components/Events/EventMetadata/index.jsx:151
 #: ../superdesk-planning/client/components/Events/EventPreviewContent.jsx:94
-#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:551
+#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:548
 #: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.jsx:134
 #: scripts/apps/archive/views/metadata-associateditem-view.html:11
 #: scripts/apps/archive/views/metadata-view.html:213
@@ -3268,7 +3529,7 @@ msgstr ""
 msgid "Desk(s)"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Assignments/AssignmentItem/fields/Desk.tsx:14
+#: ../superdesk-planning/client/components/Assignments/AssignmentItem/index.jsx:163
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreviewHeader.jsx:91
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageFormHeader.jsx:103
 #: ../superdesk-planning/client/components/Coverages/CoverageIcon.jsx:39
@@ -3302,7 +3563,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Events/EventEditor/index.jsx:342
 #: ../superdesk-planning/client/components/Events/EventPreviewContent.jsx:150
-#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:591
+#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:588
 #: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.jsx:153
 #: scripts/apps/archive/views/media-view.html:58
 #: scripts/apps/authoring/authoring/index.ts:346
@@ -3529,7 +3790,7 @@ msgstr ""
 msgid "Due"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Assignments/AssignmentItem/fields/DueDate.tsx:23
+#: ../superdesk-planning/client/components/Assignments/AssignmentItem/index.jsx:143
 msgid "Due Date"
 msgstr ""
 
@@ -3653,7 +3914,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/Coverages/CoveragePreview/index.jsx:110
 #: ../superdesk-planning/client/components/Events/EventEditor/index.jsx:402
 #: ../superdesk-planning/client/components/Events/EventPreviewContent.jsx:177
-#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:603
+#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:600
 #: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.jsx:156
 #: scripts/apps/archive/views/metadata-associateditem-view.html:19
 msgid "Ed Note"
@@ -3682,7 +3943,6 @@ msgstr ""
 #: scripts/core/editor3/components/annotations/AnnotationPopup.tsx:40
 #: scripts/core/editor3/components/comments/Comment.tsx:56
 #: scripts/core/editor3/components/links/LinkToolbar.tsx:50
-#: scripts/extensions/annotationsLibrary/dist/annotations-library-page.js:30
 #: scripts/extensions/annotationsLibrary/dist/src/annotations-library-page.js:30
 #: scripts/extensions/annotationsLibrary/src/annotations-library-page.tsx:60
 msgid "Edit"
@@ -4230,6 +4490,82 @@ msgstr ""
 msgid "Error: {{message}}"
 msgstr ""
 
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:78
+msgid "Europe/Athens"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:79
+msgid "Europe/Belgrade"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:80
+msgid "Europe/Berlin"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:81
+msgid "Europe/Brussels"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:82
+msgid "Europe/Bucharest"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:83
+msgid "Europe/Dublin"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:84
+msgid "Europe/Helsinki"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:85
+msgid "Europe/Istanbul"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:86
+msgid "Europe/Kiev"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:87
+msgid "Europe/Lisbon"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:88
+msgid "Europe/London"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:89
+msgid "Europe/Madrid"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:90
+msgid "Europe/Minsk"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:91
+msgid "Europe/Moscow"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:92
+msgid "Europe/Paris"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:93
+msgid "Europe/Prague"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:94
+msgid "Europe/Rome"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:95
+msgid "Europe/Sofia"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:96
+msgid "Europe/Stockholm"
+msgstr ""
+
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/index.jsx:163
 #: ../superdesk-planning/client/components/ItemIcon.jsx:23
 #: ../superdesk-planning/client/components/Main/CreateNewSubnavDropdown.jsx:28
@@ -4521,7 +4857,7 @@ msgid "Failed to add Calendar to the Event"
 msgstr ""
 
 #: ../superdesk-planning/client/actions/planning/featuredPlanning.js:308
-#: ../superdesk-planning/client/actions/planning/ui.js:318
+#: ../superdesk-planning/client/actions/planning/ui.js:316
 msgid "Failed to add planning item added as featured story"
 msgstr ""
 
@@ -4534,7 +4870,7 @@ msgstr ""
 msgid "Failed to associate update: {{message}}"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/planning/ui.js:256
+#: ../superdesk-planning/client/actions/planning/ui.js:254
 msgid "Failed to cancel all coverage!"
 msgstr ""
 
@@ -4542,7 +4878,7 @@ msgstr ""
 msgid "Failed to cancel the Event!"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/planning/ui.js:238
+#: ../superdesk-planning/client/actions/planning/ui.js:236
 msgid "Failed to cancel the Planning Item!"
 msgstr ""
 
@@ -4648,7 +4984,7 @@ msgid "Failed to load {{ itemType }} autosaves."
 msgstr ""
 
 #: ../superdesk-planning/client/actions/planning/featuredPlanning.js:252
-#: ../superdesk-planning/client/actions/planning/ui.js:279
+#: ../superdesk-planning/client/actions/planning/ui.js:277
 msgid "Failed to lock featured story action!"
 msgstr ""
 
@@ -4685,7 +5021,7 @@ msgid "Failed to remove link: {{message}}"
 msgstr ""
 
 #: ../superdesk-planning/client/actions/planning/featuredPlanning.js:307
-#: ../superdesk-planning/client/actions/planning/ui.js:317
+#: ../superdesk-planning/client/actions/planning/ui.js:315
 msgid "Failed to remove planning item as featured story"
 msgstr ""
 
@@ -4834,7 +5170,7 @@ msgstr ""
 msgid "Featured Stories Locked"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/planning/notifications.js:356
+#: ../superdesk-planning/client/actions/planning/notifications.js:352
 msgid "Featured Stories Unlocked"
 msgstr ""
 
@@ -4846,7 +5182,7 @@ msgstr ""
 msgid "Featured stories"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/planning/notifications.js:357
+#: ../superdesk-planning/client/actions/planning/notifications.js:353
 msgid "Featured stories you were managing was unlocked by"
 msgstr ""
 
@@ -5125,7 +5461,7 @@ msgstr ""
 msgid "Formatters"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:668
+#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:665
 msgid "Forward Planning"
 msgstr ""
 
@@ -5254,7 +5590,7 @@ msgstr ""
 msgid "Genre"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Assignments/AssignmentItem/fields/Genre.tsx:20
+#: ../superdesk-planning/client/components/Assignments/AssignmentItem/index.jsx:169
 #: ../superdesk-planning/client/components/Coverages/CoverageIcon.jsx:58
 msgid "Genre:"
 msgstr ""
@@ -5393,7 +5729,7 @@ msgstr ""
 
 #: ../superdesk-analytics/client/update_time_report/directives/UpdateTimeTable.js:67
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/PlanningPreview.jsx:37
-#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:520
+#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:517
 #: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.jsx:119
 #: scripts/apps/authoring/views/theme-select.html:36
 #: scripts/apps/authoring/views/theme-select.html:87
@@ -5411,7 +5747,6 @@ msgstr ""
 msgid "Headline:"
 msgstr ""
 
-#: scripts/extensions/helloWorld/dist/extension.js:6
 #: scripts/extensions/helloWorld/dist/src/extension.js:7
 #: scripts/extensions/helloWorld/src/extension.ts:8
 msgid "Hello world"
@@ -5710,7 +6045,7 @@ msgstr ""
 msgid "Indefinite Usage"
 msgstr ""
 
-#: scripts/apps/authoring/metadata/metadata.ts:1407
+#: scripts/apps/authoring/metadata/metadata.ts:1401
 msgid "Info"
 msgstr ""
 
@@ -5829,7 +6164,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/Coverages/ScheduledUpdate/index.jsx:150
 #: ../superdesk-planning/client/components/Events/EventEditor/index.jsx:394
 #: ../superdesk-planning/client/components/Events/EventPreviewContent.jsx:171
-#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:559
+#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:556
 #: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.jsx:139
 msgid "Internal Note"
 msgstr ""
@@ -5952,7 +6287,6 @@ msgstr ""
 msgid "Item is already in this package."
 msgstr ""
 
-#: scripts/extensions/markForUser/dist/get-mark-for-user-modal.js:20
 #: scripts/extensions/markForUser/dist/src/get-mark-for-user-modal.js:21
 #: scripts/extensions/markForUser/src/get-mark-for-user-modal.tsx:71
 msgid "Item is locked and marked user can not be changed."
@@ -6029,7 +6363,6 @@ msgstr ""
 msgid "Items Created"
 msgstr ""
 
-#: scripts/extensions/markForUser/dist/get-article-actions-bulk.js:24
 #: scripts/extensions/markForUser/dist/src/get-article-actions-bulk.js:19
 #: scripts/extensions/markForUser/src/get-article-actions-bulk.tsx:25
 msgid "Items are marked for different users"
@@ -6129,7 +6462,6 @@ msgstr ""
 #: scripts/apps/templates/views/template-editor-modal.html:110
 #: scripts/apps/users/views/edit-form.html:145
 #: scripts/apps/workspace/content/constants.ts:88
-#: scripts/extensions/annotationsLibrary/dist/GetFields.js:13
 #: scripts/extensions/annotationsLibrary/dist/src/GetFields.js:13
 #: scripts/extensions/annotationsLibrary/src/GetFields.ts:14
 msgid "Language"
@@ -6576,15 +6908,11 @@ msgstr ""
 msgid "Mark for highlight"
 msgstr ""
 
-#: scripts/extensions/markForUser/dist/get-article-actions.js:32
 #: scripts/extensions/markForUser/dist/src/get-article-actions.js:28
 #: scripts/extensions/markForUser/src/get-article-actions.tsx:32
 msgid "Mark for other user"
 msgstr ""
 
-#: scripts/extensions/markForUser/dist/get-article-actions-bulk.js:27
-#: scripts/extensions/markForUser/dist/get-article-actions.js:16
-#: scripts/extensions/markForUser/dist/get-mark-for-user-modal.js:17
 #: scripts/extensions/markForUser/dist/src/get-article-actions-bulk.js:22
 #: scripts/extensions/markForUser/dist/src/get-article-actions.js:12
 #: scripts/extensions/markForUser/dist/src/get-mark-for-user-modal.js:18
@@ -6619,7 +6947,6 @@ msgstr ""
 msgid "Marked for desks"
 msgstr ""
 
-#: scripts/extensions/markForUser/dist/get-marked-for-me-component.js:87
 #: scripts/extensions/markForUser/dist/src/extension.js:55
 #: scripts/extensions/markForUser/dist/src/get-marked-for-me-component.js:89
 #: scripts/extensions/markForUser/src/extension.tsx:61
@@ -6953,7 +7280,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.jsx:90
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateTimeForm.jsx:213
 #: ../superdesk-planning/client/components/Locations/LocationsEditor.jsx:187
-#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:528
+#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:525
 #: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.jsx:124
 #: scripts/apps/content-filters/views/manage-filter-conditions.html:38
 #: scripts/apps/content-filters/views/manage-filters.html:42
@@ -6965,7 +7292,6 @@ msgstr ""
 #: scripts/apps/templates/views/create-template.html:11
 #: scripts/apps/vocabularies/services/SchemaFactory.ts:6
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:39
-#: scripts/extensions/annotationsLibrary/dist/GetFields.js:7
 #: scripts/extensions/annotationsLibrary/dist/src/GetFields.js:7
 #: scripts/extensions/annotationsLibrary/src/GetFields.ts:8
 msgid "Name"
@@ -7229,7 +7555,6 @@ msgstr ""
 msgid "No label"
 msgstr ""
 
-#: scripts/extensions/annotationsLibrary/dist/AnnotationsSelect.js:23
 #: scripts/extensions/annotationsLibrary/dist/src/AnnotationsSelect.js:23
 #: scripts/extensions/annotationsLibrary/src/AnnotationsSelect.tsx:50
 msgid "No matches found in the library."
@@ -7419,7 +7744,7 @@ msgstr ""
 msgid "Not enough {{ name }}"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:657
+#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:654
 #: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.jsx:187
 msgid "Not for Publication"
 msgstr ""
@@ -7561,7 +7886,7 @@ msgstr ""
 msgid "Only one file can be uploaded"
 msgstr ""
 
-#: scripts/apps/authoring/authoring/directives/ItemCarouselDirective.ts:225
+#: scripts/apps/authoring/authoring/directives/ItemCarouselDirective.ts:226
 msgid "Only the following content item types are allowed:"
 msgstr ""
 
@@ -7826,6 +8151,22 @@ msgstr ""
 msgid "PROFILE"
 msgstr ""
 
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:97
+msgid "Pacific/Auckland"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:98
+msgid "Pacific/Honolulu"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:99
+msgid "Pacific/Noumea"
+msgstr ""
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:100
+msgid "Pacific/Port Moresby"
+msgstr ""
+
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:204
 msgid "Package"
 msgstr ""
@@ -8003,7 +8344,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreview.jsx:63
 #: ../superdesk-planning/client/components/Events/EventEditor/index.jsx:301
 #: ../superdesk-planning/client/components/Events/EventPreviewContent.jsx:116
-#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:567
+#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:564
 #: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.jsx:145
 #: scripts/apps/archive/views/metadata-view.html:61
 #: scripts/apps/authoring/views/full-preview.html:64
@@ -8041,7 +8382,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/spikePlanningForm.jsx:44
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/unspikePlanningForm.jsx:42
-#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:536
+#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:533
 #: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.jsx:129
 msgid "Planning Date"
 msgstr ""
@@ -8089,7 +8430,7 @@ msgstr ""
 msgid "Planning cancelled"
 msgstr ""
 
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/cancelPlanningCoveragesForm.tsx:140
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/cancelPlanningCoveragesForm.jsx:124
 msgid "Planning cancelled:"
 msgstr ""
 
@@ -8102,7 +8443,7 @@ msgid "Planning duplicated"
 msgstr ""
 
 #: ../superdesk-planning/client/actions/planning/featuredPlanning.js:304
-#: ../superdesk-planning/client/actions/planning/ui.js:314
+#: ../superdesk-planning/client/actions/planning/ui.js:312
 msgid "Planning item added as featured story"
 msgstr ""
 
@@ -8111,7 +8452,7 @@ msgid "Planning item created"
 msgstr ""
 
 #: ../superdesk-planning/client/actions/planning/featuredPlanning.js:303
-#: ../superdesk-planning/client/actions/planning/ui.js:313
+#: ../superdesk-planning/client/actions/planning/ui.js:311
 msgid "Planning item removed as featured story"
 msgstr ""
 
@@ -8513,7 +8854,7 @@ msgstr ""
 msgid "Provider:"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Assignments/AssignmentItem/index.jsx:142
+#: ../superdesk-planning/client/components/Assignments/AssignmentItem/index.jsx:188
 msgid "Provider: {{ name }}"
 msgstr ""
 
@@ -8768,7 +9109,7 @@ msgstr ""
 msgid "Reason for Event postponement:"
 msgstr ""
 
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/cancelPlanningCoveragesForm.tsx:95
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/cancelPlanningCoveragesForm.jsx:71
 msgid "Reason for cancelling all coverage:"
 msgstr ""
 
@@ -8776,7 +9117,7 @@ msgstr ""
 msgid "Reason for cancelling the coverage"
 msgstr ""
 
-#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/cancelPlanningCoveragesForm.tsx:96
+#: ../superdesk-planning/client/components/ItemActionConfirmation/forms/cancelPlanningCoveragesForm.jsx:72
 msgid "Reason for cancelling the planning item:"
 msgstr ""
 
@@ -8793,17 +9134,8 @@ msgstr ""
 msgid "Reassign"
 msgstr ""
 
-#: ../superdesk-analytics/client/publishing_performance_report/widgets/publishing_actions/settings.html:50
-#: ../superdesk-analytics/client/search/services/SearchReport.ts:90
-msgid "Recalled"
-msgstr ""
-
 #: scripts/apps/authoring/versioning/history/HistoryController.ts:205
 msgid "Recalled by"
-msgstr ""
-
-#: ../superdesk-analytics/client/charts/services/ChartConfig.js:577
-msgid "Recalls"
 msgstr ""
 
 #: scripts/apps/workspace/content/views/sd-content-create.html:24
@@ -8937,7 +9269,6 @@ msgstr ""
 #: scripts/apps/templates/views/templates.html:37
 #: scripts/apps/workspace/content/views/profile-settings.html:32
 #: scripts/core/editor3/highlightsConfig.ts:33
-#: scripts/extensions/annotationsLibrary/dist/annotations-library-page.js:35
 #: scripts/extensions/annotationsLibrary/dist/src/annotations-library-page.js:35
 #: scripts/extensions/annotationsLibrary/src/annotations-library-page.tsx:70
 msgid "Remove"
@@ -9055,7 +9386,7 @@ msgstr ""
 msgid "Remove vocabulary"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/planning/ui.js:564
+#: ../superdesk-planning/client/actions/planning/ui.js:562
 msgid "Removed assignment from coverage."
 msgstr ""
 
@@ -9175,7 +9506,7 @@ msgstr ""
 #: ../superdesk-planning/client/validators/planning.js:165
 #: scripts/apps/authoring/authoring/article-url-fields.tsx:68
 #: scripts/apps/workspace/content/views/schema-editor.html:30
-#: scripts/core/ui/ui.ts:1057
+#: scripts/core/ui/ui.ts:1065
 msgid "Required"
 msgstr ""
 
@@ -9596,7 +9927,7 @@ msgid "Save changes"
 msgstr ""
 
 #: ../superdesk-planning/client/actions/planning/featuredPlanning.js:269
-#: ../superdesk-planning/client/actions/planning/ui.js:289
+#: ../superdesk-planning/client/actions/planning/ui.js:287
 msgid "Save changes before adding to top stories ?"
 msgstr ""
 
@@ -9782,7 +10113,7 @@ msgstr ""
 msgid "Scheduled for {{date}}"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/planning/ui.js:543
+#: ../superdesk-planning/client/actions/planning/ui.js:541
 msgid "Scheduled update added to workflow."
 msgstr ""
 
@@ -9910,7 +10241,7 @@ msgstr ""
 msgid "Search for a location"
 msgstr ""
 
-#: scripts/apps/dashboard/world-clock/configuration.html:35
+#: scripts/apps/dashboard/world-clock/configuration.html:40
 msgid "Search for clock"
 msgstr ""
 
@@ -10032,7 +10363,7 @@ msgid "Select at most 1 file to upload."
 msgstr ""
 
 #: scripts/apps/archive/controllers/UploadController.ts:249
-#: scripts/apps/authoring/authoring/directives/ItemCarouselDirective.ts:189
+#: scripts/apps/authoring/authoring/directives/ItemCarouselDirective.ts:190
 msgid "Select at most {{maxUploads}} files to upload."
 msgstr ""
 
@@ -10276,7 +10607,7 @@ msgstr ""
 msgid "Show Image Title"
 msgstr ""
 
-#: ../superdesk-planning/client/components/UI/Preview/ExpandableText.jsx:47
+#: ../superdesk-planning/client/components/UI/Preview/ExpandableText.jsx:34
 msgid "Show all"
 msgstr ""
 
@@ -10292,7 +10623,7 @@ msgstr ""
 msgid "Show in preview"
 msgstr ""
 
-#: ../superdesk-planning/client/components/UI/Preview/ExpandableText.jsx:46
+#: ../superdesk-planning/client/components/UI/Preview/ExpandableText.jsx:33
 msgid "Show less"
 msgstr ""
 
@@ -10404,7 +10735,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateEventRepetitionsForm.jsx:94
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateRecurringEventsForm.jsx:83
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/updateTimeForm.jsx:206
-#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:511
+#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:508
 #: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.jsx:113
 #: scripts/apps/archive/views/metadata-view.html:5
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:96
@@ -10443,7 +10774,6 @@ msgstr ""
 
 #: ../superdesk-planning/client/planning-extension/dist/extension.js:26
 #: ../superdesk-planning/client/planning-extension/src/extension.ts:36
-#: scripts/extensions/planning/dist/extension.js:26
 msgid "Some items are linked to in-progress planning coverage."
 msgstr ""
 
@@ -10804,7 +11134,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreview.jsx:73
 #: ../superdesk-planning/client/components/Events/EventEditor/index.jsx:365
 #: ../superdesk-planning/client/components/Events/EventPreviewContent.jsx:159
-#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:623
+#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:620
 #: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.jsx:167
 #: scripts/apps/authoring/views/full-preview.html:54
 #: scripts/apps/search/constants.ts:15
@@ -11017,6 +11347,15 @@ msgstr ""
 msgid "Takedown item"
 msgstr ""
 
+#: ../superdesk-analytics/client/charts/services/ChartConfig.js:577
+msgid "Takedowns"
+msgstr ""
+
+#: ../superdesk-analytics/client/publishing_performance_report/widgets/publishing_actions/settings.html:50
+#: ../superdesk-analytics/client/search/services/SearchReport.ts:90
+msgid "Taken Down"
+msgstr ""
+
 #: scripts/core/itemList/views/relatedItem-list-widget.html:31
 msgid "Takes"
 msgstr ""
@@ -11134,7 +11473,7 @@ msgstr ""
 msgid "The Agenda you were viewing was deleted!"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/assignments/notifications.js:16
+#: ../superdesk-planning/client/actions/assignments/notifications.js:15
 msgid "The Assignment you were viewing was removed."
 msgstr ""
 
@@ -11146,11 +11485,11 @@ msgstr ""
 msgid "The Event and Planning filter you were viewing is modified!"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/events/notifications.js:110
+#: ../superdesk-planning/client/actions/events/notifications.js:108
 msgid "The Event was spiked"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/events/notifications.js:139
+#: ../superdesk-planning/client/actions/events/notifications.js:135
 msgid "The Event was unspiked"
 msgstr ""
 
@@ -11174,11 +11513,11 @@ msgstr ""
 msgid "The Planning Item(s) has been unspiked."
 msgstr ""
 
-#: ../superdesk-planning/client/actions/planning/notifications.js:195
+#: ../superdesk-planning/client/actions/planning/notifications.js:193
 msgid "The Planning item was spiked"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/planning/notifications.js:228
+#: ../superdesk-planning/client/actions/planning/notifications.js:224
 msgid "The Planning item was unspiked"
 msgstr ""
 
@@ -11620,7 +11959,7 @@ msgstr ""
 #: ../superdesk-planning/client/validators/events.js:34
 #: ../superdesk-planning/client/validators/index.js:79
 #: ../superdesk-planning/client/validators/profile.js:39
-#: scripts/core/ui/ui.ts:1036
+#: scripts/core/ui/ui.ts:1044
 msgid "This field is required"
 msgstr ""
 
@@ -11653,7 +11992,6 @@ msgstr ""
 
 #: ../superdesk-planning/client/planning-extension/dist/extension.js:10
 #: ../superdesk-planning/client/planning-extension/src/extension.ts:19
-#: scripts/extensions/planning/dist/extension.js:10
 msgid "This item is linked to in-progress planning coverage."
 msgstr ""
 
@@ -11689,7 +12027,7 @@ msgstr ""
 msgid "This will also postpone the following planning items"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/assignments/ui.js:842
+#: ../superdesk-planning/client/actions/assignments/ui.js:839
 msgid "This will also remove other linked assignments (if any, for story updates). Are you sure?"
 msgstr ""
 
@@ -12025,7 +12363,7 @@ msgstr ""
 msgid "Type your comment..."
 msgstr ""
 
-#: ../superdesk-planning/client/components/Assignments/AssignmentItem/index.jsx:69
+#: ../superdesk-planning/client/components/Assignments/AssignmentItem/index.jsx:68
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreviewHeader.jsx:147
 msgid "Type: {{type}}"
 msgstr ""
@@ -12067,7 +12405,7 @@ msgstr ""
 msgid "Un Spike"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Assignments/AssignmentItem/index.jsx:154
+#: ../superdesk-planning/client/components/Assignments/AssignmentItem/index.jsx:198
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageFormHeader.jsx:68
 #: ../superdesk-planning/client/components/Coverages/CoverageItem.jsx:183
 #: scripts/apps/dashboard/workspace-tasks/views/assignee-view.html:8
@@ -12158,13 +12496,11 @@ msgid "Unlock current item"
 msgstr ""
 
 #: ../superdesk-analytics/client/utils.js:173
-#: scripts/extensions/markForUser/dist/get-mark-for-user-modal.js:27
 #: scripts/extensions/markForUser/dist/src/get-mark-for-user-modal.js:28
 #: scripts/extensions/markForUser/src/get-mark-for-user-modal.tsx:103
 msgid "Unmark"
 msgstr ""
 
-#: scripts/extensions/markForUser/dist/get-article-actions.js:24
 #: scripts/extensions/markForUser/dist/src/get-article-actions.js:20
 #: scripts/extensions/markForUser/src/get-article-actions.tsx:23
 msgid "Unmark user"
@@ -12405,7 +12741,7 @@ msgstr ""
 msgid "Upload Media"
 msgstr ""
 
-#: scripts/apps/authoring/views/item-carousel.html:160
+#: scripts/apps/authoring/views/item-carousel.html:163
 msgid "Upload an image"
 msgstr ""
 
@@ -12424,7 +12760,7 @@ msgstr ""
 #: ../superdesk-analytics/client/search/services/SearchReport.ts:108
 #: ../superdesk-planning/client/components/AdvancedSearch/index.jsx:206
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/PlanningPreview.jsx:67
-#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:644
+#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:641
 #: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.jsx:175
 #: ../superdesk-planning/client/services/PlanningStoreService.js:233
 #: scripts/apps/archive/views/metadata-view.html:9
@@ -12473,7 +12809,6 @@ msgstr ""
 msgid "Use the article GUID for testing."
 msgstr ""
 
-#: scripts/extensions/annotationsLibrary/dist/AnnotationSelectSingleItem.js:13
 #: scripts/extensions/annotationsLibrary/dist/src/AnnotationSelectSingleItem.js:13
 #: scripts/extensions/annotationsLibrary/src/AnnotationSelectSingleItem.tsx:36
 msgid "Use this"
@@ -12490,7 +12825,6 @@ msgstr ""
 #: ../superdesk-planning/client/components/Assignments/AssignmentEditor.jsx:301
 #: scripts/apps/authoring/metadata/views/metadata-terms.html:46
 #: scripts/apps/users/views/user-privileges.html:16
-#: scripts/extensions/markForUser/dist/get-authoring-actions.js:8
 msgid "User"
 msgstr ""
 
@@ -12789,11 +13123,11 @@ msgstr ""
 msgid "When"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:497
+#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:494
 msgid "When active, assigned coverages for the Planning item will not be automatically added to workflow"
 msgstr ""
 
-#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:660
+#: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:657
 msgid "When active, the Planning item will not be publishable"
 msgstr ""
 
@@ -12878,20 +13212,20 @@ msgstr ""
 msgid "Workspace name"
 msgstr ""
 
-#: scripts/apps/dashboard/world-clock/world-clock.ts:205
+#: scripts/apps/dashboard/world-clock/world-clock.ts:221
 #: scripts/core/lang/missing-translations-strings.ts:44
 msgid "World Clock"
 msgstr ""
 
-#: scripts/apps/dashboard/world-clock/world-clock.ts:35
+#: scripts/apps/dashboard/world-clock/world-clock.ts:51
 msgid "World clock added: {{zone}}"
 msgstr ""
 
-#: scripts/apps/dashboard/world-clock/world-clock.ts:37
+#: scripts/apps/dashboard/world-clock/world-clock.ts:53
 msgid "World clock removed: {{zone}}"
 msgstr ""
 
-#: scripts/apps/dashboard/world-clock/world-clock.ts:217
+#: scripts/apps/dashboard/world-clock/world-clock.ts:233
 #: scripts/core/lang/missing-translations-strings.ts:45
 msgid "World clock widget"
 msgstr ""
@@ -13303,10 +13637,6 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:11
 msgid "draft"
-msgstr ""
-
-#: ../superdesk-planning/client/components/Assignments/AssignmentItem/fields/DueDate.tsx:43
-msgid "due"
 msgstr ""
 
 #: scripts/apps/authoring/views/send-item.html:250
@@ -14395,7 +14725,7 @@ msgstr ""
 msgid "{{ profile.label }}"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/assignments/notifications.js:336
+#: ../superdesk-planning/client/actions/assignments/notifications.js:335
 msgid "{{ type }} assignment '{{ slugline }}' is deleted"
 msgstr ""
 

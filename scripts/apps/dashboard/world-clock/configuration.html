@@ -4,11 +4,11 @@
             <div class="grid grid--wrap grid--padding-fix">
                 <label class="form-label grid__item grid__item--col-12">{{'Clock type'|translate}}</label>
                 <div class="grid__item grid__item--col-12">
-                    <div class="btn-group">                        
+                    <div class="btn-group">
 
                         <!--<sd-check ng-model="configuration.digital" type="radio" ng-value="false" label-position="inside">Analog</sd-check>
                         <sd-check ng-model="configuration.digital" type="radio" ng-value="true" label-position="inside">Digital</sd-check>-->
-                        
+
                         <button type="button" class="btn" ng-class="{active: !configuration.digital}" ng-click="configuration.digital = false">Analog</button>
                         <button type="button" class="btn" ng-class="{active: configuration.digital}" ng-click="configuration.digital = true">Digital</button>
                     </div>
@@ -19,7 +19,7 @@
                 <div class="grid__item grid__item--col-12">
                     <ul class="list-group">
                         <li class="list-group-item" ng-repeat="zone in configuration.zones">
-                            <a href="">{{ zone.replace('_', ' ')}}</a>
+                            <a href="">{{ getTimezoneLabel(zone) }}</a>
                             <a href="" class="pull-right" ng-click="configuration.zones.splice($index, 1); notify('remove', zone)"><i class="icon-close-small"></i></a>
                         </li>
                     </ul>
@@ -32,13 +32,19 @@
                 <label class="form-label grid__item grid__item--col-12">{{'Available clock'|translate}}</label>
                 <div class=" grid__item grid__item--col-12">
                     <div class="input-append" style="margin-bottom:10px;">
-                        <input type="text" class="input-large" ng-model="search" placeholder="{{ 'Search for clock'|translate }}">
-                        <button class="btn" ng-disabled="!search" ng-click="search = ''" translate>Clear</button>
+                        <input
+                            type="text"
+                            class="input-large"
+                            ng-model="search"
+                            ng-change="searchZones(search)"
+                            placeholder="{{ 'Search for clock'|translate }}"
+                        >
+                        <button class="btn" ng-disabled="!search" ng-click="search = ''; searchZones('')" translate>Clear</button>
                     </div>
 
                     <ul class="list-group">
-                        <li class="list-group-item" ng-repeat="zone in availableZones|filter:notIn(configuration.zones)|filter:search" ng-click="configuration.zones.push(zone); notify('add', zone)">
-                            <a href="">{{ zone.replace('_', ' ')}}</a>
+                        <li class="list-group-item" ng-repeat="zone in availableZones|filter:notIn(configuration.zones)" ng-click="configuration.zones.push(zone); notify('add', zone)">
+                            <a href="">{{ getTimezoneLabel(zone) }}</a>
                         </li>
                     </ul>
                 </div>

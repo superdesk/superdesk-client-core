@@ -10,6 +10,7 @@ import {reactToAngular1} from 'superdesk-ui-framework';
 import {VideoComponent} from './components/video';
 import {TextAreaInput} from './components/Form';
 import {PlainTextEditor} from './components/PlainTextEditor/PlainTextEditor';
+import {getTimezoneLabel} from 'apps/dashboard/world-clock/timezones-all-labels';
 
 /**
  * Gives top shadow for scroll elements
@@ -621,6 +622,7 @@ function TimezoneDirective(tzdata, $timeout) {
         link: function(scope, el) {
             scope.timeZones = []; // all time zones to choose from
             scope.tzSearchTerm = ''; // the current time zone search term
+            scope.getTimezoneLabel = getTimezoneLabel;
 
             // filtered time zone list containing only those that match
             // user-provided search term
@@ -654,7 +656,11 @@ function TimezoneDirective(tzdata, $timeout) {
                 termLower = searchTerm.toLowerCase();
                 scope.matchingTimeZones = _.filter(
                     scope.timeZones,
-                    (item) => item.toLowerCase().indexOf(termLower) >= 0,
+                    (item) =>
+                        item.toLowerCase().indexOf(termLower) >= 0 ||
+                           scope.getTimezoneLabel(item)
+                               .toLowerCase()
+                               .indexOf(termLower) >= 0,
                 );
             };
 

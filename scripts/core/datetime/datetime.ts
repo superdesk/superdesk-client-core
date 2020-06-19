@@ -267,8 +267,7 @@ export default angular.module('superdesk.core.datetime', [
      *   avoiding the need to fetch it again every time when needed.
      */
     .factory('tzdata', ['$resource', function($resource) {
-        var filename = 'scripts/apps/dashboard/world-clock/timezones-all.json',
-            tzResource = $resource(filename);
+        const tzResource = $resource('scripts/apps/dashboard/world-clock/timezones-all.json');
 
         /**
          * Returns a sorted list of all time zone names. If time zone data
