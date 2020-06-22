@@ -39,6 +39,10 @@ function getStrTime(secondsTotal: number) {
     );
 }
 
+function round(num: number) {
+    return parseFloat(num.toFixed(3));
+}
+
 const VIDEO_MIN_DURATION = 2;
 
 export class VideoTimeline extends React.Component<IProps, IState> {
@@ -53,7 +57,7 @@ export class VideoTimeline extends React.Component<IProps, IState> {
             thumbnailsRender: [],
             trim: {
                 start: this.props.trim.start,
-                end: this.props.trim.start,
+                end: this.props.trim.end,
             },
         };
         this.controlbar = React.createRef();
@@ -94,8 +98,8 @@ export class VideoTimeline extends React.Component<IProps, IState> {
     updateTrim(start: number, end: number) {
         this.setState({
             trim: {
-                start: start,
-                end: end,
+                start: round(start),
+                end: round(end),
             },
         });
     }
@@ -162,7 +166,7 @@ export class VideoTimeline extends React.Component<IProps, IState> {
 
     handleDragEnd() {
         this.setVideoCurrentTime(this.positionX);
-        this.props.onTrim(this.state.trim.start, this.state.trim.end);
+        this.props.onTrim(round(this.state.trim.start), round(this.state.trim.end));
     }
 
     // returns a number between 0 and 1
@@ -186,7 +190,7 @@ export class VideoTimeline extends React.Component<IProps, IState> {
     }
 
     handleTimelineClick(e: React.MouseEvent<HTMLDivElement>) {
-        let time = this.setVideoCurrentTime(e.clientX);
+        let time = round(this.setVideoCurrentTime(e.clientX));
 
         if (time < this.state.trim.start) {
             this.props.onTrim(time, this.state.trim.end);
