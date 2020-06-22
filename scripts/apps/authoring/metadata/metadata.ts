@@ -769,7 +769,15 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                     scope.terms = filterSelected(scope.list);
                     scope.activeList = false;
                 } else {
-                    const searchList = reloadList ? scope.list : scope.combinedList;
+                    let searchList;
+
+                    if (!scope.allowEntireCat) {
+                        searchList = scope.list.filter(
+                            (item) => !scope.tree.hasOwnProperty(item[scope.uniqueField]),
+                        );
+                    } else {
+                        searchList = reloadList ? scope.list : scope.combinedList;
+                    }
 
                     scope.terms = $filter('sortByName')(_.filter(filterSelected(searchList), (t) => {
                         var searchObj = {};
