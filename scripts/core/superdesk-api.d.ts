@@ -424,9 +424,9 @@ declare module 'superdesk-api' {
     }
 
     export interface IDangerousArticlePatchingOptions {
-        // when this option is set, an HTTP request will be sent and item patched immediately
-        // otherwise, the patch will get applied to authoring view
-        // and will get saved together with the rest of the article changes by the user
+        // When this option is set, an HTTP request will be sent immediately
+        // even if the article is locked and is being edited.
+        // Data received from the server will overwrite values edited by a user in case of a conflict.
         patchDirectlyAndOverwriteAuthoringValues?: boolean;
     }
 
