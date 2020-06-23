@@ -15,7 +15,6 @@ interface IProps {
     article: IArticle;
     superdesk: ISuperdesk;
     onClose: () => void;
-    onArticleUpdate: (article: IArticle, articleUpdate: IArticle) => void;
 }
 
 interface IState {
@@ -142,7 +141,14 @@ export class VideoEditor extends React.Component<IProps, IState> {
 
     handleClose() {
         this.props.onClose();
-        this.props.onArticleUpdate(this.props.article, this.state.article);
+
+        this.props.superdesk.entities.article.patch(
+            this.props.article,
+            {
+                renditions: this.state.article.renditions,
+            },
+            {patchDirectlyAndOverwriteAuthoringValues: true},
+        );
     }
 
     handleCheckingVideo(resetState: boolean = true, callback?: () => void) {

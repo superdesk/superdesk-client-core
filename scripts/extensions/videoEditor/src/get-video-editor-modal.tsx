@@ -10,7 +10,6 @@ export function getVideoEditModal(superdesk: ISuperdesk, article: IArticle) {
                     article={article}
                     superdesk={superdesk}
                     onClose={this.props.closeModal}
-                    onArticleUpdate={superdesk.entities.article.patch}
                 />
             );
         }
