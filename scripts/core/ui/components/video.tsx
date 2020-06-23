@@ -17,6 +17,11 @@ interface IVideoRenditionItem {
  * VideoComponent is used to render a player for an item with type video.
  */
 export class VideoComponent extends React.PureComponent<IProps> {
+    videoElement: HTMLVideoElement;
+
+    componentDidUpdate() {
+        this.videoElement?.load();
+    }
     render() {
         const {item} = this.props;
         const poster = item.renditions?.thumbnail?.href;
@@ -50,7 +55,11 @@ export class VideoComponent extends React.PureComponent<IProps> {
                 preload="metadata"
                 poster={poster}
                 width={this.props.width}
-                height={this.props.height}>
+                height={this.props.height}
+                ref={(el) => {
+                    this.videoElement = el;
+                }}
+            >
                 {videoRenditions.map((rendition) => (
                     <source key={rendition.href} src={rendition.href} type={rendition.mimetype}/>
                 ))}
