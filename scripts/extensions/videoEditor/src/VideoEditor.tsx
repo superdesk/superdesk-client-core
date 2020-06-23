@@ -94,7 +94,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
         this.handleCrop = this.handleCrop.bind(this);
         this.handleToggleLoading = this.handleToggleLoading.bind(this);
         this.handleToggleCrop = this.handleToggleCrop.bind(this);
-        this.handleToggleVideo = this.handleToggleVideo.bind(this);
+        this.playPause = this.playPause.bind(this);
         this.handleQualityChange = this.handleQualityChange.bind(this);
         this.handleSave = this.handleSave.bind(this);
         this.getCropRotate = this.getCropRotate.bind(this);
@@ -295,18 +295,22 @@ export class VideoEditor extends React.Component<IProps, IState> {
         this.setState({transformations: {...this.state.transformations, crop: newCrop}});
     }
 
-    handleToggleVideo() {
+    playPause() {
+        const videoElement = this.videoRef.current;
+
+        if (videoElement == null) {
+            return;
+        }
+
         if (this.state.playing) {
-            this.videoRef.current?.pause();
+            videoElement.pause();
         } else {
             // Video will play from the beginning after finished playing, but when it reaches trim end
             // play button will only play video a bit everytime it is clicked
-            if (this.videoRef.current !== null
-                && this.videoRef.current?.currentTime !== null
-                && this.videoRef.current.currentTime > this.state.transformations.trim.end) {
-                this.videoRef.current.currentTime = this.state.transformations.trim.start;
+            if (videoElement.currentTime > this.state.transformations.trim.end) {
+                videoElement.currentTime = this.state.transformations.trim.start;
             }
-            this.videoRef.current?.play();
+            videoElement.play();
         }
     }
 
@@ -325,7 +329,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
 
     handleToggleLoading(isToggle: boolean, text: string = '', type: 'video' | 'thumbnail' = 'video') {
         if (this.state.playing) {
-            this.handleToggleVideo();
+            this.playPause();
         }
         this.setState({
             loading: {
@@ -715,7 +719,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                         </div>
                                         <VideoEditorTools
                                             wrapperRef={this.setVideoToolsSize}
-                                            onToggleVideo={this.handleToggleVideo}
+                                            playPause={this.playPause}
                                             onRotate={this.handleRotate}
                                             onCrop={this.handleToggleCrop}
                                             onQualityChange={this.handleQualityChange}

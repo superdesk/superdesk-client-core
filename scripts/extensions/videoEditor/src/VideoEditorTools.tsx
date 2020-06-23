@@ -5,7 +5,7 @@ import {QualityLabel} from './Dropdown/QualityLabel';
 
 interface IProps {
     wrapperRef: (element: HTMLDivElement) => void;
-    onToggleVideo: () => void;
+    playPause: () => void;
     onRotate: () => void;
     onCrop: (aspect: number) => void;
     onQualityChange: (quality: number) => void;
@@ -39,7 +39,7 @@ class VideoEditorController extends React.PureComponent<IProps> {
             <div className="sd-photo-preview__video-tools" ref={this.props.wrapperRef}>
                 <button
                     className="btn btn--ui-dark btn--hollow btn--icon-only btn--large"
-                    onClick={this.props.onToggleVideo}
+                    onClick={this.props.playPause}
                 >
                     <i className={this.props.videoPlaying ? 'icon-pause' : 'icon-play'} />
                 </button>
