@@ -147,7 +147,6 @@ export class VideoEditor extends React.Component<IProps, IState> {
             {
                 renditions: this.state.article.renditions,
             },
-            {patchDirectlyAndOverwriteAuthoringValues: true},
         );
     }
 
