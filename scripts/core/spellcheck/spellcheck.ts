@@ -125,7 +125,7 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _, pref
                 }
 
                 angular.forEach(langItems, (item) => {
-                    angular.extend(self.abbreviationsDict.content, JSON.parse(item.content) || {});
+                    angular.extend(self.abbreviationsDict.content, JSON.parse(item.content ?? '{}') || {});
                 });
 
                 return self.abbreviationsDict.content;
