@@ -838,7 +838,7 @@ describe('monitoring', () => {
         item.click();
 
         const previewPane = el(['authoring-preview']);
-        const headlineField = el(['authoring-preview', 'field--headline'])
+        const headlineField = el(['authoring-preview', 'field--headline']);
 
         browser.wait(ECE.visibilityOf(previewPane));
         browser.wait(ECE.visibilityOf(headlineField));
