@@ -487,9 +487,9 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             helpers.filterDefaultValues(diff, origItem);
 
             if (_.size(diff) > 0) {
-                return api.save('archive', origItem, diff).then((_item) => {
+                return api.save('archive', origItem, diff).then((__item) => {
                     if (origItem.type === 'picture') {
-                        item._etag = _item._etag;
+                        item._etag = __item._etag;
                     }
                     origItem._autosave = null;
                     origItem._autosaved = false;
