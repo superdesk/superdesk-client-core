@@ -6,6 +6,17 @@ import 'apps';
 import 'external-apps';
 import {appConfig} from 'appConfig';
 
+function loadConfigs() {
+    return fetch(appConfig.server.url + '/client_config', {
+        method: 'GET',
+        mode: 'cors',
+    })
+        .then((res) => res.ok ? res.json() : Promise.reject())
+        .then((json) => {
+            Object.assign(appConfig, json.config);
+        });
+}
+
 if (appConfig.features.useTansaProofing) {
     // tslint:disable-next-line:no-var-requires
     require('apps/tansa');
@@ -32,17 +43,19 @@ body.ready(() => {
     // since tests do not import this file.
     angular.module('superdesk.config').constant('config', initializeConfigDefaults(appConfig));
 
-    /**
-     * @ngdoc module
-     * @name superdesk-client
-     * @packageName superdesk-client
-     * @description The root superdesk module.
-     */
-    angular.bootstrap(body, [
-        'superdesk.config',
-        'superdesk.core',
-        'superdesk.apps',
-    ].concat(appConfig.apps || []), {strictDi: true});
+    loadConfigs().then(() => {
+        /**
+         * @ngdoc module
+         * @name superdesk-client
+         * @packageName superdesk-client
+         * @description The root superdesk module.
+         */
+        angular.bootstrap(body, [
+            'superdesk.config',
+            'superdesk.core',
+            'superdesk.apps',
+        ].concat(appConfig.apps || []), {strictDi: true});
 
-    window['superdeskIsReady'] = true;
+        window['superdeskIsReady'] = true;
+    });
 });
