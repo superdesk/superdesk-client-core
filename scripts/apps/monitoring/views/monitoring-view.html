@@ -115,7 +115,10 @@
                                 <i class="icon-settings"></i>
                             </button>
 
-                            <div style="display: flex; align-items: center; padding-left: 10px; padding-right: 10px;">
+                            <div
+                                ng-if="type === 'monitoring'"
+                                style="display: flex; align-items: center; padding-left: 10px; padding-right: 10px;"
+                            >
                                 <sd-monitoring-filtering-buttons
                                     desk-id="activeDeskId"
                                     toggle-filter="aggregate.toggleCustomFilter"
