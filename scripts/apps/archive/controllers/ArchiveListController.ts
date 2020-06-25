@@ -6,6 +6,8 @@ export class ArchiveListController extends BaseListController {
         StagesCtrl, notify, multi, search) {
         super($scope, $location, search, desks);
 
+        const setTotalCount = super.setTotalCount.bind(this);
+
         var resource,
             self = this;
 
@@ -68,6 +70,8 @@ export class ArchiveListController extends BaseListController {
                 $scope.loading = false;
                 $scope.items = search.mergeItems(items, $scope.items, next);
                 $scope.total = items._meta.total;
+
+                setTotalCount(items._meta.total);
             }, () => {
                 $scope.loading = false;
             });
