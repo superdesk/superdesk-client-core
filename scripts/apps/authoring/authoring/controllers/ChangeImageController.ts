@@ -13,23 +13,49 @@ import {appConfig} from 'appConfig';
  * @requires lodash
  * @requires api
  * @requires $rootScope
+ * @required content
  *
  * @description Controller is responsible for cropping pictures and setting Point of Interest for an image.
  */
 
-export function validateMediaFieldsThrows(validator, metadata) {
-    for (let key in validator) {
-        const value = metadata[key];
+export function validateMediaFieldsThrows(validator, metadata, schema) {
+    const ERROR = gettext('Required field(s) missing');
+
+    Object.keys(validator).forEach((key) => {
+        if (!validator[key].required) {
+            return;
+        }
+
+        const specs = schema[key] || null;
+
+        if (specs == null) { // cv
+            const item = (metadata.subject || []).find((subj) => subj.scheme === key);
+
+            if (item == null) {
+                console.warn('missing cv', key);
+                throw ERROR;
+            }
+
+            return;
+        }
+
+        let value = metadata[key];
+
+        if (specs.type === 'text') {
+            value = metadata?.extra[key];
+        }
+
         const regex = new RegExp('^\<*br\/*\>*$', 'i');
 
-        if (validator[key].required && (!value || value.match(regex))) {
-            throw gettext('Required field(s) missing');
+        if (!value || value.match(regex)) {
+            console.warn('missing value', key);
+            throw ERROR;
         }
-    }
+    });
 }
 
-ChangeImageController.$inject = ['$scope', 'notify', 'lodash', 'api', '$rootScope', '$q'];
-export function ChangeImageController($scope, notify, _, api, $rootScope, $q) {
+ChangeImageController.$inject = ['$scope', 'notify', 'lodash', 'api', '$rootScope', '$q', 'content'];
+export function ChangeImageController($scope, notify, _, api, $rootScope, $q, content) {
     $scope.data = $scope.locals.data;
     $scope.data.cropData = {};
     $scope.validator = appConfig.validator_media_metadata;
@@ -201,7 +227,7 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, $q) {
     */
     $scope.applyMetadataChanges = () => {
         try {
-            validateMediaFieldsThrows($scope.validator, $scope.data.metadata);
+            validateMediaFieldsThrows($scope.validator, $scope.data.metadata, content.schema({}, 'picture'));
         } catch (e) {
             // show an error and stop the "done" operation
             notify.error(e);

@@ -15,6 +15,7 @@ import {appConfig, extensions} from 'appConfig';
 import {onPublishMiddlewareResult, IExtensionActivationResult, IArticle} from 'superdesk-api';
 import {mediaIdGenerator} from '../services/MediaIdGeneratorService';
 import {addInternalEventListener} from 'core/internal-events';
+import {validateMediaFieldsThrows} from '../controllers/ChangeImageController';
 
 /**
  * @ngdoc directive
@@ -530,14 +531,14 @@ export function AuthoringDirective(
 
                 if (item.type === 'picture' || item.type === 'graphic') {
                     // required media metadata fields are defined in superdesk.config.js
-                    _.each(Object.keys(validator), (key) => {
-                        if (validator[key].required && (_.isNil(item[key]) || _.isEmpty(item[key]))) {
-                            notify.error(gettext(
-                                'Required field {{key}} is missing. ...', {key: key}));
-                            return false;
-                        }
-                    });
+                    try {
+                        validateMediaFieldsThrows(validator, item, $scope.schema);
+                    } catch (e) {
+                        notify.error(e);
+                        return false;
+                    }
                 }
+
                 return true;
             }
 

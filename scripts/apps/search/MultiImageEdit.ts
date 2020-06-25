@@ -33,6 +33,7 @@ MultiImageEditController.$inject = [
     'notify',
     'lock',
     'session',
+    'content',
 ];
 
 export function MultiImageEditController(
@@ -41,6 +42,7 @@ export function MultiImageEditController(
     notify,
     lock,
     session,
+    content,
 ) {
     const saveHandler = $scope.saveHandler;
     let unsavedChangesExist = false;
@@ -134,7 +136,7 @@ export function MultiImageEditController(
 
         try {
             imagesForSaving.forEach((metadata) => {
-                validateMediaFieldsThrows($scope.validator, metadata);
+                validateMediaFieldsThrows($scope.validator, metadata, content.schema({}, 'picture'));
             });
         } catch (e) {
             notify.error(e);
