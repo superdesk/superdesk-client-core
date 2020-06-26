@@ -396,6 +396,7 @@ declare module 'superdesk-api' {
             archive?: boolean;
             externalsource: boolean;
         };
+        _autosave?: any;
         _locked?: boolean;
     }
 
