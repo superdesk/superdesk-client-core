@@ -76,7 +76,7 @@
             id="sms_message"
             ng-model="item.sms_message"
             ng-change="autosave(item)"
-            disabled="!_editable || schema.sms.readonly === true"
+            ng-disabled="!_editable || schema.sms.readonly === true"
             placeholder="Add sms message here"
             sd-focus-element
             sd-auto-height
@@ -202,7 +202,7 @@
            id="byline"
            ng-model="item.byline"
            ng-change="autosave(item)"
-           disabled="!_editable || schema.byline.readonly === true"
+           ng-disabled="!_editable || schema.byline.readonly === true"
            sd-focus-element
            data-append-element=".field"
            data-append-class="active"
@@ -572,7 +572,7 @@
          id="usageterms"
          ng-model="item.usageterms"
          ng-change="autosave(item)"
-         disabled="!_editable || schema.usageterms.readonly === true"
+         ng-disabled="!_editable || schema.usageterms.readonly === true"
          sd-focus-element
          data-append-class="active"
          tabindex="{{editor.usageterms.order}}">

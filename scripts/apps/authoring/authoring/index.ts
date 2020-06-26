@@ -368,9 +368,11 @@ angular.module('superdesk.apps.authoring', [
                 priority: 50,
                 icon: 'kill',
                 group: 'corrections',
-                controller: ['data', 'authoring',
-                    (data, authoring) => {
-                        return authoring.unpublish(data.item.archive_item);
+                controller: ['data', 'authoring', 'api',
+                    (data, authoring, api) => {
+                        return api.find('archive', data.item._id).then((updatedItem) => {
+                            return authoring.unpublish(updatedItem);
+                        });
                     },
                 ],
                 filters: [{action: 'list', type: 'archive'}],
