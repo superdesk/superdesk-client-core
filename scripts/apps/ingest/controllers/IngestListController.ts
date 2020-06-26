@@ -5,6 +5,8 @@ export class IngestListController extends BaseListController {
     constructor($scope, $injector, $location, api, $rootScope, search, desks) {
         super($scope, $location, search, desks);
 
+        const setTotalCount = super.setTotalCount.bind(this);
+
         $scope.type = 'ingest';
         $scope.loading = false;
         $scope.repo = {
@@ -22,6 +24,8 @@ export class IngestListController extends BaseListController {
             api.query('ingest', criteria).then((items) => {
                 $scope.items = search.mergeItems(items, $scope.items, next);
                 $scope.total = items._meta.total;
+
+                setTotalCount(items._meta.total);
             })
                 .finally(() => {
                     $scope.loading = false;
