@@ -92,7 +92,6 @@
                         class="line-input slugline"
                         id="slugline"
                         ng-model="item.slugline"
-                        ng-model-options="{debounce: 500}"
                         ng-change="autosave(item)"
                         ng-disabled="!_editable || schema.slugline.readonly === true"
                         ng-trim="false"

@@ -457,8 +457,8 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
      * @param {Object} item
      * @param {Object} orig
      */
-    this.autosave = function autosaveAuthoring(item, orig, timeout) {
-        return autosave.save(item, orig, timeout);
+    this.autosave = function autosaveAuthoring(item, orig, timeout, callback) {
+        return autosave.save(item, orig, timeout, callback);
     };
 
     /**
@@ -467,59 +467,61 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
      * @param {Object} origItem
      * @param {Object} item
      */
-    this.save = function saveAuthoring(origItem, item) {
-        var diff = helpers.extendItem({}, item);
-        // Finding if all the keys are dirty for real
+    this.save = function saveAuthoring(origItem, _item) {
+        return runBeforeUpdateMiddlware(_item, origItem).then((item: IArticle) => {
+            var diff = helpers.extendItem({}, item);
+            // Finding if all the keys are dirty for real
 
-        if (angular.isDefined(origItem)) {
-            angular.forEach(_.keys(diff), (key) => {
-                if (_.isEqual(diff[key], origItem[key])) {
-                    delete diff[key];
-                }
-            });
-        }
+            if (angular.isDefined(origItem)) {
+                angular.forEach(_.keys(diff), (key) => {
+                    if (_.isEqual(diff[key], origItem[key])) {
+                        delete diff[key];
+                    }
+                });
+            }
 
-        helpers.stripHtml(diff);
-        helpers.stripWhitespaces(diff);
-        helpers.cutoffPreviousRenditions(diff, origItem);
-        autosave.stop(item);
+            helpers.stripHtml(diff);
+            helpers.stripWhitespaces(diff);
+            helpers.cutoffPreviousRenditions(diff, origItem);
+            autosave.stop(item);
 
-        if (diff._etag) { // make sure we use orig item etag
-            delete diff._etag;
-        }
+            if (diff._etag) { // make sure we use orig item etag
+                delete diff._etag;
+            }
 
-        // if current document is image and it has been changed on 'media edit' we have to update the etag
-        if (origItem.type === 'picture' && item._etag != null) {
-            diff._etag = item._etag;
-        }
+            // if current document is image and it has been changed on 'media edit' we have to update the etag
+            if (origItem.type === 'picture' && item._etag != null) {
+                diff._etag = item._etag;
+            }
 
-        helpers.filterDefaultValues(diff, origItem);
+            helpers.filterDefaultValues(diff, origItem);
 
-        if (_.size(diff) > 0) {
-            return api.save('archive', origItem, diff).then((__item) => {
-                runAfterUpdateEvent(origItem, __item);
+            if (_.size(diff) > 0) {
+                return api.save('archive', origItem, diff).then((__item) => {
+                    runAfterUpdateEvent(origItem, __item);
 
-                if (origItem.type === 'picture') {
-                    item._etag = __item._etag;
-                }
+                    if (origItem.type === 'picture') {
+                        item._etag = __item._etag;
+                    }
+                    origItem._autosave = null;
+                    origItem._autosaved = false;
+                    origItem._locked = lock.isLockedInCurrentSession(item);
+
+                    const authoringWorkspace: AuthoringWorkspaceService = $injector.get('authoringWorkspace');
+
+                    authoringWorkspace.update(origItem);
+                    return origItem;
+                });
+            }
+
+            if (origItem) {
+                // if there is nothing to save. No diff.
                 origItem._autosave = null;
                 origItem._autosaved = false;
-                origItem._locked = lock.isLockedInCurrentSession(item);
+            }
 
-                const authoringWorkspace: AuthoringWorkspaceService = $injector.get('authoringWorkspace');
-
-                authoringWorkspace.update(origItem);
-                return origItem;
-            });
-        }
-
-        if (origItem) {
-            // if there is nothing to save. No diff.
-            origItem._autosave = null;
-            origItem._autosaved = false;
-        }
-
-        return $q.when(origItem);
+            return Promise.resolve(origItem);
+        });
     };
 
     /**
