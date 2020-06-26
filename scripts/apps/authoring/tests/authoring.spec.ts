@@ -113,19 +113,24 @@ describe('authoring', () => {
         expect($scope.item.headline).toBe('test');
     }));
 
-    it('can save while item is being autosaved', inject(($rootScope, $timeout, $q, api) => {
+    it('can save while item is being autosaved', (done) => inject(($rootScope, $timeout, $q, api) => {
         var $scope = startAuthoring({headline: 'test', task: 'desk:1'}, 'edit');
 
         $scope.item.body_html = 'test';
         $rootScope.$digest();
         $timeout.flush(1000);
 
-        spyOn(api, 'save').and.returnValue($q.when({}));
+        spyOn(api, 'save').and.returnValue(Promise.resolve({}));
         $scope.save();
         $rootScope.$digest();
 
         $timeout.flush(5000);
-        expect($scope.item._autosave).toBeNull();
+
+        setTimeout(() => { // save uses async middleware. HTTP request will be started asynchronously
+            expect($scope.item._autosave).toBeNull();
+
+            done();
+        });
     }));
 
     it('can close item after save work confirm', inject(($rootScope, $q, $location, authoring, reloadService) => {
@@ -603,7 +608,7 @@ describe('authoring', () => {
         }));
 
         it('updates orig item on save',
-            inject((authoring, $rootScope, $httpBackend, api, $q, urls) => {
+            (done) => inject((authoring, $rootScope, $httpBackend, $q, urls) => {
                 var item = {headline: 'foo'};
                 var orig: any = {_links: {self: {href: 'archive/foo'}}};
 
@@ -612,9 +617,14 @@ describe('authoring', () => {
                     .respond(200, {_etag: 'new', _current_version: 2});
                 authoring.save(orig, item);
                 $rootScope.$digest();
-                $httpBackend.flush();
-                expect(orig._etag).toBe('new');
-                expect(orig._current_version).toBe(2);
+
+                setTimeout(() => { // save uses async middleware. HTTP request will be started asynchronously
+                    $httpBackend.flush();
+                    expect(orig._etag).toBe('new');
+                    expect(orig._current_version).toBe(2);
+
+                    done();
+                });
             }));
     });
 
