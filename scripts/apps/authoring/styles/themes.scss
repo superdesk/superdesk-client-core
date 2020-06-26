@@ -238,9 +238,7 @@ body, html {
             display: flex;
             flex-direction: row;
             align-items: flex-end;
-            input {
-                text-transform: uppercase;
-            }
+
             input, select, option {
                 color: inherit;
                 font-size: 14px;
