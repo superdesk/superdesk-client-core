@@ -19,21 +19,18 @@ import {appConfig} from 'appConfig';
  */
 
 export function validateMediaFieldsThrows(validator, metadata, schema) {
-    const ERROR = gettext('Required field(s) missing');
-
     Object.keys(validator).forEach((key) => {
         if (!validator[key].required) {
             return;
         }
 
-        const specs = schema[key] || null;
+        const fieldSchema = schema[key] || null;
 
-        if (specs == null) { // cv
+        if (fieldSchema == null) { // cv
             const item = (metadata.subject || []).find((subj) => subj.scheme === key);
 
             if (item == null) {
-                console.warn('missing cv', key);
-                throw ERROR;
+                throw gettext('Required field {{key}} is missing. ...', {key: key});
             }
 
             return;
@@ -41,15 +38,14 @@ export function validateMediaFieldsThrows(validator, metadata, schema) {
 
         let value = metadata[key];
 
-        if (specs.type === 'text') {
+        if (fieldSchema.type === 'text') {
             value = metadata?.extra[key];
         }
 
         const regex = new RegExp('^\<*br\/*\>*$', 'i');
 
         if (!value || value.match(regex)) {
-            console.warn('missing value', key);
-            throw ERROR;
+            throw gettext('Required field {{key}} is missing. ...', {key: key});
         }
     });
 }
