@@ -1,6 +1,7 @@
 import {get} from 'lodash';
 import {gettext} from 'core/utils';
 import {appConfig} from 'appConfig';
+import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 
 /**
  * @ngdoc controller
@@ -18,7 +19,11 @@ import {appConfig} from 'appConfig';
  * @description Controller is responsible for cropping pictures and setting Point of Interest for an image.
  */
 
-export function validateMediaFieldsThrows(validator, metadata, schema) {
+export function validateMediaFieldsThrows(validator, metadata, schema, getLabelForFieldId) {
+    const raiseError = (key) => {
+        throw gettext('Required field {{key}} is missing. ...', {key: getLabelForFieldId(key)});
+    };
+
     Object.keys(validator).forEach((key) => {
         if (!validator[key].required) {
             return;
@@ -30,7 +35,7 @@ export function validateMediaFieldsThrows(validator, metadata, schema) {
             const item = (metadata.subject || []).find((subj) => subj.scheme === key);
 
             if (item == null) {
-                throw gettext('Required field {{key}} is missing. ...', {key: key});
+                raiseError(key);
             }
 
             return;
@@ -45,7 +50,7 @@ export function validateMediaFieldsThrows(validator, metadata, schema) {
         const regex = new RegExp('^\<*br\/*\>*$', 'i');
 
         if (!value || value.match(regex)) {
-            throw gettext('Required field {{key}} is missing. ...', {key: key});
+            raiseError(key);
         }
     });
 }
@@ -215,6 +220,12 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, $q, co
         $scope.crops.isDirty = false;
     };
 
+    let getLabelForFieldId = (id) => id;
+
+    getLabelNameResolver().then((_getLabelForFieldId) => {
+        getLabelForFieldId = _getLabelForFieldId;
+    });
+
     /**
     * @ngdoc method
     * @name ChangeImageController#applyMetadataChanges
@@ -223,7 +234,11 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, $q, co
     */
     $scope.applyMetadataChanges = () => {
         try {
-            validateMediaFieldsThrows($scope.validator, $scope.data.metadata, content.schema({}, 'picture'));
+            validateMediaFieldsThrows(
+                $scope.validator,
+                $scope.data.metadata,
+                content.schema({}, 'picture'),
+                getLabelForFieldId);
         } catch (e) {
             // show an error and stop the "done" operation
             notify.error(e);
