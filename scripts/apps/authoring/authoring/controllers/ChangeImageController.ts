@@ -34,16 +34,14 @@ export function validateMediaFieldsThrows(validator, metadata, schema, getLabelF
         if (fieldSchema == null) { // cv
             const item = (metadata.subject || []).find((subj) => subj.scheme === key);
 
-            if (item == null) {
-                raiseError(key);
+            if (item != null) {
+                return;
             }
-
-            return;
         }
 
         let value = metadata[key];
 
-        if (fieldSchema.type === 'text') {
+        if (fieldSchema != null && fieldSchema.type === 'text') {
             value = metadata?.extra[key];
         }
 
