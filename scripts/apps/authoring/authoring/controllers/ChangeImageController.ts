@@ -1,6 +1,7 @@
 import {get} from 'lodash';
 import {gettext} from 'core/utils';
 import {appConfig} from 'appConfig';
+import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 
 /**
  * @ngdoc controller
@@ -13,23 +14,47 @@ import {appConfig} from 'appConfig';
  * @requires lodash
  * @requires api
  * @requires $rootScope
+ * @required content
  *
  * @description Controller is responsible for cropping pictures and setting Point of Interest for an image.
  */
 
-export function validateMediaFieldsThrows(validator, metadata) {
-    for (let key in validator) {
-        const value = metadata[key];
+export function validateMediaFieldsThrows(validator, metadata, schema, getLabelForFieldId) {
+    const raiseError = (key) => {
+        throw gettext('Required field {{key}} is missing. ...', {key: getLabelForFieldId(key)});
+    };
+
+    Object.keys(validator).forEach((key) => {
+        if (!validator[key].required) {
+            return;
+        }
+
+        const fieldSchema = schema[key] || null;
+
+        if (fieldSchema == null) { // cv
+            const item = (metadata.subject || []).find((subj) => subj.scheme === key);
+
+            if (item != null) {
+                return;
+            }
+        }
+
+        let value = metadata[key];
+
+        if (fieldSchema != null && fieldSchema.type === 'text') {
+            value = metadata?.extra[key];
+        }
+
         const regex = new RegExp('^\<*br\/*\>*$', 'i');
 
-        if (validator[key].required && (!value || value.match(regex))) {
-            throw gettext('Required field(s) missing');
+        if (!value || value.match(regex)) {
+            raiseError(key);
         }
-    }
+    });
 }
 
-ChangeImageController.$inject = ['$scope', 'notify', 'lodash', 'api', '$rootScope', '$q'];
-export function ChangeImageController($scope, notify, _, api, $rootScope, $q) {
+ChangeImageController.$inject = ['$scope', 'notify', 'lodash', 'api', '$rootScope', '$q', 'content'];
+export function ChangeImageController($scope, notify, _, api, $rootScope, $q, content) {
     $scope.data = $scope.locals.data;
     $scope.data.cropData = {};
     $scope.validator = appConfig.validator_media_metadata;
@@ -193,6 +218,12 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, $q) {
         $scope.crops.isDirty = false;
     };
 
+    let getLabelForFieldId = (id) => id;
+
+    getLabelNameResolver().then((_getLabelForFieldId) => {
+        getLabelForFieldId = _getLabelForFieldId;
+    });
+
     /**
     * @ngdoc method
     * @name ChangeImageController#applyMetadataChanges
@@ -201,7 +232,11 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, $q) {
     */
     $scope.applyMetadataChanges = () => {
         try {
-            validateMediaFieldsThrows($scope.validator, $scope.data.metadata);
+            validateMediaFieldsThrows(
+                $scope.validator,
+                $scope.data.metadata,
+                content.schema({}, 'picture'),
+                getLabelForFieldId);
         } catch (e) {
             // show an error and stop the "done" operation
             notify.error(e);
