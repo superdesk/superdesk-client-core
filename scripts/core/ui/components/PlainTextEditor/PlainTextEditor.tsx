@@ -38,14 +38,17 @@ interface IState {
 function updateStateWithValue(value: string, editorState: EditorState) {
     const currentContent = editorState.getCurrentContent();
     const selectionAll = getDraftSelectionForEntireContent(editorState);
-    const newContent = Modifier.replaceText(currentContent, selectionAll, value);
+    const newContent = Modifier.replaceText(
+        currentContent,
+        selectionAll,
+        value,
+    );
     let newState = EditorState.set(editorState, {allowUndo: false});
 
     newState = EditorState.push(newState, newContent, 'insert-characters');
 
     return EditorState.set(newState, {allowUndo: true});
 }
-
 
 export class PlainTextEditor extends React.Component<IProps, IState> {
     spellcheckerTimeout?: number;
@@ -85,17 +88,27 @@ export class PlainTextEditor extends React.Component<IProps, IState> {
                 return;
             }
 
-            getSpellcheckWarningsByBlock(spellchecker, this.state.editorState)
-                .then((warningsByBlock) => {
-                    const spellcheckerDecorator =
-                        getSpellcheckingDecorator(this.props.language, warningsByBlock, {disableContextMenu: true});
-                    const decorator = new CompositeDecorator([spellcheckerDecorator]);
-                    const editorStateDecorated = EditorState.set(this.state.editorState, {decorator});
+            getSpellcheckWarningsByBlock(
+                spellchecker,
+                this.state.editorState,
+            ).then((warningsByBlock) => {
+                const spellcheckerDecorator = getSpellcheckingDecorator(
+                    this.props.language,
+                    warningsByBlock,
+                    {disableContextMenu: true},
+                );
+                const decorator = new CompositeDecorator([
+                    spellcheckerDecorator,
+                ]);
+                const editorStateDecorated = EditorState.set(
+                    this.state.editorState,
+                    {decorator},
+                );
 
-                    this.setState({
-                        editorState: editorStateDecorated,
-                    });
+                this.setState({
+                    editorState: editorStateDecorated,
                 });
+            });
         }, 500);
     }
 
@@ -116,7 +129,9 @@ export class PlainTextEditor extends React.Component<IProps, IState> {
             this.props.onChange(value, this.props.onChangeData);
         }
 
-        this.selection = this.state.hasFocus ? editorState.getSelection() : null;
+        this.selection = this.state.hasFocus
+            ? editorState.getSelection()
+            : null;
 
         this.setState({editorState}, () => {
             if (this.props.spellcheck) {
@@ -152,11 +167,18 @@ export class PlainTextEditor extends React.Component<IProps, IState> {
         let editorState = this.state.editorState;
 
         if (this.state.hasFocus && this.selection) {
-            editorState = EditorState.forceSelection(editorState, this.selection);
+            editorState = EditorState.forceSelection(
+                editorState,
+                this.selection,
+            );
         }
 
         return (
-            <div className={classes} onMouseDown={(ev) => ev.stopPropagation()} onKeyDown={(ev) => ev.stopPropagation()}>
+            <div
+                className={classes}
+                onMouseDown={(ev) => ev.stopPropagation()}
+                onKeyDown={(ev) => ev.stopPropagation()}
+            >
                 <Editor
                     onFocus={this.onFocus}
                     onBlur={this.onBlur}
