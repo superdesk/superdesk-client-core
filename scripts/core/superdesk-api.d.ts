@@ -1273,6 +1273,11 @@ declare module 'superdesk-api' {
             minHeight?: number;
         }
         langOverride: {[langCode: string]: {[originalString: string]: string}};
+        transmitter_types: Array<{
+            type: string;
+            name: string;
+            config: any;
+        }>;
     }
 
 
