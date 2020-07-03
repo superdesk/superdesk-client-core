@@ -964,6 +964,7 @@ declare module 'superdesk-api' {
 
                 // This isn't implemented for all fields accepting images.
                 addImage(field: string, image: IArticle): void;
+                save(): void;
             };
             alert(message: string): Promise<void>;
             confirm(message: string): Promise<boolean>;
