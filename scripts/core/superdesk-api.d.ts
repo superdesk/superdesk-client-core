@@ -964,6 +964,11 @@ declare module 'superdesk-api' {
 
                 // This isn't implemented for all fields accepting images.
                 addImage(field: string, image: IArticle): void;
+
+                /**
+                 * Programatically triggers saving of an article in edit mode.
+                 * Runs the same code as if "save" button was clicked manually.
+                */
                 save(): void;
             };
             alert(message: string): Promise<void>;

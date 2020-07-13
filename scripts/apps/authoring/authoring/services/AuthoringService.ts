@@ -457,61 +457,59 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
      * @param {Object} origItem
      * @param {Object} item
      */
-    this.save = function save(origItem, _item) {
-        return runBeforeUpdateMiddlware(_item, origItem).then((item: IArticle) => this.saveAuthoring(origItem, item));
-    };
+    this.save = function saveAuthoring(origItem, _item) {
+        return runBeforeUpdateMiddlware(_item, origItem).then((item: IArticle) => {
+            var diff = helpers.extendItem({}, item);
+            // Finding if all the keys are dirty for real
 
-    this.saveAuthoring = function saveAuthoring(origItem, item) {
-        var diff = helpers.extendItem({}, item);
-        // Finding if all the keys are dirty for real
+            if (angular.isDefined(origItem)) {
+                angular.forEach(_.keys(diff), (key) => {
+                    if (_.isEqual(diff[key], origItem[key])) {
+                        delete diff[key];
+                    }
+                });
+            }
 
-        if (angular.isDefined(origItem)) {
-            angular.forEach(_.keys(diff), (key) => {
-                if (_.isEqual(diff[key], origItem[key])) {
-                    delete diff[key];
-                }
-            });
-        }
+            helpers.stripHtml(diff);
+            helpers.stripWhitespaces(diff);
+            helpers.cutoffPreviousRenditions(diff, origItem);
+            autosave.stop(item);
 
-        helpers.stripHtml(diff);
-        helpers.stripWhitespaces(diff);
-        helpers.cutoffPreviousRenditions(diff, origItem);
-        autosave.stop(item);
+            if (diff._etag) { // make sure we use orig item etag
+                delete diff._etag;
+            }
 
-        if (diff._etag) { // make sure we use orig item etag
-            delete diff._etag;
-        }
+            // if current document is image and it has been changed on 'media edit' we have to update the etag
+            if (origItem.type === 'picture' && item._etag != null) {
+                diff._etag = item._etag;
+            }
 
-        // if current document is image and it has been changed on 'media edit' we have to update the etag
-        if (origItem.type === 'picture' && item._etag != null) {
-            diff._etag = item._etag;
-        }
+            helpers.filterDefaultValues(diff, origItem);
 
-        helpers.filterDefaultValues(diff, origItem);
+            if (_.size(diff) > 0) {
+                return api.save('archive', origItem, diff).then((__item) => {
+                    if (origItem.type === 'picture') {
+                        item._etag = __item._etag;
+                    }
+                    origItem._autosave = null;
+                    origItem._autosaved = false;
+                    origItem._locked = lock.isLockedInCurrentSession(item);
 
-        if (_.size(diff) > 0) {
-            return api.save('archive', origItem, diff).then((__item) => {
-                if (origItem.type === 'picture') {
-                    item._etag = __item._etag;
-                }
+                    const authoringWorkspace: AuthoringWorkspaceService = $injector.get('authoringWorkspace');
+
+                    authoringWorkspace.update(origItem);
+                    return origItem;
+                });
+            }
+
+            if (origItem) {
+                // if there is nothing to save. No diff.
                 origItem._autosave = null;
                 origItem._autosaved = false;
-                origItem._locked = lock.isLockedInCurrentSession(item);
+            }
 
-                const authoringWorkspace: AuthoringWorkspaceService = $injector.get('authoringWorkspace');
-
-                authoringWorkspace.update(origItem);
-                return origItem;
-            });
-        }
-
-        if (origItem) {
-            // if there is nothing to save. No diff.
-            origItem._autosave = null;
-            origItem._autosaved = false;
-        }
-
-        return Promise.resolve(origItem);
+            return Promise.resolve(origItem);
+        });
     };
 
     /**

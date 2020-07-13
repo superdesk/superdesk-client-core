@@ -7,7 +7,6 @@ import {isPublished} from 'apps/archive/utils';
 import {resetFieldMetadata} from 'core/editor3/helpers/fieldsMeta';
 import {appConfig} from 'appConfig';
 import {gettext} from 'core/utils';
-import {addInternalEventListener} from 'core/internal-events';
 
 interface IScope extends ng.IScope {
     readOnlyLabel: string;
@@ -88,8 +87,6 @@ ArticleEditDirective.$inject = [
     '$interpolate',
     'suggest',
     'renditions',
-    'authoring',
-    'notify',
 ];
 export function ArticleEditDirective(
     autosave,
@@ -101,8 +98,6 @@ export function ArticleEditDirective(
     $interpolate,
     suggest,
     renditions,
-    authoring,
-    notify,
 ) {
     return {
         templateUrl: 'scripts/apps/authoring/views/article-edit.html',
@@ -460,19 +455,8 @@ export function ArticleEditDirective(
                 scope.extra = {}; // placeholder for fields not part of item
             });
 
-            const removeSaveEventListener = addInternalEventListener('save', () => {
-                authoring.saveAuthoring(scope.origItem, scope.item).then((res) => {
-                    const mainEditScope: any = scope.$parent.$parent;
-
-                    mainEditScope.dirty = false;
-                    _.merge(scope.item, res);
-                    notify.success(gettext('Item updated.'));
-                });
-            });
-
             scope.$on('$destroy', () => {
                 elem.off('drop dragdrop');
-                removeSaveEventListener();
             });
         },
     };

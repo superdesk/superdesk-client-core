@@ -201,7 +201,7 @@ export function getSuperdeskApiImplementation(
                     dispatchInternalEvent('addImage', {field, image});
                 },
                 save: () => {
-                    dispatchInternalEvent('save', null);
+                    dispatchInternalEvent('saveArticleInEditMode', null);
                 },
             },
             alert: (message: string) => modal.alert({bodyText: message}),
