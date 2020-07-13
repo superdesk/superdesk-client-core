@@ -120,7 +120,15 @@ export function MultiImageEditController(
 
         $scope.images.forEach((item) => {
             if (item.selected) {
-                item[field] = $scope.metadata[field] || '';
+                if (field === 'extra') {
+                    Object.keys(item[field]).forEach((key) => {
+                        if (key !== 'DateCreated') {
+                            item[field][key] = $scope.metadata[field][key];
+                        }
+                    });
+                } else {
+                    item[field] = $scope.metadata[field] || '';
+                }
             }
         });
     };
