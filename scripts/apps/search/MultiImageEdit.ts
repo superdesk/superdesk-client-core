@@ -4,6 +4,7 @@ import {uniq, pickBy, isEmpty, forEach} from 'lodash';
 import {validateMediaFieldsThrows} from 'apps/authoring/authoring/controllers/ChangeImageController';
 import {logger} from 'core/services/logger';
 import {gettext} from 'core/utils';
+import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 
 interface IScope extends ng.IScope {
     validator: any;
@@ -32,6 +33,8 @@ MultiImageEditController.$inject = [
     'modal',
     'notify',
     'lock',
+    'session',
+    'content',
 ];
 
 export function MultiImageEditController(
@@ -39,6 +42,8 @@ export function MultiImageEditController(
     modal,
     notify,
     lock,
+    session,
+    content,
 ) {
     const saveHandler = $scope.saveHandler;
     let unsavedChangesExist = false;
@@ -123,6 +128,12 @@ export function MultiImageEditController(
         });
     };
 
+    let getLabelForFieldId = (id) => id;
+
+    getLabelNameResolver().then((_getLabelForFieldId) => {
+        getLabelForFieldId = _getLabelForFieldId;
+    });
+
     $scope.save = (close) => {
         const imagesForSaving = angular.copy($scope.images);
 
@@ -132,7 +143,11 @@ export function MultiImageEditController(
 
         try {
             imagesForSaving.forEach((metadata) => {
-                validateMediaFieldsThrows($scope.validator, metadata);
+                validateMediaFieldsThrows(
+                    $scope.validator,
+                    metadata,
+                    content.schema({}, 'picture'),
+                    getLabelForFieldId);
             });
         } catch (e) {
             notify.error(e);
@@ -170,6 +185,10 @@ export function MultiImageEditController(
 
     $scope.$on('item:lock', (_e, data) => {
         const {imagesOriginal} = $scope;
+
+        if (data.lock_session === session.sessionId) {
+            return; // ignore locking in the session (from this modal)
+        }
 
         // while editing metadata if any selected item is unlocked by another user remove that item from selected items
         if (Array.isArray(imagesOriginal) && data != null && data.item != null) {

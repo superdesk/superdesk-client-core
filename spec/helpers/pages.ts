@@ -14,7 +14,7 @@ export class LoginModal {
 
     constructor() {
         this.username = element(by.model('username'));
-        this.password = element(by.model('password'));
+        this.password = element(by.id('login-password'));
         this.btn = element(by.id('login-btn'));
         this.error = element(by.css('p.error'));
 

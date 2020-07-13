@@ -18,6 +18,7 @@ interface IScope extends ng.IScope {
     currentIndex: number;
     editable: any;
     field: any;
+    handleInputChange: (text: string, onChangeData: any) => void;
     item: any;
     items: any;
     maxUploads: any;
@@ -266,8 +267,17 @@ export function ItemCarouselDirective(notify) {
                     data[item.fieldId] = item[item.fieldId];
                     scope.item.associations = angular.extend({}, scope.item.associations, data);
                 });
-                scope.onchange();
             }
+
+            scope.handleInputChange = (value: string, onChangeData) => {
+                const {association, field} = onChangeData;
+
+                if (typeof scope.item.associations?.[association]?.[field] === 'string') {
+                    scope.item.associations[association][field] = value;
+                    scope.onchange();
+                    scope.$applyAsync();
+                }
+            };
 
             /**
              * @ngdoc method

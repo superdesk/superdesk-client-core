@@ -1,6 +1,6 @@
 import notifySaveError from '../helpers';
 import {gettext} from 'core/utils';
-import {TEMPLATEFILTERS} from '../constants';
+import {getTemplateFilters} from '../constants';
 
 TemplatesDirective.$inject = ['notify', 'api', 'templates', 'modal', 'desks', 'weekdays',
     'content', '$filter', 'session', 'lodash'];
@@ -8,6 +8,8 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
     return {
         templateUrl: 'scripts/apps/templates/views/templates.html',
         link: function($scope) {
+            const TEMPLATEFILTERS = getTemplateFilters();
+
             $scope.weekdays = weekdays;
             $scope.content_templates = null;
             $scope.origTemplate = null;

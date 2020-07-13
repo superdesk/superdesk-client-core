@@ -5,6 +5,7 @@ export class BaseListController {
     $location: any;
     search: any;
     desks: any;
+    totalCount: number;
 
     constructor($scope, $location, search, desks) {
         this.lastQueryParams = {};
@@ -14,7 +15,14 @@ export class BaseListController {
 
         $scope.selected = {};
 
+        this.totalCount = Infinity;
+
         $scope.fetchNext = (from) => {
+            if (from >= this.totalCount) {
+                // no more items to fetch
+                return;
+            }
+
             const source = this.getQuery(null, $scope.repo.archive || false);
 
             source.from = from;
@@ -81,6 +89,10 @@ export class BaseListController {
         const params = this.$location.search().params ? JSON.parse(this.$location.search().params) : {};
 
         return {source, params};
+    }
+
+    setTotalCount(n: number) {
+        this.totalCount = n;
     }
 }
 

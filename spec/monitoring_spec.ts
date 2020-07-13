@@ -828,15 +828,26 @@ describe('monitoring', () => {
         expect(textField.getAttribute('contenteditable')).toBe(null);
     });
 
-    it('can close already opened preview on an item action', () => {
-        monitoring.openMonitoring();
-        monitoring.previewAction(3, 2);
-        expect(monitoring.getPreviewTitle()).toBe('item6');
-        var previewPane = element(by.id('item-preview'));
+    it('closes preview when an item is opened for editing', () => {
+        nav('/workspace/monitoring');
 
-        expect(previewPane.isPresent()).toBe(true);
-        monitoring.actionOnItem('Edit', 3, 2);
-        expect(previewPane.isPresent()).toBe(false);
+        const item = els(['article-item']).get(6);
+
+        browser.wait(ECE.visibilityOf(item));
+
+        item.click();
+
+        const previewPane = el(['authoring-preview']);
+        const headlineField = el(['authoring-preview', 'field--headline']);
+
+        browser.wait(ECE.visibilityOf(previewPane));
+        browser.wait(ECE.visibilityOf(headlineField));
+
+        expect(headlineField.getText()).toBe('item6');
+
+        articleList.executeContextMenuAction(item, 'Edit');
+
+        browser.wait(ECE.invisibilityOf(previewPane));
     });
 
     it('Can create items from templates', () => {

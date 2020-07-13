@@ -46,6 +46,8 @@ RelatedItemsDirective.$inject = [
     'lock',
     '$rootScope',
     'content',
+    'storage',
+    'autosave',
 ];
 export function RelatedItemsDirective(
     authoringWorkspace: AuthoringWorkspaceService,
@@ -54,6 +56,8 @@ export function RelatedItemsDirective(
     lock,
     $rootScope,
     content,
+    storage,
+    autosave,
 ) {
     return {
         scope: {
@@ -67,8 +71,20 @@ export function RelatedItemsDirective(
             scope.onCreated = (items: Array<IArticle>) => {
                 items.forEach((item) => {
                     scope.addRelatedItem(item);
+                    storage.setItem(`open-item-after-related-closed--${item._id}`, scope.item._id);
                 });
             };
+
+            scope.$on('item:close', (evt, mainArticleId) => {
+                const itemId = storage.getItem(`open-item-after-related-closed--${mainArticleId}`);
+
+                if (itemId != null) {
+                    autosave.get({_id: itemId}).then((result) => {
+                        authoringWorkspace.open(result);
+                        storage.removeItem(`open-item-after-related-closed--${mainArticleId}`);
+                    });
+                }
+            });
 
             scope.gettext = gettext;
 

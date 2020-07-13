@@ -329,9 +329,11 @@ class Monitoring {
             return element(by.className('dropdown--compact-state'));
         };
 
-        this.previewAction = function(group, item) {
-            browser.wait(ECE.elementToBeClickable(this.getItem(group, item)));
-            this.getItem(group, item).click();
+        this.previewAction = function(groupIndex, itemIndex) {
+            const item = this.getItem(groupIndex, itemIndex);
+
+            browser.wait(ECE.elementToBeClickable(item));
+            item.click();
             var preview = element(by.id('item-preview'));
 
             waitFor(preview);

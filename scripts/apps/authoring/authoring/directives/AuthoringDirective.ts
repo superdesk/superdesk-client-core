@@ -7,7 +7,7 @@ import {gettext} from 'core/utils';
 import {combineReducers, createStore, applyMiddleware} from 'redux';
 import {attachments, initAttachments} from '../../attachments';
 import {applyMiddleware as coreApplyMiddleware} from 'core/middleware';
-import {onChangeMiddleware, getArticleSchemaMiddleware} from '..';
+import {getArticleSchemaMiddleware} from '..';
 import {isPublished} from 'apps/archive/utils';
 import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
 import {copyJson} from 'core/helpers/utils';
@@ -15,6 +15,8 @@ import {appConfig, extensions} from 'appConfig';
 import {onPublishMiddlewareResult, IExtensionActivationResult, IArticle} from 'superdesk-api';
 import {mediaIdGenerator} from '../services/MediaIdGeneratorService';
 import {addInternalEventListener} from 'core/internal-events';
+import {validateMediaFieldsThrows} from '../controllers/ChangeImageController';
+import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 
 /**
  * @ngdoc directive
@@ -49,8 +51,8 @@ AuthoringDirective.$inject = [
     'editorResolver',
     'compareVersions',
     'embedService',
-    'relationsService',
     '$injector',
+    'autosave',
 ];
 export function AuthoringDirective(
     superdesk,
@@ -76,8 +78,8 @@ export function AuthoringDirective(
     editorResolver,
     compareVersions,
     embedService,
-    relationsService,
     $injector,
+    autosave,
 ) {
     return {
         link: function($scope, elem, attrs) {
@@ -421,6 +423,8 @@ export function AuthoringDirective(
             }
 
             function publishItem(orig, item) {
+                autosave.stop(item);
+
                 var action = $scope.action === 'edit' ? 'publish' : $scope.action;
                 const onPublishMiddlewares = getOnPublishMiddlewares();
                 let warnings: Array<{text: string}> = [];
@@ -525,19 +529,25 @@ export function AuthoringDirective(
                 $scope.dirty = false;
             }
 
+            let getLabelForFieldId = (id) => id;
+
+            getLabelNameResolver().then((_getLabelForFieldId) => {
+                getLabelForFieldId = _getLabelForFieldId;
+            });
+
             function validateForPublish(item) {
                 var validator = appConfig.validator_media_metadata;
 
                 if (item.type === 'picture' || item.type === 'graphic') {
                     // required media metadata fields are defined in superdesk.config.js
-                    _.each(Object.keys(validator), (key) => {
-                        if (validator[key].required && (_.isNil(item[key]) || _.isEmpty(item[key]))) {
-                            notify.error(gettext(
-                                'Required field {{key}} is missing. ...', {key: key}));
-                            return false;
-                        }
-                    });
+                    try {
+                        validateMediaFieldsThrows(validator, item, $scope.schema, getLabelForFieldId);
+                    } catch (e) {
+                        notify.error(e);
+                        return false;
+                    }
                 }
+
                 return true;
             }
 
@@ -712,6 +722,7 @@ export function AuthoringDirective(
                 // returned promise used by superdesk-fi
                 return authoring.close($scope.item, $scope.origItem, $scope.save_enabled()).then(() => {
                     authoringWorkspace.close(true);
+                    $scope.$broadcast('item:close', $scope.origItem._id);
                 });
             };
 
@@ -793,10 +804,10 @@ export function AuthoringDirective(
                 }
 
                 // populate content fields so that it can undo to initial (empty) version later
-                var autosave = $scope.origItem._autosave || {};
+                var _autosave = $scope.origItem._autosave || {};
 
                 Object.keys(helpers.CONTENT_FIELDS_DEFAULTS).forEach((key) => {
-                    var value = autosave[key] || $scope.origItem[key] || helpers.CONTENT_FIELDS_DEFAULTS[key];
+                    var value = _autosave[key] || $scope.origItem[key] || helpers.CONTENT_FIELDS_DEFAULTS[key];
 
                     $scope.item[key] = angular.copy(value);
                 });
@@ -874,34 +885,19 @@ export function AuthoringDirective(
             $scope.autosave = function(item, timeout) {
                 $scope.dirty = true;
                 angular.extend($scope.item, item); // make sure all changes are available
-                return coreApplyMiddleware(onChangeMiddleware, {item: $scope.item, original: $scope.origItem}, 'item')
-                    .then(() => {
-                        const onUpdateFromExtensions = Object.values(extensions).map(
-                            (extension) => extension.activationResult?.contributions?.authoring?.onUpdate,
-                        ).filter((updates) => updates != null);
 
-                        const reducerFunc = (current, next) => current.then(
-                            (result) => next($scope.origItem._autosave ?? $scope.origItem, result),
-                        );
-
-                        return (
-                            onUpdateFromExtensions.length < 1
-                                ? Promise.resolve(item)
-                                : onUpdateFromExtensions
-                                    .reduce(reducerFunc, Promise.resolve($scope.item))
-                                    .then((nextItem) => angular.extend($scope.item, nextItem))
-                        ).then(() => {
-                            var autosavedItem = authoring.autosave($scope.item, $scope.origItem, timeout);
-
+                authoring.autosave(
+                    $scope.item,
+                    $scope.origItem,
+                    timeout,
+                    () => {
+                        $scope.$applyAsync(() => {
                             authoringWorkspace.addAutosave();
                             initMedia();
                             updateSchema();
-
-                            $scope.$apply();
-
-                            return autosavedItem;
                         });
-                    });
+                    },
+                );
             };
 
             $scope.sendToNextStage = function() {

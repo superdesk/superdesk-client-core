@@ -29,6 +29,7 @@ interface IProps {
     onValidation(valid: boolean): void;
     triggerSave: boolean;
     hideActionBar: boolean;
+    formClass?: string;
 }
 
 interface IState {
@@ -192,7 +193,7 @@ export class ContactFormContainer extends React.PureComponent<IProps, IState> {
     }
 
     render() {
-        const {svc, contact, onCancel, hideActionBar} = this.props;
+        const {svc, contact, onCancel, hideActionBar, formClass} = this.props;
         const {
             isFormValid = false,
             dirty = false,
@@ -210,7 +211,7 @@ export class ContactFormContainer extends React.PureComponent<IProps, IState> {
         return (
             <div id={contact._id} key={contact._id} className="contact-form">
                 <form name="contactForm"
-                    className="side-panel side-panel--shadow-right"
+                    className={formClass}
                     onSubmit={(e) => e.preventDefault()}
                 >
                     {!hideActionBar && (

@@ -398,6 +398,7 @@ declare module 'superdesk-api' {
             archive?: boolean;
             externalsource: boolean;
         };
+        _autosave?: any;
         _locked?: boolean;
     }
 
@@ -1275,6 +1276,9 @@ declare module 'superdesk-api' {
             publishEmbargo?: any;
             sendAndPublish?: any;
             italicAbstract?: any;
+            sendPublishSchedule?: boolean;
+            sendEmbargo?: boolean;
+            sendDefaultStage?: 'working' | 'incoming';
         };
         list: {
             narrowView: any;
@@ -1340,6 +1344,11 @@ declare module 'superdesk-api' {
             minHeight?: number;
         }
         langOverride: {[langCode: string]: {[originalString: string]: string}};
+        transmitter_types: Array<{
+            type: string;
+            name: string;
+            config: any;
+        }>;
     }
 
 

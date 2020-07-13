@@ -273,7 +273,7 @@ export function MonitoringGroup(
                     scheduleQuery(event, data);
                 } else if (data && cards.shouldUpdate(scope.group, data)) {
                     scheduleQuery(event, data);
-                } else if (data.items) {
+                } else if (data?.items != null) {
                     for (const updatedItemGuid in data.items) {
                         // check if stage contains updated items
                         if (
