@@ -484,7 +484,7 @@ export class GenericListPageComponent<T extends IItemWithId, P>
                             this.props.disallowCreatingNewItem === true ? null : (
                                 <div>
                                     <Button
-                                        onClick={this.openNewItemForm}
+                                        onClick={() => this.openNewItemForm()}
                                         className="sd-create-btn dropdown-toggle"
                                         icon="icon-plus-large"
                                         data-test-id="list-page--add-item"
