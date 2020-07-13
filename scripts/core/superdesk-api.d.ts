@@ -705,6 +705,9 @@ declare module 'superdesk-api' {
         fieldForSearch?: IFormField; // must be present in formConfig
         disallowCreatingNewItem?: true;
         disallowFiltering?: true;
+
+        // styles
+        contentMargin?: number;
     }
 
     export enum FormFieldType {

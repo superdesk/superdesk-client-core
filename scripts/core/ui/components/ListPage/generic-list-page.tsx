@@ -542,7 +542,7 @@ export class GenericListPageComponent<T extends IItemWithId, P>
                         ) : null
                     }
                     <PageContainerItem shrink>
-                        <div style={{margin: 20}}>
+                        <div style={{margin: this.props.contentMargin ?? 20}}>
                             {
                                 items._meta.max_results === items._meta.total || items._items.length === 0 ? null : (
                                     <div style={{textAlign: 'center', marginTop: -20}}>

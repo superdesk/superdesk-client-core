@@ -222,7 +222,7 @@ class ItemComponent extends React.PureComponent<IPropsItem> {
 class ItemsContainerBase extends React.PureComponent {
     render() {
         return (
-            <div style={{background: 'beige', marginLeft: -20, marginRight: -20}}>
+            <div style={{background: 'beige'}}>
                 {this.props.children}
             </div>
         );
@@ -626,6 +626,7 @@ export class ContentProfileFieldsConfig extends React.Component<IProps, IState> 
                         }}
                         disallowFiltering
                         disallowCreatingNewItem
+                        contentMargin={0}
                     />
                 </div>
             );
