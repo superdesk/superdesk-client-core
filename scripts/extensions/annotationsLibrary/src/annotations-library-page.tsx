@@ -114,6 +114,7 @@ export function getAnnotationsLibraryPage(superdesk: ISuperdesk) {
                             ? {}
                             : {language: superdesk.instance.config.default_language}
                     }
+                    hiddenFields={['cpnat_type']}
                 />
             );
         }

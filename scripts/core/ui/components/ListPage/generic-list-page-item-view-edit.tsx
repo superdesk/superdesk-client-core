@@ -20,6 +20,7 @@ import {hasValue} from '../generic-form/has-value';
 interface IProps<T> {
     operation: 'editing' | 'creation';
     editMode: boolean;
+    hiddenFields: Array<string>;
     getFormConfig(item?: Partial<T>): IFormGroup;
     item: Partial<T>;
     onEditModeChange(nextValue: boolean): void;
@@ -108,7 +109,7 @@ export class GenericListPageItemViewEdit<T> extends React.Component<IProps<T>, I
     handleSave() {
         const formConfig = this.props.getFormConfig(this.state.nextItem);
         const currentFields = getFormFieldsFlat(formConfig);
-        const currentFieldsIds = currentFields.map(({field}) => field).concat('_id');
+        const currentFieldsIds = currentFields.map(({field}) => field).concat('_id').concat(this.props.hiddenFields);
 
         /*
             Form config is dynamic and can change during editing.

@@ -706,6 +706,13 @@ declare module 'superdesk-api' {
         disallowCreatingNewItem?: true;
         disallowFiltering?: true;
 
+        /**
+         * Dynamic schema is supported in order to display additional fields depending on values of current fields.
+         * All fields are removed which aren't present in the schema at the time of saving.
+         * In some cases it is desirable to maintain a field even if it is not in the schema.
+        */
+        hiddenFields: Array<string>;
+
         // styles
         contentMargin?: number;
     }

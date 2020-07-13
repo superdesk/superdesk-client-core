@@ -611,6 +611,7 @@ export class GenericListPageComponent<T extends IItemWithId, P>
                                     item={this.state.newItem}
                                     getFormConfig={getFormConfig}
                                     editMode={true}
+                                    hiddenFields={this.props.hiddenFields}
                                     onEditModeChange={() => {
                                         this.setState((prevState) => ({
                                             ...prevState,
@@ -632,6 +633,7 @@ export class GenericListPageComponent<T extends IItemWithId, P>
                                     key={'edit' + this.state.editItemId}
                                     operation="editing"
                                     editMode={true}
+                                    hiddenFields={this.props.hiddenFields}
                                     onEditModeChange={() => {
                                         this.setState((prevState) => ({
                                             ...prevState,
@@ -652,6 +654,7 @@ export class GenericListPageComponent<T extends IItemWithId, P>
                                     key={'preview' + this.state.previewItemId}
                                     operation="editing"
                                     editMode={false}
+                                    hiddenFields={this.props.hiddenFields}
                                     onEditModeChange={() => {
                                         this.setState((prevState) => ({
                                             ...prevState,
