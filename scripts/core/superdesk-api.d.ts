@@ -1195,6 +1195,7 @@ declare module 'superdesk-api' {
         };
         user: {
             sign_off_mapping: any;
+            username_pattern?: string;
         };
         infoRemovedFields: {};
         previewSubjectFilterKey: any;

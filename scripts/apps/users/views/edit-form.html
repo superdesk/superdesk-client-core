@@ -87,7 +87,7 @@
                                 updateOn: 'default blur',
                                         debounce: {'default': 500, 'blur': 0} }"
                             ng-readonly="user._id"
-                            ng-pattern="user._id ? '' : usernamePattern"
+                            ng-pattern="usernamePattern"
                             sd-user-unique data-unique-field="username" data-exclude="user"
                             required
                             data-test-id="field--username">
