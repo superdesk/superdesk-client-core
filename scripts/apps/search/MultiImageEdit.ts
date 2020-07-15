@@ -122,12 +122,16 @@ export function MultiImageEditController(
             if (item.selected) {
                 if (field === 'extra') {
                     Object.keys(item[field]).forEach((key) => {
-                        if (key !== 'DateCreated') {
+                        if ($scope.metadata[field][key]) {
                             item[field][key] = $scope.metadata[field][key];
+                        } else {
+                            delete item[field][key];
                         }
                     });
+                } else if ($scope.metadata[field]) {
+                    item[field] = $scope.metadata[field];
                 } else {
-                    item[field] = $scope.metadata[field] || '';
+                    delete item[field];
                 }
             }
         });
