@@ -256,18 +256,23 @@ export function MultiImageEditController(
             if (item.extra != null) {
                 for (const field in item.extra) {
                     if (!values.hasOwnProperty(field)) {
-                        values[field] = getUniqueValues('extra.' + field);
-                        if (values[field].length === 1) {
-                            extra[field] = getMetaValue(field, values[field], null);
-                        } else {
-                            $scope.placeholder[field] = gettext('(multiple values)');
-                        }
+                        setExtra(field, values, extra);
                     }
                 }
             }
         });
 
         return extra;
+    }
+
+    function setExtra(field, values, extra) {
+        values[field] = getUniqueValues('extra.' + field);
+
+        if (values[field].length === 1) {
+            extra[field] = getMetaValue(field, values[field], null);
+        } else {
+            $scope.placeholder[field] = gettext('(multiple values)');
+        }
     }
 
     function getMetaValue(field: string, uniqueValues: Array<string>, defaultValue = null) {
@@ -283,6 +288,7 @@ export function MultiImageEditController(
     function compare(fieldName) {
         const uniqueValues = getUniqueValues(fieldName);
         const defaultValues = {subject: []};
+
         if (uniqueValues.length === 1 || defaultValues) {
             return getMetaValue(fieldName, uniqueValues, defaultValues[fieldName]);
         } else {
