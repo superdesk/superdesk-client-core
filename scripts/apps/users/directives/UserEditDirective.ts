@@ -35,7 +35,7 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
             });
             scope.privileges = privileges.privileges;
             scope.features = features;
-            scope.usernamePattern = appConfig.user.username_pattern != null ?
+            scope.usernamePattern = appConfig.user?.username_pattern != null ?
                 new RegExp(appConfig.user.username_pattern) : usersService.usernamePattern;
             scope.twitterPattern = usersService.twitterPattern;
             scope.phonePattern = usersService.phonePattern;
