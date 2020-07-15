@@ -120,19 +120,7 @@ export function MultiImageEditController(
 
         $scope.images.forEach((item) => {
             if (item.selected) {
-                if (field === 'extra') {
-                    Object.keys(item[field]).forEach((key) => {
-                        if ($scope.metadata[field][key]) {
-                            item[field][key] = $scope.metadata[field][key];
-                        } else {
-                            delete item[field][key];
-                        }
-                    });
-                } else if ($scope.metadata[field]) {
-                    item[field] = $scope.metadata[field];
-                } else {
-                    delete item[field];
-                }
+                item[field] = $scope.metadata[field];
             }
         });
     };
@@ -269,7 +257,11 @@ export function MultiImageEditController(
                 for (const field in item.extra) {
                     if (!values.hasOwnProperty(field)) {
                         values[field] = getUniqueValues('extra.' + field);
-                        extra[field] = getMetaValue(field, values[field]);
+                        if (values[field].length === 1) {
+                            extra[field] = getMetaValue(field, values[field], null);
+                        } else {
+                            $scope.placeholder[field] = gettext('(multiple values)');
+                        }
                     }
                 }
             }
@@ -283,8 +275,6 @@ export function MultiImageEditController(
 
         if (uniqueValues.length === 1) {
             return JSON.parse(uniqueValues[0]);
-        } else if (uniqueValues.length > 1) {
-            $scope.placeholder[field] = gettext('(multiple values)');
         }
 
         return defaultValue || '';
@@ -293,8 +283,11 @@ export function MultiImageEditController(
     function compare(fieldName) {
         const uniqueValues = getUniqueValues(fieldName);
         const defaultValues = {subject: []};
-
-        return getMetaValue(fieldName, uniqueValues, defaultValues[fieldName]);
+        if (uniqueValues.length === 1 || defaultValues) {
+            return getMetaValue(fieldName, uniqueValues, defaultValues[fieldName]);
+        } else {
+            $scope.placeholder[fieldName] = gettext('(multiple values)');
+        }
     }
 }
 
