@@ -49,7 +49,6 @@ export default angular.module('superdesk.apps.users', [
     .directive('sdUserUnique', directive.UserUniqueDirective)
     .directive('sdPasswordConfirm', directive.PasswordConfirmDirective)
     .directive('sdUserList', directive.UserListDirective)
-    .directive('sdUserListItem', directive.UserListItemDirective)
     .directive('sdActivity', directive.ActivityDirective)
     .directive('sdUserMention', UserMentionDirective)
     .directive('sdUserInfo', directive.UserInfoDirective)
