@@ -90,7 +90,15 @@ declare module 'superdesk-api' {
             iptcMapping?(data: Partial<IPTCMetadata>, item: Partial<IArticle>, parent?: IArticle): Promise<Partial<IArticle>>;
             searchPanelWidgets?: Array<React.ComponentType<ISearchPanelWidgetProps>>;
             authoring?: {
-                onUpdate?(current: IArticle, next: IArticle): Promise<IArticle>;
+                /**
+                 * Updates can be intercepted and modified. Return value will be used to compute a patch.
+                 * 
+                 * Example: onUpdateBefore = (current, next) => ({...next, priority: next.headline.includes('important') ? 10 : 1})
+                */
+                onUpdateBefore?(current: IArticle, next: IArticle): Promise<IArticle>;
+
+                /** Called after the update. */
+                onUpdateAfter?(previous: IArticle, current: IArticle): void;
             };
             monitoring?: {
                 getFilteringButtons?(): Promise<Array<IMonitoringFilter>>;
@@ -963,6 +971,12 @@ declare module 'superdesk-api' {
 
                 // This isn't implemented for all fields accepting images.
                 addImage(field: string, image: IArticle): void;
+
+                /**
+                 * Programatically triggers saving of an article in edit mode.
+                 * Runs the same code as if "save" button was clicked manually.
+                */
+                save(): void;
             };
             alert(message: string): Promise<void>;
             confirm(message: string): Promise<boolean>;

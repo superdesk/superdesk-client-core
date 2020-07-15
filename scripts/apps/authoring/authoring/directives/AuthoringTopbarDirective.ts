@@ -2,6 +2,7 @@ import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
 import {getSpellchecker} from 'core/editor3/components/spellchecker/default-spellcheckers';
 import {IArticleAction} from 'superdesk-api';
 import {getArticleActionsFromExtensions} from 'core/superdesk-api-helpers';
+import {addInternalEventListener} from 'core/internal-events';
 
 /**
  * @ngdoc directive
@@ -86,6 +87,14 @@ export function AuthoringTopbarDirective(
             scope.$watch('item', () => {
                 setActionsFromExtensions();
             }, true);
+
+            const removeSaveEventListener = addInternalEventListener('saveArticleInEditMode', () => {
+                scope.saveTopbar();
+            });
+
+            scope.$on('$destroy', () => {
+                removeSaveEventListener();
+            });
         },
     };
 }

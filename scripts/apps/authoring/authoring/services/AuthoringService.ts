@@ -11,6 +11,40 @@ import {AuthoringWorkspaceService} from './AuthoringWorkspaceService';
 import {appConfig, extensions} from 'appConfig';
 import {IPublishedArticle, IArticle, IExtensionActivationResult} from 'superdesk-api';
 import {getPublishWarningConfirmModal} from '../components/publish-warning-confirm-modal';
+import {applyMiddleware as coreApplyMiddleware} from 'core/middleware';
+import {onChangeMiddleware} from '../index';
+
+export function runBeforeUpdateMiddlware(item: IArticle, orig: IArticle): Promise<IArticle> {
+    return coreApplyMiddleware(onChangeMiddleware, {item: item, original: orig}, 'item')
+        .then(() => {
+            const onUpdateFromExtensions = Object.values(extensions).map(
+                (extension) => extension.activationResult?.contributions?.authoring?.onUpdateBefore,
+            ).filter((updateFn) => updateFn != null);
+
+            return (
+                onUpdateFromExtensions.length < 1
+                    ? Promise.resolve(item)
+                    : onUpdateFromExtensions
+                        .reduce(
+                            (current, next) => current.then(
+                                (result) => next(orig, result),
+                            ),
+                            Promise.resolve(item),
+                        )
+                        .then((nextItem) => angular.extend(item, nextItem))
+            );
+        });
+}
+
+export function runAfterUpdateEvent(previous: IArticle, current: IArticle) {
+    const onUpdateAfterFromExtensions = Object.values(extensions).map(
+        (extension) => extension.activationResult?.contributions?.authoring?.onUpdateAfter,
+    ).filter((fn) => fn != null);
+
+    onUpdateAfterFromExtensions.forEach((fn) => {
+        fn(previous, current);
+    });
+}
 
 function isReadOnly(item: IArticle) {
     return READONLY_STATES.includes(item.state);
@@ -462,9 +496,11 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         helpers.filterDefaultValues(diff, origItem);
 
         if (_.size(diff) > 0) {
-            return api.save('archive', origItem, diff).then((_item) => {
+            return api.save('archive', origItem, diff).then((__item) => {
+                runAfterUpdateEvent(origItem, __item);
+
                 if (origItem.type === 'picture') {
-                    item._etag = _item._etag;
+                    item._etag = __item._etag;
                 }
                 origItem._autosave = null;
                 origItem._autosaved = false;
