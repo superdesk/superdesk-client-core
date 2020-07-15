@@ -1,14 +1,10 @@
 import './AutofocusDirective';
-import './ThrottleDirective';
-import './DebounceDirective';
 import './SortDirective';
 import './PasswordStrengthDirective';
 import './SearchListDirective';
-import './SearchListSingleDirective';
 import './FiletypeIconDirective';
 import './CheckAllDirective';
 import './SwitchInvertedDirective';
-import './ConfirmDirective';
 import './SelectDirective';
 import './SelectPopupDirective';
 import './PermissionsDirective';
