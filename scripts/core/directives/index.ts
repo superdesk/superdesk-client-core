@@ -43,7 +43,6 @@ export default angular.module('superdesk.core.directives', [
     'superdesk.core.directives.filetypeIcon',
     'superdesk.core.directives.checkAll',
     'superdesk.core.directives.switchInverted',
-    'superdesk.core.directives.confirm',
     'superdesk.core.directives.select',
     'superdesk.core.directives.selectPopup',
     'superdesk.core.directives.permissions',
