@@ -94,11 +94,11 @@ export class MediaBlockComponent extends React.Component<any, any> {
      * @name MediaBlockComponent#onChange
      * @description Triggered (debounced) when the image caption input is edited.
      */
-    onChange(value, placeholder) {
+    onChange(value: string, field: 'description_text' | 'headline') {
         const {block, changeCaption} = this.props;
         const entityKey = block.getEntityAt(0);
 
-        changeCaption(entityKey, value, placeholder);
+        changeCaption(entityKey, value, field);
     }
 
     render() {
@@ -127,7 +127,7 @@ export class MediaBlockComponent extends React.Component<any, any> {
                             onClick={setLocked}
                             className="image-block__title"
                             value={data.headline}
-                            onChange={({target}) => this.onChange(target.value, gettext('Title'))}
+                            onChange={({target}) => this.onChange(target.value, 'headline')}
                             disabled={readOnly}
                         /> : null }
 
@@ -201,7 +201,7 @@ export class MediaBlockComponent extends React.Component<any, any> {
                                         onClick={setLocked}
                                         className="image-block__title"
                                         value={data.headline}
-                                        onChange={({target}) => this.onChange(target.value, gettext('Title'))}
+                                        onChange={({target}) => this.onChange(target.value, 'headline')}
                                         disabled={readOnly}
                                     />
                                 )
@@ -240,7 +240,7 @@ export class MediaBlockComponent extends React.Component<any, any> {
                                         onClick={setLocked}
                                         className="image-block__title"
                                         value={data.headline}
-                                        onChange={({target}) => this.onChange(target.value, gettext('Title'))}
+                                        onChange={({target}) => this.onChange(target.value, 'headline')}
                                         disabled={readOnly}
                                     />
                                 )
@@ -279,7 +279,7 @@ export class MediaBlockComponent extends React.Component<any, any> {
                         placeholder={gettext('Caption')}
                         onFocus={setLocked}
                         value={data.description_text}
-                        onChange={(value) => this.onChange(value, gettext('Caption'))}
+                        onChange={(value) => this.onChange(value, 'description_text')}
                         disabled={readOnly}
                     />
 

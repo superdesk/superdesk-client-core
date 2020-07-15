@@ -176,7 +176,11 @@ export class PlainTextEditor extends React.Component<IProps, IState> {
         return (
             <div
                 className={classes}
-                onMouseDown={(ev) => ev.stopPropagation()}
+                onMouseDown={
+                    /* This editor can be nested withing another one,
+                     * so we must prevent event bubbling */
+                    (ev) => ev.stopPropagation()
+                }
                 onKeyDown={(ev) => ev.stopPropagation()}
             >
                 <Editor
