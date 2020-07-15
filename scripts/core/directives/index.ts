@@ -34,7 +34,6 @@ import {UserOrganisationAvatar} from 'apps/users/components/OrganisationAvatar';
  */
 export default angular.module('superdesk.core.directives', [
     'superdesk.core.directives.autofocus',
-    'superdesk.core.directives.throttle',
     'superdesk.core.directives.sort',
     'superdesk.core.directives.passwordStrength',
     'superdesk.core.directives.searchList',
