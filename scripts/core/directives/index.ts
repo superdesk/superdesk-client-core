@@ -38,7 +38,6 @@ export default angular.module('superdesk.core.directives', [
     'superdesk.core.directives.sort',
     'superdesk.core.directives.passwordStrength',
     'superdesk.core.directives.searchList',
-    'superdesk.core.directives.searchListSingle',
     'superdesk.core.directives.filetypeIcon',
     'superdesk.core.directives.checkAll',
     'superdesk.core.directives.switchInverted',
