@@ -200,6 +200,9 @@ export function getSuperdeskApiImplementation(
                 addImage: (field: string, image: IArticle) => {
                     dispatchInternalEvent('addImage', {field, image});
                 },
+                save: () => {
+                    dispatchInternalEvent('saveArticleInEditMode', null);
+                },
             },
             alert: (message: string) => modal.alert({bodyText: message}),
             confirm: (message: string) => new Promise((resolve) => {
