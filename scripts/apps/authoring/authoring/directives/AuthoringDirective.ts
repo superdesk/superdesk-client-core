@@ -889,7 +889,7 @@ export function AuthoringDirective(
                 return authoring.autosave(
                     $scope.item,
                     $scope.origItem,
-                    timeout
+                    timeout,
                 ).then(
                     () => {
                         $scope.$applyAsync(() => {
@@ -898,7 +898,7 @@ export function AuthoringDirective(
                             updateSchema();
                         });
                     },
-                ));
+                );
             };
 
             $scope.sendToNextStage = function() {
