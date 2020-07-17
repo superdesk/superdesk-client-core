@@ -23,6 +23,6 @@ describe('WordCount directive', () => {
 
         scope.item = {body_html: text};
         scope.$apply();
-        expect(iscope.numWords).toBe(32);
+        expect(iscope.numWords).toBe(33);
     });
 });

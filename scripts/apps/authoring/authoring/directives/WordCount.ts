@@ -1,4 +1,5 @@
 import * as helpers from 'apps/authoring/authoring/helpers';
+import {countWords} from 'core/count-words';
 
 /**
  * @ngdoc directive
@@ -17,12 +18,6 @@ export function WordCount() {
         },
         template: require('./WordCount.html'),
         link: function wordCountLink(scope, elem, attrs) {
-            /* This pattern matches http(s) links, numbers (1.000.000 or 1,000,000 or 1 000 000), regulars words,
-            compound words (e.g. "two-done") or abbreviation (e.g. D.C.)
-            If you modify, please keep in sync with superdesk-core/superdesk/text_utils.py
-            */
-            const WORD_PATTERN = /https?:[^ ]*|([0-9]+[,. ]?)+|([\w]\.)+|[\w][\w-]*/g;
-
             scope.html = scope.html || false;
             scope.countOnly = scope.countOnly || false;
             scope.numWords = 0;
@@ -30,7 +25,7 @@ export function WordCount() {
                 var input = scope.item || '';
 
                 input = scope.html ? helpers.cleanHtml(input) : input;
-                scope.numWords = (input.match(WORD_PATTERN) || '').length;
+                scope.numWords = countWords(input);
             });
         },
     };
