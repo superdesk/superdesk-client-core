@@ -27,6 +27,10 @@ export class HighlightsList extends React.Component<any, any> {
         highlightsService.markItem(highlight._id, this.props.item);
         this.closeMenu();
 
+        // TODO: Decouple highlights from multi-select feature
+        // This event is removing an item from the list of multi-selected items when a highlight is removed
+        // it doesn't work when a highlight is removed by another user
+        // or an item disappears from the list because of different reasons - spiking or change of filters.
         if (scope.viewType === 'highlights' && this.props.item.highlights.length === 1) {
             $rootScope.$broadcast('multi:remove', this.props.item._id);
         }
