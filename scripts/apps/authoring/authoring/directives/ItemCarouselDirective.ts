@@ -267,7 +267,6 @@ export function ItemCarouselDirective(notify) {
                     data[item.fieldId] = item[item.fieldId];
                     scope.item.associations = angular.extend({}, scope.item.associations, data);
                 });
-                scope.onchange();
             }
 
             scope.handleInputChange = (value: string, onChangeData) => {

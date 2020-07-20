@@ -17,7 +17,6 @@
          data-config="{toolbar: false, imageDragging: false, disableReturn: true, disableEditing: isPublished(item), tabindex: editor.headline.order, paste: {cleanPastedHTML: editor.headline.cleanPastedHTML}}"
          data-language="item.language"
          ng-model="item.headline"
-         ng-model-options="{debounce: 100}"
          ng-change="autosave(item)"
          data-read-only="!_editable || schema.headline.readonly === true"
          ng-trim="false"></div>
@@ -76,9 +75,8 @@
             class="byline text-editor"
             id="sms_message"
             ng-model="item.sms_message"
-            ng-model-options="{debounce: 100}"
             ng-change="autosave(item)"
-            disabled="!_editable || schema.sms.readonly === true"
+            ng-disabled="!_editable || schema.sms.readonly === true"
             placeholder="Add sms message here"
             sd-focus-element
             sd-auto-height
@@ -155,7 +153,6 @@
          data-editorformat="editor.abstract.formatOptions"
          data-language="item.language"
          ng-model="item.abstract"
-         ng-model-options="{debounce: 100}"
          ng-change="autosave(item)"
          data-read-only="!_editable || schema.abstract.readonly === true"
          ng-trim="false">
@@ -204,9 +201,8 @@
            class="byline"
            id="byline"
            ng-model="item.byline"
-           ng-model-options="{debounce: 100}"
            ng-change="autosave(item)"
-           disabled="!_editable || schema.byline.readonly === true"
+           ng-disabled="!_editable || schema.byline.readonly === true"
            sd-focus-element
            data-append-element=".field"
            data-append-class="active"
@@ -293,7 +289,6 @@
          ng-model="item.body_html"
          data-read-only="!_editable || schema.body_html.readonly === true"
          ng-change="autosave(item)"
-         ng-model-options="{debounce: 100}"
          data-associations="item.associations"
          data-language="item.language"
          data-type="item.type"
@@ -327,7 +322,6 @@
          data-value="item.body_html"
          data-read-only="!_editable || schema.body_html.readonly === true"
          data-on-change="autosave(item, 0)"
-         data-debounce="500"
          data-language="item.language"
          data-item="item"
          data-refresh-trigger="refreshTrigger"
@@ -417,7 +411,6 @@
          data-editorformat="editor.description_text.formatOptions"
          data-language="item.language"
          ng-model="item.description_text"
-         ng-model-options="{debounce: 100}"
          ng-change="autosave(item)"
          data-read-only="!_editable || schema.media_description.readonly === true"
          ng-trim="false"></div>
@@ -485,7 +478,6 @@
          data-config="{disableToolbar: true, disableEditing: isPublished(item), tabindex: editor.body_footer.order, paste: {cleanPastedHTML: editor.body_footer.cleanPastedHTML}}"
          data-language="item.language"
          ng-model="item.body_footer"
-         ng-model-options="{debounce: 100}"
          ng-change="autosave(item)"
          data-read-only="!_editable || schema.body_footer.readonly === true"
          ng-trim="false"
@@ -549,7 +541,6 @@
            class="byline"
            id="sign_off"
            ng-model="item.sign_off"
-           ng-model-options="{debounce: 100}"
            ng-change="autosave(item)"
            ng-disabled="!_editable || editSignOff == null || schema.sign_off.readonly === true"
            placeholder="Sign off"
@@ -580,9 +571,8 @@
          class="usageterms"
          id="usageterms"
          ng-model="item.usageterms"
-         ng-model-options="{debounce: 100}"
          ng-change="autosave(item)"
-         disabled="!_editable || schema.usageterms.readonly === true"
+         ng-disabled="!_editable || schema.usageterms.readonly === true"
          sd-focus-element
          data-append-class="active"
          tabindex="{{editor.usageterms.order}}">
@@ -821,7 +811,6 @@
        id="slugline"
        data-language="item.language"
        ng-model="item.slugline"
-       ng-model-options="{debounce: 500}"
        ng-change="autosave(item)"
        ng-disabled="!_editable || schema.slugline.readonly === true"
        ng-trim="false"

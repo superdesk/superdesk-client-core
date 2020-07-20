@@ -1,7 +1,9 @@
 import * as helpers from 'apps/authoring/authoring/helpers';
+import {IArticle} from 'superdesk-api';
+import {runBeforeUpdateMiddlware, runAfterUpdateEvent} from './AuthoringService';
 
-const RESOURCE = 'archive_autosave',
-    AUTOSAVE_TIMEOUT = 3000;
+const RESOURCE = 'archive_autosave';
+const AUTOSAVE_TIMEOUT = 3000;
 
 let $q, $timeout, api;
 
@@ -41,7 +43,7 @@ export class AutosaveService {
     /**
      * Auto-saves an item
      */
-    save(item, orig, timeout = AUTOSAVE_TIMEOUT) {
+    save(item: IArticle, orig: IArticle, timeout: number = AUTOSAVE_TIMEOUT, callback) {
         if (!item._editable || !item._locked) {
             return $q.reject('item not ' + item._editable ? 'locked' : 'editable');
         }
@@ -51,13 +53,24 @@ export class AutosaveService {
         let id = item._id;
 
         this.timeouts[id] = $timeout(() => {
-            var diff = helpers.extendItem({_id: id}, item);
+            runBeforeUpdateMiddlware(item, orig)
+                .then((itemLatest: IArticle) => {
+                    var diff = helpers.extendItem({_id: id}, itemLatest);
 
-            helpers.filterDefaultValues(diff, orig);
-            return api.save(RESOURCE, {}, diff).then((_autosave) => {
-                orig._autosave = _autosave;
-                return _autosave;
-            });
+                    helpers.filterDefaultValues(diff, orig);
+
+                    return api.save(RESOURCE, {}, diff).then((_autosave: IArticle) => {
+                        runAfterUpdateEvent(orig, _autosave);
+
+                        orig._autosave = _autosave;
+
+                        if (typeof callback === 'function') {
+                            callback();
+                        }
+
+                        return _autosave;
+                    });
+                });
         }, timeout, false);
 
         return this.timeouts[id];
