@@ -274,7 +274,7 @@ describe('authoring', () => {
 
             spyOn(api, 'find').and.returnValue($q.when(rewriteOf));
             spyOn(confirm, 'confirmFeatureMedia').and.returnValue(defered.promise);
-            spyOn(authoring, 'autosave').and.returnValue(item);
+            spyOn(authoring, 'autosave').and.returnValue(Promise.resolve(item));
             spyOn(authoring, 'publish').and.returnValue(item);
             let scope = startAuthoring(item, 'edit');
 
