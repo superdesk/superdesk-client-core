@@ -1,5 +1,12 @@
 # Superdesk Client Changelog
 
+## [1.33.3] 2020-07-21
+
+### Fixed
+
+- Fix CSS for associations.
+- Fix autosave getting called after correction is published.
+
 ## [1.33.2] 2020-06-09
 
 https://github.com/superdesk/superdesk-client-core/milestone/81?closed=1
