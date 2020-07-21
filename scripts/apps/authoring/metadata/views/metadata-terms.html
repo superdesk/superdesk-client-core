@@ -8,7 +8,7 @@
 
 <div class="dropdown dropdown-terms" dropdown sd-dropdown-focus sd-dropdown-position
     ng-attr-title="{{ allSelected ? 'All items selected' : helperText  | translate }}">
-    <button class="dropdown__toggle" dropdown__toggle tabindex="{{tabindex}}" ng-disabled="disabled" ng-if="header && !disabled">
+    <button class="dropdown__toggle" dropdown__toggle tabindex="{{tabindex}}" ng-disabled="disabled" ng-if="header && !disabled" aria-label="{{ 'Add new' | translate }}">
         <i class="icon--white icon-plus-large"></i>
     </button>
     <ul class="dropdown__menu nested-menu pull-right" style="{{ cv.popup_width ? 'min-width: 0; width: ' + cv.popup_width + 'px' : ''}}">

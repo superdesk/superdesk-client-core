@@ -74,9 +74,9 @@
                                 <label for="search-input" class="trigger-icon" ng-click="aggregate.monitoringSearch = !aggregate.monitoringSearch"><i class="icon-search"></i></label>
                                 <input id="search-input" type="text" placeholder="{{ 'Search' | translate }}" ng-model="query"
                                        ng-keyup="aggregate.searchOnEnter($event, query)">
-                                <button class="search-close" ng-click="aggregate.search(query = null)" ng-class="{visible: query}"><i class="icon-remove-sign"></i></button>
-                                <button class="search-close" ng-click="aggregate.search(query);" ng-class="{visible: query}">
-                                    <i class="svg-icon-right"></i>
+                                <button class="search-close" ng-click="aggregate.search(query = null)" ng-class="{visible: query}" aria-label="{{ 'Clear search' | translate }}"><i class="icon-remove-sign"></i></button>
+                                <button class="search-start" ng-click="aggregate.search(query);" ng-class="{visible: query}" aria-label="{{ 'Start search' | translate }}">
+                                    <i class="icon-chevron-right-thin"></i>
                                 </button>
                             </div>
                         </div>

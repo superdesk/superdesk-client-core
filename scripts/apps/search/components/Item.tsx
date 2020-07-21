@@ -8,6 +8,7 @@ import {broadcast} from './fields/broadcast';
 
 import {ActionsMenu} from './index';
 import {closeActionsMenu, isIPublishedArticle} from '../helpers';
+import {gettext} from 'core/utils';
 import {ItemSwimlane} from './ItemSwimlane';
 import {ItemPhotoGrid} from './ItemPhotoGrid';
 import {ListItemTemplate} from './ItemListTemplate';
@@ -35,6 +36,7 @@ const actionsMenuDefaultTemplate = (toggle, stopEvent) => (
             onClick={toggle}
             onDoubleClick={stopEvent}
             className="more-activity-toggle-ref icn-btn dropdown__toggle dropdown-toggle"
+            aria-label={gettext('Item actions')}
             data-test-id="context-menu-button"
         >
             <i className="icon-dots-vertical" />

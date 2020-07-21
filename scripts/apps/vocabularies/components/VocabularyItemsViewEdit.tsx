@@ -321,7 +321,9 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
                                 placeholder={gettext('Search')} onChange={(event) => {
                                     this.setState({searchTerm: event.target.value, page: 1});
                                 }} />
-                            <button className="search-close"><i className="icon-close-small" /></button>
+                            <button className="search-close" aria-label={gettext('Clear search')}>
+                                <i className="icon-close-small" />
+                            </button>
                         </div>
                     </div>
 

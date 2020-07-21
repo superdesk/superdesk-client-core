@@ -1206,7 +1206,7 @@ $lightbox-composite-condensed : 100px;
             line-height: 16px;
             min-width: 0;
             margin: 0;
-            color: silver;
+            color: $sd-gray-text;
             @include text-overflow();
             b {
                 font-size: 12px;
@@ -1225,7 +1225,7 @@ $lightbox-composite-condensed : 100px;
             text-transform: uppercase;
             font-size: 11px;
             margin: 0 6px 0 0;
-            color: silver;
+            color: $sd-gray-text;
             line-height: 116.6%;
         }
         .takekey, company-codes {
