@@ -225,7 +225,7 @@
                     .search-item {
                         width: 80%;
                         i {
-                            color: $grayLight;
+                            color: $sd-gray-text;
                             font-weight: 400;
                         }
                         .search-name {
@@ -233,7 +233,7 @@
                         }
                         .search-description {
                             font-size: 12px;
-                            color: $grayLight;
+                            color: $sd-gray-text;
                         }
                     }
                     .search-button {
@@ -442,7 +442,7 @@
     text-transform: uppercase;
     font-size: 11px;
     letter-spacing: 0.1em;
-    color: #8A8A8A;
+    color: $sd-gray-text;
 }
 
 .sidebar-open {
