@@ -918,6 +918,9 @@ $rightfield-width:60px;
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
+                & + .takekey, & + .provider {
+                    margin-left: $sd-base-increment / 2;
+                }
             }
             .language-label {
                 overflow: visible;
@@ -958,6 +961,9 @@ $rightfield-width:60px;
             .highlights-box {
                 margin-top: -2px;
                 margin-right: 5px;
+                &:empty {
+                    display: contents;
+                }
             }
             .item-heading {
                 flex-grow: 1;
@@ -995,19 +1001,16 @@ $rightfield-width:60px;
                 }
             }
             .takekey {
-                color: #333;
-                margin-right: 20px;
-                float: left;
+                color: inherit;
+                margin-right: $sd-base-increment * 1.5;
             }
             .category {
                 color: #444;
-                margin-right: 10px;
-                float: left;
+                margin-right: $sd-base-increment * 1.5;
             }
             .provider {
-                color: #686b6c;
-                float: left;
-                margin-right: 10px;
+                color: #686868;
+                margin-right: $sd-base-increment * 1.5;
                 white-space: nowrap;
             }
             .expires {
@@ -1022,7 +1025,7 @@ $rightfield-width:60px;
             }
             time {
                 font-size: 11px;
-                color: $grayLight;
+                color: $sd-gray-text;
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: nowrap;
@@ -1035,6 +1038,11 @@ $rightfield-width:60px;
             }
             .associations {
                 position: static;
+                width: auto;
+                margin-right: $sd-base-increment;
+                i {
+                    width: 16px;
+                }
             }
             .queue-error {
                 margin-right: 5px;
