@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {IArticle, ISuperdesk} from 'superdesk-api';
-import {IErrorMessage, ICrop} from './interfaces';
+import {IErrorMessage, ICrop, IVideoProject} from './interfaces';
 import {pick} from 'lodash';
 
 interface IProps {
@@ -160,8 +160,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
                     },
                 }),
             })
-                .then((res) => res.json())
-                .then((_: IArticle) => {
+                .then(() => {
                     // reuse thumbnail from canvas so we don't have to display the old one,
                     // new thumbnail will be loaded when user reset changes
                     this.setState({
@@ -187,13 +186,16 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
                 body: form,
             })
                 .then((res) => res.json())
-                .then((res: IArticle) => {
+                .then((res: IVideoProject) => {
                     this.setState({
                         ...initialState,
                         scale: this.state.scale,
                     });
                     this.clearCanvas();
-                    this.props.onSave(res);
+                    this.props.onSave({
+                        ...this.props.article,
+                        renditions: res.renditions,
+                    });
                     this.setThumbnail(res.renditions?.thumbnail?.href ?? '');
                 })
                 .catch(this.props.onError);
@@ -228,11 +230,14 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
 
         this.interval = window.setInterval(() => {
             dataApi
-                .findOne<IArticle>('video_edit', this.props.article._id)
-                .then((response: IArticle) => {
+                .findOne<IVideoProject>('video_edit', this.props.article._id)
+                .then((response: IVideoProject) => {
                     if (response.project?.processing?.thumbnail_preview === false) {
                         clearInterval(this.interval);
-                        this.props.onSave(response);
+                        this.props.onSave({
+                            ...this.props.article,
+                            renditions: response.renditions,
+                        });
                         this.props.onToggleLoading(false, '', 'thumbnail');
                     }
                 })

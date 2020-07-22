@@ -317,26 +317,6 @@ declare module 'superdesk-api' {
             user: IUser['_id'];
         };
 
-        // video editor project
-        project?: {
-            url: string;
-            thumbnails: {
-                preview: {
-                    url: string;
-                };
-                timeline: Array<{
-                    url: string
-                    width: number;
-                    height: number;
-                }>;
-            };
-            processing: {
-                video: boolean;
-                thumbnail_preview: boolean;
-                thumbnails_timeline: boolean;
-            };
-        };
-
         // might be only used for client-side state
         created?: any;
         archived?: any;

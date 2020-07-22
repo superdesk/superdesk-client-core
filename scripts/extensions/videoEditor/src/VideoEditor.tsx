@@ -9,7 +9,7 @@ import {VideoEditorTools} from './VideoEditorTools';
 import {VideoTimeline} from './VideoTimeline/VideoTimeline';
 import {VideoEditorHeader} from './VideoEditorHeader';
 import {VideoEditorThumbnail} from './VideoEditorThumbnail';
-import {IThumbnail, ICrop, IErrorMessage, ITimelineThumbnail} from './interfaces';
+import {IThumbnail, ICrop, IErrorMessage, ITimelineThumbnail, IVideoProject} from './interfaces';
 
 interface IProps {
     article: IArticle;
@@ -153,7 +153,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
     handleCheckingVideo(resetState: boolean = true, callback?: () => void) {
         this.intervalCheckVideo = window.setInterval(() => {
             this.props.superdesk.dataApi
-                .findOne<IArticle>('video_edit', this.state.article._id)
+                .findOne<IVideoProject>('video_edit', this.state.article._id)
                 .then((result) => {
                     const processing = result.project?.processing;
 

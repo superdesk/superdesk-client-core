@@ -1,3 +1,27 @@
+import {IArticle} from 'superdesk-api';
+
+export interface IVideoProject {
+    project: {
+        url: string;
+        thumbnails: {
+            preview: {
+                url: string;
+            };
+            timeline: Array<{
+                url: string;
+                width: number;
+                height: number;
+            }>;
+        };
+        processing: {
+            video: boolean;
+            thumbnail_preview: boolean;
+            thumbnails_timeline: boolean;
+        };
+    };
+    renditions: IArticle['renditions'];
+}
+
 export interface ICrop {
     x: number;
     y: number;
