@@ -99,7 +99,10 @@ export class HighlightsInfo extends React.PureComponent<any, any> {
                 {className: 'highlights-list dropdown'},
                 React.createElement(
                     'button',
-                    {className: 'dropdown__toggle'},
+                    {
+                        className: 'dropdown__toggle',
+                        'data-test-id': 'highlights-indicator',
+                    },
                     React.createElement('i', {
                         className: classNames({
                             'icon-star': highlights.length === 1,
