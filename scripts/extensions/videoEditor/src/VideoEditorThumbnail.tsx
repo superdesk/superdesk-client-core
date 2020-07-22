@@ -9,8 +9,9 @@ interface IProps {
     crop: ICrop;
     rotate: number;
     superdesk: ISuperdesk;
+    renditions: IArticle['renditions'];
     onToggleLoading: (isLoading: boolean, loadingText?: string, type?: 'video' | 'thumbnail') => void;
-    onSave: (article: IArticle) => void;
+    onSave: (renditions: IArticle['renditions']) => void;
     onError: (err: IErrorMessage) => void;
     getCropRotate: (crop: ICrop) => ICrop;
 }
@@ -46,7 +47,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
     }
 
     componentDidMount() {
-        const thumbnail = this.props.article.renditions?.thumbnail?.href;
+        const thumbnail = this.props.renditions?.thumbnail?.href;
 
         if (thumbnail) {
             this.setThumbnail(thumbnail);
@@ -156,7 +157,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
                     capture: body,
                     item: {
                         _id: this.props.article._id,
-                        renditions: this.props.article.renditions,
+                        renditions: this.props.renditions,
                     },
                 }),
             })
@@ -187,15 +188,8 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
             })
                 .then((res) => res.json())
                 .then((res: IVideoProject) => {
-                    this.setState({
-                        ...initialState,
-                        scale: this.state.scale,
-                    });
-                    this.clearCanvas();
-                    this.props.onSave({
-                        ...this.props.article,
-                        renditions: res.renditions,
-                    });
+                    this.handleReset();
+                    this.props.onSave(res.renditions);
                     this.setThumbnail(res.renditions?.thumbnail?.href ?? '');
                 })
                 .catch(this.props.onError);
@@ -234,10 +228,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
                 .then((response: IVideoProject) => {
                     if (response.project?.processing?.thumbnail_preview === false) {
                         clearInterval(this.interval);
-                        this.props.onSave({
-                            ...this.props.article,
-                            renditions: response.renditions,
-                        });
+                        this.props.onSave(response.renditions);
                         this.props.onToggleLoading(false, '', 'thumbnail');
                     }
                 })
@@ -279,7 +270,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
             throw new Error('Could not get current canvas');
         }
         ctx.clearRect(0, 0, this.ref.current.width, this.ref.current.height);
-        const thumbnail = this.props.article.renditions?.thumbnail?.href;
+        const thumbnail = this.props.renditions?.thumbnail?.href;
 
         if (thumbnail) {
             this.setThumbnail(thumbnail);
@@ -365,7 +356,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
                         )}
                     </div>
                 </div>
-                {!this.props.article.renditions?.thumbnail?.href && !this.state.value && (
+                {!this.props.renditions?.thumbnail?.href && !this.state.value && (
                     <div className={getClass('thumbnail--empty')}>
                         <div className="upload__info-icon" />
                         <p className={getClass('thumbnail--empty__text')}>{gettext('No thumbnail')}</p>

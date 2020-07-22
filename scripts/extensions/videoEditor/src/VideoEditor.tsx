@@ -3,7 +3,7 @@ import * as React from 'react';
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 import {ISuperdesk, IArticle} from 'superdesk-api';
-import {omit, isEqual, cloneDeep} from 'lodash';
+import {omit, isEqual} from 'lodash';
 
 import {VideoEditorTools} from './VideoEditorTools';
 import {VideoTimeline} from './VideoTimeline/VideoTimeline';
@@ -35,7 +35,7 @@ interface IState {
     loadingText: string;
     scale: number;
     videoSrc: string;
-    article: IArticle;
+    renditions: IArticle['renditions'];
     cropEnabled: boolean;
     playing: boolean;
     prevVideoHeight: number;
@@ -78,7 +78,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
             prevVideoHeight: 1,
             thumbnails: [],
             videoSrc: '',
-            article: cloneDeep(this.props.article),
+            renditions: this.props.article.renditions,
         };
         this.videoWrapper = null;
         this.videoContainerSize = 0;
@@ -145,7 +145,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
         this.props.superdesk.entities.article.patch(
             this.props.article,
             {
-                renditions: this.state.article.renditions,
+                renditions: this.state.renditions,
             },
         );
     }
@@ -153,9 +153,9 @@ export class VideoEditor extends React.Component<IProps, IState> {
     handleCheckingVideo(resetState: boolean = true, callback?: () => void) {
         this.intervalCheckVideo = window.setInterval(() => {
             this.props.superdesk.dataApi
-                .findOne<IVideoProject>('video_edit', this.state.article._id)
+                .findOne<IVideoProject>('video_edit', this.props.article._id)
                 .then((result) => {
-                    const processing = result.project?.processing;
+                    const processing = result.project.processing;
 
                     if (processing?.video === false && processing?.thumbnail_preview === false) {
                         const state = resetState ? this.getResetState() : {};
@@ -172,10 +172,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                             // because if video src does not change, browser will not update video
                             // duration even after caching is disabled
                             videoSrc: result.renditions?.original?.href + `?t=${Math.random()}`,
-                            article: {
-                                ...this.state.article,
-                                ...result,
-                            },
+                            renditions: result.renditions,
                         });
                         this.loadTimelineThumbnails();
                     } else {
@@ -399,8 +396,8 @@ export class VideoEditor extends React.Component<IProps, IState> {
                 .create('video_edit', {
                     edit: body,
                     item: {
-                        _id: this.state.article._id,
-                        renditions: this.state.article.renditions,
+                        _id: this.props.article._id,
+                        renditions: this.state.renditions,
                     },
                 })
                 .then(() => {
@@ -435,7 +432,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
     loadTimelineThumbnails() {
         this.intervalThumbnails = window.setInterval(() => {
             this.props.superdesk.dataApi
-                .findOne<ITimelineThumbnail>('video_edit', this.state.article._id + '?action=timeline')
+                .findOne<ITimelineThumbnail>('video_edit', this.props.article._id + '?action=timeline')
                 .then((result: ITimelineThumbnail) => {
                     if (result.thumbnails.length > 0) {
                         clearInterval(this.intervalThumbnails);
@@ -732,7 +729,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                             videoDegree={this.state.transformations.degree}
                                             videoPlaying={this.state.playing}
                                             videoQuality={this.state.transformations.quality}
-                                            videoHeadline={this.state.article.headline}
+                                            videoHeadline={this.props.article.headline}
                                             videoResolution={Math.min(
                                                 videoRef?.videoWidth ?? 0,
                                                 videoRef?.videoHeight ?? 0,
@@ -747,10 +744,11 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                         <>
                                             <VideoEditorThumbnail
                                                 video={videoRef}
-                                                article={this.state.article}
+                                                article={this.props.article}
+                                                renditions={this.state.renditions}
                                                 onToggleLoading={this.handleToggleLoading}
-                                                onSave={(article: IArticle) =>
-                                                    this.setState({article: {...this.state.article, ...article}})
+                                                onSave={(renditions: IArticle['renditions']) =>
+                                                    this.setState({renditions: renditions})
                                                 }
                                                 onError={this.showErrorMessage}
                                                 crop={this.state.transformations.crop}
