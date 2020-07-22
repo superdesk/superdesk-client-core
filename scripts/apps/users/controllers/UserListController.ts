@@ -113,6 +113,7 @@ export function UserListController($scope, $location, api, _, session, usersServ
             break;
 
         case 'all':
+            query.all = true;
             break;
 
         default:
