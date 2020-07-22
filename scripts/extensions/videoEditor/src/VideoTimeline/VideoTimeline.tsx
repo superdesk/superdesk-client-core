@@ -98,8 +98,8 @@ export class VideoTimeline extends React.Component<IProps, IState> {
     updateTrim(start: number, end: number) {
         this.setState({
             trim: {
-                start: round(start),
-                end: round(end),
+                start: start,
+                end: end,
             },
         });
     }
@@ -210,14 +210,14 @@ export class VideoTimeline extends React.Component<IProps, IState> {
     }
 
     handleTimelineClick(e: React.MouseEvent<HTMLDivElement>) {
-        let time = round(this.setVideoCurrentTime(e.clientX));
+        let time = this.setVideoCurrentTime(e.clientX);
 
         if (time < this.state.trim.start) {
-            this.props.onTrim(time, this.state.trim.end);
+            this.props.onTrim(round(time), round(this.state.trim.end));
             this.updateTrim(time, this.state.trim.end);
         }
         if (time > this.state.trim.end) {
-            this.props.onTrim(this.state.trim.start, time);
+            this.props.onTrim(round(this.state.trim.start), round(time));
             this.updateTrim(this.state.trim.start, time);
         }
     }
