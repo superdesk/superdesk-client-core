@@ -6,6 +6,7 @@ import {gettext} from 'core/utils';
 import {VideoComponent} from 'core/ui/components/video';
 import {isMediaEditable} from 'core/config';
 import * as actions from '../../actions';
+import {PlainTextEditor} from 'core/ui/components';
 
 function getTranslationForAssignRights(value) {
     if (value === 'single-usage') {
@@ -93,11 +94,11 @@ export class MediaBlockComponent extends React.Component<any, any> {
      * @name MediaBlockComponent#onChange
      * @description Triggered (debounced) when the image caption input is edited.
      */
-    onChange({target}) {
+    onChange(value: string, field: 'description_text' | 'headline') {
         const {block, changeCaption} = this.props;
         const entityKey = block.getEntityAt(0);
 
-        changeCaption(entityKey, target.value, target.placeholder);
+        changeCaption(entityKey, value, field);
     }
 
     render() {
@@ -126,7 +127,7 @@ export class MediaBlockComponent extends React.Component<any, any> {
                             onClick={setLocked}
                             className="image-block__title"
                             value={data.headline}
-                            onChange={this.onChange}
+                            onChange={({target}) => this.onChange(target.value, 'headline')}
                             disabled={readOnly}
                         /> : null }
 
@@ -200,7 +201,7 @@ export class MediaBlockComponent extends React.Component<any, any> {
                                         onClick={setLocked}
                                         className="image-block__title"
                                         value={data.headline}
-                                        onChange={this.onChange}
+                                        onChange={({target}) => this.onChange(target.value, 'headline')}
                                         disabled={readOnly}
                                     />
                                 )
@@ -239,7 +240,7 @@ export class MediaBlockComponent extends React.Component<any, any> {
                                         onClick={setLocked}
                                         className="image-block__title"
                                         value={data.headline}
-                                        onChange={this.onChange}
+                                        onChange={({target}) => this.onChange(target.value, 'headline')}
                                         disabled={readOnly}
                                     />
                                 )
@@ -272,15 +273,16 @@ export class MediaBlockComponent extends React.Component<any, any> {
 
                     }
 
-                    <Textarea
+                    <PlainTextEditor
+                        classes="image-block__description"
+                        spellcheck={true}
                         placeholder={gettext('Caption')}
                         onFocus={setLocked}
-                        onClick={setLocked}
-                        className="image-block__description"
                         value={data.description_text}
-                        onChange={this.onChange}
+                        onChange={(value) => this.onChange(value, 'description_text')}
                         disabled={readOnly}
                     />
+
                     {editable && (mediaType === 'audio' || mediaType === 'video') &&
                         <div className="image-block__action-bar">
                             <a

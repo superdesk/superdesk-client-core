@@ -1254,7 +1254,7 @@ export default angular.module('superdesk.core.ui', [
     .component('sdPlainTextEditor',
         reactToAngular1(
             PlainTextEditor,
-            ['value', 'onChange', 'classes', 'onChangeData', 'placeholder', 'spellcheck', 'language'],
+            ['value', 'onChange', 'classes', 'onChangeData', 'placeholder', 'spellcheck', 'language', 'onFocus'],
         ))
     .component('sdTextAreaInput',
         reactToAngular1(
