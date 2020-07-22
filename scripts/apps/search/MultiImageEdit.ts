@@ -123,7 +123,7 @@ export function MultiImageEditController(
 
         $scope.images.forEach((item) => {
             if (item.selected) {
-                item[field] = $scope.metadata[field] || '';
+                item[field] = $scope.metadata[field];
             }
         });
     };
@@ -269,8 +269,7 @@ export function MultiImageEditController(
             if (item.extra != null) {
                 for (const field in item.extra) {
                     if (!values.hasOwnProperty(field)) {
-                        values[field] = getUniqueValues('extra.' + field);
-                        extra[field] = getMetaValue(field, values[field]);
+                        setExtra(field, values, extra);
                     }
                 }
             }
@@ -279,13 +278,21 @@ export function MultiImageEditController(
         return extra;
     }
 
+    function setExtra(field, values, extra) {
+        values[field] = getUniqueValues('extra.' + field);
+
+        if (values[field].length === 1) {
+            extra[field] = getMetaValue(field, values[field], null);
+        } else {
+            $scope.placeholder[field] = gettext('(multiple values)');
+        }
+    }
+
     function getMetaValue(field: string, uniqueValues: Array<string>, defaultValue = null) {
         $scope.placeholder[field] = '';
 
         if (uniqueValues.length === 1) {
             return JSON.parse(uniqueValues[0]);
-        } else if (uniqueValues.length > 1) {
-            $scope.placeholder[field] = gettext('(multiple values)');
         }
 
         return defaultValue || '';
@@ -295,7 +302,11 @@ export function MultiImageEditController(
         const uniqueValues = getUniqueValues(fieldName);
         const defaultValues = {subject: []};
 
-        return getMetaValue(fieldName, uniqueValues, defaultValues[fieldName]);
+        if (uniqueValues.length === 1 || defaultValues) {
+            return getMetaValue(fieldName, uniqueValues, defaultValues[fieldName]);
+        } else {
+            $scope.placeholder[fieldName] = gettext('(multiple values)');
+        }
     }
 }
 
