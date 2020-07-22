@@ -124,16 +124,36 @@ export class VideoTimeline extends React.Component<IProps, IState> {
     // select a number of thumbnails will be rendered based on screen width
     // because there is not enough space for all of them
     setThumbnailsRender() {
-        const width = this.props.thumbnails?.[0]?.width ?? 1;
-        const total = Math.floor((this.controlbar.current?.offsetWidth ?? 1) / width);
-        // index spacing between each timeline thumbnail
-        // e.g. 1 4 7 10 (delta = 3)
-        const delta = (this.props.thumbnails.length - 1) / total;
+        if (this.props.thumbnails.length === 0) {
+            this.setState({thumbnailsRender: []});
+            return;
+        }
+
+        const width = this.props.thumbnails[0].width;
+        // Plus one more incomplete frame because we do not know thumbnails width beforehand to
+        // make timeline render with just enough width space
+        const total = Math.floor((this.controlbar.current?.offsetWidth ?? 1) / width) + 1;
+        const secondPerFrame = (this.props.video.duration - 1) / (this.props.thumbnails.length - 1);
+        const startPosition = width / 2 + (this.controlbar.current?.getBoundingClientRect()?.x ?? 0);
+
         const thumbnailsIndex = Array.from(
-            Array(total + 1).keys(),
-            (i) => Math.round(i * delta),
+            Array(total).keys(),
+            (i) => {
+                const videoTime = this.getPositionInBar(startPosition + i * width) * this.props.video.duration;
+
+                return Math.round(videoTime / secondPerFrame);
+            },
         );
-        const thumbnails = this.props.thumbnails.filter((_, index) => thumbnailsIndex.includes(index));
+
+        let thumbnails = this.props.thumbnails.filter((_, index) => thumbnailsIndex.includes(index));
+
+        // missing some thumbnails on the last second of video, happen when video is too short (<15s)
+        if (thumbnails.length < total) {
+            thumbnails = thumbnails.concat(
+                Array(total - thumbnails.length)
+                    .fill(this.props.thumbnails[this.props.thumbnails.length - 1]),
+            );
+        }
 
         this.setState({thumbnailsRender: thumbnails});
     }
