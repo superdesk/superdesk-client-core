@@ -7,6 +7,7 @@ import {authoring} from './helpers/authoring';
 import {highlights} from './helpers/highlights';
 import {route, ctrlShiftKey} from './helpers/utils';
 import {desks} from './helpers/desks';
+import {ECE, el, hover} from 'end-to-end-testing-helpers';
 
 describe('highlights', () => {
     describe('add highlights configuration:', () => {
@@ -118,10 +119,10 @@ describe('highlights', () => {
             browser.sleep(1000);
             // trigger keyoard shortcut(ctrl+shift+^) for 'Mark for highlight'
             ctrlShiftKey('^');
+            browser.wait(ECE.presenceOf(el(['context-menu'])));
 
             // focus to next highlight
-            browser.actions().sendKeys(protractor.Key.DOWN)
-                .perform();
+            browser.actions().sendKeys(protractor.Key.DOWN).perform();
 
             // press enter to mark highlight
             browser
@@ -132,12 +133,11 @@ describe('highlights', () => {
 
             // expect 'Highlight three' is marked
             monitoring.checkMarkedForHighlight('Highlight three', 2, 0);
-
-            monitoring.getItem(2, 1).click();
-            monitoring.getItem(2, 0).click();
+            monitoring.closeMarkedForDeskPopup();
 
             // again trigger keyoard shortcut for multimark
             ctrlShiftKey('^');
+            browser.wait(ECE.presenceOf(el(['context-menu'])));
 
             // mark for first focused highlight in monitoring
             browser
@@ -147,7 +147,7 @@ describe('highlights', () => {
             browser.sleep(1000);
 
             // expect 'Highlight two' is marked
-            monitoring.checkMarkedForMultiHighlight('Highlight four', 2, 0);
+            monitoring.checkMarkedForHighlight('Highlight four', 2, 0);
         });
 
         it('create highlight package', () => {
@@ -200,8 +200,8 @@ describe('highlights', () => {
             monitoring.actionOnItem('Edit', 2, 2);
             authoring.markForHighlights();
             highlights.selectHighlight(authoring.getSubnav(), 'Highlight two');
-            monitoring.checkMarkedForMultiHighlight('Highlight All Desks', 2, 2);
-            monitoring.checkMarkedForMultiHighlight('Highlight two', 2, 2);
+            monitoring.checkMarkedForHighlight('Highlight All Desks', 2, 2);
+            monitoring.checkMarkedForHighlight('Highlight two', 2, 2);
             // now remove from the first highlight
             monitoring.removeFromFirstHighlight(2, 2);
             monitoring.checkMarkedForHighlight('Highlight two', 2, 2);

@@ -11,6 +11,7 @@ export const GET_LABEL_MAP = () => ({
     anpa_take_key: gettext('Take Key'),
     archive_description: gettext('Archive description'),
     attachments: gettext('Attachments'),
+    authors: gettext('Authors'),
     body_footer: gettext('Body footer'),
     body_html: gettext('Body HTML'),
     byline: gettext('Byline'),

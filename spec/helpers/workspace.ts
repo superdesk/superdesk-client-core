@@ -53,9 +53,7 @@ class Workspace {
         };
 
         this.getCurrentDesk = function() {
-            var dropdownBtn = el(['monitoring--selected-desk']);
-
-            return dropdownBtn.element(by.css('[ng-if="selected.name"]')).getText();
+            return el(['monitoring--selected-desk']).getText();
         };
 
         /**

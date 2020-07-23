@@ -211,7 +211,9 @@ export class Item extends React.Component<IProps, IState> {
     }
 
     setHoverState() {
-        this.setState({hover: true});
+        if (this.state.hover !== true) {
+            this.setState({hover: true});
+        }
     }
 
     unsetHoverState() {
@@ -408,7 +410,7 @@ export class Item extends React.Component<IProps, IState> {
                         'sd-list-item-nested--collapsed': this.state.nested.length && this.state.showNested === false,
                     },
                 ),
-                onMouseEnter: getCallback(this.setHoverState),
+                onMouseOver: getCallback(this.setHoverState),
                 onMouseLeave: getCallback(this.unsetHoverState),
                 onDragStart: getCallback(this.onDragStart),
                 onClick: getCallback(this.select),

@@ -886,10 +886,11 @@ export function AuthoringDirective(
                 $scope.dirty = true;
                 angular.extend($scope.item, item); // make sure all changes are available
 
-                authoring.autosave(
+                return authoring.autosave(
                     $scope.item,
                     $scope.origItem,
                     timeout,
+                ).then(
                     () => {
                         $scope.$applyAsync(() => {
                             authoringWorkspace.addAutosave();
