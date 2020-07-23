@@ -17,14 +17,13 @@ interface IProps {
 }
 
 interface IState {
-    dirty: boolean;
     type: 'capture' | 'upload' | '';
     value: number | File; // capture positon or uploaded File
     rotateDegree: number; // save current rotate degree when user captures thumbnail
     scale: number;
 }
 
-const initialState: IState = {dirty: false, type: '', value: 0, rotateDegree: 0, scale: 1};
+const initialState: IState = {type: '', value: 0, rotateDegree: 0, scale: 1};
 
 export class VideoEditorThumbnail extends React.Component<IProps, IState> {
     private ref: React.RefObject<HTMLCanvasElement>;
@@ -63,7 +62,6 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
     handleClick() {
         this.setState(
             {
-                dirty: true,
                 type: 'capture',
                 value: this.props.video.currentTime,
                 rotateDegree: this.props.rotate,
@@ -101,7 +99,6 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
                     aspect,
                     canvasSize,
                 );
-                this.setState({dirty: true});
             },
         );
     }
@@ -122,7 +119,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
         };
 
         reader.readAsDataURL(file);
-        this.setState({dirty: true, value: file, type: 'upload'});
+        this.setState({value: file, type: 'upload'});
     }
 
     handleSave() {
@@ -313,7 +310,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
                 <div className="sd-photo-preview__thumbnail-edit-label">{gettext('Video thumbnail')}</div>
                 <div className="image-overlay">
                     <div className="image-overlay__button-block">
-                        {!this.state.dirty ? (
+                        {this.state.type === '' ? (
                             <>
                                 <a
                                     className="image-overlay__button"
