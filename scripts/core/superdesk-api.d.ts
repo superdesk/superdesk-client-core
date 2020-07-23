@@ -307,6 +307,7 @@ declare module 'superdesk-api' {
         ingest_provider?: any;
         archive_item?: any;
         item_id?: string; // id of corresponding item in 'published' collection
+        marked_desks?: any;
 
         highlights?: Array<string>;
         highlight?: any;
