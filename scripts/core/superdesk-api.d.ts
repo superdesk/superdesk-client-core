@@ -721,7 +721,7 @@ declare module 'superdesk-api' {
          * All fields are removed which aren't present in the schema at the time of saving.
          * In some cases it is desirable to maintain a field even if it is not in the schema.
         */
-        hiddenFields: Array<string>;
+        hiddenFields?: Array<string>;
 
         // styles
         contentMargin?: number;
