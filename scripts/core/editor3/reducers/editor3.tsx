@@ -426,11 +426,7 @@ const changeImageCaption = (state, {entityKey, newCaption, field}) => {
     const entity = contentState.getEntity(entityKey);
     const {media} = entity.getData();
 
-    if (field === 'Title') {
-        media.headline = newCaption;
-    } else {
-        media.description_text = newCaption;
-    }
+    media[field] = newCaption;
 
     const newContentState = contentState.replaceEntityData(entityKey, {media});
     const newEditorState = EditorState.push(editorState, newContentState, 'change-block-data');
