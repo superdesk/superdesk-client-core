@@ -75,7 +75,6 @@ export class MarkedDesksInfo extends React.Component<any, any> {
             item: this.props.item,
             desks: this.getMarkedDesks(),
             markedDesksById: this.props.markedDesksById,
-            svc: this.props.svc,
         });
 
         const thisNode = ReactDOM.findDOMNode(this) as HTMLElement;

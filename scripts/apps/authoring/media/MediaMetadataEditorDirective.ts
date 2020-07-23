@@ -22,11 +22,9 @@ export default function MediaMetadataEditorDirective(metadata, features, session
             scope.metadata = metadata;
 
             scope.handleInputChange = (newValue: string, {field}) => {
-                if (scope.item.hasOwnProperty(field)) {
-                    scope.item[field] = newValue;
-                    scope.onChange({key: field}); // set parent dirty=true
-                    scope.$applyAsync(); // apply changes to scope
-                }
+                scope.item[field] = newValue;
+                scope.onChange({key: field}); // set parent dirty=true
+                scope.$applyAsync(); // apply changes to scope
             };
 
             // set default values
