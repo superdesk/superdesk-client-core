@@ -158,7 +158,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
                 .then((result) => {
                     const processing = result.project.processing;
 
-                    if (processing?.video === false && processing?.thumbnail_preview === false) {
+                    if (processing.video === false && processing.thumbnail_preview === false) {
                         const state = resetState ? this.getResetState() : {};
 
                         clearInterval(this.intervalCheckVideo);
@@ -200,12 +200,18 @@ export class VideoEditor extends React.Component<IProps, IState> {
     }
 
     handleRotate() {
+        const video = this.videoRef.current;
+
+        if (video == null) {
+            return;
+        }
+
         this.hasTransitionRun = false;
         const {getClass} = this.props.superdesk.utilities.CSS;
-        const classList = this.videoRef.current?.classList;
+        const classList = video.classList;
 
-        if (!classList?.contains(getClass('rotate__transition'))) {
-            classList?.add(getClass('rotate__transition'));
+        if (!classList.contains(getClass('rotate__transition'))) {
+            classList.add(getClass('rotate__transition'));
         }
         const cropRef = this.reactCropRef.current?.['componentRef'];
 
@@ -213,8 +219,8 @@ export class VideoEditor extends React.Component<IProps, IState> {
             cropRef.style.visibility = 'hidden';
         }
 
-        const refValue = this.videoRef?.current?.getBoundingClientRect();
-        const videoHeight = this.state.transformations.degree % 180 === -90 ? refValue?.width : refValue?.height;
+        const refValue = video.getBoundingClientRect();
+        const videoHeight = this.state.transformations.degree % 180 === -90 ? refValue.width : refValue.height;
 
         this.setState((prevState) => ({
             transformations: {
