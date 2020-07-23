@@ -18,19 +18,22 @@ export class HighlightsList extends React.Component<any, any> {
         this.closeMenu = this.closeMenu.bind(this);
     }
 
-    removeHighlight(highlight) {
+    removeHighlight(highlight, event) {
         const {highlightsService, $rootScope} = this.props.svc;
         const {scope} = this.props;
 
-        return function(event) {
-            event.stopPropagation();
-            highlightsService.markItem(highlight._id, this.props.item);
-            this.closeMenu();
+        event.stopPropagation();
 
-            if (scope.viewType === 'highlights' && this.props.item.highlights.length === 1) {
-                $rootScope.$broadcast('multi:remove', this.props.item._id);
-            }
-        }.bind(this);
+        highlightsService.markItem(highlight._id, this.props.item);
+        this.closeMenu();
+
+        // TODO: Decouple highlights from multi-select feature
+        // This event is removing an item from the list of multi-selected items when a highlight is removed
+        // it doesn't work when a highlight is removed by another user
+        // or an item disappears from the list because of different reasons - spiking or change of filters.
+        if (scope.viewType === 'highlights' && this.props.item.highlights.length === 1) {
+            $rootScope.$broadcast('multi:remove', this.props.item._id);
+        }
     }
 
     componentDidMount() {
@@ -62,52 +65,48 @@ export class HighlightsList extends React.Component<any, any> {
         const highlights = this.props.highlights;
         const highlightsById = this.props.highlightsById || {};
 
-        const createHighlight = function(id) {
-            const highlight = highlightsById[id];
+        return (
+            <ul
+                className="dropdown dropdown__menu highlights-list-menu open"
+                onMouseEnter={this.stopTimeout}
+                onMouseLeave={this.close}
+                data-test-id="highlights-list"
+            >
+                <li>
+                    <div className="dropdown__menu-label">{gettext('Marked For')}</div>
+                    <button className="dropdown__menu-close" onClick={this.closeMenu}>
+                        <i className="icon-close-small icon--white" />
+                    </button>
+                </li>
 
-            if (highlight) {
-                return React.createElement(
-                    'li',
-                    {key: 'item-highlight-' + highlight._id},
-                    highlight.name,
-                    highlightsService.hasMarkItemPrivilege() ? React.createElement(
-                        'button',
-                        {className: 'btn btn--small btn--hollow btn--primary btn--ui-dark',
-                            onClick: this.removeHighlight(highlight)},
-                        gettext('REMOVE'),
-                    ) : null,
-                );
-            }
-        }.bind(this);
+                {
+                    highlights
+                        .filter((id) => highlightsById[id] != null)
+                        .map((id) => {
+                            const highlight = highlightsById[id];
 
-        const items = [
-            React.createElement(
-                'li',
-                {key: 'item-highlight-label'},
-                React.createElement(
-                    'div',
-                    {className: 'dropdown__menu-label'},
-                    gettext('Marked For'),
-                ),
-                React.createElement(
-                    'button',
-                    {className: 'dropdown__menu-close', onClick: this.closeMenu},
-                    React.createElement(
-                        'i',
-                        {className: 'icon-close-small icon--white'},
-                    ),
-                ),
-            ),
-        ];
-
-        return React.createElement(
-            'ul',
-            {
-                className: 'dropdown dropdown__menu highlights-list-menu open',
-                onMouseEnter: this.stopTimeout,
-                onMouseLeave: this.close,
-            },
-            items.concat(highlights.map(createHighlight)),
+                            return (
+                                <li key={id}>
+                                    {highlight.name}
+                                    {
+                                        highlightsService.hasMarkItemPrivilege()
+                                            ? (
+                                                <button
+                                                    className="btn btn--small btn--hollow btn--primary btn--ui-dark"
+                                                    onClick={(event) => {
+                                                        this.removeHighlight(highlight, event);
+                                                    }}
+                                                >
+                                                    {gettext('REMOVE')}
+                                                </button>
+                                            )
+                                            : null
+                                    }
+                                </li>
+                            );
+                        })
+                }
+            </ul>
         );
     }
 }
