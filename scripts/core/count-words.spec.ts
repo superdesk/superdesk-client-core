@@ -19,8 +19,8 @@ describe('countWords function', () => {
         expect(countWords('Comment sont les français ?')).toBe(4);
     });
 
-    it('should count hyphenated words separately', () => {
-        expect(countWords('real-time video')).toBe(3);
+    it('should count hyphenated words as one', () => {
+        expect(countWords('real-time video')).toBe(2);
     });
 
     it('should count abbreviations as a single word', () => {
