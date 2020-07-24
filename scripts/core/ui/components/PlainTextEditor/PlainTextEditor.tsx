@@ -16,20 +16,38 @@ import {
     getSpellcheckingDecorator,
 } from 'core/editor3/components/spellchecker/SpellcheckerDecorator';
 import {getDraftSelectionForEntireContent} from 'core/editor3/helpers/getDraftSelectionForEntireContent';
+import classNames from 'classnames';
 
 export interface IProps {
     value: string;
     onChange: (newValue: string, data: IProps['onChangeData']) => void;
-    onChangeData: any;
-    classes: string;
+    onChangeData?: any;
+    classes?: string;
     spellcheck?: boolean;
     language?: string;
     placeholder?: string;
+    onFocus?: () => void;
+    disabled?: boolean;
 }
 
 interface IState {
     editorState: EditorState;
     hasFocus: boolean;
+}
+
+function updateStateWithValue(value: string, editorState: EditorState) {
+    const currentContent = editorState.getCurrentContent();
+    const selectionAll = getDraftSelectionForEntireContent(editorState);
+    const newContent = Modifier.replaceText(
+        currentContent,
+        selectionAll,
+        value,
+    );
+    let newState = EditorState.set(editorState, {allowUndo: false});
+
+    newState = EditorState.push(newState, newContent, 'insert-characters');
+
+    return EditorState.set(newState, {allowUndo: true});
 }
 
 export class PlainTextEditor extends React.Component<IProps, IState> {
@@ -58,23 +76,6 @@ export class PlainTextEditor extends React.Component<IProps, IState> {
         }
     }
 
-    updateStateWithValue(value: string) {
-        const {editorState} = this.state;
-        const currentContent = editorState.getCurrentContent();
-        const selectionAll = getDraftSelectionForEntireContent(editorState);
-        const newContent = Modifier.replaceText(currentContent, selectionAll, value);
-
-        if (this.props.spellcheck) {
-            this.runSpellchecker();
-        }
-
-        let newState = EditorState.set(editorState, {allowUndo: false});
-
-        newState = EditorState.push(newState, newContent, 'insert-characters');
-
-        return EditorState.set(newState, {allowUndo: true});
-    }
-
     runSpellchecker() {
         if (this.spellcheckerTimeout) {
             window.clearTimeout(this.spellcheckerTimeout);
@@ -87,29 +88,39 @@ export class PlainTextEditor extends React.Component<IProps, IState> {
                 return;
             }
 
-            getSpellcheckWarningsByBlock(spellchecker, this.state.editorState)
-                .then((warningsByBlock) => {
-                    const spellcheckerDecorator =
-                        getSpellcheckingDecorator(this.props.language, warningsByBlock, {disableContextMenu: true});
-                    const decorator = new CompositeDecorator([spellcheckerDecorator]);
-                    const editorState = this.state.editorState;
-                    const editorStateDecorated = EditorState.set(this.state.editorState, {decorator});
-                    const editorStateWithSelection =
-                        EditorState.forceSelection(editorStateDecorated, editorState.getSelection());
+            getSpellcheckWarningsByBlock(
+                spellchecker,
+                this.state.editorState,
+            ).then((warningsByBlock) => {
+                const spellcheckerDecorator = getSpellcheckingDecorator(
+                    this.props.language,
+                    warningsByBlock,
+                    {disableContextMenu: true},
+                );
+                const decorator = new CompositeDecorator([
+                    spellcheckerDecorator,
+                ]);
+                const editorStateDecorated = EditorState.set(
+                    this.state.editorState,
+                    {decorator},
+                );
 
-                    this.setState({
-                        editorState: editorStateWithSelection,
-                    });
+                this.setState({
+                    editorState: editorStateDecorated,
                 });
+            });
         }, 500);
     }
 
-    componentWillReceiveProps(newProps: IProps) {
-        if (newProps.value !== this.props.value) {
-            this.setState({
-                editorState: this.updateStateWithValue(newProps.value),
-            });
-        }
+    /**
+     * Ideally we shouldn't use this method and use getDerivedStateFromProps instead.
+     * That implementation does work but there's a bug similar to the one described here
+     * https://github.com/facebook/draft-js/issues/1198#issuecomment-535651492
+     * where the cursor jumps to the beginning of the text when we get the state from the props
+     * This version works fine and we can still handle our own selection state
+     * */
+    UNSAFE_componentWillReceiveProps(props: IProps) {
+        this.setState({editorState: updateStateWithValue(props.value || '', this.state.editorState)});
     }
 
     handleEditorChange(editorState: EditorState) {
@@ -122,12 +133,19 @@ export class PlainTextEditor extends React.Component<IProps, IState> {
             this.props.onChange(value, this.props.onChangeData);
         }
 
-        this.selection = editorState.getSelection();
-        this.setState({editorState});
+        this.selection = this.state.hasFocus
+            ? editorState.getSelection()
+            : null;
+
+        this.setState({editorState}, () => {
+            if (this.props.spellcheck) {
+                this.runSpellchecker();
+            }
+        });
     }
 
     onFocus() {
-        this.setState({hasFocus: true});
+        this.setState({hasFocus: true}, () => this.props.onFocus?.());
     }
 
     onBlur() {
@@ -143,18 +161,32 @@ export class PlainTextEditor extends React.Component<IProps, IState> {
     }
 
     render() {
-        const classes = `${this.props.classes} ${
-            this.state.hasFocus ? 'focus' : ''
-        } plain-text-editor`;
+        const classes = classNames(
+            'plain-text-editor',
+            this.props.classes,
+            {focus: this.state.hasFocus},
+            {disabled: this.props.disabled},
+        );
 
         let editorState = this.state.editorState;
 
         if (this.state.hasFocus && this.selection) {
-            editorState = EditorState.forceSelection(editorState, this.selection);
+            editorState = EditorState.forceSelection(
+                editorState,
+                this.selection,
+            );
         }
 
         return (
-            <div className={classes}>
+            <div
+                className={classes}
+                onMouseDown={
+                    /* This editor can be nested withing another one,
+                     * so we must prevent event bubbling */
+                    (ev) => ev.stopPropagation()
+                }
+                onKeyDown={(ev) => ev.stopPropagation()}
+            >
                 <Editor
                     onFocus={this.onFocus}
                     onBlur={this.onBlur}
@@ -162,6 +194,7 @@ export class PlainTextEditor extends React.Component<IProps, IState> {
                     placeholder={this.props.placeholder || ''}
                     onChange={this.handleEditorChange}
                     handleKeyCommand={this.handleKeyCommand}
+                    readOnly={this.props.disabled === true}
                 />
             </div>
         );
