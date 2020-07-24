@@ -112,11 +112,15 @@ export class PlainTextEditor extends React.Component<IProps, IState> {
         }, 500);
     }
 
-    static getDerivedStateFromProps(props: IProps, state: IState): IState {
-        return {
-            editorState: updateStateWithValue(props.value, state.editorState),
-            hasFocus: state.hasFocus,
-        };
+    /**
+     * Ideally we shouldn't use this method and use getDerivedStateFromProps instead.
+     * That implementation does work but there's a bug similar to the one described here
+     * https://github.com/facebook/draft-js/issues/1198#issuecomment-535651492
+     * where the cursor jumps to the beginning of the text when we get the state from the props
+     * This version works fine and we can still handle our own selection state
+     * */
+    UNSAFE_componentWillReceiveProps(props: IProps) {
+        this.setState({editorState: updateStateWithValue(props.value || '', this.state.editorState)});
     }
 
     handleEditorChange(editorState: EditorState) {
