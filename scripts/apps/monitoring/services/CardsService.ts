@@ -65,6 +65,8 @@ export function CardsService(search, session, desks, $location) {
 
         if (card.type === 'spike' || card.type === 'spike-personal') {
             params.spike = 'only';
+        } else if (card.type === 'personal' && card.sent) {
+            params.spike = 'include';
         }
 
         return params;
