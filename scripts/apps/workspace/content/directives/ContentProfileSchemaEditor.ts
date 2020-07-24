@@ -102,6 +102,8 @@ const EDITOR3_RICH_FORMATTING_OPTIONS = [
     'strikethrough',
     'tab',
     'tab as spaces',
+    'undo',
+    'redo',
 ];
 
 /**
