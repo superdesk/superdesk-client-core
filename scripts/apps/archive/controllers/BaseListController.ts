@@ -26,7 +26,7 @@ export class BaseListController {
             const source = this.getQuery(null, $scope.repo.archive || false);
 
             source.from = from;
-            this.fetchItems(this.getCriteria(source));
+            this.fetchItems(this.getCriteria(source), true);
         };
 
         $scope.$on('$routeUpdate', (e, data) => {
