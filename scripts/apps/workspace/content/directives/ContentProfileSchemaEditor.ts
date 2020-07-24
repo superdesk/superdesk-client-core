@@ -98,6 +98,8 @@ const EDITOR3_RICH_FORMATTING_OPTIONS = [
     'superscript',
     'subscript',
     'strikethrough',
+    'undo',
+    'redo',
 ];
 
 /**

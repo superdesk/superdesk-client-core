@@ -11,8 +11,8 @@ import {connect} from 'react-redux';
 import {LinkToolbar} from '../links';
 import classNames from 'classnames';
 import * as actions from '../../actions';
-import {PopupTypes, changeCase} from '../../actions';
 import {highlightsConfig} from '../../highlightsConfig';
+import {PopupTypes, changeCase, undo, redo} from '../../actions';
 import {gettext} from 'core/utils';
 
 interface IState {
@@ -262,6 +262,26 @@ class ToolbarComponent extends React.Component<any, IState> {
                         key="lowercase-button"
                         iconName="to-lowercase"
                         tooltip={gettext('Convert text to lowercase')}
+                    />
+                }
+
+                {has('undo') &&
+                    <IconButton
+                        onClick={() => {
+                            this.props.dispatch(undo());
+                        }}
+                        tooltip={gettext('Undo') + ' (ctrl + z)'}
+                        iconName="undo"
+                    />
+                }
+
+                {has('redo') &&
+                    <IconButton
+                        onClick={() => {
+                            this.props.dispatch(redo());
+                        }}
+                        tooltip={gettext('Redo') + ' (ctrl + y)'}
+                        iconName="redo"
                     />
                 }
 
