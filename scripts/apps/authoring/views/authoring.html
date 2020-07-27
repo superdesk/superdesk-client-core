@@ -7,25 +7,11 @@
                     <div class="authoring-sticky">
                         <div style="display: flex; align-items: center">
                             <div class="authoring-sticky__detailed">
-                                <dl>
-                                    <dt translate>Created</dt>
-                                    <dd><time sd-datetime data-date="item.firstcreated"></time></dd>
-                                    <dt ng-if="userLookup[item.original_creator]" translate>by</dt>
-                                    <dd ng-if="userLookup[item.original_creator]">{{userLookup[item.original_creator].display_name}}</dd>
-                                </dl>
-            
-                                <dl ng-if="item.versioncreated">
-                                    <dt translate>Modified</dt>
-                                    <dd><time sd-datetime data-date="item.versioncreated"></time></dd>
-                                </dl>
-            
-                                <span style="display: inline-block;">
-                                    <sd-authoring-topbar2-react
-                                        article="item"
-                                        action="action"
-                                        on-change="handleArticleChange"
-                                    ></sd-authoring-topbar-react>
-                                </span>
+                                <sd-authoring-topbar2-react
+                                    article="item"
+                                    action="action"
+                                    on-change="handleArticleChange"
+                                ></sd-authoring-topbar-react>
                             </div>
                         </div>
         

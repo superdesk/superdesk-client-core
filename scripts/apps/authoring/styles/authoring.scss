@@ -457,6 +457,8 @@ $bottom-bar-item-border-color-active: transparent;
     }
 }
 
+$authoring-toolbar-spacing: 10px;
+
 // Authoring Header
 // -------------------------------------------------
 
@@ -486,8 +488,8 @@ $bottom-bar-item-border-color-active: transparent;
         }
 
         > dl + dl, .authoring-sticky__from-extensions {
-            margin-left: 10px;
-            padding-left: 10px;
+            margin-left: $authoring-toolbar-spacing;
+            padding-left: $authoring-toolbar-spacing;
             border-left: 1px solid #DADADA;
         }
         dt {
@@ -500,6 +502,15 @@ $bottom-bar-item-border-color-active: transparent;
             text-overflow: ellipsis;
             white-space: nowrap;
             overflow: hidden;
+        }
+
+        // display `|` separators correctly over multiple lines
+
+        overflow: hidden;
+
+        .authoring-sticky__detailed-wrapper {
+            margin-left: -$authoring-toolbar-spacing * 2;
+            margin-right: -$authoring-toolbar-spacing * 2;
         }
     }
 }

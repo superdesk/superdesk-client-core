@@ -4,6 +4,10 @@ import {flatMap} from 'lodash';
 import {extensions} from 'appConfig';
 import {IAuthoringAction} from './services/AuthoringWorkspaceService';
 import {dataApi} from 'core/helpers/CrudManager';
+import {CreatedInfo} from './created-info';
+import {ModifiedInfo} from './modified-info';
+
+const defaultToolbarItems: Array<React.ComponentType<{article: IArticle}>> = [CreatedInfo, ModifiedInfo];
 
 interface IProps {
     article: IArticle;
@@ -50,16 +54,18 @@ export class AuthoringTopbar2React extends React.PureComponent<IProps, IState> {
             return null; // fetching article from the server
         }
 
-        const articleDisplayWidgets = flatMap(
-            Object.values(extensions),
-            (extension) => extension.activationResult?.contributions?.authoringTopbar2Widgets ?? [],
+        const articleDisplayWidgets = defaultToolbarItems.concat(
+            flatMap(
+                Object.values(extensions),
+                (extension) => extension.activationResult?.contributions?.authoringTopbar2Widgets ?? [],
+            ),
         );
 
         // extensions should be able to expose pure components which check equality by reference
         const articleUpdatedReference = {...this.props.article};
 
         return (
-            <div style={{display: 'flex'}}>
+            <div className="authoring-sticky__detailed-wrapper">
                 {articleDisplayWidgets.map(
                     (Component, i) =>
                         <div key={i} className="authoring-sticky__from-extensions">
