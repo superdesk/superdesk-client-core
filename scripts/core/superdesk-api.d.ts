@@ -67,6 +67,7 @@ declare module 'superdesk-api' {
             articleListItemWidgets?: Array<React.ComponentType<{article: IArticle}>>;
             articleGridItemWidgets?: Array<React.ComponentType<{article: IArticle}>>;
             authoringTopbarWidgets?: Array<React.ComponentType<{article: IArticle}>>;
+            authoringTopbar2Widgets?: Array<React.ComponentType<{article: IArticle}>>;
             pages?: Array<IPage>;
             customFieldTypes?: Array<ICustomFieldType>;
             notifications?: {

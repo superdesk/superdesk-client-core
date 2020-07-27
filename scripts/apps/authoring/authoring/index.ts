@@ -23,6 +23,7 @@ import {AuthoringTopbarReact} from './authoring-topbar-react';
 import {AuthoringWorkspaceService} from './services';
 import {sdStaticAutocompleteDirective} from './directives/sd-static-autocomplete';
 import {VideoThumbnailEditor} from './components/video-thumbnail-editor';
+import {AuthoringTopbar2React} from './authoring-topbar2-react';
 
 export interface IOnChangeParams {
     item: IArticle;
@@ -99,6 +100,7 @@ angular.module('superdesk.apps.authoring', [
     .directive('sdAuthoring', directive.AuthoringDirective)
     .directive('sdAuthoringTopbar', directive.AuthoringTopbarDirective)
     .component('sdAuthoringTopbarReact', reactToAngular1(AuthoringTopbarReact, ['article', 'action', 'onChange']))
+    .component('sdAuthoringTopbar2React', reactToAngular1(AuthoringTopbar2React, ['article', 'action', 'onChange']))
     .component('sdVideoThumbnailEditor', reactToAngular1(VideoThumbnailEditor, ['item', 'onChange']))
     .directive('sdPreviewFormatted', directive.PreviewFormattedDirective)
     .directive('sdAuthoringContainer', directive.AuthoringContainerDirective)

@@ -4,13 +4,25 @@
         <div sd-authoring-widgets data-item="item">
             <div class="authoring-sticky">
                 <div class="authoring-sticky__detailed">
-                    <label translate>Created</label><time sd-datetime data-date="item.firstcreated"></time>
-                    <label ng-if="userLookup[item.original_creator]" translate>by</label><b>{{userLookup[item.original_creator].display_name}}</b>
-                    <div ng-if="item.versioncreated">
-                        <label translate>Modified</label>
-                        <time sd-datetime data-date="item.versioncreated"></time>
-                    </div>
-                    <span sd-extension-point="authoring-sticky-detailed"></span>
+                    <dl>
+                        <dt translate>Created</dt>
+                        <dd><time sd-datetime data-date="item.firstcreated"></time></dd>
+                        <dt ng-if="userLookup[item.original_creator]" translate>by</dt>
+                        <dd ng-if="userLookup[item.original_creator]">{{userLookup[item.original_creator].display_name}}</dd>
+                    </dl>
+
+                    <dl ng-if="item.versioncreated">
+                        <dt translate>Modified</dt>
+                        <dd><time sd-datetime data-date="item.versioncreated"></time></dd>
+                    </dl>
+
+                    <span style="display: inline-block;">
+                        <sd-authoring-topbar2-react
+                            article="item"
+                            action="action"
+                            on-change="handleArticleChange"
+                        ></sd-authoring-topbar-react>
+                    </span>
                 </div>
 
                 <div class="authoring-sticky__theme-controls ">
