@@ -2,65 +2,73 @@
     <div sd-authoring-topbar></div>
     <section class="main-section" ng-class="{'auth-sendto': views.send, 'packaging-screen': item.type === 'composite'}">
         <div sd-authoring-widgets data-item="item">
-            <div class="authoring-sticky">
-                <div class="authoring-sticky__detailed">
-                    <dl>
-                        <dt translate>Created</dt>
-                        <dd><time sd-datetime data-date="item.firstcreated"></time></dd>
-                        <dt ng-if="userLookup[item.original_creator]" translate>by</dt>
-                        <dd ng-if="userLookup[item.original_creator]">{{userLookup[item.original_creator].display_name}}</dd>
-                    </dl>
-
-                    <dl ng-if="item.versioncreated">
-                        <dt translate>Modified</dt>
-                        <dd><time sd-datetime data-date="item.versioncreated"></time></dd>
-                    </dl>
-
-                    <span style="display: inline-block;">
-                        <sd-authoring-topbar2-react
-                            article="item"
-                            action="action"
-                            on-change="handleArticleChange"
-                        ></sd-authoring-topbar-react>
-                    </span>
-                </div>
-
-                <div class="authoring-sticky__theme-controls ">
-                   <div class="preview-modal-control" ng-if="$root.config.features.preview">
-                        <div sd-full-preview ng-if="fullPreview"
-                            data-item="item"
-                            data-close-action="closeFullPreview"></div>
-                        <button class="preview-toggle icn-btn"
-                            ng-if="item.type === 'text'"
-                            title="{{:: 'Preview' | translate}}"
-                            ng-click="openFullPreview($event)"
-                            ng-href="{{fullPreviewUrl}}">
-                            <i class="icon-preview-mode"></i>
-                        </button>
-                    </div>
-
-                    <button class="proofread-toggle icn-btn"
-                        ng-class="{active: proofread}"
-                        ng-click="proofread = !proofread"
-                        title="{{:: 'Toggle theme' | translate}}">
-                        <i class="icon-adjust"></i>
-                    </button>
-                    <span sd-theme-select
-                        ng-if="proofread"
-                        data-key="proofreadTheme"></span>
-                    <span sd-theme-select
-                        ng-if="!proofread"
-                        data-key="theme"></span>
-                </div>
-            </div>
-
             <div class="page-content-container" ng-click="views.send = false">
-                <header sd-authoring-header></header>
+                <div>
+                    <div class="authoring-sticky">
+                        <div style="display: flex; align-items: center">
+                            <div class="authoring-sticky__detailed">
+                                <dl>
+                                    <dt translate>Created</dt>
+                                    <dd><time sd-datetime data-date="item.firstcreated"></time></dd>
+                                    <dt ng-if="userLookup[item.original_creator]" translate>by</dt>
+                                    <dd ng-if="userLookup[item.original_creator]">{{userLookup[item.original_creator].display_name}}</dd>
+                                </dl>
+            
+                                <dl ng-if="item.versioncreated">
+                                    <dt translate>Modified</dt>
+                                    <dd><time sd-datetime data-date="item.versioncreated"></time></dd>
+                                </dl>
+            
+                                <span style="display: inline-block;">
+                                    <sd-authoring-topbar2-react
+                                        article="item"
+                                        action="action"
+                                        on-change="handleArticleChange"
+                                    ></sd-authoring-topbar-react>
+                                </span>
+                            </div>
+                        </div>
+        
+                        <div class="authoring-sticky__theme-controls ">
+                           <div class="preview-modal-control" ng-if="$root.config.features.preview">
+                                <div sd-full-preview ng-if="fullPreview"
+                                    data-item="item"
+                                    data-close-action="closeFullPreview"></div>
+                                <button class="preview-toggle icn-btn"
+                                    ng-if="item.type === 'text'"
+                                    title="{{:: 'Preview' | translate}}"
+                                    ng-click="openFullPreview($event)"
+                                    ng-href="{{fullPreviewUrl}}">
+                                    <i class="icon-preview-mode"></i>
+                                </button>
+                            </div>
+        
+                            <button class="proofread-toggle icn-btn"
+                                ng-class="{active: proofread}"
+                                ng-click="proofread = !proofread"
+                                title="{{:: 'Toggle theme' | translate}}">
+                                <i class="icon-adjust"></i>
+                            </button>
+                            <span sd-theme-select
+                                ng-if="proofread"
+                                data-key="proofreadTheme"></span>
+                            <span sd-theme-select
+                                ng-if="!proofread"
+                                data-key="theme"></span>
+                        </div>
+                    </div>
+                </div>
 
-                <article class="main-article theme-container " ng-class="{preview: !_editable}">
-                    <div ng-if="item.type !== 'composite'" class="fieldset main-article__fieldset" sd-article-edit></div>
-                    <div ng-if="item.type === 'composite'" sd-package-edit></div>
-                </article>
+                <div style="overflow-y: scroll; flex: 1">
+                    <header sd-authoring-header></header>
+
+                    <article class="main-article theme-container " ng-class="{preview: !_editable}">
+                        <div ng-if="item.type !== 'composite'" class="fieldset main-article__fieldset" sd-article-edit></div>
+                        <div ng-if="item.type === 'composite'" sd-package-edit></div>
+                    </article>
+                </div>
+
+                
             </div>
         </div>
 
