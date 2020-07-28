@@ -88,38 +88,37 @@ export class HighlightsInfo extends React.PureComponent<any, any> {
             return highlights.some((h) => statuses[h]);
         }.call(this);
 
-        return React.createElement(
-            'div',
-            {
-                className: 'highlights-box',
-                onClick: this.toggle,
-            },
-            highlights.length ? React.createElement(
-                'div',
-                {className: 'highlights-list dropdown'},
-                React.createElement(
-                    'button',
-                    {className: 'dropdown__toggle'},
-                    React.createElement('i', {
-                        className: classNames({
-                            'icon-star': highlights.length === 1,
-                            'icon-multi-star': highlights.length > 1,
-                            'red': hasActiveHighlight,
-                        }),
-                    }),
-                ),
-            ) : null,
+        return (
+            <div className="highlights-box" onClick={this.toggle}>
+                {
+                    highlights.length
+                        ? (
+                            <div className="highlights-list dropdown">
+                                <button className="dropdown__toggle" data-test-id="highlights-indicator">
+                                    <i className={classNames({
+                                        'icon-star': highlights.length === 1,
+                                        'icon-multi-star': highlights.length > 1,
+                                        'red': hasActiveHighlight,
+                                    })} />
+                                </button>
+                            </div>
+                        )
+                        : null
+                }
+            </div>
         );
     }
 
     renderDropdown() {
-        const elem = React.createElement(HighlightsList, {
-            item: this.props.item,
-            highlights: this.getHighlights(),
-            highlightsById: this.props.highlightsById,
-            svc: this.props.svc,
-            scope: this.props.scope,
-        });
+        const elem = (
+            <HighlightsList
+                item={this.props.item}
+                highlights={this.getHighlights()}
+                highlightsById={this.props.highlightsById}
+                svc={this.props.svc}
+                scope={this.props.scope}
+            />
+        );
 
         const thisNode = ReactDOM.findDOMNode(this) as HTMLElement;
 

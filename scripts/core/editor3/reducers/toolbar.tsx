@@ -38,6 +38,10 @@ const toolbar = (state: IEditorStore, action) => {
         return toggleInvisibles(state);
     case 'CHANGE_CASE':
         return changeCase(state, action.payload);
+    case 'UNDO':
+        return {...state, editorState: EditorState.undo(state.editorState)};
+    case 'REDO':
+        return {...state, editorState: EditorState.redo(state.editorState)};
     default:
         return state;
     }
