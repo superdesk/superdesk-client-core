@@ -498,7 +498,6 @@ $authoring-toolbar-spacing: 10px;
         }
         dd {
             color: $sd-text;
-            font-weight: 500;
             text-overflow: ellipsis;
             white-space: nowrap;
             overflow: hidden;
@@ -510,7 +509,6 @@ $authoring-toolbar-spacing: 10px;
 
         .authoring-sticky__detailed-wrapper {
             margin-left: -$authoring-toolbar-spacing * 2;
-            margin-right: -$authoring-toolbar-spacing * 2;
         }
     }
 }

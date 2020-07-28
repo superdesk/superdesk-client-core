@@ -1088,6 +1088,8 @@ declare module 'superdesk-api' {
                 warn(message: string, json: {[key: string]: any}): void;
             };
             dateToServerString(date: Date): string; // outputs a string for parsing by the server
+            stripHtmlTags(htmlString: string): string;
+            getLinesCount(plainText: string): number | null;
         };
         addWebsocketMessageListener<T extends string>(
             eventName: T,
@@ -1217,6 +1219,7 @@ declare module 'superdesk-api' {
         previewSubjectFilterKey: any;
         authoring?: {
             timeToRead?: any;
+            lineLength?: number;
         };
         ui: {
             publishEmbargo?: any;

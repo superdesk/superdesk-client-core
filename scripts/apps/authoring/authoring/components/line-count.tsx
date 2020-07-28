@@ -1,5 +1,4 @@
 import React from 'react';
-import {get} from 'lodash';
 import {stripHtmlTags, gettextPlural} from 'core/utils';
 import {appConfig} from 'appConfig';
 
@@ -12,15 +11,22 @@ interface IProps {
  */
 export class LineCount extends React.PureComponent<IProps> {
     render() {
-        const lineLength: number = get(appConfig, 'authoring.lineLength', 0);
+        const lines = getLinesCount(stripHtmlTags(this.props.html));
 
-        if (lineLength <= 0) {
+        if (lines == null) {
             return null;
         }
 
-        const text = stripHtmlTags(this.props.html);
-        const lines = text.split('\n').reduce((sum, line) => sum + Math.ceil(line.length / lineLength), 0);
-
         return <span className="char-count lines">{lines + ' ' + gettextPlural(lines, 'line', 'lines')}</span>;
     }
+}
+
+export function getLinesCount(plainText): number | null {
+    const lineLength = appConfig?.authoring?.lineLength;
+
+    if (lineLength == null) {
+        return null;
+    }
+
+    return plainText.split('\n').reduce((sum, line) => sum + Math.ceil(line.length / lineLength), 0);
 }
