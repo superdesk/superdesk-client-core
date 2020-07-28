@@ -289,6 +289,7 @@ declare module 'superdesk-api' {
         rewrite_of?: IArticle['_id'];
         profile: string;
         word_count?: number;
+        lines_count?: number;
         version_creator: string;
         state: ITEM_STATE;
         embargo?: any;
