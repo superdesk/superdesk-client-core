@@ -1228,6 +1228,11 @@ declare module 'superdesk-api' {
             sendPublishSchedule?: boolean;
             sendEmbargo?: boolean;
             sendDefaultStage?: 'working' | 'incoming';
+            authoring?: {
+                firstLine: {
+                    wordCount: boolean;
+                };
+            };
         };
         list: {
             narrowView: any;
