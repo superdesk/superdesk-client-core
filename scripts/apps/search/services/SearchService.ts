@@ -11,6 +11,7 @@ import {getDateFilters, getDateRangesByKey} from '../directives/DateFilters';
 import {gettext} from 'core/utils';
 import {KILLED_STATES} from 'apps/archive/constants';
 import {appConfig} from 'appConfig';
+import {string} from 'prop-types';
 
 const DEFAULT_REPOS = ['ingest', 'archive', 'published', 'archived'];
 
@@ -34,6 +35,16 @@ interface IQuery {
     getCriteria: (withSource: boolean) => IElasticQuery | {source: IElasticQuery};
     options: ISearchOptions;
     setOption: (key: SearchOptionsKeys, val: any) => void;
+}
+
+export interface IQueryParams {
+    /**
+     * By default there will be no spiked items which equals to 'exclude',
+     * use `include` to get spiked items together with other content or
+     * `only` to only get spiked content.
+     */
+    spike?: 'include' | 'exclude' | 'only';
+    [key: string]: string;
 }
 
 /**
@@ -123,7 +134,7 @@ export function SearchService($location, session, multi,
     /*
      * Set filters for parameters
      */
-    function setParameters(filters, params) {
+    function setParameters(filters, params: IQueryParams) {
         const addFromDeskFilter = function(key) {
             let desk = params[key].split('-');
 
@@ -334,7 +345,7 @@ export function SearchService($location, session, multi,
     /**
      * Single query instance
      */
-    function Query(this: IQuery, _params, cvs, options: ISearchOptions) {
+    function Query(this: IQuery, _params: IQueryParams, cvs, options: ISearchOptions) {
         this.options = {
             hidePreviousVersions: false,
             ...options,
@@ -343,7 +354,7 @@ export function SearchService($location, session, multi,
         var size,
             filters = [],
             postFilters = [],
-            params: any = {},
+            params: IQueryParams = {},
             zeroHourSuffix = 'T00:00:00',
             midnightSuffix = 'T23:59:59';
 
