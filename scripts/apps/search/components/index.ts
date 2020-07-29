@@ -19,7 +19,6 @@ export {MarkedDesksInfo} from './MarkedDesksInfo';
 export {MarkedDesksList} from './MarkedDesksList';
 export {ActionsMenu} from './actions-menu';
 export {ErrorBox} from './ErrorBox';
-export {ListItemInfo} from './ListItemInfo';
 export {Item} from './Item';
 export {ItemList} from './ItemList';
 export {Associations} from './Associations';
