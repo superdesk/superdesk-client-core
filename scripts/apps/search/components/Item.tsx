@@ -324,7 +324,6 @@ export class Item extends React.Component<IProps, IState> {
                     <ListItemTemplate
                         item={item}
                         desk={this.props.desk}
-                        svc={this.props.svc}
                         openAuthoringView={this.openAuthoringView}
                         ingestProvider={this.props.ingestProvider}
                         highlightsById={this.props.highlightsById}
@@ -335,11 +334,13 @@ export class Item extends React.Component<IProps, IState> {
                         narrow={this.props.narrow}
                         onMultiSelect={this.props.onMultiSelect}
                         getActionsMenu={getActionsMenu}
-                        scope={this.props.scope}
                         selectingDisabled={this.props.multiSelectDisabled}
                         isNested={this.props.isNested}
                         showNested={this.state.showNested}
                         toggleNested={this.toggleNested}
+                        singleLine={this.props.scope.singleLine}
+                        customRender={this.props.scope.customRender}
+                        viewType={this.props.scope.viewType}
                     />
                 );
             }
