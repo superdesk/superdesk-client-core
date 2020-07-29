@@ -21,7 +21,7 @@ export const PhotoDeskFieldsComponent: React.StatelessComponent<IProps> = (props
         .map((fieldId, i) => {
             const Component = fields[fieldId];
             const value = Component != null
-                ? <Component item={item} svc={props.svc} />
+                ? <Component item={item} />
                 : item[fieldId];
 
             if (value == null || item[fieldId] == null) {

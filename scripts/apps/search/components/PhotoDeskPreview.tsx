@@ -28,8 +28,11 @@ export const PhotoDeskPreview: React.StatelessComponent<IProps> = (props) => {
     return (
         <div className="sd-grid-item__thumb">
             {preview}
-            <SelectBox item={item} classes={`sd-grid-item__checkbox ${CHECKBOX_PARENT_CLASS}`}
-                onMultiSelect={props.onMultiSelect} svc={props.svc}/>
+            <SelectBox
+                item={item}
+                classes={`sd-grid-item__checkbox ${CHECKBOX_PARENT_CLASS}`}
+                onMultiSelect={props.onMultiSelect}
+            />
         </div>
     );
 };
