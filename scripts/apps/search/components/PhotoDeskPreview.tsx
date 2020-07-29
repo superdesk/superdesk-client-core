@@ -6,7 +6,6 @@ import {IArticle} from 'superdesk-api';
 import {getViewImage} from 'core/helpers/item';
 
 interface IProps {
-    svc: any;
     item: IArticle;
     onMultiSelect: () => void;
 }
@@ -38,7 +37,6 @@ export const PhotoDeskPreview: React.StatelessComponent<IProps> = (props) => {
 };
 
 PhotoDeskPreview.propTypes = {
-    svc: PropTypes.object.isRequired,
     onMultiSelect: PropTypes.func,
     item: PropTypes.any,
 };

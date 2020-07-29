@@ -4,7 +4,6 @@ import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 import {connectPromiseResults} from 'core/helpers/ReactRenderAsync';
 
 interface IProps {
-    svc: any;
     item: any;
     fieldsConfig: any;
     labelMode?: 'always' | 'never' | 'never-with-custom-renderer';

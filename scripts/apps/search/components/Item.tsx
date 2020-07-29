@@ -312,8 +312,6 @@ export class Item extends React.Component<IProps, IState> {
                     <ItemPhotoGrid
                         item={item}
                         desk={this.props.desk}
-                        ingestProvider={this.props.ingestProvider}
-                        svc={this.props.svc}
                         swimlane={this.props.swimlane}
                         onMultiSelect={this.props.onMultiSelect}
                         getActionsMenu={getActionsMenu}
