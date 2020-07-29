@@ -764,6 +764,10 @@ declare module 'superdesk-api' {
         UserAvatar?: React.ComponentType<{user: Partial<IUser>}>;
     }
 
+    export interface IConfigurableAlgorithms {
+        countLines?(plainText: string, lineLength: number): number;
+    }
+
     export interface IListItemProps {
         onClick?(): void;
         className?: string;
@@ -1230,8 +1234,8 @@ declare module 'superdesk-api' {
             sendEmbargo?: boolean;
             sendDefaultStage?: 'working' | 'incoming';
             authoring?: {
-                firstLine: {
-                    wordCount: boolean;
+                firstLine?: {
+                    wordCount?: boolean;
                 };
             };
         };
