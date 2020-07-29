@@ -3,7 +3,6 @@ import {fields} from './fields';
 import {IArticle} from 'superdesk-api';
 
 interface IProps {
-    svc: any;
     item: IArticle;
     fieldId: string;
 }

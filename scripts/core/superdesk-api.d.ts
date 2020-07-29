@@ -1242,6 +1242,7 @@ declare module 'superdesk-api' {
             left: Array<string>;
             right: Array<string>;
         };
+        swimlaneViewFields: any;
         item_profile: {
             change_profile: any;
         };

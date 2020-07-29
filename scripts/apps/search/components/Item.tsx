@@ -291,7 +291,6 @@ export class Item extends React.Component<IProps, IState> {
                         isLocked={isLocked}
                         getActionsMenu={getActionsMenu}
                         onMultiSelect={this.props.onMultiSelect}
-                        svc={this.props.svc}
                     />
                 );
             case 'mgrid':
