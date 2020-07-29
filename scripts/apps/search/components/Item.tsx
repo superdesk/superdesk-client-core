@@ -299,7 +299,6 @@ export class Item extends React.Component<IProps, IState> {
                         item={item}
                         desk={this.props.desk}
                         swimlane={this.props.swimlane}
-                        svc={this.props.svc}
                         ingestProvider={this.props.ingestProvider}
                         onMultiSelect={this.props.onMultiSelect}
                         broadcast={broadcast}

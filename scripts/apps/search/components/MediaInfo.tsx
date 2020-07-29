@@ -1,13 +1,18 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {FetchedDesksInfo} from './index';
+import ng from 'core/services/ng';
 import {gettext} from 'core/utils';
+
+interface IProps {
+    item: any;
+    ingestProvider: any;
+}
 
 /**
  * Media Info - renders item metadata
  */
-export const MediaInfo: React.StatelessComponent<any> = (props) => {
-    const {datetime} = props.svc;
+export const MediaInfo: React.StatelessComponent<IProps> = (props) => {
+    const datetime = ng.get('datetime');
 
     const item = props.item;
     const meta = [];
@@ -63,16 +68,9 @@ export const MediaInfo: React.StatelessComponent<any> = (props) => {
             {className: 'fetched-desk', key: 4},
             React.createElement(FetchedDesksInfo, {
                 item: item,
-                svc: props.svc,
             }),
         ));
     }
 
     return React.createElement('div', {className: 'media-info'}, info);
-};
-
-MediaInfo.propTypes = {
-    svc: PropTypes.object.isRequired,
-    item: PropTypes.any,
-    ingestProvider: PropTypes.any,
 };
