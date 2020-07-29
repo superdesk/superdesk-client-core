@@ -11,7 +11,6 @@ import {getDateFilters, getDateRangesByKey} from '../directives/DateFilters';
 import {gettext} from 'core/utils';
 import {KILLED_STATES} from 'apps/archive/constants';
 import {appConfig} from 'appConfig';
-import {string} from 'prop-types';
 
 const DEFAULT_REPOS = ['ingest', 'archive', 'published', 'archived'];
 
