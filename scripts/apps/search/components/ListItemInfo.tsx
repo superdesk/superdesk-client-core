@@ -24,6 +24,7 @@ export interface IPropsItemListInfo {
     scope: {
         singleLine: boolean;
         customRender: any;
+        viewType: any;
     };
 }
 
@@ -49,6 +50,7 @@ export class ListItemInfo extends React.PureComponent<IPropsItemListInfo> {
                 renderArea('singleLine', angular.extend({
                     svc: this.props.svc,
                     scope: this.props.scope,
+                    viewType: this.props.scope.viewType, // for highlights list
                 }, this.props), {className: 'line article-list-fields'}),
             );
         } else {
@@ -59,10 +61,12 @@ export class ListItemInfo extends React.PureComponent<IPropsItemListInfo> {
                 renderArea('firstLine', angular.extend({
                     svc: this.props.svc,
                     scope: this.props.scope,
+                    viewType: this.props.scope.viewType, // for highlights list
                 }, this.props), {className: 'line'}, this.props.scope.customRender),
                 renderArea('secondLine', angular.extend({
                     svc: this.props.svc,
                     scope: this.props.scope,
+                    viewType: this.props.scope.viewType, // for highlights list
                 }, this.props), {className: 'line'}, this.props.scope.customRender),
             );
         }

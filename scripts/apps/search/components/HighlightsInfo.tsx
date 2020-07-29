@@ -115,8 +115,7 @@ export class HighlightsInfo extends React.PureComponent<any, any> {
                 item={this.props.item}
                 highlights={this.getHighlights()}
                 highlightsById={this.props.highlightsById}
-                svc={this.props.svc}
-                scope={this.props.scope}
+                viewType={this.props.viewType}
             />
         );
 
