@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import {setFilters} from 'apps/search/services/SearchService';
+import {setFilters, IQueryParams} from 'apps/search/services/SearchService';
 import {PUBLISHED_STATES} from 'apps/archive/constants';
 import {ITEM_STATE} from 'apps/archive/constants';
 import {
@@ -47,8 +47,8 @@ export function CardsService(search, session, desks, $location) {
     this.criteria = getCriteria;
     this.shouldUpdate = shouldUpdate;
 
-    function getCriteriaParams(card: ICard) {
-        let params: any = {};
+    function getCriteriaParams(card: ICard): IQueryParams {
+        let params: IQueryParams = {};
 
         if (card.type === 'search' && card.search && card.search.filter.query) {
             angular.copy(card.search.filter.query, params);
@@ -65,6 +65,8 @@ export function CardsService(search, session, desks, $location) {
 
         if (card.type === 'spike' || card.type === 'spike-personal') {
             params.spike = 'only';
+        } else if (card.type === 'personal' && card.sent) {
+            params.spike = 'include';
         }
 
         return params;
