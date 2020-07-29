@@ -20,7 +20,6 @@ export interface IPropsItemListInfo {
     isNested: boolean;
     showNested: boolean;
     toggleNested: (event) => void;
-    svc: any;
     scope: {
         singleLine: boolean;
         customRender: any;
@@ -48,9 +47,8 @@ export class ListItemInfo extends React.PureComponent<IPropsItemListInfo> {
                 'div',
                 {style: {flexGrow: 1, flexDirection: 'column', overflow: 'hidden'}},
                 renderArea('singleLine', angular.extend({
-                    svc: this.props.svc,
-                    scope: this.props.scope,
                     viewType: this.props.scope.viewType, // for highlights list
+                    singleLine: this.props.scope.singleLine,
                 }, this.props), {className: 'line article-list-fields'}),
             );
         } else {
@@ -59,14 +57,12 @@ export class ListItemInfo extends React.PureComponent<IPropsItemListInfo> {
                 'div',
                 {style: {flexGrow: 1, flexDirection: 'column', overflow: 'hidden'}},
                 renderArea('firstLine', angular.extend({
-                    svc: this.props.svc,
-                    scope: this.props.scope,
                     viewType: this.props.scope.viewType, // for highlights list
+                    singleLine: this.props.scope.singleLine,
                 }, this.props), {className: 'line'}, this.props.scope.customRender),
                 renderArea('secondLine', angular.extend({
-                    svc: this.props.svc,
-                    scope: this.props.scope,
                     viewType: this.props.scope.viewType, // for highlights list
+                    singleLine: this.props.scope.singleLine,
                 }, this.props), {className: 'line'}, this.props.scope.customRender),
             );
         }

@@ -40,11 +40,7 @@ export class RelatedItemInListComponent extends React.PureComponent<IProps, {}> 
         const {listConfig} = this;
         const {item} = this.props;
         const deskId = item.task?.desk || null;
-        let itemProps: any = {item, listConfig};
-
-        if (deskId !== null) {
-            itemProps = {...itemProps, desk: this.services.desks.deskLookup[deskId]};
-        }
+        let itemProps = {item, listConfig, desk: deskId == null ? undefined : this.services.desks.deskLookup[deskId]};
 
         const elemProps = {className: 'line line--no-margin'};
 
