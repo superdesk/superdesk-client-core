@@ -2073,6 +2073,23 @@ sd-multi-image-edit {
         border: 1px solid rgba(94, 169, 200, 0.6);
     }
 }
+
+.sd-position--relative {
+    position: relative !important;
+}
+.sd-position--absolute {
+    position: absolute !important;
+}
 .sd-empty {
     display: contents !important;
+}
+
+.a11y-only {
+    position: absolute;
+    top:0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0;
+    height: 1px;
+    overflow: hidden;
 }
