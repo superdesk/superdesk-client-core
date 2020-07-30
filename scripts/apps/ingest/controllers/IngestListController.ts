@@ -21,6 +21,11 @@ export class IngestListController extends BaseListController {
             $scope.loading = true;
             criteria.aggregations = 1;
             criteria.es_highlight = search.getElasticHighlight();
+
+            // The page is slow due to FetchedDeskInfo issuing a request for every item
+            // and re-rendering after receiving a response.
+            criteria.max_results = 50;
+
             api.query('ingest', criteria).then((items) => {
                 $scope.items = search.mergeItems(items, $scope.items, next);
                 $scope.total = items._meta.total;
