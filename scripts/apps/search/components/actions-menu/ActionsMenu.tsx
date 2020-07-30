@@ -24,7 +24,6 @@ export class ActionsMenu extends React.PureComponent<any, any> {
 
         openActionsMenu(
             <MenuItems
-                svc={this.props.svc}
                 scope={this.props.scope}
                 item={this.props.item}
                 onActioning={this.props.onActioning}
@@ -45,7 +44,6 @@ export class ActionsMenu extends React.PureComponent<any, any> {
 }
 
 ActionsMenu.propTypes = {
-    svc: PropTypes.object.isRequired,
     scope: PropTypes.any.isRequired,
     item: PropTypes.any,
     onActioning: PropTypes.func,

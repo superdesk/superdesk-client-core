@@ -16,6 +16,8 @@ import {IArticle, IDesk, IPublishedArticle} from 'superdesk-api';
 import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {httpRequestJsonLocal} from 'core/helpers/network';
+import {appConfig} from 'appConfig';
+import ng from 'core/services/ng';
 
 function isButtonClicked(event): boolean {
     // don't trigger the action if a button inside a list view is clicked
@@ -43,7 +45,6 @@ const actionsMenuDefaultTemplate = (toggle, stopEvent) => (
 );
 
 interface IProps {
-    svc: any;
     scope: any;
     swimlane: any;
     item: IArticle | IPublishedArticle;
@@ -105,7 +106,7 @@ export class Item extends React.Component<IProps, IState> {
     }
 
     componentWillMount() {
-        if (get(this.props, 'svc.config.apps', []).includes('superdesk-planning')) {
+        if (appConfig?.apps?.includes('superdesk-planning')) {
             this.loadPlanningModals();
         }
     }
@@ -121,7 +122,9 @@ export class Item extends React.Component<IProps, IState> {
     }
 
     loadPlanningModals() {
-        const {session, superdesk, activityService} = this.props.svc;
+        const session = ng.get('session');
+        const superdesk = ng.get('superdesk');
+        const activityService = ng.get('activityService');
 
         if (!['add_to_planning', 'fulfil_assignment'].includes(get(this.props, 'item.lock_action')) ||
                 get(this.props, 'item.lock_user') !== session.identity._id ||
@@ -176,7 +179,7 @@ export class Item extends React.Component<IProps, IState> {
      * @param {string} itemId Id of the document
      */
     openAuthoringView(itemId) {
-        const authoringWorkspace: AuthoringWorkspaceService = this.props.svc.authoringWorkspace;
+        const authoringWorkspace: AuthoringWorkspaceService = ng.get('authoringWorkspace');
 
         authoringWorkspace.edit({_id: itemId}, 'view');
     }
@@ -221,9 +224,7 @@ export class Item extends React.Component<IProps, IState> {
     }
 
     onDragStart(event) {
-        const {dragitem} = this.props.svc;
-
-        dragitem.start(event, this.props.item);
+        ng.get('dragitem').start(event, this.props.item);
     }
 
     toggleNested(event) {
@@ -276,7 +277,6 @@ export class Item extends React.Component<IProps, IState> {
             this.props.hideActions !== true && this.state.hover && !item.gone ? React.createElement(
                 ActionsMenu, {
                     item: item,
-                    svc: this.props.svc,
                     scope: this.props.scope,
                     onActioning: this.setActioningState,
                     template: template,
@@ -359,7 +359,6 @@ export class Item extends React.Component<IProps, IState> {
                             <Item
                                 item={childItem}
                                 key={childItem._id + childItem._current_version}
-                                svc={this.props.svc}
                                 scope={this.props.scope}
                                 flags={{}}
                                 profilesById={this.props.profilesById}
