@@ -15,8 +15,10 @@ function getTranslationForAssignRights(value) {
         return gettext('Time Restricted');
     } else if (value === 'indefinite-usage') {
         return gettext('Indefinite Usage');
+    } else if (typeof value === 'string') {
+        return value;
     } else {
-        return '';
+        return null;
     }
 }
 
