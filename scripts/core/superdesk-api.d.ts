@@ -101,7 +101,7 @@ declare module 'superdesk-api' {
                 onUpdateAfter?(previous: IArticle, current: IArticle): void;
             };
             monitoring?: {
-                getFilteringButtons?(): Promise<Array<IMonitoringFilter>>;
+                getFilteringButtons?(deskId: string): Promise<Array<IMonitoringFilter>>;
             };
         }
     }

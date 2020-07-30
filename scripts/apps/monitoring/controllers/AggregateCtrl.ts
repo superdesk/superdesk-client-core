@@ -401,6 +401,18 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
         $scope.$apply();
     };
 
+    this.setCustomFilter = (filter: IMonitoringFilter) => {
+        if (typeof this.activeFilters.customFilters === 'undefined') {
+            this.activeFilters.customFilters = {};
+        }
+
+        this.activeFilters.customFilters[filter.label] = filter;
+
+        updateFilterInStore();
+        updateFilteringCriteria();
+        $scope.$apply();
+    };
+
     this.setFilterType = function(filterType, filterValue, $event?) {
         if (filterType === 'contentProfile') {
             if (!this.activeFilters.contentProfile.includes(filterValue._id)) {
