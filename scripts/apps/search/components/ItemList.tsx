@@ -22,6 +22,8 @@ interface IProps {
     usersById: any;
     onMonitoringItemSelect: any;
     onMonitoringItemDoubleClick: any;
+    disableMonitoringMultiSelect: boolean;
+    hideActionsForMonitoringItems(): void;
 }
 
 interface IState {
@@ -39,9 +41,6 @@ interface IState {
  * Item list component
  */
 export class ItemList extends React.Component<IProps, IState> {
-    static propTypes: any;
-    static defaultProps: any;
-
     closeActionsMenu: any;
     updateTimeout: any;
     selectedCom: any;
@@ -583,8 +582,10 @@ export class ItemList extends React.Component<IProps, IState> {
                                     profilesById={this.props.profilesById}
                                     versioncreator={this.modifiedUserName(item.version_creator)}
                                     narrow={this.state.narrow}
-                                    hideActions={scope.hideActionsForMonitoringItems || get(scope, 'flags.hideActions')}
-                                    multiSelectDisabled={scope.disableMonitoringMultiSelect}
+                                    hideActions={
+                                        this.props.hideActionsForMonitoringItems || get(scope, 'flags.hideActions')
+                                    }
+                                    multiSelectDisabled={this.props.disableMonitoringMultiSelect}
                                     scope={scope}
                                     actioning={!!this.state.actioning[itemId]}
                                 />
@@ -595,15 +596,3 @@ export class ItemList extends React.Component<IProps, IState> {
         );
     }
 }
-
-ItemList.propTypes = {
-    scope: PropTypes.any.isRequired,
-    profilesById: PropTypes.any,
-    highlightsById: PropTypes.any,
-    markedDesksById: PropTypes.any,
-    desksById: PropTypes.any,
-    ingestProvidersById: PropTypes.any,
-    usersById: PropTypes.any,
-    onMonitoringItemSelect: PropTypes.func,
-    onMonitoringItemDoubleClick: PropTypes.func,
-};
