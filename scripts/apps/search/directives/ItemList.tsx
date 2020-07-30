@@ -45,7 +45,12 @@ export function ItemList(
                 var listComponent = ReactDOM.render(
                     (
                         <ItemListComponent
-                            scope={scope}
+                            scopeApply={(callback) => {
+                                scope.$apply(callback);
+                            }}
+                            scopeApplyAsync={(callback) => {
+                                scope.$applyAsync(callback);
+                            }}
                             profilesById={monitoringState.state.profilesById}
                             highlightsById={monitoringState.state.highlightsById}
                             markedDesksById={monitoringState.state.markedDesksById}
@@ -56,6 +61,15 @@ export function ItemList(
                             onMonitoringItemDoubleClick={scope.onMonitoringItemDoubleClick}
                             hideActionsForMonitoringItems={scope.hideActionsForMonitoringItems}
                             disableMonitoringMultiSelect={scope.disableMonitoringMultiSelect}
+                            singleLine={scope.singleLine}
+                            customRender={scope.customRender}
+                            viewType={scope.viewType}
+                            flags={scope.flags}
+                            loading={scope.loading}
+                            viewColumn={scope.viewColumn}
+                            groupId={scope.$id}
+                            edit={scope.edit}
+                            preview={scope.preview}
                         />
                     ),
                     elem[0],

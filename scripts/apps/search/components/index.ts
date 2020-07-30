@@ -17,7 +17,6 @@ export {HighlightsInfo} from './HighlightsInfo';
 export {HighlightsList} from './HighlightsList';
 export {MarkedDesksInfo} from './MarkedDesksInfo';
 export {MarkedDesksList} from './MarkedDesksList';
-export {ActionsMenu} from './actions-menu';
 export {ErrorBox} from './ErrorBox';
 export {Item} from './Item';
 export {ItemList} from './ItemList';

@@ -4,11 +4,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Label from './Label';
 import Divider from './Divider';
-import Item from './Item';
+import MenuItem from './Item';
 import SubmenuDropdown from './SubmenuDropdown';
 import {getAuthoringMenuGroups} from '../../../authoring/authoring/constants';
 import {closeActionsMenu, menuHolderElem, positionPopup} from '../../helpers';
-import {gettext} from 'core/utils';
+import {gettext, IScopeApply} from 'core/utils';
 import {IArticle, IArticleAction, IDisplayPriority} from 'superdesk-api';
 import {sortByDisplayPriority} from 'core/helpers/sortByDisplayPriority';
 import {getArticleActionsFromExtensions} from 'core/superdesk-api-helpers';
@@ -16,7 +16,7 @@ import ng from 'core/services/ng';
 
 interface IProps {
     item: IArticle;
-    scope: any;
+    scopeApply: IScopeApply;
     onActioning: any;
     target?: Element;
 }
@@ -107,11 +107,12 @@ export default class MenuItems extends React.Component<IProps, IState> {
         const createAction = (activity) => ({
             label: activity.label,
             element: (
-                <Item
+                <MenuItem
                     key={activity._id}
-                    scope={this.props.scope}
-                    item={item} activity={activity}
+                    item={item}
+                    activity={activity}
                     onActioning={this.props.onActioning}
+                    scopeApply={this.props.scopeApply}
                 />
             ),
         });

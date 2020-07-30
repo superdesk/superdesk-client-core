@@ -1,14 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import PropTypes from 'prop-types';
 import MenuItems from './MenuItems';
 
 import {closeActionsMenu, openActionsMenu} from '../../helpers';
+import {IScopeApply} from 'core/utils';
 
-export class ActionsMenu extends React.PureComponent<any, any> {
-    static propTypes: any;
-    static defaultProps: any;
+interface IProps {
+    item: any;
+    onActioning: any;
+    template: any;
+    scopeApply: IScopeApply;
+}
 
+export class ActionsMenu extends React.PureComponent<IProps> {
     constructor(props) {
         super(props);
 
@@ -24,7 +28,7 @@ export class ActionsMenu extends React.PureComponent<any, any> {
 
         openActionsMenu(
             <MenuItems
-                scope={this.props.scope}
+                scopeApply={this.props.scopeApply}
                 item={this.props.item}
                 onActioning={this.props.onActioning}
                 target={icon}
@@ -42,10 +46,3 @@ export class ActionsMenu extends React.PureComponent<any, any> {
         return this.props.template(this.toggle, this.stopEvent);
     }
 }
-
-ActionsMenu.propTypes = {
-    scope: PropTypes.any.isRequired,
-    item: PropTypes.any,
-    onActioning: PropTypes.func,
-    template: PropTypes.func.isRequired,
-};

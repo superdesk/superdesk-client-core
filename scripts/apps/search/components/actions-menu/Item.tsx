@@ -1,16 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {LEFT_SIDEBAR_WIDTH} from 'core/ui/constants';
-import {gettext} from 'core/utils';
+import {gettext, IScopeApply} from 'core/utils';
 import ng from 'core/services/ng';
 
 import {closeActionsMenu} from '../../helpers';
 
 interface IProps {
-    scope: any;
     item: any;
     activity: any;
     onActioning: any;
+    scopeApply: IScopeApply;
 }
 
 interface IState {
@@ -18,10 +18,7 @@ interface IState {
     position?: string;
 }
 
-export default class Item extends React.Component<IProps, IState> {
-    static propTypes: any;
-    static defaultProps: any;
-
+export default class MenuItem extends React.Component<IProps, IState> {
     closeTimeout: any;
 
     activityService: any;
@@ -53,14 +50,12 @@ export default class Item extends React.Component<IProps, IState> {
     }
 
     run(event) {
-        const {scope} = this.props;
-
         // Stop event propagation so that click on item action
         // won't select that item for preview/authoring.
         event.stopPropagation();
 
         this.updateActioningStatus(true);
-        scope.$apply(() => {
+        this.props.scopeApply(() => {
             this.activityService.start(this.props.activity, {data: {item: this.props.item}})
                 .finally(() => this.updateActioningStatus(false));
         });

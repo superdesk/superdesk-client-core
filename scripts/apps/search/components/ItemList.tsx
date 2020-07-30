@@ -1,19 +1,19 @@
 import _, {get} from 'lodash';
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import {Item} from './index';
 import {isCheckAllowed, closeActionsMenu, bindMarkItemShortcut} from '../helpers';
 import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
 import {isMediaEditable} from 'core/config';
-import {gettext} from 'core/utils';
+import {gettext, IScopeApply} from 'core/utils';
 import {IArticle} from 'superdesk-api';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {CHECKBOX_PARENT_CLASS} from './constants';
 import ng from 'core/services/ng';
 
 interface IProps {
-    scope: any;
+    scopeApply: IScopeApply;
+    scopeApplyAsync: IScopeApply;
     profilesById: any;
     highlightsById: any;
     markedDesksById: any;
@@ -23,6 +23,17 @@ interface IProps {
     onMonitoringItemSelect: any;
     onMonitoringItemDoubleClick: any;
     disableMonitoringMultiSelect: boolean;
+    singleLine: any;
+    customRender: any;
+    viewType: any;
+    flags: {
+        hideActions: any;
+    };
+    groupId: any;
+    viewColumn: any;
+    loading: any;
+    edit(item: IArticle): void;
+    preview(item: IArticle): void;
     hideActionsForMonitoringItems(): void;
 }
 
@@ -114,7 +125,6 @@ export class ItemList extends React.Component<IProps, IState> {
 
     multiSelect(items: Array<IArticle>, selected: boolean) {
         const {search, multi} = this.angularservices;
-        const {scope} = this.props;
         let {selected: selectedId} = this.state;
 
         const itemsById = angular.extend({}, this.state.itemsById);
@@ -127,7 +137,7 @@ export class ItemList extends React.Component<IProps, IState> {
                 selectedId = itemId;
             }
             itemsById[itemId] = angular.extend({}, item, {selected: selected});
-            scope.$applyAsync(() => {
+            this.props.scopeApplyAsync(() => {
                 multi.toggle(itemsById[itemId]);
             });
         });
@@ -156,7 +166,6 @@ export class ItemList extends React.Component<IProps, IState> {
         }
 
         const {$timeout} = this.angularservices;
-        const {scope} = this.props;
 
         if (event && event.shiftKey) {
             return this.selectMultipleItems(item);
@@ -174,10 +183,10 @@ export class ItemList extends React.Component<IProps, IState> {
             (querySelectorParent(event.target, '.' + CHECKBOX_PARENT_CLASS) == null &&
             event.target.classList.contains(CHECKBOX_PARENT_CLASS) === false);
 
-        if (item && scope.preview) {
-            scope.$apply(() => {
+        if (item && this.props.preview != null) {
+            this.props.scopeApply(() => {
                 if (showPreview) {
-                    scope.preview(item);
+                    this.props.preview(item);
                 }
                 this.bindActionKeyShortcuts(item);
             });
@@ -283,7 +292,6 @@ export class ItemList extends React.Component<IProps, IState> {
 
         const {superdesk, $timeout} = this.angularservices;
         const {authoringWorkspace} = this.angularservices;
-        const {scope} = this.props;
 
         const activities = superdesk.findActivities({action: 'list', type: item._type}, item);
         const canEdit = _.reduce(activities, (result, value) => result || value._id === 'edit.item', false);
@@ -291,7 +299,7 @@ export class ItemList extends React.Component<IProps, IState> {
         this.setSelectedItem(item);
         $timeout.cancel(this.updateTimeout);
 
-        if (_.get(scope, 'flags.hideActions')) {
+        if (this.props.flags?.hideActions) {
             return;
         }
 
@@ -303,19 +311,23 @@ export class ItemList extends React.Component<IProps, IState> {
             superdesk.intent('list', 'externalsource', {item: item}, 'fetch-externalsource')
                 .then((archiveItem) => {
                     archiveItem.guid = archiveItem._id; // fix item guid to match new item _id
-                    scope.$applyAsync(() => {
-                        scope.edit ? scope.edit(archiveItem) : authoringWorkspace.open(archiveItem);
+                    this.props.scopeApplyAsync(() => {
+                        if (this.props.edit != null) {
+                            this.props.edit(archiveItem);
+                        } else {
+                            authoringWorkspace.open(archiveItem);
+                        }
                     });
                 })
                 .finally(() => {
                     this.setActioning(item, false);
                 });
-        } else if (canEdit && scope.edit) {
-            scope.$apply(() => {
-                scope.edit(item);
+        } else if (canEdit && this.props.edit != null) {
+            this.props.scopeApply(() => {
+                this.props.edit(item);
             });
         } else {
-            scope.$apply(() => {
+            this.props.scopeApply(() => {
                 authoringWorkspace.open(item);
             });
         }
@@ -324,21 +336,20 @@ export class ItemList extends React.Component<IProps, IState> {
     edit(item) {
         const {authoringWorkspace} = this.angularservices;
         const {$timeout} = this.angularservices;
-        const {scope} = this.props;
 
         this.setSelectedItem(item);
         $timeout.cancel(this.updateTimeout);
 
-        if (_.get(scope, 'flags.hideActions')) {
+        if (this.props.flags?.hideActions || item == null) {
             return;
         }
 
-        if (item && scope.edit) {
-            scope.$apply(() => {
-                scope.edit(item);
+        if (this.props.edit != null) {
+            this.props.scopeApply(() => {
+                this.props.edit(item);
             });
-        } else if (item) {
-            scope.$apply(() => {
+        } else {
+            this.props.scopeApply(() => {
                 authoringWorkspace.open(item);
             });
         }
@@ -375,12 +386,11 @@ export class ItemList extends React.Component<IProps, IState> {
 
     setSelectedItem(item) {
         const {monitoringState, $rootScope, search} = this.angularservices;
-        const {scope} = this.props;
 
-        if (monitoringState.state.activeGroup !== scope.$id) {
+        if (monitoringState.state.activeGroup !== this.props.groupId) {
             // If selected item is from another group, deselect all
             $rootScope.$broadcast('item:unselect');
-            monitoringState.setState({activeGroup: scope.$id});
+            monitoringState.setState({activeGroup: this.props.groupId});
         }
 
         this.setState({selected: item ? search.generateTrackByIdentifier(item) : null});
@@ -410,7 +420,6 @@ export class ItemList extends React.Component<IProps, IState> {
             return;
         }
 
-        const {scope} = this.props;
         const {Keys, monitoringState} = this.angularservices;
         const KEY_CODES = Object.freeze({
             X: 'X'.charCodeAt(0),
@@ -423,7 +432,7 @@ export class ItemList extends React.Component<IProps, IState> {
             event.stopPropagation();
             this.deselectAll(); // deselect active item
 
-            scope.$applyAsync(() => {
+            this.props.scopeApplyAsync(() => {
                 monitoringState.moveActiveGroup(event.keyCode === Keys.pageup ? -1 : 1);
             });
         };
@@ -495,8 +504,8 @@ export class ItemList extends React.Component<IProps, IState> {
         };
 
         // This function is to bring the selected item (by key press) into view if it is out of container boundary.
-        const scrollSelectedItemIfRequired = (_event, _scope) => {
-            const container = _scope.viewColumn ? $(document).find('.content-list') : $(_event.currentTarget);
+        const scrollSelectedItemIfRequired = (_event) => {
+            const container = this.props.viewColumn ? $(document).find('.content-list') : $(_event.currentTarget);
 
             const selectedItemElem = $(_event.currentTarget.firstChild).children('.list-item-view.active');
 
@@ -517,7 +526,7 @@ export class ItemList extends React.Component<IProps, IState> {
 
         if (!_.isNil(diff)) {
             checkRemaining(event);
-            scrollSelectedItemIfRequired(event, scope);
+            scrollSelectedItemIfRequired(event);
         }
     }
 
@@ -537,10 +546,9 @@ export class ItemList extends React.Component<IProps, IState> {
 
     render() {
         const {storage} = this.angularservices;
-        const {scope} = this.props;
 
         const isEmpty = !this.state.itemsList.length;
-        const displayEmptyList = isEmpty && !scope.loading;
+        const displayEmptyList = isEmpty && !this.props.loading;
 
         return (
             <ul
@@ -583,11 +591,14 @@ export class ItemList extends React.Component<IProps, IState> {
                                     versioncreator={this.modifiedUserName(item.version_creator)}
                                     narrow={this.state.narrow}
                                     hideActions={
-                                        this.props.hideActionsForMonitoringItems || get(scope, 'flags.hideActions')
+                                        this.props.hideActionsForMonitoringItems || this.props.flags?.hideActions
                                     }
                                     multiSelectDisabled={this.props.disableMonitoringMultiSelect}
-                                    scope={scope}
                                     actioning={!!this.state.actioning[itemId]}
+                                    singleLine={this.props.singleLine}
+                                    customRender={this.props.customRender}
+                                    viewType={this.props.viewType}
+                                    scopeApply={this.props.scopeApply}
                                 />
                             );
                         })

@@ -6,7 +6,7 @@ import {get} from 'lodash';
 
 import {broadcast} from './fields/broadcast';
 
-import {ActionsMenu} from './index';
+import {ActionsMenu} from './actions-menu/ActionsMenu';
 import {closeActionsMenu, isIPublishedArticle} from '../helpers';
 import {ItemSwimlane} from './ItemSwimlane';
 import {ItemPhotoGrid} from './ItemPhotoGrid';
@@ -18,6 +18,7 @@ import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/Autho
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {appConfig} from 'appConfig';
 import ng from 'core/services/ng';
+import {IScopeApply} from 'core/utils';
 
 function isButtonClicked(event): boolean {
     // don't trigger the action if a button inside a list view is clicked
@@ -45,7 +46,6 @@ const actionsMenuDefaultTemplate = (toggle, stopEvent) => (
 );
 
 interface IProps {
-    scope: any;
     swimlane: any;
     item: IArticle | IPublishedArticle;
     profilesById: any;
@@ -65,6 +65,10 @@ interface IProps {
     multiSelectDisabled: boolean;
     isNested: boolean;
     actioning: boolean;
+    singleLine: any;
+    customRender: any;
+    viewType: any;
+    scopeApply: IScopeApply;
 }
 
 interface IState {
@@ -77,9 +81,6 @@ interface IState {
 }
 
 export class Item extends React.Component<IProps, IState> {
-    static propTypes: any;
-    static defaultProps: any;
-
     clickTimeout: number;
 
     constructor(props) {
@@ -261,26 +262,27 @@ export class Item extends React.Component<IProps, IState> {
     }
 
     render() {
-        const {item, scope} = this.props;
+        const {item} = this.props;
         let classes = this.props.view === 'photogrid' ?
             'sd-grid-item sd-grid-item--with-click' :
             'media-box media-' + item.type;
 
         // Customize item class from its props
-        if (scope.customRender && typeof scope.customRender.getItemClass === 'function') {
-            classes = `${classes} ${scope.customRender.getItemClass(item)}`;
+        if (this.props.customRender && typeof this.props.customRender.getItemClass === 'function') {
+            classes = `${classes} ${this.props.customRender.getItemClass(item)}`;
         }
 
         const isLocked: boolean = (item.lock_user && item.lock_session) != null;
 
         const getActionsMenu = (template = actionsMenuDefaultTemplate) =>
-            this.props.hideActions !== true && this.state.hover && !item.gone ? React.createElement(
-                ActionsMenu, {
-                    item: item,
-                    scope: this.props.scope,
-                    onActioning: this.setActioningState,
-                    template: template,
-                }) : null;
+            this.props.hideActions !== true && this.state.hover && !item.gone ? (
+                <ActionsMenu
+                    item={item}
+                    onActioning={this.setActioningState}
+                    template={template}
+                    scopeApply={this.props.scopeApply}
+                />
+            ) : null;
 
         const getTemplate = () => {
             switch (this.props.view) {
@@ -334,9 +336,9 @@ export class Item extends React.Component<IProps, IState> {
                         isNested={this.props.isNested}
                         showNested={this.state.showNested}
                         toggleNested={this.toggleNested}
-                        singleLine={this.props.scope.singleLine}
-                        customRender={this.props.scope.customRender}
-                        viewType={this.props.scope.viewType}
+                        singleLine={this.props.singleLine}
+                        customRender={this.props.customRender}
+                        viewType={this.props.viewType}
                     />
                 );
             }
@@ -359,7 +361,6 @@ export class Item extends React.Component<IProps, IState> {
                             <Item
                                 item={childItem}
                                 key={childItem._id + childItem._current_version}
-                                scope={this.props.scope}
                                 flags={{}}
                                 profilesById={this.props.profilesById}
                                 isNested={true}
@@ -378,6 +379,10 @@ export class Item extends React.Component<IProps, IState> {
                                 onDbClick={this.props.onDbClick}
                                 onMultiSelect={this.props.onMultiSelect}
                                 actioning={false}
+                                singleLine={this.props.singleLine}
+                                customRender={this.props.customRender}
+                                viewType={this.props.viewType}
+                                scopeApply={this.props.scopeApply}
                             />
                         ))}
                     </div>
