@@ -2,14 +2,13 @@
   <div id="top-menu" ng-class="{'menu-open': flags.menu, 'test-environment': isTestEnvironment}" data-text="{{environmentName}}">
       <div class="pull-left">
         <span id="hamburger-menu">
-          <button class="collapse-nav pull-left" ng-click="toggleMenu()">
+          <button class="collapse-nav pull-left" ng-click="toggleMenu()" aria-label="{{ :: 'Toggle main menu' | translate }}">
             <i class="icon-collapse icon--white"></i>
           </button>
         </span>
-        <p class="sd-top-menu__header" ng-if="currentRoute.category !== 'superdesk.core.menu.settings'"
-          ng-hide="currentRoute.topTemplateUrl">{{ currentRoute.label | translate}}</p>
-        <p class="sd-top-menu__header" ng-if="currentRoute.category === 'superdesk.core.menu.settings'"
-          ng-hide="currentRoute.topTemplateUrl">{{ "Settings" | translate}}</p>
+        <h1 class="sd-top-menu__header" ng-if="currentRoute.category !== 'superdesk.core.menu.settings' && !currentRoute.topTemplateUrl"
+          ng-hide="currentRoute.topTemplateUrl">{{ currentRoute.label | translate}}</h1>
+        <h1 class="sd-top-menu__header" ng-if="currentRoute.category === 'superdesk.core.menu.settings'">{{ "Settings" | translate}}</h1>
         <div class="top-nav pull-left" ng-include="currentRoute.topTemplateUrl"></div>
       </div>
       <div class="top-menu__content-block top-menu__content-block--right">
@@ -22,8 +21,8 @@
           <sd-global-menu-horizontal></sd-global-menu-horizontal>
         </div>
         <button class="current-user" ng-click="toggleNotifications()">
-            <span id="unread-count" class="badge badge--primary" ng-show="notifications.unread">{{ notifications.unread }}</span>
-            <sd-user-avatar data-user="currentUser"></sd-user-avatar>
+          <span id="unread-count" class="badge badge--primary" ng-show="notifications.unread">{{ notifications.unread }}</span>
+          <sd-user-avatar data-user="currentUser"></sd-user-avatar>
         </button>
       </div>
   </div>
