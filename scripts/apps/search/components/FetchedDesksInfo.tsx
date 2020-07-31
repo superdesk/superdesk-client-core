@@ -9,7 +9,7 @@ export class FetchedDesksInfo extends React.Component<any, any> {
     static defaultProps: any;
 
     familyService: any;
-    location: any;
+    $location: any;
     desks: any;
     superdesk: any;
 
@@ -21,7 +21,7 @@ export class FetchedDesksInfo extends React.Component<any, any> {
         this.openDesk = this.openDesk.bind(this);
 
         this.familyService = ng.get('familyService');
-        this.location = ng.get('location');
+        this.$location = ng.get('$location');
         this.desks = ng.get('desks');
         this.superdesk = ng.get('superdesk');
     }
