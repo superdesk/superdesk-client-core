@@ -53,6 +53,13 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
         }
     }
 
+    componentDidUpdate(prevProps: IProps) {
+        // video has changed so captured thumbnail showed on UI is no longer correct
+        if (prevProps.renditions !== this.props.renditions && this.state.type === 'capture') {
+            this.handleReset();
+        }
+    }
+
     componentWillUnmount() {
         if (this.interval) {
             clearInterval(this.interval);
