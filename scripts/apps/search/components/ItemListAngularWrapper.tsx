@@ -56,7 +56,7 @@ export class ItemListAngularWrapper extends React.Component<IProps, IState> {
         let item;
 
         forOwn(this.state.itemsById, (val, key) => {
-            if (_.startsWith(key, prefix)) {
+            if (startsWith(key, prefix)) {
                 item = val;
             }
         });
