@@ -4,7 +4,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import _ from 'lodash';
 
-import {ItemList as ItemListComponent} from 'apps/search/components';
+import {closeActionsMenu} from '../helpers';
+import {ItemListAngularWrapper} from '../components/ItemListAngularWrapper';
 
 ItemList.$inject = [
     '$timeout',
@@ -25,8 +26,6 @@ export function ItemList(
 ) {
     return {
         link: function(scope, elem) {
-            elem.attr('tabindex', 0);
-
             var groupId = scope.$id;
             var groups = monitoringState.state.groups || [];
 
@@ -35,45 +34,22 @@ export function ItemList(
                 activeGroup: monitoringState.state.activeGroup || groupId,
             });
 
-            scope.$watch(() => monitoringState.state.activeGroup, (activeGroup) => {
-                if (activeGroup === groupId) {
-                    elem.focus();
-                }
-            });
-
             monitoringState.init().then(() => {
                 var listComponent = ReactDOM.render(
                     (
-                        <ItemListComponent
-                            scopeApply={(callback) => {
-                                scope.$apply(callback);
-                            }}
-                            scopeApplyAsync={(callback) => {
-                                scope.$applyAsync(callback);
-                            }}
-                            profilesById={monitoringState.state.profilesById}
-                            highlightsById={monitoringState.state.highlightsById}
-                            markedDesksById={monitoringState.state.markedDesksById}
-                            desksById={monitoringState.state.desksById}
-                            ingestProvidersById={monitoringState.state.ingestProvidersById}
-                            usersById={monitoringState.state.usersById}
-                            onMonitoringItemSelect={scope.onMonitoringItemSelect}
-                            onMonitoringItemDoubleClick={scope.onMonitoringItemDoubleClick}
-                            hideActionsForMonitoringItems={scope.hideActionsForMonitoringItems}
-                            disableMonitoringMultiSelect={scope.disableMonitoringMultiSelect}
-                            singleLine={scope.singleLine}
-                            customRender={scope.customRender}
-                            viewType={scope.viewType}
-                            flags={scope.flags}
-                            loading={scope.loading}
-                            viewColumn={scope.viewColumn}
-                            groupId={scope.$id}
-                            edit={scope.edit}
-                            preview={scope.preview}
+                        <ItemListAngularWrapper
+                            scope={scope}
+                            monitoringState={monitoringState}
                         />
                     ),
                     elem[0],
-                ) as unknown as ItemListComponent;
+                ) as unknown as ItemListAngularWrapper;
+
+                scope.$watch(() => monitoringState.state.activeGroup, (activeGroup) => {
+                    if (activeGroup === groupId) {
+                        listComponent.focus();
+                    }
+                });
 
                 /**
                  * Test if item a equals to item b
@@ -228,7 +204,6 @@ export function ItemList(
 
                 scope.$on('item:unselect', () => {
                     listComponent.setState({selected: null});
-                    listComponent.unbindActionKeyShortcuts();
                 });
 
                 scope.$on('item:expired', (_e, data) => {
@@ -332,7 +307,7 @@ export function ItemList(
                     // only scroll the list, not its parent
                     $event.stopPropagation();
 
-                    listComponent.closeActionsMenu();
+                    closeActionsMenu();
                     $timeout.cancel(updateTimeout);
 
                     if (!scope.noScroll) {
@@ -364,14 +339,11 @@ export function ItemList(
                     return element.scrollTop + element.offsetHeight + 200 >= element.scrollHeight;
                 }
 
-                elem.on('keydown', listComponent.handleKey);
-
                 elem.on('scroll', handleScroll);
 
                 // remove react elem on destroy
                 scope.$on('$destroy', () => {
                     elem.off();
-                    listComponent.unbindActionKeyShortcuts();
                     ReactDOM.unmountComponentAtNode(elem[0]);
                 });
 
