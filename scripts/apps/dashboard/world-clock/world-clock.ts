@@ -7,15 +7,6 @@ import {getTimezoneLabel} from './timezones-all-labels';
 angular.module('superdesk.apps.dashboard.world-clock', [
     'superdesk.apps.dashboard', 'superdesk.core.datetime',
 ])
-    .directive('sdWorldclock', [function() {
-        return {
-            templateUrl: 'scripts/apps/dashboard/world-clock/worldClock.html',
-            replace: true,
-            restrict: 'A',
-            controller: 'WorldClockController',
-        };
-    }])
-
     /**
      * @ngdoc controller
      * @module superdesk.apps.dashboard
@@ -68,7 +59,7 @@ angular.module('superdesk.apps.dashboard.world-clock', [
      * @module superdesk.apps.dashboard
      * @name WorldClockController
      * @description
-     *   Controller for the sdWorldclock directive - the one that creates
+     *   Controller for the directive - the one that creates
      *   a dashboard widget for displaying the current time in different
      *   time zones around the world.
      */
