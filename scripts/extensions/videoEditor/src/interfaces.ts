@@ -1,6 +1,7 @@
 import {IArticle} from 'superdesk-api';
 
 export interface IVideoProject {
+    _etag: string;
     project: {
         url: string;
         thumbnails: {

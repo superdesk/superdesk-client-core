@@ -6,12 +6,13 @@ import {pick} from 'lodash';
 interface IProps {
     video: HTMLVideoElement;
     article: IArticle;
+    etag: string;
     crop: ICrop;
     rotate: number;
     superdesk: ISuperdesk;
     renditions: IArticle['renditions'];
     onToggleLoading: (isLoading: boolean, loadingText?: string, type?: 'video' | 'thumbnail') => void;
-    onSave: (renditions: IArticle['renditions']) => void;
+    onSave: (renditions: IArticle['renditions'], etag: string) => void;
     onError: (err: IErrorMessage) => void;
     getCropRotate: (crop: ICrop) => ICrop;
 }
@@ -155,7 +156,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
                 headers: {
                     Authorization: session.getToken(),
                     'Content-Type': 'application/json',
-                    'If-Match': this.props.article._etag,
+                    'If-Match': this.props.etag,
                 },
                 body: JSON.stringify({
                     capture: body,
@@ -186,14 +187,14 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
                 method: 'PUT',
                 headers: {
                     Authorization: session.getToken(),
-                    'If-Match': this.props.article._etag,
+                    'If-Match': this.props.etag,
                 },
                 body: form,
             })
                 .then((res) => res.json())
                 .then((res: IVideoProject) => {
                     this.handleReset();
-                    this.props.onSave(res.renditions);
+                    this.props.onSave(res.renditions, res._etag);
                     this.setThumbnail(res.renditions?.thumbnail?.href ?? '');
                 })
                 .catch(this.props.onError);
@@ -232,7 +233,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
                 .then((response: IVideoProject) => {
                     if (response.project?.processing?.thumbnail_preview === false) {
                         clearInterval(this.interval);
-                        this.props.onSave(response.renditions);
+                        this.props.onSave(response.renditions, response._etag);
                         this.props.onToggleLoading(false, '', 'thumbnail');
                     }
                 })

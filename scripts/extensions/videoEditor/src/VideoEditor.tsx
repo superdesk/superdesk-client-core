@@ -29,8 +29,8 @@ interface IState {
     };
     thumbnails: Array<IThumbnail>;
     loading: {
-        video: boolean,
-        thumbnail: boolean,
+        video: boolean;
+        thumbnail: boolean;
     };
     loadingText: string;
     scale: number;
@@ -39,6 +39,7 @@ interface IState {
     cropEnabled: boolean;
     playing: boolean;
     prevVideoHeight: number;
+    etag: string;
 }
 
 const initTransformations: IState['transformations'] = {
@@ -79,6 +80,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
             thumbnails: [],
             videoSrc: '',
             renditions: this.props.article.renditions,
+            etag: this.props.article._etag,
         };
         this.videoWrapper = null;
         this.videoContainerSize = 0;
@@ -143,7 +145,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
         this.props.onClose();
 
         this.props.superdesk.entities.article.patch(
-            this.props.article,
+            {...this.props.article, _etag: this.state.etag},
             {
                 renditions: this.state.renditions,
             },
@@ -489,7 +491,8 @@ export class VideoEditor extends React.Component<IProps, IState> {
             x: Math.floor(crop.x * scaleX),
             y: Math.floor(crop.y * scaleY),
             width: Math.floor(crop.width * scaleX),
-            height: Math.floor(crop.height * scaleY)};
+            height: Math.floor(crop.height * scaleY),
+        };
     }
 
     // Set initial crop size to 80% of full video size to make the UX more user-friendly.
@@ -752,10 +755,12 @@ export class VideoEditor extends React.Component<IProps, IState> {
                                             <VideoEditorThumbnail
                                                 video={videoRef}
                                                 article={this.props.article}
+                                                etag={this.state.etag}
                                                 renditions={this.state.renditions}
                                                 onToggleLoading={this.handleToggleLoading}
-                                                onSave={(renditions: IArticle['renditions']) =>
-                                                    this.setState({renditions: renditions})
+                                                onSave={(renditions: IArticle['renditions'], etag: string) =>
+                                                    // update preview thumbnail will change etag
+                                                    this.setState({renditions: renditions, etag: etag})
                                                 }
                                                 onError={this.showErrorMessage}
                                                 crop={this.state.transformations.crop}
