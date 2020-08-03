@@ -127,7 +127,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
         };
 
         reader.readAsDataURL(file);
-        this.setState({value: file, type: 'upload'});
+        this.setState({...initialState, value: file, type: 'upload'});
     }
 
     handleSave() {
