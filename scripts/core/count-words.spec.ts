@@ -1,6 +1,10 @@
 import {countWords} from './count-words';
 
 describe('countWords function', () => {
+    it('should count empty string as 0 words', () => {
+        expect(countWords('   ')).toBe(0);
+    });
+
     it('should count space separated digits as a single word', () => {
         expect(countWords('1 000 000')).toBe(1);
     });

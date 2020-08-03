@@ -1,6 +1,12 @@
 // KEEP CHANGES IN SYNC WITH SERVER FUNCTION `get_text_word_count`
 export function countWords(str: string): number {
-    return str.trim()
+    const strTrimmed = str.trim();
+
+    if (strTrimmed.length < 1) {
+        return 0;
+    }
+
+    return strTrimmed
         .replace(/\n/g, ' ') // replace newlines with spaces
 
         // Remove spaces between two numbers
