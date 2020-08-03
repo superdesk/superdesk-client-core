@@ -79,6 +79,8 @@ const EDITOR3_RICH_FORMATTING_OPTIONS = [
     'strikethrough',
     'tab',
     'tab as spaces',
+    'undo',
+    'redo',
 ];
 
 function hasFormattingOptions(fieldId: string, editor, customFields: Array<any>) {
