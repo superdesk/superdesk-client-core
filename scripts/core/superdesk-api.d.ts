@@ -68,6 +68,7 @@ declare module 'superdesk-api' {
             articleGridItemWidgets?: Array<React.ComponentType<{article: IArticle}>>;
             authoringTopbarWidgets?: Array<React.ComponentType<{article: IArticle}>>;
             pages?: Array<IPage>;
+            workspaceMenuItems?: Array<IWorkspaceMenuItem>;
             customFieldTypes?: Array<ICustomFieldType>;
             notifications?: {
                 [id: string]: (notification) => {
@@ -581,7 +582,20 @@ declare module 'superdesk-api' {
     export type IPage = DeepReadonly<{
         title: string;
         url: string;
-        component: React.ComponentClass;
+        component: React.ComponentClass | React.ReactNode;
+        priority?: number;
+        topTemplateUrl?: string;
+        sideTemplateUrl?: string;
+        addToMainMenu?: boolean; // defaults to true
+    }>;
+
+    export type IWorkspaceMenuItem = DeepReadonly<{
+        href: string;
+        icon: string;
+        label: string;
+        if?: string;
+        order?: number;
+        shortcut?: string;
     }>;
 
 
@@ -981,8 +995,14 @@ declare module 'superdesk-api' {
                 save(): void;
             };
             alert(message: string): Promise<void>;
-            confirm(message: string): Promise<boolean>;
+            confirm(message: string, title?: string): Promise<boolean>;
             showModal(component: React.ComponentType<{closeModal(): void}>): Promise<void>;
+            notify: {
+                info(text: string, displayDuration?: number, options?: any): void;
+                success(text: string, displayDuration?: number, options?: any): void;
+                warning(text: string, displayDuration?: number, options?: any): void;
+                error(text: string, displayDuration?: number, options?: any): void;
+            },
         };
         entities: {
             article: {

@@ -135,10 +135,12 @@ export function startApp(
 
     // added to be able to register activities which didn't work using superdesk reference injected in `core.run`.
     var _superdesk;
+    var _workspaceMenu;
 
     angular.module('superdesk.register_extensions', [])
-        .config(['superdeskProvider', (superdesk) => {
+        .config(['superdeskProvider', 'workspaceMenuProvider', (superdesk, workspaceMenu) => {
             _superdesk = superdesk;
+            _workspaceMenu = workspaceMenu;
         }])
         .run([
             'modal',
@@ -148,6 +150,7 @@ export function startApp(
             'authoringWorkspace',
             'config',
             'metadata',
+            'notify',
             (
                 modal,
                 privileges,
@@ -156,6 +159,7 @@ export function startApp(
                 authoringWorkspace,
                 config,
                 metadata,
+                notify,
             ) => {
                 registerExtensions(
                     extensions,
@@ -167,6 +171,8 @@ export function startApp(
                     authoringWorkspace,
                     config,
                     metadata,
+                    _workspaceMenu,
+                    notify,
                 );
             },
         ]);
