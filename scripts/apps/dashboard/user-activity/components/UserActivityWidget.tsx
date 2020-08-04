@@ -118,15 +118,20 @@ const GET_GROUPS = (userId, services: any): Array<IGroup> => {
                 const markedQuery = extensions['markForUser']
                     ?.extension
                     .exposes
-                    .getQueryNotMarkedForAnyoneOrMarkedForMe(userId) || {};
+                    .getQueryNotMarkedForAnyoneOrMarkedForMe(userId);
+
+                const mustQuery = [
+                    {...getQueryCreatedByUser(userId)},
+                    {...getQueryNotLockedOrLockedByMe(userId)},
+                ];
+
+                if (markedQuery != null) {
+                    mustQuery.push({...markedQuery});
+                }
 
                 return fetchFn('archive', {
                     bool: {
-                        must: [
-                            {...getQueryCreatedByUser(userId)},
-                            {...getQueryNotLockedOrLockedByMe(userId)},
-                            {...markedQuery},
-                        ],
+                        must: mustQuery,
                     },
                 }).then((res) => {
                     res._items = res._items.filter(filterOutItemsInIncomingStage(services));
