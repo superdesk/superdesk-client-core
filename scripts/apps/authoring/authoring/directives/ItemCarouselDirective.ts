@@ -29,6 +29,7 @@ interface IScope extends ng.IScope {
     remove(item: any): void;
     upload(): void;
     getUploadButtonTitle: () => string;
+    waitForMediaAndInitCarousel(items: any): void;
 }
 
 function getItemsCount(items: Array<any>): number {
@@ -86,17 +87,7 @@ export function ItemCarouselDirective(notify) {
                     {number: scope.maxUploads},
                 );
 
-            /*
-             * Initialize carousel after all content is loaded
-             * otherwise carousel height is messed up
-             */
-            scope.$watchCollection('items', (items: Array<any>) => {
-                // Don't execute if there are no items or their length is same as before and their order is unchanged
-                if (items == null || previousItems && getItemsCount(items) === getItemsCount(previousItems)
-                    && !isOrderChanged(items, previousItems)) {
-                    return false;
-                }
-
+            scope.waitForMediaAndInitCarousel = (items) => {
                 previousItems = _.cloneDeep(items);
                 let field = _.find(items, (item) => !item[item.fieldId]);
 
@@ -152,6 +143,20 @@ export function ItemCarouselDirective(notify) {
                         waitForMediaToLoad(mediaItems).then(initCarousel);
                     }, 0);
                 });
+            };
+
+            /*
+             * Initialize carousel after all content is loaded
+             * otherwise carousel height is messed up
+             */
+            scope.$watchCollection('items', (items: Array<any>) => {
+                // Don't execute if there are no items or their length is same as before and their order is unchanged
+                if (items == null || previousItems && getItemsCount(items) === getItemsCount(previousItems)
+                    && !isOrderChanged(items, previousItems)) {
+                    return false;
+                }
+
+                scope.waitForMediaAndInitCarousel(items);
             });
 
             /*
@@ -271,6 +276,8 @@ export function ItemCarouselDirective(notify) {
                     data[item.fieldId] = item[item.fieldId];
                     scope.item.associations = angular.extend({}, scope.item.associations, data);
                 });
+
+                scope.onchange();
             }
 
             scope.handleInputChange = (value: string, onChangeData) => {
