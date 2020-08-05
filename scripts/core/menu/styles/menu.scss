@@ -49,11 +49,17 @@
     top: 0;
     z-index: $zindexFixedNavbar;
     margin-bottom: 0; // remove 18px margin for static navbar
-
-    @include transition( all 0.3s ease);
+    transition: all 0.3s ease;
     &.menu-open {
         left: $sf-main-menu-width !important;
         right: 0 !important;
+        .collapse-nav {
+            margin-left: -48px;
+            background: rgba(0,0,0,0.02) !important;
+            &:hover {
+                background: rgba(0,0,0,0.4) !important;
+            }
+        }
     }
 
     &.test-environment {
@@ -97,7 +103,6 @@
             padding: 0 25px;
             background: #202020;
             border:0;
-            //.box-shadow(inset -1px 0 0 #111);
             @include text-normal();
     
             &:hover {
@@ -116,6 +121,7 @@
                 text-align: center;
                 padding: 0;
                 line-height: 0;
+                transition: all 0.3s ease;
                 &:hover {
                     background: #101010;
                     cursor: pointer;
@@ -499,150 +505,125 @@
     top: 0;
 }
 
-#main-menu {
+.main-menu
+
+#main-menu, .main-menu {
     position: fixed;
     top: 0;
     left:0;
     bottom: 0;
     width: $sf-main-menu-width;
     background: #272727;
+    color: #f0f0f0;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr auto;
     @include user-select(none);
     @include box-shadow(inset -5px 0 6px -0px #181818);
-    .header {
+    .header, .main-menu__header {
+        grid-column: 1/2;
+        grid-row: 1/2;
+        z-index: 1;
+        display: flex;
+        align-items: center;
         height: $nav-height;
-        width: 100%;
-        @include box-sizing(border-box);
-        @include box-shadow(0 2px 3px 0px #202020);
-        border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+        box-shadow: 0 2px 3px rgba(0, 0, 0, 0.24);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.4);
     }
-    .content {
-        position: absolute;
-        bottom: 190px;
-        left:0; right: 0;
-        top:$nav-height;
-        @include box-sizing(border-box);
+    .main-menu__heading {
+        font-size: 1.6rem;
+        font-weight: 300;
+        opacity: 0.5;
+        padding-left: $sd-base-increment * 3;
+    }
+    .content, .main-menu__content {
+        grid-column: 1/2;
+        grid-row: 2/3;
         overflow: auto;
-        > ul {
+
+        ul, .main-menu__list {
             list-style-type: none;
             margin:0;
             padding: 0;
-            > li {
-                > a {
+            margin-top: $sd-base-increment * 2;
+            li, .main-menu__list-item {
+                a, .main-menu__menu-item {
                     @include user-select(none);
-                    display: block;
+                    display: flex;
+                    align-items: center;
                     position: relative;
-                    height: 100%;
-                    @include box-sizing(border-box);
-                    padding-left: 35px;
-                    height: 37px;
-                    line-height: 36px;
+                    padding-left: $sd-base-increment * 5;
+                    height: $sd-base-increment * 5;
                     font-size: 14px;
-                    color: #f0f0f0;
+                    color: inherit;
                     text-decoration: none;
-                    i {
-                        position: absolute;
-                        top:8px;
-                        right:10px;
-                        @include opacity(30);
-                    }
+                    border-left: 4px solid transparent;
+                    transition: all 0.2s ease-in-out;
                     &:hover {
-                        background: #283032;
-                        border-top-color: #283032;
-                        color:#3299b7;
+                        background: rgba(255, 255, 255, 0.06);
                         cursor: pointer;
+                        border-left: 4px solid rgba(255, 255, 255, 0.2);
+                    }
+                    sup {
+                        padding-left: 4px;
+                        opacity: 0.7;
+                        font-weight: 300;
+                        letter-spacing: 0.05em;
                     }
                 }
-                ul {
-                    display: none;
-                }
-                &.open {
-                    > a {
-                        border-bottom:1px solid #1b1b1b;
-                        @include box-shadow(none);
-                        i {
-                            background-position: -313px -119px;
-                        }
+                &.active, &.main-menu__list-item--active {
+                    a, .main-menu__menu-item {
+                        background: rgba(0,0,0,0.30);
+                        color: $sd-blue;
+                        border-left: 4px solid $sd-blue;
                     }
-                    ul {
-                        display: block;
-                        list-style-type: none;
-                        margin:0;
-                        padding: 0;
-                        @include box-shadow(inset 0 7px 5px -5px #202020);
-                        @include user-select(none);
-                        li a {
-                            color: #9e9e9e;
-                            font-size: 13px;
-                            line-height: 32px;
-                            height: 32px;
-                            padding-left: 30px;
-                            text-decoration: none;
-                            display: block;
-                            &:hover {
-                                color: #c8c8c8;
-                            }
-                        }
-                    }
-                    + li {
-                        > a {
-                            border-top-color: #353535;
-                            @include box-shadow-both(inset 0 -1px 0px 0px #1b1b1b,0 -2px 2px 0px #202020);
-                        }
-                        &.open {
-                            > a {
-                                @include box-shadow(0 -2px 2px 0px #202020);
-                            }
-                        }
-                    }
-                }
-
-                &.active > a {
-                    background: #1f1f1f;
-                    color:#3299b7;
                 }
             }
-            > li.main-menu_group-header {
+            .main-menu__group-header {
                 font-size: 11px;
                 text-transform: uppercase;
-                padding: 20px 0 6px 20px;
+                padding: 12px 0 4px 24px;
                 color: rgba(255, 255, 255, 0.5);
                 letter-spacing: 0.06em;
             }
         }
     }
-    .footer {
-        position: absolute;
-        height: 190px;
-        @include box-sizing(border-box);
-        left:0; right:0; bottom: 0;
+    .footer, .main-menu__footer {
+        grid-column: 1/2;
+        grid-row: 3/4;
+        z-index: 2;
         border-top: 1px solid #1f1f1f;
         @include box-shadow-both(inset 0 1px 0px 0px #353535,0 -2px 3px 0px #232323);
         text-align: center;
         .icon-superdesk {
             background: url(~images/superdesk-logo.svg) no-repeat 0 0;
-            width: 154px;
-            height: 48px;
-            margin-top: 20px;
+            background-size: contain;
+            width: 130px;
+            height: 42px;
+            margin: 14px auto 10px;
         }
         .powered {
             display: block;
-            color: rgba(255,255,255,0.3);
-            font-size: 11px;
-            margin-top: 8px;
+            color: rgba(255,255,255,0.4);
+            font-size: 10px;
             font-weight: 300;
+            letter-spacing:0.05em;
+            padding: 8px 0 6px;
+            border-bottom: 1px solid rgba(255,255,255,0.065);
         }
         .about {
-            display: block;
-            @include box-sizing(border-box);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             color: rgba(255,255,255,0.9);
-            background-color: rgba(0,0,0,0.3);
-            //border-top: 1px solid rgba(255,255,255,0.1);
+            background-color: rgba(0,0,0,0.1);
             font-size: 12px;
-            margin-top: 12px;
-            font-weight: 00;
-            padding: 16px 20px;
-            font-weight: 500;
-            letter-spacing:0.1em;
+            font-weight: 300;
+            padding: 0 16px;
+            height: 3.2rem;
+            font-weight: 300;
+            letter-spacing:0.05em;
+            border-top: 1px solid rgba(255,255,255,0.065);
             a {
               color: rgba(255,255,255,0.9);
               cursor: pointer;

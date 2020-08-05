@@ -228,6 +228,7 @@ $bottom-bar-item-border-color-active: transparent;
     display: grid;
     grid-template-rows: 32px;
     grid-template-columns: $sidebar-width 1fr auto auto;
+    transition: left 0.3s ease;
     .opened-articles-bar__list {
         display: flex;
         flex-grow: 1;
@@ -356,6 +357,10 @@ $bottom-bar-item-border-color-active: transparent;
         .btn {
             border-radius: 0 !important;
         }
+    }
+    &.menu-open {
+        left: $sf-main-menu-width !important;
+        right: 0 !important;
     }
 }
 
