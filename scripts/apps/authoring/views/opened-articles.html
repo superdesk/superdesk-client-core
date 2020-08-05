@@ -1,4 +1,4 @@
-<div class="opened-articles-bar">
+<div class="opened-articles-bar" ng-class="{'menu-open': flags.menu}">
     <button class="opened-articles-bar__quick-actions" ng-click="openDashboard()" title="{{ 'All opened items' | translate }}"><i class="icon-th-large icon--white"></i></button>
 
     <ul ng-if="workqueue.items.length" class="opened-articles-bar__list">

@@ -2,8 +2,10 @@
   <div id="top-menu" ng-class="{'menu-open': flags.menu, 'test-environment': isTestEnvironment}" data-text="{{environmentName}}">
       <div class="pull-left">
         <span id="hamburger-menu">
-          <button class="collapse-nav pull-left" ng-click="toggleMenu()">
-            <i class="icon-collapse icon--white"></i>
+          <button class="collapse-nav pull-left hamburger hamburger--spin" ng-click="toggleMenu()" ng-class="{'is-active': flags.menu}" aria-controls="main-menu" aria-expanded="{{flags.menu ? true : false}}">
+            <span class="hamburger__box">
+              <span class="hamburger__inner"></span>
+            </span>
           </button>
         </span>
         <p class="sd-top-menu__header" ng-if="currentRoute.category !== 'superdesk.core.menu.settings'"
@@ -30,32 +32,34 @@
 
   <div id="side-menu" ng-class="{'menu-open': flags.menu}" ng-include="currentRoute.sideTemplateUrl"></div>
 
-  <div id="main-menu">
-    <div class="header"></div>
-    <div class="content">
-      <ul>
-        <li ng-repeat="item in menu | filter:{ adminTools: false } | orderBy:'priority'" ng-class="{active: item.href === activeMenuItemPath}">
-          <a ng-href="#{{ :: item.href }}" title="{{ :: item.description | translate }}">{{ :: item.label | translate }}</a>
+  <nav id="main-menu" class="main-menu" aria-labelledby="main-menu_title">
+    <div class="main-menu__header">
+      <h2 id="main-menu_title" class="main-menu__heading" translate>Main menu</h2>
+    </div>
+    <div class="main-menu__content">
+      <ul class="main-menu__list">
+        <li class="main-menu__list-item" ng-repeat="item in menu | filter:{ adminTools: false } | orderBy:'priority'" ng-class="{'main-menu__list-item--active' : item.href === activeMenuItemPath}">
+          <a class="main-menu__menu-item" ng-href="#{{ :: item.href }}" title="{{ :: item.description | translate }}">{{ :: item.label | translate }}</a>
         </li>
-        <li class="main-menu_group-header" translate ng-if="adminOptions.length > 0">Admin tools</li>
-        <li ng-repeat="item in menu | filter:{ adminTools: true } | orderBy:'priority' as adminOptions" ng-class="{active: item.href === activeMenuItemPath}">
-          <a ng-href="#{{ :: item.href }}" title="{{ :: item.description | translate }}">
+        <li class="main-menu__group-header" translate ng-if="adminOptions.length > 0">Admin tools</li>
+        <li class="main-menu__list-item" ng-repeat="item in menu | filter:{ adminTools: true } | orderBy:'priority' as adminOptions" ng-class="{'main-menu__list-item--active' : item.href === activeMenuItemPath}">
+          <a class="main-menu__menu-item" ng-href="#{{ :: item.href }}" title="{{ :: item.description | translate }}">
             {{ :: item.label | translate }}
             <sup class="btn-toggle-label" ng-if="item.betaMark">Beta</sup>
           </a>
         </li>
-          <li ng-if="feedback_url" class="main-menu_group-header" translate>Feedback</li>
-          <li ng-if="feedback_url" >
-            <a ng-href="{{ feedback_url }}" target="_blank" translate>Feedback/Suggestions</a>
-          </li>
+        <li ng-if="feedback_url" class="main-menu__group-header" translate>Feedback</li>
+        <li class="main-menu__list-item" ng-if="feedback_url" >
+          <a class="main-menu__menu-item" ng-href="{{ feedback_url }}" target="_blank" translate>Feedback/Suggestions</a>
+        </li>
       </ul>
     </div>
-    <div class="footer">
-      <i class="icon-superdesk"></i>
+    <div class="main-menu__footer">
       <span class="powered" translate>Powered by Superdesk technology</span>
+      <i role="img" class="icon-superdesk" aria-label="{{ :: 'Superdesk logo' | translate }}"></i>
       <span class="about"><a ng-click="openAbout()" translate>About Superdesk</a></span>
     </div>
-  </div>
+  </nav>
 
   <div sd-about data-active="aboutActive"></div>
 </div>

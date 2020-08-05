@@ -86,6 +86,7 @@ WorkqueueCtrl.$inject = [
     'referrer',
     'notify',
     '$timeout',
+    'superdeskFlags'
 ];
 function WorkqueueCtrl(
     $scope,
@@ -103,10 +104,12 @@ function WorkqueueCtrl(
     referrer,
     notify,
     $timeout,
+    superdeskFlags
 ) {
     $scope.articleInEditMode = null;
     $scope.workqueue = workqueue;
     $scope.multiEdit = multiEdit;
+    $scope.flags = superdeskFlags.flags;
 
     $scope.$on('content:update', (_e, data) => {
         // only update the workqueue for content:update items in the workqueue
