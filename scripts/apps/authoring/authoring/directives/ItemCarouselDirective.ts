@@ -30,7 +30,7 @@ interface IScope extends ng.IScope {
     remove(item: any): void;
     upload(): void;
     getUploadButtonTitle: () => string;
-    waitForMediaAndInitCarousel(items: any): void
+    waitForMediaAndInitCarousel(items: any): void;
 }
 
 function getItemsCount(items: Array<any>): number {
