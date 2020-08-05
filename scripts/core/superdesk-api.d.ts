@@ -827,7 +827,6 @@ declare module 'superdesk-api' {
         disabled?: boolean;
         autoFocus?: boolean | {initializeWithDropdownHidden: boolean};
         horizontalSpacing?: boolean;
-        displayActiveUsers?: boolean;
     }
 
 

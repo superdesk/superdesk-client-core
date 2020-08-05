@@ -63,6 +63,10 @@ export function UserListController($scope, $location, api, _, session, usersServ
 
         criteria.where = initCriteria(params, $scope.userFilter);
 
+        criteria.show_inactive = true;
+
+        criteria.show_disabled = true;
+
         if (params.page) {
             criteria.page = parseInt(params.page, 10);
         }
@@ -113,7 +117,6 @@ export function UserListController($scope, $location, api, _, session, usersServ
             break;
 
         case 'all':
-            query.all = true;
             break;
 
         default:

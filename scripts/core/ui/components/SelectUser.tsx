@@ -24,7 +24,7 @@ export class SelectUser extends React.Component<IPropsSelectUser, IState> {
         this.queryUsers = this.queryUsers.bind(this);
     }
 
-    queryUsers(_searchString: string = '', displayActiveUsers: boolean = false) {
+    queryUsers(_searchString: string = '') {
         const searchString = _searchString.trim();
 
         this.setState({loading: true, fetchedUsers: null});
@@ -35,46 +35,22 @@ export class SelectUser extends React.Component<IPropsSelectUser, IState> {
             {field: 'display_name', direction: 'ascending'},
             (
                 searchString.length > 0
-                    ? (
-                        displayActiveUsers
-                            ? {
-                                $or: [
-                                    {
-                                        display_name: {
-                                            $regex: searchString,
-                                            $options: '-i',
-                                        },
-                                    },
-                                    {
-                                        username: {
-                                            $regex: searchString,
-                                            $options: '-i',
-                                        },
-                                    },
-                                ],
-                                $and: [
-                                    {
-                                        'is_active': true,
-                                        'is_enabled': true,
-                                    },
-                                ],
-                            } : {
-                                $or: [
-                                    {
-                                        display_name: {
-                                            $regex: searchString,
-                                            $options: '-i',
-                                        },
-                                    },
-                                    {
-                                        username: {
-                                            $regex: searchString,
-                                            $options: '-i',
-                                        },
-                                    },
-                                ],
-                            }
-                    )
+                    ? {
+                        $or: [
+                            {
+                                display_name: {
+                                    $regex: searchString,
+                                    $options: '-i',
+                                },
+                            },
+                            {
+                                username: {
+                                    $regex: searchString,
+                                    $options: '-i',
+                                },
+                            },
+                        ],
+                    }
                     : {}
             ),
             50,
@@ -124,7 +100,7 @@ export class SelectUser extends React.Component<IPropsSelectUser, IState> {
                     </ListItem>
                 )}
                 data-test-id="select-user-dropdown"
-                onSearch={(search) => this.queryUsers(search, this.props.displayActiveUsers)}
+                onSearch={(search) => this.queryUsers(search)}
                 loading={this.state.loading}
                 horizontalSpacing={this.props.horizontalSpacing}
                 required
