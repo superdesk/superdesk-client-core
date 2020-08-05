@@ -47,6 +47,7 @@ const VIDEO_MIN_DURATION = 2;
 
 export class VideoTimeline extends React.Component<IProps, IState> {
     private controlbar: React.RefObject<HTMLDivElement>;
+    private timeline: React.RefObject<HTMLDivElement>;
     private intervalTimer: number;
     private positionX: number;
 
@@ -61,6 +62,7 @@ export class VideoTimeline extends React.Component<IProps, IState> {
             },
         };
         this.controlbar = React.createRef();
+        this.timeline = React.createRef();
         this.intervalTimer = 0;
         this.positionX = 0;
         this.handleDrag = this.handleDrag.bind(this);
@@ -68,8 +70,6 @@ export class VideoTimeline extends React.Component<IProps, IState> {
         this.handleDragOver = this.handleDragOver.bind(this);
         this.handleDragEnd = this.handleDragEnd.bind(this);
         this.tick = this.tick.bind(this);
-
-        this.handleTimelineClick = this.handleTimelineClick.bind(this);
     }
 
     componentDidMount() {
@@ -130,10 +130,8 @@ export class VideoTimeline extends React.Component<IProps, IState> {
         }
 
         const width = this.props.thumbnails[0].width;
-        // Plus one more incomplete frame because we do not know thumbnails width beforehand to
-        // make timeline render with just enough width space
-        const total = Math.floor((this.controlbar.current?.offsetWidth ?? 1) / width) + 1;
-        const secondPerFrame = (this.props.video.duration - 1) / (this.props.thumbnails.length - 1);
+        const total = Math.floor((this.controlbar.current?.offsetWidth ?? 1) / width);
+        const secondPerFrame = this.props.video.duration / (this.props.thumbnails.length - 1);
         const startPosition = width / 2 + (this.controlbar.current?.getBoundingClientRect()?.x ?? 0);
 
         const thumbnailsIndex = Array.from(
@@ -146,14 +144,6 @@ export class VideoTimeline extends React.Component<IProps, IState> {
         );
 
         let thumbnails = this.props.thumbnails.filter((_, index) => thumbnailsIndex.includes(index));
-
-        // missing some thumbnails on the last second of video, happen when video is too short (<15s)
-        if (thumbnails.length < total) {
-            thumbnails = thumbnails.concat(
-                Array(total - thumbnails.length)
-                    .fill(this.props.thumbnails[this.props.thumbnails.length - 1]),
-            );
-        }
 
         this.setState({thumbnailsRender: thumbnails});
     }
@@ -235,11 +225,23 @@ export class VideoTimeline extends React.Component<IProps, IState> {
         const video = this.props.video;
         const left = video ? `${(this.state.trim.start / video.duration) * 100}%` : '0%';
         const right = video ? `${(1 - this.state.trim.end / video.duration) * 100}%` : '0%';
+        const thumbnailWidth = Math.round(video.videoWidth / (video.videoHeight / 50)); // formula from video server
+        // maximum total possible thumbnails, minus margin to avoid making it feels too narrow
+        const totalThumbnails = Math.round(((this.timeline.current?.offsetWidth ?? 0) - 40 * 2) / thumbnailWidth);
+
+        if (!totalThumbnails) {
+            return (<div className={getClass('timeline-controls')} ref={this.timeline} />);
+        }
 
         return (
-            <div className={getClass('timeline-controls')}>
-                <ListThumbnails thumbnails={this.state.thumbnailsRender} getClass={getClass} />
+            <div className={getClass('timeline-controls')} ref={this.timeline}>
                 <div className={`${getClass('controlbars')}`} ref={this.controlbar} onClick={this.handleTimelineClick}>
+                    <ListThumbnails
+                        thumbnails={this.state.thumbnailsRender}
+                        getClass={getClass}
+                        thumbnailWidth={thumbnailWidth}
+                        totalThumbnails={totalThumbnails}
+                    />
                     <div
                         className={`${getClass('controlbars__mask')} ${getClass('controlbars__mask--left')}`}
                         style={{width: left}}
