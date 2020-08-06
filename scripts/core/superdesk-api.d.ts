@@ -58,6 +58,13 @@ declare module 'superdesk-api' {
         };
     }
 
+    export interface IAuthoringSideWidget {
+        label: string;
+        order: number; // Integer.
+        icon: string;
+        component: React.ComponentType<{article: IArticle}>;
+    }
+
     export interface IExtensionActivationResult {
         contributions?: {
             globalMenuHorizontal?: Array<React.ComponentType>;
@@ -67,6 +74,7 @@ declare module 'superdesk-api' {
             articleListItemWidgets?: Array<React.ComponentType<{article: IArticle}>>;
             articleGridItemWidgets?: Array<React.ComponentType<{article: IArticle}>>;
             authoringTopbarWidgets?: Array<React.ComponentType<{article: IArticle}>>;
+            authoringSideWidgets?: Array<IAuthoringSideWidget>;
             pages?: Array<IPage>;
             customFieldTypes?: Array<ICustomFieldType>;
             notifications?: {

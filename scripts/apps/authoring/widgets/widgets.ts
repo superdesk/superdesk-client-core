@@ -1,10 +1,10 @@
-import {debounce} from 'lodash';
+import {debounce, flatMap} from 'lodash';
 import {isWidgetVisibleForContentProfile} from 'apps/workspace/content/components/WidgetsConfig';
 import {gettext} from 'core/utils';
 import {isKilled} from 'apps/archive/utils';
 import {AuthoringWorkspaceService} from '../authoring/services/AuthoringWorkspaceService';
 import {IContentProfile, IArticle} from 'superdesk-api';
-import {appConfig} from 'appConfig';
+import {appConfig, extensions} from 'appConfig';
 
 interface IWidget {
     label?: string;
@@ -36,6 +36,7 @@ interface IWidget {
         modificationDateAfter: 'today' | string;
         sluglineMatch: 'EXACT' | string;
     };
+    component: React.ComponentType<{article: IArticle}>; // only present on widgets from extensions
 }
 
 interface IScope extends ng.IScope {
@@ -148,8 +149,15 @@ function WidgetsManagerCtrl(
                 }),
             );
 
+            const widgetsFromExtensions = flatMap(
+                Object.values(extensions),
+                (extension) => extension.activationResult?.contributions?.authoringSideWidgets ?? [],
+            );
+
             Promise.all(promises).then((result) => {
-                $scope.widgets = widgets.filter((__, i) => result[i] === true);
+                $scope.widgets = widgets
+                    .filter((__, i) => result[i] === true)
+                    .concat(widgetsFromExtensions);
                 $scope.widgets.forEach((widget) => {
                     if (widget.badgeAsync != null) {
                         widget.badgeAsyncValue = null;
