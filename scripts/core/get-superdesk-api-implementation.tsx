@@ -52,6 +52,7 @@ import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/Autho
 import ng from 'core/services/ng';
 import {Spacer} from './ui/components/Spacer';
 import {appConfig} from 'appConfig';
+import {httpRequestJsonLocal} from './helpers/network';
 
 function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
@@ -114,6 +115,7 @@ export function getSuperdeskApiImplementation(
     return {
         dataApi: dataApi,
         dataApiByEntity,
+        httpRequestJsonLocal,
         helpers: {
             assertNever,
         },

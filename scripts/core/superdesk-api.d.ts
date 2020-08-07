@@ -598,6 +598,24 @@ declare module 'superdesk-api' {
 
     // REST API
 
+    export interface IHttpRequestOptions {
+        method: 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE';
+        url: string; // absolute url
+        payload?: {};
+        headers?: {[key: string]: any};
+        urlParams?: {[key: string]: any};
+    }
+    
+    export interface IHttpRequestOptionsLocal extends Omit<IHttpRequestOptions, 'url'> {
+        path: string; // relative to application server
+    }
+    
+    export interface IHttpRequestJsonOptionsLocal extends IHttpRequestOptionsLocal {
+        // JSON not available with DELETE method
+        method: 'GET' | 'POST' | 'PATCH' | 'PUT';
+    }
+    
+
     export interface IBaseRestApiResponse {
         _created: string;
         _updated: string;
@@ -971,6 +989,7 @@ declare module 'superdesk-api' {
                 query(parameters: IArticleQuery): Promise<IArticleQueryResult>;
             };
         };
+        httpRequestJsonLocal<T>(options: IHttpRequestJsonOptionsLocal): Promise<T>;
         state: {
             articleInEditMode?: IArticle['_id'];
         };
