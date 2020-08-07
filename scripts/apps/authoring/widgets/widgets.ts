@@ -71,7 +71,12 @@ function AuthoringWidgetsProvider() {
     };
 
     this.$get = function() {
-        return widgets;
+        const widgetsFromExtensions = flatMap(
+            Object.values(extensions),
+            (extension) => extension.activationResult?.contributions?.authoringSideWidgets ?? [],
+        );
+
+        return widgets.concat(widgetsFromExtensions);
     };
 }
 
@@ -80,7 +85,7 @@ WidgetsManagerCtrl.$inject = ['$scope', '$routeParams', 'authoringWidgets', 'arc
 function WidgetsManagerCtrl(
     $scope: IScope,
     $routeParams,
-    authoringWidgets,
+    authoringWidgets: Array<IWidget>,
     archiveService,
     authoringWorkspace: AuthoringWorkspaceService,
     keyboardManager,
@@ -119,12 +124,16 @@ function WidgetsManagerCtrl(
             }
         }
 
-        const widgets = authoringWidgets.filter((widget) => (
-            !!widget.display[display] &&
+        const widgets = authoringWidgets.filter((widget) => {
+            if (widget.component) { // widgets coming from extensions are themselves in control when to render
+                return true;
+            } else {
+                return !!widget.display[display] &&
                 // If the widget requires a feature configured, then test this
                 // feature name against the config (defaulting to true)
-                (!widget.feature || !!_.get(appConfig.features, widget.feature, true))
-        ));
+                (!widget.feature || !!_.get(appConfig.features, widget.feature, true));
+            }
+        });
 
         content.getType(item.profile).then((contentProfile: IContentProfile) => {
             const promises = widgets.map(
@@ -149,15 +158,9 @@ function WidgetsManagerCtrl(
                 }),
             );
 
-            const widgetsFromExtensions = flatMap(
-                Object.values(extensions),
-                (extension) => extension.activationResult?.contributions?.authoringSideWidgets ?? [],
-            );
-
             Promise.all(promises).then((result) => {
-                $scope.widgets = widgets
-                    .filter((__, i) => result[i] === true)
-                    .concat(widgetsFromExtensions);
+                $scope.widgets = widgets.filter((__, i) => result[i] === true);
+
                 $scope.widgets.forEach((widget) => {
                     if (widget.badgeAsync != null) {
                         widget.badgeAsyncValue = null;

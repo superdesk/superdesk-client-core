@@ -59,6 +59,7 @@ declare module 'superdesk-api' {
     }
 
     export interface IAuthoringSideWidget {
+        _id: string;
         label: string;
         order: number; // Integer.
         icon: string;

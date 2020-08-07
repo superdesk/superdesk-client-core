@@ -12,6 +12,7 @@ const extension: IExtension = {
             contributions: {
                 authoringSideWidgets: [
                     {
+                        _id: 'imatrics-auto-tagging-widget',
                         label: label,
                         icon: 'marked-star',
                         order: 1,
