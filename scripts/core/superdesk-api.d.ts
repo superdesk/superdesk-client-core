@@ -59,11 +59,12 @@ declare module 'superdesk-api' {
     }
 
     export interface IAuthoringSideWidget {
-        _id: string;
+        _id: string; // required for configuring widget visibility in content profile
         label: string;
         order: number; // Integer.
         icon: string;
         component: React.ComponentType<{article: IArticle}>;
+        isAllowed?(article: IArticle): boolean; // enables limiting widgets depending on article data
     }
 
     export interface IExtensionActivationResult {

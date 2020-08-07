@@ -36,7 +36,10 @@ interface IWidget {
         modificationDateAfter: 'today' | string;
         sluglineMatch: 'EXACT' | string;
     };
-    component: React.ComponentType<{article: IArticle}>; // only present on widgets from extensions
+
+    // extension-specific fields
+    component: React.ComponentType<{article: IArticle}>;
+    isAllowed?(article: IArticle): boolean;
 }
 
 interface IScope extends ng.IScope {
@@ -125,8 +128,8 @@ function WidgetsManagerCtrl(
         }
 
         const widgets = authoringWidgets.filter((widget) => {
-            if (widget.component) { // widgets coming from extensions are themselves in control when to render
-                return true;
+            if (widget.component != null) { // widgets from extensions are themselves in control of widget visibility
+                return widget.isAllowed?.(item) ?? true;
             } else {
                 return !!widget.display[display] &&
                 // If the widget requires a feature configured, then test this

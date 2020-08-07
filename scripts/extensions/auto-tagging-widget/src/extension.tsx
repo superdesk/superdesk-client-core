@@ -1,4 +1,4 @@
-import {ISuperdesk, IExtension, IExtensionActivationResult} from 'superdesk-api';
+import {ISuperdesk, IExtension, IExtensionActivationResult, IArticle} from 'superdesk-api';
 import {getAutoTaggingComponent} from './auto-tagging';
 
 const extension: IExtension = {
@@ -17,6 +17,7 @@ const extension: IExtension = {
                         icon: 'marked-star',
                         order: 1,
                         component: getAutoTaggingComponent(superdesk, label),
+                        isAllowed: (item: IArticle) => item.type === 'text',
                     },
                 ],
             },
