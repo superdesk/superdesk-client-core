@@ -226,8 +226,16 @@ export class VideoTimeline extends React.Component<IProps, IState> {
         const left = video ? `${(this.state.trim.start / video.duration) * 100}%` : '0%';
         const right = video ? `${(1 - this.state.trim.end / video.duration) * 100}%` : '0%';
         const thumbnailWidth = Math.round(video.videoWidth / (video.videoHeight / 50)); // formula from video server
-        // maximum total possible thumbnails, minus margin to avoid making it feels too narrow
-        const totalThumbnails = Math.round(((this.timeline.current?.offsetWidth ?? 0) - 40 * 2) / thumbnailWidth);
+        let timelineWidth = 0;
+
+        if (this.timeline.current != null) {
+            const timelineStyle = window.getComputedStyle(this.timeline.current);
+            const timelinePadding = parseInt(timelineStyle.paddingLeft, 10) + parseInt(timelineStyle.paddingRight, 10);
+
+            timelineWidth = this.timeline.current.offsetWidth - timelinePadding;
+        }
+        // maximum total possible thumbnails
+        const totalThumbnails = Math.floor(timelineWidth / thumbnailWidth);
 
         if (!totalThumbnails) {
             return (<div className={getClass('timeline-controls')} ref={this.timeline} />);

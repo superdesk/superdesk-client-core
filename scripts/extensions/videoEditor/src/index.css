@@ -1,6 +1,7 @@
 .timeline-controls {
   position: relative;
   margin: auto;
+  padding: 0 3rem;
   width: 100%;
 }
 
