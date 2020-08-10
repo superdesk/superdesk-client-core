@@ -16,8 +16,10 @@ angular.module('superdesk.core.auth.keycloak', []).service('keycloak', [
             keycloak = Keycloak(appConfig.keycloak_config);
             keycloak
                 .init({onLoad: 'login-required'})
-                .success(() => {
-                    auth.loginOIDC(keycloak.token);
+                .then((authenticated) => {
+                    if (authenticated === true) {
+                        auth.loginOIDC(keycloak.token);
+                    }
                 });
         };
 
@@ -25,7 +27,7 @@ angular.module('superdesk.core.auth.keycloak', []).service('keycloak', [
             () => session.identity,
             () => {
                 if (session.identity == null && (keycloak || {}).authenticated) {
-                    keycloak.logout();
+                    keycloak.logout({redirectUri: appConfig.keycloak_config.redirectUri});
                 }
             },
         );
