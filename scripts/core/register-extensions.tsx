@@ -37,12 +37,12 @@ export function registerExtensions(
             params.category = superdesk.MAIN_MENU;
         }
 
-        if (page.topTemplateUrl) {
-            params.topTemplateUrl = page.topTemplateUrl;
+        if (page.showTopMenu === true) {
+            params.topTemplateUrl = 'scripts/apps/dashboard/views/workspace-topnav.html';
         }
 
-        if (page.sideTemplateUrl) {
-            params.sideTemplateUrl = page.sideTemplateUrl;
+        if (page.showSideMenu === true) {
+            params.sideTemplateUrl = 'scripts/apps/workspace/views/workspace-sidenav.html';
         }
 
         superdesk.activity(page.url, params);

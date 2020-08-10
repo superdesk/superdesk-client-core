@@ -16,8 +16,8 @@ const extension: IExtension = {
                     title: gettext('SAMS'),
                     url: '/workspace/sams',
                     component: getSamsApp(superdesk, getSamsWorkspaceComponent),
-                    topTemplateUrl: 'scripts/apps/dashboard/views/workspace-topnav.html',
-                    sideTemplateUrl: 'scripts/apps/workspace/views/workspace-sidenav.html',
+                    showTopMenu: true,
+                    showSideMenu: true,
                     addToMainMenu: false,
                 }],
                 workspaceMenuItems: [{

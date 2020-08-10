@@ -584,8 +584,10 @@ declare module 'superdesk-api' {
         url: string;
         component: React.ComponentClass | React.ComponentType;
         priority?: number;
-        topTemplateUrl?: string;
-        sideTemplateUrl?: string;
+
+        showTopMenu?: boolean;
+        showSideMenu?: boolean;
+
         addToMainMenu?: boolean; // defaults to true
     }>;
 
