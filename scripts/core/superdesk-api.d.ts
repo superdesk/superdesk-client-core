@@ -965,6 +965,12 @@ declare module 'superdesk-api' {
         'content:update': IWebsocketMessage<IArticleUpdateEvent>;
     }
 
+    export interface INotifyMessageOptions {
+        button?: {
+            onClick(): void;
+            label: string;
+        }
+    }
 
 
     // APPLICATION API
@@ -999,10 +1005,10 @@ declare module 'superdesk-api' {
             confirm(message: string, title?: string): Promise<boolean>;
             showModal(component: React.ComponentType<{closeModal(): void}>): Promise<void>;
             notify: {
-                info(text: string, displayDuration?: number, options?: any): void;
-                success(text: string, displayDuration?: number, options?: any): void;
-                warning(text: string, displayDuration?: number, options?: any): void;
-                error(text: string, displayDuration?: number, options?: any): void;
+                info(text: string, displayDuration?: number, options?: INotifyMessageOptions): void;
+                success(text: string, displayDuration?: number, options?: INotifyMessageOptions): void;
+                warning(text: string, displayDuration?: number, options?: INotifyMessageOptions): void;
+                error(text: string, displayDuration?: number, options?: INotifyMessageOptions): void;
             },
         };
         entities: {
