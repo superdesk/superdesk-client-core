@@ -30,7 +30,7 @@ export function registerExtensions(
             priority: page.priority ?? 100,
             adminTools: false,
             controller: noop,
-            template: '<sd-extension-page />',
+            template: '<sd-extension-page></sd-extension-page>',
         };
 
         if (page.addToMainMenu ?? true) {
