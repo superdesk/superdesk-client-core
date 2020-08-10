@@ -6,11 +6,9 @@ import {pick} from 'lodash';
 interface IProps {
     video: HTMLVideoElement;
     article: IArticle;
-    etag: string;
     crop: ICrop;
     rotate: number;
     superdesk: ISuperdesk;
-    renditions: IArticle['renditions'];
     onToggleLoading: (isLoading: boolean, loadingText?: string, type?: 'video' | 'thumbnail') => void;
     onSave: (renditions: IArticle['renditions'], etag: string) => void;
     onError: (err: IErrorMessage) => void;
@@ -47,7 +45,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
     }
 
     componentDidMount() {
-        const thumbnail = this.props.renditions?.thumbnail?.href;
+        const thumbnail = this.props.article.renditions?.thumbnail?.href;
 
         if (thumbnail) {
             this.setThumbnail(thumbnail);
@@ -56,7 +54,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
 
     componentDidUpdate(prevProps: IProps) {
         // video has changed so captured thumbnail showed on UI is no longer correct
-        if (prevProps.renditions !== this.props.renditions && this.state.type === 'capture') {
+        if (prevProps.article.renditions !== this.props.article.renditions && this.state.type === 'capture') {
             this.handleReset();
         }
     }
@@ -156,13 +154,13 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
                 headers: {
                     Authorization: session.getToken(),
                     'Content-Type': 'application/json',
-                    'If-Match': this.props.etag,
+                    'If-Match': this.props.article._etag,
                 },
                 body: JSON.stringify({
                     capture: body,
                     item: {
                         _id: this.props.article._id,
-                        renditions: this.props.renditions,
+                        renditions: this.props.article.renditions,
                     },
                 }),
             })
@@ -187,7 +185,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
                 method: 'PUT',
                 headers: {
                     Authorization: session.getToken(),
-                    'If-Match': this.props.etag,
+                    'If-Match': this.props.article._etag,
                 },
                 body: form,
             })
@@ -275,7 +273,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
             throw new Error('Could not get current canvas');
         }
         ctx.clearRect(0, 0, this.ref.current.width, this.ref.current.height);
-        const thumbnail = this.props.renditions?.thumbnail?.href;
+        const thumbnail = this.props.article.renditions?.thumbnail?.href;
 
         if (thumbnail) {
             this.setThumbnail(thumbnail);
@@ -361,7 +359,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
                         )}
                     </div>
                 </div>
-                {!this.props.renditions?.thumbnail?.href && !this.state.value && (
+                {!this.props.article.renditions?.thumbnail?.href && !this.state.value && (
                     <div className={getClass('thumbnail--empty')}>
                         <div className="upload__info-icon" />
                         <p className={getClass('thumbnail--empty__text')}>{gettext('No thumbnail')}</p>
