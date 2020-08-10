@@ -16,7 +16,7 @@ export class Modal extends React.PureComponent<IProps> {
     }
 
     handleKeydown(event: KeyboardEvent) {
-        if (event.keyCode === 27 && this.props.closeModal) {
+        if (event.code === 'Escape' && this.props.closeModal) {
             event.preventDefault();
             this.props.closeModal();
         }

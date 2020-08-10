@@ -1,6 +1,10 @@
+// External Modules
 import * as React from 'react';
+
+// Types
 import {ISetItem, IStorageDestinationItem} from '../../interfaces';
 
+// UI
 import {
     ListHeader,
     ListItemGroup,
@@ -8,7 +12,6 @@ import {
     ListItemColumn,
     ListItemRow,
 } from '../../ui/';
-
 import {SetListItem} from './setListItem';
 
 interface IProps {
@@ -16,10 +19,10 @@ interface IProps {
     noItemTitle: string;
     marginTop?: boolean;
     sets: Array<ISetItem>;
-    storageDestinations: {[key: string]: IStorageDestinationItem};
-    onItemClicked(set: ISetItem): void;
-    onDelete?(set: ISetItem): void;
-    onEdit(set: ISetItem): void;
+    storageDestinations: Dictionary<string, IStorageDestinationItem>;
+    previewSet(set: ISetItem): void;
+    editSet(set: ISetItem): void;
+    deleteSet?(set: ISetItem): void;
     currentSetId?: string;
 }
 
@@ -44,9 +47,10 @@ export class SetListGroup extends React.PureComponent<IProps> {
                             <SetListItem
                                 key={set._id}
                                 set={set}
-                                onClick={this.props.onItemClicked}
-                                onDelete={this.props.onDelete}
-                                onEdit={this.props.onEdit}
+                                storageDestination={this.props.storageDestinations[set?.destination_name ?? '']}
+                                onClick={this.props.previewSet}
+                                deleteSet={this.props.deleteSet}
+                                editSet={this.props.editSet}
                                 selected={this.props.currentSetId === set._id}
                             />
                         ))

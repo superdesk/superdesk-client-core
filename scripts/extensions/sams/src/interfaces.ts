@@ -1,4 +1,5 @@
-import {IBaseRestApiResponse} from 'superdesk-api';
+// Types
+import {IBaseRestApiResponse, ISuperdesk} from 'superdesk-api';
 
 export enum SET_STATE {
     DRAFT = 'draft',
@@ -24,7 +25,7 @@ export interface ISet {
     state?: SET_STATE;
     description?: string;
     destination_name?: string;
-    destination_config?: {[key: string]: any};
+    destination_config?: Dictionary<string, any>;
     destination?: IStorageDestinationItem;
 }
 
@@ -48,3 +49,5 @@ export interface ISamsAPI {
         getAll(): Promise<Array<IStorageDestinationItem>>;
     };
 }
+
+export type IConnectComponentToSuperdesk = (superdesk: ISuperdesk) => React.ComponentType;

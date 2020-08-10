@@ -1,21 +1,23 @@
-import React from 'react';
+// External Modules
+import * as React from 'react';
 
+// Types
 import {ISuperdesk} from 'superdesk-api';
-import {ISamsAPI, MODAL_TYPES} from '../interfaces';
+import {MODAL_TYPES} from '../interfaces';
 
-import {ButtonGroup, Dropdown, SubNav} from 'superdesk-ui-framework/react';
+// UI
+import {Dropdown, ButtonGroup, SubNav} from 'superdesk-ui-framework/react';
 import {IMenuGroup} from 'superdesk-ui-framework/react/components/Dropdown';
 import {HeaderPanel, LayoutContainer, MainPanel} from '../ui';
-
-import {getManageSetsModalComponent} from './sets/manageSetsModal';
+import {getManageSetsModalComponent} from '../components/sets/manageSetsModal';
 
 interface IState {
     currentModal: MODAL_TYPES;
 }
 
-export function getSamsWorkspaceComponent(superdesk: ISuperdesk, api: ISamsAPI) {
-    const ManageSetsModal = getManageSetsModalComponent(superdesk, api);
+export function getSamsWorkspaceComponent(superdesk: ISuperdesk) {
     const {gettext} = superdesk.localization;
+    const ManageSetsModal = getManageSetsModalComponent(superdesk);
 
     return class SamsWorkspace extends React.Component<{}, IState> {
         constructor(props: any) {

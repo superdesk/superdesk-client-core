@@ -1,6 +1,6 @@
+// Types
 import {ISuperdesk, IRestApiResponse} from 'superdesk-api';
 import {ISet, ISetItem} from '../interfaces';
-import {EVENTS} from '../constants';
 
 const RESOURCE = 'sams/sets';
 
@@ -24,13 +24,6 @@ export function createSet(superdesk: ISuperdesk, item: ISet): Promise<ISetItem> 
         .then((set: ISetItem) => {
             notify.success(gettext('Set created successfully'));
 
-            window.dispatchEvent(
-                new CustomEvent(
-                    EVENTS.SET_CREATED,
-                    {detail: set},
-                ),
-            );
-
             return set;
         })
         .catch((error: any) => {
@@ -48,13 +41,6 @@ export function updateSet(superdesk: ISuperdesk, original: ISetItem, updates: IS
         .then((set: ISetItem) => {
             notify.success(gettext('Set updated successfully'));
 
-            window.dispatchEvent(
-                new CustomEvent(
-                    EVENTS.SET_UPDATED,
-                    {detail: set},
-                ),
-            );
-
             return set;
         })
         .catch((error: any) => {
@@ -71,13 +57,6 @@ export function deleteSet(superdesk: ISuperdesk, item: ISetItem): Promise<void> 
     return superdesk.dataApi.delete<ISetItem>(RESOURCE, item)
         .then(() => {
             notify.success(gettext('Set deleted successfully'));
-
-            window.dispatchEvent(
-                new CustomEvent(
-                    EVENTS.SET_DELETED,
-                    {detail: item},
-                ),
-            );
         })
         .catch((error: any) => {
             notify.error(gettext('Failed to delete the Set'));

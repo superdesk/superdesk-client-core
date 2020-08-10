@@ -1,6 +1,8 @@
+// Types
 import {ISuperdesk} from 'superdesk-api';
 import {ISamsAPI, ISet, ISetItem, IStorageDestinationItem} from '../interfaces';
 
+// APIs
 import {getAllSets, createSet, updateSet, deleteSet, confirmBeforeDeletingSet} from './sets';
 import {getAllStorageDestinations} from './storageDestinations';
 

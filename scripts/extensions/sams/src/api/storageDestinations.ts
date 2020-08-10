@@ -1,7 +1,9 @@
+// External Modules
+import {sortBy} from 'lodash';
+
+// Types
 import {ISuperdesk, IRestApiResponse} from 'superdesk-api';
 import {IStorageDestinationItem} from '../interfaces';
-
-import {sortBy} from 'lodash';
 
 const RESOURCE = 'sams/destinations';
 

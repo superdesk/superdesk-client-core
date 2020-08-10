@@ -6,7 +6,7 @@ export interface IPanelTools {
     icon: string;
     title: string;
     onClick(): void;
-    ariaValue?: string;
+    ariaValue: string;
 }
 
 interface IProps {

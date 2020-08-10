@@ -1,12 +1,21 @@
+// External Modules
 import * as React from 'react';
+import {connect} from 'react-redux';
+import {Dispatch} from 'redux';
 import {cloneDeep, isEqual, pickBy} from 'lodash';
 
+// Types
 import {ISuperdesk} from 'superdesk-api';
-import {ISamsAPI, ISet, ISetItem, IStorageDestinationItem} from '../../interfaces';
-import {SET_STATE} from '../../constants';
+import {ISet, ISetItem, IStorageDestinationItem, SET_STATE} from '../../interfaces';
+import {IApplicationState} from '../../store';
 
-import {Button, ButtonGroup, Input, Option, Select, Switch} from 'superdesk-ui-framework/react';
+// Redux Actions & Selectors
+import {createSet, previewSet, updateSet, closeSetContentPanel} from '../../store/sets/actions';
+import {getSelectedSet, getSelectedSetStorageDestination} from '../../store/sets/selectors';
+import {getStorageDestinations} from '../../store/storageDestinations/selectors';
 
+// UI
+import {Button, ButtonGroup, Input, Option, Select, Switch, FormLabel} from 'superdesk-ui-framework/react';
 import {
     FormGroup,
     FormRow,
@@ -15,31 +24,50 @@ import {
     PanelContentBlockInner,
     PanelHeader,
     PanelHeaderSlidingToolbar,
+    Text,
 } from '../../ui';
 
 interface IProps {
-    set?: ISetItem;
-    destinations?: Array<IStorageDestinationItem>;
-    onDelete?(set: ISetItem): void;
-    onClose(): void;
+    original?: ISetItem;
+    destinations: Array<IStorageDestinationItem>;
+    closeEditor(): void;
+    previewSet(set: ISetItem): void;
+    updateSet(original: ISetItem, updates: ISet): Promise<ISetItem>;
+    createSet(set: ISet): Promise<ISetItem>;
+    currentDestination?: IStorageDestinationItem;
 }
 
 interface IState {
-    diff: ISet;
+    updates: ISet;
     isDirty?: boolean;
     isExisting?: boolean;
 }
 
-export function getSetEditorPanel(superdesk: ISuperdesk, api: ISamsAPI) {
+export function getSetEditorPanel(superdesk: ISuperdesk) {
     const {gettext} = superdesk.localization;
 
-    return class SetEditorPanel extends React.Component<IProps, IState> {
+    const mapStateToProps = (state: IApplicationState) => ({
+        original: getSelectedSet(state),
+        destinations: getStorageDestinations(state),
+        currentDestination: getSelectedSetStorageDestination(state),
+    });
+
+    const mapDispatchToProps = (dispatch: Dispatch) => ({
+        closeEditor: () => dispatch(closeSetContentPanel()),
+        previewSet: (set: ISetItem) => dispatch(previewSet(set._id)),
+        updateSet: (original: ISetItem, updates: ISetItem) => dispatch<any>(updateSet(original, updates)),
+        createSet: (set: ISetItem) => dispatch<any>(createSet(set)),
+    });
+
+    class SetEditorPanelComponent extends React.Component<IProps, IState> {
+        onChange: Dictionary<string, (value: any) => void>;
+
         constructor(props: IProps) {
             super(props);
 
-            if (this.props.set?._id == null) {
+            if (this.props.original?._id == null) {
                 this.state = {
-                    diff: {
+                    updates: {
                         destination_name: this.props.destinations?.[0]?._id,
                     },
                     isDirty: true,
@@ -47,7 +75,7 @@ export function getSetEditorPanel(superdesk: ISuperdesk, api: ISamsAPI) {
                 };
             } else {
                 this.state = {
-                    diff: cloneDeep<ISetItem>(this.props.set),
+                    updates: cloneDeep<ISetItem>(this.props.original),
                     isDirty: false,
                     isExisting: true,
                 };
@@ -55,30 +83,33 @@ export function getSetEditorPanel(superdesk: ISuperdesk, api: ISamsAPI) {
 
             this.onStateChange = this.onStateChange.bind(this);
             this.onSave = this.onSave.bind(this);
-        }
+            this.onCreate = this.onCreate.bind(this);
+            this.previewSet = this.previewSet.bind(this);
 
-        onChange = {
-            name: (value: string) => this.onFieldChange('name', value),
-            description: (value: string) => this.onFieldChange('description', value),
-            destination_name: (value: string) => this.onFieldChange('destination_name', value),
-        };
+            this.onChange = {
+                name: (value: string) => this.onFieldChange('name', value),
+                description: (value: string) => this.onFieldChange('description', value),
+                destination_name: (value: string) => this.onFieldChange('destination_name', value),
+                state: (value: boolean) => this.onStateChange(value),
+            };
+        }
 
         onFieldChange(field: string, value: string): void {
             const dirtyFields = ['state', 'name', 'description', 'destination_name'];
-            const diff = this.state.diff ?? {};
+            const updates = this.state.updates ?? {};
             let dirty = true;
 
-            (diff as any)[field] = value;
+            (updates as any)[field] = value;
 
             if (this.state.isExisting) {
                 dirty = !isEqual(
-                    pickBy(this.props.set, (_value, key: string) => dirtyFields.includes(key)),
-                    pickBy(this.state.diff, (_value, key: string) => dirtyFields.includes(key)),
+                    pickBy(this.props.original, (_value, key: string) => dirtyFields.includes(key)),
+                    pickBy(this.state.updates, (_value, key: string) => dirtyFields.includes(key)),
                 );
             }
 
             this.setState({
-                diff: diff,
+                updates: updates,
                 isDirty: dirty,
             });
         }
@@ -86,7 +117,7 @@ export function getSetEditorPanel(superdesk: ISuperdesk, api: ISamsAPI) {
         onStateChange(value: boolean) {
             let newState: string;
 
-            if (this.props.set?.state === SET_STATE.DRAFT) {
+            if (this.props.original?.state === SET_STATE.DRAFT) {
                 newState = value === true ?
                     SET_STATE.USABLE :
                     SET_STATE.DRAFT;
@@ -100,39 +131,60 @@ export function getSetEditorPanel(superdesk: ISuperdesk, api: ISamsAPI) {
         }
 
         onSave() {
-            const promise: Promise<ISetItem> = !this.state.isExisting ?
-                api.sets.create(this.state.diff) :
-                api.sets.update(this.props.set as ISetItem, this.state.diff);
+            this.props.updateSet(this.props.original as ISetItem, this.state.updates);
+        }
 
-            promise.then(() => {
-                this.props.onClose();
-            });
+        onCreate() {
+            this.props.createSet(this.state.updates);
+        }
+
+        previewSet() {
+            if (this.props.original != null) {
+                this.props.previewSet(this.props.original);
+            }
+        }
+
+        renderHeaderButtons() {
+            return (this.props.original != null) ? (
+                <ButtonGroup align="right">
+                    <Button
+                        text={gettext('Cancel')}
+                        style="hollow"
+                        onClick={this.previewSet}
+                    />
+                    <Button
+                        text={gettext('Save')}
+                        type="primary"
+                        disabled={!this.state.isDirty}
+                        onClick={this.onSave}
+                    />
+                </ButtonGroup>
+            ) : (
+                <ButtonGroup align="right">
+                    <Button
+                        text={gettext('Cancel')}
+                        style="hollow"
+                        onClick={this.props.closeEditor}
+                    />
+                    <Button
+                        text={gettext('Create')}
+                        type="primary"
+                        onClick={this.onCreate}
+                    />
+                </ButtonGroup>
+            );
         }
 
         render() {
-            const {destinations} = this.props;
-            const {diff} = this.state;
-            const saveButtonText = !this.state.isExisting ?
-                gettext('Create') :
-                gettext('Save');
+            const {currentDestination} = this.props;
+            const destinations = this.props.destinations ?? [];
+            const {updates} = this.state;
 
             return (
                 <React.Fragment>
                     <PanelHeader borderB={true}>
                         <PanelHeaderSlidingToolbar>
-                            <ButtonGroup align="right">
-                                <Button
-                                    text={gettext('Cancel')}
-                                    style="hollow"
-                                    onClick={this.props.onClose}
-                                />
-                                <Button
-                                    text={saveButtonText}
-                                    type="primary"
-                                    disabled={!this.state.isDirty}
-                                    onClick={this.onSave}
-                                />
-                            </ButtonGroup>
+                            {this.renderHeaderButtons()}
                         </PanelHeaderSlidingToolbar>
                     </PanelHeader>
                     <PanelContent>
@@ -143,8 +195,8 @@ export function getSetEditorPanel(superdesk: ISuperdesk, api: ISamsAPI) {
                                         <FormRow>
                                             <label>{gettext('Enabled')}</label>
                                             <Switch
-                                                value={diff.state === SET_STATE.USABLE}
-                                                onChange={this.onStateChange}
+                                                value={updates.state === SET_STATE.USABLE}
+                                                onChange={this.onChange.state}
                                             />
                                         </FormRow>
                                     </FormGroup>
@@ -153,7 +205,7 @@ export function getSetEditorPanel(superdesk: ISuperdesk, api: ISamsAPI) {
                                     <FormRow>
                                         <Input
                                             label={gettext('Name')}
-                                            value={diff?.name}
+                                            value={updates?.name}
                                             required={true}
                                             onChange={this.onChange.name}
                                             disabled={false}
@@ -164,34 +216,49 @@ export function getSetEditorPanel(superdesk: ISuperdesk, api: ISamsAPI) {
                                     <FormRow>
                                         <Input
                                             label={gettext('Description')}
-                                            value={diff?.description}
+                                            value={updates?.description}
                                             onChange={this.onChange.description}
                                             disabled={false}
                                         />
                                     </FormRow>
                                 </FormGroup>
-                                <FormGroup>
-                                    <FormRow>
-                                        <Select
-                                            label={gettext('Destination')}
-                                            value={diff?.destination_name}
-                                            required={true}
-                                            onChange={this.onChange.destination_name}
-                                            disabled={false}
-                                        >
-                                            {(destinations ?? []).map((destination) => (
-                                                <Option key={destination._id} value={destination._id}>
-                                                    {destination._id} / {destination.provider}
-                                                </Option>
-                                            ))}
-                                        </Select>
-                                    </FormRow>
-                                </FormGroup>
+                                {(!this.state.isExisting || updates.state === SET_STATE.DRAFT) ? (
+                                    <FormGroup>
+                                        <FormRow>
+                                            <Select
+                                                label={gettext('Destination')}
+                                                value={updates?.destination_name}
+                                                required={true}
+                                                onChange={this.onChange.destination_name}
+                                                disabled={false}
+                                            >
+                                                {destinations.map((destination) => (
+                                                    <Option key={destination._id} value={destination._id}>
+                                                        {destination._id} / {destination.provider}
+                                                    </Option>
+                                                ))}
+                                            </Select>
+                                        </FormRow>
+                                    </FormGroup>
+                                ) : (
+                                    <React.Fragment>
+                                        <FormLabel text={gettext('Storage Destination')} style="light"/>
+                                        <Text>{currentDestination?._id}</Text>
+
+                                        <FormLabel text={gettext('Storage Provider')} style="light"/>
+                                        <Text>{currentDestination?.provider}</Text>
+                                    </React.Fragment>
+                                )}
                             </PanelContentBlockInner>
                         </PanelContentBlock>
                     </PanelContent>
                 </React.Fragment>
             );
         }
-    };
+    }
+
+    return connect(
+        mapStateToProps,
+        mapDispatchToProps,
+    )(SetEditorPanelComponent);
 }

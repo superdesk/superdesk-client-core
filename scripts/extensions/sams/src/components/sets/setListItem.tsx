@@ -1,18 +1,20 @@
+// External Modules
 import * as React from 'react';
 
-import {ISetItem} from '../../interfaces';
-import {SET_STATE} from '../../constants';
+// Types
+import {ISetItem, IStorageDestinationItem, SET_STATE} from '../../interfaces';
 
+// UI
 import {Badge, IconButton} from 'superdesk-ui-framework/react';
-
 import {ListItem, ListItemActionMenu, ListItemBorder, ListItemColumn, ListItemRow} from '../../ui/list';
 
 interface IProps {
     set: ISetItem;
+    storageDestination?: IStorageDestinationItem;
     selected?: boolean;
     onClick(set: ISetItem): void;
-    onDelete?(set: ISetItem): void;
-    onEdit?(set: ISetItem): void;
+    deleteSet?(set: ISetItem): void;
+    editSet?(set: ISetItem): void;
 }
 
 export class SetListItem extends React.PureComponent<IProps> {
@@ -24,32 +26,32 @@ export class SetListItem extends React.PureComponent<IProps> {
         this.onDelete = this.onDelete.bind(this);
     }
 
-    onItemClick(e: React.MouseEvent<HTMLDivElement>) {
+    onItemClick(event: React.MouseEvent<HTMLDivElement>) {
         if (this.props.onClick) {
-            e.preventDefault();
-            e.stopPropagation();
+            event.stopPropagation();
             this.props.onClick(this.props.set);
         }
     }
 
-    onEdit(e: React.MouseEvent<HTMLAnchorElement>) {
-        if (this.props.onEdit) {
-            e.preventDefault();
-            e.stopPropagation();
-            this.props.onEdit(this.props.set);
+    onEdit(event: any) {
+        if (this.props.editSet) {
+            event.stopPropagation();
+            this.props.editSet(this.props.set);
         }
     }
 
-    onDelete(e: React.MouseEvent<HTMLDivElement>) {
-        if (this.props.onDelete) {
-            e.preventDefault();
-            e.stopPropagation();
-            this.props.onDelete(this.props.set);
+    onDelete(event: any) {
+        if (this.props.deleteSet) {
+            event.stopPropagation();
+            this.props.deleteSet(this.props.set);
         }
     }
 
     render() {
-        const set = this.props.set;
+        const {set, storageDestination} = this.props;
+        const storageDestinationText = storageDestination == null ?
+            '' :
+            `${storageDestination._id} / ${storageDestination.provider}`;
 
         return (
             <ListItem shadow={1} onClick={this.onItemClick} selected={this.props.selected}>
@@ -71,11 +73,11 @@ export class SetListItem extends React.PureComponent<IProps> {
                 </ListItemColumn>
                 <ListItemColumn>
                     <ListItemRow>
-                        {set.destination?._id} / {set.destination?.provider}
+                        {storageDestinationText}
                     </ListItemRow>
                 </ListItemColumn>
                 <ListItemActionMenu row={true}>
-                    {this.props.onDelete == null ? null : (
+                    {this.props.deleteSet == null ? null : (
                         <IconButton icon="trash" ariaValue="delete" onClick={this.onDelete} />
                     )}
                     <IconButton icon="pencil" ariaValue="edit" onClick={this.onEdit} />

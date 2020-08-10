@@ -1,19 +1,21 @@
+// Types
 import {IExtension, IExtensionActivationResult, ISuperdesk} from 'superdesk-api';
-import {getSamsAPIs} from './api';
-import {getSamsWorkspaceComponent} from './components/samsWorkspace';
+
+// Apps
+import {getSamsApp} from './apps/samsApp';
+import {getSamsWorkspaceComponent} from './apps/samsWorkspace';
 
 const extension: IExtension = {
     id: 'sams',
     activate: (superdesk: ISuperdesk) => {
         const {gettext} = superdesk.localization;
-        const api = getSamsAPIs(superdesk);
 
         const result: IExtensionActivationResult = {
             contributions: {
                 pages: [{
                     title: gettext('SAMS'),
                     url: '/workspace/sams',
-                    component: getSamsWorkspaceComponent(superdesk, api),
+                    component: getSamsApp(superdesk, getSamsWorkspaceComponent),
                     topTemplateUrl: 'scripts/apps/dashboard/views/workspace-topnav.html',
                     sideTemplateUrl: 'scripts/apps/workspace/views/workspace-sidenav.html',
                     addToMainMenu: false,
