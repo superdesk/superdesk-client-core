@@ -1,13 +1,17 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {isCheckAllowed} from '../helpers';
+import {gettext} from 'core/utils';
 
-export class SelectBox extends React.Component<any, any> {
-    static propTypes: any;
-    static defaultProps: any;
+interface IProps {
+    item: any;
+    classes?: any;
+    onMultiSelect: any;
+}
 
-    constructor(props) {
+export class SelectBox extends React.Component<IProps> {
+    constructor(props: IProps) {
         super(props);
+
         this.toggle = this.toggle.bind(this);
     }
 
@@ -28,24 +32,15 @@ export class SelectBox extends React.Component<any, any> {
         if (this.props.item.selected) {
             this.props.item.selected = isCheckAllowed(this.props.item);
         }
-        return React.createElement(
-            'div',
-            {
-                className: this.props.classes ? this.props.classes : 'selectbox',
-                title: isCheckAllowed(this.props.item) ? null : 'selection not allowed',
-                onClick: this.toggle,
-            },
-            React.createElement(
-                'span', {
-                    className: 'sd-checkbox' + (this.props.item.selected ? ' checked' : ''),
-                },
-            ),
+
+        return (
+            <div
+                className={this.props.classes ? this.props.classes : 'selectbox'}
+                title={isCheckAllowed(this.props.item) ? null : gettext('selection not allowed')}
+                onClick={this.toggle}
+            >
+                <span className={'sd-checkbox' + (this.props.item.selected ? ' checked' : '')} />
+            </div>
         );
     }
 }
-
-SelectBox.propTypes = {
-    item: PropTypes.any,
-    classes: PropTypes.string,
-    onMultiSelect: PropTypes.func,
-};

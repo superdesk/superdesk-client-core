@@ -6,10 +6,9 @@ import {IPropsItemListInfo} from '../ListItemInfo';
 export const urgency: React.StatelessComponent<IPropsItemListInfo> = (props) => props.item.urgency ?
     React.createElement(
         ItemUrgency,
-        angular.extend({key: 'urgency', svc: props.svc}, props.item),
+        angular.extend({key: 'urgency'}, props.item),
     ) : null;
 
 urgency.propTypes = {
-    svc: PropTypes.any.isRequired,
     item: PropTypes.any,
 };

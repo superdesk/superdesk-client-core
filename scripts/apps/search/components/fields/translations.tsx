@@ -6,7 +6,6 @@ import {TranslationsList} from './translations-list';
 import {ItemListPopup} from '../item-list-popup';
 
 interface IProps {
-    svc: any;
     item: IArticle;
 }
 
