@@ -16,6 +16,68 @@ import {applyDefault} from 'core/helpers/typescript-helpers';
 UserPreferencesDirective.$inject = ['session', 'preferencesService', 'notify', 'asset',
     'metadata', 'desks', 'modal', '$timeout', '$q', 'userList', 'lodash', 'search'];
 
+function translateCategoryName(category) {
+    switch (category.name.toLowerCase()) {
+    case 'advisory': return gettext('Advisory');
+    case 'agate': return gettext('Agate');
+    case 'atlantic': return gettext('Atlantic');
+    case 'audio skeds': return gettext('Audio Skeds');
+    case 'business': return gettext('Business');
+    case 'entertainment': return gettext('Entertainment');
+    case 'finance': return gettext('Finance');
+    case 'international': return gettext('International');
+    case 'lifestyle': return gettext('Lifestyle');
+    case 'national': return gettext('National');
+    case 'ontario/quebec': return gettext('Ontario/Quebec');
+    case 'prairies/bc': return gettext('Prairies/BC');
+    case 'press release': return gettext('Press Release');
+    case 'spare news': return gettext('Spare News');
+    case 'spare sports': return gettext('Spare Sports');
+    case 'sports': return gettext('Sports');
+    case 'travel': return gettext('Travel');
+    }
+
+    return category.name;
+}
+
+function translatePreferenceLabel(label) {
+    switch (label.toLowerCase()) {
+    case 'allow desktop notifications': return gettext('Allow Desktop Notifications');
+    case 'allow notifications to slack': return gettext('Allow Notifications To Slack');
+    case 'archive': return gettext('archive');
+    case 'article_defaults': return gettext('article_defaults');
+    case 'assignments': return gettext('Assignments');
+    case 'categories': return gettext('categories');
+    case 'contacts': return gettext('contacts');
+    case 'cvs': return gettext('cvs');
+    case 'default agenda': return gettext('Default Agenda');
+    case 'default calendar': return gettext('Default Calendar');
+    case 'default desk for coverage types': return gettext('Default desk for coverage types');
+    case 'default events planning filter': return gettext('Default Events Planning Filter');
+    case 'default sort preferences for assignment lists': return gettext('Default sort preferences for Assignment lists');
+    case 'desks': return gettext('desks');
+    case 'enable feature preview': return gettext('Enable Feature Preview');
+    case 'enable single line view': return gettext('Enable Single Line View');
+    case 'feature': return gettext('feature');
+    case 'located': return gettext('Located');
+    case 'monitoring view': return gettext('Monitoring View');
+    case 'monitoring': return gettext('monitoring');
+    case 'notifications': return gettext('notifications');
+    case 'open advanced mode when adding coverages': return gettext('Open advanced mode when adding coverages');
+    case 'place': return gettext('Place');
+    case 'planning': return gettext('planning');
+    case 'prefered cv items': return gettext('Prefered CV items');
+    case 'preferred categories': return gettext('Preferred Categories');
+    case 'preferred desks': return gettext('Preferred Desks');
+    case 'rows': return gettext('rows');
+    case 'send notifications via email': return gettext('Send notifications via email');
+    case 'users archive view format': return gettext('Users archive view format');
+    case 'users contacts view format': return gettext('Users contacts view format');
+    }
+
+    return label;
+}
+
 export function UserPreferencesDirective(
     session, preferencesService, notify, asset, metadata, desks, modal,
     $timeout, $q, userList, _, search,
@@ -214,7 +276,11 @@ export function UserPreferencesDirective(
                 scope.preferences = {};
                 _.each(data, (val, key) => {
                     if (val.label && val.category) {
-                        scope.preferences[key] = _.create(val);
+                        const pref = _.create(val);
+
+                        pref.categoryLabel = translatePreferenceLabel(pref.category);
+                        pref.label = translatePreferenceLabel(pref.label);
+                        scope.preferences[key] = pref;
                     }
                 });
 
@@ -289,6 +355,7 @@ export function UserPreferencesDirective(
                         selectedCats = userPrefs['categories:preferred'].selected;
 
                     newObj.selected = !!selectedCats[cat.qcode];
+                    newObj.name = translateCategoryName(newObj);
                     scope.categories.push(newObj);
                 });
 

@@ -12,7 +12,7 @@ interface IProps {
 
 export const state: React.StatelessComponent<Pick<IPropsItemListInfo, 'item' | 'svc'>> = (props: IProps) => {
     if (props.item.state != null) {
-        let title = removeLodash(props.item.state);
+        let title = removeLodash(gettext(props.item.state));
 
         if (props.item.state === 'scheduled') {
             const scheduled = props.item.archive_item?.schedule_settings?.utc_publish_schedule;

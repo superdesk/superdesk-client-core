@@ -765,6 +765,10 @@ msgstr ""
 msgid "Advanced mode"
 msgstr ""
 
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:21
+msgid "Advisory"
+msgstr ""
+
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:10
 msgid "Africa/Abidjan"
 msgstr ""
@@ -811,6 +815,10 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Events/RecurringRulesInput/index.jsx:23
 msgid "After"
+msgstr ""
+
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:22
+msgid "Agate"
 msgstr ""
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/PlanningPreview.jsx:19
@@ -905,8 +913,16 @@ msgstr ""
 msgid "All user types"
 msgstr ""
 
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:45
+msgid "Allow Desktop Notifications"
+msgstr ""
+
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:215
 msgid "Allow Multiple Items"
+msgstr ""
+
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:46
+msgid "Allow Notifications To Slack"
 msgstr ""
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:189
@@ -1077,9 +1093,12 @@ msgstr ""
 msgid "Annotations"
 msgstr ""
 
-#: scripts/extensions/annotationsLibrary/dist/src/extension.js:60
 #: scripts/extensions/annotationsLibrary/dist/src/extension.js:71
 #: scripts/extensions/annotationsLibrary/src/extension.tsx:102
+msgid "Annotations Library"
+msgstr ""
+
+#: scripts/extensions/annotationsLibrary/dist/src/extension.js:60
 #: scripts/extensions/annotationsLibrary/src/extension.tsx:90
 msgid "Annotations library"
 msgstr ""
@@ -1499,6 +1518,7 @@ msgstr ""
 #: ../superdesk-planning/client/controllers/AssignmentController.js:34
 #: ../superdesk-planning/client/index.js:56
 #: ../superdesk-planning/index.js:21
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:49
 msgid "Assignments"
 msgstr ""
 
@@ -1530,6 +1550,10 @@ msgstr ""
 
 #: scripts/apps/publish/views/ftp-config.html:36
 msgid "Associated/featuremedia path"
+msgstr ""
+
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:23
+msgid "Atlantic"
 msgstr ""
 
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageForm.jsx:415
@@ -1564,6 +1588,10 @@ msgstr ""
 #: ../superdesk-planning/client/utils/index.ts:665
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:189
 msgid "Audio"
+msgstr ""
+
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:24
+msgid "Audio Skeds"
 msgstr ""
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:74
@@ -1765,6 +1793,10 @@ msgstr ""
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:479
 msgid "Building, Suite, Unit, Apartment, Floor, etc."
+msgstr ""
+
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:25
+msgid "Business"
 msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:31
@@ -2991,7 +3023,7 @@ msgstr ""
 msgid "Created by"
 msgstr ""
 
-#: scripts/apps/dashboard/user-activity/components/UserActivityWidget.tsx:116
+#: scripts/apps/dashboard/user-activity/components/UserActivityWidget.tsx:115
 msgid "Created by this user"
 msgstr ""
 
@@ -3271,10 +3303,12 @@ msgstr ""
 msgid "Default"
 msgstr ""
 
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:53
 #: scripts/apps/users/views/user-preferences.html:165
 msgid "Default Agenda"
 msgstr ""
 
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:54
 #: scripts/apps/users/views/user-preferences.html:154
 msgid "Default Calendar"
 msgstr ""
@@ -3295,6 +3329,10 @@ msgstr ""
 msgid "Default Events & Planning Filter"
 msgstr ""
 
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:56
+msgid "Default Events Planning Filter"
+msgstr ""
+
 #: ../superdesk-planning/client/components/Assignments/SelectDeskTemplate.jsx:70
 msgid "Default Template"
 msgstr ""
@@ -3307,8 +3345,16 @@ msgstr ""
 msgid "Default author roles"
 msgstr ""
 
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:55
+msgid "Default desk for coverage types"
+msgstr ""
+
 #: scripts/apps/desks/views/desk-config-modal.html:122
 msgid "Default monitoring view"
+msgstr ""
+
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:57
+msgid "Default sort preferences for Assignment lists"
 msgstr ""
 
 #: scripts/apps/search-providers/views/search-provider-config.html:53
@@ -4225,8 +4271,13 @@ msgstr ""
 msgid "Embargo Timestamp"
 msgstr ""
 
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:59
 #: scripts/core/lang/missing-translations-strings.ts:14
 msgid "Enable Feature Preview"
+msgstr ""
+
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:60
+msgid "Enable Single Line View"
 msgstr ""
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:201
@@ -4285,6 +4336,10 @@ msgstr ""
 
 #: scripts/apps/users/views/change-avatar.html:41
 msgid "Enter web url"
+msgstr ""
+
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:26
+msgid "Entertainment"
 msgstr ""
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:240
@@ -5373,6 +5428,10 @@ msgstr ""
 msgid "Filters"
 msgstr ""
 
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:27
+msgid "Finance"
+msgstr ""
+
 #: scripts/apps/authoring/editor/views/find-replace.html:5
 msgid "Find"
 msgstr ""
@@ -5676,7 +5735,7 @@ msgstr ""
 msgid "Green"
 msgstr ""
 
-#: scripts/apps/users/directives/UserPreferencesDirective.ts:25
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:87
 msgid "Grid View"
 msgstr ""
 
@@ -6186,6 +6245,10 @@ msgstr ""
 msgid "Internal Note:"
 msgstr ""
 
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:28
+msgid "International"
+msgstr ""
+
 #: ../superdesk-analytics/client/desk_activity_report/views/desk-activity-report-parameters.html:22
 #: ../superdesk-analytics/client/desk_activity_report/views/desk-activity-report-preview.html:9
 msgid "Interval"
@@ -6636,6 +6699,10 @@ msgstr ""
 msgid "Licensee:"
 msgstr ""
 
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:29
+msgid "Lifestyle"
+msgstr ""
+
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:53
 msgid "Light Gray"
 msgstr ""
@@ -6685,8 +6752,8 @@ msgstr ""
 #: scripts/apps/desks/directives/DeskConfigModal.ts:34
 #: scripts/apps/monitoring/views/monitoring-view.html:184
 #: scripts/apps/search-providers/directive.ts:16
-#: scripts/apps/users/directives/UserPreferencesDirective.ts:26
-#: scripts/apps/users/directives/UserPreferencesDirective.ts:28
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:88
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:90
 msgid "List View"
 msgstr ""
 
@@ -6731,6 +6798,7 @@ msgstr ""
 msgid "Local Readonly"
 msgstr ""
 
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:62
 #: scripts/core/lang/missing-translations-strings.ts:14
 #: scripts/core/lang/missing-translations-strings.ts:31
 msgid "Located"
@@ -6757,7 +6825,7 @@ msgstr ""
 msgid "Locked by"
 msgstr ""
 
-#: scripts/apps/dashboard/user-activity/components/UserActivityWidget.tsx:96
+#: scripts/apps/dashboard/user-activity/components/UserActivityWidget.tsx:95
 msgid "Locked by this user"
 msgstr ""
 
@@ -6967,7 +7035,7 @@ msgstr ""
 msgid "Marked for me"
 msgstr ""
 
-#: scripts/apps/dashboard/user-activity/components/UserActivityWidget.tsx:104
+#: scripts/apps/dashboard/user-activity/components/UserActivityWidget.tsx:103
 msgid "Marked for this user"
 msgstr ""
 
@@ -7131,6 +7199,10 @@ msgstr ""
 msgid "Monitoring"
 msgstr ""
 
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:63
+msgid "Monitoring View"
+msgstr ""
+
 #: scripts/apps/desks/views/settings.html:44
 #: scripts/apps/desks/views/settings.html:48
 #: scripts/apps/monitoring/views/aggregate-settings.html:2
@@ -7193,7 +7265,7 @@ msgstr ""
 msgid "Moved onto stage Rule:"
 msgstr ""
 
-#: scripts/apps/dashboard/user-activity/components/UserActivityWidget.tsx:140
+#: scripts/apps/dashboard/user-activity/components/UserActivityWidget.tsx:144
 msgid "Moved to a working stage by this user"
 msgstr ""
 
@@ -7324,6 +7396,10 @@ msgstr ""
 
 #: scripts/apps/publish/views/email-config.html:30
 msgid "Name of the rendition to attach to the email"
+msgstr ""
+
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:30
+msgid "National"
 msgstr ""
 
 #: scripts/apps/desks/index.ts:56
@@ -7581,7 +7657,7 @@ msgstr ""
 msgid "No of calls"
 msgstr ""
 
-#: scripts/apps/users/directives/UserPreferencesDirective.ts:350
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:417
 msgid "No preferred categories selected. Should you choose to proceed with your choice. A default set of categories will be selected for you."
 msgstr ""
 
@@ -7597,7 +7673,7 @@ msgstr ""
 msgid "No result"
 msgstr ""
 
-#: scripts/apps/dashboard/user-activity/components/UserActivityWidget.tsx:349
+#: scripts/apps/dashboard/user-activity/components/UserActivityWidget.tsx:352
 msgid "No results for this user"
 msgstr ""
 
@@ -7899,7 +7975,7 @@ msgstr ""
 msgid "Only one file can be uploaded"
 msgstr ""
 
-#: scripts/apps/authoring/authoring/directives/ItemCarouselDirective.ts:226
+#: scripts/apps/authoring/authoring/directives/ItemCarouselDirective.ts:231
 msgid "Only the following content item types are allowed:"
 msgstr ""
 
@@ -7909,6 +7985,10 @@ msgstr ""
 
 #: scripts/apps/authoring/authoring/directives/ItemAssociationDirective.ts:88
 msgid "Only the following media item types are allowed:"
+msgstr ""
+
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:31
+msgid "Ontario/Quebec"
 msgstr ""
 
 #: scripts/core/auth/secure-login.html:28
@@ -7938,6 +8018,10 @@ msgstr ""
 
 #: ../superdesk-planning/client/constants/assignments.js:62
 msgid "Open Coverage"
+msgstr ""
+
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:66
+msgid "Open advanced mode when adding coverages"
 msgstr ""
 
 #: scripts/apps/search-providers/views/search-provider-config.html:47
@@ -8335,7 +8419,7 @@ msgstr ""
 #: scripts/apps/desks/directives/DeskConfigModal.ts:40
 #: scripts/apps/monitoring/views/monitoring-view.html:194
 #: scripts/apps/search-providers/directive.ts:17
-#: scripts/apps/users/directives/UserPreferencesDirective.ts:27
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:89
 msgid "Photo Grid View"
 msgstr ""
 
@@ -8364,6 +8448,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.jsx:145
 #: scripts/apps/archive/views/metadata-view.html:61
 #: scripts/apps/authoring/views/full-preview.html:64
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:67
 #: scripts/apps/workspace/content/constants.ts:92
 msgid "Place"
 msgstr ""
@@ -8622,8 +8707,21 @@ msgstr ""
 msgid "Powered by Superdesk technology"
 msgstr ""
 
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:32
+msgid "Prairies/BC"
+msgstr ""
+
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:69
+msgid "Prefered CV items"
+msgstr ""
+
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:70
 #: scripts/core/lang/missing-translations-strings.ts:15
 msgid "Preferred Categories"
+msgstr ""
+
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:71
+msgid "Preferred Desks"
 msgstr ""
 
 #: scripts/apps/desks/views/desk-config-modal.html:176
@@ -8649,6 +8747,10 @@ msgstr ""
 
 #: scripts/apps/desks/views/desk-config-modal.html:77
 msgid "Preserve Published Content"
+msgstr ""
+
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:33
+msgid "Press Release"
 msgstr ""
 
 #: scripts/apps/authoring/authoring/directives/SendItem.tsx:179
@@ -10383,7 +10485,7 @@ msgid "Select at most 1 file to upload."
 msgstr ""
 
 #: scripts/apps/archive/controllers/UploadController.ts:249
-#: scripts/apps/authoring/authoring/directives/ItemCarouselDirective.ts:190
+#: scripts/apps/authoring/authoring/directives/ItemCarouselDirective.ts:195
 msgid "Select at most {{maxUploads}} files to upload."
 msgstr ""
 
@@ -10501,6 +10603,7 @@ msgstr ""
 msgid "Send Takedown"
 msgstr ""
 
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:73
 #: scripts/core/lang/missing-translations-strings.ts:14
 msgid "Send notifications via email"
 msgstr ""
@@ -10589,6 +10692,10 @@ msgstr ""
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:129
 msgid "Set maximum items per stages and saved searches for view"
+msgstr ""
+
+#: scripts/apps/monitoring/aggregate-widget/aggregate.ts:17
+msgid "Set up different monitors to follow any topics from ingest or production, desk outputs or any part of the workflow. All you need is to give it a sensible name, select a saved search or desk or its workflow stages. Monitor anything, anywhere, anytime. You can have as many Monitor widgets as you wish."
 msgstr ""
 
 #: scripts/apps/settings/index.ts:19
@@ -10897,6 +11004,14 @@ msgstr ""
 msgid "Sources"
 msgstr ""
 
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:34
+msgid "Spare News"
+msgstr ""
+
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:35
+msgid "Spare Sports"
+msgstr ""
+
 #: scripts/apps/authoring/views/authoring-topbar.html:319
 msgid "Spell Checker"
 msgstr ""
@@ -10987,6 +11102,10 @@ msgstr ""
 
 #: scripts/core/editor3/highlightsConfig.ts:97
 msgid "Split paragraph"
+msgstr ""
+
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:36
+msgid "Sports"
 msgstr ""
 
 #: scripts/apps/desks/views/actionpicker.html:15
@@ -11273,7 +11392,7 @@ msgstr ""
 
 #: scripts/apps/desks/directives/DeskConfigModal.ts:37
 #: scripts/apps/monitoring/views/monitoring-view.html:189
-#: scripts/apps/users/directives/UserPreferencesDirective.ts:29
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:91
 msgid "Swimlane View"
 msgstr ""
 
@@ -12344,6 +12463,10 @@ msgstr ""
 msgid "Transmitted at"
 msgstr ""
 
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:37
+msgid "Travel"
+msgstr ""
+
 #: scripts/core/auth/login-modal.html:55
 #: scripts/core/auth/reset-password.html:38
 #: scripts/core/auth/reset-password.html:86
@@ -12853,7 +12976,7 @@ msgid "User"
 msgstr ""
 
 #: ../superdesk-analytics/client/user_activity_report/index.js:46
-#: scripts/apps/dashboard/user-activity/components/UserActivityWidget.tsx:407
+#: scripts/apps/dashboard/user-activity/components/UserActivityWidget.tsx:400
 #: scripts/apps/dashboard/user-activity/user-activity.ts:37
 msgid "User Activity"
 msgstr ""
@@ -12880,11 +13003,11 @@ msgstr ""
 msgid "User not found."
 msgstr ""
 
-#: scripts/apps/users/directives/UserPreferencesDirective.ts:97
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:159
 msgid "User preferences could not be saved..."
 msgstr ""
 
-#: scripts/apps/users/directives/UserPreferencesDirective.ts:93
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:155
 msgid "User preferences saved"
 msgstr ""
 
@@ -12934,8 +13057,13 @@ msgstr ""
 msgid "Users Profile"
 msgstr ""
 
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:74
 #: scripts/core/lang/missing-translations-strings.ts:13
 msgid "Users archive view format"
+msgstr ""
+
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:75
+msgid "Users contacts view format"
 msgstr ""
 
 #: scripts/apps/archive/views/export.html:17
@@ -13437,12 +13565,17 @@ msgstr ""
 msgid "and '{{ user }}'"
 msgstr ""
 
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:47
 #: scripts/core/lang/missing-translations-strings.ts:13
 msgid "archive"
 msgstr ""
 
 #: scripts/apps/search/components/ItemContainer.tsx:20
 msgid "archived"
+msgstr ""
+
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:48
+msgid "article_defaults"
 msgstr ""
 
 #: scripts/apps/authoring/versioning/history/views/history.html:140
@@ -13504,6 +13637,7 @@ msgstr ""
 msgid "cancelled"
 msgstr ""
 
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:50
 #: scripts/core/lang/missing-translations-strings.ts:14
 msgid "categories"
 msgstr ""
@@ -13550,6 +13684,10 @@ msgstr ""
 
 #: scripts/apps/contacts/components/Form/ContactFormContainer.tsx:155
 msgid "contact saved."
+msgstr ""
+
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:51
+msgid "contacts"
 msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:10
@@ -13605,6 +13743,10 @@ msgstr ""
 msgid "custom vocabulary"
 msgstr ""
 
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:52
+msgid "cvs"
+msgstr ""
+
 #: scripts/apps/workspace/helpers/getTypeForFieldId.ts:8
 msgid "date"
 msgstr ""
@@ -13639,6 +13781,10 @@ msgstr ""
 #: scripts/apps/search/components/ItemContainer.tsx:13
 #: scripts/core/itemList/views/relatedItem-list-widget.html:38
 msgid "desk:"
+msgstr ""
+
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:58
+msgid "desks"
 msgstr ""
 
 #: ../superdesk-planning/client/components/Agendas/ManageAgendasModal.jsx:104
@@ -13770,6 +13916,7 @@ msgstr ""
 msgid "fax"
 msgstr ""
 
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:61
 #: scripts/core/lang/missing-translations-strings.ts:14
 msgid "feature"
 msgstr ""
@@ -14095,6 +14242,10 @@ msgstr ""
 msgid "mobile"
 msgstr ""
 
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:64
+msgid "monitoring"
+msgstr ""
+
 #: ../superdesk-analytics/client/search/views/preview-date-filter.html:23
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:141
 msgid "months"
@@ -14132,6 +14283,7 @@ msgstr ""
 msgid "notes"
 msgstr ""
 
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:65
 #: scripts/core/lang/missing-translations-strings.ts:13
 msgid "notifications"
 msgstr ""
@@ -14232,6 +14384,10 @@ msgstr ""
 #: scripts/apps/monitoring/controllers/AggregateCtrl.ts:31
 #: scripts/core/lang/missing-translations-strings.ts:9
 msgid "picture"
+msgstr ""
+
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:68
+msgid "planning"
 msgstr ""
 
 #: ../superdesk-planning/client/components/MultiSelectActions.jsx:45
@@ -14370,6 +14526,10 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:11
 msgid "routed"
+msgstr ""
+
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:72
+msgid "rows"
 msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:12
