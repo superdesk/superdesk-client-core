@@ -39,18 +39,26 @@ export function getSamsWorkspaceComponent(superdesk: ISuperdesk) {
         }
 
         getMenuActions(): Array<IMenuGroup> {
-            return [{
-                type: 'group',
-                label: gettext('Actions'),
-                items: [
-                    'divider',
-                    {
-                        label: gettext('Manage Sets'),
-                        icon: 'folder-open',
-                        onSelect: () => this.showModal(MODAL_TYPES.MANAGE_SETS),
-                    },
-                ],
-            }];
+            const actions: Array<any> = [];
+
+            if (superdesk.privileges.hasPrivilege('sams_manage')) {
+                actions.push({
+                    label: gettext('Manage Sets'),
+                    icon: 'folder-open',
+                    onSelect: () => this.showModal(MODAL_TYPES.MANAGE_SETS),
+                });
+            }
+
+            return actions.length === 0 ?
+                [] :
+                [{
+                    type: 'group',
+                    label: gettext('Actions'),
+                    items: [
+                        'divider',
+                        ...actions,
+                    ],
+                }];
         }
 
         renderModal() {
@@ -65,19 +73,23 @@ export function getSamsWorkspaceComponent(superdesk: ISuperdesk) {
         }
 
         render() {
+            const actions = this.getMenuActions();
+
             return (
                 <React.Fragment>
                     <div className="sd-page">
                         <LayoutContainer>
                             <HeaderPanel>
                                 <SubNav zIndex={2}>
-                                    <ButtonGroup align="right">
-                                        <Dropdown items={this.getMenuActions()}>
-                                            <button className="sd-navbtn">
-                                                <i className="icon-dots-vertical"/>
-                                            </button>
-                                        </Dropdown>
-                                    </ButtonGroup>
+                                    {actions.length === 0 ? null : (
+                                        <ButtonGroup align="right">
+                                            <Dropdown items={this.getMenuActions()}>
+                                                <button className="sd-navbtn">
+                                                    <i className="icon-dots-vertical"/>
+                                                </button>
+                                            </Dropdown>
+                                        </ButtonGroup>
+                                    )}
                                 </SubNav>
                                 <SubNav zIndex={1}/>
                             </HeaderPanel>

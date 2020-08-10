@@ -53,7 +53,6 @@ export function registerExtensions(
             href: menuItem.href,
             icon: menuItem.icon,
             label: menuItem.label,
-            if: menuItem.if,
             order: menuItem.order ?? 1000,
             shortcut: menuItem.shortcut,
         });

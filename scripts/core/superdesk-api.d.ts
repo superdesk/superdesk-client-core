@@ -595,7 +595,6 @@ declare module 'superdesk-api' {
         href: string;
         icon: string;
         label: string;
-        if?: string;
         order?: number;
         shortcut?: string;
     }>;
