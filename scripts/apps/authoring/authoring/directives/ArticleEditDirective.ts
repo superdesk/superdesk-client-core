@@ -2,12 +2,14 @@ import _ from 'lodash';
 import {IArticle} from 'superdesk-api';
 import {FIELD_KEY_SEPARATOR} from 'core/editor3/helpers/fieldsMeta';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
-import {MEDIA_TYPES} from 'apps/vocabularies/constants';
+import {getMediaTypes} from 'apps/vocabularies/constants';
 import {isPublished} from 'apps/archive/utils';
 import {resetFieldMetadata} from 'core/editor3/helpers/fieldsMeta';
 import {appConfig} from 'appConfig';
+import {gettext} from 'core/utils';
 
 interface IScope extends ng.IScope {
+    readOnlyLabel: string;
     handleUrlsChange: any;
     toggleDetails: any;
     errorMessage: any;
@@ -46,6 +48,10 @@ interface IScope extends ng.IScope {
     addHelplineToFooter(): void;
     maxUploads(options: any): void;
     toggleSMS(): void;
+}
+
+export function getReadOnlyLabel() {
+    return gettext('This field is read-only');
 }
 
 /**
@@ -105,6 +111,8 @@ export function ArticleEditDirective(
                     scope.autosave(scope.item);
                 };
 
+                scope.readOnlyLabel = getReadOnlyLabel();
+
                 scope.toggleDetails = true;
                 scope.errorMessage = null;
                 scope.contentType = null;
@@ -120,7 +128,7 @@ export function ArticleEditDirective(
                 scope.label = (id) => getLabelForFieldId(id);
 
                 scope.FIELD_KEY_SEPARATOR = FIELD_KEY_SEPARATOR;
-                scope.mediaTypes = MEDIA_TYPES;
+                scope.mediaTypes = getMediaTypes();
 
                 /* Start: Dateline related properties */
 

@@ -1,4 +1,11 @@
-import {RichUtils, EditorState} from 'draft-js';
+import {
+    RichUtils,
+    EditorState,
+    ContentState,
+    Modifier,
+    SelectionState,
+    ContentBlock,
+} from 'draft-js';
 import {setTansaHtml} from '../helpers/tansa';
 import {addMedia} from './toolbar';
 import {getCustomDecorator, IEditorStore} from '../store';
@@ -7,8 +14,6 @@ import {DELETE_SUGGESTION} from '../highlightsConfig';
 import {moveBlockWithoutDispatching} from '../helpers/draftMoveBlockWithoutDispatching';
 import {insertEntity} from '../helpers/draftInsertEntity';
 
-const isEditorPlainText = (props) => props.singleLine || (props.editorFormat || []).length === 0;
-
 /**
  * @description Contains the list of editor related reducers.
  */
@@ -16,6 +21,8 @@ const editor3 = (state: IEditorStore, action) => {
     switch (action.type) {
     case 'EDITOR_CHANGE_STATE':
         return onChange(state, action.payload.editorState, action.payload.force, false, action.payload.skipOnChange);
+    case 'EDITOR_PUSH_STATE':
+        return pushState(state, action.payload.contentState);
     case 'EDITOR_SET_LOCKED':
         return setLocked(state, action.payload);
     case 'EDITOR_SET_READONLY':
@@ -46,6 +53,8 @@ const editor3 = (state: IEditorStore, action) => {
         return state;
     }
 };
+
+export default editor3;
 
 /**
  * @ngdoc method
@@ -128,7 +137,7 @@ export const onChange = (
     const contentChanged = state.editorState.getCurrentContent() !== editorStateNext.getCurrentContent();
 
     if (!skipOnChange && (contentChanged || force)) {
-        const plainText = isEditorPlainText(state);
+        const plainText = state.singleLine === true;
 
         state.onChangeValue(editorStateNext.getCurrentContent(), {plainText});
     }
@@ -173,8 +182,13 @@ const setAbbreviations = (state, abbreviations) => ({
 const applyAbbreviations = (state) => {
     const {editorState, abbreviations} = state;
     const selection = editorState.getSelection();
+    const lastChangeType = editorState.getLastChangeType();
 
-    if (!selection.isCollapsed() || abbreviations == null || Object.keys(abbreviations).length === 0) {
+    if (!selection.isCollapsed()
+        || abbreviations == null
+        || Object.keys(abbreviations).length === 0
+        || lastChangeType === 'undo'
+        || lastChangeType === 'redo') {
         return state;
     }
 
@@ -260,6 +274,20 @@ function escapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
+function replaceText(
+    editorState: EditorState,
+    selection: SelectionState,
+    text: string,
+) {
+    const newContent = Modifier.replaceText(
+        editorState.getCurrentContent(),
+        selection,
+        text,
+    );
+
+    return EditorState.push(editorState, newContent, 'insert-characters');
+}
+
 /**
  * @ngdoc method
  * @name onTab
@@ -268,8 +296,30 @@ function escapeRegExp(string) {
  * @description Handle the editor tab key pressed event
  */
 const onTab = (state, e) => {
-    const {editorState} = state;
-    const newState = RichUtils.onTab(e, editorState, 4);
+    const {editorState, editorFormat = []} = state;
+    const selection = editorState.getSelection() as SelectionState;
+    const moreThanOneBlockSelected =
+        selection.getStartKey() !== selection.getEndKey();
+    const block = editorState
+        .getCurrentContent()
+        .getBlockForKey(selection.getStartKey()) as ContentBlock;
+    const blockType = block.getType();
+    let newState = editorState;
+
+    if (['unordered-list-item', 'ordered-list-item'].includes(blockType)) {
+        // let draft-js handle the Tab event
+        newState = RichUtils.onTab(e, editorState, 4);
+    } else if (!moreThanOneBlockSelected) {
+        const tabOption = editorFormat.includes('tab') && !e.shiftKey;
+        const spacesOption =
+            editorFormat.includes('tab as spaces') && e.shiftKey;
+        let tabString = tabOption ? '\t' : spacesOption ? '        ' : null;
+
+        if (tabString) {
+            newState = replaceText(newState, selection, tabString);
+            e.preventDefault();
+        }
+    }
 
     return onChange(state, newState);
 };
@@ -435,6 +485,10 @@ const applyEmbed = (state, {code, targetBlockKey}) => {
     return onChange(state, nextEditorState);
 };
 
-export default editor3;
-
 const setLoading = (state, loading) => ({...state, loading});
+
+const pushState = (state: IEditorStore, contentState: ContentState) => {
+    const editorState = EditorState.push(state.editorState, contentState, 'insert-characters');
+
+    return onChange(state, editorState, true, false, false);
+};

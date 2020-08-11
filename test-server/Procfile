@@ -1,2 +1,2 @@
-rest: gunicorn -c gunicorn_config.py wsgi
+rest: PYTHONUNBUFFERED=True gunicorn -c gunicorn_config.py wsgi
 wamp: python3 -u ws.py

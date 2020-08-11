@@ -1,15 +1,87 @@
 import _ from 'lodash';
-import {get} from 'lodash';
+import {flatMap} from 'lodash';
 import * as helpers from 'apps/authoring/authoring/helpers';
 import {gettext} from 'core/utils';
 import {logger} from 'core/services/logger';
 import {isPublished, isKilled} from 'apps/archive/utils';
-import {showModal} from 'core/services/modalService';
+import {showModal, showErrorsModal} from 'core/services/modalService';
 import {getUnpublishConfirmModal} from '../components/unpublish-confirm-modal';
 import {ITEM_STATE, CANCELED_STATES, READONLY_STATES} from 'apps/archive/constants';
 import {AuthoringWorkspaceService} from './AuthoringWorkspaceService';
-import {appConfig} from 'appConfig';
-import {IPublishedArticle} from 'superdesk-api';
+import {appConfig, extensions} from 'appConfig';
+import {IPublishedArticle, IArticle, IExtensionActivationResult} from 'superdesk-api';
+import {getPublishWarningConfirmModal} from '../components/publish-warning-confirm-modal';
+import {applyMiddleware as coreApplyMiddleware} from 'core/middleware';
+import {onChangeMiddleware} from '../index';
+
+export function runBeforeUpdateMiddlware(item: IArticle, orig: IArticle): Promise<IArticle> {
+    return coreApplyMiddleware(onChangeMiddleware, {item: item, original: orig}, 'item')
+        .then(() => {
+            const onUpdateFromExtensions = Object.values(extensions).map(
+                (extension) => extension.activationResult?.contributions?.authoring?.onUpdate,
+            ).filter((updateFn) => updateFn != null);
+
+            return (
+                onUpdateFromExtensions.length < 1
+                    ? Promise.resolve(item)
+                    : onUpdateFromExtensions
+                        .reduce(
+                            (current, next) => current.then(
+                                (result) => next(orig, result),
+                            ),
+                            Promise.resolve(item),
+                        )
+                        .then((nextItem) => angular.extend(item, nextItem))
+            );
+        });
+}
+
+function isReadOnly(item: IArticle) {
+    return READONLY_STATES.includes(item.state);
+}
+
+function canRewrite(item: IArticle): true | Array<string> {
+    const errors = [];
+
+    if (
+        isReadOnly(item)
+        && !(item.state === ITEM_STATE.SCHEDULED && appConfig.allow_updating_scheduled_items === true)
+    ) {
+        errors.push(gettext('The item is read-only.'));
+    }
+
+    if (item.type !== 'text') {
+        errors.push(gettext(
+            'Updates can only be created for text items. The type of this item is {{type}}',
+            {type: item.type},
+        ));
+    }
+
+    if (item.embargo != null) {
+        errors.push(gettext('The item is embargoed.'));
+    }
+
+    if (item.rewritten_by != null) {
+        errors.push(gettext(
+            'An update for this version of the item already exists. '
+            + 'To create another update, find the latest version of the item.',
+        ));
+    }
+
+    if (item.broadcast?.master_id != null) {
+        errors.push(gettext('Can not update a broadcast version of the story.'));
+    }
+
+    if (item.rewrite_of != null && !(isPublished(item) || appConfig.workflow_allow_multiple_updates)) {
+        errors.push(gettext('An update can not be created for an item which is not published yet.'));
+    }
+
+    if (errors.length < 1) {
+        return true;
+    } else {
+        return errors;
+    }
+}
 
 interface IPublishOptions {
     notifyErrors: boolean;
@@ -37,10 +109,10 @@ interface IPublishOptions {
  *
  * @description Authoring Service is responsible for management of the actions on a story
  */
-AuthoringService.$inject = ['$q', '$location', 'api', 'lock', 'autosave', 'confirm', 'privileges',
-    'desks', 'superdeskFlags', 'notify', 'session', '$injector', 'moment', 'familyService'];
+AuthoringService.$inject = ['$q', '$location', 'api', 'lock', 'autosave', 'confirm', 'privileges', 'desks',
+    'superdeskFlags', 'notify', 'session', '$injector', 'moment', 'familyService', 'modal'];
 export function AuthoringService($q, $location, api, lock, autosave, confirm, privileges, desks, superdeskFlags,
-    notify, session, $injector, moment, familyService) {
+    notify, session, $injector, moment, familyService, modal) {
     var self = this;
 
     // TODO: have to trap desk update event for refereshing users desks.
@@ -100,16 +172,47 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             .then((item) => autosave.open(item).then(null, (err) => item));
     };
 
-    this.rewrite = function(item) {
+    this.rewrite = function(item): void {
         var authoringWorkspace: AuthoringWorkspaceService = $injector.get('authoringWorkspace');
 
-        session.getIdentity()
-            .then((user) => {
-                var updates = {
-                    desk_id: desks.getCurrentDeskId() || item.task.desk,
-                };
+        function getOnRewriteAfterMiddlewares()
+        : Array<IExtensionActivationResult['contributions']['entities']['article']['onRewriteAfter']> {
+            return flatMap(
+                Object.values(extensions).map(({activationResult}) => activationResult),
+                (activationResult) =>
+                    activationResult.contributions != null
+                    && activationResult.contributions.entities != null
+                    && activationResult.contributions.entities.article != null
+                    && activationResult.contributions.entities.article.onRewriteAfter != null
+                        ? activationResult.contributions.entities.article.onRewriteAfter
+                        : [],
+            );
+        }
 
-                return api.save('archive_rewrite', {}, updates, item);
+        const errors = canRewrite(item);
+
+        if (Array.isArray(errors)) {
+            showErrorsModal(gettext('An update can not be created'), errors);
+
+            return;
+        }
+
+        var updates = {
+            desk_id: desks.getCurrentDeskId() || item.task.desk,
+        };
+
+        return api.save('archive_rewrite', {}, updates, item)
+            .then((newItem: IArticle) => {
+                const onRewriteAfterMiddlewares = getOnRewriteAfterMiddlewares();
+
+                return onRewriteAfterMiddlewares.reduce(
+                    (current, next) => {
+                        return current.then((result) => {
+                            return next(Object.freeze(result));
+                        });
+                    },
+                    Promise.resolve(Object.freeze(newItem)),
+                );
             })
             .then((newItem) => {
                 notify.success(gettext('Update Created.'));
@@ -237,7 +340,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         }
     };
 
-    this.publish = function publish(orig, diff, action = 'publish',
+    this.publish = function publish(orig, diff, action = 'publish', publishingWarningsConfirmed = false,
         {notifyErrors}: IPublishOptions = {notifyErrors: false},
     ) {
         let extDiff = helpers.extendItem({}, diff);
@@ -251,16 +354,39 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         helpers.filterDefaultValues(extDiff, orig);
         var endpoint = 'archive_' + action;
 
-        return api.update(endpoint, orig, extDiff)
+        return api.update(endpoint, orig, extDiff, {publishing_warnings_confirmed: publishingWarningsConfirmed})
             .then(
                 (result) => lock.unlock(result).catch(() => result), // ignore unlock err
                 (reason) => {
-                    if (notifyErrors && reason != null && get(reason, 'data._issues')) {
+                    const issues = reason?.data?._issues;
+
+                    if (notifyErrors && issues) {
                         Object.values(reason.data._issues).forEach((message) => {
                             if (message != null) {
                                 notify.error(message);
                             }
                         });
+                    } else if (issues?.['validator exception'] && issues?.fields == null) {
+                        let errorObj: {[key: string]: Array<string>} = {};
+
+                        try {
+                            errorObj = JSON.parse(issues?.['validator exception']);
+                        } catch (e) {
+                            logger.error(e);
+                            return $q.reject(reason);
+                        }
+
+                        const publishingAction = () => {
+                            return self.publish(orig, diff, action, true);
+                        };
+
+                        if (errorObj.warnings) {
+                            return getPublishWarningConfirmModal(errorObj.warnings, publishingAction);
+                        }
+                    }
+
+                    if (issues == null) {
+                        notify.error(gettext('Unknown Error: Item not published.'));
                     }
 
                     return $q.reject(reason);
@@ -321,8 +447,8 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
      * @param {Object} item
      * @param {Object} orig
      */
-    this.autosave = function autosaveAuthoring(item, orig, timeout) {
-        return autosave.save(item, orig, timeout);
+    this.autosave = function autosaveAuthoring(item, orig, timeout, callback) {
+        return autosave.save(item, orig, timeout, callback);
     };
 
     /**
@@ -331,57 +457,59 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
      * @param {Object} origItem
      * @param {Object} item
      */
-    this.save = function saveAuthoring(origItem, item) {
-        var diff = helpers.extendItem({}, item);
-        // Finding if all the keys are dirty for real
+    this.save = function saveAuthoring(origItem, _item) {
+        return runBeforeUpdateMiddlware(_item, origItem).then((item: IArticle) => {
+            var diff = helpers.extendItem({}, item);
+            // Finding if all the keys are dirty for real
 
-        if (angular.isDefined(origItem)) {
-            angular.forEach(_.keys(diff), (key) => {
-                if (_.isEqual(diff[key], origItem[key])) {
-                    delete diff[key];
-                }
-            });
-        }
+            if (angular.isDefined(origItem)) {
+                angular.forEach(_.keys(diff), (key) => {
+                    if (_.isEqual(diff[key], origItem[key])) {
+                        delete diff[key];
+                    }
+                });
+            }
 
-        helpers.stripHtml(diff);
-        helpers.stripWhitespaces(diff);
-        helpers.cutoffPreviousRenditions(diff, origItem);
-        autosave.stop(item);
+            helpers.stripHtml(diff);
+            helpers.stripWhitespaces(diff);
+            helpers.cutoffPreviousRenditions(diff, origItem);
+            autosave.stop(item);
 
-        if (diff._etag) { // make sure we use orig item etag
-            delete diff._etag;
-        }
+            if (diff._etag) { // make sure we use orig item etag
+                delete diff._etag;
+            }
 
-        // if current document is image and it has been changed on 'media edit' we have to update the etag
-        if (origItem.type === 'picture' && item._etag != null) {
-            diff._etag = item._etag;
-        }
+            // if current document is image and it has been changed on 'media edit' we have to update the etag
+            if (origItem.type === 'picture' && item._etag != null) {
+                diff._etag = item._etag;
+            }
 
-        helpers.filterDefaultValues(diff, origItem);
+            helpers.filterDefaultValues(diff, origItem);
 
-        if (_.size(diff) > 0) {
-            return api.save('archive', origItem, diff).then((_item) => {
-                if (origItem.type === 'picture') {
-                    item._etag = _item._etag;
-                }
+            if (_.size(diff) > 0) {
+                return api.save('archive', origItem, diff).then((__item) => {
+                    if (origItem.type === 'picture') {
+                        item._etag = __item._etag;
+                    }
+                    origItem._autosave = null;
+                    origItem._autosaved = false;
+                    origItem._locked = lock.isLockedInCurrentSession(item);
+
+                    const authoringWorkspace: AuthoringWorkspaceService = $injector.get('authoringWorkspace');
+
+                    authoringWorkspace.update(origItem);
+                    return origItem;
+                });
+            }
+
+            if (origItem) {
+                // if there is nothing to save. No diff.
                 origItem._autosave = null;
                 origItem._autosaved = false;
-                origItem._locked = lock.isLockedInCurrentSession(item);
+            }
 
-                const authoringWorkspace: AuthoringWorkspaceService = $injector.get('authoringWorkspace');
-
-                authoringWorkspace.update(origItem);
-                return origItem;
-            });
-        }
-
-        if (origItem) {
-            // if there is nothing to save. No diff.
-            origItem._autosave = null;
-            origItem._autosaved = false;
-        }
-
-        return $q.when(origItem);
+            return Promise.resolve(origItem);
+        });
     };
 
     /**
@@ -426,18 +554,21 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
 
     /**
      * Lock an item - callback for item:lock event
-     *
-     * @param {Object} item
-     * @param {string} userId
      */
-    this.lock = function(item, userId) {
+    this.lock = function(
+        item: IArticle,
+        data: {
+            user: string;
+            lock_time: string;
+            lock_session: string;
+        },
+    ) {
         autosave.stop(item);
-        api.find('users', userId).then((user) => {
+        api.find('users', data.user).then((user) => {
             item.lock_user = user;
-        }, (rejection) => {
-            item.lock_user = userId;
+            item.lock_session = data.lock_session;
+            item._locked = true;
         });
-        item._locked = true;
     };
 
     /**
@@ -460,7 +591,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
 
         // Archived items can be duplicated
         if (_.get(currentItem, '_type') === 'archived' && currentItem.type === 'text') {
-            action.duplicate = true;
+            action.duplicate = action.duplicateTo = true;
             return action;
         }
 
@@ -471,7 +602,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         action.export = currentItem && currentItem.type && currentItem.type === 'text';
 
         // item is published state - corrected, published, scheduled, killed
-        if (isPublished(currentItem)) {
+        if (isPublished(currentItem) && item.state !== 'unpublished') {
             // if not the last published version
             if (item.last_published_version === false) {
                 return angular.extend({}, helpers.DEFAULT_ACTIONS);
@@ -576,16 +707,8 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         let isReadOnlyState = this._isReadOnly(currentItem);
         let userPrivileges = privileges.privileges;
 
-        action.re_write = !isReadOnlyState && _.includes(['text'], currentItem.type) &&
-            !currentItem.embargo && !currentItem.rewritten_by &&
-            (!currentItem.broadcast || !currentItem.broadcast.master_id) &&
-            (
-                !currentItem.rewrite_of || (
-                    currentItem.rewrite_of && isPublished(currentItem)
-                ) || appConfig.workflow_allow_multiple_updates
-            );
-
-        action.resend = _.includes(['text'], currentItem.type) &&
+        action.re_write = canRewrite(currentItem) === true;
+        action.resend = currentItem.type === 'text' &&
             isPublished(currentItem, false);
 
         // mark item for highlights
@@ -619,6 +742,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
 
             action.duplicate = userPrivileges.duplicate &&
                 !CANCELED_STATES.includes(currentItem.state);
+            const duplicateTo = action.duplicateTo = action.duplicate;
 
             action.add_to_current = !READONLY_STATES.includes(currentItem.state);
 
@@ -628,6 +752,9 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
                 action = angular.extend({}, helpers.DEFAULT_ACTIONS);
                 // user can action `update` even if the user is not a member.
                 action.re_write = reWrite;
+                if (appConfig.workflow_allow_duplicate_non_members) {
+                    action.duplicateTo = duplicateTo;
+                }
             }
         } else {
             // personal

@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
-import * as actions from '../../actions';
 import Textarea from 'react-textarea-autosize';
 import {gettext} from 'core/utils';
-import {appConfig} from 'appConfig';
 import {VideoComponent} from 'core/ui/components/video';
+import {isMediaEditable} from 'core/config';
+import * as actions from '../../actions';
 
 function getTranslationForAssignRights(value) {
     if (value === 'single-usage') {
@@ -41,7 +41,6 @@ export class MediaBlockComponent extends React.Component<any, any> {
         this.onClickDelete = this.onClickDelete.bind(this);
         this.data = this.data.bind(this);
         this.onChange = this.onChange.bind(this);
-        this.onDragStart = this.onDragStart.bind(this);
     }
 
     /**
@@ -101,31 +100,17 @@ export class MediaBlockComponent extends React.Component<any, any> {
         changeCaption(entityKey, target.value, target.placeholder);
     }
 
-    onDragStart(event) {
-        event.dataTransfer.setData('superdesk/editor3-block', this.props.block.getKey());
-    }
-
     render() {
         const {setLocked, showTitle, readOnly} = this.props;
         const data = this.data();
         const rendition = data.renditions.baseImage || data.renditions.viewImage || data.renditions.original;
         const alt = data.alt_text || data.description_text || data.caption;
         const mediaType = data.type;
-
-        const editable =
-            !readOnly
-            && (
-                data._type !== 'externalsource'
-                || (appConfig.features == null || appConfig.features.editFeaturedImage == null
-                    ? true
-                    : appConfig.features.editFeaturedImage)
-            );
+        const editable = !readOnly && (data._type !== 'externalsource' || isMediaEditable(data));
 
         return (
 
-            <div className="image-block"
-                onClick={(e) => e.stopPropagation()}
-                draggable={!readOnly} onDragStart={this.onDragStart}>
+            <div className="image-block" onClick={(e) => e.stopPropagation()}>
                 {
                     readOnly ? null : (
                         <a className="icn-btn image-block__remove" onClick={this.onClickDelete}>
@@ -298,8 +283,14 @@ export class MediaBlockComponent extends React.Component<any, any> {
                     />
                     {editable && (mediaType === 'audio' || mediaType === 'video') &&
                         <div className="image-block__action-bar">
-                            <a className="btn btn--hollow btn--small"
-                                onClick={this.onClick}><span>{gettext('Edit metadata')}</span></a>
+                            <a
+                                className="btn btn--hollow btn--small"
+                                onClick={() => {
+                                    this.onClick('view');
+                                }}
+                            >
+                                <span>{gettext('Edit metadata')}</span>
+                            </a>
                         </div>
                     }
                 </div>

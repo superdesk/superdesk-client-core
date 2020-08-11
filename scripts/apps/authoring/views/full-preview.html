@@ -1,7 +1,7 @@
 <div sd-modal data-model="item" data-full="true" class="modal--fullscreen modal--preview-article modal--white">
     <div class="modal__header modal__header--flex modal__header--no-border">
         <div class="btn-group sd-flex-grow">
-            <sd-check ng-model="hide_media"><span translate>Hide media</span></sd-check>
+            <sd-check ng-model="hide_media" label-position="inside">{{ 'Hide media' | translate }}</sd-check>
         </div>
         <div class="btn-group">
             <button ng-click="printPreview()" title="{{'Print'|translate}}"><i class="icon-print"></i></button>
@@ -142,8 +142,8 @@
                     <div ng-if="field.field_type === 'related_content'">
                         <div sd-related-items-preview
                             data-item="item"
-                            
-                            data-field="field">
+                            data-field="field"
+                            data-preview="true">
                         </div>
                     </div>
                 </div>

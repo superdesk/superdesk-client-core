@@ -188,6 +188,16 @@ export const dataApi: IDataApi = {
             },
         });
     },
+    patchRaw: (endpoint, id, etag, patch) => {
+        return httpRequestJsonLocal({
+            'method': 'PATCH',
+            path: '/' + endpoint + '/' + id,
+            payload: patch,
+            headers: {
+                'If-Match': etag,
+            },
+        });
+    },
     delete: (endpoint, item) => httpRequestVoidLocal({
         method: 'DELETE',
         path: '/' + endpoint + '/' + item._id,
@@ -196,19 +206,6 @@ export const dataApi: IDataApi = {
         },
     }),
 };
-
-export function patchArticle(endpoint: 'archive' | 'published', item1: IArticle, item2: IArticle) {
-    const patch = generatePatchIArticle(item1, item2);
-
-    return httpRequestJsonLocal({
-        'method': 'PATCH',
-        path: '/' + endpoint + '/' + item1._id,
-        payload: patch,
-        headers: {
-            'If-Match': item1._etag,
-        },
-    });
-}
 
 export function connectCrudManager<Props, PropsToConnect, Entity extends IBaseRestApiResponse>(
     // type stoped working after react 16.8 upgrade. See if it's fixed by a future React types or TypeScript update

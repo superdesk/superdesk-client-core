@@ -16,6 +16,15 @@
             </div>
         </div>
 
+        <div class="form__row" ng-if="search_config.sign_off">
+            <div class="sd-line-input sd-line-input--boxed sd-line-input--no-margin">
+                <label class="sd-line-input__label" for="search-sign_off">
+                    {{:: 'Sign-off' | translate}}
+                </label>
+                <input class="sd-line-input__input" type="text" ng-keypress="keyPressed($event)" id="search-sign_off" ng-model="meta.sign_off">
+            </div>
+        </div>
+
         <div class="form__row" ng-if="search_config.story_text">
             <div class="sd-line-input sd-line-input--boxed sd-line-input--no-margin">
                 <label class="sd-line-input__label" for="search-storytext">
@@ -75,13 +84,13 @@
 
         <div class="field keywords" ng-if="search_config.keywords">
             <label for="search-keywords">
-                {{:: 'Keywords' | translate}}
+                {{keywords.display_name}}
             </label>
             <div id="search-keywords"
                  sd-meta-words-list
                  data-field="keywords"
                  data-header="true"
-                 data-list="keywords"
+                 data-list="keywords.items"
                  data-item="meta"
                  class="line-input--boxed"
             ></div>
@@ -107,7 +116,7 @@
                 </label>
                 <select
                     id="to-desk"
-                    class="sd-line-input__select" 
+                    class="sd-line-input__select"
                     name="to-desk"
                     ng-options="d._id as d.name for d in desks._items"
                     ng-model="fields.to_desk">
@@ -136,7 +145,7 @@
                     {{:: 'Spiked Content' | translate}}
                 </label>
                 <select id="spike-options"
-                        class="sd-line-input__select" 
+                        class="sd-line-input__select"
                         name="spike-options"
                         ng-model="fields.spike">
                         <option value="exclude" label="{{:: 'Exclude spiked content' | translate }}"></option>
@@ -144,8 +153,6 @@
                         <option value="only" label="{{:: 'Spiked only content' | translate }}"></option>
                 </select>
             </div>
-
-
         </div>
 
         <div class="form__row form__row--flex" ng-if="search_config.ingest_provider">
@@ -219,7 +226,7 @@
         <div class="form__row">
             <div class="sd-line-input sd-line-input--boxed sd-line-input--no-margin">
                 <label class="sd-line-input__label" for="search-keywords">
-                    {{:: 'Keywords'}}
+                    {{:: 'Keywords' | translate}}
                 </label>
                 <span class="control">
                     <input class="sd-line-input__input" type="text" ng-keypress="keyPressed($event)" id="search-keywords" ng-model="meta.keywords">
@@ -256,6 +263,35 @@
         </div>
 
     </fieldset>
+    <div ng-repeat="dateFilter in dateFilters track by dateFilter.fieldname"
+        sd-toggle-box data-style="circle" data-title="{{:: dateFilter.labelBlock }}"
+        data-open="false"
+        id="filter-{{dateFilter.fieldname}}"
+        ng-if="dateFilter.isEnabled(search_config)">
+        <ng-form class="date-filter">
+            <div class="predefined-dates">
+                <button ng-repeat="predefinedFilter in dateFilter.predefinedFilters track by predefinedFilter.key"
+                    ng-click='togglePredefinedDateFilter(dateFilter, predefinedFilter.key); toggleDateFilter(dateFilter.fieldname, dateFilter.predefinedFilters)'
+                    class="toggle-button"
+                    title="{{predefinedFilter.label}}"
+                    ng-class="{'toggle-button--active': predefinedFilter.active}"
+                    id="filter-{{dateFilter.fieldname}}-{{predefinedFilter.key}}">{{predefinedFilter.label}}</button>
+            </div>
+
+            <fieldset ng-show="(dateFilter.labelFrom != null && dateFilter.labelTo != null) && (repo.search === 'local' || providerType.startsWith('scanpix') || repo.search === 'content-api' || providerType === 'aapmm')">
+                <div class="form__row form__row-item form__row--no-padding form__row--flex">
+                    <div class="form__row-item">
+                        <label class="form-label">{{dateFilter.labelFrom}}</label>
+                        <div sd-datepicker on-change="clearPredefinedFilters(dateFilter.fieldname)" ng-model="fields[dateFilter.fieldname + 'from']"></div>
+                    </div>
+                    <div class="form__row-item">
+                        <label class="form-label">{{dateFilter.labelTo}}</label>
+                        <div sd-datepicker on-change="clearPredefinedFilters(dateFilter.fieldname)" ng-model="fields[dateFilter.fieldname + 'to']"></div>
+                    </div>
+                </div>
+            </fieldset>
+        </ng-form>
+    </div>
     <div ng-if="hasTemplate(providerType)" ng-include="getTemplate(providerType)"></div>
 
     <search-panel-widgets

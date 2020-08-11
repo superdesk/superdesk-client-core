@@ -1,19 +1,23 @@
 <div ng-if="loading" class="loading-overlay" ng-class="{active: loading}" style="opacity: 0.5;"></div>
 
-<div ng-if="!loading" class="sd-list-item-group sd-list-item-group--space-between-items">
+<div ng-if="!loading" class="sd-list-item-group sd-list-item-group--space-between-items sd-margin-b--2">
     <div class="sd-list-item sd-list-item--no-hover sd-shadow--z1"
-        ng-repeat="(key, relatedItem) in relatedItems track by key"> 
+        ng-repeat="(key, relatedItem) in relatedItems track by key">
         <div class="sd-list-item__column"><i class="type-icon" sd-filetype-icon data-item="relatedItem"></i></div>
         <div class="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border">
-            <div class="sd-list-item__row">
-                <span class="sd-list-item__slugline" ng-if="relatedItem.slugline">{{ relatedItem.slugline }}</span>
-                <span class="sd-overflow-ellipsis sd-list-item--element-grow" sd-item-container data-item="relatedItem" class="container"></span>
-            </div>
-            <div class="sd-list-item__row">
-                <span class="state-label state-{{relatedItem.state}}">{{ relatedItem.state }}</span>
-                <span class="sd-overflow-ellipsis sd-list-item--element-grow" title="{{ relatedItem.headline }}">{{ relatedItem.headline || relatedItem.description_text }}</span>
+            <sd-related-item-in-list-react item="relatedItem" />
+        </div>
+        <figure class="sd-list-item__thumbnail" ng-if="getThumbnailForItem(relatedItem)">
+            <img ng-src="{{getThumbnailForItem(relatedItem).href}}"
+                alt="{{ 'Thumbnail for related item' | translate }}">
+        </figure>
+        <div class="sd-list-item__action-menu--direction-row" ng-if="!preview">
+            <div class="icn-btn"
+                sd-item-actions-menu
+                data-item="relatedItem"
+                data-active="relatedItem"
+                data-allowed-actions="['edit.item', 'edit.item.popup', 'view.item', 'view.item.popup']">
             </div>
         </div>
     </div>
 </div>
-

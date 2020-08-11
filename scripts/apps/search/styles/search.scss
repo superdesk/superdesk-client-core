@@ -242,7 +242,6 @@
         line-height: 1.8rem;
         margin: 2px 1px 2px 0;
         span {
-            text-transform: capitalize;
             opacity: 0.75;
             margin-right: 0.5rem
         }
@@ -404,9 +403,6 @@
     }
 
     .dropdown__menu {
-        .label-group {
-            text-transform: capitalize;
-        }
         &-divider {
             clear: both;
         }
@@ -540,5 +536,19 @@
             }
 
         }
+    }
+}
+
+
+// used to resize thumbnail of item while dragging it
+#drag-image-holder {
+    position: absolute;
+    left: -2000px;
+    max-width: 200px;
+    max-height: 200px;
+
+    img {
+        max-width: 200px;
+        max-height: 200px;
     }
 }

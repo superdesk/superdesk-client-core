@@ -22,6 +22,7 @@ import {IArticleSchema} from 'superdesk-interfaces/ArticleSchema';
 import {AuthoringTopbarReact} from './authoring-topbar-react';
 import {AuthoringWorkspaceService} from './services';
 import {sdStaticAutocompleteDirective} from './directives/sd-static-autocomplete';
+import {VideoThumbnailEditor} from './components/video-thumbnail-editor';
 
 export interface IOnChangeParams {
     item: IArticle;
@@ -84,7 +85,6 @@ angular.module('superdesk.apps.authoring', [
     .service('authThemes', svc.AuthoringThemesService)
     .service('authoringWorkspace', svc.AuthoringWorkspaceService)
     .service('renditions', svc.RenditionsService)
-    .service('mediaIdGenerator', svc.MediaIdGeneratorService)
 
     .factory('history', svc.HistoryFactory)
 
@@ -99,6 +99,7 @@ angular.module('superdesk.apps.authoring', [
     .directive('sdAuthoring', directive.AuthoringDirective)
     .directive('sdAuthoringTopbar', directive.AuthoringTopbarDirective)
     .component('sdAuthoringTopbarReact', reactToAngular1(AuthoringTopbarReact, ['article', 'action', 'onChange']))
+    .component('sdVideoThumbnailEditor', reactToAngular1(VideoThumbnailEditor, ['item', 'onChange']))
     .directive('sdPreviewFormatted', directive.PreviewFormattedDirective)
     .directive('sdAuthoringContainer', directive.AuthoringContainerDirective)
     .directive('sdAuthoringEmbedded', directive.AuthoringEmbeddedDirective)
@@ -367,29 +368,15 @@ angular.module('superdesk.apps.authoring', [
                 priority: 50,
                 icon: 'kill',
                 group: 'corrections',
-                controller: ['data', 'authoring',
-                    (data, authoring) => {
-                        return authoring.unpublish(data.item.archive_item);
+                controller: ['data', 'authoring', 'api',
+                    (data, authoring, api) => {
+                        return api.find('archive', data.item._id).then((updatedItem) => {
+                            return authoring.unpublish(updatedItem);
+                        });
                     },
                 ],
                 filters: [{action: 'list', type: 'archive'}],
                 additionalCondition: ['authoring', 'item', (authoring, item) => authoring.itemActions(item).unpublish],
-                privileges: {unpublish: 1},
-            })
-            .activity('edit.unpublished', {
-                label: gettext('Edit'),
-                priority: 100,
-                icon: 'edit-line',
-                group: 'corrections',
-                controller: ['data', 'authoringWorkspace', 'api',
-                    (data, authoringWorkspace: AuthoringWorkspaceService, api) => {
-                        api.update('archive', data.item.archive_item, {state: 'in_progress'})
-                            .then((updated) =>
-                                authoringWorkspace.edit(updated));
-                    },
-                ],
-                filters: [{action: 'list', type: 'archive'}],
-                additionalCondition: ['item', (item) => item.state === 'unpublished'],
                 privileges: {unpublish: 1},
             })
         ;

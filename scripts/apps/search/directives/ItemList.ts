@@ -105,33 +105,33 @@ export function ItemList(
     // contains all the injected services to be passed down to child
     // components via props
     const services = {
-        $location: $location,
-        $timeout: $timeout,
-        $injector: $injector,
-        $filter: $filter,
-        search: search,
-        datetime: datetime,
-        superdesk: superdesk,
-        workflowService: workflowService,
-        archiveService: archiveService,
-        activityService: activityService,
-        multi: multi,
-        desks: desks,
-        familyService: familyService,
-        Keys: Keys,
-        dragitem: dragitem,
-        highlightsService: highlightsService,
-        TranslationService: TranslationService,
-        monitoringState: monitoringState,
-        authoringWorkspace: authoringWorkspace,
-        $rootScope: $rootScope,
+        $location,
+        $timeout,
+        $injector,
+        $filter,
+        search,
+        datetime,
+        superdesk,
+        workflowService,
+        archiveService,
+        activityService,
+        multi,
+        desks,
+        familyService,
+        Keys,
+        dragitem,
+        highlightsService,
+        TranslationService,
+        monitoringState,
+        authoringWorkspace,
+        $rootScope,
         config: appConfig,
-        $interpolate: $interpolate,
-        metadata: metadata,
-        storage: storage,
-        keyboardManager: keyboardManager,
-        session: session,
-        content: content,
+        $interpolate,
+        metadata,
+        storage,
+        keyboardManager,
+        session,
+        content,
     };
 
     return {
@@ -463,6 +463,10 @@ export function ItemList(
                     elem.off();
                     listComponent.unbindActionKeyShortcuts();
                     ReactDOM.unmountComponentAtNode(elem[0]);
+                });
+
+                scope.$on('item:actioning', (_e, data) => {
+                    listComponent.setActioning(data.item, data.actioning);
                 });
             });
         },

@@ -1,44 +1,51 @@
 import {RichUtils, EditorState} from 'draft-js';
-import {highlightsConfig} from '../highlightsConfig';
+import {getHighlightsConfig} from '../highlightsConfig';
 import {editor3DataKeys, getCustomDataFromEditor, setCustomDataForEditor__deprecated} from './editor3CustomData';
 import {getDraftCharacterListForSelection} from './getDraftCharacterListForSelection';
 import {getDraftSelectionForEntireContent} from './getDraftSelectionForEntireContent';
 import {resizeDraftSelection} from './resizeDraftSelection';
 import {clearInlineStyles} from './clearInlineStyles';
-import {changeSuggestionsTypes, blockStylesDescription, paragraphSuggestionTypes} from '../highlightsConfig';
+import {changeSuggestionsTypes, paragraphSuggestionTypes} from '../highlightsConfig';
 import {has} from 'lodash';
+import {gettext} from 'core/utils';
 
 export const paragraphSeparator = '¶';
 
-export const availableHighlights = Object.keys(highlightsConfig).reduce((obj, key) => {
-    obj[key] = highlightsConfig[key].draftStyleMap;
-    return obj;
-}, {});
+export function getAvailableHighlights() {
+    const highlightsConfig = getHighlightsConfig();
 
-const mapHighlightTypeToInlineStyle = Object.keys(highlightsConfig).reduce((obj, key) => {
-    if (highlightsConfig[key].type === 'STYLE') {
-        obj[key] = highlightsConfig[key].style;
-    }
-    return obj;
-}, {});
-
-const mapInlineStyleToHighlightType = Object.keys(highlightsConfig).reduce((obj, key) => {
-    if (highlightsConfig[key].type === 'STYLE') {
-        obj[highlightsConfig[key].style] = key;
-    }
-    return obj;
-}, {});
+    return Object.keys(highlightsConfig).reduce((obj, key) => {
+        obj[key] = highlightsConfig[key].draftStyleMap;
+        return obj;
+    }, {});
+}
 
 export function getTypeByInlineStyle(inlineStyle) {
+    const highlightsConfig = getHighlightsConfig();
+    const mapInlineStyleToHighlightType = Object.keys(highlightsConfig).reduce((obj, key) => {
+        if (highlightsConfig[key].type === 'STYLE') {
+            obj[highlightsConfig[key].style] = key;
+        }
+        return obj;
+    }, {});
+
     return mapInlineStyleToHighlightType[inlineStyle];
 }
 
 export function getInlineStyleByType(type) {
+    const highlightsConfig = getHighlightsConfig();
+    const mapHighlightTypeToInlineStyle = Object.keys(highlightsConfig).reduce((obj, key) => {
+        if (highlightsConfig[key].type === 'STYLE') {
+            obj[key] = highlightsConfig[key].style;
+        }
+        return obj;
+    }, {});
+
     return mapHighlightTypeToInlineStyle[type];
 }
 
 export function getHighlightDescription(suggestionsType) {
-    const highlight = highlightsConfig[suggestionsType];
+    const highlight = getHighlightsConfig()[suggestionsType];
 
     if (highlight != null && highlight.description) {
         return highlight.description;
@@ -48,6 +55,19 @@ export function getHighlightDescription(suggestionsType) {
 }
 
 export function getBlockStylesDescription(blockStyle) {
+    const blockStylesDescription = {
+        'header-one': 'H1',
+        'header-two': 'H2',
+        'header-three': 'H3',
+        'header-four': 'H4',
+        'header-five': 'H5',
+        'header-six': 'H6',
+        blockquote: gettext('quote'),
+        'unordered-list-item': gettext('unordered list'),
+        'ordered-list-item': gettext('ordered list'),
+        'code-block': gettext('preformatted'),
+    };
+
     if (blockStyle == null || !(blockStyle in blockStylesDescription)) {
         return '';
     }
@@ -59,7 +79,7 @@ function getInitialHighlightsState() {
     return {
         highlightsStyleMap: {},
         highlightsData: {},
-        lastHighlightIds: Object.keys(availableHighlights).reduce((obj, key) => {
+        lastHighlightIds: Object.keys(getAvailableHighlights()).reduce((obj, key) => {
             obj[key] = 0;
             return obj;
         }, {}),
@@ -120,7 +140,7 @@ export function getHighlightsStyleMap(editorState) {
  * @description return true if the highlightType is a valid highlight type for current editor.
  */
 function highlightTypeValid(highlightType) {
-    return Object.keys(availableHighlights).includes(highlightType);
+    return Object.keys(getAvailableHighlights()).includes(highlightType);
 }
 
 /**
@@ -141,7 +161,7 @@ export function styleNameBelongsToHighlight(styleName) {
         return false;
     }
 
-    return Object.keys(availableHighlights).includes(styleName.slice(0, delimiterIndex));
+    return Object.keys(getAvailableHighlights()).includes(styleName.slice(0, delimiterIndex));
 }
 
 /**
@@ -434,7 +454,7 @@ export function addHighlight(editorState, type, data, single = false) {
         },
         highlightsStyleMap: {
             ...highlightsState.highlightsStyleMap,
-            [styleName]: availableHighlights[type],
+            [styleName]: getAvailableHighlights()[type],
         },
         highlightsData: {
             ...highlightsState.highlightsData,
@@ -992,7 +1012,7 @@ function addCommentsForServer(editorState) {
     const highlightsData = multipleHighlights.highlightsData;
 
     const comments = Object.keys(highlightsData)
-        .filter((key) => key.indexOf(highlightsConfig.COMMENT.type) === 0)
+        .filter((key) => key.indexOf(getHighlightsConfig().COMMENT.type) === 0)
         .map((key) => highlightsData[key].data);
 
     return setCustomDataForEditor__deprecated(editorState, editor3DataKeys.__PUBLIC_API__comments, comments);
@@ -1016,7 +1036,7 @@ function applyHighlightsStyleMap(editorState) {
     const highlightsWithStyleMapApplied = {
         ...highlights,
         highlightsStyleMap: Object.keys(highlights.highlightsData).reduce((obj, styleName) => {
-            obj[styleName] = availableHighlights[getHighlightType(styleName)];
+            obj[styleName] = getAvailableHighlights()[getHighlightType(styleName)];
             return obj;
         }, {}),
     };

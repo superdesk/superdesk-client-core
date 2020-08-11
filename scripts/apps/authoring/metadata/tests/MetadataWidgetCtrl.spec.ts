@@ -145,6 +145,10 @@ describe('metadata terms directive', () => {
         $compile = _$compile_;
     }));
 
+    beforeEach(inject(($httpBackend) => {
+        $httpBackend.whenGET(/api$/).respond({_links: {child: []}});
+    }));
+
     function compileDirective(html, scopeValues) {
         var scope = $rootScope.$new();
 
@@ -352,7 +356,8 @@ describe('metadata terms directive', () => {
     it('search of tree type', inject(() => {
         var elmHtml = '<div sd-meta-terms ng-disabled="!_editable" ' +
                       'data-item="item" data-field="subjects" data-unique="qcode" ' +
-                      'data-list="subjects" data-header="true" data-reload-list="true"></div>';
+                      'data-list="subjects" data-header="true" data-reload-list="true" ' +
+                      'data-disable-entire-category="false"></div>';
 
         var iScope;
         var scopeValues = {

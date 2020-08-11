@@ -115,7 +115,7 @@ angular.module('superdesk.apps.ingest', [
                 icon: 'archive',
                 monitor: true,
                 controller: ['send', 'data', function(send, data) {
-                    return send.one(data.item);
+                    return send.validateAndSend(data.item);
                 }],
                 keyboardShortcut: 'ctrl+enter',
                 filters: [{action: 'list', type: 'ingest'}],

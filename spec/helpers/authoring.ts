@@ -138,7 +138,6 @@ class Authoring {
     addHelpline: (helplineLabel: any) => void;
     getHelplineSelectedOption: (option: any) => any;
     getBodyFooter: () => any;
-    getBodyFooterPreview: () => any;
     showTransmissionDetails: (publishedHistoryItemIndex: any) => any;
     openRelatedItem: () => void;
     openMacros: () => void;
@@ -741,15 +740,18 @@ class Authoring {
             });
         };
 
-        var bodyHtml = element(by.model('item.body_html')).all(by.className('editor-type-html')).first();
+        var getBodyHtml = () => browser.wait(ECE.presenceOf(element(by.model('item.body_html'))))
+            .then(() => element(by.model('item.body_html')).all(by.className('editor-type-html')).first());
+
         var abstract = element(by.model('item.abstract')).all(by.className('editor-type-html')).first();
         var bodyFooter = element(by.id('body_footer')).all(by.className('editor-type-html')).first();
-        var bodyFooterPreview = element(by.id('body_footer_preview')).all(by.css('[ng-bind-html="html"]')).first();
         var packageSlugline = element.all(by.className('keyword')).last();
         var byline = element(by.model('item.byline')).all(by.className('editor-type-html')).first();
 
         this.writeText = function(text) {
-            bodyHtml.sendKeys(text);
+            getBodyHtml().then((bodyHtml) => {
+                bodyHtml.sendKeys(text);
+            });
         };
 
         this.writeTextToHeadline = function(text) {
@@ -797,7 +799,9 @@ class Authoring {
         this.getEditorWordCount = () => element.all(by.className('char-count words')).last().getText();
 
         this.getBodyText = function() {
-            return bodyHtml.getText();
+            return getBodyHtml().then((bodyHtml) => {
+                return bodyHtml.getText();
+            });
         };
 
         this.getBodyInnerHtml = function() {
@@ -806,12 +810,16 @@ class Authoring {
         };
 
         this.focusBodyHtmlElement = function() {
-            bodyHtml.click();
+            getBodyHtml().then((bodyHtml) => {
+                bodyHtml.click();
+            });
         };
 
         this.cleanBodyHtmlElement = function() {
-            bodyHtml.clear();
-            this.backspaceBodyHtml();
+            getBodyHtml().then((bodyHtml) => {
+                bodyHtml.clear();
+                this.backspaceBodyHtml();
+            });
         };
 
         this.backspaceBodyHtml = function(count) {
@@ -821,7 +829,9 @@ class Authoring {
                 sequence += protractor.Key.BACK_SPACE;
             }
 
-            bodyHtml.sendKeys(sequence);
+            getBodyHtml().then((bodyHtml) => {
+                bodyHtml.sendKeys(sequence);
+            });
         };
 
         this.getHeadlineText = function() {
@@ -869,9 +879,6 @@ class Authoring {
 
         this.getBodyFooter = function() {
             return bodyFooter.getText();
-        };
-        this.getBodyFooterPreview = function() {
-            return bodyFooterPreview.getText();
         };
 
         this.showTransmissionDetails = function(publishedHistoryItemIndex) {
@@ -974,6 +981,8 @@ class Authoring {
         this.setHeaderSluglineText = function(text) {
             var headerDetails = element(by.className('authoring-header__detailed'));
 
+            browser.wait(ECE.presenceOf(headerDetails));
+
             return headerDetails.all(by.model('item.slugline')).sendKeys(text);
         };
 
@@ -1049,7 +1058,7 @@ class Authoring {
 
         this.getNextLevelSelectedCategory = function() {
             return this.subject.all(by.className('levelup')).all(
-                by.css('[ng-click="allowEntireCat && selectTerm(activeTerm, $event)"]'));
+                by.css('[data-test-id="choose-entire-category"]'));
         };
 
         this.getItemSource = function() {
@@ -1090,7 +1099,10 @@ class Authoring {
         };
 
         this.getArticleHeadlineOfBoard = function(index) {
-            return this.getBoardArticle(index).all(by.className('headline')).first().getText();
+            return this.getBoardArticle(index)
+                .all(by.css('.headline .medium-editor-element:not(.clone)'))
+                .first()
+                .getText();
         };
 
         this.getHtmlArticleHeadlineOfBoard = function(index) {

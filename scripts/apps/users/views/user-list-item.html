@@ -4,14 +4,9 @@
     ng-class="{selected: user._id === selected._id, 'inactive' : !user.is_enabled || !user.is_active}"
     data-test-id="users-list-item"
 >
-    <figure class="avatar avatar-with-info" ng-class="{'user-logged': isLoggedIn(user)}">
-        <div class="logged-info"></div>
-        <div class="user-image">
-            <img sd-user-avatar data-user="user">
-        </div>
-    </figure>
-
-    <i class="admin-label icon-settings" ng-if="user.user_type == 'administrator'" tooltip="{{ :: 'admin'|translate}}" tooltip-placement="top"></i>
+    <div style="height: auto">
+        <sd-user-avatar data-user="user" data-display-status="true" display-administrator-indicator="true"></sd-user-avatar>
+    </div>
 
     <div class="row-wrapper" sd-col-width>
         <div class="name">
@@ -26,7 +21,7 @@
         <div class="created">{{ user._created | reldate}}</div>
     </div>
 
-    <div class="action">
+    <div class="action" ng-show="user._id !== selected._id">
         <ul class="item-functions"
             sd-activity-list
             data-item="user"

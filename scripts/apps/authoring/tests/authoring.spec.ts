@@ -2,6 +2,7 @@ import {AuthoringWorkspaceService} from '../authoring/services/AuthoringWorkspac
 import _ from 'lodash';
 import {appConfig} from 'appConfig';
 import {ISuperdeskGlobalConfig} from 'superdesk-api';
+import {mediaIdGenerator} from '../authoring/services/MediaIdGeneratorService';
 
 describe('authoring', () => {
     var GUID = 'urn:tag:superdesk-1';
@@ -28,6 +29,7 @@ describe('authoring', () => {
     beforeEach(window.module('superdesk.core.editor3'));
     beforeEach(window.module('superdesk.apps.editor2'));
     beforeEach(window.module('superdesk.apps.extension-points'));
+    beforeEach(window.module('superdesk.apps.spellcheck'));
 
     beforeEach(inject(($window) => {
         $window.onbeforeunload = angular.noop;
@@ -47,6 +49,10 @@ describe('authoring', () => {
     beforeEach(inject((session) => {
         session.start({_id: 'sess'}, {_id: USER});
         expect(session.identity._id).toBe(USER);
+    }));
+
+    beforeEach(inject(($httpBackend) => {
+        $httpBackend.whenGET(/api$/).respond({_links: {child: []}});
     }));
 
     it('can open an item',
@@ -100,34 +106,6 @@ describe('authoring', () => {
             expect($location.path(), '/authoring/' + $scope.item._id);
         }));
 
-    it('can autosave and save an item', (done) => inject((api, $q, $timeout, $rootScope) => {
-        var $scope = startAuthoring({guid: GUID, _id: GUID, task: 'desk:1', _locked: true, _editable: true},
-                'edit'),
-            headline = 'test headline';
-
-        expect($scope.dirty).toBe(false);
-        expect($scope.item.guid).toBe(GUID);
-        spyOn(api, 'save').and.returnValue($q.when({headline: 'foo'}));
-
-        $scope.item.headline = headline;
-        $scope.autosave($scope.item)
-            .then(() => {
-                expect($scope.dirty).toBe(true);
-
-                expect(api.save).toHaveBeenCalled();
-                expect($scope.item.headline).toBe(headline);
-
-                $scope.save();
-                $rootScope.$digest();
-                expect($scope.dirty).toBe(false);
-                expect(api.save).toHaveBeenCalled();
-            })
-            .finally(done);
-
-        // it must flush timeout only when the applyMiddleware promise is resolved
-        setTimeout(() => $timeout.flush(5000), 10);
-    }));
-
     it('can use a previously created autosave', inject(() => {
         var $scope = startAuthoring({_autosave: {headline: 'test'}}, 'edit');
 
@@ -135,19 +113,24 @@ describe('authoring', () => {
         expect($scope.item.headline).toBe('test');
     }));
 
-    it('can save while item is being autosaved', inject(($rootScope, $timeout, $q, api) => {
+    it('can save while item is being autosaved', (done) => inject(($rootScope, $timeout, $q, api) => {
         var $scope = startAuthoring({headline: 'test', task: 'desk:1'}, 'edit');
 
         $scope.item.body_html = 'test';
         $rootScope.$digest();
         $timeout.flush(1000);
 
-        spyOn(api, 'save').and.returnValue($q.when({}));
+        spyOn(api, 'save').and.returnValue(Promise.resolve({}));
         $scope.save();
         $rootScope.$digest();
 
         $timeout.flush(5000);
-        expect($scope.item._autosave).toBeNull();
+
+        setTimeout(() => { // save uses async middleware. HTTP request will be started asynchronously
+            expect($scope.item._autosave).toBeNull();
+
+            done();
+        });
     }));
 
     it('can close item after save work confirm', inject(($rootScope, $q, $location, authoring, reloadService) => {
@@ -297,20 +280,23 @@ describe('authoring', () => {
 
             scope.publish();
             $rootScope.$digest();
-            expect(api.find).toHaveBeenCalledWith('archive', 'rewriteOf');
-            expect(confirm.confirmFeatureMedia).toHaveBeenCalledWith(rewriteOf);
-            defered.resolve(rewriteOf);
-            $rootScope.$digest();
 
-            setTimeout(() => { // let applyMiddleware promise resolve
-                expect(authoring.autosave).toHaveBeenCalled();
-                expect(authoring.publish).not.toHaveBeenCalled();
-                done();
+            setTimeout(() => { // let onPublishMiddlewares promise resolve
+                expect(api.find).toHaveBeenCalledWith('archive', 'rewriteOf');
+                defered.resolve(rewriteOf);
+                $rootScope.$digest();
+                expect(confirm.confirmFeatureMedia).toHaveBeenCalledWith(rewriteOf);
+
+                setTimeout(() => { // let applyMiddleware promise resolve
+                    expect(authoring.autosave).toHaveBeenCalled();
+                    expect(authoring.publish).not.toHaveBeenCalled();
+                    done();
+                }, 10);
             }, 10);
         }));
 
     it('confirm the associated media but do not use the associated media',
-        inject((api, $q, $rootScope, confirm, authoring) => {
+        (done) => inject((api, $q, $rootScope, confirm, authoring) => {
             let item = {
                 _id: 'test',
                 rewrite_of: 'rewriteOf',
@@ -345,12 +331,18 @@ describe('authoring', () => {
 
             scope.publish();
             $rootScope.$digest();
-            expect(api.find).toHaveBeenCalledWith('archive', 'rewriteOf');
-            expect(confirm.confirmFeatureMedia).toHaveBeenCalledWith(rewriteOf);
-            defered.resolve({});
-            $rootScope.$digest();
-            expect(authoring.publish).toHaveBeenCalled();
-            expect(authoring.autosave).not.toHaveBeenCalled();
+            setTimeout(() => { // let onPublishMiddlewares promise resolve
+                expect(api.find).toHaveBeenCalledWith('archive', 'rewriteOf');
+                defered.resolve({});
+                $rootScope.$digest();
+                expect(confirm.confirmFeatureMedia).toHaveBeenCalledWith(rewriteOf);
+
+                setTimeout(() => { // let applyMiddleware promise resolve
+                    expect(authoring.publish).toHaveBeenCalled();
+                    expect(authoring.autosave).not.toHaveBeenCalled();
+                    done();
+                }, 10);
+            }, 10);
         }));
 
     it('can reject publishing on error', inject((api, $q, $rootScope, authoring, lock) => {
@@ -502,7 +494,8 @@ describe('authoring', () => {
 
             spyOn(api, 'update').and.returnValue($q.when());
             authoring.publish(item);
-            expect(api.update).toHaveBeenCalledWith('archive_publish', item, {});
+            expect(api.update).toHaveBeenCalledWith('archive_publish', item, {},
+                {publishing_warnings_confirmed: false});
         }));
 
         it('confirms if an item is dirty and saves and publish',
@@ -527,7 +520,8 @@ describe('authoring', () => {
                 authoring.publish(edit);
                 $rootScope.$digest();
 
-                expect(api.update).toHaveBeenCalledWith('archive_publish', edit, {});
+                expect(api.update).toHaveBeenCalledWith('archive_publish', edit, {},
+                    {publishing_warnings_confirmed: false});
                 expect(lock.unlock).toHaveBeenCalled();
             }));
 
@@ -614,7 +608,7 @@ describe('authoring', () => {
         }));
 
         it('updates orig item on save',
-            inject((authoring, $rootScope, $httpBackend, api, $q, urls) => {
+            (done) => inject((authoring, $rootScope, $httpBackend, $q, urls) => {
                 var item = {headline: 'foo'};
                 var orig: any = {_links: {self: {href: 'archive/foo'}}};
 
@@ -623,19 +617,24 @@ describe('authoring', () => {
                     .respond(200, {_etag: 'new', _current_version: 2});
                 authoring.save(orig, item);
                 $rootScope.$digest();
-                $httpBackend.flush();
-                expect(orig._etag).toBe('new');
-                expect(orig._current_version).toBe(2);
+
+                setTimeout(() => { // save uses async middleware. HTTP request will be started asynchronously
+                    $httpBackend.flush();
+                    expect(orig._etag).toBe('new');
+                    expect(orig._current_version).toBe(2);
+
+                    done();
+                });
             }));
     });
 
     describe('media identifer generator service', () => {
-        it('generates media field identifer', inject((mediaIdGenerator) => {
-            expect(mediaIdGenerator.getFieldVersionName('media1')).toBe('media1');
-            expect(mediaIdGenerator.getFieldVersionName('media1', 1)).toBe('media1--1');
+        it('generates media field identifer', () => {
+            expect(mediaIdGenerator.getFieldVersionName('media1', null)).toBe('media1');
+            expect(mediaIdGenerator.getFieldVersionName('media1', '1')).toBe('media1--1');
             expect(mediaIdGenerator.getFieldParts('media1')).toEqual(['media1', null]);
             expect(mediaIdGenerator.getFieldParts('media1--1')).toEqual(['media1', 1]);
-        }));
+        });
     });
 
     describe('carousel directive', () => {
@@ -721,6 +720,10 @@ describe('autosave', () => {
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
 
+    beforeEach(inject(($httpBackend) => {
+        $httpBackend.whenGET(/api$/).respond({_links: {child: []}});
+    }));
+
     it('can fetch an autosave for item locked by user and is editable',
         inject((autosave, api, $q, $rootScope) => {
             spyOn(api, 'find').and.returnValue($q.when({}));
@@ -745,39 +748,30 @@ describe('autosave', () => {
             expect(api.find).not.toHaveBeenCalled();
         }));
 
-    it('can create an autosave', inject((autosave, api, $q, $timeout, $rootScope) => {
+    it('can create an autosave', (done) => inject((autosave, api, $timeout, $rootScope) => {
         var orig: any = {_id: 1, _etag: 'x', _locked: true, _editable: true};
         var item = Object.create(orig);
 
         item.headline = 'test';
-        spyOn(api, 'save').and.returnValue($q.when({_id: 2}));
-        autosave.save(item, orig);
-        $rootScope.$digest();
+        spyOn(api, 'save').and.returnValue(Promise.resolve({_id: 2}));
+
+        autosave.save(
+            item,
+            orig,
+            0,
+            () => {
+                expect(api.save).toHaveBeenCalledWith('archive_autosave', {}, {_id: 1, headline: 'test'});
+                expect(orig._autosave._id).toBe(2);
+                expect(item.headline).toBe('test');
+                expect(orig.headline).not.toBe('test');
+
+                done();
+            },
+        );
+
         expect(api.save).not.toHaveBeenCalled();
+        $rootScope.$digest();
         $timeout.flush(5000);
-        expect(api.save).toHaveBeenCalledWith('archive_autosave', {}, {_id: 1, headline: 'test'});
-        expect(orig._autosave._id).toBe(2);
-        expect(item.headline).toBe('test');
-        expect(orig.headline).not.toBe('test');
-    }));
-
-    it('can save multiple items', inject((autosave, api, $q, $timeout, $rootScope) => {
-        var item1 = {_id: 1, _etag: '1', _locked: true, _editable: true},
-            item2 = {_id: 2, _etag: '2', _locked: true, _editable: true};
-
-        spyOn(api, 'save').and.returnValue($q.when({}));
-
-        autosave.save(_.create(item1), item1);
-        $timeout.flush(1500);
-
-        autosave.save(_.create(item2), item2);
-        $timeout.flush(2500);
-
-        expect(api.save).toHaveBeenCalled();
-        expect(api.save.calls.count()).toBe(1);
-
-        $timeout.flush(5000);
-        expect(api.save.calls.count()).toBe(2);
     }));
 });
 
@@ -851,10 +845,10 @@ describe('authoring actions', () => {
      */
     function allowedActions(actions, keys) {
         _.forOwn(actions, (value, key) => {
-            if (_.includes(keys, key)) {
-                expect(value).toBeTruthy();
+            if (value) {
+                expect(keys).toContain(key);
             } else {
-                expect(value).toBeFalsy();
+                expect(keys).not.toContain(key);
             }
         });
     }
@@ -864,6 +858,7 @@ describe('authoring actions', () => {
     beforeEach(window.module('superdesk.apps.desks'));
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
+    beforeEach(window.module('superdesk.apps.spellcheck'));
 
     beforeEach(inject((desks, $q) => {
         spyOn(desks, 'fetchCurrentUserDesks').and.returnValue($q.when(userDesks));
@@ -922,7 +917,7 @@ describe('authoring actions', () => {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
 
-            allowedActions(itemActions, ['save', 'edit', 'duplicate', 'spike', 're_write',
+            allowedActions(itemActions, ['save', 'edit', 'duplicate', 'duplicateTo', 'spike', 're_write',
                 'mark_item_for_highlight', 'mark_item_for_desks',
                 'package_item', 'multi_edit', 'publish', 'add_to_current', 'export', 'set_label', 'send']);
         }));
@@ -954,7 +949,7 @@ describe('authoring actions', () => {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
 
-            allowedActions(itemActions, ['save', 'edit', 'duplicate', 'spike', 're_write',
+            allowedActions(itemActions, ['save', 'edit', 'duplicate', 'duplicateTo', 'spike', 're_write',
                 'mark_item_for_highlight', 'package_item', 'multi_edit', 'add_to_current',
                 'export', 'set_label', 'send']);
         }));
@@ -986,7 +981,7 @@ describe('authoring actions', () => {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
 
-            allowedActions(itemActions, ['save', 'edit', 'duplicate', 'spike',
+            allowedActions(itemActions, ['save', 'edit', 'duplicate', 'duplicateTo', 'spike',
                 'package_item', 'multi_edit', 'add_to_current', 'set_label', 'send']);
         }));
 
@@ -1017,7 +1012,7 @@ describe('authoring actions', () => {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
 
-            allowedActions(itemActions, ['save', 'edit', 'duplicate', 'spike', 're_write',
+            allowedActions(itemActions, ['save', 'edit', 'duplicate', 'duplicateTo', 'spike', 're_write',
                 'mark_item_for_highlight', 'package_item', 'multi_edit', 'add_to_current',
                 'export', 'set_label', 'send']);
         }));
@@ -1051,6 +1046,39 @@ describe('authoring actions', () => {
             var itemActions = authoring.itemActions(item);
 
             allowedActions(itemActions, ['view', 're_write', 'export', 'set_label']);
+        }));
+
+    it('can also duplicateTo item which is on desk where is not a member when enabled via config',
+        inject((privileges, desks, authoring, $q, $rootScope) => {
+            var item = {
+                _id: 'test',
+                state: 'submitted',
+                flags: {marked_for_not_publication: false},
+                type: 'text',
+                task: {
+                    desk: 'desk3',
+                },
+                _current_version: 2,
+            };
+
+            var userPrivileges = {
+                duplicate: true,
+                mark_item: false,
+                spike: true,
+                unspike: true,
+                mark_for_highlights: true,
+                mark_for_desks: false,
+                unlock: true,
+                archive: true,
+            };
+
+            appConfig.workflow_allow_duplicate_non_members = true;
+
+            privileges.setUserPrivileges(userPrivileges);
+            $rootScope.$digest();
+            var itemActions = authoring.itemActions(item);
+
+            allowedActions(itemActions, ['view', 're_write', 'export', 'set_label', 'duplicateTo']);
         }));
 
     it('can only view the item if the item is killed',
@@ -1205,7 +1233,7 @@ describe('authoring actions', () => {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
 
-            allowedActions(itemActions, ['duplicate', 'view', 'add_to_current',
+            allowedActions(itemActions, ['duplicate', 'duplicateTo', 'view', 'add_to_current',
                 'mark_item_for_highlight', 'package_item', 'multi_edit', 'correct', 'takedown', 'kill', 're_write',
                 'create_broadcast', 'resend', 'export', 'set_label']);
         }));
@@ -1250,7 +1278,7 @@ describe('authoring actions', () => {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
 
-            allowedActions(itemActions, ['duplicate', 'view', 'add_to_current',
+            allowedActions(itemActions, ['duplicate', 'duplicateTo', 'view', 'add_to_current',
                 'mark_item_for_highlight', 'package_item', 'multi_edit', 'correct', 'kill', 're_write',
                 'create_broadcast', 'resend', 'export', 'set_label']);
 
@@ -1258,7 +1286,7 @@ describe('authoring actions', () => {
             itemActions = authoring.itemActions(item);
             allowedActions(itemActions, ['duplicate', 'view', 'add_to_current', 'mark_item_for_highlight',
                 'package_item', 'multi_edit', 'correct', 'kill', 'create_broadcast', 'resend', 'export',
-                'set_label']);
+                'set_label', 'duplicateTo']);
         }));
 
     it('Cannot perform correction or kill or takedown on published item without privileges',
@@ -1301,7 +1329,7 @@ describe('authoring actions', () => {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
 
-            allowedActions(itemActions, ['duplicate', 'view', 'add_to_current',
+            allowedActions(itemActions, ['duplicate', 'duplicateTo', 'view', 'add_to_current',
                 'mark_item_for_highlight', 'package_item', 'multi_edit', 're_write', 'resend',
                 'export', 'set_label']);
         }));
@@ -1388,7 +1416,7 @@ describe('authoring actions', () => {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
 
-            allowedActions(itemActions, ['view', 'duplicate', 'deschedule', 'export', 'set_label']);
+            allowedActions(itemActions, ['view', 'duplicate', 'duplicateTo', 'deschedule', 'export', 'set_label']);
         }));
 
     it('Cannot send item if the version is zero',
@@ -1423,7 +1451,7 @@ describe('authoring actions', () => {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
 
-            allowedActions(itemActions, ['save', 'edit', 'duplicate', 'spike', 'add_to_current',
+            allowedActions(itemActions, ['save', 'edit', 'duplicate', 'duplicateTo', 'spike', 'add_to_current',
                 'mark_item_for_highlight', 'package_item', 'multi_edit', 'publish', 'export',
                 'mark_item_for_desks', 're_write', 'set_label']);
         }));
@@ -1459,7 +1487,7 @@ describe('authoring actions', () => {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
 
-            allowedActions(itemActions, ['save', 'edit', 'duplicate', 'spike', 'add_to_current',
+            allowedActions(itemActions, ['save', 'edit', 'duplicate', 'duplicateTo', 'spike', 'add_to_current',
                 'mark_item_for_highlight', 'package_item', 'multi_edit', 'publish', 'export',
                 're_write', 'set_label']);
         }));
@@ -1495,7 +1523,7 @@ describe('authoring actions', () => {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
 
-            allowedActions(itemActions, ['save', 'edit', 'duplicate', 'spike', 'add_to_current',
+            allowedActions(itemActions, ['save', 'edit', 'duplicate', 'duplicateTo', 'spike', 'add_to_current',
                 're_write', 'mark_item_for_highlight', 'package_item', 'multi_edit', 'publish',
                 'export', 'set_label', 'send']);
         }));
@@ -1531,7 +1559,7 @@ describe('authoring actions', () => {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
 
-            allowedActions(itemActions, ['save', 'edit', 'duplicate', 'spike', 'add_to_current',
+            allowedActions(itemActions, ['save', 'edit', 'duplicate', 'duplicateTo', 'spike', 'add_to_current',
                 're_write', 'mark_item_for_highlight', 'package_item', 'multi_edit', 'publish',
                 'send', 'export', 'set_label']);
         }));
@@ -1568,7 +1596,7 @@ describe('authoring actions', () => {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
 
-            allowedActions(itemActions, ['save', 'edit', 'duplicate', 'spike', 'add_to_current',
+            allowedActions(itemActions, ['save', 'edit', 'duplicate', 'duplicateTo', 'spike', 'add_to_current',
                 'mark_item_for_highlight', 'multi_edit', 'publish', 'send', 'export', 'set_label']);
         }));
 
@@ -1604,7 +1632,7 @@ describe('authoring actions', () => {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
 
-            allowedActions(itemActions, ['save', 'edit', 'duplicate', 'spike', 'add_to_current',
+            allowedActions(itemActions, ['save', 'edit', 'duplicate', 'duplicateTo', 'spike', 'add_to_current',
                 'mark_item_for_highlight', 'multi_edit', 'publish', 'send', 'export', 're_write',
                 'set_label']);
         }));
@@ -1645,7 +1673,7 @@ describe('authoring actions', () => {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
 
-            allowedActions(itemActions, ['correct', 'kill', 'duplicate', 'add_to_current', 're_write',
+            allowedActions(itemActions, ['correct', 'kill', 'duplicate', 'duplicateTo', 'add_to_current', 're_write',
                 'view', 'package_item', 'mark_item_for_highlight', 'multi_edit', 'resend', 'export',
                 'set_label']);
         }));
@@ -1694,7 +1722,7 @@ describe('authoring actions', () => {
 
             allowedActions(itemActions, ['duplicate', 're_write', 'mark_item_for_highlight', 'multi_edit',
                 'correct', 'kill', 'package_item', 'view', 'create_broadcast', 'add_to_current', 'resend',
-                'export', 'set_label']);
+                'export', 'set_label', 'duplicateTo']);
         }));
 
     it('Create broadcast icon is available for text item with genre Article.',
@@ -1741,7 +1769,7 @@ describe('authoring actions', () => {
 
             allowedActions(itemActions, ['duplicate', 're_write', 'mark_item_for_highlight', 'multi_edit',
                 'correct', 'kill', 'package_item', 'view', 'create_broadcast', 'add_to_current', 'resend',
-                'export', 'set_label']);
+                'export', 'set_label', 'duplicateTo']);
         }));
 
     it('Create broadcast icon is not available for broadcast item',
@@ -1792,7 +1820,7 @@ describe('authoring actions', () => {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
 
-            allowedActions(itemActions, ['duplicate', 'mark_item_for_highlight', 'multi_edit',
+            allowedActions(itemActions, ['duplicate', 'duplicateTo', 'mark_item_for_highlight', 'multi_edit',
                 'correct', 'kill', 'package_item', 'view', 'add_to_current', 'resend', 'export',
                 're_write', 'set_label']);
         }));
@@ -1893,7 +1921,7 @@ describe('authoring actions', () => {
             $rootScope.$digest();
             var itemActions = authoring.itemActions(item);
 
-            allowedActions(itemActions, ['duplicate', 'mark_item_for_highlight', 'multi_edit',
+            allowedActions(itemActions, ['duplicate', 'duplicateTo', 'mark_item_for_highlight', 'multi_edit',
                 'create_broadcast', 'correct', 'kill', 'package_item', 'view', 'add_to_current',
                 'resend', 'export', 'set_label']);
         }));
@@ -2009,10 +2037,10 @@ describe('authoring workspace', () => {
 
         var archived = {_id: 'bar'};
 
-        spyOn(send, 'one').and.returnValue($q.when(archived));
+        spyOn(send, 'validateAndSend').and.returnValue($q.when(archived));
         item._type = 'ingest';
         authoringWorkspace.open(item);
-        expect(send.one).toHaveBeenCalledWith(item);
+        expect(send.validateAndSend).toHaveBeenCalledWith(item);
         $rootScope.$digest();
         expect(authoring.open).toHaveBeenCalledWith(archived._id, false, null, 'edit');
     }));

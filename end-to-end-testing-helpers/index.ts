@@ -2,8 +2,7 @@ import {element, by, ElementFinder, ElementArrayFinder, browser, Locator, promis
 import {ECE} from './expected-conditions-extended';
 import {executeContextMenuAction} from './articlesList';
 import {navigateTo} from './workspace';
-
-const WAIT_TIMEOUT = 200;
+import * as path from 'path';
 
 const getTestSelector = (testIds: Array<string> | null = null, text: string | null = null): Locator => {
     const selector = (testIds == null ? [] : testIds)
@@ -28,7 +27,34 @@ export function el(
 
     const elem = byLocator == null ? locator : locator.element(byLocator);
 
-    browser.wait(() => elem.isPresent(), WAIT_TIMEOUT);
+    [
+        'click',
+        'sendKeys',
+        'getTagName',
+        'getCssValue',
+        'getAttribute',
+        'getText',
+        'getSize',
+        'getLocation',
+        'isEnabled',
+        'isSelected',
+        'submit',
+        'clear',
+        'isDisplayed',
+        'getId',
+        'takeScreenshot',
+    ].forEach((methodName) => {
+        const originalHandler = elem[methodName];
+
+        // override methods to wait for an element to be visible
+        // if the element is already visible, the action will be executed immediately
+        elem[methodName] = (...args: Array<any>) => {
+            return browser.wait(ECE.presenceOf(elem), 5000).then(() => {
+                return originalHandler(...args); // forward arguments
+            });
+        };
+    });
+
     return elem;
 }
 
@@ -70,6 +96,20 @@ export function login(username?: string, password?: string) {
 
 export function hover(elem: ElementFinder) {
     browser.actions().mouseMove(elem).perform();
+}
+
+export function selectFilesForUpload(
+    fileInput: ElementFinder,
+    fileNames: Array<string>, // relative to spec/test-files folder
+) {
+    fileInput.sendKeys(
+        fileNames
+            .map(
+                (relativePath) =>
+                    path.resolve(__dirname, '../../../spec/test-files/' + relativePath),
+            )
+            .join('\n'),
+    );
 }
 
 export const articleList = {

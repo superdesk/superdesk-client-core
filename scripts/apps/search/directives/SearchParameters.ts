@@ -1,4 +1,5 @@
-import {PARAMETERS} from 'apps/search/constants';
+import {getParameters} from 'apps/search/constants';
+import {getDateFilters} from './DateFilters';
 import _ from 'lodash';
 
 /**
@@ -23,11 +24,11 @@ SearchParameters.$inject = [
     '$location', 'asset', 'tags', 'metadata',
     'searchCommon', 'desks', 'userList',
     'ingestSources', 'subscribersService',
-    '$templateCache',
+    '$templateCache', 'search',
 ];
 
 export function SearchParameters($location, asset, tags, metadata, common, desks,
-    userList, ingestSources, subscribersService, $templateCache) {
+    userList, ingestSources, subscribersService, $templateCache, search) {
     return {
         scope: {
             repo: '=',
@@ -36,7 +37,11 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
         },
         templateUrl: asset.templateUrl('apps/search/views/search-parameters.html'),
         link: function(scope, elem) {
+            const PARAMETERS = getParameters();
             var ENTER = 13;
+
+            scope.dateFilters = getDateFilters()
+                .filter((dateFilter) => metadata.search_config?.[dateFilter.fieldname] != null);
 
             scope.keyPressed = function(event) {
                 if (event.keyCode === ENTER) {
@@ -45,10 +50,40 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                 }
             };
 
+            scope.toggleDateFilter = function(fieldname, predefinedFilters) {
+                predefinedFilters.forEach((filters) => {
+                    if (filters.key === scope.fields[fieldname]) {
+                        filters.active = !filters.active;
+                        if (!filters.active) {
+                            scope.fields[fieldname] = null;
+                        }
+                        if (scope.fields[fieldname + 'to']) {
+                            scope.fields[fieldname + 'to'] = null;
+                        }
+                        if (scope.fields[fieldname + 'from']) {
+                            scope.fields[fieldname + 'from'] = null;
+                        }
+                    } else {
+                        filters.active = false;
+                    }
+                });
+            };
+
+            scope.togglePredefinedDateFilter = function(dateFilter, predefinedFilter) {
+                scope.fields[dateFilter.fieldname] = predefinedFilter;
+            };
+
+            scope.clearPredefinedFilters = function(fieldname) {
+                const clearDateFilter = scope.dateFilters.find((dateFilter) => dateFilter.fieldname === fieldname);
+
+                scope.fields[fieldname] = null;
+                clearDateFilter.predefinedFilters.forEach((predefinedFilter) => predefinedFilter.active = false);
+            };
+
             const getSearchConfig = () => {
                 if (scope.isContentApi()) {
                     let searchConfig: any = _.pick(metadata.search_config, ['slugline', 'headline',
-                        'byline', 'story_text']);
+                        'byline', 'story_text', 'sign_off', 'firstpublished']);
 
                     searchConfig.subscribers = 1;
                     return searchConfig;
@@ -97,6 +132,45 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                 } else if (!scope.isContentApi()) {
                     scope.fields.spike = 'exclude';
                 }
+
+                // Date filter start.
+
+                let parameters = getDateFilters()
+                    .filter((dateFilter) => metadata.search_config?.[dateFilter.fieldname] != null);
+                let paramsParameters = Object.keys($location.search());
+
+                function initialDatePublishedFromTo(fieldname) {
+                    scope.fields[fieldname] = $location.search()[fieldname];
+                }
+
+                scope.dateFilters.forEach((parameter) => {
+                    // 1) Initialize the scope fields for predefined buttons
+                    // 2) Setting the active property for the predefined buttons.
+
+                    if (paramsParameters.includes(parameter.fieldname)) {
+                        let fieldname = $location.search()[parameter['fieldname']];
+                        let _predefinedFilter = parameter.predefinedFilters
+                            .find((predefinedFilter) => predefinedFilter.key === fieldname);
+
+                        scope.fields[parameter.fieldname] = fieldname;
+                        _predefinedFilter.active = true;
+                    } else {
+                        parameter.predefinedFilters.forEach((predefinedFilter) => {
+                            predefinedFilter.active = false;
+                        });
+                    }
+
+                    // Initializing the date published from to field.
+
+                    if (paramsParameters.includes(parameter['fieldname'] + 'to')) {
+                        initialDatePublishedFromTo(parameter['fieldname'] + 'to');
+                    }
+                    if (paramsParameters.includes(parameter['fieldname'] + 'from')) {
+                        initialDatePublishedFromTo(parameter['fieldname'] + 'from');
+                    }
+                });
+
+                // Date filter end.
 
                 if ($location.search().featuremedia) {
                     scope.fields.featuremedia = true;
@@ -262,7 +336,7 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                 metadata
                     .initialize()
                     .then(() => {
-                        scope.keywords = metadata.values.keywords;
+                        scope.keywords = metadata.cvs.find((cv) => cv._id === 'keywords');
                         return metadata.fetchSubjectcodes();
                     })
                     .then(() => {

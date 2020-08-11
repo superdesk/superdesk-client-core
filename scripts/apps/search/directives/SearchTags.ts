@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import {PARAMETERS} from 'apps/search/constants';
+import {getParameters} from 'apps/search/constants';
 
 /**
  * @ngdoc directive
@@ -23,6 +23,8 @@ export function SearchTags($location, tags, asset, metadata, desks, $rootScope) 
         },
         templateUrl: asset.templateUrl('apps/search/views/search-tags.html'),
         link: function(scope) {
+            const PARAMETERS = getParameters();
+
             scope.cvs = metadata.search_cvs;
             const urlParams = scope.urlParams || PARAMETERS;
 

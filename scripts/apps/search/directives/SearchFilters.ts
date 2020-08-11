@@ -22,7 +22,6 @@ class LinkFunction {
         this.scope.removeFilter = this.removeFilter.bind(this);
         this.scope.setFilter = this.setFilter.bind(this);
         this.scope.isEmpty = this.isEmpty.bind(this);
-        this.scope.dateFilters = getDateFilters();
         this.scope.clearPredefinedFilters = this.clearPredefinedFilters.bind(this);
         this.scope.togglePredefinedDateFilter = this.togglePredefinedDateFilter.bind(this);
         this.scope.hasPredefinedDateFilter = this.hasPredefinedDateFilter.bind(this);
@@ -35,6 +34,8 @@ class LinkFunction {
             desk: this._deskMapper.bind(this),
             defaultMapper: this._defaultMapper.bind(this),
         };
+        this.scope.dateFilters = getDateFilters()
+            .filter((dateFilter) => metadata.search_config?.[dateFilter.fieldname] == null);
         this.init();
         // fetch available languages
         metadata.initialize()

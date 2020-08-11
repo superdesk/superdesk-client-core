@@ -30,6 +30,14 @@
                     </div>
                     <div id="org-field"></div>
                     <div class="field">
+                        <label for="search-contact_type" translate>Contact Type</label>
+                        <select ng-model="meta.contact_type"
+                                name="contact_type"
+                                id="contact_type"
+                                ng-options="type.qcode as type.name for type in metadata.contact_type | orderBy:'name'">
+                        </select>
+                    </div>
+                    <div class="field">
                         <label for="search-job_title" translate>Job Title</label>
                         <select ng-model="meta.job_title"
                                 name="job_title"

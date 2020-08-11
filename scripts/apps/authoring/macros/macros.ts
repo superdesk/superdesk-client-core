@@ -176,21 +176,25 @@ function MacrosController($scope, macros, desks, autosave, $rootScope, storage, 
 
             // ignore fields is only required for editor3
             if (isEditor3) {
-                ignoreFields.push('body_html');
+                if (useReplace && macro.replace_type === 'editor_state') {
+                    editor.setEditorStateFromItem(res.item, 'body_html');
+                } else {
+                    ignoreFields.push('body_html');
 
-                if (res.diff == null && useReplace === true && item.body_html !== res.item.body_html) {
-                    editor.setHtmlFromTansa(res.item.body_html, isSimpleReplace);
+                    if (res.diff == null && useReplace === true && item.body_html !== res.item.body_html) {
+                        editor.setHtmlFromTansa(res.item.body_html, isSimpleReplace);
+                    }
+
+                    Object.keys(res.item || {}).forEach((field) => {
+                        if (isString(res.item[field]) === false || field === 'body_html') {
+                            return;
+                        }
+                        ignoreFields.push(field);
+                        if (res.item[field] !== item[field]) {
+                            $rootScope.$broadcast('macro:refreshField', field, res.item[field]);
+                        }
+                    });
                 }
-
-                Object.keys(res.item || {}).forEach((field) => {
-                    if (isString(res.item[field]) === false || field === 'body_html') {
-                        return;
-                    }
-                    ignoreFields.push(field);
-                    if (res.item[field] !== item[field]) {
-                        $rootScope.$broadcast('macro:refreshField', field, res.item[field]);
-                    }
-                });
             }
 
             if (isEditor3 || res.diff == null) {

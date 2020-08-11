@@ -4,8 +4,8 @@ import {PreviewModal} from '../previewModal';
 import {gettext} from 'core/utils';
 import {isPublished} from 'apps/archive/utils';
 import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
-import {appConfig} from 'appConfig';
-import {applyDefault} from 'core/helpers/typescript-helpers';
+import {appConfig, extensions} from 'appConfig';
+import {IExtensionActivationResult, IArticle} from 'superdesk-api';
 
 SendItem.$inject = [
     '$q',
@@ -92,6 +92,8 @@ export function SendItem($q,
             scope.destination_last = {send_to: null, publish: null, duplicate_to: null};
             scope.origItem = angular.extend({}, scope.item);
             scope.subscribersWithPreviewConfigured = [];
+            scope.sendPublishSchedule = appConfig?.ui?.sendPublishSchedule ?? true;
+            scope.sendEmbargo = appConfig?.ui?.sendEmbargo ?? true;
 
             // if authoring:publish extension point is not defined
             // then publish pane is single column
@@ -232,8 +234,44 @@ export function SendItem($q,
             };
 
             scope.send = function(open, sendAllPackageItems) {
-                updateLastDestination();
-                return runSend(open, sendAllPackageItems);
+                const middlewares
+                    : Array<IExtensionActivationResult['contributions']['entities']['article']['onSendBefore']>
+                = _.flatMap(
+                    Object.values(extensions),
+                    (extension) => extension.activationResult.contributions?.entities?.article?.onSendBefore ?? [],
+                );
+                let itemsToSend: Array<IArticle>;
+
+                if (scope.multiItems != null) {
+                    // scope.multiItems is populated by MultiService
+                    itemsToSend = scope.multiItems;
+                } else if (scope.item != null && scope.item._id) {
+                    // scope.item is populated by the editor
+                    itemsToSend = [scope.item];
+                } else if (scope.config && scope.config.items) {
+                    // scope.config.items is populated by SendService
+                    itemsToSend = scope.config.items;
+                } else {
+                    itemsToSend = [];
+                }
+
+                // save these here, it might get changed on scope while middlewares run
+                const deskId = scope.selectedDesk._id;
+                const stageId = scope.selectedStage._id || scope.selectedDesk.incoming_stage;
+                const selectedDesk = scope.selectedDesk;
+
+                return middlewares.reduce(
+                    (current, next) => {
+                        return current.then(() => {
+                            return next(itemsToSend, selectedDesk);
+                        });
+                    },
+                    Promise.resolve(),
+                )
+                    .then(() => {
+                        updateLastDestination();
+                        return runSend(open, sendAllPackageItems, deskId, stageId);
+                    });
             };
             scope.isSendToNextStage = false;
             scope.$on('item:nextStage', (_e, data) => {
@@ -388,11 +426,9 @@ export function SendItem($q,
              * @param {Boolean} sendAllPackageItems - True to include all contained items for packages
              * @return {Object} promise
              */
-            function runSend(open, sendAllPackageItems) {
+            function runSend(open, sendAllPackageItems, deskId, stageId) {
                 scope.loading = true;
                 scope.item.sendTo = true;
-                var deskId = scope.selectedDesk._id;
-                var stageId = scope.selectedStage._id || scope.selectedDesk.incoming_stage;
 
                 if (scope.mode === 'authoring') {
                     return sendAuthoring(deskId, stageId, scope.selectedMacro, sendAllPackageItems);
@@ -875,7 +911,14 @@ export function SendItem($q,
                     scope.currentUserAction === ctrl.userActions.duplicate_to) {
                     var lastDestination = scope.destination_last[scope.currentUserAction];
 
-                    if (lastDestination) {
+                    if (appConfig.ui
+                        && appConfig.ui.sendDefaultStage != null
+                        && (appConfig.ui.sendDefaultStage === 'working'
+                        || appConfig.ui.sendDefaultStage === 'incoming')) {
+                        stage = scope.stages.find((stg) => appConfig.ui.sendDefaultStage === 'working'
+                            ? stg.working_stage
+                            : stg.incoming_stage);
+                    } else if (lastDestination) {
                         stage = _.find(scope.stages, {_id: lastDestination.stage});
                     } else if (scope.item.task && scope.item.task.stage) {
                         stage = _.find(scope.stages, {_id: scope.item.task.stage});
@@ -973,6 +1016,8 @@ export function SendItem($q,
 
             // update actions on item save
             scope.$watch('orig._current_version', initializeItemActions);
+
+            scope.getPublishLabel = (action) => action === 'edit' ? gettext('publish') : gettext(action);
         },
     };
 }

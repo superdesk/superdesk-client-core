@@ -1,12 +1,15 @@
 import notifySaveError from '../helpers';
 import {gettext} from 'core/utils';
+import {getTemplateFilters} from '../constants';
 
 TemplatesDirective.$inject = ['notify', 'api', 'templates', 'modal', 'desks', 'weekdays',
-    'content', '$filter', 'lodash'];
-export function TemplatesDirective(notify, api, templates, modal, desks, weekdays, content, $filter, _) {
+    'content', '$filter', 'session', 'lodash'];
+export function TemplatesDirective(notify, api, templates, modal, desks, weekdays, content, $filter, session, _) {
     return {
         templateUrl: 'scripts/apps/templates/views/templates.html',
         link: function($scope) {
+            const TEMPLATEFILTERS = getTemplateFilters();
+
             $scope.weekdays = weekdays;
             $scope.content_templates = null;
             $scope.origTemplate = null;
@@ -194,6 +197,22 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
                 return null;
             };
 
+            /*
+             * Returns true if the template is not public and does not belong to the current user
+            */
+            $scope.isPrivate = function(template) {
+                return !template.is_public && (session.identity._id !== template.user);
+            };
+
+            /*
+             * Returns the display name of the user that owns the template
+            */
+            $scope.getTemplateOwner = function(template) {
+                var owner = desks.userLookup[template.user];
+
+                return owner.display_name;
+            };
+
             $scope.types = templates.types;
 
             function validate(orig, item) {
@@ -343,10 +362,13 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
                     $scope.template.schedule_stage : true;
 
             $scope.filters = [
-                {label: gettext('All'), value: 'All'},
-                {label: gettext('Personal'), value: 'Personal'},
-                {label: gettext('No Desk'), value: 'None'},
+                TEMPLATEFILTERS.All,
+                TEMPLATEFILTERS.Personal,
             ];
+            if (templates.isAdmin(true)) {
+                $scope.filters.push(TEMPLATEFILTERS.Private);
+            }
+            $scope.filters.push(TEMPLATEFILTERS.NoDesk);
 
             // holds the index of the active filter.
             $scope.activeFilter = 0;

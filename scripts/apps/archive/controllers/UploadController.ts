@@ -6,6 +6,10 @@ import {handleBinaryFile} from '@metadata/exif';
 import {extensions} from 'appConfig';
 import {IPTCMetadata, IUser, IArticle} from 'superdesk-api';
 import {appConfig} from 'appConfig';
+import {fileUploadErrorModal} from './file-upload-error-modal';
+import {showModal} from 'core/services/modalService';
+
+const isNotEmptyString = (value: any) => value != null && value !== '';
 
 /* eslint-disable complexity */
 
@@ -15,7 +19,7 @@ function getExifData(file: File): Promise<IPTCMetadata> {
 
         reader.onloadend = () => {
             try {
-                const exif: {iptcdata: IPTCMetadata} = handleBinaryFile(reader.result);
+                const exif: { iptcdata: IPTCMetadata } = handleBinaryFile(reader.result);
 
                 resolve(exif.iptcdata);
             } catch (error) {
@@ -29,29 +33,27 @@ function getExifData(file: File): Promise<IPTCMetadata> {
     });
 }
 
-function mapIPTCExtensions(metadata: IPTCMetadata, user: IUser): Promise<Partial<IArticle>> {
-    if (metadata == null) {
-        return Promise.resolve({
-            byline: user.byline,
-        });
-    }
+function mapIPTCExtensions(metadata: IPTCMetadata, user: IUser, parent?: IArticle): Promise<Partial<IArticle>> {
+    const meta: Partial<IPTCMetadata> = Object.assign({
+        'By-line': user.byline,
+    }, pickBy(metadata, isNotEmptyString));
 
     const item = {
-        byline: metadata['By-line'] || user.byline,
-        headline: metadata.Headline,
-        description_text: metadata['Caption-Abstract'],
-        copyrightnotice: metadata.CopyrightNotice,
-        language: metadata.LanguageIdentifier,
-        creditline: metadata.Credit,
+        byline: meta['By-line'] || user.byline,
+        headline: meta.Headline,
+        description_text: meta['Caption-Abstract'],
+        copyrightnotice: meta.CopyrightNotice,
+        language: meta.LanguageIdentifier,
+        creditline: meta.Credit,
     };
 
     return Object.values(extensions).filter(({activationResult}) =>
-        activationResult.contributions && activationResult.contributions.iptcMapping,
+        activationResult.contributions?.iptcMapping,
     ).reduce(
         (accumulator, {activationResult}) =>
-            accumulator.then((_item) => activationResult.contributions.iptcMapping(metadata, _item)),
+            accumulator.then((_item) => activationResult.contributions.iptcMapping(meta, _item, parent)),
         Promise.resolve(item),
-    ).then((_item: Partial<IArticle>) => pickBy(_item));
+    ).then((_item: Partial<IArticle>) => pickBy(_item, isNotEmptyString));
 }
 
 function serializePromises(promiseCreators: Array<() => Promise<any>>): Promise<Array<any>> {
@@ -73,6 +75,7 @@ UploadController.$inject = [
     'desks',
     'notify',
     '$location',
+    'modal',
 ];
 export function UploadController(
     $scope,
@@ -84,6 +87,7 @@ export function UploadController(
     desks,
     notify,
     $location,
+    modal,
 ) {
     $scope.items = [];
     $scope.saving = false;
@@ -97,8 +101,10 @@ export function UploadController(
     $scope.allowVideo = !($scope.locals && $scope.locals.data && $scope.locals.data.allowVideo === false);
     $scope.allowAudio = !($scope.locals && $scope.locals.data && $scope.locals.data.allowAudio === false);
     $scope.validator = _.omit(appConfig.validator_media_metadata, ['archive_description']);
+    $scope.parent = $scope.locals?.data?.parent || null;
     $scope.deskSelectionAllowed = ($location.path() !== '/workspace/personal') && $scope.locals &&
         $scope.locals.data && $scope.locals.data.deskSelectionAllowed === true;
+
     if ($scope.deskSelectionAllowed === true) {
         Promise.all([desks.fetchDesks(), desks.getCurrentDesk()]).then(([_desks, currentDesk]) => {
             $scope.desks = _desks._items;
@@ -244,70 +250,118 @@ export function UploadController(
             return false;
         }
 
-        let acceptedFiles: Array<{file: File, getThumbnail: (file: File) => Promise<string>}> = [];
-        let uploadOfDisallowedFileTypesAttempted: boolean = false;
+        let acceptedFiles: Array<{ file: File, getThumbnail: (file: File) => Promise<string> }> = [];
+        let invalidFiles = [];
 
-        _.each(files, (file) => {
-            if (/^image/.test(file.type)) {
-                if ($scope.allowPicture) {
-                    acceptedFiles.push({
-                        file: file,
-                        getThumbnail: (f: File) => getDataUrl(f).then((uri) => `<img src="${uri}" />`),
+        const fileDimensionsValid = (file: File) => {
+            if (appConfig.pictures) {
+                return getDataUrl(file).then((dataUrl) => {
+                    return new Promise((resolve) => {
+                        let img = document.createElement('img');
+
+                        img.src = dataUrl;
+                        img.onload = function() {
+                            if (img.width && img.width >= appConfig.pictures.minWidth
+                                && img.height > appConfig.pictures.minHeight) {
+                                return resolve({valid: true, name: file.name});
+                            } else {
+                                return resolve({
+                                    valid: false,
+                                    name: file.name,
+                                    width: img.width,
+                                    height: img.height,
+                                    type: file.type,
+                                });
+                            }
+                        };
                     });
-                } else {
-                    uploadOfDisallowedFileTypesAttempted = true;
-                }
-            } else if (/^video/.test(file.type)) {
-                if ($scope.allowVideo) {
-                    acceptedFiles.push({
-                        file: file,
-                        getThumbnail: () => Promise.resolve('<i class="icon--2x icon-video"></i>'),
-                    });
-                } else {
-                    uploadOfDisallowedFileTypesAttempted = true;
-                }
-            } else if (/^audio/.test(file.type)) {
-                if ($scope.allowAudio) {
-                    acceptedFiles.push({
-                        file: file,
-                        getThumbnail: () => Promise.resolve('<i class="icon--2x icon-audio"></i>'),
-                    });
-                } else {
-                    uploadOfDisallowedFileTypesAttempted = true;
-                }
-            } else {
-                uploadOfDisallowedFileTypesAttempted = true;
-            }
-        });
-
-        if (uploadOfDisallowedFileTypesAttempted) {
-            const message = gettext('Only the following files are allowed: ')
-                + ($scope.allowPicture ? gettext('image') : '')
-                + ($scope.allowVideo ? ', ' + gettext('video') : '')
-                + ($scope.allowAudio ? ', ' + gettext('audio') : '');
-
-            notify.error(message);
-        }
-
-        return acceptedFiles.length < 1
-            ? Promise.resolve()
-            : Promise.all(acceptedFiles.map(
-                ({file, getThumbnail}) =>
-                    getExifData(file)
-                        .then(
-                            (fileMeta) => mapIPTCExtensions(fileMeta, $scope.currentUser),
-                            () => ({}), // proceed with upload on exif parsing error
-                        )
-                        .then((meta) => {
-                            const item = initFile(file, meta, getPseudoId());
-
-                            return getThumbnail(file).then((htmlString) => item.thumbnailHtml = htmlString);
-                        }),
-            )).then(() => {
-                $scope.$applyAsync(() => {
-                    $scope.imagesMetadata = $scope.items.map((item) => item.meta);
                 });
+            } else {
+                return Promise.resolve({valid: true});
+            }
+        };
+
+        return Promise.all(_.map(files, (file): any => {
+            if (file.type.startsWith('image')) {
+                if (!$scope.allowPicture) {
+                    return Promise.resolve({error: {isAllowedFileType: false}});
+                }
+                return fileDimensionsValid(file).then((data: {[key: string]: string}) => {
+                    if (data.valid) {
+                        return {
+                            file: file,
+                            getThumbnail: () => getDataUrl(file).then((uri) => `<img src="${uri}" />`),
+                        };
+                    } else {
+                        return {error: data};
+                    }
+                });
+            } else if (file.type.startsWith('video')) {
+                if (!$scope.allowVideo) {
+                    return Promise.resolve({error: {isAllowedFileType: false}});
+                }
+                return Promise.resolve({
+                    file: file,
+                    getThumbnail: () => Promise.resolve('<i class="icon--2x icon-video"></i>'),
+                });
+            } else if (file.type.startsWith('audio')) {
+                if (!$scope.allowAudio) {
+                    return Promise.resolve({error: {isAllowedFileType: false}});
+                }
+                return Promise.resolve({
+                    file: file,
+                    getThumbnail: () => Promise.resolve('<i class="icon--2x icon-audio"></i>'),
+                });
+            } else {
+                return Promise.resolve({error: {isAllowedFileType: false}});
+            }
+        })).then((result) => {
+            let uploadOfDisallowedFileTypesAttempted: boolean = false;
+
+            result.forEach((file) => {
+                if (!file.error) {
+                    acceptedFiles.push({
+                        file: file.file,
+                        getThumbnail: file.getThumbnail,
+                    });
+                } else if (file.error.isAllowedFileType === false) {
+                    uploadOfDisallowedFileTypesAttempted = true;
+                } else {
+                    invalidFiles.push(file.error);
+                }
             });
+
+            if (uploadOfDisallowedFileTypesAttempted) {
+                const message = gettext('Only the following files are allowed: ')
+                    + ($scope.allowPicture ? gettext('image') : '')
+                    + ($scope.allowVideo ? ', ' + gettext('video') : '')
+                    + ($scope.allowAudio ? ', ' + gettext('audio') : '');
+
+                notify.error(message);
+            }
+
+            showModal(fileUploadErrorModal(invalidFiles));
+
+            return acceptedFiles.length < 1
+                ? Promise.resolve()
+                : Promise.all(acceptedFiles.map(
+                    ({file, getThumbnail}) =>
+                        getExifData(file)
+                            .then(
+                                (fileMeta) => mapIPTCExtensions(fileMeta, $scope.currentUser, $scope.parent),
+                                () => ({}), // proceed with upload on exif parsing error
+                            )
+                            .then((meta) => {
+                                const item = initFile(file, meta, getPseudoId());
+
+                                return getThumbnail(file).then((htmlString) => item.thumbnailHtml = htmlString);
+                            }),
+                )).then(() => {
+                    $scope.$applyAsync(() => {
+                        $scope.imagesMetadata = $scope.items.map((item) => item.meta);
+                    });
+                });
+        });
     };
 
     $scope.upload = function() {

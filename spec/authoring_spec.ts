@@ -1,11 +1,39 @@
 /* eslint-disable newline-per-chained-call */
 
 import {element, by, protractor, browser} from 'protractor';
-import {ctrlKey, commandKey, ctrlShiftKey, assertToastMsg, nav} from './helpers/utils';
+import {
+    ctrlKey,
+    commandKey,
+    ctrlShiftKey,
+    assertToastMsg,
+    assertToastMsgNotDisplayed,
+    waitForToastMsgDissapear,
+    nav,
+} from './helpers/utils';
 import {monitoring} from './helpers/monitoring';
 import {dictionaries} from './helpers/dictionaries';
 import {workspace} from './helpers/workspace';
 import {authoring} from './helpers/authoring';
+
+import {el, ECE, els, hover, selectFilesForUpload} from 'end-to-end-testing-helpers';
+
+function uploadMedia(imageName) {
+    el(['media-gallery--upload-placeholder']).click();
+
+    browser.wait(ECE.presenceOf(el(['image-upload-input'])));
+    selectFilesForUpload(el(['image-upload-input']), [imageName]);
+
+    el(['media-metadata-editor', 'field--headline'], by.tagName('[contenteditable]'))
+        .sendKeys('image headline');
+    el(['media-metadata-editor', 'field--alt_text'], by.tagName('[contenteditable]'))
+        .sendKeys('image alt text');
+    el(['media-metadata-editor', 'field--description_text'], by.tagName('[contenteditable]'))
+        .sendKeys('image description');
+
+    el(['multi-image-edit--start-upload']).click();
+
+    el(['change-image', 'done']).click();
+}
 
 describe('authoring', () => {
     beforeEach(() => {
@@ -146,7 +174,7 @@ describe('authoring', () => {
         browser.sleep(300);
 
         monitoring.filterAction('text');
-        monitoring.actionOnItem('Kill item', 5, 0);
+        monitoring.actionOnItemSubmenu('Publishing actions', 'Kill item', 5, 0, true);
         expect(authoring.send_kill_button.isDisplayed()).toBeTruthy();
         authoring.cancel();
         browser.sleep(300);
@@ -160,7 +188,7 @@ describe('authoring', () => {
         browser.sleep(300);
 
         monitoring.filterAction('text');
-        monitoring.actionOnItem('Correct item', 5, 0);
+        monitoring.actionOnItemSubmenu('Publishing actions', 'Correct item', 5, 0, true);
         expect(authoring.send_correction_button.isDisplayed()).toBeTruthy();
         authoring.cancel();
 
@@ -438,7 +466,8 @@ describe('authoring', () => {
         authoring.publish(); // item9 published
 
         monitoring.filterAction('text');
-        monitoring.actionOnItem('Update', 5, 0); // duplicate item9 text published item
+        // Duplicate item9 text published item
+        monitoring.actionOnItemSubmenu('Publishing actions', 'Update', 5, 0, true);
         expect(monitoring.getGroupItems(0).count()).toBe(1);
         monitoring.actionOnItem('Edit', 0, 0);
 
@@ -453,7 +482,7 @@ describe('authoring', () => {
         monitoring.actionOnItem('Edit', 2, 0);
         authoring.publish();
         monitoring.filterAction('text');
-        monitoring.actionOnItem('Kill item', 5, 0);
+        monitoring.actionOnItemSubmenu('Publishing actions', 'Kill item', 5, 0, true);
         browser.sleep(500);
         expect(authoring.getBodyText()).toBe('This is kill template. Slugged item5 slugline one/two.');
         expect(authoring.getHeadlineText()).toBe('KILL NOTICE');
@@ -511,7 +540,7 @@ describe('authoring', () => {
         expect(authoring.multieditButton.isDisplayed()).toBe(true);
         authoring.publish();
         monitoring.filterAction('text');
-        monitoring.actionOnItem('Kill item', 5, 0);
+        monitoring.actionOnItemSubmenu('Publishing actions', 'Kill item', 5, 0, true);
         authoring.moreActionsButton.click();
         expect(authoring.multieditButton.isDisplayed()).toBe(false);
     });
@@ -562,7 +591,7 @@ describe('authoring', () => {
         authoring.publish();
         monitoring.filterAction('text');
         monitoring.actionOnItem('Open', 5, 0);
-        expect(authoring.getBodyFooterPreview()).not.toContain('<br>');
+        expect(element(by.css('#body_footer .medium-editor-element:not(.clone)')).getText()).not.toContain('<br>');
     });
 
     it('maintains helpline first option always selected', () => {
@@ -588,7 +617,7 @@ describe('authoring', () => {
 
         authoring.publish();
         monitoring.filterAction('text');
-        monitoring.actionOnItem('Kill item', 5, 0);
+        monitoring.actionOnItemSubmenu('Publishing actions', 'Kill item', 5, 0, true);
 
         // Body:
         // undo without editing body text
@@ -646,55 +675,18 @@ describe('authoring', () => {
         expect(authoring.getBodyText()).toBe('one\ntwo\nthree');
     });
 
-    it('can send and publish', () => {
-        workspace.selectDesk('Sports Desk');
-        expect(monitoring.getGroupItems(0).count()).toBe(0);
-        expect(monitoring.getGroupItems(1).count()).toBe(0);
-        expect(monitoring.getGroupItems(2).count()).toBe(1);
-        expect(monitoring.getGroupItems(3).count()).toBe(0);
-        expect(monitoring.getGroupItems(4).count()).toBe(1);
-        expect(monitoring.getGroupItems(5).count()).toBe(0); // no published content.
-        workspace.selectDesk('Politic Desk');
-        expect(monitoring.getGroupItems(5).count()).toBe(0); // desk output
-        expect(monitoring.getTextItem(3, 2)).toBe('item6');
-        monitoring.actionOnItem('Edit', 3, 2);
-        authoring.writeTextToHeadline('testing send and publish');
-        authoring.save();
-        authoring.writeText(protractor.Key.HOME);
-        ctrlShiftKey(protractor.Key.END);
-        ctrlKey('x');
-        authoring.sendAndpublish('Sports Desk');
-        authoring.confirmSendTo(); // confirm unsaved changes
-
-        browser.sleep(3000); // wait for alert message to go away
-
-        authoring.publishFrom('Sports Desk');
-
-        assertToastMsg('error', 'BODY_HTML empty values not allowed'); // validation takes place
-        authoring.closeSendAndPublish();
-        authoring.writeText('Testing');
-        authoring.save();
-
-        authoring.sendToButton.click();
-        authoring.publishFrom('Sports Desk');
-        // desk output count zero as content publish from sport desk
-        expect(monitoring.getGroupItems(5).count()).toBe(0);
-        workspace.selectDesk('Sports Desk');
-        expect(monitoring.getGroupItems(5).count()).toBe(1);
-    });
-
     it('can minimize story while a correction and kill is being written', () => {
         workspace.selectDesk('Politic Desk');
         expect(monitoring.getTextItem(3, 2)).toBe('item6');
         monitoring.actionOnItem('Edit', 3, 2);
         authoring.publish();
         monitoring.filterAction('text');
-        monitoring.actionOnItem('Correct item', 5, 0); // Edit for correction
+        monitoring.actionOnItemSubmenu('Publishing actions', 'Correct item', 5, 0, true); // Edit for correction
         authoring.minimize(); // minimize before publishing the correction
         expect(monitoring.getTextItem(2, 1)).toBe('item9');
         monitoring.actionOnItem('Edit', 2, 1);
         authoring.publish();
-        monitoring.actionOnItem('Kill item', 5, 0); // Edit for kill
+        monitoring.actionOnItemSubmenu('Publishing actions', 'Kill item', 5, 0, true); // Edit for kill
         authoring.minimize(); // minimize before publishing the kill
         authoring.maximize('item6');
         expect(authoring.send_correction_button.isDisplayed()).toBeTruthy();
@@ -712,5 +704,58 @@ describe('authoring', () => {
         authoring.openMacros();
         authoring.callMacros('Populate Abstract');
         expect(authoring.getAbstractText()).toBe('item6 text');
+    });
+
+    it('Not modifying crops will not trigger an article change', () => {
+        workspace.selectDesk('XEditor3 Desk'); // has media gallery in content profile
+        el(['content-create']).click();
+        el(['content-create-dropdown']).element(by.buttonText('editor3 template')).click();
+        browser.wait(ECE.visibilityOf(el(['authoring-field--media-gallery', 'media-gallery--upload-placeholder'])));
+        expect(ECE.hasElementCount(els(['authoring-field--media-gallery', 'media-gallery-image']), 0)()).toBe(true);
+
+        uploadMedia('image-big.jpg');
+
+        assertToastMsg('success', 'Item updated.');
+        waitForToastMsgDissapear('success', 'Item updated.');
+
+        browser.wait(ECE.hasElementCount(els(['authoring-field--media-gallery', 'media-gallery-image']), 1));
+
+        hover(el(['authoring-field--media-gallery', 'media-gallery-image']));
+        el(['media-gallery-image--edit']).click();
+        el(['done']).click(); // click done without making any changes
+
+        assertToastMsgNotDisplayed('success', 'Item updated.');
+        expect(authoring.save_button.isEnabled()).toBe(false);
+    });
+
+    it('Can add an image with default crops to media gallery', () => {
+        workspace.selectDesk('XEditor3 Desk'); // has media gallery in content profile
+        el(['content-create']).click();
+        el(['content-create-dropdown']).element(by.buttonText('editor3 template')).click();
+        browser.wait(ECE.visibilityOf(el(['authoring-field--media-gallery', 'media-gallery--upload-placeholder'])));
+        expect(ECE.hasElementCount(els(['authoring-field--media-gallery', 'media-gallery-image']), 0)()).toBe(true);
+
+        uploadMedia('image-big.jpg');
+
+        browser.wait(ECE.hasElementCount(els(['authoring-field--media-gallery', 'media-gallery-image']), 1));
+    });
+
+    it('Can remove an image from media gallery', () => {
+        workspace.selectDesk('XEditor3 Desk'); // has media gallery in content profile
+
+        el(['content-create']).click();
+        el(['content-create-dropdown']).element(by.buttonText('editor3 template')).click();
+
+        browser.wait(ECE.visibilityOf(el(['authoring-field--media-gallery', 'media-gallery--upload-placeholder'])));
+        expect(ECE.hasElementCount(els(['authoring-field--media-gallery', 'media-gallery-image']), 0)()).toBe(true);
+
+        uploadMedia('image-red.jpg');
+
+        browser.wait(ECE.hasElementCount(els(['authoring-field--media-gallery', 'media-gallery-image']), 1));
+
+        hover(el(['authoring-field--media-gallery', 'media-gallery-image']));
+        el(['authoring-field--media-gallery', 'media-gallery-image--remove']).click();
+
+        browser.wait(ECE.hasElementCount(els(['authoring-field--media-gallery', 'media-gallery-image']), 0));
     });
 });

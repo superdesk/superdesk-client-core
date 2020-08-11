@@ -1,9 +1,7 @@
-import {AUTHORING_MENU_GROUPS} from '../../authoring/authoring/constants';
-import {IArticle, IArticleAction, IExtensionActivationResult} from 'superdesk-api';
+import {getAuthoringMenuGroups} from '../../authoring/authoring/constants';
+import {IArticle, IArticleAction} from 'superdesk-api';
 import {IActivity} from 'superdesk-interfaces/Activity';
-import {flatMap} from 'lodash';
-import {extensions} from 'appConfig';
-import {getActionsFromExtensions} from 'core/superdesk-api-helpers';
+import {getArticleActionsFromExtensions} from 'core/superdesk-api-helpers';
 
 type IAction =
     {kind: 'activity-based'; activity: IActivity} | {kind: 'extension-action'; articleAction: IArticleAction};
@@ -19,6 +17,7 @@ interface IScope extends ng.IScope {
     item?: IArticle;
     open: any;
     active: any;
+    allowedActions?: Array<string>;
     menuGroups: Array<IAuthoringMenuGroup>;
     toggleActions(open: boolean): void;
     stopEvent(event: any): void;
@@ -31,6 +30,7 @@ export function ItemActionsMenu(superdesk, activityService, workflowService, arc
         scope: {
             item: '=',
             active: '=',
+            allowedActions: '=?',
         },
         templateUrl: 'scripts/apps/monitoring/views/item-actions-menu.html',
         link: function(scope: IScope) {
@@ -89,7 +89,7 @@ export function ItemActionsMenu(superdesk, activityService, workflowService, arc
             function getActions(item: IArticle): void {
                 scope.menuGroups = [];
 
-                getActionsFromExtensions(item)
+                getArticleActionsFromExtensions(item)
                     .then((actionsFromExtensions) => {
                         let intent = {action: 'list', type: getType(item)};
                         let activitiesByGroupName: {[groupName: string]: Array<IActivity>} = {};
@@ -102,16 +102,21 @@ export function ItemActionsMenu(superdesk, activityService, workflowService, arc
                                 if (activitiesByGroupName[group] == null) {
                                     activitiesByGroupName[group] = [];
                                 }
-
-                                activitiesByGroupName[group].push(activity);
+                                if (scope.allowedActions?.length > 0) {
+                                    if (scope.allowedActions.includes(activity._id)) {
+                                        activitiesByGroupName[group].push(activity);
+                                    }
+                                } else {
+                                    activitiesByGroupName[group].push(activity);
+                                }
                             }
                         });
 
                         let menuGroups: Array<IAuthoringMenuGroup> = [];
 
                         // take default menu groups, add activities and push to `menuGroups`
-                        AUTHORING_MENU_GROUPS.forEach((group) => {
-                            if (activitiesByGroupName[group._id]) {
+                        getAuthoringMenuGroups().forEach((group) => {
+                            if (activitiesByGroupName[group._id] && activitiesByGroupName[group._id].length > 0) {
                                 menuGroups.push({
                                     _id: group._id,
                                     label: group.label,
@@ -123,9 +128,9 @@ export function ItemActionsMenu(superdesk, activityService, workflowService, arc
                         });
 
                         // go over `activitiesByGroupName` and add groups not present
-                        // in default groups (AUTHORING_MENU_GROUPS)
+                        // in default groups (getAuthoringMenuGroups)
                         Object.keys(activitiesByGroupName).forEach((groupName) => {
-                            var existingGroup = AUTHORING_MENU_GROUPS.find((g) => g._id === groupName);
+                            var existingGroup = getAuthoringMenuGroups().find((g) => g._id === groupName);
 
                             if (!existingGroup) {
                                 menuGroups.push({
@@ -138,7 +143,7 @@ export function ItemActionsMenu(superdesk, activityService, workflowService, arc
                         });
 
                         // actions(except viewing an item) are not allowed for items in legal archive
-                        if (item._type !== 'legal_archive') {
+                        if (item._type !== 'legal_archive' && scope.allowedActions == null) {
                             // handle actions from extensions
                             let extensionActionsByGroupName: {[groupName: string]: Array<IArticleAction>} = {};
 

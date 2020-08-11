@@ -1,23 +1,27 @@
-<div class="form__row" ng-repeat="field in fields track by field.field" ng-if="item">
-    <sd-line-input
-        class="sd-line-input--no-margin"
+<div
+    ng-if="item"
+    ng-repeat="field in fields track by field.field"
+    data-test-id="media-metadata-editor"
+>
+
+    <div
         ng-if="(!field.type && !field.cv) || (field.type === 'string' && !field.cv)"
-        ng-model="item[field.field]"
-        data-sync="true"
-        data-dark="dark"
-        data-boxed="boxed"
-        data-label="{{ field.label }}"
-        data-required="field.required"
-        data-disabled="isDisabled(field)"
-        data-onchange="onChange({key: field.field})"
-        data-onblur="onBlur()"
-        data-maxlength="field.maxlength"
-        data-placeholder="{{ placeholder[field.field] }}"
-        data-textarea="field.textarea"
-    />
+        class="sd-line-input sd-line-input--boxed"
+        ng-class="{'sd-line-input--required': field.required}"
+        data-test-id="{{'field--' + field.field}}"
+    >
+        <label class="sd-line-input__label">{{field.label}}</label>
+        <sd-plain-text-editor
+            on-change="handleInputChange"
+            on-change-data="{field: field.field}"
+            value="item[field.field]"
+            classes="'sd-line-input__input'"
+            spellcheck="true"
+            language="item.language"
+        />
+    </div>
 
     <sd-line-input
-        class="sd-line-input--no-margin"
         ng-if="field.cv && field.cv.field_type === 'text'"
         data-sync="true"
         ng-model="item.extra[field.field]"
@@ -30,10 +34,11 @@
         data-onblur="onBlur()"
         data-maxlength="field.maxlength"
         data-placeholder="{{ placeholder[field.field] }}"
+        data-test-id="{{'field--' + field.field}}"
     />
 
-    <div ng-if="field.cv && !field.cv.field_type">
-        <label class="form-label">{{ field.label }}</label>
+    <div ng-if="field.cv && !field.cv.field_type" class="sd-line-input sd-line-input--boxed" ng-class="{'sd-line-input--required': field.required}">
+        <label class="sd-line-input__label">{{ field.label }}</label>
 
         <div sd-meta-place ng-if="field.field === 'place' && features.places_autocomplete"
             class="data sd-terms--boxed"
@@ -47,8 +52,8 @@
             class="data sd-terms--boxed sd-line-input--dark-ui sd-line-input--boxed"
             data-item="item"
             data-field="keywords"
-            data-change="onChange({key: field})"
-            data-list="metadata.keywords"
+            data-change="onChange({key: field.field})"
+            data-list="field.cv.items"
             data-disabled="isDisabled(field)"
             data-style="sd-line-input__input"
             data-header="true"
@@ -82,9 +87,13 @@
             data-change="onChange({key: field})"
             data-key="{{ field.cv.key }}"
         ></div>
+
+        <span class="sd-line-input__hint" ng-show="field.helper_text || field.cv.helper_text" style="position: static">
+            {{ field.helper_text || field.cv.helper_text }}
+        </span>
     </div>
 
-    <div ng-if="field.cv && field.cv.field_type === 'date'">
+    <div ng-if="field.cv && field.cv.field_type === 'date'" class="sd-line-input sd-line-input--boxed" ng-class="{'sd-line-input--required': field.required}">
         <label class="form-label">{{ field.label }}</label>
         <div sd-datepicker
             ng-disabled="isDisabled(field)"
@@ -92,5 +101,25 @@
             data-format="YYYY-MM-DDT00:00:00+0000"
             data-on-change="onChange({key: 'extra'})"
         ></div>
+    </div>
+
+    <div ng-if="field.cv && field.cv.field_type === 'authors'" class="sd-line-input sd-line-input--boxed" ng-class="{'sd-line-input--required': field.required}">
+        <label class="authoring-header__item-label">{{ field.label }}</label>
+        <div class="authoring-header__input-holder">
+            <div
+                sd-meta-terms
+                class="data sd-terms--boxed"
+                data-item="item"
+                data-field="authors"
+                data-unique="_id"
+                data-list="field.cv.items"
+                data-label= "{{ :: 'Add author' | translate }}"
+                ng-disabled="isDisabled(field)"
+                data-header="true"
+                data-change="onChange({key: field})"
+                data-reload-list="true"
+                data-disable-entire-category="{{field.cv.disable_entire_category_selection}}"
+            ></div>
+        </div>
     </div>
 </div>

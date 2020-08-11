@@ -1,30 +1,81 @@
+/* eslint-disable react/no-multi-comp */
+
 import React from 'react';
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
+import {IUser} from 'superdesk-api';
+import {CC} from 'core/ui/configurable-ui-components';
+import {isUserLoggedIn} from '../services/UsersService';
+import {gettext} from 'core/utils';
+import {AvatarWrapper, AvatarContentText, AvatarContentImage} from 'superdesk-ui-framework/react';
 
-/*
- * @ngdoc React
- * @module superdesk.apps.users
- * @name UserAvatar
- * @param {string} displayName The user's display name.
- * @param {string=} pictureUrl URL of the user's avatar, if provided.
- * @description Displays the user avatar. If `pictureUrl` is provided it shows the picture
- * at that URL, otherwise it shows the initial of `displayName`.
- */
-export const UserAvatar: React.StatelessComponent<any> = ({displayName, pictureUrl, title, ...rest}) =>
-    <div className="user-avatar" {...rest} title={title || displayName} data-test-id="user-avatar">
-        <figure className={classNames(
-            'avatar avatar--no-margin',
-            {'no-bg': pictureUrl},
-            {initials: !pictureUrl},
-        )}>
-            {pictureUrl && <img src={pictureUrl} />}
-            {displayName && <span>{displayName[0].toUpperCase()}</span>}
-        </figure>
-    </div>;
+class DefaultAvatarDisplay extends React.PureComponent<{user: Partial<IUser>}> {
+    render() {
+        const {user} = this.props;
 
-UserAvatar.propTypes = {
-    displayName: PropTypes.string.isRequired,
-    title: PropTypes.string,
-    pictureUrl: PropTypes.string,
-};
+        if (user == null) {
+            return null;
+        }
+
+        const tooltipText = user?.display_name ?? null;
+
+        if (user.picture_url == null) {
+            const initials = (user.first_name?.[0] ?? '') + (user.last_name?.[0] ?? '');
+
+            return (
+                <AvatarContentText
+                    text={initials.length > 0 ? initials : user.display_name?.[0] ?? ''}
+                    tooltipText={tooltipText}
+                />
+            );
+        } else {
+            return (
+                <AvatarContentImage
+                    imageUrl={user.picture_url}
+                    tooltipText={tooltipText}
+                />
+            );
+        }
+    }
+}
+
+interface IProps {
+    user: IUser;
+
+    size?: 'small' | 'medium' | 'large'; // defaults to medium
+
+    // indicates whether to show online/offline status
+    // should only be used when the user object is up to date
+    displayStatus?: boolean;
+
+    displayAdministratorIndicator?: boolean;
+}
+
+export class UserAvatar extends React.PureComponent<IProps> {
+    render() {
+        const {user, displayStatus, displayAdministratorIndicator} = this.props;
+
+        return (
+            <AvatarWrapper
+                size={this.props.size}
+                administratorIndicator={
+                    displayAdministratorIndicator && user.user_type === 'administrator'
+                        ? {enabled: true, tooltipText: gettext('Administrator')}
+                        : undefined
+                }
+                statusIndicator={
+                    !displayStatus
+                        ? undefined
+                        : isUserLoggedIn(user)
+                            ? {status: 'online', tooltipText: gettext('Online')}
+                            : {status: 'offline', tooltipText: gettext('Offline')}
+                }
+                data-test-id="user-avatar"
+            >
+                {
+                    CC.UserAvatar != null
+                        ? <CC.UserAvatar user={user} />
+                        : <DefaultAvatarDisplay user={user} />
+                }
+            </AvatarWrapper>
+        );
+    }
+}

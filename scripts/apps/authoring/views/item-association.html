@@ -16,7 +16,8 @@
     <figure
         ng-if="!(editable && associations.isMediaEditable() && !related)"
         class="item-association"
-        ng-class="{'item-association--preview': related, 'item-association--loading': loading}">
+        ng-class="{'item-association--preview': related, 'item-association--loading': loading}"\
+        ng-disabled="!editable">
             <a ng-if="related && editable" class="item-association__remove-item" ng-click="remove(related); $event.stopPropagation()">
                 <i class="icon-close-small"></i>
             </a>
@@ -25,7 +26,18 @@
                 <sd-video item="related"></sd-video>
                 <div class="item-association__metadata" sd-media-metadata-view data-item="related"></div>
                 <div class="item-association__action-bar" ng-if="related && editable">
-                    <a class="btn btn--hollow btn--small" ng-click="associations.isMediaEditable() && associations.edit(this, related); $event.stopPropagation()"><span translate>Edit metadata</span></a>
+                    <div class="flex-grid flex-grid--medium-3">
+                        <div class="flex-grid__item sd-text__left" style="text-align: left;">
+                            <sd-video-thumbnail-editor data-item="related" data-on-change="onRenditionChange"></sd-video-thumbnail-editor>
+                        </div>
+                        <div class="flex-grid__item">
+                        </div>
+                        <div class="flex-grid__item">
+                            <a class="btn btn--hollow btn--small" ng-click="associations.isMediaEditable() && associations.edit(this, related); $event.stopPropagation()">
+                                <span translate>Edit metadata</span>
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
             <!-- audio -->
@@ -49,7 +61,7 @@
                             {{related.headline || ('[No Value]' | translate)}}
                         </span>
                     </div>
-                    <div ng-hide="related._type === 'externalsource' || !associations.isMediaEditable()" class="item-association__icons-block">
+                    <div ng-show="related._type !== 'externalsource' && associations.isMediaEditable(related)" class="item-association__icons-block">
                         <a ng-if="related && editable" class="item-association__image-action" ng-click="associations.isMediaEditable() && associations.edit(this, related, {defaultTab: 'view'}); $event.stopPropagation()" sd-tooltip="Edit metadata"><i class="icon-pencil"></i></a>
                         <a ng-if="related && editable" class="item-association__image-action" ng-click="associations.isMediaEditable() && associations.edit(this, related, {defaultTab: 'image-edit'}); $event.stopPropagation()" sd-tooltip="Edit image"><i class="icon-switches"></i></a>
                         <a ng-if="related && editable" class="item-association__image-action" ng-click="associations.isMediaEditable() && associations.edit(this, related, {defaultTab: 'crop'}); $event.stopPropagation()" sd-tooltip="Edit crops"><i class="icon-crop"></i></a>

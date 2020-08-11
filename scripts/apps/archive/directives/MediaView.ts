@@ -50,9 +50,13 @@ export function MediaView(keyboardManager, packages) {
 
             keyboardManager.push('left', scope.prev);
             keyboardManager.push('right', scope.next);
+            keyboardManager.bind('esc', () => {
+                scope.close();
+            }, {global: true});
             scope.$on('$destroy', () => {
                 keyboardManager.pop('left');
                 keyboardManager.pop('right');
+                keyboardManager.unbind('esc');
             });
 
             scope.setPackageSingle = function(packageItem) {

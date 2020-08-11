@@ -7,7 +7,11 @@
             <sd-search-handler ng-model="query.name" data-debounce="200"></sd-search-handler>
 
             <span class="sd-page__element-grow"></span>
-            <button id="add-new-desk" class="btn btn--primary" ng-click="openDesk('general')">
+            <button
+                class="btn btn--primary"
+                ng-click="openDesk('general')"
+                data-test-id="add-new-desk"
+            >
                 <i class="icon-plus-sign icon--white"></i> {{ :: 'Add New' | translate }}
             </button>
         </div>
@@ -15,18 +19,45 @@
         <div class="sd-page__content desk-settings">
             <div class="flex-grid box wrap-items small-1 medium-3 large-4 xlarge-6">
 
-                <div class="flex-item card-box" ng-repeat="desk in desks._items | filter:query track by desk._id">
+                <div class="flex-item card-box" ng-repeat="desk in desks._items | filter:query track by desk._id" data-test-id="desk--{{desk.name}}">
                     <div class="card-box__header">
                         <div class="dropdown" dropdown>
-                            <button class="dropdown__toggle" dropdown__toggle>
+                            <button class="dropdown__toggle" dropdown__toggle data-test-id="desk-actions">
                                 <i class="icon-dots-vertical"></i>
                             </button>
                             <ul class="dropdown__menu more-activity-menu pull-right">
                                 <li><div class="dropdown__menu-label" translate>Actions</div></li>
                                 <li class="dropdown__menu-divider"></li>
-                                <li><button ng-click="openDesk('general', desk)" title="{{:: 'Edit desk'| translate }}"><i class="icon-pencil"></i>{{:: 'Edit'| translate}}</button></li>
-                                <li><button ng-click="openMonitoringSettings(desk)" title="{{:: 'Monitoring settings'| translate }}"><i class="icon-settings"></i>{{:: 'Monitoring settings'| translate}}</button></li>
-                                <li><button ng-click="remove(desk)" title="{{:: 'Remove desk'| translate }}"><i class="icon-trash"></i>{{:: 'Remove'| translate}}</button></li>
+                                <li>
+                                    <button
+                                        ng-click="openDesk('general', desk)"
+                                        title="{{:: 'Edit desk'| translate }}"
+                                        data-test-id="desk-actions--edit"
+                                    >
+                                        <i class="icon-pencil"></i>
+                                        {{:: 'Edit'| translate}}
+                                    </button>
+                                </li>
+                                <li>
+                                    <button
+                                        ng-click="openMonitoringSettings(desk)"
+                                        title="{{:: 'Monitoring settings'| translate }}"
+                                        data-test-id="desk-actions--monitoring-settings"
+                                    >
+                                        <i class="icon-settings"></i>
+                                        {{:: 'Monitoring settings'| translate}}
+                                    </button>
+                                </li>
+                                <li>
+                                    <button
+                                        ng-click="remove(desk)"
+                                        title="{{:: 'Remove desk'| translate }}"
+                                        data-test-id="desk-actions--remove"
+                                    >
+                                        <i class="icon-trash"></i>
+                                        {{:: 'Remove'| translate}}
+                                    </button>
+                                </li>
                             </ul>
                         </div>
                         <div class="card-box__heading">{{ desk.name }}</div>
@@ -35,7 +66,7 @@
                         <ul class="card-box__content-list">
                             <li>
                                 <h4>{{ :: 'Stages' | translate }}<span class="label">{{getDeskStages(desk).length}}</span></h4>
-                                <span ng-repeat="stage in getDeskStages(desk) track by stage._id" class="card-box__content-list-inline-span">{{stage.name}}<span ng-if="$index < getDeskStages(desk).length-1">,&nbsp;</span></span>
+                                <span ng-repeat="stage in getDeskStages(desk) track by stage._id" class="card-box__content-list-inline-span">{{labelForStage(stage)}}<span ng-if="$index < getDeskStages(desk).length-1">,&nbsp;</span></span>
                             </li>
                             <li>
                                 <h4>{{ :: 'People' | translate }}<span class="label">{{getDeskUsers(desk).length}}</span></h4>

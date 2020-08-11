@@ -1,11 +1,29 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
-import momentTimezone from 'moment-timezone';
+import moment from 'moment-timezone';
 import {appConfig} from 'appConfig';
-import {ISuperdeskGlobalConfig} from 'superdesk-api';
 
-DateTimeDirective.$inject = ['datetime', 'moment'];
-function DateTimeDirective(datetime, moment) {
+const ISO_DATE_FORMAT = 'YYYY-MM-DD';
+const ISO_WEEK_FORMAT = 'YYYY-W';
+const ISO_YEAR_FORMAT = 'YYYY';
+
+const LONG_FORMAT = appConfig.longDateFormat || 'LLL';
+const TIME_FORMAT = appConfig.shortTimeFormat || 'hh:mm';
+const DATE_FORMAT = appConfig.shortDateFormat || 'MM/DD';
+const WEEK_FORMAT = appConfig.shortWeekFormat || 'dddd, ' + TIME_FORMAT;
+const ARCHIVE_FORMAT = appConfig.ArchivedDateFormat || DATE_FORMAT;
+
+/**
+* Get long representation of given datetime
+*
+* @param {String} d iso format datetime
+*/
+export function longFormat(d: string): string {
+    return moment(d).format(LONG_FORMAT);
+}
+
+DateTimeDirective.$inject = ['datetime'];
+function DateTimeDirective(datetime) {
     return {
         scope: {date: '=', fromNow: '='},
         link: function datetimeLink(scope, elem) {
@@ -27,9 +45,9 @@ function DateTimeDirective(datetime, moment) {
     };
 }
 
-ShortDateDirective.$inject = ['moment'];
-function ShortDateDirective(moment) {
-    var DATE_FORMAT = appConfig.view.dateformat || appConfig.model.dateformat;
+ShortDateDirective.$inject = [];
+function ShortDateDirective() {
+    var CONFIG_DATE_FORMAT = appConfig.view.dateformat || appConfig.model.dateformat;
 
     return {
         scope: {date: '='},
@@ -43,7 +61,7 @@ function ShortDateDirective(moment) {
              */
             function renderDate(date) {
                 var momentDate = moment(date);
-                var text = momentDate.format(DATE_FORMAT);
+                var text = momentDate.format(CONFIG_DATE_FORMAT);
 
                 if (momentDate) {
                     elem.text(text);
@@ -54,18 +72,8 @@ function ShortDateDirective(moment) {
     };
 }
 
-DateTimeService.$inject = ['moment'];
-function DateTimeService(moment) {
-    var ISO_DATE_FORMAT = 'YYYY-MM-DD';
-    var ISO_WEEK_FORMAT = 'YYYY-W';
-    var ISO_YEAR_FORMAT = 'YYYY';
-
-    var LONG_FORMAT = appConfig.longDateFormat || 'LLL';
-    var TIME_FORMAT = appConfig.shortTimeFormat || 'hh:mm';
-    var DATE_FORMAT = appConfig.shortDateFormat || 'MM/DD';
-    var WEEK_FORMAT = appConfig.shortWeekFormat || 'dddd, ' + TIME_FORMAT;
-    var ARCHIVE_FORMAT = appConfig.ArchivedDateFormat || DATE_FORMAT;
-
+DateTimeService.$inject = [];
+function DateTimeService() {
     /**
      * Get short representation of given datetime
      *
@@ -89,15 +97,7 @@ function DateTimeService(moment) {
         return m.format(DATE_FORMAT);
     };
 
-    /**
-     * Get long representation of given datetime
-     *
-     * @param {String} d iso format datetime
-     * @return {String}
-     */
-    this.longFormat = function(d) {
-        return moment(d).format(LONG_FORMAT);
-    };
+    this.longFormat = longFormat;
 
     /**
      * Get date and time format for scheduled datetime
@@ -133,8 +133,8 @@ function DateTimeService(moment) {
     }
 }
 
-DateTimeHelperService.$inject = ['moment'];
-function DateTimeHelperService(moment) {
+DateTimeHelperService.$inject = [];
+function DateTimeHelperService() {
     /*
     * @param timestring 2016-03-01T04:45:00+0000
     * @param timezone Europe/London
@@ -211,11 +211,11 @@ export default angular.module('superdesk.core.datetime', [
     .directive('sdDatetime', DateTimeDirective)
     .directive('sdShortDate', ShortDateDirective)
 
-    .filter('reldate', ['moment', function reldateFactory(moment) {
+    .filter('reldate', function reldateFactory() {
         return function reldate(date) {
             return moment(date).fromNow();
         };
-    }])
+    })
 
     /**
      * Returns the difference between given date and the
@@ -224,7 +224,7 @@ export default angular.module('superdesk.core.datetime', [
      * @param {Datetime} date iso format datetime
      * @return {Int} hours
      */
-    .filter('hoursFromNow', ['moment', function hoursFromNowFactory(moment) {
+    .filter('hoursFromNow', function hoursFromNowFactory() {
         return function hoursFromNow(date) {
             var difference = moment().diff(moment(date));
             var d = moment.duration(difference);
@@ -232,22 +232,22 @@ export default angular.module('superdesk.core.datetime', [
 
             return s;
         };
-    }])
+    })
 
     // format datetime obj to time string
-    .filter('time', ['moment', function timeFilterFactory(moment) {
-        var TIME_FORMAT = appConfig.view == null || appConfig.view.timeformat == null
+    .filter('time', function timeFilterFactory() {
+        var CONFIG_TIME_FORMAT = appConfig.view == null || appConfig.view.timeformat == null
             ? 'h:mm'
             : appConfig.view.timeformat;
 
         return function timeFilter(time) {
             var m = moment(time, 'HH:mm:ss');
 
-            return m.format(TIME_FORMAT);
+            return m.format(CONFIG_TIME_FORMAT);
         };
-    }])
+    })
 
-    .constant('moment', momentTimezone)
+    .constant('moment', moment)
 
     .factory('weekdays', [function() {
         return Object.freeze({
@@ -267,8 +267,7 @@ export default angular.module('superdesk.core.datetime', [
      *   avoiding the need to fetch it again every time when needed.
      */
     .factory('tzdata', ['$resource', function($resource) {
-        var filename = 'scripts/apps/dashboard/world-clock/timezones-all.json',
-            tzResource = $resource(filename);
+        const tzResource = $resource('scripts/apps/dashboard/world-clock/timezones-all.json');
 
         /**
          * Returns a sorted list of all time zone names. If time zone data

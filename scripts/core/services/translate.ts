@@ -1,7 +1,7 @@
 import 'angular-dynamic-locale';
-import {addLangOverride} from 'core/lang';
 import moment from 'moment';
-import {appConfig} from 'appConfig';
+import {gettext} from 'core/utils';
+import {loadTranslations} from 'index';
 
 /**
  * Translate module
@@ -22,32 +22,17 @@ export default angular.module('superdesk.core.translate', [
     .run(['gettextCatalog', '$location', '$rootScope', 'SESSION_EVENTS', 'tmhDynamicLocale',
         function(gettextCatalog, $location, $rootScope, SESSION_EVENTS, tmhDynamicLocale) {
             $rootScope.$on(SESSION_EVENTS.IDENTITY_LOADED, (event) => {
-                if ($rootScope.$root.currentUser
-                    && appConfig.profileLanguages.includes($rootScope.$root.currentUser.language)) {
-                    // if the current logged in user has a saved language preference that is available
-                    gettextCatalog.setCurrentLanguage($rootScope.$root.currentUser.language);
-                } else if (appConfig.language) {
-                    gettextCatalog.setCurrentLanguage(appConfig.language);
-                } else if (appConfig.profileLanguages.includes(window.navigator.language)) {
-                    // no saved preference but browser language is available
-                    gettextCatalog.setCurrentLanguage(window.navigator.language);
-                } else {
-                    // no other options available go with baseLanguage
-                    gettextCatalog.setCurrentLanguage(gettextCatalog.baseLanguage);
-                }
+                loadTranslations()
+                    .then((res) => {
+                        const {translations, language} = res;
 
-                // load translations synchronously(blocking) in order to prevent caching of default strings
-                if (gettextCatalog.currentLanguage !== 'en') {
-                    gettextCatalog.loadRemoteSync('languages/' + gettextCatalog.currentLanguage + '.json');
-                }
+                        gettextCatalog.setCurrentLanguage(language);
+                        gettextCatalog.setStrings(language, translations);
+                        moment.locale(language); // set locale for date/time management
 
-                // add lang override strings
-                $rootScope.$applyAsync(() => addLangOverride(gettextCatalog, gettextCatalog.currentLanguage));
-
-                // set locale for date/time management
-                moment.locale(gettextCatalog.currentLanguage);
-                // set locale for angular-i18n
-                tmhDynamicLocale.set(gettextCatalog.currentLanguage.replace('_', '-').toLowerCase());
+                        // set locale for angular-i18n
+                        tmhDynamicLocale.set(language.replace('_', '-').toLowerCase());
+                    });
             });
 
             var params = $location.search();
@@ -56,6 +41,9 @@ export default angular.module('superdesk.core.translate', [
                 gettextCatalog.currentLanguage = params.lang;
                 gettextCatalog.debug = true;
             }
+
+            // make it available in templates
+            $rootScope.gettext = gettext;
         }])
 
     /**

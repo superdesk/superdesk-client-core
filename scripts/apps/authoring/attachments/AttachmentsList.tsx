@@ -17,7 +17,7 @@ import {IAttachment} from '.';
 
 interface IProps {
     files: Array<IAttachment>;
-    isLocked: boolean;
+    readOnly: boolean;
 
     editFile: (file: IAttachment) => void;
     download: (file: IAttachment) => void;
@@ -31,7 +31,7 @@ class AttachmentsListComponent extends React.PureComponent<IProps> {
     }
 
     renderFile(file: IAttachment) {
-        const {isLocked, download: _download, editFile: _editFile, removeFile: _removeFile} = this.props;
+        const {readOnly, download: _download, editFile: _editFile, removeFile: _removeFile} = this.props;
 
         return (
             <Item key={file._id} shadow={1}>
@@ -61,16 +61,27 @@ class AttachmentsListComponent extends React.PureComponent<IProps> {
                         title={gettext('Download')}>
                         <i className="icon-download" />
                     </button>
-                    {!isLocked && <button className="dropdown__toggle"
-                        onClick={() => _editFile(file)}
-                        title={gettext('Edit')}>
-                        <i className="icon-pencil" />
-                    </button>}
-                    <button className="dropdown__toggle"
-                        onClick={() => _removeFile(file)}
-                        title={gettext('Remove')}>
-                        <i className="icon-trash" />
-                    </button>
+
+                    {
+                        readOnly === true ? null : (
+                            <button
+                                className="dropdown__toggle"
+                                onClick={() => _editFile(file)}
+                                title={gettext('Edit')}>
+                                <i className="icon-pencil" />
+                            </button>
+                        )
+                    }
+
+                    {
+                        readOnly === true ? null : (
+                            <button className="dropdown__toggle"
+                                onClick={() => _removeFile(file)}
+                                title={gettext('Remove')}>
+                                <i className="icon-trash" />
+                            </button>
+                        )
+                    }
                 </ActionMenu>
             </Item>
         );
@@ -91,10 +102,12 @@ class AttachmentsListComponent extends React.PureComponent<IProps> {
     }
 }
 
-const mapStateToProps = (state) => ({
-    files: state.attachments.files,
-    isLocked: state.editor.isLocked,
-});
+const mapStateToProps = (state, ownProps) => {
+    return {
+        files: state.attachments.files,
+        readOnly: state.editor.isLocked || ownProps.readOnly === true,
+    };
+};
 
 const mapDispatchToProps = {
     editFile,
@@ -104,8 +117,8 @@ const mapDispatchToProps = {
 
 const AttachmentsListConnected = connect(mapStateToProps, mapDispatchToProps)(AttachmentsListComponent);
 
-export const AttachmentsList = (props: {store: any}) => (
+export const AttachmentsList = (props: {store: any, readOnly?: boolean}) => (
     <Provider store={props.store}>
-        <AttachmentsListConnected />
+        <AttachmentsListConnected readOnly={props.readOnly} />
     </Provider>
 );

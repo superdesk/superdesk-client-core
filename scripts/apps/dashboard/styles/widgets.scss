@@ -3,9 +3,8 @@
 // ----------------------------------------------------------------------------------------
 @import '~mixins.scss';
 @import '~variables.scss';
-
 .sd-widget {
-    &.ingest, &.archive, &.related-item, &.aggregate, &.package-manager, &.packages {
+    &.ingest, &.archive, &.related-item, &.aggregate, &.package-manager, &.packages, &.user-activity {
         .widget-header {
             z-index: 2;
             background: $white;
@@ -123,6 +122,16 @@
 
             }
         }
+
+        .search-box--no-shadow, .search-box--no-shadow:hover {
+            box-shadow: none;
+        }
+
+        .search-box--fluid-height {
+            min-height: 34px;
+            height: inherit;
+        }
+
         .content-list-holder {
             position: static;
             flex-grow: 1;
@@ -336,8 +345,8 @@
         .main-list {
             position: absolute;
             left: 0;
-            right: 0; 
-            bottom: 0; 
+            right: 0;
+            bottom: 0;
             top: 34px;
             width: 100%;
             @include transition(all ease 0.2s);
@@ -362,9 +371,9 @@
         .preview {
             //display: none;
             position: absolute;
-            left: 0; 
-            width: 100%; 
-            bottom: 0; 
+            left: 0;
+            width: 100%;
+            bottom: 0;
             top: 38px;
             @include transition(all ease 0.2s);
             &.custom-widget {
@@ -520,3 +529,4 @@
         }
     }
 }
+

@@ -1,4 +1,4 @@
-import {max, sortBy, get} from 'lodash';
+import {sortBy, get} from 'lodash';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 import {appConfig} from 'appConfig';
 
@@ -17,6 +17,10 @@ export default function MediaFieldsController($q, metadata) {
             return {schema_field: 'language', items: metadata.values.languages, key: 'qcode'};
         }
 
+        if (cv == null && field === 'authors' && metadata.values.authors) {
+            return {schema_field: 'authors', items: metadata.values.authors, field_type: 'authors'};
+        }
+
         return cv;
     }
 
@@ -29,7 +33,7 @@ export default function MediaFieldsController($q, metadata) {
         const validator = appConfig.validator_media_metadata;
 
         // get last order
-        let nextOrder = max(Object.keys(editor).map((field) => get(editor, `${field}.order`, 0))) + 1;
+        let nextOrder = Math.max(0, ...Object.keys(editor).map((field) => editor?.[field]?.order ?? 0)) + 1;
 
         // add missing fields from validator to editor/schema
         Object.keys(validator || {}).forEach((field) => {

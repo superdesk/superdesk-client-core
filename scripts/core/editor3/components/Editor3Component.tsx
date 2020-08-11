@@ -33,6 +33,7 @@ import {getSpellcheckWarningsByBlock} from './spellchecker/SpellcheckerDecorator
 import {getSpellchecker} from './spellchecker/default-spellcheckers';
 import {IEditorStore} from '../store';
 import {appConfig} from 'appConfig';
+import {EDITOR_BLOCK_TYPE} from '../constants';
 
 const MEDIA_TYPES_TRIGGER_DROP_ZONE = [
     'application/superdesk.item.picture',
@@ -43,7 +44,7 @@ const MEDIA_TYPES_TRIGGER_DROP_ZONE = [
 
 const EVENT_TYPES_TRIGGER_DROP_ZONE = [
     ...MEDIA_TYPES_TRIGGER_DROP_ZONE,
-    'superdesk/editor3-block',
+    EDITOR_BLOCK_TYPE,
     'Files',
 ];
 
@@ -74,38 +75,34 @@ export function dragEventShouldShowDropZone(event) {
     return intersection.length > 0;
 }
 
-/**
-    * @ngdoc method
-    * @name Editor3#canDropMedia
-    * @param {Object} e Event
-    * @param {Array} editorConfig
-    * @returns {Boolean} Returns true if the item is permitted.
-    * @description Check if the editor accept images and if current item is valid media.
-*/
-export function canDropMedia(e, editorConfig) {
-    const {editorFormat, readOnly, singleLine} = editorConfig;
-    const supportsMedia = !readOnly && !singleLine && editorFormat.includes('media');
+// caret position isn't displayed if a boolean is returned while dragging text
+export function canDropMedia(e, editorConfig): undefined | boolean {
+    // apply restrictions only if it is something other than text(IArticle object, image file) being dragged
+    if ((e?.originalEvent?.dataTransfer?.types ?? []).some((type) => type !== 'text/plain' && type !== 'text/html')) {
+        const {editorFormat, readOnly, singleLine} = editorConfig;
+        const supportsMedia = !readOnly && !singleLine && editorFormat.includes('media');
 
-    if (!supportsMedia) {
-        return false;
-    }
-
-    const mediaType = getValidMediaType(e.originalEvent);
-    const dataTransfer = e.originalEvent.dataTransfer;
-    let isValidMedia = !!mediaType;
-
-    if (mediaType === 'Files' && dataTransfer.files.length > 0) {
-        // checks if files dropped from external folder are valid or not
-        const isValidFileType = Object.values(dataTransfer.files).every(
-            (file: File) => file.type.startsWith('audio/')
-            || file.type.startsWith('image/') || file.type.startsWith('video/'));
-
-        if (!isValidFileType) {
+        if (!supportsMedia) {
             return false;
         }
-    }
 
-    return isValidMedia;
+        const mediaType = getValidMediaType(e.originalEvent);
+        const dataTransfer = e.originalEvent.dataTransfer;
+        let isValidMedia = !!mediaType;
+
+        if (mediaType === 'Files' && dataTransfer.files.length > 0) {
+            // checks if files dropped from external folder are valid or not
+            const isValidFileType = Object.values(dataTransfer.files).every(
+                (file: File) => file.type.startsWith('audio/')
+                || file.type.startsWith('image/') || file.type.startsWith('video/'));
+
+            if (!isValidFileType) {
+                return false;
+            }
+        }
+
+        return isValidMedia;
+    }
 }
 
 interface IProps {
@@ -132,7 +129,7 @@ interface IProps {
     onCreateChangeStyleSuggestion?(style, active): void;
     onChange?(editorState: EditorState): void;
     unlock?(): void;
-    onTab?(): void;
+    onTab?(event): void;
     dragDrop?(): void;
     dispatch?(action: any): void;
 }
@@ -200,10 +197,6 @@ export class Editor3Component extends React.Component<IProps, IState> {
     }
 
     spellcheck() {
-        if (this.props.spellchecking.enabled !== true) {
-            return;
-        }
-
         this.spellcheckCancelFn();
 
         this.spellcheckCancelFn = (() => {
@@ -263,14 +256,19 @@ export class Editor3Component extends React.Component<IProps, IState> {
     }
 
     keyBindingFn(e) {
-        const {keyCode, shiftKey} = e;
+        const {key, shiftKey} = e;
 
-        if (keyCode === 13 && shiftKey) {
+        if (key === 'Enter' && shiftKey) {
             return 'soft-newline';
         }
 
+        if (key === 'Tab') {
+            this.props.onTab(e);
+            return '';
+        }
+
         // ctrl + X
-        if (keyCode === 88 && KeyBindingUtil.hasCommandModifier(e)) {
+        if (key === 'x' && KeyBindingUtil.hasCommandModifier(e)) {
             const {editorState} = this.props;
             const selection = editorState.getSelection();
 
@@ -282,9 +280,9 @@ export class Editor3Component extends React.Component<IProps, IState> {
 
         if (KeyBindingUtil.hasCommandModifier(e)) {
             const {editorFormat} = this.props;
-            const notAllowBold = keyCode === 66 && editorFormat.indexOf('bold') === -1;
-            const notAllowItalic = keyCode === 73 && editorFormat.indexOf('italic') === -1;
-            const notAllowUnderline = keyCode === 85 && editorFormat.indexOf('underline') === -1;
+            const notAllowBold = key === 'b' && editorFormat.indexOf('bold') === -1;
+            const notAllowItalic = key === 'i' && editorFormat.indexOf('italic') === -1;
+            const notAllowUnderline = key === 'u' && editorFormat.indexOf('underline') === -1;
 
             if (notAllowBold || notAllowItalic || notAllowUnderline) {
                 e.preventDefault();
@@ -464,7 +462,14 @@ export class Editor3Component extends React.Component<IProps, IState> {
 
         window[EDITOR_GLOBAL_REFS][this.editorKey] = this.editor;
 
-        this.spellcheck();
+        if (appConfig.features.showCharacterLimit) {
+            document.documentElement.style.
+                setProperty('--preCharacterLimit', appConfig.features.showCharacterLimit + 'ch');
+        }
+
+        if (this.props.spellchecking.enabled) {
+            this.spellcheck();
+        }
     }
 
     handleRefs(editor) {
@@ -485,10 +490,14 @@ export class Editor3Component extends React.Component<IProps, IState> {
             window.instgrm.Embeds.process();
         }
 
-        if (prevProps.editorState.getCurrentContent() !== this.props.editorState.getCurrentContent()) {
+        if (
+            this.props.spellchecking.enabled &&
+            prevProps.editorState.getCurrentContent() !== this.props.editorState.getCurrentContent()
+        ) {
             this.spellcheck();
         }
     }
+
     render() {
         const {
             readOnly,
@@ -496,7 +505,6 @@ export class Editor3Component extends React.Component<IProps, IState> {
             showToolbar,
             editorState,
             onChange,
-            onTab,
             tabindex,
             scrollContainer,
             cleanPastedHtml,
@@ -521,16 +529,27 @@ export class Editor3Component extends React.Component<IProps, IState> {
             } : {},
         ));
 
+        const blockStyle = (contentBlock): string => {
+            const type = contentBlock.getType();
+
+            if (type === 'code-block' && appConfig.features.showCharacterLimit) {
+                return 'showCharacterLimit';
+            }
+        };
+
         return (
             <div
                 className={cx}
                 ref={(div) => this.div = div}
                 onDragStart={() => {
-                    // known issue: dragging text doesn't work when the top of the editor is in the viewport
-                    // https://github.com/facebook/draft-js/issues/2218
-
                     if (this.state.draggingInProgress !== true) {
-                        this.setState({draggingInProgress: true});
+                        setTimeout(() => {
+                            // known issue: dragging text doesn't work when the top of the editor is in the viewport
+                            // https://github.com/facebook/draft-js/issues/2218
+                            // it's not clear why, but using setTimeout seems to work around the issue
+
+                            this.setState({draggingInProgress: true});
+                        });
                     }
                 }}
 
@@ -565,6 +584,7 @@ export class Editor3Component extends React.Component<IProps, IState> {
                         handleBeforeInput={this.handleBeforeInput}
                         blockRenderMap={blockRenderMap}
                         blockRendererFn={blockRenderer}
+                        blockStyleFn={blockStyle}
                         customStyleMap={{...customStyleMap, ...this.props.highlightsManager.styleMap}}
                         onChange={(editorStateNext: EditorState) => {
                             // in order to position the popup component we need to know the position of editor selection
@@ -578,7 +598,6 @@ export class Editor3Component extends React.Component<IProps, IState> {
 
                             onChange(editorStateNext);
                         }}
-                        onTab={onTab}
                         tabIndex={tabindex}
                         handlePastedText={handlePastedText.bind(this)}
                         readOnly={locked || readOnly}

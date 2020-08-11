@@ -59,7 +59,7 @@ export class TextArea extends React.Component<any, any> {
         const {nativeOnChange, onChange, field, autoHeight, multiLine} = this.props;
 
         if (nativeOnChange) {
-            onChange(event);
+            onChange(event, field);
         } else {
             onChange(
                 field,

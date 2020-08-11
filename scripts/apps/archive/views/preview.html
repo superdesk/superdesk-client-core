@@ -45,6 +45,9 @@
               <span ng-if="item._type === 'archived'" class="stage" tooltip="{{:: 'Archived from' | translate}} {{deskName}} / {{ stage }}" tooltip-placement="bottom" ng-show="stage"><b>{{:: 'Archived from' | translate}} {{deskName}}</b> / {{ stage }}</span>
               <span ng-if="item._type !== 'archived'" class="stage" tooltip="{{deskName}} / {{ stage }}" tooltip-placement="bottom" ng-show="stage"><b>{{deskName}}</b> / {{ stage }}</span>
             </div>
+            <div class="preview-header__flex-row preview-header__flex-row--single-line" ng-if="subjectPreviewFields.length">
+              <sd-preview-subject item="item" fields="subjectPreviewFields"></sd-preview-subject>
+            </div>
           </div>
           <div class="preview-header__side-block">
             <div class="preview-header__flex-row" ng-if="item.type === 'text'">
@@ -70,8 +73,11 @@
         <div class="composite-nav" ng-if="selected.preview.type === 'composite'">
           <i class="filetype-icon-large-composite"></i>
           <p class="title preview-headline"
-             ng-if="selected.preview.headline"
-             ng-class="{condensed: !lock}" sd-html-preview="selected.preview.headline"></p>
+            ng-if="selected.preview.headline"
+            ng-class="{condensed: !lock}"
+            sd-html-preview="selected.preview.headline"
+            data-test-id="field--headline"
+          ></p>
         </div>
 
         <div ng-hide="hideActions()" class="action-menu">
@@ -84,8 +90,11 @@
             class="open-item"><i class="icon-external"></i></a></div>
 
         <p class="title preview-headline"
-           ng-if="selected.preview.headline && selected.preview.type !== 'composite'"
-           ng-class="{condensed: !lock}" sd-html-preview="selected.preview.headline"></p>
+          ng-if="selected.preview.headline && selected.preview.type !== 'composite'"
+          ng-class="{condensed: !lock}"
+          sd-html-preview="selected.preview.headline"
+          data-test-id="field--headline"
+        ></p>
 
         <p class="nav-space" ng-if="!selected.preview.headline && !lock"></p>
 
@@ -178,7 +187,8 @@
                 <div ng-if="field.field_type === 'related_content'">
                     <div sd-related-items-preview
                         data-item="item"
-                        data-field="field">
+                        data-field="field"
+                        data-preview="true">
                     </div>
                 </div>
             </div>

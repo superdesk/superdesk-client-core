@@ -1,6 +1,6 @@
 # Superdesk Client
 
-[![Build Status](https://travis-ci.org/superdesk/superdesk-client-core.svg?branch=master)](https://travis-ci.org/superdesk/superdesk-client-core)
+[![Build Status](https://travis-ci.com/superdesk/superdesk-client-core.svg?branch=develop)](https://travis-ci.com/superdesk/superdesk-client-core)
 [![Code Climate](https://codeclimate.com/github/superdesk/superdesk-client-core/badges/gpa.svg)](https://codeclimate.com/github/superdesk/superdesk-client-core)
 ### Installation
 
@@ -37,6 +37,7 @@ To configure the build, the `superdesk.config.js` file must export a function th
 - `features.swimlane`: `null` - enables switch view button in monitoring view, which allows to switch between list view or swimlane view. Example: `features: {swimlane: {defaultNumberOfColumns: 4}}` will enable switch view button and displays 4 columns when turned ON, set null or keep undefined to disable
 - `features.confirmMediaOnUpdate`: `true` - Display the user confirmation dialog in the updated story to use the media from the original story.
 - `features.nestedItemsInOutputStage` : `false` - Display only latest version of published item in output stages.
+- `features.showCharacterLimit` : `number` -  a character limit in the preformatted text field. The number defines the placement of the limiter and is based on the number of characters on one line.
 
 ##### Workspace
 - `workspace.content`: `false` - enable content view in workspace (obsolete)
@@ -101,6 +102,15 @@ You can configure what will be displayed in list views, there are 3 areas in lis
 - `narrowView` - optional narrow view of 'firstLine' when authoring and preview panes are both open. This is active when singleline:view user preference is also active.
 
 - `singleLineView` - optional config to have thinner rows with elements in singleLine displayed.
+
+- `relatedItems` - configure the fields to be displayed on the related items field inside the authoring. Defaults are:
+    - `firstLine`:
+        - `slugline`
+        - `headline`
+        - `versioncreated`
+    - `secondLine`
+        - `state`
+        - `desk`
 
 ##### Profile
 

@@ -1,14 +1,12 @@
-<ul class="users-list-embed">
-    <li mentio-menu-item="user" ng-repeat="user in items">
+<ul style="list-style: none; padding-left: 0;">
+    <li mentio-menu-item="user" ng-repeat="user in items" class="sd-mentions-item">
         <div ng-if="user.type == 'user'">
-            <figure class="avatar small">
-                <img sd-user-avatar data-user="user" alt="user.item.display_name">
-            </figure>
-        <span class="name" >{{:: user.item.display_name }}</span>
+            <sd-user-avatar user="user.item" data-size="'small'"></sd-user-avatar>
+            <span>{{:: user.item.display_name }}</span>
         </div>
         <div ng-if="user.type == 'desk'">
             <i class="icon-tasks" title="Desk"></i>
-            <span class="name" >{{:: user.item.name }}</span>
+            <span>{{:: user.item.name }}</span>
         </div>
     </li>
 </ul>

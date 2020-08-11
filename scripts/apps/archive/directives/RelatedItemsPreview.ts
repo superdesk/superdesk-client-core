@@ -1,3 +1,7 @@
+import {IArticle, IArticleField, IRendition} from 'superdesk-api';
+import {gettext} from 'core/utils';
+import {getThumbnailForItem} from 'core/helpers/item';
+
 /**
  * @ngdoc directive
  * @module superdesk.apps.archive
@@ -9,6 +13,16 @@
  *
  */
 
+interface IScope extends ng.IScope {
+    item: IArticle;
+    field: IArticleField;
+    preview: boolean;
+    loading: boolean;
+    relatedItems: Array<IArticle>;
+    gettext: (text: string, params?: any) => string;
+    getThumbnailForItem: (item: IArticle) => IRendition;
+}
+
 RelatedItemsPreview.$inject = ['relationsService'];
 
 export function RelatedItemsPreview(relationsService) {
@@ -16,10 +30,14 @@ export function RelatedItemsPreview(relationsService) {
         scope: {
             item: '=',
             field: '<',
+            preview: '=?',
         },
         template: require('../views/related-items-preview.html'),
-        link: function(scope) {
+        link: function(scope: IScope) {
             scope.loading = true;
+            scope.gettext = gettext;
+            scope.getThumbnailForItem = getThumbnailForItem;
+
             relationsService.getRelatedItemsForField(scope.item, scope.field._id)
                 .then((items) => {
                     scope.relatedItems = items;

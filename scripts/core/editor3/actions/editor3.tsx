@@ -1,8 +1,9 @@
 import ng from 'core/services/ng';
 import {insertMedia} from './toolbar';
 import {logger} from 'core/services/logger';
-import {SelectionState} from 'draft-js';
+import {SelectionState, convertFromRaw, EditorState} from 'draft-js';
 import {IArticle} from 'superdesk-api';
+import {getFieldMetadata, fieldsMetaKeys} from '../helpers/fieldsMeta';
 
 /**
  * @ngdoc method
@@ -173,6 +174,16 @@ export function setHtmlFromTansa(html, simpleReplace) {
         payload: {html, simpleReplace},
     };
 }
+
+export const setEditorStateFromItem = (item: IArticle, field: string) => {
+    const rawState = getFieldMetadata(item, field, fieldsMetaKeys.draftjsState);
+    const contentState = convertFromRaw(rawState);
+
+    return {
+        type: 'EDITOR_PUSH_STATE',
+        payload: {contentState},
+    };
+};
 
 /**
  * Move one block after another

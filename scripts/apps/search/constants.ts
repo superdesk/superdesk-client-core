@@ -1,37 +1,46 @@
 import {IArticle} from 'superdesk-api';
+import {gettext} from 'core/utils';
 
 /**
   * Global search parameters and label mapping.
  */
-export const PARAMETERS = Object.freeze({
-    unique_name: 'Unique Name',
-    original_creator: 'Creator',
-    from_desk: 'From Desk',
-    to_desk: 'To Desk',
-    spike: 'Spiked',
-    subject: 'Subject',
-    company_codes: 'Company Codes',
-    marked_desks: 'Marked Desks',
-    ingest_provider: 'Provider',
-    featuremedia: 'Associated Feature Media',
-    subscriber: 'Subscriber',
-});
+
+export function getParameters() {
+    return Object.freeze({
+        unique_name: gettext('Unique Name'),
+        original_creator: gettext('Creator'),
+        from_desk: gettext('From Desk'),
+        to_desk: gettext('To Desk'),
+        spike: gettext('Spiked'),
+        subject: gettext('Subject'),
+        company_codes: gettext('Company Codes'),
+        marked_desks: gettext('Marked Desks'),
+        ingest_provider: gettext('Provider'),
+        featuremedia: gettext('Associated Feature Media'),
+        subscriber: gettext('Subscriber'),
+        firstpublished: gettext('Date published'),
+        firstpublishedfrom: gettext('Published from'),
+        firstpublishedto: gettext('Published to'),
+    });
+}
 
 /**
  * Facet field and label mapping and used when facets are removed.
  */
-export const EXCLUDE_FACETS = Object.freeze({
-    notdesk: 'Not Desk',
-    nottype: 'Not Type',
-    notgenre: 'Not Genre',
-    notcategory: 'Not Category',
-    noturgency: 'Not Urgency',
-    notsource: 'Not Source',
-    notpriority: 'Not Priority',
-    notlegal: 'Not Legal',
-    notsms: 'Not Sms',
-    notlanguage: 'Not Language',
-});
+export function getExcludeFacets() {
+    return Object.freeze({
+        notdesk: gettext('Not Desk'),
+        nottype: gettext('Not Type'),
+        notgenre: gettext('Not Genre'),
+        notcategory: gettext('Not Category'),
+        noturgency: gettext('Not Urgency'),
+        notsource: gettext('Not Source'),
+        notpriority: gettext('Not Priority'),
+        notlegal: gettext('Not Legal'),
+        notsms: gettext('Not Sms'),
+        notlanguage: gettext('Not Language'),
+    });
+}
 
 /**
  * Default list of fields
@@ -72,6 +81,18 @@ export const DEFAULT_LIST_CONFIG = {
     ],
 };
 
+export const DEFAULT_RELATED_ITEMS_LIST_CONFIG = {
+    firstLine: [
+        'slugline',
+        'headline',
+        'versioncreated',
+    ],
+    secondLine: [
+        'state',
+        'desk',
+    ],
+};
+
 export const DEFAULT_GRID_VIEW_FIELDS_CONFIG = [
     'source',
 ];
@@ -92,7 +113,7 @@ interface ISwimlaneGroup {
     ellipsis?: boolean;
 }
 
-export const DEFAULT_SWIMLANE_FIELDS_CONFIG: {[key: string]: Array<ISwimlaneGroup>} = {
+export const DEFAULT_SWIMLANE_FIELDS_CONFIG: { [key: string]: Array<ISwimlaneGroup> } = {
     left: [{fields: ['urgency']}, {fields: ['slugline', 'headline'], ellipsis: true}],
     right: [{fields: ['versioncreated']}],
 };
@@ -182,4 +203,5 @@ export const UI_PROJECTED_FIELD_MAPPINGS = {
     versioncreated: 'versioncreated',
     markedDesks: 'marked_desks',
     queueError: 'error_message',
+    used: ['used', 'used_updated', 'used_count'],
 };

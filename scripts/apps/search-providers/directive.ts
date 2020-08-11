@@ -9,10 +9,19 @@ export default function SearchProviderConfigDirective(searchProviderService, not
             $scope.origProvider = null;
             $scope.providers = null;
             $scope.newDestination = null;
+            $scope.gettext = gettext;
+
+            $scope.availableListViews = {
+                '': {label: gettext('None')},
+                list: {label: gettext('List View'), icon: 'th-list'},
+                grid: {label: gettext('Photo Grid View'), icon: 'th'},
+            };
 
             searchProviderService.getAllowedProviderTypes().then((providerTypes) => {
                 $scope.providerTypes = providerTypes;
                 $scope.noProvidersAllowed = !$scope.providerTypes.length;
+                $scope.addProviderLabel = $scope.noProvidersAllowed ?
+                    gettext('There are no providers available.') : gettext('Add New Search Provider');
                 $scope.providerLabels = searchProviderService.getProviderLabels(providerTypes);
                 $scope.providerTypesOptions = providerTypes.map((t) => ({label: t.label, value: t.search_provider}));
             });
@@ -98,6 +107,9 @@ export default function SearchProviderConfigDirective(searchProviderService, not
             };
 
             fetchSearchProviders();
+
+            $scope.getStatusLabel = (provider) => provider.is_closed ? gettext('Open') : gettext('Close');
+            $scope.getIsDefaultLabel = (provider) => provider.is_default ? gettext('Default') : '';
         },
     };
 }

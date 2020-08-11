@@ -4,23 +4,16 @@
     </li>
 
     <li ng-if="!defaultTemplate">
-        <button id="create_text_article" ng-click="create()">
+        <button id="create_text_article" ng-click="create({kind: 'plain-text'})">
             <i class="icon-plus-sign icon--blue"></i>
-            {{ :: 'Plain text' | translate }}
+            <span translate>Plain text</span>
         </button>
     </li>
 
     <li ng-if="defaultTemplate">
-        <button id="create_text_article" ng-click="createFromTemplate(defaultTemplate)">
+        <button id="create_text_article" ng-click="create({kind: 'from-template', template: defaultTemplate})">
             <i class="icon-plus-sign icon--blue"></i>
             {{ defaultTemplate.template_name }}
-        </button>
-    </li>
-
-    <li ng-if="item">
-        <button id="package_item" ng-click="createPackage(item)">
-            <i class="icon-plus-sign icon--blue"></i>
-            {{ :: 'Package current item' | translate }}
         </button>
     </li>
 </ul>
@@ -32,31 +25,31 @@
     </li>
 
     <li ng-repeat="template in contentTemplates | orderBy:'template_name'">
-        <button ng-click="createFromTemplate(template)">
+        <button ng-click="create({kind: 'from-template', template: template})">
             <i class="icon-plus-sign icon--blue"></i> {{ :: template.template_name }}
         </button>
     </li>
 
     <li ng-hide="contentTemplates.length">
-        <span class="dropdown__menu-item--no-link"><em>No recent templates.</em></span>
+        <span class="dropdown__menu-item--no-link"><em translate>No recent templates.</em></span>
     </li>
 
     <li>
         <button id="more_templates" ng-click="flags = {displayTemplateSelect: true}" translate>More templates...</button>
     </li>
 </ul>
-<!-- <li class="dropdown__menu-divider" ng-if="openUpload"></li> -->
+
 <ul class="dropdown__menu-footer">
     <li ng-if="canCreatePackage() && !$root.config.features.hideCreatePackage">
-        <button id="create_package"  ng-click="createPackage()">
+        <button id="create_package" ng-click="create({kind: 'create-package'})">
             <i class="icon-package-plus"></i>
-            {{ :: 'Create Package' | translate }}
+            <span translate>Create Package</span>
         </button>
     </li>
 
-    <li ng-if="openUpload">
-        <button ng-click="openUpload()" id="start-upload-btn">
-            <i class="icon-upload"></i> {{ :: 'Upload Media' | translate }}
+    <li>
+        <button ng-click="create({kind: 'upload-media'})" id="start-upload-btn">
+            <i class="icon-upload"></i> <span translate>Upload Media</span>
         </button>
     </li>
 </ul>

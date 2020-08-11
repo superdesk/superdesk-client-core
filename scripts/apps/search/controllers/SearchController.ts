@@ -15,6 +15,8 @@ export function SearchController($location, searchProviderService) {
 
     this.hideNested = appConfig.features.nestedItemsInOutputStage;
 
+    this.hideNested = appConfig.features.nestedItemsInOutputStage;
+
     const getActiveRepos = () => INTERNAL.filter((name) => this.repo[name]);
     const resetInternalRepo = () => this.repo = Object.assign({}, DEFAULT_CONFIG);
 
@@ -31,7 +33,7 @@ export function SearchController($location, searchProviderService) {
             this.providers = providers;
 
             // init selected/default provider
-            if (this.providers.length) {
+            if (this.providers.length && $location.search().internal == null) {
                 const selectedProvider = this.providers.find((provider) =>
                     provider.search_provider === $location.search().repo || provider._id === $location.search().repo,
                 );

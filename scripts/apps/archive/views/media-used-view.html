@@ -1,6 +1,6 @@
 <div class="mediaUsed">
     <ul>
-        <li ng-repeat="usedItem in usedItems._items">
+        <li ng-repeat="usedItem in links">
             <div class="mediaUsed--Item" ng-click="open(usedItem)">
                 <i class="type-icon" sd-filetype-icon data-item="usedItem"></i>
                 <span class="keyword" ng-if="usedItem.slugline">{{ usedItem.slugline }}</span>

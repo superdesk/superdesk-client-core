@@ -62,22 +62,32 @@ export function ItemPreview(asset, storage, desks, _, familyService, privileges)
 
             scope.$watch('item', (newItem, oldItem) => {
                 scope.selected = {preview: newItem || null};
+                scope.links = [];
 
                 if (newItem !== oldItem) {
+                    const isMedia = newItem?.type != null &&
+                        ['audio', 'video', 'picture', 'graphic'].includes(newItem.type);
+
                     fetchRelatedItems();
 
                     // Set the desk and stage names
                     if (newItem && newItem.task && newItem.task.stage) {
                         scope.deskName = desks.deskLookup[newItem.task.desk].name;
                         scope.stage = desks.stageLookup[newItem.task.stage].name;
-                        scope.isMediaUsed = _.includes(['audio', 'video', 'picture', 'graphic'], scope.item.type) &&
-                            scope.item.used;
                     } else {
                         scope.deskName = scope.stage = null;
                     }
 
                     // item is associated to an assignment
                     scope.isAssigned = _.get(scope, 'item.assignment_id') && _.get(privileges, 'privileges.planning');
+
+                    if (isMedia && (newItem.used || newItem._type === 'ingest')) {
+                        familyService.fetchLinks(newItem).then((links) => {
+                            scope.$applyAsync(() => {
+                                scope.links = links;
+                            });
+                        });
+                    }
 
                     if (scope.vm.current_tab === 'assignment' && !scope.isAssigned) {
                         scope.vm.current_tab = 'content';
@@ -125,8 +135,9 @@ export function ItemPreview(asset, storage, desks, _, familyService, privileges)
              * double up with this api call
              */
             function fetchRelatedItems() {
-                if (scope.item && _.includes(['archive', 'archived'], scope.item._type)) {
-                    familyService.fetchItems(scope.item.family_id || scope.item._id, scope.item)
+                if (scope.item && ['archive', 'archived', 'published'].includes(scope.item._type)
+                    && scope.item.family_id) {
+                    familyService.fetchItems(scope.item.family_id, scope.item)
                         .then(setRelatedItems);
                 } else {
                     setRelatedItems(null);

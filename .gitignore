@@ -1,5 +1,6 @@
 bower_components
 node_modules
+yarn.lock
 package-lock.json
 nbproject
 bower
@@ -22,6 +23,7 @@ yarn-error.log
 *.swp
 *.swn
 *.swm
+.vim/
 
 .vscode
 .idea

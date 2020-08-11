@@ -8,6 +8,9 @@ import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/Autho
 import {appConfig} from 'appConfig';
 import {reactToAngular1} from 'superdesk-ui-framework';
 import {VideoComponent} from './components/video';
+import {TextAreaInput} from './components/Form';
+import {PlainTextEditor} from './components/PlainTextEditor/PlainTextEditor';
+import {getTimezoneLabel} from 'apps/dashboard/world-clock/timezones-all-labels';
 
 /**
  * Gives top shadow for scroll elements
@@ -619,6 +622,7 @@ function TimezoneDirective(tzdata, $timeout) {
         link: function(scope, el) {
             scope.timeZones = []; // all time zones to choose from
             scope.tzSearchTerm = ''; // the current time zone search term
+            scope.getTimezoneLabel = getTimezoneLabel;
 
             // filtered time zone list containing only those that match
             // user-provided search term
@@ -652,7 +656,11 @@ function TimezoneDirective(tzdata, $timeout) {
                 termLower = searchTerm.toLowerCase();
                 scope.matchingTimeZones = _.filter(
                     scope.timeZones,
-                    (item) => item.toLowerCase().indexOf(termLower) >= 0,
+                    (item) =>
+                        item.toLowerCase().indexOf(termLower) >= 0 ||
+                           scope.getTimezoneLabel(item)
+                               .toLowerCase()
+                               .indexOf(termLower) >= 0,
                 );
             };
 
@@ -695,11 +703,12 @@ function TimepickerPopupDirective($timeout) {
             time: '=',
         },
         link: function(scope, element) {
-            var MODEL_TIME_FORMAT = appConfig.model.timeformat;
+            const MODEL_TIME_FORMAT = appConfig.model.timeformat;
+            const VIEW_TIME_FORMAT = appConfig.view.timeformat;
 
-            var POPUP = '.timepicker-popup';
+            const POPUP = '.timepicker-popup';
 
-            var focusEl = function() {
+            const focusEl = function() {
                 $timeout(() => {
                     element.find(POPUP).focus();
                 }, 0, false);
@@ -714,6 +723,9 @@ function TimepickerPopupDirective($timeout) {
 
             scope.hours = _.range(24);
             scope.minutes = _.range(0, 60, 5);
+            if (VIEW_TIME_FORMAT.includes('ss')) {
+                scope.seconds = _.range(0, 60, 10);
+            }
 
             scope.$watch('time', (newVal, oldVal) => {
                 var local;
@@ -1237,6 +1249,31 @@ export default angular.module('superdesk.core.ui', [
         reactToAngular1(
             VideoComponent,
             ['item'],
+        ),
+    )
+    .component('sdPlainTextEditor',
+        reactToAngular1(
+            PlainTextEditor,
+            ['value', 'onChange', 'classes', 'onChangeData', 'placeholder', 'spellcheck', 'language'],
+        ))
+    .component('sdTextAreaInput',
+        reactToAngular1(
+            TextAreaInput,
+            [
+                'field',
+                'value',
+                'label',
+                'onChange',
+                'autoHeight',
+                'autoHeightTimeout',
+                'nativeOnChange',
+                'placeholder',
+                'readOnly',
+                'maxLength',
+                'onFocus',
+                'boxed',
+                'required',
+            ],
         ),
     )
 ;

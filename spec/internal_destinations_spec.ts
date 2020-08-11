@@ -1,7 +1,7 @@
 /* eslint-disable newline-per-chained-call */
 
 import {browser, element, by} from 'protractor';
-import {el, els, s, ECE} from 'end-to-end-testing-helpers';
+import {el, els, s, ECE, hover} from 'end-to-end-testing-helpers';
 import {nav} from './helpers/utils';
 
 describe('internal destinations & generic-page-list', () => {
@@ -18,7 +18,8 @@ describe('internal destinations & generic-page-list', () => {
 
         el(['list-page--add-item']).click();
         el(['list-page--new-item', 'gform-input--name']).sendKeys('delta');
-        el(['list-page--new-item', 'gform-input--desk'], by.cssContainingText('option', 'Sports Desk')).click();
+        el(['list-page--new-item', 'gform-input--desk']).click();
+        el(['list-page--new-item', 'gform-input--desk'], by.buttonText('Sports Desk')).click();
 
         el(['list-page--new-item', 'item-view-edit--save']).click();
 
@@ -32,10 +33,7 @@ describe('internal destinations & generic-page-list', () => {
 
         var firstItem = items.get(0);
 
-        // hover in order for action buttons to show up
-        browser.actions()
-            .mouseMove(firstItem)
-            .perform();
+        hover(firstItem); // in order for action buttons to show up
 
         el(['edit'], null, firstItem).click();
 
@@ -70,10 +68,7 @@ describe('internal destinations & generic-page-list', () => {
 
         browser.wait(ECE.textToBePresentInElementValue(el(['list-page--view-edit', 'gform-input--name']), 'alpha'));
 
-        // hover in order for action buttons to show up
-        browser.actions()
-            .mouseMove(items.get(1))
-            .perform();
+        hover(items.get(1)); // in order for action buttons to show up
 
         el(['edit'], null, items.get(1)).click();
 
@@ -92,10 +87,7 @@ describe('internal destinations & generic-page-list', () => {
 
         var firstItem = items.get(0);
 
-        // hover in order for action buttons to show up
-        browser.actions()
-            .mouseMove(firstItem)
-            .perform();
+        hover(firstItem); // in order for action buttons to show up
 
         el(['delete'], null, firstItem).click();
 
@@ -110,10 +102,7 @@ describe('internal destinations & generic-page-list', () => {
 
         var firstItem = items.get(0);
 
-        // hover in order for action buttons to show up
-        browser.actions()
-            .mouseMove(firstItem)
-            .perform();
+        hover(firstItem); // in order for action buttons to show up
 
         el(['delete'], null, firstItem).click();
 
@@ -150,13 +139,15 @@ describe('internal destinations & generic-page-list', () => {
 
         el(['toggle-filters']).click();
 
-        el(['list-page--filters-form', 'gform-input--desk'], by.cssContainingText('option', 'Politic Desk')).click();
+        el(['list-page--filters-form', 'gform-input--desk']).click();
+        el(['list-page--filters-form', 'gform-input--desk'], by.buttonText('Politic Desk')).click();
         el(['list-page--filters-form', 'filters-submit']).click();
 
         browser.wait(ECE.hasElementCount(items, 1));
         expect(el(['gform-output--name'], null, items.get(0)).getText()).toBe('bravo');
 
-        el(['list-page--filters-form', 'gform-input--desk'], by.cssContainingText('option', 'Sports Desk')).click();
+        el(['list-page--filters-form', 'gform-input--desk']).click();
+        el(['list-page--filters-form', 'gform-input--desk'], by.buttonText('Sports Desk')).click();
         el(['list-page--filters-form', 'filters-submit']).click();
 
         browser.wait(ECE.hasElementCount(items, 2));
@@ -172,14 +163,15 @@ describe('internal destinations & generic-page-list', () => {
 
         el(['toggle-filters']).click();
 
-        el(['list-page--filters-form', 'gform-input--desk'], by.cssContainingText('option', 'Sports Desk')).click();
+        el(['list-page--filters-form', 'gform-input--desk']).click();
+        el(['list-page--filters-form', 'gform-input--desk'], by.buttonText('Sports Desk')).click();
         el(['list-page--filters-form', 'filters-submit']).click();
         browser.wait(ECE.hasElementCount(items, 2));
         expect(els(['list-page--filters-active', 'tag-label']).count()).toBe(1);
 
         var activeFilter = els(['list-page--filters-active', 'tag-label']).get(0);
 
-        expect(activeFilter.getAttribute('textContent')).toBe('desk: Sports Desk');
+        browser.wait(ECE.attributeEquals(activeFilter, 'textContent', 'desk: Sports Desk'));
 
         el(['tag-label--remove'], null, activeFilter).click();
 
