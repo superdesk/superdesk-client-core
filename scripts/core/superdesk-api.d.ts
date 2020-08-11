@@ -582,7 +582,7 @@ declare module 'superdesk-api' {
     export type IPage = DeepReadonly<{
         title: string;
         url: string;
-        component: React.ComponentClass | React.ComponentType;
+        component: React.ComponentType;
         priority?: number;
 
         showTopMenu?: boolean;
