@@ -9,7 +9,7 @@ export const State: React.StatelessComponent<any> = ({item}) => {
         <div key="state" className={cssClass}>
             {
                 item.contact_state !== undefined && item.contact_state !== null &&
-                <span title={gettext(item.contact_state)}>
+                <span title={item.contact_state}>
                     {gettext(item.contact_state)}
                 </span>
             }
