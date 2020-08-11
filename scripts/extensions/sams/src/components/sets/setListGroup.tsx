@@ -47,7 +47,10 @@ export class SetListGroup extends React.PureComponent<IProps> {
                             <SetListItem
                                 key={set._id}
                                 set={set}
-                                storageDestination={this.props.storageDestinations[set?.destination_name ?? '']}
+                                storageDestination={set?.destination_name == null ?
+                                    undefined :
+                                    this.props.storageDestinations[set.destination_name]
+                                }
                                 onClick={this.props.previewSet}
                                 deleteSet={this.props.deleteSet}
                                 editSet={this.props.editSet}
