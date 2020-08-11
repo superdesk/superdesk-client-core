@@ -83,8 +83,7 @@ export function getSetEditorPanel(superdesk: ISuperdesk) {
 
             this.onStateChange = this.onStateChange.bind(this);
             this.onSave = this.onSave.bind(this);
-            this.onCreate = this.onCreate.bind(this);
-            this.previewSet = this.previewSet.bind(this);
+            this.onCancel = this.onCancel.bind(this);
 
             this.onChange = {
                 name: (value: string) => this.onFieldChange('name', value),
@@ -127,48 +126,19 @@ export function getSetEditorPanel(superdesk: ISuperdesk) {
         }
 
         onSave() {
-            this.props.updateSet(this.props.original as ISetItem, this.state.updates);
-        }
-
-        onCreate() {
-            this.props.createSet(this.state.updates);
-        }
-
-        previewSet() {
             if (this.props.original != null) {
-                this.props.previewSet(this.props.original);
+                this.props.updateSet(this.props.original as ISetItem, this.state.updates);
+            } else {
+                this.props.createSet(this.state.updates);
             }
         }
 
-        renderHeaderButtons() {
-            return (this.props.original != null) ? (
-                <ButtonGroup align="right">
-                    <Button
-                        text={gettext('Cancel')}
-                        style="hollow"
-                        onClick={this.previewSet}
-                    />
-                    <Button
-                        text={gettext('Save')}
-                        type="primary"
-                        disabled={!this.state.isDirty}
-                        onClick={this.onSave}
-                    />
-                </ButtonGroup>
-            ) : (
-                <ButtonGroup align="right">
-                    <Button
-                        text={gettext('Cancel')}
-                        style="hollow"
-                        onClick={this.props.closeEditor}
-                    />
-                    <Button
-                        text={gettext('Create')}
-                        type="primary"
-                        onClick={this.onCreate}
-                    />
-                </ButtonGroup>
-            );
+        onCancel() {
+            if (this.props.original != null) {
+                this.props.previewSet(this.props.original);
+            } else {
+                this.props.closeEditor();
+            }
         }
 
         render() {
@@ -180,7 +150,22 @@ export function getSetEditorPanel(superdesk: ISuperdesk) {
                 <React.Fragment>
                     <PanelHeader borderB={true}>
                         <PanelHeaderSlidingToolbar>
-                            {this.renderHeaderButtons()}
+                            <ButtonGroup align="right">
+                                <Button
+                                    text={gettext('Cancel')}
+                                    style="hollow"
+                                    onClick={this.onCancel}
+                                />
+                                <Button
+                                    text={this.props.original != null ?
+                                        gettext('Save') :
+                                        gettext('Create')
+                                    }
+                                    type="primary"
+                                    disabled={!this.state.isDirty}
+                                    onClick={this.onSave}
+                                />
+                            </ButtonGroup>
                         </PanelHeaderSlidingToolbar>
                     </PanelHeader>
                     <PanelContent>

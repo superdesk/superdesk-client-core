@@ -69,21 +69,21 @@ export function getManageSetsModalComponent(superdesk: ISuperdesk) {
             this.props.closeModal();
         }
 
-        renderContentPanel() {
+        getContentPanelComponent(): React.ComponentType<any> | null {
             if (this.props.contentPanelState === CONTENT_PANEL_STATE.PREVIEW) {
-                return <SetPreviewPanel key={this.props.selectedSetId} />;
+                return SetPreviewPanel;
             } else if (
                 this.props.contentPanelState === CONTENT_PANEL_STATE.CREATE ||
                 this.props.contentPanelState === CONTENT_PANEL_STATE.EDIT
             ) {
-                return <SetEditorPanel key={this.props.selectedSetId} />;
+                return SetEditorPanel;
             }
 
             return null;
         }
 
         render() {
-            const contentPanel = this.renderContentPanel();
+            const ContentPanel = this.getContentPanelComponent();
             const addButtonDisabled = this.props.contentPanelState === CONTENT_PANEL_STATE.CREATE ||
                 this.props.contentPanelState === CONTENT_PANEL_STATE.EDIT;
 
@@ -116,9 +116,11 @@ export function getManageSetsModalComponent(superdesk: ISuperdesk) {
                                 <SetListPanel />
                             </MainPanel>
 
-                            <RightPanel open={contentPanel != null}>
+                            <RightPanel open={ContentPanel != null}>
                                 <Panel side="right">
-                                    {contentPanel}
+                                    {ContentPanel && (
+                                        <ContentPanel key={this.props.selectedSetId} />
+                                    )}
                                 </Panel>
                             </RightPanel>
                         </LayoutContainer>
