@@ -5,6 +5,6 @@ export function generatePatch<T>(original: Partial<T>, updates: Partial<T>): Par
     return (generate(original, updates) ?? {}) as Partial<T>;
 }
 
-export function hasItemChanged(original: any, updates: any): boolean {
+export function hasItemChanged<T>(original: Partial<T>, updates: Partial<T>): boolean {
     return Object.keys(generatePatch(original, updates)).length > 0;
 }
