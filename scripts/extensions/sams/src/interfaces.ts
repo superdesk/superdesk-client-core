@@ -19,6 +19,10 @@ export enum MODAL_TYPES {
     MANAGE_SETS = 'manage_sets',
 }
 
+export interface IModalProps {
+    closeModal(): void;
+}
+
 export interface ISetItem extends IBaseRestApiResponse {
     name: string;
     state: SET_STATE;
@@ -28,13 +32,9 @@ export interface ISetItem extends IBaseRestApiResponse {
     destination?: IStorageDestinationItem;
 }
 
-// export interface ISetItem extends IBaseRestApiResponse, ISet {}
-
 export interface IStorageDestinationItem extends IBaseRestApiResponse {
     provider?: string;
 }
-
-// export interface IStorageDestinationItem extends IBaseRestApiResponse, IStorageDestination {}
 
 export interface ISamsAPI {
     sets: {

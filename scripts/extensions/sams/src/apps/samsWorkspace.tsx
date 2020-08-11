@@ -3,7 +3,7 @@ import * as React from 'react';
 
 // Types
 import {ISuperdesk} from 'superdesk-api';
-import {MODAL_TYPES} from '../interfaces';
+import {MODAL_TYPES, IModalProps} from '../interfaces';
 
 // UI
 import {Dropdown, ButtonGroup, SubNav} from 'superdesk-ui-framework/react';
@@ -38,7 +38,7 @@ export function getSamsWorkspaceComponent(superdesk: ISuperdesk) {
             this.setState({currentModal: MODAL_TYPES.NONE});
         }
 
-        getMenuActions(): Array<IMenuGroup> {
+        getSubNavMenuActions(): Array<IMenuGroup> {
             const actions: Array<any> = [];
 
             if (superdesk.privileges.hasPrivilege('sams_manage')) {
@@ -61,19 +61,18 @@ export function getSamsWorkspaceComponent(superdesk: ISuperdesk) {
                 }];
         }
 
-        renderModal() {
+        getModalComponent(): React.ComponentType<IModalProps> | null {
             switch (this.state.currentModal) {
             case MODAL_TYPES.MANAGE_SETS:
-                return (
-                    <ManageSetsModal closeModal={this.closeModal}/>
-                );
+                return ManageSetsModal;
             }
 
             return null;
         }
 
         render() {
-            const actions = this.getMenuActions();
+            const subNavMenuActions = this.getSubNavMenuActions();
+            const Modal = this.getModalComponent();
 
             return (
                 <React.Fragment>
@@ -81,9 +80,9 @@ export function getSamsWorkspaceComponent(superdesk: ISuperdesk) {
                         <LayoutContainer>
                             <HeaderPanel>
                                 <SubNav zIndex={2}>
-                                    {actions.length === 0 ? null : (
+                                    {subNavMenuActions.length === 0 ? null : (
                                         <ButtonGroup align="right">
-                                            <Dropdown items={this.getMenuActions()}>
+                                            <Dropdown items={subNavMenuActions}>
                                                 <button className="sd-navbtn">
                                                     <i className="icon-dots-vertical"/>
                                                 </button>
@@ -98,7 +97,9 @@ export function getSamsWorkspaceComponent(superdesk: ISuperdesk) {
                             </MainPanel>
                         </LayoutContainer>
                     </div>
-                    {this.renderModal()}
+                    {Modal && (
+                        <Modal closeModal={this.closeModal} />
+                    )}
                 </React.Fragment>
             );
         }
