@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 /* tslint:disable:max-line-length */
 import {gettext} from 'core/utils';
-import {appConfig} from 'appConfig';
+import {appConfig, getUserInterfaceLanguage} from 'appConfig';
 import {applyDefault} from 'core/helpers/typescript-helpers';
 
 /**
@@ -15,30 +15,6 @@ import {applyDefault} from 'core/helpers/typescript-helpers';
  */
 UserPreferencesDirective.$inject = ['session', 'preferencesService', 'notify', 'asset',
     'metadata', 'desks', 'modal', '$timeout', '$q', 'userList', 'lodash', 'search'];
-
-function translateCategoryName(category) {
-    switch (category.name.toLowerCase()) {
-    case 'advisory': return gettext('Advisory');
-    case 'agate': return gettext('Agate');
-    case 'atlantic': return gettext('Atlantic');
-    case 'audio skeds': return gettext('Audio Skeds');
-    case 'business': return gettext('Business');
-    case 'entertainment': return gettext('Entertainment');
-    case 'finance': return gettext('Finance');
-    case 'international': return gettext('International');
-    case 'lifestyle': return gettext('Lifestyle');
-    case 'national': return gettext('National');
-    case 'ontario/quebec': return gettext('Ontario/Quebec');
-    case 'prairies/bc': return gettext('Prairies/BC');
-    case 'press release': return gettext('Press Release');
-    case 'spare news': return gettext('Spare News');
-    case 'spare sports': return gettext('Spare Sports');
-    case 'sports': return gettext('Sports');
-    case 'travel': return gettext('Travel');
-    }
-
-    return category.name;
-}
 
 function translatePreferenceLabel(label) {
     switch (label.toLowerCase()) {
@@ -102,10 +78,13 @@ export function UserPreferencesDirective(
     return {
         templateUrl: asset.templateUrl('apps/users/views/user-preferences.html'),
         link: function(scope, element, attrs) {
+            const userLang = getUserInterfaceLanguage().replace('_', '-');
+
             /*
              * Set this to true after adding all the preferences to the scope. If done before, then the
              * directives which depend on scope variables might fail to load properly.
              */
+
             scope.preferencesLoaded = false;
             var orig; // original preferences, before any changes
 
@@ -276,11 +255,7 @@ export function UserPreferencesDirective(
                 scope.preferences = {};
                 _.each(data, (val, key) => {
                     if (val.label && val.category) {
-                        const pref = _.create(val);
-
-                        pref.categoryLabel = translatePreferenceLabel(pref.category);
-                        pref.label = translatePreferenceLabel(pref.label);
-                        scope.preferences[key] = pref;
+                        scope.preferences[key] = _.create(val);
                     }
                 });
 
@@ -355,7 +330,9 @@ export function UserPreferencesDirective(
                         selectedCats = userPrefs['categories:preferred'].selected;
 
                     newObj.selected = !!selectedCats[cat.qcode];
-                    newObj.name = translateCategoryName(newObj);
+                    if (cat.translations?.name?.[userLang]) {
+                        newObj.name = cat.translations.name[userLang];
+                    }
                     scope.categories.push(newObj);
                 });
 
