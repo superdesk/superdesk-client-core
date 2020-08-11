@@ -730,6 +730,10 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
                     action.duplicateTo = duplicateTo;
                 }
             }
+
+            if (appConfig.workflow_allow_copy_to_personal) {
+                action.copy = true;
+            }
         } else {
             // personal
             action.copy = true;
