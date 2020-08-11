@@ -19,31 +19,29 @@ export enum MODAL_TYPES {
     MANAGE_SETS = 'manage_sets',
 }
 
-export interface ISet {
-    // _id?: string;
-    name?: string;
-    state?: SET_STATE;
+export interface ISetItem extends IBaseRestApiResponse {
+    name: string;
+    state: SET_STATE;
     description?: string;
     destination_name?: string;
     destination_config?: Dictionary<string, any>;
     destination?: IStorageDestinationItem;
 }
 
-export interface ISetItem extends IBaseRestApiResponse, ISet {}
+// export interface ISetItem extends IBaseRestApiResponse, ISet {}
 
-export interface IStorageDestination {
+export interface IStorageDestinationItem extends IBaseRestApiResponse {
     provider?: string;
 }
 
-export interface IStorageDestinationItem extends IBaseRestApiResponse, IStorageDestination {}
+// export interface IStorageDestinationItem extends IBaseRestApiResponse, IStorageDestination {}
 
 export interface ISamsAPI {
     sets: {
         getAll(): Promise<Array<ISetItem>>;
-        create(set: ISet): Promise<ISetItem>;
-        update(original: ISetItem, updates: ISet): Promise<ISetItem>;
+        create(set: Partial<ISetItem>): Promise<ISetItem>;
+        update(original: ISetItem, updates: Partial<ISetItem>): Promise<ISetItem>;
         delete(set: ISetItem): Promise<void>;
-        confirmAndDelete(set: ISetItem): Promise<void>;
     };
     storageDestinations: {
         getAll(): Promise<Array<IStorageDestinationItem>>;

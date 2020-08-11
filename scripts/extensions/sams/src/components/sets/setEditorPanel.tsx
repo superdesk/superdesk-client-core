@@ -6,7 +6,7 @@ import {cloneDeep, isEqual, pickBy} from 'lodash';
 
 // Types
 import {ISuperdesk} from 'superdesk-api';
-import {ISet, ISetItem, IStorageDestinationItem, SET_STATE} from '../../interfaces';
+import {ISetItem, IStorageDestinationItem, SET_STATE} from '../../interfaces';
 import {IApplicationState} from '../../store';
 
 // Redux Actions & Selectors
@@ -32,13 +32,13 @@ interface IProps {
     destinations: Array<IStorageDestinationItem>;
     closeEditor(): void;
     previewSet(set: ISetItem): void;
-    updateSet(original: ISetItem, updates: ISet): Promise<ISetItem>;
-    createSet(set: ISet): Promise<ISetItem>;
+    updateSet(original: ISetItem, updates: Partial<ISetItem>): Promise<ISetItem>;
+    createSet(set: Partial<ISetItem>): Promise<ISetItem>;
     currentDestination?: IStorageDestinationItem;
 }
 
 interface IState {
-    updates: ISet;
+    updates: Partial<ISetItem>;
     isDirty?: boolean;
     isExisting?: boolean;
 }

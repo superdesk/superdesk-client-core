@@ -1,6 +1,6 @@
 // Types
 import {ISuperdesk, IRestApiResponse} from 'superdesk-api';
-import {ISet, ISetItem} from '../interfaces';
+import {ISetItem} from '../interfaces';
 
 const RESOURCE = 'sams/sets';
 
@@ -25,7 +25,7 @@ export function getAllSets(superdesk: ISuperdesk): Promise<Array<ISetItem>> {
         });
 }
 
-export function createSet(superdesk: ISuperdesk, item: ISet): Promise<ISetItem> {
+export function createSet(superdesk: ISuperdesk, item: Partial<ISetItem>): Promise<ISetItem> {
     const {gettext} = superdesk.localization;
     const {notify} = superdesk.ui;
 
@@ -43,7 +43,7 @@ export function createSet(superdesk: ISuperdesk, item: ISet): Promise<ISetItem> 
         });
 }
 
-export function updateSet(superdesk: ISuperdesk, original: ISetItem, updates: ISet): Promise<ISetItem> {
+export function updateSet(superdesk: ISuperdesk, original: ISetItem, updates: Partial<ISetItem>): Promise<ISetItem> {
     const {gettext} = superdesk.localization;
     const {notify} = superdesk.ui;
 
@@ -74,22 +74,5 @@ export function deleteSet(superdesk: ISuperdesk, item: ISetItem): Promise<void> 
             console.error(error);
 
             return Promise.reject(error);
-        });
-}
-
-export function confirmBeforeDeletingSet(superdesk: ISuperdesk, set: ISetItem): Promise<void> {
-    const {gettext} = superdesk.localization;
-    const {confirm} = superdesk.ui;
-
-    return confirm(
-        gettext('Are you sure you want to delete the Set "{{name}}"?', {name: set.name ?? ''}),
-        gettext('Delete Set?'),
-    )
-        .then((response: boolean) => {
-            if (response === true) {
-                return deleteSet(superdesk, set);
-            }
-
-            return Promise.resolve();
         });
 }

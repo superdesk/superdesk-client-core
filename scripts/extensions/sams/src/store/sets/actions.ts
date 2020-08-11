@@ -1,5 +1,5 @@
 // Types
-import {ISet, ISetItem} from '../../interfaces';
+import {ISetItem} from '../../interfaces';
 import {IThunkAction} from '../types';
 
 // Redux Selectors
@@ -90,7 +90,7 @@ export function openDeleteConfirmationModal(set: ISetItem): IThunkAction<boolean
         dispatch(setDeleteConfirmationModalOpen(true));
 
         return confirm(
-            gettext('Are you sure you want to delete the Set "{{name}}"?', {name: set.name ?? ''}),
+            gettext('Are you sure you want to delete the Set "{{name}}"?', {name: set.name}),
             gettext('Delete Set?'),
         )
             .then((response: boolean) => {
@@ -108,7 +108,6 @@ export function confirmBeforeDeletingSet(set: ISetItem): IThunkAction<void> {
                     return api.sets.delete(set)
                         .then(() => {
                             dispatch(removeSetInStore(set));
-                            // dispatch(loadSets());
 
                             if (getSelectedSetId(getState()) === set._id) {
                                 dispatch(closeSetContentPanel());
@@ -121,7 +120,7 @@ export function confirmBeforeDeletingSet(set: ISetItem): IThunkAction<void> {
     };
 }
 
-export function updateSet(original: ISetItem, updates: ISet): IThunkAction<ISetItem> {
+export function updateSet(original: ISetItem, updates: Partial<ISetItem>): IThunkAction<ISetItem> {
     return (dispatch, _getState, {api}) => {
         return api.sets.update(original, updates)
             .then((updatedSet: ISetItem) => {
@@ -133,7 +132,7 @@ export function updateSet(original: ISetItem, updates: ISet): IThunkAction<ISetI
     };
 }
 
-export function createSet(item: ISet): IThunkAction<ISetItem> {
+export function createSet(item: Partial<ISetItem>): IThunkAction<ISetItem> {
     return (dispatch, _getState, {api}) => {
         return api.sets.create(item)
             .then((newSet: ISetItem) => {
