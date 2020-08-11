@@ -2,7 +2,7 @@
 import * as React from 'react';
 import {connect} from 'react-redux';
 import {Dispatch} from 'redux';
-import {cloneDeep, isEqual, pickBy} from 'lodash';
+import {cloneDeep} from 'lodash';
 
 // Types
 import {ISuperdesk} from 'superdesk-api';
@@ -27,6 +27,9 @@ import {
     Text,
 } from '../../ui';
 
+// Utils
+import {hasItemChanged} from '../../utils/api';
+
 interface IProps {
     original?: ISetItem;
     destinations: Array<IStorageDestinationItem>;
@@ -40,7 +43,6 @@ interface IProps {
 interface IState {
     updates: Partial<ISetItem>;
     isDirty?: boolean;
-    isExisting?: boolean;
 }
 
 export function getSetEditorPanel(superdesk: ISuperdesk) {
@@ -71,13 +73,11 @@ export function getSetEditorPanel(superdesk: ISuperdesk) {
                         destination_name: this.props.destinations?.[0]?._id,
                     },
                     isDirty: true,
-                    isExisting: false,
                 };
             } else {
                 this.state = {
                     updates: cloneDeep<ISetItem>(this.props.original),
                     isDirty: false,
-                    isExisting: true,
                 };
             }
 
@@ -95,17 +95,13 @@ export function getSetEditorPanel(superdesk: ISuperdesk) {
         }
 
         onFieldChange(field: string, value: string): void {
-            const dirtyFields = ['state', 'name', 'description', 'destination_name'];
-            const updates = this.state.updates ?? {};
+            const updates = this.state.updates;
             let dirty = true;
 
             (updates as any)[field] = value;
 
-            if (this.state.isExisting) {
-                dirty = !isEqual(
-                    pickBy(this.props.original, (_value, key: string) => dirtyFields.includes(key)),
-                    pickBy(this.state.updates, (_value, key: string) => dirtyFields.includes(key)),
-                );
+            if (this.props.original != null) {
+                dirty = hasItemChanged<ISetItem>(this.props.original, this.state.updates);
             }
 
             this.setState({
@@ -190,7 +186,7 @@ export function getSetEditorPanel(superdesk: ISuperdesk) {
                     <PanelContent>
                         <PanelContentBlock>
                             <PanelContentBlockInner grow={true}>
-                                {!this.state.isExisting ? null : (
+                                {this.props.original == null ? null : (
                                     <FormGroup>
                                         <FormRow>
                                             <label>{gettext('Enabled')}</label>
@@ -205,7 +201,7 @@ export function getSetEditorPanel(superdesk: ISuperdesk) {
                                     <FormRow>
                                         <Input
                                             label={gettext('Name')}
-                                            value={updates?.name}
+                                            value={updates.name}
                                             required={true}
                                             onChange={this.onChange.name}
                                             disabled={false}
@@ -216,18 +212,18 @@ export function getSetEditorPanel(superdesk: ISuperdesk) {
                                     <FormRow>
                                         <Input
                                             label={gettext('Description')}
-                                            value={updates?.description}
+                                            value={updates.description}
                                             onChange={this.onChange.description}
                                             disabled={false}
                                         />
                                     </FormRow>
                                 </FormGroup>
-                                {(!this.state.isExisting || updates.state === SET_STATE.DRAFT) ? (
+                                {(this.props.original == null || updates.state === SET_STATE.DRAFT) ? (
                                     <FormGroup>
                                         <FormRow>
                                             <Select
                                                 label={gettext('Destination')}
-                                                value={updates?.destination_name}
+                                                value={updates.destination_name}
                                                 required={true}
                                                 onChange={this.onChange.destination_name}
                                                 disabled={false}
