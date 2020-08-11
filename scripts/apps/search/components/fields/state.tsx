@@ -4,15 +4,35 @@ import {gettext} from 'core/utils';
 import {removeLodash} from 'core/filters';
 import {IPropsItemListInfo} from '../ListItemInfo';
 import {longFormat} from 'core/datetime/datetime';
-import {IArticle} from 'superdesk-api';
+import {IArticle, ITEM_STATE} from 'superdesk-api';
 
 interface IProps {
     item: IArticle;
 }
 
+export function getStateLabel(state: ITEM_STATE) {
+    switch (state) {
+    case 'draft': return gettext('Draft');
+    case 'ingested': return gettext('Ingested');
+    case 'routed': return gettext('Routed');
+    case 'fetched': return gettext('Fetched');
+    case 'submitted': return gettext('Submitted');
+    case 'in_progress': return gettext('In Progress');
+    case 'spiked': return gettext('Spiked');
+    case 'published': return gettext('Published');
+    case 'scheduled': return gettext('Scheduled');
+    case 'corrected': return gettext('Corrected');
+    case 'killed': return gettext('Killed');
+    case 'recalled': return gettext('Recalled');
+    case 'unpublished': return gettext('Unpublished');
+    }
+
+    return state;
+}
+
 export const state: React.StatelessComponent<Pick<IPropsItemListInfo, 'item' | 'svc'>> = (props: IProps) => {
     if (props.item.state != null) {
-        let title = removeLodash(gettext(props.item.state));
+        let title = getStateLabel(props.item.state);
 
         if (props.item.state === 'scheduled') {
             const scheduled = props.item.archive_item?.schedule_settings?.utc_publish_schedule;
@@ -28,7 +48,7 @@ export const state: React.StatelessComponent<Pick<IPropsItemListInfo, 'item' | '
                 className={'state-label state-' + props.item.state}
                 key="state"
             >
-                {removeLodash(gettext(props.item.state))}
+                {title}
             </span>
         );
     } else {
