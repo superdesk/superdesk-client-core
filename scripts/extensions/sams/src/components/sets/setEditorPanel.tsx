@@ -100,7 +100,7 @@ export function getSetEditorPanel(superdesk: ISuperdesk) {
             updates[field] = value;
 
             if (this.props.original != null) {
-                dirty = hasItemChanged<ISetItem>(this.props.original, this.state.updates);
+                dirty = hasItemChanged(this.props.original, this.state.updates);
             }
 
             this.setState({
