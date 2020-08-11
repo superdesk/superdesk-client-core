@@ -8,6 +8,9 @@ import {IStorageDestinationItem} from '../interfaces';
 const RESOURCE = 'sams/destinations';
 
 export function getAllStorageDestinations(superdesk: ISuperdesk): Promise<Array<IStorageDestinationItem>> {
+    const {gettext} = superdesk.localization;
+    const {notify} = superdesk.ui;
+
     return superdesk.dataApi.query(
         RESOURCE,
         1,
@@ -19,5 +22,11 @@ export function getAllStorageDestinations(superdesk: ISuperdesk): Promise<Array<
                 response?._items ?? [],
                 ['_id'],
             );
+        })
+        .catch((error: any) => {
+            notify.error(gettext('Failed to load all storage destinations'));
+            console.log(error);
+
+            return Promise.reject(error);
         });
 }
