@@ -30,7 +30,7 @@ export function getStateLabel(state: ITEM_STATE) {
     return state;
 }
 
-export const state: React.StatelessComponent<Pick<IPropsItemListInfo, 'item' | 'svc'>> = (props: IProps) => {
+export const state: React.StatelessComponent<Pick<IPropsItemListInfo, 'item'>> = (props: IProps) => {
     if (props.item.state != null) {
         let title = getStateLabel(props.item.state);
 

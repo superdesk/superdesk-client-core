@@ -1,20 +1,23 @@
 import React from 'react';
-import {connectServices} from 'core/helpers/ReactRenderAsync';
+import ng from 'core/services/ng';
 
 interface IProps {
     date: any;
-    key?: string;
-    datetime?: any;
 }
 
-class TimeElementComponent extends React.Component<IProps> {
+export class TimeElem extends React.Component<IProps> {
+    datetime: any;
+
+    constructor(props: IProps) {
+        super(props);
+
+        this.datetime = ng.get('datetime');
+    }
     render() {
-        const {datetime, date, key} = this.props;
+        const {date} = this.props;
 
         return (
-            <time key={key} title={datetime.longFormat(date)}>{datetime.shortFormat(date)}</time>
+            <time title={this.datetime.longFormat(date)}>{this.datetime.shortFormat(date)}</time>
         );
     }
 }
-
-export const TimeElem = connectServices<IProps>(TimeElementComponent, ['datetime']);

@@ -1,15 +1,20 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {ItemContainer, SelectBox} from './index';
 
 function hasThumbnail(item) {
     return item.renditions && item.renditions.thumbnail;
 }
 
+interface IProps {
+    onMultiSelect: any;
+    desk: any;
+    item: any;
+}
+
 /**
  * Media Preview - renders item thumbnail
  */
-export const MediaPreview: React.StatelessComponent<any> = (props) => {
+export const MediaPreview: React.StatelessComponent<IProps> = (props) => {
     const item = props.item;
     const headline = item.headline || item.slugline || item.type;
     // headline could contains html tags hence stripping for tooltips
@@ -47,14 +52,6 @@ export const MediaPreview: React.StatelessComponent<any> = (props) => {
         React.createElement(SelectBox, {
             item: item,
             onMultiSelect: props.onMultiSelect,
-            svc: props.svc,
         }),
     );
-};
-
-MediaPreview.propTypes = {
-    svc: PropTypes.object.isRequired,
-    onMultiSelect: PropTypes.func,
-    desk: PropTypes.any,
-    item: PropTypes.any,
 };
