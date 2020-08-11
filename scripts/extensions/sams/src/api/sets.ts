@@ -29,7 +29,7 @@ export function createSet(superdesk: ISuperdesk, item: Partial<ISetItem>): Promi
     const {gettext} = superdesk.localization;
     const {notify} = superdesk.ui;
 
-    return superdesk.dataApi.create<ISetItem>(RESOURCE, item as ISetItem)
+    return superdesk.dataApi.create<ISetItem>(RESOURCE, item)
         .then((set: ISetItem) => {
             notify.success(gettext('Set created successfully'));
 
@@ -47,7 +47,7 @@ export function updateSet(superdesk: ISuperdesk, original: ISetItem, updates: Pa
     const {gettext} = superdesk.localization;
     const {notify} = superdesk.ui;
 
-    return superdesk.dataApi.patch<ISetItem>(RESOURCE, original, updates as ISetItem)
+    return superdesk.dataApi.patch<ISetItem>(RESOURCE, original, updates)
         .then((set: ISetItem) => {
             notify.success(gettext('Set updated successfully'));
 

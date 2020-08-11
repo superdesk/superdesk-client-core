@@ -93,11 +93,11 @@ export function getSetEditorPanel(superdesk: ISuperdesk) {
             };
         }
 
-        onFieldChange(field: string, value: string): void {
+        onFieldChange(field: keyof ISetItem, value: any): void {
             const updates = this.state.updates;
             let dirty = true;
 
-            (updates as any)[field] = value;
+            updates[field] = value;
 
             if (this.props.original != null) {
                 dirty = hasItemChanged<ISetItem>(this.props.original, this.state.updates);
@@ -127,7 +127,7 @@ export function getSetEditorPanel(superdesk: ISuperdesk) {
 
         onSave() {
             if (this.props.original != null) {
-                this.props.updateSet(this.props.original as ISetItem, this.state.updates);
+                this.props.updateSet(this.props.original, this.state.updates);
             } else {
                 this.props.createSet(this.state.updates);
             }
