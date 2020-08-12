@@ -84,7 +84,8 @@ export function openDeleteConfirmationModal(set: ISetItem): IThunkAction<boolean
         // Add an extra backdrop that will cover the Manage Sets modal
         // This is required because the ui-framework calculates z-index
         // based on the number of active modals, where as we're using
-        // a mixture of these modals (superdesk.ui.showModal vs superdesk.ui.confirm)
+        // a mixture of the ui-framework and pure React modals
+        // (superdesk.ui.showModal vs superdesk.ui.confirm)
         el.classList.add('modal__backdrop', 'fade', 'in');
         el.style.zIndex = '1050';
         document.body.append(el);
