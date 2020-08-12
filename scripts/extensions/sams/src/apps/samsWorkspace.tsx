@@ -3,41 +3,18 @@ import * as React from 'react';
 
 // Types
 import {ISuperdesk} from 'superdesk-api';
-import {MODAL_TYPES, IModalProps} from '../interfaces';
 
 // UI
 import {Dropdown, ButtonGroup, SubNav} from 'superdesk-ui-framework/react';
 import {IMenuGroup} from 'superdesk-ui-framework/react/components/Dropdown';
 import {HeaderPanel, LayoutContainer, MainPanel} from '../ui';
-import {getManageSetsModalComponent} from '../components/sets/manageSetsModal';
-
-interface IState {
-    currentModal: MODAL_TYPES;
-}
+import {getShowManageSetsModalFunction} from '../components/sets/manageSetsModal';
 
 export function getSamsWorkspaceComponent(superdesk: ISuperdesk) {
     const {gettext} = superdesk.localization;
-    const ManageSetsModal = getManageSetsModalComponent(superdesk);
+    const showManageSetsModal = getShowManageSetsModalFunction(superdesk);
 
-    return class SamsWorkspace extends React.Component<{}, IState> {
-        constructor(props: any) {
-            super(props);
-
-            this.state = {
-                currentModal: MODAL_TYPES.NONE,
-            };
-
-            this.closeModal = this.closeModal.bind(this);
-        }
-
-        showModal(modalType: MODAL_TYPES) {
-            this.setState({currentModal: modalType});
-        }
-
-        closeModal() {
-            this.setState({currentModal: MODAL_TYPES.NONE});
-        }
-
+    return class SamsWorkspace extends React.PureComponent<{}> {
         getSubNavMenuActions(): Array<IMenuGroup> {
             const actions: Array<any> = [];
 
@@ -45,7 +22,7 @@ export function getSamsWorkspaceComponent(superdesk: ISuperdesk) {
                 actions.push({
                     label: gettext('Manage Sets'),
                     icon: 'folder-open',
-                    onSelect: () => this.showModal(MODAL_TYPES.MANAGE_SETS),
+                    onSelect: showManageSetsModal,
                 });
             }
 
@@ -61,18 +38,8 @@ export function getSamsWorkspaceComponent(superdesk: ISuperdesk) {
                 }];
         }
 
-        getModalComponent(): React.ComponentType<IModalProps> | null {
-            switch (this.state.currentModal) {
-            case MODAL_TYPES.MANAGE_SETS:
-                return ManageSetsModal;
-            }
-
-            return null;
-        }
-
         render() {
             const subNavMenuActions = this.getSubNavMenuActions();
-            const Modal = this.getModalComponent();
 
             return (
                 <React.Fragment>
@@ -97,9 +64,6 @@ export function getSamsWorkspaceComponent(superdesk: ISuperdesk) {
                             </MainPanel>
                         </LayoutContainer>
                     </div>
-                    {Modal && (
-                        <Modal closeModal={this.closeModal} />
-                    )}
                 </React.Fragment>
             );
         }

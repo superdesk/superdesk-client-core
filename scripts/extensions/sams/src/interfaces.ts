@@ -1,5 +1,12 @@
 // Types
-import {IBaseRestApiResponse, ISuperdesk} from 'superdesk-api';
+import {IBaseRestApiResponse, IExtension, ISuperdesk} from 'superdesk-api';
+import {Store} from 'redux';
+
+export interface ISamsExtension extends IExtension {
+    exposes: {
+        store?: Store;
+    };
+}
 
 export enum SET_STATE {
     DRAFT = 'draft',
@@ -12,15 +19,6 @@ export enum CONTENT_PANEL_STATE {
     PREVIEW = 'preview',
     EDIT = 'edit',
     CREATE = 'create',
-}
-
-export enum MODAL_TYPES {
-    NONE = '',
-    MANAGE_SETS = 'manage_sets',
-}
-
-export interface IModalProps {
-    closeModal(): void;
 }
 
 export interface ISetItem extends IBaseRestApiResponse {

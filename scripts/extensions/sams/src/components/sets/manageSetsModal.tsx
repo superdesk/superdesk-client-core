@@ -29,6 +29,7 @@ import {
 import {getSetListPanel} from './setListPanel';
 import {getSetPreviewPanel} from './setPreviewPanel';
 import {getSetEditorPanel} from './setEditorPanel';
+import {showModalConnectedToStore} from '../../utils/ui';
 
 interface IProps {
     closeModal(): void;
@@ -49,6 +50,15 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     createSet: () => dispatch(editSet()),
     onModalClosed: () => dispatch(onManageSetsModalClosed()),
 });
+
+export function getShowManageSetsModalFunction(superdesk: ISuperdesk) {
+    const ManageSetsModal = getManageSetsModalComponent(superdesk);
+
+    return () => showModalConnectedToStore(
+        superdesk,
+        ManageSetsModal,
+    );
+}
 
 export function getManageSetsModalComponent(superdesk: ISuperdesk) {
     const {gettext} = superdesk.localization;

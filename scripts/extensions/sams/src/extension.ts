@@ -1,11 +1,12 @@
 // Types
-import {IExtension, ISuperdesk} from 'superdesk-api';
+import {ISuperdesk} from 'superdesk-api';
+import {ISamsExtension} from './interfaces';
 
 // Apps
 import {getSamsApp} from './apps/samsApp';
 import {getSamsWorkspaceComponent} from './apps/samsWorkspace';
 
-const extension: IExtension = {
+const extension: ISamsExtension = {
     id: 'sams',
     activate: (superdesk: ISuperdesk) => {
         const {gettext} = superdesk.localization;
@@ -34,6 +35,9 @@ const extension: IExtension = {
                         },
                     };
             });
+    },
+    exposes: {
+        store: undefined,
     },
 };
 
