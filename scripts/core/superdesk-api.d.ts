@@ -139,6 +139,7 @@ declare module 'superdesk-api' {
         parent: string;
     }
 
+    // to use as a value, use enum inside 'scripts/apps/search/interfaces.ts'
     export enum ITEM_STATE {
         /**
          * Item created in user workspace.

@@ -4,30 +4,31 @@ import {gettext} from 'core/utils';
 import {removeLodash} from 'core/filters';
 import {IPropsItemListInfo} from '../ListItemInfo';
 import {longFormat} from 'core/datetime/datetime';
-import {IArticle, ITEM_STATE} from 'superdesk-api';
+import {IArticle} from 'superdesk-api';
+import {assertNever} from 'core/helpers/typescript-helpers';
+import {ITEM_STATE} from 'apps/search/interfaces';
+
+export function getStateLabel(itemState: ITEM_STATE) {
+    switch (itemState) {
+    case ITEM_STATE.DRAFT: return gettext('Draft');
+    case ITEM_STATE.INGESTED: return gettext('Ingested');
+    case ITEM_STATE.ROUTED: return gettext('Routed');
+    case ITEM_STATE.FETCHED: return gettext('Fetched');
+    case ITEM_STATE.SUBMITTED: return gettext('Submitted');
+    case ITEM_STATE.IN_PROGRESS: return gettext('In Progress');
+    case ITEM_STATE.SPIKED: return gettext('Spiked');
+    case ITEM_STATE.PUBLISHED: return gettext('Published');
+    case ITEM_STATE.SCHEDULED: return gettext('Scheduled');
+    case ITEM_STATE.CORRECTED: return gettext('Corrected');
+    case ITEM_STATE.KILLED: return gettext('Killed');
+    case ITEM_STATE.RECALLED: return gettext('Recalled');
+    case ITEM_STATE.UNPUBLISHED: return gettext('Unpublished');
+    default: assertNever(itemState);
+    }
+}
 
 interface IProps {
     item: IArticle;
-}
-
-export function getStateLabel(state: ITEM_STATE) {
-    switch (state) {
-    case 'draft': return gettext('Draft');
-    case 'ingested': return gettext('Ingested');
-    case 'routed': return gettext('Routed');
-    case 'fetched': return gettext('Fetched');
-    case 'submitted': return gettext('Submitted');
-    case 'in_progress': return gettext('In Progress');
-    case 'spiked': return gettext('Spiked');
-    case 'published': return gettext('Published');
-    case 'scheduled': return gettext('Scheduled');
-    case 'corrected': return gettext('Corrected');
-    case 'killed': return gettext('Killed');
-    case 'recalled': return gettext('Recalled');
-    case 'unpublished': return gettext('Unpublished');
-    }
-
-    return state;
 }
 
 export const state: React.StatelessComponent<Pick<IPropsItemListInfo, 'item'>> = (props: IProps) => {
