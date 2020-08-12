@@ -49,13 +49,22 @@ export function registerExtensions(
     }
 
     function registerWorkspaceMenu(menuItem: IWorkspaceMenuItem) {
-        workspaceMenuProvider.item({
+        const entry: Dictionary<string, string | number> = {
             href: menuItem.href,
             icon: menuItem.icon,
             label: menuItem.label,
             order: menuItem.order ?? 1000,
             shortcut: menuItem.shortcut,
-        });
+        };
+
+        if (menuItem.privileges?.length > 0) {
+            // Convert array of privilege names to if statement i.e.
+            // ['sams', 'archive'] converts to
+            // 'privileges.sams && privileges.archive'
+            entry.if = 'privileges.' + menuItem.privileges.join(' && privileges.');
+        }
+
+        workspaceMenuProvider.item(entry);
     }
 
     return Promise.all(

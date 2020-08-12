@@ -597,6 +597,7 @@ declare module 'superdesk-api' {
         label: string;
         order?: number;
         shortcut?: string;
+        privileges?: Array<string>;
     }>;
 
 
