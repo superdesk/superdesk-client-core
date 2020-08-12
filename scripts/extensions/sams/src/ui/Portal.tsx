@@ -12,10 +12,7 @@ export class Portal extends React.Component<IProps, any> {
     constructor(props: IProps) {
         super(props);
         this.parentElement = document.createElement('div');
-
-        if (this.props.id) {
-            this.parentElement.setAttribute('data-portal-id', this.props.id);
-        }
+        this.parentElement.setAttribute('data-portal-id', this.props.id);
     }
 
     componentDidMount() {
