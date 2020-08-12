@@ -16,7 +16,7 @@ interface IUpdateSetInStoreAction {
 export const REMOVE_SET_IN_STORE = 'sets__remove_set_in_store';
 interface IRemoveSetInStoreAction {
     type: typeof REMOVE_SET_IN_STORE;
-    paylaod: ISetItem;
+    payload: ISetItem;
 }
 
 export const MANAGE_SETS_EDIT = 'manage_sets__edit';

@@ -34,7 +34,7 @@ export function updatedSetInStore(set: ISetItem): ISetActionTypes {
 export function removeSetInStore(set: ISetItem): ISetActionTypes {
     return {
         type: REMOVE_SET_IN_STORE,
-        paylaod: set,
+        payload: set,
     };
 }
 

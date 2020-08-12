@@ -33,7 +33,7 @@ export function setsReducer(
     case UPDATE_SET_IN_STORE:
         return updateSetInStore(state, action.payload);
     case REMOVE_SET_IN_STORE:
-        return removeSetFromStore(state, action.paylaod);
+        return removeSetFromStore(state, action.payload);
     case MANAGE_SETS_EDIT:
         return {
             ...state,
