@@ -22,10 +22,6 @@ export function getSets(state: IApplicationState): Array<ISetItem> {
     return state.sets.sets ?? [];
 }
 
-export function isDeleteConfirmationOpen(state: IApplicationState): boolean {
-    return state.sets.deleteConfirmationOpen ?? false;
-}
-
 export const getSetsById = createSelector<IApplicationState, Array<ISetItem>, Dictionary<string, ISetItem>>(
     [getSets],
     (sets: Array<ISetItem>) => {

@@ -13,8 +13,7 @@ import {
     MANAGE_SETS_EDIT,
     MANAGE_SETS_PREVIEW,
     MANAGE_SETS_CLOSE_CONTENT_PANEL,
-    MANAGE_SETS_DELETE_CONFIRMATION_OPEN,
-    MANAGE_SETS_ON_CLOSED,
+    MANAGE_SETS_RESET,
 } from './types';
 
 export function receiveSets(sets: Array<ISetItem>): ISetActionTypes {
@@ -58,16 +57,9 @@ export function closeSetContentPanel(): ISetActionTypes {
     };
 }
 
-export function setDeleteConfirmationModalOpen(open: boolean): ISetActionTypes {
-    return {
-        type: MANAGE_SETS_DELETE_CONFIRMATION_OPEN,
-        payload: open,
-    };
-}
-
 export function onManageSetsModalClosed(): ISetActionTypes {
     return {
-        type: MANAGE_SETS_ON_CLOSED,
+        type: MANAGE_SETS_RESET,
     };
 }
 
@@ -83,18 +75,22 @@ export function loadSets(): IThunkAction<Array<ISetItem>> {
 }
 
 export function openDeleteConfirmationModal(set: ISetItem): IThunkAction<boolean> {
-    return (dispatch, _getState, {superdesk}) => {
+    return (_dispatch, _getState, {superdesk}) => {
         const {gettext} = superdesk.localization;
         const {confirm} = superdesk.ui;
 
-        dispatch(setDeleteConfirmationModalOpen(true));
+        const el = document.createElement('div');
+
+        el.classList.add('modal__backdrop', 'fade', 'in');
+        el.style.zIndex = '1050';
+        document.body.append(el);
 
         return confirm(
             gettext('Are you sure you want to delete the Set "{{name}}"?', {name: set.name}),
             gettext('Delete Set?'),
         )
             .then((response: boolean) => {
-                dispatch(setDeleteConfirmationModalOpen(false));
+                el.remove();
                 return response;
             });
     };

@@ -3,21 +3,19 @@ import {CONTENT_PANEL_STATE, ISetItem} from '../../interfaces';
 import {
     ISetActionTypes,
     ISetState,
-    RECEIVE_SETS,
-    UPDATE_SET_IN_STORE,
-    REMOVE_SET_IN_STORE,
+    MANAGE_SETS_CLOSE_CONTENT_PANEL,
     MANAGE_SETS_EDIT,
     MANAGE_SETS_PREVIEW,
-    MANAGE_SETS_CLOSE_CONTENT_PANEL,
-    MANAGE_SETS_DELETE_CONFIRMATION_OPEN,
-    MANAGE_SETS_ON_CLOSED,
+    MANAGE_SETS_RESET,
+    RECEIVE_SETS,
+    REMOVE_SET_IN_STORE,
+    UPDATE_SET_IN_STORE,
 } from './types';
 
 const initialState: ISetState = {
     sets: [],
     contentPanelState: CONTENT_PANEL_STATE.CLOSED,
     selectedSetId: undefined,
-    deleteConfirmationOpen: false,
 };
 
 export function setsReducer(
@@ -52,15 +50,11 @@ export function setsReducer(
             contentPanelState: CONTENT_PANEL_STATE.CLOSED,
             selectedSetId: undefined,
         };
-    case MANAGE_SETS_DELETE_CONFIRMATION_OPEN:
+    case MANAGE_SETS_RESET:
         return {
             ...state,
-            deleteConfirmationOpen: action.payload,
-        };
-    case MANAGE_SETS_ON_CLOSED:
-        return {
-            ...initialState,
-            sets: state.sets,
+            contentPanelState: CONTENT_PANEL_STATE.CLOSED,
+            selectedSetId: undefined,
         };
     default:
         return state;

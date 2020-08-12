@@ -10,7 +10,7 @@ import {IApplicationState} from '../../store';
 
 // Redux Actions & Selectors
 import {editSet, onManageSetsModalClosed} from '../../store/sets/actions';
-import {getSetContentPanelState, isDeleteConfirmationOpen, getSelectedSetId} from '../../store/sets/selectors';
+import {getSetContentPanelState, getSelectedSetId} from '../../store/sets/selectors';
 
 // UI
 import {Button, ButtonGroup, SubNav} from 'superdesk-ui-framework/react';
@@ -23,7 +23,6 @@ import {
     ModalFooter,
     ModalHeader,
     Panel,
-    Portal,
     RightPanel,
 } from '../../ui';
 import {getSetListPanel} from './setListPanel';
@@ -35,14 +34,12 @@ interface IProps {
     closeModal(): void;
     contentPanelState: CONTENT_PANEL_STATE;
     createSet(): void;
-    isDeleteConfirmationOpen: boolean;
     selectedSetId?: string;
     onModalClosed(): void;
 }
 
 const mapStateToProps = (state: IApplicationState) => ({
     contentPanelState: getSetContentPanelState(state),
-    isDeleteConfirmationOpen: isDeleteConfirmationOpen(state),
     selectedSetId: getSelectedSetId(state),
 });
 
@@ -141,14 +138,6 @@ export function getManageSetsModalComponent(superdesk: ISuperdesk) {
                             onClick={this.closeModal}
                         />
                     </ModalFooter>
-                    {!this.props.isDeleteConfirmationOpen ? null : (
-                        <Portal id="deleteModalOverlay">
-                            <div
-                                className="modal__backdrop fade in"
-                                style={{zIndex: 1050}}
-                            />
-                        </Portal>
-                    )}
                 </Modal>
             );
         }

@@ -36,15 +36,9 @@ interface ICloseSetAction {
     type: typeof MANAGE_SETS_CLOSE_CONTENT_PANEL;
 }
 
-export const MANAGE_SETS_DELETE_CONFIRMATION_OPEN = 'manage_sets__delete_confirmation_open';
-interface ISetDeleteConfirmationOpenAction {
-    type: typeof MANAGE_SETS_DELETE_CONFIRMATION_OPEN;
-    payload: boolean;
-}
-
-export const MANAGE_SETS_ON_CLOSED = 'manage_sets__on_closed';
+export const MANAGE_SETS_RESET = 'manage_sets__reset';
 interface IManageSetsOnModalClosed {
-    type: typeof MANAGE_SETS_ON_CLOSED;
+    type: typeof MANAGE_SETS_RESET;
 }
 
 export type ISetActionTypes = IReceiveSetsAction |
@@ -53,12 +47,10 @@ export type ISetActionTypes = IReceiveSetsAction |
     IEditSetAction |
     IPreviewSetAction |
     ICloseSetAction |
-    ISetDeleteConfirmationOpenAction |
     IManageSetsOnModalClosed;
 
 export interface ISetState {
     sets: Array<ISetItem>;
     contentPanelState: CONTENT_PANEL_STATE;
     selectedSetId?: string;
-    deleteConfirmationOpen: boolean;
 }
