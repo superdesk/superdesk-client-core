@@ -19,7 +19,7 @@ type ISetArrays = {
 };
 
 export function getSets(state: IApplicationState): Array<ISetItem> {
-    return state.sets.sets ?? [];
+    return state.sets.sets;
 }
 
 export const getSetsById = createSelector<IApplicationState, Array<ISetItem>, Dictionary<string, ISetItem>>(
