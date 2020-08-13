@@ -1,20 +1,13 @@
 // Types
-import {IStorageDestinationItem} from '../../interfaces';
-import {IThunkAction} from '../types';
-import {RECEIVE, IStorageDestinationActionTypes} from './types';
+import {IStorageDestinationItem, IThunkAction} from '../../interfaces';
 
-export function receiveDestinations(destinations: Array<IStorageDestinationItem>): IStorageDestinationActionTypes {
-    return {
-        type: RECEIVE,
-        payload: destinations,
-    };
-}
+import {storageDestinationsBranch} from './branch';
 
 export function loadStorageDestinations(): IThunkAction<Array<IStorageDestinationItem>> {
     return (dispatch, _getState, {api}) => {
         return api.storageDestinations.getAll()
             .then((destinations: Array<IStorageDestinationItem>) => {
-                dispatch(receiveDestinations(destinations));
+                dispatch(storageDestinationsBranch.receive.action(destinations));
 
                 return Promise.resolve(destinations);
             });

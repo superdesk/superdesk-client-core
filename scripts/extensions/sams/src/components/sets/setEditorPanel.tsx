@@ -6,11 +6,11 @@ import {cloneDeep} from 'lodash';
 
 // Types
 import {ISuperdesk} from 'superdesk-api';
-import {ISetItem, IStorageDestinationItem, SET_STATE} from '../../interfaces';
-import {IApplicationState} from '../../store';
+import {ISetItem, IStorageDestinationItem, SET_STATE, IApplicationState} from '../../interfaces';
 
 // Redux Actions & Selectors
-import {createSet, previewSet, updateSet, closeSetContentPanel} from '../../store/sets/actions';
+import {createSet, updateSet} from '../../store/sets/actions';
+import {setsBranch} from '../../store/sets/branch';
 import {getSelectedSet, getSelectedSetStorageDestination} from '../../store/sets/selectors';
 import {getStorageDestinations} from '../../store/storageDestinations/selectors';
 
@@ -55,8 +55,8 @@ export function getSetEditorPanel(superdesk: ISuperdesk) {
     });
 
     const mapDispatchToProps = (dispatch: Dispatch) => ({
-        closeEditor: () => dispatch(closeSetContentPanel()),
-        previewSet: (set: ISetItem) => dispatch(previewSet(set._id)),
+        closeEditor: () => dispatch(setsBranch.closeContentPanel.action()),
+        previewSet: (set: ISetItem) => dispatch(setsBranch.previewSet.action(set._id)),
         updateSet: (original: ISetItem, updates: ISetItem) => dispatch<any>(updateSet(original, updates)),
         createSet: (set: ISetItem) => dispatch<any>(createSet(set)),
     });

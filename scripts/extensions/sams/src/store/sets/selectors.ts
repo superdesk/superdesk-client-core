@@ -2,12 +2,12 @@
 import {createSelector} from 'reselect';
 
 // Types
-import {IApplicationState} from '../index';
 import {
     CONTENT_PANEL_STATE,
     ISetItem,
     IStorageDestinationItem,
     SET_STATE,
+    IApplicationState,
 } from '../../interfaces';
 
 import {getStorageDestinationsById} from '../storageDestinations/selectors';

@@ -5,11 +5,11 @@ import {Dispatch} from 'redux';
 
 // Types
 import {ISuperdesk} from 'superdesk-api';
-import {ISetItem, IStorageDestinationItem, SET_STATE} from '../../interfaces';
-import {IApplicationState} from '../../store';
+import {ISetItem, IStorageDestinationItem, SET_STATE, IApplicationState} from '../../interfaces';
 
 // Redux Actions & Selectors
-import {editSet, confirmBeforeDeletingSet, closeSetContentPanel} from '../../store/sets/actions';
+import {confirmBeforeDeletingSet} from '../../store/sets/actions';
+import {setsBranch} from '../../store/sets/branch';
 import {getSelectedSet, getSelectedSetStorageDestination} from '../../store/sets/selectors';
 
 // UI
@@ -34,9 +34,9 @@ export function getSetPreviewPanel(superdesk: ISuperdesk) {
     });
 
     const mapDispatchToProps = (dispatch: Dispatch) => ({
-        onEdit: (set: ISetItem) => dispatch(editSet(set._id)),
+        onEdit: (set: ISetItem) => dispatch(setsBranch.editSet.action(set._id)),
         onDelete: (set: ISetItem) => dispatch<any>(confirmBeforeDeletingSet(set)),
-        onClose: () => dispatch(closeSetContentPanel()),
+        onClose: () => dispatch(setsBranch.closeContentPanel.action()),
     });
 
     class SetPreviewPanelComponent extends React.PureComponent<IProps> {

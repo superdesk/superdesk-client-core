@@ -1,25 +1,17 @@
 // External Modules
-import {createStore, applyMiddleware, compose, Reducer, Store, combineReducers} from 'redux';
+import {createStore, applyMiddleware, compose, Store, combineReducers} from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import {createLogger} from 'redux-logger';
 
-// Types
-import {ISetState} from './sets/types';
-import {IStorageDestinationState} from './storageDestinations/types';
-
-// Redux Reducers
-import {setsReducer} from './sets/reducers';
-import {storageDestinationReducer} from './storageDestinations/reducers';
+// Redux Branches
+import {setsBranch, setsInitialState} from './sets/branch';
+import {storageDestinationsBranch, storageDestinationsInitialState} from './storageDestinations/branch';
+import {getReducersFromBranchLeaf} from '../utils/redux';
 
 export const rootReducer = combineReducers({
-    sets: setsReducer,
-    storageDestinations: storageDestinationReducer,
+    sets: getReducersFromBranchLeaf(setsInitialState, setsBranch),
+    storageDestinations: getReducersFromBranchLeaf(storageDestinationsInitialState, storageDestinationsBranch),
 });
-
-export type IApplicationState = {
-    sets: ISetState;
-    storageDestinations: IStorageDestinationState;
-};
 
 /**
  * Some action dispatchers (specifically thunk with promises)
@@ -42,8 +34,7 @@ function crashReporter() {
 
 export function createReduxStore(
     extraArguments: any,
-    initialState: {},
-    reducer: Reducer,
+    initialState: {} = {},
 ): Store {
     const middlewares = [
         crashReporter,
@@ -57,7 +48,7 @@ export function createReduxStore(
     }
 
     return createStore(
-        reducer,
+        rootReducer,
         initialState,
         compose(applyMiddleware(...middlewares)),
     );
