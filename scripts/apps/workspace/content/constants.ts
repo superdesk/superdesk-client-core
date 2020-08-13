@@ -116,7 +116,7 @@ function getLabelForStageName(stageName: IStage['name']): string | null {
     }
 }
 
-function getLabelForStageType(stageType: ICard['type']): string | null {
+export function getLabelForStageType(stageType: ICard['type']): string | null {
     switch (stageType) {
     case 'deskOutput':
         return gettext('Desk Output');
@@ -144,7 +144,7 @@ export function getLabelForStage(stage: IStage | ICard): string {
     }
 
     if (isCard(stage)) {
-        return getLabelForStageType(stage.type) ?? SplitFilter()(stage.type);
+        return getLabelForStageType(stage.type) ?? stage.type;
     }
 }
 
