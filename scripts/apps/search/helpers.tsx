@@ -134,7 +134,7 @@ export function positionPopup(target, zIndex = 1000) {
 }
 
 export function renderArea(
-    area: 'firstLine' | 'secondLine',
+    area: 'firstLine' | 'secondLine' | 'singleLine' | 'priority',
     itemProps,
     props?: { className?: string },
     customRender: any = {},
