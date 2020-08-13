@@ -1,9 +1,9 @@
 // External Modules
 import * as React from 'react';
 import {connect} from 'react-redux';
-import {Dispatch} from 'redux';
 
 // Types
+import {Dispatch} from 'redux';
 import {ISuperdesk} from 'superdesk-api';
 import {ISetItem, IStorageDestinationItem, SET_STATE, IApplicationState} from '../../interfaces';
 
@@ -23,23 +23,42 @@ interface IProps {
     onEdit(set: ISetItem): void;
     onDelete(set: ISetItem): void;
     onClose(): void;
+    dispatch: Dispatch;
 }
+
+const mapStateToProps = (state: IApplicationState) => ({
+    set: getSelectedSet(state),
+    storageDestination: getSelectedSetStorageDestination(state),
+});
 
 export function getSetPreviewPanel(superdesk: ISuperdesk) {
     const {gettext} = superdesk.localization;
 
-    const mapStateToProps = (state: IApplicationState) => ({
-        set: getSelectedSet(state),
-        storageDestination: getSelectedSetStorageDestination(state),
-    });
-
-    const mapDispatchToProps = (dispatch: Dispatch) => ({
-        onEdit: (set: ISetItem) => dispatch(setsBranch.editSet.action(set._id)),
-        onDelete: (set: ISetItem) => dispatch<any>(confirmBeforeDeletingSet(set)),
-        onClose: () => dispatch(setsBranch.closeContentPanel.action()),
-    });
-
     class SetPreviewPanelComponent extends React.PureComponent<IProps> {
+        constructor(props: IProps) {
+            super(props);
+
+            this.onEdit = this.onEdit.bind(this);
+            this.onDelete = this.onDelete.bind(this);
+            this.onClose = this.onClose.bind(this);
+        }
+
+        onEdit() {
+            if (this.props.set?._id != null) {
+                this.props.dispatch(setsBranch.editSet.action(this.props.set._id));
+            }
+        }
+
+        onDelete() {
+            if (this.props.set?._id != null) {
+                this.props.dispatch<any>(confirmBeforeDeletingSet(this.props.set));
+            }
+        }
+
+        onClose() {
+            this.props.dispatch(setsBranch.closeContentPanel.action());
+        }
+
         render() {
             const {set, storageDestination} = this.props;
 
@@ -50,12 +69,12 @@ export function getSetPreviewPanel(superdesk: ISuperdesk) {
             let topTools: Array<IPanelTools> = [{
                 title: gettext('Edit'),
                 icon: 'pencil',
-                onClick: () => this.props.onEdit(set),
+                onClick: this.onEdit,
                 ariaValue: 'edit',
             }, {
                 title: gettext('Close'),
                 icon: 'close-small',
-                onClick: this.props.onClose,
+                onClick: this.onClose,
                 ariaValue: 'close',
             }];
 
@@ -64,7 +83,7 @@ export function getSetPreviewPanel(superdesk: ISuperdesk) {
                     {
                         title: gettext('Delete'),
                         icon: 'trash',
-                        onClick: () => this.props.onDelete(set),
+                        onClick: this.onDelete,
                         ariaValue: 'delete',
                     },
                     ...topTools,
@@ -98,8 +117,5 @@ export function getSetPreviewPanel(superdesk: ISuperdesk) {
         }
     }
 
-    return connect(
-        mapStateToProps,
-        mapDispatchToProps,
-    )(SetPreviewPanelComponent);
+    return connect(mapStateToProps)(SetPreviewPanelComponent);
 }

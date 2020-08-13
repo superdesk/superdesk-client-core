@@ -1,9 +1,9 @@
 // External modules
 import * as React from 'react';
 import {connect} from 'react-redux';
-import {Dispatch} from 'redux';
 
 // Types
+import {Dispatch} from 'redux';
 import {ISuperdesk} from 'superdesk-api';
 import {CONTENT_PANEL_STATE, IApplicationState} from '../../interfaces';
 
@@ -32,19 +32,13 @@ import {showModalConnectedToStore} from '../../utils/ui';
 interface IProps {
     closeModal(): void;
     contentPanelState: CONTENT_PANEL_STATE;
-    createSet(): void;
     selectedSetId?: string;
-    onModalClosed(): void;
+    dispatch: Dispatch;
 }
 
 const mapStateToProps = (state: IApplicationState) => ({
     contentPanelState: getSetContentPanelState(state),
     selectedSetId: getSelectedSetId(state),
-});
-
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-    createSet: () => dispatch(setsBranch.editSet.action()),
-    onModalClosed: () => dispatch(setsBranch.closeContentPanel.action()),
 });
 
 export function getShowManageSetsModalFunction(superdesk: ISuperdesk) {
@@ -68,11 +62,16 @@ export function getManageSetsModalComponent(superdesk: ISuperdesk) {
             super(props);
 
             this.closeModal = this.closeModal.bind(this);
+            this.createSet = this.createSet.bind(this);
         }
 
         closeModal() {
-            this.props.onModalClosed();
+            this.props.dispatch(setsBranch.closeContentPanel.action());
             this.props.closeModal();
+        }
+
+        createSet() {
+            this.props.dispatch(setsBranch.editSet.action());
         }
 
         getContentPanelComponent(): React.ComponentType<any> | null {
@@ -113,7 +112,7 @@ export function getManageSetsModalComponent(superdesk: ISuperdesk) {
                                             text={gettext('Add New')}
                                             icon="plus-sign"
                                             disabled={addButtonDisabled}
-                                            onClick={this.props.createSet}
+                                            onClick={this.createSet}
                                         />
                                     </ButtonGroup>
                                 </SubNav>
@@ -142,8 +141,5 @@ export function getManageSetsModalComponent(superdesk: ISuperdesk) {
         }
     }
 
-    return connect(
-        mapStateToProps,
-        mapDispatchToProps,
-    )(ManageSetsModalComponent);
+    return connect(mapStateToProps)(ManageSetsModalComponent);
 }

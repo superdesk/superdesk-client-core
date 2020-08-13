@@ -1,10 +1,10 @@
 // External Modules
 import * as React from 'react';
 import {connect} from 'react-redux';
-import {Dispatch} from 'redux';
 import {cloneDeep} from 'lodash';
 
 // Types
+import {Dispatch} from 'redux';
 import {ISuperdesk} from 'superdesk-api';
 import {ISetItem, IStorageDestinationItem, SET_STATE, IApplicationState} from '../../interfaces';
 
@@ -33,12 +33,15 @@ import {hasItemChanged} from '../../utils/api';
 interface IProps {
     original?: ISetItem;
     destinations: Array<IStorageDestinationItem>;
-    closeEditor(): void;
-    previewSet(set: ISetItem): void;
-    updateSet(original: ISetItem, updates: Partial<ISetItem>): Promise<ISetItem>;
-    createSet(set: Partial<ISetItem>): Promise<ISetItem>;
     currentDestination?: IStorageDestinationItem;
+    dispatch: Dispatch;
 }
+
+const mapStateToProps = (state: IApplicationState) => ({
+    original: getSelectedSet(state),
+    destinations: getStorageDestinations(state),
+    currentDestination: getSelectedSetStorageDestination(state),
+});
 
 interface IState {
     updates: Partial<ISetItem>;
@@ -47,19 +50,6 @@ interface IState {
 
 export function getSetEditorPanel(superdesk: ISuperdesk) {
     const {gettext} = superdesk.localization;
-
-    const mapStateToProps = (state: IApplicationState) => ({
-        original: getSelectedSet(state),
-        destinations: getStorageDestinations(state),
-        currentDestination: getSelectedSetStorageDestination(state),
-    });
-
-    const mapDispatchToProps = (dispatch: Dispatch) => ({
-        closeEditor: () => dispatch(setsBranch.closeContentPanel.action()),
-        previewSet: (set: ISetItem) => dispatch(setsBranch.previewSet.action(set._id)),
-        updateSet: (original: ISetItem, updates: ISetItem) => dispatch<any>(updateSet(original, updates)),
-        createSet: (set: ISetItem) => dispatch<any>(createSet(set)),
-    });
 
     class SetEditorPanelComponent extends React.Component<IProps, IState> {
         onChange: Dictionary<string, (value: any) => void>;
@@ -127,17 +117,17 @@ export function getSetEditorPanel(superdesk: ISuperdesk) {
 
         onSave() {
             if (this.props.original != null) {
-                this.props.updateSet(this.props.original, this.state.updates);
+                this.props.dispatch<any>(updateSet(this.props.original, this.state.updates));
             } else {
-                this.props.createSet(this.state.updates);
+                this.props.dispatch<any>(createSet(this.state.updates));
             }
         }
 
         onCancel() {
             if (this.props.original != null) {
-                this.props.previewSet(this.props.original);
+                this.props.dispatch(setsBranch.previewSet.action(this.props.original._id));
             } else {
-                this.props.closeEditor();
+                this.props.dispatch(setsBranch.closeContentPanel.action());
             }
         }
 
@@ -238,8 +228,5 @@ export function getSetEditorPanel(superdesk: ISuperdesk) {
         }
     }
 
-    return connect(
-        mapStateToProps,
-        mapDispatchToProps,
-    )(SetEditorPanelComponent);
+    return connect(mapStateToProps)(SetEditorPanelComponent);
 }
